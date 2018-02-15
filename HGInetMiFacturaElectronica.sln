@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectronicaWeb", "HGInetMiFacturaElectronicaWeb\HGInetMiFacturaElectronicaWeb.csproj", "{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectonicaData", "HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj", "{B3B46672-9956-48F5-B7CE-24C013995E47}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
