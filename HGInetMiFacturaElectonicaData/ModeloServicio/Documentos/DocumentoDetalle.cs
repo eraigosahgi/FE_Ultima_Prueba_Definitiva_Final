@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,22 +13,25 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 	public class DocumentoDetalle
 	{
 
-		#region Propiedades 
+        #region Propiedades 
 
-		/// <summary>
-		/// Id incrementable de cada detalle del documento
-		/// </summary>
-		public int Codigo { get; set; }
+        /// <summary>
+        /// Id incrementable de cada detalle del documento
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        public int Codigo { get; set; }
 
-		/// <summary>
-		/// Codigo del Producto
-		/// </summary>
-		public string ProductoCodigo { get; set; }
+        /// <summary>
+        /// Codigo del Producto
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        public string ProductoCodigo { get; set; }
 
-		/// <summary>
-		/// Nombre del Producto
-		/// </summary>
-		public string ProductoNombre { get; set; }
+        /// <summary>
+        /// Nombre del Producto
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        public string ProductoNombre { get; set; }
 
 		/// <summary>
 		/// Descripcion del producto
@@ -37,12 +41,14 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// <summary>
 		/// Cantidad de producto del detalle
 		/// </summary>
+        [Range(typeof(decimal), "0.1", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
 		public decimal Cantidad { get; set; }
 
-		/// <summary>
-		/// Subtotal de cada detalle 
-		/// </summary>
-		public decimal ValorSubtotal { get; set; }
+        /// <summary>
+        /// Subtotal de cada detalle 
+        /// </summary>
+        [Range(typeof(decimal), "0.1", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        public decimal ValorSubtotal { get; set; }
 
 		/// <summary>
 		/// Valor del Impuesto al Consumo del detalle
@@ -69,10 +75,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public decimal DescuentoPorcentaje { get; set; }
 
-		/// <summary>
-		/// Valor Unitario sin impuestos
-		/// </summary>
-		public decimal ValorUnitario { get; set; }
+        /// <summary>
+        /// Valor Unitario sin impuestos
+        /// </summary>
+        [Range(typeof(decimal), "0.1", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        public decimal ValorUnitario { get; set; }
 
 		#endregion
 

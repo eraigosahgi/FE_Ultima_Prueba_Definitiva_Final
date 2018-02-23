@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,28 +7,26 @@ using System.Threading.Tasks;
 namespace HGInetMiFacturaElectonicaData.ModeloServicio
 {
     /// <summary>
-    /// Documento tipo Factura de Venta
+    /// Documento tipo Nota Credito
     /// </summary>
-    public class Factura
+    public class NotaCredito
     {
         #region Propiedades
 
         /// <summary>
         /// Id único de Registro del Obligado a Facturar
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        public string CodigoRegistro { get; set; }
+        public int CodigoRegistro { get; set; }
 
         /// <summary>
         /// Numero de Documento
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public int Documento { get; set; }
 
         /// <summary>
-        /// Prefijo segun Resolución
+        /// Documento afectado
         /// </summary>
-        public string Prefijo { get; set; }
+        public string DocumentoRef { get; set; }
 
         /// <summary>
         /// Cufe identificador unico de la Factura
@@ -54,25 +51,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// <summary>
         /// Datos del Obligado a facturar
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public Tercero DatosObligado { get; set; }
 
         /// <summary>
         /// Datos del Adquiriente de la Factura
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public Tercero DatosAdquiriente { get; set; }
 
         /// <summary>
         /// Valor del documento sin descuentos y sin impuestos
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public decimal Valor { get; set; }
 
         /// <summary>
         /// Subtotal del documento: valor del documento con descuentos y sin impuestos
         /// </summary>
-        [Range(typeof(decimal), "0.1", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorSubtotal { get; set; }
 
         /// <summary>
@@ -103,13 +96,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// <summary>
         /// Total del documento: Subtotal incluyendo impuestos
         /// </summary>
-        [Range(typeof(decimal), "0.1", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Total { get; set; }
 
         /// <summary>
         /// Neto del documento: Total menos Retenciones.
         /// </summary>
-        [Range(typeof(decimal), "0.1", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Neto { get; set; }
 
         /// <summary>
@@ -118,6 +109,5 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public List<DocumentoDetalle> DocumentoDetalles { get; set; }
 
         #endregion
-
     }
 }

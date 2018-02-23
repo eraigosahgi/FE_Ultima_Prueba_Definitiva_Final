@@ -7,7 +7,7 @@ using System.Web.Http;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
-{
+{    
 	public class FacturaController : ApiController
 	{
 
@@ -27,21 +27,46 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			return documentos;
 		}
 
-		// GET: api/Factura/5
-		public Factura Get(int id)
+        // GET: api/Factura/5
+        public Factura Get(int id)
 		{
 			return documentos.Where(_doc => _doc.Documento == id).FirstOrDefault();
 		}
 
-		// POST: api/Factura
-		public void Post([FromBody]string value)
+        // POST: api/Factura
+        public HttpResponseMessage Post(Factura value)
 		{
-		}
+
+            if (ModelState.IsValid)
+            {
+                // Los campos enviados en el objeto, cumplen con lo solicitado.
+
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+            //return "post";
+
+        }
 
 		// PUT: api/Factura/5
-		public void Put(int id, [FromBody]string value)
+		public HttpResponseMessage Put(Factura value)
 		{
-		}
+            if (ModelState.IsValid)
+            {
+                // Los campos enviados en el objeto, cumplen con lo solicitado.
+
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
+            //return "put";
+        }
 
 		// DELETE: api/Factura/5
 		public void Delete(int id)
