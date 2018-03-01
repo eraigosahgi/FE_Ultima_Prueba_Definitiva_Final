@@ -1,7 +1,4 @@
-﻿using ConexionDatosHGInet;
-using HGInetUBL.Objetos;
-using LibreriaGlobalHGInet.Funciones;
-using LibreriaGlobalHGInet.General;
+﻿using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,22 +10,26 @@ using System.Xml.Serialization;
 
 namespace HGInetUBL
 {
+    /// <summary>
+    /// Genera el elemento XML para la extensión de la DIAN
+    /// </summary>
 	public class ExtensionDian
 	{
 		/// <summary>
 		/// Obtiene la extension requerida por la Dian
 		/// </summary>
-		/// <param name="documento">Datos del documento</param>
-		/// <returns> XmlElement que contiene la extension requerida por la Dian</returns>
-		public static XmlElement Obtener(TblDocumentos documento, TblEmpresas empresa, TipoDocumento tipo_doc)
+        /// <param name="extension">Datos de la resolución</param>
+		/// <param name="tipo_doc">Indica el tipo de documento</param>
+        /// <returns> XmlElement que contiene la extension requerida por la Dian</returns>
+		public static XmlElement Obtener(HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension, TipoDocumento tipo_doc)
 		{
 
-			string IdentificadorSoftware = documento.TblTransacciones.StrIdentificadorDIAN;//Identificador del software proporcionado en la plataforma de la DIAN
+			string IdentificadorSoftware = extension.IdSoftware;//Identificador del software proporcionado en la plataforma de la DIAN
 
 			if (String.IsNullOrEmpty(IdentificadorSoftware))
 				throw new Exception("El identificador de la DIAN en la transacción es inválido.");
 
-			string Pin = documento.TblTransacciones.StrPinDIAN;//Pin del software proporcionado en la plataforma de la DIAN
+			string Pin = extension.PinSoftware;//Pin del software proporcionado en la plataforma de la DIAN
 
 			if (String.IsNullOrEmpty(Pin))
 				throw new Exception("El PIN de la DIAN en la transacción es inválido.");
@@ -42,29 +43,30 @@ namespace HGInetUBL
 			{
 				InvoiceControl InvoiceControl = new InvoiceControl();
 
-				#region Resolución de la numeración
+                #region Resolución de la numeración 
 
-				if (String.IsNullOrEmpty(documento.TblTransacciones.StrNumResolucion))
+                if (String.IsNullOrEmpty(extension.NumResolucion))
 					throw new Exception("El número de resolución de la DIAN en la transacción es inválido.");
 
-				InvoiceControl.InvoiceAuthorization = Convert.ToDecimal(documento.TblTransacciones.StrNumResolucion);
-				#endregion
+				InvoiceControl.InvoiceAuthorization = Convert.ToDecimal(extension.NumResolucion);
+				
+                #endregion
 
 				#region Fechas de inicio y fin de la resolución
 
-				if (documento.TblTransacciones.DatFechaIniResol == null)
+				if (extension.FechaResIni == null)
 					throw new Exception("La fecha inicial de la resolución de la DIAN en la transacción es inválida.");
 
 				PeriodType AuthorizationPeriod = new PeriodType();
 				StartDateType StartDate = new StartDateType();
-				StartDate.Value = documento.TblTransacciones.DatFechaIniResol.Value;
+				StartDate.Value = extension.FechaResIni;
 				AuthorizationPeriod.StartDate = StartDate;
 
-				if (documento.TblTransacciones.DatFechaResol == null)
+				if (extension.FechaResFin == null)
 					throw new Exception("La fecha final de la resolución de la DIAN en la transacción es inválida.");
 
 				EndDateType EndDate = new EndDateType();
-				EndDate.Value = documento.TblTransacciones.DatFechaResol.Value;
+				EndDate.Value = extension.FechaResFin;
 				AuthorizationPeriod.EndDate = EndDate;
 				InvoiceControl.AuthorizationPeriod = AuthorizationPeriod;
 				#endregion
@@ -72,15 +74,15 @@ namespace HGInetUBL
 				#region Prefijo y rangos resolución
 				AuthrorizedInvoices AuthorizedInvoices = new AuthrorizedInvoices();
 
-				if (!documento.TblTransacciones.StrPrefijo.Equals(string.Empty)) //Si tiene prefijo lo agrega
+				if (!extension.Prefijo.Equals(string.Empty)) //Si tiene prefijo lo agrega
 				{
 					TextType Prefix = new TextType();
-					Prefix.Value = documento.TblTransacciones.StrPrefijo;
+					Prefix.Value = extension.Prefijo;
 					AuthorizedInvoices.Prefix = Prefix;
 				}
 
-				AuthorizedInvoices.From = documento.TblTransacciones.IntDocI;
-				AuthorizedInvoices.To = documento.TblTransacciones.IntDocF;
+				AuthorizedInvoices.From = extension.RangoIni;
+				AuthorizedInvoices.To = extension.RangoFin;
 				InvoiceControl.AuthorizedInvoices = AuthorizedInvoices;
 				#endregion
 
@@ -93,7 +95,7 @@ namespace HGInetUBL
             REGLA: Para el DOCUMENTO FACTURA DE VENTA, el valor de este elemento será “CO” */
 			CountryType InvoiceSource = new CountryType();
 			IdentificationCodeType IdentificationCode = new IdentificationCodeType();
-			IdentificationCode.Value = "CO";
+			IdentificationCode.Value = extension.CodPaisExpedicion;
 			InvoiceSource.IdentificationCode = IdentificationCode;
 			DianExtensions.InvoiceSource = InvoiceSource;
 			#endregion
@@ -109,7 +111,7 @@ namespace HGInetUBL
 			#region NIT del Facturador Electrónico o del Proveedor Tecnológico
 			SoftwareProvider SoftwareProvider = new SoftwareProvider();
 			IdentifierType ProviderID = new IdentifierType();
-			ProviderID.Value = "811021438";
+			ProviderID.Value = extension.NitProveedor;
 			SoftwareProvider.ProviderID = ProviderID;
 			#endregion
 

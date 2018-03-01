@@ -1,4 +1,4 @@
-﻿using ConexionDatosHGInet;
+﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace HGInetUBL.Objetos
 	public class ResultadoXml
 	{
 
-		public TblDocumentos Documento;
+		public Factura Documento;
 
 		public string RutaXml;
 

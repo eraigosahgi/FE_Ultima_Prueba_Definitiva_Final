@@ -1,8 +1,7 @@
-﻿using ConexionDatosHGInet;
+﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL.Objetos;
 using HGInetUBL.Recursos;
 using HGInetUBL.XML;
-//using HGInetServiciosDian;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Properties;
@@ -16,59 +15,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using LibreriaDatosHGInet;
 
 namespace HGInetUBL
 {
 	public class FacturaXML
 	{
-
-		/// <summary>
-		/// Crea el XML con la informacion de la factura en formato UBL
-		/// </summary>
-		/// <param name="cod_compania">Código de la compañía</param>
-		/// <param name="id_empresa">Id de la empresa</param>
-		/// <param name="id_app">Id del aplicativo</param>
-		/// <param name="cod_transaccion">Código de la transacción del documento</param>
-		/// <param name="numero_documento">Número del documento</param>
-		/// <param name="ruta_almacenamiento">Ruta donde se va a guardar el archivo</param>
-		/// <param name="reemplazar_archivo">Indica si sobreescribe el archivo existente</param>
-		/// <param name="tipo">Indica el tipo de documento</param>
-		/// <returns>Ruta donde se guardo el archivo XML</returns>
-		public static ResultadoXml CrearDocumento(string cod_compania, int id_empresa, int id_app, string cod_transaccion, int numero_documento, string ruta_almacenamiento, bool reemplazar_archivo, TipoDocumento tipo = TipoDocumento.Factura)
-		{
-			try
-			{
-
-				// obtiene la información del documento
-				DocumentoBD obj = new DocumentoBD();
-				obj.CodigoCompania = cod_compania;
-				obj.CodigoEmpresa = id_empresa;
-				obj.IdAplicativo = id_app;
-
-				TblDocumentos documento = obj.Obtener(cod_transaccion, numero_documento.ToString());
-
-				if (documento == null)
-					throw new ArgumentException(string.Format("No se encontró el documento."));
-
-				// obtiene la información de la empresa
-				EmpresaBD _empresa = new EmpresaBD();
-				_empresa.Model_db = obj.Model_db;
-				TblEmpresas empresa = _empresa.Obtener();
-
-				if (empresa == null)
-					throw new ArgumentException(string.Format("No se encontró la empresa."));
-
-				// crea el archivo XML del documento
-				return CrearDocumento(documento, empresa, ruta_almacenamiento, reemplazar_archivo, tipo);
-
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
-
+        
 		/// <summary>
 		/// Crea el XML con la informacion de la factura en formato UBL
 		/// </summary>
@@ -78,7 +30,7 @@ namespace HGInetUBL
 		/// <param name="reemplazar_archivo">Indica si sobreescribe el archivo existente</param>
 		/// <param name="tipo">Indica el tipo de documento</param>
 		/// <returns>Ruta donde se guardo el archivo XML</returns>  
-		protected static ResultadoXml CrearDocumento(TblDocumentos documento, TblEmpresas empresa, string ruta_almacenamiento, bool reemplazar_archivo, TipoDocumento tipo = TipoDocumento.Factura)
+		protected static ResultadoXml CrearDocumento(Factura documento, Tercero empresa, string ruta_almacenamiento, bool reemplazar_archivo, TipoDocumento tipo = TipoDocumento.Factura)
 		{
 			try
 			{
@@ -209,13 +161,13 @@ namespace HGInetUBL
 
 				#region factura.InvoiceLine - Línea de Factura
 				/*Elemento que agrupa todos los campos de una línea de factura. Detalle del documento*/
-				factura.InvoiceLine = ObtenerDetalleDocumento(documento.TblDetalleDocumentos.ToList());
+				factura.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList());
 				#endregion
 
 				#region	factura.TaxTotal - Impuesto y Impuesto Retenido
 				/*Impuesto Retenido: Elemento raíz compuesto utilizado para informar de un impuesto	retenido. 
 				 Impuesto: Elemento raíz compuesto utilizado para informar de un impuesto. */
-				factura.TaxTotal = ObtenerImpuestos(documento.TblDetalleDocumentos.ToList());
+				factura.TaxTotal = ObtenerImpuestos(documento.DocumentoDetalle.ToList());
 
 				#endregion
 
@@ -471,7 +423,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="empresa">Datos de la empresa</param>
 		/// <returns>Objeto de tipo SupplierPartyType1</returns>
-		public static SupplierPartyType1 ObtenerObligado(TblEmpresas empresa)
+		public static SupplierPartyType1 ObtenerObligado(Tercero empresa)
 		{
 			try
 			{
@@ -601,7 +553,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="tercero">Datos de la tercero</param>
 		/// <returns>Objeto de tipo SupplierPartyType1</returns>
-		public static CustomerPartyType1 ObtenerAquiriente(TblTerceros tercero)
+		public static CustomerPartyType1 ObtenerAquiriente(Tercero tercero)
 		{
 			try
 			{
@@ -754,7 +706,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo InvoiceLineType1</returns>
-		public static InvoiceLineType1[] ObtenerDetalleDocumento(List<TblDetalleDocumentos> documentoDetalle)
+		public static InvoiceLineType1[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
 		{
 			try
 			{
@@ -842,7 +794,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="documentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo TaxTotalType1</returns>
-		public static TaxTotalType1[] ObtenerImpuestos(List<TblDetalleDocumentos> documentoDetalle)
+		public static TaxTotalType1[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle)
 		{
 			try
 			{
@@ -859,7 +811,7 @@ namespace HGInetUBL
 				foreach (var item in impuestos_iva)
 				{
 					DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-					List<TblDetalleDocumentos> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntIva == item.IntIva).ToList();
+					List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntIva == item.IntIva).ToList();
 					BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.TblProductos.IntIva == item.IntIva).Sum(docDet => docDet.IntValorUnitario * docDet.IntCantidad), 2);
 
 					imp_doc.Codigo = item.IntIva;
@@ -886,7 +838,7 @@ namespace HGInetUBL
 						if (item.IntImpConsumo != 0)
 						{
 							DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-							List<TblDetalleDocumentos> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntImpuesto1 == item.Consumo).ToList();
+							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntImpuesto1 == item.Consumo).ToList();
 							BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.TblProductos.IntImpuesto1 == item.Consumo).Sum(docDet => docDet.IntValorUnitario * docDet.IntCantidad), 2);
 
 							imp_doc.Codigo = item.IntImpConsumo.ToString();
@@ -914,7 +866,7 @@ namespace HGInetUBL
 					foreach (var item in retencion)
 					{
 						DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-						List<TblDetalleDocumentos> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).ToList();
+						List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).ToList();
 						BaseImponibleRetencion = decimal.Round(documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).Sum(docDet => docDet.IntValorUnitario * docDet.IntCantidad), 2);
 
 						imp_doc.Codigo = item.IntIdRetencion.ToString();
@@ -1026,7 +978,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="documento">datos del documento</param>
 		/// <returns>MonetaryTotalType1</returns>
-		public static MonetaryTotalType1 ObtenerTotales(TblDocumentos documento)
+		public static MonetaryTotalType1 ObtenerTotales(Factura documento)
 		{
 			try
 			{

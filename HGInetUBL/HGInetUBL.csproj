@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HGInetUBL</RootNamespace>
     <AssemblyName>HGInetUBL</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SccProjectName>Svn</SccProjectName>
@@ -37,18 +37,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ConexionDatosHGInet">
-      <HintPath>..\Documentacion\Librerias\HGInet\ConexionDatosHGInet.dll</HintPath>
-    </Reference>
-    <Reference Include="LibreriaDatosHGInet">
-      <HintPath>..\Documentacion\Librerias\HGInet\LibreriaDatosHGInet.dll</HintPath>
-    </Reference>
     <Reference Include="LibreriaGlobalHGInet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\LibreriaGlobalHGInet.dll</HintPath>
-    </Reference>
-    <Reference Include="LibreriaValidacionesHGInet">
-      <HintPath>..\Documentacion\Librerias\HGInet\LibreriaValidacionesHGInet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -662,15 +653,7 @@
     <Compile Include="Dian_CommonExtensionComponents\UBLExtensionsType.cs" />
     <Compile Include="Dian_CommonExtensionComponents\UBLExtensionType.cs" />
     <Compile Include="Objetos\DocumentoImpuestos.cs" />
-    <Compile Include="Objetos\Empresa.cs" />
-    <Compile Include="Objetos\ImpuestoConsumo.cs" />
-    <Compile Include="Objetos\ImpuestoIva.cs" />
-    <Compile Include="Objetos\Producto.cs" />
     <Compile Include="Objetos\ResultadoXml.cs" />
-    <Compile Include="Objetos\Tercero.cs" />
-    <Compile Include="Objetos\Documento.cs" />
-    <Compile Include="Objetos\DocumentoDetalle.cs" />
-    <Compile Include="Objetos\Transaccion.cs" />
     <Compile Include="Recursos\TipoImpuestos.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -849,7 +832,6 @@
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\NameType.cs" />
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\QuantityType.cs" />
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\TextType.cs" />
-    <Compile Include="XML\FacturaXML-V1.cs" />
     <Compile Include="XML\NotaCreditoXML.cs" />
     <Compile Include="XML\NotaDebitoXML.cs" />
   </ItemGroup>
@@ -932,6 +914,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>VersionesDIAN.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
+      <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
+      <Name>HGInetMiFacturaElectonicaData</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
