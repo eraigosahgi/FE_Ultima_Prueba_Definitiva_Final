@@ -1,0 +1,944 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E571F23F-B598-4DB1-893B-D94EC0354775}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HGInetUBL</RootNamespace>
+    <AssemblyName>HGInetUBL</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ConexionDatosHGInet">
+      <HintPath>..\Documentacion\Librerias\HGInet\ConexionDatosHGInet.dll</HintPath>
+    </Reference>
+    <Reference Include="LibreriaDatosHGInet">
+      <HintPath>..\Documentacion\Librerias\HGInet\LibreriaDatosHGInet.dll</HintPath>
+    </Reference>
+    <Reference Include="LibreriaGlobalHGInet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\LibreriaGlobalHGInet.dll</HintPath>
+    </Reference>
+    <Reference Include="LibreriaValidacionesHGInet">
+      <HintPath>..\Documentacion\Librerias\HGInet\LibreriaValidacionesHGInet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dian_CommonAggregateComponents\AddressType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\AirTransportType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\AllowanceChargeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\AttachmentType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\BillingReferenceLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\BillingReferenceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\BranchType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CardAccountType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CatalogueItemSpecificationUpdateLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CatalogueLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CataloguePricingUpdateLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CatalogueReferenceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CatalogueRequestLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CertificateOfOriginApplicationType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ClassificationCategoryType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ClassificationSchemeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CommodityClassificationType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CommunicationType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ConsignmentType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ContactType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ContractType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CorporateRegistrationSchemeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CountryType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CreditAccountType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CreditNoteLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\CustomerPartyType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DebitNoteLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DeliveryTermsType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DeliveryType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DeliveryUnitType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DespatchLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DespatchType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DimensionType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DocumentDistributionType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DocumentReferenceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\DocumentResponseType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\EndorsementType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\EndorserPartyType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ExchangeRateType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ExternalReferenceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\FinancialAccountType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\FinancialInstitutionType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\GoodsItemContainerType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\GoodsItemType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\HazardousGoodsTransitType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\InvoiceLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ItemComparisonType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ItemIdentificationType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ItemInstanceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ItemLocationQuantityType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ItemPropertyGroupType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ItemPropertyType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ItemType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\LanguageType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\LineItemType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\LineReferenceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\LineResponseType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\LocationCoordinateType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\LocationType1.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\LotIdentificationType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\MaritimeTransportType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\MonetaryTotalType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\OrderedShipmentType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\OrderLineReferenceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\OrderLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\OrderReferenceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PackageType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PartyIdentificationType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PartyLegalEntityType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PartyNameType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PartyTaxSchemeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PartyType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PaymentMeansType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PaymentTermsType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PaymentType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PeriodType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PersonType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PhysicalAttributeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PriceListType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PriceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\PricingReferenceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\QuotationLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\RailTransportType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ReceiptLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\RelatedItemType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ReminderLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\RemittanceAdviceLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\RequestedDespatchTimeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\RequestedInvoiceCurrencyCodeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\RequestForQuotationLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\RequiredCustomsIDType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ResponseCodeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ResponseDateType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ResponseTimeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ResponseType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\RoadTransportType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\SecondaryHazardType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\ShipmentType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\SignatureType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\StatementLineType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\StatusType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\StowageType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\SupplierPartyType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TaxCategoryType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TaxSchemeType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TaxSubtotalType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TaxTotalType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TemperatureType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TradingTermsType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TransactionConditionsType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TransportationServiceType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TransportEquipmentSealType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TransportEquipmentType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TransportEventType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TransportHandlingUnitType.cs" />
+    <Compile Include="Dian_CommonAggregateComponents\TransportMeansType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AcceptedIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AccountIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AccountingCostCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AccountingCostType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AccountNumberIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AccountTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ActionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ActualDeliveryDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ActualDeliveryTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ActualDespatchDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ActualDespatchTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AdditionalAccountIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AdditionalInformationType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AdditionalStreetNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AddressFormatCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AddressLineType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AddressTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AdValoremIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AgencyIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AgencyNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AircraftIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AllowanceChargeReasonCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AllowanceChargeReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AllowanceTotalAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AmountType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ApplicationIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ApplicationStatusCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ApprovalStatusType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\AttributeIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BackOrderAllowedIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BackorderQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BackorderReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BalanceAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BalanceBroughtForwardIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BaseAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BaseQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BaseUnitMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BatchQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BlockNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BrandNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BuildingNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\BuildingNumberType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CalculationRateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CalculationSequenceNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CancellationNoteType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CanonicalizationMethodType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CardChipCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CardTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CargoTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CarrierAssignedIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CatalogueIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CategoryNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CertificateTypeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ChannelCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ChannelType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ChargeableWeightMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ChargeIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ChargeTotalAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ChipApplicationIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CityNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CitySubdivisionNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ClassifiedIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CodeValueType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CommodityCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CompanyIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CompletionIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ConditionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ConditionsType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ConditionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ConsumerUnitQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ContentUnitQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ContractSubdivisionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ContractTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ContractTypeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CoordinateSystemCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CopiesNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CopyIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CorporateRegistrationTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CountrySubentityCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CountrySubentityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CreditAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CreditedQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CreditLineAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CurrencyBaseRateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CurrencyCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CustomerAssignedAccountIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CustomerReferenceType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CustomizationIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CustomsIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CustomsImportClassifiedIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CustomsStatusCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CustomsTariffQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\CV2IDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DamageRemarksType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DataSendingCapabilityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DebitAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DebitedQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DebitLineAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DeclaredCarriageValueAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DeclaredCustomsValueAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DeclaredForCarriageValueAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DeclaredStatisticsValueAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DegreesMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DeliveredQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DeliveryDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DeliveryInstructionsType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DeliveryTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DepartmentType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DescriptionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DescriptionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DespatchAdviceTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DespatchDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DespatchTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DirectionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DiscountPercentType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DispositionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DistrictType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DocumentBinaryObjectType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DocumentCurrencyCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DocumentHashType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DocumentIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DocumentStatusCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DocumentTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DocumentTypeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\DurationMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ElectronicMailType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\EmbeddedDocumentBinaryObjectType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\EmergencyProceduresCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\EndDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\EndpointIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\EndTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\EstimatedDespatchDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\EstimatedDespatchTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\EventCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ExchangeMarketIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ExemptionReasonCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ExemptionReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ExpiryDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ExpiryTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ExtendedIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ExtensionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\FactorNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\FamilyNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\FirstNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\FloorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\FreeOfChargeIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\FreeOnBoardValueAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\FreightRateClassCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\FullnessIndicationCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\GoodsItemQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\GrossVolumeMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\GrossWeightMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\HandlingCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\HandlingInstructionsType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\HazardClassIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\HazardousCategoryCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\HazardousItemType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\HazardousRegulationCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\HazardousRiskIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\HolderNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IdentificationCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IdentificationIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IndicationIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InformationType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InhalationToxicityZoneCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InhouseMailType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InspectionMethodCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InstructionIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InstructionNoteType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InstructionsType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InstructionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InsurancePremiumAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InsuranceValueAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InvoiceAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InvoicedQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InvoiceTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\InvoicingPartyReferenceType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IssueDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IssueNumberIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IssuerIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\IssueTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ItemClassificationCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ItemUpdateRequestIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\JobIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\JobTitleType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\JourneyIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\KeywordType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LanguageIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LastRevisionDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LastRevisionTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LatestDeliveryDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LatestDeliveryTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LatitudeDegreesMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LatitudeDirectionCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LatitudeMinutesMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LeadTimeMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LegalStatusIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LengthMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LicensePlateIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LifeCycleStatusCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LineAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LineCountNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LineExtensionAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LineIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LineType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LoadingLengthMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LocaleCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LocationIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LocationType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LogoReferenceIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LongitudeDegreesMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LongitudeDirectionCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LongitudeMinutesMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LossRiskResponsibilityCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LossRiskType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LotNumberIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\LowerOrangeHazardPlacardIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MailType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ManifestType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ManufactureDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ManufactureTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MarkAttentionIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MarkAttentionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MarkCareIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MarkCareType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MarkingIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MarksType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MathematicOperatorCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MaximumBackorderQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MaximumCopiesNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MaximumMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MaximumOrderQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MaximumQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MeasureType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MedicalFirstAidGuideCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MiddleNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MinimumBackorderQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MinimumMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MinimumOrderQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MinimumQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MinutesMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ModelNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\MultiplierFactorNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NameSuffixType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NameType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NationalityIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NationalityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NatureCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NetNetWeightMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NetVolumeMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NetWeightMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NetworkIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NoteType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\NumberIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OccurrenceDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OccurrenceTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OnCarriageIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OrangeHazardPlacardIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OrderableIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OrderableUnitFactorRateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OrderableUnitType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OrderIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OrderQuantityIncrementNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OrderQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OrganizationDepartmentType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OriginalJobIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OtherInstructionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OutstandingQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OutstandingReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OversupplyQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\OwnerTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackageLevelCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackageQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackagesQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackagingTypeCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackingCriteriaCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackingMaterialType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackLevelCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PackSizeNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaidAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaidDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaidTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ParentDocumentIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ParentDocumentTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PartialDeliveryIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PayableAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PayableRoundingAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PayerReferenceType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentAlternativeCurrencyCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentChannelCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentCurrencyCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentDueDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentMeansCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentMeansIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentNoteType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PaymentOrderReferenceType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PenaltySurchargePercentType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PercentType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PerUnitAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PlacardEndorsementType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PlacardNotationType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PlotIdentificationType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PositionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PostalZoneType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PostboxType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PreCarriageIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PreferenceCriterionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PrepaidAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PrepaidIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PrepaidPaymentReferenceIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PreviousJobIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PreviousVersionIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PriceAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PriceChangeReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PriceTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PriceTypeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PricingCurrencyCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PricingUpdateRequestIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PrimaryAccountNumberIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PrintQualifierType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\PriorityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ProductTraceIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ProfileIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ProviderTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\QualifierType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\QuantityType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RailCarIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReceivedDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReceivedQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReferenceDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReferenceEventCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReferenceIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReferenceTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReferenceType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RefrigerationOnIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RegionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RegistrationIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RegistrationNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RegistrationNationalityIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RegistrationNationalityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RejectActionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RejectedQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RejectionNoteType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RejectReasonCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RejectReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RemarksType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReminderSequenceNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReminderTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RequestedDespatchDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReturnabilityIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ReturnableMaterialIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RevisionDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RevisionTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RoleCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RoomType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\RoundingAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SalesOrderIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SalesOrderLineIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SchemeURIType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SealingPartyTypeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SealIssuerTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SealStatusCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SequenceIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SequenceNumberIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SequenceNumericType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SerialIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SettlementDiscountPercentType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ShipmentStageType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ShippingMarksType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ShippingOrderIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ShippingPriorityLevelCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ShortageActionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ShortQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SignatureMethodType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SizeTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SourceCurrencyBaseRateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SourceCurrencyCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SpecialInstructionsType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SpecialTermsType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SplitConsignmentIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\StartDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\StartTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\StatusCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\StatusReasonCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\StatusReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\StreetNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SubstitutionStatusCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SummaryDescriptionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SupplierAssignedAccountIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\SurchargePercentType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TargetCurrencyBaseRateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TargetCurrencyCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TariffClassCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TariffCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TariffDescriptionType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxableAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxCurrencyCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxEvidenceIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxExclusiveAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxExemptionReasonCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxExemptionReasonType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxInclusiveAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxLevelCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxPointDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TaxTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TechnicalNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TelefaxType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TelephoneType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TermsType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TextType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TierRangeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TierRatePercentType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TimezoneOffsetType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TimingComplaintCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TimingComplaintType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TitleType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ToOrderIndicatorType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalBalanceAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalCreditAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalDebitAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalGoodsItemQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalInvoiceAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalPackageQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalPackagesQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalPaymentAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalTaxAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TotalTransportHandlingUnitQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TrackingIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TradingRestrictionsType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TrainIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransactionCurrencyTaxAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransitDirectionCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportAuthorizationCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportEmergencyCardCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportEquipmentTypeCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportEventTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportHandlingUnitQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportHandlingUnitTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportMeansTypeCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportModeCodeType1.cs" />
+    <Compile Include="Dian_CommonBasicComponents\TransportServiceCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\UBLVersionIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\UNDGCodeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\UnitQuantityType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\UnitType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\UpperOrangeHazardPlacardIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\URIType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\UUIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ValidationDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ValidationTimeType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ValidatorIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ValidityStartDateType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ValueAmountType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ValueType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\VersionIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\VesselIDType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\VesselNameType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\VolumeMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\WarrantyInformationType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\WebsiteURIType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\WeightMeasureType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\XPathType.cs" />
+    <Compile Include="Dian_CommonBasicComponents\ZoneType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\ExtensionAgencyIDType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\ExtensionAgencyNameType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\ExtensionAgencyURIType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\ExtensionReasonCodeType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\ExtensionReasonType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\ExtensionURIType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\ExtensionVersionIDType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\UBLExtensionsType.cs" />
+    <Compile Include="Dian_CommonExtensionComponents\UBLExtensionType.cs" />
+    <Compile Include="Objetos\DocumentoImpuestos.cs" />
+    <Compile Include="Objetos\Empresa.cs" />
+    <Compile Include="Objetos\ImpuestoConsumo.cs" />
+    <Compile Include="Objetos\ImpuestoIva.cs" />
+    <Compile Include="Objetos\Producto.cs" />
+    <Compile Include="Objetos\ResultadoXml.cs" />
+    <Compile Include="Objetos\Tercero.cs" />
+    <Compile Include="Objetos\Documento.cs" />
+    <Compile Include="Objetos\DocumentoDetalle.cs" />
+    <Compile Include="Objetos\Transaccion.cs" />
+    <Compile Include="Recursos\TipoImpuestos.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TipoImpuestos.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Xades\AnyType.cs" />
+    <Compile Include="Xades\CanonicalizationMethodType.cs" />
+    <Compile Include="Xades\CertIDListType.cs" />
+    <Compile Include="Xades\CertIDType.cs" />
+    <Compile Include="Xades\CertificateValuesType.cs" />
+    <Compile Include="Xades\CommitmentTypeIndicationType.cs" />
+    <Compile Include="Xades\CompleteCertificateRefsType.cs" />
+    <Compile Include="Xades\CompleteRevocationRefsType.cs" />
+    <Compile Include="Xades\CounterSignatureType.cs" />
+    <Compile Include="Xades\CRLIdentifierType.cs" />
+    <Compile Include="Xades\CRLRefType.cs" />
+    <Compile Include="Xades\DataObjectFormatType.cs" />
+    <Compile Include="Xades\DigestAlgAndValueType.cs" />
+    <Compile Include="Xades\DigestMethodType.cs" />
+    <Compile Include="Xades\DocumentationReferencesType.cs" />
+    <Compile Include="Xades\DSAKeyValueType.cs" />
+    <Compile Include="Xades\EncapsulatedPKIDataType.cs" />
+    <Compile Include="Xades\GenericTimeStampType.cs" />
+    <Compile Include="Xades\IdentifierType.cs" />
+    <Compile Include="Xades\IncludeType.cs" />
+    <Compile Include="Xades\ItemsChoiceType.cs" />
+    <Compile Include="Xades\ItemsChoiceType1.cs" />
+    <Compile Include="Xades\ItemsChoiceType2.cs" />
+    <Compile Include="Xades\ItemsChoiceType3.cs" />
+    <Compile Include="Xades\KeyInfoType.cs" />
+    <Compile Include="Xades\KeyValueType.cs" />
+    <Compile Include="Xades\ManifestType.cs" />
+    <Compile Include="Xades\NoticeReferenceType.cs" />
+    <Compile Include="Xades\ObjectIdentifierType.cs" />
+    <Compile Include="Xades\ObjectType.cs" />
+    <Compile Include="Xades\OCSPIdentifierType.cs" />
+    <Compile Include="Xades\OCSPRefType.cs" />
+    <Compile Include="Xades\OtherTimeStampType.cs" />
+    <Compile Include="Xades\PGPDataType.cs" />
+    <Compile Include="Xades\QualifierType.cs" />
+    <Compile Include="Xades\QualifyingPropertiesReferenceType.cs" />
+    <Compile Include="Xades\QualifyingPropertiesType.cs" />
+    <Compile Include="Xades\ReferenceInfoType.cs" />
+    <Compile Include="Xades\ReferenceType.cs" />
+    <Compile Include="Xades\ResponderIDType.cs" />
+    <Compile Include="Xades\RetrievalMethodType.cs" />
+    <Compile Include="Xades\RevocationValuesType.cs" />
+    <Compile Include="Xades\RSAKeyValueType.cs" />
+    <Compile Include="Xades\SignatureMethodType.cs" />
+    <Compile Include="Xades\SignaturePolicyIdentifierType.cs" />
+    <Compile Include="Xades\SignaturePolicyIdType.cs" />
+    <Compile Include="Xades\SignatureProductionPlaceType.cs" />
+    <Compile Include="Xades\SignaturePropertiesType.cs" />
+    <Compile Include="Xades\SignaturePropertyType.cs" />
+    <Compile Include="Xades\SignatureType.cs" />
+    <Compile Include="Xades\SignatureValueType.cs" />
+    <Compile Include="Xades\SignedDataObjectPropertiesType.cs" />
+    <Compile Include="Xades\SignedInfoType.cs" />
+    <Compile Include="Xades\SignedPropertiesType.cs" />
+    <Compile Include="Xades\SignedSignaturePropertiesType.cs" />
+    <Compile Include="Xades\SignerRoleType.cs" />
+    <Compile Include="Xades\SPKIDataType.cs" />
+    <Compile Include="Xades\SPUserNoticeType.cs" />
+    <Compile Include="Xades\TransformsType.cs" />
+    <Compile Include="Xades\TransformType.cs" />
+    <Compile Include="Xades\UnsignedDataObjectPropertiesType.cs" />
+    <Compile Include="Xades\UnsignedPropertiesType.cs" />
+    <Compile Include="Xades\UnsignedSignaturePropertiesType.cs" />
+    <Compile Include="Xades\X509DataType.cs" />
+    <Compile Include="Xades\X509IssuerSerialType.cs" />
+    <Content Include="Dian_UBL_Recursos\comandos xsd.txt" />
+    <Content Include="Dian_UBL_Recursos\DIAN.txt" />
+    <Content Include="Xades\Xades-Scheme\xades_xmldsig-core-schema.txt" />
+    <Compile Include="Xades\XAdESTimeStampType.cs" />
+    <Compile Include="XML\FacturaXML.cs" />
+    <Compile Include="XML\ExtensionDian.cs" />
+    <Compile Include="Namespaces\NamespacesXML.cs" />
+    <Compile Include="Dian_IANAMIMEMediaType\BinaryObjectMimeCodeContentType.cs" />
+    <Compile Include="Procesos\Nombrar\NombramientoArchivo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Dian_QualifiedDatatypes\AllowanceChargeReasonCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\ChannelCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\ChipCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\ContainerSizeTypeCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\CountryIdentificationCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\CurrencyCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\DocumentStatusCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\LatitudeDirectionCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\LineStatusCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\LongitudeDirectionCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\OperatorCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\PackagingTypeCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\PaymentMeansCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\PortCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\SubstitutionStatusCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\TransportationStatusCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\TransportEquipmentTypeCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\TransportModeCodeType.cs" />
+    <Compile Include="Dian_QualifiedDatatypes\UnitOfMeasureCodeType.cs" />
+    <Compile Include="Recursos\NombreArchivos.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NombreArchivos.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Dian_Structures\AdditionalMonetaryTotal.cs" />
+    <Compile Include="Dian_Structures\AddressType1.cs" />
+    <Compile Include="Dian_Structures\AllowanceChargeType1.cs" />
+    <Compile Include="Dian_Structures\AuthrorizedInvoices.cs" />
+    <Compile Include="Recursos\TipoDocumento.cs" />
+    <Compile Include="Recursos\VersionesDIAN.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VersionesDIAN.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Dian_W3\CanonicalizationMethodType1.cs" />
+    <Compile Include="Dian_Structures\CreditNoteType.cs" />
+    <Compile Include="Dian_Structures\CurrencyCodeContentType.cs" />
+    <Compile Include="Dian_Structures\CustomerPartyType1.cs" />
+    <Compile Include="Dian_Structures\DebitNoteType.cs" />
+    <Compile Include="Dian_Structures\DeliveryTermsType1.cs" />
+    <Compile Include="Dian_Structures\DeliveryType1.cs" />
+    <Compile Include="Dian_Structures\DespatchType1.cs" />
+    <Compile Include="Dian_Structures\DianExtensionsType.cs" />
+    <Compile Include="Dian_W3\DigestMethodType.cs" />
+    <Compile Include="Dian_W3\DSAKeyValueType.cs" />
+    <Compile Include="Dian_Structures\FinancialInformation.cs" />
+    <Compile Include="Dian_Structures\InvoiceControl.cs" />
+    <Compile Include="Dian_Structures\InvoiceLineType1.cs" />
+    <Compile Include="Dian_Structures\InvoiceType.cs" />
+    <Compile Include="Dian_W3\ItemsChoiceType.cs" />
+    <Compile Include="Dian_W3\ItemsChoiceType1.cs" />
+    <Compile Include="Dian_W3\ItemsChoiceType2.cs" />
+    <Compile Include="Dian_Structures\ItemType1.cs" />
+    <Compile Include="Dian_W3\KeyInfoType.cs" />
+    <Compile Include="Dian_W3\KeyValueType.cs" />
+    <Compile Include="Dian_Structures\LocationType2.cs" />
+    <Compile Include="Dian_Structures\MonetaryTotalType1.cs" />
+    <Compile Include="Dian_W3\ObjectType.cs" />
+    <Compile Include="Dian_Structures\PartyLegalEntityType1.cs" />
+    <Compile Include="Dian_Structures\PartyTaxSchemeType1.cs" />
+    <Compile Include="Dian_Structures\PartyType1.cs" />
+    <Compile Include="Dian_Structures\PaymentType1.cs" />
+    <Compile Include="Dian_Structures\PersonType1.cs" />
+    <Compile Include="Dian_W3\PGPDataType.cs" />
+    <Compile Include="Dian_Structures\PriceType1.cs" />
+    <Compile Include="Dian_W3\ReferenceType1.cs" />
+    <Compile Include="Dian_W3\RetrievalMethodType.cs" />
+    <Compile Include="Dian_W3\RSAKeyValueType.cs" />
+    <Compile Include="Dian_W3\SignatureMethodType1.cs" />
+    <Compile Include="Dian_W3\SignaturePropertiesType.cs" />
+    <Compile Include="Dian_W3\SignaturePropertyType.cs" />
+    <Compile Include="Dian_W3\SignatureType1.cs" />
+    <Compile Include="Dian_W3\SignatureValueType.cs" />
+    <Compile Include="Dian_W3\SignedInfoType.cs" />
+    <Compile Include="Dian_Structures\SoftwareProvider.cs" />
+    <Compile Include="Dian_W3\SPKIDataType.cs" />
+    <Compile Include="Dian_Structures\SupplierPartyType1.cs" />
+    <Compile Include="Dian_Structures\TaxSubtotalType1.cs" />
+    <Compile Include="Dian_Structures\TaxTotalType1.cs" />
+    <Compile Include="Dian_W3\TransformsType.cs" />
+    <Compile Include="Dian_W3\TransformType.cs" />
+    <Compile Include="Dian_Structures\UnitCodeContentType.cs" />
+    <Compile Include="Dian_W3\X509DataType.cs" />
+    <Compile Include="Dian_W3\X509IssuerSerialType.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\AmountType.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\BinaryObjectType.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\CodeType.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\IdentifierType.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\LineStatusCodeType1.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\MeasureType.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\NameType.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\QuantityType.cs" />
+    <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\TextType.cs" />
+    <Compile Include="XML\FacturaXML-V1.cs" />
+    <Compile Include="XML\NotaCreditoXML.cs" />
+    <Compile Include="XML\NotaDebitoXML.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EncabezadoEnvioServicio.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Dian_UBL_Recursos\DIAN_UBL.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\DIAN_UBL_Structures.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\CCTS_CCT_SchemaModule-2.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\CodeList_CurrencyCode_ISO_7_04.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\CodeList_LanguageCode_ISO_7_04.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\CodeList_MIMEMediaTypeCode_IANA_7_04.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\CodeList_UnitCode_UNECE_7_04.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\genericode-code-list-1.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\UBL-CommonAggregateComponents-2.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\UBL-CommonBasicComponents-2.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\UBL-CommonExtensionComponents-2.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\UBL-CoreComponentParameters-2.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\UBL-ExtensionContentDatatype-2.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\UBL-QualifiedDatatypes-2.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\ubl2\common\UnqualifiedDataTypeSchemaModule-2.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Dian_UBL_Recursos\xmldsig-core-schema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Xades\Xades-Scheme\xmldsig-core-schema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Recursos\NombreArchivos.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NombreArchivos.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Recursos\TipoImpuestos.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TipoImpuestos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Recursos\VersionesDIAN.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>VersionesDIAN.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

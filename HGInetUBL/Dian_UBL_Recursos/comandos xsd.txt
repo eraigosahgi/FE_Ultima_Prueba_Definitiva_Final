@@ -1,0 +1,25 @@
+ubl2\common\CCTS_CCT_SchemaModule-2.0.xsd
+ubl2\common\UBL-ExtensionContentDatatype-2.0.xsd
+ubl2\common\UBL-CommonAggregateComponents-2.0.xsd
+ubl2\common\UBL-CommonBasicComponents-2.0.xsd
+ubl2\common\UBL-CommonExtensionComponents-2.0.xsd
+ubl2\common\UBL-CoreComponentParameters-2.0.xsd
+ubl2\common\UBL-QualifiedDatatypes-2.0.xsd
+ubl2\common\UnqualifiedDataTypeSchemaModule-2.0.xsd
+ubl2\common\CodeList_CurrencyCode_ISO_7_04.xsd
+ubl2\common\CodeList_LanguageCode_ISO_7_04.xsd
+ubl2\common\CodeList_MIMEMediaTypeCode_IANA_7_04.xsd
+ubl2\common\CodeList_UnitCode_UNECE_7_04.xsd
+ubl2\common\genericode-code-list-1.0.xsd
+xmldsig-core-schema.xsd DIAN_UBL_Structures.xsd .\DIAN_UBL.xsd
+
+
+
+
+"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\xsd" ubl2\common\CCTS_CCT_SchemaModule-2.0.xsd ubl2\common\UBL-ExtensionContentDatatype-2.0.xsd ubl2\common\UBL-CommonAggregateComponents-2.0.xsd ubl2\common\UBL-CommonBasicComponents-2.0.xsd ubl2\common\UBL-CommonExtensionComponents-2.0.xsd ubl2\common\UBL-CoreComponentParameters-2.0.xsd ubl2\common\UBL-QualifiedDatatypes-2.0.xsd ubl2\common\UnqualifiedDataTypeSchemaModule-2.0.xsd ubl2\common\CodeList_CurrencyCode_ISO_7_04.xsd ubl2\common\CodeList_LanguageCode_ISO_7_04.xsd ubl2\common\CodeList_MIMEMediaTypeCode_IANA_7_04.xsd ubl2\common\CodeList_UnitCode_UNECE_7_04.xsd ubl2\common\genericode-code-list-1.0.xsd xmldsig-core-schema.xsd DIAN_UBL_Structures.xsd .\DIAN_UBL.xsd /c /n:HGInetUBL
+
+
+
+2017-04-11 OK
+"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\xsd" ubl2\common\UBL-CommonBasicComponents-2.0.xsd ubl2\common\UBL-CommonAggregateComponents-2.0.xsd ubl2\common\CCTS_CCT_SchemaModule-2.0.xsd ubl2\common\UnqualifiedDataTypeSchemaModule-2.0.xsd ubl2\common\UBL-QualifiedDatatypes-2.0.xsd ubl2\common\UBL-CoreComponentParameters-2.0.xsd ubl2\common\CodeList_CurrencyCode_ISO_7_04.xsd ubl2\common\CodeList_MIMEMediaTypeCode_IANA_7_04.xsd ubl2\common\CodeList_UnitCode_UNECE_7_04.xsd ubl2\common\CodeList_LanguageCode_ISO_7_04.xsd ubl2\common\UBL-CommonExtensionComponents-2.0.xsd ubl2\common\UBL-ExtensionContentDatatype-2.0.xsd xmldsig-core-schema.xsd DIAN_UBL_Structures.xsd .\DIAN_UBL.xsd /c /n:HGInetUBL
+
