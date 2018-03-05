@@ -54,7 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Almacenamiento\BlobController.cs" />
+    <Compile Include="Almacenamiento\TableController.cs" />
+    <Compile Include="Enumerables\ClaveTableEnum.cs" />
     <Compile Include="Enumerables\TipoAccesoEnum.cs" />
+    <Compile Include="Objetos\TableNameAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
