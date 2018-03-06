@@ -32,32 +32,19 @@ namespace HGInetUBL
         /// <param name="reemplazar_archivo">Indica si sobreescribe el archivo existente</param>
         /// <param name="tipo">Indica el tipo de documento</param>
         /// <returns>Ruta donde se guardo el archivo XML</returns>  
-        protected static ResultadoXml CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, Tercero empresa, string ruta_almacenamiento, bool reemplazar_archivo, TipoDocumento tipo = TipoDocumento.Factura)
+        protected static ResultadoXml CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, Tercero empresa, TipoDocumento tipo = TipoDocumento.Factura)
         {
             try
             {
                 if (documento == null)
                     throw new Exception("La documento es inválido.");
-
-                if (string.IsNullOrEmpty(Directorio.CrearDirectorio(ruta_almacenamiento)))
-                    throw new ApplicationException("Error al obtener la ruta de almacenamiento del xml.");
-
+					
                 //Obtiene el nombre del archivo XML
-                //string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.IntDocumento.ToString(), documento.StrTercero, tipo);
-
-                string nombre_archivo_xml = RecursoDms.ArchivoDocumento.Replace("{cod_Obli}", documento.DatosObligado.Identificacion.ToString()).Replace("{num_doc}", documento.Documento.ToString());
-
+                string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion.ToString(), tipo);
+				
                 if (string.IsNullOrWhiteSpace(nombre_archivo_xml))
                     throw new ApplicationException("El nombre del archivo es inválido.");
-
-                // valida la existencia del archivo xml
-                bool existe_archivo = Archivo.ValidarExistencia(string.Format("{0}{1}{2}", ruta_almacenamiento, nombre_archivo_xml, ".xml"));
-
-                if (existe_archivo && reemplazar_archivo)
-                    Archivo.Borrar(string.Format("{0}{1}{2}", ruta_almacenamiento, nombre_archivo_xml, ".xml"));
-                else if (existe_archivo && !reemplazar_archivo)
-                    throw new ApplicationException(string.Format("No fue permitido sobreescribir el archivo: {0}{1}{2}.", ruta_almacenamiento, nombre_archivo_xml, ".xml"));
-
+				
                 InvoiceType factura = new InvoiceType();
                 XmlSerializerNamespaces namespaces_xml = NamespacesXML.Obtener();
 
@@ -128,9 +115,7 @@ namespace HGInetUBL
                 factura.Note = Notes;
 
                 #endregion
-
-
-                // PENDIENTE!!
+				                
                 #region factura.DocumentCurrencyCode - Divisa de la Factura
                 /*Divisa consolidada aplicable a toda la factura. Moneda con la que se presenta el documento*/
                 DocumentCurrencyCodeType DocumentCurrencyCode = new DocumentCurrencyCodeType();
@@ -190,7 +175,7 @@ namespace HGInetUBL
 					ningún campo ha sido alterado*/
 
                 if (string.IsNullOrEmpty(resolucion.ClaveTecnicaDIAN))
-                    throw new Exception("La clave técnica de la DIAN en la transacción es inválida.");
+                    throw new Exception("La clave técnica en la resolución de la DIAN es inválida para el documento.");
 
                 UUIDType UUID = new UUIDType();
                 string CUFE = CalcularCUFE(factura, resolucion.ClaveTecnicaDIAN);
@@ -219,12 +204,13 @@ namespace HGInetUBL
                 factura.UBLExtensions = UBLExtensions;
                 #endregion
 
-                // genera el archivo XML fisicamente
-                string ruta_xml = GuardarDocumento(factura, ruta_almacenamiento, nombre_archivo_xml, namespaces_xml, reemplazar_archivo);
+                // convierte los datos del objeto en texto XML 
+                StringBuilder txt_xml = ConvertirXml(factura, namespaces_xml);
 
                 ResultadoXml xml_sin_firma = new ResultadoXml();
                 xml_sin_firma.Documento = documento;
-                xml_sin_firma.RutaXml = ruta_xml;
+                xml_sin_firma.NombreXml = nombre_archivo_xml;
+				xml_sin_firma.DocumentoXml = txt_xml;
                 xml_sin_firma.CUFE = CUFE;
 
                 return xml_sin_firma;
@@ -377,15 +363,12 @@ namespace HGInetUBL
         }
 
         /// <summary>
-        /// Guarda el archivo XML
+        /// Convierte el objeto en texto XML
         /// </summary>
         /// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
-        /// <param name="ruta_almacenamiento">Ruta donde se va a guardar el archivo</param>
-        /// <param name="nombre_archivo">Nombre del archivo XML</param>
         /// <param name="namespaces_xml">Namespaces</param>       
-        /// <param name="reemplazar_archivo">Indica si sobreescribe el archivo existente</param>
         /// <returns>Ruta donde se guardo el archivo XML</returns>     
-        public static string GuardarDocumento(InvoiceType factura, string ruta_almacenamiento, string nombre_archivo, XmlSerializerNamespaces namespaces_xml, bool reemplazar_archivo)
+        public static StringBuilder ConvertirXml(InvoiceType factura, XmlSerializerNamespaces namespaces_xml)
         {
             try
             {
@@ -394,25 +377,10 @@ namespace HGInetUBL
 
                 if (namespaces_xml == null)
                     throw new Exception("Los Namespaces son inválidos.");
+					
+                StringBuilder texto_xml = Xml.Convertir<InvoiceType>(factura, namespaces_xml);
 
-                if (string.IsNullOrEmpty(Directorio.CrearDirectorio(ruta_almacenamiento)))
-                    throw new ApplicationException("Error al obtener la ruta de almacenamiento del xml.");
-
-                if (string.IsNullOrWhiteSpace(nombre_archivo))
-                    throw new ApplicationException("El nombre del archivo es inválido.");
-
-                bool existe_archivo = Archivo.ValidarExistencia(string.Format("{0}{1}{2}", ruta_almacenamiento, nombre_archivo, ".xml"));
-
-                if (existe_archivo && reemplazar_archivo)
-                    Archivo.Borrar(string.Format("{0}{1}{2}", ruta_almacenamiento, nombre_archivo, ".xml"));
-                else if (existe_archivo && !reemplazar_archivo)
-                    throw new ApplicationException(string.Format("No fue permitido sobreescribir el archivo: {0}{1}{2}.", ruta_almacenamiento, nombre_archivo, ".xml"));
-
-                if (!nombre_archivo.EndsWith(".xml"))
-                    nombre_archivo = string.Format("{0}{1}", nombre_archivo, ".xml");
-
-                string ruta_xml = Xml.GuardarObjeto(factura, ruta_almacenamiento, nombre_archivo, namespaces_xml);
-                return ruta_xml;
+                return texto_xml;
             }
             catch (Exception excepcion)
             {
@@ -514,9 +482,6 @@ namespace HGInetUBL
 
                 #endregion
 
-
-
-                // PENDIENTE!!
                 #region Dirección
                 LocationType2 PhysicalLocation = new LocationType2();
                 AddressType1 Address = new AddressType1();
@@ -680,9 +645,7 @@ namespace HGInetUBL
 
                 AddressLines[0] = AddressLine;
                 Address.AddressLine = AddressLines;
-
-
-                // PENDIENTE!!
+				
                 CountryType Country = new CountryType();
                 IdentificationCodeType IdentificationCode = new IdentificationCodeType();
                 IdentificationCode.Value = tercero.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN)
