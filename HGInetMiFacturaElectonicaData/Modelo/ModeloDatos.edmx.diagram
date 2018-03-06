@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="71">
+        <EntityTypeShape EntityType="Modelo.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="1.5" PointX="7.375" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblEmpresas" Width="1.5" PointX="2.875" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.5" PointX="5.125" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="5.125" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="10.375" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="7.375" PointY="11.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblPerfiles" Width="1.5" PointX="8.125" PointY="16.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblPlanes" Width="1.5" PointX="12.75" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblPlanesTransacciones" Width="1.5" PointX="10.375" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="1.5" PointX="5.125" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblUsuariosPorPerfil" Width="1.5" PointX="4.875" PointY="16.75" IsExpanded="true" />
+        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresas" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblEmpresas" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblUsuarios_TblEmpresas" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblOpciones" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblOpciones" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblPerfiles" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="Modelo.FK_TblUsuariosPorPerfil_TblPerfiles" />
+        <AssociationConnector Association="Modelo.FK_TblUsuariosPorPerfil_TblUsuarios" />
+        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
