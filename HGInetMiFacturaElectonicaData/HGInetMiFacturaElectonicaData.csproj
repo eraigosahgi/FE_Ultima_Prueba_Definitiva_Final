@@ -42,11 +42,14 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,11 +58,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControllerSql\BaseObject.cs" />
+    <Compile Include="ControllerSql\ExtType.cs" />
+    <Compile Include="ControllerSql\IBaseObject.cs" />
+    <Compile Include="ControllerSql\ModelExt.cs" />
+    <Compile Include="ControllerSql\Repositorio.Buscar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Editar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Eliminar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Exportar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Importar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Insertar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Obtener.cs" />
+    <Compile Include="ControllerSql\Repositorio.Ordenar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Validar.cs" />
+    <Compile Include="Enumerables\Accion.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoDetalle.cs" />
     <Compile Include="ModeloServicio\Documentos\Factura.cs" />
     <Compile Include="ModeloServicio\Documentos\NotaCredito.cs" />
     <Compile Include="ModeloServicio\General\ExtensionDian.cs" />
     <Compile Include="ModeloServicio\General\Tercero.cs" />
+    <Compile Include="Modelo\ModeloAutenticacion.cs" />
+    <Compile Include="Modelo\ModeloConexion.cs" />
     <Compile Include="Modelo\ModeloDatos.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -138,6 +157,12 @@
       <DependentUpon>ModeloDatos.edmx</DependentUpon>
       <LastGenOutput>ModeloDatos.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
+      <Project>{a966a394-f6cc-482f-87a4-56ec1af05e5e}</Project>
+      <Name>LibreriaGlobalHGInet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
