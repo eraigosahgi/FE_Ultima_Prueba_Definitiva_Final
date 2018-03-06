@@ -22,10 +22,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public int TipoDocumento { get; set; }
 
-		/// <summary>
-		/// Número de Resolución del documento Factura*
-		/// </summary>
-		public string NumResolucion { get; set; }
+        /// <summary>
+        /// Clave Tecnica otorgada por la DIAN al Obligado a Facturar
+        /// </summary>
+        public string ClaveTecnicaDIAN { get; set; }
+
+        /// <summary>
+        /// Número de Resolución del documento Factura*
+        /// </summary>
+        public string NumResolucion { get; set; }
 
         /// <summary>
 		/// Prefijo del documento Factura*
