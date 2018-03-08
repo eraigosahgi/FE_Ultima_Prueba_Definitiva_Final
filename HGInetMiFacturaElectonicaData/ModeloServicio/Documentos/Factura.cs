@@ -26,10 +26,16 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public int Documento { get; set; }
 
-        /// <summary>
-        /// Prefijo segun Resolución
-        /// </summary>
-        public string Prefijo { get; set; }
+		/// <summary>
+		/// Número de Resolución
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		public string NumeroResolucion { get; set; }
+
+		/// <summary>
+		/// Prefijo segun Resolución
+		/// </summary>
+		public string Prefijo { get; set; }
 
         /// <summary>
         /// Cufe identificador unico de la Factura
