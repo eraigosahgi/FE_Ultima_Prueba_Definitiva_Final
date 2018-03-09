@@ -15,7 +15,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         #region Propiedades
 
         /// <summary>
-        /// Id único de Registro del Obligado a Facturar
+        /// Id único de Registro del Documento
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string CodigoRegistro { get; set; }
@@ -30,7 +30,8 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Número de Resolución
 		/// </summary>
 		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-		public string NumeroResolucion { get; set; }
+        [RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
+        public string NumeroResolucion { get; set; }
 
 		/// <summary>
 		/// Prefijo segun Resolución
