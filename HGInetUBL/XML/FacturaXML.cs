@@ -486,6 +486,14 @@ namespace HGInetUBL
                 LocationType2 PhysicalLocation = new LocationType2();
                 AddressType1 Address = new AddressType1();
 
+                CityNameType City = new CityNameType();
+                City.Value = empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+                Address.CityName = City;
+
+                DepartmentType Department = new DepartmentType();
+                Department.Value = empresa.Departamento; //Departamento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+                Address.Department = Department;
+
                 AddressLineType[] AddressLines = new AddressLineType[1];
                 AddressLineType AddressLine = new AddressLineType();
                 LineType Line = new LineType();
@@ -494,6 +502,19 @@ namespace HGInetUBL
 
                 AddressLines[0] = AddressLine;
                 Address.AddressLine = AddressLines;
+
+                ContactType Contact = new ContactType();
+                TelephoneType Telephone = new TelephoneType();
+                Telephone.Value = empresa.Telefono;
+                Contact.Telephone = Telephone;
+                ElectronicMailType Mail = new ElectronicMailType();
+                Mail.Value = empresa.Mail;
+                Contact.ElectronicMail = Mail;
+                Party.Contact = Contact;
+
+                WebsiteURIType Web = new WebsiteURIType();
+                Web.Value = empresa.PaginaWeb;
+                Party.WebsiteURI = Web;
 
                 CountryType Country = new CountryType();
                 IdentificationCodeType IdentificationCode = new IdentificationCodeType();
@@ -643,14 +664,29 @@ namespace HGInetUBL
                 Line.Value = tercero.Direccion;
                 AddressLine.Line = Line;
 
+                CityNameType City = new CityNameType();
+                City.Value = tercero.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+                Address.CityName = City;
+
+                DepartmentType Department = new DepartmentType();
+                Department.Value = tercero.Departamento; //Departamento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+                Address.Department = Department;
+
                 AddressLines[0] = AddressLine;
                 Address.AddressLine = AddressLines;
-				
-                CountryType Country = new CountryType();
-                IdentificationCodeType IdentificationCode = new IdentificationCodeType();
-                IdentificationCode.Value = tercero.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                Country.IdentificationCode = IdentificationCode;
-                Address.Country = Country;
+
+                ContactType Contact = new ContactType();
+                TelephoneType Telephone = new TelephoneType();
+                Telephone.Value = tercero.Telefono;
+                Contact.Telephone = Telephone;
+                ElectronicMailType Mail = new ElectronicMailType();
+                Mail.Value = tercero.Mail;
+                Contact.ElectronicMail = Mail;
+                Party.Contact = Contact;
+
+                WebsiteURIType Web = new WebsiteURIType();
+                Web.Value = tercero.PaginaWeb;
+                Party.WebsiteURI = Web;
 
                 PhysicalLocation.Address = Address;
                 Party.PhysicalLocation = PhysicalLocation;
