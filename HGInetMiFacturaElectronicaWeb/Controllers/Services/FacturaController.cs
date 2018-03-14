@@ -19,7 +19,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             new Factura { Documento = 4, Fecha = new DateTime(2018,1,4), Nota = "Factura #4", Valor = 135000 },
             new Factura { Documento = 5, Fecha = new DateTime(2018,1,5), Nota = "Factura #5", Valor = 140000 },
              new Factura {
-                            CodigoRegistro="20",
+                            CodigoRegistro="4d44203b44ccc3fa67f1548dae4e050618a5b263",
                             Documento= 12184,
                             NumeroResolucion="18762006401118",
                             Prefijo=null,
@@ -29,7 +29,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                             Moneda="COP",
                             DatosObligado=new Tercero()
                             {
-                                Identificacion=811021438,
+                                Identificacion="811021438",
                                 IdentificacionDv=4,
                                 TipoIdentificacion=31,
                                 TipoPersona=1,
@@ -50,7 +50,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                             },
                             DatosAdquiriente = new Tercero()
                             {
-                                Identificacion=1036929786,
+                                Identificacion="1036929786",
                                 IdentificacionDv=0,
                                 TipoIdentificacion=22,
                                 TipoPersona=2,
