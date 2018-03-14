@@ -29,7 +29,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public string DocumentoRef { get; set; }
 
         /// <summary>
-        /// Cufe identificador unico de la Factura
+        /// Cufe identificador unico de la Nota Crédito
         /// </summary>
         public string Cufe { get; set; }
 

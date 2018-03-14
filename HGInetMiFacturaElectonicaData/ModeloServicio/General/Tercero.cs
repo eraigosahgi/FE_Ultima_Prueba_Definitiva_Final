@@ -14,8 +14,9 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// Identificacion
         /// Campo: StrIdTercero       
         /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
-        public int Identificacion { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        [RegularExpression("^\\d+$", ErrorMessage = "La {0} debe contener sólo números.")]
+        public string Identificacion { get; set; }
 
         /// <summary>
         /// Digito de Verificación de identificacion

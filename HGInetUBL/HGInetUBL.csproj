@@ -44,6 +44,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -828,7 +829,6 @@
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\NameType.cs" />
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\QuantityType.cs" />
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\TextType.cs" />
-    <Compile Include="XML\NotaCreditoXML.cs" />
     <Compile Include="XML\NotaDebitoXML.cs" />
   </ItemGroup>
   <ItemGroup>
