@@ -75,6 +75,16 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public decimal IvaValor { get; set; }
 
         /// <summary>
+        /// Porcentaje del ReteICA aplicado del detalle
+        /// </summary>
+        public decimal ReteIcaPorcentaje { get; set; }
+
+        /// <summary>
+        /// Valor del ReteICA aplicado del detalle
+        /// </summary>
+        public decimal ReteIcaValor { get; set; }
+
+        /// <summary>
         /// Porcentaje de descuento aplicado en cada detalle
         /// </summary>
         public decimal DescuentoPorcentaje { get; set; }

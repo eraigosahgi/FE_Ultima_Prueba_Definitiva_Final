@@ -117,6 +117,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public decimal ValorRetefuente { get; set; }
 
         /// <summary>
+        /// ReteIca total del documento
+        /// </summary>
+        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        public decimal ValorReteIca { get; set; }
+
+        /// <summary>
         /// Total del documento: Subtotal incluyendo impuestos
         /// </summary>
         [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
