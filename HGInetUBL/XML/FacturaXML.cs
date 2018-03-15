@@ -38,13 +38,13 @@ namespace HGInetUBL
             {
                 if (documento == null)
                     throw new Exception("La documento es inválido.");
-					
+
                 //Obtiene el nombre del archivo XML
                 string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion.ToString(), tipo);
-				
+
                 if (string.IsNullOrWhiteSpace(nombre_archivo_xml))
                     throw new ApplicationException("El nombre del archivo es inválido.");
-				
+
                 InvoiceType factura = new InvoiceType();
                 XmlSerializerNamespaces namespaces_xml = NamespacesXML.Obtener();
 
@@ -115,7 +115,7 @@ namespace HGInetUBL
                 factura.Note = Notes;
 
                 #endregion
-				                
+
                 #region factura.DocumentCurrencyCode - Divisa de la Factura
                 /*Divisa consolidada aplicable a toda la factura. Moneda con la que se presenta el documento*/
                 DocumentCurrencyCodeType DocumentCurrencyCode = new DocumentCurrencyCodeType();
@@ -210,7 +210,7 @@ namespace HGInetUBL
                 ResultadoXml xml_sin_firma = new ResultadoXml();
                 xml_sin_firma.Documento = documento;
                 xml_sin_firma.NombreXml = nombre_archivo_xml;
-				xml_sin_firma.DocumentoXml = txt_xml;
+                xml_sin_firma.DocumentoXml = txt_xml;
                 xml_sin_firma.CUFE = CUFE;
 
                 return xml_sin_firma;
@@ -377,7 +377,7 @@ namespace HGInetUBL
 
                 if (namespaces_xml == null)
                     throw new Exception("Los Namespaces son inválidos.");
-					
+
                 StringBuilder texto_xml = Xml.Convertir<InvoiceType>(factura, namespaces_xml);
 
                 return texto_xml;
@@ -803,7 +803,7 @@ namespace HGInetUBL
                     throw new Exception("El detalle del documento es inválido.");
 
                 //Toma los impuestos de IVA que tiene el producto en el detalle del documento
-                var impuestos_iva = documentoDetalle.Select(_impuesto => new { _impuesto.IvaPorcentaje, Recursos.TipoImpuestos.Iva, _impuesto.IvaValor }).Distinct();
+                var impuestos_iva = documentoDetalle.Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor }).Distinct();
 
                 List<DocumentoImpuestos> doc_impuestos = new List<DocumentoImpuestos>();
 
@@ -817,7 +817,7 @@ namespace HGInetUBL
 
                     //imp_doc.Codigo = item.IntIva;
                     //imp_doc.Nombre = item.StrDescripcion;
-                    imp_doc.Porcentaje = decimal.Round(item.IvaValor, 2);
+                    imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje, 2);
                     imp_doc.TipoImpuesto = item.Iva;
                     imp_doc.BaseImponible = BaseImponibleImpuesto;
                     foreach (var docDet in doc_)
@@ -828,24 +828,26 @@ namespace HGInetUBL
                 }
 
                 //Toma el impuesto al consumo de los productos que esten el detalle
-                var impuesto_consumo = documentoDetalle.Select(_consumo => new { _consumo.ValorImpuestoConsumo, Recursos.TipoImpuestos.Consumo }).Distinct();
+                var impuesto_consumo = documentoDetalle.Select(_consumo => new { _consumo.ValorImpuestoConsumo, TipoImpuestos.Consumo }).Distinct();
                 decimal BaseImponibleImpConsumo = 0;
 
 
-                //Valida si hay algun producto con impuesto al consumo
+                
                 if (impuesto_consumo.Count() > 0)
                 {
                     foreach (var item in impuesto_consumo)
                     {
+                        //Valida si hay algun producto con impuesto al consumo
                         if (item.ValorImpuestoConsumo != 0)
                         {
                             DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-                            List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo !=0).ToList();
+                            List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).ToList();
                             BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
 
                             //imp_doc.Codigo = item.IntImpConsumo.ToString();
                             //imp_doc.Nombre = item.StrDescripcion;
                             imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2);
+                            imp_doc.TipoImpuesto = item.Consumo;
                             imp_doc.BaseImponible = BaseImponibleImpConsumo;
                             foreach (var docDet in doc_)
                             {
@@ -857,46 +859,78 @@ namespace HGInetUBL
                     }
                 }
 
-                //var retencion = documentoDetalle.Select(_retencion => new { _retencion.TblProductos.IntRetencion, _retencion.TblProductos.TblRetencionFte.IntBase, Recursos.TipoImpuestos.Retencion, _retencion.TblProductos.TblRetencionFte.StrDescripcion, _retencion.TblProductos.TblRetencionFte.IntIdRetencion, _retencion.TblProductos.TblRetencionFte.IntPorcentaje, _retencion.TblProductos.TblRetencionFte.IntPorcentajePn }).Distinct();
-                //decimal BaseImponibleRetencion = 0;
+                //Toma el ReteICA de los productos que esten el detalle
+                var impuesto_ica = documentoDetalle.Select(_ica => new { _ica.ReteIcaPorcentaje, TipoImpuestos.Ica, _ica.ReteIcaValor }).Distinct();
+                decimal BaseImponibleReteIca = 0;
 
 
-                /*if (retencion.Count() > 0)
-				{
-					TblTerceros tercero = new TblTerceros();
+                if (impuesto_ica.Count() > 0)
+                {
+                    foreach ( var item in impuesto_ica)
+                    {
+                        //Valida si hay algun producto con ReteICA
+                        if (item.ReteIcaValor != 0)
+                        {
+                            DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+                            List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).ToList();
+                            BaseImponibleReteIca = decimal.Round(documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
 
-					foreach (var item in retencion)
-					{
-						DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-						List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).ToList();
-						BaseImponibleRetencion = decimal.Round(documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).Sum(docDet => docDet.IntValorUnitario * docDet.IntCantidad), 2);
+                            imp_doc.Porcentaje = decimal.Round(item.ReteIcaPorcentaje, 2);
+                            imp_doc.TipoImpuesto = item.Ica;
+                            imp_doc.BaseImponible = BaseImponibleReteIca;
+                            foreach ( var docDet in doc_)
+                            {
+                                imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ReteIcaValor, 2);
+                            }
+                            doc_impuestos.Add(imp_doc);
+                        }
 
-						imp_doc.Codigo = item.IntIdRetencion.ToString();
-						imp_doc.Nombre = item.StrDescripcion;
-						
-						//Porcentaje de retencion segun el tipo de Persona: 1-Natural, 2-Juridica
-						if (tercero.IntTipoPersona == 1)
-						{
-							imp_doc.Porcentaje = decimal.Round(item.IntPorcentajePn, 2);
-						}
-						else
-						{
-							imp_doc.Porcentaje = decimal.Round(item.IntPorcentaje, 2);
-						}
-						imp_doc.BaseImponible = BaseImponibleRetencion;
-						foreach (var docDet in doc_)
-						{
-							imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IntReteFte,2);
-						}
-						doc_impuestos.Add(imp_doc);
+                    }
 
-					}
+                }
 
 
-				}*/
+
+                    //var retencion = documentoDetalle.Select(_retencion => new { _retencion.TblProductos.IntRetencion, _retencion.TblProductos.TblRetencionFte.IntBase, Recursos.TipoImpuestos.Retencion, _retencion.TblProductos.TblRetencionFte.StrDescripcion, _retencion.TblProductos.TblRetencionFte.IntIdRetencion, _retencion.TblProductos.TblRetencionFte.IntPorcentaje, _retencion.TblProductos.TblRetencionFte.IntPorcentajePn }).Distinct();
+                    //decimal BaseImponibleRetencion = 0;
 
 
-                TaxTotalType1[] TaxTotals = new TaxTotalType1[doc_impuestos.Count];
+                    /*if (retencion.Count() > 0)
+                    {
+                        TblTerceros tercero = new TblTerceros();
+
+                        foreach (var item in retencion)
+                        {
+                            DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+                            List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).ToList();
+                            BaseImponibleRetencion = decimal.Round(documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).Sum(docDet => docDet.IntValorUnitario * docDet.IntCantidad), 2);
+
+                            imp_doc.Codigo = item.IntIdRetencion.ToString();
+                            imp_doc.Nombre = item.StrDescripcion;
+
+                            //Porcentaje de retencion segun el tipo de Persona: 1-Natural, 2-Juridica
+                            if (tercero.IntTipoPersona == 1)
+                            {
+                                imp_doc.Porcentaje = decimal.Round(item.IntPorcentajePn, 2);
+                            }
+                            else
+                            {
+                                imp_doc.Porcentaje = decimal.Round(item.IntPorcentaje, 2);
+                            }
+                            imp_doc.BaseImponible = BaseImponibleRetencion;
+                            foreach (var docDet in doc_)
+                            {
+                                imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IntReteFte,2);
+                            }
+                            doc_impuestos.Add(imp_doc);
+
+                        }
+
+
+                    }*/
+
+
+                    TaxTotalType1[] TaxTotals = new TaxTotalType1[doc_impuestos.Count];
 
                 int contador = 0;
                 foreach (var item in doc_impuestos)
