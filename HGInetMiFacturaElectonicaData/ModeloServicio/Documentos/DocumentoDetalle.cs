@@ -21,39 +21,39 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         [Required(ErrorMessage = "{0} es un campo obligatorio")]
         public int Codigo { get; set; }
 
-        /// <summary>
-        /// Codigo del Producto
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		/// <summary>
+		/// Código del producto y/o servicio
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string ProductoCodigo { get; set; }
 
-        /// <summary>
-        /// Nombre del Producto
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		/// <summary>
+		/// Nombre del producto y/o servicio
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string ProductoNombre { get; set; }
 
-        /// <summary>
-        /// Descripcion del producto
-        /// </summary>
-        public string ProductoDescripcion { get; set; }
+		/// <summary>
+		/// Descripcion del producto y/o servicio
+		/// </summary>
+		public string ProductoDescripcion { get; set; }
 
-        /// <summary>
-        /// Cantidad de producto del detalle
-        /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
+		/// <summary>
+		/// Cantidad del producto y/o servicio
+		/// </summary>
+		[Required(ErrorMessage = "{0} es un campo obligatorio")]
         [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Cantidad { get; set; }
 
-        /// <summary>
-        /// Valor Unitario sin impuestos
-        /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
+		/// <summary>
+		/// Valor unitario del producto y/o servicio; sin aplicar descuentos e impuestos
+		/// </summary>
+		[Required(ErrorMessage = "{0} es un campo obligatorio")]
         [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorUnitario { get; set; }
 
         /// <summary>
-        /// Subtotal de cada detalle 
+        /// Valor subtotal del detalle 
         /// </summary>
         [Required(ErrorMessage = "{0} es un campo obligatorio")]
         [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
@@ -64,33 +64,33 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public decimal ValorImpuestoConsumo { get; set; }
 
-        /// <summary>
-        /// Porcentaje del Iva aplicado del detalle
-        /// </summary>
-        public decimal IvaPorcentaje { get; set; }
+		/// <summary>
+		/// Porcentaje del IVA del producto y/o servicio
+		/// </summary>
+		public decimal IvaPorcentaje { get; set; }
 
         /// <summary>
-        /// Valor del Iva del detalle
+        /// Valor del IVA aplicado al detalle
         /// </summary>
         public decimal IvaValor { get; set; }
 
         /// <summary>
-        /// Porcentaje del ReteICA aplicado del detalle
+        /// Porcentaje del ReteICA aplicado al detalle
         /// </summary>
         public decimal ReteIcaPorcentaje { get; set; }
 
         /// <summary>
-        /// Valor del ReteICA aplicado del detalle
+        /// Valor del ReteICA aplicado al detalle
         /// </summary>
         public decimal ReteIcaValor { get; set; }
 
         /// <summary>
-        /// Porcentaje de descuento aplicado en cada detalle
+        /// Porcentaje de descuento aplicado al detalle
         /// </summary>
         public decimal DescuentoPorcentaje { get; set; }
 
         /// <summary>
-        /// Valor del Descuento del detalle
+        /// Valor de descuento aplicado al detalle
         /// </summary>
         public decimal DescuentoValor { get; set; }
 

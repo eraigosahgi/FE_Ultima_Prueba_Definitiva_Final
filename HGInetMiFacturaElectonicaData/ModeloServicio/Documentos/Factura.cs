@@ -12,39 +12,40 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
     /// </summary>
     public class Factura
     {
-        #region Propiedades
+		#region Propiedades
 
-        /// <summary>
-        /// Id único de Registro del Documento
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		/// <summary>
+		/// Código de seguridad (autenticación)
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		public string DataKey { get; set; }
+
+		/// <summary>
+		/// Identificador del Documento asigando por el Facturador Electrónico
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string CodigoRegistro { get; set; }
 
         /// <summary>
-        /// Numero de Documento
+        /// Número del Documento
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public int Documento { get; set; }
 
 		/// <summary>
-		/// Número de Resolución
+		/// Número de Resolución del Documento asignado por la DIAN
 		/// </summary>
 		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         [RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
         public string NumeroResolucion { get; set; }
 
 		/// <summary>
-		/// Prefijo segun Resolución
+		/// Prefijo del Documento según la Resolución asignada por la DIAN
 		/// </summary>
 		public string Prefijo { get; set; }
-
+		
         /// <summary>
-        /// Cufe identificador unico de la Factura
-        /// </summary>
-        public string Cufe { get; set; }
-
-        /// <summary>
-        /// Fecha de documento
+        /// Fecha del Documento
         /// </summary>
         public DateTime Fecha { get; set; }
 
@@ -53,10 +54,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public string Nota { get; set; }
 
-        /// <summary>
-        /// Codigo Moneda del documento segun tabla DIAN
-        /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
+		/// <summary>
+		/// Código de la moneda según tabla ISO 4217 (ej: COP = Pesos Colombianos).
+		/// </summary>
+		[Required(ErrorMessage = "{0} es un campo obligatorio")]
         [MaxLength(3, ErrorMessage = "La {0} no puede superar los {1} caracteres")]
         public string Moneda { get; set; }
 
@@ -87,49 +88,49 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public decimal ValorSubtotal { get; set; }
 
         /// <summary>
-        /// Descuento total del documento
+        /// Valor de descuento total del documento
         /// </summary>
         [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorDescuento { get; set; }
 
         /// <summary>
-        /// Iva Total del documento
+        /// Valor total de IVA del documento
         /// </summary>
         [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorIva { get; set; }
 
-        /// <summary>
-        /// ReteIva total del documento
-        /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		/// <summary>
+		/// Valor total de Retención de IVA del documento
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorReteIva { get; set; }
 
-        /// <summary>
-        /// Impuesto al consumo total del documento
-        /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		/// <summary>
+		/// Valor total de Impuesto al consumo del documento
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorImpuestoConsumo { get; set; }
 
-        /// <summary>
-        /// ReteFuente total del documento
-        /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal ValorRetefuente { get; set; }
+		/// <summary>
+		/// Valor total de Retención en la Fuente del documento
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        public decimal ValorReteFuente { get; set; }
 
-        /// <summary>
-        /// ReteIca total del documento
-        /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		/// <summary>
+		/// Valor total de Retención de ICA del documento.
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorReteIca { get; set; }
 
         /// <summary>
-        /// Total del documento: Subtotal incluyendo impuestos
+        /// Valor total del documento: Subtotal incluyendo descuentos e impuestos agregados
         /// </summary>
         [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Total { get; set; }
 
         /// <summary>
-        /// Neto del documento: Total menos Retenciones.
+        /// Valor neto del documento aplicando impuestos de retención
         /// </summary>
         [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Neto { get; set; }
