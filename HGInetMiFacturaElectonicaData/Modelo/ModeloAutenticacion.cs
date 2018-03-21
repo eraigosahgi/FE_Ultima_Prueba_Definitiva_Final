@@ -45,6 +45,18 @@ namespace HGInetMiFacturaElectonicaData
 				return clave;
 			}
 		}
+
+		public ModeloAutenticacion()
+		{
+			//DataBaseServer server_bd = new DataBaseServer();
+
+			DataBaseServer server_bd = HgiConfiguracion.GetConfiguration().DataBaseServer;
+
+			this.servidor = server_bd.Servidor;
+			this.basedatos = server_bd.BaseDatos;
+			this.usuario = server_bd.Usuario;
+			this.clave = server_bd.Clave;
+		}
 		
 		public ModeloAutenticacion(string servidor, string basedatos, string usuario, string clave)
 		{

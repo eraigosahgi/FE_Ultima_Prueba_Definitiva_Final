@@ -19,11 +19,16 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 		/// Autenticación de base de datos
 		/// </summary>
 		protected virtual ModeloAutenticacion autenticacion { get; set; }
-
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public BaseObject()
 		{
+			DataBaseServer server_bd = new DataBaseServer();
+			
 			if (this.context == null)
-				this.context = new ModeloConexion();
+				setBaseObject(server_bd.Servidor, server_bd.BaseDatos, server_bd.Usuario, server_bd.Clave);
 		}
 
 		/// <summary>
@@ -52,8 +57,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 		/// <param name="basedatos">nombre de la base de datos</param>
 		/// <param name="usuario">usuario de acceso a la base de datos</param>
 		/// <param name="clave">clave de acceso a la base de datos</param>
-		/// <param name="codigo_licencia">código de licencia</param>
-		public BaseObject(string servidor, string basedatos, string usuario, string clave, string codigo_licencia, string dms_fisica, string dms_url)
+		public BaseObject(string servidor, string basedatos, string usuario, string clave)
 		{
 			if (string.IsNullOrEmpty(servidor))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "servidor", "String"));
@@ -80,8 +84,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 		/// <param name="basedatos">nombre de la base de datos</param>
 		/// <param name="usuario">usuario de acceso a la base de datos</param>
 		/// <param name="clave">clave de acceso a la base de datos</param>
-		/// <param name="codigo_licencia">código de licencia</param>
-		public void setBaseObject(string servidor, string basedatos, string usuario, string clave, string codigo_licencia, string dms_fisica, string dms_url)
+		public void setBaseObject(string servidor, string basedatos, string usuario, string clave)
 		{
 			if (string.IsNullOrEmpty(servidor))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "servidor", "String"));
