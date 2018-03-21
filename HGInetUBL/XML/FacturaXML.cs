@@ -27,12 +27,9 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="documento">Objeto de tipo TblDocumentos que contiene la informacion de la factura</param>
         /// <param name="resolucion">Objeto que contiene los parametros de la DIAN</param>
-        /// <param name="empresa">Objeto de tipo TblEmpresas que contiene la informacion de la empresa que expide</param>
-        /// <param name="ruta_almacenamiento">Ruta donde se va a guardar el archivo</param>
-        /// <param name="reemplazar_archivo">Indica si sobreescribe el archivo existente</param>
         /// <param name="tipo">Indica el tipo de documento</param>
         /// <returns>Ruta donde se guardo el archivo XML</returns>  
-        protected static ResultadoXml CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, Tercero empresa, TipoDocumento tipo = TipoDocumento.Factura)
+        public static ResultadoXml CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo = TipoDocumento.Factura)
         {
             try
             {
@@ -65,7 +62,7 @@ namespace HGInetUBL
                 #region factura.ID - Número de documento
 
                 string numero_documento = "";
-                if (!documento.Prefijo.Equals(string.Empty))
+                if (!string.IsNullOrEmpty(documento.Prefijo))
                     numero_documento = string.Format("{0}", documento.Prefijo);
 
                 numero_documento = string.Format("{0}{1}", numero_documento, documento.Documento.ToString());
@@ -101,7 +98,7 @@ namespace HGInetUBL
                 #region Note - Nota adicional (Resolución texto)
                 /*Notas adicionales informativas*/
                 string prefijo = string.Empty;
-                if (!documento.Prefijo.Equals(string.Empty))
+                if (!string.IsNullOrEmpty(documento.Prefijo))
                     prefijo = string.Format("{0}-", documento.Prefijo);
 
                 //TblTransacciones transaccion = documento.TblTransacciones;
@@ -124,7 +121,7 @@ namespace HGInetUBL
                 #endregion
 
                 #region factura.AccountingSupplierParty - Información del obligado a facturar
-                factura.AccountingSupplierParty = ObtenerObligado(empresa);
+                factura.AccountingSupplierParty = ObtenerObligado(documento.DatosObligado);
                 #endregion
 
                 #region factura.AccountingCustomerParty - Información del Adquiriente
@@ -227,7 +224,7 @@ namespace HGInetUBL
         /// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
         /// <param name="clave_tecnica">Clave técnica de la resolución</param>
         /// <returns>Texto con la encriptación del CUFE</returns>        
-        public static string CalcularCUFE(InvoiceType factura, string clave_tecnica)
+        private static string CalcularCUFE(InvoiceType factura, string clave_tecnica)
         {
             try
             {
@@ -368,7 +365,7 @@ namespace HGInetUBL
         /// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
         /// <param name="namespaces_xml">Namespaces</param>       
         /// <returns>Ruta donde se guardo el archivo XML</returns>     
-        public static StringBuilder ConvertirXml(InvoiceType factura, XmlSerializerNamespaces namespaces_xml)
+        private static StringBuilder ConvertirXml(InvoiceType factura, XmlSerializerNamespaces namespaces_xml)
         {
             try
             {
@@ -393,7 +390,7 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="empresa">Datos de la empresa</param>
         /// <returns>Objeto de tipo SupplierPartyType1</returns>
-        public static SupplierPartyType1 ObtenerObligado(Tercero empresa)
+        private static SupplierPartyType1 ObtenerObligado(Tercero empresa)
         {
             try
             {
@@ -508,7 +505,7 @@ namespace HGInetUBL
                 Telephone.Value = empresa.Telefono;
                 Contact.Telephone = Telephone;
                 ElectronicMailType Mail = new ElectronicMailType();
-                Mail.Value = empresa.Mail;
+                Mail.Value = empresa.Email;
                 Contact.ElectronicMail = Mail;
                 Party.Contact = Contact;
 
@@ -541,7 +538,7 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="tercero">Datos de la tercero</param>
         /// <returns>Objeto de tipo SupplierPartyType1</returns>
-        public static CustomerPartyType1 ObtenerAquiriente(Tercero tercero)
+        private static CustomerPartyType1 ObtenerAquiriente(Tercero tercero)
         {
             try
             {
@@ -680,7 +677,7 @@ namespace HGInetUBL
                 Telephone.Value = tercero.Telefono;
                 Contact.Telephone = Telephone;
                 ElectronicMailType Mail = new ElectronicMailType();
-                Mail.Value = tercero.Mail;
+				Mail.Value = tercero.Email;
                 Contact.ElectronicMail = Mail;
                 Party.Contact = Contact;
 
@@ -707,7 +704,7 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="DocumentoDetalle">Datos del detalle del documento</param>
         /// <returns>Objeto de tipo InvoiceLineType1</returns>
-        public static InvoiceLineType1[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
+        private static InvoiceLineType1[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
         {
             try
             {
@@ -795,7 +792,7 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="documentoDetalle">Datos del detalle del documento</param>
         /// <returns>Objeto de tipo TaxTotalType1</returns>
-        public static TaxTotalType1[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle)
+        private static TaxTotalType1[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle)
         {
             try
             {
@@ -1014,7 +1011,7 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="documento">datos del documento</param>
         /// <returns>MonetaryTotalType1</returns>
-        public static MonetaryTotalType1 ObtenerTotales(Factura documento)
+        private static MonetaryTotalType1 ObtenerTotales(Factura documento)
         {
             try
             {

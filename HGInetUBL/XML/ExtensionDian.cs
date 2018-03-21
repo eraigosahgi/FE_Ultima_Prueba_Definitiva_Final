@@ -74,7 +74,7 @@ namespace HGInetUBL
 				#region Prefijo y rangos resolución
 				AuthrorizedInvoices AuthorizedInvoices = new AuthrorizedInvoices();
 
-				if (!extension.Prefijo.Equals(string.Empty)) //Si tiene prefijo lo agrega
+				if (!string.IsNullOrEmpty(extension.Prefijo)) //Si tiene prefijo lo agrega
 				{
 					TextType Prefix = new TextType();
 					Prefix.Value = extension.Prefijo;
