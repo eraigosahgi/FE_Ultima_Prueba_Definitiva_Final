@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUBL;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {    
@@ -23,7 +25,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                             Documento= 12184,
                             NumeroResolucion="18762006401118",
                             Prefijo=null,
-                            Cufe="7958005ee2bf17b05da5fff0beb891eeb532d79a",
+                            //Cufe="7958005ee2bf17b05da5fff0beb891eeb532d79a",
                             Fecha= new DateTime(2018,1,30,0,0,0),
                             Nota="Resolución Dian Nro 18762006401118 de 2018-01-10 del 12001 al 12818",
                             Moneda="COP",
@@ -39,7 +41,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                                 Ciudad= "Medellin",
                                 Direccion="Calle 48 Nro. 77C-06",
                                 Telefono="4444584",
-                                Mail="info@hgi.com.co",
+                                Email="info@hgi.com.co",
                                 PaginaWeb=null,
                                 CodigoPais="CO",
                                 RazonSocial="HGI SAS",
@@ -60,7 +62,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                                 Ciudad="GUARNE",
                                 Direccion="Parque Empresarial Puerta de Oriente, Bodega No 48",
                                 Telefono="3164387856",
-                                Mail="estrella2629@hotmail.com",
+                                Email="estrella2629@hotmail.com",
                                 PaginaWeb=null,
                                 CodigoPais="CO",
                                 RazonSocial="RAMIREZ MONTOYA DANIEL",
@@ -75,7 +77,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                             ValorIva=208624,
                             ValorReteIva=0,
                             ValorImpuestoConsumo=0,
-                            ValorRetefuente=0,
+                            ValorReteFuente=0,
                             Total=1306643,
                             Neto=1306643,
                             DocumentoDetalles = new List<DocumentoDetalle>()
@@ -122,6 +124,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         // GET: api/Factura/5
         public Factura Get(int id)
 		{
+			Ctl_Ubl _ubl = new Ctl_Ubl();
+			_ubl.Generar(documentos[id], TipoDocumento.Factura);
+
+
 			return documentos.Where(_doc => _doc.Documento == id).FirstOrDefault();
 		}
 

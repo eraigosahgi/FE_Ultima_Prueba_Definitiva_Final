@@ -30,5 +30,23 @@ namespace HGInetMiFacturaElectronicaWeb
 			
 			GlobalConfiguration.Configure(WebApiConfig.Register);
 		}
-    }
+
+		/// <summary>
+		/// Evento al empezar una solicitud web
+		/// </summary>
+		protected void Application_BeginRequest(object sender, EventArgs e)
+		{
+			var context = HttpContext.Current;
+			var response = context.Response;
+
+			// enable CORS
+			response.AddHeader("X-Frame-Options", "ALLOW-FROM *");
+
+			if (context.Request.HttpMethod == "OPTIONS")
+			{
+				response.End();
+			}
+		}
+
+	}
 }
