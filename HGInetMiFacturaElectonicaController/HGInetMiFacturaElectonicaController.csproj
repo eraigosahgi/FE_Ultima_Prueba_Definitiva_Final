@@ -55,8 +55,13 @@
     <Compile Include="Procesos\Ctl_Firma.cs" />
     <Compile Include="Procesos\Ctl_Ubl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiciosDian\Ctl_ResolucionDian.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HGInetDIANServicios\HGInetDIANServicios.csproj">
+      <Project>{e87c13d9-aef2-442c-b377-7a5d7290502a}</Project>
+      <Name>HGInetDIANServicios</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
       <Name>HGInetMiFacturaElectonicaData</Name>
