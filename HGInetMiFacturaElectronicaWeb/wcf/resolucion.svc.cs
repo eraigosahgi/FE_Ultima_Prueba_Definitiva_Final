@@ -30,8 +30,13 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		{
 			try
 			{
+				string id_software = "f715d60f-9880-4b17-91f3-4695ea4f64cf";
+				string clave = "HgiNet#811";
+				string nit_proveedor = "811021438";
+				string nit_empresa = Identificacion;
+				Guid id_peticion = Guid.NewGuid();
 
-
+				string respuesta = HGInetMiFacturaElectonicaController.ServiciosDian.Ctl_ResolucionDian.Obtener(id_peticion, id_software, clave, nit_empresa, nit_proveedor);
 
 				return null;
 
