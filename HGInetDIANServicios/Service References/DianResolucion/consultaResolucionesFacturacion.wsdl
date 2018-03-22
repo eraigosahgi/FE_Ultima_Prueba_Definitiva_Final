@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sch="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion" xmlns:tns="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion" targetNamespace="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <schema xmlns:xmime="http://www.w3.org/2005/05/xmlmime" elementFormDefault="qualified" targetNamespace="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion" xmlns="http://www.w3.org/2001/XMLSchema">
+      <element name="ConsultaResolucionesFacturacionPeticion" type="tns:ConsultaResoluciones" />
+      <element name="ConsultaResolucionesFacturacionRespuesta" type="tns:ResolucionesFacturacion" />
+      <complexType name="ConsultaResoluciones">
+        <annotation>
+          <documentation>Envoltorio para consultar resoluciones de facturacion por medio de web service</documentation>
+        </annotation>
+        <sequence>
+          <element name="NITObligadoFacturarElectronicamente" type="tns:NitType" />
+          <element name="NITProveedorTecnologico" type="tns:NitType" />
+          <element minOccurs="1" maxOccurs="1" name="IdentificadorSoftware" type="string" />
+        </sequence>
+      </complexType>
+      <complexType name="ResolucionesFacturacion">
+        <sequence>
+          <element name="CodigoOperacion" type="tns:CodigoType" />
+          <element name="DescripcionOperacion" type="tns:DescripcionType" />
+          <element name="IdentificadorOperacion" type="tns:IdOperacionType" />
+          <element minOccurs="0" maxOccurs="unbounded" name="RangoFacturacion" type="tns:RangoFacturacion" />
+        </sequence>
+      </complexType>
+      <complexType name="RangoFacturacion">
+        <annotation>
+          <documentation xmlns:xml="http://www.w3.org/XML/1998/namespace" xml:lang="es">
+				Contiene la informacion relevante en la consulta del rango de facturacion perteneciente a la resolucion
+			</documentation>
+        </annotation>
+        <sequence>
+          <element name="NumeroResolucion" type="long" />
+          <element name="FechaResolucion" type="date" />
+          <element name="Prefijo" type="tns:PrefijoType" />
+          <element name="RangoInicial" type="tns:RangoType" />
+          <element name="RangoFinal" type="tns:RangoType" />
+          <element name="FechaVigenciaDesde" type="date" />
+          <element name="FechaVigenciaHasta" type="date" />
+          <element name="ClaveTecnica" type="string" />
+        </sequence>
+      </complexType>
+      <simpleType name="NitType">
+        <annotation>
+          <documentation>NIT</documentation>
+        </annotation>
+        <restriction base="string">
+          <minLength value="1" />
+          <maxLength value="35" />
+        </restriction>
+      </simpleType>
+      <simpleType name="CodigoType">
+        <annotation>
+          <documentation />
+        </annotation>
+        <restriction base="string">
+          <enumeration value="OK" />
+          <enumeration value="ND" />
+          <enumeration value="EP" />
+          <enumeration value="ES" />
+          <enumeration value="EH" />
+          <enumeration value="EA" />
+          <enumeration value="ER" />
+          <enumeration value="EF" />
+          <enumeration value="EN" />
+        </restriction>
+      </simpleType>
+      <simpleType name="DescripcionType">
+        <annotation>
+          <documentation />
+        </annotation>
+        <restriction base="string">
+          <minLength value="1" />
+          <maxLength value="500" />
+        </restriction>
+      </simpleType>
+      <simpleType name="PrefijoType">
+        <annotation>
+          <documentation />
+        </annotation>
+        <restriction base="string">
+          <minLength value="1" />
+          <maxLength value="4" />
+        </restriction>
+      </simpleType>
+      <simpleType name="RangoType">
+        <restriction base="long">
+          <minExclusive value="0" />
+          <maxInclusive value="9999999999999999" />
+        </restriction>
+      </simpleType>
+      <simpleType name="IdOperacionType">
+        <restriction base="decimal">
+          <minExclusive value="0" />
+          <maxInclusive value="99999999999999999999" />
+        </restriction>
+      </simpleType>
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="ConsultaResolucionesFacturacionRespuesta">
+    <wsdl:part name="ConsultaResolucionesFacturacionRespuesta" element="tns:ConsultaResolucionesFacturacionRespuesta" />
+  </wsdl:message>
+  <wsdl:message name="ConsultaResolucionesFacturacionPeticion">
+    <wsdl:part name="ConsultaResolucionesFacturacionPeticion" element="tns:ConsultaResolucionesFacturacionPeticion" />
+  </wsdl:message>
+  <wsdl:portType name="resolucionFacturacionPortName">
+    <wsdl:operation name="ConsultaResolucionesFacturacion">
+      <wsdl:input name="ConsultaResolucionesFacturacionPeticion" message="tns:ConsultaResolucionesFacturacionPeticion" />
+      <wsdl:output name="ConsultaResolucionesFacturacionRespuesta" message="tns:ConsultaResolucionesFacturacionRespuesta" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="resolucionFacturacionPortNameSoap11" type="tns:resolucionFacturacionPortName">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ConsultaResolucionesFacturacion">
+      <soap:operation soapAction="" />
+      <wsdl:input name="ConsultaResolucionesFacturacionPeticion">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ConsultaResolucionesFacturacionRespuesta">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="resolucionFacturacionPortNameService">
+    <wsdl:port name="resolucionFacturacionPortNameSoap11" binding="tns:resolucionFacturacionPortNameSoap11">
+      <soap:address location="http://facturaelectronica.dian.gov.co:80/servicios/B2BIntegrationEngine-servicios/FacturaElectronica" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
