@@ -19,7 +19,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 			return "¡Prueba correcta!";
 		}
 
-		public List<DocumentoRespuesta> ConsultaPorNumeros(string DataKey, string Identificacion, int TipoDocumento, List<string> Numeros)
+		public List<DocumentoRespuesta> ConsultaPorNumeros(string DataKey, string Identificacion, int TipoDocumento, string Numeros)
 		{
 			try
 			{
@@ -36,7 +36,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 			}
 		}
 
-		public List<DocumentoRespuesta> ConsultaPorCodigoRegistro(string DataKey, string Identificacion, int TipoDocumento, List<string> CodigosRegistros)
+		public List<DocumentoRespuesta> ConsultaPorCodigoRegistro(string DataKey, string Identificacion, int TipoDocumento, string CodigosRegistros)
 		{
 			try
 			{

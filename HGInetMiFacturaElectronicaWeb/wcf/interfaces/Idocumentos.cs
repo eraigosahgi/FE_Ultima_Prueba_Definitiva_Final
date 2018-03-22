@@ -21,13 +21,13 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		[OperationContract(Name = "ConsultaPorNumeros")]
 		[FaultContract(typeof(Error), Action = "ConsultaPorNumeros", Name = "Error")]
 		[WebInvoke(Method = "GET")]
-		List<DocumentoRespuesta> ConsultaPorNumeros(string DataKey, string Identificacion, int TipoDocumento, List<string> Numeros);
+		List<DocumentoRespuesta> ConsultaPorNumeros(string DataKey, string Identificacion, int TipoDocumento, string Numeros);
 
 		
 		[OperationContract(Name = "ConsultaPorCodigoRegistro")]
 		[FaultContract(typeof(Error), Action = "ConsultaPorCodigoRegistro", Name = "Error")]
 		[WebInvoke(Method = "GET")]
-		List<DocumentoRespuesta> ConsultaPorCodigoRegistro(string DataKey, string Identificacion, int TipoDocumento, List<string> CodigosRegistros);
+		List<DocumentoRespuesta> ConsultaPorCodigoRegistro(string DataKey, string Identificacion, int TipoDocumento, string CodigosRegistros);
 			
 
 		[OperationContract(Name = "ConsultaPorFechaElaboracion")]
