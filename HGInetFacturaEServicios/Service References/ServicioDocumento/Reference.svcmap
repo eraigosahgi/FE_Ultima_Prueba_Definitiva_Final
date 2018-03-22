@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="54355816-adad-4581-93a0-681186929b7d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.ArrayList" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:61429/wcf/documentos.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="documentos.wsdl" MetadataType="Wsdl" ID="6dca0bbe-dc01-48e8-8baa-fd59b817c2a3" SourceId="1" SourceUrl="http://localhost:61429/wcf/documentos.svc?wsdl" />
+    <MetadataFile FileName="documentos.xsd" MetadataType="Schema" ID="06d838b1-694b-43e3-9fc1-50272884d24a" SourceId="1" SourceUrl="http://localhost:61429/wcf/documentos.svc?xsd=xsd2" />
+    <MetadataFile FileName="documentos1.xsd" MetadataType="Schema" ID="6e092d99-e88a-4008-a319-4b688bf54735" SourceId="1" SourceUrl="http://localhost:61429/wcf/documentos.svc?xsd=xsd3" />
+    <MetadataFile FileName="documentos2.xsd" MetadataType="Schema" ID="265f6347-9fb4-4a5e-aa9a-87730cda8923" SourceId="1" SourceUrl="http://localhost:61429/wcf/documentos.svc?xsd=xsd0" />
+    <MetadataFile FileName="documentos3.xsd" MetadataType="Schema" ID="77d43506-15ef-4a45-af19-a2f4c9af04f5" SourceId="1" SourceUrl="http://localhost:61429/wcf/documentos.svc?xsd=xsd1" />
+    <MetadataFile FileName="documentos.disco" MetadataType="Disco" ID="3c42faa8-68ce-44a3-b8f4-04d669021138" SourceId="1" SourceUrl="http://localhost:61429/wcf/documentos.svc?disco" />
+    <MetadataFile FileName="documentos1.wsdl" MetadataType="Wsdl" ID="b712c9ac-7e44-4176-a1ed-34db6c55c659" SourceId="1" SourceUrl="http://localhost:61429/wcf/documentos.svc?wsdl=wsdl0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ab72b015-148c-4a81-813d-3851ce58b766" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.ArrayList" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:61429/wcf/resolucion.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="resolucion.xsd" MetadataType="Schema" ID="240982a4-10e2-4b77-8168-34d2553f2750" SourceId="1" SourceUrl="http://localhost:61429/wcf/resolucion.svc?xsd=xsd3" />
+    <MetadataFile FileName="resolucion1.xsd" MetadataType="Schema" ID="e98b82f8-d8b1-4da2-a937-3b9921bd6c1f" SourceId="1" SourceUrl="http://localhost:61429/wcf/resolucion.svc?xsd=xsd2" />
+    <MetadataFile FileName="resolucion2.xsd" MetadataType="Schema" ID="f5c2a7f3-57e6-4fa9-8557-3c1b4d699664" SourceId="1" SourceUrl="http://localhost:61429/wcf/resolucion.svc?xsd=xsd1" />
+    <MetadataFile FileName="resolucion.wsdl" MetadataType="Wsdl" ID="320a2742-48db-4fd5-9a8d-be544dba8ef8" SourceId="1" SourceUrl="http://localhost:61429/wcf/resolucion.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="resolucion1.wsdl" MetadataType="Wsdl" ID="5a4df086-d9c1-46cd-bc45-efe08a4211f2" SourceId="1" SourceUrl="http://localhost:61429/wcf/resolucion.svc?wsdl" />
+    <MetadataFile FileName="resolucion3.xsd" MetadataType="Schema" ID="f16b6e8a-a8a5-4b23-b794-03148d062d1d" SourceId="1" SourceUrl="http://localhost:61429/wcf/resolucion.svc?xsd=xsd0" />
+    <MetadataFile FileName="resolucion.disco" MetadataType="Disco" ID="c23b2950-d278-4246-9750-4500cb41d2f7" SourceId="1" SourceUrl="http://localhost:61429/wcf/resolucion.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
