@@ -10,17 +10,17 @@ using System.Xml.Serialization;
 
 namespace HGInetUBL
 {
-    /// <summary>
-    /// Genera el elemento XML para la extensión de la DIAN
-    /// </summary>
+	/// <summary>
+	/// Genera el elemento XML para la extensión de la DIAN
+	/// </summary>
 	public class ExtensionDian
 	{
 		/// <summary>
 		/// Obtiene la extension requerida por la Dian
 		/// </summary>
-        /// <param name="extension">Datos de la resolución</param>
+		/// <param name="extension">Datos de la resolución</param>
 		/// <param name="tipo_doc">Indica el tipo de documento</param>
-        /// <returns> XmlElement que contiene la extension requerida por la Dian</returns>
+		/// <returns> XmlElement que contiene la extension requerida por la Dian</returns>
 		public static XmlElement Obtener(HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension, TipoDocumento tipo_doc)
 		{
 
@@ -43,14 +43,14 @@ namespace HGInetUBL
 			{
 				InvoiceControl InvoiceControl = new InvoiceControl();
 
-                #region Resolución de la numeración 
+				#region Resolución de la numeración 
 
-                if (String.IsNullOrEmpty(extension.NumResolucion))
+				if (String.IsNullOrEmpty(extension.NumResolucion))
 					throw new Exception("El número de resolución de la DIAN en la transacción es inválido.");
 
 				InvoiceControl.InvoiceAuthorization = Convert.ToDecimal(extension.NumResolucion);
-				
-                #endregion
+
+				#endregion
 
 				#region Fechas de inicio y fin de la resolución
 
@@ -152,5 +152,30 @@ namespace HGInetUBL
 			extension_dian.LoadXml(buffer);
 			return extension_dian.DocumentElement;
 		}
+
+
+		/// <summary>
+		/// Valida el nodo ExtensionContent necesario para la firma
+		/// </summary>
+		/// <param name="xml">datos del xml</param>
+		/// <returns>texto del xml</returns>
+		public static StringBuilder ValidarNodo(StringBuilder xml)
+		{
+			// convierte el texto de xml a XmlDocument para modificarlo
+			XmlDocument xmlDoc = Xml.ConvertirXmlDocument(xml);
+			xmlDoc.PreserveWhitespace = true;
+
+			var indiceNodo = 1;
+			var nodoExtension = xmlDoc.GetElementsByTagName("ExtensionContent", "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2").Item(indiceNodo);
+			
+			if (nodoExtension != null)
+				nodoExtension.RemoveAll();
+			else
+				throw new InvalidOperationException("No se pudo encontrar el nodo ExtensionContent en el XML");
+			
+			return Xml.Convertir(xmlDoc);
+		}
+
+
 	}
 }
