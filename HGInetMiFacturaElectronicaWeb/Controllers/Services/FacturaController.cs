@@ -4,9 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using HGInetFirmaDigital;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL;
+using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {    
@@ -124,9 +127,28 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         // GET: api/Factura/5
         public Factura Get(int id)
 		{
-			Ctl_Ubl _ubl = new Ctl_Ubl();
-			_ubl.Generar(documentos[id], TipoDocumento.Factura);
 
+			// genera el xml en ubl
+			FacturaE_Documento documento = new FacturaE_Documento()
+			{
+				ID = Guid.NewGuid()
+			};
+
+			documento = Ctl_Ubl.Generar(documentos[id]);
+
+			string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
+
+			// firma el xml 
+			documento = Ctl_Firma.Generar(ruta_certificado, "6c 0b 07 62 62 6d a0 e2", "persona_juridica_pruebas1", EnumCertificadoras.Andes, documento);
+			
+			
+			string ruta_xml = string.Format("{0}{1}.xml", Directorio.ObtenerDirectorioRaiz(), documento.NombreXml);
+
+			System.IO.StreamWriter file = new System.IO.StreamWriter(ruta_xml);
+			file.WriteLine(documento.DocumentoXml.ToString());
+			file.Close();
+
+			Ctl_Compresion.Comprimir(documento);
 
 			return documentos.Where(_doc => _doc.Documento == id).FirstOrDefault();
 		}
