@@ -43,6 +43,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
+    <Compile Include="Procesos\Ctl_Compresion.cs" />
     <Compile Include="Procesos\Ctl_Firma.cs" />
     <Compile Include="Procesos\Ctl_Ubl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +64,10 @@
     <ProjectReference Include="..\HGInetDIANServicios\HGInetDIANServicios.csproj">
       <Project>{e87c13d9-aef2-442c-b377-7a5d7290502a}</Project>
       <Name>HGInetDIANServicios</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetFirmaDigital\HGInetFirmaDigital.csproj">
+      <Project>{9c888de6-5aae-45c6-9c50-e0844ef42a3c}</Project>
+      <Name>HGInetFirmaDigital</Name>
     </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>

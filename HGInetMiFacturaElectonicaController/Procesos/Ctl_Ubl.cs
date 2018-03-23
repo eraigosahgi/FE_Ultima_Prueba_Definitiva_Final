@@ -9,6 +9,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL;
 using HGInetUBL.Objetos;
+using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -22,10 +23,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// 
 		/// </summary>
 		/// <param name="documento"></param>
-		/// <param name="tipo"></param>
 		/// <returns></returns>
-		public ResultadoXml Generar(Factura documento, TipoDocumento tipo)
+		public static FacturaE_Documento Generar(Factura documento)
 		{
+			TipoDocumento tipo = TipoDocumento.Factura;
+
 			// obtiene la resolución del documento
 			Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 			TblEmpresasResoluciones resolucion_documento = _resolucion.Obtener(documento.DatosObligado.Identificacion, documento.NumeroResolucion);
@@ -50,8 +52,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			};
 
 			// convierte el documento 
-			ResultadoXml resultado = FacturaXML.CrearDocumento(documento, extension_documento);
+			FacturaE_Documento resultado = FacturaXML.CrearDocumento(documento, extension_documento);
 
+			// Obtiene el nombre del archivo ZIP
+			resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo);
+			
 			return resultado;
 		}
 
