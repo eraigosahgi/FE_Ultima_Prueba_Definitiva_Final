@@ -13,7 +13,7 @@ namespace HGInetFacturaEServicios
 		/// Permite obtener las resoluciones registradas ante la DIAN por el Facturador Electrónico
 		/// Manual Técnico: 5.3.1 Metodo Web: Consulta de Resolución
 		/// </summary>
-		/// <param name="UrlWs">ruta de ejecución del servicio web (http)</param>
+		/// <param name="UrlWs">ruta de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
 		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <returns>datos de las resoluciones</returns>
