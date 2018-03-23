@@ -67,10 +67,7 @@ namespace HGInetFirmaDigital
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
-
-
-
-
+		
 		/// <summary>
 		/// Firmado de varios archivos XML a través del certificado físico
 		/// </summary>
@@ -97,7 +94,7 @@ namespace HGInetFirmaDigital
 
 					throw new ApplicationException(string.Format("No se encuentra el certificado en la ruta {0}", RutaCertificado));
 				}
-				
+
 				XadesService xadesService = new XadesService();
 				SignatureParameters parametros = new SignatureParameters();
 
@@ -250,7 +247,7 @@ namespace HGInetFirmaDigital
 
 			try
 			{
-				
+
 				XadesService xadesService = new XadesService();
 				SignatureParameters parametros = new SignatureParameters();
 
@@ -323,7 +320,7 @@ namespace HGInetFirmaDigital
 						parametros.DatoIssuername1 = CertificadorasDatos.Andes_DatoIssuername1;
 						parametros.DatoIssuername = CertificadorasDatos.Andes_DatoIssuername;
 					}
-					
+
 					// generar firma en el xml
 					Firmar(rutas_archivos, parametros, MontCertificat);
 				}
@@ -411,7 +408,7 @@ namespace HGInetFirmaDigital
 			return rutas_archivos;
 		}
 
-
+		
 
 		/***  MÉTODOS INICIALES 
 

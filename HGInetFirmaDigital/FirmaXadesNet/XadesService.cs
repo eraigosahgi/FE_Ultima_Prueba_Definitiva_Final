@@ -65,7 +65,7 @@ namespace FirmaXadesNet
                 throw new Exception("Es necesario un certificado válido para la firma");
             }
 
-            if (input == null && string.IsNullOrEmpty(parameters.ExternalContentUri))
+            if (input == null && string.IsNullOrEmpty(parameters.ExternalContentUri) && xmlDocument == null)
             {
                 throw new Exception("No se ha especificado ningún contenido a firmar");
             }
@@ -122,13 +122,13 @@ namespace FirmaXadesNet
 
             return signatureDocument;
         }
-
-        /// <summary>
-        /// Añade una firma al documento
-        /// </summary>
-        /// <param name="sigDocument"></param>
-        /// <param name="parameters"></param>
-        public SignatureDocument CoSign(SignatureDocument sigDocument, SignatureParameters parameters)
+		
+		/// <summary>
+		/// Añade una firma al documento
+		/// </summary>
+		/// <param name="sigDocument"></param>
+		/// <param name="parameters"></param>
+		public SignatureDocument CoSign(SignatureDocument sigDocument, SignatureParameters parameters)
         {
             SignatureDocument.CheckSignatureDocument(sigDocument);
 

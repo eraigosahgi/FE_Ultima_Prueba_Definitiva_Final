@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controladores\Ctl_FirmadoStringBuilder.cs" />
     <Compile Include="Funciones\Seguridad.cs" />
     <Compile Include="Properties\CertificadorasDatos.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -175,7 +175,7 @@ namespace FirmaXadesNet.Signature
         }
 
 
-        internal static void CheckSignatureDocument(SignatureDocument sigDocument)
+        public static void CheckSignatureDocument(SignatureDocument sigDocument)
         {
             if (sigDocument == null)
             {
