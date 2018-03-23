@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetUBL
 {
@@ -29,7 +30,7 @@ namespace HGInetUBL
         /// <param name="resolucion">Objeto que contiene los parametros de la DIAN</param>
         /// <param name="tipo">Indica el tipo de documento</param>
         /// <returns>Ruta donde se guardo el archivo XML</returns>  
-        public static ResultadoXml CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo = TipoDocumento.Factura)
+        public static FacturaE_Documento CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo = TipoDocumento.Factura)
         {
             try
             {
@@ -204,7 +205,7 @@ namespace HGInetUBL
                 // convierte los datos del objeto en texto XML 
                 StringBuilder txt_xml = ConvertirXml(factura, namespaces_xml);
 
-                ResultadoXml xml_sin_firma = new ResultadoXml();
+                FacturaE_Documento xml_sin_firma = new FacturaE_Documento();
                 xml_sin_firma.Documento = documento;
                 xml_sin_firma.NombreXml = nombre_archivo_xml;
                 xml_sin_firma.DocumentoXml = txt_xml;

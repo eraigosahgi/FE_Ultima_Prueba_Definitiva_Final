@@ -650,7 +650,6 @@
     <Compile Include="Dian_CommonExtensionComponents\UBLExtensionsType.cs" />
     <Compile Include="Dian_CommonExtensionComponents\UBLExtensionType.cs" />
     <Compile Include="Objetos\DocumentoImpuestos.cs" />
-    <Compile Include="Objetos\ResultadoXml.cs" />
     <Compile Include="Recursos\TipoImpuestos.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
