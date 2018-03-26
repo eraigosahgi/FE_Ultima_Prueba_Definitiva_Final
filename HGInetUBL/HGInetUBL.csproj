@@ -763,7 +763,6 @@
     <Compile Include="Dian_Structures\AddressType1.cs" />
     <Compile Include="Dian_Structures\AllowanceChargeType1.cs" />
     <Compile Include="Dian_Structures\AuthrorizedInvoices.cs" />
-    <Compile Include="Recursos\TipoDocumento.cs" />
     <Compile Include="Recursos\VersionesDIAN.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
