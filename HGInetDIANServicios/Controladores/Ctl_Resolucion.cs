@@ -15,15 +15,15 @@ namespace HGInetDIANServicios
 		{
 			try
 			{
-				LibreriaGlobalHGInet.Formato.ConfiguracionRegional.Predeterminar();
+				//LibreriaGlobalHGInet.Formato.ConfiguracionRegional.Predeterminar();
 
 				string ruta_servicio_web = "";
-
+				/*
 				if (!prueba)
 					ruta_servicio_web = "https://facturaelectronica.dian.gov.co/servicios/B2BIntegrationEngine-servicios/FacturaElectronica/consultaResolucionesFacturacion.wsdl";
 				else
 					ruta_servicio_web = "https://facturaelectronica.dian.gov.co/habilitacion/B2BIntegrationEngine/FacturaElectronica/consultaResolucionesFacturacion.wsdl";
-
+				*/
 
 				ruta_servicio_web = "https://facturaelectronica.dian.gov.co/servicios/B2BIntegrationEngine-servicios/FacturaElectronica/consultaResolucionesFacturacion.wsdl";
 
@@ -69,7 +69,8 @@ namespace HGInetDIANServicios
 					string xml_doc = Xml.Convertir(behavior.Inspector.XmlResponse);
 
 					// convierte el xml al objeto resultado de la ejecución del servicio web
-					respuesta = Convertir(xml_doc);
+					if (!xml_doc.Contains("Fault"))
+						respuesta = Convertir(xml_doc);
 				}
 
 				return respuesta;

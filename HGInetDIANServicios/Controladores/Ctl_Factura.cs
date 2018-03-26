@@ -101,13 +101,16 @@ namespace HGInetDIANServicios
 
 			var soapBody = xmlDocument.GetElementsByTagName("ns2:EnvioDianFacturaRespuesta")[0];
 
+			if(soapBody == null)
+				soapBody = xmlDocument.GetElementsByTagName("ns2:EnvioFacturaElectronicaRespuesta")[0];
+
 			// objeto de respuesta principal
 			DianFactura.AcuseRecibo acuse = new DianFactura.AcuseRecibo();
 
 			// objeto de respuesta secundario
 			List<DianFactura.AcuseRecibo> respuesta_envio = new List<DianFactura.AcuseRecibo>();
 
-			foreach (XmlNode item in xmlDocument.GetElementsByTagName("ns2:EnvioDianFacturaRespuesta")[0])
+			foreach (XmlNode item in soapBody)
 			{
 				if (item.LocalName.Equals("Version"))
 					acuse.Version = item.InnerText;
