@@ -55,9 +55,11 @@
   <ItemGroup>
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
     <Compile Include="Procesos\Ctl_Compresion.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.cs" />
     <Compile Include="Procesos\Ctl_Firma.cs" />
     <Compile Include="Procesos\Ctl_Ubl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiciosDian\Ctl_DocumentoDian.cs" />
     <Compile Include="ServiciosDian\Ctl_ResolucionDian.cs" />
   </ItemGroup>
   <ItemGroup>
