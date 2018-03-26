@@ -137,6 +137,7 @@
     </Compile>
     <Compile Include="Parametros\DataBaseServer.cs" />
     <Compile Include="Parametros\DianProveedor.cs" />
+    <Compile Include="Parametros\DianProveedorTest.cs" />
     <Compile Include="Parametros\HgiConfiguracion.cs" />
     <Compile Include="Parametros\MailServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
