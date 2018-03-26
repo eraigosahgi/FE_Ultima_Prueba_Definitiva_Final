@@ -20,151 +20,151 @@ using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetUBL
 {
-    public class FacturaXML
-    {
+	public class FacturaXML
+	{
 
-        /// <summary>
-        /// Crea el XML con la informacion de la factura en formato UBL
-        /// </summary>
-        /// <param name="documento">Objeto de tipo TblDocumentos que contiene la informacion de la factura</param>
-        /// <param name="resolucion">Objeto que contiene los parametros de la DIAN</param>
-        /// <param name="tipo">Indica el tipo de documento</param>
-        /// <returns>Ruta donde se guardo el archivo XML</returns>  
-        public static FacturaE_Documento CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo = TipoDocumento.Factura)
-        {
-            try
-            {
-                if (documento == null)
-                    throw new Exception("La documento es inválido.");
+		/// <summary>
+		/// Crea el XML con la informacion de la factura en formato UBL
+		/// </summary>
+		/// <param name="documento">Objeto de tipo TblDocumentos que contiene la informacion de la factura</param>
+		/// <param name="resolucion">Objeto que contiene los parametros de la DIAN</param>
+		/// <param name="tipo">Indica el tipo de documento</param>
+		/// <returns>Ruta donde se guardo el archivo XML</returns>  
+		public static FacturaE_Documento CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo = TipoDocumento.Factura)
+		{
+			try
+			{
+				if (documento == null)
+					throw new Exception("La documento es inválido.");
 
-                //Obtiene el nombre del archivo XML
-                string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion.ToString(), tipo);
+				//Obtiene el nombre del archivo XML
+				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion.ToString(), tipo);
 
-                if (string.IsNullOrWhiteSpace(nombre_archivo_xml))
-                    throw new ApplicationException("El nombre del archivo es inválido.");
+				if (string.IsNullOrWhiteSpace(nombre_archivo_xml))
+					throw new ApplicationException("El nombre del archivo es inválido.");
 
-                InvoiceType factura = new InvoiceType();
-                XmlSerializerNamespaces namespaces_xml = NamespacesXML.Obtener();
+				InvoiceType factura = new InvoiceType();
+				XmlSerializerNamespaces namespaces_xml = NamespacesXML.Obtener();
 
-                #region factura.UBLVersionID - Versión UBL
-                /*Versión de los esquemas UBL utilizados por la Dian */
-                UBLVersionIDType UBLVersionID = new UBLVersionIDType();
-                UBLVersionID.Value = Recursos.VersionesDIAN.UBLVersionID;
-                factura.UBLVersionID = UBLVersionID;
-                #endregion
+				#region factura.UBLVersionID - Versión UBL
+				/*Versión de los esquemas UBL utilizados por la Dian */
+				UBLVersionIDType UBLVersionID = new UBLVersionIDType();
+				UBLVersionID.Value = Recursos.VersionesDIAN.UBLVersionID;
+				factura.UBLVersionID = UBLVersionID;
+				#endregion
 
-                #region factura.ProfileID - Versión del documento DIAN_UBL.xsd
-                /*Versión del documento DIAN_UBL.xsd publicado por la DIAN*/
-                ProfileIDType ProfileID = new ProfileIDType();
-                ProfileID.Value = Recursos.VersionesDIAN.ProfileID;
-                factura.ProfileID = ProfileID;
-                #endregion
+				#region factura.ProfileID - Versión del documento DIAN_UBL.xsd
+				/*Versión del documento DIAN_UBL.xsd publicado por la DIAN*/
+				ProfileIDType ProfileID = new ProfileIDType();
+				ProfileID.Value = Recursos.VersionesDIAN.ProfileID;
+				factura.ProfileID = ProfileID;
+				#endregion
 
-                #region factura.ID - Número de documento
+				#region factura.ID - Número de documento
 
-                string numero_documento = "";
-                if (!string.IsNullOrEmpty(documento.Prefijo))
-                    numero_documento = string.Format("{0}", documento.Prefijo);
+				string numero_documento = "";
+				if (!string.IsNullOrEmpty(documento.Prefijo))
+					numero_documento = string.Format("{0}", documento.Prefijo);
 
-                numero_documento = string.Format("{0}{1}", numero_documento, documento.Documento.ToString());
+				numero_documento = string.Format("{0}{1}", numero_documento, documento.Documento.ToString());
 
-                /*Número de documento: Número de factura o factura cambiaria.*/
-                IDType ID = new IDType();
-                //ID.Value = documento.IntDocumento.ToString();
-                ID.Value = numero_documento;
-                factura.ID = ID;
-                #endregion
+				/*Número de documento: Número de factura o factura cambiaria.*/
+				IDType ID = new IDType();
+				//ID.Value = documento.IntDocumento.ToString();
+				ID.Value = numero_documento;
+				factura.ID = ID;
+				#endregion
 
-                #region factura.IssueDate - Fecha de la factura
-                /*Fecha de emision de la factura*/
-                IssueDateType IssueDate = new IssueDateType();
-                IssueDate.Value = Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet));
-                factura.IssueDate = IssueDate;
-                #endregion
+				#region factura.IssueDate - Fecha de la factura
+				/*Fecha de emision de la factura*/
+				IssueDateType IssueDate = new IssueDateType();
+				IssueDate.Value = Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet));
+				factura.IssueDate = IssueDate;
+				#endregion
 
-                #region factura.IssueTime - Hora de la factura
-                /*Hora de emision de la factura*/
-                IssueTimeType IssueTime = new IssueTimeType();
-                IssueTime.Value = documento.Fecha.ToString(Fecha.formato_hora_completa);
-                factura.IssueTime = IssueTime;
-                #endregion
+				#region factura.IssueTime - Hora de la factura
+				/*Hora de emision de la factura*/
+				IssueTimeType IssueTime = new IssueTimeType();
+				IssueTime.Value = documento.Fecha.ToString(Fecha.formato_hora_completa);
+				factura.IssueTime = IssueTime;
+				#endregion
 
-                #region factura.InvoiceTypeCode - Tipo de Documento
-                /*Indicar si es una factura de venta o una factura cambiaria de compraventa*/
-                InvoiceTypeCodeType InvoiceTypeCode = new InvoiceTypeCodeType();
-                InvoiceTypeCode.Value = "1";
-                factura.InvoiceTypeCode = InvoiceTypeCode;
-                #endregion
+				#region factura.InvoiceTypeCode - Tipo de Documento
+				/*Indicar si es una factura de venta o una factura cambiaria de compraventa*/
+				InvoiceTypeCodeType InvoiceTypeCode = new InvoiceTypeCodeType();
+				InvoiceTypeCode.Value = "1";
+				factura.InvoiceTypeCode = InvoiceTypeCode;
+				#endregion
 
-                #region Note - Nota adicional (Resolución texto)
-                /*Notas adicionales informativas*/
-                string prefijo = string.Empty;
-                if (!string.IsNullOrEmpty(documento.Prefijo))
-                    prefijo = string.Format("{0}-", documento.Prefijo);
+				#region Note - Nota adicional (Resolución texto)
+				/*Notas adicionales informativas*/
+				string prefijo = string.Empty;
+				if (!string.IsNullOrEmpty(documento.Prefijo))
+					prefijo = string.Format("{0}-", documento.Prefijo);
 
-                //TblTransacciones transaccion = documento.TblTransacciones;
+				//TblTransacciones transaccion = documento.TblTransacciones;
 
-                string dian_resolucion = string.Format("Resolución Dian Nro {0} de {1} del {2}{3} al {4}{5}", resolucion.NumResolucion, resolucion.FechaResIni.ToString(Fecha.formato_fecha_hginet), prefijo, resolucion.RangoIni, prefijo, resolucion.RangoFin);
+				string dian_resolucion = string.Format("Resolución Dian Nro {0} de {1} del {2}{3} al {4}{5}", resolucion.NumResolucion, resolucion.FechaResIni.ToString(Fecha.formato_fecha_hginet), prefijo, resolucion.RangoIni, prefijo, resolucion.RangoFin);
 
-                NoteType[] Notes = new NoteType[1];
-                NoteType Note = new NoteType();
-                Note.Value = dian_resolucion;
-                Notes[0] = Note;
-                factura.Note = Notes;
+				NoteType[] Notes = new NoteType[1];
+				NoteType Note = new NoteType();
+				Note.Value = dian_resolucion;
+				Notes[0] = Note;
+				factura.Note = Notes;
 
-                #endregion
+				#endregion
 
-                #region factura.DocumentCurrencyCode - Divisa de la Factura
-                /*Divisa consolidada aplicable a toda la factura. Moneda con la que se presenta el documento*/
-                DocumentCurrencyCodeType DocumentCurrencyCode = new DocumentCurrencyCodeType();
-                DocumentCurrencyCode.Value = documento.Moneda; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)                
-                factura.DocumentCurrencyCode = DocumentCurrencyCode;
-                #endregion
+				#region factura.DocumentCurrencyCode - Divisa de la Factura
+				/*Divisa consolidada aplicable a toda la factura. Moneda con la que se presenta el documento*/
+				DocumentCurrencyCodeType DocumentCurrencyCode = new DocumentCurrencyCodeType();
+				DocumentCurrencyCode.Value = documento.Moneda; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)                
+				factura.DocumentCurrencyCode = DocumentCurrencyCode;
+				#endregion
 
-                #region factura.AccountingSupplierParty - Información del obligado a facturar
-                factura.AccountingSupplierParty = ObtenerObligado(documento.DatosObligado);
-                #endregion
+				#region factura.AccountingSupplierParty - Información del obligado a facturar
+				factura.AccountingSupplierParty = ObtenerObligado(documento.DatosObligado);
+				#endregion
 
-                #region factura.AccountingCustomerParty - Información del Adquiriente
-                /* Persona natural o jurídica que adquiere bienes y/o servicios y debe exigir factura 
+				#region factura.AccountingCustomerParty - Información del Adquiriente
+				/* Persona natural o jurídica que adquiere bienes y/o servicios y debe exigir factura 
 				51 o documento equivalente y, que tratándose de la factura electrónica, 
 				la recibe, rechaza, cuando
 				52 sea del caso, y conserva para su posterior exhibición*/
-                //factura.AccountingCustomerParty = Aquiriente(documento.DatosTercero);
+				//factura.AccountingCustomerParty = Aquiriente(documento.DatosTercero);
 
-                #region factura.AccountingCustomerParty //Información del Adquiriente
-                /* Persona natural o jurídica que adquiere bienes y/o servicios y debe exigir factura
+				#region factura.AccountingCustomerParty //Información del Adquiriente
+				/* Persona natural o jurídica que adquiere bienes y/o servicios y debe exigir factura
 				51 o documento equivalente y, que tratándose de la factura electrónica, 
 			    la recibe, rechaza, cuando
 				52 sea del caso, y conserva para su posterior exhibición*/
 
-                factura.AccountingCustomerParty = ObtenerAquiriente(documento.DatosAdquiriente);
-                #endregion
+				factura.AccountingCustomerParty = ObtenerAquiriente(documento.DatosAdquiriente);
+				#endregion
 
 
-                #endregion
+				#endregion
 
-                #region factura.InvoiceLine - Línea de Factura
-                /*Elemento que agrupa todos los campos de una línea de factura. Detalle del documento*/
-                factura.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList());
-                #endregion
+				#region factura.InvoiceLine - Línea de Factura
+				/*Elemento que agrupa todos los campos de una línea de factura. Detalle del documento*/
+				factura.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList());
+				#endregion
 
-                #region	factura.TaxTotal - Impuesto y Impuesto Retenido
-                /*Impuesto Retenido: Elemento raíz compuesto utilizado para informar de un impuesto	retenido. 
+				#region	factura.TaxTotal - Impuesto y Impuesto Retenido
+				/*Impuesto Retenido: Elemento raíz compuesto utilizado para informar de un impuesto	retenido. 
 				 Impuesto: Elemento raíz compuesto utilizado para informar de un impuesto. */
-                factura.TaxTotal = ObtenerImpuestos(documento.DocumentoDetalles.ToList());
+				factura.TaxTotal = ObtenerImpuestos(documento.DocumentoDetalles.ToList());
 
-                #endregion
+				#endregion
 
-                #region factura.LegalMonetaryTotal //Datos Importes Totales
-                /*Agrupación de campos relativos a los importes totales aplicables a la	factura. Estos importes son calculados teniendo
+				#region factura.LegalMonetaryTotal //Datos Importes Totales
+				/*Agrupación de campos relativos a los importes totales aplicables a la	factura. Estos importes son calculados teniendo
 				en cuenta las líneas de factura y elementos a nivel de factura, como descuentos, cargos, impuestos, etc*/
-                factura.LegalMonetaryTotal = ObtenerTotales(documento);
+				factura.LegalMonetaryTotal = ObtenerTotales(documento);
 
-                #endregion
+				#endregion
 
-                #region factura.UUID //CUFE:Codigo Unico de Facturacion Electronica.
-                /*  CUFE: Obligatorio si es factura nacional.
+				#region factura.UUID //CUFE:Codigo Unico de Facturacion Electronica.
+				/*  CUFE: Obligatorio si es factura nacional.
 					Codigo Unico de Facturacion Electronica. Campo que verifica la integridad de la información
 					recibida, es un campo generado por el sistema Numeración de facturación, está pendiente
 					deFINir su contenido. Esta Encriptado. La factura electrónica tiene una firma electrónica
@@ -172,233 +172,233 @@ namespace HGInetUBL
 					viene asegurada por la firma digital, no es	necesaria ninguna medida más para asegurar que
 					ningún campo ha sido alterado*/
 
-                if (string.IsNullOrEmpty(resolucion.ClaveTecnicaDIAN))
-                    throw new Exception("La clave técnica en la resolución de la DIAN es inválida para el documento.");
+				if (string.IsNullOrEmpty(resolucion.ClaveTecnicaDIAN))
+					throw new Exception("La clave técnica en la resolución de la DIAN es inválida para el documento.");
 
-                UUIDType UUID = new UUIDType();
-                string CUFE = CalcularCUFE(factura, resolucion.ClaveTecnicaDIAN);
-                UUID.Value = CUFE;
-                factura.UUID = UUID;
-                #endregion
+				UUIDType UUID = new UUIDType();
+				string CUFE = CalcularCUFE(factura, resolucion.ClaveTecnicaDIAN);
+				UUID.Value = CUFE;
+				factura.UUID = UUID;
+				#endregion
 
-                #region factura.UBLExtensions
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml("<firma></firma>");
+				#region factura.UBLExtensions
+				XmlDocument doc = new XmlDocument();
+				doc.LoadXml("<firma></firma>");
 
-                UBLExtensionType[] UBLExtensions = new UBLExtensionType[2];
+				UBLExtensionType[] UBLExtensions = new UBLExtensionType[2];
 
-                #region Extension de la Dian
-                UBLExtensionType UBLExtensionDian = new UBLExtensionType();
-                UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo);
-                UBLExtensions[0] = UBLExtensionDian;
-                #endregion
+				#region Extension de la Dian
+				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
+				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo);
+				UBLExtensions[0] = UBLExtensionDian;
+				#endregion
 
-                #region Extension de la firma
-                UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
-                UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
-                UBLExtensions[1] = UBLExtensionFirma;
-                #endregion
+				#region Extension de la firma
+				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
+				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
+				UBLExtensions[1] = UBLExtensionFirma;
+				#endregion
 
-                factura.UBLExtensions = UBLExtensions;
-                #endregion
+				factura.UBLExtensions = UBLExtensions;
+				#endregion
 
-                // convierte los datos del objeto en texto XML 
-                StringBuilder txt_xml = ConvertirXml(factura, namespaces_xml);
+				// convierte los datos del objeto en texto XML 
+				StringBuilder txt_xml = ConvertirXml(factura, namespaces_xml);
 
-                FacturaE_Documento xml_sin_firma = new FacturaE_Documento();
-                xml_sin_firma.Documento = documento;
-                xml_sin_firma.NombreXml = nombre_archivo_xml;
-                xml_sin_firma.DocumentoXml = txt_xml;
-                xml_sin_firma.CUFE = CUFE;
+				FacturaE_Documento xml_sin_firma = new FacturaE_Documento();
+				xml_sin_firma.Documento = documento;
+				xml_sin_firma.NombreXml = nombre_archivo_xml;
+				xml_sin_firma.DocumentoXml = txt_xml;
+				xml_sin_firma.CUFE = CUFE;
 
-                return xml_sin_firma;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				return xml_sin_firma;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-        /// <summary>
-        /// Calcula el codigo CUFE
-        /// </summary>
-        /// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
-        /// <param name="clave_tecnica">Clave técnica de la resolución</param>
-        /// <returns>Texto con la encriptación del CUFE</returns>        
-        private static string CalcularCUFE(InvoiceType factura, string clave_tecnica)
-        {
-            try
-            {
-                if (factura == null)
-                    throw new Exception("Los datos de la factura son inválidos.");
-                if (string.IsNullOrWhiteSpace(clave_tecnica))
-                    throw new Exception("La clave técnica es inválida.");
+		/// <summary>
+		/// Calcula el codigo CUFE
+		/// </summary>
+		/// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
+		/// <param name="clave_tecnica">Clave técnica de la resolución</param>
+		/// <returns>Texto con la encriptación del CUFE</returns>        
+		private static string CalcularCUFE(InvoiceType factura, string clave_tecnica)
+		{
+			try
+			{
+				if (factura == null)
+					throw new Exception("Los datos de la factura son inválidos.");
+				if (string.IsNullOrWhiteSpace(clave_tecnica))
+					throw new Exception("La clave técnica es inválida.");
 
-                #region Documentación de la creación código CUFE
-                /*
-			NumFac = Número de factura.
-			FecFac = Fecha de factura en formato (Java) YYYYmmddHHMMss. 
-			ValFac = Valor Factura sin IVA, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
-			CodImp1 = 01 
-			ValImp1 = Valor impuesto 01, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
-			CodImp2 = 02 
-			ValImp2 = Valor impuesto 02, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
-			CodImp3 = 03 
-			ValImp3 = Valor impuesto 03, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos.
-			ValImp = Valor IVA, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos.
-			NitOFE = NIT del Facturador Electrónico sin puntos ni guiones, sin digito de verificación. 
-			TipAdq = tipo de adquiriente, de acuerdo con la tabla Tipos de documentos de identidad del «Anexo 001 Formato estándar XML de la Factura, notas débito y notas crédito electrónicos» 
-			NumAdq = Número de identificación del adquirente sin puntos ni guiones, sin digito de verificación. 
-			ClTec = Clave técnica del rango de facturación.
-			CUFE = SHA-1(NumFac + FecFac + ValFac + CodImp1 + ValImp1 + CodImp2 + ValImp2 + CodImp3 +
-						ValImp3 + ValImp + NitOFE + TipAdq + NumAdq + ClTec) 
+				#region Documentación de la creación código CUFE
+				/*
+				NumFac = Número de factura.
+				FecFac = Fecha de factura en formato (Java) YYYYmmddHHMMss. 
+				ValFac = Valor Factura sin IVA, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
+				CodImp1 = 01 
+				ValImp1 = Valor impuesto 01, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
+				CodImp2 = 02 
+				ValImp2 = Valor impuesto 02, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
+				CodImp3 = 03 
+				ValImp3 = Valor impuesto 03, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos.
+				ValImp = Valor IVA, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos.
+				NitOFE = NIT del Facturador Electrónico sin puntos ni guiones, sin digito de verificación. 
+				TipAdq = tipo de adquiriente, de acuerdo con la tabla Tipos de documentos de identidad del «Anexo 001 Formato estándar XML de la Factura, notas débito y notas crédito electrónicos» 
+				NumAdq = Número de identificación del adquirente sin puntos ni guiones, sin digito de verificación. 
+				ClTec = Clave técnica del rango de facturación.
+				CUFE = SHA-1(NumFac + FecFac + ValFac + CodImp1 + ValImp1 + CodImp2 + ValImp2 + CodImp3 +
+							ValImp3 + ValImp + NitOFE + TipAdq + NumAdq + ClTec) 
 			
-			NumFac = /fe:Invoice/cbc:ID
-			FecFac = sinSimbolos(/fe:Invoice/cbc:IssueDate + /fe:Invoice/cbc:IssueTime) formato AAAAMMDDHHMMSS
-			i.e. año + mes + día + hora + minutos + segundos
-			ValFac = /fe:Invoice/fe:LegalMonetaryTotal/cbc:LineExtensionAmount
-			CodImp1 = /fe:Invoice/fe:TaxTotal[x]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 01
-			ValImp1 = /fe:Invoice/fe:TaxTotal[x]/fe:TaxSubtotal/cbc:TaxAmount
-			CodImp2 = /fe:Invoice/fe:TaxTotal[y]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 02
-			ValImp2 = /fe:Invoice/fe:TaxTotal[y]/fe:TaxSubtotal/cbc:TaxAmount
-			CodImp3 = /fe:Invoice/fe:TaxTotal[z]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 03
-			ValImp3 = /fe:Invoice/fe:TaxTotal[z]/fe:TaxSubtotal/cbc:TaxAmount
-			ValImp = /fe:Invoice/fe:LegalMonetaryTotal/cbc:PayableAmount
-			NitOFE = /fe:Invoice/fe:AccountingSupplierParty/fe:Party/cac:PartyIdentification/cbc:ID
-			TipAdq = /fe:Invoice/fe:AccountingCustomerParty/fe:Party/cac:PartyIdentification/cbc:ID/@schemeID
-			NumAdq = /fe:Invoice/fe:AccountingCustomerParty/fe:Party/cac:PartyIdentification/cbc:ID
-			ClTec = no está en el XML 			 
-			*/
-                #endregion
+				NumFac = /fe:Invoice/cbc:ID
+				FecFac = sinSimbolos(/fe:Invoice/cbc:IssueDate + /fe:Invoice/cbc:IssueTime) formato AAAAMMDDHHMMSS
+				i.e. año + mes + día + hora + minutos + segundos
+				ValFac = /fe:Invoice/fe:LegalMonetaryTotal/cbc:LineExtensionAmount
+				CodImp1 = /fe:Invoice/fe:TaxTotal[x]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 01
+				ValImp1 = /fe:Invoice/fe:TaxTotal[x]/fe:TaxSubtotal/cbc:TaxAmount
+				CodImp2 = /fe:Invoice/fe:TaxTotal[y]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 02
+				ValImp2 = /fe:Invoice/fe:TaxTotal[y]/fe:TaxSubtotal/cbc:TaxAmount
+				CodImp3 = /fe:Invoice/fe:TaxTotal[z]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 03
+				ValImp3 = /fe:Invoice/fe:TaxTotal[z]/fe:TaxSubtotal/cbc:TaxAmount
+				ValImp = /fe:Invoice/fe:LegalMonetaryTotal/cbc:PayableAmount
+				NitOFE = /fe:Invoice/fe:AccountingSupplierParty/fe:Party/cac:PartyIdentification/cbc:ID
+				TipAdq = /fe:Invoice/fe:AccountingCustomerParty/fe:Party/cac:PartyIdentification/cbc:ID/@schemeID
+				NumAdq = /fe:Invoice/fe:AccountingCustomerParty/fe:Party/cac:PartyIdentification/cbc:ID
+				ClTec = no está en el XML 			 
+				*/
+				#endregion
 
-                #region Creación Código CUFE
+				#region Creación Código CUFE
 
-                string codigo_impuesto = string.Empty;
-                DateTime fecha = factura.IssueDate.Value;
-                DateTime fecha_hora = Convert.ToDateTime(factura.IssueTime.Value);
-                TimeSpan hora = new TimeSpan(fecha_hora.Hour, fecha_hora.Minute, fecha_hora.Second);
-                fecha = fecha.Date + hora;
+				string codigo_impuesto = string.Empty;
+				DateTime fecha = factura.IssueDate.Value;
+				DateTime fecha_hora = Convert.ToDateTime(factura.IssueTime.Value);
+				TimeSpan hora = new TimeSpan(fecha_hora.Hour, fecha_hora.Minute, fecha_hora.Second);
+				fecha = fecha.Date + hora;
 
-                string NumFac = factura.ID.Value;
-                string FecFac = fecha.ToString(Fecha.formato_fecha_java);
-                string ValFac = factura.LegalMonetaryTotal.LineExtensionAmount.Value.ToString();
+				string NumFac = factura.ID.Value;
+				string FecFac = fecha.ToString(Fecha.formato_fecha_java);
+				string ValFac = factura.LegalMonetaryTotal.LineExtensionAmount.Value.ToString();
 
-                //Impuesto 1
-                string CodImp1 = "01";
-                decimal ValImp1 = 0.00M;
+				//Impuesto 1
+				string CodImp1 = "01";
+				decimal ValImp1 = 0.00M;
 
-                //Impuesto 2
-                string CodImp2 = "02";
-                decimal ValImp2 = 0.00M;
+				//Impuesto 2
+				string CodImp2 = "02";
+				decimal ValImp2 = 0.00M;
 
-                //Impuesto 3
-                string CodImp3 = "03";
-                decimal ValImp3 = 0.00M;
+				//Impuesto 3
+				string CodImp3 = "03";
+				decimal ValImp3 = 0.00M;
 
-                for (int i = 0; i < factura.TaxTotal.Count(); i++)
-                {
-                    for (int j = 0; j < factura.TaxTotal[i].TaxSubtotal.Count(); j++)
-                    {
-                        codigo_impuesto = factura.TaxTotal[i].TaxSubtotal[j].TaxCategory.TaxScheme.ID.Value;
+				for (int i = 0; i < factura.TaxTotal.Count(); i++)
+				{
+					for (int j = 0; j < factura.TaxTotal[i].TaxSubtotal.Count(); j++)
+					{
+						codigo_impuesto = factura.TaxTotal[i].TaxSubtotal[j].TaxCategory.TaxScheme.ID.Value;
 
-                        if (codigo_impuesto.Equals("01"))
-                        {
-                            ValImp1 += factura.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
-                        }
-                        else if (codigo_impuesto.Equals("02"))
-                        {
-                            ValImp2 += factura.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
-                        }
-                        else if (codigo_impuesto.Equals("03"))
-                        {
-                            ValImp3 += factura.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
-                        }
-                    }
-                }
+						if (codigo_impuesto.Equals("01"))
+						{
+							ValImp1 += factura.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
+						}
+						else if (codigo_impuesto.Equals("02"))
+						{
+							ValImp2 += factura.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
+						}
+						else if (codigo_impuesto.Equals("03"))
+						{
+							ValImp3 += factura.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
+						}
+					}
+				}
 
-                string ValImp = factura.LegalMonetaryTotal.PayableAmount.Value.ToString();
+				string ValImp = factura.LegalMonetaryTotal.PayableAmount.Value.ToString();
 
-                string NitOFE = string.Empty;
+				string NitOFE = string.Empty;
 
-                for (int contador_obligado_facturar = 0; contador_obligado_facturar < factura.AccountingSupplierParty.Party.PartyIdentification.Count(); contador_obligado_facturar++)
-                {
-                    NitOFE = factura.AccountingSupplierParty.Party.PartyIdentification[contador_obligado_facturar].ID.Value;
-                }
+				for (int contador_obligado_facturar = 0; contador_obligado_facturar < factura.AccountingSupplierParty.Party.PartyIdentification.Count(); contador_obligado_facturar++)
+				{
+					NitOFE = factura.AccountingSupplierParty.Party.PartyIdentification[contador_obligado_facturar].ID.Value;
+				}
 
-                string TipAdq = string.Empty;
-                string NumAdq = string.Empty;
+				string TipAdq = string.Empty;
+				string NumAdq = string.Empty;
 
-                for (int contador_adquiriente = 0; contador_adquiriente < factura.AccountingCustomerParty.Party.PartyTaxScheme.Count(); contador_adquiriente++)
-                {
-                    TipAdq = factura.AccountingCustomerParty.Party.PartyIdentification[contador_adquiriente].ID.schemeID;
-                    NumAdq = factura.AccountingCustomerParty.Party.PartyIdentification[contador_adquiriente].ID.Value;
-                }
+				for (int contador_adquiriente = 0; contador_adquiriente < factura.AccountingCustomerParty.Party.PartyTaxScheme.Count(); contador_adquiriente++)
+				{
+					TipAdq = factura.AccountingCustomerParty.Party.PartyIdentification[contador_adquiriente].ID.schemeID;
+					NumAdq = factura.AccountingCustomerParty.Party.PartyIdentification[contador_adquiriente].ID.Value;
+				}
 
-                string cufe = NumFac
-                    + FecFac
-                    + ValFac.Replace(",", ".")
-                    + CodImp1
-                    + ValImp1.ToString().Replace(",", ".")
-                    + CodImp2
-                    + ValImp2.ToString().Replace(",", ".")
-                    + CodImp3
-                    + ValImp3.ToString().Replace(",", ".")
-                    + ValImp.Replace(",", ".")
-                    + NitOFE
-                    + TipAdq
-                    + NumAdq
-                    + clave_tecnica
-                ;
+				string cufe = NumFac
+					+ FecFac
+					+ ValFac.Replace(",", ".")
+					+ CodImp1
+					+ ValImp1.ToString().Replace(",", ".")
+					+ CodImp2
+					+ ValImp2.ToString().Replace(",", ".")
+					+ CodImp3
+					+ ValImp3.ToString().Replace(",", ".")
+					+ ValImp.Replace(",", ".")
+					+ NitOFE
+					+ TipAdq
+					+ NumAdq
+					+ clave_tecnica
+				;
 
-                string cufe_encriptado = Encriptar.Encriptar_SHA1(cufe);
-                return cufe_encriptado;
-                #endregion
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				string cufe_encriptado = Encriptar.Encriptar_SHA1(cufe);
+				return cufe_encriptado;
+				#endregion
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-        /// <summary>
-        /// Convierte el objeto en texto XML
-        /// </summary>
-        /// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
-        /// <param name="namespaces_xml">Namespaces</param>       
-        /// <returns>Ruta donde se guardo el archivo XML</returns>     
-        private static StringBuilder ConvertirXml(InvoiceType factura, XmlSerializerNamespaces namespaces_xml)
-        {
-            try
-            {
-                if (factura == null)
-                    throw new Exception("La factura es inválida.");
+		/// <summary>
+		/// Convierte el objeto en texto XML
+		/// </summary>
+		/// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
+		/// <param name="namespaces_xml">Namespaces</param>       
+		/// <returns>Ruta donde se guardo el archivo XML</returns>     
+		private static StringBuilder ConvertirXml(InvoiceType factura, XmlSerializerNamespaces namespaces_xml)
+		{
+			try
+			{
+				if (factura == null)
+					throw new Exception("La factura es inválida.");
 
-                if (namespaces_xml == null)
-                    throw new Exception("Los Namespaces son inválidos.");
+				if (namespaces_xml == null)
+					throw new Exception("Los Namespaces son inválidos.");
 
-                StringBuilder texto_xml = Xml.Convertir<InvoiceType>(factura, namespaces_xml);
+				StringBuilder texto_xml = Xml.Convertir<InvoiceType>(factura, namespaces_xml);
 
-                return texto_xml;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				return texto_xml;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-        /// <summary>
-        /// Llena el objeto del Obligado a facturar con los datos de la empresa
-        /// </summary>
-        /// <param name="empresa">Datos de la empresa</param>
-        /// <returns>Objeto de tipo SupplierPartyType1</returns>
-        private static SupplierPartyType1 ObtenerObligado(Tercero empresa)
-        {
-            try
-            {
-                if (empresa == null)
-                    throw new Exception("Los datos de la empresa son inválidos.");
+		/// <summary>
+		/// Llena el objeto del Obligado a facturar con los datos de la empresa
+		/// </summary>
+		/// <param name="empresa">Datos de la empresa</param>
+		/// <returns>Objeto de tipo SupplierPartyType1</returns>
+		private static SupplierPartyType1 ObtenerObligado(Tercero empresa)
+		{
+			try
+			{
+				if (empresa == null)
+					throw new Exception("Los datos de la empresa son inválidos.");
 
-                /* Tipo de persona en el ERP 
+				/* Tipo de persona en el ERP 
 					 1 Natural
 					 2 Jurídica                      
 				   para la Dian
@@ -412,7 +412,7 @@ namespace HGInetUBL
 					dian_tipoPersona = "1";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
 
                 */
-                /* Tipo de regimen en el ERP 
+				/* Tipo de regimen en el ERP 
 					 1 Simplificado
 					 2 Comun                  
 					Para la Dian
@@ -431,123 +431,123 @@ namespace HGInetUBL
 				else if (empresa.TipoIdentificacion.Equals("CC"))
 					dian_tipoDocumento = "13";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)*/
 
-                // Datos del obligado a facturar
-                SupplierPartyType1 AccountingSupplierParty = new SupplierPartyType1();
-                PartyType1 Party = new PartyType1();
+				// Datos del obligado a facturar
+				SupplierPartyType1 AccountingSupplierParty = new SupplierPartyType1();
+				PartyType1 Party = new PartyType1();
 
-                #region Tipo de persona
+				#region Tipo de persona
 
-                AdditionalAccountIDType AdditionalAccountID = new AdditionalAccountIDType();
-                AdditionalAccountID.Value = empresa.TipoPersona.ToString();//Tipo de persona (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                AccountingSupplierParty.AdditionalAccountID = AdditionalAccountID;
-                #endregion
+				AdditionalAccountIDType AdditionalAccountID = new AdditionalAccountIDType();
+				AdditionalAccountID.Value = empresa.TipoPersona.ToString();//Tipo de persona (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				AccountingSupplierParty.AdditionalAccountID = AdditionalAccountID;
+				#endregion
 
-                #region Regimen
-                PartyTaxSchemeType1[] PartyTaxSchemes = new PartyTaxSchemeType1[1];
-                PartyTaxSchemeType1 PartyTaxScheme = new PartyTaxSchemeType1();
-                TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
-                TaxLevelCode.Value = empresa.Regimen.ToString();
-                PartyTaxScheme.TaxLevelCode = TaxLevelCode;
+				#region Regimen
+				PartyTaxSchemeType1[] PartyTaxSchemes = new PartyTaxSchemeType1[1];
+				PartyTaxSchemeType1 PartyTaxScheme = new PartyTaxSchemeType1();
+				TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
+				TaxLevelCode.Value = empresa.Regimen.ToString();
+				PartyTaxScheme.TaxLevelCode = TaxLevelCode;
 
-                TaxSchemeType TaxScheme = new TaxSchemeType();
-                PartyTaxScheme.TaxScheme = TaxScheme;
-                PartyTaxSchemes[0] = PartyTaxScheme;
-                Party.PartyTaxScheme = PartyTaxSchemes;
-                #endregion
+				TaxSchemeType TaxScheme = new TaxSchemeType();
+				PartyTaxScheme.TaxScheme = TaxScheme;
+				PartyTaxSchemes[0] = PartyTaxScheme;
+				Party.PartyTaxScheme = PartyTaxSchemes;
+				#endregion
 
-                #region Documento y tipo de documento
-                PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
-                PartyIdentificationType PartyIdentification = new PartyIdentificationType();
-                IDType ID = new IDType();
-                ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
-                ID.schemeAgencyID = "195";
-                ID.schemeID = empresa.TipoIdentificacion.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                ID.Value = empresa.Identificacion.ToString();
-                PartyIdentification.ID = ID;
-                PartyIdentifications[0] = PartyIdentification;
-                Party.PartyIdentification = PartyIdentifications;
-                #endregion
+				#region Documento y tipo de documento
+				PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
+				PartyIdentificationType PartyIdentification = new PartyIdentificationType();
+				IDType ID = new IDType();
+				ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
+				ID.schemeAgencyID = "195";
+				ID.schemeID = empresa.TipoIdentificacion.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				ID.Value = empresa.Identificacion.ToString();
+				PartyIdentification.ID = ID;
+				PartyIdentifications[0] = PartyIdentification;
+				Party.PartyIdentification = PartyIdentifications;
+				#endregion
 
-                #region Datos de la empresa
+				#region Datos de la empresa
 
-                PartyLegalEntityType1[] PartyLegalEntitys = new PartyLegalEntityType1[1];
-                PartyLegalEntityType1 PartyLegalEntity = new PartyLegalEntityType1();
-                RegistrationNameType RegistrationName = new RegistrationNameType();
-                RegistrationName.Value = empresa.RazonSocial;
-                PartyLegalEntity.RegistrationName = RegistrationName;
-                PartyLegalEntitys[0] = PartyLegalEntity;
-                Party.PartyLegalEntity = PartyLegalEntitys;
+				PartyLegalEntityType1[] PartyLegalEntitys = new PartyLegalEntityType1[1];
+				PartyLegalEntityType1 PartyLegalEntity = new PartyLegalEntityType1();
+				RegistrationNameType RegistrationName = new RegistrationNameType();
+				RegistrationName.Value = empresa.RazonSocial;
+				PartyLegalEntity.RegistrationName = RegistrationName;
+				PartyLegalEntitys[0] = PartyLegalEntity;
+				Party.PartyLegalEntity = PartyLegalEntitys;
 
-                #endregion
+				#endregion
 
-                #region Dirección
-                LocationType2 PhysicalLocation = new LocationType2();
-                AddressType1 Address = new AddressType1();
+				#region Dirección
+				LocationType2 PhysicalLocation = new LocationType2();
+				AddressType1 Address = new AddressType1();
 
-                CityNameType City = new CityNameType();
-                City.Value = empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                Address.CityName = City;
+				CityNameType City = new CityNameType();
+				City.Value = empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				Address.CityName = City;
 
-                DepartmentType Department = new DepartmentType();
-                Department.Value = empresa.Departamento; //Departamento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                Address.Department = Department;
+				DepartmentType Department = new DepartmentType();
+				Department.Value = empresa.Departamento; //Departamento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				Address.Department = Department;
 
-                AddressLineType[] AddressLines = new AddressLineType[1];
-                AddressLineType AddressLine = new AddressLineType();
-                LineType Line = new LineType();
-                Line.Value = empresa.Direccion;
-                AddressLine.Line = Line;
+				AddressLineType[] AddressLines = new AddressLineType[1];
+				AddressLineType AddressLine = new AddressLineType();
+				LineType Line = new LineType();
+				Line.Value = empresa.Direccion;
+				AddressLine.Line = Line;
 
-                AddressLines[0] = AddressLine;
-                Address.AddressLine = AddressLines;
+				AddressLines[0] = AddressLine;
+				Address.AddressLine = AddressLines;
 
-                ContactType Contact = new ContactType();
-                TelephoneType Telephone = new TelephoneType();
-                Telephone.Value = empresa.Telefono;
-                Contact.Telephone = Telephone;
-                ElectronicMailType Mail = new ElectronicMailType();
-                Mail.Value = empresa.Email;
-                Contact.ElectronicMail = Mail;
-                Party.Contact = Contact;
+				ContactType Contact = new ContactType();
+				TelephoneType Telephone = new TelephoneType();
+				Telephone.Value = empresa.Telefono;
+				Contact.Telephone = Telephone;
+				ElectronicMailType Mail = new ElectronicMailType();
+				Mail.Value = empresa.Email;
+				Contact.ElectronicMail = Mail;
+				Party.Contact = Contact;
 
-                WebsiteURIType Web = new WebsiteURIType();
-                Web.Value = empresa.PaginaWeb;
-                Party.WebsiteURI = Web;
+				WebsiteURIType Web = new WebsiteURIType();
+				Web.Value = empresa.PaginaWeb;
+				Party.WebsiteURI = Web;
 
-                CountryType Country = new CountryType();
-                IdentificationCodeType IdentificationCode = new IdentificationCodeType();
-                IdentificationCode.Value = empresa.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                Country.IdentificationCode = IdentificationCode;
-                Address.Country = Country;
+				CountryType Country = new CountryType();
+				IdentificationCodeType IdentificationCode = new IdentificationCodeType();
+				IdentificationCode.Value = empresa.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				Country.IdentificationCode = IdentificationCode;
+				Address.Country = Country;
 
-                PhysicalLocation.Address = Address;
-                Party.PhysicalLocation = PhysicalLocation;
-                #endregion
+				PhysicalLocation.Address = Address;
+				Party.PhysicalLocation = PhysicalLocation;
+				#endregion
 
-                AccountingSupplierParty.Party = Party;
+				AccountingSupplierParty.Party = Party;
 
-                return AccountingSupplierParty;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				return AccountingSupplierParty;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-        /// <summary>
-        /// Llena el objeto del adquiriente con los datos del tercero
-        /// </summary>
-        /// <param name="tercero">Datos de la tercero</param>
-        /// <returns>Objeto de tipo SupplierPartyType1</returns>
-        private static CustomerPartyType1 ObtenerAquiriente(Tercero tercero)
-        {
-            try
-            {
-                if (tercero == null)
-                    throw new Exception("Los datos del tercero son inválidos.");
+		/// <summary>
+		/// Llena el objeto del adquiriente con los datos del tercero
+		/// </summary>
+		/// <param name="tercero">Datos de la tercero</param>
+		/// <returns>Objeto de tipo SupplierPartyType1</returns>
+		private static CustomerPartyType1 ObtenerAquiriente(Tercero tercero)
+		{
+			try
+			{
+				if (tercero == null)
+					throw new Exception("Los datos del tercero son inválidos.");
 
 
-                /* Tipo de persona en el ERP 
+				/* Tipo de persona en el ERP 
 					 1 Natural
 					 2 Jurídica                      
 				   para la Dian
@@ -560,7 +560,7 @@ namespace HGInetUBL
 				else if (tercero.TipoPersona == 2)
 					dian_tipoPersona = "1";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)*/
 
-                /* Tipo de regimen en el ERP 
+				/* Tipo de regimen en el ERP 
 					 1 Simplificado
 					 2 Comun                  
 					Para la Dian
@@ -581,442 +581,449 @@ namespace HGInetUBL
 				else if (tercero.TipoIdentificacion.Equals("CE"))
 					dian_tipoDocumento = "22";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN) */
 
-                // Datos del adquiriente de la factura
-                CustomerPartyType1 AccountingCustomerParty = new CustomerPartyType1();
-                PartyType1 Party = new PartyType1();
+				// Datos del adquiriente de la factura
+				CustomerPartyType1 AccountingCustomerParty = new CustomerPartyType1();
+				PartyType1 Party = new PartyType1();
 
-                #region Tipo de persona
-                AdditionalAccountIDType AdditionalAccountID = new AdditionalAccountIDType();
-                AdditionalAccountID.Value = tercero.TipoPersona.ToString();//Tipo de persona (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                AccountingCustomerParty.AdditionalAccountID = AdditionalAccountID;
-                #endregion
+				#region Tipo de persona
+				AdditionalAccountIDType AdditionalAccountID = new AdditionalAccountIDType();
+				AdditionalAccountID.Value = tercero.TipoPersona.ToString();//Tipo de persona (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				AccountingCustomerParty.AdditionalAccountID = AdditionalAccountID;
+				#endregion
 
-                #region Regimen
-                PartyTaxSchemeType1[] PartyTaxSchemes = new PartyTaxSchemeType1[1];
-                PartyTaxSchemeType1 PartyTaxScheme = new PartyTaxSchemeType1();
-                TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
-                TaxLevelCode.Value = tercero.Regimen.ToString();
-                PartyTaxScheme.TaxLevelCode = TaxLevelCode;
+				#region Regimen
+				PartyTaxSchemeType1[] PartyTaxSchemes = new PartyTaxSchemeType1[1];
+				PartyTaxSchemeType1 PartyTaxScheme = new PartyTaxSchemeType1();
+				TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
+				TaxLevelCode.Value = tercero.Regimen.ToString();
+				PartyTaxScheme.TaxLevelCode = TaxLevelCode;
 
-                TaxSchemeType TaxScheme = new TaxSchemeType();
-                PartyTaxScheme.TaxScheme = TaxScheme;
-                PartyTaxSchemes[0] = PartyTaxScheme;
-                Party.PartyTaxScheme = PartyTaxSchemes;
-                #endregion
+				TaxSchemeType TaxScheme = new TaxSchemeType();
+				PartyTaxScheme.TaxScheme = TaxScheme;
+				PartyTaxSchemes[0] = PartyTaxScheme;
+				Party.PartyTaxScheme = PartyTaxSchemes;
+				#endregion
 
-                #region Documento y tipo de documento
-                PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
-                PartyIdentificationType PartyIdentification = new PartyIdentificationType();
-                IDType ID = new IDType();
-                ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
-                ID.schemeAgencyID = "195";
-                ID.schemeID = tercero.TipoIdentificacion.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                ID.Value = tercero.Identificacion.ToString();
-                PartyIdentification.ID = ID;
-                PartyIdentifications[0] = PartyIdentification;
-                Party.PartyIdentification = PartyIdentifications;
-                #endregion
+				#region Documento y tipo de documento
+				PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
+				PartyIdentificationType PartyIdentification = new PartyIdentificationType();
+				IDType ID = new IDType();
+				ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
+				ID.schemeAgencyID = "195";
+				ID.schemeID = tercero.TipoIdentificacion.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				ID.Value = tercero.Identificacion.ToString();
+				PartyIdentification.ID = ID;
+				PartyIdentifications[0] = PartyIdentification;
+				Party.PartyIdentification = PartyIdentifications;
+				#endregion
 
-                #region Datos personales segun el tipo de persona
-                if (tercero.TipoPersona.Equals("2"))//Persona natural
-                {
-                    PersonType1 Person = new PersonType1();
+				#region Datos personales segun el tipo de persona
+				if (tercero.TipoPersona.Equals("2"))//Persona natural
+				{
+					PersonType1 Person = new PersonType1();
 
-                    FirstNameType FirstName = new FirstNameType();
-                    FirstName.Value = tercero.PrimerNombre;
-                    Person.FirstName = FirstName;
+					FirstNameType FirstName = new FirstNameType();
+					FirstName.Value = tercero.PrimerNombre;
+					Person.FirstName = FirstName;
 
-                    MiddleNameType MiddleName = new MiddleNameType();
-                    if (tercero.SegundoNombre != null && !tercero.SegundoNombre.Equals(string.Empty))
-                    {
-                        MiddleName.Value = tercero.SegundoNombre;
-                    }
-                    Person.MiddleName = MiddleName;
+					MiddleNameType MiddleName = new MiddleNameType();
+					if (tercero.SegundoNombre != null && !tercero.SegundoNombre.Equals(string.Empty))
+					{
+						MiddleName.Value = tercero.SegundoNombre;
+					}
+					Person.MiddleName = MiddleName;
 
-                    FamilyNameType FamilyName = new FamilyNameType();
-                    FamilyName.Value = string.Format("{0} {1}", tercero.PrimerApellido, tercero.SegundoApellido);
-                    Person.FamilyName = FamilyName;
+					FamilyNameType FamilyName = new FamilyNameType();
+					FamilyName.Value = string.Format("{0} {1}", tercero.PrimerApellido, tercero.SegundoApellido);
+					Person.FamilyName = FamilyName;
 
-                    Party.Person = Person;
-                }
-                else if (tercero.TipoPersona.Equals("1")) //Persona juridica
-                {
-                    PartyLegalEntityType1[] PartyLegalEntitys = new PartyLegalEntityType1[1];
-                    PartyLegalEntityType1 PartyLegalEntity = new PartyLegalEntityType1();
-                    RegistrationNameType RegistrationName = new RegistrationNameType();
-                    RegistrationName.Value = tercero.RazonSocial;
-                    PartyLegalEntity.RegistrationName = RegistrationName;
-                    PartyLegalEntitys[0] = PartyLegalEntity;
+					Party.Person = Person;
+				}
+				else if (tercero.TipoPersona.Equals("1")) //Persona juridica
+				{
+					PartyLegalEntityType1[] PartyLegalEntitys = new PartyLegalEntityType1[1];
+					PartyLegalEntityType1 PartyLegalEntity = new PartyLegalEntityType1();
+					RegistrationNameType RegistrationName = new RegistrationNameType();
+					RegistrationName.Value = tercero.RazonSocial;
+					PartyLegalEntity.RegistrationName = RegistrationName;
+					PartyLegalEntitys[0] = PartyLegalEntity;
 
-                    Party.PartyLegalEntity = PartyLegalEntitys;
-                }
-                #endregion
+					Party.PartyLegalEntity = PartyLegalEntitys;
+				}
+				#endregion
 
-                #region Dirección
-                LocationType2 PhysicalLocation = new LocationType2();
-                AddressType1 Address = new AddressType1();
+				#region Dirección
+				LocationType2 PhysicalLocation = new LocationType2();
+				AddressType1 Address = new AddressType1();
 
-                AddressLineType[] AddressLines = new AddressLineType[1];
-                AddressLineType AddressLine = new AddressLineType();
-                LineType Line = new LineType();
-                Line.Value = tercero.Direccion;
-                AddressLine.Line = Line;
+				AddressLineType[] AddressLines = new AddressLineType[1];
+				AddressLineType AddressLine = new AddressLineType();
+				LineType Line = new LineType();
+				Line.Value = tercero.Direccion;
+				AddressLine.Line = Line;
 
-                CityNameType City = new CityNameType();
-                City.Value = tercero.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                Address.CityName = City;
+				CityNameType City = new CityNameType();
+				City.Value = tercero.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				Address.CityName = City;
 
-                DepartmentType Department = new DepartmentType();
-                Department.Value = tercero.Departamento; //Departamento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                Address.Department = Department;
+				DepartmentType Department = new DepartmentType();
+				Department.Value = tercero.Departamento; //Departamento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				Address.Department = Department;
 
-                AddressLines[0] = AddressLine;
-                Address.AddressLine = AddressLines;
 
-                ContactType Contact = new ContactType();
-                TelephoneType Telephone = new TelephoneType();
-                Telephone.Value = tercero.Telefono;
-                Contact.Telephone = Telephone;
-                ElectronicMailType Mail = new ElectronicMailType();
+				CountryType Country = new CountryType();
+				IdentificationCodeType IdentificationCode = new IdentificationCodeType();
+				IdentificationCode.Value = tercero.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				Country.IdentificationCode = IdentificationCode;
+				Address.Country = Country;
+
+				AddressLines[0] = AddressLine;
+				Address.AddressLine = AddressLines;
+
+				ContactType Contact = new ContactType();
+				TelephoneType Telephone = new TelephoneType();
+				Telephone.Value = tercero.Telefono;
+				Contact.Telephone = Telephone;
+				ElectronicMailType Mail = new ElectronicMailType();
 				Mail.Value = tercero.Email;
-                Contact.ElectronicMail = Mail;
-                Party.Contact = Contact;
+				Contact.ElectronicMail = Mail;
+				Party.Contact = Contact;
 
-                WebsiteURIType Web = new WebsiteURIType();
-                Web.Value = tercero.PaginaWeb;
-                Party.WebsiteURI = Web;
+				WebsiteURIType Web = new WebsiteURIType();
+				Web.Value = tercero.PaginaWeb;
+				Party.WebsiteURI = Web;
 
-                PhysicalLocation.Address = Address;
-                Party.PhysicalLocation = PhysicalLocation;
-                #endregion
+				PhysicalLocation.Address = Address;
+				Party.PhysicalLocation = PhysicalLocation;
+				#endregion
 
-                AccountingCustomerParty.Party = Party;
+				AccountingCustomerParty.Party = Party;
 
-                return AccountingCustomerParty;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				return AccountingCustomerParty;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-        /// <summary>
-        /// Llena el objeto del detalle de la factura con los datos documento detalle
-        /// </summary>
-        /// <param name="DocumentoDetalle">Datos del detalle del documento</param>
-        /// <returns>Objeto de tipo InvoiceLineType1</returns>
-        private static InvoiceLineType1[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
-        {
-            try
-            {
-                if (documentoDetalle == null || !documentoDetalle.Any())
-                    throw new Exception("El detalle del documento es inválido.");
+		/// <summary>
+		/// Llena el objeto del detalle de la factura con los datos documento detalle
+		/// </summary>
+		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
+		/// <returns>Objeto de tipo InvoiceLineType1</returns>
+		private static InvoiceLineType1[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
+		{
+			try
+			{
+				if (documentoDetalle == null || !documentoDetalle.Any())
+					throw new Exception("El detalle del documento es inválido.");
 
-                InvoiceType factura = new InvoiceType();
-                InvoiceLineType1[] InvoicesLineType1 = new InvoiceLineType1[documentoDetalle.Count()];
+				InvoiceType factura = new InvoiceType();
+				InvoiceLineType1[] InvoicesLineType1 = new InvoiceLineType1[documentoDetalle.Count()];
 
-                int contadorPosicion = 0;
-                int contadorProducto = 1;
+				int contadorPosicion = 0;
+				int contadorProducto = 1;
 
-                foreach (var DocDet in documentoDetalle)
-                {
-                    decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
-                    InvoiceLineType1 InvoiceLineType1 = new InvoiceLineType1();
+				foreach (var DocDet in documentoDetalle)
+				{
+					decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
+					InvoiceLineType1 InvoiceLineType1 = new InvoiceLineType1();
 
-                    #region Id producto definido por la Dian (Contador de productos iniciando desde 1)
-                    IDType ID = new IDType();
-                    ID.Value = contadorProducto.ToString();
-                    InvoiceLineType1.ID = ID;
-                    #endregion
+					#region Id producto definido por la Dian (Contador de productos iniciando desde 1)
+					IDType ID = new IDType();
+					ID.Value = contadorProducto.ToString();
+					InvoiceLineType1.ID = ID;
+					#endregion
 
-                    #region Cantidad producto
-                    InvoicedQuantityType InvoicedQuantity = new InvoicedQuantityType();
-                    InvoicedQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
-                    InvoiceLineType1.InvoicedQuantity = InvoicedQuantity;
-                    #endregion
+					#region Cantidad producto
+					InvoicedQuantityType InvoicedQuantity = new InvoicedQuantityType();
+					InvoicedQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
+					InvoiceLineType1.InvoicedQuantity = InvoicedQuantity;
+					#endregion
 
-                    #region Valor Total
-                    LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
-                    LineExtensionAmount.currencyID = CurrencyCodeContentType.COP; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                    LineExtensionAmount.Value = decimal.Round(valorTotal, 2);
-                    InvoiceLineType1.LineExtensionAmount = LineExtensionAmount;
-                    #endregion
+					#region Valor Total
+					LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
+					LineExtensionAmount.currencyID = CurrencyCodeContentType.COP; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					LineExtensionAmount.Value = decimal.Round(valorTotal, 2);
+					InvoiceLineType1.LineExtensionAmount = LineExtensionAmount;
+					#endregion
 
-                    #region Datos producto
-                    ItemType1 Item = new ItemType1();
+					#region Datos producto
+					ItemType1 Item = new ItemType1();
 
-                    #region Descripcion producto
-                    DescriptionType[] Descriptions = new DescriptionType[1];
-                    DescriptionType Description = new DescriptionType();
-                    Description.Value = DocDet.ProductoDescripcion;
-                    Descriptions[0] = Description;
-                    Item.Description = Descriptions;
-                    #endregion
+					#region Descripcion producto
+					DescriptionType[] Descriptions = new DescriptionType[1];
+					DescriptionType Description = new DescriptionType();
+					Description.Value = DocDet.ProductoDescripcion;
+					Descriptions[0] = Description;
+					Item.Description = Descriptions;
+					#endregion
 
-                    #region Id producto definido por la Empresa ***///
-                    ItemIdentificationType CatalogueItemIdentification = new ItemIdentificationType();
-                    IDType IDItem = new IDType();
-                    IDItem.Value = DocDet.ProductoCodigo;
-                    CatalogueItemIdentification.ID = IDItem;
-                    Item.CatalogueItemIdentification = CatalogueItemIdentification;
-                    #endregion
+					#region Id producto definido por la Empresa ***///
+					ItemIdentificationType CatalogueItemIdentification = new ItemIdentificationType();
+					IDType IDItem = new IDType();
+					IDItem.Value = DocDet.ProductoCodigo;
+					CatalogueItemIdentification.ID = IDItem;
+					Item.CatalogueItemIdentification = CatalogueItemIdentification;
+					#endregion
 
-                    InvoiceLineType1.Item = Item;
-                    #endregion
+					InvoiceLineType1.Item = Item;
+					#endregion
 
-                    #region Valor Unitario producto
-                    PriceType1 Price = new PriceType1();
-                    PriceAmountType PriceAmount = new PriceAmountType();
-                    PriceAmount.currencyID = CurrencyCodeContentType.COP; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                    PriceAmount.Value = decimal.Round(DocDet.ValorUnitario, 2);
-                    Price.PriceAmount = PriceAmount;
-                    InvoiceLineType1.Price = Price;
-                    #endregion
+					#region Valor Unitario producto
+					PriceType1 Price = new PriceType1();
+					PriceAmountType PriceAmount = new PriceAmountType();
+					PriceAmount.currencyID = CurrencyCodeContentType.COP; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					PriceAmount.Value = decimal.Round(DocDet.ValorUnitario, 2);
+					Price.PriceAmount = PriceAmount;
+					InvoiceLineType1.Price = Price;
+					#endregion
 
-                    InvoicesLineType1[contadorPosicion] = InvoiceLineType1;
-                    contadorProducto++;
-                    contadorPosicion++;
-                }
+					InvoicesLineType1[contadorPosicion] = InvoiceLineType1;
+					contadorProducto++;
+					contadorPosicion++;
+				}
 
-                factura.InvoiceLine = InvoicesLineType1;
-                return factura.InvoiceLine;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
+				factura.InvoiceLine = InvoicesLineType1;
+				return factura.InvoiceLine;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
 
-        }
+		}
 
-        /// <summary>
-        /// Llena el objeto de los impuestos de la factura con los datos documento detalle
-        /// </summary>
-        /// <param name="documentoDetalle">Datos del detalle del documento</param>
-        /// <returns>Objeto de tipo TaxTotalType1</returns>
-        private static TaxTotalType1[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle)
-        {
-            try
-            {
-                if (documentoDetalle == null || documentoDetalle.Count == 0)
-                    throw new Exception("El detalle del documento es inválido.");
+		/// <summary>
+		/// Llena el objeto de los impuestos de la factura con los datos documento detalle
+		/// </summary>
+		/// <param name="documentoDetalle">Datos del detalle del documento</param>
+		/// <returns>Objeto de tipo TaxTotalType1</returns>
+		private static TaxTotalType1[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle)
+		{
+			try
+			{
+				if (documentoDetalle == null || documentoDetalle.Count == 0)
+					throw new Exception("El detalle del documento es inválido.");
 
-                //Toma los impuestos de IVA que tiene el producto en el detalle del documento
-                var impuestos_iva = documentoDetalle.Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor }).Distinct();
+				//Toma los impuestos de IVA que tiene el producto en el detalle del documento
+				var impuestos_iva = documentoDetalle.Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor }).Distinct();
 
-                List<DocumentoImpuestos> doc_impuestos = new List<DocumentoImpuestos>();
+				List<DocumentoImpuestos> doc_impuestos = new List<DocumentoImpuestos>();
 
-                decimal BaseImponibleImpuesto = 0;
+				decimal BaseImponibleImpuesto = 0;
 
-                foreach (var item in impuestos_iva)
-                {
-                    DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-                    List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
-                    BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
+				foreach (var item in impuestos_iva)
+				{
+					DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+					List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
+					BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
 
-                    //imp_doc.Codigo = item.IntIva;
-                    //imp_doc.Nombre = item.StrDescripcion;
-                    imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje, 2);
-                    imp_doc.TipoImpuesto = item.Iva;
-                    imp_doc.BaseImponible = BaseImponibleImpuesto;
-                    foreach (var docDet in doc_)
-                    {
-                        imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IvaValor, 2);
-                    }
-                    doc_impuestos.Add(imp_doc);
-                }
+					//imp_doc.Codigo = item.IntIva;
+					//imp_doc.Nombre = item.StrDescripcion;
+					imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje, 2);
+					imp_doc.TipoImpuesto = item.Iva;
+					imp_doc.BaseImponible = BaseImponibleImpuesto;
+					foreach (var docDet in doc_)
+					{
+						imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IvaValor, 2);
+					}
+					doc_impuestos.Add(imp_doc);
+				}
 
-                //Toma el impuesto al consumo de los productos que esten el detalle
-                var impuesto_consumo = documentoDetalle.Select(_consumo => new { _consumo.ValorImpuestoConsumo, TipoImpuestos.Consumo }).Distinct();
-                decimal BaseImponibleImpConsumo = 0;
-
-
-                
-                if (impuesto_consumo.Count() > 0)
-                {
-                    foreach (var item in impuesto_consumo)
-                    {
-                        //Valida si hay algun producto con impuesto al consumo
-                        if (item.ValorImpuestoConsumo != 0)
-                        {
-                            DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-                            List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).ToList();
-                            BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
-
-                            //imp_doc.Codigo = item.IntImpConsumo.ToString();
-                            //imp_doc.Nombre = item.StrDescripcion;
-                            imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2);
-                            imp_doc.TipoImpuesto = item.Consumo;
-                            imp_doc.BaseImponible = BaseImponibleImpConsumo;
-                            foreach (var docDet in doc_)
-                            {
-                                imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2);
-                            }
-                            doc_impuestos.Add(imp_doc);
-                        }
-
-                    }
-                }
-
-                //Toma el ReteICA de los productos que esten el detalle
-                var impuesto_ica = documentoDetalle.Select(_ica => new { _ica.ReteIcaPorcentaje, TipoImpuestos.Ica, _ica.ReteIcaValor }).Distinct();
-                decimal BaseImponibleReteIca = 0;
-
-
-                if (impuesto_ica.Count() > 0)
-                {
-                    foreach ( var item in impuesto_ica)
-                    {
-                        //Valida si hay algun producto con ReteICA
-                        if (item.ReteIcaValor != 0)
-                        {
-                            DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-                            List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).ToList();
-                            BaseImponibleReteIca = decimal.Round(documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
-
-                            imp_doc.Porcentaje = decimal.Round(item.ReteIcaPorcentaje, 2);
-                            imp_doc.TipoImpuesto = item.Ica;
-                            imp_doc.BaseImponible = BaseImponibleReteIca;
-                            foreach ( var docDet in doc_)
-                            {
-                                imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ReteIcaValor, 2);
-                            }
-                            doc_impuestos.Add(imp_doc);
-                        }
-
-                    }
-
-                }
+				//Toma el impuesto al consumo de los productos que esten el detalle
+				var impuesto_consumo = documentoDetalle.Select(_consumo => new { _consumo.ValorImpuestoConsumo, TipoImpuestos.Consumo }).Distinct();
+				decimal BaseImponibleImpConsumo = 0;
 
 
 
-                    //var retencion = documentoDetalle.Select(_retencion => new { _retencion.TblProductos.IntRetencion, _retencion.TblProductos.TblRetencionFte.IntBase, Recursos.TipoImpuestos.Retencion, _retencion.TblProductos.TblRetencionFte.StrDescripcion, _retencion.TblProductos.TblRetencionFte.IntIdRetencion, _retencion.TblProductos.TblRetencionFte.IntPorcentaje, _retencion.TblProductos.TblRetencionFte.IntPorcentajePn }).Distinct();
-                    //decimal BaseImponibleRetencion = 0;
+				if (impuesto_consumo.Count() > 0)
+				{
+					foreach (var item in impuesto_consumo)
+					{
+						//Valida si hay algun producto con impuesto al consumo
+						if (item.ValorImpuestoConsumo != 0)
+						{
+							DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).ToList();
+							BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
+
+							//imp_doc.Codigo = item.IntImpConsumo.ToString();
+							//imp_doc.Nombre = item.StrDescripcion;
+							imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2);
+							imp_doc.TipoImpuesto = item.Consumo;
+							imp_doc.BaseImponible = BaseImponibleImpConsumo;
+							foreach (var docDet in doc_)
+							{
+								imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2);
+							}
+							doc_impuestos.Add(imp_doc);
+						}
+
+					}
+				}
+
+				//Toma el ReteICA de los productos que esten el detalle
+				var impuesto_ica = documentoDetalle.Select(_ica => new { _ica.ReteIcaPorcentaje, TipoImpuestos.Ica, _ica.ReteIcaValor }).Distinct();
+				decimal BaseImponibleReteIca = 0;
 
 
-                    /*if (retencion.Count() > 0)
-                    {
-                        TblTerceros tercero = new TblTerceros();
+				if (impuesto_ica.Count() > 0)
+				{
+					foreach (var item in impuesto_ica)
+					{
+						//Valida si hay algun producto con ReteICA
+						if (item.ReteIcaValor != 0)
+						{
+							DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).ToList();
+							BaseImponibleReteIca = decimal.Round(documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
 
-                        foreach (var item in retencion)
-                        {
-                            DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-                            List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).ToList();
-                            BaseImponibleRetencion = decimal.Round(documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).Sum(docDet => docDet.IntValorUnitario * docDet.IntCantidad), 2);
+							imp_doc.Porcentaje = decimal.Round(item.ReteIcaPorcentaje, 2);
+							imp_doc.TipoImpuesto = item.Ica;
+							imp_doc.BaseImponible = BaseImponibleReteIca;
+							foreach (var docDet in doc_)
+							{
+								imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ReteIcaValor, 2);
+							}
+							doc_impuestos.Add(imp_doc);
+						}
 
-                            imp_doc.Codigo = item.IntIdRetencion.ToString();
-                            imp_doc.Nombre = item.StrDescripcion;
+					}
 
-                            //Porcentaje de retencion segun el tipo de Persona: 1-Natural, 2-Juridica
-                            if (tercero.IntTipoPersona == 1)
-                            {
-                                imp_doc.Porcentaje = decimal.Round(item.IntPorcentajePn, 2);
-                            }
-                            else
-                            {
-                                imp_doc.Porcentaje = decimal.Round(item.IntPorcentaje, 2);
-                            }
-                            imp_doc.BaseImponible = BaseImponibleRetencion;
-                            foreach (var docDet in doc_)
-                            {
-                                imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IntReteFte,2);
-                            }
-                            doc_impuestos.Add(imp_doc);
-
-                        }
+				}
 
 
-                    }*/
+
+				//var retencion = documentoDetalle.Select(_retencion => new { _retencion.TblProductos.IntRetencion, _retencion.TblProductos.TblRetencionFte.IntBase, Recursos.TipoImpuestos.Retencion, _retencion.TblProductos.TblRetencionFte.StrDescripcion, _retencion.TblProductos.TblRetencionFte.IntIdRetencion, _retencion.TblProductos.TblRetencionFte.IntPorcentaje, _retencion.TblProductos.TblRetencionFte.IntPorcentajePn }).Distinct();
+				//decimal BaseImponibleRetencion = 0;
 
 
-                    TaxTotalType1[] TaxTotals = new TaxTotalType1[doc_impuestos.Count];
+				/*if (retencion.Count() > 0)
+				{
+					TblTerceros tercero = new TblTerceros();
 
-                int contador = 0;
-                foreach (var item in doc_impuestos)
-                {
+					foreach (var item in retencion)
+					{
+						DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+						List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).ToList();
+						BaseImponibleRetencion = decimal.Round(documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).Sum(docDet => docDet.IntValorUnitario * docDet.IntCantidad), 2);
 
-                    TaxTotalType1 TaxTotal = new TaxTotalType1();
+						imp_doc.Codigo = item.IntIdRetencion.ToString();
+						imp_doc.Nombre = item.StrDescripcion;
 
-                    #region Importe Impuesto: Importe del impuesto retenido
-                    TaxAmountType TaxAmount = new TaxAmountType();
-                    TaxAmount.currencyID = CurrencyCodeContentType.COP;
-                    TaxAmount.Value = decimal.Round(item.ValorImpuesto, 2);
-                    TaxTotal.TaxAmount = TaxAmount;
-                    #endregion
+						//Porcentaje de retencion segun el tipo de Persona: 1-Natural, 2-Juridica
+						if (tercero.IntTipoPersona == 1)
+						{
+							imp_doc.Porcentaje = decimal.Round(item.IntPorcentajePn, 2);
+						}
+						else
+						{
+							imp_doc.Porcentaje = decimal.Round(item.IntPorcentaje, 2);
+						}
+						imp_doc.BaseImponible = BaseImponibleRetencion;
+						foreach (var docDet in doc_)
+						{
+							imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IntReteFte,2);
+						}
+						doc_impuestos.Add(imp_doc);
 
-                    #region Impuesto Legal ***PENDIENTE
-                    // Indicador de si estos totales se reconocen como evidencia legal a efectos impositivos.
-                    TaxEvidenceIndicatorType TaxEvidenceIndicator = new TaxEvidenceIndicatorType();
-                    TaxEvidenceIndicator.Value = false;
-                    TaxTotal.TaxEvidenceIndicator = TaxEvidenceIndicator;
-                    #endregion
+					}
 
-                    TaxSubtotalType1[] TaxSubtotals = new TaxSubtotalType1[1];
-                    TaxSubtotalType1 TaxSubtotal = new TaxSubtotalType1();
 
-                    #region Base Imponible: Base	Imponible sobre la que se calcula la retención de impuesto
-                    //Base Imponible = Importe bruto + cargos - descuentos
-                    TaxableAmountType TaxableAmount = new TaxableAmountType();
-                    TaxableAmount.currencyID = CurrencyCodeContentType.COP;
-                    TaxableAmount.Value = decimal.Round(item.BaseImponible, 2);
-                    TaxSubtotal.TaxableAmount = TaxableAmount;
-                    #endregion
+				}*/
 
-                    #region Importe Impuesto (detalle): Importe del impuesto retenido
-                    //Valor total del impuesto retenido
-                    TaxAmountType TaxAmountSubtotal = new TaxAmountType();
-                    TaxAmountSubtotal.currencyID = CurrencyCodeContentType.COP;
-                    TaxAmountSubtotal.Value = decimal.Round(item.ValorImpuesto, 2);
-                    TaxSubtotal.TaxAmount = TaxAmountSubtotal;
-                    #endregion
 
-                    #region Porcentaje: Porcentaje a aplicar
-                    PercentType Percent = new PercentType();
-                    Percent = new PercentType();
-                    Percent.Value = item.Porcentaje;
-                    TaxSubtotal.Percent = Percent;
-                    #endregion
+				TaxTotalType1[] TaxTotals = new TaxTotalType1[doc_impuestos.Count];
 
-                    #region Tipo o clase impuesto
-                    /* Tipo o clase impuesto. Concepto fiscal por el que se tributa. Debería si un	campo que referencia a una lista de códigos. En
+				int contador = 0;
+				foreach (var item in doc_impuestos)
+				{
+
+					TaxTotalType1 TaxTotal = new TaxTotalType1();
+
+					#region Importe Impuesto: Importe del impuesto retenido
+					TaxAmountType TaxAmount = new TaxAmountType();
+					TaxAmount.currencyID = CurrencyCodeContentType.COP;
+					TaxAmount.Value = decimal.Round(item.ValorImpuesto, 2);
+					TaxTotal.TaxAmount = TaxAmount;
+					#endregion
+
+					#region Impuesto Legal ***PENDIENTE
+					// Indicador de si estos totales se reconocen como evidencia legal a efectos impositivos.
+					TaxEvidenceIndicatorType TaxEvidenceIndicator = new TaxEvidenceIndicatorType();
+					TaxEvidenceIndicator.Value = false;
+					TaxTotal.TaxEvidenceIndicator = TaxEvidenceIndicator;
+					#endregion
+
+					TaxSubtotalType1[] TaxSubtotals = new TaxSubtotalType1[1];
+					TaxSubtotalType1 TaxSubtotal = new TaxSubtotalType1();
+
+					#region Base Imponible: Base	Imponible sobre la que se calcula la retención de impuesto
+					//Base Imponible = Importe bruto + cargos - descuentos
+					TaxableAmountType TaxableAmount = new TaxableAmountType();
+					TaxableAmount.currencyID = CurrencyCodeContentType.COP;
+					TaxableAmount.Value = decimal.Round(item.BaseImponible, 2);
+					TaxSubtotal.TaxableAmount = TaxableAmount;
+					#endregion
+
+					#region Importe Impuesto (detalle): Importe del impuesto retenido
+					//Valor total del impuesto retenido
+					TaxAmountType TaxAmountSubtotal = new TaxAmountType();
+					TaxAmountSubtotal.currencyID = CurrencyCodeContentType.COP;
+					TaxAmountSubtotal.Value = decimal.Round(item.ValorImpuesto, 2);
+					TaxSubtotal.TaxAmount = TaxAmountSubtotal;
+					#endregion
+
+					#region Porcentaje: Porcentaje a aplicar
+					PercentType Percent = new PercentType();
+					Percent = new PercentType();
+					Percent.Value = item.Porcentaje;
+					TaxSubtotal.Percent = Percent;
+					#endregion
+
+					#region Tipo o clase impuesto
+					/* Tipo o clase impuesto. Concepto fiscal por el que se tributa. Debería si un	campo que referencia a una lista de códigos. En
 					   la lista deberían aparecer los impuestos	estatales o nacionales*/
-                    TaxCategoryType TaxCategory = new TaxCategoryType();
-                    TaxSchemeType TaxScheme = new TaxSchemeType();
-                    IDType IDTaxScheme = new IDType();
-                    IDTaxScheme.Value = TipoImpuestos.Iva;//(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-                    TaxScheme.ID = IDTaxScheme;
+					TaxCategoryType TaxCategory = new TaxCategoryType();
+					TaxSchemeType TaxScheme = new TaxSchemeType();
+					IDType IDTaxScheme = new IDType();
+					IDTaxScheme.Value = TipoImpuestos.Iva;//(LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					TaxScheme.ID = IDTaxScheme;
 
-                    NameType1 Name = new NameType1();
-                    Name.Value = item.Porcentaje.ToString();
+					NameType1 Name = new NameType1();
+					Name.Value = item.Porcentaje.ToString();
 
-                    TaxScheme.Name = Name;
-                    TaxCategory.TaxScheme = TaxScheme;
-                    TaxSubtotal.TaxCategory = TaxCategory;
-                    #endregion
+					TaxScheme.Name = Name;
+					TaxCategory.TaxScheme = TaxScheme;
+					TaxSubtotal.TaxCategory = TaxCategory;
+					#endregion
 
-                    TaxSubtotals[0] = TaxSubtotal;
-                    TaxTotal.TaxSubtotal = TaxSubtotals;
-                    TaxTotals[contador] = TaxTotal;
-                    contador++;
-                }
+					TaxSubtotals[0] = TaxSubtotal;
+					TaxTotal.TaxSubtotal = TaxSubtotals;
+					TaxTotals[contador] = TaxTotal;
+					contador++;
+				}
 
-                return TaxTotals;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				return TaxTotals;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-        /// <summary>
-        /// Obtiene los valores del encabezado del documento
-        /// </summary>
-        /// <param name="documento">datos del documento</param>
-        /// <returns>MonetaryTotalType1</returns>
-        private static MonetaryTotalType1 ObtenerTotales(Factura documento)
-        {
-            try
-            {
-                /*
+		/// <summary>
+		/// Obtiene los valores del encabezado del documento
+		/// </summary>
+		/// <param name="documento">datos del documento</param>
+		/// <returns>MonetaryTotalType1</returns>
+		private static MonetaryTotalType1 ObtenerTotales(Factura documento)
+		{
+			try
+			{
+				/*
 					http://www.sfti.se/download/18.1498118f15dce5e8b1e9bb1e/1502968653471/20170315-PEPPOL_BIS_4A-401.pdf
 					
 					https://peppol.eu/downloads/post-award/
@@ -1063,58 +1070,58 @@ namespace HGInetUBL
 				 
 				 */
 
-                MonetaryTotalType1 LegalMonetaryTotal = new MonetaryTotalType1();
+				MonetaryTotalType1 LegalMonetaryTotal = new MonetaryTotalType1();
 
-                #region Total Importe bruto antes de impuestos
-                // cbc:LineExtensionAmount [0..1]    The total of Line Extension Amounts net of tax and settlement discounts, but inclusive of any applicable rounding amount.
-                //	Total importe bruto, suma de los importes brutos de las líneas de la factura.
-                LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
-                LineExtensionAmount.currencyID = CurrencyCodeContentType.COP;
-                LineExtensionAmount.Value = decimal.Round(documento.ValorSubtotal, 2);
-                LegalMonetaryTotal.LineExtensionAmount = LineExtensionAmount;
-                #endregion
+				#region Total Importe bruto antes de impuestos
+				// cbc:LineExtensionAmount [0..1]    The total of Line Extension Amounts net of tax and settlement discounts, but inclusive of any applicable rounding amount.
+				//	Total importe bruto, suma de los importes brutos de las líneas de la factura.
+				LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
+				LineExtensionAmount.currencyID = CurrencyCodeContentType.COP;
+				LineExtensionAmount.Value = decimal.Round(documento.ValorSubtotal, 2);
+				LegalMonetaryTotal.LineExtensionAmount = LineExtensionAmount;
+				#endregion
 
-                #region Valor total base imponible (generó impuestos)
-                //Total Base Imponible (Importe Bruto+Cargos-Descuentos): Base imponible para el cálculo de los impuestos.
-                //Subtotal de la factura.
-                TaxExclusiveAmountType TaxExclusiveAmount = new TaxExclusiveAmountType();
-                TaxExclusiveAmount.currencyID = CurrencyCodeContentType.COP;
-                TaxExclusiveAmount.Value = decimal.Round(documento.ValorIva, 2);
-                LegalMonetaryTotal.TaxExclusiveAmount = TaxExclusiveAmount;
-                #endregion
+				#region Valor total base imponible (generó impuestos)
+				//Total Base Imponible (Importe Bruto+Cargos-Descuentos): Base imponible para el cálculo de los impuestos.
+				//Subtotal de la factura.
+				TaxExclusiveAmountType TaxExclusiveAmount = new TaxExclusiveAmountType();
+				TaxExclusiveAmount.currencyID = CurrencyCodeContentType.COP;
+				TaxExclusiveAmount.Value = decimal.Round(documento.ValorIva, 2);
+				LegalMonetaryTotal.TaxExclusiveAmount = TaxExclusiveAmount;
+				#endregion
 
-                //Opcional no usado por la DIAN, las partes pueden definir un significado o simplemente omitirlo
-                /*#region Valor total base no imponible (no generó impuestos)
+				//Opcional no usado por la DIAN, las partes pueden definir un significado o simplemente omitirlo
+				/*#region Valor total base no imponible (no generó impuestos)
 				TaxInclusiveAmountType TaxInclusiveAmount = new TaxInclusiveAmountType();
 				TaxInclusiveAmount.currencyID = CurrencyCodeContentType.COP;
 				TaxInclusiveAmount.Value = decimal.Round(documento.IntSubtotal, 2);
 				LegalMonetaryTotal.TaxInclusiveAmount = TaxInclusiveAmount;
 				#endregion*/
 
-                #region Descuentos
-                // Total de Descuentos: Suma de todos los descuentos presentes
-                AllowanceTotalAmountType AllowanceTotalAmount = new AllowanceTotalAmountType();
-                AllowanceTotalAmount.currencyID = CurrencyCodeContentType.COP;
-                AllowanceTotalAmount.Value = decimal.Round(documento.ValorDescuento, 2);
-                LegalMonetaryTotal.AllowanceTotalAmount = AllowanceTotalAmount;
+				#region Descuentos
+				// Total de Descuentos: Suma de todos los descuentos presentes
+				AllowanceTotalAmountType AllowanceTotalAmount = new AllowanceTotalAmountType();
+				AllowanceTotalAmount.currencyID = CurrencyCodeContentType.COP;
+				AllowanceTotalAmount.Value = decimal.Round(documento.ValorDescuento, 2);
+				LegalMonetaryTotal.AllowanceTotalAmount = AllowanceTotalAmount;
 
-                #endregion
+				#endregion
 
-                #region Valor total de pago //  Total de Factura =  Valor total bases - Valor descuentos + Valor total Impuestos - Valor total impuestos retenidos
-                PayableAmountType PayableAmount = new PayableAmountType();
-                PayableAmount.currencyID = CurrencyCodeContentType.COP;
-                PayableAmount.Value = decimal.Round(documento.Total, 2);
-                LegalMonetaryTotal.PayableAmount = PayableAmount;
-                #endregion
+				#region Valor total de pago //  Total de Factura =  Valor total bases - Valor descuentos + Valor total Impuestos - Valor total impuestos retenidos
+				PayableAmountType PayableAmount = new PayableAmountType();
+				PayableAmount.currencyID = CurrencyCodeContentType.COP;
+				PayableAmount.Value = decimal.Round(documento.Total, 2);
+				LegalMonetaryTotal.PayableAmount = PayableAmount;
+				#endregion
 
-                return LegalMonetaryTotal;
+				return LegalMonetaryTotal;
 
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
-    }
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+	}
 }
 
