@@ -132,9 +132,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						break;
 				}
 
+
+				// carpeta del xml
+				string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
+				carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
+
+				// valida la existencia de la carpeta
+				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
+
 				// ruta del xml
-				string ruta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
-				ruta_xml = string.Format(@"{0}\{1}.xml", ruta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento.NombreXml);
+				string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_xml, documento.NombreXml);
 				
 				// elimina el archivo xml si existe
 				if (Archivo.ValidarExistencia(ruta_xml))

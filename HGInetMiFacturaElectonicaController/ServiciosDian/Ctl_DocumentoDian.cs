@@ -55,8 +55,12 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 			
 			// ruta del zip
 			string ruta_zip = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
-			ruta_zip = string.Format(@"{0}\{1}.zip", ruta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento.NombreZip);
-
+			ruta_zip = string.Format(@"{0}{1}\{2}.zip", ruta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento.NombreZip);
+			
+			// valida el archivo zip si existe
+			if (!Archivo.ValidarExistencia(ruta_zip))
+				throw new ApplicationException(string.Format("No se encuentra la ruta del archivo zip: {0}", ruta_zip));
+				
 			// envía el documento a través de los servicios web de la DIAN
 			AcuseRecibo acuse = Ctl_Factura.Enviar(documento.ID, data_dian.IdSoftware, data_dian.ClaveAmbiente, prefijo, numero, fecha, nit_obligado, ruta_zip, data_dian.UrlServicioWeb);
 

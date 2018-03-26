@@ -45,12 +45,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			// ruta del xml
 			string ruta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
-			ruta_xml = string.Format(@"{0}\{1}.xml", ruta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento.NombreXml);
+			ruta_xml = string.Format(@"{0}{1}\{2}.xml", ruta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento.NombreXml);
+
+			// carpeta del zip
+			string carpeta_zip = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
+			carpeta_zip = string.Format(@"{0}{1}", carpeta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
+
+			// valida la existencia de la carpeta
+			carpeta_zip = Directorio.CrearDirectorio(carpeta_zip);
 
 			// ruta del zip
-			string ruta_zip = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
-			ruta_zip = string.Format(@"{0}\{1}.zip", ruta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento.NombreZip);
-
+			string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_zip, documento.NombreZip);
+			
 			// elimina el archivo zip si existe
 			if (Archivo.ValidarExistencia(ruta_zip))
 				Archivo.Borrar(ruta_zip);
