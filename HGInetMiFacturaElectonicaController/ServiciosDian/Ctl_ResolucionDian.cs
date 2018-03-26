@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HGInetDIANServicios;
+using HGInetDIANServicios.DianResolucion;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 
@@ -15,7 +17,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 			try
 			{
 				// Producción HGI SAS
-				HGInetDIANServicios.DianResolucion.ResolucionesFacturacion resoluciones_produccion = HGInetDIANServicios.Ctl_Resolucion.Obtener(id_peticion, id_software, clave, nit_empresa, nit_proveedor, Fecha.GetFecha());
+				ResolucionesFacturacion resoluciones_produccion = Ctl_Resolucion.Obtener(id_peticion, id_software, clave, nit_empresa, nit_proveedor, Fecha.GetFecha());
 
 				string carpeta = Directorio.CrearDirectorio(AppDomain.CurrentDomain.BaseDirectory + @"_LogFacturaE\");
 
