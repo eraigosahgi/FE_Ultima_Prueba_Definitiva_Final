@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaData
 {
-	public class DianProveedor : ConfigurationElement
+	public class DianProveedorTest : ConfigurationElement
 	{
 		[ConfigurationProperty("NitProveedor", DefaultValue = "", IsKey = true, IsRequired = true)]
 		public string NitProveedor
@@ -43,8 +43,8 @@ namespace HGInetMiFacturaElectonicaData
 			get { return (string)this["UrlServicioWeb"]; }
 			set { this["UrlServicioWeb"] = value; }
 		}
-		
-		public DianProveedor() { }
+
+		public DianProveedorTest() { }
 
 	}
 }

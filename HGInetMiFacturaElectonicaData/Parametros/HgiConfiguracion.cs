@@ -56,5 +56,17 @@ namespace HGInetMiFacturaElectonicaData
 			}
 			//set { this["DianProveedor"] = value; }
 		}
+
+		[ConfigurationProperty("dianProveedorTest")]
+		public DianProveedorTest DianProveedorTest
+		{
+			get
+			{
+				DianProveedorTest dian_tmp = this["dianProveedorTest"] as DianProveedorTest;
+
+				return dian_tmp;
+			}
+			//set { this["DianProveedor"] = value; }
+		}
 	}
 }
