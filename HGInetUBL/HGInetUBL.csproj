@@ -827,6 +827,7 @@
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\NameType.cs" />
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\QuantityType.cs" />
     <Compile Include="Dian_UnqualifiedDataTypesSchemaModule\TextType.cs" />
+    <Compile Include="XML\NotaCreditoXML.cs" />
     <Compile Include="XML\NotaDebitoXML.cs" />
   </ItemGroup>
   <ItemGroup>

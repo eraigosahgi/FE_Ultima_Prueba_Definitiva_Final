@@ -34,14 +34,29 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public string Cufe { get; set; }
 
         /// <summary>
-        /// Fecha de documento
+        /// Cufe identificador unico de la Factura afectada
+        /// </summary>
+        public string CufeFactura { get; set; }
+
+        /// <summary>
+        /// Fecha de la Nota Credito
         /// </summary>
         public DateTime Fecha { get; set; }
+
+        /// <summary>
+        /// Fecha de la Factura afectada
+        /// </summary>
+        public DateTime FechaFactura { get; set; }
 
         /// <summary>
         /// Observaciones del documento
         /// </summary>
         public string Nota { get; set; }
+
+        /// <summary>
+        /// Concepto por el cual genera la nota, codigo Según Tabla DIAN.
+        /// </summary>
+        public string Concepto { get; set; }
 
         /// <summary>
         /// Codigo Moneda del documento segun tabla DIAN
