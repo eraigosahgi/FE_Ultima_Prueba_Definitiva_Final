@@ -58,14 +58,14 @@ namespace HGInetDIANServicios
 				catch (Exception e)
 				{
 					// valida si la excepción es diferente de serializar para lanzarla
-					if (!e.Message.Contains("deserializar") || !e.StackTrace.Contains("XmlSerializer") || !e.StackTrace.Contains("'Security'"))
+					if (!e.Message.Contains("deserializar") || !e.StackTrace.Contains("XmlSerializer") || !e.Message.Contains("encabezado 'Security'") || !e.StackTrace.Contains("'Security'"))
 						throw e;
 				}
 				finally
 				{
-					string carpeta = Directorio.CrearDirectorio(AppDomain.CurrentDomain.BaseDirectory + @"_LogFacturaE\");
-
-					string archivo = id_peticion.ToString() + ".xml";
+                    string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
+                    
+                    string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
 
 					// almacena el mensaje de respuesta del servicio web
 					archivo = Xml.GuardarXml(behavior.Inspector.XmlResponse, carpeta, archivo);

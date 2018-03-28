@@ -54,8 +54,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 			}
 			
 			// ruta del zip
-			string ruta_zip = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
-			ruta_zip = string.Format(@"{0}{1}\{2}.zip", ruta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento.NombreZip);
+			string ruta_zip = string.Format(@"{0}\{1}.zip", documento.RutaArchivosEnvio, documento.NombreZip);
 			
 			// valida el archivo zip si existe
 			if (!Archivo.ValidarExistencia(ruta_zip))

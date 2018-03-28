@@ -153,7 +153,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					file.WriteLine(documento.DocumentoXml.ToString());
 				}
 
-				return documento;
+                // asigna la ruta del directorio para los archivos
+                documento.RutaArchivosProceso = carpeta_xml;
+
+                // carpeta del zip
+                string carpeta_zip = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
+                carpeta_zip = string.Format(@"{0}{1}", carpeta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+                // directorio para el zip y xml firmado
+                documento.RutaArchivosEnvio = carpeta_zip;
+
+
+                return documento;
 			}
 			catch (Exception excepcion)
 			{

@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controladores\Ctl_FirmadoStringBuilder.cs" />
+    <Compile Include="Controladores\Ctl_FirmadoXml.cs" />
     <Compile Include="Funciones\Seguridad.cs" />
     <Compile Include="Properties\CertificadorasDatos.Designer.cs">
       <AutoGen>True</AutoGen>

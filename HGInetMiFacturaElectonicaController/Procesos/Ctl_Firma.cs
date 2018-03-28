@@ -18,11 +18,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			List<FacturaE_Documento> datos = new List<FacturaE_Documento>();
 			datos.Add(informacion);
 
-			// valida el nodo de ExtensionContent
-			informacion.DocumentoXml = ExtensionDian.ValidarNodo(informacion.DocumentoXml);
+            // firma el archivo fìsico xml
+            datos = Ctl_FirmadoXml.FirmarDocumentos(certificado_ruta, certificado_serial, certificado_clave, empresa_certificadora, datos);
 
-			// firma el documento xml
-			datos = Ctl_FirmadoStringBuilder.FirmarDocumentos(certificado_ruta, certificado_serial, certificado_clave, empresa_certificadora, datos);
+
+            // firma el texto xml
+            //datos = Ctl_FirmadoStringBuilder.FirmarDocumentos(certificado_ruta, certificado_serial, certificado_clave, empresa_certificadora, datos);
 
 
 			return datos[0];

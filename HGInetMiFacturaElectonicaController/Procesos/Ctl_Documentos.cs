@@ -30,12 +30,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// genera el xml en ubl
 			FacturaE_Documento documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, pruebas);
 
-			// firma el xml 
-			string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
-			documento_result = Ctl_Firma.Generar(ruta_certificado, "6c 0b 07 62 62 6d a0 e2", "persona_juridica_pruebas1", EnumCertificadoras.Andes, documento_result);
 
-			// almacena el xml
-			documento_result = Ctl_Ubl.Almacenar(documento_result);
+            // valida el nodo de ExtensionContent
+            documento_result.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(documento_result.DocumentoXml);
+            
+            // almacena el xml
+            documento_result = Ctl_Ubl.Almacenar(documento_result);
+
+            // firma el xml 
+            string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
+			documento_result = Ctl_Firma.Generar(ruta_certificado, "6c 0b 07 62 62 6d a0 e2", "persona_juridica_pruebas1", EnumCertificadoras.Andes, documento_result);
 
 			// comprime el archivo xml
 			Ctl_Compresion.Comprimir(documento_result);
