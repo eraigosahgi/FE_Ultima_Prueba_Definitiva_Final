@@ -16,7 +16,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public DateTime FechaRecepcion { get; set; }
 		public string CodigoRegistro { get; set; }
 		public string Identificacion { get; set; }
-		public int NumeroResolucion { get; set; }
+		public string NumeroResolucion { get; set; }
 		public string Prefijo { get; set; }
 		public int Documento { get; set; }
 		public string Cufe { get; set; }

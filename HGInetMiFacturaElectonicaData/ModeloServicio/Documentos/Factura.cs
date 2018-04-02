@@ -32,12 +32,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public int Documento { get; set; }
 
-		/// <summary>
-		/// Número de Resolución del Documento asignado por la DIAN
-		/// </summary>
-		[Required(ErrorMessage = "{0} es un campo obligatorio")]
-		[Range(typeof(int), "0", "9999999999", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-		public int NumeroResolucion { get; set; }
+        /// <summary>
+        /// Número de Resolución del Documento asignado por la DIAN
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        [RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
+        public string NumeroResolucion { get; set; }
 
 		/// <summary>
 		/// Prefijo del Documento según la Resolución asignada por la DIAN
