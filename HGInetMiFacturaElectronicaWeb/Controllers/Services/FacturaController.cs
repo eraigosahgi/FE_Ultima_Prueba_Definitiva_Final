@@ -116,7 +116,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			new Factura(){
 
 							CodigoRegistro="4d44203b44ccc3fa67f1548dae4e050618a5b263",
-							Documento= 990000323,
+							Documento= 990000324,
 							NumeroResolucion="9000000033394696",
 							Prefijo="",
                             //Cufe="7ead8ae96acc8bb7d0fe6cd078a5fd90005849ea",

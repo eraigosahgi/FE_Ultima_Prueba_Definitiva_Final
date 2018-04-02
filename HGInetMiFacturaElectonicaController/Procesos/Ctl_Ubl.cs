@@ -110,7 +110,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
-				
+				// valida el nodo de ExtensionContent
+				documento.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(documento.DocumentoXml);
+
 				string nit_obligado = string.Empty;
 
 				switch (documento.DocumentoTipo)

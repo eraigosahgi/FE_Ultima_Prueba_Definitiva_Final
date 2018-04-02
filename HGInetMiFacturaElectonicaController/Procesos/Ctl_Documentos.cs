@@ -30,10 +30,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// genera el xml en ubl
 			FacturaE_Documento documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, pruebas);
 
-
-            // valida el nodo de ExtensionContent
-            documento_result.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(documento_result.DocumentoXml);
-            
             // almacena el xml
             documento_result = Ctl_Ubl.Almacenar(documento_result);
 
