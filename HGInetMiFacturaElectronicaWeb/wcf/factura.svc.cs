@@ -8,6 +8,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Error;
+using HGInetMiFacturaElectonicaController.Procesos;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -31,10 +32,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		{
 			try
 			{
-
-
-
-				return null;
+				return Ctl_Documentos.Procesar(documentos);
 
 			}
 			catch (Exception exec)

@@ -143,18 +143,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
 
 				// ruta del xml
-				string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_xml, documento.NombreXml);
+				string archivo_xml = string.Format(@"{0}.xml", documento.NombreXml);
+
+				// ruta del xml
+				string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
 				
 				// elimina el archivo xml si existe
 				if (Archivo.ValidarExistencia(ruta_xml))
 					Archivo.Borrar(ruta_xml);
-				
+					
 				// almacena el archivo xml
-				using (file = new System.IO.StreamWriter(ruta_xml))
-				{
-					file.WriteLine(documento.DocumentoXml.ToString());
-				}
-
+				string ruta_save = Xml.Guardar(documento.DocumentoXml, carpeta_xml, archivo_xml);
+				
                 // asigna la ruta del directorio para los archivos
                 documento.RutaArchivosProceso = carpeta_xml;
 
@@ -164,8 +164,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 // directorio para el zip y xml firmado
                 documento.RutaArchivosEnvio = carpeta_zip;
-
-
+				
                 return documento;
 			}
 			catch (Exception excepcion)

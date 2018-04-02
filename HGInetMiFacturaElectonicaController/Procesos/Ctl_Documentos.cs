@@ -8,6 +8,7 @@ using HGInetMiFacturaElectonicaController.ServiciosDian;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.Funciones;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -30,11 +31,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// genera el xml en ubl
 			FacturaE_Documento documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, pruebas);
 
-            // almacena el xml
-            documento_result = Ctl_Ubl.Almacenar(documento_result);
+			// almacena el xml
+			documento_result = Ctl_Ubl.Almacenar(documento_result);
 
-            // firma el xml 
-            string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
+			// firma el xml 
+			string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
 			documento_result = Ctl_Firma.Generar(ruta_certificado, "6c 0b 07 62 62 6d a0 e2", "persona_juridica_pruebas1", EnumCertificadoras.Andes, documento_result);
 
 			// comprime el archivo xml
@@ -46,6 +47,54 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			return documento_result;
 
 		}
+
+		/// <summary>
+		/// Procesa una lista de documentos
+		/// </summary>
+		/// <param name="documentos"></param>
+		/// <returns></returns>
+		public static List<DocumentoRespuesta> Procesar(List<Factura> documentos)
+		{
+
+			DateTime fecha_actual = Fecha.GetFecha();
+
+			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+
+			foreach (Factura item in documentos)
+			{
+				DocumentoRespuesta respuesta_tmp = new DocumentoRespuesta()
+				{
+					Aceptacion = 0,
+					CodigoRegistro = item.CodigoRegistro,
+					Cufe = "",
+					DescripcionProceso = "Recepción - Información del documento.",
+					Documento = item.Documento,
+					Error = new LibreriaGlobalHGInet.Error.Error() { Codigo = LibreriaGlobalHGInet.Error.CodigoError.OK, Fecha = fecha_actual, Mensaje = "Pruebas de recepción de documentos." },
+					FechaRecepcion = fecha_actual,
+					FechaUltimoProceso = fecha_actual,
+					IdDocumento = Guid.NewGuid().ToString(),
+					Identificacion = item.DatosObligado.Identificacion,
+					IdProceso = 1,
+					IdUltimoProceso = 1,
+					MotivoRechazo = "",
+					NumeroResolucion = item.NumeroResolucion,
+					Prefijo = item.Prefijo,
+					ProcesoFinalizado = 0,
+					UltimoProceso = "Recepción - Información del documento.",
+					UrlPdf = "",
+					UrlXmlUbl = ""
+				};
+
+				respuesta.Add(respuesta_tmp);
+			}
+
+			return respuesta;
+
+		}
+
+
+
+
 
 	}
 }
