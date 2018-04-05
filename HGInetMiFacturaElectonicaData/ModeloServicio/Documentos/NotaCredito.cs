@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,18 +15,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         #region Propiedades
 
         /// <summary>
-        /// Id único de Registro del Obligado a Facturar
+        /// Identificador del Documento asigando por el Facturador Electrónico
         /// </summary>
-        public int CodigoRegistro { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        public string CodigoRegistro { get; set; }
 
         /// <summary>
         /// Numero de Documento
         /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public int Documento { get; set; }
 
         /// <summary>
         /// Documento afectado
         /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string DocumentoRef { get; set; }
 
         /// <summary>
@@ -36,6 +40,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// <summary>
         /// Cufe identificador unico de la Factura afectada
         /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string CufeFactura { get; set; }
 
         /// <summary>
