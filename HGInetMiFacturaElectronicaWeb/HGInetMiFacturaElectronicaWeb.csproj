@@ -137,6 +137,7 @@
     <Content Include="packages.config" />
     <Content Include="certificado_test.p12" />
     <Content Include="CertificadoHGI.pfx" />
+    <None Include="Properties\PublishProfiles\Archivos.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
