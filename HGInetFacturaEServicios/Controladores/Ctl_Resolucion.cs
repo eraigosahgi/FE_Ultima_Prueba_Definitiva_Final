@@ -6,24 +6,29 @@ using System.Text;
 
 namespace HGInetFacturaEServicios
 {
+	/// <summary>
+	/// Controlador para la gestión de Resoluciones
+	/// </summary>
 	public class Ctl_Resolucion
 	{
+		// ruta donde se encuentra el servicio web
+		private static string UrlWcf = "wcf/resolucion.svc";
 
 		/// <summary>
 		/// Permite obtener las resoluciones registradas ante la DIAN por el Facturador Electrónico
 		/// Manual Técnico: 5.3.1 Metodo Web: Consulta de Resolución
 		/// </summary>
-		/// <param name="UrlWs">ruta de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
 		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <returns>datos de las resoluciones</returns>
 		public static List<ServicioResolucion.Resolucion> Obtener(string UrlWs, string Serial, string Identificacion)
 		{
 			// valida la URL del servicio web
-			UrlWs = Ctl_Utilidades.ValidarUrl(UrlWs);
+			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
 			// valida el parámetro Serial
-			if(string.IsNullOrEmpty(Serial))
+			if (string.IsNullOrEmpty(Serial))
 				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
 
 			// valida el parámetro Identificacion
@@ -58,7 +63,7 @@ namespace HGInetFacturaEServicios
 					return result.ToList();
 				else
 					throw new Exception("Error al obtener los datos con los parámetros indicados.");
-					
+
 			}
 			catch (FaultException excepcion)
 			{
