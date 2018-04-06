@@ -85,6 +85,16 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public decimal ReteIcaValor { get; set; }
 
         /// <summary>
+        /// Porcentaje aplicado de Rentencion en la Fuente al Subtotal
+        /// </summary>
+        public decimal ReteFuenteProcentaje { get; set; }
+
+        /// <summary>
+        /// Valor de la Retencion a la Fuente
+        /// </summary>
+        public decimal ReteFuenteValor { get; set; }
+
+        /// <summary>
         /// Porcentaje de descuento aplicado al detalle
         /// </summary>
         public decimal DescuentoPorcentaje { get; set; }

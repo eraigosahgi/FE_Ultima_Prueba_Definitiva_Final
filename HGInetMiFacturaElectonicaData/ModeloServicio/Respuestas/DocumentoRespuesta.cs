@@ -88,16 +88,6 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public DateTime FechaUltimoProceso { get; set; }
 
         /// <summary>
-        /// Indica el id del último proceso realizado por la Plataforma.
-        /// </summary>
-		public int IdUltimoProceso { get; set; }
-
-        /// <summary>
-        /// Nombre del último proceso realizado por la Plataforma.
-        /// </summary>
-		public string UltimoProceso { get; set; }
-
-        /// <summary>
         /// Indica si el documento ha finalizado todos los procesos en la Plataforma (0: Procesos pendientes, 1: Procesos finalizados)
         /// </summary>
 		public int ProcesoFinalizado { get; set; }
