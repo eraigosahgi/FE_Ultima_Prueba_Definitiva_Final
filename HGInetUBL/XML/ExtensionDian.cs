@@ -161,6 +161,17 @@ namespace HGInetUBL
 		/// <returns>texto del xml</returns>
 		public static StringBuilder ValidarNodo(StringBuilder xml)
 		{
+
+			// valida el namespace xmlns:schemaLocation y lo reemplaza para Google Chrome
+			TextReader textReader = new StringReader(xml.ToString());
+			string texto_xml = textReader.ReadToEnd();
+
+			if (texto_xml.Contains("xmlns:schemaLocation"))
+			{
+				texto_xml = texto_xml.Replace("xmlns:schemaLocation", "xsi:schemaLocation");
+				xml = new StringBuilder(texto_xml);
+			}	
+			
 			// convierte el texto de xml a XmlDocument para modificarlo
 			XmlDocument xmlDoc = Xml.ConvertirXmlDocument(xml);
 			xmlDoc.PreserveWhitespace = true;
