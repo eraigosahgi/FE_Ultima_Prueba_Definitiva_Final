@@ -77,6 +77,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Fecha = fecha_actual,
 						Mensaje = string.Format("Error en la validación del documento. Detalle: {0}", excepcion.Message)
 					};
+
+					throw excepcion;
 				}
 
 				// genera el xml en ubl
@@ -97,6 +99,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Fecha = fecha_actual,
 						Mensaje = string.Format("Error en la generación del estandar UBL del documento. Detalle: {0}", excepcion.Message)
 					};
+
+					throw excepcion;
 				}
 
 				// almacena el xml en ubl
@@ -118,6 +122,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Fecha = fecha_actual,
 						Mensaje = string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0}", excepcion.Message)
 					};
+
+					throw excepcion;
 				}
 
 				// firma el xml
@@ -140,6 +146,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Fecha = fecha_actual,
 						Mensaje = string.Format("Error en el firmado del documento UBL en XML. Detalle: {0}", excepcion.Message)
 					};
+
+					throw excepcion;
 				}
 
 				// comprime el archivo xml firmado
@@ -160,6 +168,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Fecha = fecha_actual,
 						Mensaje = string.Format("Error en la compresión del documento UBL en XML firmado. Detalle: {0}", excepcion.Message)
 					};
+
+					throw excepcion;
 				}
 
 				// envía el archivo zip con el xml firmado a la DIAN
@@ -180,10 +190,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Fecha = fecha_actual,
 						Mensaje = string.Format("Error en el envío del archivo ZIP con el XML firmado a la DIAN. Detalle: {0}", excepcion.Message)
 					};
+
+					throw excepcion;
 				}
 
 				respuesta.Cufe = documento_result.CUFE;
-				respuesta.UrlXmlUbl = documento_result.RutaArchivosEnvio + "\\" + documento_result.NombreXml;
+				
+				// url pública del xml
+				string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(("", documento_obj.DatosObligado.Identificacion);
+				respuesta.UrlXmlUbl = string.Format(@"{0}{1}{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
 			}
 			catch (Exception excepcion)
