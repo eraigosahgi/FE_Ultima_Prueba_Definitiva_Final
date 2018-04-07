@@ -618,7 +618,7 @@ namespace HGInetUBL
 				#endregion
 
 				#region Datos personales segun el tipo de persona
-				if (tercero.TipoPersona.Equals("2"))//Persona natural
+				if (tercero.TipoPersona.Equals(2))//Persona natural
 				{
 					PersonType1 Person = new PersonType1();
 
@@ -639,7 +639,7 @@ namespace HGInetUBL
 
 					Party.Person = Person;
 				}
-				else if (tercero.TipoPersona.Equals("1")) //Persona juridica
+				else if (tercero.TipoPersona.Equals(1)) //Persona juridica
 				{
 					PartyLegalEntityType1[] PartyLegalEntitys = new PartyLegalEntityType1[1];
 					PartyLegalEntityType1 PartyLegalEntity = new PartyLegalEntityType1();

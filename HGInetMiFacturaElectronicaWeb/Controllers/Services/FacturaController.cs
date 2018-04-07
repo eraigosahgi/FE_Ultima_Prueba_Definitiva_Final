@@ -186,7 +186,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 																				  ValorSubtotal = 450000.00M,
 																				  ValorImpuestoConsumo = 0.00M,
 																				  IvaValor = 72000.00M,
-																				  IvaPorcentaje = 0.19M,
+																				  IvaPorcentaje = 0.16M,
                                                                                   ReteIcaPorcentaje = 0.00M,
                                                                                   ReteIcaValor = 0.00M,
 																				  DescuentoValor = 0.00M,
