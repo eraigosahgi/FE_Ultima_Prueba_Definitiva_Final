@@ -203,7 +203,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			return documentos;
 		}
 
-		// GET: api/Factura/5
+		// GET: api/Factura/990000330
 		public Factura Get(int id)
 		{
 			try
@@ -211,12 +211,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Guid id_peticion = Guid.NewGuid();
 
 				// información del documento de pruebas solicitado
-				Factura documento_obj = documentos[id];
+				Factura documento_obj = documentos[6];
+
+				documento_obj.Documento = id;
 
 				// procesa el documento
 				FacturaE_Documento resultado = Ctl_Documentos.Procesar(id_peticion, documento_obj, true);
 				
-				return documentos[id];
+				return documento_obj;
 			}
 			catch (Exception excepcion)
 			{
