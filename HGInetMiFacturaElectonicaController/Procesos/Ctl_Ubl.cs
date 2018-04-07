@@ -163,8 +163,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 carpeta_zip = string.Format(@"{0}{1}", carpeta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
                 // directorio para el zip y xml firmado
-                documento.RutaArchivosEnvio = carpeta_zip;
-				
+                documento.RutaArchivosEnvio = Directorio.CrearDirectorio(carpeta_zip);
+							
                 return documento;
 			}
 			catch (Exception excepcion)
