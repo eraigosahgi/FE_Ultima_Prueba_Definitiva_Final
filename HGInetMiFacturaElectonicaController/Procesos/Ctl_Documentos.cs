@@ -27,7 +27,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="documento_obj">datos del documento</param>
 		/// <param name="pruebas">indica si el documento es de pruebas (true)</param>
 		/// <returns>datos de resultado para el documento</returns>
-		public static DocumentoRespuesta Procesar(Guid id_peticion, Factura documento_obj, bool pruebas = false)
+		public static DocumentoRespuesta Procesar(Guid id_peticion, Factura documento_obj, bool pruebas = false, bool solo_validar = false)
 		{
 			bool error = false;
 
@@ -81,125 +81,128 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw excepcion;
 				}
 
-				// genera el xml en ubl
-				try
+				if (solo_validar)
 				{
-					fecha_actual = Fecha.GetFecha();
-					respuesta.DescripcionProceso = "Genera información en estandar UBL.";
-					respuesta.FechaUltimoProceso = fecha_actual;
-					respuesta.IdProceso = 3;
 
-					documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, pruebas);
-				}
-				catch (Exception excepcion)
-				{
-					respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+					// genera el xml en ubl
+					try
 					{
-						Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
-						Fecha = fecha_actual,
-						Mensaje = string.Format("Error en la generación del estandar UBL del documento. Detalle: {0}", excepcion.Message)
-					};
+						fecha_actual = Fecha.GetFecha();
+						respuesta.DescripcionProceso = "Genera información en estandar UBL.";
+						respuesta.FechaUltimoProceso = fecha_actual;
+						respuesta.IdProceso = 3;
 
-					throw excepcion;
-				}
-
-				// almacena el xml en ubl
-				try
-				{
-					fecha_actual = Fecha.GetFecha();
-					respuesta.DescripcionProceso = "Almacena el archivo XML con la información en estandar UBL.";
-					respuesta.FechaUltimoProceso = fecha_actual;
-					respuesta.IdProceso = 4;
-
-					// almacena el xml
-					documento_result = Ctl_Ubl.Almacenar(documento_result);
-				}
-				catch (Exception excepcion)
-				{
-					respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+						documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, pruebas);
+					}
+					catch (Exception excepcion)
 					{
-						Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
-						Fecha = fecha_actual,
-						Mensaje = string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0}", excepcion.Message)
-					};
+						respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+						{
+							Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
+							Fecha = fecha_actual,
+							Mensaje = string.Format("Error en la generación del estandar UBL del documento. Detalle: {0}", excepcion.Message)
+						};
 
-					throw excepcion;
-				}
+						throw excepcion;
+					}
 
-				// firma el xml
-				try
-				{
-					fecha_actual = Fecha.GetFecha();
-					respuesta.DescripcionProceso = "Firma el archivo XML con la información en estandar UBL.";
-					respuesta.FechaUltimoProceso = fecha_actual;
-					respuesta.IdProceso = 5;
-
-					string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
-					documento_result = Ctl_Firma.Generar(ruta_certificado, "6c 0b 07 62 62 6d a0 e2", "persona_juridica_pruebas1", EnumCertificadoras.Andes, documento_result);
-					
-				}
-				catch (Exception excepcion)
-				{
-					respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+					// almacena el xml en ubl
+					try
 					{
-						Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
-						Fecha = fecha_actual,
-						Mensaje = string.Format("Error en el firmado del documento UBL en XML. Detalle: {0}", excepcion.Message)
-					};
+						fecha_actual = Fecha.GetFecha();
+						respuesta.DescripcionProceso = "Almacena el archivo XML con la información en estandar UBL.";
+						respuesta.FechaUltimoProceso = fecha_actual;
+						respuesta.IdProceso = 4;
 
-					throw excepcion;
-				}
-
-				// comprime el archivo xml firmado
-				try
-				{
-					fecha_actual = Fecha.GetFecha();
-					respuesta.DescripcionProceso = "Compresión del archivo XML firmado con la información en estandar UBL.";
-					respuesta.FechaUltimoProceso = fecha_actual;
-					respuesta.IdProceso = 6;
-
-					Ctl_Compresion.Comprimir(documento_result);
-				}
-				catch (Exception excepcion)
-				{
-					respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+						// almacena el xml
+						documento_result = Ctl_Ubl.Almacenar(documento_result);
+					}
+					catch (Exception excepcion)
 					{
-						Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
-						Fecha = fecha_actual,
-						Mensaje = string.Format("Error en la compresión del documento UBL en XML firmado. Detalle: {0}", excepcion.Message)
-					};
+						respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+						{
+							Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
+							Fecha = fecha_actual,
+							Mensaje = string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0}", excepcion.Message)
+						};
 
-					throw excepcion;
-				}
+						throw excepcion;
+					}
 
-				// envía el archivo zip con el xml firmado a la DIAN
-				try
-				{
-					fecha_actual = Fecha.GetFecha();
-					respuesta.DescripcionProceso = "Envío del archivo ZIP con el XML firmado a la DIAN.";
-					respuesta.FechaUltimoProceso = fecha_actual;
-					respuesta.IdProceso = 7;
-
-					HGInetDIANServicios.DianFactura.AcuseRecibo acuse = Ctl_DocumentoDian.Enviar(documento_result);
-				}
-				catch (Exception excepcion)
-				{
-					respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+					// firma el xml
+					try
 					{
-						Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
-						Fecha = fecha_actual,
-						Mensaje = string.Format("Error en el envío del archivo ZIP con el XML firmado a la DIAN. Detalle: {0}", excepcion.Message)
-					};
+						fecha_actual = Fecha.GetFecha();
+						respuesta.DescripcionProceso = "Firma el archivo XML con la información en estandar UBL.";
+						respuesta.FechaUltimoProceso = fecha_actual;
+						respuesta.IdProceso = 5;
 
-					throw excepcion;
+						string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
+						documento_result = Ctl_Firma.Generar(ruta_certificado, "6c 0b 07 62 62 6d a0 e2", "persona_juridica_pruebas1", EnumCertificadoras.Andes, documento_result);
+
+					}
+					catch (Exception excepcion)
+					{
+						respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+						{
+							Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
+							Fecha = fecha_actual,
+							Mensaje = string.Format("Error en el firmado del documento UBL en XML. Detalle: {0}", excepcion.Message)
+						};
+
+						throw excepcion;
+					}
+
+					// comprime el archivo xml firmado
+					try
+					{
+						fecha_actual = Fecha.GetFecha();
+						respuesta.DescripcionProceso = "Compresión del archivo XML firmado con la información en estandar UBL.";
+						respuesta.FechaUltimoProceso = fecha_actual;
+						respuesta.IdProceso = 6;
+
+						Ctl_Compresion.Comprimir(documento_result);
+					}
+					catch (Exception excepcion)
+					{
+						respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+						{
+							Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
+							Fecha = fecha_actual,
+							Mensaje = string.Format("Error en la compresión del documento UBL en XML firmado. Detalle: {0}", excepcion.Message)
+						};
+
+						throw excepcion;
+					}
+
+					// envía el archivo zip con el xml firmado a la DIAN
+					try
+					{
+						fecha_actual = Fecha.GetFecha();
+						respuesta.DescripcionProceso = "Envío del archivo ZIP con el XML firmado a la DIAN.";
+						respuesta.FechaUltimoProceso = fecha_actual;
+						respuesta.IdProceso = 7;
+
+						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = Ctl_DocumentoDian.Enviar(documento_result);
+					}
+					catch (Exception excepcion)
+					{
+						respuesta.Error = new LibreriaGlobalHGInet.Error.Error()
+						{
+							Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
+							Fecha = fecha_actual,
+							Mensaje = string.Format("Error en el envío del archivo ZIP con el XML firmado a la DIAN. Detalle: {0}", excepcion.Message)
+						};
+
+						throw excepcion;
+					}
+
+					respuesta.Cufe = documento_result.CUFE;
+
+					// url pública del xml
+					string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
+					respuesta.UrlXmlUbl = string.Format(@"{0}{1}{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 				}
-
-				respuesta.Cufe = documento_result.CUFE;
-				
-				// url pública del xml
-				string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
-				respuesta.UrlXmlUbl = string.Format(@"{0}{1}{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
-
 			}
 			catch (Exception excepcion)
 			{
@@ -216,7 +219,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns></returns>
 		public static List<DocumentoRespuesta> Procesar(List<Factura> documentos)
 		{
-
+			// genera un id único de la plataforma
+			Guid id_peticion = Guid.NewGuid();
 
 			Factura _documento = new Factura();
 
@@ -227,49 +231,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			foreach (Factura item in documentos)
 			{
 
-				DocumentoRespuesta respuesta_tmp = new DocumentoRespuesta()
-				{
-					Aceptacion = 0,
-					CodigoRegistro = item.CodigoRegistro,
-					Cufe = "",
-					DescripcionProceso = "Recepción - Información del documento.",
-					Documento = item.Documento,
-					Error = new LibreriaGlobalHGInet.Error.Error() { Codigo = LibreriaGlobalHGInet.Error.CodigoError.OK, Fecha = fecha_actual, Mensaje = "Pruebas de recepción de documentos." },
-					FechaRecepcion = fecha_actual,
-					FechaUltimoProceso = fecha_actual,
-					IdDocumento = Guid.NewGuid().ToString(),
-					Identificacion = item.DatosObligado.Identificacion,
-					IdProceso = 1,
-					MotivoRechazo = "",
-					NumeroResolucion = item.NumeroResolucion,
-					Prefijo = item.Prefijo,
-					ProcesoFinalizado = 0,
-					UrlPdf = "",
-					UrlXmlUbl = ""
-				};
-
-
-				_documento = item;
-
-				respuesta_tmp.DescripcionProceso = "Validación - Información del documento.";
-				respuesta_tmp.FechaUltimoProceso = fecha_actual;
-				respuesta_tmp.IdProceso = 2;
-
-				try
-				{
-
-					_documento = Validar(item);
-
-				}
-				catch (Exception excepcion)
-				{
-					respuesta_tmp.Error = new LibreriaGlobalHGInet.Error.Error()
-					{
-						Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION,
-						Fecha = fecha_actual,
-						Mensaje = string.Format("Error en la validación del documento. Detalle: {0}", excepcion.Message)
-					};
-				}
+				DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, true, true);
 
 				respuesta.Add(respuesta_tmp);
 			}
