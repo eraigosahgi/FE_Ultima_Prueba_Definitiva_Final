@@ -204,7 +204,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		}
 
 		// GET: api/Factura/990000330
-		public Factura Get(int id)
+		public DocumentoRespuesta Get(int id)
 		{
 			try
 			{	// genera un id único de la plataforma
@@ -216,9 +216,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				documento_obj.Documento = id;
 
 				// procesa el documento
-				FacturaE_Documento resultado = Ctl_Documentos.Procesar(id_peticion, documento_obj, true);
+				DocumentoRespuesta resultado = Ctl_Documentos.Procesar(id_peticion, documento_obj, true);
 				
-				return documento_obj;
+				return resultado;
 			}
 			catch (Exception excepcion)
 			{
