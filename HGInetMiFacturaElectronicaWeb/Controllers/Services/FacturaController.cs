@@ -218,7 +218,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				// información del documento de pruebas solicitado
 				Factura documento_obj = documentos[6];
 
+
+				/***
+				 * MODIFICA LOS DATOS DEL DOCUMENTO PARA EL PROCESAMIENTO
+				 ***/
 				documento_obj.Documento = id;
+				documento_obj.Fecha = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha();
 
 				// procesa el documento
 				DocumentoRespuesta resultado = Ctl_Documentos.Procesar(id_peticion, documento_obj, true);
