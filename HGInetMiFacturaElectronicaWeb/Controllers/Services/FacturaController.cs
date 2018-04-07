@@ -114,9 +114,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						},
 
 			new Factura(){
-
-							CodigoRegistro="4d44203b44ccc3fa67f1548dae4e050618a5b263",
-							Documento= 990000330,
+                            DataKey = "4d44203b44ccc3fa67f1548dae4e050618a5b263",
+                            CodigoRegistro="5489679",
+							Documento= 990000331,
 							NumeroResolucion="9000000033394696",
 							Prefijo="",
                             //Cufe="7ead8ae96acc8bb7d0fe6cd078a5fd90005849ea",
@@ -172,6 +172,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 														ValorReteIva=0.00M,
 														ValorImpuestoConsumo=0.00M,
 														ValorReteFuente=0.00M,
+                                                        ValorReteIca = 0.00M,
 														Total=522000.00M,
 														Neto=522000.00M,
 														DocumentoDetalles = new List<DocumentoDetalle>()
@@ -186,8 +187,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 																				  ValorImpuestoConsumo = 0.00M,
 																				  IvaValor = 72000.00M,
 																				  IvaPorcentaje = 0.19M,
+                                                                                  ReteIcaPorcentaje = 0.00M,
+                                                                                  ReteIcaValor = 0.00M,
 																				  DescuentoValor = 0.00M,
 																				  DescuentoPorcentaje = 0.00M,
+                                                                                  ReteFuenteProcentaje = 0.00M,
+                                                                                  ReteFuenteValor = 0.00M,
 															},
 
 

@@ -67,7 +67,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.FechaUltimoProceso = fecha_actual;
 					respuesta.IdProceso = 2;
 
-					documento_obj = validar(documento_obj);
+					documento_obj = Validar(documento_obj);
 				}
 				catch (Exception excepcion)
 				{
@@ -258,7 +258,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				try
 				{
 
-					_documento = validar(item);
+					_documento = Validar(item);
 
 				}
 				catch (Exception excepcion)
@@ -279,7 +279,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		}
 
 
-		public static Factura validar(Factura documento)
+		public static Factura Validar(Factura documento)
 		{
 			// valida objeto recibido
 			if (documento == null)
