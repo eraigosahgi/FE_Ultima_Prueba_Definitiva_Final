@@ -81,7 +81,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw excepcion;
 				}
 
-				if (solo_validar)
+				if (!solo_validar)
 				{
 
 					// genera el xml en ubl
