@@ -120,7 +120,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 							NumeroResolucion="9000000033394696",
 							Prefijo="",
                             //Cufe="7ead8ae96acc8bb7d0fe6cd078a5fd90005849ea",
-                            Fecha= new DateTime(2018,3,23,0,0,0),
+                            Fecha= new DateTime(2018,4,7,0,0,0),
 							Nota="Resolución Dian Nro 9000000033394696 de 2017-07-02 del 990000000 al 995000000",
 							Moneda="COP",
 							DatosObligado=new Tercero()
