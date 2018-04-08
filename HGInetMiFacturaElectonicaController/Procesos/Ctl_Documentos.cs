@@ -42,7 +42,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				Cufe = "",
 				DescripcionProceso = "Recepción - Información del documento.",
 				Documento = documento_obj.Documento,
-				Error = new LibreriaGlobalHGInet.Error.Error() { Codigo = LibreriaGlobalHGInet.Error.CodigoError.OK, Fecha = fecha_actual, Mensaje = "Pruebas de recepción de documentos." },
+				Error = new LibreriaGlobalHGInet.Error.Error() { Codigo = LibreriaGlobalHGInet.Error.CodigoError.OK, Fecha = fecha_actual, Mensaje = "" },
 				FechaRecepcion = fecha_actual,
 				FechaUltimoProceso = fecha_actual,
 				IdDocumento = Guid.NewGuid().ToString(),
@@ -176,6 +176,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					// envía el archivo zip con el xml firmado a la DIAN
+					HGInetDIANServicios.DianFactura.AcuseRecibo acuse = new HGInetDIANServicios.DianFactura.AcuseRecibo();
 					try
 					{
 						fecha_actual = Fecha.GetFecha();
@@ -183,7 +184,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta.FechaUltimoProceso = fecha_actual;
 						respuesta.IdProceso = 7;
 
-						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = Ctl_DocumentoDian.Enviar(documento_result);
+						acuse = Ctl_DocumentoDian.Enviar(documento_result);
 					}
 					catch (Exception excepcion)
 					{
@@ -202,6 +203,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					// url pública del xml
 					string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
 					respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+
+					// se indica la respuesta de la DIAN
+					respuesta.Error.Fecha = fecha_actual;
+					respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - {1} - {2}", acuse.Response, acuse.Comments, acuse.ResponseDateTime);
+
 				}
 			}
 			catch (Exception excepcion)
