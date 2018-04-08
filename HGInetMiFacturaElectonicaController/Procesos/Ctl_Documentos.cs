@@ -205,6 +205,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
 					// se indica la respuesta de la DIAN
+					respuesta.Error.Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION;
 					respuesta.Error.Fecha = fecha_actual;
 					respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - {1} - {2}", acuse.Response, acuse.Comments, acuse.ResponseDateTime);
 
