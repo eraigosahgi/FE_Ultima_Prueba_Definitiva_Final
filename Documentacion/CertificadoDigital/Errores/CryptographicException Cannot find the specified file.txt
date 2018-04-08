@@ -1,0 +1,13 @@
+ERROR:
+CryptographicException was unhandled System cannot find the specified file
+
+CORRECCIÓN:
+https://stackoverflow.com/questions/17840825/cryptographicexception-was-unhandled-system-cannot-find-the-specified-file
+
+
+Did you set the following on the application pool in IIS?
+
+    Go to IIS Manager
+    Go to the application pool instance
+    Click advanced settings
+    Under Process model, set Load User Profile to true

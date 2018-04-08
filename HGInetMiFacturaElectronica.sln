@@ -41,6 +41,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Firma", "Firma", "{EBACB14C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFirmaDigital", "HGInetFirmaDigital\HGInetFirmaDigital.csproj", "{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CertificadoDigital", "CertificadoDigital", "{23109A26-F049-4B31-B856-61B9F8990E5C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Errores", "Errores", "{B86938E2-C84C-46A0-A40D-F4DB79E9DBA9}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\CertificadoDigital\Errores\CryptographicException Cannot find the specified file.txt = Documentacion\CertificadoDigital\Errores\CryptographicException Cannot find the specified file.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -141,5 +148,7 @@ Global
 		{EFD98A42-3E60-459D-9574-8270FBFAC35E} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 		{59113B66-AE70-4B22-83BC-94B88ED048AF} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 		{EBACB14C-A142-4A25-84E0-EE8A1626BE41} = {59113B66-AE70-4B22-83BC-94B88ED048AF}
+		{23109A26-F049-4B31-B856-61B9F8990E5C} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{B86938E2-C84C-46A0-A40D-F4DB79E9DBA9} = {23109A26-F049-4B31-B856-61B9F8990E5C}
 	EndGlobalSection
 EndGlobal
