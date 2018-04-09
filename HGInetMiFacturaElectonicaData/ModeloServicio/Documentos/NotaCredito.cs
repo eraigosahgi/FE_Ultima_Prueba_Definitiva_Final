@@ -15,6 +15,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         #region Propiedades
 
         /// <summary>
+		/// Código de seguridad (autenticación)
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        public string DataKey { get; set; }
+
+        /// <summary>
         /// Identificador del Documento asigando por el Facturador Electrónico
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]

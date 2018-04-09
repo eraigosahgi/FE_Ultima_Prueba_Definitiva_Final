@@ -288,6 +288,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//Valida que no este vacio y este bien formado 
 			ValidarTercero(documento.DatosAdquiriente, "Adquiriente");
 
+            //Valida totales del objeto
 			ValidarTotales(documento);
 
 			return documento;
@@ -356,22 +357,27 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			DocumentoDetalle retorno = ValidarDetalleDocumento(documento.DocumentoDetalles);
 
-			//valida el 
+			//Valida el Iva del detalle sea igual al encabezado
 			if (documento.ValorIva != retorno.IvaValor)
 				throw new ApplicationException(string.Format("El valor Iva {0} no es correcto.", documento.ValorIva));
 
+            //Valida el Descuento del detalle sea igual al encabezado
 			if (documento.ValorDescuento != retorno.DescuentoValor)
 				throw new ApplicationException(string.Format("El valor Descuento {0} no es correcto", documento.ValorDescuento));
 
+            //Valida el Subtotal del detalle sea igual al encabezado
 			if (documento.ValorSubtotal != retorno.ValorSubtotal)
 				throw new ApplicationException(string.Format("El subtotal {0} no es correcto.", documento.ValorSubtotal));
 
+            //Valida el Impuesto al consumo del detalle sea igual al encabezado
 			if (documento.ValorImpuestoConsumo != retorno.ValorImpuestoConsumo)
 				throw new ApplicationException(string.Format("El Impuesto al Consumo {0} no es correcto.", documento.ValorImpuestoConsumo));
 
+            //Valida la Retencion en la fuente del detalle sea igual al encabezado
 			if (documento.ValorReteFuente != retorno.ReteFuenteValor)
 				throw new ApplicationException(string.Format("El valor ReteFuente {0} no es correcto.", documento.ValorReteFuente));
 
+            //Valida el ReteIca del detalle sea igual al encabezado
 			if (documento.ValorReteIca != retorno.ReteIcaValor)
 				throw new ApplicationException(string.Format("El valor ReteIca {0} no es correcto.", documento.ValorReteIca));
 
@@ -381,16 +387,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (documento.Total != total_cal)
 				throw new ApplicationException(string.Format("El valor Total {0} no es correcto.", documento.Total));
 
+            //Suma de las retenciones del documento
 			decimal retencion_doc = (documento.ValorReteFuente + documento.ValorReteIca + documento.ValorReteIva);
-			if ((documento.Total - retencion_doc) != documento.Neto)
+
+            //Validacion del Neto calculado con el que es enviado en el documento
+            if ((documento.Total - retencion_doc) != documento.Neto)
 				throw new ApplicationException(string.Format("El valor Neto {0} no es correcto.", documento.Neto));
 
+            //Validacion del ReteIva calculado con el que es enviado en el documento
 			if ((documento.Total - documento.Neto - documento.ValorReteFuente - documento.ValorReteIca) != documento.ValorReteIva)
 				throw new ApplicationException(string.Format("El valor ReteIva {0} no es correcto.", documento.ValorReteIva));
 
 
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="documentoDetalle"></param>
+        /// <returns></returns>
 		public static DocumentoDetalle ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
 		{
 
