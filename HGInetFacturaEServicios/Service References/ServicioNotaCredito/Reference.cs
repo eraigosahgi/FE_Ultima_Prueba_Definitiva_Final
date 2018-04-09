@@ -36,6 +36,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private string CufeFacturaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DataKeyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private HGInetFacturaEServicios.ServicioNotaCredito.Tercero DatosAdquirienteField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -147,6 +150,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.CufeFacturaField, value) != true)) {
                     this.CufeFacturaField = value;
                     this.RaisePropertyChanged("CufeFactura");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DataKey {
+            get {
+                return this.DataKeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DataKeyField, value) != true)) {
+                    this.DataKeyField = value;
+                    this.RaisePropertyChanged("DataKey");
                 }
             }
         }

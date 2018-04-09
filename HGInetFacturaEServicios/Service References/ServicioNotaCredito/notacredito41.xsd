@@ -13,6 +13,7 @@
       <xs:element minOccurs="0" name="Concepto" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Cufe" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CufeFactura" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DataKey" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DatosAdquiriente" nillable="true" type="tns:Tercero" />
       <xs:element minOccurs="0" name="DatosObligado" nillable="true" type="tns:Tercero" />
       <xs:element minOccurs="0" name="Documento" type="xs:int" />

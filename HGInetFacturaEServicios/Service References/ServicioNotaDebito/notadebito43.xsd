@@ -8,7 +8,10 @@
   </xs:complexType>
   <xs:element name="ArrayOfNotaDebito" nillable="true" type="tns:ArrayOfNotaDebito" />
   <xs:complexType name="NotaDebito">
-    <xs:sequence />
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CodigoRegistro" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DataKey" nillable="true" type="xs:string" />
+    </xs:sequence>
   </xs:complexType>
   <xs:element name="NotaDebito" nillable="true" type="tns:NotaDebito" />
   <xs:complexType name="ArrayOfDocumentoRespuesta">

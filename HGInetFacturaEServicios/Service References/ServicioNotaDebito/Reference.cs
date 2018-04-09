@@ -23,6 +23,12 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoRegistroField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DataKeyField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -30,6 +36,32 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoRegistro {
+            get {
+                return this.CodigoRegistroField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoRegistroField, value) != true)) {
+                    this.CodigoRegistroField = value;
+                    this.RaisePropertyChanged("CodigoRegistro");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DataKey {
+            get {
+                return this.DataKeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DataKeyField, value) != true)) {
+                    this.DataKeyField = value;
+                    this.RaisePropertyChanged("DataKey");
+                }
             }
         }
         
