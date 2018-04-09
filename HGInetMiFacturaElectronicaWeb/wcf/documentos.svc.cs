@@ -69,5 +69,22 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
 			}
 		}
+
+		public List<DocumentoRespuesta> Recepcion(List<DocumentoArchivo> documentos)
+		{
+			try
+			{
+
+
+
+				return null;
+
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
 	}
 }

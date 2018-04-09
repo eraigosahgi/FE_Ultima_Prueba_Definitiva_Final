@@ -74,6 +74,7 @@
     <Compile Include="ControllerSql\Repositorio.Ordenar.cs" />
     <Compile Include="ControllerSql\Repositorio.Validar.cs" />
     <Compile Include="Enumerables\Accion.cs" />
+    <Compile Include="ModeloServicio\Documentos\DocumentoArchivo.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoDetalle.cs" />
     <Compile Include="ModeloServicio\Documentos\Factura.cs" />
     <Compile Include="ModeloServicio\Documentos\NotaCredito.cs" />

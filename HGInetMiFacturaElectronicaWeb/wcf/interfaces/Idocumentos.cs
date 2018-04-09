@@ -35,5 +35,10 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		[WebInvoke(Method = "GET")]
 		List<DocumentoRespuesta> ConsultaPorFechaElaboracion(string DataKey, string Identificacion, int TipoDocumento, DateTime FechaInicial, DateTime FechaFinal);
 
+		[OperationContract(Name = "Recepcion")]
+		[FaultContract(typeof(Error), Action = "Recepcion", Name = "Error")]
+		[WebInvoke(Method = "POST")]
+		List<DocumentoRespuesta> Recepcion(List<DocumentoArchivo> documentos);
+
 	}
 }
