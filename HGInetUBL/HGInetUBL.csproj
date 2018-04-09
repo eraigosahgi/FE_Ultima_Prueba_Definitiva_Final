@@ -52,6 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Dian_CommonAggregateComponents\AddressType.cs" />
     <Compile Include="Dian_CommonAggregateComponents\AirTransportType.cs" />
     <Compile Include="Dian_CommonAggregateComponents\AllowanceChargeType.cs" />

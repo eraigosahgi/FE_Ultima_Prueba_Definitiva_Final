@@ -31,8 +31,8 @@ namespace HGInetDIANServicios
 		{
 			Response = reply;
 
-			string strRequestXML = reply.ToString();
-			XmlResponse = System.Xml.Linq.XDocument.Parse(strRequestXML);
+			string strResponseXML = reply.ToString();
+			XmlResponse = System.Xml.Linq.XDocument.Parse(strResponseXML);
 
 			return;
 		}
@@ -45,6 +45,7 @@ namespace HGInetDIANServicios
 				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
 				 securityToken, false);
 			request.Headers.Add(securityHeader);
+			string strRequestXML = request.ToString();
 
 			return Convert.DBNull;
 		}

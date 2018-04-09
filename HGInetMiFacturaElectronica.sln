@@ -33,6 +33,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetDIANServicios", "HGInetDIANServicios\HGInetDIANServicios.csproj", "{E87C13D9-AEF2-442C-B377-7A5D7290502A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Librerias", "Librerias", "{59113B66-AE70-4B22-83BC-94B88ED048AF}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Librerias\GlobalAssemblyInfo.cs = Documentacion\Librerias\GlobalAssemblyInfo.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Firma", "Firma", "{EBACB14C-A142-4A25-84E0-EE8A1626BE41}"
 	ProjectSection(SolutionItems) = preProject

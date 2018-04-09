@@ -29,20 +29,20 @@ namespace HGInetDIANServicios
 				string password = Encriptar.Encriptar_SHA256(clave);//Se encripta la clave en SHA256
 
 				Byte[] bytes = File.ReadAllBytes(ruta_zip);
-				String file = Convert.ToBase64String(bytes);
+				//String file = Convert.ToBase64String(bytes);
 
 				DianFactura.facturaElectronicaPortNameClient cliente = new DianFactura.facturaElectronicaPortNameClient();
 				cliente.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
-
+				
 				var behavior = new PasswordDigestBehavior(identificador_software, password, id_peticion);
 				cliente.Endpoint.Behaviors.Add(behavior);
 
 				DianFactura.EnvioFacturaElectronica datos_envio = new DianFactura.EnvioFacturaElectronica()
 				{
 					Document = bytes,
-				InvoiceNumber = string.Format("{0}{1}", prefijo, consecutivo),
-				IssueDate = Convert.ToDateTime(fecha.ToString(Fecha.formato_fecha_hora_completa)),
-				NIT = identificacion_empresa
+					InvoiceNumber = string.Format("{0}{1}", prefijo, consecutivo),
+					IssueDate = Convert.ToDateTime(fecha.ToString(Fecha.formato_fecha_hora_completa)),
+					NIT = identificacion_empresa
 				};
 
 				DianFactura.EnvioFacturaElectronicaPeticion peticion = new DianFactura.EnvioFacturaElectronicaPeticion(datos_envio);
@@ -63,9 +63,9 @@ namespace HGInetDIANServicios
 				}
 				finally
 				{
-                    string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
-                    
-                    string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+					string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
+
+					string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
 
 					// almacena el mensaje de respuesta del servicio web
 					archivo = Xml.GuardarXml(behavior.Inspector.XmlResponse, carpeta, archivo);
@@ -101,7 +101,7 @@ namespace HGInetDIANServicios
 
 			var soapBody = xmlDocument.GetElementsByTagName("ns2:EnvioDianFacturaRespuesta")[0];
 
-			if(soapBody == null)
+			if (soapBody == null)
 				soapBody = xmlDocument.GetElementsByTagName("ns2:EnvioFacturaElectronicaRespuesta")[0];
 
 			// objeto de respuesta principal

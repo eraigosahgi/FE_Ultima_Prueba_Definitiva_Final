@@ -7,30 +7,11 @@ using System.Runtime.InteropServices;
 // asociada con un ensamblado.
 [assembly: AssemblyTitle("HGInetFirmaDigital")]
 [assembly: AssemblyDescription("Firmado digital de documentos en Xades")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HGI SAS")]
-[assembly: AssemblyProduct("HGInetFirmaDigital")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
-[assembly: AssemblyTrademark("HGInet")]
-[assembly: AssemblyCulture("")]
+
+// El siguiente GUID sirve como identificador de typelib si este proyecto se expone a COM
+[assembly: Guid("8c4d0acc-150a-483a-8179-4fd0af76f895")]
 
 // Si establece ComVisible como false, los tipos de este ensamblado no estarán visibles 
 // para los componentes COM. Si necesita obtener acceso a un tipo de este ensamblado desde 
 // COM, establezca el atributo ComVisible como true en este tipo.
 [assembly: ComVisible(false)]
-
-// El siguiente GUID sirve como identificador de typelib si este proyecto se expone a COM
-[assembly: Guid("8c4d0acc-150a-483a-8179-4fd0af76f895")]
-
-// La información de versión de un ensamblado consta de los cuatro valores siguientes:
-//
-//      Versión principal
-//      Versión secundaria 
-//      Número de compilación
-//      Revisión
-//
-// Puede especificar todos los valores o establecer como predeterminados los números de compilación y de revisión 
-// mediante el carácter '*', como se muestra a continuación:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2017.1.0.0")]
-[assembly: AssemblyFileVersion("2017.1.0.0")]
