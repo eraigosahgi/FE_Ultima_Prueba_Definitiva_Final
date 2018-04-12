@@ -50,6 +50,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public DateTime Fecha { get; set; }
 
         /// <summary>
+        /// Fecha de Vencimiento del Documento
+        /// </summary>
+        public DateTime FechaVence { get; set; }
+
+        /// <summary>
         /// Observaciones del documento
         /// </summary>
         public string Nota { get; set; }

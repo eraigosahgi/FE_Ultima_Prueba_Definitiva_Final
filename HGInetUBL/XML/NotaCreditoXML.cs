@@ -17,16 +17,16 @@ namespace HGInetUBL
 	public class NotaCreditoXML
 	{
 
-		/// <summary>
-		/// Crea el XML con la informacion de la nota credito en formato UBL
-		/// </summary>
-		/// <param name="documento">Objeto de tipo NotaCredito que contiene la informacion de la nota credito</param>
-		/// <param name="empresa">Objeto de tipo TblEmpresas que contiene la informacion de la empresa que expide</param>
-		/// <param name="ruta_almacenamiento">Ruta donde se va a guardar el archivo</param>
-		/// <param name="reemplazar_archivo">Indica si sobreescribe el archivo existente</param>
-		/// <param name="tipo">Indica el tipo de documento</param>
-		/// <returns>Ruta donde se guardo el archivo XML</returns>  
-		protected FacturaE_Documento CrearDocument(NotaCredito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo = TipoDocumento.NotaCredito)
+        /// <summary>
+        /// Crea el XML con la informacion de la nota credito en formato UBL
+        /// </summary>
+        /// <param name="documento">Objeto de tipo NotaCredito que contiene la informacion de la nota credito</param>
+        /// <param name="empresa">Objeto de tipo TblEmpresas que contiene la informacion de la empresa que expide</param>
+        /// <param name="ruta_almacenamiento">Ruta donde se va a guardar el archivo</param>
+        /// <param name="reemplazar_archivo">Indica si sobreescribe el archivo existente</param>
+        /// <param name="tipo">Indica el tipo de documento</param>
+        /// <returns>Ruta donde se guardo el archivo XML</returns>  
+        public static FacturaE_Documento CrearDocumento(NotaCredito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo)
 		{
 			try
 			{
@@ -222,7 +222,7 @@ namespace HGInetUBL
 
 				#region nota_credito.CreditNoteLine  //Línea de nota_credito
 				//Elemento que agrupa todos los campos de una línea de nota_credito
-				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList());
+				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(),documento.CufeFactura);
 
                 #endregion
 
@@ -947,7 +947,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo CreditNoteLineType</returns>
-		public static CreditNoteLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
+		public static CreditNoteLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string cufefactura)
 		{
 			try
 			{
@@ -970,8 +970,8 @@ namespace HGInetUBL
 					ID.Value = contadorProducto.ToString();
 					CreditNoteLine.ID = ID;
 
-					//CreditNoteLine.UUID = new UUIDType();
-					//CreditNoteLine.UUID.Value = DocDet.NotaCredito.StrFacturaECufe;
+					CreditNoteLine.UUID = new UUIDType();
+					CreditNoteLine.UUID.Value = cufefactura;
 
 					#endregion
 

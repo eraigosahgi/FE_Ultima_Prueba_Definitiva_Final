@@ -28,9 +28,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="documento">datos del documento</param>
 		/// <param name="pruebas">indica si el documento es de pruebas (true)</param>
 		/// <returns>datos del documento</returns>
-		public static FacturaE_Documento Generar(Guid id, Factura documento, bool pruebas = false)
+		public static FacturaE_Documento Generar(Guid id, Factura documento, TipoDocumento tipo_doc, bool pruebas = false)
 		{
-			TipoDocumento tipo = TipoDocumento.Factura;
 
 			// resolución del documento
 			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
@@ -56,7 +55,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// convierte la información de la resolución a la extensión DIAN
 				extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
 				{
-					TipoDocumento = tipo.GetHashCode(),
+					TipoDocumento = tipo_doc.GetHashCode(),
 					NumResolucion = "9000000033394696",
 					Prefijo = "",
 					FechaResIni = new DateTime(2017, 07, 02),
@@ -79,20 +78,81 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 
 			// convierte el documento 
-			FacturaE_Documento resultado = FacturaXML.CrearDocumento(documento, extension_documento);
-			resultado.DocumentoTipo = tipo;
+			FacturaE_Documento resultado = FacturaXML.CrearDocumento(documento, extension_documento, tipo_doc);
+			resultado.DocumentoTipo = tipo_doc;
 			resultado.ID = id;
 
 			// genera el nombre del archivo ZIP
-			resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo);
+			resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc);
 
 			return resultado;
 		}
 
-		public static FacturaE_Documento Generar(Guid id, NotaCredito documento, bool pruebas = false)
+        /// <summary>
+        /// Genera la información del documento en formato UBL
+        /// </summary>
+        /// <param name="id">id único de identificación de la plataforma</param>
+        /// <param name="documento">datos del documento</param>
+        /// <param name="pruebas">indica si el documento es de pruebas (true)</param>
+        /// <returns>datos del documento</returns>
+        public static FacturaE_Documento Generar(Guid id, NotaCredito documento, TipoDocumento tipo_doc, bool pruebas = false)
 		{
-			return null;
-		}
+            // resolución del documento
+            HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
+
+            if (pruebas)
+            {
+                /*
+					# Resolucion : 9000000033394696 
+					Desde 990000000
+					Hasta 995000000
+					Identificador 606f5740-c6b9-494f-931c-5a6b3e22d72c
+					Pin Pfe2017
+					Clave Tecnica dd85db55545bd6566f36b0fd3be9fd8555c36e
+					Clave Ambiente Prueba2017
+					Ruta Servicio https://facturaelectronica.dian.gov.co/habilitacion/B2BIntegrationEngine/FacturaElectronica/facturaElectronica.wsdl
+				 */
+
+                // obtiene los datos de prueba del proveedor tecnológico de la DIAN
+                DianProveedorTest data_dian = HgiConfiguracion.GetConfiguration().DianProveedorTest;
+
+                //Ctl_ResolucionDian.Obtener(id, data_dian.IdSoftware, data_dian.ClaveAmbiente, documento.DatosObligado.Identificacion, data_dian.NitProveedor);
+
+                // convierte la información de la resolución a la extensión DIAN
+                extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
+                {
+                    TipoDocumento = tipo_doc.GetHashCode(),
+                    NumResolucion = "9000000033394696",
+                    Prefijo = "",
+                    FechaResIni = new DateTime(2017, 07, 02),
+                    FechaResFin = new DateTime(2027, 07, 02),
+                    RangoIni = 990000000,
+                    RangoFin = 995000000,
+                    IdSoftware = data_dian.IdSoftware,
+                    NitProveedor = data_dian.NitProveedor,
+                    ClaveTecnicaDIAN = "dd85db55545bd6566f36b0fd3be9fd8555c36e",
+                    PinSoftware = data_dian.Pin
+                };
+            }
+            else
+            {
+                // obtiene los datos del proveedor tecnológico de la DIAN
+                DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
+
+
+
+            }
+
+            // convierte el documento 
+            FacturaE_Documento resultado = NotaCreditoXML.CrearDocumento(documento, extension_documento,tipo_doc);
+            resultado.DocumentoTipo = tipo_doc;
+            resultado.ID = id;
+
+            // genera el nombre del archivo ZIP
+            resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc);
+
+            return resultado;
+        }
 
 		public static FacturaE_Documento Generar(Guid id, NotaDebito documento, bool pruebas = false)
 		{
