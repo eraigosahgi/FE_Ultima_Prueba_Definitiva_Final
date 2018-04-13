@@ -183,6 +183,8 @@
           <Property Name="DatFechaActualizacion" Type="datetime" Nullable="false" />
           <Property Name="IntIdEstado" Type="smallint" Nullable="false" />
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DatFechaCambioClave" Type="datetime" />
+          <Property Name="StrIdCambioClave" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="TblUsuariosPorPerfil">
           <Key>
@@ -639,6 +641,8 @@
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Self.FK_TblOpcionesUsuario_TblUsuarios" FromRole="TblUsuarios" ToRole="TblOpcionesUsuario" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Self.FK_TblPlanesTransacciones_TblUsuarios" FromRole="TblUsuarios" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblUsuariosPorPerfil" Relationship="Modelo.FK_TblUsuariosPorPerfil_TblUsuarios" FromRole="TblUsuarios" ToRole="TblUsuariosPorPerfil" />
+          <Property Name="DatFechaCambioClave" Type="DateTime" Precision="3" />
+          <Property Name="StrIdCambioClave" Type="Guid" />
         </EntityType>
         <EntityType Name="TblUsuariosPorPerfil">
           <Key>
@@ -1065,6 +1069,8 @@
           <EntitySetMapping Name="TblUsuarios">
             <EntityTypeMapping TypeName="Modelo.TblUsuarios">
               <MappingFragment StoreEntitySet="TblUsuarios">
+                <ScalarProperty Name="StrIdCambioClave" ColumnName="StrIdCambioClave" />
+                <ScalarProperty Name="DatFechaCambioClave" ColumnName="DatFechaCambioClave" />
                 <ScalarProperty Name="IntId" ColumnName="IntId" />
                 <ScalarProperty Name="IntIdEmpresa" ColumnName="IntIdEmpresa" />
                 <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
