@@ -63,7 +63,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     Cufe = "",
                     DescripcionProceso = "Recepción - Información del documento.",
                     Documento = documento_obj.Documento,
-                    Error = new LibreriaGlobalHGInet.Error.Error() { Codigo = LibreriaGlobalHGInet.Error.CodigoError.OK, Fecha = fecha_actual, Mensaje = "" },
+                    Error = null,
                     FechaRecepcion = fecha_actual,
                     FechaUltimoProceso = fecha_actual,
                     IdDocumento = Guid.NewGuid().ToString(),
@@ -267,7 +267,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             foreach (object item in documentos)
             {
 
-                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.Factura, true);
+                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.Factura, true, true);
 
                 respuesta.Add(respuesta_tmp);
             }
@@ -295,7 +295,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             foreach (object item in documentos)
             {
 
-                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, true);
+                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, true, true);
 
                 respuesta.Add(respuesta_tmp);
             }
@@ -305,9 +305,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         }
 
         /// <summary>
-        /// Procesa una lista de documentos tipo NotaCredito
+        /// Procesa una lista de documentos tipo NotaDebito
         /// </summary>
-        /// <param name="documentos">documentos tipo NotaCredito</param>
+        /// <param name="documentos">documentos tipo NotaDebito</param>
         /// <returns></returns>
         public static List<DocumentoRespuesta> Procesar(List<NotaDebito> documentos)
         {
@@ -367,13 +367,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             if (documento.FechaVence.Date < documento.Fecha.Date)
                 throw new ApplicationException(string.Format("La fecha {0} debe ser mayor o igual a la generacion del documento", documento.FechaVence));
 
-            //Valida que la fecha este en los terminos
-            if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
-                throw new ApplicationException(string.Format("La fecha {0} no esta dentro los terminos.", documento.Fecha));
-
             //Valida que no este vacio y Formato
             if (string.IsNullOrEmpty(documento.Moneda))
                 throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Moneda", "string"));
+
+            if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Moneda))
+                throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
 
             //Valida que no este vacio y este bien formado 
             ValidarTercero(documento.DatosObligado, "Obligado");
@@ -487,9 +486,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             if (string.IsNullOrEmpty(tercero.Telefono))
                 throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
 
+            Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+            if (!ismail.IsMatch(tercero.Email))
+                throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+            /*
             if (string.IsNullOrEmpty(tercero.Email))
                 throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Email", tipo).Replace("de tipo", "del"));
-
+*/
             if (string.IsNullOrEmpty(tercero.CodigoPais))
                 throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
 
@@ -536,46 +539,111 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 DocumentoDetalle retorno = ValidarDetalleDocumento(documento.DocumentoDetalles);
 
+                Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
+
                 //Valida el Iva del detalle sea igual al encabezado
-                if (documento.ValorIva != retorno.IvaValor)
-                    throw new ApplicationException(string.Format("El valor Iva {0} no es correcto.", documento.ValorIva));
+                if (isnumber.IsMatch(Convert.ToString(documento.ValorIva).Replace(",", ".")))
+                {
+                    if (documento.ValorIva != retorno.IvaValor)
+                        throw new ApplicationException(string.Format("El valor Iva {0} no es correcto.", documento.ValorIva));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor Iva {0} no esta bien formado", documento.ValorIva));
+                }
 
                 //Valida el Descuento del detalle sea igual al encabezado
-                if (documento.ValorDescuento != retorno.DescuentoValor)
-                    throw new ApplicationException(string.Format("El valor Descuento {0} no es correcto", documento.ValorDescuento));
+                if (isnumber.IsMatch(Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+                {
+                    if (documento.ValorDescuento != retorno.DescuentoValor)
+                        throw new ApplicationException(string.Format("El valor Descuento {0} no es correcto", documento.ValorDescuento));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor Descuento {0} no esta bien formado", documento.ValorDescuento));
+                }
 
                 //Valida el Subtotal del detalle sea igual al encabezado
-                if (documento.ValorSubtotal != retorno.ValorSubtotal)
+                if (isnumber.IsMatch(Convert.ToString(documento.ValorSubtotal).Replace(",", ".")))
+                {
+                    if (documento.ValorSubtotal != retorno.ValorSubtotal)
                     throw new ApplicationException(string.Format("El subtotal {0} no es correcto.", documento.ValorSubtotal));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El subtotal {0} no esta bien formado", documento.ValorSubtotal));
+                }
 
                 //Valida el Impuesto al consumo del detalle sea igual al encabezado
-                if (documento.ValorImpuestoConsumo != retorno.ValorImpuestoConsumo)
+                if (isnumber.IsMatch(Convert.ToString(documento.ValorImpuestoConsumo).Replace(",", ".")))
+                {
+                    if (documento.ValorImpuestoConsumo != retorno.ValorImpuestoConsumo)
                     throw new ApplicationException(string.Format("El Impuesto al Consumo {0} no es correcto.", documento.ValorImpuestoConsumo));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El Impuesto al Consumo {0} no esta bien formado", documento.ValorImpuestoConsumo));
+                }
 
                 //Valida la Retencion en la fuente del detalle sea igual al encabezado
-                if (documento.ValorReteFuente != retorno.ReteFuenteValor)
+                if (isnumber.IsMatch(Convert.ToString(documento.ValorReteFuente).Replace(",", ".")))
+                {
+                    if (documento.ValorReteFuente != retorno.ReteFuenteValor)
                     throw new ApplicationException(string.Format("El valor ReteFuente {0} no es correcto.", documento.ValorReteFuente));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor ReteFuente {0} no esta bien formado", documento.ValorReteFuente));
+                }
 
                 //Valida el ReteIca del detalle sea igual al encabezado
-                if (documento.ValorReteIca != retorno.ReteIcaValor)
+                if (isnumber.IsMatch(Convert.ToString(documento.ValorReteIca).Replace(",", ".")))
+                {
+                    if (documento.ValorReteIca != retorno.ReteIcaValor)
                     throw new ApplicationException(string.Format("El valor ReteIca {0} no es correcto.", documento.ValorReteIca));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor ReteIca {0} no esta bien formado", documento.ValorReteIca));
+                }
 
                 //Calculo del total con los campos enviados en el objeto
-                decimal total_cal = documento.ValorSubtotal + documento.ValorIva;
+                if (isnumber.IsMatch(Convert.ToString(documento.Total).Replace(",", ".")))
+                {
+                    decimal total_cal = documento.ValorSubtotal + documento.ValorIva;
                 //Validacion del total del objeto con el calculado
                 if (documento.Total != total_cal)
                     throw new ApplicationException(string.Format("El valor Total {0} no es correcto.", documento.Total));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor Total {0} no esta bien formado", documento.Total));
+                }
 
                 //Suma de las retenciones del documento
                 decimal retencion_doc = (documento.ValorReteFuente + documento.ValorReteIca + documento.ValorReteIva);
 
                 //Validacion del Neto calculado con el que es enviado en el documento
-                if ((documento.Total - retencion_doc) != documento.Neto)
+                if (isnumber.IsMatch(Convert.ToString(documento.Neto).Replace(",", ".")))
+                {
+                    if ((documento.Total - retencion_doc) != documento.Neto)
                     throw new ApplicationException(string.Format("El valor Neto {0} no es correcto.", documento.Neto));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor Neto {0} no esta bien formado", documento.Neto));
+                }
 
                 //Validacion del ReteIva calculado con el que es enviado en el documento
-                if ((documento.Total - documento.Neto - documento.ValorReteFuente - documento.ValorReteIca) != documento.ValorReteIva)
+                if (isnumber.IsMatch(Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
+                {
+                    if ((documento.Total - documento.Neto - documento.ValorReteFuente - documento.ValorReteIca) != documento.ValorReteIva)
                     throw new ApplicationException(string.Format("El valor ReteIva {0} no es correcto.", documento.ValorReteIva));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor Neto {0} no esta bien formado", documento.ValorReteIva));
+                }
 
             }
         }
@@ -606,13 +674,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 if (Docdet.Cantidad != cantidad)
                     throw new ApplicationException(string.Format("La cantidad {0} no es correcto.", Docdet.Cantidad));
 
-                decimal val_unitario = (Docdet.ValorSubtotal + Docdet.DescuentoValor) / Docdet.Cantidad;
-                if (Docdet.ValorUnitario != val_unitario)
-                    throw new ApplicationException(string.Format("El valor Unitario {0} no es correcto", Docdet.ValorUnitario));
+                //Validacion del valor unitario
+                Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
 
-                decimal val_iva = (Docdet.ValorUnitario * Docdet.IvaPorcentaje) * Docdet.Cantidad;
-                if (Docdet.IvaValor != val_iva)
-                    throw new ApplicationException(string.Format("El valor Iva {0} no es correcto", Docdet.IvaValor));
+                if (isnumber.IsMatch(Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
+                {
+                    decimal val_unitario = (Docdet.ValorSubtotal + Docdet.DescuentoValor) / Docdet.Cantidad;
+                    if (Docdet.ValorUnitario != val_unitario)
+                        throw new ApplicationException(string.Format("El valor Unitario {0} no es correcto", Docdet.ValorUnitario));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor Unitario {0} no esta bien formado", Docdet.ValorUnitario));
+                }
+
 
                 if (Docdet.DescuentoPorcentaje > 1 || Docdet.DescuentoPorcentaje < 0)
                     throw new ApplicationException(string.Format("El porcentaje Descuento {0} no es correcto", Docdet.DescuentoValor));
@@ -620,21 +695,68 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 if (Docdet.DescuentoValor != val_descuento)
                     throw new ApplicationException(string.Format("El valor Descuento {0} no es correcto", Docdet.DescuentoValor));
 
-                decimal val_subtotal = (Docdet.Cantidad * Docdet.ValorUnitario) - val_descuento;
-                if (Docdet.ValorSubtotal != val_subtotal)
-                    throw new ApplicationException(string.Format("El subtotal {0} no es correcto.", Docdet.ValorSubtotal));
 
-                decimal val_ImpConsumo = Docdet.ValorImpuestoConsumo * Docdet.Cantidad;
-                if (Docdet.ValorImpuestoConsumo != val_ImpConsumo)
-                    throw new ApplicationException(string.Format("El Impuesto al Consumo {0} no es correcto.", Docdet.ValorImpuestoConsumo));
+                //Validacion del valor IVA
+                if (isnumber.IsMatch(Convert.ToString(Docdet.IvaValor).Replace(",", ".")))
+                {
+                    decimal val_iva = ((Docdet.ValorUnitario - Docdet.DescuentoValor) * Docdet.IvaPorcentaje) * Docdet.Cantidad;
+                    if (Docdet.IvaValor != val_iva)
+                        throw new ApplicationException(string.Format("El valor Iva {0} no es correcto", Docdet.IvaValor));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor Iva {0} no esta bien formado", Docdet.IvaValor));
+                }
 
-                decimal val_reteica = (Docdet.ValorUnitario * Docdet.ReteIcaPorcentaje) * Docdet.Cantidad;
-                if (Docdet.ReteIcaValor != val_reteica)
-                    throw new ApplicationException(string.Format("El valor ReteIca {0} no es correcto.", Docdet.ReteIcaValor));
+                //Validacion del Valor Subtotal
+                if (isnumber.IsMatch(Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
+                {
+                    decimal val_subtotal = (Docdet.Cantidad * Docdet.ValorUnitario) - val_descuento;
+                    if (Docdet.ValorSubtotal != val_subtotal)
+                        throw new ApplicationException(string.Format("El subtotal {0} no es correcto.", Docdet.ValorSubtotal));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El subtotal {0} no esta bien formado", Docdet.ValorSubtotal));
+                }
 
-                decimal val_retefte = (Docdet.ValorSubtotal * Docdet.ReteFuentePorcentaje);
-                if (Docdet.ReteFuenteValor != val_retefte)
-                    throw new ApplicationException(string.Format("El valor ReteFuente {0} no es correcto.", Docdet.ReteFuenteValor));
+                //Validacion del Valor del Impuesto al Consumo
+                if (isnumber.IsMatch(Convert.ToString(Docdet.ValorImpuestoConsumo).Replace(",", ".")))
+                {
+                    decimal val_ImpConsumo = Docdet.ValorImpuestoConsumo * Docdet.Cantidad;
+                    if (Docdet.ValorImpuestoConsumo != val_ImpConsumo)
+                        throw new ApplicationException(string.Format("El Impuesto al Consumo {0} no es correcto.", Docdet.ValorImpuestoConsumo));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El Impuesto al Consumo {0} no esta bien formado", Docdet.ValorImpuestoConsumo));
+                }
+
+                //Validacion del Valor del ReteICA
+                if (isnumber.IsMatch(Convert.ToString(Docdet.ReteIcaValor).Replace(",", ".")))
+                {
+                    decimal val_reteica = (Docdet.ValorUnitario * Docdet.ReteIcaPorcentaje) * Docdet.Cantidad;
+                    if (Docdet.ReteIcaValor != val_reteica)
+                        throw new ApplicationException(string.Format("El valor ReteIca {0} no es correcto.", Docdet.ReteIcaValor));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor ReteIca {0} no esta bien formado", Docdet.ReteIcaValor));
+                }
+
+
+                //Validacion del Valor del ReteICA
+                if (isnumber.IsMatch(Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
+                {
+                    decimal val_retefte = (Docdet.ValorSubtotal * Docdet.ReteFuentePorcentaje);
+                    if (Docdet.ReteFuenteValor != val_retefte)
+                        throw new ApplicationException(string.Format("El valor ReteFuente {0} no es correcto.", Docdet.ReteFuenteValor));
+                }
+                else
+                {
+                    throw new ApplicationException(string.Format("El valor ReteFuente  {0} no esta bien formado", Docdet.ReteFuenteValor));
+                }
+
 
                 Iva_total += Docdet.IvaValor;
                 Desc_total += Docdet.DescuentoValor;
