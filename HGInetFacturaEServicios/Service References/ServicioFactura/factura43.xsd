@@ -16,6 +16,7 @@
       <xs:element minOccurs="0" name="Documento" type="xs:int" />
       <xs:element minOccurs="0" name="DocumentoDetalles" nillable="true" type="tns:ArrayOfDocumentoDetalle" />
       <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaVence" type="xs:dateTime" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Neto" type="xs:decimal" />
       <xs:element minOccurs="0" name="Nota" nillable="true" type="xs:string" />
@@ -73,7 +74,7 @@
       <xs:element minOccurs="0" name="ProductoCodigo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoNombre" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="ReteFuenteProcentaje" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteFuentePorcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="ReteFuenteValor" type="xs:decimal" />
       <xs:element minOccurs="0" name="ReteIcaPorcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="ReteIcaValor" type="xs:decimal" />

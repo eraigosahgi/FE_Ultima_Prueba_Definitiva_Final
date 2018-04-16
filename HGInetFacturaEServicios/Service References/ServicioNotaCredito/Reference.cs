@@ -84,10 +84,13 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private decimal ValorIvaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private decimal ValorReteIvaField;
+        private decimal ValorReteFuenteField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private decimal ValorRetefuenteField;
+        private decimal ValorReteIcaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorReteIvaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorSubtotalField;
@@ -363,6 +366,32 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorReteFuente {
+            get {
+                return this.ValorReteFuenteField;
+            }
+            set {
+                if ((this.ValorReteFuenteField.Equals(value) != true)) {
+                    this.ValorReteFuenteField = value;
+                    this.RaisePropertyChanged("ValorReteFuente");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorReteIca {
+            get {
+                return this.ValorReteIcaField;
+            }
+            set {
+                if ((this.ValorReteIcaField.Equals(value) != true)) {
+                    this.ValorReteIcaField = value;
+                    this.RaisePropertyChanged("ValorReteIca");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public decimal ValorReteIva {
             get {
                 return this.ValorReteIvaField;
@@ -371,19 +400,6 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((this.ValorReteIvaField.Equals(value) != true)) {
                     this.ValorReteIvaField = value;
                     this.RaisePropertyChanged("ValorReteIva");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public decimal ValorRetefuente {
-            get {
-                return this.ValorRetefuenteField;
-            }
-            set {
-                if ((this.ValorRetefuenteField.Equals(value) != true)) {
-                    this.ValorRetefuenteField = value;
-                    this.RaisePropertyChanged("ValorRetefuente");
                 }
             }
         }
@@ -767,7 +783,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private string ProductoNombreField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private decimal ReteFuenteProcentajeField;
+        private decimal ReteFuentePorcentajeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ReteFuenteValorField;
@@ -915,14 +931,14 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public decimal ReteFuenteProcentaje {
+        public decimal ReteFuentePorcentaje {
             get {
-                return this.ReteFuenteProcentajeField;
+                return this.ReteFuentePorcentajeField;
             }
             set {
-                if ((this.ReteFuenteProcentajeField.Equals(value) != true)) {
-                    this.ReteFuenteProcentajeField = value;
-                    this.RaisePropertyChanged("ReteFuenteProcentaje");
+                if ((this.ReteFuentePorcentajeField.Equals(value) != true)) {
+                    this.ReteFuentePorcentajeField = value;
+                    this.RaisePropertyChanged("ReteFuentePorcentaje");
                 }
             }
         }

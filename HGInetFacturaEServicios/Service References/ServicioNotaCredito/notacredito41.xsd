@@ -29,8 +29,9 @@
       <xs:element minOccurs="0" name="ValorDescuento" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorImpuestoConsumo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorIva" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ValorReteFuente" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ValorReteIca" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorReteIva" type="xs:decimal" />
-      <xs:element minOccurs="0" name="ValorRetefuente" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorSubtotal" type="xs:decimal" />
     </xs:sequence>
   </xs:complexType>
@@ -75,7 +76,7 @@
       <xs:element minOccurs="0" name="ProductoCodigo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoNombre" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="ReteFuenteProcentaje" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteFuentePorcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="ReteFuenteValor" type="xs:decimal" />
       <xs:element minOccurs="0" name="ReteIcaPorcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="ReteIcaValor" type="xs:decimal" />

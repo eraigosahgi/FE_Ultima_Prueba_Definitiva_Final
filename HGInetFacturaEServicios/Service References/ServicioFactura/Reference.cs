@@ -45,6 +45,9 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private System.DateTime FechaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaVenceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MonedaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -183,6 +186,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((this.FechaField.Equals(value) != true)) {
                     this.FechaField = value;
                     this.RaisePropertyChanged("Fecha");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaVence {
+            get {
+                return this.FechaVenceField;
+            }
+            set {
+                if ((this.FechaVenceField.Equals(value) != true)) {
+                    this.FechaVenceField = value;
+                    this.RaisePropertyChanged("FechaVence");
                 }
             }
         }
@@ -735,7 +751,7 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private string ProductoNombreField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private decimal ReteFuenteProcentajeField;
+        private decimal ReteFuentePorcentajeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ReteFuenteValorField;
@@ -883,14 +899,14 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public decimal ReteFuenteProcentaje {
+        public decimal ReteFuentePorcentaje {
             get {
-                return this.ReteFuenteProcentajeField;
+                return this.ReteFuentePorcentajeField;
             }
             set {
-                if ((this.ReteFuenteProcentajeField.Equals(value) != true)) {
-                    this.ReteFuenteProcentajeField = value;
-                    this.RaisePropertyChanged("ReteFuenteProcentaje");
+                if ((this.ReteFuentePorcentajeField.Equals(value) != true)) {
+                    this.ReteFuentePorcentajeField = value;
+                    this.RaisePropertyChanged("ReteFuentePorcentaje");
                 }
             }
         }
