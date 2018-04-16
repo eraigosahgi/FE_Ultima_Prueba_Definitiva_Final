@@ -27,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ManualTecnico", "ManualTecn
 		Documentacion\ManualTecnico\20180327-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\20180327-ManualTecnicoServiciosFacturacionElectronica.pdf
 		Documentacion\ManualTecnico\20180409-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\20180409-ManualTecnicoServiciosFacturacionElectronica.pdf
 		Documentacion\ManualTecnico\20180413-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\20180413-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\ManualArquitecturaFacturacionElectronica.docx = Documentacion\ManualTecnico\ManualArquitecturaFacturacionElectronica.docx
 		Documentacion\ManualTecnico\ManualTecnicoServiciosFacturaE.docx = Documentacion\ManualTecnico\ManualTecnicoServiciosFacturaE.docx
 	EndProjectSection
 EndProject
