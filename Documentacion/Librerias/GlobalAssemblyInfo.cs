@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("HGInet Facturación Electrónica")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("HGInet")]
-[assembly: AssemblyCulture("es-CO")]
+[assembly: AssemblyCulture("")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //
