@@ -48,7 +48,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private int DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private HGInetFacturaEServicios.ServicioNotaCredito.DocumentoDetalle[] DocumentoDetallesField;
+        private System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.DocumentoDetalle> DocumentoDetallesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DocumentoRefField;
@@ -210,7 +210,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public HGInetFacturaEServicios.ServicioNotaCredito.DocumentoDetalle[] DocumentoDetalles {
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.DocumentoDetalle> DocumentoDetalles {
             get {
                 return this.DocumentoDetallesField;
             }
@@ -1495,12 +1495,12 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
     public partial class RecepcionRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioNotaCredito.NotaCredito[] documentos;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.NotaCredito> documentos;
         
         public RecepcionRequest() {
         }
         
-        public RecepcionRequest(HGInetFacturaEServicios.ServicioNotaCredito.NotaCredito[] documentos) {
+        public RecepcionRequest(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.NotaCredito> documentos) {
             this.documentos = documentos;
         }
     }
@@ -1511,12 +1511,12 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
     public partial class RecepcionResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioNotaCredito.DocumentoRespuesta[] RecepcionResult;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.DocumentoRespuesta> RecepcionResult;
         
         public RecepcionResponse() {
         }
         
-        public RecepcionResponse(HGInetFacturaEServicios.ServicioNotaCredito.DocumentoRespuesta[] RecepcionResult) {
+        public RecepcionResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.DocumentoRespuesta> RecepcionResult) {
             this.RecepcionResult = RecepcionResult;
         }
     }

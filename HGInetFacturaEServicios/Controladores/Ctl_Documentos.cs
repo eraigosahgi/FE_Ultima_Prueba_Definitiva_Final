@@ -60,10 +60,10 @@ namespace HGInetFacturaEServicios
 				ServicioDocumento.ConsultaPorNumerosResponse respuesta = cliente_ws.ConsultaPorNumeros(peticion);
 
 				// resultado del servicio web
-				ServicioDocumento.DocumentoRespuesta[] result = respuesta.ConsultaPorNumerosResult;
+				List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorNumerosResult;
 
 				if (respuesta != null)
-					return result.ToList();
+					return result;
 				else
 					throw new Exception("Error al obtener los datos con los parámetros indicados.");
 
@@ -134,10 +134,10 @@ namespace HGInetFacturaEServicios
 				ServicioDocumento.ConsultaPorCodigoRegistroResponse respuesta = cliente_ws.ConsultaPorCodigoRegistro(peticion);
 
 				// resultado del servicio web
-				ServicioDocumento.DocumentoRespuesta[] result = respuesta.ConsultaPorCodigoRegistroResult;
+				List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorCodigoRegistroResult;
 
 				if (respuesta != null)
-					return result.ToList();
+					return result;
 				else
 					throw new Exception("Error al obtener los datos con los parámetros indicados.");
 
@@ -210,10 +210,10 @@ namespace HGInetFacturaEServicios
 				ServicioDocumento.ConsultaPorFechaElaboracionResponse respuesta = cliente_ws.ConsultaPorFechaElaboracion(peticion);
 
 				// resultado del servicio web
-				ServicioDocumento.DocumentoRespuesta[] result = respuesta.ConsultaPorFechaElaboracionResult;
+				List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorFechaElaboracionResult;
 
 				if (respuesta != null)
-					return result.ToList();
+					return result;
 				else
 					throw new Exception("Error al obtener los datos con los parámetros indicados.");
 
@@ -278,14 +278,14 @@ namespace HGInetFacturaEServicios
 				// datos para la petición
 				ServicioDocumento.RecepcionRequest peticion = new ServicioDocumento.RecepcionRequest()
 				{
-					documentos = documentos_envio.ToArray()
+					documentos = documentos_envio
 				};
 
 				// ejecución del servicio web
 				ServicioDocumento.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
 
 				// resultado del servicio web
-				ServicioDocumento.DocumentoRespuesta[] result = respuesta.RecepcionResult;
+				List<ServicioDocumento.DocumentoRespuesta> result = respuesta.RecepcionResult;
 
 				if (respuesta != null)
 					return result.ToList();

@@ -57,10 +57,10 @@ namespace HGInetFacturaEServicios
 				ServicioResolucion.ConsultarResponse respuesta = cliente_ws.Consultar(peticion);
 
 				// resultado del servicio web
-				ServicioResolucion.Resolucion[] result = respuesta.ConsultarResult;
+				List<ServicioResolucion.Resolucion> result = respuesta.ConsultarResult;
 
 				if (respuesta != null)
-					return result.ToList();
+					return result;
 				else
 					throw new Exception("Error al obtener los datos con los parámetros indicados.");
 

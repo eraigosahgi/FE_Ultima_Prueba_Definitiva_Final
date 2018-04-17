@@ -39,7 +39,7 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private int DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private HGInetFacturaEServicios.ServicioFactura.DocumentoDetalle[] DocumentoDetallesField;
+        private System.Collections.Generic.List<HGInetFacturaEServicios.ServicioFactura.DocumentoDetalle> DocumentoDetallesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaField;
@@ -165,7 +165,7 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public HGInetFacturaEServicios.ServicioFactura.DocumentoDetalle[] DocumentoDetalles {
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioFactura.DocumentoDetalle> DocumentoDetalles {
             get {
                 return this.DocumentoDetallesField;
             }
@@ -1463,12 +1463,12 @@ namespace HGInetFacturaEServicios.ServicioFactura {
     public partial class RecepcionRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioFactura.Factura[] documentos;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioFactura.Factura> documentos;
         
         public RecepcionRequest() {
         }
         
-        public RecepcionRequest(HGInetFacturaEServicios.ServicioFactura.Factura[] documentos) {
+        public RecepcionRequest(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioFactura.Factura> documentos) {
             this.documentos = documentos;
         }
     }
@@ -1479,12 +1479,12 @@ namespace HGInetFacturaEServicios.ServicioFactura {
     public partial class RecepcionResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioFactura.DocumentoRespuesta[] RecepcionResult;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioFactura.DocumentoRespuesta> RecepcionResult;
         
         public RecepcionResponse() {
         }
         
-        public RecepcionResponse(HGInetFacturaEServicios.ServicioFactura.DocumentoRespuesta[] RecepcionResult) {
+        public RecepcionResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioFactura.DocumentoRespuesta> RecepcionResult) {
             this.RecepcionResult = RecepcionResult;
         }
     }

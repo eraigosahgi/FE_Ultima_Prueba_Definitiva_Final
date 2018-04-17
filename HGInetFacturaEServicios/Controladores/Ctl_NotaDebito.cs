@@ -56,14 +56,14 @@ namespace HGInetFacturaEServicios
 				// datos para la petición
 				ServicioNotaDebito.RecepcionRequest peticion = new ServicioNotaDebito.RecepcionRequest()
 				{
-					documentos = documentos_envio.ToArray()
+					documentos = documentos_envio
 				};
 
 				// ejecución del servicio web
 				ServicioNotaDebito.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
 
 				// resultado del servicio web
-				ServicioNotaDebito.DocumentoRespuesta[] result = respuesta.RecepcionResult;
+				List<ServicioNotaDebito.DocumentoRespuesta> result = respuesta.RecepcionResult;
 
 				if (respuesta != null)
 					return result.ToList();

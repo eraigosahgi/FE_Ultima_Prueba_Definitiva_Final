@@ -353,12 +353,12 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
     public partial class ConsultarResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioResolucion.Resolucion[] ConsultarResult;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> ConsultarResult;
         
         public ConsultarResponse() {
         }
         
-        public ConsultarResponse(HGInetFacturaEServicios.ServicioResolucion.Resolucion[] ConsultarResult) {
+        public ConsultarResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> ConsultarResult) {
             this.ConsultarResult = ConsultarResult;
         }
     }

@@ -636,12 +636,12 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
     public partial class ConsultaPorNumerosResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta[] ConsultaPorNumerosResult;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta> ConsultaPorNumerosResult;
         
         public ConsultaPorNumerosResponse() {
         }
         
-        public ConsultaPorNumerosResponse(HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta[] ConsultaPorNumerosResult) {
+        public ConsultaPorNumerosResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta> ConsultaPorNumerosResult) {
             this.ConsultaPorNumerosResult = ConsultaPorNumerosResult;
         }
     }
@@ -680,12 +680,12 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
     public partial class ConsultaPorCodigoRegistroResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta[] ConsultaPorCodigoRegistroResult;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta> ConsultaPorCodigoRegistroResult;
         
         public ConsultaPorCodigoRegistroResponse() {
         }
         
-        public ConsultaPorCodigoRegistroResponse(HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta[] ConsultaPorCodigoRegistroResult) {
+        public ConsultaPorCodigoRegistroResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta> ConsultaPorCodigoRegistroResult) {
             this.ConsultaPorCodigoRegistroResult = ConsultaPorCodigoRegistroResult;
         }
     }
@@ -728,12 +728,12 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
     public partial class ConsultaPorFechaElaboracionResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta[] ConsultaPorFechaElaboracionResult;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta> ConsultaPorFechaElaboracionResult;
         
         public ConsultaPorFechaElaboracionResponse() {
         }
         
-        public ConsultaPorFechaElaboracionResponse(HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta[] ConsultaPorFechaElaboracionResult) {
+        public ConsultaPorFechaElaboracionResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta> ConsultaPorFechaElaboracionResult) {
             this.ConsultaPorFechaElaboracionResult = ConsultaPorFechaElaboracionResult;
         }
     }
@@ -744,12 +744,12 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
     public partial class RecepcionRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioDocumento.DocumentoArchivo[] documentos;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoArchivo> documentos;
         
         public RecepcionRequest() {
         }
         
-        public RecepcionRequest(HGInetFacturaEServicios.ServicioDocumento.DocumentoArchivo[] documentos) {
+        public RecepcionRequest(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoArchivo> documentos) {
             this.documentos = documentos;
         }
     }
@@ -760,12 +760,12 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
     public partial class RecepcionResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta[] RecepcionResult;
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta> RecepcionResult;
         
         public RecepcionResponse() {
         }
         
-        public RecepcionResponse(HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta[] RecepcionResult) {
+        public RecepcionResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioDocumento.DocumentoRespuesta> RecepcionResult) {
             this.RecepcionResult = RecepcionResult;
         }
     }

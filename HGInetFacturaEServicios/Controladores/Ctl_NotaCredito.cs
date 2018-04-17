@@ -54,17 +54,17 @@ namespace HGInetFacturaEServicios
 				// datos para la petición
 				ServicioNotaCredito.RecepcionRequest peticion = new ServicioNotaCredito.RecepcionRequest()
 				{
-					documentos = documentos_envio.ToArray()
+					documentos = documentos_envio
 				};
 
 				// ejecución del servicio web
 				ServicioNotaCredito.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
 
 				// resultado del servicio web
-				ServicioNotaCredito.DocumentoRespuesta[] result = respuesta.RecepcionResult;
+				List<ServicioNotaCredito.DocumentoRespuesta> result = respuesta.RecepcionResult;
 
 				if (respuesta != null)
-					return result.ToList();
+					return result;
 				else
 					throw new Exception("Error al obtener los datos con los parámetros indicados.");
 
