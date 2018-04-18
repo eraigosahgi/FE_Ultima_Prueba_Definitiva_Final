@@ -21,7 +21,7 @@
           </Key>
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DatFechaIngreso" Type="datetime" Nullable="false" />
-          <Property Name="IntDocTipo" Type="int" />
+          <Property Name="IntDocTipo" Type="int" Nullable="false" />
           <Property Name="IntIdEmpresa" Type="int" Nullable="false" />
           <Property Name="IntIdEmpresaResolucion" Type="int" Nullable="false" />
           <Property Name="StrPrefijo" Type="varchar" MaxLength="5" />
@@ -33,12 +33,12 @@
           <Property Name="IntIdEmpresaAdquiriente" Type="int" Nullable="false" />
           <Property Name="IntAdquirienteRecibo" Type="smallint" Nullable="false" />
           <Property Name="DatAdquirienteFechaRecibo" Type="datetime" />
-          <Property Name="StrAdquirienteMvoRechazo" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="StrAdquirienteMvoRechazo" Type="varchar" MaxLength="500" />
           <Property Name="IntVlrTotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="StrUrlArchivoUbl" Type="varchar" MaxLength="300" />
           <Property Name="StrUrlArchivoPdf" Type="varchar" MaxLength="300" />
           <Property Name="StrUrlArchivoZip" Type="varchar" MaxLength="300" />
-          <Property Name="StrIdPlanTransaccion" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StrIdPlanTransaccion" Type="uniqueidentifier" />
           <Property Name="IntIdEstado" Type="smallint" Nullable="false" />
           <Property Name="DatFechaActualizaEstado" Type="datetime" Nullable="false" />
         </EntityType>
@@ -50,8 +50,8 @@
           <Property Name="StrTipoIdentificacion" Type="varchar" MaxLength="2" Nullable="false" />
           <Property Name="StrIdentificacion" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="IntIdentificacionDv" Type="smallint" Nullable="false" />
-          <Property Name="StrRazonSocial" Type="varchar" MaxLength="200" />
-          <Property Name="StrMail" Type="varchar" MaxLength="200" />
+          <Property Name="StrRazonSocial" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="StrMail" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="DatFechaIngreso" Type="datetime" Nullable="false" />
           <Property Name="StrObservaciones" Type="varchar" MaxLength="150" />
           <Property Name="StrSerial" Type="uniqueidentifier" Nullable="false" />
@@ -676,8 +676,8 @@
           <Property Name="StrTipoIdentificacion" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="StrIdentificacion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntIdentificacionDv" Type="Int16" Nullable="false" />
-          <Property Name="StrRazonSocial" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="StrMail" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="StrRazonSocial" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StrMail" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="DatFechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="StrObservaciones" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="StrSerial" Type="Guid" Nullable="false" />
@@ -721,7 +721,7 @@
           </Key>
           <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
           <Property Name="DatFechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IntDocTipo" Type="Int32" />
+          <Property Name="IntDocTipo" Type="Int32" Nullable="false" />
           <Property Name="IntIdEmpresa" Type="Int32" Nullable="false" />
           <Property Name="IntIdEmpresaResolucion" Type="Int32" Nullable="false" />
           <Property Name="StrPrefijo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
@@ -733,12 +733,12 @@
           <Property Name="IntIdEmpresaAdquiriente" Type="Int32" Nullable="false" />
           <Property Name="IntAdquirienteRecibo" Type="Int16" Nullable="false" />
           <Property Name="DatAdquirienteFechaRecibo" Type="DateTime" Precision="3" />
-          <Property Name="StrAdquirienteMvoRechazo" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="StrAdquirienteMvoRechazo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="IntVlrTotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <Property Name="StrUrlArchivoUbl" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="StrUrlArchivoPdf" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="StrUrlArchivoZip" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="StrIdPlanTransaccion" Type="Guid" Nullable="false" />
+          <Property Name="StrIdPlanTransaccion" Type="Guid" />
           <Property Name="IntIdEstado" Type="Int16" Nullable="false" />
           <Property Name="DatFechaActualizaEstado" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblDocumentos_TblEmpresas" FromRole="TblDocumentos" ToRole="TblEmpresas" />

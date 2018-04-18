@@ -16,7 +16,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     {
         public System.Guid StrIdSeguridad { get; set; }
         public System.DateTime DatFechaIngreso { get; set; }
-        public Nullable<int> IntDocTipo { get; set; }
+        public int IntDocTipo { get; set; }
         public int IntIdEmpresa { get; set; }
         public int IntIdEmpresaResolucion { get; set; }
         public string StrPrefijo { get; set; }
@@ -33,7 +33,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrUrlArchivoUbl { get; set; }
         public string StrUrlArchivoPdf { get; set; }
         public string StrUrlArchivoZip { get; set; }
-        public System.Guid StrIdPlanTransaccion { get; set; }
+        public Nullable<System.Guid> StrIdPlanTransaccion { get; set; }
         public short IntIdEstado { get; set; }
         public System.DateTime DatFechaActualizaEstado { get; set; }
     
