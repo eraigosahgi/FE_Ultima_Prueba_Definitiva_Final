@@ -9,6 +9,7 @@ using System.Text;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Error;
 using HGInetMiFacturaElectonicaController.Procesos;
+using HGInetMiFacturaElectronicaWeb.Controllers.Services;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -32,6 +33,13 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		{
 			try
 			{
+				// id de la petición en la plataforma
+				Guid id_peticion = Guid.NewGuid();
+
+				// guardar traza de la petición realizada
+				if (documentos != null)
+					Peticion.ToXml(OperationContext.Current.RequestContext, "WSFacturaRecepcion", documentos.FirstOrDefault().DatosObligado.Identificacion, id_peticion.ToString());
+
 				return Ctl_Documentos.Procesar(documentos);
 
 			}
