@@ -12,6 +12,11 @@ namespace HGInetMiFacturaElectonicaData.Modelo
 
 	public partial class ModeloConexion : DbContext
 	{
+        /// <summary>
+        /// Cierre de conexión a la base de datos
+        /// </summary>
+        private static int conex_time_out = 30;
+
 		/// <summary>
 		/// Constructor para la conexión con la base de datos
 		/// </summary>
@@ -66,7 +71,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
 
 			// construye el texto de conexión de SQL Server
 			var sqlBuilder = new SqlConnectionStringBuilder(conexion);
-			sqlBuilder.ConnectTimeout = 300;
+			sqlBuilder.ConnectTimeout = conex_time_out;
 			sqlBuilder.MultipleActiveResultSets = true;
 			//sqlBuilder.PersistSecurityInfo = false;
 

@@ -28,7 +28,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="documento">datos del documento</param>
 		/// <param name="pruebas">indica si el documento es de pruebas (true)</param>
 		/// <returns>datos del documento</returns>
-		public static FacturaE_Documento Generar(Guid id, Factura documento, TipoDocumento tipo_doc, bool pruebas = false)
+		public static FacturaE_Documento Generar(Guid id, Factura documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion = null, bool pruebas = false)
 		{
 
 			// resolución del documento
@@ -49,9 +49,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// obtiene los datos de prueba del proveedor tecnológico de la DIAN
 				DianProveedorTest data_dian = HgiConfiguracion.GetConfiguration().DianProveedorTest;
-
-				//Ctl_ResolucionDian.Obtener(id, data_dian.IdSoftware, data_dian.ClaveAmbiente, documento.DatosObligado.Identificacion, data_dian.NitProveedor);
-
+                
 				// convierte la información de la resolución a la extensión DIAN
 				extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
 				{
@@ -73,9 +71,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// obtiene los datos del proveedor tecnológico de la DIAN
 				DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
 
+                // convierte la información de la resolución a la extensión DIAN
+                extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
+                {
+                    TipoDocumento = tipo_doc.GetHashCode(),
+                    NumResolucion = resolucion.StrNumResolucion,
+                    Prefijo = (!string.IsNullOrEmpty(resolucion.StrPrefijo)) ? resolucion.StrPrefijo : "",
+                    FechaResIni = resolucion.DatFechaVigenciaDesde,
+                    FechaResFin = resolucion.DatFechaVigenciaHasta,
+                    RangoIni = resolucion.IntRangoInicial,
+                    RangoFin = resolucion.IntRangoFinal,
+                    IdSoftware = data_dian.IdSoftware,
+                    NitProveedor = data_dian.NitProveedor,
+                    ClaveTecnicaDIAN = resolucion.StrClaveTecnica,
+                    PinSoftware = data_dian.Pin
+                };
 
-
-			}
+            }
 
 			// convierte el documento 
 			FacturaE_Documento resultado = FacturaXML.CrearDocumento(documento, extension_documento, tipo_doc);

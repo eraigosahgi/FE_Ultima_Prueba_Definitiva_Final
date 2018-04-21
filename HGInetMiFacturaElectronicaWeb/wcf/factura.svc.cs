@@ -36,10 +36,6 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				// id de la petición en la plataforma
 				Guid id_peticion = Guid.NewGuid();
 
-				// guardar traza de la petición realizada
-				if (documentos != null)
-					Peticion.ToXml(OperationContext.Current.RequestContext, "WSFacturaRecepcion", documentos.FirstOrDefault().DatosObligado.Identificacion, id_peticion.ToString());
-
 				return Ctl_Documentos.Procesar(documentos);
 
 			}

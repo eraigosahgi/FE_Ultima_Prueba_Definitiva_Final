@@ -106,6 +106,7 @@ namespace HGInetDIANServicios
 
             // objeto de respuesta principal
             DianFactura.AcuseRecibo acuse = new DianFactura.AcuseRecibo();
+            acuse.ReceivedInvoice = new DianFactura.ReceivedInvoice();
 
             foreach (XmlNode item in soapBody)
             {
@@ -129,8 +130,7 @@ namespace HGInetDIANServicios
 
                     var received = xmlDocument.GetElementsByTagName("ns2:ReceivedInvoice")[0];
 
-                    acuse.ReceivedInvoice = new DianFactura.ReceivedInvoice();
-
+                    
                     foreach (XmlNode item2 in received)
                     {
                         if (item2.LocalName.Equals("NumeroFactura"))

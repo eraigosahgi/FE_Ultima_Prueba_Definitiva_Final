@@ -8,8 +8,14 @@ using LibreriaGlobalHGInet.Properties;
 
 namespace HGInetMiFacturaElectonicaData.ControllerSql
 {
+
 	public abstract partial class BaseObject<T> : IBaseObject<T> where T : class
 	{
+        /// <summary>
+        /// Cierre de conexión de ejecución de comandos
+        /// </summary>
+        private int cmd_time_out = 90;
+
 		/// <summary>
 		/// Modelo de datos
 		/// </summary>
@@ -45,7 +51,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 			if (this.context == null)
 			{
 				this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave);
-				this.context.Database.CommandTimeout = 600;
+                this.context.Database.CommandTimeout = this.cmd_time_out;
 
 			}
 		}
@@ -73,7 +79,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 			if (this.context == null)
 			{
 				this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave);
-				this.context.Database.CommandTimeout = 600;
+				this.context.Database.CommandTimeout = this.cmd_time_out;
 			}
 		}
 
@@ -98,7 +104,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 			this.autenticacion = new ModeloAutenticacion(servidor, basedatos, usuario, clave);
 
 			this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave);
-			this.context.Database.CommandTimeout = 600;
+			this.context.Database.CommandTimeout = this.cmd_time_out;
 
 		}
 
