@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HGInetFacturaEServicios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,11 @@ namespace HGInetFacturaETestConsola
 	{
 		static void Main(string[] args)
 		{
+
+			//HGInetFacturaEServicios.ServicioFactura.Factura factura = new HGInetFacturaEServicios.ServicioFactura.Factura();
+
+			Ctl_Factura.Test("http://habilitacion.mifacturaenlinea.com.co");
+
 
 			Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
 
@@ -49,6 +55,13 @@ namespace HGInetFacturaETestConsola
 
 			bool decimal4 = isnumber.IsMatch(valor_txt);
 
+
+
+			decimal x = 0.00m;
+
+			decimal y = 12;
+
+			x = y;
 		}
 	}
 }
