@@ -56,7 +56,9 @@
     <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuracion\Ctl_Empresa.cs" />
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
+    <Compile Include="Configuracion\Ctl_Usuario.cs" />
     <Compile Include="Procesos\Ctl_Compresion.cs" />
     <Compile Include="Procesos\Ctl_Documentos.cs" />
     <Compile Include="Procesos\Ctl_Firma.cs" />
