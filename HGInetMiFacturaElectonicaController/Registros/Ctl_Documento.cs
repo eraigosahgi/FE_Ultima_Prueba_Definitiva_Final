@@ -63,21 +63,30 @@ namespace HGInetMiFacturaElectonicaController.Registros
             {
                 if (string.IsNullOrWhiteSpace(identificacion_obligado))
                     throw new ApplicationException("Número de identificación del obligado inválido.");
-                if (tipo_documento > 1 || tipo_documento < 3)
+                if (tipo_documento < 1 || tipo_documento > 3)
                     throw new ApplicationException("Tipo de documento inválido.");
                 if (string.IsNullOrWhiteSpace(Numeros))
                     throw new ApplicationException("Filtro por números inválido.");
 
+                List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
+
                 //Convierte Numeros en una lista.
                 List<string> lista_documentos = Coleccion.ConvertirLista(Numeros);
 
-                var respuesta = (from documento in context.TblDocumentos
-                                 where (identificacion_obligado.Equals(documento.IntIdEmpresa))
+                var respuesta = from documento in context.TblDocumentos
+                                join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
+                                where identificacion_obligado.Equals(empresa.StrIdentificacion)
                                  && documento.IntDocTipo == tipo_documento
                                  && lista_documentos.Contains(documento.IntNumero.ToString())
-                                 select documento);
+                                select documento;
 
-                return (from item in respuesta select Convertir(item)).ToList();
+                //Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
+                foreach (TblDocumentos item in respuesta)
+                {
+                    lista_respuesta.Add(Convertir(item));
+                }
+
+                return lista_respuesta;
             }
             catch (Exception exec)
             {
@@ -98,26 +107,33 @@ namespace HGInetMiFacturaElectonicaController.Registros
         {
             try
             {
-                throw new ApplicationException("DataKey inválido.");
+                //Valida que los parametros sean correctos.
                 if (string.IsNullOrWhiteSpace(identificacion_obligado))
                     throw new ApplicationException("Número de identificación del obligado inválido.");
-                if (tipo_documento < 1 || tipo_documento < 3)
+                if (tipo_documento < 1 || tipo_documento > 3)
                     throw new ApplicationException("Tipo de documento inválido.");
                 if (string.IsNullOrWhiteSpace(CodigosRegistros))
                     throw new ApplicationException("Filtro por números inválido.");
 
+                List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
 
                 //Convierte CodigoRegistros en una lista.
                 List<string> lista_documentos = Coleccion.ConvertirLista(CodigosRegistros);
 
-                var respuesta = (from documento in context.TblDocumentos
-                                 where (identificacion_obligado.Equals(documento.IntIdEmpresa))
-                                 && documento.IntDocTipo == tipo_documento
-                                 && lista_documentos.Contains(documento.StrObligadoIdRegistro)
-                                 select documento);
+                var respuesta = from documento in context.TblDocumentos
+                                join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
+                                where identificacion_obligado.Equals(empresa.StrIdentificacion)
+                                && documento.IntDocTipo == tipo_documento
+                                && lista_documentos.Contains(documento.StrObligadoIdRegistro)
+                                select documento;
 
-                return (from item in respuesta select Convertir(item)).ToList();
+                //Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
+                foreach (TblDocumentos item in respuesta)
+                {
+                    lista_respuesta.Add(Convertir(item));
+                }
 
+                return lista_respuesta;
             }
             catch (Exception exec)
             {
@@ -140,16 +156,29 @@ namespace HGInetMiFacturaElectonicaController.Registros
             {
                 if (string.IsNullOrWhiteSpace(identificacion_obligado))
                     throw new ApplicationException("Número de identificación del obligado inválido.");
-                if (tipo_documento < 1 || tipo_documento < 3)
+                if (tipo_documento < 1 || tipo_documento > 3)
                     throw new ApplicationException("Tipo de documento inválido.");
+                if (FechaInicial == null)
+                    throw new ApplicationException("Fecha inicial inválida.");
+                if (FechaFinal == null)
+                    throw new ApplicationException("Fecha final inválida.");
 
-                var respuesta = (from documento in context.TblDocumentos
-                                 where (identificacion_obligado.Equals(documento.IntIdEmpresa))
+                List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
+
+                var respuesta = from documento in context.TblDocumentos
+                                join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
+                                where identificacion_obligado.Equals(empresa.StrIdentificacion)
                                  && documento.IntDocTipo == tipo_documento
                                  && (documento.DatFechaIngreso >= FechaInicial && documento.DatFechaIngreso <= FechaFinal)
-                                 select documento);
+                                select documento;
 
-                return (from item in respuesta select Convertir(item)).ToList();
+                //Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
+                foreach (TblDocumentos item in respuesta)
+                {
+                    lista_respuesta.Add(Convertir(item));
+                }
+
+                return lista_respuesta;
             }
             catch (Exception exec)
             {
@@ -226,6 +255,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
             try
             {
                 //Valida el tipo de documento enviado por el usuario
+
+                if (respuesta == null)
+                    throw new ApplicationException("Está Null");
 
                 DocumentoRespuesta obj_documento = new DocumentoRespuesta();
 
