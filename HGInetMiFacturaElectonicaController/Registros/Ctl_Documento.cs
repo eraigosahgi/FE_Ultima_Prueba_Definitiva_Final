@@ -1,13 +1,17 @@
-﻿using HGInetMiFacturaElectonicaData;
+﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using LibreriaGlobalHGInet.Error;
+using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,6 +45,121 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
         }
+
+
+        #region Obtener
+
+        /// <summary>
+        /// Obtiene los documentos por número
+        /// </summary>
+        /// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+        /// <param name="Identificacion">identificación obligado</param>
+        /// <param name="TipoDocumento">tipo documento 1: factura - 2: nota crédito - 3: nota débito</param>
+        /// <param name="Numeros">número de los documentos (recibe varios números separados por coma)</param>
+        /// <returns></returns>
+        public List<DocumentoRespuesta> ConsultaPorNumeros(string identificacion_obligado, int tipo_documento, string Numeros)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(identificacion_obligado))
+                    throw new ApplicationException("Número de identificación del obligado inválido.");
+                if (tipo_documento > 1 || tipo_documento < 3)
+                    throw new ApplicationException("Tipo de documento inválido.");
+                if (string.IsNullOrWhiteSpace(Numeros))
+                    throw new ApplicationException("Filtro por números inválido.");
+
+                //Convierte Numeros en una lista.
+                List<string> lista_documentos = Coleccion.ConvertirLista(Numeros);
+
+                var respuesta = (from documento in context.TblDocumentos
+                                 where (identificacion_obligado.Equals(documento.IntIdEmpresa))
+                                 && documento.IntDocTipo == tipo_documento
+                                 && lista_documentos.Contains(documento.IntNumero.ToString())
+                                 select documento);
+
+                return (from item in respuesta select Convertir(item)).ToList();
+            }
+            catch (Exception exec)
+            {
+                Error error = new Error(CodigoError.VALIDACION, exec);
+                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los documentos por Código de Registros
+        /// </summary>
+        /// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+        /// <param name="Identificacion">identificación obligado</param>
+        /// <param name="TipoDocumento">tipo documento 1: factura - 2: nota crédito - 3: nota débito</param>
+        /// <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
+        /// <returns></returns>
+        public List<DocumentoRespuesta> ConsultaPorCodigoRegistro(string identificacion_obligado, int tipo_documento, string CodigosRegistros)
+        {
+            try
+            {
+                throw new ApplicationException("DataKey inválido.");
+                if (string.IsNullOrWhiteSpace(identificacion_obligado))
+                    throw new ApplicationException("Número de identificación del obligado inválido.");
+                if (tipo_documento < 1 || tipo_documento < 3)
+                    throw new ApplicationException("Tipo de documento inválido.");
+                if (string.IsNullOrWhiteSpace(CodigosRegistros))
+                    throw new ApplicationException("Filtro por números inválido.");
+
+
+                //Convierte CodigoRegistros en una lista.
+                List<string> lista_documentos = Coleccion.ConvertirLista(CodigosRegistros);
+
+                var respuesta = (from documento in context.TblDocumentos
+                                 where (identificacion_obligado.Equals(documento.IntIdEmpresa))
+                                 && documento.IntDocTipo == tipo_documento
+                                 && lista_documentos.Contains(documento.StrObligadoIdRegistro)
+                                 select documento);
+
+                return (from item in respuesta select Convertir(item)).ToList();
+
+            }
+            catch (Exception exec)
+            {
+                Error error = new Error(CodigoError.VALIDACION, exec);
+                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los documentos por rangos de fecha de elaboración.
+        /// </summary>
+        /// <param name="identificacion_obligado">identificación obligado</param>
+        /// <param name="tipo_documento">tipo documento 1: factura - 2: nota crédito - 3: nota débito</param>
+        /// <param name="FechaInicial">fecha inicial del rango de búsqueda - aplica sobre la fecha del registro</param>
+        /// <param name="FechaFinal">fecha final del rango de búsqueda - aplica sobre la fecha del registro</param>
+        /// <returns></returns>
+        public List<DocumentoRespuesta> ConsultaPorFechaElaboracion(string identificacion_obligado, int tipo_documento, DateTime FechaInicial, DateTime FechaFinal)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(identificacion_obligado))
+                    throw new ApplicationException("Número de identificación del obligado inválido.");
+                if (tipo_documento < 1 || tipo_documento < 3)
+                    throw new ApplicationException("Tipo de documento inválido.");
+
+                var respuesta = (from documento in context.TblDocumentos
+                                 where (identificacion_obligado.Equals(documento.IntIdEmpresa))
+                                 && documento.IntDocTipo == tipo_documento
+                                 && (documento.DatFechaIngreso >= FechaInicial && documento.DatFechaIngreso <= FechaFinal)
+                                 select documento);
+
+                return (from item in respuesta select Convertir(item)).ToList();
+            }
+            catch (Exception exec)
+            {
+                Error error = new Error(CodigoError.VALIDACION, exec);
+                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+            }
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Convierte un Objeto de Servicio a un Objeto de Bd

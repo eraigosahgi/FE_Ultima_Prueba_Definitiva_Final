@@ -48,7 +48,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                     return true;
 
             }
-            return false;
+
+            throw new ApplicationException(string.Format("El DataKey {0} para la Identificacion {1} es inválido.", datakey, identificacion_obligado));
 
         }
 

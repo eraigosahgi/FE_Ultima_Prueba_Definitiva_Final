@@ -967,6 +967,7 @@
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Services\FacturaController.cs" />
+    <Compile Include="Controllers\Services\Peticion.cs" />
     <Compile Include="Views\Demos\Demos.aspx.cs">
       <DependentUpon>Demos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
