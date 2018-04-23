@@ -41,7 +41,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
         }
-   
+
         /// <summary>
         /// Convierte un Objeto de Servicio a un Objeto de Bd
         /// </summary>
@@ -51,7 +51,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <param name="adquiriente"></param>
         /// <param name="tipo_doc"></param>
         /// <returns></returns>
-        public static TblDocumentos Convertir(DocumentoRespuesta respuesta, object documento, TblEmpresas empresa,TblEmpresas adquiriente, TipoDocumento tipo_doc)
+        public static TblDocumentos Convertir(DocumentoRespuesta respuesta, object documento, TblEmpresas empresa, TblEmpresas adquiriente, TipoDocumento tipo_doc)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 tbl_documento.IntAdquirienteRecibo = 0;
                 tbl_documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
                 tbl_documento.DatFechaActualizaEstado = Fecha.GetFecha();
-                
+
 
                 return tbl_documento;
             }
@@ -96,7 +96,45 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
-       
+
+        /// <summary>
+        /// Convierte un objeto de tipo de base de datos a objeto de servicio.
+        /// </summary>
+        /// <param name="respuesta">Objeto de tipo TblDocumentos</param>
+        /// <returns></returns>
+        public static DocumentoRespuesta Convertir(TblDocumentos respuesta)
+        {
+            try
+            {
+                //Valida el tipo de documento enviado por el usuario
+
+                DocumentoRespuesta obj_documento = new DocumentoRespuesta();
+
+                obj_documento.Aceptacion = respuesta.IntAdquirienteRecibo;
+                obj_documento.CodigoRegistro = respuesta.StrObligadoIdRegistro;
+                obj_documento.Cufe = respuesta.StrCufe;
+                // obj_documento.DescripcionProceso
+                obj_documento.Documento = respuesta.IntNumero;
+                obj_documento.FechaRecepcion = respuesta.DatFechaIngreso;
+                obj_documento.FechaUltimoProceso = respuesta.DatFechaActualizaEstado;
+                obj_documento.IdDocumento = respuesta.StrIdSeguridad.ToString();
+                obj_documento.Identificacion = respuesta.TblEmpresas.StrIdentificacion;
+                obj_documento.IdProceso = respuesta.IntIdEstado;
+                obj_documento.MotivoRechazo = respuesta.StrAdquirienteMvoRechazo;
+                obj_documento.NumeroResolucion = respuesta.TblEmpresasResoluciones.StrNumResolucion;
+                obj_documento.Prefijo = respuesta.TblEmpresasResoluciones.StrPrefijo;
+                // obj_documento.ProcesoFinalizado
+                obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf;
+                obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
+
+                return obj_documento;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+
+        }
 
     }
 
