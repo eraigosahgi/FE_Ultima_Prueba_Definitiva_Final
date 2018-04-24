@@ -37,6 +37,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntObligado { get; set; }
         public System.DateTime DatFechaActualizacion { get; set; }
         public System.Guid StrIdSeguridad { get; set; }
+        public bool IntHabilitacion { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }

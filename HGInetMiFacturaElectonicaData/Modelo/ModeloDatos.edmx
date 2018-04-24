@@ -59,6 +59,7 @@
           <Property Name="IntObligado" Type="bit" Nullable="false" />
           <Property Name="DatFechaActualizacion" Type="datetime" Nullable="false" />
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IntHabilitacion" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -690,6 +691,7 @@
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresas" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblDocumentos1" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblEmpresas" ToRole="TblUsuarios" />
+          <Property Name="IntHabilitacion" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -991,6 +993,7 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntHabilitacion" ColumnName="IntHabilitacion" />
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
                 <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
                 <ScalarProperty Name="IntObligado" ColumnName="IntObligado" />
