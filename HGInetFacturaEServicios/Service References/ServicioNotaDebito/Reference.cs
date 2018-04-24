@@ -1057,7 +1057,7 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         private int DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private HGInetFacturaEServicios.ServicioNotaDebito.Error ErrorField;
+        private LibreriaGlobalHGInet.Error.Error ErrorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaRecepcionField;
@@ -1168,7 +1168,7 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public HGInetFacturaEServicios.ServicioNotaDebito.Error Error {
+        public LibreriaGlobalHGInet.Error.Error Error {
             get {
                 return this.ErrorField;
             }
@@ -1333,115 +1333,6 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Error", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
-    [System.SerializableAttribute()]
-    public partial class Error : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private HGInetFacturaEServicios.ServicioNotaDebito.CodigoError CodigoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime FechaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MensajeField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public HGInetFacturaEServicios.ServicioNotaDebito.CodigoError Codigo {
-            get {
-                return this.CodigoField;
-            }
-            set {
-                if ((this.CodigoField.Equals(value) != true)) {
-                    this.CodigoField = value;
-                    this.RaisePropertyChanged("Codigo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime Fecha {
-            get {
-                return this.FechaField;
-            }
-            set {
-                if ((this.FechaField.Equals(value) != true)) {
-                    this.FechaField = value;
-                    this.RaisePropertyChanged("Fecha");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Mensaje {
-            get {
-                return this.MensajeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
-                    this.MensajeField = value;
-                    this.RaisePropertyChanged("Mensaje");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="CodigoError", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
-    public enum CodigoError : int {
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        OK = 0,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_NO_CONTROLADO = 1,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_EN_SERVIDOR = 2,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        VALIDACION = 3,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_AGREGAR = 4,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_EDITAR = 5,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_ELIMINAR = 6,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_LICENCIA = 98,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        NINGUNO = 99,
-    }
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", ConfigurationName="ServicioNotaDebito.ServicioNotaDebito")]
     public interface ServicioNotaDebito {
@@ -1455,7 +1346,7 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         HGInetFacturaEServicios.ServicioNotaDebito.TestResponse EndTest(System.IAsyncResult result);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaDebito/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaDebito/RecepcionResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFacturaEServicios.ServicioNotaDebito.Error), Action="Recepcion", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="Recepcion", Name="Error")]
         HGInetFacturaEServicios.ServicioNotaDebito.RecepcionResponse Recepcion(HGInetFacturaEServicios.ServicioNotaDebito.RecepcionRequest request);
         
         [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaDebito/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaDebito/RecepcionResponse")]

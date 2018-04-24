@@ -1,8 +1,11 @@
-﻿using System;
+﻿using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HGInetFacturaEServicios
 {
@@ -134,6 +137,143 @@ namespace HGInetFacturaEServicios
 			{
 				if (cliente_ws != null)
 					cliente_ws.Abort();
+			}
+		}
+
+
+		/// <summary>
+		/// Calcula el codigo CUFE
+		/// </summary>
+		/// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
+		/// <param name="clave_tecnica">Clave técnica de la resolución</param>
+		/// <returns>Texto con la encriptación del CUFE</returns>        
+		public static string CalcularCUFE(string clave_tecnica, string numero_factura, DateTime fecha_factura, string nit_facturador, string tipo_identificacion_adquiriente, string nit_adquiriente, decimal total, decimal subtotal, decimal iva, decimal impto_consumo, decimal rte_ica)
+		{
+			try
+			{				
+				if (string.IsNullOrWhiteSpace(clave_tecnica))
+					throw new Exception(string.Format("Parámetro {0} inválido.", "clave_tecnica"));
+
+				if (string.IsNullOrWhiteSpace(numero_factura))
+					throw new Exception(string.Format("Parámetro {0} inválido.", "numero_factura"));
+
+				if (string.IsNullOrWhiteSpace(nit_facturador))
+					throw new Exception(string.Format("Parámetro {0} inválido.", "nit_facturador"));
+
+				if (string.IsNullOrWhiteSpace(tipo_identificacion_adquiriente))
+					throw new Exception(string.Format("Parámetro {0} inválido.", "tipo_identificacion_adquiriente"));
+
+				if (string.IsNullOrWhiteSpace(nit_adquiriente))
+					throw new Exception(string.Format("Parámetro {0} inválido.", "nit_adquiriente"));
+
+				/*
+				NumFac = Número de factura.
+				FecFac = Fecha de factura en formato (Java) YYYYmmddHHMMss. 
+				ValFac = Valor Factura sin IVA, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
+				CodImp1 = 01 
+				ValImp1 = Valor impuesto 01, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
+				CodImp2 = 02 
+				ValImp2 = Valor impuesto 02, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos. 
+				CodImp3 = 03 
+				ValImp3 = Valor impuesto 03, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos.
+				ValImp = Valor IVA, con punto decimal, con decimales a dos (2) dígitos, sin separadores de miles, ni símbolo pesos.
+				NitOFE = NIT del Facturador Electrónico sin puntos ni guiones, sin digito de verificación. 
+				TipAdq = tipo de adquiriente, de acuerdo con la tabla Tipos de documentos de identidad del «Anexo 001 Formato estándar XML de la Factura, notas débito y notas crédito electrónicos» 
+				NumAdq = Número de identificación del adquirente sin puntos ni guiones, sin digito de verificación. 
+				ClTec = Clave técnica del rango de facturación.
+				CUFE = SHA-1(NumFac + FecFac + ValFac + CodImp1 + ValImp1 + CodImp2 + ValImp2 + CodImp3 +
+							ValImp3 + ValImp + NitOFE + TipAdq + NumAdq + ClTec) 
+			
+				NumFac = /fe:Invoice/cbc:ID
+				FecFac = sinSimbolos(/fe:Invoice/cbc:IssueDate + /fe:Invoice/cbc:IssueTime) formato AAAAMMDDHHMMSS
+				i.e. año + mes + día + hora + minutos + segundos
+				ValFac = /fe:Invoice/fe:LegalMonetaryTotal/cbc:LineExtensionAmount
+				CodImp1 = /fe:Invoice/fe:TaxTotal[x]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 01
+				ValImp1 = /fe:Invoice/fe:TaxTotal[x]/fe:TaxSubtotal/cbc:TaxAmount
+				CodImp2 = /fe:Invoice/fe:TaxTotal[y]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 02
+				ValImp2 = /fe:Invoice/fe:TaxTotal[y]/fe:TaxSubtotal/cbc:TaxAmount
+				CodImp3 = /fe:Invoice/fe:TaxTotal[z]/fe:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID = 03
+				ValImp3 = /fe:Invoice/fe:TaxTotal[z]/fe:TaxSubtotal/cbc:TaxAmount
+				ValImp = /fe:Invoice/fe:LegalMonetaryTotal/cbc:PayableAmount
+				NitOFE = /fe:Invoice/fe:AccountingSupplierParty/fe:Party/cac:PartyIdentification/cbc:ID
+				TipAdq = /fe:Invoice/fe:AccountingCustomerParty/fe:Party/cac:PartyIdentification/cbc:ID/@schemeID
+				NumAdq = /fe:Invoice/fe:AccountingCustomerParty/fe:Party/cac:PartyIdentification/cbc:ID
+				ClTec = no está en el XML 			 
+				*/
+				
+				string codigo_impuesto = string.Empty;
+				DateTime fecha = fecha_factura;
+				DateTime fecha_hora = Convert.ToDateTime(fecha_factura);
+				TimeSpan hora = new TimeSpan(fecha_hora.Hour, fecha_hora.Minute, fecha_hora.Second);
+				fecha = fecha.Date + hora;
+
+				string NumFac = numero_factura;
+				string FecFac = fecha.ToString(Fecha.formato_fecha_java);
+				string ValFac = subtotal.ToString();
+
+
+				// formato para validación de valor con dos decimales
+				Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
+				
+				//Impuesto 1
+				string CodImp1 = "01";
+				decimal ValImp1 = iva;
+
+				//Valida el iva
+				if (ValImp1 == 0)
+					ValImp1 = Convert.ToDecimal(0.00M);
+				else if (!isnumber.IsMatch(Convert.ToString(ValImp1).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El valor iva {0} no esta bien formado", iva));
+				
+				//Impuesto 2
+				string CodImp2 = "02";
+				decimal ValImp2 = impto_consumo;
+
+				//Valida el impuesto al consumo
+				if (ValImp2 == 0)
+					ValImp2 = Convert.ToDecimal(0.00M);
+				else if (!isnumber.IsMatch(Convert.ToString(ValImp2).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El valor impto_consumo {0} no esta bien formado", impto_consumo));
+					
+				//Impuesto 3
+				string CodImp3 = "03";
+				decimal ValImp3 = rte_ica;
+				
+				//Valida el reteica
+				if (ValImp3 == 0)
+					ValImp3 = Convert.ToDecimal(0.00M);
+				else if (!isnumber.IsMatch(Convert.ToString(ValImp3).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El valor rte_ica {0} no esta bien formado", rte_ica));
+					
+				string ValImp = total.ToString();
+
+				string NitOFE = nit_facturador;
+				
+				string TipAdq = tipo_identificacion_adquiriente;
+				string NumAdq = nit_adquiriente;
+				
+				string cufe = NumFac
+					+ FecFac
+					+ ValFac.Replace(",", ".")
+					+ CodImp1
+					+ ValImp1.ToString().Replace(",", ".")
+					+ CodImp2
+					+ ValImp2.ToString().Replace(",", ".")
+					+ CodImp3
+					+ ValImp3.ToString().Replace(",", ".")
+					+ ValImp.Replace(",", ".")
+					+ NitOFE
+					+ TipAdq
+					+ NumAdq
+					+ clave_tecnica
+				;
+
+				string cufe_encriptado = Encriptar.Encriptar_SHA1(cufe);
+				return cufe_encriptado;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
 
