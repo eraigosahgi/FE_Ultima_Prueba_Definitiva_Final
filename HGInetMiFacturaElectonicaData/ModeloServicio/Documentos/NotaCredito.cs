@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HGInetMiFacturaElectonicaData.ModeloServicio.General;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -155,7 +156,13 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// Detalle del documento
         /// </summary>
         public List<DocumentoDetalle> DocumentoDetalles { get; set; }
+		
+		/// <summary>
+		/// Datos del formato del documento
+		/// </summary>
+		public Formato DocumentoFormato { get; set; }
 
-        #endregion
-    }
+
+		#endregion
+	}
 }
