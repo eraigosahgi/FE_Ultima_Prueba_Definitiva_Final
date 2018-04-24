@@ -25,7 +25,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool BitProcesada { get; set; }
         public string StrObservaciones { get; set; }
     
-        public virtual TblEmpresas TblEmpresas { get; set; }
         public virtual TblUsuarios TblUsuarios { get; set; }
+        public virtual TblEmpresas TblEmpresas { get; set; }
     }
 }
