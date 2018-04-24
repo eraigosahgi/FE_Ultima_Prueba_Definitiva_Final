@@ -19,7 +19,7 @@ namespace HGInetDIANServicios
 
 				string ruta_servicio_web = "";
 				/*
-				if (!prueba)
+				if (!prueba)                
 					ruta_servicio_web = "https://facturaelectronica.dian.gov.co/servicios/B2BIntegrationEngine-servicios/FacturaElectronica/consultaResolucionesFacturacion.wsdl";
 				else
 					ruta_servicio_web = "https://facturaelectronica.dian.gov.co/habilitacion/B2BIntegrationEngine/FacturaElectronica/consultaResolucionesFacturacion.wsdl";
@@ -49,10 +49,10 @@ namespace HGInetDIANServicios
 				}
 				catch (Exception e)
 				{
-					// valida si la excepción es diferente de serializar para lanzarla
-					if (!e.Message.Contains("deserializar") || !e.StackTrace.Contains("XmlSerializer"))
-						throw e;
-				}
+                    // valida si la excepción es diferente de serializar para lanzarla
+                    if (!e.Message.Contains("deserializar") && !e.StackTrace.Contains("XmlSerializer") && !e.Message.Contains("Security") && !e.StackTrace.Contains("Security"))
+                        throw e;
+                }
 				finally
 				{
 					string carpeta = Directorio.CrearDirectorio(AppDomain.CurrentDomain.BaseDirectory + @"_LogFacturaE\");
