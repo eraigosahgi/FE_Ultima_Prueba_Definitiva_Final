@@ -12,6 +12,37 @@ namespace HGInetFacturaETestConsola
 		static void Main(string[] args)
 		{
 
+			PruebaCufe();
+
+		}
+
+		public static void PruebaCufe()
+		{
+			try
+			{
+
+				string cufe = Ctl_Factura.CalcularCUFE("dd85db55545bd6566f36b0fd3be9fd8555c36e", "990000402", new DateTime(2018, 4, 23), "811021438", "13", "1020395355", 47500.00M, 39916.00M, 7584.00M, 0.00M, 0.00M);
+
+				System.Diagnostics.Debug.WriteLine("CUFE GENERADO : " + cufe);
+
+
+				string cufeNC = Ctl_NotaCredito.CalcularCUFE("5790af0483698d226240b7c4abafd49eb0dc8d480f6a7e44dfe4a523fed2129a", "3d03ae717f28dab49c7588ffa4ef006f776ac468", "602", new DateTime(2018, 4, 23), "811021438", "13", "79758318", 687196.00M, 607870.00M, 109720.00M, 0.00M, 0.00M);
+
+				System.Diagnostics.Debug.WriteLine("cufeNC GENERADO : " + cufeNC);
+
+			}
+			catch (Exception excepcion)
+			{
+				System.Diagnostics.Debug.WriteLine("ERRO GENERANDO CUFE" + excepcion.Message);
+			}
+
+		}
+
+
+		public static void test1()
+		{
+
+
 			//HGInetFacturaEServicios.ServicioFactura.Factura factura = new HGInetFacturaEServicios.ServicioFactura.Factura();
 
 			Ctl_Factura.Test("http://habilitacion.mifacturaenlinea.com.co");
