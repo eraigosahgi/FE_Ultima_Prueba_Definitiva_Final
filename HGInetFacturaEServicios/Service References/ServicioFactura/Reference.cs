@@ -42,6 +42,9 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private System.Collections.Generic.List<HGInetFacturaEServicios.ServicioFactura.DocumentoDetalle> DocumentoDetallesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFacturaEServicios.ServicioFactura.Formato DocumentoFormatoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -173,6 +176,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((object.ReferenceEquals(this.DocumentoDetallesField, value) != true)) {
                     this.DocumentoDetallesField = value;
                     this.RaisePropertyChanged("DocumentoDetalles");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFacturaEServicios.ServicioFactura.Formato DocumentoFormato {
+            get {
+                return this.DocumentoFormatoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DocumentoFormatoField, value) != true)) {
+                    this.DocumentoFormatoField = value;
+                    this.RaisePropertyChanged("DocumentoFormato");
                 }
             }
         }
@@ -699,6 +715,52 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((this.TipoPersonaField.Equals(value) != true)) {
                     this.TipoPersonaField = value;
                     this.RaisePropertyChanged("TipoPersona");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Formato", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio.General")]
+    [System.SerializableAttribute()]
+    public partial class Formato : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte[] ArchivoPdfField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public byte[] ArchivoPdf {
+            get {
+                return this.ArchivoPdfField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ArchivoPdfField, value) != true)) {
+                    this.ArchivoPdfField = value;
+                    this.RaisePropertyChanged("ArchivoPdf");
                 }
             }
         }

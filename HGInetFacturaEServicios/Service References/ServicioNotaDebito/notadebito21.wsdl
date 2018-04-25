@@ -5,7 +5,8 @@
       <xsd:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd0" namespace="HGInetFacturaElectronica.ServiciosWcf" />
       <xsd:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" />
-      <xsd:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+      <xsd:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.General" />
+      <xsd:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="ServicioNotaDebito_Test_InputMessage">

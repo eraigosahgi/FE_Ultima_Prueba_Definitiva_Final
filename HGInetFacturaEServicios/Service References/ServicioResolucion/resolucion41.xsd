@@ -12,7 +12,7 @@
       <xs:element minOccurs="0" name="FechaResolucion" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaVigenciaFinal" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaVigenciaInicial" type="xs:dateTime" />
-      <xs:element minOccurs="0" name="NumeroResolucion" type="xs:int" />
+      <xs:element minOccurs="0" name="NumeroResolucion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="RangoFinal" type="xs:int" />
       <xs:element minOccurs="0" name="RangoInicial" type="xs:int" />

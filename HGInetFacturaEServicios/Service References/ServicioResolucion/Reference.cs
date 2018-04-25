@@ -36,7 +36,7 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         private System.DateTime FechaVigenciaInicialField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int NumeroResolucionField;
+        private string NumeroResolucionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string PrefijoField;
@@ -110,12 +110,12 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int NumeroResolucion {
+        public string NumeroResolucion {
             get {
                 return this.NumeroResolucionField;
             }
             set {
-                if ((this.NumeroResolucionField.Equals(value) != true)) {
+                if ((object.ReferenceEquals(this.NumeroResolucionField, value) != true)) {
                     this.NumeroResolucionField = value;
                     this.RaisePropertyChanged("NumeroResolucion");
                 }
