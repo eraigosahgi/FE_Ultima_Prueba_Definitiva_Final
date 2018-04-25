@@ -79,7 +79,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
                 var respuesta = from documento in context.TblDocumentos
                                 join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
-                                where identificacion_obligado.Equals(empresa.StrIdentificacion)
+                                where empresa.StrIdentificacion.Equals(identificacion_obligado)
                                  && documento.IntDocTipo == tipo_documento
                                  && lista_documentos.Contains(documento.IntNumero.ToString())
                                 select documento;
@@ -126,7 +126,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
                 var respuesta = from documento in context.TblDocumentos
                                 join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
-                                where identificacion_obligado.Equals(empresa.StrIdentificacion)
+                                where empresa.StrIdentificacion.Equals(identificacion_obligado)
                                 && documento.IntDocTipo == tipo_documento
                                 && lista_documentos.Contains(documento.StrObligadoIdRegistro)
                                 select documento;
@@ -171,7 +171,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
                 var respuesta = from documento in context.TblDocumentos
                                 join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
-                                where identificacion_obligado.Equals(empresa.StrIdentificacion)
+                                where empresa.StrIdentificacion.Equals(identificacion_obligado)
                                  && documento.IntDocTipo == tipo_documento
                                  && (documento.DatFechaIngreso >= FechaInicial && documento.DatFechaIngreso <= FechaFinal)
                                 select documento;
