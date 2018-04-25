@@ -488,7 +488,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 // Obtiene la resolucion de la base de datos
                 Ctl_EmpresaResolucion _resolucion_factura = new Ctl_EmpresaResolucion();
-                lista_resolucion.Add(_resolucion_factura.Obtener(documentos.FirstOrDefault().DatosObligado.Identificacion,documentos.FirstOrDefault().NumeroResolucion));
+                lista_resolucion.Add(_resolucion_factura.Obtener(documentos.FirstOrDefault().DatosObligado.Identificacion, documentos.FirstOrDefault().NumeroResolucion));
             }
 
             List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
@@ -847,17 +847,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 {
                     documento.Total = Convert.ToDecimal(0.00M);
                 }
-                if (isnumber.IsMatch(Convert.ToString(documento.Total).Replace(",", ".")))
-                {
-                    decimal total_cal = documento.ValorSubtotal + documento.ValorIva;
-                    //Validacion del total del objeto con el calculado
-                    if (documento.Total != total_cal)
-                        throw new ApplicationException(string.Format("El valor Total {0} no es correcto.", documento.Total));
-                }
-                else
-                {
+                if (!isnumber.IsMatch(Convert.ToString(documento.Total).Replace(",", ".")))
                     throw new ApplicationException(string.Format("El valor Total {0} no esta bien formado", documento.Total));
-                }
 
                 //Suma de las retenciones del documento
                 decimal retencion_doc = (documento.ValorReteFuente + documento.ValorReteIca + documento.ValorReteIva);
