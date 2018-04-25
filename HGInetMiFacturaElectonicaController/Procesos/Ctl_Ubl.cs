@@ -85,7 +85,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <param name="documento">datos del documento</param>
         /// <param name="pruebas">indica si el documento es de pruebas (true)</param>
         /// <returns>datos del documento</returns>
-        public static FacturaE_Documento Generar(Guid id, NotaCredito documento, TipoDocumento tipo_doc, TblEmpresas empresa)
+        public static FacturaE_Documento Generar(Guid id, NotaCredito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
         {
             // resolución del documento
             HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
@@ -114,6 +114,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 TipoDocumento = tipo_doc.GetHashCode(),
                 IdSoftware = IdSoftware,
                 NitProveedor = NitProveedor,
+                ClaveTecnicaDIAN = resolucion.StrClaveTecnica,
                 PinSoftware = PinSoftware
             };
 

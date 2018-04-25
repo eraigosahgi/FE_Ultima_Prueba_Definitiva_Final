@@ -192,7 +192,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         if (tipo_doc == TipoDocumento.Factura)
                             documento_obj = Validar(documento_obj, resolucion);
                         else if (tipo_doc == TipoDocumento.NotaCredito)
-                            documento_obj = ValidarNotaCredito(documento_obj);
+                            documento_obj = ValidarNotaCredito(documento_obj, resolucion);
                     }
                     catch (Exception excepcion)
                     {
@@ -278,7 +278,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             if (tipo_doc == TipoDocumento.Factura)
                                 documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, tipo_doc, empresa, resolucion);
                             else if (tipo_doc == TipoDocumento.NotaCredito)
-                                documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, tipo_doc, empresa);
+                                documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, tipo_doc, empresa, resolucion);
 
                         }
                         catch (Exception excepcion)
@@ -427,6 +427,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <returns></returns>
         public static List<DocumentoRespuesta> Procesar(List<NotaCredito> documentos)
         {
+            string resolucion_pruebas = "9000000033394696";
+
+
             Ctl_Empresa Peticion = new Ctl_Empresa();
 
             //Válida que la key sea correcta.
@@ -439,6 +442,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             Guid id_peticion = Guid.NewGuid();
 
             DateTime fecha_actual = Fecha.GetFecha();
+
+            List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
             // sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
             if (facturador_electronico.IntHabilitacion < 99)
@@ -466,14 +471,36 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     SegundoNombre = null
                 };
 
+
+                Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
+                lista_resolucion.Add(_resolucion.Obtener(DatosObligado.Identificacion, resolucion_pruebas));
+
+                foreach (var item in documentos)
+                {
+                    item.NumeroResolucion = resolucion_pruebas;
+                    item.DatosObligado = DatosObligado;
+
+                }
+            }
+            else
+            {
+
+
+                // Obtiene la resolucion de la base de datos
+                Ctl_EmpresaResolucion _resolucion_factura = new Ctl_EmpresaResolucion();
+                lista_resolucion.Add(_resolucion_factura.Obtener(documentos.FirstOrDefault().DatosObligado.Identificacion,documentos.FirstOrDefault().NumeroResolucion));
             }
 
             List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
-            foreach (object item in documentos)
+            foreach (NotaCredito item in documentos)
             {
+                // filtra la resolución del documento
+                TblEmpresasResoluciones resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+
+
                 // realiza el proceso de envío a la DIAN del documento
-                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, null, facturador_electronico);
+                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, resolucion, facturador_electronico);
 
                 respuesta.Add(respuesta_tmp);
             }
@@ -616,7 +643,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// </summary>
         /// <param name="documento">Objeto NotaCredito</param>
         /// <returns></returns>
-        public static NotaCredito ValidarNotaCredito(NotaCredito documento)
+        public static NotaCredito ValidarNotaCredito(NotaCredito documento, TblEmpresasResoluciones resolucion)
         {
             // valida objeto recibido
             if (documento == null)
@@ -641,6 +668,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             //Validar que no este vacio
             if (string.IsNullOrEmpty(documento.CufeFactura))
                 throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "CufeFactura", "string"));
+
+            //valida resolucion
+            if (!resolucion.StrNumResolucion.Equals(documento.NumeroResolucion))
+                throw new ApplicationException(string.Format("La Resolución {0} no es valida", documento.NumeroResolucion));
 
             //Validar que no este vacia la fecha
             if (documento.Fecha == null)

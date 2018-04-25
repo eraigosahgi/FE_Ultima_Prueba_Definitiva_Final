@@ -49,6 +49,13 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public string CufeFactura { get; set; }
 
         /// <summary>
+        /// Número de Resolución del Documento de Factura afectado.
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        [RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
+        public string NumeroResolucion { get; set; }
+
+        /// <summary>
         /// Fecha de la Nota Credito
         /// </summary>
         public DateTime Fecha { get; set; }
