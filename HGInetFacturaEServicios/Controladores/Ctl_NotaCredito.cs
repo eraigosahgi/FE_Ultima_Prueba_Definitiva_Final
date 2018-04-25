@@ -142,12 +142,21 @@ namespace HGInetFacturaEServicios
 		}
 
 		/// <summary>
-		/// Calcula el codigo CUFE
+		/// Calcula el código CUFE de la nota crédito
 		/// </summary>
-		/// <param name="nota_credito">Objeto de tipo CreditNoteType que contiene la informacion de la Nota Crédito</param>
-		/// <param name="clave_tecnica">Clave técnica de la resolución</param>
-		/// <param name="cufe_factura">Identificador de la factura Afectada</param>
-		/// <returns></returns>
+		/// <param name="clave_tecnica">Clave técnica de la resolución de la factura</param>
+		/// <param name="cufe_factura">Cufe de la factura</param>
+		/// <param name="numero_nota_credito">Número de la nota crédito</param>
+		/// <param name="fecha_nota_credito">Fecha de la nota crédito</param>
+		/// <param name="nit_facturador">Número de identificación del facturador electrónico</param>
+		/// <param name="tipo_identificacion_adquiriente">Tipo de identificación del facturador electrónico</param>
+		/// <param name="nit_adquiriente">Número de identificación del adquiriente</param>
+		/// <param name="total">Total de la nota crédito</param>
+		/// <param name="subtotal">Subtotal de la nota crédito</param>
+		/// <param name="iva">Iva de la nota crédito</param>
+		/// <param name="impto_consumo">Impuesto al consumo de la nota crédito</param>
+		/// <param name="rte_ica">Retención del ICA de la nota crédito</param>
+		/// <returns>Texto con la encriptación del CUFE</returns>
 		public static string CalcularCUFE(string clave_tecnica, string cufe_factura, string numero_nota_credito, DateTime fecha_nota_credito, string nit_facturador, string tipo_identificacion_adquiriente, string nit_adquiriente, decimal total, decimal subtotal, decimal iva, decimal impto_consumo, decimal rte_ica)
 		{
 			try

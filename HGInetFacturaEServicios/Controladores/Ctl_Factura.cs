@@ -142,11 +142,20 @@ namespace HGInetFacturaEServicios
 
 
 		/// <summary>
-		/// Calcula el codigo CUFE
-		/// </summary>
-		/// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
+		/// Calcula el código CUFE de la factura
+		/// </summary>     
 		/// <param name="clave_tecnica">Clave técnica de la resolución</param>
-		/// <returns>Texto con la encriptación del CUFE</returns>        
+		/// <param name="numero_factura">Número de la factura</param>
+		/// <param name="fecha_factura">Fecha de elaboración de la factura</param>
+		/// <param name="nit_facturador">Documento de identificación del facturador electrónico</param>
+		/// <param name="tipo_identificacion_adquiriente">Código del tipo de identificación del adquiriente</param>
+		/// <param name="nit_adquiriente">Número de identificación del adquiriente</param>
+		/// <param name="total">Total de la factura</param>
+		/// <param name="subtotal">Subtotal de la factura</param>
+		/// <param name="iva">Iva de la factura</param>
+		/// <param name="impto_consumo">Impuesto al consumo de la factura</param>
+		/// <param name="rte_ica">Retención del ICA de la factura</param>
+		/// <returns>Texto con la encriptación del CUFE</returns>
 		public static string CalcularCUFE(string clave_tecnica, string numero_factura, DateTime fecha_factura, string nit_facturador, string tipo_identificacion_adquiriente, string nit_adquiriente, decimal total, decimal subtotal, decimal iva, decimal impto_consumo, decimal rte_ica)
 		{
 			try
