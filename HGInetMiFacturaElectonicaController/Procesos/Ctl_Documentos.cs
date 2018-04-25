@@ -26,6 +26,100 @@ namespace HGInetMiFacturaElectonicaController.Procesos
     /// </summary>
     public class Ctl_Documentos
     {
+        /// <summary>
+        /// Procesa una lista de documentos tipo Factura
+        /// </summary>
+        /// <param name="documentos">documentos tipo Factura</param>
+        /// <returns></returns>
+        public static List<DocumentoRespuesta> Procesar(List<Factura> documentos)
+        {
+            try
+            {
+                string resolucion_pruebas = "9000000033394696";
+
+
+                Ctl_Empresa Peticion = new Ctl_Empresa();
+
+                //Válida que la key sea correcta.
+                TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().DatosObligado.Identificacion);
+
+                if (!facturador_electronico.IntObligado)
+                    throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
+
+                // genera un id único de la plataforma
+                Guid id_peticion = Guid.NewGuid();
+
+                DateTime fecha_actual = Fecha.GetFecha();
+
+                List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+
+                // sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
+                if (facturador_electronico.IntHabilitacion < 99)
+                {
+
+                    Tercero DatosObligado = new Tercero()
+                    {
+                        Identificacion = "811021438",
+                        IdentificacionDv = 4,
+                        TipoIdentificacion = 31,
+                        TipoPersona = 1,
+                        Regimen = 2,
+                        NombreComercial = "HGI",
+                        Departamento = "Antioquia",
+                        Ciudad = "Medellin",
+                        Direccion = "Calle 48 Nro. 77C-06",
+                        Telefono = "4444584",
+                        Email = "info@hgi.com.co",
+                        PaginaWeb = null,
+                        CodigoPais = "CO",
+                        RazonSocial = "HGI SAS",
+                        PrimerApellido = null,
+                        SegundoApellido = null,
+                        PrimerNombre = null,
+                        SegundoNombre = null
+                    };
+
+
+                    Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
+                    lista_resolucion.Add(_resolucion.Obtener(DatosObligado.Identificacion, resolucion_pruebas));
+
+                    foreach (var item in documentos)
+                    {
+                        item.NumeroResolucion = resolucion_pruebas;
+                        item.DatosObligado = DatosObligado;
+
+                    }
+                }
+                else
+                {
+
+                    // actualiza las resoluciones de los servicios web de la DIAN en la base de datos
+                    lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, documentos.FirstOrDefault().DatosObligado.Identificacion);
+                }
+
+
+                List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+
+                foreach (Factura item in documentos)
+                {
+
+                    // filtra la resolución del documento
+                    TblEmpresasResoluciones resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+
+                    // realiza el proceso de envío a la DIAN del documento
+                    DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.Factura, resolucion, facturador_electronico);
+
+                    respuesta.Add(respuesta_tmp);
+                }
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// Realiza el proceso de la plataforma para el documento
@@ -35,8 +129,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <param name="documento_obj">datos del documento</param>
         /// <param name="pruebas">indica si el documento es de pruebas (true)</param>
         /// <returns>datos de resultado para el documento</returns>
-        //public static DocumentoRespuesta Procesar(Guid id_peticion, object documento, TipoDocumento tipo_doc, List<Resolucion> resoluciones, bool pruebas = false, bool solo_validar = false)
-        public static DocumentoRespuesta Procesar(Guid id_peticion, object documento, TipoDocumento tipo_doc, bool pruebas = false, bool solo_validar = false)
+        public static DocumentoRespuesta Procesar(Guid id_peticion, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa)
         {
             string numero_resolucion = string.Empty;
             string prefijo = string.Empty;
@@ -94,16 +187,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         respuesta.DescripcionProceso = "Valida la información del documento.";
                         respuesta.FechaUltimoProceso = fecha_actual;
                         respuesta.IdProceso = 2;
-                        /*
-                        List<Resolucion> resolucion_doc =  resoluciones.Where(_res => _res.NumeroResolucion.Equals(numero_resolucion)).ToList();
-
-                        if (!resolucion_doc.Any())
-                            throw new Exception("Resolucion no encontrada");*/
 
 
                         if (tipo_doc == TipoDocumento.Factura)
-                            //documento_obj = Validar(documento_obj, resoluciones);
-                            documento_obj = Validar(documento_obj);
+                            documento_obj = Validar(documento_obj, resolucion);
                         else if (tipo_doc == TipoDocumento.NotaCredito)
                             documento_obj = ValidarNotaCredito(documento_obj);
                     }
@@ -115,49 +202,32 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         throw excepcion; ;
                     }
 
-                    if (documento_obj.DatosObligado.Identificacion.Equals("811021438"))
-                    {
-                        solo_validar = false;
-                    }
 
 
-                    if (!solo_validar)
+
+                    if (empresa.IntHabilitacion > 0)
                     {
-                     
-                        Ctl_Empresa empresa = new Ctl_Empresa();
-                        TblEmpresas empresaBd = null;
+
+                        Ctl_Empresa empresa_config = new Ctl_Empresa();
+
                         TblEmpresas adquirienteBd = null;
 
-                        //Validar Obligado en BD
-                        try
-                        {
-                            //Obtiene la informacion del Obligado que se tiene en BD
-                            empresaBd = empresa.Obtener(documento_obj.DatosObligado.Identificacion);
 
-                            if (empresaBd == null)
-                                throw new ApplicationException(string.Format("No se encontró Obligado {0}", documento_obj.DatosObligado.Identificacion));
 
-                        }
-                        catch (Exception excepcion)
-                        {
-                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Facturador Electrónico. Detalle: {0} ",excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-                           
-                            throw excepcion;
-                        }
 
                         //Validacion de Adquiriente y usuario
                         try
                         {
 
                             //Obtiene la informacion del Adquiriente que se tiene en BD
-                            adquirienteBd = empresa.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+                            adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
 
                             //Si no existe Adquiriente se crea en BD y se crea Usuario
                             if (adquirienteBd == null)
                             {
-                                empresa = new Ctl_Empresa();
+                                empresa_config = new Ctl_Empresa();
                                 //Creacion del Adquiriente
-                                adquirienteBd = empresa.Crear(documento_obj.DatosAdquiriente);
+                                adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
 
                                 //Creacion del Usuario del Adquiriente
                                 Ctl_Usuario usuario = new Ctl_Usuario();
@@ -166,29 +236,29 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         }
                         catch (Exception excepcion)
                         {
-                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ",excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
+                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
 
                             throw excepcion;
                         }
 
+
+                        Ctl_Documento documento_tmp = new Ctl_Documento();
+
+                        TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, empresa, adquirienteBd, tipo_doc);
                         //guarda documento en BD
                         try
                         {
 
-                            //Guardado del documento en BD
-                            Ctl_Documento documento_tmp = new Ctl_Documento();
-
-                            TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, empresaBd, adquirienteBd, tipo_doc);
-
                             documento_tmp.Crear(documentoBd);
+
                         }
                         catch (Exception excepcion)
                         {
-                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al guardar el documento. Detalle: {0} ",excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
+                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al guardar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
 
                             throw excepcion;
                         }
-                     
+
 
                         // genera el xml en ubl
                         try
@@ -198,16 +268,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             respuesta.FechaUltimoProceso = fecha_actual;
                             respuesta.IdProceso = 3;
 
-                            if (tipo_doc == TipoDocumento.Factura)
-                                documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, tipo_doc, null, pruebas);
-                            else if (tipo_doc == TipoDocumento.NotaCredito)
-                                documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, tipo_doc, pruebas);
+                            //Actualiza documento en la Base de Datos
+                            documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                            documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
+                            documento_tmp.Actualizar(documentoBd);
+
+                            //Genera Ubl
+                            if (tipo_doc == TipoDocumento.Factura)
+                                documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, tipo_doc, empresa, resolucion);
+                            else if (tipo_doc == TipoDocumento.NotaCredito)
+                                documento_result = Ctl_Ubl.Generar(id_peticion, documento_obj, tipo_doc, empresa);
 
                         }
                         catch (Exception excepcion)
                         {
-                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la generación del estandar UBL del documento. Detalle: {0} ",excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la generación del estandar UBL del documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
                             throw excepcion;
 
@@ -223,10 +299,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                             // almacena el xml
                             documento_result = Ctl_Ubl.Almacenar(documento_result);
+
+                            //Actualiza Documento en Base de Datos
+                            documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                            documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+                            documento_tmp.Actualizar(documentoBd);
                         }
                         catch (Exception excepcion)
                         {
-                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0} ",excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
                             throw excepcion;
                         }
@@ -242,10 +324,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
                             documento_result = Ctl_Firma.Generar(ruta_certificado, "6c 0b 07 62 62 6d a0 e2", "persona_juridica_pruebas1", EnumCertificadoras.Andes, documento_result);
 
+                            //Actualiza Documento en Base de Datos
+                            documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                            documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+                            documento_tmp.Actualizar(documentoBd);
                         }
                         catch (Exception excepcion)
                         {
-                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el firmado del documento UBL en XML. Detalle: {0} ",excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el firmado del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
                             throw excepcion;
                         }
@@ -259,6 +346,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             respuesta.IdProceso = 6;
 
                             Ctl_Compresion.Comprimir(documento_result);
+
+                            //Actualiza Documento en Base de Datos
+                            documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                            documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+                            documento_tmp.Actualizar(documentoBd);
                         }
                         catch (Exception excepcion)
                         {
@@ -293,6 +386,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
                         respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
+                        documentoBd.StrCufe = respuesta.Cufe;
+                        documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
+                        documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                        documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+                        documento_tmp.Actualizar(documentoBd);
+
                         // se indica la respuesta de la DIAN
                         respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
                         respuesta.Error.Codigo = LibreriaGlobalHGInet.Error.CodigoError.OK;
@@ -307,7 +407,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}", acuse.ResponseDateTime, acuse.Response, acuse.Comments, detalle_dian);
 
                     }
-                   
+
 
                 }
                 catch (Exception excepcion)
@@ -321,119 +421,60 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         }
 
         /// <summary>
-        /// Procesa una lista de documentos tipo Factura
-        /// </summary>
-        /// <param name="documentos">documentos tipo Factura</param>
-        /// <returns></returns>
-        public static List<DocumentoRespuesta> Procesar(List<Factura> documentos)
-        {
-
-            try
-            {
-                /*
-                Ctl_Empresa obj = new Ctl_Empresa();
-
-                if (obj.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().DatosObligado.Identificacion) != true)
-                    throw new ApplicationException("Autenticacion invalida");*/
-
-                // genera un id único de la plataforma
-                Guid id_peticion = Guid.NewGuid();
-
-                DateTime fecha_actual = Fecha.GetFecha();
-
-
-
-                /*
-                                // obtiene los datos de prueba del proveedor tecnológico de la DIAN
-                                DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
-
-
-                                //Obtiene la resolucion de la DIAN para el Obligado enviado
-                                ResolucionesFacturacion resoluciones = Ctl_Resolucion.Obtener(id_peticion, data_dian.IdSoftware, data_dian.ClaveAmbiente, documentos.FirstOrDefault().DatosObligado.Identificacion, data_dian.NitProveedor, fecha_actual);
-                                Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
-
-
-                                empresa_resolucion.Crear(resoluciones, documentos.FirstOrDefault().DatosObligado.Identificacion);
-
-                                List<Resolucion> resolucion_empresas = new List<Resolucion>();
-                                Resolucion resolucion = new Resolucion();
-
-                                foreach (var item in resoluciones.RangoFacturacion)
-                                {
-
-                                    resolucion.NumeroResolucion = item.NumeroResolucion.ToString();
-                                    resolucion.Prefijo = (!string.IsNullOrEmpty(item.Prefijo)) ? item.Prefijo : "";
-                                    resolucion.RangoInicial = Convert.ToInt16(item.RangoInicial);
-                                    resolucion.RangoFinal = Convert.ToInt16(item.RangoFinal);
-                                    resolucion.FechaResolucion = item.FechaResolucion;
-                                    resolucion.FechaVigenciaInicial = item.FechaVigenciaDesde;
-                                    resolucion.FechaVigenciaFinal = item.FechaVigenciaHasta;
-                                    resolucion.ClaveTecnica = item.ClaveTecnica;
-
-                                    resolucion_empresas.Add(resolucion);
-                                }
-
-                                //Valida si es Nit HGI para que agregue la Resolucion de Pruebas
-                                if (documentos.FirstOrDefault().DatosObligado.Identificacion == "811021438")
-                                {
-                                    Ctl_EmpresaResolucion resolucion_prueba = new Ctl_EmpresaResolucion();
-                                    TblEmpresasResoluciones resolucion_hgi = resolucion_prueba.Obtener(documentos.FirstOrDefault().DatosObligado.Identificacion, documentos.FirstOrDefault().NumeroResolucion);
-
-                                    resolucion.NumeroResolucion = resolucion_hgi.StrNumResolucion;
-                                    resolucion.Prefijo = (!string.IsNullOrEmpty(resolucion_hgi.StrPrefijo)) ? resolucion_hgi.StrPrefijo : "";
-                                    resolucion.RangoInicial = resolucion_hgi.IntRangoInicial;
-                                    resolucion.RangoFinal = resolucion_hgi.IntRangoFinal;
-                                    resolucion.FechaResolucion = resolucion_hgi.DatFechaIngreso;
-                                    resolucion.FechaVigenciaInicial = resolucion_hgi.DatFechaVigenciaDesde;
-                                    resolucion.FechaVigenciaFinal = resolucion_hgi.DatFechaVigenciaHasta;
-                                    resolucion.ClaveTecnica = resolucion_hgi.StrClaveTecnica;
-
-                                    resolucion_empresas.Add(resolucion);
-                                }
-
-                */
-                List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
-
-                foreach (object item in documentos)
-                {
-
-                    //DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.Factura, resolucion_empresas, true, true);
-                    DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.Factura, true, true);
-                    respuesta.Add(respuesta_tmp);
-                }
-
-                return respuesta;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw new ApplicationException(ex.Message);
-            }
-
-
-
-        }
-
-        /// <summary>
         /// Procesa una lista de documentos tipo NotaCredito
         /// </summary>
         /// <param name="documentos">documentos tipo NotaCredito</param>
         /// <returns></returns>
         public static List<DocumentoRespuesta> Procesar(List<NotaCredito> documentos)
         {
+            Ctl_Empresa Peticion = new Ctl_Empresa();
+
+            //Válida que la key sea correcta.
+            TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().DatosObligado.Identificacion);
+
+            if (!facturador_electronico.IntObligado)
+                throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
+
             // genera un id único de la plataforma
             Guid id_peticion = Guid.NewGuid();
 
             DateTime fecha_actual = Fecha.GetFecha();
 
+            // sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
+            if (facturador_electronico.IntHabilitacion < 99)
+            {
+
+                Tercero DatosObligado = new Tercero()
+                {
+                    Identificacion = "811021438",
+                    IdentificacionDv = 4,
+                    TipoIdentificacion = 31,
+                    TipoPersona = 1,
+                    Regimen = 2,
+                    NombreComercial = "HGI",
+                    Departamento = "Antioquia",
+                    Ciudad = "Medellin",
+                    Direccion = "Calle 48 Nro. 77C-06",
+                    Telefono = "4444584",
+                    Email = "info@hgi.com.co",
+                    PaginaWeb = null,
+                    CodigoPais = "CO",
+                    RazonSocial = "HGI SAS",
+                    PrimerApellido = null,
+                    SegundoApellido = null,
+                    PrimerNombre = null,
+                    SegundoNombre = null
+                };
+
+            }
+
             List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
             foreach (object item in documentos)
             {
+                // realiza el proceso de envío a la DIAN del documento
+                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, null, facturador_electronico);
 
-                //DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, null, true, true);
-                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, true, true);
                 respuesta.Add(respuesta_tmp);
             }
 
@@ -448,18 +489,53 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <returns></returns>
         public static List<DocumentoRespuesta> Procesar(List<NotaDebito> documentos)
         {
+            Ctl_Empresa Peticion = new Ctl_Empresa();
+
+            //Válida que la key sea correcta.
+            TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().DatosObligado.Identificacion);
+
+            if (!facturador_electronico.IntObligado)
+                throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
+
             // genera un id único de la plataforma
             Guid id_peticion = Guid.NewGuid();
 
             DateTime fecha_actual = Fecha.GetFecha();
 
+            // sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
+            if (facturador_electronico.IntHabilitacion < 99)
+            {
+
+                Tercero DatosObligado = new Tercero()
+                {
+                    Identificacion = "811021438",
+                    IdentificacionDv = 4,
+                    TipoIdentificacion = 31,
+                    TipoPersona = 1,
+                    Regimen = 2,
+                    NombreComercial = "HGI",
+                    Departamento = "Antioquia",
+                    Ciudad = "Medellin",
+                    Direccion = "Calle 48 Nro. 77C-06",
+                    Telefono = "4444584",
+                    Email = "info@hgi.com.co",
+                    PaginaWeb = null,
+                    CodigoPais = "CO",
+                    RazonSocial = "HGI SAS",
+                    PrimerApellido = null,
+                    SegundoApellido = null,
+                    PrimerNombre = null,
+                    SegundoNombre = null
+                };
+
+            }
             List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
             foreach (object item in documentos)
             {
+                // realiza el proceso de envío a la DIAN del documento
+                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaDebito, null, facturador_electronico);
 
-                //DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaDebito, null, true, true);
-                DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaDebito, true, true);
                 respuesta.Add(respuesta_tmp);
             }
 
@@ -473,8 +549,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// </summary>
         /// <param name="documento">Objeto factura</param>
         /// <returns></returns>
-        //public static Factura Validar(Factura documento, List<Resolucion> resoluciones)
-        public static Factura Validar(Factura documento)
+        public static Factura Validar(Factura documento, TblEmpresasResoluciones resolucion)
+        //public static Factura Validar(Factura documento)
         {
             // valida objeto recibido
             if (documento == null)
@@ -491,29 +567,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             // valida el número del documento no sea valor negativo
             if (documento.Documento < 0)
                 throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Documento", "int").Replace("no puede ser nulo", "no puede ser menor a 0"));
-            /*
-                        //Validar que no este vacio y este vigente en los terminos.
-                        if (string.IsNullOrEmpty(documento.NumeroResolucion))
-                            throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
-                        bool resolucion_correcta = false;
-                        bool rangos = false;
-                        foreach (var item in resoluciones)
-                        {
-                            if (item.NumeroResolucion == documento.NumeroResolucion)
-                                resolucion_correcta = true;
-                            if (documento.Documento > item.RangoInicial && documento.Documento < item.RangoFinal)
-                                rangos = true;
-                        }
 
-                        if (documento.DatosObligado.Identificacion.Equals("811021438"))
-                            //valida resolucion
-                            if (resolucion_correcta == false)
-                                throw new ApplicationException(string.Format("La Resolución {0} no es valida", documento.NumeroResolucion));
+            //Validar que no este vacio y este vigente en los terminos.
+            if (string.IsNullOrEmpty(documento.NumeroResolucion))
+                throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
-                        //valida número de la Factura este entre los rangos
-                        if (rangos == false)
-                            throw new ApplicationException(string.Format("El Número de la Factura {0} no es valida según Resolución", documento.Documento));
-            */
+            //valida resolucion
+            if (!resolucion.StrNumResolucion.Equals(documento.NumeroResolucion))
+                throw new ApplicationException(string.Format("La Resolución {0} no es valida", documento.NumeroResolucion));
+
+            //valida número de la Factura este entre los rangos
+            if (documento.Documento < resolucion.IntRangoInicial && documento.Documento > resolucion.IntRangoFinal)
+                throw new ApplicationException(string.Format("El Número de la Factura {0} no es valida según Resolución", documento.Documento));
+
+            if (!resolucion.StrPrefijo.Equals(documento.Prefijo))
+                throw new ApplicationException(string.Format("El prefijo {0} no es valido según Resolución", documento.Prefijo));
+
             //Valida que la fecha este en los terminos
             if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
                 throw new ApplicationException(string.Format("La fecha {0} no esta dentro los terminos.", documento.Fecha));
@@ -690,102 +759,57 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             if (documento != null)
             {
 
-                DocumentoDetalle retorno = ValidarDetalleDocumento(documento.DocumentoDetalles);
+                ValidarDetalleDocumento(documento.DocumentoDetalles);
 
                 Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
 
-                //Valida el Iva del detalle sea igual al encabezado
+                //Valida el Iva 
                 if (documento.ValorIva == 0)
                 {
                     documento.ValorIva = Convert.ToDecimal(0.00M);
                 }
-                if (isnumber.IsMatch(Convert.ToString(documento.ValorIva).Replace(",", ".")))
-                {
-                    if (documento.ValorIva != retorno.IvaValor)
-                        throw new ApplicationException(string.Format("El valor Iva {0} del encabezado no corresponde al detalle.", documento.ValorIva));
-                }
-                else
-                {
+                if (!isnumber.IsMatch(Convert.ToString(documento.ValorIva).Replace(",", ".")))
                     throw new ApplicationException(string.Format("El valor Iva {0} del encabezado no esta bien formado", documento.ValorIva));
-                }
 
-                //Valida el Descuento del detalle sea igual al encabezado
+                //Valida el Descuento 
                 if (documento.ValorDescuento == 0)
                 {
                     documento.ValorDescuento = Convert.ToDecimal(0.00M);
                 }
-                if (isnumber.IsMatch(Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
-                {
-                    if (documento.ValorDescuento != retorno.DescuentoValor)
-                        throw new ApplicationException(string.Format("El valor Descuento {0} del encabezado no corresponde al detalle.", documento.ValorDescuento));
-                }
-                else
-                {
+                if (!isnumber.IsMatch(Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
                     throw new ApplicationException(string.Format("El valor Descuento {0} del encabezado no esta bien formado", documento.ValorDescuento));
-                }
 
-                //Valida el Subtotal del detalle sea igual al encabezado
+                //Valida el Subtotal 
                 if (documento.ValorSubtotal == 0)
                 {
                     documento.ValorSubtotal = Convert.ToDecimal(0.00M);
                 }
-                if (isnumber.IsMatch(Convert.ToString(documento.ValorSubtotal).Replace(",", ".")))
-                {
-                    if (documento.ValorSubtotal != retorno.ValorSubtotal)
-                        throw new ApplicationException(string.Format("El subtotal {0} del encabezado no corresponde al detalle.", documento.ValorSubtotal));
-                }
-                else
-                {
+                if (!isnumber.IsMatch(Convert.ToString(documento.ValorSubtotal).Replace(",", ".")))
                     throw new ApplicationException(string.Format("El subtotal {0} del encabezado no esta bien formado", documento.ValorSubtotal));
-                }
 
-                //Valida el Impuesto al consumo del detalle sea igual al encabezado
+                //Valida el Impuesto al consumo 
                 if (documento.ValorImpuestoConsumo == 0)
                 {
                     documento.ValorImpuestoConsumo = Convert.ToDecimal(0.00M);
                 }
-
-                if (isnumber.IsMatch(Convert.ToString(documento.ValorImpuestoConsumo).Replace(",", ".")))
-                {
-
-                    if (documento.ValorImpuestoConsumo != retorno.ValorImpuestoConsumo)
-                        throw new ApplicationException(string.Format("El Impuesto al Consumo {0} del encabezado no corresponde al detalle.", documento.ValorImpuestoConsumo));
-                }
-                else
-                {
+                if (!isnumber.IsMatch(Convert.ToString(documento.ValorImpuestoConsumo).Replace(",", ".")))
                     throw new ApplicationException(string.Format("El Impuesto al Consumo {0} del encabezado no esta bien formado", documento.ValorImpuestoConsumo));
-                }
 
-                //Valida la Retencion en la fuente del detalle sea igual al encabezado
+                //Valida la Retencion en la fuente
                 if (documento.ValorReteFuente == 0)
                 {
                     documento.ValorReteFuente = Convert.ToDecimal(0.00M);
                 }
-
-                if (isnumber.IsMatch(Convert.ToString(documento.ValorReteFuente).Replace(",", ".")))
-                {
-                    if (documento.ValorReteFuente != retorno.ReteFuenteValor)
-                        throw new ApplicationException(string.Format("El valor ReteFuente {0} del encabezado no corresponde al detalle.", documento.ValorReteFuente));
-                }
-                else
-                {
+                if (!isnumber.IsMatch(Convert.ToString(documento.ValorReteFuente).Replace(",", ".")))
                     throw new ApplicationException(string.Format("El valor ReteFuente {0} del encabezado no esta bien formado", documento.ValorReteFuente));
-                }
 
-                //Valida el ReteIca del detalle sea igual al encabezado
+                //Valida el ReteIca 
                 if (documento.ValorReteIca == 0)
                 {
                     documento.ValorReteIca = Convert.ToDecimal(0.00M);
                 }
-                if (isnumber.IsMatch(Convert.ToString(documento.ValorReteIca).Replace(",", ".")))
-                {
-                    if (documento.ValorReteIca != retorno.ReteIcaValor)
-                        throw new ApplicationException(string.Format("El valor ReteIca {0} del encabezado no corresponde al detalle.", documento.ValorReteIca));
-                }
-                else
-                {
+                if (!isnumber.IsMatch(Convert.ToString(documento.ValorReteIca).Replace(",", ".")))
                     throw new ApplicationException(string.Format("El valor ReteIca {0} del encabezado no esta bien formado", documento.ValorReteIca));
-                }
 
                 //Calculo del total con los campos enviados en el objeto
                 if (documento.Total == 0)

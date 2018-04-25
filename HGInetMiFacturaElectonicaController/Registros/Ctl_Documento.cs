@@ -40,9 +40,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
         }
 
 
-        public void Validar(TblDocumentos documento)
-        {
 
+
+        public TblDocumentos Actualizar(TblDocumentos documento)
+        {
+            documento = this.Update(documento);
+
+            return documento;
 
         }
 
@@ -222,9 +226,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 tbl_documento.DatFechaIngreso = respuesta.FechaRecepcion;
                 tbl_documento.IntDocTipo = Convert.ToInt16(tipo_doc);
                 tbl_documento.IntNumero = documento_obj.Documento;
-                tbl_documento.StrPrefijo = documento_obj.Prefijo;
+
+                if (tipo_doc == TipoDocumento.NotaCredito || tipo_doc == TipoDocumento.NotaDebito)
+                {
+                    tbl_documento.StrPrefijo = "";
+                    tbl_documento.DatFechaVencDocumento = documento_obj.Fecha;
+                }
+                else
+                {
+                    tbl_documento.StrPrefijo = (string.IsNullOrEmpty(documento_obj.Prefijo)) ? documento_obj.Prefijo : "";
+                    tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
+                }
                 tbl_documento.DatFechaDocumento = documento_obj.Fecha;
-                tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
                 tbl_documento.StrObligadoIdRegistro = documento_obj.CodigoRegistro;
                 tbl_documento.IntIdEmpresaResolucion = empresa.TblEmpresasResoluciones.FirstOrDefault().IntId;
                 tbl_documento.IntIdEmpresa = empresa.IntId;

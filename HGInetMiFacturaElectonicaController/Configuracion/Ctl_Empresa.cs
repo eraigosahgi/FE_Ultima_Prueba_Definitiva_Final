@@ -31,11 +31,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <param name="datakey"></param>
         /// <param name="identificacion_obligado"></param>
         /// <returns></returns>
-        public bool Validar(string datakey, string identificacion_obligado)
+        public TblEmpresas Validar(string datakey, string identificacion_obligado)
         {
-
-
-            var datos = (from item in context.TblEmpresas
+            TblEmpresas datos = (from item in context.TblEmpresas
                          where item.StrIdentificacion.Equals(identificacion_obligado)
                          select item).FirstOrDefault();
 
@@ -45,7 +43,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 string datakey_encriptado = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
 
                 if (datakey_encriptado == datakey)
-                    return true;
+                    return datos;
 
             }
 

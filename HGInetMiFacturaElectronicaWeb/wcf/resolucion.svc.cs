@@ -7,6 +7,8 @@ using System.ServiceModel.Activation;
 using System.Text;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Error;
+using HGInetMiFacturaElectonicaController.Procesos;
+using HGInetMiFacturaElectronicaWeb.Controllers.Services;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -30,16 +32,11 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		{
 			try
 			{
-				string id_software = "f715d60f-9880-4b17-91f3-4695ea4f64cf";
-				string clave = "HgiNet#811";
-				string nit_proveedor = "811021438";
-				string nit_empresa = Identificacion;
-				Guid id_peticion = Guid.NewGuid();
+                // valida
+                Peticion.Validar(DataKey, Identificacion);
 
-				string respuesta = HGInetMiFacturaElectonicaController.ServiciosDian.Ctl_ResolucionDian.Obtener(id_peticion, id_software, clave, nit_empresa, nit_proveedor);
-
-				return null;
-
+                return Ctl_Resoluciones.Obtener(Identificacion);
+               
 			}
 			catch (Exception exec)
 			{
