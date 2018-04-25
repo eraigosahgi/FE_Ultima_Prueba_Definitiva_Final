@@ -244,7 +244,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                         Ctl_Documento documento_tmp = new Ctl_Documento();
 
-                        TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, empresa, adquirienteBd, tipo_doc);
+                        TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, adquirienteBd, tipo_doc);
                         //guarda documento en BD
                         try
                         {
