@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet;
 
 namespace HGInetDIANServicios
 {
@@ -55,7 +56,9 @@ namespace HGInetDIANServicios
                 }
 				finally
 				{
-					string carpeta = Directorio.CrearDirectorio(AppDomain.CurrentDomain.BaseDirectory + @"_LogFacturaE\");
+                    string carpeta = string.Format(@"{0}_LogFacturaE\", Dms.ObtenerCarpetaPrincipal("", identificacion_empresa));
+                    
+                    carpeta = Directorio.CrearDirectorio(carpeta);
 
 					string archivo = id_peticion.ToString() + ".xml";
 
