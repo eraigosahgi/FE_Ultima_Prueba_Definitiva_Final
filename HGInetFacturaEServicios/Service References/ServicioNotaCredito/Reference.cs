@@ -788,7 +788,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte[] ArchivoPdfField;
+        private string ArchivoPdfField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -801,7 +801,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public byte[] ArchivoPdf {
+        public string ArchivoPdf {
             get {
                 return this.ArchivoPdfField;
             }

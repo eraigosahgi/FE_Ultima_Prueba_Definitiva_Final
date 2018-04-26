@@ -2,7 +2,7 @@
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.General" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.General" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:complexType name="Formato">
     <xs:sequence>
-      <xs:element minOccurs="0" name="ArchivoPdf" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="ArchivoPdf" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Formato" nillable="true" type="tns:Formato" />
