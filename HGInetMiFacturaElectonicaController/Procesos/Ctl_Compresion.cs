@@ -20,7 +20,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// Comprime el archivo XML en ZIP
 		/// </summary>
 		/// <param name="documento">datos del documento procesado</param>
-		public static void Comprimir(FacturaE_Documento documento)
+		public static string Comprimir(FacturaE_Documento documento)
 		{
 			string nit_obligado = string.Empty;
 
@@ -61,6 +61,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				archive.CreateEntryFromFile(ruta_xml, Path.GetFileName(ruta_xml));
 			}
+
+			return documento.NombreZip;
 		}
 
 	}

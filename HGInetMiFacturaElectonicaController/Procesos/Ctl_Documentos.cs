@@ -381,7 +381,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.FechaUltimoProceso = fecha_actual;
 							respuesta.IdProceso = 6;
 
-							Ctl_Compresion.Comprimir(documento_result);
+							documento_result.NombreZip = Ctl_Compresion.Comprimir(documento_result);
 
 							//Actualiza Documento en Base de Datos
 							documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
@@ -422,9 +422,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
 						respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
-
+						// url pública del zip
+						string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreZip);
+						
 						documentoBd.StrCufe = respuesta.Cufe;
 						documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
+						documentoBd.StrUrlArchivoZip = url_ppal_zip;
 						documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 						documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
