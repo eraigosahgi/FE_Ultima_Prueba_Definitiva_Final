@@ -15,7 +15,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio.General
 		/// <summary>
 		/// Archivo PDF 
 		/// </summary>
-		public byte[] ArchivoPdf { get; set; }
+		public string ArchivoPdf { get; set; }
 
 
 	}
