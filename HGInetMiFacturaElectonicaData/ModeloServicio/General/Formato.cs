@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HGInetMiFacturaElectonicaData.ModeloServicio.General
+namespace HGInetMiFacturaElectonicaData.ModeloServicio
 {
 	/// <summary>
 	/// Información adicional del documento para generar el formato
