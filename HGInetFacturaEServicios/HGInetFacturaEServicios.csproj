@@ -130,9 +130,6 @@
     <None Include="Service References\ServicioDocumento\HGInetFacturaEServicios.ServicioDocumento.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioFactura\factura.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\ServicioFactura\factura2.wsdl" />
     <None Include="Service References\ServicioFactura\factura21.wsdl" />
     <None Include="Service References\ServicioFactura\factura4.xsd">
@@ -159,9 +156,6 @@
     <None Include="Service References\ServicioNotaCredito\HGInetFacturaEServicios.ServicioNotaCredito.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\ServicioNotaCredito\notacredito2.wsdl" />
     <None Include="Service References\ServicioNotaCredito\notacredito21.wsdl" />
     <None Include="Service References\ServicioNotaCredito\notacredito4.xsd">
@@ -181,9 +175,6 @@
     </None>
     <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito.xsd">
-      <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioNotaDebito\notadebito2.wsdl" />
     <None Include="Service References\ServicioNotaDebito\notadebito21.wsdl" />

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.General" />
-  <xs:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:import schemaLocation="http://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
   <xs:complexType name="ArrayOfNotaCredito">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="NotaCredito" nillable="true" type="tns:NotaCredito" />
@@ -19,7 +18,7 @@
       <xs:element minOccurs="0" name="DatosObligado" nillable="true" type="tns:Tercero" />
       <xs:element minOccurs="0" name="Documento" type="xs:int" />
       <xs:element minOccurs="0" name="DocumentoDetalles" nillable="true" type="tns:ArrayOfDocumentoDetalle" />
-      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.General" minOccurs="0" name="DocumentoFormato" nillable="true" type="q1:Formato" />
+      <xs:element minOccurs="0" name="DocumentoFormato" nillable="true" type="tns:Formato" />
       <xs:element minOccurs="0" name="DocumentoRef" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaFactura" type="xs:dateTime" />
@@ -89,6 +88,12 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="DocumentoDetalle" nillable="true" type="tns:DocumentoDetalle" />
+  <xs:complexType name="Formato">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ArchivoPdf" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Formato" nillable="true" type="tns:Formato" />
   <xs:complexType name="ArrayOfDocumentoRespuesta">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentoRespuesta" nillable="true" type="tns:DocumentoRespuesta" />
@@ -102,7 +107,7 @@
       <xs:element minOccurs="0" name="Cufe" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DescripcionProceso" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Documento" type="xs:int" />
-      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q2:Error" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q1:Error" />
       <xs:element minOccurs="0" name="FechaRecepcion" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaUltimoProceso" type="xs:dateTime" />
       <xs:element minOccurs="0" name="IdDocumento" nillable="true" type="xs:string" />

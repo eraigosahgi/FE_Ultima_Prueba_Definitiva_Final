@@ -26,7 +26,6 @@
     <MetadataFile FileName="factura2.wsdl" MetadataType="Wsdl" ID="d5e32a40-4de4-4b6d-ba01-a839716124b1" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?wsdl=wsdl0" />
     <MetadataFile FileName="factura21.wsdl" MetadataType="Wsdl" ID="7cc5e2fe-2007-4209-acc9-87381873c175" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?wsdl" />
     <MetadataFile FileName="factura4.xsd" MetadataType="Schema" ID="542ea595-7736-45cc-8906-6502c25c5d2e" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd3" />
-    <MetadataFile FileName="factura.xsd" MetadataType="Schema" ID="2b90062d-9a0c-42ed-8d1b-c46c4f530ab1" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd4" />
     <MetadataFile FileName="factura1.disco" MetadataType="Disco" ID="40777fe6-476f-4f13-ab96-2471f90c6881" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?disco" />
     <MetadataFile FileName="factura41.xsd" MetadataType="Schema" ID="c3270d70-ba2e-466d-98d4-c9480d5426aa" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd1" />
     <MetadataFile FileName="factura42.xsd" MetadataType="Schema" ID="a3bc6b65-40a4-4636-b309-deb4f3439ace" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd0" />
