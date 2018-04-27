@@ -54,6 +54,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Errores", "Errores", "{B869
 		Documentacion\CertificadoDigital\Errores\CryptographicException Cannot find the specified file.txt = Documentacion\CertificadoDigital\Errores\CryptographicException Cannot find the specified file.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Email", "Email", "{DD134E07-6322-4EA9-8A1F-777C13D3D20F}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Librerias\Email\HGInetEmailServicios.dll = Documentacion\Librerias\Email\HGInetEmailServicios.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -156,5 +161,6 @@ Global
 		{EBACB14C-A142-4A25-84E0-EE8A1626BE41} = {59113B66-AE70-4B22-83BC-94B88ED048AF}
 		{23109A26-F049-4B31-B856-61B9F8990E5C} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 		{B86938E2-C84C-46A0-A40D-F4DB79E9DBA9} = {23109A26-F049-4B31-B856-61B9F8990E5C}
+		{DD134E07-6322-4EA9-8A1F-777C13D3D20F} = {59113B66-AE70-4B22-83BC-94B88ED048AF}
 	EndGlobalSection
 EndGlobal
