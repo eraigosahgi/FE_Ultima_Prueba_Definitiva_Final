@@ -331,19 +331,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							{
 								// almacena archivo en base64
 								documento_result.NombrePdf = Ctl_Formato.GuardarArchivo(formato_documento.ArchivoPdf, empresa, documento_result);
+								respuesta.UrlPdf = "";
 
-								// url pública del pdf
-								string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
-								respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
-
+								if (!string.IsNullOrWhiteSpace(documento_result.NombrePdf))
+								{
+									// url pública del pdf
+									string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
+									respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
+								}
 							}
-
 
 						}
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento PDF. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-
 						}
 
 
@@ -444,7 +445,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							detalle_dian = acuse.ReceivedInvoice.Comments;
 
 
-						respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}", acuse.ResponseDateTime, acuse.Response, acuse.Comments, detalle_dian);
+						if (string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
+							respuesta.Error.Mensaje = "ninguno.";
+
+						respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}. Detalles: {4}", acuse.ResponseDateTime, acuse.Response, acuse.Comments, detalle_dian, respuesta.Error.Mensaje);
 
 					}
 
