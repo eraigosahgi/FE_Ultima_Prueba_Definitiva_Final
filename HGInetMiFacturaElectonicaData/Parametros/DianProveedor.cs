@@ -44,6 +44,13 @@ namespace HGInetMiFacturaElectonicaData
 			set { this["UrlServicioWeb"] = value; }
 		}
 		
+		[ConfigurationProperty("UrlWSConsultaTransacciones", DefaultValue = "", IsRequired = true)]
+		public string UrlWSConsultaTransacciones
+		{
+			get { return (string)this["UrlWSConsultaTransacciones"]; }
+			set { this["UrlWSConsultaTransacciones"] = value; }
+		}
+
 		public DianProveedor() { }
 
 	}
