@@ -104,5 +104,32 @@ namespace HGInetMiFacturaElectonicaController.Properties {
                 return ResourceManager.GetString("RutaCambioContraseña", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_documento_acuse.html.
+        /// </summary>
+        internal static string RutaPlantillaAcuse {
+            get {
+                return ResourceManager.GetString("RutaPlantillaAcuse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_documento.html.
+        /// </summary>
+        internal static string RutaPlantillaHtmlDocumentos {
+            get {
+                return ResourceManager.GetString("RutaPlantillaHtmlDocumentos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_restablecer_clave.html.
+        /// </summary>
+        internal static string RutaPlantillaRestablecer {
+            get {
+                return ResourceManager.GetString("RutaPlantillaRestablecer", resourceCulture);
+            }
+        }
     }
 }

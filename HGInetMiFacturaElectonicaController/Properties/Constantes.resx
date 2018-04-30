@@ -137,4 +137,16 @@
     <value>http://habilitacion.mifacturaenlinea.com.co/pages/usuarios/RestablecerContrasena.aspx?id={cod_seguridad}</value>
     <comment>Ruta de redireccion página restablecer contraseña</comment>
   </data>
+  <data name="RutaPlantillaAcuse" xml:space="preserve">
+    <value>emails\\plantilla_documento_acuse.html</value>
+    <comment>Ruta de la plantilla Html de envío acuse de recibo</comment>
+  </data>
+  <data name="RutaPlantillaHtmlDocumentos" xml:space="preserve">
+    <value>emails\\plantilla_documento.html</value>
+    <comment>Ruta de la plantilla Html de envío de documentos</comment>
+  </data>
+  <data name="RutaPlantillaRestablecer" xml:space="preserve">
+    <value>emails\\plantilla_restablecer_clave.html</value>
+    <comment>Ruta de la plantilla Html de envío restablecer contraseña</comment>
+  </data>
 </root>

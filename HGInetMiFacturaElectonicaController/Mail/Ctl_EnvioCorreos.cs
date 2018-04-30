@@ -132,12 +132,12 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="archivos">archivos de envio</param>
 		/// <param name="obj_respuesta">datos del objeto de respuesta</param>
 		/// <returns></returns>
-		public bool NotificacionDocumento(TblDocumentos documento, List<string> archivos, DocumentoRespuesta obj_respuesta)
+		public bool NotificacionDocumento(TblDocumentos documento, List<string> archivos)
 		{
 
 			try
 			{
-				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "emails\\plantilla_documento.html");
+				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaHtmlDocumentos);
 
 				string asunto = "Factura Electrónica";
 
@@ -186,7 +186,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NitTercero}", documento.TblEmpresas1.StrIdentificacion);
 						mensaje = mensaje.Replace("{Digitov}", documento.TblEmpresas1.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{CorreoTercero}", documento.TblEmpresas1.StrMail);
-						mensaje = mensaje.Replace("{GuidDocumento}", obj_respuesta.CodigoRegistro.ToString());
+						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
 
 
 						//Datos del Documento
@@ -256,7 +256,7 @@ namespace HGInetMiFacturaElectonicaController
 				if (usuario == null)
 					throw new ApplicationException(string.Format("No se encontró información del usuario {0}",usuario));
 
-				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "emails\\plantilla_restablecer_clave.html");
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaRestablecer);
 
 				if (!string.IsNullOrWhiteSpace(fileName))
 				{
@@ -314,7 +314,7 @@ namespace HGInetMiFacturaElectonicaController
 		{
 			try
 			{
-				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "emails\\plantilla_documento_acuse.html");
+				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaAcuse);
 
 				string asunto = "Respuesta Acuse de Recibo";
 
