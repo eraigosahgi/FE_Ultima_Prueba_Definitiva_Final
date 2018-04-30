@@ -1,4 +1,7 @@
-﻿using HGInetFacturaEServicios;
+﻿using HGInetDIANServicios;
+using HGInetFacturaEServicios;
+using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +14,32 @@ namespace HGInetFacturaETestConsola
 	{
 		static void Main(string[] args)
 		{
+			try
+			{
 
-			PruebaCufe();
+
+				DateTime fecha = DateTime.Now;
+
+				string fecha_t = fecha.ToString(Fecha.formato_fecha_javaT);
+
+				string url_ws_consulta = "http://facturaelectronica.dian.gov.co/habilitacion/B2BIntegrationEngine/FacturaElectronica/consultaDocumentos.wsdl";
+				string id_software = "606f5740-c6b9-494f-931c-5a6b3e22d72c";
+				string clave = "Prueba2018";
+				string nit_facturador = "811021438";
+				string cufe = "c25cbb4eef8b3135375756347153855d52dd389e";
+				string prefijo = "";
+				string documento = "990000381";
+				DateTime fecha_documento = new DateTime(2018, 4, 30);
+
+				Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), id_software, clave, 1, prefijo, documento, nit_facturador, fecha_documento, cufe, url_ws_consulta, Directorio.ObtenerDirectorioRaiz());
+
+				//PruebaCufe();
+
+			}
+			catch (Exception excepcion)
+			{
+				System.Diagnostics.Debug.WriteLine("ERROR: " + excepcion.Message);
+			}
 
 		}
 
@@ -21,7 +48,7 @@ namespace HGInetFacturaETestConsola
 			try
 			{
 
-				string cufe = Ctl_Factura.CalcularCUFE("dd85db55545bd6566f36b0fd3be9fd8555c36e", "990000402", new DateTime(2018, 4, 23), "811021438", "13", "1020395355", 47500.00M, 39916.00M, 7584.00M, 0.00M, 0.00M);
+				string cufe = HGInetFacturaEServicios.Ctl_Factura.CalcularCUFE("dd85db55545bd6566f36b0fd3be9fd8555c36e", "990000402", new DateTime(2018, 4, 23), "811021438", "13", "1020395355", 47500.00M, 39916.00M, 7584.00M, 0.00M, 0.00M);
 
 				System.Diagnostics.Debug.WriteLine("CUFE GENERADO : " + cufe);
 
@@ -45,7 +72,7 @@ namespace HGInetFacturaETestConsola
 
 			//HGInetFacturaEServicios.ServicioFactura.Factura factura = new HGInetFacturaEServicios.ServicioFactura.Factura();
 
-			Ctl_Factura.Test("http://habilitacion.mifacturaenlinea.com.co");
+			HGInetFacturaEServicios.Ctl_Factura.Test("http://habilitacion.mifacturaenlinea.com.co");
 
 
 			Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");

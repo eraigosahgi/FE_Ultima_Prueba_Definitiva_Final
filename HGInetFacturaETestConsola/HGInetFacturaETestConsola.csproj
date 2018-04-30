@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HGInetFacturaETestConsola</RootNamespace>
     <AssemblyName>HGInetFacturaETestConsola</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -52,9 +54,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HGInetDIANServicios\HGInetDIANServicios.csproj">
+      <Project>{e87c13d9-aef2-442c-b377-7a5d7290502a}</Project>
+      <Name>HGInetDIANServicios</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HGInetFacturaEServicios\HGInetFacturaEServicios.csproj">
       <Project>{ee6399c8-f3c3-4537-b048-dbf0ad505f4d}</Project>
       <Name>HGInetFacturaEServicios</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
+      <Project>{A966A394-F6CC-482F-87A4-56EC1AF05E5E}</Project>
+      <Name>LibreriaGlobalHGInet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
