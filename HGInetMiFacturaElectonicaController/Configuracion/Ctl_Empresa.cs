@@ -80,7 +80,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         }
 
         /// <summary>
-        /// Crea una empresa en la BD
+        /// Convierte y Crea un objeto de servicio a un objeto de BD
         /// </summary>
         /// <param name="empresa">Objeto de servicio de la empresa a crear</param>
         /// <returns></returns>
