@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="Cabecera\PasswordDigestBehavior.cs" />
     <Compile Include="Cabecera\PasswordDigestMessageInspector.cs" />
+    <Compile Include="Controladores\Ctl_ConsultaTransacciones.cs" />
     <Compile Include="Controladores\Ctl_Factura.cs" />
     <Compile Include="Controladores\Ctl_Resolucion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +63,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\DianResolucion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\DianResultadoTransacciones\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -81,10 +87,15 @@
     <None Include="Service References\DianResolucion\HGInetDIANServicios.DianResolucion.ConsultaResolucionesFacturacionRespuesta.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\DianResultadoTransacciones\consultaDocumentos.wsdl" />
+    <None Include="Service References\DianResultadoTransacciones\HGInetDIANServicios.DianResultadoTransacciones.ConsultaResultadoValidacionDocumentosRespuesta.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\DianFactura\" />
     <WCFMetadataStorage Include="Service References\DianResolucion\" />
+    <WCFMetadataStorage Include="Service References\DianResultadoTransacciones\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DianResolucion\configuration91.svcinfo" />
@@ -115,6 +126,18 @@
       <Project>{a966a394-f6cc-482f-87a4-56ec1af05e5e}</Project>
       <Name>LibreriaGlobalHGInet</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianResultadoTransacciones\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianResultadoTransacciones\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianResultadoTransacciones\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
