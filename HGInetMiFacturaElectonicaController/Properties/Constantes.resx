@@ -141,6 +141,14 @@
     <value>emails\\plantilla_documento_acuse.html</value>
     <comment>Ruta de la plantilla Html de envío acuse de recibo</comment>
   </data>
+  <data name="RutaPlantillaBienvenidaAdquiriente" xml:space="preserve">
+    <value>emails\\plantilla_bienvenida_adquiriente.html</value>
+    <comment>Ruta de la plantilla Html de envío bienvenida Adquiriente</comment>
+  </data>
+  <data name="RutaPlantillaBienvenidaObligado" xml:space="preserve">
+    <value>emails\\plantilla_bienvenida_facturador.html</value>
+    <comment>Ruta de la plantilla Html de envío bienvenida Obligado a facturar</comment>
+  </data>
   <data name="RutaPlantillaHtmlDocumentos" xml:space="preserve">
     <value>emails\\plantilla_documento.html</value>
     <comment>Ruta de la plantilla Html de envío de documentos</comment>

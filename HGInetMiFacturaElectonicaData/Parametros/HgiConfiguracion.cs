@@ -74,7 +74,7 @@ namespace HGInetMiFacturaElectonicaData
 		{
 			get
 			{
-				PlataformaData plataforma_tmp = this["PlataformaData"] as PlataformaData;
+				PlataformaData plataforma_tmp = this["plataformaData"] as PlataformaData;
 
 				return plataforma_tmp;
 			}

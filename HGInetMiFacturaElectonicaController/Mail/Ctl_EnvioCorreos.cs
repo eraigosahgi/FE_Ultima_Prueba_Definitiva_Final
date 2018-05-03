@@ -1,11 +1,15 @@
-﻿using HGInetMiFacturaElectonicaController.Configuracion;
+﻿using HGInetEmailServicios.ServicioEnvio;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectonicaData.ModeloServicio.General;
+using HGInetUBL;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,31 +24,110 @@ namespace HGInetMiFacturaElectonicaController
 	{
 
 
-		public void EnviarEmail(bool uno_a_uno, string mensaje, string asunto, bool contenido_html, DestinatarioEmail correo_respuesta, List<DestinatarioEmail> correos_destino, List<DestinatarioEmail> correos_copia = null, List<DestinatarioEmail> correos_copia_oculta = null, string ruta_plantilla_html = "", string tag_mensaje = "", IEnumerable<string> rutas_adjuntos = null)
+		private void EnviarEmail(string id_seguridad, bool uno_a_uno, string mensaje, string asunto, bool contenido_html, DestinatarioEmail correo_respuesta, List<DestinatarioEmail> correos_destino, List<DestinatarioEmail> correos_copia = null, List<DestinatarioEmail> correos_copia_oculta = null, string ruta_plantilla_html = "", string tag_mensaje = "", List<Adjunto> rutas_adjuntos = null)
 		{
 			try
 			{
-				// convierte las direcciones de los destinatarios
-				MailAddressCollection to = ConvertirDestinatarios(correos_destino);
 
-				MailAddressCollection cc = ConvertirDestinatarios(correos_copia);
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-				MailAddressCollection bcc = ConvertirDestinatarios(correos_copia_oculta);
+				if (plataforma.Mailenvio.Equals("smtp"))
+				{
 
-				MailAddress from = new MailAddress(correo_respuesta.Email, correo_respuesta.Nombre);
 
-				// construye el correo para el envío
-				Mail correo = new Mail(uno_a_uno, from, to, cc, bcc);
+					MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
 
-				// configura los datos de conexión smtp
-				correo.ConfigurarSmtp("in-v3.mailjet.com", 587, "ad643914de5fcf81094ab97d7c181bb2", "0c65681e968ad77a15848ac5a9d40b13", true);
+					// convierte las direcciones de los destinatarios
+					MailAddressCollection to = ConvertirDestinatarios(correos_destino);
 
-				// codificación UTF8 (por defecto)
-				Encoding codificacion = Encoding.UTF8;
+					MailAddressCollection cc = ConvertirDestinatarios(correos_copia);
 
-				// envía el correo electrónico
-				correo.Enviar(mensaje, asunto, contenido_html, codificacion, tag_mensaje, ruta_plantilla_html, rutas_adjuntos);
-				//}
+					MailAddressCollection bcc = ConvertirDestinatarios(correos_copia_oculta);
+
+					MailAddress from = new MailAddress(correo_respuesta.Email, correo_respuesta.Nombre);
+
+					// construye el correo para el envío
+					Mail correo = new Mail(uno_a_uno, from, to, cc, bcc);
+
+					// configura los datos de conexión smtp
+					correo.ConfigurarSmtp(configuracion_server.Servidor, configuracion_server.Puerto, configuracion_server.Usuario, configuracion_server.Clave, true);
+
+					// codificación UTF8 (por defecto)
+					Encoding codificacion = Encoding.UTF8;
+
+					// envía el correo electrónico
+					correo.Enviar(mensaje, asunto, contenido_html, codificacion, tag_mensaje, ruta_plantilla_html, null, true);
+
+				}
+				else if (plataforma.Mailenvio.Equals("hgi"))
+				{
+					List<Destinatario> emails = new List<Destinatario>();
+
+					// From
+
+
+					Destinatario destino = new Destinatario()
+					{
+						Email = correo_respuesta.Email,
+						Nombre = correo_respuesta.Nombre,
+						Tipo = 0
+					};
+
+					emails.Add(destino);
+
+					// To
+					foreach (DestinatarioEmail item in correos_destino)
+					{
+						Destinatario mail = new Destinatario()
+						{
+							Email = item.Email,
+							Nombre = item.Nombre,
+							Tipo = 1
+						};
+						emails.Add(mail);
+					}
+
+					// CC
+					foreach (DestinatarioEmail item in correos_copia)
+					{
+						Destinatario mail = new Destinatario()
+						{
+							Email = item.Email,
+							Nombre = item.Nombre,
+							Tipo = 2
+						};
+						emails.Add(mail);
+					}
+
+					// BCC
+					foreach (DestinatarioEmail item in correos_copia_oculta)
+					{
+						Destinatario mail = new Destinatario()
+						{
+							Email = item.Email,
+							Nombre = item.Nombre,
+							Tipo = 3
+						};
+						emails.Add(mail);
+					}
+
+
+					MensajeContenido contenido = new MensajeContenido();
+					contenido.Id = id_seguridad;
+					contenido.Emails = emails;
+					contenido.Adjuntos = rutas_adjuntos;
+					contenido.Asunto = asunto;
+					contenido.ContenidoHtml = mensaje;
+					contenido.ContenidoTexto = "";
+					contenido.UnoaUno = false;
+
+					List<MensajeContenido> mensajes = new List<MensajeContenido>();
+					mensajes.Add(contenido);
+
+
+					HGInetEmailServicios.Ctl_Envio.Enviar(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);
+
+				}
 
 			}
 			catch (Exception excepcion)
@@ -59,7 +142,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="empresa">Datos del Obligado o el Adquiriente</param>
 		/// <param name="datos_usuario">datos del usuario</param>
 		/// <returns></returns>
-		public bool Bienvenida(TblEmpresas empresa, TblUsuarios datos_usuario)
+		public bool Bienvenida(TblEmpresas empresa)
 		{
 
 			try
@@ -70,15 +153,12 @@ namespace HGInetMiFacturaElectonicaController
 				if (empresa == null)
 					throw new ApplicationException("No se encontró información del Usuario");
 
-				if (datos_usuario == null)
-					throw new ApplicationException("No se encontró información del Usuario");
-
 				if (empresa.IntObligado)
 				{
-					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "emails\\plantilla_bienvenida_facturador.html");
+					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaObligado);
 				}
 				else if (empresa.IntAdquiriente)
-					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "emails\\plantilla_bienvenida_adquiriente.html");
+					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaAdquiriente);
 
 				if (!string.IsNullOrWhiteSpace(fileName))
 				{
@@ -93,7 +173,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
 						mensaje = mensaje.Replace("{CodigoUsuario}", empresa.TblUsuarios.FirstOrDefault().StrUsuario);
-						mensaje = mensaje.Replace("{RutaUrl}", Constantes.RutaCambioContraseña.Replace("{cod_seguridad}", datos_usuario.StrIdCambioClave.ToString()));
+						mensaje = mensaje.Replace("{RutaUrl}", Constantes.RutaCambioContraseña.Replace("{cod_seguridad}", empresa.TblUsuarios.FirstOrDefault().StrIdCambioClave.ToString()));
 						mensaje = mensaje.Replace("{RutaAcceso}", Constantes.RutaAccesoPlataforma);
 
 						string asunto = "Acceso Plataforma Facturación Electrónica";
@@ -103,15 +183,26 @@ namespace HGInetMiFacturaElectonicaController
 						remitente.Nombre = Constantes.NombreRemitenteEmail;
 
 						DestinatarioEmail destinatario = new DestinatarioEmail();
-						destinatario.Email = datos_usuario.StrMail;
-						destinatario.Nombre = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
+						destinatario.Email = empresa.TblUsuarios.FirstOrDefault().StrMail;
+						destinatario.Nombre = string.Format("{0} {1}", empresa.TblUsuarios.FirstOrDefault().StrNombres, empresa.TblUsuarios.FirstOrDefault().StrApellidos);
 
 						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 						correos_destino.Add(destinatario);
 
+						DestinatarioEmail copia_oculta = new DestinatarioEmail();
+						copia_oculta.Nombre = " ";
+						copia_oculta.Email = " ";
+
+						List<DestinatarioEmail> correos_copia = new List<DestinatarioEmail>();
+						correos_copia.Add(copia_oculta);
+
+						List<DestinatarioEmail> correos_copia_oculta = new List<DestinatarioEmail>();
+						correos_copia_oculta.Add(copia_oculta);
+
+
 						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-						clase_email.EnviarEmail(false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+						clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, correos_copia, correos_copia_oculta, "", "");
 					}
 				}
 				return true;
@@ -132,7 +223,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="archivos">archivos de envio</param>
 		/// <param name="obj_respuesta">datos del objeto de respuesta</param>
 		/// <returns></returns>
-		public bool NotificacionDocumento(TblDocumentos documento, List<string> archivos)
+		public bool NotificacionDocumento(TblDocumentos documento)
 		{
 
 			try
@@ -141,13 +232,20 @@ namespace HGInetMiFacturaElectonicaController
 
 				string asunto = "Factura Electrónica";
 
+				Ctl_Empresa adquiriente_empresa = new Ctl_Empresa();
+				TblEmpresas empresa_adquiriente = adquiriente_empresa.ObtenerId(documento.IntIdEmpresaAdquiriente);
+
 				DestinatarioEmail adquiriente = new DestinatarioEmail();
-				adquiriente.Nombre = documento.TblEmpresas1.StrRazonSocial;
-				adquiriente.Email = documento.TblEmpresas1.StrMail;
+				adquiriente.Nombre = empresa_adquiriente.StrRazonSocial;
+				adquiriente.Email = empresa_adquiriente.StrMail;
+
+
+				Ctl_Empresa obligado_empresa = new Ctl_Empresa();
+				TblEmpresas empresa_obligado = obligado_empresa.ObtenerId(documento.IntIdEmpresa);
 
 				DestinatarioEmail facturador = new DestinatarioEmail();
-				facturador.Nombre = documento.TblEmpresas.StrRazonSocial;
-				facturador.Email = documento.TblEmpresas.StrMail;
+				facturador.Nombre = empresa_obligado.StrRazonSocial;
+				facturador.Email = empresa_obligado.StrMail;
 
 				DestinatarioEmail copia_oculta = new DestinatarioEmail();
 				copia_oculta.Nombre = "Auditoria";
@@ -174,18 +272,18 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						// Datos Facturador Electronico
 						mensaje = mensaje.Replace("{ImagenLogo}", "<img id='ImgLogo' src='" + "" + "' style='border: none; border-radius: 0px; display: block; outline: none; text-decoration: none; width: 100%; height: auto;' width='233' />");
-						mensaje = mensaje.Replace("{NombreFacturador}", documento.TblEmpresas.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitFacturador}", documento.TblEmpresas.StrIdentificacion);
-						mensaje = mensaje.Replace("{EmailFacturador}", documento.TblEmpresas.StrMail);
+						mensaje = mensaje.Replace("{NombreFacturador}", empresa_obligado.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
+						mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMail);
 
 						//validar como llevar el telefono
-						mensaje = mensaje.Replace("{TelefonoFacturador}", documento.TblEmpresas.StrMail);
+						mensaje = mensaje.Replace("{TelefonoFacturador}", empresa_obligado.StrMail);
 
 						// Datos del Tercero
-						mensaje = mensaje.Replace("{NombreTercero}", documento.TblEmpresas1.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitTercero}", documento.TblEmpresas1.StrIdentificacion);
-						mensaje = mensaje.Replace("{Digitov}", documento.TblEmpresas1.IntIdentificacionDv.ToString());
-						mensaje = mensaje.Replace("{CorreoTercero}", documento.TblEmpresas1.StrMail);
+						mensaje = mensaje.Replace("{NombreTercero}", empresa_adquiriente.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitTercero}", empresa_adquiriente.StrIdentificacion);
+						mensaje = mensaje.Replace("{Digitov}", empresa_adquiriente.IntIdentificacionDv.ToString());
+						mensaje = mensaje.Replace("{CorreoTercero}", empresa_adquiriente.StrMail);
 						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
 
 
@@ -225,8 +323,47 @@ namespace HGInetMiFacturaElectonicaController
 
 						mensaje = mensaje.Replace("{RutaUrl}", Properties.Constantes.RutaAcuse.Replace("{cod_seguridad}", documento.StrIdSeguridad.ToString()));
 
+
+						List<Adjunto> archivos = new List<Adjunto>();
+
+						//Archivos para enviar por smtp
+						/*
+						if (!string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
+							archivos.Add(documento.StrUrlArchivoPdf);
+
+						if (!string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
+							archivos.Add(documento.StrUrlArchivoUbl);
+
+							*/
+
+						byte[] bytes_pdf = Archivo.ObtenerWeb(documento.StrUrlArchivoPdf);
+						string ruta_fisica_pdf = Convert.ToBase64String(bytes_pdf);
+						string nombre_pdf = Path.GetFileName(documento.StrUrlArchivoPdf);
+
+
+						if (!string.IsNullOrEmpty(ruta_fisica_pdf))
+						{
+							Adjunto adjunto = new Adjunto();
+							adjunto.ContenidoB64 = ruta_fisica_pdf;
+							adjunto.Nombre = nombre_pdf;
+							archivos.Add(adjunto);
+						}
+
+						byte[] bytes_xml = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl);
+						string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
+						string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
+
+						if (!string.IsNullOrEmpty(ruta_fisica_xml))
+						{
+							Adjunto adjunto = new Adjunto();
+							adjunto.ContenidoB64 = ruta_fisica_xml;
+							adjunto.Nombre = nombre_xml;
+							archivos.Add(adjunto);
+						}
+
+
 						// envía el correo electrónico
-						EnviarEmail(false, mensaje, asunto, true, facturador, correos_destino, correos_copia, correos_copia_oculta, "", "", archivos);
+						EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, facturador, correos_destino, correos_copia, correos_copia_oculta, "", "", archivos);
 
 					}
 				}
@@ -251,10 +388,10 @@ namespace HGInetMiFacturaElectonicaController
 			{
 
 				if (empresa == null)
-					throw new ApplicationException(string.Format("No se encontró información del Nit {0} ",empresa.StrIdentificacion));
+					throw new ApplicationException(string.Format("No se encontró información del Nit {0} ", empresa.StrIdentificacion));
 
 				if (usuario == null)
-					throw new ApplicationException(string.Format("No se encontró información del usuario {0}",usuario));
+					throw new ApplicationException(string.Format("No se encontró información del usuario {0}", usuario));
 
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaRestablecer);
 
@@ -288,9 +425,19 @@ namespace HGInetMiFacturaElectonicaController
 						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 						correos_destino.Add(destinatario);
 
+						DestinatarioEmail copia_oculta = new DestinatarioEmail();
+						copia_oculta.Nombre = " ";
+						copia_oculta.Email = " ";
+
+						List<DestinatarioEmail> correos_copia = new List<DestinatarioEmail>();
+						correos_copia.Add(copia_oculta);
+
+						List<DestinatarioEmail> correos_copia_oculta = new List<DestinatarioEmail>();
+						correos_copia_oculta.Add(copia_oculta);
+
 						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-						clase_email.EnviarEmail(false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+						clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, correos_copia, correos_copia_oculta, "", "");
 
 					}
 				}
@@ -324,6 +471,16 @@ namespace HGInetMiFacturaElectonicaController
 
 				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 				correos_destino.Add(facturador);
+
+				DestinatarioEmail copia_oculta = new DestinatarioEmail();
+				copia_oculta.Nombre = " ";
+				copia_oculta.Email = " ";
+
+				List<DestinatarioEmail> correos_copia = new List<DestinatarioEmail>();
+				correos_copia.Add(copia_oculta);
+
+				List<DestinatarioEmail> correos_copia_oculta = new List<DestinatarioEmail>();
+				correos_copia_oculta.Add(copia_oculta);
 
 				// plantilla Html
 				if (!string.IsNullOrWhiteSpace(ruta_plantilla_html))
@@ -388,7 +545,7 @@ namespace HGInetMiFacturaElectonicaController
 
 
 						// envía el correo electrónico
-						EnviarEmail(false, mensaje, asunto, true, facturador, correos_destino, null, null, "", "");
+						EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, facturador, correos_destino, correos_copia, correos_copia_oculta, "", "");
 
 					}
 				}

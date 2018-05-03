@@ -220,7 +220,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						TblEmpresas adquirienteBd = null;
 
-
+						bool adquiriente_nuevo = false;
+						
 
 
 						//Validacion de Adquiriente y usuario
@@ -240,6 +241,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Creacion del Usuario del Adquiriente
 								Ctl_Usuario usuario = new Ctl_Usuario();
 								TblUsuarios usuarioBd = usuario.Crear(adquirienteBd);
+
+								adquiriente_nuevo = true;
 							}
 						}
 						catch (Exception excepcion)
@@ -249,11 +252,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw excepcion;
 						}
 
-
 						Ctl_Documento documento_tmp = new Ctl_Documento();
 
-						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, adquirienteBd, tipo_doc);
 						//guarda documento en BD
+						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, adquirienteBd, tipo_doc);
+
 						try
 						{
 
@@ -425,7 +428,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// url pública del zip
 						string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreZip);
-						
+
 						documentoBd.StrCufe = respuesta.Cufe;
 						documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
 						documentoBd.StrUrlArchivoZip = url_ppal_zip;
@@ -449,6 +452,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.Error.Mensaje = "ninguno.";
 
 						respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}. Detalles: {4}", acuse.ResponseDateTime, acuse.Response, acuse.Comments, detalle_dian, respuesta.Error.Mensaje);
+
+						//Envio de mail
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+
+						//Si es nuevo en la Plataforma envia informacion
+						if (adquiriente_nuevo == true)
+						{
+
+							email.Bienvenida(adquirienteBd);
+						}
+
+						//envío de los documentos al Adquiriente
+						email.NotificacionDocumento(documentoBd);
 
 					}
 

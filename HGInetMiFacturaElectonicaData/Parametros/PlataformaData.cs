@@ -38,11 +38,11 @@ namespace HGInetMiFacturaElectonicaData
 			set { this["LicenciaHGInetMail"] = value; }
 		}
 
-		[ConfigurationProperty("IdenticacionHGInetMail", DefaultValue = "", IsRequired = true)]
-		public string IdenticacionHGInetMail
+		[ConfigurationProperty("IdentificacionHGInetMail", DefaultValue = "", IsRequired = true)]
+		public string IdentificacionHGInetMail
 		{
-			get { return (string)this["IdenticacionHGInetMail"]; }
-			set { this["IdenticacionHGInetMail"] = value; }
+			get { return (string)this["IdentificacionHGInetMail"]; }
+			set { this["IdentificacionHGInetMail"] = value; }
 		}
 
 		public PlataformaData() { }

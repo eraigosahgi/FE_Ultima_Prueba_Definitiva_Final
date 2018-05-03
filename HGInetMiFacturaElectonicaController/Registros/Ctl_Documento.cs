@@ -367,13 +367,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 tbl_documento.DatFechaActualizaEstado = Fecha.GetFecha();
 
 
-                return tbl_documento;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				return tbl_documento;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
         /// <summary>
         /// Convierte un objeto de tipo de base de datos a objeto de servicio.
