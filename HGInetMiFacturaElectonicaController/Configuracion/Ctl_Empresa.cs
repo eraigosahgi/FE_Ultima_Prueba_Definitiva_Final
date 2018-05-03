@@ -67,12 +67,29 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             
         }
 
-        /// <summary>
-        /// Crea una empresa en la BD
-        /// </summary>
-        /// <param name="empresa">Objeto BD de la empresa a crear</param>
-        /// <returns></returns>
-        public TblEmpresas Crear(TblEmpresas empresa)
+
+		/// <summary>
+		/// Obtiene empresa con el Id
+		/// </summary>
+		/// <param name="id">Id de Obligado o Adquiriente</param>
+		/// <returns></returns>
+		public TblEmpresas ObtenerId(int id)
+		{
+
+			var datos = (from item in context.TblEmpresas
+						 where item.IntId.Equals(id)
+						 select item).FirstOrDefault();
+
+			return datos;
+
+		}
+
+		/// <summary>
+		/// Crea una empresa en la BD
+		/// </summary>
+		/// <param name="empresa">Objeto BD de la empresa a crear</param>
+		/// <returns></returns>
+		public TblEmpresas Crear(TblEmpresas empresa)
         {
             empresa = this.Add(empresa);
 
