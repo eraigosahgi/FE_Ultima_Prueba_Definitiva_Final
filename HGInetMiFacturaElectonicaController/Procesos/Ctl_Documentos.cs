@@ -219,6 +219,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Ctl_Empresa empresa_config = new Ctl_Empresa();
 
 						TblEmpresas adquirienteBd = null;
+						TblUsuarios usuarioBd = null;
 
 						bool adquiriente_nuevo = false;
 						
@@ -240,7 +241,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 								//Creacion del Usuario del Adquiriente
 								Ctl_Usuario usuario = new Ctl_Usuario();
-								TblUsuarios usuarioBd = usuario.Crear(adquirienteBd);
+								usuarioBd = usuario.Crear(adquirienteBd);
 
 								adquiriente_nuevo = true;
 							}
@@ -460,7 +461,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (adquiriente_nuevo == true)
 						{
 
-							email.Bienvenida(adquirienteBd);
+							email.Bienvenida(adquirienteBd, usuarioBd);
 						}
 
 						//envío de los documentos al Adquiriente

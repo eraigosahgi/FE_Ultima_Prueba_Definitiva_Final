@@ -142,7 +142,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="empresa">Datos del Obligado o el Adquiriente</param>
 		/// <param name="datos_usuario">datos del usuario</param>
 		/// <returns></returns>
-		public bool Bienvenida(TblEmpresas empresa)
+		public bool Bienvenida(TblEmpresas empresa, TblUsuarios usuario)
 		{
 
 			try
@@ -172,8 +172,8 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
 						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
-						mensaje = mensaje.Replace("{CodigoUsuario}", empresa.TblUsuarios.FirstOrDefault().StrUsuario);
-						mensaje = mensaje.Replace("{RutaUrl}", Constantes.RutaCambioContraseña.Replace("{cod_seguridad}", empresa.TblUsuarios.FirstOrDefault().StrIdCambioClave.ToString()));
+						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
+						mensaje = mensaje.Replace("{RutaUrl}", Constantes.RutaCambioContraseña.Replace("{cod_seguridad}", usuario.StrIdCambioClave.ToString()));
 						mensaje = mensaje.Replace("{RutaAcceso}", Constantes.RutaAccesoPlataforma);
 
 						string asunto = "Acceso Plataforma Facturación Electrónica";
@@ -183,8 +183,8 @@ namespace HGInetMiFacturaElectonicaController
 						remitente.Nombre = Constantes.NombreRemitenteEmail;
 
 						DestinatarioEmail destinatario = new DestinatarioEmail();
-						destinatario.Email = empresa.TblUsuarios.FirstOrDefault().StrMail;
-						destinatario.Nombre = string.Format("{0} {1}", empresa.TblUsuarios.FirstOrDefault().StrNombres, empresa.TblUsuarios.FirstOrDefault().StrApellidos);
+						destinatario.Email = usuario.StrMail;
+						destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
 
 						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 						correos_destino.Add(destinatario);
