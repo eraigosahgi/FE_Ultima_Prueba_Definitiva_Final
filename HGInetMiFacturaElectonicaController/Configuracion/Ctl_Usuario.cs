@@ -54,8 +54,35 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             return tbl_usuario;
         }
-        
 
+        #region Validar
+
+        public bool ValidarExistencia(string codigo_empresa, string codigo_usuario, string clave)
+        {
+            try
+            {
+                clave = LibreriaGlobalHGInet.General.Encriptar.Encriptar_MD5(clave);
+
+                var respuesta = from usuario in context.TblUsuarios
+                                join empresa in context.TblEmpresas on usuario.IntIdEmpresa equals empresa.IntId
+                                where empresa.StrIdentificacion.Equals(codigo_empresa)
+                                && usuario.StrUsuario.Equals(codigo_usuario)
+                                && usuario.StrClave.Equals(clave)
+                                select usuario;
+
+                if (respuesta.FirstOrDefault() == null)
+                    return false;
+
+                return true;
+            }
+            catch (Exception excepcion)
+            {
+
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        #endregion
 
     }
 }

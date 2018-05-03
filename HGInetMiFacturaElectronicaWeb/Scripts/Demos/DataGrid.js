@@ -1,12 +1,27 @@
-﻿//Establece la localización - lenguaje.
+﻿
+
+//******************************************************CONSOLE.LOG******************************************************
+//El console.log es implementado para la captura de datos en la consola del navegador y así poder llevar trazabilidad de los datos y respuestas de los controladores, 
+//por ende se recomienda quitar cada uno de las líneas implementadas para esta función al salir a producción o culminar un proceso y/o tarea.
+//******************************************************CONSOLE.LOG******************************************************
+
+
+//******************************************************NOTIFY******************************************************
+//DevExpress.ui.notify(mensaje, tipo, tiempo);
+//Tipos: 'info', 'warning', 'error', 'success'
+//EJEMPLO: DevExpress.ui.notify("Datos de autenticación inválidos.", 'error', 3000);
+//******************************************************NOTIFY******************************************************
+
+
+//Establece la localización - lenguaje.
 DevExpress.localization.locale(navigator.language);
+
+
 
 //Define el elemento raíz de la aplicación.
 var DemoApp = angular.module('DemoApp', ['dx']);
 //Define el controlador de la aplicación: puede escribir código y hacer funciones y variables, que serán partes de un objeto, disponibles dentro del elemento HTML actual.
 DemoApp.controller('DemoController', function DemoController($scope, $http) {
-
-
 
     //******************************************************DATAGRID******************************************************
 
@@ -300,6 +315,9 @@ DemoApp.controller('DemoController', function DemoController($scope, $http) {
         },
         //Control única selección.
         Seleccion: {
+            //Activa la busqueda en el control.
+            searchEnabled: true,
+            //carga los items.
             items: items
         }
     };

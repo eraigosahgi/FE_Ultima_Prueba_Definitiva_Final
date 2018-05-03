@@ -1,0 +1,314 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPrincipal.master.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Masters.MasterPrincipal" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>HGInet Facturación Electrónica</title>
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css" />
+    <!-- /Global stylesheets -->
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+    <!-- Global stylesheets -->
+    <link href="../../Scripts/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css" />
+    <link href="../../Scripts/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="../../Scripts/assets/css/core.css" rel="stylesheet" type="text/css" />
+    <link href="../../Scripts/assets/css/components.css" rel="stylesheet" type="text/css" />
+    <link href="../../Scripts/assets/css/colors.css" rel="stylesheet" type="text/css" />
+    <!-- /global stylesheets -->
+
+    <!-- Core JS files -->
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/loaders/blockui.min.js"></script>
+    <!-- /core JS files -->
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/visualization/d3/d3.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/visualization/d3/d3_tooltip.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/styling/switchery.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/moment/moment.min.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/headroom/headroom.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/headroom/headroom_jquery.min.js"></script>
+
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/pnotify.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/sweet_alert.min.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/media/fancybox.min.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/user_pages_team.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/components_popups.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/components_modals.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/layout_navbar_hideable.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/extensions/session_timeout.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/gallery.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/ripple.min.js"></script>
+    <!-- /theme JS files -->
+
+
+    <!-- Estilos CSS -->
+    <%-- <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" />--%>
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />
+    <link rel="dx-theme" data-theme="generic.light" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />
+
+    <!-- Scripts Requeridos-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>
+    <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
+
+    <!-- JS Localización -->
+    <script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
+
+</head>
+<body>
+    <form id="form1" runat="server">
+
+        <!-- Barra de Navegación Principal -->
+        <div class="navbar navbar-inverse bg-slate-800">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">Logo de App</a>
+
+                <ul class="nav navbar-nav visible-xs-block">
+                    <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+                    <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+                </ul>
+            </div>
+
+            <div class="navbar-collapse collapse" id="navbar-mobile">
+                <ul class="nav navbar-nav">
+                    <li><a class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-puzzle3"></i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-content">
+                            <div class="dropdown-content-heading">
+                                Actualizaciones
+							<ul class="icons-list">
+                                <li><a href="#"><i class="icon-sync"></i></a></li>
+                            </ul>
+                            </div>
+
+                            <ul class="media-list dropdown-content-body width-350">
+                                <li class="media">
+                                    <div class="media-left">
+                                        <a href="#" class="btn border-primary text-primary btn-flat btn-rounded btn-icon btn-sm"><i class="icon-newspaper"></i></a>
+                                    </div>
+
+                                    <div class="media-body">
+                                        <b>
+                                            <asp:Label runat="server" ID="Label_version_actualizacion"></asp:Label></b>
+                                        <br />
+                                        Nueva Versión HGInet Facturación Electrónica
+									<div class="media-annotation">HGI SAS</div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <div class="dropdown-content-footer">
+                                <a href="#"><i class="icon-menu display-block"></i></a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="navbar-right navbar-collapse collapse" id="Div2">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <label>Nombre de Usuario Barra</label>
+                            </a>
+
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-user"></i>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-content">
+                                <div class="dropdown-content-heading">
+                                    <asp:Label runat="server">Información de Usuario</asp:Label>
+                                </div>
+
+                                <ul class="media-list dropdown-content-body width-350">
+                                    <li class="media">
+                                        <div class="media-body">
+                                            <i id="icono_usuario" class="icon-vcard position-left" title="Usuario"></i>
+                                            <label>Código de Usuario</label>
+                                            <br />
+                                            <i class="icon-user position-left" title="Nombre del usuario"></i>
+                                            <label>Nombre de Usuario</label>
+                                            <br />
+                                            <div runat="server" id="EmailUsuario" visible="false">
+                                                <i runat="server" id="icono_email" class="icon-envelop5 position-left" title="Email"></i>
+                                                <label>E-mail de Usuario</label>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a class="legitRipple icon-switch2"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <!-- /Barra de Navegación Principal -->
+
+        <!-- Contenedor de la página -->
+        <div class="page-container">
+
+            <!-- Contenido de la página -->
+            <div class="page-content">
+
+                <!-- Barra Lateral Principal -->
+                <div class="sidebar sidebar-main sidebar-default">
+                    <div class="sidebar-content">
+
+                        <!-- Menú de Usuario-->
+                        <div class="sidebar-user-material">
+                            <div class="category-content">
+                                <div class="sidebar-user-material-content">
+                                    <a href="#">
+                                        <img src="../../Scripts/assets/images/placeholder.jpg" class="img-circle img-responsive" alt="" /></a>
+                                    <h6>María T</h6>
+                                    <span class="text-size-small">97042206974</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /Menú de Usuario -->
+
+                        <!-- Navegación Principal -->
+                        <div class="sidebar-category sidebar-category-visible">
+                            <div class="category-content no-padding">
+                                <ul class="navigation navigation-main navigation-accordion">
+
+                                    <!-- Principal -->
+                                    <li class="navigation-header"><span style="margin: -10px">Menú</span> <i class="icon-menu" title="Menú"></i></li>
+
+                                    <!-- /Principal -->
+
+                                    <!-- HGInet Facturación electrónica -->
+                                    <li class="active">
+                                        <a href="#" class="has-ul legitRipple"><i class="icon-typewriter"></i><span style="margin: -10px">Facturación Electrónica</span></a>
+                                        <ul>
+
+                                            <li>
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-reading"></i><span style="margin: -10px">Facturador</span></a>
+                                                <ul>
+                                                    <li>
+                                                        <a class="legitRipple"><i class="icon-file-check"></i><span style="margin: -10px">Consulta de Documentos</span></a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                            <li>
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-collaboration"></i><span style="margin: -10px">Adquiriente</span></a>
+                                                <ul>
+                                                    <li>
+                                                        <a class="legitRipple"><i class="icon-file-check"></i><span style="margin: -10px">Consulta de Documentos</span></a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                            <li>
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-user"></i><span style="margin: -10px">Usuarios</span></a>
+                                                <ul>
+                                                    <li>
+                                                        <a class="legitRipple"><i class="icon-cogs"></i><span style="margin: -10px">Gestión Usuarios</span></a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                    <!-- /HGInet Facturación electrónica -->
+
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- /Navegación Principal  -->
+
+                    </div>
+                </div>
+                <!-- /Barra Lateral Principal -->
+
+                <!-- Contenido Principal -->
+                <div class="content-wrapper">
+
+                    <!-- Encabezado de la página -->
+                    <div class="page-header page-header-default">
+                        <div class="page-header-content">
+                            <div class="page-title">
+                                <h4><i class="icon-arrow-left52 position-left"></i>Facturación Eelectrónica</h4>
+                            </div>
+                            <div class="heading-elements">
+                                <div class="heading-btn-group">
+                                    <a href="#" class="btn btn-link btn-float text-size-small has-text"><i class="icon-bars-alt text-primary"></i><span>Manual</span></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="breadcrumb-line">
+                            <ul class="breadcrumb">
+                                <li><a href="index.html"><i class="icon-home2 position-left"></i>Inicio</a></li>
+                                <li class="active">Página</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /Encabezado de la página -->
+
+                    <!-- Área Contenido -->
+                    <div class="content">
+
+                        <asp:ContentPlaceHolder ID="ContenidoPagina" runat="server"></asp:ContentPlaceHolder>
+
+                        <!-- Pie de Página -->
+                        <div class="footer text-muted">
+                            2018 <a href="#">HGInet Facturación Electrónica</a> Copyright &copy; <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S</a>
+                        </div>
+                        <!-- /Pie de Página -->
+
+                    </div>
+                    <!-- /Área Contenido -->
+
+                </div>
+                <!-- /Contenido Principal -->
+
+            </div>
+            <!-- /Contenido de la página -->
+
+        </div>
+        <!-- /Contenedor de la página -->
+
+    </form>
+</body>
+</html>
