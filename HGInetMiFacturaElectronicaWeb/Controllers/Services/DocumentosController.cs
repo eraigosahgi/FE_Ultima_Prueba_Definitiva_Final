@@ -61,8 +61,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 IdSeguridad = d.StrIdSeguridad,
                 EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                 MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "N/A",
+                FechaRespuesta = d.DatAdquirienteFechaRecibo,
                 Xml = d.StrUrlArchivoUbl,
-                Pdf = d.StrUrlArchivoPdf
+                Pdf = d.StrUrlArchivoPdf,
+                RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
+                CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
             });
 
             if (datos == null)
@@ -96,7 +99,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                 MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "N/A",
                 Xml = d.StrUrlArchivoUbl,
-                Pdf = d.StrUrlArchivoPdf
+                Pdf = d.StrUrlArchivoPdf,
+                RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
+                CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
             });
 
             if (datos == null)

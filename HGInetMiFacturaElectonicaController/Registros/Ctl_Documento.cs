@@ -284,6 +284,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 List<TblDocumentos> retorno = new List<TblDocumentos>();
                 TblDocumentos doc = ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
 
+                Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+
                 if (doc == null)
                     throw new ArgumentException(string.Format(LibreriaGlobalHGInet.Properties.RecursoMensajes.ObjectNotExistError, "el documento", doc.IntNumero));
 
@@ -292,6 +294,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
 
                 Actualizar(doc);
+
+                doc.TblEmpresas = ctl_empresa.ObtenerId(doc.IntIdEmpresa);
+                doc.TblEmpresas1 = ctl_empresa.ObtenerId(doc.IntIdEmpresaAdquiriente);
 
                 retorno.Add(doc);
 

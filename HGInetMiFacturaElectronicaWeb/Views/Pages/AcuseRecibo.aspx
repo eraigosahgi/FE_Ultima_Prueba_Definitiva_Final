@@ -62,18 +62,19 @@
 
             <!-- Visualización PDF -->
             <div class="col-md-6">
-                <iframe src="http://smart20184.hginet.co/dms/8890/cia1/emp1/login/TerminosYCondiciones.pdf" style="width: 96%; height: 800px;" frameborder="0"></iframe>
+                <iframe src="{{datos.StrUrlArchivoPdf}}" style="width: 96%; height: 800px;" frameborder="0"></iframe>
             </div>
             <!-- /Visualización PDF -->
 
-
-            <%--<iframe src="http://localhost:61428/dms/811021438/FacturaEDian/face_f0811021438003B0234FD.xml" style="width: 50%; height: 1000px;" frameborder="0"></iframe>--%>
+            <%--<div class="col-md-6">
+                <iframe src="http://localhost:61428/dms/811021438/FacturaEDian/face_f0811021438003B0234FD.xml" style="width: 50%; height: 800px;" frameborder="0"></iframe>
+            </div>--%>
 
             <!-- Visualización Información Factura -->
             <div class="col-md-6">
                 <div class="panel panel-flat form-horizontal">
 
-                    <div class="panel-body" style="display: block; margin: 3%" >
+                    <div class="panel-body" style="display: block; margin: 3%">
 
                         <div id="PanelInformacionFactura" style="font-size: medium" class="dx-fieldset">
 
@@ -109,7 +110,7 @@
 
 
                         <!-- PANEL CONTIENE LA RESPUESTA SI YA LA TIENE-->
-                        <div id="PanelRespuestaAdquiriente" style="font-size: medium">
+                        <div id="PanelRespuestaAdquiriente" style="font-size: medium" ng-show="{{datos.RespuestaVisible}}" class="dx-fieldset">
 
                             <h4 class="panel-title text-bold text-center">Respuesta Adquiriente</h4>
 
@@ -122,20 +123,27 @@
                                 <label class="text-bold">Observaciones: </label>
                                 <span>{{datos.MotivoRechazo}}</span>
                             </div>
+
+                            <div style="margin-top: 3%;" runat="server" id="Div1">
+                                <label class="text-bold">Fecha: </label>
+                                <span>{{datos.FechaRespuesta}}</span>
+                            </div>
+
                         </div>
 
                         <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
-                        <div id="PanelOpcionesAdquiriente" runat="server">
+                        <div id="PanelOpcionesAdquiriente" ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
 
                             <div dx-button="ButtonOptionsRechazar"></div>
                             &nbsp;&nbsp;&nbsp;
                             <div dx-button="ButtonOptionsAceptar"></div>
                             <br />
                             <br />
-                            <label>Observaciones: </label>
-                            <div dx-text-area="editableTextArea"></div>
+                            <div id="form" dx-form="TextAreaObservaciones">
+                            </div>
                             <br />
                             <br />
+
                         </div>
 
                     </div>
