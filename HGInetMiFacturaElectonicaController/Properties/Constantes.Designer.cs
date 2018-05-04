@@ -79,7 +79,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a /Views/Pages/AcuseRecibo.aspx?id={id_seguridad}.
+        ///   Busca una cadena traducida similar a /Views/Pages/AcuseRecibo.aspx?id_seguridad={id_seguridad}.
         /// </summary>
         public static string PaginaAcuseRecibo {
             get {

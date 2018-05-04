@@ -126,7 +126,7 @@
     <comment>nombre del remitente.</comment>
   </data>
   <data name="PaginaAcuseRecibo" xml:space="preserve">
-    <value>/Views/Pages/AcuseRecibo.aspx?id={id_seguridad}</value>
+    <value>/Views/Pages/AcuseRecibo.aspx?id_seguridad={id_seguridad}</value>
     <comment>Ruta de redirección página de acuse recibo (adquiriente factura)</comment>
   </data>
   <data name="RutaAccesoPlataforma" xml:space="preserve">
