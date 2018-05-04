@@ -56,7 +56,13 @@
     <Compile Include="Controladores\Ctl_ConsultaTransacciones.cs" />
     <Compile Include="Controladores\Ctl_Factura.cs" />
     <Compile Include="Controladores\Ctl_Resolucion.cs" />
+    <Compile Include="Objetos\ConsultaDocumento.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Service References\DianFactura\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -79,6 +85,10 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Service References\DianFactura\facturaElectronica.wsdl" />
     <None Include="Service References\DianFactura\HGInetDIANServicios.DianFactura.EnvioFacturaElectronicaRespuesta.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -138,6 +148,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

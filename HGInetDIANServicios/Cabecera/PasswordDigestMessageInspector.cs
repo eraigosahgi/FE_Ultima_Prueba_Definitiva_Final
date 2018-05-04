@@ -20,7 +20,9 @@ namespace HGInetDIANServicios
 
 		public Message Response { get; set; }
 
-		public PasswordDigestMessageInspector(string username, string password, Guid id_request)
+        public Message Request { get; set; }
+
+        public PasswordDigestMessageInspector(string username, string password, Guid id_request)
 		{
 			this.Username = username;
 			this.Password = password;
@@ -46,6 +48,8 @@ namespace HGInetDIANServicios
 				 securityToken, false);
 			request.Headers.Add(securityHeader);
 			string strRequestXML = request.ToString();
+
+            Request = request;
 
 			return Convert.DBNull;
 		}
