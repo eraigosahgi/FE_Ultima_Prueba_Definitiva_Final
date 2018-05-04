@@ -1,0 +1,56 @@
+{<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+  <SOAP-ENV:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" SOAP-ENV:mustUnderstand="1">
+      <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-8326664">
+        <ds:SignedInfo>
+          <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+            <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="SOAP-ENV" />
+          </ds:CanonicalizationMethod>
+          <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+          <ds:Reference URI="#id-8326663">
+            <ds:Transforms>
+              <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="" />
+              </ds:Transform>
+            </ds:Transforms>
+            <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+            <ds:DigestValue>meH4H71sRVPoUWI74QAptWvTm+U=</ds:DigestValue>
+          </ds:Reference>
+        </ds:SignedInfo>
+        <ds:SignatureValue>FmAsrUObpEn57shM777R/5/ncg3uwJl7TP5X1WG7ItnA7tRrtgtEkaYD39ooWq/yGumyveKG48yTB8aT0VtVrWQPlnk2DHrBGLH5vQsUVe9LIcGn3Bm73zBgaS8cpCDLmaX8BVMC52YzEoL23cUQJDzbjS/uVs3ebarib91V+I24s/Pj75UqUndwzg/yPqNyY6eC6JTIgcfpgFKoCfVTP+iV3G7en9PymC5XVMpZFcZSkZdRnqKjEdX/9J3Cgo3apdLUB1jwuEhNbggldaoDOBpG/Vza6ag6jc+GpO4kz+THo17vofwakCBhfjGfXW9FxYoOn4Z5CfiSsPqqv0BuQg==</ds:SignatureValue>
+        <ds:KeyInfo Id="KI-E4F82D759472D4285315254558112806244997">
+          <wsse:SecurityTokenReference wsu:Id="STR-E4F82D759472D4285315254558112806244998">
+            <ds:X509Data>
+              <ds:X509IssuerSerial>
+                <ds:X509IssuerName>CN=AC SUB CERTICAMARA,O=CERTICAMARA S.A,OU=NIT 830084433-7,C=CO,ST=DISTRITO CAPITAL,L=BOGOTA,STREET=www.certicamara.com</ds:X509IssuerName>
+                <ds:X509SerialNumber>91436926122049973593519406185072624124</ds:X509SerialNumber>
+              </ds:X509IssuerSerial>
+            </ds:X509Data>
+          </wsse:SecurityTokenReference>
+        </ds:KeyInfo>
+      </ds:Signature>
+      <wsu:Timestamp wsu:Id="TS-8326662">
+        <wsu:Created>2018-05-04T17:43:31.280Z</wsu:Created>
+        <wsu:Expires>2018-05-04T17:48:31.280Z</wsu:Expires>
+      </wsu:Timestamp>
+      <wsse11:SignatureConfirmation xmlns:wsse11="http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd" wsu:Id="SC-8326661" />
+    </wsse:Security>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-8326663">
+    <ns3:ConsultaResultadoValidacionDocumentosRespuesta xmlns:ns3="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaDocumentos" xmlns:ns2="http://www.dian.gov.co/servicios/facturaelectronica/ReportarFactura" xmlns:ns4="http://www.dian.gov.co/servicios/facturaelectronica/VersionDespliegue">
+      <ns3:CodigoTransaccion>200</ns3:CodigoTransaccion>
+      <ns3:FechaTransaccion>2018-05-04T12:43:31.279-05:00</ns3:FechaTransaccion>
+      <ns3:DescripcionTransaccion>Consulta realizada con exito.</ns3:DescripcionTransaccion>
+      <ns3:DocumentoRecibido>
+        <ns3:DatosBasicosDocumento>
+          <ns3:Emisor>811021438</ns3:Emisor>
+          <ns3:FechaHoraEmision>2018-05-03 00:00:00.0</ns3:FechaHoraEmision>
+          <ns3:EstadoDocumento>7200002</ns3:EstadoDocumento>
+          <ns3:DescripcionEstado>EXITOSA</ns3:DescripcionEstado>
+          <ns3:NumeroDocumento>990000396</ns3:NumeroDocumento>
+          <ns3:CUFE>1de20e628084240a92f19d6019d92cd711dfe782</ns3:CUFE>
+        </ns3:DatosBasicosDocumento>
+      </ns3:DocumentoRecibido>
+    </ns3:ConsultaResultadoValidacionDocumentosRespuesta>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>}

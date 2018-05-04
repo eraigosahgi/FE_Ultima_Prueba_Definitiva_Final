@@ -60,6 +60,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Email", "Email", "{DD134E07
 		Documentacion\Librerias\Email\HGInetEmailServicios.dll = Documentacion\Librerias\Email\HGInetEmailServicios.dll
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DIANPruebas", "DIANPruebas", "{1B150BCF-D3BC-4E30-B239-74891D9AFC1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WSConsultaDocumentos", "WSConsultaDocumentos", "{74CA58BC-3812-4DBA-9D46-CD8E78A6EAF1}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\DIANPruebas\WSConsultaDocumentos\396-Inexistente-Peticion.txt = Documentacion\DIANPruebas\WSConsultaDocumentos\396-Inexistente-Peticion.txt
+		Documentacion\DIANPruebas\WSConsultaDocumentos\396-Inexistente-Respuesta.txt = Documentacion\DIANPruebas\WSConsultaDocumentos\396-Inexistente-Respuesta.txt
+		Documentacion\DIANPruebas\WSConsultaDocumentos\990000396-Correcto-Peticion.txt = Documentacion\DIANPruebas\WSConsultaDocumentos\990000396-Correcto-Peticion.txt
+		Documentacion\DIANPruebas\WSConsultaDocumentos\990000396-Correcto-Respuesta.txt = Documentacion\DIANPruebas\WSConsultaDocumentos\990000396-Correcto-Respuesta.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -163,5 +173,7 @@ Global
 		{23109A26-F049-4B31-B856-61B9F8990E5C} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 		{B86938E2-C84C-46A0-A40D-F4DB79E9DBA9} = {23109A26-F049-4B31-B856-61B9F8990E5C}
 		{DD134E07-6322-4EA9-8A1F-777C13D3D20F} = {59113B66-AE70-4B22-83BC-94B88ED048AF}
+		{1B150BCF-D3BC-4E30-B239-74891D9AFC1E} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{74CA58BC-3812-4DBA-9D46-CD8E78A6EAF1} = {1B150BCF-D3BC-4E30-B239-74891D9AFC1E}
 	EndGlobalSection
 EndGlobal
