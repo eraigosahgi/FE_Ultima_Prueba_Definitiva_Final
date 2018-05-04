@@ -80,5 +80,17 @@ namespace HGInetMiFacturaElectonicaData
 			}
 
 		}
-	}
+
+        [ConfigurationProperty("certificadoDigital")]
+        public CertificadoDigital CertificadoDigitalData
+        {
+            get
+            {
+                CertificadoDigital certificado_tmp = this["certificadoDigital"] as CertificadoDigital;
+
+                return certificado_tmp;
+            }
+
+        }
+    }
 }

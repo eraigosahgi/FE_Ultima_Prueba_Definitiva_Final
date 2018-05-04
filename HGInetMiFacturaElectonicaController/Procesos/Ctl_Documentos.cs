@@ -361,9 +361,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.FechaUltimoProceso = fecha_actual;
 							respuesta.IdProceso = 5;
 
-							string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), "certificado_test.p12");
-							documento_result = Ctl_Firma.Generar(ruta_certificado, "6c 0b 07 62 62 6d a0 e2", "persona_juridica_pruebas1", EnumCertificadoras.Andes, documento_result);
+                            // obtiene la información de configuración del certificado digital
+                            CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
 
+                            // obtiene la empresa certificadora
+                            EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
+
+                            if (certificado.Certificadora.Equals("andes"))
+                                empresa_certificadora = EnumCertificadoras.Andes;
+                            else if (certificado.Certificadora.Equals("gse"))
+                                empresa_certificadora = EnumCertificadoras.Gse;
+
+                            // información del certificado digital
+                            string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
+							documento_result = Ctl_Firma.Generar(ruta_certificado, certificado.Serial, certificado.Clave, empresa_certificadora, documento_result);
+                            
 							//Actualiza Documento en Base de Datos
 							documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
 							documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
