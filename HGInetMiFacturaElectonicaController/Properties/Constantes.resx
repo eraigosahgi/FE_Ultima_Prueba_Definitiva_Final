@@ -125,13 +125,13 @@
     <value>HGInet Facturación Electrónica</value>
     <comment>nombre del remitente.</comment>
   </data>
+  <data name="PaginaAcuseRecibo" xml:space="preserve">
+    <value>/Views/Pages/AcuseRecibo.aspx?id={id_seguridad}</value>
+    <comment>Ruta de redirección página de acuse recibo (adquiriente factura)</comment>
+  </data>
   <data name="RutaAccesoPlataforma" xml:space="preserve">
     <value>http://habilitacion.mifacturaenlinea.com.co</value>
     <comment>Ruta de eacceso a la plataforma web.</comment>
-  </data>
-  <data name="RutaAcuse" xml:space="preserve">
-    <value>http://habilitacion.mifacturaenlinea.com.co/pages/facturae/AcuseRecibo.aspx?id={cod_seguridad}</value>
-    <comment>Ruta de redirección página de acuse recibo (adquiriente factura)</comment>
   </data>
   <data name="RutaCambioContraseña" xml:space="preserve">
     <value>http://habilitacion.mifacturaenlinea.com.co/pages/usuarios/RestablecerContrasena.aspx?id={cod_seguridad}</value>

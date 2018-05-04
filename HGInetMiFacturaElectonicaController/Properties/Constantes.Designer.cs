@@ -22,7 +22,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Constantes {
+    public class Constantes {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         ///   Devuelve la instancia de ResourceManager almacenada en caché utilizada por esta clase.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("HGInetMiFacturaElectonicaController.Properties.Constantes", typeof(Constantes).Assembly);
@@ -51,7 +51,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         ///   búsquedas de recursos mediante esta clase de recurso fuertemente tipado.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         /// <summary>
         ///   Busca una cadena traducida similar a noreply@hgi.com.co.
         /// </summary>
-        internal static string EmailRemitente {
+        public static string EmailRemitente {
             get {
                 return ResourceManager.GetString("EmailRemitente", resourceCulture);
             }
@@ -72,34 +72,34 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         /// <summary>
         ///   Busca una cadena traducida similar a HGInet Facturación Electrónica.
         /// </summary>
-        internal static string NombreRemitenteEmail {
+        public static string NombreRemitenteEmail {
             get {
                 return ResourceManager.GetString("NombreRemitenteEmail", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a /Views/Pages/AcuseRecibo.aspx?id={id_seguridad}.
+        /// </summary>
+        public static string PaginaAcuseRecibo {
+            get {
+                return ResourceManager.GetString("PaginaAcuseRecibo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a http://habilitacion.mifacturaenlinea.com.co.
         /// </summary>
-        internal static string RutaAccesoPlataforma {
+        public static string RutaAccesoPlataforma {
             get {
                 return ResourceManager.GetString("RutaAccesoPlataforma", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a http://habilitacion.mifacturaenlinea.com.co/pages/facturae/AcuseRecibo.aspx?id={cod_seguridad}.
-        /// </summary>
-        internal static string RutaAcuse {
-            get {
-                return ResourceManager.GetString("RutaAcuse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a http://habilitacion.mifacturaenlinea.com.co/pages/usuarios/RestablecerContrasena.aspx?id={cod_seguridad}.
         /// </summary>
-        internal static string RutaCambioContraseña {
+        public static string RutaCambioContraseña {
             get {
                 return ResourceManager.GetString("RutaCambioContraseña", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_documento_acuse.html.
         /// </summary>
-        internal static string RutaPlantillaAcuse {
+        public static string RutaPlantillaAcuse {
             get {
                 return ResourceManager.GetString("RutaPlantillaAcuse", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_bienvenida_adquiriente.html.
         /// </summary>
-        internal static string RutaPlantillaBienvenidaAdquiriente {
+        public static string RutaPlantillaBienvenidaAdquiriente {
             get {
                 return ResourceManager.GetString("RutaPlantillaBienvenidaAdquiriente", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_bienvenida_facturador.html.
         /// </summary>
-        internal static string RutaPlantillaBienvenidaObligado {
+        public static string RutaPlantillaBienvenidaObligado {
             get {
                 return ResourceManager.GetString("RutaPlantillaBienvenidaObligado", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_documento.html.
         /// </summary>
-        internal static string RutaPlantillaHtmlDocumentos {
+        public static string RutaPlantillaHtmlDocumentos {
             get {
                 return ResourceManager.GetString("RutaPlantillaHtmlDocumentos", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_restablecer_clave.html.
         /// </summary>
-        internal static string RutaPlantillaRestablecer {
+        public static string RutaPlantillaRestablecer {
             get {
                 return ResourceManager.GetString("RutaPlantillaRestablecer", resourceCulture);
             }
