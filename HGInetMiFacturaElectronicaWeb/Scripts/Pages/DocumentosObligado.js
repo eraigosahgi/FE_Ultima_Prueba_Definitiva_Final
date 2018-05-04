@@ -1,15 +1,18 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-var DemoApp = angular.module('DocAdquirienteApp', ['dx']);
-DemoApp.controller('DocAdquirienteController', function DemoController($scope, $http, $location) {
+
+var DemoApp = angular.module('DocObligadoApp', ['dx']);
+DemoApp.controller('DocObligadoController', function DemoController($scope, $http, $location) {
 
     var now = new Date();
 
-    var codigo_adquiente = "1152708377",
+    var codigo_facturador = "811021438",
            numero_documento = "",
+           estado_dian = "",
            estado_recibo = "",
            fecha_inicio = "",
-           fecha_fin = "";
+           fecha_fin = "",
+           codigo_adquiriente = "";
 
     //Define los campos y las opciones
     $scope.filtros =
@@ -32,12 +35,26 @@ DemoApp.controller('DocAdquirienteController', function DemoController($scope, $
                     console.log("FechaFinal", new Date(data.value).toISOString());
                     fecha_fin = new Date(data.value).toISOString();
                 }
+            }, EstadoDian: {
+                searchEnabled: true,
+                //Carga la data del control
+                dataSource: new DevExpress.data.ArrayStore({
+                    data: items_dian,
+                    key: "ID"
+                }),
+                displayExpr: "Texto",
+                Enabled: true,
+                placeholder: "Seleccione un Item",
+                onValueChanged: function (data) {
+                    console.log("EstadoDian", data.value.id);
+                    estado_dian = data.value.id;
+                }
             },
             EstadoRecibo: {
                 searchEnabled: true,
                 //Carga la data del control
                 dataSource: new DevExpress.data.ArrayStore({
-                    data: items,
+                    data: items_recibo,
                     key: "ID"
                 }),
                 displayExpr: "Texto",
@@ -53,6 +70,13 @@ DemoApp.controller('DocAdquirienteController', function DemoController($scope, $
                 onValueChanged: function (data) {
                     console.log("NumeroDocumento", data.value);
                     numero_documento = data.value;
+                }
+            },
+            Adquiriente: {
+                placeholder: "Ingrese Identificación del Adquiriente",
+                onValueChanged: function (data) {
+                    console.log("Adquiriente", data.value);
+                    codigo_adquiriente = data.value;
                 }
             }
         }
@@ -72,12 +96,12 @@ DemoApp.controller('DocAdquirienteController', function DemoController($scope, $
             if (fecha_fin == "")
                 fecha_fin = now.toISOString();
 
-            console.log("FILTROS DE BÚSQUEDA:\n" + "codigo_adquiente:", codigo_adquiente, "\nnumero_documento:", numero_documento, "\nestado_recibo:", estado_recibo, "\nfecha_inicio:", fecha_inicio, "\nfecha_fin:", fecha_fin);
+            console.log("FILTROS DE BÚSQUEDA:\n" + "codigo_adquiriente:", codigo_adquiriente, "\nnumero_documento:", numero_documento, "\nestado_recibo:", estado_recibo, "\nfecha_inicio:", fecha_inicio, "\nfecha_fin:", fecha_fin);
 
             //Obtiene los datos del web api
             //ControladorApi: /Api/Documentos/
-            //Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
-            $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+            //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
+            $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
 
                 console.log("Ingresó a cargar la data.");
 
@@ -128,12 +152,12 @@ DemoApp.controller('DocAdquirienteController', function DemoController($scope, $
                             dataField: "IntVlrTotal"
                         },
                          {
-                             caption: "Identificación Facturador",
-                             dataField: "IdentificacionFacturador"
+                             caption: "Identificación Adquiriente",
+                             dataField: "IdentificacionAdquiriente"
                          },
                           {
-                              caption: "Nombre Facturador",
-                              dataField: "NombreFacturador"
+                              caption: "Nombre Adquiriente",
+                              dataField: "NombreAdquiriente"
                           },
                           {
                               caption: "Estado",
@@ -151,7 +175,7 @@ DemoApp.controller('DocAdquirienteController', function DemoController($scope, $
                               dataField: "",
                               cellTemplate: function (container, options) {
                                   $("<div>")
-                                      .append($("<a target='_blank' href='" + options.data.RutaAcuse + "'>Acuse</a>"))
+                                      .append($("<a target='_blank' class='icon-envelop3' href='http://app.mifacturaenlinea.com.co/pages/facturae/AcuseRecibo.aspx?id=" + options.data.StrIdSeguridad + "'></a>"))
                                       .appendTo(container);
                               }
                           }
@@ -171,7 +195,15 @@ DemoApp.controller('DocAdquirienteController', function DemoController($scope, $
 });
 
 //Datos del control EstadoRecibo.
-var items =
+var items_recibo =
+    [
+    { ID: "*", Texto: 'Obtener Todos' },
+    { ID: "0", Texto: 'Pendiente' },
+    { ID: "1", Texto: 'Aprobado' },
+    { ID: "2", Texto: 'Rechazado' }
+    ];
+
+var items_dian =
     [
     { ID: "*", Texto: 'Obtener Todos' },
     { ID: "0", Texto: 'Pendiente' },

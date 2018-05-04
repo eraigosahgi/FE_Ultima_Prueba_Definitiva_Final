@@ -1,4 +1,6 @@
-﻿using HGInetMiFacturaElectonicaController.Registros;
+﻿using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaController.Registros;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
@@ -13,10 +15,20 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
     public class DocumentosController : ApiController
     {
-
+        /// <summary>
+        /// Obtiene los documentos por adquiriente
+        /// </summary>
+        /// <param name="codigo_adquiente"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
         public IHttpActionResult Get(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
+
+            PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
             List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasAdquiriente(codigo_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date);
 
@@ -34,6 +46,50 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 NombreFacturador = d.TblEmpresas.StrRazonSocial,
                 d.StrUrlArchivoPdf,
                 d.StrUrlArchivoUbl,
+                d.StrIdSeguridad,
+                RutaPublica = plataforma.RutaPublica,
+                RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+            });
+
+            if (datos == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Obtiene los documentos por obligado
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="codigo_adquiriente"></param>
+        /// <param name="estado_dian"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        {
+            Ctl_Documento ctl_documento = new Ctl_Documento();
+
+            List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin);
+
+            var retorno = datos.Select(d => new
+            {
+                NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                d.DatFechaDocumento,
+                d.DatFechaVencDocumento,
+                d.IntVlrTotal,
+                EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+                EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "N/A",
+                d.StrAdquirienteMvoRechazo,
+                IdentificacionAdquiriente = d.TblEmpresas1.StrIdentificacion,
+                NombreAdquiriente = d.TblEmpresas1.StrRazonSocial,
+                d.StrUrlArchivoPdf,
+                d.StrUrlArchivoUbl,
                 d.StrIdSeguridad
             });
 
@@ -45,7 +101,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             return Ok(retorno);
         }
 
-
+        /// <summary>
+        /// Obtiene el documento por ID de seguridad.
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <returns></returns>
         public IHttpActionResult Get(System.Guid id_seguridad)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
