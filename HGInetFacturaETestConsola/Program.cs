@@ -20,16 +20,80 @@ namespace HGInetFacturaETestConsola
 
                 DateTime fecha = DateTime.Now;
 
-                string url_ws_consulta = "http://facturaelectronica.dian.gov.co/habilitacion/B2BIntegrationEngine/FacturaElectronica/consultaDocumentos.wsdl";
+                string url_ws_consulta = "https://facturaelectronica.dian.gov.co/habilitacion/B2BIntegrationEngine/FacturaElectronica/consultaDocumentos.wsdl";
                 string id_software = "606f5740-c6b9-494f-931c-5a6b3e22d72c";
                 string clave = "Prueba2018";
                 string nit_facturador = "811021438";
-                string cufe = "c25cbb4eef8b3135375756347153855d52dd389e";
+                string cufe = "66535b95ced25329480369470cab595e31a08241";
                 string prefijo = "";
-                string documento = "990000381";
-                DateTime fecha_documento = new DateTime(2018, 4, 30);
+                string documento = "990000410";
+                DateTime fecha_documento = new DateTime(2018, 5, 3);
 
-                Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), id_software, clave, 1, prefijo, documento, nit_facturador, fecha_documento, cufe, url_ws_consulta, Directorio.ObtenerDirectorioRaiz());
+
+                // error documento duplicado
+                documento = "990000371";
+                cufe = "2b517089694b8c5df3d45012907a29a1305604a7";
+                prefijo = "";
+                fecha_documento = new DateTime(2018, 4, 24);
+
+
+                // error documento duplicado con prefijo
+                documento = "980000036";
+                cufe = "0559e058645a442416b85733c1d20b49c778540c";
+                prefijo = "PRUE";
+                fecha_documento = new DateTime(2018, 4, 10);
+
+                // error documento cufe incorrecto
+                documento = "990000348";
+                cufe = "ba12f6a59c07ed5c168d74418fbf5a2eafcc21c0";
+                prefijo = "";
+                fecha_documento = new DateTime(2018, 4, 10);
+
+                
+                // documento correcto
+                documento = "990000396";
+                cufe = "1de20e628084240a92f19d6019d92cd711dfe782";
+                prefijo = "";
+                fecha_documento = new DateTime(2018, 5, 1);
+
+                // documento inexistente
+                documento = "396";
+                cufe = "1de20e628084240a92f19d6019d92cd711dfe782";
+                prefijo = "";
+                fecha_documento = new DateTime(2018, 5, 1);
+
+
+
+                // error documento fuera de los terminos
+                documento = "980000036";
+                cufe = "0559e058645a442416b85733c1d20b49c778540c";
+                prefijo = "PRUE";
+                fecha_documento = new DateTime(2018, 4, 6);
+
+
+
+
+
+                // carpeta del xml
+                string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_facturador);
+                carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+
+                // valida la existencia de la carpeta
+                carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
+
+                // ruta del xml
+                string archivo_xml = string.Format(@"{0}{1}.xml", prefijo, documento);
+
+                // ruta del xml
+                string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
+
+                // elimina el archivo xml si existe
+                if (Archivo.ValidarExistencia(ruta_xml))
+                    Archivo.Borrar(ruta_xml);
+
+                HGInetDIANServicios.DianResultadoTransacciones.DocumentosRecibidos resultado = Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), id_software, clave, 1, prefijo, documento, nit_facturador, fecha_documento, cufe, url_ws_consulta, ruta_xml);
+
+                ConsultaDocumento resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
 
                 //PruebaCufe();
 
