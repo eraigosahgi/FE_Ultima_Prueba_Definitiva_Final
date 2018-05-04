@@ -48,6 +48,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             tbl_usuario.DatFechaActualizacion = Fecha.GetFecha();
             tbl_usuario.IntIdEstado = 1;
             tbl_usuario.StrIdSeguridad = Guid.NewGuid();
+			tbl_usuario.StrIdCambioClave = Guid.NewGuid();
 
             // agrega el usuario en la base de datos
             tbl_usuario = Crear(tbl_usuario);

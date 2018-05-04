@@ -353,6 +353,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 doc.IntAdquirienteRecibo = estado;
                 doc.StrAdquirienteMvoRechazo = motivo_rechazo;
                 doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+				doc.IntIdEstado = 9;
 
                 Actualizar(doc);
 

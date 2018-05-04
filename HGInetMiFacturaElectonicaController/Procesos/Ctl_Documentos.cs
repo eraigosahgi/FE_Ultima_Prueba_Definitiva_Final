@@ -222,7 +222,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						TblUsuarios usuarioBd = null;
 
 						bool adquiriente_nuevo = false;
-						
+
 
 
 						//Validacion de Adquiriente y usuario
@@ -361,21 +361,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.FechaUltimoProceso = fecha_actual;
 							respuesta.IdProceso = 5;
 
-                            // obtiene la información de configuración del certificado digital
-                            CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
+							// obtiene la información de configuración del certificado digital
+							CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
 
-                            // obtiene la empresa certificadora
-                            EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
+							// obtiene la empresa certificadora
+							EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
 
-                            if (certificado.Certificadora.Equals("andes"))
-                                empresa_certificadora = EnumCertificadoras.Andes;
-                            else if (certificado.Certificadora.Equals("gse"))
-                                empresa_certificadora = EnumCertificadoras.Gse;
+							if (certificado.Certificadora.Equals("andes"))
+								empresa_certificadora = EnumCertificadoras.Andes;
+							else if (certificado.Certificadora.Equals("gse"))
+								empresa_certificadora = EnumCertificadoras.Gse;
 
-                            // información del certificado digital
-                            string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
+							// información del certificado digital
+							string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
 							documento_result = Ctl_Firma.Generar(ruta_certificado, certificado.Serial, certificado.Clave, empresa_certificadora, documento_result);
-                            
+
 							//Actualiza Documento en Base de Datos
 							documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
 							documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
@@ -450,34 +450,133 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						documento_tmp.Actualizar(documentoBd);
 
-						// se indica la respuesta de la DIAN
-						respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
-						respuesta.Error.Codigo = LibreriaGlobalHGInet.Error.CodigoError.OK;
-						respuesta.Error.Fecha = fecha_actual;
-
-						string detalle_dian = string.Empty;
-
-						if (acuse.ReceivedInvoice != null)
-							detalle_dian = acuse.ReceivedInvoice.Comments;
-
-
-						if (string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
-							respuesta.Error.Mensaje = "ninguno.";
-
-						respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}. Detalles: {4}", acuse.ResponseDateTime, acuse.Response, acuse.Comments, detalle_dian, respuesta.Error.Mensaje);
-
-						//Envio de mail
-						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-
-						//Si es nuevo en la Plataforma envia informacion
-						if (adquiriente_nuevo == true)
+						//Valida estado del documento en la Plataforma de la DIAN
+						try
 						{
+							string IdSoftware = null;
+							string PinSoftware = null;
+							string clave = null;
+							string url_ws_consulta = null;
 
-							email.Bienvenida(adquirienteBd, usuarioBd);
+							// carpeta del xml
+							string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), documento_obj.DatosObligado.Identificacion);
+							carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+
+							// valida la existencia de la carpeta
+							carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
+
+							// ruta del xml
+							string archivo_xml = string.Format(@"{0}{1}.xml", prefijo, documento);
+
+							// ruta del xml
+							string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
+
+							// elimina el archivo xml si existe
+							if (Archivo.ValidarExistencia(ruta_xml))
+								Archivo.Borrar(ruta_xml);
+
+							// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
+							if (empresa.IntHabilitacion < 99)
+							{
+								// obtiene los datos de prueba del proveedor tecnológico de la DIAN
+								DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
+
+								IdSoftware = data_dian_habilitacion.IdSoftware;
+								PinSoftware = data_dian_habilitacion.Pin;
+								clave = data_dian_habilitacion.ClaveAmbiente;
+								url_ws_consulta = data_dian_habilitacion.UrlWSConsultaTransacciones;
+							}
+							else
+							{
+								// obtiene los datos del proveedor tecnológico de la DIAN
+								DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
+
+								IdSoftware = data_dian.IdSoftware;
+								PinSoftware = data_dian.Pin;
+								clave = data_dian.ClaveAmbiente;
+								url_ws_consulta = data_dian.UrlWSConsultaTransacciones;
+							}
+
+
+							HGInetDIANServicios.DianResultadoTransacciones.DocumentosRecibidos resultado = Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), IdSoftware, clave, documentoBd.IntDocTipo, documentoBd.StrPrefijo, documentoBd.IntNumero.ToString(), documento_obj.DatosObligado.Identificacion, documentoBd.DatFechaDocumento, documentoBd.StrCufe, url_ws_consulta, ruta_xml);
+
+							ConsultaDocumento resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
+
+							string detalle_dian = string.Empty;
+
+							if (!resultado_doc.DocumentoCorrecto)
+							{
+								// se indica la respuesta de la DIAN
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
+								respuesta.Error.Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION;
+								respuesta.Error.Fecha = fecha_actual;
+
+								detalle_dian = string.Empty;
+
+								if (acuse.ReceivedInvoice != null)
+									detalle_dian = acuse.ReceivedInvoice.Comments;
+
+
+								if (string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
+									respuesta.Error.Mensaje = "ninguno.";
+
+								respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}. Detalles: {4}", acuse.ResponseDateTime, acuse.Response, acuse.Comments, detalle_dian, respuesta.Error.Mensaje);
+
+							}
+							else
+							{
+								// se indica la respuesta de la DIAN
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
+								respuesta.Error.Codigo = LibreriaGlobalHGInet.Error.CodigoError.OK;
+								respuesta.Error.Fecha = fecha_actual;
+
+
+								respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} ", resultado_doc.EstadoDianDescripcion, resultado_doc.EstadoDian);
+
+								//Envio de mail
+								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+								try
+								{
+									fecha_actual = Fecha.GetFecha();
+									respuesta.DescripcionProceso = "Envío correo adquiriente.";
+									respuesta.FechaUltimoProceso = fecha_actual;
+									respuesta.IdProceso = 8;
+
+									//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
+									if (adquiriente_nuevo == true)
+									{
+
+										email.Bienvenida(adquirienteBd, usuarioBd);
+									}
+
+									//envío de los documentos al Adquiriente
+									email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono);
+
+									//Actualiza Documento en Base de Datos
+									documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+									documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+									documento_tmp.Actualizar(documentoBd);
+								}
+								catch (Exception excepcion)
+								{
+									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente.. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+
+									throw excepcion;
+
+								}
+
+							}
+
 						}
+						catch (Exception excepcion)
+						{
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la consulta del estado del documento en la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
-						//envío de los documentos al Adquiriente
-						email.NotificacionDocumento(documentoBd);
+							throw excepcion;
+
+						}
+						
 
 					}
 

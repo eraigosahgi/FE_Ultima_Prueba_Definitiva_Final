@@ -129,13 +129,13 @@
     <value>/Views/Pages/AcuseRecibo.aspx?id_seguridad={id_seguridad}</value>
     <comment>Ruta de redirección página de acuse recibo (adquiriente factura)</comment>
   </data>
+  <data name="PaginaRestablecerClave" xml:space="preserve">
+    <value>/Views/Login/RestablecerClave.aspx?id_seguridad={id_seguridad}</value>
+    <comment>Ruta de redireccion página restablecer contraseña</comment>
+  </data>
   <data name="RutaAccesoPlataforma" xml:space="preserve">
     <value>http://habilitacion.mifacturaenlinea.com.co</value>
     <comment>Ruta de eacceso a la plataforma web.</comment>
-  </data>
-  <data name="RutaCambioContraseña" xml:space="preserve">
-    <value>http://habilitacion.mifacturaenlinea.com.co/pages/usuarios/RestablecerContrasena.aspx?id={cod_seguridad}</value>
-    <comment>Ruta de redireccion página restablecer contraseña</comment>
   </data>
   <data name="RutaPlantillaAcuse" xml:space="preserve">
     <value>emails\\plantilla_documento_acuse.html</value>

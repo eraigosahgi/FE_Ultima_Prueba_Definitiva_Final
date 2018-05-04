@@ -88,20 +88,20 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a /Views/Login/RestablecerClave.aspx?id_seguridad={id_seguridad}.
+        /// </summary>
+        public static string PaginaRestablecerClave {
+            get {
+                return ResourceManager.GetString("PaginaRestablecerClave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a http://habilitacion.mifacturaenlinea.com.co.
         /// </summary>
         public static string RutaAccesoPlataforma {
             get {
                 return ResourceManager.GetString("RutaAccesoPlataforma", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a http://habilitacion.mifacturaenlinea.com.co/pages/usuarios/RestablecerContrasena.aspx?id={cod_seguridad}.
-        /// </summary>
-        public static string RutaCambioContraseña {
-            get {
-                return ResourceManager.GetString("RutaCambioContraseña", resourceCulture);
             }
         }
         

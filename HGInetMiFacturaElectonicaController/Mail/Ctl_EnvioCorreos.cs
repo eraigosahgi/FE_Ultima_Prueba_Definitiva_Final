@@ -147,6 +147,7 @@ namespace HGInetMiFacturaElectonicaController
 
 			try
 			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				string fileName = string.Empty;
 
@@ -173,8 +174,8 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
 						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
-						mensaje = mensaje.Replace("{RutaUrl}", Constantes.RutaCambioContraseña.Replace("{cod_seguridad}", usuario.StrIdCambioClave.ToString()));
-						mensaje = mensaje.Replace("{RutaAcceso}", Constantes.RutaAccesoPlataforma);
+						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClave.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
 						string asunto = "Acceso Plataforma Facturación Electrónica";
 
@@ -223,11 +224,13 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="archivos">archivos de envio</param>
 		/// <param name="obj_respuesta">datos del objeto de respuesta</param>
 		/// <returns></returns>
-		public bool NotificacionDocumento(TblDocumentos documento)
+		public bool NotificacionDocumento(TblDocumentos documento, string telefono)
 		{
 
 			try
 			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
 				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaHtmlDocumentos);
 
 				string asunto = "Factura Electrónica";
@@ -275,9 +278,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NombreFacturador}", empresa_obligado.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
 						mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMail);
-
-						//validar como llevar el telefono
-						mensaje = mensaje.Replace("{TelefonoFacturador}", empresa_obligado.StrMail);
+						mensaje = mensaje.Replace("{TelefonoFacturador}", telefono);
 
 						// Datos del Tercero
 						mensaje = mensaje.Replace("{NombreTercero}", empresa_adquiriente.StrRazonSocial);
@@ -321,7 +322,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{TotalDocumento}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
 						mensaje = mensaje.Replace("{EstadoDianDocumento}", estado_factura);
 
-						mensaje = mensaje.Replace("{RutaUrl}", Properties.Constantes.PaginaAcuseRecibo.Replace("{cod_seguridad}", documento.StrIdSeguridad.ToString()));
+						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", documento.StrIdSeguridad.ToString())));
 
 
 						List<Adjunto> archivos = new List<Adjunto>();
@@ -386,6 +387,7 @@ namespace HGInetMiFacturaElectonicaController
 
 			try
 			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				if (empresa == null)
 					throw new ApplicationException(string.Format("No se encontró información del Nit {0} ", empresa.StrIdentificacion));
@@ -409,8 +411,8 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NombresUsuario}", usuario.StrNombres);
 						mensaje = mensaje.Replace("{ApellidosUsuario}", usuario.StrApellidos);
 						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
-						mensaje = mensaje.Replace("{RutaUrl}", Constantes.RutaCambioContraseña.Replace("{cod_seguridad}", usuario.StrIdCambioClave.ToString()));
-						mensaje = mensaje.Replace("{RutaAcceso}", Constantes.RutaAccesoPlataforma);
+						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClave.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
 						string asunto = "Restablecimiento de Contraseña";
 
@@ -457,7 +459,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// </summary>
 		/// <param name="documento">Datos del documento</param>
 		/// <returns></returns>
-		public bool RespuestaAcuse(TblDocumentos documento)
+		public bool RespuestaAcuse(TblDocumentos documento, string telefono)
 		{
 			try
 			{
@@ -495,9 +497,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NombreFacturador}", documento.TblEmpresas.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitFacturador}", documento.TblEmpresas.StrIdentificacion);
 						mensaje = mensaje.Replace("{EmailFacturador}", documento.TblEmpresas.StrMail);
-
-						//Validar como llevar el telefono del facturador
-						mensaje = mensaje.Replace("{TelefonoFacturador}", documento.TblEmpresas.StrMail);
+						mensaje = mensaje.Replace("{TelefonoFacturador}", telefono);
 
 						// Datos del Tercero
 						mensaje = mensaje.Replace("{NombreTercero}", documento.TblEmpresas1.StrRazonSocial);
