@@ -118,7 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Constantes.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Constantes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

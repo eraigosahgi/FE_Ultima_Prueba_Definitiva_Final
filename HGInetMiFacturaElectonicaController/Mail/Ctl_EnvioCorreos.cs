@@ -321,7 +321,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{TotalDocumento}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
 						mensaje = mensaje.Replace("{EstadoDianDocumento}", estado_factura);
 
-						mensaje = mensaje.Replace("{RutaUrl}", Properties.Constantes.RutaAcuse.Replace("{cod_seguridad}", documento.StrIdSeguridad.ToString()));
+						mensaje = mensaje.Replace("{RutaUrl}", Properties.Constantes.PaginaAcuseRecibo.Replace("{cod_seguridad}", documento.StrIdSeguridad.ToString()));
 
 
 						List<Adjunto> archivos = new List<Adjunto>();

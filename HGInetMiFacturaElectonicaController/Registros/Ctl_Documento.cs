@@ -212,7 +212,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="codigo_adquiente"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
         public List<TblDocumentos> ObtenerPorFechasAdquiriente(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
 
@@ -240,6 +248,59 @@ namespace HGInetMiFacturaElectonicaController.Registros
                              select datos).ToList();
 
             return respuesta;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="codigo_tercero"></param>
+        /// <param name="estado_dian"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        public List<TblDocumentos> ObtenerPorFechasObligado(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        {
+
+            int num_doc = -1;
+            int.TryParse(numero_documento, out num_doc);
+
+            short cod_estado_dian = -1;
+            short.TryParse(estado_dian, out cod_estado_dian);
+
+            short cod_estado_recibo = -1;
+            short.TryParse(estado_recibo, out cod_estado_recibo);
+
+            if (string.IsNullOrWhiteSpace(numero_documento))
+                numero_documento = "*";
+            if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+                codigo_adquiriente = "*";
+            if (string.IsNullOrWhiteSpace(estado_dian))
+                estado_dian = "*";
+            if (string.IsNullOrWhiteSpace(estado_recibo))
+                estado_recibo = "*";
+
+            if (estado_dian.Equals("3"))
+                estado_dian = "2,3";
+
+            List<string> estados = Coleccion.ConvertirLista(estado_dian);
+
+
+            List<TblDocumentos> documentos = (from datos in context.TblDocumentos
+                                              join obligado in context.TblEmpresas on datos.IntIdEmpresa equals obligado.IntId
+                                              join adquiriente in context.TblEmpresas on datos.IntIdEmpresaAdquiriente equals adquiriente.IntId
+                                              where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+                                            && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+                                            && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+                                            && (estados.Contains(datos.IntAdquirienteRecibo.ToString()) || estado_dian.Equals("*"))
+                                            && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+                                            && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
+                                              orderby datos.IntNumero descending
+                                              select datos).ToList();
+
+            return documentos;
         }
 
         /// <summary>
