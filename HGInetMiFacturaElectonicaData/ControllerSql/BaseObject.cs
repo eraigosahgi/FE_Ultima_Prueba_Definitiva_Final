@@ -31,7 +31,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 		/// </summary>
 		public BaseObject()
 		{
-			DataBaseServer server_bd = new DataBaseServer();
+			DataBaseServer server_bd = HgiConfiguracion.GetConfiguration().DataBaseServer;
 			
 			if (this.context == null)
 				setBaseObject(server_bd.Servidor, server_bd.BaseDatos, server_bd.Usuario, server_bd.Clave);
