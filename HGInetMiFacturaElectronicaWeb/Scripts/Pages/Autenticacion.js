@@ -3,7 +3,7 @@
 
 var AutenticacionApp = angular.module('AutenticacionApp', ['dx']);
 AutenticacionApp.controller('AutenticacionController', function AutenticacionController($scope, $http, $location) {
-
+   
     var dato_identificacion = "",
     dato_usuario = "",
     dato_contrasena = "";
@@ -111,3 +111,115 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
 });
 
+
+//Controlador para Restablecer Contraseña
+//ControladorApi: /Api/Usuario/
+//Datos PUT: codigo_empresa - codigo_usuario 
+AutenticacionApp.controller('RestablecerController', function RestController($scope, $http, $location) {
+  
+    $scope.formOptions2 = {
+
+        readOnly: false,
+        showColonAfterLabel: true,
+        showValidationSummary: true,
+        validationGroup: "DatosRestablecer",
+        onInitialized: function (e) {
+            formInstance = e.component;
+        },
+        items: [{
+            itemType: "group",
+            items: [
+                {
+                    dataField: "TextBoxDocIdentificacion",
+                    editorType: "dxTextBox",
+                    label: {
+                        text: "Documento Identificación"
+                    },
+                    validationRules: [{
+                        type: "required",
+                        message: "El documento de identificación es requerido."
+                    }, {
+                        //Valida que el campo solo contenga números
+                        type: "pattern",
+                        pattern: "^[0-9]+$",
+                        message: "El campo no debe contener letras ni caracteres especiales."
+                    }]
+                },
+                {
+                    dataField: "TextBoxUsuario",
+                    editorType: "dxTextBox",
+                    label: {
+                        text: "Código de Usuario"
+                    },
+                    validationRules: [{
+                        type: "required",
+                        message: "El Código de Usuario es requerido."
+                    }]
+                }
+            ]
+        }
+
+        ]
+
+    };
+
+
+    //Opciones de botón -  valida el formulario
+    $scope.buttonCerrarRestablecer = {
+        text: "CERRAR"   
+    };
+
+
+    //Opciones de botón -  valida el formulario
+    $scope.buttonRestablecer = {
+        text: "ENVIAR",
+        type: "success",
+        useSubmitBehavior: true,
+        validationGroup: "DatosRestablecer"
+    };
+
+    //Evento del botón.
+    $scope.onFormSubmit = function (e) {
+
+        console.log("Ingresó al evento del botón");
+
+        dato_identificacion = $('input:text[name=TextBoxDocIdentificacion]').val();
+        dato_usuario = $('input:text[name=TextBoxUsuario]').val();
+
+        //aqui doy valor a los parametros que van al webapi
+        var data = $.param({
+            codigo_empresa: dato_identificacion,
+            codigo_usuario: dato_usuario
+        });
+        console.log("Identificación:", dato_identificacion, " Usuario:", dato_usuario);
+
+        //Obtiene los datos del web api
+        //ControladorApi: /Api/Usuario/
+        //Datos GET: codigo_empresa - codigo_usuario - clave
+        $http.put('/Api/Usuario?' + data).then(function (response) {
+            //var respuesta = response.data;
+
+          swal({    title: 'Solicitud Éxitosa',
+                    text: 'Se ha enviado un e-mail para el restablecimiento de contraseña',
+                    type: 'success',
+                    confirmButtonColor: '#66BB6A',
+                    confirmButtonText: 'Aceptar',
+                    animation: 'pop',
+                    html: true,
+                });
+            //swal("Solicitud Éxitosa", "Se ha enviado un e-mail para el restablecimiento de contraseña " , "success");
+
+            $('input:text[name=TextBoxDocIdentificacion]').val("");
+            $('input:text[name=TextBoxUsuario]').val("");
+            $("#modal_restablecer_clave").removeClass("modal fade in").addClass("modal fade");
+
+            $('.modal-backdrop').remove();
+            
+
+        }, function errorCallback(response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);            
+        });
+        e.preventDefault();
+    };
+
+});

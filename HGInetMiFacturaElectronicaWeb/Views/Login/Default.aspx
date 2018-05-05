@@ -10,6 +10,7 @@
 
     <title>HGInet Facturación Electrónica</title>
 
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- Global stylesheets -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css" />
@@ -53,51 +54,94 @@
 
 </head>
 <body class="login-container" style="background-color: #eeeded">
+    <div ng-app="AutenticacionApp">
+        <!-- Contenedor de Página -->
+        <div class="page-container" ng-controller="AutenticacionController">
 
-    <!-- Contenedor de Página -->
-    <div class="page-container" ng-app="AutenticacionApp" ng-controller="AutenticacionController">
+            <!-- Contenido de Página -->
+            <div class="page-content">
 
-        <!-- Contenido de Página -->
-        <div class="page-content">
+                <!-- Main content -->
+                <div class="content-wrapper">
 
-            <!-- Main content -->
-            <div class="content-wrapper">
+                    <!-- Área de Contenido -->
+                    <div class="content">
 
-                <!-- Área de Contenido -->
-                <div class="content">
+                        <form ng-submit="onFormSubmit($event)">
 
-                    <form ng-submit="onFormSubmit($event)">
-
-                        <div class="panel panel-body login-form widget-container">
-                            <div class="text-center">
-                                <div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>
-                                <h5 class="content-group-lg">Autenticación<small class="display-block">Ingrese los datos de autenticación</small></h5>
-                            </div>
-
-                            <div class="widget-container">
-                                <div id="form" dx-form="formOptions">
+                            <div class="panel panel-body login-form widget-container">
+                                <div class="text-center">
+                                    <div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>
+                                    <h5 class="content-group-lg">Autenticación<small class="display-block">Ingrese los datos de autenticación</small></h5>
                                 </div>
+
+                                <div class="widget-container">
+                                    <div id="form" dx-form="formOptions">
+                                    </div>
+                                </div>
+                                <br />
+                                <a data-toggle="modal" data-target="#modal_restablecer_clave" data-popup="tooltip" title="Restablecer contraseña" style="color: #166dba">
+                                    <h6>Restablecer contraseña</h6>
+                                </a>
+                                <br />
+                                <div dx-button="buttonOptions"></div>
+
+
+
                             </div>
-                            <br />
-                            <div dx-button="buttonOptions"></div>
 
-                        </div>
+                        </form>
 
-                    </form>
+                        <!-- /Formulario Autenticación -->
 
-                    <!-- /Formulario Autenticación -->
+                    </div>
+                    <!-- /Área de Contenido -->
 
                 </div>
-                <!-- /Área de Contenido -->
+                <!-- /main content -->
 
             </div>
-            <!-- /main content -->
+            <!-- /Contenido de Página -->
 
         </div>
-        <!-- /Contenido de Página -->
+        <!-- /Contenedor de Página -->
+        <%--Modal Restablecer Contraseña--%>
+        <form ng-submit="onFormSubmit($event)" ng-controller="RestablecerController">
+            <div id="modal_restablecer_clave" class="modal fade" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div id="EncabezadoModal" class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h5 style="margin-bottom: 10px" class="modal-title">Restablecer Contraseña</h5>
+                        </div>
 
+                        <div class="modal-body" >
+
+                            <div class="col-md-8 col-md-offset-2">
+
+                                <div id="formulario" class="row">
+
+
+                                    <div id="formvalidar" dx-form="formOptions2">
+                                    </div>
+
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="divsombra" class="modal-footer" style="margin-top: 22%">
+                            <div dx-button="buttonCerrarRestablecer" data-dismiss="modal"></div>
+                            <div dx-button="buttonRestablecer"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
     </div>
-    <!-- /Contenedor de Página -->
-
+    </form>
+    <%--/ Modal Restablecer Contraseña--%>
 </body>
 </html>

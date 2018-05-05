@@ -1835,6 +1835,7 @@
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
+    <Content Include="Scripts\Pages\RestablecerClave.js" />
     <Content Include="Views\Demos\Demo.aspx" />
     <Content Include="Views\Demos\Demos.aspx" />
     <Content Include="Global.asax" />
@@ -2820,7 +2821,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61428/</IISUrl>
+          <IISUrl>http://localhost:61430/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

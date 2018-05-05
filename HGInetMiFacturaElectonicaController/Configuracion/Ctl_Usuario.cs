@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
+using HGInetMiFacturaElectonicaData.ModeloServicio.General;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -85,5 +88,119 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
         #endregion
 
+        #region Validar documento y usuario para restablecer
+        public bool ValidarExistenciaRestablecer(string codigo_empresa, string codigo_usuario)
+        {
+            try
+            {                
+                var respuesta = from usuario in context.TblUsuarios
+                                join empresa in context.TblEmpresas on usuario.IntIdEmpresa equals empresa.IntId
+                                where empresa.StrIdentificacion.Equals(codigo_empresa)
+                                && usuario.StrUsuario.Equals(codigo_usuario)
+                                select usuario;
+
+
+                if (!respuesta.Any())
+                    return false;
+
+                TblUsuarios usuarioRestablecer = respuesta.FirstOrDefault();
+                                
+                usuarioRestablecer.DatFechaCambioClave = Fecha.GetFecha();
+                usuarioRestablecer.StrIdCambioClave = Guid.NewGuid();
+                Actualizar_usuario(usuarioRestablecer);
+
+                TblEmpresas Empresas = (from  empresa in context.TblEmpresas
+                                where empresa.StrIdentificacion.Equals(codigo_empresa)                                
+                                select empresa).FirstOrDefault() ;
+
+                //Aqui debo enviar el correo a usuarioRestablecer.StrMail
+                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+                      
+                Email.RestablecerClave(Empresas,usuarioRestablecer);
+
+                return true;
+            }
+            catch (Exception excepcion)
+            {
+
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+        #endregion
+
+        #region Cambio de Clave
+        public bool RestablecerClave(System.Guid IdSeguridad, string clave)
+        {
+            try
+            {
+                TblUsuarios datos = (from item in context.TblUsuarios
+                                     where item.StrIdCambioClave == IdSeguridad
+                                     select item).FirstOrDefault();
+                if (datos != null)
+                {
+
+                    if (!(datos.DatFechaCambioClave.Value.AddHours(24.0) >= Fecha.GetFecha()))
+                    {
+                        throw new ApplicationException("El ID de seguridad ha expirado; por favor realice el proceso de recuperación de contraseña nuevamente.");
+                    }
+
+
+                    clave = LibreriaGlobalHGInet.General.Encriptar.Encriptar_MD5(clave);
+
+                    datos.StrClave = clave;
+                    datos.DatFechaCambioClave = Fecha.GetFecha();
+                    datos.StrIdCambioClave= Guid.NewGuid();
+                    Actualizar_usuario(datos);
+                    return true;
+                }
+                else
+                {
+                    throw new ApplicationException("Id de seguridad incorrecto.");
+                }
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException("Id de seguridad incorrecto.", excepcion.InnerException);
+            }
+        }
+
+        public bool ValidarIdSeguridad(System.Guid IdSeguridad)
+        {
+            try
+            {
+                TblUsuarios datos = (from item in context.TblUsuarios
+                                     where item.StrIdCambioClave == IdSeguridad
+                                     select item).FirstOrDefault();
+                if (datos != null)
+                {
+                    if (!(datos.DatFechaCambioClave.Value.AddHours(24.0) >= Fecha.GetFecha()))
+                    {
+                        throw new ApplicationException("El ID de seguridad ha expirado; por favor realice el proceso de recuperación de contraseña nuevamente.");
+                    }
+                    return true;
+                }
+                else
+                {
+                    throw new ApplicationException("Id de seguridad incorrecto.");
+                }
+            }
+            catch (ApplicationException excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+        #endregion
+
+        #region Actualizar TblUsuarios        
+        public TblUsuarios Actualizar_usuario(TblUsuarios usuario)
+        {
+            usuario = this.Update(usuario);
+
+            return usuario;
+
+        }
+        #endregion
     }
 }

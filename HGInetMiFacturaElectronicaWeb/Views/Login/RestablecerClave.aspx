@@ -8,8 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>HGInet Facturación Electrónica</title>
-
+    <title>HGInet Facturación Electrónica</title>    
+    <%--Se debe copiar el archivo al proyecto--%>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- Global stylesheets -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css" />
@@ -30,9 +31,9 @@
     <script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/styling/uniform.min.js"></script>
 
     <script type="text/javascript" src="../../Scripts/assets/js/core/app.js"></script>
-    <script type="text/javascript" src="../../Scripts/assets/js/pages/login.js"></script>
+    <%--<script type="text/javascript" src="../../Scripts/assets/js/pages/login.js"></script>--%>
 
-    <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/ripple.min.js"></script>
+    <%--<script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/ripple.min.js"></script>--%>
     <!-- /theme JS files -->
 
 
@@ -49,55 +50,68 @@
     <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
     <!-- /DevExtreme -->
 
-    <script src="../../Scripts/Pages/Autenticacion.js"></script>
-
+    <%--<script src="../../Scripts/Pages/Autenticacion.js"></script>--%>
+    <script src="../../Scripts/Pages/RestablecerClave.js"></script>
 </head>
 <body class="login-container" style="background-color: #eeeded">
 
-    <!-- Contenedor de Página -->
-    <div class="page-container" ng-app="RestablecerClaveApp" ng-controller="RestablecerClaveController">
+    <div class="demo-container" ng-app="RestablecerClaveApp" ng-controller="RestablecerClaveController">
+        <!-- Contenedor de Página -->
+        <div class="page-container">
 
-        <!-- Contenido de Página -->
-        <div class="page-content">
+            <!-- Contenido de Página -->
+            <div class="page-content">
 
-            <!-- Main content -->
-            <div class="content-wrapper">
+                <!-- Main content -->
+                <div class="content-wrapper">
 
-                <!-- Área de Contenido -->
-                <div class="content">
-
-                    <form ng-submit="onFormSubmit($event)">
-
-                        <div class="panel panel-body login-form widget-container">
-                            <div class="text-center">
-                                <div class="icon-object border-primary-800 text-primary-800"><i class="icon-lock2"></i></div>
-                                <h5 class="content-group-lg">Restablecimiento Contraseña<small class="display-block">Ingrese su nueva contraseña</small></h5>
-                            </div>
-
-                            <div class="widget-container">
-                                <div id="form" dx-form="formOptions">
+                    <!-- Área de Contenido -->
+                    <div class="content" >
+                        <form action="your-action" ng-submit="onFormSubmit($event)" class="ng-pristine ng-valid">
+                            
+                            <div class="panel panel-body login-form widget-container" id="divcontenido">
+                                <div class="text-center">
+                                    <div class="icon-object border-primary-800 text-primary-800"><i class="icon-lock2"></i></div>
+                                    <h5 class="content-group-lg">Restablecimiento de Contraseña</h5>
                                 </div>
+
+                                <div class="widget-container">
+                                    <div id="form" dx-form="formOptions">
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div id="PanelControles" runat="server">
+
+                                    <div dx-button="buttonAceptar"></div>
+                                    <br />
+                                    <br />
+                                </div>
+
                             </div>
-                            <br />
-                            <div dx-button="buttonOptions"></div>
 
-                        </div>
+                            <div class="panel panel-body login-form widget-container" id="divexito" style="display:none">
+                                <div class="text-center">
+                                    <div class="icon-object border-primary-800 text-primary-800"><i class="icon-lock2"></i></div>
+                                    <h5 class="content-group-lg">Cambio de Contraseña exitoso<small class="display-block"><a href="Default.aspx">Por favor ingrese al siguiente link para iniciar sesión</a></small></h5>
+                                </div>
+                                                               
 
-                    </form>
+                            </div>
 
-                    <!-- /Formulario Autenticación -->
+                        </form>
+                        <!-- /Formulario Autenticación -->
+                    </div>
+                    <!-- /Área de Contenido -->
 
                 </div>
-                <!-- /Área de Contenido -->
+                <!-- /main content -->
 
             </div>
-            <!-- /main content -->
+            <!-- /Contenido de Página -->
 
         </div>
-        <!-- /Contenido de Página -->
-
+        <!-- /Contenedor de Página -->
     </div>
-    <!-- /Contenedor de Página -->
-
 </body>
 </html>
