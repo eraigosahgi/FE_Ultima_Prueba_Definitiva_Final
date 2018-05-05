@@ -1,8 +1,8 @@
 ﻿
 
 
-var DemoApp = angular.module('AcuseReciboApp', ['dx']);
-DemoApp.controller('AcuseReciboController', function DemoController($scope, $http) {
+var AcuseReciboApp = angular.module('AcuseReciboApp', ['dx']);
+AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboController($scope, $http) {
 
     var IdSeguridad = location.search.split('id_seguridad=')[1];
     var estado = "";
@@ -13,6 +13,7 @@ DemoApp.controller('AcuseReciboController', function DemoController($scope, $htt
     //Datos GET: id_seguridad
     $http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
         $scope.RespuestaAcuse = response.data;
+        console.log(response.data);
     });
 
     $scope.TextAreaObservaciones = {
@@ -30,6 +31,9 @@ DemoApp.controller('AcuseReciboController', function DemoController($scope, $htt
                 {
                     dataField: "Observaciones",
                     editorType: "dxTextArea",
+                    label: {
+                        text: "Observaciones"
+                    },
                     validationRules: [{
                         type: "required",
                         message: "Las observaciones son requeridas."
@@ -54,19 +58,22 @@ DemoApp.controller('AcuseReciboController', function DemoController($scope, $htt
         text: "Rechazar",
         validationGroup: "ObservacionesAcuse",
         useSubmitBehavior: true,
-        onClick: function (e) {
-            console.log("Entró Rechazar");
-            estado = 2;
-            ActualizarDatos();
-        }
     };
+
+
+    $scope.onFormSubmit = function (e) {
+
+        console.log($('textarea[name=Observaciones]').val());
+
+        motivo_rechazo = $('textarea[name=Observaciones]').val();
+
+        console.log("Entró Rechazar", motivo_rechazo);
+        estado = 2;
+        ActualizarDatos();
+    }
 
     //Función para actualizar los datos
     function ActualizarDatos() {
-
-        motivo_rechazo = $('input:text[name=Observaciones]').val();
-
-        console.log("Rechazo", motivo_rechazo);
 
         var data = $.param({
             id_seguridad: IdSeguridad,
@@ -78,7 +85,7 @@ DemoApp.controller('AcuseReciboController', function DemoController($scope, $htt
             $scope.ServerResponse = data;
         });
 
-       location.reload();
+        location.reload();
     }
 
 });

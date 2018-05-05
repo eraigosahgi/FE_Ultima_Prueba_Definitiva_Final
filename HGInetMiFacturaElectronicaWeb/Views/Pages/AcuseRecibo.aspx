@@ -56,20 +56,18 @@
 
 <body class="login-container" style="background-color: #eeeded">
 
-    <form runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController">
-
+    <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController">
         <div style="margin: 4%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
 
             <!-- Visualización PDF -->
             <div class="col-md-6">
-                <iframe src="{{datos.StrUrlArchivoPdf}}" style="width: 96%; height: 800px;" frameborder="0"></iframe>
+                <iframe src="{{datos.Pdf}}" style="width: 96%; height: 800px;" frameborder="0"></iframe>
+
+                <iframe type="application/xml" src="{{datos.Xml}}" style="width: 96%; height: 800px;" frameborder="0"></iframe>
+
+
             </div>
             <!-- /Visualización PDF -->
-
-            <%--<div class="col-md-6">
-                <iframe src="http://localhost:61428/dms/811021438/FacturaEDian/face_f0811021438003B0234FD.xml" style="width: 50%; height: 800px;" frameborder="0"></iframe>
-            </div>--%>
-
             <!-- Visualización Información Factura -->
             <div class="col-md-6">
                 <div class="panel panel-flat form-horizontal">
@@ -126,21 +124,27 @@
 
                             <div style="margin-top: 3%;" runat="server" id="Div1">
                                 <label class="text-bold">Fecha: </label>
-                                <span>{{datos.FechaRespuesta}}</span>
+                                <span>{{datos.FechaRespuesta | date: "yyyy-MM-dd"}}</span>
                             </div>
 
                         </div>
 
+
                         <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
                         <div id="PanelOpcionesAdquiriente" ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
 
-                            <div dx-button="ButtonOptionsRechazar"></div>
-                            &nbsp;&nbsp;&nbsp;
+                            <form ng-submit="onFormSubmit($event)">
+                                <div id="form" dx-form="TextAreaObservaciones">
+                                </div>
+                                <br />
+                                <br />
+                                <div dx-button="ButtonOptionsRechazar"></div>
+                                &nbsp;&nbsp;&nbsp;
                             <div dx-button="ButtonOptionsAceptar"></div>
-                            <br />
-                            <br />
-                            <div id="form" dx-form="TextAreaObservaciones">
-                            </div>
+                                <br />
+                                <br />
+                            </form>
+
                             <br />
                             <br />
 
@@ -154,7 +158,7 @@
         </div>
 
 
-    </form>
+    </div>
 
 </body>
 
