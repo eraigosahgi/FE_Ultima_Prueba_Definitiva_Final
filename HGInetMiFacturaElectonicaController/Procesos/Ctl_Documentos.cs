@@ -504,7 +504,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 							string detalle_dian = string.Empty;
 
-							if (!resultado_doc.DocumentoCorrecto)
+							if (resultado_doc.EstadoDian.Equals("7200003"))
 							{
 								// se indica la respuesta de la DIAN
 								respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
@@ -516,14 +516,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								if (acuse.ReceivedInvoice != null)
 									detalle_dian = acuse.ReceivedInvoice.Comments;
 
-
 								if (string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
 									respuesta.Error.Mensaje = "ninguno.";
 
 								respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}. Detalles: {4}", acuse.ResponseDateTime, acuse.Response, acuse.Comments, detalle_dian, respuesta.Error.Mensaje);
 
 							}
-							else
+							else if (resultado_doc.EstadoDian.Equals("7200002"))
 							{
 								// se indica la respuesta de la DIAN
 								respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
@@ -565,6 +564,29 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									throw excepcion;
 
 								}
+
+							}
+							else if (resultado_doc.EstadoDian.Equals("7200004") || resultado_doc.EstadoDian.Equals("7200005"))
+							{
+
+								fecha_actual = Fecha.GetFecha();
+								respuesta.DescripcionProceso = "Termina proceso.";
+								respuesta.FechaUltimoProceso = fecha_actual;
+								respuesta.IdProceso = 99;
+								respuesta.ProcesoFinalizado = 1;
+
+								// se indica la respuesta de la DIAN
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
+								respuesta.Error.Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION;
+								respuesta.Error.Fecha = fecha_actual;
+
+								respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} ", resultado_doc.EstadoDianDescripcion, resultado_doc.EstadoDian);
+
+								//Actualiza Documento en Base de Datos
+								documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+								documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+								documento_tmp.Actualizar(documentoBd);
 
 							}
 
