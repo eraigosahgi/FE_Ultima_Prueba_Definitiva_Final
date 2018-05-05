@@ -1,8 +1,8 @@
 ﻿
 
 
-var DemoApp = angular.module('AutenticacionApp', ['dx']);
-DemoApp.controller('AutenticacionController', function DemoController($scope, $http, $location) {
+var AutenticacionApp = angular.module('AutenticacionApp', ['dx']);
+AutenticacionApp.controller('AutenticacionController', function AutenticacionController($scope, $http, $location) {
 
     var dato_identificacion = "",
     dato_usuario = "",
