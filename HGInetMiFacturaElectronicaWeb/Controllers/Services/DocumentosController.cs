@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Xml;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
@@ -40,12 +41,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 d.IntVlrTotal,
                 EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                 EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "N/A",
+                MotivoRechazo = d.StrAdquirienteMvoRechazo,
                 d.StrAdquirienteMvoRechazo,
                 IdentificacionFacturador = d.TblEmpresas.StrIdentificacion,
                 NombreFacturador = d.TblEmpresas.StrRazonSocial,
-                d.StrUrlArchivoPdf,
-                d.StrUrlArchivoUbl,
+                Xml = d.StrUrlArchivoUbl,
+                Pdf = d.StrUrlArchivoPdf,
                 d.StrIdSeguridad,
                 RutaPublica = plataforma.RutaPublica,
                 RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
@@ -84,12 +85,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 d.IntVlrTotal,
                 EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                 EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "N/A",
+                MotivoRechazo = d.StrAdquirienteMvoRechazo,
                 d.StrAdquirienteMvoRechazo,
                 IdentificacionAdquiriente = d.TblEmpresas1.StrIdentificacion,
                 NombreAdquiriente = d.TblEmpresas1.StrRazonSocial,
-                d.StrUrlArchivoPdf,
-                d.StrUrlArchivoUbl,
+                Xml = d.StrUrlArchivoUbl,
+                Pdf = d.StrUrlArchivoPdf,
                 d.StrIdSeguridad
             });
 
@@ -120,9 +121,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Cufe = d.StrCufe,
                 IdSeguridad = d.StrIdSeguridad,
                 EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "N/A",
+                MotivoRechazo = d.StrAdquirienteMvoRechazo,
                 FechaRespuesta = d.DatAdquirienteFechaRecibo,
                 Xml = d.StrUrlArchivoUbl,
+                d.StrUrlArchivoUbl,
                 Pdf = d.StrUrlArchivoPdf,
                 RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
                 CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
