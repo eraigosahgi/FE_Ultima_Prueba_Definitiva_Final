@@ -450,6 +450,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						documento_tmp.Actualizar(documentoBd);
 
+						//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
+						System.Threading.Thread.Sleep(2000);
+
 						//Valida estado del documento en la Plataforma de la DIAN
 						try
 						{
@@ -519,7 +522,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								if (string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
 									respuesta.Error.Mensaje = "ninguno.";
 
-								respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}. Detalles: {4}", acuse.ResponseDateTime, acuse.Response, acuse.Comments, detalle_dian, respuesta.Error.Mensaje);
+								respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} - {2} - {3}. Detalles: {4}", acuse.ResponseDateTime, resultado_doc.EstadoDian, acuse.Comments, detalle_dian, respuesta.Error.Mensaje);
 
 							}
 							else if (resultado_doc.EstadoDian.Equals("7200002"))
