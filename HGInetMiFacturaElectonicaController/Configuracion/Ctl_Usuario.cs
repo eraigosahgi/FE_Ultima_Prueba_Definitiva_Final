@@ -43,13 +43,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             tbl_usuario.IntIdEmpresa = empresa.IntId;
             tbl_usuario.StrUsuario = empresa.StrIdentificacion;
-            tbl_usuario.StrClave = empresa.StrIdentificacion;
+            tbl_usuario.StrClave = Encriptar.Encriptar_MD5(empresa.StrIdentificacion);
             tbl_usuario.StrNombres = empresa.StrRazonSocial;
             tbl_usuario.StrApellidos = "";
             tbl_usuario.StrMail = empresa.StrMail;
             tbl_usuario.DatFechaIngreso = Fecha.GetFecha();
             tbl_usuario.DatFechaActualizacion = Fecha.GetFecha();
-            tbl_usuario.IntIdEstado = 1;
+			tbl_usuario.DatFechaCambioClave = Fecha.GetFecha();
+			tbl_usuario.IntIdEstado = 1;
             tbl_usuario.StrIdSeguridad = Guid.NewGuid();
 			tbl_usuario.StrIdCambioClave = Guid.NewGuid();
 
@@ -164,26 +165,34 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             }
         }
 
+		/// <summary>
+		/// Valida el id de seguridad para cambio de contraseña
+		/// </summary>
+		/// <param name="IdSeguridad">id de seguridad</param>
+		/// <returns>indica si es válido el cambio de clave</returns>
         public bool ValidarIdSeguridad(System.Guid IdSeguridad)
         {
             try
             {
-                TblUsuarios datos = (from item in context.TblUsuarios
-                                     where item.StrIdCambioClave == IdSeguridad
-                                     select item).FirstOrDefault();
-                if (datos != null)
-                {
-                    if (!(datos.DatFechaCambioClave.Value.AddHours(24.0) >= Fecha.GetFecha()))
-                    {
-                        throw new ApplicationException("El ID de seguridad ha expirado; por favor realice el proceso de recuperación de contraseña nuevamente.");
-                    }
-                    return true;
-                }
-                else
-                {
-                    throw new ApplicationException("Id de seguridad incorrecto.");
-                }
-            }
+				List<TblUsuarios> datos = (from item in context.TblUsuarios
+									 where item.StrIdCambioClave == IdSeguridad
+									 select item).ToList();
+
+				if (datos.Any())
+				{			
+
+					if (datos.FirstOrDefault() != null)
+					{
+						if (!datos.FirstOrDefault().DatFechaCambioClave.HasValue || !(datos.FirstOrDefault().DatFechaCambioClave.Value.AddHours(24.0) >= Fecha.GetFecha()))
+						{
+							throw new ApplicationException("El ID de seguridad ha expirado; por favor realice el proceso de recuperación de contraseña nuevamente.");
+						}
+						return true;
+					}
+				}
+
+				throw new ApplicationException("Id de seguridad incorrecto.");
+			}
             catch (ApplicationException excepcion)
             {
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
