@@ -25,6 +25,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="fecha_inicio"></param>
         /// <param name="fecha_fin"></param>
         /// <returns></returns>
+		[HttpGet]
         public IHttpActionResult Get(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
@@ -60,18 +61,19 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             return Ok(retorno);
         }
 
-        /// <summary>
-        /// Obtiene los documentos por obligado
-        /// </summary>
-        /// <param name="codigo_facturador"></param>
-        /// <param name="numero_documento"></param>
-        /// <param name="codigo_adquiriente"></param>
-        /// <param name="estado_dian"></param>
-        /// <param name="estado_recibo"></param>
-        /// <param name="fecha_inicio"></param>
-        /// <param name="fecha_fin"></param>
-        /// <returns></returns>
-        public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+		/// <summary>
+		/// Obtiene los documentos por obligado
+		/// </summary>
+		/// <param name="codigo_facturador"></param>
+		/// <param name="numero_documento"></param>
+		/// <param name="codigo_adquiriente"></param>
+		/// <param name="estado_dian"></param>
+		/// <param name="estado_recibo"></param>
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
+		/// <returns></returns>
+		[HttpGet]
+		public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
 
@@ -102,12 +104,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             return Ok(retorno);
         }
 
-        /// <summary>
-        /// Obtiene el documento por ID de seguridad.
-        /// </summary>
-        /// <param name="id_seguridad"></param>
-        /// <returns></returns>
-        public IHttpActionResult Get(System.Guid id_seguridad)
+		/// <summary>
+		/// Obtiene el documento por ID de seguridad.
+		/// </summary>
+		/// <param name="id_seguridad"></param>
+		/// <returns></returns>
+		[HttpGet]
+		public IHttpActionResult Get(System.Guid id_seguridad)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
 
@@ -138,14 +141,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             return Ok(retorno);
         }
 
-        /// <summary>
-        /// Actualiza la respuesta de acuse del documento.
-        /// </summary>
-        /// <param name="id_seguridad"></param>
-        /// <param name="estado"></param>
-        /// <param name="motivo_rechazo"></param>
-        /// <returns></returns>
-        public IHttpActionResult Put(System.Guid id_seguridad, short estado, string motivo_rechazo)
+		/// <summary>
+		/// Actualiza la respuesta de acuse del documento.
+		/// </summary>
+		/// <param name="id_seguridad"></param>
+		/// <param name="estado"></param>
+		/// <param name="motivo_rechazo"></param>
+		/// <returns></returns>
+		[HttpPost]
+		public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri]short estado, [FromUri]string motivo_rechazo)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
 
@@ -180,17 +184,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public string DescripcionEstadoFactura(short e)
+        private string DescripcionEstadoFactura(short e)
         {
             return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(e));
         }
 
-        /// <summary>
-        /// Retorna la descripción del estado del acuse.
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public string DescripcionEstadoAcuse(short e)
+		/// <summary>
+		/// Retorna la descripción del estado del acuse.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <returns></returns>
+		private string DescripcionEstadoAcuse(short e)
         {
             return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(e));
         }

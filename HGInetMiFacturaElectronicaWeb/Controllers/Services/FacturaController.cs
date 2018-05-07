@@ -239,6 +239,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         }
 
         // POST: api/Factura
+		[HttpPost]
         public HttpResponseMessage Post(Factura value)
         {
 
@@ -257,6 +258,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         }
 
         // PUT: api/Factura/5
+		[HttpPut]
         public HttpResponseMessage Put(Factura value)
         {
             if (ModelState.IsValid)
