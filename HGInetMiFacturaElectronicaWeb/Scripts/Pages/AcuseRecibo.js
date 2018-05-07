@@ -81,7 +81,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
             motivo_rechazo: motivo_rechazo
         });
 
-        $http.put('/api/Documentos?' + data).success(function (data, response) {
+        $http.post('/api/Documentos?'+ data).success(function (data, response) {
             $scope.ServerResponse = data;
         });
 

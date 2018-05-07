@@ -96,7 +96,7 @@ DemoApp.controller('RestablecerClaveController', function DemoController($scope,
         if (id_seguridad == undefined) {
             Mensaje("Link Incorrecto", "error");
         } else {
-            $http.put('/api/Usuario?' + data).then(function (response) {
+            $http.post('/api/Usuario?'+ data).then(function (response) {
 
                 $scope.RespuestaIdSeguridad = response.data;                
 

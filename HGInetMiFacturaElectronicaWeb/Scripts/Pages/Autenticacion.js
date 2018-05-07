@@ -195,8 +195,8 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 
         //Obtiene los datos del web api
         //ControladorApi: /Api/Usuario/
-        //Datos GET: codigo_empresa - codigo_usuario - clave
-        $http.put('/Api/Usuario?' + data).then(function (response) {
+        //Datos PUT: codigo_empresa - codigo_usuario
+        $http.post('/Api/Usuario?'+ data).then(function (response) {
             //var respuesta = response.data;
 
           swal({    title: 'Solicitud Éxitosa',
