@@ -150,6 +150,24 @@
 
                         </div>
 
+						<div id="PanelInformacionArchivos" style="font-size: medium" class="dx-fieldset">
+
+                            <h4 class="panel-title text-bold text-center">Descargar Archivos</h4>
+
+                            <div style="margin-top: 3%">
+                                Para descargar los archivos presione clic derecho sobre el link y seleccione la opción Guardar como.
+                            </div>
+
+                            <div style="margin-top: 3%">
+							
+								<a href="{{datos.Pdf}}" target="_blank" class="text-bold">Pdf</a>
+								&nbsp&nbsp&nbsp
+                                <a href="{{datos.Xml}}" target="_blank" class="text-bold">Xml</a>
+                                
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
