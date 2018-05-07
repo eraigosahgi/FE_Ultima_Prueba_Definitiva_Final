@@ -552,7 +552,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									}
 
 									//envío de los documentos al Adquiriente
-									email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono);
+									email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, resultado_doc.EstadoDian);
 
 									//Actualiza Documento en Base de Datos
 									documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;

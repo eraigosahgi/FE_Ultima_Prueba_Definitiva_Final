@@ -224,7 +224,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="archivos">archivos de envio</param>
 		/// <param name="obj_respuesta">datos del objeto de respuesta</param>
 		/// <returns></returns>
-		public bool NotificacionDocumento(TblDocumentos documento, string telefono)
+		public bool NotificacionDocumento(TblDocumentos documento, string telefono, string estado_doc)
 		{
 
 			try
@@ -306,14 +306,9 @@ namespace HGInetMiFacturaElectonicaController
 
 						string estado_factura = string.Empty;
 
-						switch (documento.IntAdquirienteRecibo)
+						if (estado_doc.Equals("7200002"))
 						{
-							case 5:
-								estado_factura = "Entregado DIAN";
-								break;
-							case 6:
-								estado_factura = "Rechazado DIAN";
-								break;
+							estado_factura = "Entregado DIAN";
 						}
 
 						mensaje = mensaje.Replace("{TipoDocumento}", titulo_factura);
