@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Properties;
+﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
@@ -169,6 +170,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
                 CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
             });
+
+			Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+			email.RespuestaAcuse(datos.FirstOrDefault(), datos.FirstOrDefault().TblEmpresas.TblUsuarios.FirstOrDefault().StrTelefono);
 
             if (datos == null)
             {
