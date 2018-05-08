@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EmailCopiaOculta" xml:space="preserve">
+    <value>tic@hgi.com.co</value>
+    <comment>email para copias ocultas (auditorías)</comment>
+  </data>
   <data name="EmailRemitente" xml:space="preserve">
     <value>noreply@hgi.com.co</value>
     <comment>email del remitente</comment>

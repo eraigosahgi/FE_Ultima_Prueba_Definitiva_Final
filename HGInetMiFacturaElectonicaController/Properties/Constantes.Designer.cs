@@ -61,6 +61,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a tic@hgi.com.co.
+        /// </summary>
+        public static string EmailCopiaOculta {
+            get {
+                return ResourceManager.GetString("EmailCopiaOculta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a noreply@hgi.com.co.
         /// </summary>
         public static string EmailRemitente {
