@@ -539,10 +539,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 								try
 								{
-									fecha_actual = Fecha.GetFecha();
-									respuesta.DescripcionProceso = "Envío correo adquiriente.";
-									respuesta.FechaUltimoProceso = fecha_actual;
-									respuesta.IdProceso = 8;
 
 									//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
 									if (adquiriente_nuevo == true)
@@ -554,6 +550,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									//envío de los documentos al Adquiriente
 									email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, resultado_doc.EstadoDian);
 
+									//Actualiza la respuesta
+									fecha_actual = Fecha.GetFecha();
+									respuesta.DescripcionProceso = "Envío correo adquiriente.";
+									respuesta.FechaUltimoProceso = fecha_actual;
+									respuesta.IdProceso = 8;
+
 									//Actualiza Documento en Base de Datos
 									documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 									documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
@@ -562,7 +564,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								}
 								catch (Exception excepcion)
 								{
-									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
 									throw excepcion;
 
@@ -575,7 +577,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								fecha_actual = Fecha.GetFecha();
 								respuesta.DescripcionProceso = "Termina proceso.";
 								respuesta.FechaUltimoProceso = fecha_actual;
-								respuesta.IdProceso = 99;
+								respuesta.IdProceso = 90;
 								respuesta.ProcesoFinalizado = 1;
 
 								// se indica la respuesta de la DIAN
