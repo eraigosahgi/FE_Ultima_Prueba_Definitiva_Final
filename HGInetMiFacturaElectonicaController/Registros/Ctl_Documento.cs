@@ -353,12 +353,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 doc.IntAdquirienteRecibo = estado;
                 doc.StrAdquirienteMvoRechazo = motivo_rechazo;
                 doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
-				doc.IntIdEstado = 9;
+                doc.IntIdEstado = 9;
 
                 Actualizar(doc);
 
+                // obtiene los datos del facturador electrónico
                 doc.TblEmpresas = ctl_empresa.ObtenerId(doc.IntIdEmpresa);
+
+                // obtiene los datos del adquiriente
                 doc.TblEmpresas1 = ctl_empresa.ObtenerId(doc.IntIdEmpresaAdquiriente);
+
+                try
+                {   // envía el correo del acuse de recibo al facturador electrónico
+                    Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+                    email.RespuestaAcuse(doc);
+                }
+                catch (Exception) { }
 
                 retorno.Add(doc);
 
@@ -429,13 +439,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 tbl_documento.DatFechaActualizaEstado = Fecha.GetFecha();
 
 
-				return tbl_documento;
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
+                return tbl_documento;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
 
         /// <summary>
         /// Convierte un objeto de tipo de base de datos a objeto de servicio.
