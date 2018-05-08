@@ -1,18 +1,27 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
 
-var DemoApp = angular.module('DocObligadoApp', ['dx']);
-DemoApp.controller('DocObligadoController', function DemoController($scope, $http, $location) {
+var DocObligadoApp = angular.module('DocObligadoApp', ['dx']);
+DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location) {
 
     var now = new Date();
 
-    var codigo_facturador = "811021438",
+    var codigo_facturador = "",
            numero_documento = "",
            estado_dian = "",
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
            codigo_adquiriente = "";
+
+
+    $http.get('/api/DatosSesion/').then(function (response) {
+
+    	console.log(response.data[0]);
+
+    	codigo_facturador = response.data[0].Identificacion;
+    });
+
 
     //Define los campos y las opciones
     $scope.filtros =
@@ -108,7 +117,7 @@ DemoApp.controller('DocObligadoController', function DemoController($scope, $htt
                 $scope.dataGridOptions = {
                     dataSource: response.data,
                     paging: {
-                        pageSize: 10
+                        pageSize: 20
                     },
                     pager: {
                         showPageSizeSelector: true,
@@ -120,7 +129,7 @@ DemoApp.controller('DocObligadoController', function DemoController($scope, $htt
                             caption: "Archivos",
                             cellTemplate: function (container, options) {
                                 $("<div>")
-                                    .append($("<a target='_blank' class='icon-file-pdf' href='" + options.data.StrUrlArchivoPdf + "'> &nbsp;&nbsp; <a target='_blank' class='icon-file-xml' href='" + options.data.StrUrlArchivoUbl + "'>"))
+                                    .append($("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "'>&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "'>&nbsp;&nbsp;<a target='_blank' class='icon-mail-read' href='" + "#" + "'>"))
                                     .append($(""))
                                     .appendTo(container);
                             }
@@ -170,12 +179,12 @@ DemoApp.controller('DocObligadoController', function DemoController($scope, $htt
                           {
                               caption: "Motivo Rechazo",
                               dataField: "MotivoRechazo",
-                          },
-                          {
+                          },                          
+						  {
                               dataField: "",
                               cellTemplate: function (container, options) {
                                   $("<div>")
-                                      .append($("<a target='_blank' class='icon-envelop3' href='http://app.mifacturaenlinea.com.co/pages/facturae/AcuseRecibo.aspx?id=" + options.data.StrIdSeguridad + "'></a>"))
+                                      .append($("<a target='_blank' class='icon-check' href='" + options.data.RutaAcuse + "'>Acuse</a>"))
                                       .appendTo(container);
                               }
                           }
