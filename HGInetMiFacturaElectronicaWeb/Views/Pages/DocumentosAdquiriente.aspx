@@ -96,7 +96,6 @@
 
             </div>
         </div>
-        <!-- /DATOS -->
 
     </div>
     <!-- /CONTENEDOR PRINCIPAL -->
