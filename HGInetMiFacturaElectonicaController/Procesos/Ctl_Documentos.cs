@@ -603,7 +603,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw excepcion;
 
 						}
-						
+
 
 					}
 
@@ -694,9 +694,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			foreach (NotaCredito item in documentos)
 			{
+
+				Ctl_Documento num_doc = new Ctl_Documento();
+
+				//valida si el Documento ya existe en Base de Datos
+				TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento);
+
+				if (numero_documento != null)
+					throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
+
 				// filtra la resolución del documento
 				TblEmpresasResoluciones resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
-
 
 				// realiza el proceso de envío a la DIAN del documento
 				DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, resolucion, facturador_electronico);
@@ -864,12 +872,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (string.IsNullOrEmpty(documento.DocumentoRef))
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "DocumentoRef", "string"));
 
-            //Validar que no este vacia la fecha del documento de referencia
-            if (documento.FechaFactura == null)
-                throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
-                
-            //Validar que no este vacio
-            if (string.IsNullOrEmpty(documento.CufeFactura))
+			//Validar que no este vacia la fecha del documento de referencia
+			if (documento.FechaFactura == null)
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
+
+			//Validar que no este vacio
+			if (string.IsNullOrEmpty(documento.CufeFactura))
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "CufeFactura", "string"));
 
 			//valida resolucion
@@ -1078,7 +1086,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (!isnumber.IsMatch(Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor ReteIva {0} no esta bien formado", documento.ValorReteIva));
-				
+
 			}
 		}
 
@@ -1136,10 +1144,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					Docdet.ValorSubtotal = Convert.ToDecimal(0.00M);
 				}
-                
-                if (!isnumber.IsMatch(Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
+
+				if (!isnumber.IsMatch(Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El subtotal {0} del detalle no esta bien formado", Docdet.ValorSubtotal));
-				
+
 				//Validacion del Valor del Impuesto al Consumo
 				if (Docdet.ValorImpuestoConsumo == 0)
 				{
