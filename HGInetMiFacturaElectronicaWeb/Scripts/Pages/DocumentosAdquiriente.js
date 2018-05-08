@@ -1,15 +1,22 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-var DemoApp = angular.module('DocAdquirienteApp', ['dx']);
-DemoApp.controller('DocAdquirienteController', function DemoController($scope, $http, $location) {
+var DocAdquirienteApp = angular.module('DocAdquirienteApp', ['dx']);
+DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquirienteController($scope, $http, $location) {
 
     var now = new Date();
 
-    var codigo_adquiente = "1152708377",
+    var codigo_adquiente = "",
            numero_documento = "",
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "";
+
+    $http.get('/api/DatosSesion/').then(function (response) {
+
+    	console.log(response.data[0]);
+
+        codigo_adquiente = response.data[0].Identificacion;
+    });
 
     //Define los campos y las opciones
     $scope.filtros =
@@ -84,7 +91,7 @@ DemoApp.controller('DocAdquirienteController', function DemoController($scope, $
                 $scope.dataGridOptions = {
                     dataSource: response.data,
                     paging: {
-                        pageSize: 10
+                        pageSize: 20
                     },
                     pager: {
                         showPageSizeSelector: true,
@@ -96,7 +103,7 @@ DemoApp.controller('DocAdquirienteController', function DemoController($scope, $
                             caption: "Archivos",
                             cellTemplate: function (container, options) {
                                 $("<div>")
-                                    .append($("<a target='_blank' class='icon-file-pdf' href='" + options.data.StrUrlArchivoPdf + "'> &nbsp;&nbsp; <a target='_blank' class='icon-file-xml' href='" + options.data.StrUrlArchivoUbl + "'>"))
+                                    .append($("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "'> &nbsp;&nbsp; <a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "'>"))
                                     .append($(""))
                                     .appendTo(container);
                             }
