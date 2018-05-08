@@ -188,6 +188,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 if (FechaFinal == null)
                     throw new ApplicationException("Fecha final inválida.");
 
+                FechaInicial = FechaInicial.Date;
+                FechaFinal = FechaFinal.Date.AddDays(1);
+
                 List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
 
                 var respuesta = from documento in context.TblDocumentos
@@ -223,6 +226,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <returns></returns>
         public List<TblDocumentos> ObtenerPorFechasAdquiriente(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
+
+            fecha_inicio = fecha_inicio.Date;
+            fecha_fin = fecha_fin.Date.AddDays(1);
 
             int num_doc = -1;
             int.TryParse(numero_documento, out num_doc);
@@ -263,6 +269,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <returns></returns>
         public List<TblDocumentos> ObtenerPorFechasObligado(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
+            fecha_inicio = fecha_inicio.Date;
+            fecha_fin = fecha_fin.Date.AddDays(1);
 
             int num_doc = -1;
             int.TryParse(numero_documento, out num_doc);
