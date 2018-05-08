@@ -52,7 +52,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			tbl_usuario.DatFechaCambioClave = Fecha.GetFecha();
 			tbl_usuario.IntIdEstado = 1;
             tbl_usuario.StrIdSeguridad = Guid.NewGuid();
-			tbl_usuario.StrIdCambioClave = Guid.NewGuid();
+            tbl_usuario.StrIdCambioClave = Guid.NewGuid();
 
             // agrega el usuario en la base de datos
             tbl_usuario = Crear(tbl_usuario);
@@ -62,7 +62,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
         #region Validar
 
-        public bool ValidarExistencia(string codigo_empresa, string codigo_usuario, string clave)
+        public List<TblUsuarios> ValidarExistencia(string codigo_empresa, string codigo_usuario, string clave)
         {
             try
             {
@@ -75,10 +75,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                                 && usuario.StrClave.Equals(clave)
                                 select usuario;
 
-                if (respuesta.FirstOrDefault() == null)
-                    return false;
-
-                return true;
+                return respuesta.ToList();
             }
             catch (Exception excepcion)
             {
@@ -89,11 +86,57 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
         #endregion
 
+        #region Obtener
+
+        /// <summary>
+        /// Obtiene los datos por código de usuario.
+        /// </summary>
+        /// <param name="codigo_usuario"></param>
+        /// <returns></returns>
+        public TblUsuarios ObtenerUsuario(System.Guid codigo_usuario)
+        {
+            try
+            {
+                var respuesta = from usuario in context.TblUsuarios
+                                where (usuario.StrUsuario.Equals(codigo_usuario))
+                                select usuario;
+
+                return respuesta.FirstOrDefault();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene el usuario por id seguridad
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <returns></returns>
+        public TblUsuarios ObtenerIdSeguridad(System.Guid id_seguridad)
+        {
+            try
+            {
+                var respuesta = from usuario in context.TblUsuarios
+                                where (usuario.StrIdSeguridad.Equals(id_seguridad))
+                                select usuario;
+
+                return respuesta.FirstOrDefault();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        #endregion
+
         #region Validar documento y usuario para restablecer
         public bool ValidarExistenciaRestablecer(string codigo_empresa, string codigo_usuario)
         {
             try
-            {                
+            {
                 var respuesta = from usuario in context.TblUsuarios
                                 join empresa in context.TblEmpresas on usuario.IntIdEmpresa equals empresa.IntId
                                 where empresa.StrIdentificacion.Equals(codigo_empresa)
@@ -105,19 +148,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                     return false;
 
                 TblUsuarios usuarioRestablecer = respuesta.FirstOrDefault();
-                                
+
                 usuarioRestablecer.DatFechaCambioClave = Fecha.GetFecha();
                 usuarioRestablecer.StrIdCambioClave = Guid.NewGuid();
                 Actualizar_usuario(usuarioRestablecer);
 
-                TblEmpresas Empresas = (from  empresa in context.TblEmpresas
-                                where empresa.StrIdentificacion.Equals(codigo_empresa)                                
-                                select empresa).FirstOrDefault() ;
+                TblEmpresas Empresas = (from empresa in context.TblEmpresas
+                                        where empresa.StrIdentificacion.Equals(codigo_empresa)
+                                        select empresa).FirstOrDefault();
 
                 //Aqui debo enviar el correo a usuarioRestablecer.StrMail
                 Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
-                      
-                Email.RestablecerClave(Empresas,usuarioRestablecer);
+
+                Email.RestablecerClave(Empresas, usuarioRestablecer);
 
                 return true;
             }
@@ -150,7 +193,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                     datos.StrClave = clave;
                     datos.DatFechaCambioClave = Fecha.GetFecha();
-                    datos.StrIdCambioClave= Guid.NewGuid();
+                    datos.StrIdCambioClave = Guid.NewGuid();
                     Actualizar_usuario(datos);
                     return true;
                 }
