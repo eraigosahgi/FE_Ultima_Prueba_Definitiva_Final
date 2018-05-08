@@ -61,14 +61,13 @@
 
             <!-- Visualización PDF -->
             <div class="col-md-6">
-                <iframe src="{{datos.Pdf}}" style="width: 96%; height: 800px;" frameborder="0"></iframe>
+			
+				<embed width="100%" height="800px" name="plugin" id="plugin" src="{{datos.Pdf}}" type="application/pdf">
 
-                <iframe type="application/xml" src="{{datos.Xml}}" style="width: 96%; height: 800px;" frameborder="0"></iframe>
-
-
-            </div>
+            </div>			
             <!-- /Visualización PDF -->
-            <!-- Visualización Información Factura -->
+            
+			<!-- Visualización Información Factura -->
             <div class="col-md-6">
                 <div class="panel panel-flat form-horizontal">
 
@@ -152,10 +151,10 @@
 
 						<div id="PanelInformacionArchivos" style="font-size: medium" class="dx-fieldset">
 
-                            <h4 class="panel-title text-bold text-center">Descargar Archivos</h4>
+                            <h4 class="panel-title text-bold text-center">Archivos</h4>
 
-                            <div style="margin-top: 3%">
-                                Para descargar los archivos presione clic derecho sobre el link y seleccione la opción Guardar como.
+                            <div style="margin-top: 3%; text-align:justify;">
+								Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
                             </div>
 
                             <div style="margin-top: 3%">
