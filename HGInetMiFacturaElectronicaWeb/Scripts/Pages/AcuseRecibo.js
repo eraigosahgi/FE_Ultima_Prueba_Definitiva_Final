@@ -13,7 +13,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     //Datos GET: id_seguridad
     $http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
         $scope.RespuestaAcuse = response.data;
-        console.log(response.data);
+        
     });
 
     $scope.TextAreaObservaciones = {
@@ -81,12 +81,14 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
             estado: estado,
             motivo_rechazo: motivo_rechazo
         });
-
-        $http.post('/api/Documentos?'+ data).success(function (data, response) {
+        
+        $http.post('/api/Documentos?'+ data).then(function (data, response) {
             $scope.ServerResponse = data;
-        });
-
-        location.reload();
+            var id = IdSeguridad;
+            window.location.assign("../Pages/AcuseRecibo.aspx?id_seguridad=" + id);
+        }, function errorCallback(response) {
+            console.log("Error..", response.data.ExceptionMessage);
+        });        
     }
 
 });
