@@ -131,7 +131,7 @@ namespace HGInetMiFacturaElectonicaController
                     }
 
                     // BCC
-                    if (correos_copia != null)
+                    if (correos_copia_oculta != null)
                     {
                         foreach (DestinatarioEmail item in correos_copia_oculta)
                         {
@@ -285,6 +285,8 @@ namespace HGInetMiFacturaElectonicaController
                 List<DestinatarioEmail> correos_copia_oculta = null;
                 if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
                 {
+                    correos_copia_oculta = new List<DestinatarioEmail>();
+
                     DestinatarioEmail copia_oculta = new DestinatarioEmail();
                     copia_oculta.Nombre = "Auditoría";
                     copia_oculta.Email = Constantes.EmailCopiaOculta;
