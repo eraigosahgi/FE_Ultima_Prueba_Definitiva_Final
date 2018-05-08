@@ -471,7 +471,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// </summary>
 		/// <param name="documento">Datos del documento</param>
 		/// <returns></returns>
-		public bool RespuestaAcuse(TblDocumentos documento)
+		public bool RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente)
 		{
 			try
 			{
@@ -481,13 +481,13 @@ namespace HGInetMiFacturaElectonicaController
 
                 // envía como email de respuesta el Adquiriente
                 DestinatarioEmail remitente = new DestinatarioEmail();
-                remitente.Nombre = documento.TblEmpresas1.StrRazonSocial;
-                remitente.Email = documento.TblEmpresas1.StrMail;
+                remitente.Nombre = adquiriente.StrRazonSocial;
+                remitente.Email = adquiriente.StrMail;
 
                 // recibe el email el Facturador Electrónico
                 DestinatarioEmail destinatario = new DestinatarioEmail();
-                destinatario.Nombre = documento.TblEmpresas.StrRazonSocial;
-                destinatario.Email = documento.TblEmpresas.StrMail;
+                destinatario.Nombre = facturador.StrRazonSocial;
+                destinatario.Email = facturador.StrMail;
 
 				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 				correos_destino.Add(destinatario);                
@@ -502,13 +502,13 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						// Datos Facturador Electronico
 						mensaje = mensaje.Replace("{ImagenLogo}", "<img id='ImgLogo' src='" + "" + "' style='border: none; border-radius: 0px; display: block; outline: none; text-decoration: none; width: 100%; height: auto;' width='233' />");
-						mensaje = mensaje.Replace("{NombreFacturador}", documento.TblEmpresas.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitFacturador}", documento.TblEmpresas.StrIdentificacion);
+						mensaje = mensaje.Replace("{NombreFacturador}", facturador.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitFacturador}", facturador.StrIdentificacion);
 
 						// Datos del Tercero
-						mensaje = mensaje.Replace("{NombreTercero}", documento.TblEmpresas1.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitTercero}", documento.TblEmpresas1.StrIdentificacion);
-						mensaje = mensaje.Replace("{EmailTercero}", documento.TblEmpresas1.StrMail);
+						mensaje = mensaje.Replace("{NombreTercero}", adquiriente.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitTercero}", adquiriente.StrIdentificacion);
+						mensaje = mensaje.Replace("{EmailTercero}", adquiriente.StrMail);
 						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
 
 
