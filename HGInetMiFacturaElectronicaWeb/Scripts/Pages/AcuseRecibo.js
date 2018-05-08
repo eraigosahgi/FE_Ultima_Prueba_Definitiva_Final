@@ -48,7 +48,8 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         text: "Aceptar",
         type: "success",
         onClick: function (e) {
-            estado = 1;
+        	estado = 1;
+        	motivo_rechazo = $('textarea[name=Observaciones]').val();
             ActualizarDatos();
         }
     };
