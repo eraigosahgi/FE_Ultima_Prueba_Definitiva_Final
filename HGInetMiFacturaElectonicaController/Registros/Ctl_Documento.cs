@@ -302,7 +302,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                               where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
                                             && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
                                             && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-                                            && (estados.Contains(datos.IntAdquirienteRecibo.ToString()) || estado_dian.Equals("*"))
+                                            && (estados.Contains(datos.IntIdEstado.ToString()) || estado_dian.Equals("*"))
                                             && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
                                             && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
                                               orderby datos.IntNumero descending
