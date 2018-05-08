@@ -98,8 +98,9 @@
                     </div>
                 </div>
 
-                <div class="panel-body">
-                    <div id="gridContainer" dx-data-grid="dataGridOptions">
+                <div class="panel-body">                   
+                     <div class="demo-container">
+                        <div id="gridDocumentos"></div>
                     </div>
                 </div>
 
