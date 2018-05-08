@@ -157,11 +157,11 @@
 								Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
                             </div>
 
-                            <div style="margin-top: 3%">
+                            <div style="margin-top: 3%; text-align:center;">
 							
-								<a href="{{datos.Pdf}}" target="_blank" class="text-bold">Pdf</a>
-								&nbsp&nbsp&nbsp
-                                <a href="{{datos.Xml}}" target="_blank" class="text-bold">Xml</a>
+								<a href="{{datos.Pdf}}" target="_blank" class="icon-file-pdf text-bold" style="color:#1E88E5;"> Pdf</a>
+								&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                <a href="{{datos.Xml}}" target="_blank" class="icon-file-xml text-bold" style="color:#1E88E5;"> Xml</a>
                                 
                             </div>
 
