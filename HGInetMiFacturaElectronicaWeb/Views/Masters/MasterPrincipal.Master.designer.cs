@@ -40,6 +40,33 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.WebControls.Label Label_version_actualizacion;
         
         /// <summary>
+        /// Control LblNombreUsuario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LblNombreUsuario;
+        
+        /// <summary>
+        /// Control LblCodigoUsuario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LblCodigoUsuario;
+        
+        /// <summary>
+        /// Control LblNombreUsuarioDet.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LblNombreUsuarioDet;
+        
+        /// <summary>
         /// Control EmailUsuario.
         /// </summary>
         /// <remarks>
@@ -49,13 +76,40 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl EmailUsuario;
         
         /// <summary>
-        /// Control icono_email.
+        /// Control lblEmailUsuario.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl icono_email;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblEmailUsuario;
+        
+        /// <summary>
+        /// Control LinkCerrarSesionHeader.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkCerrarSesionHeader;
+        
+        /// <summary>
+        /// Control LblNombreEmpresa.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LblNombreEmpresa;
+        
+        /// <summary>
+        /// Control LinkCerrarSesion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkCerrarSesion;
         
         /// <summary>
         /// Control ContenidoPagina.

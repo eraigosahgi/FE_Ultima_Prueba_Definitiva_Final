@@ -85,7 +85,7 @@
         <!-- Barra de Navegación Principal -->
         <div class="navbar navbar-inverse bg-slate-800">
             <div class="navbar-header">
-                <a class="navbar-brand" href="index.html">Logo de App</a>
+                <a class="navbar-brand" href="index.html">HGInet Facturación Electrónica</a>
 
                 <ul class="nav navbar-nav visible-xs-block">
                     <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
@@ -137,7 +137,7 @@
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <label>Nombre de Usuario Barra</label>
+                                <label runat="server" id="LblNombreUsuario">Nombre de Usuario Barra</label>
                             </a>
 
                         </li>
@@ -155,14 +155,14 @@
                                     <li class="media">
                                         <div class="media-body">
                                             <i id="icono_usuario" class="icon-vcard position-left" title="Usuario"></i>
-                                            <label>Código de Usuario</label>
+                                            <label runat="server" id="LblCodigoUsuario">Código de Usuario</label>
                                             <br />
                                             <i class="icon-user position-left" title="Nombre del usuario"></i>
-                                            <label>Nombre de Usuario</label>
+                                            <label runat="server" id="LblNombreUsuarioDet">Nombre de Usuario</label>
                                             <br />
-                                            <div runat="server" id="EmailUsuario" visible="false">
-                                                <i runat="server" id="icono_email" class="icon-envelop5 position-left" title="Email"></i>
-                                                <label>E-mail de Usuario</label>
+                                            <div runat="server" id="EmailUsuario">
+                                                <i class="icon-envelop5 position-left" title="Email"></i>
+                                                <label runat="server" id="lblEmailUsuario">E-mail de Usuario</label>
                                             </div>
                                         </div>
                                     </li>
@@ -173,7 +173,7 @@
 
                     <ul class="nav navbar-nav">
                         <li>
-                            <a class="legitRipple icon-switch2"></a>
+                            <asp:LinkButton ID="LinkCerrarSesionHeader" runat="server" class="legitRipple" ToolTip="Cerrar Sesión" OnClick="LinkCerrarSesion_Click"><i class="icon-switch2"></i><span></span></asp:LinkButton>
                         </li>
                     </ul>
                 </div>
@@ -194,14 +194,25 @@
 
                         <!-- Menú de Usuario-->
                         <div class="sidebar-user-material">
-                            <div class="category-content">
+                            <div class="category-content-custom">
                                 <div class="sidebar-user-material-content">
-                                    <a href="#">
-                                        <img src="../../Scripts/assets/images/placeholder.jpg" class="img-circle img-responsive" alt="" /></a>
-                                    <h6>María T</h6>
-                                    <span class="text-size-small">97042206974</span>
+                                    <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
                                 </div>
                             </div>
+
+                            <ul class="navigation navigation-main navigation-accordion">
+
+                                <li>
+                                    <a href="#" class="has-ul legitRipple dropdown-toggle" data-toggle="dropdown"><i class="icon-store2"></i>
+                                        <label runat="server" class="dropdown-toggle" id="LblNombreEmpresa"></label>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <asp:LinkButton ID="LinkCerrarSesion" runat="server" class="legitRipple" ToolTip="Cerrar Sesión" OnClick="LinkCerrarSesion_Click"><i class="icon-switch2"></i><span>Cerrar sesión</span></asp:LinkButton>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
 
                         </div>
                         <!-- /Menú de Usuario -->
@@ -225,7 +236,7 @@
                                                 <a href="#" class="has-ul legitRipple"><i class="icon-reading"></i><span style="margin: -10px">Facturador</span></a>
                                                 <ul>
                                                     <li>
-                                                        <a class="legitRipple"><i class="icon-file-check"></i><span style="margin: -10px">Consulta de Documentos</span></a>
+                                                        <a class="legitRipple" href="../Pages/DocumentosObligado.aspx"><i class="icon-file-check"></i><span style="margin: -10px">Consulta de Documentos</span></a>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -234,7 +245,7 @@
                                                 <a href="#" class="has-ul legitRipple"><i class="icon-collaboration"></i><span style="margin: -10px">Adquiriente</span></a>
                                                 <ul>
                                                     <li>
-                                                        <a class="legitRipple"><i class="icon-file-check"></i><span style="margin: -10px">Consulta de Documentos</span></a>
+                                                        <a class="legitRipple" href="../Pages/DocumentosAdquiriente.aspx"><i class="icon-file-check"></i><span style="margin: -10px">Consulta de Documentos</span></a>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -280,7 +291,6 @@
                         <div class="breadcrumb-line">
                             <ul class="breadcrumb">
                                 <li><a href="index.html"><i class="icon-home2 position-left"></i>Inicio</a></li>
-                                <li class="active">Página</li>
                             </ul>
                         </div>
                     </div>
