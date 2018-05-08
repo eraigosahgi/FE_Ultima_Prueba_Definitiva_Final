@@ -364,22 +364,24 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 doc.IntIdEstado = 9;
                 
                 // obtiene los datos del facturador electrónico
-                doc.TblEmpresas = ctl_empresa.ObtenerId(doc.IntIdEmpresa);
+                TblEmpresas facturador = ctl_empresa.ObtenerId(doc.IntIdEmpresa);
 
                 // obtiene los datos del adquiriente
-                doc.TblEmpresas1 = ctl_empresa.ObtenerId(doc.IntIdEmpresaAdquiriente);
+                TblEmpresas adquiriente = ctl_empresa.ObtenerId(doc.IntIdEmpresaAdquiriente);
 
                 try
                 {   // envía el correo del acuse de recibo al facturador electrónico
                     Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-                    email.RespuestaAcuse(doc);
+                    email.RespuestaAcuse(doc, facturador, adquiriente);
                     doc.IntIdEstado = 99;
                 }
                 catch (Exception) { }
 
                 doc.DatFechaActualizaEstado = Fecha.GetFecha();
-                Actualizar(doc);
+                doc = Actualizar(doc);
 
+                doc.TblEmpresas = facturador;
+                doc.TblEmpresas1 = adquiriente;
                 retorno.Add(doc);
 
                 return retorno;
