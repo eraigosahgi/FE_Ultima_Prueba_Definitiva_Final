@@ -3,7 +3,7 @@
 
 var AutenticacionApp = angular.module('AutenticacionApp', ['dx']);
 AutenticacionApp.controller('AutenticacionController', function AutenticacionController($scope, $http, $location) {
-   
+
     var dato_identificacion = "",
     dato_usuario = "",
     dato_contrasena = "";
@@ -96,9 +96,8 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
             var respuesta = response.data;
 
-            if (respuesta) {
-                console.log(respuesta);
-                window.location.assign("../Pages/Inicio.aspx");
+            if (respuesta.length != 0) {
+                window.location.assign("../Pages/Inicio.aspx?ID=" + response.data[0].Token);
             }
             else {
                 //DevExpress.ui.notify(mensaje, tipo, tiempo);
@@ -116,7 +115,7 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 //ControladorApi: /Api/Usuario/
 //Datos PUT: codigo_empresa - codigo_usuario 
 AutenticacionApp.controller('RestablecerController', function RestController($scope, $http, $location) {
-  
+
     $scope.formOptions2 = {
 
         readOnly: false,
@@ -166,7 +165,7 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 
     //Opciones de botón -  valida el formulario
     $scope.buttonCerrarRestablecer = {
-        text: "CERRAR"   
+        text: "CERRAR"
     };
 
 
@@ -199,14 +198,15 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
         $http.post('/Api/Usuario?'+ data).then(function (response) {
             //var respuesta = response.data;
 
-          swal({    title: 'Solicitud Éxitosa',
-                    text: 'Se ha enviado un e-mail para el restablecimiento de contraseña',
-                    type: 'success',
-                    confirmButtonColor: '#66BB6A',
-                    confirmButtonText: 'Aceptar',
-                    animation: 'pop',
-                    html: true,
-                });
+            swal({
+                title: 'Solicitud Éxitosa',
+                text: 'Se ha enviado un e-mail para el restablecimiento de contraseña',
+                type: 'success',
+                confirmButtonColor: '#66BB6A',
+                confirmButtonText: 'Aceptar',
+                animation: 'pop',
+                html: true,
+            });
             //swal("Solicitud Éxitosa", "Se ha enviado un e-mail para el restablecimiento de contraseña " , "success");
 
             $('input:text[name=TextBoxDocIdentificacion]').val("");
@@ -214,10 +214,10 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
             $("#modal_restablecer_clave").removeClass("modal fade in").addClass("modal fade");
 
             $('.modal-backdrop').remove();
-            
+
 
         }, function errorCallback(response) {
-            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);            
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 8000);
         });
         e.preventDefault();
     };
