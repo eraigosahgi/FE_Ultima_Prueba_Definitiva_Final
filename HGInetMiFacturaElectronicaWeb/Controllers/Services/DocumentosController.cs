@@ -2,7 +2,6 @@
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
-using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using System;
@@ -29,10 +28,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		[HttpGet]
         public IHttpActionResult Get(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
-            Ctl_Documento ctl_documento = new Ctl_Documento();
-
             PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
+            Ctl_Documento ctl_documento = new Ctl_Documento();
             List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasAdquiriente(codigo_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date);
 
             if (datos == null)
@@ -76,10 +74,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		[HttpGet]
 		public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
+            PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
             Ctl_Documento ctl_documento = new Ctl_Documento();
-
             List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin);
-
+            
             if (datos == null)
             {
                 return NotFound();
@@ -99,7 +98,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 NombreAdquiriente = d.TblEmpresas1.StrRazonSocial,
                 Xml = d.StrUrlArchivoUbl,
                 Pdf = d.StrUrlArchivoPdf,
-                d.StrIdSeguridad
+                d.StrIdSeguridad,
+                RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
             });
 
             return Ok(retorno);
@@ -114,9 +114,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		public IHttpActionResult Get(System.Guid id_seguridad)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
-
             List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
-
+            
             if (datos == null)
             {
                 return NotFound();
@@ -139,7 +138,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
             });
 
-
             return Ok(retorno);
         }
 
@@ -154,7 +152,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri]short estado, [FromUri]string motivo_rechazo)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
-
             List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo);
 
             if (datos == null)
@@ -170,13 +167,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Cufe = d.StrCufe,
                 IdSeguridad = d.StrIdSeguridad,
                 EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "",
+                MotivoRechazo = d.StrAdquirienteMvoRechazo,
                 Xml = d.StrUrlArchivoUbl,
                 Pdf = d.StrUrlArchivoPdf,
                 RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
                 CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
             });
-
 
             return Ok(retorno);
         }
