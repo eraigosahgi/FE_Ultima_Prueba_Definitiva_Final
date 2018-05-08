@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HGInetMiFacturaElectronicaWeb.Seguridad;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,17 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // obtiene de la ruta GET el id de seguridad del usuario autenticado para crear la sesión
+            if (Request.QueryString != null)
+            {
+                Sesion sesion = new Sesion();
+
+                System.Guid id_seguridad = new System.Guid(Request.QueryString["ID"]);
+
+                sesion.GuardarSesionWeb(id_seguridad);
+            }
 
         }
+
     }
 }
