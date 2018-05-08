@@ -149,7 +149,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                 join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
                                 where empresa.StrIdentificacion.Equals(identificacion_obligado)
                                 && documento.IntDocTipo == tipo_documento
-                                && lista_documentos.Contains(documento.StrObligadoIdRegistro)
+                                && (lista_documentos.Contains(documento.StrObligadoIdRegistro) || lista_documentos.Contains(documento.StrIdSeguridad.ToString()))
                                 select documento;
 
                 //Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
@@ -441,12 +441,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 tbl_documento.IntIdEmpresaAdquiriente = adquiriente.IntId;
                 tbl_documento.StrCufe = respuesta.Cufe;
                 tbl_documento.IntVlrTotal = documento_obj.Total;
-                tbl_documento.StrIdSeguridad = Guid.NewGuid();
+                tbl_documento.StrIdSeguridad = Guid.Parse(respuesta.IdDocumento);
                 tbl_documento.IntAdquirienteRecibo = 0;
                 tbl_documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
                 tbl_documento.DatFechaActualizaEstado = Fecha.GetFecha();
-
-
+                
                 return tbl_documento;
             }
             catch (Exception excepcion)
