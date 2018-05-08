@@ -145,7 +145,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
                 if (!respuesta.Any())
-                    return false;
+                    throw new ApplicationException("Datos Incorrectos.");
 
                 TblUsuarios usuarioRestablecer = respuesta.FirstOrDefault();
 
