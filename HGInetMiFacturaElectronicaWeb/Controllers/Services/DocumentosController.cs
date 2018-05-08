@@ -35,6 +35,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
             List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasAdquiriente(codigo_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date);
 
+            if (datos == null)
+            {
+                return NotFound();
+            }
+
             var retorno = datos.Select(d => new
             {
                 NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
@@ -53,11 +58,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 RutaPublica = plataforma.RutaPublica,
                 RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
             });
-
-            if (datos == null)
-            {
-                return NotFound();
-            }
 
             return Ok(retorno);
         }
@@ -80,6 +80,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
             List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin);
 
+            if (datos == null)
+            {
+                return NotFound();
+            }
+
             var retorno = datos.Select(d => new
             {
                 NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
@@ -97,11 +102,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 d.StrIdSeguridad
             });
 
-            if (datos == null)
-            {
-                return NotFound();
-            }
-
             return Ok(retorno);
         }
 
@@ -117,6 +117,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
             List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
 
+            if (datos == null)
+            {
+                return NotFound();
+            }
+        
             var retorno = datos.Select(d => new
             {
                 NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
@@ -134,10 +139,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
             });
 
-            if (datos == null)
-            {
-                return NotFound();
-            }
 
             return Ok(retorno);
         }
@@ -156,6 +157,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
             List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo);
 
+            if (datos == null)
+            {
+                return NotFound();
+            }
+
             var retorno = datos.Select(d => new
             {
                 NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
@@ -164,20 +170,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Cufe = d.StrCufe,
                 IdSeguridad = d.StrIdSeguridad,
                 EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "N/A",
+                MotivoRechazo = (d.StrAdquirienteMvoRechazo != null) ? d.StrAdquirienteMvoRechazo : "",
                 Xml = d.StrUrlArchivoUbl,
                 Pdf = d.StrUrlArchivoPdf,
                 RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
                 CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
             });
 
-			Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-			email.RespuestaAcuse(datos.FirstOrDefault(), datos.FirstOrDefault().TblEmpresas.TblUsuarios.FirstOrDefault().StrTelefono);
-
-            if (datos == null)
-            {
-                return NotFound();
-            }
 
             return Ok(retorno);
         }
