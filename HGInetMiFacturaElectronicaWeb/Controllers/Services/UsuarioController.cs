@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using HGInetMiFacturaElectronicaWeb.Seguridad;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
@@ -22,16 +23,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		[HttpGet]
 		public IHttpActionResult Get(string codigo_empresa, string codigo_usuario, string clave)
         {
+            Sesion sesion_web = new Sesion();
+
             Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+            List<TblUsuarios> datos = ctl_usuario.ValidarExistencia(codigo_empresa, codigo_usuario, clave);
 
-            bool datos = ctl_usuario.ValidarExistencia(codigo_empresa, codigo_usuario, clave);
-
-            if (!datos)
+            if (datos == null)
             {
                 return NotFound();
             }
 
-            return Ok(datos);
+            var retorno = datos.Select(d => new
+            {
+               Token = d.StrIdSeguridad
+            });
+            
+            return Ok(retorno);
         }
 
         /// <summary>
@@ -68,7 +75,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             Ctl_Usuario ctl_usuario = new Ctl_Usuario();
 
-            bool datos = ctl_usuario.RestablecerClave(id_seguridad,clave);           
+            bool datos = ctl_usuario.RestablecerClave(id_seguridad, clave);
 
             if (datos)
             {
