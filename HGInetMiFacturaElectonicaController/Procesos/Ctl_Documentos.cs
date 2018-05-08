@@ -451,7 +451,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_tmp.Actualizar(documentoBd);
 
 						//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
-						System.Threading.Thread.Sleep(2000);
+						System.Threading.Thread.Sleep(5000);
 
 						//Valida estado del documento en la Plataforma de la DIAN
 						try
