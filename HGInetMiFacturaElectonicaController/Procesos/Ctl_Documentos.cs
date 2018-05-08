@@ -469,7 +469,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
 
 							// ruta del xml
-							string archivo_xml = string.Format(@"{0}{1}.xml", prefijo, documento);
+							string archivo_xml = string.Format(@"{0}{1}.xml", documentoBd.StrPrefijo, documentoBd.IntNumero.ToString());
 
 							// ruta del xml
 							string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
@@ -562,7 +562,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								}
 								catch (Exception excepcion)
 								{
-									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente.. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
 									throw excepcion;
 
@@ -1069,16 +1069,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.ValorReteIva = Convert.ToDecimal(0.00M);
 				}
-				if (isnumber.IsMatch(Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
-				{
-					if ((documento.Total - documento.Neto - documento.ValorReteFuente - documento.ValorReteIca) != documento.ValorReteIva)
-						throw new ApplicationException(string.Format("El valor ReteIva {0} no es correcto.", documento.ValorReteIva));
-				}
-				else
-				{
-					throw new ApplicationException(string.Format("El valor ReteIva {0} no esta bien formado", documento.ValorReteIva));
-				}
 
+				if (!isnumber.IsMatch(Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El valor ReteIva {0} no esta bien formado", documento.ValorReteIva));
+				
 			}
 		}
 
@@ -1136,16 +1130,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					Docdet.ValorSubtotal = Convert.ToDecimal(0.00M);
 				}
-				if (isnumber.IsMatch(Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
-				{
-					if (Docdet.ValorSubtotal != (((Docdet.ValorUnitario * Docdet.Cantidad)) - Docdet.DescuentoValor))
-						throw new ApplicationException(string.Format("El subtotal {0} del detalle no es correcto.", Docdet.ValorSubtotal));
-				}
-				else
-				{
+                
+                if (!isnumber.IsMatch(Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El subtotal {0} del detalle no esta bien formado", Docdet.ValorSubtotal));
-				}
-
+				
 				//Validacion del Valor del Impuesto al Consumo
 				if (Docdet.ValorImpuestoConsumo == 0)
 				{
