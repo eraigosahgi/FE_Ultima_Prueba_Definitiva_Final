@@ -862,8 +862,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (string.IsNullOrEmpty(documento.DocumentoRef))
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "DocumentoRef", "string"));
 
-			//Validar que no este vacio
-			if (string.IsNullOrEmpty(documento.CufeFactura))
+            //Validar que no este vacia la fecha del documento de referencia
+            if (documento.FechaFactura == null)
+                throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
+                
+            //Validar que no este vacio
+            if (string.IsNullOrEmpty(documento.CufeFactura))
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "CufeFactura", "string"));
 
 			//valida resolucion
