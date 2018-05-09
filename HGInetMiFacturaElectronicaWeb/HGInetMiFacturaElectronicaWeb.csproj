@@ -1826,7 +1826,9 @@
     <Content Include="Scripts\globalize\plural.js" />
     <Content Include="Scripts\globalize\relative-time.js" />
     <Content Include="Scripts\globalize\unit.js" />
+    <Content Include="Scripts\Images\ImgIndex.jpg" />
     <Content Include="Scripts\Images\ImgIndex.png" />
+    <Content Include="Scripts\Images\LogoHGInet.jpg" />
     <Content Include="Scripts\Images\LogoHGInet.PNG" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

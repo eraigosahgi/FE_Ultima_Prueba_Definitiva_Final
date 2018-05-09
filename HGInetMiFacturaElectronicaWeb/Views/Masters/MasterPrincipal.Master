@@ -196,7 +196,7 @@
                         <div class="sidebar-user-material">
                             <div class="category-content-custom">
                                 <div class="sidebar-user-material-content">
-                                    <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
+                                    <img src="../../Scripts/Images/LogoHGInet.jpg" class="img-responsive" />
                                 </div>
                             </div>
 
@@ -298,7 +298,7 @@
                                         </div>
 
                                         <div class="modal-body">
-                                            <img class="img-responsive" src="../../Scripts/Images/LogoHGInet.PNG" width="300" style="margin-top: 2%; margin-left: 10%" />
+                                            <img class="img-responsive" src="../../Scripts/Images/LogoHGInet.png" width="300" style="margin-top: 2%; margin-left: 10%" />
 
                                             <div style="margin-top: 5%; margin-left: 15%">
 
@@ -354,7 +354,7 @@
                                                 <a href="https://www.linkedin.com/company/10623078" target="_blank"><i class=" icon-linkedin" style="color: black"></i></a>
                                             </div>
 
-                                            <div id="div_copyright" class=" text-center" style=" margin-top: 2%;">
+                                            <div id="div_copyright" class=" text-center" style="margin-top: 2%;">
                                                 <label class="text-default text-semibold" style="text-align: center">
                                                     Copyright © 2018 HGI S.A.S - NIT 811.021.438-4<br />
                                                     Todos los Derechos Reservados</label>

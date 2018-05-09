@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>HGInet Facturación Electrónica</title>    
+    <title>HGInet Facturación Electrónica</title>
     <%--Se debe copiar el archivo al proyecto--%>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- Global stylesheets -->
@@ -66,12 +66,13 @@
                 <div class="content-wrapper">
 
                     <!-- Área de Contenido -->
-                    <div class="content" >
+                    <div class="content">
                         <form action="your-action" ng-submit="onFormSubmit($event)" class="ng-pristine ng-valid">
-                            
+
                             <div class="panel panel-body login-form widget-container" id="divcontenido">
                                 <div class="text-center">
-                                    <div class="icon-object border-primary-800 text-primary-800"><i class="icon-lock2"></i></div>
+                                     <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
+                                   <%-- <div class="icon-object border-primary-800 text-primary-800"><i class="icon-lock2"></i></div>--%>
                                     <h5 class="content-group-lg">Restablecimiento de Contraseña</h5>
                                 </div>
 
@@ -90,14 +91,20 @@
 
                             </div>
 
-                            <div class="panel panel-body login-form widget-container" id="divexito" style="display:none">
+                            <div class="panel panel-body login-form widget-container" id="divexito" style="display: none">
                                 <div class="text-center">
                                     <div class="icon-object border-primary-800 text-primary-800"><i class="icon-lock2"></i></div>
                                     <h5 class="content-group-lg">Cambio de Contraseña exitoso<small class="display-block"><a href="Default.aspx">Por favor ingrese al siguiente link para iniciar sesión</a></small></h5>
                                 </div>
-                                                               
+
 
                             </div>
+
+                            <!-- Pie de Página -->
+                            <div class="footer text-muted text-center" style="font-size: 13px">
+                                Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGInet Facturación Electrónica</a>
+                            </div>
+                            <!-- /Pie de Página -->
 
                         </form>
                         <!-- /Formulario Autenticación -->

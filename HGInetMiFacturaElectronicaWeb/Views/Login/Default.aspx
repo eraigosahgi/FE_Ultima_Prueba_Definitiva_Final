@@ -53,6 +53,7 @@
     <script src="../../Scripts/Pages/Autenticacion.js"></script>
 
 </head>
+
 <body class="login-container" style="background-color: #eeeded">
     <div ng-app="AutenticacionApp">
         <!-- Contenedor de Página -->
@@ -90,6 +91,12 @@
 
 
                             </div>
+
+                            <!-- Pie de Página -->
+                            <div class="footer text-muted text-center" style=" font-size: 13px">
+                                Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGInet Facturación Electrónica</a>
+                            </div>
+                            <!-- /Pie de Página -->
 
                         </form>
 
