@@ -15,11 +15,14 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
             // obtiene de la ruta GET el id de seguridad del usuario autenticado para crear la sesión
             if (Request.QueryString != null)
             {
-                Sesion sesion = new Sesion();
+                if (!string.IsNullOrWhiteSpace(Request.QueryString["ID"]))
+                {
+                    Sesion sesion = new Sesion();
 
-                System.Guid id_seguridad = new System.Guid(Request.QueryString["ID"]);
+                    System.Guid id_seguridad = new System.Guid(Request.QueryString["ID"]);
 
-                sesion.GuardarSesionWeb(id_seguridad);
+                    sesion.GuardarSesionWeb(id_seguridad);
+                }
             }
 
         }
