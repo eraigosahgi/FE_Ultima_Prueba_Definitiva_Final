@@ -1,5 +1,7 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
+var email_destino = "";
+var id_seguridad = "";
 
 var DocObligadoApp = angular.module('DocObligadoApp', ['dx']);
 DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location) {
@@ -17,10 +19,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
     $http.get('/api/DatosSesion/').then(function (response) {
 
-    	console.log(response.data[0]);
+        console.log(response.data[0]);
 
-    	codigo_facturador = response.data[0].Identificacion;
-    	consultar();
+        codigo_facturador = response.data[0].Identificacion;
+        consultar();
     });
 
 
@@ -91,8 +93,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             }
         }
 
-    var mensaje_acuse = "";
-
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
         type: 'default',
@@ -118,8 +118,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
         $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
 
-            console.log("Ingresó a cargar la data.");
-            console.log("Datossss", response.data);
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
                 paging: {
@@ -135,7 +133,17 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         caption: "Archivos",
                         cellTemplate: function (container, options) {
                             $("<div>")
-                                .append($("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "'>&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "'>&nbsp;&nbsp;<a target='_blank' class='icon-mail-read' href='" + "#" + "'>"))
+                                .append(
+                                    $("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "'>&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "'>&nbsp;&nbsp;"),
+                                    $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>").dxButton({
+                                        onClick: function () {
+                                            $scope.showModal = true;
+                                            email_destino = options.data.MailAdquiriente;
+                                            id_seguridad = options.data.StrIdSeguridad;
+                                            $('input:text[name=EmailDestino]').val(email_destino);
+                                        }
+                                    }).removeClass("dx-button dx-button-normal dx-widget")
+                            )
                                 .append($(""))
                                 .appendTo(container);
                         }
@@ -205,6 +213,107 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         });
 
     }
+
+});
+
+
+
+DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController($scope, $http, $location) {
+
+    //Formulario.
+    $scope.formOptionsEmailEnvio = {
+
+        readOnly: false,
+        showColonAfterLabel: true,
+        showValidationSummary: true,
+        validationGroup: "DatosEmail",
+        onInitialized: function (e) {
+            formInstance = e.component;
+        },
+        items: [{
+            itemType: "group",
+            items: [
+                {
+                    dataField: "EmailDestino",
+                    editorType: "dxTextBox",
+                    label: {
+                        text: "E-mail"
+                    },
+                    validationRules: [{
+                        type: "required",
+                        message: "El e-mail de destino es obligatorio."
+                    }, {
+                        //Valida que el campo solo contenga números
+                        type: "pattern",
+                        pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$",
+                        message: "El campo no contiene el formato requerido."
+                    }]
+                }
+            ]
+        }
+        ]
+    };
+
+    //botón Cerrar Modal
+    $scope.buttonCerrarModal = {
+        text: "CERRAR"
+    };
+
+    //Botón Enviar email
+    $scope.buttonEnviarEmail = {
+        text: "ENVIAR",
+        type: "success",
+        //useSubmitBehavior: true,
+        //validationGroup: "DatosEmail",
+
+        onClick: function (e) {
+
+            try {
+
+                email_destino = $('input:text[name=EmailDestino]').val();
+
+                if (email_destino == "") {
+                    throw new DOMException("El e-mail de destino es obligatorio.");
+                }
+
+                $http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino).then(function (responseEnvio) {
+
+                    var respuesta = responseEnvio.data;
+
+                    if (respuesta) {
+                        swal({
+                            title: 'Proceso Éxitoso',
+                            text: 'El e-mail ha sido enviado con éxito.',
+                            type: 'success',
+                            confirmButtonColor: '#66BB6A',
+                            confirmButtonTex: 'Aceptar',
+                            animation: 'pop',
+                            html: true,
+                        });
+                    } else {
+                        swal({
+                            title: 'Error',
+                            text: 'Ocurrió un error en el envío del e-mail.',
+                            type: 'Error',
+                            confirmButtonColor: '#66BB6A',
+                            confirmButtonTex: 'Aceptar',
+                            animation: 'pop',
+                            html: true,
+                        });
+                    }
+                    $('input:text[name=EmailDestino]').val("");
+                    $("#modal_enviar_email").removeClass("modal fade in").addClass("modal fade");
+                    $('.modal-backdrop').remove();
+
+                }, function errorCallback(response) {
+                    DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
+                });
+
+            } catch (e) {
+                DevExpress.ui.notify(e.message, 'error', 10000);
+            }
+        }
+    };
 
 
 });

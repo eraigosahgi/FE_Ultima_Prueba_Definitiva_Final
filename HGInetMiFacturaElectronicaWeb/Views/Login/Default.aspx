@@ -71,8 +71,9 @@
 
                             <div class="panel panel-body login-form widget-container">
                                 <div class="text-center">
-                                    <div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>
-                                    <h5 class="content-group-lg">Autenticación<small class="display-block">Ingrese los datos de autenticación</small></h5>
+                                    <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
+                                    <%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
+                                    <h5 class="content-group-lg">HGInet Facturación Electrónica<small class="display-block">Ingrese los datos de autenticación</small></h5>
                                 </div>
 
                                 <div class="widget-container">
@@ -115,7 +116,7 @@
                             <h5 style="margin-bottom: 10px" class="modal-title">Restablecer Contraseña</h5>
                         </div>
 
-                        <div class="modal-body" >
+                        <div class="modal-body">
 
                             <div class="col-md-8 col-md-offset-2">
 
