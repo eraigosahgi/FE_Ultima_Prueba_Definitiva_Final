@@ -7,49 +7,51 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     var IdSeguridad = location.search.split('id_seguridad=')[1];
     var estado = "";
     var motivo_rechazo = "";
+    consultar();
+    function consultar() {
+        //Obtiene los datos del web api
+        //ControladorApi: /Api/Documentos/
+        //Datos GET: id_seguridad
+        $http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
+            $scope.RespuestaAcuse = response.data;
 
-    //Obtiene los datos del web api
-    //ControladorApi: /Api/Documentos/
-    //Datos GET: id_seguridad
-    $http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
-        $scope.RespuestaAcuse = response.data;
-        
-    });
+        });
 
-    $scope.TextAreaObservaciones = {
+        $scope.TextAreaObservaciones = {
 
-        readOnly: false,
-        showColonAfterLabel: true,
-        showValidationSummary: true,
-        validationGroup: "ObservacionesAcuse",
-        onInitialized: function (e) {
-            formInstance = e.component;
-        },
-        items: [{
-            itemType: "group",
-            items: [
-                {
-                    dataField: "Observaciones",
-                    editorType: "dxTextArea",
-                    label: {
-                        text: "Observaciones"
-                    },
-                    validationRules: [{
-                        type: "required",
-                        message: "Las observaciones son requeridas."
-                    }]
-                }
-            ]
-        }]
-    };
+            readOnly: false,
+            showColonAfterLabel: true,
+            showValidationSummary: true,
+            validationGroup: "ObservacionesAcuse",
+            onInitialized: function (e) {
+                formInstance = e.component;
+            },
+            items: [{
+                itemType: "group",
+                items: [
+                    {
+                        dataField: "Observaciones",
+                        editorType: "dxTextArea",
+                        label: {
+                            text: "Observaciones"
+                        },
+                        validationRules: [{
+                            type: "required",
+                            message: "Las observaciones son requeridas."
+                        }]
+                    }
+                ]
+            }]
+        };
+    }
 
     //Botón Rechazar.
     $scope.ButtonOptionsAceptar = {
         text: "Aceptar",
-        type: "success",
+        type: "success",        
         onClick: function (e) {
-        	estado = 1;
-        	motivo_rechazo = $('textarea[name=Observaciones]').val();
+            estado = 1;
+            motivo_rechazo = $('textarea[name=Observaciones]').val();
             ActualizarDatos();
         }
     };
@@ -73,6 +75,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         ActualizarDatos();
     }
 
+  
     //Función para actualizar los datos
     function ActualizarDatos() {
 
@@ -81,14 +84,18 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
             estado: estado,
             motivo_rechazo: motivo_rechazo
         });
-        
-        $http.post('/api/Documentos?'+ data).then(function (data, response) {
+
+        $('#wait').show();
+
+        $http.post('/api/Documentos?' + data).then(function (data, response) {
             $scope.ServerResponse = data;
+            consultar();
             var id = IdSeguridad;
-            window.location.assign("../Pages/AcuseRecibo.aspx?id_seguridad=" + id);
+            $('#wait').hide();            
         }, function errorCallback(response) {
+            $('#wait').hide();
             console.log("Error..", response.data.ExceptionMessage);
-        });        
+        });
     }
 
 });
