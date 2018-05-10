@@ -20,8 +20,8 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaController
 {
-	public class Ctl_EnvioCorreos
-	{
+    public class Ctl_EnvioCorreos
+    {
 
         /// <summary>
         /// 
@@ -39,56 +39,56 @@ namespace HGInetMiFacturaElectonicaController
         /// <param name="tag_mensaje"></param>
         /// <param name="rutas_adjuntos"></param>
 		private void EnviarEmail(string id_seguridad, bool uno_a_uno, string mensaje, string asunto, bool contenido_html, DestinatarioEmail correo_remitente, List<DestinatarioEmail> correos_destino, List<DestinatarioEmail> correos_copia = null, List<DestinatarioEmail> correos_copia_oculta = null, string ruta_plantilla_html = "", string tag_mensaje = "", List<Adjunto> rutas_adjuntos = null)
-		{
-			try
-			{
-                if(correo_remitente == null)
+        {
+            try
+            {
+                if (correo_remitente == null)
                     throw new ApplicationException("No se encontró información del Remitente");
-                else if(string.IsNullOrWhiteSpace(correo_remitente.Email))
+                else if (string.IsNullOrWhiteSpace(correo_remitente.Email))
                     throw new ApplicationException("No se encontró información del Remitente");
 
-                if(correos_destino == null && correos_copia == null && correos_copia_oculta == null)
+                if (correos_destino == null && correos_copia == null && correos_copia_oculta == null)
                     throw new ApplicationException("No se encontró información del Destinatario");
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-				if (plataforma.Mailenvio.Equals("smtp"))
-				{
-					MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
+                if (plataforma.Mailenvio.Equals("smtp"))
+                {
+                    MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
 
-					// convierte las direcciones de los destinatarios
-					MailAddressCollection to = ConvertirDestinatarios(correos_destino);
+                    // convierte las direcciones de los destinatarios
+                    MailAddressCollection to = ConvertirDestinatarios(correos_destino);
 
-					MailAddressCollection cc = ConvertirDestinatarios(correos_copia);
+                    MailAddressCollection cc = ConvertirDestinatarios(correos_copia);
 
-					MailAddressCollection bcc = ConvertirDestinatarios(correos_copia_oculta);
+                    MailAddressCollection bcc = ConvertirDestinatarios(correos_copia_oculta);
 
-					MailAddress from = new MailAddress(correo_remitente.Email, correo_remitente.Nombre);
+                    MailAddress from = new MailAddress(correo_remitente.Email, correo_remitente.Nombre);
 
-					// construye el correo para el envío
-					Mail correo = new Mail(uno_a_uno, from, to, cc, bcc);
+                    // construye el correo para el envío
+                    Mail correo = new Mail(uno_a_uno, from, to, cc, bcc);
 
-					// configura los datos de conexión smtp
-					correo.ConfigurarSmtp(configuracion_server.Servidor, configuracion_server.Puerto, configuracion_server.Usuario, configuracion_server.Clave, true);
+                    // configura los datos de conexión smtp
+                    correo.ConfigurarSmtp(configuracion_server.Servidor, configuracion_server.Puerto, configuracion_server.Usuario, configuracion_server.Clave, true);
 
-					// codificación UTF8 (por defecto)
-					Encoding codificacion = Encoding.UTF8;
+                    // codificación UTF8 (por defecto)
+                    Encoding codificacion = Encoding.UTF8;
 
-					// envía el correo electrónico
-					correo.Enviar(mensaje, asunto, contenido_html, codificacion, tag_mensaje, ruta_plantilla_html, null, true);
+                    // envía el correo electrónico
+                    correo.Enviar(mensaje, asunto, contenido_html, codificacion, tag_mensaje, ruta_plantilla_html, null, true);
 
-				}
-				else if (plataforma.Mailenvio.Equals("hgi"))
-				{
-					List<Destinatario> emails = new List<Destinatario>();
+                }
+                else if (plataforma.Mailenvio.Equals("hgi"))
+                {
+                    List<Destinatario> emails = new List<Destinatario>();
 
-					// From
+                    // From
                     Destinatario destino = new Destinatario()
-					{
-						Email = Constantes.EmailRemitente,
-						Nombre = correo_remitente.Nombre,
-						Tipo = 0
-					};
+                    {
+                        Email = Constantes.EmailRemitente,
+                        Nombre = correo_remitente.Nombre,
+                        Tipo = 0
+                    };
                     emails.Add(destino);
 
                     // Reply-To
@@ -146,99 +146,102 @@ namespace HGInetMiFacturaElectonicaController
                     }
 
 
-					MensajeContenido contenido = new MensajeContenido();
-					contenido.Id = id_seguridad;
-					contenido.Emails = emails;
-					contenido.Adjuntos = rutas_adjuntos;
-					contenido.Asunto = asunto;
-					contenido.ContenidoHtml = mensaje;
-					contenido.ContenidoTexto = "";
-					contenido.UnoaUno = false;
+                    MensajeContenido contenido = new MensajeContenido();
+                    contenido.Id = id_seguridad;
+                    contenido.Emails = emails;
+                    contenido.Adjuntos = rutas_adjuntos;
+                    contenido.Asunto = asunto;
+                    contenido.ContenidoHtml = mensaje;
+                    contenido.ContenidoTexto = "";
+                    contenido.UnoaUno = false;
 
-					List<MensajeContenido> mensajes = new List<MensajeContenido>();
-					mensajes.Add(contenido);
-
-
-					HGInetEmailServicios.Ctl_Envio.Enviar(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);
-
-				}
-
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
-
-		/// <summary>
-		/// Envía mail de bienvenida al portal.
-		/// </summary>
-		/// <param name="empresa">Datos del Obligado o el Adquiriente</param>
-		/// <param name="datos_usuario">datos del usuario</param>
-		/// <returns></returns>
-		public bool Bienvenida(TblEmpresas empresa, TblUsuarios usuario)
-		{
-
-			try
-			{
-				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-				string fileName = string.Empty;
-
-				if (empresa == null)
-					throw new ApplicationException("No se encontró información del Usuario");
-
-				if (empresa.IntObligado)
-				{
-					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaObligado);
-				}
-				else if (empresa.IntAdquiriente)
-					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaAdquiriente);
-
-				if (!string.IsNullOrWhiteSpace(fileName))
-				{
-					FileInfo file = new FileInfo(fileName);
-
-					string mensaje = file.OpenText().ReadToEnd();
-
-					if (file != null)
-					{
-						mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
-						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
-						mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
-						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
-						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClave.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
-						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
-
-						string asunto = "Acceso Plataforma Facturación Electrónica";
-
-						DestinatarioEmail remitente = new DestinatarioEmail();
-						remitente.Email = Constantes.EmailRemitente;
-						remitente.Nombre = Constantes.NombreRemitenteEmail;
-
-						DestinatarioEmail destinatario = new DestinatarioEmail();
-						destinatario.Email = usuario.StrMail;
-						destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
-
-						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
-						correos_destino.Add(destinatario);
-                        
-						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
-
-						clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
-					}
-				}
-				return true;
-
-			}
-			catch (Exception ex)
-			{
-				throw new ApplicationException(ex.Message);
-			}
+                    List<MensajeContenido> mensajes = new List<MensajeContenido>();
+                    mensajes.Add(contenido);
 
 
-		}
+                    HGInetEmailServicios.Ctl_Envio.Enviar(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);
+
+                }
+
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Envía mail de bienvenida al portal.
+        /// </summary>
+        /// <param name="empresa">Datos del Obligado o el Adquiriente</param>
+        /// <param name="datos_usuario">datos del usuario</param>
+        /// <returns></returns>
+        public bool Bienvenida(TblEmpresas empresa, TblUsuarios usuario)
+        {
+
+            try
+            {
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+                string fileName = string.Empty;
+
+                if (empresa == null)
+                    throw new ApplicationException("No se encontró información del Usuario");
+
+                if (empresa.IntObligado)
+                {
+                    fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaObligado);
+                }
+                else if (empresa.IntAdquiriente)
+                    fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaAdquiriente);
+
+                if (!string.IsNullOrWhiteSpace(fileName))
+                {
+                    FileInfo file = new FileInfo(fileName);
+
+                    string mensaje = file.OpenText().ReadToEnd();
+
+                    if (file != null)
+                    {
+                        if (empresa.IntObligado)
+                            mensaje = mensaje.Replace("{SerialActivacion}", empresa.StrSerial.ToString());
+
+                        mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
+                        mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
+                        mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
+                        mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
+                        mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
+                        mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClave.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+                        mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
+
+                        string asunto = "Acceso Plataforma Facturación Electrónica";
+
+                        DestinatarioEmail remitente = new DestinatarioEmail();
+                        remitente.Email = Constantes.EmailRemitente;
+                        remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+                        DestinatarioEmail destinatario = new DestinatarioEmail();
+                        destinatario.Email = usuario.StrMail;
+                        destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
+
+                        List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+                        correos_destino.Add(destinatario);
+
+                        Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+                        clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+                    }
+                }
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+
+
+        }
 
         /// <summary>
         /// Envía mail al Adquiriente con los archivos generados
@@ -413,75 +416,75 @@ namespace HGInetMiFacturaElectonicaController
         /// <param name="empresa">Datos del Obligado o del Adquiriente</param>
         /// <param name="usuario">Datos del usuario guardado en BD</param>
         public void RestablecerClave(TblEmpresas empresa, TblUsuarios usuario)
-		{
+        {
 
-			try
-			{
-				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+            try
+            {
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-				if (empresa == null)
-					throw new ApplicationException(string.Format("No se encontró información del Nit {0} ", empresa.StrIdentificacion));
+                if (empresa == null)
+                    throw new ApplicationException(string.Format("No se encontró información del Nit {0} ", empresa.StrIdentificacion));
 
-				if (usuario == null)
-					throw new ApplicationException(string.Format("No se encontró información del usuario {0}", usuario));
+                if (usuario == null)
+                    throw new ApplicationException(string.Format("No se encontró información del usuario {0}", usuario));
 
-				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaRestablecer);
+                string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaRestablecer);
 
-				if (!string.IsNullOrWhiteSpace(fileName))
-				{
-					FileInfo file = new FileInfo(fileName);
+                if (!string.IsNullOrWhiteSpace(fileName))
+                {
+                    FileInfo file = new FileInfo(fileName);
 
-					string mensaje = file.OpenText().ReadToEnd();
+                    string mensaje = file.OpenText().ReadToEnd();
 
-					if (file != null)
-					{
-						mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
-						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
-						mensaje = mensaje.Replace("{NombresUsuario}", usuario.StrNombres);
-						mensaje = mensaje.Replace("{ApellidosUsuario}", usuario.StrApellidos);
-						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
-						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClave.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
-						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
+                    if (file != null)
+                    {
+                        mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
+                        mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
+                        mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
+                        mensaje = mensaje.Replace("{NombresUsuario}", usuario.StrNombres);
+                        mensaje = mensaje.Replace("{ApellidosUsuario}", usuario.StrApellidos);
+                        mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
+                        mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClave.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+                        mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
-						string asunto = "Restablecimiento de Contraseña";
+                        string asunto = "Restablecimiento de Contraseña";
 
-						DestinatarioEmail remitente = new DestinatarioEmail();
-						remitente.Email = Constantes.EmailRemitente;
-						remitente.Nombre = Constantes.NombreRemitenteEmail;
+                        DestinatarioEmail remitente = new DestinatarioEmail();
+                        remitente.Email = Constantes.EmailRemitente;
+                        remitente.Nombre = Constantes.NombreRemitenteEmail;
 
-						DestinatarioEmail destinatario = new DestinatarioEmail();
-						destinatario.Email = usuario.StrMail;
-						destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
+                        DestinatarioEmail destinatario = new DestinatarioEmail();
+                        destinatario.Email = usuario.StrMail;
+                        destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
 
-						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
-						correos_destino.Add(destinatario);
-                        
-						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+                        List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+                        correos_destino.Add(destinatario);
 
-						clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+                        Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				throw ex;
-			}
-		}
+                        clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
 
-		/// <summary>
-		/// Envía acuse de recibo al Obligado
-		/// </summary>
-		/// <param name="documento">Datos del documento</param>
-		/// <returns></returns>
-		public bool RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente)
-		{
-			try
-			{
-				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaAcuse);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-				string asunto = "Respuesta Acuse de Recibo";
+        /// <summary>
+        /// Envía acuse de recibo al Obligado
+        /// </summary>
+        /// <param name="documento">Datos del documento</param>
+        /// <returns></returns>
+        public bool RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente)
+        {
+            try
+            {
+                string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaAcuse);
+
+                string asunto = "Respuesta Acuse de Recibo";
 
                 // envía como email de respuesta el Adquiriente
                 DestinatarioEmail remitente = new DestinatarioEmail();
@@ -493,115 +496,115 @@ namespace HGInetMiFacturaElectonicaController
                 destinatario.Nombre = facturador.StrRazonSocial;
                 destinatario.Email = facturador.StrMail;
 
-				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
-				correos_destino.Add(destinatario);                
+                List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+                correos_destino.Add(destinatario);
 
-				// plantilla Html
-				if (!string.IsNullOrWhiteSpace(ruta_plantilla_html))
-				{
-					FileInfo file = new FileInfo(ruta_plantilla_html);
+                // plantilla Html
+                if (!string.IsNullOrWhiteSpace(ruta_plantilla_html))
+                {
+                    FileInfo file = new FileInfo(ruta_plantilla_html);
 
-					string mensaje = file.OpenText().ReadToEnd();
-					if (file != null)
-					{
-						// Datos Facturador Electronico
-						mensaje = mensaje.Replace("{ImagenLogo}", "<img id='ImgLogo' src='" + "" + "' style='border: none; border-radius: 0px; display: block; outline: none; text-decoration: none; width: 100%; height: auto;' width='233' />");
-						mensaje = mensaje.Replace("{NombreFacturador}", facturador.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitFacturador}", facturador.StrIdentificacion);
+                    string mensaje = file.OpenText().ReadToEnd();
+                    if (file != null)
+                    {
+                        // Datos Facturador Electronico
+                        mensaje = mensaje.Replace("{ImagenLogo}", "<img id='ImgLogo' src='" + "" + "' style='border: none; border-radius: 0px; display: block; outline: none; text-decoration: none; width: 100%; height: auto;' width='233' />");
+                        mensaje = mensaje.Replace("{NombreFacturador}", facturador.StrRazonSocial);
+                        mensaje = mensaje.Replace("{NitFacturador}", facturador.StrIdentificacion);
 
-						// Datos del Tercero
-						mensaje = mensaje.Replace("{NombreTercero}", adquiriente.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitTercero}", adquiriente.StrIdentificacion);
-						mensaje = mensaje.Replace("{EmailTercero}", adquiriente.StrMail);
-						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
+                        // Datos del Tercero
+                        mensaje = mensaje.Replace("{NombreTercero}", adquiriente.StrRazonSocial);
+                        mensaje = mensaje.Replace("{NitTercero}", adquiriente.StrIdentificacion);
+                        mensaje = mensaje.Replace("{EmailTercero}", adquiriente.StrMail);
+                        mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
 
 
-						//Datos del Documento
-						string titulo_factura = string.Empty;
+                        //Datos del Documento
+                        string titulo_factura = string.Empty;
 
-						switch (documento.IntDocTipo)
-						{
-							case 1:
-								titulo_factura = "Factura";
-								break;
-							case 2:
-								titulo_factura = "Nota Crédito";
-								break;
-							case 3:
-								titulo_factura = "Nota Débito";
-								break;
-						}
+                        switch (documento.IntDocTipo)
+                        {
+                            case 1:
+                                titulo_factura = "Factura";
+                                break;
+                            case 2:
+                                titulo_factura = "Nota Crédito";
+                                break;
+                            case 3:
+                                titulo_factura = "Nota Débito";
+                                break;
+                        }
 
-						string estado_respuesta = string.Empty;
+                        string estado_respuesta = string.Empty;
 
-						switch (documento.IntAdquirienteRecibo)
-						{
-							case 1:
-								estado_respuesta = "Aprobada";
-								break;
-							case 2:
-								estado_respuesta = "Rechazada";
-								break;
-						}
+                        switch (documento.IntAdquirienteRecibo)
+                        {
+                            case 1:
+                                estado_respuesta = "Aprobada";
+                                break;
+                            case 2:
+                                estado_respuesta = "Rechazada";
+                                break;
+                        }
 
-                        if(documento.IntAdquirienteRecibo == 1 && !string.IsNullOrWhiteSpace(documento.StrAdquirienteMvoRechazo))
+                        if (documento.IntAdquirienteRecibo == 1 && !string.IsNullOrWhiteSpace(documento.StrAdquirienteMvoRechazo))
                             mensaje = mensaje.Replace("{MotivoRechazo}", "Observaciones: " + documento.StrAdquirienteMvoRechazo);
                         else if (documento.IntAdquirienteRecibo == 2)
-							mensaje = mensaje.Replace("{MotivoRechazo}", "Motivo rechazo: " + documento.StrAdquirienteMvoRechazo);
-						else
-							mensaje = mensaje.Replace("{MotivoRechazo}", " ");
+                            mensaje = mensaje.Replace("{MotivoRechazo}", "Motivo rechazo: " + documento.StrAdquirienteMvoRechazo);
+                        else
+                            mensaje = mensaje.Replace("{MotivoRechazo}", " ");
 
-						mensaje = mensaje.Replace("{TipoDocumento}", titulo_factura);
-						mensaje = mensaje.Replace("{NumeroDocumento}", documento.IntNumero.ToString());
-						mensaje = mensaje.Replace("{Estadorespuesta}", estado_respuesta);
-
-
-						// envía el correo electrónico
-						EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
-
-					}
-				}
-
-				return true;
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
+                        mensaje = mensaje.Replace("{TipoDocumento}", titulo_factura);
+                        mensaje = mensaje.Replace("{NumeroDocumento}", documento.IntNumero.ToString());
+                        mensaje = mensaje.Replace("{Estadorespuesta}", estado_respuesta);
 
 
-		}
+                        // envía el correo electrónico
+                        EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
 
-		/// <summary>
-		/// Convierte los correos electrónicos de objeto a MailAddressCollection
-		/// </summary>
-		/// <param name="correos_destino">correos electrónicos</param>
-		/// <returns>correos electrónicos</returns>
-		public static MailAddressCollection ConvertirDestinatarios(List<DestinatarioEmail> correos_destino)
-		{
-			try
-			{
-				MailAddressCollection destinatarios = new MailAddressCollection();
+                    }
+                }
 
-				if (correos_destino != null)
-				{
-					foreach (DestinatarioEmail item in correos_destino)
-					{
-						if (!string.IsNullOrWhiteSpace(item.Email))
-						{
-							destinatarios.Add(new MailAddress(item.Email, item.Nombre));
-						}
-					}
-				}
-				return destinatarios;
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-
-		}
+                return true;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
 
 
-	}
+        }
+
+        /// <summary>
+        /// Convierte los correos electrónicos de objeto a MailAddressCollection
+        /// </summary>
+        /// <param name="correos_destino">correos electrónicos</param>
+        /// <returns>correos electrónicos</returns>
+        public static MailAddressCollection ConvertirDestinatarios(List<DestinatarioEmail> correos_destino)
+        {
+            try
+            {
+                MailAddressCollection destinatarios = new MailAddressCollection();
+
+                if (correos_destino != null)
+                {
+                    foreach (DestinatarioEmail item in correos_destino)
+                    {
+                        if (!string.IsNullOrWhiteSpace(item.Email))
+                        {
+                            destinatarios.Add(new MailAddress(item.Email, item.Nombre));
+                        }
+                    }
+                }
+                return destinatarios;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+
+        }
+
+
+    }
 }

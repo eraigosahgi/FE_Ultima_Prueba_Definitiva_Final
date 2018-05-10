@@ -60,7 +60,7 @@
     <script type="text/javascript" src="../../Scripts/assets/js/plugins/extensions/session_timeout.min.js"></script>
     <script type="text/javascript" src="../../Scripts/assets/js/pages/gallery.js"></script>
     <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/ripple.min.js"></script>
-    
+
     <!-- /theme JS files -->
 
 
@@ -81,10 +81,12 @@
     <script src="../../Scripts/config.js"></script>
 </head>
 <body>
-   <%--Panel carga o Loading--%>
+    <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>        
-        <div> <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' /></div>
+        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>
+        <div>
+            <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' />
+        </div>
     </div>
 
 
@@ -258,14 +260,14 @@
                                                 </ul>
                                             </li>
 
-                                            <%--<li visible="false">
+                                            <li>
                                                 <a href="#" class="has-ul legitRipple"><i class="icon-user"></i><span style="margin: -10px">Usuarios</span></a>
                                                 <ul>
                                                     <li>
-                                                        <a class="legitRipple"><i class="icon-cogs"></i><span style="margin: -10px">Gestión Usuarios</span></a>
+                                                        <a class="legitRipple" href="../Pages/ConsultaUsuarios.aspx"><i class="icon-cogs"></i><span style="margin: -10px">Gestión Usuarios</span></a>
                                                     </li>
                                                 </ul>
-                                            </li>--%>
+                                            </li>
                                         </ul>
                                     </li>
                                     <!-- /HGInet Facturación electrónica -->

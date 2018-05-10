@@ -49,8 +49,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             tbl_usuario.StrMail = empresa.StrMail;
             tbl_usuario.DatFechaIngreso = Fecha.GetFecha();
             tbl_usuario.DatFechaActualizacion = Fecha.GetFecha();
-			tbl_usuario.DatFechaCambioClave = Fecha.GetFecha();
-			tbl_usuario.IntIdEstado = 1;
+            tbl_usuario.DatFechaCambioClave = Fecha.GetFecha();
+            tbl_usuario.IntIdEstado = 1;
             tbl_usuario.StrIdSeguridad = Guid.NewGuid();
             tbl_usuario.StrIdCambioClave = Guid.NewGuid();
 
@@ -89,19 +89,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         #region Obtener
 
         /// <summary>
-        /// Obtiene los datos por código de usuario.
+        /// Obtiene los datos por código de usuario y empresa.
         /// </summary>
         /// <param name="codigo_usuario"></param>
         /// <returns></returns>
-        public TblUsuarios ObtenerUsuario(System.Guid codigo_usuario)
+        public List<TblUsuarios> ObtenerUsuarios(string codigo_usuario, string codigo_empresa)
         {
             try
             {
                 var respuesta = from usuario in context.TblUsuarios
-                                where (usuario.StrUsuario.Equals(codigo_usuario))
+                                where (usuario.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
+                                && (usuario.StrEmpresa.Equals(codigo_empresa) || codigo_empresa.Equals("*"))
                                 select usuario;
 
-                return respuesta.FirstOrDefault();
+                return respuesta.ToList();
             }
             catch (Exception excepcion)
             {
@@ -208,34 +209,34 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             }
         }
 
-		/// <summary>
-		/// Valida el id de seguridad para cambio de contraseña
-		/// </summary>
-		/// <param name="IdSeguridad">id de seguridad</param>
-		/// <returns>indica si es válido el cambio de clave</returns>
+        /// <summary>
+        /// Valida el id de seguridad para cambio de contraseña
+        /// </summary>
+        /// <param name="IdSeguridad">id de seguridad</param>
+        /// <returns>indica si es válido el cambio de clave</returns>
         public bool ValidarIdSeguridad(System.Guid IdSeguridad)
         {
             try
             {
-				List<TblUsuarios> datos = (from item in context.TblUsuarios
-									 where item.StrIdCambioClave == IdSeguridad
-									 select item).ToList();
+                List<TblUsuarios> datos = (from item in context.TblUsuarios
+                                           where item.StrIdCambioClave == IdSeguridad
+                                           select item).ToList();
 
-				if (datos.Any())
-				{			
+                if (datos.Any())
+                {
 
-					if (datos.FirstOrDefault() != null)
-					{
-						if (!datos.FirstOrDefault().DatFechaCambioClave.HasValue || !(datos.FirstOrDefault().DatFechaCambioClave.Value.AddHours(24.0) >= Fecha.GetFecha()))
-						{
-							throw new ApplicationException("El ID de seguridad ha expirado; por favor realice el proceso de recuperación de contraseña nuevamente.");
-						}
-						return true;
-					}
-				}
+                    if (datos.FirstOrDefault() != null)
+                    {
+                        if (!datos.FirstOrDefault().DatFechaCambioClave.HasValue || !(datos.FirstOrDefault().DatFechaCambioClave.Value.AddHours(24.0) >= Fecha.GetFecha()))
+                        {
+                            throw new ApplicationException("El ID de seguridad ha expirado; por favor realice el proceso de recuperación de contraseña nuevamente.");
+                        }
+                        return true;
+                    }
+                }
 
-				throw new ApplicationException("Id de seguridad incorrecto.");
-			}
+                throw new ApplicationException("Id de seguridad incorrecto.");
+            }
             catch (ApplicationException excepcion)
             {
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);

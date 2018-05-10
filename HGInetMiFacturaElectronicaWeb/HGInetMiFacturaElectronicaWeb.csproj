@@ -1838,6 +1838,7 @@
     <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
+    <Content Include="Scripts\Pages\Usuarios.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
     <Content Include="Scripts\Pages\RestablecerClave.js" />
@@ -2653,6 +2654,7 @@
     <Content Include="Views\Login\Default.aspx" />
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
     <Content Include="Views\Pages\Inicio.aspx" />
@@ -2724,6 +2726,13 @@
     </Compile>
     <Compile Include="Views\Pages\AcuseRecibo.aspx.designer.cs">
       <DependentUpon>AcuseRecibo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaUsuarios.aspx.cs">
+      <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaUsuarios.aspx.designer.cs">
+      <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\DocumentosAdquiriente.aspx.cs">
       <DependentUpon>DocumentosAdquiriente.aspx</DependentUpon>
@@ -2833,7 +2842,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61499/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
