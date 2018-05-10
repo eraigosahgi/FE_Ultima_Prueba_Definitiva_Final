@@ -66,13 +66,14 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         public static void ValidarSesion()
         {
             HttpContext context = HttpContext.Current;
+         
+                if (context.Session == null)
+                    throw new ApplicationException("No se encontraron datos en la sesión; ingrese nuevamente.");
 
-            if (context.Session == null)
-                throw new ApplicationException("No se encontraron datos en la sesión; ingrese nuevamente.");
 
-
-            if (context.Session["datos_empresa"] == null || context.Session["datos_usuario"] == null)
-                throw new ApplicationException("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.");
+                if (context.Session["datos_empresa"] == null || context.Session["datos_usuario"] == null)
+                    throw new ApplicationException("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.");            
+           
         }
 
         /// <summary>

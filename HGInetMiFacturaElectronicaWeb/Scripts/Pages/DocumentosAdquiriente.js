@@ -100,9 +100,10 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
 
             console.log("Ingresó a cargar la data.");
-
+            console.log("Datos ", response.data);
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
+                
                 paging: {
                     pageSize: 20
                 },

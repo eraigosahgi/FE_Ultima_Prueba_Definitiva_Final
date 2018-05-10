@@ -127,8 +127,26 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     showPageSizeSelector: true,
                     allowedPageSizes: [5, 10, 20],
                     showInfo: true
-                },
-                columns: [
+                }
+                //Formatos personalizados a las columnas en este caso para el monto
+                , onCellPrepared: function (options) {
+                    var fieldData = options.value,
+                        fieldHtml = "";
+
+                    try {
+                        if (options.columnIndex == 4) {
+                            if (fieldData) {
+
+                                var inicial = fNumber.go(fieldData);
+                                options.cellElement.html(inicial);
+                            }
+                        }
+                    } catch (err) {
+                        // console.log("Error: ", err.message);
+                    }
+
+                }
+                ,columns: [
                     {
                         caption: "Archivos",
                         cellTemplate: function (container, options) {
@@ -151,11 +169,13 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     {
                         caption: "Documento",
                         dataField: "NumeroDocumento",
+                        width: '10%'
                     },
                     {
                         caption: "Fecha Documento",
                         dataField: "DatFechaDocumento",
-                        dataType: "date",
+                        displayFormat: "yyyy-MM-dd",
+                        width: '11.5%',
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
@@ -164,7 +184,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     {
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
-                        dataType: "date",
+                        displayFormat: "yyyy-MM-dd",
+                        width: '11.5%',
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."

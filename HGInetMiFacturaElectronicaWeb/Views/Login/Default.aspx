@@ -50,7 +50,7 @@
     <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
     <!-- /DevExtreme -->
 
-    <script src="../../Scripts/Pages/Autenticacion2.js"></script>
+    <script src="../../Scripts/Pages/Autenticacion.js"></script>
 
 </head>
 <body class="login-container" style="background-color: #eeeded">
