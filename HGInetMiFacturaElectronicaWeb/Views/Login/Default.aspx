@@ -50,106 +50,113 @@
     <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
     <!-- /DevExtreme -->
 
-    <script src="../../Scripts/Pages/Autenticacion.js"></script>
+    <script src="../../Scripts/Pages/Autenticacion2.js"></script>
 
 </head>
-
 <body class="login-container" style="background-color: #eeeded">
-    <div ng-app="AutenticacionApp">
-        <!-- Contenedor de Página -->
-        <div class="page-container" ng-controller="AutenticacionController">
-
-            <!-- Contenido de Página -->
-            <div class="page-content">
-
-                <!-- Main content -->
-                <div class="content-wrapper">
-
-                    <!-- Área de Contenido -->
-                    <div class="content">
-
-                        <form ng-submit="onFormSubmit($event)">
-
-                            <div class="panel panel-body login-form widget-container">
-                                <div class="text-center">
-                                    <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
-                                    <%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
-                                    <h5 class="content-group-lg">HGInet Facturación Electrónica<small class="display-block">Ingrese los datos de autenticación</small></h5>
-                                </div>
-
-                                <div class="widget-container">
-                                    <div id="form" dx-form="formOptions">
-                                    </div>
-                                </div>
-                                <br />
-                                <a data-toggle="modal" data-target="#modal_restablecer_clave" data-popup="tooltip" title="Restablecer contraseña" style="color: #166dba">
-                                    <h6>Restablecer contraseña</h6>
-                                </a>
-                                <br />
-                                <div dx-button="buttonOptions"></div>
-
-
-
-                            </div>
-
-                            <!-- Pie de Página -->
-                            <div class="footer text-muted text-center" style=" font-size: 13px">
-                                Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGInet Facturación Electrónica</a>
-                            </div>
-                            <!-- /Pie de Página -->
-
-                        </form>
-
-                        <!-- /Formulario Autenticación -->
-
-                    </div>
-                    <!-- /Área de Contenido -->
-
-                </div>
-                <!-- /main content -->
-
-            </div>
-            <!-- /Contenido de Página -->
-
-        </div>
-        <!-- /Contenedor de Página -->
-        <%--Modal Restablecer Contraseña--%>
-        <form ng-submit="onFormSubmit($event)" ng-controller="RestablecerController">
-            <div id="modal_restablecer_clave" class="modal fade" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div id="EncabezadoModal" class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">×</button>
-                            <h5 style="margin-bottom: 10px" class="modal-title">Restablecer Contraseña</h5>
-                        </div>
-
-                        <div class="modal-body">
-
-                            <div class="col-md-8 col-md-offset-2">
-
-                                <div id="formulario" class="row">
-
-
-                                    <div id="formvalidar" dx-form="formOptions2">
-                                    </div>
-
-
-
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div id="divsombra" class="modal-footer" style="margin-top: 22%">
-                            <div dx-button="buttonCerrarRestablecer" data-dismiss="modal"></div>
-                            <div dx-button="buttonRestablecer"></div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+    <%--Panel de Carga HGI--%>
+    <div id="wait" style="display: none; z-index: 9999; position: absolute; left: 43%; top: 30%">
+        <img src='../../Content/icons/Loading.gif' />
+        H.G.I.
     </div>
-    </form>
+    <div class="row" style="height:100%; background-color:white;">
+        <div class="col-md-6 col-lg-8 hidden-xs hidden-sm" style="height:100%;" >
+            <div id="galleryContainer" style="background-color:white;height:100%;">
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4"  style="background-color:white; height:100%;">
+            <div ng-app="AutenticacionApp">
+                <!-- Contenedor de Página -->
+                <div class="page-container" ng-controller="AutenticacionController">
+
+                    <!-- Contenido de Página -->
+                    <div class="page-content">
+
+                        <!-- Main content -->
+                        <div class="content-wrapper">
+
+                            <!-- Área de Contenido -->
+                            <div class="content">
+
+                                <form ng-submit="onFormSubmit($event)">
+
+                                    <div >
+                                        <div class="text-center">
+                                            <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
+                                            <%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
+                                            <h5 class="content-group-lg">HGInet Facturación Electrónica<small class="display-block">Ingrese los datos de autenticación</small></h5>
+                                        </div>
+
+                                        <div class="widget-container">
+                                            <div id="form" dx-form="formOptions">
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <a data-toggle="modal" data-target="#modal_restablecer_clave" data-popup="tooltip" title="Restablecer contraseña" style="color: #166dba">
+                                            <h6>Restablecer contraseña</h6>
+                                        </a>
+                                        <br />
+                                        <div dx-button="buttonOptions"></div>
+
+
+
+                                    </div>
+
+                                </form>
+
+                                <!-- /Formulario Autenticación -->
+
+                            </div>
+                            <!-- /Área de Contenido -->
+
+                        </div>
+                        <!-- /main content -->
+
+                    </div>
+                    <!-- /Contenido de Página -->
+
+                </div>
+                <!-- /Contenedor de Página -->
+                <%--Modal Restablecer Contraseña--%>
+                <form ng-submit="onFormSubmit($event)" ng-controller="RestablecerController">
+                    <div id="modal_restablecer_clave" class="modal fade" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div id="EncabezadoModal" class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+                                    <h5 style="margin-bottom: 10px;  " class="modal-title">Restablecer Contraseña</h5>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="col-md-8 col-md-offset-2">
+
+                                        <div id="formulario" class="row">
+
+
+                                            <div id="formvalidar" dx-form="formOptions2">
+                                            </div>
+
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div id="divsombra" class="modal-footer" style="margin-top: 22%">
+                                    <div dx-button="buttonCerrarRestablecer" data-dismiss="modal"></div>
+                                    <div dx-button="buttonRestablecer"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
     <%--/ Modal Restablecer Contraseña--%>
 </body>
 </html>
