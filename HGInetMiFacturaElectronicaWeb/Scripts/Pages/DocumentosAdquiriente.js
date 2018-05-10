@@ -11,7 +11,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
            fecha_inicio = "",
            fecha_fin = "";
 
-    
+    /*
         $http.get('/api/DatosSesion/').then(function (response) {
 
             console.log(response.data[0]);
@@ -19,8 +19,10 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             codigo_adquiente = response.data[0].Identificacion;
                       
             consultar();
-        });
-    
+        }),function errorCallback(response) {                
+           Mensaje(response.data.ExceptionMessage, "error");
+        };
+    */
     //Define los campos y las opciones
     $scope.filtros =
         {
@@ -79,8 +81,9 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
     };
 
     //Consultar DOcumentos
-    function consultar() {
-
+    function consultar() {        
+        $('#wait').show();
+        $("#loadPanelContainer").dxLoadPanel("show");
         console.log("Ingresó al evento del botón");
 
         if (fecha_inicio == "")
@@ -107,8 +110,26 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     showPageSizeSelector: true,
                     allowedPageSizes: [5, 10, 20],
                     showInfo: true
-                },
-                columns: [
+                }
+                //Formatos personalizados a las columnas en este caso para el monto
+                ,onCellPrepared: function (options) {
+                    var fieldData = options.value,
+                        fieldHtml = "";
+
+                    try {
+                        if (options.columnIndex == 4) {
+                            if (fieldData) {
+                                
+                                var inicial = fNumber.go(fieldData);                                
+                                options.cellElement.html(inicial);                                
+                            }
+                        }
+                    } catch (err) {
+                       // console.log("Error: ", err.message);
+                    }
+
+                }
+                ,columns: [
                     {
                         caption: "Archivos",
                         cellTemplate: function (container, options) {
@@ -120,12 +141,14 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     },
                     {
                         caption: "Documento",
-                        dataField: "NumeroDocumento",                        
+                        dataField: "NumeroDocumento",
+                        width: '10%'
                     },
                     {
-                        caption: "Fecha Documento",
-                        dataField: "DatFechaDocumento",                        
-                        dataType: "date",
+                        caption: "Fecha Documento",                        
+                        dataField: "DatFechaDocumento",
+                        displayFormat: "yyyy-MM-dd",
+                        width:'11.5%',
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
@@ -134,15 +157,18 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     {
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
-                        dataType: "date",
+                        displayFormat: "yyyy-MM-dd",
+                        width: '11.5%',
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
                         }]
-                    },
+                    },                    
                     {
                         caption: "Valor Total",
-                        dataField: "IntVlrTotal"                       
+                        dataField: "IntVlrTotal",
+                        width: '12%',
+                        Type: Number,                                                                                              
                     },
                      {
                          caption: "Identificación Facturador",
@@ -180,6 +206,8 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             console.log("DATOS DE RETORNO DE WEB API", response.data);
 
             console.log("Salió del método");
+            $('#wait').hide();
+            $("#loadPanelContainer").dxLoadPanel("hide");
         });
     }
    
@@ -196,3 +224,4 @@ var items =
     { ID: "1", Texto: 'Aprobado' },
     { ID: "2", Texto: 'Rechazado' }
     ];
+
