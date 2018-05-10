@@ -93,7 +93,7 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
 
                 //Obtiene la información de la empresa autenticada.
                 Ctl_Empresa clase_empresa = new Ctl_Empresa();
-                TblEmpresas datos_empresa = clase_empresa.ObtenerId(datos_usuario.IntIdEmpresa);
+                TblEmpresas datos_empresa = clase_empresa.Obtener(datos_usuario.StrEmpresa);
 
                 if (datos_empresa != null)
                     HttpContext.Current.Session.Add("datos_empresa", datos_empresa);

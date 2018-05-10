@@ -24,7 +24,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 FechaIngreso = d.DatFechaIngreso,
                 Adquiriente = d.IntAdquiriente,
                 Habilitacion = d.IntHabilitacion,
-                Id = d.IntId,
                 IdentificacionDV = d.IntIdentificacionDv,
                 Obligado = d.IntObligado,
                 Identificacion = d.StrIdentificacion,

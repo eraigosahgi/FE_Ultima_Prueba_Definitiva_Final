@@ -260,7 +260,7 @@ namespace HGInetMiFacturaElectonicaController
 
                 // obtiene los datos del facturador electrónico
                 Ctl_Empresa facturador_electronico = new Ctl_Empresa();
-                TblEmpresas empresa_obligado = facturador_electronico.ObtenerId(documento.IntIdEmpresa);
+                TblEmpresas empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
 
                 // envía como email de respuesta facturador electrónico
                 DestinatarioEmail remitente = new DestinatarioEmail();
@@ -270,7 +270,7 @@ namespace HGInetMiFacturaElectonicaController
 
                 // obtiene los datos del adquiriente
                 Ctl_Empresa adquiriente = new Ctl_Empresa();
-                TblEmpresas empresa_adquiriente = adquiriente.ObtenerId(documento.IntIdEmpresaAdquiriente);
+                TblEmpresas empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaAdquiriente);
 
                 // recibe el email el adquiriente
                 DestinatarioEmail destinatario = new DestinatarioEmail();

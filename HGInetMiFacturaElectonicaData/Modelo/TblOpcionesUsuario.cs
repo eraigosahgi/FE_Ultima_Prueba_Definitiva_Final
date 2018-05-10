@@ -14,8 +14,9 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     
     public partial class TblOpcionesUsuario
     {
+        public string StrEmpresa { get; set; }
+        public string StrUsuario { get; set; }
         public int IntIdOpcion { get; set; }
-        public int IntIdUsuario { get; set; }
         public bool IntConsultar { get; set; }
         public bool IntAgregar { get; set; }
         public bool IntEditar { get; set; }
@@ -23,6 +24,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntAnular { get; set; }
         public bool IntGestion { get; set; }
     
+        public virtual TblEmpresas TblEmpresas { get; set; }
         public virtual TblOpciones TblOpciones { get; set; }
         public virtual TblUsuarios TblUsuarios { get; set; }
     }

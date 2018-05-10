@@ -15,7 +15,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     public partial class TblUsuariosPorPerfil
     {
         public short IntIdPerfil { get; set; }
-        public int IntIdUsuario { get; set; }
+        public string StrEmpresa { get; set; }
+        public string StrUsuario { get; set; }
         public bool Activado { get; set; }
     
         public virtual TblPerfiles TblPerfiles { get; set; }

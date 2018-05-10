@@ -17,15 +17,15 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public System.Guid StrIdSeguridad { get; set; }
         public System.DateTime DatFechaIngreso { get; set; }
         public int IntDocTipo { get; set; }
-        public int IntIdEmpresa { get; set; }
-        public int IntIdEmpresaResolucion { get; set; }
+        public string StrEmpresaFacturador { get; set; }
+        public string StrNumResolucion { get; set; }
         public string StrPrefijo { get; set; }
         public int IntNumero { get; set; }
         public string StrCufe { get; set; }
         public System.DateTime DatFechaDocumento { get; set; }
         public System.DateTime DatFechaVencDocumento { get; set; }
         public string StrObligadoIdRegistro { get; set; }
-        public int IntIdEmpresaAdquiriente { get; set; }
+        public string StrEmpresaAdquiriente { get; set; }
         public short IntAdquirienteRecibo { get; set; }
         public Nullable<System.DateTime> DatAdquirienteFechaRecibo { get; set; }
         public string StrAdquirienteMvoRechazo { get; set; }
@@ -37,8 +37,9 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntIdEstado { get; set; }
         public System.DateTime DatFechaActualizaEstado { get; set; }
     
-        public virtual TblEmpresasResoluciones TblEmpresasResoluciones { get; set; }
         public virtual TblEmpresas TblEmpresas { get; set; }
         public virtual TblEmpresas TblEmpresas1 { get; set; }
+        public virtual TblEmpresasResoluciones TblEmpresasResoluciones { get; set; }
+        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
     }
 }

@@ -20,8 +20,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
             this.TblDocumentos = new HashSet<TblDocumentos>();
         }
     
-        public int IntId { get; set; }
-        public int IntIdEmpresa { get; set; }
+        public string StrEmpresa { get; set; }
         public string StrNumResolucion { get; set; }
         public string StrPrefijo { get; set; }
         public int IntRangoInicial { get; set; }

@@ -99,7 +99,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 List<string> lista_documentos = Coleccion.ConvertirLista(Numeros);
 
                 var respuesta = from documento in context.TblDocumentos
-                                join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
+                                join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
                                 where empresa.StrIdentificacion.Equals(identificacion_obligado)
                                  && documento.IntDocTipo == tipo_documento
                                  && lista_documentos.Contains(documento.IntNumero.ToString())
@@ -146,7 +146,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 List<string> lista_documentos = Coleccion.ConvertirLista(CodigosRegistros);
 
                 var respuesta = from documento in context.TblDocumentos
-                                join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
+                                join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
                                 where empresa.StrIdentificacion.Equals(identificacion_obligado)
                                 && documento.IntDocTipo == tipo_documento
                                 && (lista_documentos.Contains(documento.StrObligadoIdRegistro) || lista_documentos.Contains(documento.StrIdSeguridad.ToString()))
@@ -194,7 +194,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
 
                 var respuesta = from documento in context.TblDocumentos
-                                join empresa in context.TblEmpresas on documento.IntIdEmpresa equals empresa.IntId
+                                join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
                                 where empresa.StrIdentificacion.Equals(identificacion_obligado)
                                  && documento.IntDocTipo == tipo_documento
                                  && (documento.DatFechaIngreso >= FechaInicial && documento.DatFechaIngreso <= FechaFinal)
@@ -245,7 +245,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 estado_recibo = "*";
 
             var respuesta = (from datos in context.TblDocumentos
-                             join empresa in context.TblEmpresas on datos.IntIdEmpresaAdquiriente equals empresa.IntId
+                             join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
                              where (empresa.StrIdentificacion.Equals(codigo_adquiente) || codigo_adquiente.Equals("*"))
                                            && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
                                            && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
@@ -297,8 +297,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
             List<TblDocumentos> documentos = (from datos in context.TblDocumentos
-                                              join obligado in context.TblEmpresas on datos.IntIdEmpresa equals obligado.IntId
-                                              join adquiriente in context.TblEmpresas on datos.IntIdEmpresaAdquiriente equals adquiriente.IntId
+                                              join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+                                              join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
                                               where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
                                             && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
                                             && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
@@ -364,10 +364,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 doc.IntIdEstado = 9;
                 
                 // obtiene los datos del facturador electrónico
-                TblEmpresas facturador = ctl_empresa.ObtenerId(doc.IntIdEmpresa);
+                TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
 
                 // obtiene los datos del adquiriente
-                TblEmpresas adquiriente = ctl_empresa.ObtenerId(doc.IntIdEmpresaAdquiriente);
+                TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
 
                 try
                 {   // envía el correo del acuse de recibo al facturador electrónico
@@ -440,9 +440,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 }
                 tbl_documento.DatFechaDocumento = documento_obj.Fecha;
                 tbl_documento.StrObligadoIdRegistro = documento_obj.CodigoRegistro;
-                tbl_documento.IntIdEmpresaResolucion = resolucion.IntId;
-                tbl_documento.IntIdEmpresa = empresa.IntId;
-                tbl_documento.IntIdEmpresaAdquiriente = adquiriente.IntId;
+                tbl_documento.StrNumResolucion = resolucion.StrNumResolucion;
+                tbl_documento.StrEmpresaFacturador = empresa.StrIdentificacion;
+                tbl_documento.StrEmpresaAdquiriente = adquiriente.StrIdentificacion;
                 tbl_documento.StrCufe = respuesta.Cufe;
                 tbl_documento.IntVlrTotal = documento_obj.Total;
                 tbl_documento.StrIdSeguridad = Guid.Parse(respuesta.IdDocumento);

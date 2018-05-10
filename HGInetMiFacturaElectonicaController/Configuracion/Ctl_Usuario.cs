@@ -41,7 +41,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             TblUsuarios tbl_usuario = new TblUsuarios();
 
-            tbl_usuario.IntIdEmpresa = empresa.IntId;
+            tbl_usuario.StrEmpresa = empresa.StrIdentificacion;
             tbl_usuario.StrUsuario = empresa.StrIdentificacion;
             tbl_usuario.StrClave = Encriptar.Encriptar_MD5(empresa.StrIdentificacion);
             tbl_usuario.StrNombres = empresa.StrRazonSocial;
@@ -69,7 +69,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 clave = LibreriaGlobalHGInet.General.Encriptar.Encriptar_MD5(clave);
 
                 var respuesta = from usuario in context.TblUsuarios
-                                join empresa in context.TblEmpresas on usuario.IntIdEmpresa equals empresa.IntId
+                                join empresa in context.TblEmpresas on usuario.StrEmpresa equals empresa.StrIdentificacion
                                 where empresa.StrIdentificacion.Equals(codigo_empresa)
                                 && usuario.StrUsuario.Equals(codigo_usuario)
                                 && usuario.StrClave.Equals(clave)
@@ -138,7 +138,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             try
             {
                 var respuesta = from usuario in context.TblUsuarios
-                                join empresa in context.TblEmpresas on usuario.IntIdEmpresa equals empresa.IntId
+                                join empresa in context.TblEmpresas on usuario.StrEmpresa equals empresa.StrIdentificacion
                                 where empresa.StrIdentificacion.Equals(codigo_empresa)
                                 && usuario.StrUsuario.Equals(codigo_usuario)
                                 select usuario;

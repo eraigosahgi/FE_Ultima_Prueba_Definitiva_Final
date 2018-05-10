@@ -66,23 +66,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 return datos;
             
         }
-
-
-		/// <summary>
-		/// Obtiene empresa con el Id
-		/// </summary>
-		/// <param name="id">Id de Obligado o Adquiriente</param>
-		/// <returns></returns>
-		public TblEmpresas ObtenerId(int id)
-		{
-
-			var datos = (from item in context.TblEmpresas
-						 where item.IntId.Equals(id)
-						 select item).FirstOrDefault();
-
-			return datos;
-
-		}
+        
 
 		/// <summary>
 		/// Crea una empresa en la BD

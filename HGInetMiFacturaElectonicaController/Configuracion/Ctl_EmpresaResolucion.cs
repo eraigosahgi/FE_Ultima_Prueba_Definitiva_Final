@@ -110,7 +110,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             TblEmpresasResoluciones tbl_resolucion = new TblEmpresasResoluciones()
             {
-                IntIdEmpresa = empresa.IntId,
+                StrEmpresa = empresa.StrIdentificacion,
                 StrNumResolucion = item.NumeroResolucion.ToString(),
                 StrPrefijo = (!string.IsNullOrEmpty(item.Prefijo)) ? item.Prefijo : "",
                 IntRangoInicial = Convert.ToInt16(item.RangoInicial),

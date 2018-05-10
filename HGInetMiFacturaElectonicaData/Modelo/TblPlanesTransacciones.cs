@@ -14,18 +14,26 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     
     public partial class TblPlanesTransacciones
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public TblPlanesTransacciones()
+        {
+            this.TblDocumentos = new HashSet<TblDocumentos>();
+        }
+    
         public System.Guid StrIdSeguridad { get; set; }
         public System.DateTime DatFecha { get; set; }
         public byte IntTipoProceso { get; set; }
-        public int IntIdEmpresa { get; set; }
-        public int IntIdUsuario { get; set; }
+        public string StrEmpresa { get; set; }
+        public string StrUsuario { get; set; }
         public short IntNumTransaccCompra { get; set; }
         public short IntNumTransaccProcesadas { get; set; }
         public decimal IntValor { get; set; }
         public bool BitProcesada { get; set; }
         public string StrObservaciones { get; set; }
     
-        public virtual TblUsuarios TblUsuarios { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
         public virtual TblEmpresas TblEmpresas { get; set; }
+        public virtual TblUsuarios TblUsuarios { get; set; }
     }
 }
