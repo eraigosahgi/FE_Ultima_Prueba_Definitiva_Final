@@ -13,7 +13,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 	public class Ctl_Formato
 	{
 
-		public static string GuardarArchivo(string archivo, TblEmpresas empresa, FacturaE_Documento documento)
+		public static string GuardarArchivo(string archivo, FacturaE_Documento documento)
 		{
 			try
 			{
@@ -22,7 +22,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (string.IsNullOrWhiteSpace(archivo))
 					throw new ApplicationException(string.Format("No se encontró información en el archivo. {0}", archivo));
 					
-				string carpeta_pdf = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), empresa.StrIdentificacion);
+				string carpeta_pdf = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), documento.IdSeguridadTercero.ToString());
 				carpeta_pdf = string.Format(@"{0}{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
 				// valida la existencia de la carpeta

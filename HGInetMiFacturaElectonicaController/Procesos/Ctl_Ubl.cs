@@ -70,7 +70,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             // convierte el documento 
             FacturaE_Documento resultado = FacturaXML.CrearDocumento(documento, extension_documento, tipo_doc);
             resultado.DocumentoTipo = tipo_doc;
-            resultado.ID = id;
+			resultado.IdSeguridad = id;
+            resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
             // genera el nombre del archivo ZIP
             resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc);
@@ -122,7 +123,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             // convierte el documento 
             FacturaE_Documento resultado = NotaCreditoXML.CrearDocumento(documento, extension_documento, tipo_doc);
             resultado.DocumentoTipo = tipo_doc;
-            resultado.ID = id;
+            resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
             // genera el nombre del archivo ZIP
             resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc);
@@ -130,7 +131,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             return resultado;
         }
 
-        public static FacturaE_Documento Generar(Guid id, NotaDebito documento, bool pruebas = false)
+        public static FacturaE_Documento Generar(NotaDebito documento, bool pruebas = false)
         {
             return null;
         }
@@ -155,11 +156,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 {
                     case TipoDocumento.Factura:
                         Factura doc_factura = ((Factura)documento.Documento);
-                        nit_obligado = doc_factura.DatosObligado.Identificacion;
+                        nit_obligado = documento.IdSeguridadTercero.ToString();
                         break;
                     case TipoDocumento.NotaCredito:
                         NotaCredito doc_nota_credito = ((NotaCredito)documento.Documento);
-                        nit_obligado = doc_nota_credito.DatosObligado.Identificacion;
+                        nit_obligado = documento.IdSeguridadTercero.ToString();
                         break;
                     case TipoDocumento.NotaDebito:
                         /*NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);

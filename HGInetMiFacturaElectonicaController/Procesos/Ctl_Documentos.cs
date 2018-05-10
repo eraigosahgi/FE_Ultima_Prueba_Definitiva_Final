@@ -223,7 +223,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						bool adquiriente_nuevo = false;
 
-
+						//Guarda la id de la Peticion con la que se esta haciendo el proceso
+						documento_result.IdSeguridad = id_peticion;
 
 						//Validacion de Adquiriente y usuario
 						try
@@ -334,13 +335,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (formato_documento != null)
 							{
 								// almacena archivo en base64
-								documento_result.NombrePdf = Ctl_Formato.GuardarArchivo(formato_documento.ArchivoPdf, empresa, documento_result);
-								respuesta.UrlPdf = "";
+								documento_result.NombrePdf = Ctl_Formato.GuardarArchivo(formato_documento.ArchivoPdf, documento_result);
+								respuesta.UrlPdf = string.Empty;
 
 								if (!string.IsNullOrWhiteSpace(documento_result.NombrePdf))
 								{
 									// url pública del pdf
-									string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
+									string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
+									
 									respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
 								}
 							}
@@ -436,7 +438,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta.Cufe = documento_result.CUFE;
 
 						// url pública del xml
-						string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_obj.DatosObligado.Identificacion);
+						string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
 						respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
 						// url pública del zip
@@ -462,7 +464,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							string url_ws_consulta = null;
 
 							// carpeta del xml
-							string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), documento_obj.DatosObligado.Identificacion);
+							string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), documento_result.IdSeguridad.ToString());
 							carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
 
 							// valida la existencia de la carpeta

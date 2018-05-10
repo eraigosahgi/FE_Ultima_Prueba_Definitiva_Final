@@ -61,7 +61,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 				throw new ApplicationException(string.Format("No se encuentra la ruta del archivo zip: {0}", ruta_zip));
 				
 			// envía el documento a través de los servicios web de la DIAN
-			AcuseRecibo acuse = Ctl_Factura.Enviar(documento.ID, data_dian.IdSoftware, data_dian.ClaveAmbiente, prefijo, numero, fecha, nit_obligado, ruta_zip, data_dian.UrlServicioWeb);
+			AcuseRecibo acuse = Ctl_Factura.Enviar(documento.IdSeguridad, data_dian.IdSoftware, data_dian.ClaveAmbiente, prefijo, numero, fecha, nit_obligado, ruta_zip, data_dian.UrlServicioWeb);
 
 			return acuse;
 		}
