@@ -11,7 +11,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
            fecha_inicio = "",
            fecha_fin = "";
 
-    /*
+    
         $http.get('/api/DatosSesion/').then(function (response) {
 
             console.log(response.data[0]);
@@ -22,7 +22,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         }),function errorCallback(response) {                
            Mensaje(response.data.ExceptionMessage, "error");
         };
-    */
+    
     //Define los campos y las opciones
     $scope.filtros =
         {
