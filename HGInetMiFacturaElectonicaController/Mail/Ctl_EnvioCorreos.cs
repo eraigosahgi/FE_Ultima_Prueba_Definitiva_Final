@@ -337,10 +337,10 @@ namespace HGInetMiFacturaElectonicaController
                                 titulo_factura = "Factura";
                                 break;
                             case 2:
-                                titulo_factura = "Nota Crédito";
+                                titulo_factura = "Nota Débito";
                                 break;
                             case 3:
-                                titulo_factura = "Nota Débito";
+                                titulo_factura = "Nota Crédito";
                                 break;
                         }
 
