@@ -17,6 +17,7 @@
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <!-- Global stylesheets -->
     <link href="../../Scripts/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
@@ -83,12 +84,20 @@
 <body>
     <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
+<<<<<<< .mine
+        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; "></div>        
+        <div> <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width:20%; height:20%;" src="../../Content/icons/Loading.gif" /></div>
+||||||| .r270
+        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>        
+        <div> <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' /></div>
+=======
         <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>
         <div>
             <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' />
         </div>
+>>>>>>> .r272
     </div>
-
+    
 
     <form id="form1" runat="server">
 

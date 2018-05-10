@@ -54,17 +54,19 @@
 
 </head>
 <body class="login-container" style="background-color: #eeeded">
-    <%--Panel de Carga HGI--%>
-    <div id="wait" style="display: none; z-index: 9999; position: absolute; left: 43%; top: 30%">
-        <img src='../../Content/icons/Loading.gif' />
-        H.G.I.
+    <%--Panel carga o Loading--%>
+    <div id="wait" style="display: none; z-index: 9999;">
+        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block;"></div>
+        <div>
+            <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
+        </div>
     </div>
-    <div class="row" style="height:100%; background-color:white;">
-        <div class="col-md-6 col-lg-8 hidden-xs hidden-sm" style="height:100%;" >
-            <div id="galleryContainer" style="background-color:white;height:100%;">
+    <div class="row" style="height: 100%; background-color: white;">
+        <div class="col-md-6 col-lg-8 hidden-xs hidden-sm" style="height: 100%;">
+            <div id="galleryContainer" style="background-color: white; height: 100%;">
             </div>
         </div>
-        <div class="col-md-6 col-lg-4"  style="background-color:white; height:100%;">
+        <div class="col-md-6 col-lg-4" style="background-color: white; height: 100%;">
             <div ng-app="AutenticacionApp">
                 <!-- Contenedor de Página -->
                 <div class="page-container" ng-controller="AutenticacionController">
@@ -80,7 +82,7 @@
 
                                 <form ng-submit="onFormSubmit($event)">
 
-                                    <div >
+                                    <div>
                                         <div class="text-center">
                                             <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
                                             <%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
@@ -124,7 +126,7 @@
                             <div class="modal-content">
                                 <div id="EncabezadoModal" class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">×</button>
-                                    <h5 style="margin-bottom: 10px;  " class="modal-title">Restablecer Contraseña</h5>
+                                    <h5 style="margin-bottom: 10px;" class="modal-title">Restablecer Contraseña</h5>
                                 </div>
 
                                 <div class="modal-body">

@@ -98,12 +98,12 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
             if (respuesta.length != 0) {
                 window.location.assign("../Pages/Inicio.aspx?ID=" + response.data[0].Token);
-            }
+            }            
             else {
                 //DevExpress.ui.notify(mensaje, tipo, tiempo);
                 DevExpress.ui.notify("Datos de autenticación inválidos.", 'error', 3000);
             }
-            $('#wait').hide();
+           
 
         });
 
@@ -180,7 +180,7 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 
     //Evento del botón.
     $scope.onFormSubmit = function (e) {
-
+        $('#wait').show();
         console.log("Ingresó al evento del botón");
 
         dato_identificacion = $('input:text[name=TextBoxDocIdentificacion]').val();
@@ -198,7 +198,7 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
         //Datos PUT: codigo_empresa - codigo_usuario
         $http.post('/Api/Usuario?' + data).then(function (response) {
             //var respuesta = response.data;
-
+            $('#wait').hide();
             swal({
                 title: 'Solicitud Éxitosa',
                 text: 'Se ha enviado un e-mail para el restablecimiento de contraseña',
@@ -218,6 +218,7 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 
 
         }, function errorCallback(response) {
+            $('#wait').hide();
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 8000);
         });
         e.preventDefault();
@@ -240,9 +241,5 @@ $(function () {
         , loop: true
         , slideshowDelay: 3000
     });
-
-    $('input:text[name=Clave]').attr("placeholder", "Contraseña");
-    $('input:text[name=Identificacion]').attr("placeholder", "Identificacion");
-    $('input:text[name=Usuario]').attr("placeholder", "Usuario");
 
 });

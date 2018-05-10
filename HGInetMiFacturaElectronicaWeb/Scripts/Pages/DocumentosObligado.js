@@ -102,7 +102,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
     };
 
     function consultar() {
-
+        $('#wait').show();
         console.log("Ingresó al evento del botón");
 
         if (fecha_inicio == "")
@@ -136,13 +136,19 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     try {
                         if (options.columnIndex == 4) {
                             if (fieldData) {
-
                                 var inicial = fNumber.go(fieldData);
                                 options.cellElement.html(inicial);
                             }
                         }
-                    } catch (err) {
-                        // console.log("Error: ", err.message);
+                        if (options.columnIndex == 3 || options.columnIndex == 2) {                            
+                            if (fieldData) {                                
+                                var inicial = convertDateFormat(options.text);
+                                
+                                options.cellElement.html(inicial);
+                            }
+                        }
+                    } catch (err) {                        
+                        console.log("Error: ", err.message);
                     }
 
                 }
@@ -173,8 +179,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     },
                     {
                         caption: "Fecha Documento",
-                        dataField: "DatFechaDocumento",
-                        displayFormat: "yyyy-MM-dd",
+                        dataField: "DatFechaDocumento",                        
+                        dataType: "date",
                         width: '11.5%',
                         validationRules: [{
                             type: "required",
@@ -183,8 +189,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     },
                     {
                         caption: "Fecha Vencimiento",
-                        dataField: "DatFechaVencDocumento",
-                        displayFormat: "yyyy-MM-dd",
+                        dataField: "DatFechaVencDocumento",                        
+                        dataType: "date",
                         width: '11.5%',
                         validationRules: [{
                             type: "required",
@@ -232,9 +238,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
             console.log("Salió del método");
         });
-
+        $('#wait').hide();
     }
-
+    
 });
 
 
@@ -288,7 +294,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
         //validationGroup: "DatosEmail",
 
         onClick: function (e) {
-
+            $('#wait').show();
             try {
 
                 email_destino = $('input:text[name=EmailDestino]').val();
@@ -325,12 +331,14 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                     $('input:text[name=EmailDestino]').val("");
                     $("#modal_enviar_email").removeClass("modal fade in").addClass("modal fade");
                     $('.modal-backdrop').remove();
-
+                    $('#wait').hide();
                 }, function errorCallback(response) {
+                    $('#wait').hide();
                     DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
                 });
 
             } catch (e) {
+                $('#wait').hide();
                 DevExpress.ui.notify(e.message, 'error', 10000);
             }
         }
@@ -363,3 +371,9 @@ var items_dian =
     { ID: "10", Texto: 'Envío E-mail Acuse' },
     { ID: "11", Texto: 'Fin Proceso' }
     ];
+
+
+function convertDateFormat(string) {
+    var info = string.split('/');
+    return info[2] + '/' + info[0] + '/' + info[1];
+}
