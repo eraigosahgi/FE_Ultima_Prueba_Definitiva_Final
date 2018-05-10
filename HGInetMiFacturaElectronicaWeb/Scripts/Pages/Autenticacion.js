@@ -80,7 +80,7 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
     //Evento del botón.
     $scope.onFormSubmit = function (e) {
-
+        $('#wait').show();
         console.log("Ingresó al evento del botón");
 
         dato_identificacion = $('input:text[name=Identificacion]').val();
@@ -103,6 +103,7 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
                 //DevExpress.ui.notify(mensaje, tipo, tiempo);
                 DevExpress.ui.notify("Datos de autenticación inválidos.", 'error', 3000);
             }
+            $('#wait').hide();
 
         });
 
@@ -195,7 +196,7 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
         //Obtiene los datos del web api
         //ControladorApi: /Api/Usuario/
         //Datos PUT: codigo_empresa - codigo_usuario
-        $http.post('/Api/Usuario?'+ data).then(function (response) {
+        $http.post('/Api/Usuario?' + data).then(function (response) {
             //var respuesta = response.data;
 
             swal({
@@ -221,5 +222,27 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
         });
         e.preventDefault();
     };
+
+});
+
+
+$(function () {
+
+    $("#galleryContainer").dxGallery({
+        dataSource: [
+            "http://habilitacion.mifacturaenlinea.com.co/Scripts/Images/1.png",
+            "http://habilitacion.mifacturaenlinea.com.co/Scripts/Images/2.png",
+            "http://habilitacion.mifacturaenlinea.com.co/Scripts/Images/3.png",
+            "http://habilitacion.mifacturaenlinea.com.co/Scripts/Images/4.png"
+        ],
+        swipeEnabled: true,
+        showNavButtons: true
+        , loop: true
+        , slideshowDelay: 3000
+    });
+
+    $('input:text[name=Clave]').attr("placeholder", "Contraseña");
+    $('input:text[name=Identificacion]').attr("placeholder", "Identificacion");
+    $('input:text[name=Usuario]').attr("placeholder", "Usuario");
 
 });
