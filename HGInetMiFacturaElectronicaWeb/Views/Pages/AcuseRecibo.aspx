@@ -59,15 +59,7 @@
     <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController">
         <div style="margin: 4%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
 
-            <!-- Visualización PDF -->
-            <div class="col-md-6">
-			
-				<embed width="100%" height="800px" name="plugin" id="plugin" src="{{datos.Pdf}}" type="application/pdf">
-
-            </div>			
-            <!-- /Visualización PDF -->
-            
-			<!-- Visualización Información Factura -->
+            <!-- Visualización Información Factura -->
             <div class="col-md-6">
                 <div class="panel panel-flat form-horizontal">
 
@@ -149,20 +141,20 @@
 
                         </div>
 
-						<div id="PanelInformacionArchivos" style="font-size: medium" class="dx-fieldset">
+                        <div id="PanelInformacionArchivos" style="font-size: medium" class="dx-fieldset">
 
                             <h4 class="panel-title text-bold text-center">Archivos</h4>
 
-                            <div style="margin-top: 3%; text-align:justify;">
-								Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
+                            <div style="margin-top: 3%; text-align: justify;">
+                                Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
                             </div>
 
-                            <div style="margin-top: 3%; text-align:center;">
-							
-								<a href="{{datos.Pdf}}" target="_blank" class="icon-file-pdf text-bold" style="color:#1E88E5;"> Pdf</a>
-								&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                <a href="{{datos.Xml}}" target="_blank" class="icon-file-xml text-bold" style="color:#1E88E5;"> Xml</a>
-                                
+                            <div style="margin-top: 3%; text-align: center;">
+
+                                <a href="{{datos.Pdf}}" target="_blank" class="icon-file-pdf text-bold" style="color: #1E88E5;">Pdf</a>
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                <a href="{{datos.Xml}}" target="_blank" class="icon-file-xml text-bold" style="color: #1E88E5;">Xml</a>
+
                             </div>
 
                         </div>
@@ -172,14 +164,23 @@
                 </div>
             </div>
 
+            <!-- Visualización PDF -->
+            <div class="col-md-6">
+
+                <embed width="100%" height="800px" name="plugin" id="plugin" src="{{datos.Pdf}}" type="application/pdf">
+            </div>
+            <!-- /Visualización PDF -->
+
         </div>
 
 
     </div>
-       <%--Panel carga o Loading--%>
+    <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>        
-        <div> <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' /></div>
+        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>
+        <div>
+            <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' />
+        </div>
     </div>
 </body>
 
