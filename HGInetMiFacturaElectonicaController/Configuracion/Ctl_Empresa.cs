@@ -39,15 +39,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             if (datos != null)
             {
-                string datakey_construido = datos.StrSerial.ToString() + datos.StrIdentificacion.ToString();
+                string datakey_construido = datos.StrSerial.ToString().ToUpper() + datos.StrIdentificacion.ToString();
                 string datakey_encriptado = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
 
-                if (datakey_encriptado == datakey)
+                if (datakey_encriptado.Equals(datakey))
                     return datos;
 
             }
 
-            throw new ApplicationException(string.Format("El DataKey {0} para la Identificacion {1} es inválido.", datakey, identificacion_obligado));
+            throw new ApplicationException(string.Format("El DataKey de seguridad {0} para la identificación {1} es inválido.", datakey, identificacion_obligado));
 
         }
 
