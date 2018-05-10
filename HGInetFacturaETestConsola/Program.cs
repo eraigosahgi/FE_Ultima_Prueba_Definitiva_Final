@@ -16,6 +16,14 @@ namespace HGInetFacturaETestConsola
         {
             try
             {
+                
+                List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> resoluciones = HGInetFacturaEServicios.Ctl_Resolucion.Obtener("http://localhost:61499/", "CE61061C-9AD2-4942-97F5-A48206F2680D", "811021438");
+
+
+
+
+
+
 
 
                 DateTime fecha = DateTime.Now;
