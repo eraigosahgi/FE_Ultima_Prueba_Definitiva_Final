@@ -39,10 +39,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             if (datos != null)
             {
-                string datakey_construido = datos.StrSerial.ToString().ToUpper() + datos.StrIdentificacion.ToString();
-                string datakey_encriptado = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
+               
+				string datakey_construido = datos.StrSerial.ToString() + datos.StrIdentificacion.ToString();
+				string datakey_encriptado = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
 
-                if (datakey_encriptado.Equals(datakey))
+				string datakey_construido_may = datos.StrSerial.ToString().ToUpper() + datos.StrIdentificacion.ToString();
+				string datakey_encriptado_may = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido_may);
+
+
+				if (datakey_encriptado.Equals(datakey) || datakey_encriptado_may.Equals(datakey))
                     return datos;
 
             }
