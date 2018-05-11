@@ -1,7 +1,7 @@
-﻿
+﻿//Controla el formato de numeros Ejemplo: $ 1.222.333,90
 var fNumber = {
-    sepMil: ".", // separador para los miles
-    sepDec: ',', // separador para los decimales
+    sepMil: ",", // separador para los miles
+    sepDec: '.', // separador para los decimales
     simbol: "$" || '', //Simbolo de modena
     formatear: function (num) {
         num += '';
@@ -19,6 +19,7 @@ var fNumber = {
     }
 }
 
+//Controla los mensajes de Session
 function control_session(Ruta) {
     swal({
         title: "No se encontraron los datos de autenticación en la sesión!",
@@ -28,4 +29,15 @@ function control_session(Ruta) {
     .then((willDelete) => {
         window.location.assign(Ruta);
     });
+}
+
+//Formato de fecha para los grid.
+function convertDateFormat(string) {
+    string = string.substr(0, 10);
+    var info = string.split('/');
+    var part1 = info[1].length;
+    var part0 = info[0].length;
+    if (part1 == 1) { info[1] = '0' + info[1] }
+    if (part0 == 1) { info[0] = '0' + info[0] }
+    return info[2] + '/' + info[0] + '/' + info[1];
 }
