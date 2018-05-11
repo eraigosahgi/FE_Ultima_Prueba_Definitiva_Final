@@ -226,20 +226,17 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 
 });
 
-
 $(function () {
-
     $("#galleryContainer").dxGallery({
         dataSource: [
-            "http://habilitacion.mifacturaenlinea.com.co/Scripts/Images/1.png",
-            "http://habilitacion.mifacturaenlinea.com.co/Scripts/Images/2.png",
-            "http://habilitacion.mifacturaenlinea.com.co/Scripts/Images/3.png",
-            "http://habilitacion.mifacturaenlinea.com.co/Scripts/Images/4.png"
+            "/Scripts/Images/1.png",
+            "/Scripts/Images/2.png",
+            "/Scripts/Images/3.png",
+            "/Scripts/Images/4.png"
         ],
         swipeEnabled: true,
         showNavButtons: true
         , loop: true
         , slideshowDelay: 3000
     });
-
 });
