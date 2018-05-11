@@ -56,7 +56,7 @@
 <body class="login-container" style="background-color: #eeeded">
     <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block;"></div>
+        <div class="modal" style="background-color: white; opacity: 0.4; display: block;"></div>
         <div>
             <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
         </div>
