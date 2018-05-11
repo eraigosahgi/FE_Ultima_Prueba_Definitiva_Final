@@ -99,11 +99,9 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         //Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
         $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
 
-            console.log("Ingresó a cargar la data.");
-            console.log("Datos ", response.data);
+            console.log("Ingresó a cargar la data.");         
             $("#gridDocumentos").dxDataGrid({
-                dataSource: response.data,
-                
+                dataSource: response.data,                
                 paging: {
                     pageSize: 20
                 },
@@ -113,22 +111,26 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     showInfo: true
                 }
                 //Formatos personalizados a las columnas en este caso para el monto
-                ,onCellPrepared: function (options) {
+                , onCellPrepared: function (options) {
                     var fieldData = options.value,
                         fieldHtml = "";
-
                     try {
-                        if (options.columnIndex == 4) {
-                            if (fieldData) {
-                                
+                        if (options.columnIndex == 4) {//Columna de valor Total
+                            if (fieldData) {                                
                                 var inicial = fNumber.go(fieldData);                                
                                 options.cellElement.html(inicial);                                
                             }
                         }
+                        //Valida el formato de fecha en la configuracion de fecha
+                        if (options.columnIndex == 3 || options.columnIndex == 2) {
+                            if (fieldData) {
+                                var inicial = convertDateFormat(options.text);
+                                options.cellElement.html(inicial);
+                            }
+                        }
                     } catch (err) {
-                       // console.log("Error: ", err.message);
+                       
                     }
-
                 }
                 ,columns: [
                     {
@@ -148,17 +150,17 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     {
                         caption: "Fecha Documento",                        
                         dataField: "DatFechaDocumento",
-                        displayFormat: "yyyy-MM-dd",
-                        width:'11.5%',
+                        dataType: "date",
+                        width: '11.5%',                        
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
-                        }]
+                        }]                    
                     },
                     {
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
-                        displayFormat: "yyyy-MM-dd",
+                        dataType: "date",
                         width: '11.5%',
                         validationRules: [{
                             type: "required",
