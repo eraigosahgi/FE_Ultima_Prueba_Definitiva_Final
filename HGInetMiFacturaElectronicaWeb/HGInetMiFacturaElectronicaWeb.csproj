@@ -1512,6 +1512,7 @@
     <Content Include="Scripts\cldr\event.js" />
     <Content Include="Scripts\cldr\supplemental.js" />
     <Content Include="Scripts\cldr\unresolved.js" />
+    <Content Include="Scripts\config.js" />
     <Content Include="Scripts\Demos\DataGrid.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.es.js" />
     <Content Include="Scripts\assets\css\icons\fontawesome\fonts\fontawesome-webfont.eot" />
@@ -1827,6 +1828,10 @@
     <Content Include="Scripts\globalize\plural.js" />
     <Content Include="Scripts\globalize\relative-time.js" />
     <Content Include="Scripts\globalize\unit.js" />
+    <Content Include="Scripts\Images\1.png" />
+    <Content Include="Scripts\Images\2.png" />
+    <Content Include="Scripts\Images\3.png" />
+    <Content Include="Scripts\Images\4.png" />
     <Content Include="Scripts\Images\ImgIndex.jpg" />
     <Content Include="Scripts\Images\ImgIndex.png" />
     <Content Include="Scripts\Images\LogoHGInet.jpg" />
