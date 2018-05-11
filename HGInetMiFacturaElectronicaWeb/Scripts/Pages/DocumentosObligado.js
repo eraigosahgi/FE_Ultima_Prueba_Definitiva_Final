@@ -118,6 +118,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
         $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
 
+            console.log("Datos", response.data);
+
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
                 paging: {
@@ -132,7 +134,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 , onCellPrepared: function (options) {
                     var fieldData = options.value,
                         fieldHtml = "";
-
                     try {
                         if (options.columnIndex == 4) {
                             if (fieldData) {
@@ -140,10 +141,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                 options.cellElement.html(inicial);
                             }
                         }
+                        //Valida el formato de fecha en la configuracion de fecha
                         if (options.columnIndex == 3 || options.columnIndex == 2) {                            
                             if (fieldData) {                                
-                                var inicial = convertDateFormat(options.text);
-                                
+                                var inicial = convertDateFormat(options.text);                                
                                 options.cellElement.html(inicial);
                             }
                         }
@@ -372,8 +373,3 @@ var items_dian =
     { ID: "11", Texto: 'Fin Proceso' }
     ];
 
-
-function convertDateFormat(string) {
-    var info = string.split('/');
-    return info[2] + '/' + info[0] + '/' + info[1];
-}
