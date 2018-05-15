@@ -27,7 +27,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                 }
             }
         }
-
+    consultar();
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
         type: 'default',
@@ -38,7 +38,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 
 
     function consultar() {
-
+        
         if (codigo_usuario == "")
             codigo_usuario = "*";
 
@@ -48,8 +48,9 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
         //Obtiene los datos del web api
         //ControladorApi: /Api/Usuario/
         //Datos GET: string codigo_usuario, string codigo_empresa
+        $('#wait').show();
         $http.get('/api/Usuario?codigo_usuario=' + codigo_usuario + '&codigo_empresa=' + codigo_empresa).then(function (response) {
-
+        $('#wait').hide();
             $("#gridUsuarios").dxDataGrid({
                 dataSource: response.data,
                 paging: {
@@ -128,20 +129,10 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                 filterRow: {
                     visible: true
                 },
-            });
-
-
-
+            });            
         }), function errorCallback(response) {
+            $('#wait').hide();
             Mensaje(response.data.ExceptionMessage, "error");
         };
-
-
-
-
-
     }
-
-
-
 });
