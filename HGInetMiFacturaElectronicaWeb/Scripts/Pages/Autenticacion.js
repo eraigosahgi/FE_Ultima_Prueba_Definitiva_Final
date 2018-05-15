@@ -80,7 +80,7 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
     //Evento del botón.
     $scope.onFormSubmit = function (e) {
-        $('#wait').show();
+        
         console.log("Ingresó al evento del botón");
 
         dato_identificacion = $('input:text[name=Identificacion]').val();
@@ -92,24 +92,29 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
         //Obtiene los datos del web api
         //ControladorApi: /Api/Usuario/
         //Datos GET: codigo_empresa - codigo_usuario - clave
+        $('#wait').show();
         $http.get('/Api/Usuario?codigo_empresa=' + dato_identificacion + '&codigo_usuario=' + dato_usuario + '&clave=' + dato_contrasena).then(function (response) {
-
+        $('#wait').hide();        
             var respuesta = response.data;
 
             if (respuesta.length != 0) {
                 window.location.assign("../Pages/Inicio.aspx?ID=" + response.data[0].Token);
             }            
             else {
-                //DevExpress.ui.notify(mensaje, tipo, tiempo);
+                
                 DevExpress.ui.notify("Datos de autenticación inválidos.", 'error', 3000);
             }
            
-
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify("Datos de autenticación inválidos.", 'error', 3000);
         });
 
     };
 
 });
+
+
 
 
 //Controlador para Restablecer Contraseña
@@ -180,7 +185,7 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 
     //Evento del botón.
     $scope.onFormSubmit = function (e) {
-        $('#wait').show();
+        
         console.log("Ingresó al evento del botón");
 
         dato_identificacion = $('input:text[name=TextBoxDocIdentificacion]').val();
@@ -196,9 +201,11 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
         //Obtiene los datos del web api
         //ControladorApi: /Api/Usuario/
         //Datos PUT: codigo_empresa - codigo_usuario
+        $('#wait').show();
         $http.post('/Api/Usuario?' + data).then(function (response) {
+        $('#wait').hide();
             //var respuesta = response.data;
-            $('#wait').hide();
+            
             swal({
                 title: 'Solicitud Éxitosa',
                 text: 'Se ha enviado un e-mail para el restablecimiento de contraseña',
@@ -207,8 +214,7 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
                 confirmButtonText: 'Aceptar',
                 animation: 'pop',
                 html: true,
-            });
-            //swal("Solicitud Éxitosa", "Se ha enviado un e-mail para el restablecimiento de contraseña " , "success");
+            });            
 
             $('input:text[name=TextBoxDocIdentificacion]').val("");
             $('input:text[name=TextBoxUsuario]').val("");
