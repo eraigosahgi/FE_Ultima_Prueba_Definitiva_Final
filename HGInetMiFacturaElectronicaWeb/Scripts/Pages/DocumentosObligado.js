@@ -14,11 +14,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
-           codigo_adquiriente = "";
-
-
+           codigo_adquiriente = "";    
     $http.get('/api/DatosSesion/').then(function (response) {
-
+    
         console.log(response.data[0]);
 
         codigo_facturador = response.data[0].Identificacion;
@@ -102,7 +100,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
     };
 
     function consultar() {
-        $('#wait').show();
+        
         console.log("Ingresó al evento del botón");
 
         if (fecha_inicio == "")
@@ -116,8 +114,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         //Obtiene los datos del web api
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
+        $('#wait').show();
         $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
-
+        $('#wait').hide();
             console.log("Datos", response.data);
 
             $("#gridDocumentos").dxDataGrid({
@@ -144,10 +143,11 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         //Valida el formato de fecha en la configuracion de fecha
                         if (options.columnIndex == 3 || options.columnIndex == 2) {                            
                             if (fieldData) {                                
-                                var inicial = convertDateFormat(options.text);                                
+                                var inicial = convertDateFormat(options.text );                                
                                 options.cellElement.html(inicial);
                             }
                         }
+
                     } catch (err) {                        
                         console.log("Error: ", err.message);
                     }
@@ -156,6 +156,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 ,columns: [
                     {
                         caption: "Archivos",
+                        cssClass: "col-xs-3 col-md-1",
                         cellTemplate: function (container, options) {
                             $("<div>")
                                 .append(
@@ -175,14 +176,15 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     },
                     {
                         caption: "Documento",
+                        cssClass: "col-xs-3 col-md-1",                        
                         dataField: "NumeroDocumento",
-                        width: '10%'
+                        
                     },
                     {
                         caption: "Fecha Documento",
                         dataField: "DatFechaDocumento",                        
                         dataType: "date",
-                        width: '11.5%',
+                        cssClass: "col-xs-3 col-md-1",
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
@@ -192,7 +194,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",                        
                         dataType: "date",
-                        width: '11.5%',
+                        cssClass: "hidden-xs col-md-1",
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
@@ -200,30 +202,37 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     },
                     {
                         caption: "Valor Total",
+                        cssClass: "col-xs-2 col-md-1",
                         dataField: "IntVlrTotal"
                     },
                      {
                          caption: "Identificación Adquiriente",
+                         cssClass: "hidden-xs col-md-1",
                          dataField: "IdentificacionAdquiriente"
                      },
                       {
                           caption: "Nombre Adquiriente",
+                          cssClass: "hidden-xs col-md-1",
                           dataField: "NombreAdquiriente"
                       },
                       {
                           caption: "Estado",
+                          cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoFactura",
                       },
                       {
                           caption: "Estado Acuse",
+                          cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoAcuse",
                       },
                       {
                           caption: "Motivo Rechazo",
+                          cssClass: "hidden-xs col-md-1",
                           dataField: "MotivoRechazo",
                       },
                       {
                           dataField: "",
+                          cssClass: "col-xs-2 col-md-1",
                           cellTemplate: function (container, options) {
                               $("<div>")
                                   .append($("<a target='_blank' class='icon-check' href='" + options.data.RutaAcuse + "'>Acuse</a>"))
@@ -238,12 +247,14 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             console.log("DATOS DE RETORNO DE WEB API", response.data);
 
             console.log("Salió del método");
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
         });
-        $('#wait').hide();
+        
     }
     
 });
-
 
 
 DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController($scope, $http, $location) {
@@ -295,7 +306,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
         //validationGroup: "DatosEmail",
 
         onClick: function (e) {
-            $('#wait').show();
+            
             try {
 
                 email_destino = $('input:text[name=EmailDestino]').val();
@@ -303,9 +314,9 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                 if (email_destino == "") {
                     throw new DOMException("El e-mail de destino es obligatorio.");
                 }
-
+                $('#wait').show();
                 $http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino).then(function (responseEnvio) {
-
+                $('#wait').hide();
                     var respuesta = responseEnvio.data;
 
                     if (respuesta) {
@@ -332,7 +343,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                     $('input:text[name=EmailDestino]').val("");
                     $("#modal_enviar_email").removeClass("modal fade in").addClass("modal fade");
                     $('.modal-backdrop').remove();
-                    $('#wait').hide();
+                    
                 }, function errorCallback(response) {
                     $('#wait').hide();
                     DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
