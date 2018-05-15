@@ -82,8 +82,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 
     //Consultar DOcumentos
     function consultar() {        
-        $('#wait').show();
-        $("#loadPanelContainer").dxLoadPanel("show");
+                
         console.log("Ingresó al evento del botón");
 
         if (fecha_inicio == "")
@@ -97,8 +96,9 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         //Obtiene los datos del web api
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
+        $('#wait').show();
         $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
-
+        $('#wait').hide();
             console.log("Ingresó a cargar la data.");         
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,                
@@ -135,6 +135,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 ,columns: [
                     {
                         caption: "Archivos",
+                        cssClass: "col-md-1 col-xs-2",
                         cellTemplate: function (container, options) {
                             $("<div>")
                                 .append($("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "'> &nbsp;&nbsp; <a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "'>"))
@@ -144,14 +145,14 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     },
                     {
                         caption: "Documento",
-                        dataField: "NumeroDocumento",
-                        width: '10%'
+                        dataField: "NumeroDocumento",                        
+                        cssClass: "col-md-1 col-xs-3",
                     },
                     {
                         caption: "Fecha Documento",                        
                         dataField: "DatFechaDocumento",
                         dataType: "date",
-                        width: '11.5%',                        
+                        cssClass: "col-md-2 col-xs-3",
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
@@ -161,7 +162,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
                         dataType: "date",
-                        width: '11.5%',
+                        cssClass:"hidden-xs col-md-2",                        
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
@@ -170,31 +171,40 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     {
                         caption: "Valor Total",
                         dataField: "IntVlrTotal",
+                        cssClass: "col-md-1 col-xs-2",
                         width: '12%',
                         Type: Number,                                                                                              
-                    },
+                    }
+                    ,
                      {
                          caption: "Identificación Facturador",
+                         cssClass: "hidden-xs col-md-1",
                          dataField: "IdentificacionFacturador"
+
                      },
                       {
                           caption: "Nombre Facturador",
+                          cssClass: "hidden-xs col-md-1",
                           dataField: "NombreFacturador"
                       },
                       {
                           caption: "Estado",
+                          cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoFactura",
                       },
                       {
                           caption: "Estado Acuse",
+                          cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoAcuse",
                       },
                       {
                           caption: "Motivo Rechazo",
+                          cssClass: "hidden-xs col-md-1",
                           dataField: "MotivoRechazo",
                       },
                       {
                           dataField: "",
+                          cssClass: "col-md-1 col-xs-2",
                           cellTemplate: function (container, options) {
                               $("<div>")
                                   .append($("<a target='_blank' href='" + options.data.RutaAcuse + "'>Acuse</a>"))
@@ -207,10 +217,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 },
             });
             console.log("DATOS DE RETORNO DE WEB API", response.data);
-
-            console.log("Salió del método");
-            $('#wait').hide();
-            $("#loadPanelContainer").dxLoadPanel("hide");
+            console.log("Salió del método");                        
         });
     }
    
