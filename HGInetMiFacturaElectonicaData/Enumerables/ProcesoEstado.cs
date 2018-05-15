@@ -39,7 +39,10 @@ namespace HGInetMiFacturaElectonicaData
         [Description("Envío E-mail Acuse")]
         EnvioRespuestaAcuse = 10,
 
-        [Description("Fin Proceso")]
+		[Description("Error Dian, Finaliza Proceso")]
+		FinalizacionErrorDian = 90,
+
+		[Description("Fin Proceso Exitoso")]
         Finalizacion = 99
     }
 }
