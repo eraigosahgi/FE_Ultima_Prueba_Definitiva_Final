@@ -211,7 +211,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <returns></returns>
         private string DescripcionEstadoFactura(short e)
         {
-            return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(e));
+			try
+			{
+				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(e));
+			}
+			catch (Exception excepcion)
+			{
+				return string.Format("Desconocido {0}", e);
+			}
         }
 
         /// <summary>
@@ -221,7 +228,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <returns></returns>
         private string DescripcionEstadoAcuse(short e)
         {
-            return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(e));
-        }
+			try
+			{
+				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(e));
+			}
+			catch (Exception excepcion)
+			{
+				return string.Format("Desconocido {0}", e);
+			}
+		}
     }
 }
