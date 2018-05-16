@@ -16,7 +16,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     {
         public int IntIdOpcion { get; set; }
         public short IntIdPerfil { get; set; }
-        public bool IntConsutar { get; set; }
+        public bool IntConsultar { get; set; }
         public bool IntAgregar { get; set; }
         public bool IntEditar { get; set; }
         public bool IntEliminar { get; set; }

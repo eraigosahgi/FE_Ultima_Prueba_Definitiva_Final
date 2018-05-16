@@ -37,8 +37,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntIdEstado { get; set; }
         public System.DateTime DatFechaActualizaEstado { get; set; }
     
-        public virtual TblEmpresas TblEmpresas { get; set; }
-        public virtual TblEmpresas TblEmpresas1 { get; set; }
+        public virtual TblEmpresas TblEmpresasAdquiriente { get; set; }
+        public virtual TblEmpresas TblEmpresasFacturador { get; set; }
         public virtual TblEmpresasResoluciones TblEmpresasResoluciones { get; set; }
         public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
     }

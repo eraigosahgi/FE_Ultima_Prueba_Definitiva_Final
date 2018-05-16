@@ -573,8 +573,8 @@
           <Property Name="StrIdPlanTransaccion" Type="Guid" />
           <Property Name="IntIdEstado" Type="Int16" Nullable="false" />
           <Property Name="DatFechaActualizaEstado" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
-          <NavigationProperty Name="TblEmpresas1" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblDocumentos" ToRole="TblEmpresas" />
+          <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
+          <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblDocumentos" ToRole="TblEmpresasResoluciones" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblDocumentos" ToRole="TblPlanesTransacciones" />
         </EntityType>
@@ -595,8 +595,8 @@
           <Property Name="DatFechaActualizacion" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
           <Property Name="IntHabilitacion" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
-          <NavigationProperty Name="TblDocumentos1" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
+          <NavigationProperty Name="TblDocumentosAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
+          <NavigationProperty Name="TblDocumentosFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresasResoluciones" />
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblEmpresas" FromRole="TblEmpresas" ToRole="TblOpcionesUsuario" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPlanesTransacciones" />
@@ -646,7 +646,7 @@
           </Key>
           <Property Name="IntIdOpcion" Type="Int32" Nullable="false" />
           <Property Name="IntIdPerfil" Type="Int16" Nullable="false" />
-          <Property Name="IntConsutar" Type="Boolean" Nullable="false" />
+          <Property Name="IntConsultar" Type="Boolean" Nullable="false" />
           <Property Name="IntAgregar" Type="Boolean" Nullable="false" />
           <Property Name="IntEditar" Type="Boolean" Nullable="false" />
           <Property Name="IntEliminar" Type="Boolean" Nullable="false" />
@@ -1053,7 +1053,7 @@
                 <ScalarProperty Name="IntEliminar" ColumnName="IntEliminar" />
                 <ScalarProperty Name="IntEditar" ColumnName="IntEditar" />
                 <ScalarProperty Name="IntAgregar" ColumnName="IntAgregar" />
-                <ScalarProperty Name="IntConsutar" ColumnName="IntConsutar" />
+                <ScalarProperty Name="IntConsultar" ColumnName="IntConsutar" />
                 <ScalarProperty Name="IntIdPerfil" ColumnName="IntIdPerfil" />
                 <ScalarProperty Name="IntIdOpcion" ColumnName="IntIdOpcion" />
               </MappingFragment>
