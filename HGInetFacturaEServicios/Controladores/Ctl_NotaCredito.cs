@@ -1,5 +1,6 @@
 ﻿using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +52,11 @@ namespace HGInetFacturaEServicios
 				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
 
 				foreach (ServicioNotaCredito.NotaCredito item in documentos_envio)
-				{	item.DataKey = dataKey;
+				{
+					if (item == null)
+						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioNotaCredito.NotaCredito"));
+
+					item.DataKey = dataKey;
 				}
 
 				// datos para la petición

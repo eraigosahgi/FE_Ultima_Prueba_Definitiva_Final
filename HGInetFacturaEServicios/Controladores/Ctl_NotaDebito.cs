@@ -1,5 +1,6 @@
 ﻿using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,9 @@ namespace HGInetFacturaEServicios
 
 				foreach (ServicioNotaDebito.NotaDebito item in documentos_envio)
 				{
+					if (item == null)
+						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioNotaDebito.NotaDebito"));
+
 					item.DataKey = dataKey;
 				}
 
