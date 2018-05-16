@@ -41,33 +41,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 				throw new ApplicationException(exec.Message, exec.InnerException);
 			}
 		}
-
-        /// <summary>
-		/// Actualiza un registro en la base de datos
-		/// </summary>
-		[DataObjectMethod(DataObjectMethodType.Insert)]
-        public virtual T Update(T entity)
-        {
-            try
-            {
-                this.context.Configuration.LazyLoadingEnabled = false;
-                if (entity == null)
-                    throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "entity", typeof(T)));
-
-                this.Validate(entity, Accion.actualizacion);
-                this.OnEditing(entity);
-
-                this.context.SaveChanges();
-                this.OnEdited(entity);
-
-                return entity;
-            }
-            catch (Exception exec)
-            {
-                throw new ApplicationException(exec.Message, exec.InnerException);
-            }
-        }
-
+		
         /// <summary>
 		/// evento despues de editar el objeto
 		/// </summary>
