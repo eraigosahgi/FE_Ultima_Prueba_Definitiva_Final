@@ -91,7 +91,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                     tbl_resolucion_actual.StrPrefijo = tbl_resolucion.StrPrefijo;
                     tbl_resolucion_actual.DatFechaActualizacion = Fecha.GetFecha();
 
-                    this.Update(tbl_resolucion_actual);
+                    this.Edit(tbl_resolucion_actual);
                     lista_resolucion.Add(tbl_resolucion_actual);
                 }
             }

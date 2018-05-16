@@ -44,7 +44,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
         public TblDocumentos Actualizar(TblDocumentos documento)
         {
-            documento = this.Update(documento);
+            documento = this.Edit(documento);
 
             return documento;
 

@@ -186,14 +186,24 @@ namespace HGInetMiFacturaElectonicaController
                 string fileName = string.Empty;
 
                 if (empresa == null)
-                    throw new ApplicationException("No se encontró información del Usuario");
+                    throw new ApplicationException("No se encontró información de la empresa.");
 
-                if (empresa.IntObligado)
+				if (usuario == null)
+					throw new ApplicationException("No se encontró información del usuario");
+
+				if (empresa.IntObligado)
                 {
                     fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaObligado);
                 }
                 else if (empresa.IntAdquiriente)
                     fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaAdquiriente);
+				
+				// permite el cambio de contraseña para el usuario
+				Ctl_Usuario _usuario = new Ctl_Usuario();	
+				usuario.DatFechaCambioClave = Fecha.GetFecha();
+				usuario.StrIdCambioClave = Guid.NewGuid();
+				usuario = _usuario.Actualizar_usuario(usuario);
+
 
                 if (!string.IsNullOrWhiteSpace(fileName))
                 {

@@ -249,7 +249,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         #region Actualizar TblUsuarios        
         public TblUsuarios Actualizar_usuario(TblUsuarios usuario)
         {
-            usuario = this.Update(usuario);
+            usuario = this.Edit(usuario);
 
             return usuario;
 
