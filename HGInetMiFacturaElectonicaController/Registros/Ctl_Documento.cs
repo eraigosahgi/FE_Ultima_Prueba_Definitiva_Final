@@ -362,7 +362,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 doc.StrAdquirienteMvoRechazo = motivo_rechazo;
                 doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
                 doc.IntIdEstado = 9;
-                
+
                 // obtiene los datos del facturador electrónico
                 TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
 
@@ -380,8 +380,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 doc.DatFechaActualizaEstado = Fecha.GetFecha();
                 doc = Actualizar(doc);
 
-                doc.TblEmpresas = facturador;
-                doc.TblEmpresas1 = adquiriente;
+                doc.TblEmpresasFacturador = facturador;
+                doc.TblEmpresasAdquiriente = adquiriente;
                 retorno.Add(doc);
 
                 return retorno;
@@ -449,7 +449,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 tbl_documento.IntAdquirienteRecibo = 0;
                 tbl_documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
                 tbl_documento.DatFechaActualizaEstado = Fecha.GetFecha();
-                
+
                 return tbl_documento;
             }
             catch (Exception excepcion)
@@ -470,7 +470,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 //Valida el tipo de documento enviado por el usuario
 
                 if (respuesta == null)
-                    throw new ApplicationException("Está Null");
+                    throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "respuesta", "TblDocumentos"));
 
                 DocumentoRespuesta obj_documento = new DocumentoRespuesta();
 
@@ -481,7 +481,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 obj_documento.FechaRecepcion = respuesta.DatFechaIngreso;
                 obj_documento.FechaUltimoProceso = respuesta.DatFechaActualizaEstado;
                 obj_documento.IdDocumento = respuesta.StrIdSeguridad.ToString();
-                obj_documento.Identificacion = respuesta.TblEmpresas.StrIdentificacion;
+                obj_documento.Identificacion = respuesta.TblEmpresasAdquiriente.StrIdentificacion;
                 obj_documento.IdProceso = respuesta.IntIdEstado;
                 obj_documento.MotivoRechazo = respuesta.StrAdquirienteMvoRechazo;
                 obj_documento.NumeroResolucion = respuesta.TblEmpresasResoluciones.StrNumResolucion;
