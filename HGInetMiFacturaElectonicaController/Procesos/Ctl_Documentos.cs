@@ -92,7 +92,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
-
 					// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
 					lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, documentos.FirstOrDefault().DatosObligado.Identificacion);
 				}
@@ -102,6 +101,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				foreach (Factura item in documentos)
 				{
+					if (string.IsNullOrEmpty(item.NumeroResolucion))
+						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
+
 					Ctl_Documento num_doc = new Ctl_Documento();
 
 					//valida si el Documento ya existe en Base de Datos
@@ -342,7 +344,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								{
 									// url pública del pdf
 									string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
-									
+
 									respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
 								}
 							}
@@ -685,17 +687,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			else
 			{
-
-
 				// Obtiene la resolucion de la base de datos
 				Ctl_EmpresaResolucion _resolucion_factura = new Ctl_EmpresaResolucion();
-				lista_resolucion.Add(_resolucion_factura.Obtener(documentos.FirstOrDefault().DatosObligado.Identificacion, documentos.FirstOrDefault().NumeroResolucion));
+				lista_resolucion.Add(_resolucion_factura.Obtener(documentos.FirstOrDefault().DatosObligado.Identificacion, "*"));
 			}
 
 			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
 			foreach (NotaCredito item in documentos)
 			{
+				if (string.IsNullOrEmpty(item.NumeroResolucion))
+					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
 				Ctl_Documento num_doc = new Ctl_Documento();
 
@@ -704,7 +706,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (numero_documento != null)
 					throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
-
+					
 				// filtra la resolución del documento
 				TblEmpresasResoluciones resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
 
@@ -767,8 +769,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
-			foreach (object item in documentos)
+			foreach (NotaDebito item in documentos)
 			{
+
+				if (string.IsNullOrEmpty(item.NumeroResolucion))
+					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
+
 				// realiza el proceso de envío a la DIAN del documento
 				DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaDebito, null, facturador_electronico);
 
