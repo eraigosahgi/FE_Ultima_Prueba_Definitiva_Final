@@ -14,28 +14,35 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
         public IHttpActionResult Get()
         {
-            List<TblEmpresas> datos = new List<TblEmpresas>();
-
-            datos.Add(Sesion.DatosEmpresa);
-
-            var retorno = datos.Select(d => new
+            try
             {
-                FechaActualizacion = d.DatFechaActualizacion,
-                FechaIngreso = d.DatFechaIngreso,
-                Adquiriente = d.IntAdquiriente,
-                Habilitacion = d.IntHabilitacion,
-                IdentificacionDV = d.IntIdentificacionDv,
-                Obligado = d.IntObligado,
-                Identificacion = d.StrIdentificacion,
-                IdSeguridad = d.StrIdSeguridad,
-                Mail = d.StrMail,
-                Observaciones = d.StrObservaciones,
-                RazonSocial = d.StrRazonSocial,
-                Serial = d.StrSerial,
-                TipoIdentificacion = d.StrTipoIdentificacion
-            });
+                List<TblEmpresas> datos = new List<TblEmpresas>();
 
-            return Ok(retorno);
+                datos.Add(Sesion.DatosEmpresa);
+
+                var retorno = datos.Select(d => new
+                {
+                    FechaActualizacion = d.DatFechaActualizacion,
+                    FechaIngreso = d.DatFechaIngreso,
+                    Adquiriente = d.IntAdquiriente,
+                    Habilitacion = d.IntHabilitacion,
+                    IdentificacionDV = d.IntIdentificacionDv,
+                    Obligado = d.IntObligado,
+                    Identificacion = d.StrIdentificacion,
+                    IdSeguridad = d.StrIdSeguridad,
+                    Mail = d.StrMail,
+                    Observaciones = d.StrObservaciones,
+                    RazonSocial = d.StrRazonSocial,
+                    Serial = d.StrSerial,
+                    TipoIdentificacion = d.StrTipoIdentificacion
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
 

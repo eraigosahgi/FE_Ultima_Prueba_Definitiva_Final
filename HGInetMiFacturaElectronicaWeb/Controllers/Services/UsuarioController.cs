@@ -24,20 +24,27 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get(string codigo_empresa, string codigo_usuario, string clave)
         {
-            Ctl_Usuario ctl_usuario = new Ctl_Usuario();
-            List<TblUsuarios> datos = ctl_usuario.ValidarExistencia(codigo_empresa, codigo_usuario, clave);
-
-            if (datos == null)
+            try
             {
-                return NotFound();
+                Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+                List<TblUsuarios> datos = ctl_usuario.ValidarExistencia(codigo_empresa, codigo_usuario, clave);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    Token = d.StrIdSeguridad
+                });
+
+                return Ok(retorno);
             }
-
-            var retorno = datos.Select(d => new
+            catch (Exception excepcion)
             {
-                Token = d.StrIdSeguridad
-            });
-
-            return Ok(retorno);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
         /// <summary>
@@ -124,17 +131,23 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		[HttpPost]
         public IHttpActionResult Post([FromUri]string codigo_empresa, [FromUri]string codigo_usuario)
         {
-
-            Ctl_Usuario ctl_usuario = new Ctl_Usuario();
-
-            bool datos = ctl_usuario.ValidarExistenciaRestablecer(codigo_empresa, codigo_usuario);
-
-            if (!datos)
+            try
             {
-                return NotFound();
-            }
+                Ctl_Usuario ctl_usuario = new Ctl_Usuario();
 
-            return Ok(datos);
+                bool datos = ctl_usuario.ValidarExistenciaRestablecer(codigo_empresa, codigo_usuario);
+
+                if (!datos)
+                {
+                    return NotFound();
+                }
+
+                return Ok(datos);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
 
@@ -147,15 +160,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpPost]
         public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri]string clave)
         {
-            Ctl_Usuario ctl_usuario = new Ctl_Usuario();
-
-            bool datos = ctl_usuario.RestablecerClave(id_seguridad, clave);
-
-            if (datos)
+            try
             {
-                return Ok(datos);
+                Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+
+                bool datos = ctl_usuario.RestablecerClave(id_seguridad, clave);
+
+                if (datos)
+                {
+                    return Ok(datos);
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
         /// <summary>
@@ -166,15 +186,23 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get(System.Guid id_seguridad)
         {
-            Ctl_Usuario ctl_usuario = new Ctl_Usuario();
-
-            bool datos = ctl_usuario.ValidarIdSeguridad(id_seguridad);
-
-            if (datos)
+            try
             {
-                return Ok(datos);
+                Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+
+                bool datos = ctl_usuario.ValidarIdSeguridad(id_seguridad);
+
+                if (datos)
+                {
+                    return Ok(datos);
+                }
+                return NotFound();
+
             }
-            return NotFound();
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
     }

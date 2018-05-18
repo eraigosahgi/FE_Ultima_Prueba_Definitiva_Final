@@ -28,36 +28,43 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		[HttpGet]
         public IHttpActionResult Get(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
-            PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-            Ctl_Documento ctl_documento = new Ctl_Documento();
-            List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasAdquiriente(codigo_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date);
-
-            if (datos == null)
+            try
             {
-                return NotFound();
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasAdquiriente(codigo_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    d.DatFechaDocumento,
+                    d.DatFechaVencDocumento,
+                    d.IntVlrTotal,
+                    EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    d.StrAdquirienteMvoRechazo,
+                    IdentificacionFacturador = d.TblEmpresasFacturador.StrIdentificacion,
+                    NombreFacturador = d.TblEmpresasFacturador.StrRazonSocial,
+                    Xml = d.StrUrlArchivoUbl,
+                    Pdf = d.StrUrlArchivoPdf,
+                    d.StrIdSeguridad,
+                    RutaPublica = plataforma.RutaPublica,
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+                });
+
+                return Ok(retorno);
             }
-
-            var retorno = datos.Select(d => new
+            catch (Exception excepcion)
             {
-                NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
-                d.DatFechaDocumento,
-                d.DatFechaVencDocumento,
-                d.IntVlrTotal,
-                EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
-                EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = d.StrAdquirienteMvoRechazo,
-                d.StrAdquirienteMvoRechazo,
-                IdentificacionFacturador = d.TblEmpresasFacturador.StrIdentificacion,
-                NombreFacturador = d.TblEmpresasFacturador.StrRazonSocial,
-                Xml = d.StrUrlArchivoUbl,
-                Pdf = d.StrUrlArchivoPdf,
-                d.StrIdSeguridad,
-                RutaPublica = plataforma.RutaPublica,
-                RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
-            });
-
-            return Ok(retorno);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
         /// <summary>
@@ -74,36 +81,43 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
-            PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-            Ctl_Documento ctl_documento = new Ctl_Documento();
-            List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin);
-
-            if (datos == null)
+            try
             {
-                return NotFound();
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    d.DatFechaDocumento,
+                    d.DatFechaVencDocumento,
+                    d.IntVlrTotal,
+                    EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    d.StrAdquirienteMvoRechazo,
+                    IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+                    NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
+                    Xml = d.StrUrlArchivoUbl,
+                    Pdf = d.StrUrlArchivoPdf,
+                    d.StrIdSeguridad,
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+                });
+
+                return Ok(retorno);
             }
-
-            var retorno = datos.Select(d => new
+            catch (Exception excepcion)
             {
-                NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
-                d.DatFechaDocumento,
-                d.DatFechaVencDocumento,
-                d.IntVlrTotal,
-                EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
-                EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = d.StrAdquirienteMvoRechazo,
-                d.StrAdquirienteMvoRechazo,
-                IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
-                NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
-                MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
-                Xml = d.StrUrlArchivoUbl,
-                Pdf = d.StrUrlArchivoPdf,
-                d.StrIdSeguridad,
-                RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
-            });
-
-            return Ok(retorno);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
         /// <summary>
@@ -114,32 +128,39 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get(System.Guid id_seguridad)
         {
-            Ctl_Documento ctl_documento = new Ctl_Documento();
-            List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
-
-            if (datos == null)
+            try
             {
-                return NotFound();
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+                    NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+                    Cufe = d.StrCufe,
+                    IdSeguridad = d.StrIdSeguridad,
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    FechaRespuesta = d.DatAdquirienteFechaRecibo,
+                    Xml = d.StrUrlArchivoUbl,
+                    d.StrUrlArchivoUbl,
+                    Pdf = d.StrUrlArchivoPdf,
+                    RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
+                    CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
+                });
+
+                return Ok(retorno);
             }
-
-            var retorno = datos.Select(d => new
+            catch (Exception excepcion)
             {
-                NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
-                IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
-                NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
-                Cufe = d.StrCufe,
-                IdSeguridad = d.StrIdSeguridad,
-                EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = d.StrAdquirienteMvoRechazo,
-                FechaRespuesta = d.DatAdquirienteFechaRecibo,
-                Xml = d.StrUrlArchivoUbl,
-                d.StrUrlArchivoUbl,
-                Pdf = d.StrUrlArchivoPdf,
-                RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
-                CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
-            });
-
-            return Ok(retorno);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
 
@@ -177,30 +198,37 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpPost]
         public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri]short estado, [FromUri]string motivo_rechazo)
         {
-            Ctl_Documento ctl_documento = new Ctl_Documento();
-            List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo);
-
-            if (datos == null)
+            try
             {
-                return NotFound();
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+                    NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+                    Cufe = d.StrCufe,
+                    IdSeguridad = d.StrIdSeguridad,
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    Xml = d.StrUrlArchivoUbl,
+                    Pdf = d.StrUrlArchivoPdf,
+                    RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
+                    CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
+                });
+                return Ok(retorno);
+
             }
-
-            var retorno = datos.Select(d => new
+            catch (Exception excepcion)
             {
-                NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
-                IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
-                NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
-                Cufe = d.StrCufe,
-                IdSeguridad = d.StrIdSeguridad,
-                EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                MotivoRechazo = d.StrAdquirienteMvoRechazo,
-                Xml = d.StrUrlArchivoUbl,
-                Pdf = d.StrUrlArchivoPdf,
-                RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
-                CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
-            });
-
-            return Ok(retorno);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
 
@@ -211,14 +239,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <returns></returns>
         private string DescripcionEstadoFactura(short e)
         {
-			try
-			{
-				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(e));
-			}
-			catch (Exception excepcion)
-			{
-				return string.Format("Desconocido {0}", e);
-			}
+            try
+            {
+                return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(e));
+            }
+            catch (Exception excepcion)
+            {
+                return string.Format("Desconocido {0}", e);
+            }
         }
 
         /// <summary>
@@ -228,14 +256,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <returns></returns>
         private string DescripcionEstadoAcuse(short e)
         {
-			try
-			{
-				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(e));
-			}
-			catch (Exception excepcion)
-			{
-				return string.Format("Desconocido {0}", e);
-			}
-		}
+            try
+            {
+                return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(e));
+            }
+            catch (Exception excepcion)
+            {
+                return string.Format("Desconocido {0}", e);
+            }
+        }
     }
 }

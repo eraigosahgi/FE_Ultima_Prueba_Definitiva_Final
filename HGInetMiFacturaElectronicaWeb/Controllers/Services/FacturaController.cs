@@ -227,52 +227,60 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 // procesa el documento
                 DocumentoRespuesta resultado = Ctl_Documentos.Procesar(id_peticion, documento_obj, TipoDocumento.Factura, null, null);
-                
+
 
                 return resultado;
             }
             catch (Exception excepcion)
             {
-
-                throw excepcion;
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
 
         // POST: api/Factura
-		[HttpPost]
+        [HttpPost]
         public HttpResponseMessage Post(Factura value)
         {
-
-            if (ModelState.IsValid)
+            try
             {
-                // Los campos enviados en el objeto, cumplen con lo solicitado.
-
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                if (ModelState.IsValid)
+                {
+                    // Los campos enviados en el objeto, cumplen con lo solicitado.
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
             }
-            else
+            catch (Exception excepcion)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
-            //return "post";
 
         }
 
         // PUT: api/Factura/5
-		[HttpPut]
+        [HttpPut]
         public HttpResponseMessage Put(Factura value)
         {
-            if (ModelState.IsValid)
+            try
             {
-                // Los campos enviados en el objeto, cumplen con lo solicitado.
+                if (ModelState.IsValid)
+                {
+                    // Los campos enviados en el objeto, cumplen con lo solicitado.
 
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
             }
-            else
+            catch (Exception excepcion)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
-
-            //return "put";
         }
 
         // DELETE: api/Factura/5

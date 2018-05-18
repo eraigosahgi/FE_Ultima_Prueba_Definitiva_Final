@@ -18,10 +18,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="identificacion_obligado"></param>
         public static void Validar(string DataKey, string identificacion_obligado)
         {
-            Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+            try
+            {
+                Ctl_Empresa ctl_empresa = new Ctl_Empresa();
 
-            //Válida que la key sea correcta.
-            ctl_empresa.Validar(DataKey, identificacion_obligado);
+                //Válida que la key sea correcta.
+                ctl_empresa.Validar(DataKey, identificacion_obligado);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
 
         }
 
@@ -58,7 +65,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
             catch (Exception excepcion)
             {
-
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
 
