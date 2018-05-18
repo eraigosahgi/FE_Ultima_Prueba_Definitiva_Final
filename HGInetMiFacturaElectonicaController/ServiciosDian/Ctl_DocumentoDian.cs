@@ -9,17 +9,43 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData.Modelo;
 
 namespace HGInetMiFacturaElectonicaController.ServiciosDian
 {
 	public class Ctl_DocumentoDian
 	{
 
-		public static AcuseRecibo Enviar(FacturaE_Documento documento)
+		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblEmpresas empresa)
 		{
-			// obtiene los datos del proveedor tecnológico de la DIAN
-			DianProveedorTest data_dian = HgiConfiguracion.GetConfiguration().DianProveedorTest;
-			
+
+			string IdSoftware = null;
+			string PinSoftware = null;
+			string clave = null;
+			string UrlServicioWeb = null;
+			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
+			if (empresa.IntHabilitacion < 99)
+			{
+				// obtiene los datos de prueba del proveedor tecnológico de la DIAN
+				DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
+
+				IdSoftware = data_dian_habilitacion.IdSoftware;
+				PinSoftware = data_dian_habilitacion.Pin;
+				clave = data_dian_habilitacion.ClaveAmbiente;
+				UrlServicioWeb = data_dian_habilitacion.UrlServicioWeb;
+			}
+			else
+			{
+				// obtiene los datos del proveedor tecnológico de la DIAN
+				DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
+
+				IdSoftware = data_dian.IdSoftware;
+				PinSoftware = data_dian.Pin;
+				clave = data_dian.ClaveAmbiente;
+				UrlServicioWeb = data_dian.UrlServicioWeb;
+			}
+
 			string prefijo = string.Empty;
 
 			string numero = string.Empty;
@@ -61,7 +87,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 				throw new ApplicationException(string.Format("No se encuentra la ruta del archivo zip: {0}", ruta_zip));
 				
 			// envía el documento a través de los servicios web de la DIAN
-			AcuseRecibo acuse = Ctl_Factura.Enviar(documento.IdSeguridad, data_dian.IdSoftware, data_dian.ClaveAmbiente, prefijo, numero, fecha, nit_obligado, ruta_zip, data_dian.UrlServicioWeb);
+			AcuseRecibo acuse = Ctl_Factura.Enviar(documento.IdSeguridad, IdSoftware, clave, prefijo, numero, fecha, nit_obligado, ruta_zip, UrlServicioWeb);
 
 			return acuse;
 		}
