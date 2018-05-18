@@ -46,5 +46,30 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 			}
 		}
 
-	}
+        /// <summary>
+		/// Método Web para probar Formato
+		/// </summary>
+		/// <param name="formato">formato</param>
+		/// <returns>resultado de la operación</returns>
+		private string TestFormato(Formato formato)
+        {
+            try
+            {
+                // id de la petición en la plataforma
+                Guid id_peticion = Guid.NewGuid();
+
+                string nombre_pdf = string.Empty;
+
+                nombre_pdf = Ctl_Formato.GuardarArchivo(formato, "log_pdf", id_peticion.ToString());
+
+                return nombre_pdf;
+            }
+            catch (Exception exec)
+            {
+                Error error = new Error(CodigoError.VALIDACION, exec);
+                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+            }
+        }
+
+    }
 }
