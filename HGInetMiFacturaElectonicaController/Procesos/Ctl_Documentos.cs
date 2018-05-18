@@ -333,19 +333,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						try
 						{
 							Formato formato_documento = (Formato)documento_obj.DocumentoFormato;
-
 							if (formato_documento != null)
 							{
-								// almacena archivo en base64
-								documento_result.NombrePdf = Ctl_Formato.GuardarArchivo(formato_documento.ArchivoPdf, documento_result);
-								respuesta.UrlPdf = string.Empty;
 
-								if (!string.IsNullOrWhiteSpace(documento_result.NombrePdf))
+								if (!string.IsNullOrEmpty(formato_documento.ArchivoPdf))
 								{
-									// url pública del pdf
-									string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
+									// almacena archivo en base64
+									documento_result.NombrePdf = Ctl_Formato.GuardarArchivo(formato_documento.ArchivoPdf, documento_result);
+									respuesta.UrlPdf = string.Empty;
 
-									respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
+									if (!string.IsNullOrWhiteSpace(documento_result.NombrePdf))
+									{
+										// url pública del pdf
+										string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
+
+										respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
+
+                                        documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
+                                        documentoBd = documento_tmp.Actualizar(documentoBd);
+                                    }
 								}
 							}
 
@@ -353,6 +359,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento PDF. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+                            LogExcepcion.Guardar(excepcion);
+							throw excepcion;
 						}
 
 
@@ -385,7 +393,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 							documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
-							documento_tmp.Actualizar(documentoBd);
+                            documentoBd = documento_tmp.Actualizar(documentoBd);
 						}
 						catch (Exception excepcion)
 						{
@@ -427,7 +435,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.FechaUltimoProceso = fecha_actual;
 							respuesta.IdProceso = 7;
 
-							acuse = Ctl_DocumentoDian.Enviar(documento_result);
+							acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
 						}
 						catch (Exception excepcion)
 						{
@@ -457,6 +465,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
 						System.Threading.Thread.Sleep(5000);
 
+						bool _estado_dian = false;
+
 						//Valida estado del documento en la Plataforma de la DIAN
 						try
 						{
@@ -466,7 +476,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							string url_ws_consulta = null;
 
 							// carpeta del xml
-							string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), documento_result.IdSeguridad.ToString());
+							string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), documento_result.IdSeguridadTercero.ToString());
 							carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
 
 							// valida la existencia de la carpeta
@@ -538,7 +548,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 								respuesta.Error.Mensaje = string.Format("Respuesta DIAN: {0} - Cod. {1} ", resultado_doc.EstadoDianDescripcion, resultado_doc.EstadoDian);
-
+								/*
 								//Envio de mail
 								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 								try
@@ -573,7 +583,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									throw excepcion;
 
 								}
+								*/
+								//Actualiza Documento en Base de Datos
+								documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+								documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
+								documento_tmp.Actualizar(documentoBd);
+								_estado_dian = true;
 							}
 							else if (resultado_doc.EstadoDian.Equals("7200004") || resultado_doc.EstadoDian.Equals("7200005"))
 							{
@@ -606,6 +622,44 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 							throw excepcion;
 
+						}
+						if (_estado_dian == true)
+						{
+							//Envio de mail
+							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							try
+							{
+								respuesta.DescripcionProceso = string.Format("{0} - En estado EXITOSA", respuesta.DescripcionProceso);
+
+								//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
+								if (adquiriente_nuevo == true)
+								{
+
+									email.Bienvenida(adquirienteBd, usuarioBd);
+								}
+
+								//envío de los documentos al Adquiriente
+								email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono);
+
+								//Actualiza la respuesta
+								fecha_actual = Fecha.GetFecha();
+								respuesta.DescripcionProceso = "Envío correo adquiriente.";
+								respuesta.FechaUltimoProceso = fecha_actual;
+								respuesta.IdProceso = 8;
+
+								//Actualiza Documento en Base de Datos
+								documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+								documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+								documento_tmp.Actualizar(documentoBd);
+							}
+							catch (Exception excepcion)
+							{
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+
+								throw excepcion;
+
+							}
 						}
 
 
@@ -706,7 +760,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (numero_documento != null)
 					throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
-					
+
 				// filtra la resolución del documento
 				TblEmpresasResoluciones resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
 
