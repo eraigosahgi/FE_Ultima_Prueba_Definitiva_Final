@@ -48,7 +48,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     //Botón Rechazar.
     $scope.ButtonOptionsAceptar = {
         text: "Aceptar",
-        type: "success",        
+        type: "success",
         onClick: function (e) {
             estado = 1;
             motivo_rechazo = $('textarea[name=Observaciones]').val();
@@ -75,7 +75,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         ActualizarDatos();
     }
 
-  
+
     //Función para actualizar los datos
     function ActualizarDatos() {
 
@@ -91,7 +91,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
             $scope.ServerResponse = data;
             consultar();
             var id = IdSeguridad;
-            $('#wait').hide();            
+            $('#wait').hide();
         }, function errorCallback(response) {
             $('#wait').hide();
             console.log("Error..", response.data.ExceptionMessage);
@@ -99,3 +99,4 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     }
 
 });
+

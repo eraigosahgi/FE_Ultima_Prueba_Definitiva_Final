@@ -187,6 +187,45 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene los datos de los acuse de recibo
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="codigo_adquiriente"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        public IHttpActionResult Get(string codigo_facturador, string codigo_adquiriente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        {
+            try
+            {
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, "*", estado_recibo, fecha_inicio, fecha_fin).Where(x => x.IntAdquirienteRecibo != 0).ToList();
+
+                var retorno = datos.Select(d => new
+                {
+                    IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+                    RazonSocial = d.TblEmpresasAdquiriente.StrRazonSocial,
+                    NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    FechaRespuesta = d.DatAdquirienteFechaRecibo,
+                    Estado = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
 
         /// <summary>
         /// Actualiza la respuesta de acuse del documento.

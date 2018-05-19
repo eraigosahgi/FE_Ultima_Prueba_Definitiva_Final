@@ -1,6 +1,9 @@
-﻿using HGInetMiFacturaElectonicaController.Configuracion;
+﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaData.Modelo;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Http;
 
@@ -45,16 +48,19 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         }
 
 
-        public static string Token
+        /// <summary>
+		/// Lista de opciones de permiso del usuario.
+		/// </summary>
+		public static string PermisosUsuario
         {
             get
             {
                 ValidarSesion();
-                if (HttpContext.Current.Session["token"] == null)
+                if (HttpContext.Current.Session["PermisosUsuario"] == null)
                 {
-                    HttpContext.Current.Session["token"] = string.Empty;
+                    HttpContext.Current.Session["PermisosUsuario"] = string.Empty;
                 }
-                return HttpContext.Current.Session["token"].ToString();
+                return HttpContext.Current.Session["PermisosUsuario"].ToString();
             }
         }
 
@@ -66,14 +72,14 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         public static void ValidarSesion()
         {
             HttpContext context = HttpContext.Current;
-         
-                if (context.Session == null)
-                    throw new ApplicationException("No se encontraron datos en la sesión; ingrese nuevamente.");
+
+            if (context.Session == null)
+                throw new ApplicationException("No se encontraron datos en la sesión; ingrese nuevamente.");
 
 
-                if (context.Session["datos_empresa"] == null || context.Session["datos_usuario"] == null)
-                    throw new ApplicationException("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.");            
-           
+            if (context.Session["datos_empresa"] == null || context.Session["datos_usuario"] == null)
+                throw new ApplicationException("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.");
+
         }
 
         /// <summary>
@@ -98,12 +104,66 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
                 if (datos_empresa != null)
                     HttpContext.Current.Session.Add("datos_empresa", datos_empresa);
 
+                CargarPermisos();
+
             }
             catch (Exception excepcion)
             {
                 throw new ApplicationException(string.Format("{0}{1}{2}", "Error al construir la sesíón del usuario con los datos de autenticación. ", excepcion.Message, excepcion.InnerException));
             }
         }
+
+        /// <summary>
+        /// Obtiene los permisos del usuario y los convierte en lista string.
+        /// </summary>
+        public static void CargarPermisos()
+        {
+            try
+            {
+                Ctl_Permisos ctl_permisos = new Ctl_Permisos();
+                // crea los parámetros para el servicio web
+                List<TblOpcionesUsuario> permisos_usuario = ctl_permisos.ObtenerPermisosUsuario(DatosUsuario.StrUsuario);
+
+                if (permisos_usuario == null)
+                    throw new ApplicationException("No se encontraron permisos asignados del usuario.");
+
+                string lista_permisos = string.Empty;
+
+                foreach (TblOpcionesUsuario item in permisos_usuario)
+                {
+                    lista_permisos = string.Format("{0}{1},", lista_permisos, item.IntIdOpcion);
+                }
+
+                HttpContext context = HttpContext.Current;
+                context.Session["PermisosUsuario"] = lista_permisos;
+
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(string.Format("Error al obtener los permisos del usuario - {0}.", excepcion.Message), excepcion);
+            }
+        }
+
+        /// <summary>
+        /// Valida que el usuario tenga permiso para el código.
+        /// </summary>
+        /// <param name="codigo_opcion"></param>
+        /// <returns></returns>
+        public static bool ValidarPermiso(string codigo_opcion)
+        {
+
+            string cod = PermisosUsuario;
+
+            cod = cod.Split(',').Where(_permiso => _permiso.Equals(codigo_opcion)).FirstOrDefault();
+
+
+            // valida que el usuario tenga el permiso en la sesión
+            if (string.IsNullOrEmpty(PermisosUsuario.Split(',').Where(_permiso => _permiso.Equals(codigo_opcion)).FirstOrDefault()))
+                return false;
+            else
+                return true;
+        }
+
 
     }
 }

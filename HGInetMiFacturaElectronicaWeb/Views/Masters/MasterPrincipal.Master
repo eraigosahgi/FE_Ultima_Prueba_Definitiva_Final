@@ -80,21 +80,21 @@
     <!-- JS Localización -->
     <script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
     <script src="../../Scripts/config.js"></script>
-     <style>.swal-button {background-color: #337ab7;}</style>
+    <style>
+        .swal-button {
+            background-color: #337ab7;
+        }
+    </style>
 </head>
 <body>
     <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; "></div>        
-        <div> <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width:20%; height:20%;" src="../../Content/icons/Loading.gif" /></div>
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>        
-        <div> <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' /></div>
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>
+        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block;"></div>
         <div>
-            <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' />
+            <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
         </div>
+
     </div>
-    
 
     <form id="form1" runat="server">
 
@@ -236,7 +236,7 @@
                         <!-- Navegación Principal -->
                         <div class="sidebar-category sidebar-category-visible">
                             <div class="category-content no-padding">
-                                <ul class="navigation navigation-main navigation-accordion">
+                                <ul class="navigation navigation-main navigation-accordion" id="MenuPrincipal" runat="server">
 
                                     <!-- Principal -->
                                     <li class="navigation-header"><span style="margin: -10px">Menú</span> <i class="icon-menu" title="Menú"></i></li>
@@ -244,36 +244,63 @@
                                     <!-- /Principal -->
 
                                     <!-- HGInet Facturación electrónica -->
-                                    <li class="active">
+                                    <li class="active" runat="server" id="menu_13">
                                         <a href="#" class="has-ul legitRipple"><i class="icon-typewriter"></i><span style="margin: -10px">Facturación Electrónica</span></a>
-                                        <ul>
 
-                                            <li>
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-reading"></i><span style="margin: -10px">Facturador</span></a>
-                                                <ul>
-                                                    <li>
-                                                        <a class="legitRipple" href="../Pages/DocumentosObligado.aspx"><i class="icon-file-check"></i><span style="margin: -10px">Consulta de Documentos</span></a>
+                                        <ul runat="server" id="ul_13">
+
+                                            <!-- Opciones Documentos -->
+                                            <li runat="server" id="menu_131">
+
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-folder-open"></i><span style="margin: -10px">Documentos</span></a>
+
+                                                <ul runat="server" id="ul_131">
+
+                                                    <li runat="server" id="menu_1311">
+                                                        <asp:HyperLink runat="server" ID="link_1311" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosObligado.aspx"><i class="icon-reading"></i><span style="margin: -10px">Documentos Facturador</span></asp:HyperLink>
                                                     </li>
+
+                                                    <li runat="server" id="menu_1312">
+                                                        <asp:HyperLink runat="server" ID="link_1312" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosAdquiriente.aspx"><i class="icon-reading"></i><span style="margin: -10px">Documentos Adquiriente</span></asp:HyperLink>
+                                                    </li>
+
+                                                    <li runat="server" id="menu_1313">
+                                                        <asp:HyperLink runat="server" ID="link_1313" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaAcuseRecibo.aspx"><i class="icon-sort-time-desc"></i><span style="margin: -10px">Consulta Acuse</span></asp:HyperLink>
+                                                    </li>
+
                                                 </ul>
+
                                             </li>
 
-                                            <li>
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-collaboration"></i><span style="margin: -10px">Adquiriente</span></a>
-                                                <ul>
-                                                    <li>
-                                                        <a class="legitRipple" href="../Pages/DocumentosAdquiriente.aspx"><i class="icon-file-check"></i><span style="margin: -10px">Consulta de Documentos</span></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
+                                            <!-- /Opciones Documentos -->
+                                            <li runat="server" id="menu_132">
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-cogs"></i><span style="margin: -10px">Configuración</span></a>
+                                                <ul runat="server" id="ul_132">
 
-                                            <li>
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-user"></i><span style="margin: -10px">Usuarios</span></a>
-                                                <ul>
-                                                    <li>
-                                                        <a class="legitRipple" href="../Pages/ConsultaUsuarios.aspx"><i class="icon-cogs"></i><span style="margin: -10px">Gestión Usuarios</span></a>
+                                                    <li runat="server" id="menu_1321">
+                                                        <a href="#" class="has-ul legitRipple"><i class="icon-user"></i><span style="margin: -10px">Usuarios</span></a>
+                                                        <ul runat="server" id="ul_1321">
+                                                            <li runat="server" id="menu_13211">
+                                                                <asp:HyperLink ID="link_13211" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta</span></asp:HyperLink></li>
+                                                            <li runat="server" id="menu_13212">
+                                                                <asp:HyperLink ID="link_13212" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-user-plus"></i><span style="margin: -10px">Gestión</span></asp:HyperLink></li>
+                                                        </ul>
                                                     </li>
+
+                                                    <li runat="server" id="menu_1322">
+                                                        <a href="#" class="has-ul legitRipple"><i class="icon-home2"></i><span style="margin: -10px">Empresas</span></a>
+                                                        <ul runat="server" id="ul_1322">
+                                                            <li runat="server" id="menu_13221">
+                                                                <asp:HyperLink ID="link_13221" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta</span></asp:HyperLink></li>
+                                                            <li runat="server" id="menu_13222">
+                                                                <asp:HyperLink ID="link_13222" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-file-plus2"></i><span style="margin: -10px">Gestión</span></asp:HyperLink></li>
+                                                        </ul>
+                                                    </li>
+
                                                 </ul>
                                             </li>
+                                            <!-- /Opciones Configuración -->
+
                                         </ul>
                                     </li>
                                     <!-- /HGInet Facturación electrónica -->
@@ -293,9 +320,12 @@
                     <!-- Encabezado de la página -->
                     <div class="page-header page-header-default">
                         <div class="page-header-content">
+
                             <div class="page-title">
-                                <h4><i class="icon-arrow-left52 position-left"></i>Facturación Electrónica</h4>
+                                <h4>
+                                    <asp:Label ID="lb_TituloPagina" runat="server" Text="lb_TituloPagina"></asp:Label></h4>
                             </div>
+
                             <div class="heading-elements">
                                 <div class="heading-btn-group">
                                     <a id="a_info_acerca" class="btn btn-link btn-float text-size-small has-text" data-toggle="modal" data-target="#modal_default"><i class="icon-info22"></i><span>Acerca de..</span></a>
@@ -386,7 +416,9 @@
 
                         <div class="breadcrumb-line">
                             <ul class="breadcrumb">
-                                <li><a href="../Pages/Inicio.aspx"><i class="icon-home2 position-left"></i>Inicio</a></li>
+                                <li><a href="../Pages/Inicio.aspx"><i class="icon-home2 position-left"></i>Inicio</a>
+                                    <asp:Label ID="lb_GrupoPagina" runat="server" Text="lb_GrupoPagina"></asp:Label>
+                                </li>
                             </ul>
                         </div>
                     </div>

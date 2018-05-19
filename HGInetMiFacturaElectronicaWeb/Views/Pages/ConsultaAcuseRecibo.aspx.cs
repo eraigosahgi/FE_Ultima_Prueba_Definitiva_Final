@@ -9,17 +9,16 @@ using System.Web.UI.WebControls;
 
 namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 {
-    public partial class ConsultaUsuarios : PaginaContenido
+    public partial class ConsultaAcuseRecibo : PaginaContenido
     {
         protected void Page_Init(object sender, EventArgs e)
         {
-            this.CodigoOpcion = OpcionesPermisos.ConsultaUsuariosSistema;
+            this.CodigoOpcion = OpcionesPermisos.ConsultaAcuseRecibo;
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
-
         }
     }
 }

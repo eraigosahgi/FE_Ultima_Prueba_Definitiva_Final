@@ -14,9 +14,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
-           codigo_adquiriente = "";    
+           codigo_adquiriente = "";
     $http.get('/api/DatosSesion/').then(function (response) {
-    
+
         console.log(response.data[0]);
 
         codigo_facturador = response.data[0].Identificacion;
@@ -100,7 +100,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
     };
 
     function consultar() {
-        
+
         console.log("Ingresó al evento del botón");
 
         if (fecha_inicio == "")
@@ -116,7 +116,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
         $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
-        $('#wait').hide();
+            $('#wait').hide();
             console.log("Datos", response.data);
 
             $("#gridDocumentos").dxDataGrid({
@@ -141,26 +141,43 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                             }
                         }
                         //Valida el formato de fecha en la configuracion de fecha
-                        if (options.columnIndex == 3 || options.columnIndex == 2) {                            
-                            if (fieldData) {                                
-                                var inicial = convertDateFormat(options.text );                                
+                        if (options.columnIndex == 3 || options.columnIndex == 2) {
+                            if (fieldData) {
+                                var inicial = convertDateFormat(options.text);
                                 options.cellElement.html(inicial);
                             }
                         }
 
-                    } catch (err) {                        
+                    } catch (err) {
                         console.log("Error: ", err.message);
                     }
 
                 }
-                ,columns: [
+                , columns: [
                     {
                         caption: "Archivos",
                         cssClass: "col-xs-3 col-md-1",
                         cellTemplate: function (container, options) {
+
+                            var visible_pdf = "pointer-events:auto;cursor: not-allowed;";
+                            var visible_xml = "pointer-events:auto;cursor: not-allowed;";
+
+                            if (options.data.Pdf)
+                                visible_pdf = "pointer-events:auto;cursor: pointer";
+                            else
+                                options.data.Pdf = "#";
+
+                            if (options.data.Xml)
+                                visible_xml = "pointer-events:auto;cursor: pointer";
+                            else
+                                options.data.Xml = "#";
+
+                            console.log("PDF: " + options.data.Pdf);
+                            console.log("XML: " + options.data.Xml);
+
                             $("<div>")
                                 .append(
-                                    $("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "'>&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "'>&nbsp;&nbsp;"),
+                                    $("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "' style='" + visible_pdf + "'>&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "' style='" + visible_xml + "'>&nbsp;&nbsp;"),
                                     $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>").dxButton({
                                         onClick: function () {
                                             $scope.showModal = true;
@@ -176,13 +193,13 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     },
                     {
                         caption: "Documento",
-                        cssClass: "col-xs-3 col-md-1",                        
+                        cssClass: "col-xs-3 col-md-1",
                         dataField: "NumeroDocumento",
-                        
+
                     },
                     {
                         caption: "Fecha Documento",
-                        dataField: "DatFechaDocumento",                        
+                        dataField: "DatFechaDocumento",
                         dataType: "date",
                         cssClass: "col-xs-3 col-md-1",
                         validationRules: [{
@@ -192,7 +209,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     },
                     {
                         caption: "Fecha Vencimiento",
-                        dataField: "DatFechaVencDocumento",                        
+                        dataField: "DatFechaVencDocumento",
                         dataType: "date",
                         cssClass: "hidden-xs col-md-1",
                         validationRules: [{
@@ -251,9 +268,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             $('#wait').hide();
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
         });
-        
+
     }
-    
+
 });
 
 
@@ -306,7 +323,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
         //validationGroup: "DatosEmail",
 
         onClick: function (e) {
-            
+
             try {
 
                 email_destino = $('input:text[name=EmailDestino]').val();
@@ -316,7 +333,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                 }
                 $('#wait').show();
                 $http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino).then(function (responseEnvio) {
-                $('#wait').hide();
+                    $('#wait').hide();
                     var respuesta = responseEnvio.data;
 
                     if (respuesta) {
@@ -343,7 +360,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                     $('input:text[name=EmailDestino]').val("");
                     $("#modal_enviar_email").removeClass("modal fade in").addClass("modal fade");
                     $('.modal-backdrop').remove();
-                    
+
                 }, function errorCallback(response) {
                     $('#wait').hide();
                     DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);

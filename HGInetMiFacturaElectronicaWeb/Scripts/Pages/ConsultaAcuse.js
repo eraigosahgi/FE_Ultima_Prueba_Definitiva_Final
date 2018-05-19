@@ -1,0 +1,200 @@
+﻿DevExpress.localization.locale(navigator.language);
+
+var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx']);
+AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, $http, $location) {
+
+    var now = new Date();
+
+    var codigo_facturador = "",
+               codigo_adquiriente = "",
+               numero_documento = "",
+               fecha_inicio = "",
+               fecha_fin = "",
+               estado_acuse = "";
+
+
+    $http.get('/api/DatosSesion/').then(function (response) {
+
+        console.log(response.data[0]);
+
+        codigo_facturador = response.data[0].Identificacion;
+        consultar();
+    });
+
+
+    $scope.filtros =
+           {
+               //Control defecto ingreso de datos.
+               FechaInicial: {
+                   type: "date",
+                   value: now,
+                   displayFormat: "yyyy-MM-dd",
+                   onValueChanged: function (data) {
+                       console.log("FechaInicial", new Date(data.value).toISOString());
+                       fecha_inicio = new Date(data.value).toISOString();
+                   }
+               },
+               FechaFinal: {
+                   type: "date",
+                   value: now,
+                   displayFormat: "yyyy-MM-dd",
+                   onValueChanged: function (data) {
+                       console.log("FechaFinal", new Date(data.value).toISOString());
+                       fecha_fin = new Date(data.value).toISOString();
+                   }
+               },
+               EstadoRecibo: {
+                   searchEnabled: true,
+                   //Carga la data del control
+                   dataSource: new DevExpress.data.ArrayStore({
+                       data: items_recibo,
+                       key: "ID"
+                   }),
+                   displayExpr: "Texto",
+                   Enabled: true,
+                   placeholder: "Seleccione un Item",
+                   onValueChanged: function (data) {
+                       console.log("EstadoRecibo", data.value.ID);
+                       estado_acuse = data.value.ID;
+                   }
+               },
+               NumeroDocumento: {
+                   placeholder: "Ingrese Número Documento",
+                   onValueChanged: function (data) {
+                       console.log("NumeroDocumento", data.value);
+                       numero_documento = data.value;
+                   }
+               },
+               Adquiriente: {
+                   placeholder: "Ingrese Identificación del Adquiriente",
+                   onValueChanged: function (data) {
+                       console.log("Adquiriente", data.value);
+                       codigo_adquiriente = data.value;
+                   }
+               }
+           }
+
+    $scope.ButtonOptionsConsultar = {
+        text: 'Consultar',
+        type: 'default',
+        onClick: function (e) {
+            consultar();
+        }
+    };
+
+
+    function consultar() {
+
+        console.log("Ingresó al evento del botón");
+
+        if (fecha_inicio == "")
+            fecha_inicio = now.toISOString();
+
+        if (fecha_fin == "")
+            fecha_fin = now.toISOString();
+
+        //Obtiene los datos del web api
+        //ControladorApi: /Api/Documentos/
+        //Datos GET: codigo_facturador, codigo_adquiriente, numero_documento, estado_recibo, fecha_inicio, fecha_fin
+        $('#wait').show();
+        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+            $('#wait').hide();
+            console.log("Datos", response.data);
+
+            $("#gridDocumentos").dxDataGrid({
+                dataSource: response.data,
+                paging: {
+                    pageSize: 20
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20],
+                    showInfo: true
+                }
+                //Formatos personalizados a las columnas en este caso para el monto
+                , onCellPrepared: function (options) {
+                    var fieldData = options.value;
+                    try {
+                        //Valida el formato de fecha en la configuracion de fecha
+                        if (options.columnIndex == 3) {
+                            if (fieldData) {
+                                var inicial = convertDateFormat(options.text);
+                                options.cellElement.html(inicial);
+                            }
+                        }
+
+                    } catch (err) {
+                        console.log("Error: ", err.message);
+                    }
+
+                }
+
+                , columns: [
+                     {
+                         caption: "Identificación Adquiriente",
+                         cssClass: "hidden-xs col-md-1",
+                         dataField: "IdentificacionAdquiriente"
+                     },
+                      {
+                          caption: "Nombre Adquiriente",
+                          cssClass: "hidden-xs col-md-1",
+                          dataField: "RazonSocial"
+                      },
+                      {
+                          caption: "Número Documento",
+                          cssClass: "hidden-xs col-md-1",
+                          dataField: "NumeroDocumento",
+                      },
+                    {
+                        caption: "Fecha Respuesta",
+                        dataField: "FechaRespuesta",
+                        dataType: "date",
+                        cssClass: "col-xs-3 col-md-1",
+                        validationRules: [{
+                            type: "required",
+                            message: "El campo Fecha es obligatorio."
+                        }]
+                    },
+                       {
+                           caption: "Estado Acuse",
+                           cssClass: "hidden-xs col-md-1",
+                           dataField: "Estado",
+                       },
+                      {
+                          caption: "Motivo Rechazo",
+                          cssClass: "hidden-xs col-md-1",
+                          dataField: "MotivoRechazo",
+                      },
+                      {
+                          dataField: "",
+                          cssClass: "col-xs-2 col-md-1",
+                          cellTemplate: function (container, options) {
+                              $("<div>")
+                                  .append($("<a target='_blank' class='icon-check' href='" + options.data.RutaAcuse + "'>Acuse</a>"))
+                                  .appendTo(container);
+                          }
+                      }
+                ],
+                filterRow: {
+                    visible: true
+                },
+            });
+            console.log("DATOS DE RETORNO DE WEB API", response.data);
+
+            console.log("Salió del método");
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+    }
+
+
+});
+
+var items_recibo =
+    [
+    { ID: "*", Texto: 'Obtener Todos' },
+    { ID: "1", Texto: 'Aprobado' },
+    { ID: "2", Texto: 'Rechazado' }
+    ];

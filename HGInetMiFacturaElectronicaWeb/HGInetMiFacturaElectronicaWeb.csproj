@@ -1844,6 +1844,7 @@
     <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
+    <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\Usuarios.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
@@ -2660,6 +2661,7 @@
     <Content Include="Views\Login\Default.aspx" />
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
@@ -2682,8 +2684,21 @@
     <Compile Include="Controllers\Services\DatosSesionController.cs" />
     <Compile Include="Controllers\Services\DocumentosController.cs" />
     <Compile Include="Controllers\Services\FacturaController.cs" />
+    <Compile Include="Controllers\Services\MaestrosEnumController.cs" />
     <Compile Include="Controllers\Services\Peticion.cs" />
     <Compile Include="Controllers\Services\UsuarioController.cs" />
+    <Compile Include="Properties\OpcionesPermisos.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OpcionesPermisos.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Seguridad\PaginaContenido.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Seguridad\PaginaPermiso.cs" />
+    <Compile Include="Seguridad\PaginaPrincipal.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Seguridad\Sesion.cs" />
     <Compile Include="Seguridad\SessionControllerHandler.cs" />
     <Compile Include="Seguridad\SessionHttpControllerRouteHandler.cs" />
@@ -2732,6 +2747,13 @@
     </Compile>
     <Compile Include="Views\Pages\AcuseRecibo.aspx.designer.cs">
       <DependentUpon>AcuseRecibo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.cs">
+      <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.designer.cs">
+      <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaUsuarios.aspx.cs">
       <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>
@@ -2833,6 +2855,12 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\OpcionesPermisos.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OpcionesPermisos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -2848,7 +2876,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61430/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
