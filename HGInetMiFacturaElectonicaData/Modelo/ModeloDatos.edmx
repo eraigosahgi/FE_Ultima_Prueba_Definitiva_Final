@@ -5,16 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Modelo.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
         <EntityType Name="TblDocumentos">
           <Key>
             <PropertyRef Name="StrIdSeguridad" />
@@ -56,9 +46,11 @@
           <Property Name="StrSerial" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IntAdquiriente" Type="bit" Nullable="false" />
           <Property Name="IntObligado" Type="bit" Nullable="false" />
+          <Property Name="StrResolucionDian" Type="varchar" MaxLength="10" />
           <Property Name="DatFechaActualizacion" Type="datetime" Nullable="false" />
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="IntHabilitacion" Type="tinyint" Nullable="false" />
+          <Property Name="IntHabilitacion" Type="tinyint" />
+          <Property Name="StrEmpresaAsociada" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -87,7 +79,6 @@
           </Key>
           <Property Name="IntId" Type="int" Nullable="false" />
           <Property Name="IntIdDependencia" Type="int" />
-          <Property Name="StrCodigo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="StrDescripcion" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="IntHabilitado" Type="bit" Nullable="false" />
           <Property Name="IntIdPerfilSuperior" Type="smallint" Nullable="false" />
@@ -100,7 +91,7 @@
           </Key>
           <Property Name="IntIdOpcion" Type="int" Nullable="false" />
           <Property Name="IntIdPerfil" Type="smallint" Nullable="false" />
-          <Property Name="IntConsutar" Type="bit" Nullable="false" />
+          <Property Name="IntConsultar" Type="bit" Nullable="false" />
           <Property Name="IntAgregar" Type="bit" Nullable="false" />
           <Property Name="IntEditar" Type="bit" Nullable="false" />
           <Property Name="IntEliminar" Type="bit" Nullable="false" />
@@ -172,7 +163,7 @@
           <Property Name="StrEmpresa" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrUsuario" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="StrClave" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="StrNombres" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrNombres" Type="varchar" MaxLength="256" Nullable="false" />
           <Property Name="StrApellidos" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrCargo" Type="varchar" MaxLength="50" />
           <Property Name="StrTelefono" Type="varchar" MaxLength="50" />
@@ -386,7 +377,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ModeloStoreContainer">
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblDocumentos" EntityType="Self.TblDocumentos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresas" EntityType="Self.TblEmpresas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresasResoluciones" EntityType="Self.TblEmpresasResoluciones" Schema="dbo" store:Type="Tables" />
@@ -464,12 +454,9 @@
     <edmx:ConceptualModels>
       <Schema Namespace="Modelo" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ModeloConexion" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="sysdiagrams" EntityType="Modelo.sysdiagrams" />
           <EntitySet Name="TblDocumentos" EntityType="Modelo.TblDocumentos" />
           <EntitySet Name="TblEmpresas" EntityType="Modelo.TblEmpresas" />
           <EntitySet Name="TblEmpresasResoluciones" EntityType="Modelo.TblEmpresasResoluciones" />
-          <EntitySet Name="TblOpciones" EntityType="Modelo.TblOpciones" />
-          <EntitySet Name="TblOpcionesPerfil" EntityType="Modelo.TblOpcionesPerfil" />
           <EntitySet Name="TblOpcionesUsuario" EntityType="Modelo.TblOpcionesUsuario" />
           <EntitySet Name="TblPerfiles" EntityType="Modelo.TblPerfiles" />
           <EntitySet Name="TblPlanes" EntityType="Modelo.TblPlanes" />
@@ -508,18 +495,6 @@
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
           </AssociationSet>
-          <AssociationSet Name="FK_TblOpcionesPerfil_TblOpciones" Association="Modelo.FK_TblOpcionesPerfil_TblOpciones">
-            <End Role="TblOpciones" EntitySet="TblOpciones" />
-            <End Role="TblOpcionesPerfil" EntitySet="TblOpcionesPerfil" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TblOpcionesUsuario_TblOpciones" Association="Modelo.FK_TblOpcionesUsuario_TblOpciones">
-            <End Role="TblOpciones" EntitySet="TblOpciones" />
-            <End Role="TblOpcionesUsuario" EntitySet="TblOpcionesUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TblOpcionesPerfil_TblPerfiles" Association="Modelo.FK_TblOpcionesPerfil_TblPerfiles">
-            <End Role="TblPerfiles" EntitySet="TblPerfiles" />
-            <End Role="TblOpcionesPerfil" EntitySet="TblOpcionesPerfil" />
-          </AssociationSet>
           <AssociationSet Name="FK_TblOpcionesUsuario_TblUsuarios" Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios">
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
             <End Role="TblOpcionesUsuario" EntitySet="TblOpcionesUsuario" />
@@ -536,17 +511,21 @@
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
             <End Role="TblUsuariosPorPerfil" EntitySet="TblUsuariosPorPerfil" />
           </AssociationSet>
+          <EntitySet Name="TblOpcionesPerfil" EntityType="Modelo.TblOpcionesPerfil" />
+          <AssociationSet Name="FK_TblOpcionesPerfil_TblPerfiles" Association="Modelo.FK_TblOpcionesPerfil_TblPerfiles">
+            <End Role="TblPerfiles" EntitySet="TblPerfiles" />
+            <End Role="TblOpcionesPerfil" EntitySet="TblOpcionesPerfil" />
+          </AssociationSet>
+          <EntitySet Name="TblOpciones" EntityType="Modelo.TblOpciones" />
+          <AssociationSet Name="FK_TblOpcionesPerfil_TblOpciones" Association="Modelo.FK_TblOpcionesPerfil_TblOpciones">
+            <End Role="TblOpciones" EntitySet="TblOpciones" />
+            <End Role="TblOpcionesPerfil" EntitySet="TblOpcionesPerfil" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TblOpcionesUsuario_TblOpciones" Association="Modelo.FK_TblOpcionesUsuario_TblOpciones">
+            <End Role="TblOpciones" EntitySet="TblOpciones" />
+            <End Role="TblOpcionesUsuario" EntitySet="TblOpcionesUsuario" />
+          </AssociationSet>
           </EntityContainer>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
         <EntityType Name="TblDocumentos">
           <Key>
             <PropertyRef Name="StrIdSeguridad" />
@@ -594,13 +573,15 @@
           <Property Name="IntObligado" Type="Boolean" Nullable="false" />
           <Property Name="DatFechaActualizacion" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
-          <Property Name="IntHabilitacion" Type="Byte" Nullable="false" />
+          <Property Name="IntHabilitacion" Type="Byte" />
           <NavigationProperty Name="TblDocumentosAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblDocumentosFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresasResoluciones" />
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblEmpresas" FromRole="TblEmpresas" ToRole="TblOpcionesUsuario" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblEmpresas" ToRole="TblUsuarios" />
+          <Property Name="StrResolucionDian" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="StrEmpresaAsociada" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -625,36 +606,6 @@
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblEmpresasResoluciones" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresas" />
         </EntityType>
-        <EntityType Name="TblOpciones">
-          <Key>
-            <PropertyRef Name="IntId" />
-          </Key>
-          <Property Name="IntId" Type="Int32" Nullable="false" />
-          <Property Name="IntIdDependencia" Type="Int32" />
-          <Property Name="StrCodigo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="StrDescripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IntHabilitado" Type="Boolean" Nullable="false" />
-          <Property Name="IntIdPerfilSuperior" Type="Int16" Nullable="false" />
-          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="TblOpcionesPerfil" Relationship="Modelo.FK_TblOpcionesPerfil_TblOpciones" FromRole="TblOpciones" ToRole="TblOpcionesPerfil" />
-          <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblOpciones" FromRole="TblOpciones" ToRole="TblOpcionesUsuario" />
-        </EntityType>
-        <EntityType Name="TblOpcionesPerfil">
-          <Key>
-            <PropertyRef Name="IntIdOpcion" />
-            <PropertyRef Name="IntIdPerfil" />
-          </Key>
-          <Property Name="IntIdOpcion" Type="Int32" Nullable="false" />
-          <Property Name="IntIdPerfil" Type="Int16" Nullable="false" />
-          <Property Name="IntConsultar" Type="Boolean" Nullable="false" />
-          <Property Name="IntAgregar" Type="Boolean" Nullable="false" />
-          <Property Name="IntEditar" Type="Boolean" Nullable="false" />
-          <Property Name="IntEliminar" Type="Boolean" Nullable="false" />
-          <Property Name="IntAnular" Type="Boolean" Nullable="false" />
-          <Property Name="IntGestion" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="TblOpciones" Relationship="Modelo.FK_TblOpcionesPerfil_TblOpciones" FromRole="TblOpcionesPerfil" ToRole="TblOpciones" />
-          <NavigationProperty Name="TblPerfiles" Relationship="Modelo.FK_TblOpcionesPerfil_TblPerfiles" FromRole="TblOpcionesPerfil" ToRole="TblPerfiles" />
-        </EntityType>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
             <PropertyRef Name="StrEmpresa" />
@@ -671,8 +622,8 @@
           <Property Name="IntAnular" Type="Boolean" Nullable="false" />
           <Property Name="IntGestion" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblOpcionesUsuario_TblEmpresas" FromRole="TblOpcionesUsuario" ToRole="TblEmpresas" />
-          <NavigationProperty Name="TblOpciones" Relationship="Modelo.FK_TblOpcionesUsuario_TblOpciones" FromRole="TblOpcionesUsuario" ToRole="TblOpciones" />
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblOpcionesUsuario_TblUsuarios" FromRole="TblOpcionesUsuario" ToRole="TblUsuarios" />
+          <NavigationProperty Name="TblOpciones" Relationship="Modelo.FK_TblOpcionesUsuario_TblOpciones" FromRole="TblOpcionesUsuario" ToRole="TblOpciones" />
         </EntityType>
         <EntityType Name="TblPerfiles">
           <Key>
@@ -683,8 +634,8 @@
           <Property Name="StrDescripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntHabilitado" Type="Boolean" Nullable="false" />
           <Property Name="IntVisible" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="TblOpcionesPerfil" Relationship="Modelo.FK_TblOpcionesPerfil_TblPerfiles" FromRole="TblPerfiles" ToRole="TblOpcionesPerfil" />
           <NavigationProperty Name="TblUsuariosPorPerfil" Relationship="Modelo.FK_TblUsuariosPorPerfil_TblPerfiles" FromRole="TblPerfiles" ToRole="TblUsuariosPorPerfil" />
+          <NavigationProperty Name="TblOpcionesPerfil" Relationship="Modelo.FK_TblOpcionesPerfil_TblPerfiles" FromRole="TblPerfiles" ToRole="TblOpcionesPerfil" />
         </EntityType>
         <EntityType Name="TblPlanes">
           <Key>
@@ -728,7 +679,7 @@
           <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrUsuario" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="StrClave" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrNombres" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrNombres" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="StrApellidos" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrCargo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrTelefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -857,42 +808,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_TblOpcionesPerfil_TblOpciones">
-          <End Type="Modelo.TblOpciones" Role="TblOpciones" Multiplicity="1" />
-          <End Type="Modelo.TblOpcionesPerfil" Role="TblOpcionesPerfil" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblOpciones">
-              <PropertyRef Name="IntId" />
-            </Principal>
-            <Dependent Role="TblOpcionesPerfil">
-              <PropertyRef Name="IntIdOpcion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TblOpcionesUsuario_TblOpciones">
-          <End Type="Modelo.TblOpciones" Role="TblOpciones" Multiplicity="1" />
-          <End Type="Modelo.TblOpcionesUsuario" Role="TblOpcionesUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblOpciones">
-              <PropertyRef Name="IntId" />
-            </Principal>
-            <Dependent Role="TblOpcionesUsuario">
-              <PropertyRef Name="IntIdOpcion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TblOpcionesPerfil_TblPerfiles">
-          <End Type="Modelo.TblPerfiles" Role="TblPerfiles" Multiplicity="1" />
-          <End Type="Modelo.TblOpcionesPerfil" Role="TblOpcionesPerfil" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblPerfiles">
-              <PropertyRef Name="IntId" />
-            </Principal>
-            <Dependent Role="TblOpcionesPerfil">
-              <PropertyRef Name="IntIdPerfil" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TblOpcionesUsuario_TblUsuarios">
           <End Type="Modelo.TblUsuarios" Role="TblUsuarios" Multiplicity="1" />
           <End Type="Modelo.TblOpcionesUsuario" Role="TblOpcionesUsuario" Multiplicity="*" />
@@ -947,23 +862,77 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblOpcionesPerfil">
+          <Key>
+            <PropertyRef Name="IntIdOpcion" />
+            <PropertyRef Name="IntIdPerfil" />
+          </Key>
+          <Property Name="IntIdOpcion" Type="Int32" Nullable="false" />
+          <Property Name="IntIdPerfil" Type="Int16" Nullable="false" />
+          <Property Name="IntConsultar" Type="Boolean" Nullable="false" />
+          <Property Name="IntAgregar" Type="Boolean" Nullable="false" />
+          <Property Name="IntEditar" Type="Boolean" Nullable="false" />
+          <Property Name="IntEliminar" Type="Boolean" Nullable="false" />
+          <Property Name="IntAnular" Type="Boolean" Nullable="false" />
+          <Property Name="IntGestion" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TblPerfiles" Relationship="Modelo.FK_TblOpcionesPerfil_TblPerfiles" FromRole="TblOpcionesPerfil" ToRole="TblPerfiles" />
+          <NavigationProperty Name="TblOpciones" Relationship="Modelo.FK_TblOpcionesPerfil_TblOpciones" FromRole="TblOpcionesPerfil" ToRole="TblOpciones" />
+        </EntityType>
+        <Association Name="FK_TblOpcionesPerfil_TblPerfiles">
+          <End Type="Modelo.TblPerfiles" Role="TblPerfiles" Multiplicity="1" />
+          <End Type="Modelo.TblOpcionesPerfil" Role="TblOpcionesPerfil" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblPerfiles">
+              <PropertyRef Name="IntId" />
+            </Principal>
+            <Dependent Role="TblOpcionesPerfil">
+              <PropertyRef Name="IntIdPerfil" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TblOpciones">
+          <Key>
+            <PropertyRef Name="IntId" />
+          </Key>
+          <Property Name="IntId" Type="Int32" Nullable="false" />
+          <Property Name="IntIdDependencia" Type="Int32" />
+          <Property Name="StrDescripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntHabilitado" Type="Boolean" Nullable="false" />
+          <Property Name="IntIdPerfilSuperior" Type="Int16" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="TblOpcionesPerfil" Relationship="Modelo.FK_TblOpcionesPerfil_TblOpciones" FromRole="TblOpciones" ToRole="TblOpcionesPerfil" />
+          <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblOpciones" FromRole="TblOpciones" ToRole="TblOpcionesUsuario" />
+        </EntityType>
+        <Association Name="FK_TblOpcionesPerfil_TblOpciones">
+          <End Type="Modelo.TblOpciones" Role="TblOpciones" Multiplicity="1" />
+          <End Type="Modelo.TblOpcionesPerfil" Role="TblOpcionesPerfil" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblOpciones">
+              <PropertyRef Name="IntId" />
+            </Principal>
+            <Dependent Role="TblOpcionesPerfil">
+              <PropertyRef Name="IntIdOpcion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TblOpcionesUsuario_TblOpciones">
+          <End Type="Modelo.TblOpciones" Role="TblOpciones" Multiplicity="1" />
+          <End Type="Modelo.TblOpcionesUsuario" Role="TblOpcionesUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblOpciones">
+              <PropertyRef Name="IntId" />
+            </Principal>
+            <Dependent Role="TblOpcionesUsuario">
+              <PropertyRef Name="IntIdOpcion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ModeloStoreContainer" CdmEntityContainer="ModeloConexion">
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="Modelo.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="definition" ColumnName="definition" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="name" ColumnName="name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
@@ -995,6 +964,8 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="StrEmpresaAsociada" ColumnName="StrEmpresaAsociada" />
+                <ScalarProperty Name="StrResolucionDian" ColumnName="StrResolucionDian" />
                 <ScalarProperty Name="IntHabilitacion" ColumnName="IntHabilitacion" />
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
                 <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
@@ -1029,33 +1000,6 @@
                 <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
                 <ScalarProperty Name="StrNumResolucion" ColumnName="StrNumResolucion" />
                 <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TblOpciones">
-            <EntityTypeMapping TypeName="Modelo.TblOpciones">
-              <MappingFragment StoreEntitySet="TblOpciones">
-                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
-                <ScalarProperty Name="IntIdPerfilSuperior" ColumnName="IntIdPerfilSuperior" />
-                <ScalarProperty Name="IntHabilitado" ColumnName="IntHabilitado" />
-                <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
-                <ScalarProperty Name="StrCodigo" ColumnName="StrCodigo" />
-                <ScalarProperty Name="IntIdDependencia" ColumnName="IntIdDependencia" />
-                <ScalarProperty Name="IntId" ColumnName="IntId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TblOpcionesPerfil">
-            <EntityTypeMapping TypeName="Modelo.TblOpcionesPerfil">
-              <MappingFragment StoreEntitySet="TblOpcionesPerfil">
-                <ScalarProperty Name="IntGestion" ColumnName="IntGestion" />
-                <ScalarProperty Name="IntAnular" ColumnName="IntAnular" />
-                <ScalarProperty Name="IntEliminar" ColumnName="IntEliminar" />
-                <ScalarProperty Name="IntEditar" ColumnName="IntEditar" />
-                <ScalarProperty Name="IntAgregar" ColumnName="IntAgregar" />
-                <ScalarProperty Name="IntConsultar" ColumnName="IntConsutar" />
-                <ScalarProperty Name="IntIdPerfil" ColumnName="IntIdPerfil" />
-                <ScalarProperty Name="IntIdOpcion" ColumnName="IntIdOpcion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1147,6 +1091,32 @@
                 <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
                 <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
                 <ScalarProperty Name="IntIdPerfil" ColumnName="IntIdPerfil" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblOpcionesPerfil">
+            <EntityTypeMapping TypeName="Modelo.TblOpcionesPerfil">
+              <MappingFragment StoreEntitySet="TblOpcionesPerfil">
+                <ScalarProperty Name="IntGestion" ColumnName="IntGestion" />
+                <ScalarProperty Name="IntAnular" ColumnName="IntAnular" />
+                <ScalarProperty Name="IntEliminar" ColumnName="IntEliminar" />
+                <ScalarProperty Name="IntEditar" ColumnName="IntEditar" />
+                <ScalarProperty Name="IntAgregar" ColumnName="IntAgregar" />
+                <ScalarProperty Name="IntConsultar" ColumnName="IntConsultar" />
+                <ScalarProperty Name="IntIdPerfil" ColumnName="IntIdPerfil" />
+                <ScalarProperty Name="IntIdOpcion" ColumnName="IntIdOpcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblOpciones">
+            <EntityTypeMapping TypeName="Modelo.TblOpciones">
+              <MappingFragment StoreEntitySet="TblOpciones">
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="IntIdPerfilSuperior" ColumnName="IntIdPerfilSuperior" />
+                <ScalarProperty Name="IntHabilitado" ColumnName="IntHabilitado" />
+                <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
+                <ScalarProperty Name="IntIdDependencia" ColumnName="IntIdDependencia" />
+                <ScalarProperty Name="IntId" ColumnName="IntId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

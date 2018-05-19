@@ -107,9 +107,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ModeloDatos.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Modelo\sysdiagrams.cs">
-      <DependentUpon>ModeloDatos.tt</DependentUpon>
-    </Compile>
     <Compile Include="Modelo\TblDocumentos.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>

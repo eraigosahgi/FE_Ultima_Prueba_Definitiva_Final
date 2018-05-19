@@ -23,7 +23,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     
         public int IntId { get; set; }
         public Nullable<int> IntIdDependencia { get; set; }
-        public string StrCodigo { get; set; }
         public string StrDescripcion { get; set; }
         public bool IntHabilitado { get; set; }
         public short IntIdPerfilSuperior { get; set; }

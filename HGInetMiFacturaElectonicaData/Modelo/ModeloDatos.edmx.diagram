@@ -5,12 +5,9 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="78" DisplayType="true">
-        <EntityTypeShape EntityType="Modelo.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="1.5" PointX="7.875" PointY="13.5" />
         <EntityTypeShape EntityType="Modelo.TblEmpresas" Width="1.5" PointX="3.375" PointY="12.25" />
         <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.5" PointX="5.625" PointY="16.375" />
-        <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="8.625" PointY="26.125" />
-        <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="10.875" PointY="26" />
         <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="10.875" PointY="21.75" />
         <EntityTypeShape EntityType="Modelo.TblPerfiles" Width="1.5" PointX="5.625" PointY="26" />
         <EntityTypeShape EntityType="Modelo.TblPlanes" Width="1.5" PointX="3.375" PointY="0.75" />
@@ -25,13 +22,15 @@
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblUsuarios_TblEmpresas" />
-        <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblOpciones" />
-        <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblOpciones" />
-        <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblPerfiles" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
         <AssociationConnector Association="Modelo.FK_TblUsuariosPorPerfil_TblPerfiles" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
         <AssociationConnector Association="Modelo.FK_TblUsuariosPorPerfil_TblUsuarios" />
+        <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="10.875" PointY="26" />
+        <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblPerfiles" />
+        <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="13.25" PointY="24.75" />
+        <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblOpciones" />
+        <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblOpciones" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

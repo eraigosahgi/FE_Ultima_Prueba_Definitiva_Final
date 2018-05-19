@@ -17,8 +17,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblPerfiles()
         {
-            this.TblOpcionesPerfil = new HashSet<TblOpcionesPerfil>();
             this.TblUsuariosPorPerfil = new HashSet<TblUsuariosPorPerfil>();
+            this.TblOpcionesPerfil = new HashSet<TblOpcionesPerfil>();
         }
     
         public short IntId { get; set; }
@@ -28,8 +28,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntVisible { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblOpcionesPerfil> TblOpcionesPerfil { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblUsuariosPorPerfil> TblUsuariosPorPerfil { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblOpcionesPerfil> TblOpcionesPerfil { get; set; }
     }
 }
