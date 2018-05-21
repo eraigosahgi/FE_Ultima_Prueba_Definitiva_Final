@@ -16,11 +16,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
            fecha_inicio = "",
            fecha_fin = "",
            codigo_adquiriente = "";
-    $http.get('/api/DatosSesion/').then(function (response) {
-
-        console.log(response.data[0]);
-
+    $http.get('/api/DatosSesion/').then(function (response) {        
+        console.log("Datos",response.data);
         codigo_facturador = response.data[0].Identificacion;
+        if (codigo_facturador == '811021438') {
+            $scope.Admin = true;
+        } else {
+            $('#SelecionarEmpresa').hide();
+            $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
+        };
 
     });
 
@@ -31,9 +35,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         Datos_Adquiriente = "",
         Datos_Obligado = "",
         Datos_Habilitacion = ""
-    Datos_IdentificacionDv = "",
-    Datos_Tipo = "1",
-    Datos_Resolucion = ""
+        Datos_IdentificacionDv = "",
+        Datos_Tipo = "1",
+        Datos_Resolucion = "",
+        Datos_empresa_Asociada=""
 
 
     //Define los campos del Formulario  
@@ -111,12 +116,20 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                     message: "El campo Email no tiene el formato correcto"
                 }]
             });
-
+        
         $("#txtempresaasociada").dxTextBox({
+            readOnly: true,
+            value: codigo_facturador,
+            name:txtempresaasociada,
             onValueChanged: function (data) {
                 console.log("txtempresaasociada", data.value);
-                Datos_IdentificacionDv = data.value;
+                Datos_empresa_Asociada = data.value;
             }
+        }).dxValidator({
+            validationRules: [{
+                type: "required",
+                message: "Debe introducir la empresa Asociada"
+            }]
         });
 
         $("#txtidentificciondev").dxTextBox({
@@ -254,9 +267,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         $("#wait").show();
         $http.get('/api/Empresas?IdSeguridad=' + id_seguridad).then(function (response) {
             $("#wait").hide();
-            try {
-
-                $scope.StrResolucionDian = "JEEEEEE";
+            try {               
 
                 Datos_Tipoidentificacion = response.data[0].TipoIdentificacion;
                 Datos_Idententificacion = response.data[0].Identificacion;
@@ -267,6 +278,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Datos_Habilitacion = response.data[0].Habilitacion;
                 Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
                 Datos_Resolucion = response.data[0].StrResolucionDian;
+                Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
 
                 $("#Facturador").dxCheckBox({ value: Datos_Obligado });
                 $("#Adquiriente").dxCheckBox({ value: Datos_Adquiriente });
@@ -281,7 +293,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 $("#TipoIndentificacion").dxSelectBox({ readOnly: true });
 
                 $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
-                //$("#txtResolucion").dxTextBox({ value: Datos_Resolucion });
+                $("#txtResolucion").dxTextBox({ value: Datos_Resolucion });
+                $("#txtempresaasociada").dxTextBox({ value: Datos_empresa_Asociada });
 
 
             } catch (err) {
@@ -302,10 +315,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             guardarEmpresa();
         }
     };
-    //1933
-    //1905
 
     function guardarEmpresa() {
+        var empresa = Datos_empresa_Asociada.split(' -- ');
 
         var data = $.param({
             TipoIdentificacion: Datos_Tipoidentificacion,
@@ -315,7 +327,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             Intadquiriente: (Datos_Adquiriente) ? true : false,
             IntObligado: (Datos_Obligado) ? true : false,
             IntHabilitacion: Datos_Habilitacion,
-            StrEmpresaAsociada: Datos_IdentificacionDv,
+            StrEmpresaAsociada: empresa[0],
             tipo: Datos_Tipo,
             StrResolucionDian: Datos_Resolucion
         });
