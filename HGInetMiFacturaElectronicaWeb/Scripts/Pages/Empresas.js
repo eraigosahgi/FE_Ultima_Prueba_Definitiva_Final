@@ -31,167 +31,222 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         Datos_Adquiriente = "",
         Datos_Obligado = "",
         Datos_Habilitacion = ""
-        Datos_IdentificacionDv = "",
-        Datos_Tipo = "1",
-        Datos_Resolucion=""
+    Datos_IdentificacionDv = "",
+    Datos_Tipo = "1",
+    Datos_Resolucion = ""
 
 
     //Define los campos del Formulario  
-        $(function () {
-            $("#summary").dxValidationSummary({});
+    $(function () {
+        $("#summary").dxValidationSummary({});
 
-            $("#TipoIndentificacion").dxSelectBox({
-                placeholder:"Seleccione el tipo de Indetificación",
-                displayExpr: "Texto",
-                dataSource: TiposIdentificacion,
-                onValueChanged: function (data) {
-                    console.log("EstadoRecibo", data.value.ID);
-                    Datos_Tipoidentificacion = data.value.ID;
-                }
-            }).dxValidator({
-                validationRules: [{
-                    type: "required",
-                    message: "Debe seleccionar el tipo de documento"
-                }]
-            });
+        $("#TipoIndentificacion").dxSelectBox({
+            placeholder: "Seleccione el tipo de Indetificación",
+            displayExpr: "Texto",
+            dataSource: TiposIdentificacion,
+            onValueChanged: function (data) {
+                console.log("EstadoRecibo", data.value.ID);
+                Datos_Tipoidentificacion = data.value.ID;
+            }
+        }).dxValidator({
+            validationRules: [{
+                type: "required",
+                message: "Debe seleccionar el tipo de documento"
+            }]
+        });
 
-            $("#NumeroIdentificacion").dxTextBox({             
-                      onValueChanged: function (data) {
-                        console.log("NumeroDocumento", data.value);
-                        Datos_Idententificacion = data.value;
-                    }
-            })
+        $("#NumeroIdentificacion").dxTextBox({
+            onValueChanged: function (data) {
+                console.log("NumeroDocumento", data.value);
+                Datos_Idententificacion = data.value;
+            }
+        })
+        .dxValidator({
+            validationRules: [{
+                type: "required",
+                message: "Debe Indicar el numero de Identificación"
+            },{
+                type: "stringLength",
+                max: 50,
+                message: "El numero de Identificación no puede ser mayor a 50 digitos"
+            },{
+                type: "numeric",
+                message: "El numero de Identificación debe ser numérico"
+            }]
+        });
+
+        $("#txtRasonSocial").dxTextBox({
+            onValueChanged: function (data) {
+                console.log("RasonSocial", data.value);
+                Datos_Razon_Social = data.value;
+            }
+        })
             .dxValidator({
                 validationRules: [{
-                    type: "required",
-                    message: "Debe Indicar el numero de Identificación"
-                }, {
                     type: "stringLength",
-                    min: 4,
-                    max:20,
-                    message: "El campo debe contener entre 4 y 20 caracteres"
-                }]
-            });
+                    max: 200,
+                    message: "La razón Social no puede ser mayor a 200 caracteres"
+                },{
+                type: "required",
+                message: "Debe introducir la Razón Social"
+            }]
+        });
 
-            $("#txtRasonSocial").dxTextBox({
-                onValueChanged: function (data) {
-                    console.log("RasonSocial", data.value);
-                    Datos_Razon_Social = data.value;
-                }
-            })
+        $("#txtEmail").dxTextBox({
+            onValueChanged: function (data) {
+                console.log("txtEmail", data.value);
+                Datos_Email = data.value;
+            }
+        })
             .dxValidator({
                 validationRules: [{
-                    type: "required",
-                    message: "Debe introducir la Razón Social"
-                }]
-            });
-
-            $("#txtEmail").dxTextBox({
-                onValueChanged: function (data) {
-                    console.log("txtEmail", data.value);
-                    Datos_Email = data.value;
-                }
-            })
-            .dxValidator({
-                validationRules: [{
+                    type: "stringLength",
+                    max: 200,
+                    message: "El Email no puede ser mayor a 200 caracteres"
+                }, {
                     type: "required",
                     message: "Debe introducir el Email"
+                }, {
+                    type: "email",
+                    message: "El campo Email no tiene el formato correcto"
                 }]
             });
 
-            $("#txtempresaasociada").dxTextBox({                
-                onValueChanged: function (data) {
-                    console.log("txtempresaasociada", data.value);
-                    Datos_IdentificacionDv = data.value;
-                }
-            });
-           
-            $("#txtidentificciondev").dxTextBox({
-                onValueChanged: function (data) {
-                    console.log("txtidentificciondev", data.value);
-                    Datos_Email = data.value;
-                }
-            })
-            .dxValidator({
-                validationRules: [{
-                    type: "required",
-                    message: "Debe introducir el codigo del Facturador"
-                }]
-            });
-            
-           
-            $("#Facturador").dxCheckBox({
-                name: "PerfilFacturador",
-                text: "Facturador Electrónico",
-                value: false,
-                onValueChanged: function (data) {
-                    console.log("Datos_Obligado", data.value);
-                    Datos_Obligado = data.value;
-                }
-            });
-
-            $("#Adquiriente").dxCheckBox({
-                name: "PerfilAdquiriente",
-                text: "Adquiriente",
-                value: false,
-                onValueChanged: function (data) {
-                    console.log("Datos_Adquiriente", data.value);
-                    Datos_Adquiriente = data.value;
-                }
-            });
-
-            $("#Habilitacion").dxRadioGroup({
-                searchEnabled: true,
-                caption: 'Habilitación',
-                dataSource: new DevExpress.data.ArrayStore({
-                    data: TiposHabilitacion,
-                    key: "ID"
-                }),
-                displayExpr: "Texto",
-                Enabled: true,
-                onValueChanged: function (data) {
-                    console.log("Datos_Habilitacion", data.value.ID);
-                    Datos_Habilitacion = data.value.ID;
-                }
-            }).dxValidator({
-                validationRules: [{
-                    type: "required",
-                    message: "Debe indicar el tipo de Habilitacion"
-                }]
-            });
-
-
-            $("#txtResolucion").dxTextBox({
-                onValueChanged: function (data) {
-                    console.log("txtresolucion", data.value);
-                    Datos_Resolucion = data.value;
-                }
-            })
-          .dxValidator({
-              validationRules: [{
-                  type: "required",
-                  message: "Debe introducir el codigo Resolución"
-              }]
-          });
-
-
-
-
-            $("#button").dxButton({
-                text: "Guardar",
-                type: "default",
-                useSubmitBehavior: true
-            });
-
-
-            $("#form1").on("submit", function (e) {
-                guardarEmpresa();               
-                e.preventDefault();
-            });
-
-
+        $("#txtempresaasociada").dxTextBox({
+            onValueChanged: function (data) {
+                console.log("txtempresaasociada", data.value);
+                Datos_IdentificacionDv = data.value;
+            }
         });
+
+        $("#txtidentificciondev").dxTextBox({
+            onValueChanged: function (data) {
+                console.log("txtidentificciondev", data.value);
+                Datos_Email = data.value;
+            }
+        })
+        .dxValidator({
+            validationRules: [{
+                type: "required",
+                message: "Debe introducir el codigo del Facturador"
+            }]
+        });
+
+
+        $("#Facturador").dxCheckBox({
+            name: "PerfilFacturador",
+            text: "Facturador Electrónico",
+            value: false,
+            onValueChanged: function (data) {
+                console.log("Datos_Obligado", data.value);
+                Datos_Obligado = data.value;
+            }
+        }).dxValidator({
+            validationRules: [
+                {
+                    type: 'custom', validationCallback: function (options) {
+                        if (validar()) {
+                            options.rule.message = "Debe Indicar si es Facturador o Adquiriente";
+                            return false;
+                        } else { return true; }
+                    }
+                }
+            ]
+        });
+
+        $("#Adquiriente").dxCheckBox({
+            name: "PerfilAdquiriente",
+            text: "Adquiriente",
+            value: false,
+            onValueChanged: function (data) {
+                console.log("Datos_Adquiriente", data.value);
+                Datos_Adquiriente = data.value;
+            }
+        }).dxValidator({
+            validationRules: [
+                {
+                    type: 'custom', validationCallback: function (options) {
+                        if (validar()) {
+                            options.rule.message = "Debe Indicar si es Facturador o Adquiriente";
+                            return false;
+                        } else { return true; }
+                    }
+                }
+            ]
+        });
+
         
+
+        $("#Habilitacion").dxRadioGroup({
+            searchEnabled: true,
+            caption: 'Habilitación',
+            dataSource: new DevExpress.data.ArrayStore({
+                data: TiposHabilitacion,
+                key: "ID"
+            }),
+            displayExpr: "Texto",
+            Enabled: true,
+            onValueChanged: function (data) {
+                console.log("Datos_Habilitacion", data.value.ID);
+                Datos_Habilitacion = data.value.ID;
+            }
+        }).dxValidator({
+            validationRules: [{
+                type: "required",
+                message: "Debe indicar el tipo de Habilitacion"
+            }]
+        });
+
+
+        $("#txtResolucion").dxTextBox({
+
+            onValueChanged: function (data) {
+                console.log("txtResolucion", data.value);
+                Datos_Resolucion = data.value;
+            }
+        })
+      .dxValidator({
+          validationRules: [{
+              type: "required",
+              message: "Debe introducir el codigo Resolución"
+          }, {
+              type: "numeric",
+              message: "El codigo Resolución debe ser numerico"
+          }, {
+              type: "stringLength",
+              max: 10,
+              message: "El Nª de Resolución no puede ser mayor a 10 Digitos"
+          }]
+      });
+
+
+
+
+        $("#button").dxButton({
+            text: "Guardar",
+            type: "default",
+            useSubmitBehavior: true
+        });
+
+
+        $("#form1").on("submit", function (e) {
+            guardarEmpresa();
+            e.preventDefault();
+        });
+
+        function validar() {
+            console.log("Datos_Adquiriente", Datos_Adquiriente);
+            console.log("Datos_Obligado", Datos_Obligado);
+
+            if (Datos_Adquiriente == true || Datos_Obligado == true) {
+                console.log("Alguno de los dos es verdadero");
+                return false;
+            }
+            return true;
+        }
+
+    });
+
     //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
     var id_seguridad = location.search.split('IdSeguridad=')[1];
     if (id_seguridad) {
@@ -201,32 +256,34 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             $("#wait").hide();
             try {
 
+                $scope.StrResolucionDian = "JEEEEEE";
+
                 Datos_Tipoidentificacion = response.data[0].TipoIdentificacion;
                 Datos_Idententificacion = response.data[0].Identificacion;
                 Datos_Razon_Social = response.data[0].RazonSocial;
                 Datos_Email = response.data[0].Email;
-                Datos_Adquiriente = (response.data[0].Intadquiriente)? true:false;
+                Datos_Adquiriente = (response.data[0].Intadquiriente) ? true : false;
                 Datos_Obligado = (response.data[0].intObligado) ? true : false;
                 Datos_Habilitacion = response.data[0].Habilitacion;
                 Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
                 Datos_Resolucion = response.data[0].StrResolucionDian;
-                                                             
+
                 $("#Facturador").dxCheckBox({ value: Datos_Obligado });
                 $("#Adquiriente").dxCheckBox({ value: Datos_Adquiriente });
 
                 $("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
                 $("#NumeroIdentificacion").dxTextBox({ readOnly: true });
-                
+
                 $("#txtRasonSocial").dxTextBox({ value: Datos_Razon_Social });
                 $("#txtEmail").dxTextBox({ value: Datos_Email });
-                
+
                 $("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
                 $("#TipoIndentificacion").dxSelectBox({ readOnly: true });
 
                 $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
-                $("#txtResolucion").dxTextBox({ value: Datos_Resolucion });
+                //$("#txtResolucion").dxTextBox({ value: Datos_Resolucion });
 
-                
+
             } catch (err) {
                 DevExpress.ui.notify(err.message, 'error', 7000);
             }
@@ -239,7 +296,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
     $scope.ButtonGuardar = {
         text: 'Guardar',
-        type: 'default',        
+        type: 'default',
         validationGroup: "ValidacionDatosEmpresa",
         onClick: function (e) {
             guardarEmpresa();
@@ -255,11 +312,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             Identificacion: Datos_Idententificacion,
             RazonSocial: Datos_Razon_Social,
             Email: Datos_Email,
-            Intadquiriente: (Datos_Adquiriente)?true:false,
-            IntObligado: (Datos_Obligado)?true:false,
+            Intadquiriente: (Datos_Adquiriente) ? true : false,
+            IntObligado: (Datos_Obligado) ? true : false,
             IntHabilitacion: Datos_Habilitacion,
             StrEmpresaAsociada: Datos_IdentificacionDv,
-            tipo: Datos_Tipo
+            tipo: Datos_Tipo,
+            StrResolucionDian: Datos_Resolucion
         });
 
         $("#wait").show();
@@ -341,12 +399,12 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
     }, function errorCallback(response) {
         $('#wait').hide();
         DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-    });    
+    });
 
 });
 
 //Funcion para Buscar el indice el Array de los objetos, segun el id de base de datos
-function BuscarID(miArray,ID) {
+function BuscarID(miArray, ID) {
     for (var i = 0; i < miArray.length; i += 1) {
         if (ID == miArray[i].ID) {
             return i;
@@ -363,12 +421,12 @@ var TiposHabilitacion =
 
 var TiposIdentificacion =
     [
-        { ID: "11", Texto: 'Registro civil'},
-        { ID: "12", Texto: 'Tarjeta de identidad'},
-        { ID: "13", Texto: 'Cédula de ciudadanía'},
-        { ID: "21", Texto: 'Tarjeta de extranjería'},
-        { ID: "22", Texto: 'Cédula de extranjería'},
-        { ID: "31", Texto: 'NIT'},
+        { ID: "11", Texto: 'Registro civil' },
+        { ID: "12", Texto: 'Tarjeta de identidad' },
+        { ID: "13", Texto: 'Cédula de ciudadanía' },
+        { ID: "21", Texto: 'Tarjeta de extranjería' },
+        { ID: "22", Texto: 'Cédula de extranjería' },
+        { ID: "31", Texto: 'NIT' },
         { ID: "41", Texto: 'Pasaporte' },
-        { ID: "42", Texto: 'Documento de identificación extranjero'}
+        { ID: "42", Texto: 'Documento de identificación extranjero' }
     ];
