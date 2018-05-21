@@ -91,7 +91,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="codigo_usuario"></param>        
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada,[FromUri] string StrResolucionDian, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
             TblEmpresas Empresa = new TblEmpresas();
@@ -107,6 +107,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Empresa.IntHabilitacion = IntHabilitacion;
                     Empresa.IntObligado = IntObligado;
                     Empresa.StrEmpresaAsociada = StrEmpresaAsociada;
+                    Empresa.StrResolucionDian = StrResolucionDian;
 
                     var datos = ctl_empresa.Guardar(Empresa);
                 }
@@ -120,6 +121,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Empresa.IntHabilitacion = IntHabilitacion;
                     Empresa.IntObligado = IntObligado;
                     Empresa.StrEmpresaAsociada = StrEmpresaAsociada;
+                    Empresa.StrResolucionDian = StrResolucionDian;
 
                     var datos = ctl_empresa.Editar(Empresa);
                 }
