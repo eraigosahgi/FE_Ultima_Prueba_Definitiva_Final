@@ -80,39 +80,19 @@
     <!-- JS Localización -->
     <script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
     <script src="../../Scripts/config.js"></script>
-<<<<<<< .mine
-     <style>.swal-button {background-color: #337ab7;} </style>
-||||||| .r311
-     <style>.swal-button {background-color: #337ab7;}</style>
-=======
     <style>
         .swal-button {
             background-color: #337ab7;
         }
     </style>
->>>>>>> .r312
 </head>
 <body>
     <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
-<<<<<<< .mine
-        <div class="modal" style="background-color: white; opacity: 0.4; display: block; "></div>        
-        <div> <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width:20%; height:20%;" src="../../Content/icons/Loading.gif" /></div>        
-||||||| .r311
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; "></div>        
-        <div> <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width:20%; height:20%;" src="../../Content/icons/Loading.gif" /></div>
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>        
-        <div> <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' /></div>
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block; z-index: 9999;"></div>
-        <div>
-            <img style="position: absolute; left: 43%; top: 30%" src='../../Content/icons/Loading.gif' />
-        </div>
-=======
         <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block;"></div>
         <div>
             <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
         </div>
->>>>>>> .r312
 
     </div>
 
