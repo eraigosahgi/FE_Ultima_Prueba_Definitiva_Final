@@ -67,15 +67,20 @@
         <!-- DATOS -->
         <div class="col-md-12">
             <div class="panel panel-white">
-                <div class="panel-heading">
-                    <h6 class="panel-title">Datos<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
-                    <div class="heading-elements">
-                        <ul class="icons-list">
-                            <li><a data-action="collapse"></a></li>
-                        </ul>
+                 <div>
+                    <br />
+                    
+                    <div class="col-md-12">
+                        <div class="col-md-10">
+                            <h6 class="panel-title">Lista de Usuarios</h6>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn btn-primary" href="GestionUsuarios.aspx">Nuevo Usuario</a>
+                        </div>
                     </div>
-                </div>
 
+                </div>
+                    <br />
                 <div class="panel-body">
                     <div class="demo-container">
                         <div id="gridUsuarios"></div>
