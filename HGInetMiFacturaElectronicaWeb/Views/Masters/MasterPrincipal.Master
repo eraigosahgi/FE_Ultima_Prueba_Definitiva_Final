@@ -303,7 +303,7 @@
                                                             <li runat="server" id="menu_13211">
                                                                 <asp:HyperLink ID="link_13211" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta</span></asp:HyperLink></li>
                                                             <li runat="server" id="menu_13212">
-                                                                <asp:HyperLink ID="link_13212" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-user-plus"></i><span style="margin: -10px">Gestión</span></asp:HyperLink></li>
+                                                                <asp:HyperLink ID="link_13212" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/GestionUsuarios.aspx"><i class="icon-user-plus"></i><span style="margin: -10px">Gestión</span></asp:HyperLink></li>
                                                         </ul>
                                                     </li>
 
@@ -311,9 +311,9 @@
                                                         <a href="#" class="has-ul legitRipple"><i class="icon-home2"></i><span style="margin: -10px">Empresas</span></a>
                                                         <ul runat="server" id="ul_1322">
                                                             <li runat="server" id="menu_13221">
-                                                                <asp:HyperLink ID="link_13221" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta</span></asp:HyperLink></li>
+                                                                <asp:HyperLink ID="link_13221" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresas.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta</span></asp:HyperLink></li>
                                                             <li runat="server" id="menu_13222">
-                                                                <asp:HyperLink ID="link_13222" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-file-plus2"></i><span style="margin: -10px">Gestión</span></asp:HyperLink></li>
+                                                                <asp:HyperLink ID="link_13222" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/GestionEmpresas.aspx"><i class="icon-file-plus2"></i><span style="margin: -10px">Gestión</span></asp:HyperLink></li>
                                                         </ul>
                                                     </li>
 
