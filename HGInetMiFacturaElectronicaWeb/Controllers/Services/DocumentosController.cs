@@ -42,7 +42,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
                     d.IntVlrTotal,
@@ -95,7 +95,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
                     d.IntVlrTotal,
