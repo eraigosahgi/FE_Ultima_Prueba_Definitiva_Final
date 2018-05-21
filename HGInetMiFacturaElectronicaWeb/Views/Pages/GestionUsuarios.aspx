@@ -6,11 +6,6 @@
     <script src="../../Scripts/Pages/Usuarios.js"></script>
     <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
     <div ng-app="ConsultaUsuarioApp" ng-controller="GestionUsuarioController">
-
-
-        <div ng-include="'ModalConsultaEmpresas.aspx'"></div>
-
-
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
@@ -82,14 +77,14 @@
 
                                 <div class="dx-fieldset">
 
-                                    <div class="col-md-4 col-xs-6">
+                                    <div class="col-md-5 col-xs-10">
                                         <label>Empresa:<strom style="color: red;">*</label>
                                         <div id="txtempresaasociada"></div>
 
                                     </div>
-                                    <div class="col-md-2 col-xs-6">
+                                    <div class="col-md-1 col-xs-2">
                                         <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba">
-                                            <h6>Consulta Empresa</h6>
+                                            <h6 id="SelecionarEmpresa">Empresa</h6>
                                         </a>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
@@ -122,6 +117,9 @@
 
                 </div>
             </div>
+        </div>
+         <div ng-if="Admin">
+        <div ng-include="'ModalConsultaEmpresas.aspx'"></div>
         </div>
     </div>
 
