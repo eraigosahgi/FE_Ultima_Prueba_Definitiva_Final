@@ -121,33 +121,36 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             try
             {
-
                 TblUsuarios UsuarioActiliza = (from item in context.TblUsuarios
                                                 where item.StrUsuario.Equals(usuario.StrUsuario)
                                                 && item.StrEmpresa.Equals(usuario.StrEmpresa)
                                                 select item).FirstOrDefault();
+                if (UsuarioActiliza != null)
+                {
+                    UsuarioActiliza.StrEmpresa = usuario.StrEmpresa;
+                    UsuarioActiliza.StrUsuario = usuario.StrUsuario;
+                    UsuarioActiliza.StrClave = (usuario.StrClave != UsuarioActiliza.StrClave) ? Encriptar.Encriptar_MD5(usuario.StrClave) : usuario.StrClave;
+                    UsuarioActiliza.StrNombres = usuario.StrNombres;
+                    UsuarioActiliza.StrApellidos = usuario.StrApellidos;
+                    UsuarioActiliza.StrMail = usuario.StrMail;
+                    UsuarioActiliza.StrTelefono = usuario.StrTelefono;
+                    UsuarioActiliza.StrExtension = usuario.StrExtension;
+                    UsuarioActiliza.StrCelular = usuario.StrCelular;
+                    UsuarioActiliza.StrCargo = usuario.StrCargo;
+                    UsuarioActiliza.IntIdEstado = usuario.IntIdEstado;
 
-                UsuarioActiliza.StrEmpresa= usuario.StrEmpresa ;
-                UsuarioActiliza.StrUsuario = usuario.StrUsuario ;
-                UsuarioActiliza.StrClave = (usuario.StrClave!= UsuarioActiliza.StrClave) ? Encriptar.Encriptar_MD5(usuario.StrClave): usuario.StrClave; 
-                UsuarioActiliza.StrNombres = usuario.StrNombres ;
-                UsuarioActiliza.StrApellidos = usuario.StrApellidos ;
-                UsuarioActiliza.StrMail = usuario.StrMail ;
-                UsuarioActiliza.StrTelefono = usuario.StrTelefono ;
-                UsuarioActiliza.StrExtension = usuario.StrExtension ;
-                UsuarioActiliza.StrCelular = usuario.StrCelular ;
-                UsuarioActiliza.StrCargo = usuario.StrCargo ;
-                UsuarioActiliza.IntIdEstado = usuario.IntIdEstado ;                
+                    UsuarioActiliza.DatFechaActualizacion = Fecha.GetFecha();
+                    UsuarioActiliza.DatFechaCambioClave = Fecha.GetFecha();
+                    UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();
+                    UsuarioActiliza.StrIdCambioClave = Guid.NewGuid();
 
-                UsuarioActiliza.DatFechaActualizacion = Fecha.GetFecha();
-                UsuarioActiliza.DatFechaCambioClave = Fecha.GetFecha();                
-                UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();
-                UsuarioActiliza.StrIdCambioClave = Guid.NewGuid();
+                    // agrega el usuario en la base de datos
+                    usuario = Actualizar_usuario(UsuarioActiliza);
 
-                // agrega el usuario en la base de datos
-                usuario = Actualizar_usuario(UsuarioActiliza);
-                
-                return true;
+                    return true;
+                }else {
+                    throw new ApplicationException("Datos Invalidos, el Usuario no coincide con la empresa");
+                }            
             }
             catch (Exception excepcion)
             {
