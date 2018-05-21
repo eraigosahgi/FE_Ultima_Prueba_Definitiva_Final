@@ -151,12 +151,6 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         /// <returns></returns>
         public static bool ValidarPermiso(string codigo_opcion)
         {
-
-            string cod = PermisosUsuario;
-
-            cod = cod.Split(',').Where(_permiso => _permiso.Equals(codigo_opcion)).FirstOrDefault();
-
-
             // valida que el usuario tenga el permiso en la sesión
             if (string.IsNullOrEmpty(PermisosUsuario.Split(',').Where(_permiso => _permiso.Equals(codigo_opcion)).FirstOrDefault()))
                 return false;

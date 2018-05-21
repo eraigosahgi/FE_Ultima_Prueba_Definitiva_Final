@@ -108,7 +108,7 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
                 {
                     // valida el permiso en la cookie
                     if (!Sesion.ValidarPermiso(CodigoOpcion))
-                        Response.Redirect("~/Views/Login/Default.aspx");
+                        Response.Redirect("~/Views/Pages/Inicio.aspx");
                 }
             }
             catch (Exception excepcion)
