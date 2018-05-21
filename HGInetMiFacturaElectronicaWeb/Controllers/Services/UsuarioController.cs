@@ -224,7 +224,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = resultado.Select(d => new
                 {
-                    StrEmpresa = d.StrEmpresa,
+                    StrEmpresa = d.StrEmpresa ,
                     StrUsuario = d.StrUsuario,
                     StrClave = d.StrClave,
                     StrNombres = d.StrNombres,
