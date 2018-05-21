@@ -5,9 +5,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
     <script src="../../Scripts/Pages/Empresas.js"></script>
     <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
-    <div ng-app="EmpresasApp" ng-controller="GestionEmpresasController">
 
-        <div ng-include="'ModalConsultaEmpresas.aspx'"></div>
+    <div ng-app="EmpresasApp" ng-controller="GestionEmpresasController">
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
@@ -38,7 +37,7 @@
                                         <div id="NumeroIdentificacion"></div>
 
                                     </div>
-                                </div>                                
+                                </div>
                                 <div class="dx-fieldset">
                                     <div class="col-md-6 col-xs-12">
                                         <label>Razón Social:</label>
@@ -69,19 +68,19 @@
 
                                 <div class="dx-fieldset">
 
-                                    <div class="col-md-3 col-xs-6">
+                                    <div class="col-md-5 col-xs-10">
                                         <label>Empresa Asociada<strom style="color: red;">*</label>
                                         <div id="txtempresaasociada"></div>
 
                                     </div>
-                                    <div class="col-md-3 col-xs-6">                                        
-                                        <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba">
-                                            <h6>Seleccionar Empresa</h6>
+                                    <div class="col-md-1 col-xs-2">
+                                        <a data-toggle="modal"   data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba">
+                                            <h6 id="SelecionarEmpresa">Empresa</h6>
                                         </a>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
                                         <label>Nª Resolución<strom style="color: red;">*</label>
-                                        <div id="txtResolucion"></div>                                        
+                                        <div id="txtResolucion"></div>
                                     </div>
                                 </div>
 
@@ -100,6 +99,9 @@
 
                 </div>
             </div>
+        </div>
+        <div ng-if="Admin">
+        <div ng-include="'ModalConsultaEmpresas.aspx'"></div>
         </div>
     </div>
 
