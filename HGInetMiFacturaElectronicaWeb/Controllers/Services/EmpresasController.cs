@@ -78,7 +78,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Intadquiriente = d.IntAdquiriente,
                 intObligado = d.IntObligado,
                 IntIdentificacionDv = d.IntIdentificacionDv,
-                StrResolucionDian = d.StrResolucionDian
+                StrResolucionDian = d.StrResolucionDian,
+                StrEmpresaAsociada = d.StrEmpresaAsociada
             });
 
             return Ok(retorno);
