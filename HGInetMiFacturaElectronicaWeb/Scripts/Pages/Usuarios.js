@@ -156,7 +156,13 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
         console.log(response.data[0]);
 
-        codigo_facturador = response.data[0].Identificacion;
+        codigo_facturador = response.data[0].Identificacion;        
+        if (codigo_facturador == '811021438') {
+            $scope.Admin = true;
+        } else {
+            $('#SelecionarEmpresa').hide();
+            $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
+        };
 
     });
 
@@ -340,6 +346,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
        });
 
         $("#txtempresaasociada").dxTextBox({
+            readOnly:true,
             onValueChanged: function (data) {
                 console.log("txtempresaasociada", data.value);
                 Datos_empresa = data.value;
@@ -445,9 +452,10 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
     };
 
     function guardarUsuario() {
+        var empresa = Datos_empresa.split(' -- ');
 
         var data = $.param({
-            StrEmpresa: Datos_empresa,
+            StrEmpresa: empresa[0],
             StrUsuario: Datos_usuario,
             StrClave: Datos_clave,
             StrNombres: Datos_nombres,
