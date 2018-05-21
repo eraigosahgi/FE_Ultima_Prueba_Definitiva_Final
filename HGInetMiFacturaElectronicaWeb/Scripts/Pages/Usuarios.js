@@ -167,16 +167,16 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         Datos_telefono = "",
         Datos_extension = "",
         Datos_celular = ""
-        Datos_email = "",
-        Datos_cargo = "1",
-        Datos_empresa = "",
-        Datos_estado = "",
-        Datos_Tipo = "1";
-        
+    Datos_email = "",
+    Datos_cargo = "1",
+    Datos_empresa = "",
+    Datos_estado = "",
+    Datos_Tipo = "1";
+
     //Define los campos del Formulario  
     $(function () {
         $("#summary").dxValidationSummary({});
-      
+
 
         $("#txtnombres").dxTextBox({
             onValueChanged: function (data) {
@@ -188,8 +188,13 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             validationRules: [{
                 type: "required",
                 message: "Debe Indicar el Nombre"
+            }, {
+                type: "stringLength",
+                max: 255,
+                message: "El Nombre no puede ser mayor a 255 caracteres"
             }]
         });
+
 
         $("#txtapellidos").dxTextBox({
             onValueChanged: function (data) {
@@ -201,6 +206,10 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             validationRules: [{
                 type: "required",
                 message: "Debe indicar el Apellido"
+            }, {
+                type: 'stringLength',
+                max: 50,
+                message: "El apellido no puede ser mayor a 50 caracteres"
             }]
         });
 
@@ -214,6 +223,10 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             validationRules: [{
                 type: "required",
                 message: "Debe introducir el Usuario"
+            }, {
+                type: "stringLength",
+                max: 20,
+                message: "El Usuario no puede ser mayor a 20 caracteres"
             }]
         });
 
@@ -228,6 +241,10 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             validationRules: [{
                 type: "required",
                 message: "Debe introducir la Clave"
+            }, {
+                type: "stringLength",
+                max: 50,
+                message: "La clave no puede ser mayor a 50 caracteres"
             }]
         });
 
@@ -241,6 +258,10 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             validationRules: [{
                 type: "required",
                 message: "Debe introducir el Teléfono"
+            }, {
+                type: "stringLength",
+                max: 50,
+                message: "El Telefono no puede ser mayor a 50 caracteres"
             }]
         });
 
@@ -254,6 +275,13 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             validationRules: [{
                 type: "required",
                 message: "Debe introducir la extensión"
+            }, {
+                type: "stringLength",
+                max: 10,
+                message: "La extensión no puede ser mayor a 20 caracteres"
+            }, {
+                type: "numeric",                
+                message: "El campo extensión debe ser numerico"
             }]
         });
 
@@ -267,6 +295,10 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             validationRules: [{
                 type: "required",
                 message: "Debe introducir el Celular"
+            }, {
+                type: "stringLength",
+                max: 50,
+                message: "El celular no puede ser mayor a 50 caracteres"
             }]
         });
 
@@ -274,12 +306,19 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             onValueChanged: function (data) {
                 console.log("txtemail", data.value);
                 Datos_email = data.value;
-            }
+            },
         })
         .dxValidator({
             validationRules: [{
                 type: "required",
                 message: "Debe introducir el Email"
+            }, {
+                type: "stringLength",
+                max: 200,
+                message: "El email no puede ser mayor a 200 caracteres"
+            }, {
+                type: "email",                
+                message: "El email no no tiene el formato correcto"
             }]
         });
 
@@ -293,6 +332,10 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
            validationRules: [{
                type: "required",
                message: "Debe introducir el Cargo"
+           }, {
+               type: "stringLength",
+               max: 50,
+               message: "El Cargo no puede ser mayor a 50 caracteres"
            }]
        });
 
@@ -344,16 +387,17 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
     //Consultar por el id de seguridad para obtener los datos del Usuario
     var id_seguridad = location.search.split('IdSeguridad=')[1];
-    if (id_seguridad) {        
+    if (id_seguridad) {
         var parametros = $.param({
             StrIdSeguridad: id_seguridad,
-            Consulta:1});
+            Consulta: 1
+        });
 
         Datos_Tipo = "2";
         $("#wait").show();
         $http.get('/api/Usuario?' + parametros).then(function (response) {
             $("#wait").hide();
-            console.log("Funciono",response.data);
+            console.log("Funciono", response.data);
             try {
 
                 Datos_nombres = response.data[0].StrNombres;
@@ -367,7 +411,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 Datos_cargo = response.data[0].StrCargo;
                 Datos_empresa = response.data[0].StrEmpresa;
                 Datos_estado = response.data[0].IntIdEstado;
-                
+
                 $("#txtnombres").dxTextBox({ value: Datos_nombres });
                 $("#txtapellidos").dxTextBox({ value: Datos_apellidos });
                 $("#txtusuario").dxTextBox({ value: Datos_usuario });
@@ -380,7 +424,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 $("#txtempresaasociada").dxTextBox({ value: Datos_empresa });
                 $("#txtempresaasociada").dxTextBox({ readOnly: true });
                 $("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
-                               
+
             } catch (err) {
                 DevExpress.ui.notify(err.message, 'error', 7000);
             }
@@ -412,9 +456,9 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             StrTelefono: Datos_telefono,
             StrExtension: Datos_extension,
             StrCelular: Datos_celular,
-            StrCargo:Datos_cargo,
-            IntIdEstado:Datos_estado,
-            Tipo: Datos_Tipo 
+            StrCargo: Datos_cargo,
+            IntIdEstado: Datos_estado,
+            Tipo: Datos_Tipo
         });
 
         $("#wait").show();
