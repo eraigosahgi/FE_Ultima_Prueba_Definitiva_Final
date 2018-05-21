@@ -32,7 +32,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         Datos_Obligado = "",
         Datos_Habilitacion = ""
         Datos_IdentificacionDv = "",
-        Datos_Tipo="1"
+        Datos_Tipo = "1",
+        Datos_Resolucion=""
 
 
     //Define los campos del Formulario  
@@ -159,6 +160,23 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 }]
             });
 
+
+            $("#txtResolucion").dxTextBox({
+                onValueChanged: function (data) {
+                    console.log("txtresolucion", data.value);
+                    Datos_Resolucion = data.value;
+                }
+            })
+          .dxValidator({
+              validationRules: [{
+                  type: "required",
+                  message: "Debe introducir el codigo Resolución"
+              }]
+          });
+
+
+
+
             $("#button").dxButton({
                 text: "Guardar",
                 type: "default",
@@ -191,6 +209,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Datos_Obligado = (response.data[0].intObligado) ? true : false;
                 Datos_Habilitacion = response.data[0].Habilitacion;
                 Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
+                Datos_Resolucion = response.data[0].StrResolucionDian;
                                                              
                 $("#Facturador").dxCheckBox({ value: Datos_Obligado });
                 $("#Adquiriente").dxCheckBox({ value: Datos_Adquiriente });
@@ -205,6 +224,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 $("#TipoIndentificacion").dxSelectBox({ readOnly: true });
 
                 $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
+                $("#txtResolucion").dxTextBox({ value: Datos_Resolucion });
+
                 
             } catch (err) {
                 DevExpress.ui.notify(err.message, 'error', 7000);

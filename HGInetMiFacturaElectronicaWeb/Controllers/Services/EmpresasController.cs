@@ -77,8 +77,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 IdSeguridad = d.StrIdSeguridad,
                 Intadquiriente = d.IntAdquiriente,
                 intObligado = d.IntObligado,
-                IntIdentificacionDv = d.IntIdentificacionDv
-
+                IntIdentificacionDv = d.IntIdentificacionDv,
+                StrResolucionDian = d.StrResolucionDian
             });
 
             return Ok(retorno);

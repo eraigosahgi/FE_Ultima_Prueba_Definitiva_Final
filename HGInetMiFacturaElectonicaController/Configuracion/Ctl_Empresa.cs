@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibreriaGlobalHGInet.HgiNet;
 
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
@@ -66,19 +67,118 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             
                 var datos = (from item in context.TblEmpresas
                              where item.StrIdentificacion.Equals(identificacion)
-                             select item).FirstOrDefault();
- 
-                return datos;
-            
+                             select item).FirstOrDefault(); 
+                return datos;            
         }
-        
 
-		/// <summary>
-		/// Crea una empresa en la BD
-		/// </summary>
-		/// <param name="empresa">Objeto BD de la empresa a crear</param>
-		/// <returns></returns>
-		public TblEmpresas Crear(TblEmpresas empresa)
+        /// <summary>
+        /// Crea una empresa en la BD
+        /// </summary>
+        /// <param name="empresa">Objeto BD de la empresa a crear</param>
+        /// <returns></returns>
+        public TblEmpresas Guardar(TblEmpresas empresa)
+        {
+            try{
+                if (empresa == null)
+                    throw new ApplicationException("La empresa es incorrecta!, Error");
+                
+                if (String.IsNullOrEmpty(empresa.StrTipoIdentificacion))                
+                    throw new ApplicationException("Debe ingresar el Tipo de Identificación");
+
+                if (String.IsNullOrEmpty(empresa.StrIdentificacion))
+                    throw new ApplicationException("Debe ingresar el Numero de Identificación");
+
+                if (String.IsNullOrEmpty(empresa.StrRazonSocial))
+                    throw new ApplicationException("Debe ingresar La Razón Social");
+
+                if (String.IsNullOrEmpty(empresa.StrMail))
+                    throw new ApplicationException("Debe ingresar el Email");
+
+                if (empresa.IntAdquiriente==false && empresa.IntObligado==false)
+                    throw new ApplicationException("Debe Indicar el Perfil");
+                                               
+
+                empresa.IntIdentificacionDv = FuncionesIdentificacion.Dv(empresa.StrIdentificacion);
+
+                //Automaricos                
+                empresa.DatFechaIngreso = Fecha.GetFecha();
+                empresa.DatFechaActualizacion = Fecha.GetFecha();
+                empresa.StrIdSeguridad = Guid.NewGuid();
+                empresa.StrSerial = Guid.NewGuid();
+
+                empresa = this.Add(empresa);
+
+                return empresa;
+            }
+            catch (Exception excepcion)
+            {               
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);               
+            }
+           
+        }
+
+        /// <summary>
+        /// Actualizar una empresa en la BD
+        /// </summary>
+        /// <param name="empresa">Objeto BD de la empresa a Actualizar</param>
+        /// <returns></returns>
+        public TblEmpresas Editar(TblEmpresas empresa)
+        {
+            try
+            {
+              
+                if (empresa == null)
+                    throw new ApplicationException("La empresa es incorrecta!, Error");
+
+                //if (String.IsNullOrEmpty(empresa.StrTipoIdentificacion))
+                //    throw new ApplicationException("Debe ingresar el Tipo de Identificación");
+
+                //if (String.IsNullOrEmpty(empresa.StrIdentificacion))
+                //    throw new ApplicationException("Debe ingresar el Numero de Identificación");
+
+                //if (String.IsNullOrEmpty(empresa.StrRazonSocial))
+                //    throw new ApplicationException("Debe ingresar La Razón Social");
+
+                //if (String.IsNullOrEmpty(empresa.StrMail))
+                //    throw new ApplicationException("Debe ingresar el Email");
+
+                //if (empresa.IntAdquiriente == false && empresa.IntObligado == false)
+                //    throw new ApplicationException("Debe Indicar el Perfil");
+
+                TblEmpresas EmpresaActualiza = (from item in context.TblEmpresas
+                         where item.StrIdentificacion.Equals(empresa.StrIdentificacion)
+                         select item).FirstOrDefault();
+
+                if (EmpresaActualiza == null)
+                    throw new ApplicationException("La empresa que desea Actualizar no Existe");
+                
+                EmpresaActualiza.StrRazonSocial = empresa.StrRazonSocial;
+                EmpresaActualiza.StrMail = empresa.StrMail;
+                EmpresaActualiza.IntAdquiriente = empresa.IntAdquiriente;
+                EmpresaActualiza.IntHabilitacion = empresa.IntHabilitacion;
+                EmpresaActualiza.IntObligado = empresa.IntObligado;
+                EmpresaActualiza.StrEmpresaAsociada = empresa.StrEmpresaAsociada;
+
+                empresa.DatFechaActualizacion = Fecha.GetFecha();
+
+                Actualizar(EmpresaActualiza);
+
+                return EmpresaActualiza;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+
+        }
+
+
+        /// <summary>
+        /// Crea una empresa en la BD
+        /// </summary>
+        /// <param name="empresa">Objeto BD de la empresa a crear</param>
+        /// <returns></returns>
+        public TblEmpresas Crear(TblEmpresas empresa)
         {
             empresa = this.Add(empresa);
 
@@ -129,5 +229,51 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             return tbl_empresa;
         }
+
+
+
+        /// <summary>
+        /// Obtiene Todas las empresas
+        /// </summary>        
+        /// <returns></returns>
+        public List<TblEmpresas> ObtenerTodas()
+        {
+            List<TblEmpresas> datos = (from item in context.TblEmpresas
+                         select item).ToList();
+
+            return datos;
+        }
+
+        /// <summary>
+        /// Obtiene Todas las empresas
+        /// </summary>        
+        /// /// <param name="IdSeguridad">id de seguridad</param>
+        /// <returns></returns>
+        public List<TblEmpresas> Obtener(System.Guid IdSeguridad)
+        {
+            List<TblEmpresas> datos = (from item in context.TblEmpresas
+                                       where item.StrIdSeguridad.Equals(IdSeguridad)
+                                       select item).ToList();
+
+            return datos;
+        }
+
+
+
+        /// <summary>
+        /// Actualizar Empresa
+        /// </summary>        
+        /// /// <param name="TblEmpresa">Objeto empresa a actualizar en BD</param>
+        /// <returns></returns>
+        public TblEmpresas Actualizar(TblEmpresas empresa)
+        {
+            empresa = this.Edit(empresa);
+
+            return empresa;
+
+        }
+
+
+
     }
 }

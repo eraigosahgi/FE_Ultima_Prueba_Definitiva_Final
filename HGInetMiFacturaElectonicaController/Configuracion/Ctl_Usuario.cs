@@ -25,6 +25,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public Ctl_Usuario(string servidor, string basedatos, string usuario, string clave) : base(servidor, basedatos, usuario, clave) { }
         #endregion
 
+        #region Guardar
         public TblUsuarios Crear(TblUsuarios usuario)
         {
             usuario = this.Add(usuario);
@@ -59,6 +60,101 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             return tbl_usuario;
         }
+
+        /// <summary>
+        /// Crea el usuario principal para la empresa
+        /// </summary>
+        /// <param name="empresa">información de la empresa</param>
+        /// <returns>información del usuario</returns>
+        public bool Crear(TblUsuarios usuario, TblEmpresas empresa = null)
+        {
+
+            try
+            {
+                //Aqui se deben validar los campos del objeto
+                TblUsuarios tbl_usuario = new TblUsuarios();
+                usuario.StrClave = Encriptar.Encriptar_MD5(usuario.StrClave);
+
+                usuario.DatFechaIngreso = Fecha.GetFecha();
+                usuario.DatFechaActualizacion = Fecha.GetFecha();
+                usuario.DatFechaCambioClave = Fecha.GetFecha();
+                usuario.IntIdEstado = usuario.IntIdEstado;
+                usuario.StrIdSeguridad = Guid.NewGuid();
+                usuario.StrIdCambioClave = Guid.NewGuid();
+
+                // agrega el usuario en la base de datos
+                tbl_usuario = Crear(usuario);
+
+                return true;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        #endregion
+
+        #region Actualizar
+
+        /// <summary>
+        /// Actualiza el usuario en la base ded atos
+        /// </summary>
+        /// <param name="usuario">información del Usuario</param>
+        /// <returns>información del usuario</returns>
+
+        public TblUsuarios Actualizar_usuario(TblUsuarios usuario)
+        {
+            usuario = this.Edit(usuario);
+
+            return usuario;
+
+        }
+
+
+        /// <summary>
+        /// Recibe parte del usuario y luego se envia a actualizar usuario para guardarlo en db
+        /// </summary>
+        /// <param name="usuario">información del usuario</param>
+        /// <returns>información del usuario</returns>
+        public bool Actualizar(TblUsuarios usuario)
+        {
+            try
+            {
+
+                TblUsuarios UsuarioActiliza = (from item in context.TblUsuarios
+                                                where item.StrUsuario.Equals(usuario.StrUsuario)
+                                                && item.StrEmpresa.Equals(usuario.StrEmpresa)
+                                                select item).FirstOrDefault();
+
+                UsuarioActiliza.StrEmpresa= usuario.StrEmpresa ;
+                UsuarioActiliza.StrUsuario = usuario.StrUsuario ;
+                UsuarioActiliza.StrClave = (usuario.StrClave!= UsuarioActiliza.StrClave) ? Encriptar.Encriptar_MD5(usuario.StrClave): usuario.StrClave; 
+                UsuarioActiliza.StrNombres = usuario.StrNombres ;
+                UsuarioActiliza.StrApellidos = usuario.StrApellidos ;
+                UsuarioActiliza.StrMail = usuario.StrMail ;
+                UsuarioActiliza.StrTelefono = usuario.StrTelefono ;
+                UsuarioActiliza.StrExtension = usuario.StrExtension ;
+                UsuarioActiliza.StrCelular = usuario.StrCelular ;
+                UsuarioActiliza.StrCargo = usuario.StrCargo ;
+                UsuarioActiliza.IntIdEstado = usuario.IntIdEstado ;                
+
+                UsuarioActiliza.DatFechaActualizacion = Fecha.GetFecha();
+                UsuarioActiliza.DatFechaCambioClave = Fecha.GetFecha();                
+                UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();
+                UsuarioActiliza.StrIdCambioClave = Guid.NewGuid();
+
+                // agrega el usuario en la base de datos
+                usuario = Actualizar_usuario(UsuarioActiliza);
+                
+                return true;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+        #endregion
 
         #region Validar
 
@@ -246,14 +342,5 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
         #endregion
 
-        #region Actualizar TblUsuarios        
-        public TblUsuarios Actualizar_usuario(TblUsuarios usuario)
-        {
-            usuario = this.Edit(usuario);
-
-            return usuario;
-
-        }
-        #endregion
     }
 }
