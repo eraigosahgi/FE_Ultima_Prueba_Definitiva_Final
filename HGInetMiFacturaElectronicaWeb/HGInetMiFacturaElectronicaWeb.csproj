@@ -1845,6 +1845,8 @@
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
+    <Content Include="Scripts\Pages\Empresas.js" />
+    <Content Include="Scripts\Pages\ModalConsultaEmpresas.js" />
     <Content Include="Scripts\Pages\Usuarios.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
@@ -2662,10 +2664,14 @@
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
+    <Content Include="Views\Pages\GestionEmpresas.aspx" />
+    <Content Include="Views\Pages\GestionUsuarios.aspx" />
     <Content Include="Views\Pages\Inicio.aspx" />
+    <Content Include="Views\Pages\ModalConsultaEmpresas.aspx" />
     <Content Include="wcf\acuserecibo.svc" />
     <Content Include="wcf\documentos.svc" />
     <Content Include="wcf\factura.svc" />
@@ -2683,6 +2689,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Services\DatosSesionController.cs" />
     <Compile Include="Controllers\Services\DocumentosController.cs" />
+    <Compile Include="Controllers\Services\EmpresasController.cs" />
     <Compile Include="Controllers\Services\FacturaController.cs" />
     <Compile Include="Controllers\Services\MaestrosEnumController.cs" />
     <Compile Include="Controllers\Services\Peticion.cs" />
@@ -2755,6 +2762,13 @@
     <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.designer.cs">
       <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ConsultaEmpresas.aspx.cs">
+      <DependentUpon>ConsultaEmpresas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaEmpresas.aspx.designer.cs">
+      <DependentUpon>ConsultaEmpresas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ConsultaUsuarios.aspx.cs">
       <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2776,12 +2790,33 @@
     <Compile Include="Views\Pages\DocumentosObligado.aspx.designer.cs">
       <DependentUpon>DocumentosObligado.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\GestionEmpresas.aspx.cs">
+      <DependentUpon>GestionEmpresas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\GestionEmpresas.aspx.designer.cs">
+      <DependentUpon>GestionEmpresas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\GestionUsuarios.aspx.cs">
+      <DependentUpon>GestionUsuarios.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\GestionUsuarios.aspx.designer.cs">
+      <DependentUpon>GestionUsuarios.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\Inicio.aspx.cs">
       <DependentUpon>Inicio.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Views\Pages\Inicio.aspx.designer.cs">
       <DependentUpon>Inicio.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ModalConsultaEmpresas.aspx.cs">
+      <DependentUpon>ModalConsultaEmpresas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ModalConsultaEmpresas.aspx.designer.cs">
+      <DependentUpon>ModalConsultaEmpresas.aspx</DependentUpon>
     </Compile>
     <Compile Include="wcf\acuserecibo.svc.cs">
       <DependentUpon>acuserecibo.svc</DependentUpon>

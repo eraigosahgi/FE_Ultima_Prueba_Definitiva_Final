@@ -205,5 +205,119 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
 
+        /// <summary>
+        /// Consulta un usuario por el id de Seguridad (StrIdSeguridad)
+        /// </summary>
+        /// <param name="StrIdSeguridad"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult Get(System.Guid StrIdSeguridad,int Consulta)
+        {
+            try
+            {
+                Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+
+                TblUsuarios datos = ctl_usuario.ObtenerIdSeguridad(StrIdSeguridad);
+                List<TblUsuarios> resultado = new List<TblUsuarios>();
+
+                resultado.Add(datos);
+
+                var retorno = resultado.Select(d => new
+                {
+                    StrEmpresa = d.StrEmpresa,
+                    StrUsuario = d.StrUsuario,
+                    StrClave = d.StrClave,
+                    StrNombres = d.StrNombres,
+                    StrApellidos= d.StrApellidos,
+                    StrCargo = d.StrCargo,
+                    StrTelefono=d.StrTelefono,
+                    StrExtension = d.StrExtension,
+                    StrCelular=d.StrCelular,
+                    StrMail=d.StrMail,
+                    IntIdEstado=d.IntIdEstado                    
+                });
+
+                return Ok(retorno);
+
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Crea el Usuario
+        /// </summary>
+        /// <param name="StrEmpresa"></param>        
+        /// <param name="StrUsuario"></param>                
+        ///  <param name="StrClave"></param>        
+        ///  <param name="StrNombres"></param>        
+        ///  <param name="StrApellidos"></param>        
+        /// <param name="StrMail"></param>        
+        /// <param name="StrTelefono"></param>         
+        /// <param name="StrExtension"></param> 
+        /// <param name="StrCelular"></param> 
+        /// <param name="StrCargo"></param> 
+        /// <param name="IntIdEstado"></param> 
+        /// <param name="Tipo"></param>                                
+        /// <returns></returns>
+        [HttpPost]                   
+        public IHttpActionResult Post([FromUri]string StrEmpresa, [FromUri]string StrUsuario,[FromUri] string StrClave,[FromUri] string StrNombres,[FromUri]string StrApellidos, [FromUri]string StrMail,[FromUri]string StrTelefono,[FromUri]string StrExtension,[FromUri]string StrCelular,[FromUri]string StrCargo,[FromUri] short IntIdEstado, [FromUri]int Tipo)//1 Nuevo -- 2 Actualizar
+        {
+            try
+            {
+                Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+
+
+                if (Tipo==1) {
+                    TblUsuarios usuario = new TblUsuarios();
+                    usuario.StrEmpresa = StrEmpresa;
+                    usuario.StrUsuario = StrUsuario;
+                    usuario.StrClave = StrClave;
+                    usuario.StrNombres = StrNombres;
+                    usuario.StrApellidos = StrApellidos;
+                    usuario.StrMail = StrMail;
+                    usuario.StrTelefono = StrTelefono;
+                    usuario.StrExtension = StrExtension;
+                    usuario.StrCelular = StrCelular;
+                    usuario.StrCargo = StrCargo;
+                    usuario.IntIdEstado = IntIdEstado;
+
+                    bool datos = ctl_usuario.Crear(usuario, null);
+                }
+                if(Tipo==2)
+                {
+                    TblUsuarios usuario = new TblUsuarios();
+                    usuario.StrEmpresa = StrEmpresa;
+                    usuario.StrUsuario = StrUsuario;
+                    usuario.StrClave = StrClave;
+                    usuario.StrNombres = StrNombres;
+                    usuario.StrApellidos = StrApellidos;
+                    usuario.StrMail = StrMail;
+                    usuario.StrTelefono = StrTelefono;
+                    usuario.StrExtension = StrExtension;
+                    usuario.StrCelular = StrCelular;
+                    usuario.StrCargo = StrCargo;
+                    usuario.IntIdEstado = IntIdEstado;
+
+                    bool datos = ctl_usuario.Actualizar(usuario);
+                }
+
+                //if (!datos)
+                //{
+                //    return NotFound();
+                //}
+
+                return Ok();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
     }
 }

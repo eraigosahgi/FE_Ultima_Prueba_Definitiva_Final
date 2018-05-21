@@ -1,4 +1,6 @@
-﻿//Controla el formato de numeros Ejemplo: $ 1.222.333,90
+﻿
+
+//Controla el formato de numeros Ejemplo: $ 1.222.333,90
 var fNumber = {
     sepMil: ",", // separador para los miles
     sepDec: '.', // separador para los decimales
@@ -21,10 +23,10 @@ var fNumber = {
 
 //Controla los mensajes de Session
 function control_session(Ruta) {
+    
     swal({
-        title: "No se encontraron los datos de autenticación en la sesión!",
-        text: "ingrese nuevamente!",
-        icon: "warning",                
+        title: "Tu sesión ha expirado",
+        icon: "warning"        
     })
     .then((willDelete) => {
         window.location.assign(Ruta);
@@ -41,3 +43,4 @@ function convertDateFormat(string) {
     if (part0 == 1) { info[0] = '0' + info[0] }
     return info[2] + '/' + info[0] + '/' + info[1];
 }
+
