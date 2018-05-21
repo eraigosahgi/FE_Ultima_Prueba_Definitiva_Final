@@ -70,17 +70,18 @@
                                 <div class="dx-fieldset">
 
                                     <div class="col-md-3 col-xs-6">
+                                        <label>Empresa Asociada<strom style="color: red;">*</label>
                                         <div id="txtempresaasociada"></div>
 
                                     </div>
-                                    <div class="col-md-3 col-xs-6">
+                                    <div class="col-md-3 col-xs-6">                                        
                                         <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba">
                                             <h6>Seleccionar Empresa</h6>
                                         </a>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
                                         <label>Nª Resolución<strom style="color: red;">*</label>
-                                        <div id="txtresolucion"></div>
+                                        <div id="txtResolucion"></div>                                        
                                     </div>
                                 </div>
 
