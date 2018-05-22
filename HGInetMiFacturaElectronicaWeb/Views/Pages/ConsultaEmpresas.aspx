@@ -19,7 +19,7 @@
                         <div class="col-md-10">
                             <h6 class="panel-title">Datos</h6>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-12 text-right">
                             <a class="btn btn-primary" style="background: #337ab7" href="GestionEmpresas.aspx">Nueva Empresa </a>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                 </div>
 
                 <br />
-                <div class="panel-body">
+                <div class="panel-body" style="margin-top: 2%">
                     <div class="demo-container">
                         <div id="gridEmpresas"></div>
                     </div>
