@@ -47,7 +47,7 @@
                                 <div class="col-md-3">
                                     <i class="icon-file-text"></i>
                                     <label>Código Adquiriente:</label>
-                                    <div dx-select-box="filtros.EmpresaAdquiriente"></div>
+                                    <div dx-autocomplete="filtros.Adquiriente"></div>
                                 </div>
 
                                 <div class="col-md-3">
