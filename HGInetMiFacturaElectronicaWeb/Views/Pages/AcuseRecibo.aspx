@@ -156,12 +156,16 @@
                                 <a href="{{datos.Xml}}" target="_blank" class="icon-file-xml text-bold" style="color: #1E88E5;">Xml</a>                                
                             </div>
                             <br />
-                            <div style="text-align: center;" >
+                            <div style="text-align: center;" >                                                                
+                                <a id="btnautenticar" class="btn btn-default" style="background:rgb(92, 184, 92); color:white; text-transform:initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size:14px;  text-align:center; ">Autenticar</a>
+                                <br />
+                                <br />
                                 <div class="footer text-muted" style="font-size:14px;">
-                                    Copyright © 2018 
-                                </div>
-                                <a href="http://habilitacion.mifacturaenlinea.com.co" style="font-size:14px;  text-align:center; "> Autenticar</a>                                
+                                    
+                                    Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color:rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a> 
+                                </div>                                
                             </div>
+
                         </div>
 
                     </div>
