@@ -79,6 +79,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public TblEmpresas Guardar(TblEmpresas empresa)
         {
             try{
+
+                TblEmpresas ConsultaEmpresa = Obtener(empresa.StrIdentificacion);
+                if (ConsultaEmpresa!=null)
+                    throw new ApplicationException("La empresa :  " +  ConsultaEmpresa.StrRazonSocial  + " ya existe" );
+
                 if (empresa == null)
                     throw new ApplicationException("La empresa es incorrecta!, Error");
                 
