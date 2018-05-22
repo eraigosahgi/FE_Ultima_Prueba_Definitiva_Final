@@ -211,7 +211,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="StrIdSeguridad"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Get(System.Guid StrIdSeguridad,int Consulta)
+        public IHttpActionResult Get(System.Guid StrIdSeguridad, int Consulta)
         {
             try
             {
@@ -228,13 +228,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     StrUsuario = d.StrUsuario,
                     StrClave = d.StrClave,
                     StrNombres = d.StrNombres,
-                    StrApellidos= d.StrApellidos,
+                    StrApellidos = d.StrApellidos,
                     StrCargo = d.StrCargo,
-                    StrTelefono=d.StrTelefono,
+                    StrTelefono = d.StrTelefono,
                     StrExtension = d.StrExtension,
-                    StrCelular=d.StrCelular,
-                    StrMail=d.StrMail,
-                    IntIdEstado=d.IntIdEstado                    
+                    StrCelular = d.StrCelular,
+                    StrMail = d.StrMail,
+                    IntIdEstado = d.IntIdEstado
                 });
 
                 return Ok(retorno);
@@ -264,15 +264,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="IntIdEstado"></param> 
         /// <param name="Tipo"></param>                                
         /// <returns></returns>
-        [HttpPost]                   
-        public IHttpActionResult Post([FromUri]string StrEmpresa, [FromUri]string StrUsuario,[FromUri] string StrClave,[FromUri] string StrNombres,[FromUri]string StrApellidos, [FromUri]string StrMail,[FromUri]string StrTelefono,[FromUri]string StrExtension,[FromUri]string StrCelular,[FromUri]string StrCargo,[FromUri] short IntIdEstado, [FromUri]int Tipo)//1 Nuevo -- 2 Actualizar
+        [HttpPost]
+        public IHttpActionResult Post([FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri] string StrClave, [FromUri] string StrNombres, [FromUri]string StrApellidos, [FromUri]string StrMail, [FromUri]string StrTelefono, [FromUri]string StrExtension, [FromUri]string StrCelular, [FromUri]string StrCargo, [FromUri] short IntIdEstado, [FromUri]int Tipo)//1 Nuevo -- 2 Actualizar
         {
             try
             {
                 Ctl_Usuario ctl_usuario = new Ctl_Usuario();
 
 
-                if (Tipo==1) {
+                if (Tipo == 1)
+                {
                     TblUsuarios usuario = new TblUsuarios();
                     usuario.StrEmpresa = StrEmpresa;
                     usuario.StrUsuario = StrUsuario;
@@ -288,7 +289,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                     bool datos = ctl_usuario.Crear(usuario, null);
                 }
-                if(Tipo==2)
+                if (Tipo == 2)
                 {
                     TblUsuarios usuario = new TblUsuarios();
                     usuario.StrEmpresa = StrEmpresa;
