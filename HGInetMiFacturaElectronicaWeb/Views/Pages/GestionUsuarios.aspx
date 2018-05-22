@@ -67,7 +67,7 @@
                                     </div>
 
                                     <div class="col-md-4 col-xs-10">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Empresa:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Empresa Asociada:<strom style="color: red;">*</label>
                                         <div id="txtempresaasociada"></div>
 
                                     </div>
