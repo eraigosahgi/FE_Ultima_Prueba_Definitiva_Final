@@ -17,8 +17,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblEmpresas()
         {
-            this.TblDocumentosAdquiriente = new HashSet<TblDocumentos>();
-            this.TblDocumentosFacturador = new HashSet<TblDocumentos>();
+            this.TblDocumentos = new HashSet<TblDocumentos>();
+            this.TblDocumentos1 = new HashSet<TblDocumentos>();
             this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
             this.TblOpcionesUsuario = new HashSet<TblOpcionesUsuario>();
             this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
@@ -32,19 +32,19 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrMail { get; set; }
         public System.DateTime DatFechaIngreso { get; set; }
         public string StrObservaciones { get; set; }
-        public System.Guid StrSerial { get; set; }
+        public string StrSerial { get; set; }
         public bool IntAdquiriente { get; set; }
         public bool IntObligado { get; set; }
+        public string StrResolucionDian { get; set; }
         public System.DateTime DatFechaActualizacion { get; set; }
         public System.Guid StrIdSeguridad { get; set; }
         public Nullable<byte> IntHabilitacion { get; set; }
-        public string StrResolucionDian { get; set; }
         public string StrEmpresaAsociada { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblDocumentosAdquiriente { get; set; }
+        public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblDocumentosFacturador { get; set; }
+        public virtual ICollection<TblDocumentos> TblDocumentos1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

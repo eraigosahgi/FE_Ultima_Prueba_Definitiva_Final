@@ -109,7 +109,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 empresa.DatFechaIngreso = Fecha.GetFecha();
                 empresa.DatFechaActualizacion = Fecha.GetFecha();
                 empresa.StrIdSeguridad = Guid.NewGuid();
-                empresa.StrSerial = Guid.NewGuid();
 
                 empresa = this.Add(empresa);
 
@@ -227,7 +226,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             tbl_empresa.StrRazonSocial = empresa.RazonSocial;
             tbl_empresa.StrMail = empresa.Email;
             tbl_empresa.DatFechaIngreso = Fecha.GetFecha();
-            tbl_empresa.StrSerial = Guid.NewGuid();
             tbl_empresa.IntAdquiriente = true;
             tbl_empresa.IntObligado = false;
             tbl_empresa.DatFechaActualizacion = Fecha.GetFecha();

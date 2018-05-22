@@ -24,8 +24,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntAnular { get; set; }
         public bool IntGestion { get; set; }
     
-        public virtual TblEmpresas TblEmpresas { get; set; }
         public virtual TblUsuarios TblUsuarios { get; set; }
         public virtual TblOpciones TblOpciones { get; set; }
+        public virtual TblEmpresas TblEmpresas { get; set; }
     }
 }
