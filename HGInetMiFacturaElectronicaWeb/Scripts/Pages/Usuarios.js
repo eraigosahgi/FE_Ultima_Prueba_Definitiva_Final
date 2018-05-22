@@ -8,51 +8,26 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 
 
     var codigo_usuario = "",
-        codigo_empresa = "";
+        codigo_facturador = "";
 
+    $http.get('/api/DatosSesion/').then(function (response) {
 
-    //Define los campos y las opciones
-    $scope.filtros =
-        {
-            //Control defecto ingreso de datos.
-            CodigoUsuario: {
-                placeholder: "Ingrese Código de Usuario",
-                onValueChanged: function (data) {
-                    console.log("codigo_usuario", data.value);
-                    codigo_usuario = data.value;
-                }
-            },
-            CodigoEmpresa: {
-                placeholder: "Ingrese Identificación de la Empresa",
-                onValueChanged: function (data) {
-                    console.log("codigo_empresa", data.value);
-                    codigo_empresa = data.value;
-                }
-            }
-        }
-    consultar();
-    $scope.ButtonOptionsConsultar = {
-        text: 'Consultar',
-        type: 'default',
-        onClick: function (e) {
-            consultar();
-        }
+        console.log(response.data[0]);
+
+        codigo_facturador = response.data[0].Identificacion;
+
+        consultar();
+    }), function errorCallback(response) {
+        Mensaje(response.data.ExceptionMessage, "error");
     };
 
-
     function consultar() {
-
-        if (codigo_usuario == "")
-            codigo_usuario = "*";
-
-        if (codigo_empresa == "")
-            codigo_empresa = "*";
 
         //Obtiene los datos del web api
         //ControladorApi: /Api/Usuario/
         //Datos GET: string codigo_usuario, string codigo_empresa
         $('#wait').show();
-        $http.get('/api/Usuario?codigo_usuario=' + codigo_usuario + '&codigo_empresa=' + codigo_empresa).then(function (response) {
+        $http.get('/api/Usuario?codigo_usuario=' + "*" + '&codigo_empresa=' + codigo_facturador).then(function (response) {
             $('#wait').hide();
             $("#gridUsuarios").dxDataGrid({
                 dataSource: response.data,
@@ -70,7 +45,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                          cellTemplate: function (container, options) {
                              $("<div>")
                                  .append(
-                                     $("<a class='icon-mail-read' style='margin-left:12%; font-size:19px'></a> &nbsp;&nbsp;").dxButton({
+                                     $("<a class='icon-mail-read' style='margin-right:12%; font-size:19px'></a> &nbsp;&nbsp;").dxButton({
                                          onClick: function () {
                                              $http.get('/api/Usuario?codigo_usuario=' + options.data.Usuario).then(function (responseEnvio) {
 
@@ -104,7 +79,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                                          }
                                      }).removeClass("dx-button dx-button-normal dx-widget")
                              )
-                                 .append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionUsuarios.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
+                                 .append($("<a taget=_self class='icon-pencil3' style='margin-right:-20%' title='Editar' href='GestionUsuarios.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
                                  .append($(""))
                                  .appendTo(container);
                          }
