@@ -17,10 +17,10 @@
                     
                     <div class="col-md-12">
                         <div class="col-md-10">
-                            <h6 class="panel-title">Lista de Empresas</h6>
+                            <h6 class="panel-title">Datos</h6>
                         </div>
                         <div class="col-md-2">
-                            <a class="btn btn-primary" href="GestionEmpresas.aspx">Nueva Empresa </a>
+                            <a class="btn btn-primary" style="background: #337ab7" href="GestionEmpresas.aspx">Nueva Empresa </a>
                         </div>
                     </div>
 
