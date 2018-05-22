@@ -3,6 +3,7 @@
 
 var AcuseReciboApp = angular.module('AcuseReciboApp', ['dx']);
 AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboController($scope, $http) {
+    
 
     var IdSeguridad = location.search.split('id_seguridad=')[1];
     var estado = "";
@@ -63,7 +64,6 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         useSubmitBehavior: true,
     };
 
-
     $scope.onFormSubmit = function (e) {
 
         console.log($('textarea[name=Observaciones]').val());
@@ -97,6 +97,16 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
             console.log("Error..", response.data.ExceptionMessage);
         });
     }
+
+
+    $http.get('/api/DatosSesion/').then(function (response) {
+        
+        console.log("Usuario Logeado");
+    }, function errorCallback(response) {
+        $('#btnautenticar').show();
+        console.log("Usuario no autenticado");
+    });
+   
 
 });
 
