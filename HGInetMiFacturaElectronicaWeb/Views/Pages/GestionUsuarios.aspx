@@ -21,106 +21,98 @@
 
                     <div class="col-lg-12">
 
-                        <div class="row">
-                            <form id="form1">
+                        <form id="form1">
+                            <div class="row">
 
                                 <div class="dx-fieldset">
+
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Nombres:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nombres:<strom style="color: red;">*</label>
                                         <div id="txtnombres"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-
-                                        <label>Apellidos:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Apellidos:<strom style="color: red;">*</label>
                                         <div id="txtapellidos"></div>
-
                                     </div>
-                                </div>
 
-                                <div class="dx-fieldset">
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Usuario:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Usuario:<strom style="color: red;">*</label>
                                         <div id="txtusuario"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Clave:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Clave:<strom style="color: red;">*</label>
                                         <div id="txtclave"></div>
                                     </div>
-                                </div>
 
-                                <div class="dx-fieldset">
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Teléfono:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Teléfono:<strom style="color: red;">*</label>
                                         <div id="txttelefono"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Extensión:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Extensión:<strom style="color: red;">*</label>
                                         <div id="txtextension"></div>
                                     </div>
-                                </div>
 
-                                <div class="dx-fieldset">
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Celular:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Celular:<strom style="color: red;">*</label>
                                         <div id="txtcelular"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Email:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email:<strom style="color: red;">*</label>
                                         <div id="txtemail"></div>
                                     </div>
-                                </div>
 
-
-                                <div class="dx-fieldset">
-
-                                    <div class="col-md-5 col-xs-10">
-                                        <label>Empresa:<strom style="color: red;">*</label>
+                                    <div class="col-md-4 col-xs-10">
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Empresa:<strom style="color: red;">*</label>
                                         <div id="txtempresaasociada"></div>
 
                                     </div>
-                                    <div class="col-md-1 col-xs-2">
-                                        <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba">
-                                            <h6 id="SelecionarEmpresa">Empresa</h6>
+
+                                    <div class="col-md-2 col-xs-2" style="margin-top: 2%">
+                                        <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba;">
+                                            <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
                                         </a>
                                     </div>
+
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Cargo:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Cargo:<strom style="color: red;">*</label>
                                         <div id="txtcargo"></div>
                                     </div>
-                                </div>
 
-
-                                <div class="dx-fieldset">
                                     <div class="col-md-6 col-xs-12">
-                                        <label>Estado:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Estado:<strom style="color: red;">*</label>
                                         <div id="cboestado"></div>
                                     </div>
 
-
-                                    <div class="col-lg-12 text-right">
-                                        <br />
-                                        <br />
-                                        <div id="button"></div>
-                                    </div>
-
                                 </div>
-                        </div>
-                        <div class="dx-fieldset">
-                            <div id="summary"></div>
-                        </div>
+
+                                <div class="dx-fieldset">
+                                    <div id="summary"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-12 text-right">
+                                <br />
+                                <br />
+                                <div id="button"></div>
+                            </div>
+
                         </form>
                     </div>
 
                 </div>
             </div>
         </div>
-         <div ng-if="Admin">
-        <div ng-include="'ModalConsultaEmpresas.aspx'"></div>
+
+        <div ng-if="Admin">
+            <div ng-include="'ModalConsultaEmpresas.aspx'"></div>
         </div>
+
     </div>
 
 </asp:Content>
