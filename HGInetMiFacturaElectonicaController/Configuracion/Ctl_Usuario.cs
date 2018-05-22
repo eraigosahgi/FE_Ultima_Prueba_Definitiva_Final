@@ -71,6 +71,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             try
             {
+                //Valido si es el usuario existe para la misma empresa
+                List<TblUsuarios> ConsultaUsuario = ObtenerUsuarios(usuario.StrUsuario,usuario.StrEmpresa);
+                if (ConsultaUsuario.Count>0)
+                    throw new ApplicationException("El Usuario :  " + usuario.StrUsuario + " ya existe");
+
                 //Aqui se deben validar los campos del objeto
                 TblUsuarios tbl_usuario = new TblUsuarios();
                 usuario.StrClave = Encriptar.Encriptar_MD5(usuario.StrClave);
