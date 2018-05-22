@@ -47,7 +47,7 @@ ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalCon
                        //    dataField: "Habilitacion"
                        //},
                        {
-                           caption: "Empresa",
+                           caption: "",
                            cssClass: "col-md-1 col-xs-2",
                            cellTemplate: function (container, options) {
                                $("<div style='text-align:center'>")
