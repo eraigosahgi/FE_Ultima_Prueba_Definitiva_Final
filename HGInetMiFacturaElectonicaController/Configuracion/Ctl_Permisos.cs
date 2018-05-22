@@ -15,7 +15,7 @@ namespace HGInetMiFacturaElectonicaController
         /// </summary>
         /// <param name="usuario"></param>
         /// <returns></returns>
-        public List<TblOpcionesUsuario> ObtenerPermisosUsuario(string usuario)
+        public List<TblOpcionesUsuario> ObtenerPermisosUsuario(string usuario, string codigo_empresa)
         {
             try
             {
@@ -25,11 +25,13 @@ namespace HGInetMiFacturaElectonicaController
                 // obtiene los permisos del usuario.
                 List<TblOpcionesUsuario> permisos_usuario = (from opc_usuario in context.TblOpcionesUsuario
                                                              where opc_usuario.StrUsuario.Equals(usuario)
+                                                             && opc_usuario.StrEmpresa.Equals(codigo_empresa)
                                                              select opc_usuario).ToList();
 
                 List<TblPerfiles> perfiles = (from perfiles_usuario in context.TblOpcionesPerfil
                                               join usuario_perfil in context.TblUsuariosPorPerfil on perfiles_usuario.IntIdPerfil equals usuario_perfil.IntIdPerfil
                                               where (usuario_perfil.StrUsuario.Equals(usuario))
+                                                     && usuario_perfil.StrEmpresa.Equals(codigo_empresa)
                                               select usuario_perfil.TblPerfiles).Distinct().ToList();
 
                 List<TblOpcionesPerfil> opciones_perfil = new List<TblOpcionesPerfil>();
