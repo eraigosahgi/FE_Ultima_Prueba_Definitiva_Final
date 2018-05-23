@@ -235,6 +235,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     StrCelular = d.StrCelular,
                     StrMail = d.StrMail,
                     IntIdEstado = d.IntIdEstado
+                    
                 });
 
                 return Ok(retorno);
@@ -265,7 +266,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="Tipo"></param>                                
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post([FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri] string StrClave, [FromUri] string StrNombres, [FromUri]string StrApellidos, [FromUri]string StrMail, [FromUri]string StrTelefono, [FromUri]string StrExtension, [FromUri]string StrCelular, [FromUri]string StrCargo, [FromUri] short IntIdEstado, [FromUri]int Tipo)//1 Nuevo -- 2 Actualizar
+        public IHttpActionResult Post([FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri] string StrNombres, [FromUri]string StrApellidos, [FromUri]string StrMail, [FromUri]string StrTelefono, [FromUri]string StrExtension, [FromUri]string StrCelular, [FromUri]string StrCargo, [FromUri] short IntIdEstado, [FromUri]int Tipo)//1 Nuevo -- 2 Actualizar
         {
             try
             {
@@ -276,8 +277,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 {
                     TblUsuarios usuario = new TblUsuarios();
                     usuario.StrEmpresa = StrEmpresa;
-                    usuario.StrUsuario = StrUsuario;
-                    usuario.StrClave = StrClave;
+                    usuario.StrUsuario = StrUsuario;                    
                     usuario.StrNombres = StrNombres;
                     usuario.StrApellidos = StrApellidos;
                     usuario.StrMail = StrMail;
@@ -293,8 +293,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 {
                     TblUsuarios usuario = new TblUsuarios();
                     usuario.StrEmpresa = StrEmpresa;
-                    usuario.StrUsuario = StrUsuario;
-                    usuario.StrClave = StrClave;
+                    usuario.StrUsuario = StrUsuario;                    
                     usuario.StrNombres = StrNombres;
                     usuario.StrApellidos = StrApellidos;
                     usuario.StrMail = StrMail;
