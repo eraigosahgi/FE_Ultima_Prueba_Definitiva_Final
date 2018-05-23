@@ -22,7 +22,7 @@
                             <h6 class="panel-title">Datos</h6>
                         </div>
                         <div class="col-md-12 text-right">
-                            <a class="btn btn-primary" style="background: #337ab7" href="GestionUsuarios.aspx">Nuevo Usuario</a>
+                            <a class="btn btn-primary" style="background: #337ab7" href="GestionUsuarios.aspx">Crear</a>
                             <br />
                         </div>
                     </div>
