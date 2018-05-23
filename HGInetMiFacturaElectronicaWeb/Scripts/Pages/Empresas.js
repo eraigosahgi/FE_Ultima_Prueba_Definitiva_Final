@@ -280,9 +280,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
                 $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
 
-                $("#txtempresaasociada").dxTextBox({ value: Datos_empresa_Asociada });
-
-                $("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
+                $("#txtempresaasociada").dxTextBox({ value: (Datos_empresa_Asociada) ? Datos_empresa_Asociada : '' });
+                if (Datos_Observaciones != null) {
+                    $("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
+                }
 
 
             } catch (err) {
@@ -305,7 +306,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
     };
 
     function guardarEmpresa() {
-        var empresa = Datos_empresa_Asociada.split(' -- ');
+        var empresa = null;
+        var Asociada ="";
+        if (Datos_empresa_Asociada!=null){
+            empresa = Datos_empresa_Asociada.split(' -- ');
+            Asociada= empresa[0];
+        } else {
+            empresa = Datos_Idententificacion;
+            Asociada=empresa;
+        }
 
         var data = $.param({
             TipoIdentificacion: Datos_Tipoidentificacion,
@@ -315,7 +324,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             Intadquiriente: (Datos_Adquiriente) ? true : false,
             IntObligado: (Datos_Obligado) ? true : false,
             IntHabilitacion: Datos_Habilitacion,
-            StrEmpresaAsociada: (empresa[0] == '') ? Datos_Idententificacion : empresa[0],
+            StrEmpresaAsociada: Asociada,
             tipo: Datos_Tipo,
             StrObservaciones:Datos_Observaciones
         });

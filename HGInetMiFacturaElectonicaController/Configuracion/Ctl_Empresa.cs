@@ -177,6 +177,60 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             }
 
         }
+        /// <summary>
+        /// Actualizar el serial de la empresa  en la BD
+        /// </summary>
+        /// <param name="Codigo_Identificacion"></param>
+        /// <param name="Codigo_Serial"></param>
+        /// <param name="Codigo_Resolucion"></param> 
+        /// <returns></returns>
+        public TblEmpresas Editar(string Identificacion,string Serial, string Resolucion)
+        {
+            try
+            {
+
+                if (String.IsNullOrEmpty(Identificacion) || string.IsNullOrEmpty(Serial) || string.IsNullOrEmpty(Resolucion))
+                    throw new ApplicationException("Los datos estan incompletos");
+                
+
+                TblEmpresas EmpresaActualiza = (from item in context.TblEmpresas
+                                                where item.StrIdentificacion.Equals(Identificacion)
+                                                select item).FirstOrDefault();
+
+
+                if (EmpresaActualiza == null)
+                    throw new ApplicationException("La empresa que desea Actualizar no Existe");
+
+
+                Ctl_Usuario clUsuario = new Ctl_Usuario();
+
+                List<TblUsuarios> lUsuario = new List<TblUsuarios>();
+
+                lUsuario = clUsuario.ObtenerUsuarios(EmpresaActualiza.StrIdentificacion,EmpresaActualiza.StrIdentificacion);
+
+                if (lUsuario.Count<1)
+                    throw new ApplicationException("La empresa no se puede activar ya que no posee ningun usuario asociado");
+
+                TblUsuarios Usuario = lUsuario.FirstOrDefault();                
+
+                EmpresaActualiza.StrSerial = Serial.Trim();
+                EmpresaActualiza.StrResolucionDian = Resolucion.Trim();                
+
+                Actualizar(EmpresaActualiza);
+                
+                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+      
+
+                bool Enviarmail= Email.Bienvenida(EmpresaActualiza,Usuario );
+
+                return EmpresaActualiza;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+
+        }
 
 
         /// <summary>
@@ -245,6 +299,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             List<TblEmpresas> datos = (from item in context.TblEmpresas
                          select item).ToList();
+
+            return datos;
+        }
+
+        /// <summary>
+        /// Obtiene las empresas facturadoras
+        /// </summary>        
+        /// <returns></returns>
+        public List<TblEmpresas> ObtenerFacturadores()
+        {
+            List<TblEmpresas> datos = (from item in context.TblEmpresas
+                                       where item.IntObligado.Equals(true)  && item.IntHabilitacion==99
+                                       select item).ToList();
 
             return datos;
         }

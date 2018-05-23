@@ -81,7 +81,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 					Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
-					lista_resolucion =_resolucion.ObtenerResoluciones(DatosObligado.Identificacion, resolucion_pruebas);
+					lista_resolucion.Add(_resolucion.Obtener(DatosObligado.Identificacion, resolucion_pruebas));
 
 					foreach (var item in documentos)
 					{
@@ -126,7 +126,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
 				throw new ApplicationException(ex.Message);
 			}
 		}
@@ -208,10 +207,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					catch (Exception excepcion)
 					{
 						respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la validación del documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-						
-						//Gurada la linea donde genero la excepcion
-						LogExcepcion.Guardar(excepcion);
-						throw excepcion; 
+
+
+						throw excepcion; ;
 					}
 
 
@@ -255,8 +253,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
 
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 						}
 
@@ -275,8 +271,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al guardar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
 
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 						}
 
@@ -306,8 +300,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la generación del estandar UBL del documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 
 						}
@@ -333,8 +325,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 						}
 
@@ -369,9 +359,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento PDF. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
+                            LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 						}
 
@@ -411,8 +399,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el firmado del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 						}
 
@@ -436,8 +422,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la compresión del documento UBL en XML firmado. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 
 						}
@@ -451,14 +435,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.FechaUltimoProceso = fecha_actual;
 							respuesta.IdProceso = 7;
 
-							acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
+							acuse = Ctl_DocumentoDian.Enviar(documento_result,empresa);
 						}
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el envío del archivo ZIP con el XML firmado a la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 
 						}
@@ -638,8 +620,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la consulta del estado del documento en la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
-							//Gurada la linea donde genero la excepcion
-							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 
 						}
@@ -677,8 +657,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							{
 								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 
-								//Gurada la linea donde genero la excepcion
-								LogExcepcion.Guardar(excepcion);
 								throw excepcion;
 
 							}
@@ -765,7 +743,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				// Obtiene la resolucion de la base de datos
 				Ctl_EmpresaResolucion _resolucion_factura = new Ctl_EmpresaResolucion();
-				lista_resolucion = _resolucion_factura.ObtenerResoluciones(documentos.FirstOrDefault().DatosObligado.Identificacion, "*");
+				lista_resolucion.Add(_resolucion_factura.Obtener(documentos.FirstOrDefault().DatosObligado.Identificacion, "*"));
 			}
 
 			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();

@@ -2,8 +2,8 @@
 
 //Controla el formato de numeros Ejemplo: $ 1.222.333,90
 var fNumber = {
-    sepMil: ",", // separador para los miles
-    sepDec: '.', // separador para los decimales
+    sepMil: ".", // separador para los miles
+    sepDec: ',', // separador para los decimales
     simbol: "$" || '', //Simbolo de modena
     formatear: function (num) {
         num += '';

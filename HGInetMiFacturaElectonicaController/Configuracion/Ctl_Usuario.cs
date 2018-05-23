@@ -143,8 +143,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                                                 select item).FirstOrDefault();
                 if (UsuarioActiliza != null)
                 {
-                    UsuarioActiliza.StrEmpresa = usuario.StrEmpresa;
-                    UsuarioActiliza.StrUsuario = usuario.StrUsuario;                    
+                    UsuarioActiliza.StrEmpresa = usuario.StrEmpresa;                                  
                     UsuarioActiliza.StrNombres = usuario.StrNombres;
                     UsuarioActiliza.StrApellidos = usuario.StrApellidos;
                     UsuarioActiliza.StrMail = usuario.StrMail;
@@ -156,8 +155,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                     UsuarioActiliza.DatFechaActualizacion = Fecha.GetFecha();
                     UsuarioActiliza.DatFechaCambioClave = Fecha.GetFecha();
-                    UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();
-                    UsuarioActiliza.StrIdCambioClave = Guid.NewGuid();
+                    UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();                   
 
                     // agrega el usuario en la base de datos
                     usuario = Actualizar_usuario(UsuarioActiliza);

@@ -49,6 +49,37 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         }
 
         /// <summary>
+        /// Obtiene de Facturadores y perfil 99 de Habilitacion 
+        /// </summary>        
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult Get([FromUri] bool Facturador)
+        {
+
+            Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+            List<TblEmpresas> datos = ctl_empresa.ObtenerFacturadores();
+
+            if (datos == null)
+            {
+                return NotFound();
+            }
+
+            var retorno = datos.Select(d => new
+            {
+                Identificacion = d.StrIdentificacion,
+                RazonSocial = d.StrRazonSocial,
+                Email = d.StrMail,
+                Serial = d.StrSerial,
+                Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
+                Habilitacion = d.IntHabilitacion,
+                IdSeguridad = d.StrIdSeguridad,
+                Resolucion = d.StrResolucionDian
+            });
+
+            return Ok(retorno);
+        }
+
+        /// <summary>
         /// Obtiene la lista 
         /// </summary>
         /// /// <param name="IdSeguridad">id de seguridad</param>
@@ -145,7 +176,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Empresa.StrResolucionDian = Resolucion;
                 Empresa.StrSerial = Serial;
 
-                var datos = ctl_empresa.Editar(Empresa);
+                var datos = ctl_empresa.Editar(Identificacion,Serial,Resolucion);
 
                 return Ok();
             }

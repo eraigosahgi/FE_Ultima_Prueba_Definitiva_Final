@@ -1845,6 +1845,7 @@
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
+    <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
     <Content Include="Scripts\Pages\ModalConsultaEmpresas.js" />
     <Content Include="Scripts\Pages\Usuarios.js" />
@@ -2664,6 +2665,7 @@
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConsultaEmpresasSerial.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
@@ -2671,6 +2673,7 @@
     <Content Include="Views\Pages\GestionEmpresas.aspx" />
     <Content Include="Views\Pages\GestionUsuarios.aspx" />
     <Content Include="Views\Pages\Inicio.aspx" />
+    <Content Include="Views\Pages\ModalSerialEmpresa.aspx" />
     <Content Include="Views\Pages\ModalConsultaEmpresas.aspx" />
     <Content Include="wcf\acuserecibo.svc" />
     <Content Include="wcf\documentos.svc" />
@@ -2762,6 +2765,13 @@
     <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.designer.cs">
       <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ConsultaEmpresasSerial.aspx.cs">
+      <DependentUpon>ConsultaEmpresasSerial.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaEmpresasSerial.aspx.designer.cs">
+      <DependentUpon>ConsultaEmpresasSerial.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ConsultaEmpresas.aspx.cs">
       <DependentUpon>ConsultaEmpresas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2810,6 +2820,13 @@
     </Compile>
     <Compile Include="Views\Pages\Inicio.aspx.designer.cs">
       <DependentUpon>Inicio.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ModalSerialEmpresa.aspx.cs">
+      <DependentUpon>ModalSerialEmpresa.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ModalSerialEmpresa.aspx.designer.cs">
+      <DependentUpon>ModalSerialEmpresa.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ModalConsultaEmpresas.aspx.cs">
       <DependentUpon>ModalConsultaEmpresas.aspx</DependentUpon>
@@ -2911,7 +2928,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61430/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

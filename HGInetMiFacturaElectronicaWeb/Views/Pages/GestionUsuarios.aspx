@@ -43,12 +43,12 @@
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Extensión:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Extensión:</label>
                                         <div id="txtextension"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Celular:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Celular:</label>
                                         <div id="txtcelular"></div>
                                     </div>
 
@@ -68,7 +68,7 @@
                                     </div>
 
                                     <div class="col-md-4 col-xs-10">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Empresa Asociada:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Empresa Asociada:</label>
                                         <div id="txtempresaasociada"></div>
 
                                     </div>

@@ -371,12 +371,13 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 $("#txtnombres").dxTextBox({ value: Datos_nombres });
                 $("#txtapellidos").dxTextBox({ value: Datos_apellidos });
                 $("#txtusuario").dxTextBox({ value: Datos_usuario });
-                $("#txttelefono").dxTextBox({ value: Datos_telefono });
-                $("#txtextension").dxTextBox({ value: Datos_extension });
-                $("#txtcelular").dxTextBox({ value: Datos_celular });
-                $("#txtemail").dxTextBox({ value: Datos_email });
-                $("#txtcargo").dxTextBox({ value: Datos_cargo });
-                $("#txtempresaasociada").dxTextBox({ value: Datos_empresa });
+                $("#txtusuario").dxTextBox({readOnly:true});
+                $("#txttelefono").dxTextBox({ value: (Datos_telefono)? Datos_telefono:'' });
+                $("#txtextension").dxTextBox({ value: (Datos_extension)? Datos_extension:'' });
+                $("#txtcelular").dxTextBox({ value: (Datos_celular)? Datos_celular :'' });
+                $("#txtemail").dxTextBox({ value: (Datos_email)? Datos_email : '' });
+                $("#txtcargo").dxTextBox({ value: (Datos_cargo)? Datos_cargo :'' });
+                $("#txtempresaasociada").dxTextBox({ value: (Datos_empresa)? Datos_empresa :'' });
                 $("#txtempresaasociada").dxTextBox({ readOnly: true });
                 $("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
 
