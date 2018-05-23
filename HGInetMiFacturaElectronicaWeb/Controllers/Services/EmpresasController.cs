@@ -40,7 +40,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 RazonSocial = d.StrRazonSocial,
                 Email = d.StrMail,
                 Serial = d.StrSerial,
-                Perfil = d.IntAdquiriente ? "Adquiriente" : "Facturador",
+                Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente? "Adquiriente" : d.IntObligado ?  "Facturador" :"",
                 Habilitacion = d.IntHabilitacion,
                 IdSeguridad = d.StrIdSeguridad
             });
@@ -79,7 +79,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 intObligado = d.IntObligado,
                 IntIdentificacionDv = d.IntIdentificacionDv,
                 StrResolucionDian = d.StrResolucionDian,
-                StrEmpresaAsociada = d.StrEmpresaAsociada
+                StrEmpresaAsociada = d.StrEmpresaAsociada,
+                StrObservaciones = d.StrObservaciones
             });
 
             return Ok(retorno);
@@ -92,14 +93,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="codigo_usuario"></param>        
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada,[FromUri] string StrResolucionDian, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada,[FromUri]string StrObservaciones, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
             TblEmpresas Empresa = new TblEmpresas();
             try
             {
-                if (tipo == 1)//Nuevo
-                {
                     Empresa.StrTipoIdentificacion = TipoIdentificacion;
                     Empresa.StrIdentificacion = Identificacion;
                     Empresa.StrRazonSocial = RazonSocial;
@@ -108,24 +107,45 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Empresa.IntHabilitacion = IntHabilitacion;
                     Empresa.IntObligado = IntObligado;
                     Empresa.StrEmpresaAsociada = StrEmpresaAsociada;
-                    Empresa.StrResolucionDian = StrResolucionDian;
-
+                    Empresa.StrObservaciones = StrObservaciones;
+                if (tipo == 1)//Nuevo
+                {                
                     var datos = ctl_empresa.Guardar(Empresa);
                 }
 
                 if (tipo == 2)//Editar
-                {
-                    Empresa.StrIdentificacion = Identificacion;
-                    Empresa.StrRazonSocial = RazonSocial;
-                    Empresa.StrMail = Email;
-                    Empresa.IntAdquiriente = Intadquiriente;
-                    Empresa.IntHabilitacion = IntHabilitacion;
-                    Empresa.IntObligado = IntObligado;
-                    Empresa.StrEmpresaAsociada = StrEmpresaAsociada;
-                    Empresa.StrResolucionDian = StrResolucionDian;
-
+                {                 
                     var datos = ctl_empresa.Editar(Empresa);
                 }
+
+                return Ok();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+        /// <summary>
+        /// Crear la activacion para la Empresa ingresando el serial y la resolución
+        /// </summary>
+        /// <param name="codigo_empresa"></param>
+        /// <param name="Codigo_Serial"></param>        
+        /// <param name="Codigo_Resolucion"></param>        
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult Post([FromUri]string Identificacion, [FromUri]string Serial, [FromUri]string Resolucion)
+        {
+            Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+            TblEmpresas Empresa = new TblEmpresas();
+            try
+            {
+                Empresa.StrIdentificacion = Identificacion;
+                Empresa.StrResolucionDian = Resolucion;
+                Empresa.StrSerial = Serial;
+
+                var datos = ctl_empresa.Editar(Empresa);
 
                 return Ok();
             }
