@@ -124,6 +124,30 @@ namespace HGInetMiFacturaElectonicaController
         }
 
         /// <summary>
+        /// Obtiene las opciones de permisos por usuario y empresa
+        /// </summary>
+        /// <param name="codigo_usuario"></param>
+        /// <param name="identificacion_empresa"></param>
+        /// <returns></returns>
+        public List<TblOpcionesUsuario> ObtenerOpcionesUsuarios(string codigo_usuario, string identificacion_empresa)
+        {
+            try
+            {
+                List<TblOpcionesUsuario> permisos_usuario = (from opcion in context.TblOpcionesUsuario
+                                                             where opcion.StrUsuario.Equals(codigo_usuario)
+                                                             && opcion.StrEmpresa.Equals(identificacion_empresa)
+                                                             select opcion).ToList();
+
+                return permisos_usuario;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+        /// <summary>
         /// Obtiene la opción por código
         /// </summary>
         /// <param name="id_opcion"></param>

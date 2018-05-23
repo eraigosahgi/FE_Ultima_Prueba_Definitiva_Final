@@ -58,7 +58,67 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             // agrega el usuario en la base de datos
             tbl_usuario = Crear(tbl_usuario);
 
+            AsignarPermisos(empresa);
+
             return tbl_usuario;
+        }
+
+        /// <summary>
+        /// Asigna los permisos al usuario según el perfil de la empresa (Obligado ó Adquiriente).
+        /// </summary>
+        /// <param name="datos_empresa">datos de la empresa</param>
+        public void AsignarPermisos(TblEmpresas datos_empresa)
+        {
+            try
+            {
+                Ctl_Permisos clase_permisos = new Ctl_Permisos();
+                List<TblOpcionesPerfil> opciones_perfil = new List<TblOpcionesPerfil>();
+
+                //Obtiene permisos del facturador.
+                if (datos_empresa.IntObligado)
+                    opciones_perfil = clase_permisos.ObtenerOpcionesPerfiles((short)Perfiles.Facturador);
+
+                //Obtiene permisos del adquiriente.
+                if (datos_empresa.IntAdquiriente)
+                    opciones_perfil = clase_permisos.ObtenerOpcionesPerfiles((short)Perfiles.Adquiriente);
+
+                List<TblOpcionesUsuario> opciones_usuario = new List<TblOpcionesUsuario>();
+
+                //Añade las opciones TblOpcionesPerfil en una lista de tipo TblOpcionesUsuario.
+                if (opciones_perfil.Count() > 0)
+                {
+                    foreach (var permiso_perfil in opciones_perfil)
+                    {
+                        if (permiso_perfil.IntAnular || permiso_perfil.IntEditar || permiso_perfil.IntEliminar || permiso_perfil.IntGestion || permiso_perfil.IntAgregar || permiso_perfil.IntConsultar)
+                        {
+                            TblOpcionesUsuario permiso = new TblOpcionesUsuario();
+
+                            permiso.IntAgregar = permiso_perfil.IntAgregar;
+                            permiso.IntAnular = permiso_perfil.IntAnular;
+                            permiso.IntConsultar = permiso_perfil.IntConsultar;
+                            permiso.IntEditar = permiso_perfil.IntEditar;
+                            permiso.IntEliminar = permiso_perfil.IntEliminar;
+                            permiso.IntGestion = permiso_perfil.IntGestion;
+                            permiso.IntIdOpcion = permiso_perfil.IntIdOpcion;
+                            permiso.StrUsuario = datos_empresa.StrIdentificacion;
+                            permiso.StrEmpresa = datos_empresa.StrIdentificacion;
+
+                            opciones_usuario.Add(permiso);
+                        }
+                    }
+                }
+
+                //Almacena la información de las opciones de permiso del usuario en base de datos.
+                if (opciones_usuario.Count > 0)
+                {
+                    Ctl_OpcionesUsuario clase_opciones_usuario = new Ctl_OpcionesUsuario();
+                    clase_opciones_usuario.CrearOpciones(opciones_usuario);
+                }
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
         /// <summary>
@@ -72,8 +132,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             try
             {
                 //Valido si es el usuario existe para la misma empresa
-                List<TblUsuarios> ConsultaUsuario = ObtenerUsuarios(usuario.StrUsuario,usuario.StrEmpresa);
-                if (ConsultaUsuario.Count>0)
+                List<TblUsuarios> ConsultaUsuario = ObtenerUsuarios(usuario.StrUsuario, usuario.StrEmpresa);
+                if (ConsultaUsuario.Count > 0)
                     throw new ApplicationException("El Usuario :  " + usuario.StrUsuario + " ya existe");
 
                 //Aqui se deben validar los campos del objeto
@@ -94,9 +154,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 //Aqui debo enviar el correo a usuarioRestablecer.StrMail
                 Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
 
-                 empresa =(from a in context.TblEmpresas 
-                                where a.StrIdentificacion.Equals(usuario.StrEmpresa)                                
-                                select a).FirstOrDefault();
+                empresa = (from a in context.TblEmpresas
+                           where a.StrIdentificacion.Equals(usuario.StrEmpresa)
+                           select a).FirstOrDefault();
 
                 Email.Bienvenida(empresa, usuario);
 
@@ -138,12 +198,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             try
             {
                 TblUsuarios UsuarioActiliza = (from item in context.TblUsuarios
-                                                where item.StrUsuario.Equals(usuario.StrUsuario)
-                                                && item.StrEmpresa.Equals(usuario.StrEmpresa)
-                                                select item).FirstOrDefault();
+                                               where item.StrUsuario.Equals(usuario.StrUsuario)
+                                               && item.StrEmpresa.Equals(usuario.StrEmpresa)
+                                               select item).FirstOrDefault();
                 if (UsuarioActiliza != null)
                 {
-                    UsuarioActiliza.StrEmpresa = usuario.StrEmpresa;                                  
+                    UsuarioActiliza.StrEmpresa = usuario.StrEmpresa;
                     UsuarioActiliza.StrNombres = usuario.StrNombres;
                     UsuarioActiliza.StrApellidos = usuario.StrApellidos;
                     UsuarioActiliza.StrMail = usuario.StrMail;
@@ -155,15 +215,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                     UsuarioActiliza.DatFechaActualizacion = Fecha.GetFecha();
                     UsuarioActiliza.DatFechaCambioClave = Fecha.GetFecha();
-                    UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();                   
+                    UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();
 
                     // agrega el usuario en la base de datos
                     usuario = Actualizar_usuario(UsuarioActiliza);
 
                     return true;
-                }else {
+                }
+                else
+                {
                     throw new ApplicationException("Datos Invalidos, el Usuario no coincide con la empresa");
-                }            
+                }
             }
             catch (Exception excepcion)
             {

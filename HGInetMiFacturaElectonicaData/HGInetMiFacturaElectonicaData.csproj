@@ -78,6 +78,7 @@
     <Compile Include="ControllerSql\Repositorio.Validar.cs" />
     <Compile Include="Enumerables\Accion.cs" />
     <Compile Include="Enumerables\AdquirienteRecibo.cs" />
+    <Compile Include="Enumerables\Perfiles.cs" />
     <Compile Include="Enumerables\ProcesoEstado.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoArchivo.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoDetalle.cs" />
