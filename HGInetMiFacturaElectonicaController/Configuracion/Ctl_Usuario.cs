@@ -78,7 +78,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 //Aqui se deben validar los campos del objeto
                 TblUsuarios tbl_usuario = new TblUsuarios();
-                usuario.StrClave = Encriptar.Encriptar_MD5(usuario.StrClave);
+                usuario.StrClave = System.Guid.NewGuid().ToString();
 
                 usuario.DatFechaIngreso = Fecha.GetFecha();
                 usuario.DatFechaActualizacion = Fecha.GetFecha();
@@ -89,6 +89,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 // agrega el usuario en la base de datos
                 tbl_usuario = Crear(usuario);
+
+
+                //Aqui debo enviar el correo a usuarioRestablecer.StrMail
+                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+
+                 empresa =(from a in context.TblEmpresas 
+                                where a.StrIdentificacion.Equals(usuario.StrEmpresa)                                
+                                select a).FirstOrDefault();
+
+                Email.Bienvenida(empresa, usuario);
+
 
                 return true;
             }
@@ -133,8 +144,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 if (UsuarioActiliza != null)
                 {
                     UsuarioActiliza.StrEmpresa = usuario.StrEmpresa;
-                    UsuarioActiliza.StrUsuario = usuario.StrUsuario;
-                    UsuarioActiliza.StrClave = (usuario.StrClave != UsuarioActiliza.StrClave) ? Encriptar.Encriptar_MD5(usuario.StrClave) : usuario.StrClave;
+                    UsuarioActiliza.StrUsuario = usuario.StrUsuario;                    
                     UsuarioActiliza.StrNombres = usuario.StrNombres;
                     UsuarioActiliza.StrApellidos = usuario.StrApellidos;
                     UsuarioActiliza.StrMail = usuario.StrMail;
