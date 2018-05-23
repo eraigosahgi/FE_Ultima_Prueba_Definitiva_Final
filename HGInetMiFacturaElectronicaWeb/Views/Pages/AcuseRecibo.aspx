@@ -157,7 +157,7 @@
                             </div>
                             <br />
                             <div style="text-align: center;" >                                                                
-                                <a id="btnautenticar" class="btn btn-default" style="background:rgb(92, 184, 92); color:white; text-transform:initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size:14px;  text-align:center; ">Autenticar</a>
+                                <a id="btnautenticar" class="btn btn-default" style="background:rgb(51, 122, 183); color:white; text-transform:initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size:14px;  text-align:center; ">Autenticar</a>
                                 <br />
                                 <br />
                                 <div class="footer text-muted" style="font-size:14px;">
