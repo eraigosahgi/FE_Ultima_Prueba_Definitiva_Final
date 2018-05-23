@@ -131,7 +131,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
         console.log(response.data[0]);
 
-        codigo_facturador = response.data[0].Identificacion;        
+        codigo_facturador = response.data[0].Identificacion;
         if (codigo_facturador == '811021438') {
             $scope.Admin = true;
         } else {
@@ -144,7 +144,6 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
     var Datos_nombres = "",
         Datos_apellidos = "",
         Datos_usuario = "",
-        Datos_clave = "",
         Datos_telefono = "",
         Datos_extension = "",
         Datos_celular = ""
@@ -161,8 +160,8 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
         $("#txtnombres").dxTextBox({
             onValueChanged: function (data) {
-                console.log("txtnombres", data.value);
-                Datos_nombres = data.value;
+                Datos_nombres = data.value.toUpperCase();
+                console.log("txtnombres", Datos_nombres);
             }
         })
         .dxValidator({
@@ -180,7 +179,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         $("#txtapellidos").dxTextBox({
             onValueChanged: function (data) {
                 console.log("txtapellidos", data.value);
-                Datos_apellidos = data.value;
+                Datos_apellidos = data.value.toUpperCase();
             }
         })
         .dxValidator({
@@ -197,7 +196,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         $("#txtusuario").dxTextBox({
             onValueChanged: function (data) {
                 console.log("txtusuario", data.value);
-                Datos_usuario = data.value;
+                Datos_usuario = data.value.toUpperCase();
             }
         })
         .dxValidator({
@@ -208,24 +207,6 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 type: "stringLength",
                 max: 20,
                 message: "El Usuario no puede ser mayor a 20 caracteres"
-            }]
-        });
-
-        $("#txtclave").dxTextBox({
-            mode: "password",
-            onValueChanged: function (data) {
-                console.log("txtclave", data.value);
-                Datos_clave = data.value;
-            }
-        })
-        .dxValidator({
-            validationRules: [{
-                type: "required",
-                message: "Debe introducir la Clave"
-            }, {
-                type: "stringLength",
-                max: 50,
-                message: "La clave no puede ser mayor a 50 caracteres"
             }]
         });
 
@@ -253,16 +234,11 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             }
         })
         .dxValidator({
-            validationRules: [{
-                type: "required",
-                message: "Debe introducir la extensión"
-            }, {
+            validationRules: [
+            {
                 type: "stringLength",
                 max: 10,
-                message: "La extensión no puede ser mayor a 20 caracteres"
-            }, {
-                type: "numeric",                
-                message: "El campo extensión debe ser numerico"
+                message: "La extenasión no puede ser mayor a 10 caracteres"
             }]
         });
 
@@ -273,20 +249,18 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             }
         })
         .dxValidator({
-            validationRules: [{
-                type: "required",
-                message: "Debe introducir el Celular"
-            }, {
+            validationRules: [
+            {
                 type: "stringLength",
                 max: 50,
-                message: "El celular no puede ser mayor a 50 caracteres"
+                message: "El Celular no puede ser mayor a 50 caracteres"
             }]
         });
 
         $("#txtemail").dxTextBox({
             onValueChanged: function (data) {
                 console.log("txtemail", data.value);
-                Datos_email = data.value;
+                Datos_email = data.value.toUpperCase();
             },
         })
         .dxValidator({
@@ -298,7 +272,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 max: 200,
                 message: "El email no puede ser mayor a 200 caracteres"
             }, {
-                type: "email",                
+                type: "email",
                 message: "El email no no tiene el formato correcto"
             }]
         });
@@ -306,7 +280,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         $("#txtcargo").dxTextBox({
             onValueChanged: function (data) {
                 console.log("txtcargo", data.value);
-                Datos_cargo = data.value;
+                Datos_cargo = data.value.toUpperCase();
             }
         })
        .dxValidator({
@@ -321,7 +295,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
        });
 
         $("#txtempresaasociada").dxTextBox({
-            readOnly:true,
+            readOnly: true,
             onValueChanged: function (data) {
                 console.log("txtempresaasociada", data.value);
                 Datos_empresa = data.value;
@@ -349,6 +323,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 message: "Debe seleccionar el Estado"
             }]
         });
+
 
 
 
@@ -385,7 +360,6 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 Datos_nombres = response.data[0].StrNombres;
                 Datos_apellidos = response.data[0].StrApellidos;
                 Datos_usuario = response.data[0].StrUsuario;
-                Datos_clave = response.data[0].StrClave;
                 Datos_telefono = response.data[0].StrTelefono;
                 Datos_extension = response.data[0].StrExtension;
                 Datos_celular = response.data[0].StrCelular;
@@ -397,7 +371,6 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 $("#txtnombres").dxTextBox({ value: Datos_nombres });
                 $("#txtapellidos").dxTextBox({ value: Datos_apellidos });
                 $("#txtusuario").dxTextBox({ value: Datos_usuario });
-                $("#txtclave").dxTextBox({ value: Datos_clave });
                 $("#txttelefono").dxTextBox({ value: Datos_telefono });
                 $("#txtextension").dxTextBox({ value: Datos_extension });
                 $("#txtcelular").dxTextBox({ value: Datos_celular });
@@ -432,7 +405,6 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         var data = $.param({
             StrEmpresa: empresa[0],
             StrUsuario: Datos_usuario,
-            StrClave: Datos_clave,
             StrNombres: Datos_nombres,
             StrApellidos: Datos_apellidos,
             StrMail: Datos_email,
@@ -448,8 +420,11 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         $http.post('/api/Usuario?' + data).then(function (response) {
             $("#wait").hide();
             try {
-                //Aqui se debe colocar los pasos a seguir
+
                 DevExpress.ui.notify({ message: "Usuario Guardado con exito", position: { my: "center top", at: "center top" } }, "success", 6000);
+                $("#button").hide();
+                $("#btncancelar").hide();
+                setTimeout(IrAConsulta, 2000);
 
             } catch (err) {
                 DevExpress.ui.notify(err.message, 'error', 3000);
@@ -462,10 +437,15 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
 });
 
+
+function IrAConsulta() {
+    window.location.assign("../Pages/ConsultaUsuarios.aspx");
+}
+
 var TiposEstado =
     [
-        { ID: "1", Texto: 'Activo' },
-        { ID: "2", Texto: 'Inactivo' }
+        { ID: "1", Texto: 'ACTIVO' },
+        { ID: "2", Texto: 'INACTIVO' }
     ];
 
 //Funcion para Buscar el indice el Array de los objetos, segun el id de base de datos
