@@ -20,7 +20,7 @@
                             <h6 class="panel-title">Datos</h6>
                         </div>
                         <div class="col-md-12 text-right">
-                            <a class="btn btn-primary" style="background: #337ab7" href="GestionEmpresas.aspx">Nueva Empresa </a>
+                            <a class="btn btn-primary" style="background: #337ab7" href="GestionEmpresas.aspx">Crear</a>
                         </div>
                     </div>
 
