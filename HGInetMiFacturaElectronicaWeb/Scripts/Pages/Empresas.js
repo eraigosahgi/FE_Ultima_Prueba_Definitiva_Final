@@ -258,17 +258,20 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Datos_Idententificacion = response.data[0].Identificacion;
                 Datos_Razon_Social = response.data[0].RazonSocial;
                 Datos_Email = response.data[0].Email;
-                Datos_Adquiriente = (response.data[0].Intadquiriente) ? true : false;
-                Datos_Obligado = (response.data[0].intObligado) ? true : false;
+                Datos_Adquiriente = (response.data[0].Intadquiriente) ? 1 : 0;
+                Datos_Obligado = (response.data[0].intObligado) ? 1 : 0;
                 Datos_Habilitacion = response.data[0].Habilitacion;
                 Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
                 Datos_Observaciones = response.data[0].StrObservaciones;
 
                 Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
 
-                $("#Facturador").dxCheckBox({ value: Datos_Obligado });
-                $("#Adquiriente").dxCheckBox({ value: Datos_Adquiriente });
-
+                if (Datos_Obligado == 1) {
+                    $("#Facturador").dxCheckBox({ value: 1 });
+                }
+                if (Datos_Adquiriente == 1) {
+                    $("#Adquiriente").dxCheckBox({ value: 1 });
+                }
                 $("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
                 $("#NumeroIdentificacion").dxTextBox({ readOnly: true });
 
@@ -307,13 +310,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
     function guardarEmpresa() {
         var empresa = null;
-        var Asociada ="";
-        if (Datos_empresa_Asociada!=null){
+        var Asociada = "";
+        if (Datos_empresa_Asociada != null) {
             empresa = Datos_empresa_Asociada.split(' -- ');
-            Asociada= empresa[0];
+            Asociada = empresa[0];
         } else {
             empresa = Datos_Idententificacion;
-            Asociada=empresa;
+            Asociada = empresa;
         }
 
         var data = $.param({
@@ -326,7 +329,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             IntHabilitacion: Datos_Habilitacion,
             StrEmpresaAsociada: Asociada,
             tipo: Datos_Tipo,
-            StrObservaciones:Datos_Observaciones
+            StrObservaciones: Datos_Observaciones
         });
 
         $("#wait").show();
@@ -334,7 +337,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             $("#wait").hide();
             try {
                 //Aqui se debe colocar los pasos a seguir
-                DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 6000);                
+                DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 6000);
                 $("#button").hide();
                 $("#btncancelar").hide();
                 setTimeout(IrAConsulta, 2000);
@@ -415,7 +418,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 });
 
 //Esta funcion es para ir a la pagina de consulta
-function IrAConsulta() {    
+function IrAConsulta() {
     window.location.assign("../Pages/ConsultaEmpresas.aspx");
 }
 
