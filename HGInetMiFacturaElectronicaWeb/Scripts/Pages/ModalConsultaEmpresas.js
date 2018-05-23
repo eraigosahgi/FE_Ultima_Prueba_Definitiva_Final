@@ -31,21 +31,7 @@ ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalCon
                            caption: "Razón Social",
                            dataField: "RazonSocial",
                            cssClass: "col-md-7"
-                       },
-                       //{
-                       //    caption: "Email",
-                       //    dataField: "Email"
-                       //},
-                       //{
-                       //    caption: "Serial",
-                       //    dataField: "Serial"
-                       //},
-                       //{
-                       //    dataField: "Perfil"
-                       //},
-                       //{
-                       //    dataField: "Habilitacion"
-                       //},
+                       },                     
                        {
                            caption: "",
                            cssClass: "col-md-1 col-xs-2",
