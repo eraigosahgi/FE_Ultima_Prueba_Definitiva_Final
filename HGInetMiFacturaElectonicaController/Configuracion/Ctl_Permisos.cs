@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaData.ControllerSql;
+﻿using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using System;
 using System.Collections.Generic;
@@ -266,11 +267,41 @@ namespace HGInetMiFacturaElectonicaController
                     if (string.IsNullOrWhiteSpace(ruta_grupo))
                         ruta_grupo = string.Format("{0}", item.StrDescripcion);
                     else
-                        ruta_grupo = string.Format(" / {0} / {1}", ruta_grupo, item.StrDescripcion);
+                        ruta_grupo = string.Format(" {0} / {1}", ruta_grupo, item.StrDescripcion);
                 }
             }
             return ruta_grupo;
         }
+
+
+
+        public void VallidarPermisosUsuario(TblEmpresas datos_empresa)
+        {
+            List<TblOpcionesPerfil> opciones_perfil = new List<TblOpcionesPerfil>();
+            List<TblOpcionesUsuario> opciones_usuario = new List<TblOpcionesUsuario>();
+
+            //Obtiene permisos del facturador.
+            if (datos_empresa.IntObligado)
+                opciones_perfil = ObtenerOpcionesPerfiles((short)Perfiles.Facturador);
+
+            //Obtiene permisos del adquiriente.
+            if (datos_empresa.IntAdquiriente)
+                opciones_perfil = ObtenerOpcionesPerfiles((short)Perfiles.Adquiriente);
+
+            opciones_usuario = ObtenerOpcionesUsuarios(datos_empresa.StrIdentificacion, datos_empresa.StrIdentificacion);
+
+
+
+            foreach (TblOpcionesUsuario item_usuario in opciones_usuario)
+            {
+                foreach (TblOpcionesPerfil item_perfil in opciones_perfil)
+                {
+                    //if(!item_usuario.contains)
+                }
+            }
+
+        }
+
 
     }
 }

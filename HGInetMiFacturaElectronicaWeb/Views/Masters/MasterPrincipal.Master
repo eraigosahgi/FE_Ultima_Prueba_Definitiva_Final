@@ -418,7 +418,7 @@
 
                         <div class="breadcrumb-line">
                             <ul class="breadcrumb">
-                                <li><a href="../Pages/Inicio.aspx"><i class="icon-home2 position-left"></i>Inicio</a>
+                                <li><a href="../Pages/Inicio.aspx"><i class="icon-home2 position-left"></i>Inicio /</a>
                                     <asp:Label ID="lb_GrupoPagina" runat="server" Text="lb_GrupoPagina"></asp:Label>
                                 </li>
                             </ul>
