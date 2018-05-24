@@ -12,13 +12,10 @@
         <EntityTypeShape EntityType="Modelo.TblPlanes" Width="1.5" PointX="3.375" PointY="0.75" />
         <EntityTypeShape EntityType="Modelo.TblPlanesTransacciones" Width="1.5" PointX="7.875" PointY="21.75" />
         <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="1.5" PointX="5.625" PointY="29.75" />
-        <EntityTypeShape EntityType="Modelo.TblUsuariosPorPerfil" Width="1.5" PointX="7.875" PointY="31.125" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblPlanesTransacciones" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
-        <AssociationConnector Association="Modelo.FK_TblUsuariosPorPerfil_TblPerfiles" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
-        <AssociationConnector Association="Modelo.FK_TblUsuariosPorPerfil_TblUsuarios" />
         <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="10.875" PointY="26" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblPerfiles" />
         <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="13.25" PointY="24.75" />

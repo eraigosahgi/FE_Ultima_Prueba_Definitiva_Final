@@ -32,7 +32,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual DbSet<TblPlanes> TblPlanes { get; set; }
         public virtual DbSet<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
         public virtual DbSet<TblUsuarios> TblUsuarios { get; set; }
-        public virtual DbSet<TblUsuariosPorPerfil> TblUsuariosPorPerfil { get; set; }
         public virtual DbSet<TblOpcionesPerfil> TblOpcionesPerfil { get; set; }
         public virtual DbSet<TblOpciones> TblOpciones { get; set; }
         public virtual DbSet<TblEmpresas> TblEmpresas { get; set; }

@@ -177,17 +177,6 @@
           <Property Name="DatFechaCambioClave" Type="datetime" />
           <Property Name="StrIdCambioClave" Type="uniqueidentifier" />
         </EntityType>
-        <EntityType Name="TblUsuariosPorPerfil">
-          <Key>
-            <PropertyRef Name="IntIdPerfil" />
-            <PropertyRef Name="StrEmpresa" />
-            <PropertyRef Name="StrUsuario" />
-          </Key>
-          <Property Name="IntIdPerfil" Type="smallint" Nullable="false" />
-          <Property Name="StrEmpresa" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="StrUsuario" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Activado" Type="bit" Nullable="false" />
-        </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Role="TblEmpresas" Type="Self.TblEmpresas" Multiplicity="1" />
           <End Role="TblDocumentos" Type="Self.TblDocumentos" Multiplicity="*" />
@@ -350,32 +339,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_TblUsuariosPorPerfil_TblPerfiles">
-          <End Role="TblPerfiles" Type="Self.TblPerfiles" Multiplicity="1" />
-          <End Role="TblUsuariosPorPerfil" Type="Self.TblUsuariosPorPerfil" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblPerfiles">
-              <PropertyRef Name="IntId" />
-            </Principal>
-            <Dependent Role="TblUsuariosPorPerfil">
-              <PropertyRef Name="IntIdPerfil" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TblUsuariosPorPerfil_TblUsuarios">
-          <End Role="TblUsuarios" Type="Self.TblUsuarios" Multiplicity="1" />
-          <End Role="TblUsuariosPorPerfil" Type="Self.TblUsuariosPorPerfil" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblUsuarios">
-              <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrUsuario" />
-            </Principal>
-            <Dependent Role="TblUsuariosPorPerfil">
-              <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="ModeloStoreContainer">
           <EntitySet Name="TblDocumentos" EntityType="Self.TblDocumentos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresas" EntityType="Self.TblEmpresas" Schema="dbo" store:Type="Tables" />
@@ -387,7 +350,6 @@
           <EntitySet Name="TblPlanes" EntityType="Self.TblPlanes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblPlanesTransacciones" EntityType="Self.TblPlanesTransacciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblUsuarios" EntityType="Self.TblUsuarios" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="TblUsuariosPorPerfil" EntityType="Self.TblUsuariosPorPerfil" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_TblDocumentos_TblEmpresasAdquiriente" Association="Self.FK_TblDocumentos_TblEmpresasAdquiriente">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
@@ -440,14 +402,6 @@
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
           </AssociationSet>
-          <AssociationSet Name="FK_TblUsuariosPorPerfil_TblPerfiles" Association="Self.FK_TblUsuariosPorPerfil_TblPerfiles">
-            <End Role="TblPerfiles" EntitySet="TblPerfiles" />
-            <End Role="TblUsuariosPorPerfil" EntitySet="TblUsuariosPorPerfil" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TblUsuariosPorPerfil_TblUsuarios" Association="Self.FK_TblUsuariosPorPerfil_TblUsuarios">
-            <End Role="TblUsuarios" EntitySet="TblUsuarios" />
-            <End Role="TblUsuariosPorPerfil" EntitySet="TblUsuariosPorPerfil" />
-          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -461,7 +415,6 @@
           <EntitySet Name="TblPlanes" EntityType="Modelo.TblPlanes" />
           <EntitySet Name="TblPlanesTransacciones" EntityType="Modelo.TblPlanesTransacciones" />
           <EntitySet Name="TblUsuarios" EntityType="Modelo.TblUsuarios" />
-          <EntitySet Name="TblUsuariosPorPerfil" EntityType="Modelo.TblUsuariosPorPerfil" />
           <AssociationSet Name="FK_TblDocumentos_TblEmpresasResoluciones" Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones">
             <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
@@ -474,17 +427,9 @@
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
             <End Role="TblOpcionesUsuario" EntitySet="TblOpcionesUsuario" />
           </AssociationSet>
-          <AssociationSet Name="FK_TblUsuariosPorPerfil_TblPerfiles" Association="Modelo.FK_TblUsuariosPorPerfil_TblPerfiles">
-            <End Role="TblPerfiles" EntitySet="TblPerfiles" />
-            <End Role="TblUsuariosPorPerfil" EntitySet="TblUsuariosPorPerfil" />
-          </AssociationSet>
           <AssociationSet Name="FK_TblPlanesTransacciones_TblUsuarios" Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios">
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
             <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TblUsuariosPorPerfil_TblUsuarios" Association="Modelo.FK_TblUsuariosPorPerfil_TblUsuarios">
-            <End Role="TblUsuarios" EntitySet="TblUsuarios" />
-            <End Role="TblUsuariosPorPerfil" EntitySet="TblUsuariosPorPerfil" />
           </AssociationSet>
           <EntitySet Name="TblOpcionesPerfil" EntityType="Modelo.TblOpcionesPerfil" />
           <AssociationSet Name="FK_TblOpcionesPerfil_TblPerfiles" Association="Modelo.FK_TblOpcionesPerfil_TblPerfiles">
@@ -608,7 +553,6 @@
           <Property Name="StrDescripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntHabilitado" Type="Boolean" Nullable="false" />
           <Property Name="IntVisible" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="TblUsuariosPorPerfil" Relationship="Modelo.FK_TblUsuariosPorPerfil_TblPerfiles" FromRole="TblPerfiles" ToRole="TblUsuariosPorPerfil" />
           <NavigationProperty Name="TblOpcionesPerfil" Relationship="Modelo.FK_TblOpcionesPerfil_TblPerfiles" FromRole="TblPerfiles" ToRole="TblOpcionesPerfil" />
         </EntityType>
         <EntityType Name="TblPlanes">
@@ -668,21 +612,7 @@
           <Property Name="StrIdCambioClave" Type="Guid" />
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblUsuarios" FromRole="TblUsuarios" ToRole="TblOpcionesUsuario" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblUsuarios" FromRole="TblUsuarios" ToRole="TblPlanesTransacciones" />
-          <NavigationProperty Name="TblUsuariosPorPerfil" Relationship="Modelo.FK_TblUsuariosPorPerfil_TblUsuarios" FromRole="TblUsuarios" ToRole="TblUsuariosPorPerfil" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblUsuarios" ToRole="TblEmpresas" />
-        </EntityType>
-        <EntityType Name="TblUsuariosPorPerfil">
-          <Key>
-            <PropertyRef Name="IntIdPerfil" />
-            <PropertyRef Name="StrEmpresa" />
-            <PropertyRef Name="StrUsuario" />
-          </Key>
-          <Property Name="IntIdPerfil" Type="Int16" Nullable="false" />
-          <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrUsuario" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Activado" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="TblPerfiles" Relationship="Modelo.FK_TblUsuariosPorPerfil_TblPerfiles" FromRole="TblUsuariosPorPerfil" ToRole="TblPerfiles" />
-          <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuariosPorPerfil_TblUsuarios" FromRole="TblUsuariosPorPerfil" ToRole="TblUsuarios" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasResoluciones">
           <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="1" />
@@ -724,18 +654,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_TblUsuariosPorPerfil_TblPerfiles">
-          <End Type="Modelo.TblPerfiles" Role="TblPerfiles" Multiplicity="1" />
-          <End Type="Modelo.TblUsuariosPorPerfil" Role="TblUsuariosPorPerfil" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblPerfiles">
-              <PropertyRef Name="IntId" />
-            </Principal>
-            <Dependent Role="TblUsuariosPorPerfil">
-              <PropertyRef Name="IntIdPerfil" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TblPlanesTransacciones_TblUsuarios">
           <End Type="Modelo.TblUsuarios" Role="TblUsuarios" Multiplicity="1" />
           <End Type="Modelo.TblPlanesTransacciones" Role="TblPlanesTransacciones" Multiplicity="*" />
@@ -745,20 +663,6 @@
               <PropertyRef Name="StrUsuario" />
             </Principal>
             <Dependent Role="TblPlanesTransacciones">
-              <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TblUsuariosPorPerfil_TblUsuarios">
-          <End Type="Modelo.TblUsuarios" Role="TblUsuarios" Multiplicity="1" />
-          <End Type="Modelo.TblUsuariosPorPerfil" Role="TblUsuariosPorPerfil" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblUsuarios">
-              <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrUsuario" />
-            </Principal>
-            <Dependent Role="TblUsuariosPorPerfil">
               <PropertyRef Name="StrEmpresa" />
               <PropertyRef Name="StrUsuario" />
             </Dependent>
@@ -1060,16 +964,6 @@
                 <ScalarProperty Name="StrClave" ColumnName="StrClave" />
                 <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
                 <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TblUsuariosPorPerfil">
-            <EntityTypeMapping TypeName="Modelo.TblUsuariosPorPerfil">
-              <MappingFragment StoreEntitySet="TblUsuariosPorPerfil">
-                <ScalarProperty Name="Activado" ColumnName="Activado" />
-                <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
-                <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
-                <ScalarProperty Name="IntIdPerfil" ColumnName="IntIdPerfil" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
