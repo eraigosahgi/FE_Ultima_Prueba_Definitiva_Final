@@ -436,7 +436,7 @@ var TiposHabilitacion =
     [
         { ID: "0", Texto: 'VALIDA OBJETO' },
         { ID: "1", Texto: 'PRUEBAS' },
-        { ID: "99", Texto: 'PRODCUCCIÓN' }
+        { ID: "99", Texto: 'PRODUCCIÓN' }
     ];
 
 var TiposIdentificacion =
