@@ -112,6 +112,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 empresa = this.Add(empresa);
 
+                //Creacion de usuario generico 
+                Ctl_Usuario Usuario = new Ctl_Usuario();
+                Usuario.Crear(empresa);
+                //
+
                 return empresa;
             }
             catch (Exception excepcion)
