@@ -21,7 +21,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         }
     
         public short IntId { get; set; }
-        public string StrCodigo { get; set; }
         public string StrDescripcion { get; set; }
         public bool IntHabilitado { get; set; }
         public bool IntVisible { get; set; }
