@@ -79,6 +79,24 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 8110214384.
+        /// </summary>
+        public static string NitResolucionconPrefijo {
+            get {
+                return ResourceManager.GetString("NitResolucionconPrefijo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 811021438.
+        /// </summary>
+        public static string NitResolucionsinPrefijo {
+            get {
+                return ResourceManager.GetString("NitResolucionsinPrefijo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a HGInet Facturación Electrónica.
         /// </summary>
         public static string NombreRemitenteEmail {
@@ -102,6 +120,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         public static string PaginaRestablecerClave {
             get {
                 return ResourceManager.GetString("PaginaRestablecerClave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 9000000033394696.
+        /// </summary>
+        public static string ResolucionPruebas {
+            get {
+                return ResourceManager.GetString("ResolucionPruebas", resourceCulture);
             }
         }
         

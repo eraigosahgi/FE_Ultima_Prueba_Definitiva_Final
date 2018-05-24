@@ -18,13 +18,14 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData;
 using HGInetDIANServicios;
 using HGInetDIANServicios.DianResolucion;
+using HGInetMiFacturaElectonicaController.Properties;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
 	/// <summary>
 	/// Controlador para gestionar los documentos
 	/// </summary>
-	public class Ctl_Documentos
+	public partial class Ctl_Documentos
 	{
 		/// <summary>
 		/// Procesa una lista de documentos tipo Factura
@@ -35,9 +36,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		{
 			try
 			{
-				string resolucion_pruebas = "9000000033394696";
-
-
 				Ctl_Empresa Peticion = new Ctl_Empresa();
 
 				//Válida que la key sea correcta.
@@ -79,9 +77,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						SegundoNombre = null
 					};
 
+					//Valida que Resolucion tomar, con Prefijo o sin Prefijo
+					string resolucion_pruebas = string.Empty;
+					string nit_resolucion = string.Empty;
+					if (documentos.FirstOrDefault().Prefijo.Equals(string.Empty))
+					{
+						resolucion_pruebas = Constantes.ResolucionPruebas;
+						nit_resolucion = Constantes.NitResolucionsinPrefijo;
+					 
+					}
+					else
+					{
+						resolucion_pruebas = Constantes.ResolucionPruebas;
+						nit_resolucion = Constantes.NitResolucionconPrefijo;
+					}
+
+
 
 					Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
-					lista_resolucion.Add(_resolucion.Obtener(DatosObligado.Identificacion, resolucion_pruebas));
+					lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas));
 
 					foreach (var item in documentos)
 					{
@@ -177,7 +191,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					FechaRecepcion = fecha_actual,
 					FechaUltimoProceso = fecha_actual,
 					IdDocumento = Guid.NewGuid().ToString(),
-					Identificacion = documento_obj.DatosObligado.Identificacion,
+					Identificacion = documento_obj.DatosAdquiriente.Identificacion,
 					IdProceso = 1,
 					MotivoRechazo = "",
 					NumeroResolucion = numero_resolucion,
@@ -349,9 +363,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 										respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
 
-                                        documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
-                                        documentoBd = documento_tmp.Actualizar(documentoBd);
-                                    }
+										documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
+										documentoBd = documento_tmp.Actualizar(documentoBd);
+									}
 								}
 							}
 
@@ -359,7 +373,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento PDF. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-                            LogExcepcion.Guardar(excepcion);
+							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 						}
 
@@ -393,7 +407,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 							documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
-                            documentoBd = documento_tmp.Actualizar(documentoBd);
+							documentoBd = documento_tmp.Actualizar(documentoBd);
 						}
 						catch (Exception excepcion)
 						{
@@ -435,7 +449,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.FechaUltimoProceso = fecha_actual;
 							respuesta.IdProceso = 7;
 
-							acuse = Ctl_DocumentoDian.Enviar(documento_result,empresa);
+							acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
 						}
 						catch (Exception excepcion)
 						{
@@ -638,8 +652,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									email.Bienvenida(adquirienteBd, usuarioBd);
 								}
 
-								//envío de los documentos al Adquiriente
-								email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono);
+								if (empresa.IntHabilitacion < 99)
+								{
+									//envío de los documentos al Adquiriente
+									email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
+								}
+								else
+								{
+									//envío de los documentos al Adquiriente
+									email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono);
+								}
 
 								//Actualiza la respuesta
 								fecha_actual = Fecha.GetFecha();
@@ -684,9 +706,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns></returns>
 		public static List<DocumentoRespuesta> Procesar(List<NotaCredito> documentos)
 		{
-			string resolucion_pruebas = "9000000033394696";
-
-
+			
 			Ctl_Empresa Peticion = new Ctl_Empresa();
 
 			//Válida que la key sea correcta.
@@ -727,10 +747,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					PrimerNombre = null,
 					SegundoNombre = null
 				};
-
+				string resolucion_pruebas = Constantes.ResolucionPruebas;
+				string nit_resolucion = Constantes.NitResolucionsinPrefijo;
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
-				lista_resolucion.Add(_resolucion.Obtener(DatosObligado.Identificacion, resolucion_pruebas));
+				lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas));
 
 				foreach (var item in documentos)
 				{

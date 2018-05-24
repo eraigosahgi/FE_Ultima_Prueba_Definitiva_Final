@@ -125,6 +125,14 @@
     <value>noreply@hgi.com.co</value>
     <comment>email del remitente</comment>
   </data>
+  <data name="NitResolucionconPrefijo" xml:space="preserve">
+    <value>8110214384</value>
+    <comment>Nit de pruebas para Resolucion con Prefijo</comment>
+  </data>
+  <data name="NitResolucionsinPrefijo" xml:space="preserve">
+    <value>811021438</value>
+    <comment>Nit de pruebas para Resolucion sin Prefijo</comment>
+  </data>
   <data name="NombreRemitenteEmail" xml:space="preserve">
     <value>HGInet Facturación Electrónica</value>
     <comment>nombre del remitente.</comment>
@@ -136,6 +144,10 @@
   <data name="PaginaRestablecerClave" xml:space="preserve">
     <value>/Views/Login/RestablecerClave.aspx?id_seguridad={id_seguridad}</value>
     <comment>Ruta de redireccion página restablecer contraseña</comment>
+  </data>
+  <data name="ResolucionPruebas" xml:space="preserve">
+    <value>9000000033394696</value>
+    <comment>Numero de Resolución de Pruebas de HGI </comment>
   </data>
   <data name="RutaAccesoPlataforma" xml:space="preserve">
     <value>http://habilitacion.mifacturaenlinea.com.co</value>
