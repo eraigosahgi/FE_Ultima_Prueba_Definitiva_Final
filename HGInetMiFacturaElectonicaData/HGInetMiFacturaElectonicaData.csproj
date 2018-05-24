@@ -138,9 +138,6 @@
     <Compile Include="Modelo\TblUsuarios.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
-    <Compile Include="Modelo\TblUsuariosPorPerfil.cs">
-      <DependentUpon>ModeloDatos.tt</DependentUpon>
-    </Compile>
     <Compile Include="Parametros\CertificadoDigital.cs" />
     <Compile Include="Parametros\DataBaseServer.cs" />
     <Compile Include="Parametros\DianProveedor.cs" />
