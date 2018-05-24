@@ -76,11 +76,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 //Obtiene permisos del facturador.
                 if (datos_empresa.IntObligado)
-                    opciones_perfil = clase_permisos.ObtenerOpcionesPerfiles((short)Perfiles.Facturador);
+                    opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPerfiles((short)Perfiles.Facturador));
 
                 //Obtiene permisos del adquiriente.
                 if (datos_empresa.IntAdquiriente)
-                    opciones_perfil = clase_permisos.ObtenerOpcionesPerfiles((short)Perfiles.Adquiriente);
+                    opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPerfiles((short)Perfiles.Adquiriente));
 
                 List<TblOpcionesUsuario> opciones_usuario = new List<TblOpcionesUsuario>();
 
@@ -112,7 +112,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 if (opciones_usuario.Count > 0)
                 {
                     Ctl_OpcionesUsuario clase_opciones_usuario = new Ctl_OpcionesUsuario();
-                    clase_opciones_usuario.CrearOpciones(opciones_usuario);
+
+                    List<TblOpcionesUsuario> opciones_permisos = opciones_usuario.GroupBy(x => x.IntIdOpcion).Select(d => d.First()).ToList();
+
+                    clase_opciones_usuario.CrearOpciones(opciones_permisos);
                 }
             }
             catch (Exception excepcion)
