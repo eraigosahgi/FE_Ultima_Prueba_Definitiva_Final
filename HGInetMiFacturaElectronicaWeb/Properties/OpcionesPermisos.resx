@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActivacionSerial" xml:space="preserve">
+    <value>13223</value>
+    <comment>Opción de permiso para la consulta y activación de serial de la empresa</comment>
+  </data>
   <data name="ConsultaAcuseRecibo" xml:space="preserve">
     <value>1313</value>
     <comment>Opción de permiso para la consulta de acuses de recibo</comment>

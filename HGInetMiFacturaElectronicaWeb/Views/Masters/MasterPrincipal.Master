@@ -294,6 +294,8 @@
                                                                 <asp:HyperLink ID="link_13221" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresas.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta</span></asp:HyperLink></li>
                                                             <li runat="server" id="menu_13222">
                                                                 <asp:HyperLink ID="link_13222" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/GestionEmpresas.aspx"><i class="icon-file-plus2"></i><span style="margin: -10px">Gestión</span></asp:HyperLink></li>
+                                                            <li runat="server" id="menu_13223">
+                                                                <asp:HyperLink ID="link_13223" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresasSerial.aspx"><i class="icon-key"></i><span style="margin: -10px">Activación</span></asp:HyperLink></li>
                                                         </ul>
                                                     </li>
 
