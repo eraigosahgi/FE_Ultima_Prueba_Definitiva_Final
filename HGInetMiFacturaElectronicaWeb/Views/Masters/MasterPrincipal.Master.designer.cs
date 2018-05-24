@@ -337,7 +337,6 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.WebControls.HyperLink link_13222;
         
         /// <summary>
-<<<<<<< .mine
         /// Control menu_1323.
         /// </summary>
         /// <remarks>
@@ -392,8 +391,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.WebControls.HyperLink link_13232;
         
         /// <summary>
-||||||| .r350
-=======
+
         /// Control menu_13223.
         /// </summary>
         /// <remarks>
@@ -412,7 +410,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.WebControls.HyperLink link_13223;
         
         /// <summary>
->>>>>>> .r382
+
         /// Control lb_TituloPagina.
         /// </summary>
         /// <remarks>
