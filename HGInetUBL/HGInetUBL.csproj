@@ -727,6 +727,7 @@
     <Content Include="Dian_UBL_Recursos\DIAN.txt" />
     <Content Include="Xades\Xades-Scheme\xades_xmldsig-core-schema.txt" />
     <Compile Include="Xades\XAdESTimeStampType.cs" />
+    <Compile Include="XML\FacturaXml.Convertir.cs" />
     <Compile Include="XML\FacturaXML.cs" />
     <Compile Include="XML\ExtensionDian.cs" />
     <Compile Include="Namespaces\NamespacesXML.cs" />

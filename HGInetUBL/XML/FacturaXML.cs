@@ -20,7 +20,7 @@ using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetUBL
 {
-    public class FacturaXML
+    public partial class FacturaXML
     {
 
         /// <summary>
