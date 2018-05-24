@@ -66,6 +66,12 @@
     <Compile Include="Configuracion\Ctl_OpcionesUsuario.cs" />
     <Compile Include="Configuracion\Ctl_Permisos.cs" />
     <Compile Include="Configuracion\Ctl_Usuario.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.Dian.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.Factura.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.Formato.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.Mail.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.Validacion.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.Xml.cs" />
     <Compile Include="Properties\Constantes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

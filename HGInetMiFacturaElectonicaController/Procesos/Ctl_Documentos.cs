@@ -288,8 +288,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw excepcion;
 						}
 
+                        /*
+                        // genera el xml en ubl
+                        respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
 
-						// genera el xml en ubl
+                        if (respuesta.Error != null)
+                            if (!string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
+                                throw new ApplicationException(respuesta.Error.Mensaje);
+                        */
+
 						try
 						{
 							fecha_actual = Fecha.GetFecha();

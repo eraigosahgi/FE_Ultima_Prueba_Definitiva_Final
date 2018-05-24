@@ -1,0 +1,102 @@
+﻿using HGInetMiFacturaElectonicaController.Registros;
+using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
+using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.Objetos;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HGInetMiFacturaElectonicaController.Procesos
+{
+    public partial class Ctl_Documentos
+    {
+        /// <summary>
+        /// Genera el xml con la información del documento en formato UBL
+        /// </summary>
+        /// <param name="documento_obj">información del documento</param>
+        /// <param name="tipo_doc">tipo de documento</param>
+        /// <param name="resolucion">información de la resolución</param>
+        /// <param name="documentoBd">información del documento en base de datos</param>
+        /// <param name="empresa">información del facturador electrónico en base de datos</param>
+        /// <param name="respuesta">datos de respuesta del documento</param>
+        /// <param name="documento_result">información del proceso interno del documento</param>
+        /// <returns>información adicional de respuesta del documento</returns>
+        public static DocumentoRespuesta UblGenerar(object documento_obj, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+        {   
+            try
+            {
+                respuesta.DescripcionProceso = "Genera información en estandar UBL.";
+                respuesta.FechaUltimoProceso = Fecha.GetFecha();
+                respuesta.IdProceso = ProcesoEstado.UBL.GetHashCode();
+
+                //Actualiza documento en la Base de Datos
+                documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+                
+                Ctl_Documento documento_tmp = new Ctl_Documento();
+                documento_tmp.Actualizar(documentoBd);
+                
+                //Genera Ubl
+                if (tipo_doc == TipoDocumento.Factura)
+                    documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridad, (Factura)documento_obj, tipo_doc, empresa, resolucion);
+                else if (tipo_doc == TipoDocumento.NotaCredito)
+                    documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridad, (NotaCredito)documento_obj, tipo_doc, empresa, resolucion);
+
+            }
+            catch (Exception excepcion)
+            {
+                respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la generación del estandar UBL del documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+            }
+
+            return respuesta;
+        }
+
+        /// <summary>
+        /// Almacena físicamente la información del documento en xml en formato UBL
+        /// </summary>
+        /// <param name="documentoBd">información del documento en base de datos</param>
+        /// <param name="respuesta">datos de respuesta del documento</param>
+        /// <param name="documento_result">información del proceso interno del documento</param>
+        /// <returns>información adicional de respuesta del documento</returns>
+        public static DocumentoRespuesta UblGuardar(TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+        {
+            try
+            {
+                respuesta.DescripcionProceso = "Almacena el archivo XML con la información en estandar UBL.";
+                respuesta.FechaUltimoProceso = Fecha.GetFecha();
+                respuesta.IdProceso = ProcesoEstado.AlmacenaXML.GetHashCode();
+
+                // almacena el xml
+                documento_result = Ctl_Ubl.Almacenar(documento_result);
+
+                //Actualiza Documento en Base de Datos
+                documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+                Ctl_Documento documento_tmp = new Ctl_Documento();
+                documento_tmp.Actualizar(documentoBd);
+            }
+            catch (Exception excepcion)
+            {
+                respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+            }
+            return respuesta;
+        }
+
+        public static void UblFirmar()
+        { 
+            
+        }
+
+        public static void UblComprimir()
+        {
+
+        }
+
+
+    }
+}
