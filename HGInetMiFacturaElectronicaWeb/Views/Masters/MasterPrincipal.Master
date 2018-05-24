@@ -299,6 +299,16 @@
                                                         </ul>
                                                     </li>
 
+                                                    <li runat="server" id="menu_1323">
+                                                        <a href="#" class="has-ul legitRipple"><i class="icon-drawer-in"></i><span style="margin: -10px">Planes</span></a>
+                                                        <ul runat="server" id="ul_1323">
+                                                            <li runat="server" id="menu_13231">
+                                                                <asp:HyperLink ID="link_13231" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaPlanesTransacciones.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta</span></asp:HyperLink></li>
+                                                            <li runat="server" id="menu_13232">
+                                                                <asp:HyperLink ID="link_13232" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/GestionPlanesTransacciones.aspx"><i class=" icon-folder-plus"></i><span style="margin: -10px">Gestión</span></asp:HyperLink></li>
+                                                        </ul>
+                                                    </li>
+
                                                 </ul>
                                             </li>
                                             <!-- /Opciones Configuración -->

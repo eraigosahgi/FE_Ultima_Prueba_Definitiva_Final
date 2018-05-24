@@ -137,6 +137,10 @@
     <value>13221</value>
     <comment>Opción de permiso para la consulta de empresas</comment>
   </data>
+  <data name="ConsultaPlanesTransaccionales" xml:space="preserve">
+    <value>13232</value>
+    <comment>Opción de Permiso para la gestión de planes</comment>
+  </data>
   <data name="ConsultaUsuariosSistema" xml:space="preserve">
     <value>13211</value>
     <comment>Opción de permiso para la consulta de usuarios del sistema</comment>
@@ -148,6 +152,10 @@
   <data name="GestionEmpresasSistema" xml:space="preserve">
     <value>13222</value>
     <comment>Opción de permiso para la gestión de empresas</comment>
+  </data>
+  <data name="GestionPlanesTransaccionales" xml:space="preserve">
+    <value>13231</value>
+    <comment>Opción de Permiso para la consulta de planes </comment>
   </data>
   <data name="GestionUsuariosSistema" xml:space="preserve">
     <value>13212</value>

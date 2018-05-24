@@ -65,6 +65,7 @@
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
     <Compile Include="Configuracion\Ctl_OpcionesUsuario.cs" />
     <Compile Include="Configuracion\Ctl_Permisos.cs" />
+    <Compile Include="Configuracion\Ctl_Planes.cs" />
     <Compile Include="Configuracion\Ctl_Usuario.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Dian.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Factura.cs" />

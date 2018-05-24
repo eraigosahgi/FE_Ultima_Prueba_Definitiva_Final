@@ -1848,6 +1848,7 @@
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
     <Content Include="Scripts\Pages\ModalConsultaEmpresas.js" />
+    <Content Include="Scripts\Pages\PlanesTransacciones.js" />
     <Content Include="Scripts\Pages\Usuarios.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
@@ -2667,10 +2668,12 @@
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresasSerial.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
+    <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
     <Content Include="Views\Pages\GestionEmpresas.aspx" />
+    <Content Include="Views\Pages\GestionPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\GestionUsuarios.aspx" />
     <Content Include="Views\Pages\Inicio.aspx" />
     <Content Include="Views\Pages\ModalSerialEmpresa.aspx" />
@@ -2696,6 +2699,7 @@
     <Compile Include="Controllers\Services\FacturaController.cs" />
     <Compile Include="Controllers\Services\MaestrosEnumController.cs" />
     <Compile Include="Controllers\Services\Peticion.cs" />
+    <Compile Include="Controllers\Services\PlanesTransaccionesController.cs" />
     <Compile Include="Controllers\Services\UsuarioController.cs" />
     <Compile Include="Properties\OpcionesPermisos.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -2779,6 +2783,13 @@
     <Compile Include="Views\Pages\ConsultaEmpresas.aspx.designer.cs">
       <DependentUpon>ConsultaEmpresas.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ConsultaPlanesTransacciones.aspx.cs">
+      <DependentUpon>ConsultaPlanesTransacciones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaPlanesTransacciones.aspx.designer.cs">
+      <DependentUpon>ConsultaPlanesTransacciones.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ConsultaUsuarios.aspx.cs">
       <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2806,6 +2817,13 @@
     </Compile>
     <Compile Include="Views\Pages\GestionEmpresas.aspx.designer.cs">
       <DependentUpon>GestionEmpresas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\GestionPlanesTransacciones.aspx.cs">
+      <DependentUpon>GestionPlanesTransacciones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\GestionPlanesTransacciones.aspx.designer.cs">
+      <DependentUpon>GestionPlanesTransacciones.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\GestionUsuarios.aspx.cs">
       <DependentUpon>GestionUsuarios.aspx</DependentUpon>

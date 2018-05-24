@@ -337,6 +337,63 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.WebControls.HyperLink link_13222;
         
         /// <summary>
+<<<<<<< .mine
+        /// Control menu_1323.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl menu_1323;
+        
+        /// <summary>
+        /// Control ul_1323.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ul_1323;
+        
+        /// <summary>
+        /// Control menu_13231.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl menu_13231;
+        
+        /// <summary>
+        /// Control link_13231.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink link_13231;
+        
+        /// <summary>
+        /// Control menu_13232.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl menu_13232;
+        
+        /// <summary>
+        /// Control link_13232.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink link_13232;
+        
+        /// <summary>
+||||||| .r350
+=======
         /// Control menu_13223.
         /// </summary>
         /// <remarks>
@@ -355,6 +412,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.WebControls.HyperLink link_13223;
         
         /// <summary>
+>>>>>>> .r382
         /// Control lb_TituloPagina.
         /// </summary>
         /// <remarks>

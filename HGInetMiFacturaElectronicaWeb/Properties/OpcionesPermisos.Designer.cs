@@ -106,6 +106,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 13232.
+        /// </summary>
+        internal static string ConsultaPlanesTransaccionales {
+            get {
+                return ResourceManager.GetString("ConsultaPlanesTransaccionales", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 13211.
         /// </summary>
         internal static string ConsultaUsuariosSistema {
@@ -129,6 +138,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         internal static string GestionEmpresasSistema {
             get {
                 return ResourceManager.GetString("GestionEmpresasSistema", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 13231.
+        /// </summary>
+        internal static string GestionPlanesTransaccionales {
+            get {
+                return ResourceManager.GetString("GestionPlanesTransaccionales", resourceCulture);
             }
         }
         
