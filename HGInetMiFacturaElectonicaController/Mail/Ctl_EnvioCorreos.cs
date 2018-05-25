@@ -231,7 +231,7 @@ namespace HGInetMiFacturaElectonicaController
 						DestinatarioEmail destinatario = new DestinatarioEmail();
 						destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
 						if (string.IsNullOrWhiteSpace(nuevo_email))
-							destinatario.Email = destinatario.Email;
+							destinatario.Email = usuario.StrMail;
 						else
 							destinatario.Email = nuevo_email;
 
