@@ -3,55 +3,53 @@ var ModalEmpresasApp = angular.module('ModalEmpresasApp', ['dx']);
 var DatosEmpresa = false;
 
 //Controlador para gestionar la consulta de empresas
-ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalConsultaEmpresasController($scope, $http, $location) {    
-        $("#wait").show();
-        $http.get('/api/Empresas').then(function (response) {
-            $("#wait").hide();
-            DatosEmpresa = response.data;
-            $("#gridEmpresas").dxDataGrid({
-                dataSource: response.data,
-                paging: {
-                    pageSize: 10
-                },
-                pager: {
-                    showPageSizeSelector: true,
-                    allowedPageSizes: [5, 10, 20],
-                    showInfo: true
-                }
+ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalConsultaEmpresasController($scope, $http, $location) {
 
-                   , columns: [
+    $("#wait").show();
+    $http.get('/api/Empresas').then(function (response) {
+        $("#wait").hide();
+        DatosEmpresa = response.data;
+        $("#gridEmpresas").dxDataGrid({
+            dataSource: response.data,
+            paging: {
+                pageSize: 10
+            },
+            pager: {
+                showPageSizeSelector: true,
+                allowedPageSizes: [5, 10, 20],
+                showInfo: true
+            }
 
-                       {
-                           caption: "Identificacion",
-                           dataField: "Identificacion",
-                           cssClass: "col-md-3"
+               , columns: [
 
-                       },
-                       {
-                           caption: "Razón Social",
-                           dataField: "RazonSocial",
-                           cssClass: "col-md-7"
-                       },                     
-                       {
-                           caption: "",
-                           cssClass: "col-md-1 col-xs-2",
-                           cellTemplate: function (container, options) {
-                               $("<div style='text-align:center'>")
-                                   .append($("<a taget=_self class='icon-checkmark4' data-dismiss='modal' title='Seleccionar Empresa Asociada' onclick=ObtenerEmpresa('" + options.data.Identificacion + "')>"))
-                                   .appendTo(container);
-                           }
+               {
+                   caption: "Identificación",
+                   dataField: "Identificacion",
+                   cssClass: "col-md-3",
+                   cellTemplate: function (container, options) {
+                       $("<div style='text-align:left'>")
+                           .append($("<a taget=_self  data-dismiss='modal' title='Seleccionar Empresa' onclick=ObtenerEmpresa('" + options.data.Identificacion + "')>" + options.data.Identificacion + "</a>"))
+                           .appendTo(container);
+                   }
 
-                       }
-                   ],
-                filterRow: {
-                    visible: true
-                }
-            });
+               }
+                   ,
+                   {
+                       caption: "Razón Social",
+                       dataField: "RazonSocial",
+                       cssClass: "col-md-9"
+                   }
 
-        }, function errorCallback(response) {
-            $('#wait').hide();
-            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-        });    
+               ],
+            filterRow: {
+                visible: true
+            }
+        });
+
+    }, function errorCallback(response) {
+        $('#wait').hide();
+        DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+    });
 });
 //Funcion para asignar la Empresa Asociada
 function ObtenerEmpresa(Empresa) {
