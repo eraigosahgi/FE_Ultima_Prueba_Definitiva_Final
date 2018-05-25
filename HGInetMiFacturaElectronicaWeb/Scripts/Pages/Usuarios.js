@@ -148,7 +148,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         Datos_extension = "",
         Datos_celular = ""
     Datos_email = "",
-    Datos_cargo = "1",
+    Datos_cargo = "",
     Datos_empresa = "",
     Datos_estado = "",
     Datos_Tipo = "1";
@@ -260,7 +260,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         $("#txtemail").dxTextBox({
             onValueChanged: function (data) {
                 console.log("txtemail", data.value);
-                Datos_email = data.value.toUpperCase();
+                Datos_email = data.value;
             },
         })
         .dxValidator({
