@@ -72,7 +72,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             }, {
                 type: "stringLength",
                 max: 50,
-                message: "El numero de Identificación no puede ser mayor a 50 digitos"
+                min:6,
+                message: "El numero de Identificación no puede ser mayor a 50 digitos ni menor a 6"
             }, {
                 type: "numeric",
                 message: "El numero de Identificación debe ser numérico"
@@ -99,7 +100,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         $("#txtEmail").dxTextBox({
             onValueChanged: function (data) {
                 console.log("txtEmail", data.value);
-                Datos_Email = data.value.toUpperCase();
+                Datos_Email = data.value;
             }
         })
             .dxValidator({
@@ -126,18 +127,18 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             }
         });
 
-        $("#txtidentificciondev").dxTextBox({
-            onValueChanged: function (data) {
-                console.log("txtidentificciondev", data.value);
-                Datos_Email = data.value;
-            }
-        })
-        .dxValidator({
-            validationRules: [{
-                type: "required",
-                message: "Debe introducir el codigo del Facturador"
-            }]
-        });
+        //$("#txtidentificciondev").dxTextBox({
+        //    onValueChanged: function (data) {
+        //        console.log("txtidentificciondev", data.value);
+        //        Datos_Email = data.value;
+        //    }
+        //})
+        //.dxValidator({
+        //    validationRules: [{
+        //        type: "required",
+        //        message: "Debe introducir el codigo del Facturador"
+        //    }]
+        //});
 
 
         $("#Facturador").dxCheckBox({
@@ -311,7 +312,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
     function guardarEmpresa() {
         var empresa = null;
         var Asociada = "";
-        if (Datos_empresa_Asociada != null) {
+        if (Datos_empresa_Asociada != null && Datos_empresa_Asociada != "") {
             empresa = Datos_empresa_Asociada.split(' -- ');
             Asociada = empresa[0];
         } else {
