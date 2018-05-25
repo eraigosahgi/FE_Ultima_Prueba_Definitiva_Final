@@ -1,8 +1,10 @@
-﻿using HGInetMiFacturaElectonicaController.Registros;
+﻿using HGInetFirmaDigital;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
@@ -87,14 +89,80 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             return respuesta;
         }
 
-        public static void UblFirmar()
-        { 
-            
+        /// <summary>
+        /// Realiza el proceso de firmado del documento XML en estandar UBL
+        /// </summary>
+        /// <param name="documentoBd">información del documento en base de datos</param>
+        /// <param name="respuesta">datos de respuesta del documento</param>
+        /// <param name="documento_result">información del proceso interno del documento</param>
+        /// <returns>información adicional de respuesta del documento</returns>
+        public static DocumentoRespuesta UblFirmar(TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+        {
+            try
+            {
+                respuesta.DescripcionProceso = "Firma el archivo XML con la información en estandar UBL.";
+                respuesta.FechaUltimoProceso = Fecha.GetFecha();
+                respuesta.IdProceso = ProcesoEstado.FirmaXml.GetHashCode();
+
+                // obtiene la información de configuración del certificado digital
+                CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
+
+                // obtiene la empresa certificadora
+                EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
+
+                if (certificado.Certificadora.Equals("andes"))
+                    empresa_certificadora = EnumCertificadoras.Andes;
+                else if (certificado.Certificadora.Equals("gse"))
+                    empresa_certificadora = EnumCertificadoras.Gse;
+
+                // información del certificado digital
+                string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
+                documento_result = Ctl_Firma.Generar(ruta_certificado, certificado.Serial, certificado.Clave, empresa_certificadora, documento_result);
+
+                //Actualiza Documento en Base de Datos
+                documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
+                documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+                Ctl_Documento documento_tmp = new Ctl_Documento();
+                documentoBd = documento_tmp.Actualizar(documentoBd);
+            }
+            catch (Exception excepcion)
+            {
+                respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el firmado del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+            }
+            return respuesta;
         }
 
-        public static void UblComprimir()
+        /// <summary>
+        /// Comprime el documento XML en estandar UBL firmado
+        /// </summary>
+        /// <param name="documentoBd">información del documento en base de datos</param>
+        /// <param name="respuesta">datos de respuesta del documento</param>
+        /// <param name="documento_result">información del proceso interno del documento</param>
+        /// <returns>información adicional de respuesta del documento</returns>
+        public static DocumentoRespuesta UblComprimir(TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
         {
+            try
+            {
+                respuesta.DescripcionProceso = "Compresión del archivo XML firmado con la información en estandar UBL.";
+                respuesta.FechaUltimoProceso = Fecha.GetFecha();
+                respuesta.IdProceso = ProcesoEstado.CompresionXml.GetHashCode();
 
+                documento_result.NombreZip = Ctl_Compresion.Comprimir(documento_result);
+
+                //Actualiza Documento en Base de Datos
+                documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+                Ctl_Documento documento_tmp = new Ctl_Documento();
+                documento_tmp.Actualizar(documentoBd);
+            }
+            catch (Exception excepcion)
+            {
+                respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la compresión del documento UBL en XML firmado. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+            }
+            return respuesta;
         }
 
 

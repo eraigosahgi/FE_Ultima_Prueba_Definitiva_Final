@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaData.Modelo;
+﻿using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Objetos;
@@ -21,13 +22,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <param name="resolucion">información de la resolución</param>
         /// <param name="respuesta">datos de respuesta del documento</param>
         /// <returns>información adicional de respuesta del documento</returns>
-        public static DocumentoRespuesta Validar(object documento_obj, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, DocumentoRespuesta respuesta)
+        public static DocumentoRespuesta Validar(object documento_obj, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, ref DocumentoRespuesta respuesta)
         {
             try
             {
                 respuesta.DescripcionProceso = "Valida la información del documento.";
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
-                respuesta.IdProceso = 2;
+                respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
                 
                 if (tipo_doc == TipoDocumento.Factura)
                     documento_obj = Validar((Factura)documento_obj, resolucion);
@@ -42,5 +43,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             return respuesta;
         }
 
+        /// <summary>
+        /// Valida si la respuesta generó error 
+        /// </summary>
+        /// <param name="respuesta">información de respuesta</param>
+        public static void ValidarRespuesta(DocumentoRespuesta respuesta)
+        {
+            if (respuesta.Error != null)
+                if (!string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
+                    throw new ApplicationException(respuesta.Error.Mensaje);
+        }
     }
 }
