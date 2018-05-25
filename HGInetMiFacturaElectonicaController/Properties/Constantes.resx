@@ -165,6 +165,10 @@
     <value>emails\\plantilla_bienvenida_facturador.html</value>
     <comment>Ruta de la plantilla Html de envío bienvenida Obligado a facturar</comment>
   </data>
+  <data name="RutaPlantillaEnviarSerial" xml:space="preserve">
+    <value>emails\\plantilla_envio_serial.html</value>
+    <comment>Ruta de la plantilla Html de envío serial de activacion al facturador</comment>
+  </data>
   <data name="RutaPlantillaHtmlDocumentos" xml:space="preserve">
     <value>emails\\plantilla_documento.html</value>
     <comment>Ruta de la plantilla Html de envío de documentos</comment>

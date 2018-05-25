@@ -112,12 +112,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 empresa = this.Add(empresa);
 
-                //Creacion de usuario generico 
+				//Creacion de usuario generico 
+				TblUsuarios UsuarioBd = null;
                 Ctl_Usuario Usuario = new Ctl_Usuario();
-                Usuario.Crear(empresa);
-                //
+				UsuarioBd = Usuario.Crear(empresa);
 
-                return empresa;
+				//Envia correo de bienvenida al usuario creado
+				Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+
+				bool Enviarmail = Email.Bienvenida(empresa, UsuarioBd);
+
+				return empresa;
             }
             catch (Exception excepcion)
             {               
@@ -223,10 +228,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 Actualizar(EmpresaActualiza);
                 
-                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
-      
+                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();     
 
-                bool Enviarmail= Email.Bienvenida(EmpresaActualiza,Usuario );
+                bool Enviarmail= Email.EnviaSerial(EmpresaActualiza.StrIdentificacion,EmpresaActualiza.StrMail);
 
                 return EmpresaActualiza;
             }
