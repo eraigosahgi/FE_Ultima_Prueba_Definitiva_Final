@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Configuracion;
+﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -188,7 +189,27 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
 
+        /// <summary>
+        /// Envio de Email con Serial 
+        /// </summary>
+        /// <param name="codigo_empresa"></param>        
+        /// <param name="Email"></param>        
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult Post([FromUri]string Identificacion, [FromUri]string Mail)
+        {            
+            try
+            {                   
+                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+                bool Enviarmail = Email.EnviaSerial(Identificacion, Mail);
 
+                return Ok();                
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
     }
 
 }
