@@ -1,15 +1,123 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-
 var ModalSerialEmpresaApp = angular.module('ModalSerialEmpresaApp', []);
 
-var SerialEmpresaApp = angular.module('SerialEmpresaApp', ['ModalSerialEmpresaApp', 'dx']);
+var SerialEmpresaApp = angular.module('SerialEmpresaApp', ['ModalSerialEmpresaApp', 'dx', 'appsrvusuario']);
 
+//Servicio para gestionar la consulta de las empresas 
+angular.module("appsrvusuario", [])
+.factory("srvusuario", function ( $http) {
 
-//Controlador para gestionar la consulta de empresas
-SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaController($scope, $http, $location) {
+    var Scope = function () { }    
+    Scope.consulta = function () {    
+        $("#wait").show();
+        $http.get('/api/Empresas?Facturador=true').then(function (response) {
+            $("#wait").hide();
 
-    
+            $("#gridEmpresas").dxDataGrid({
+                dataSource: response.data,
+
+                paging: {
+                    pageSize: 20
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20],
+                    showInfo: true
+                }
+
+                   , columns: [
+                       {
+                           //href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'
+                           cssClass: "col-md-1 col-xs-2",
+                           cellTemplate: function (container, options) {
+                               if (options.data.Serial != "" && options.data.Serial != null) {
+                                   Scope.estilo = 'icon-mail-read';
+                               } else {
+                                   Scope.estilo = '1';
+                               };
+                               $("<div style='text-align:center'>")
+                                   .append(
+
+                                   $("<a class='icon-pencil3' data-toggle='modal' data-target='#modal_Serial_empresa' style='margin-left:12%; font-size:19px'></a>").dxButton({
+                                       onClick: function () {
+                                           Scope.email = options.data.Email;
+                                           $('#txtemail').dxTextBox({ value: Scope.email });
+                                           $("#txtemail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
+
+                                           Scope.nitEmpresa = options.data.Identificacion;
+                                           $('#txtnitEmpresa').dxTextBox({ value: Scope.nitEmpresa });
+                                           $("#txtnitEmpresa").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
+
+                                           Scope.nombre = options.data.RazonSocial;
+                                           $('#txtnombre').dxTextBox({ value: Scope.nombre });
+                                           $("#txtnombre").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
+
+                                           $("#txtResolucion").dxTextBox({ value: options.data.Resolucion });
+                                           $("#txtSerial").dxTextBox({ value: options.data.Serial });
+
+                                       }
+                                   }).removeClass("dx-button dx-button-normal dx-widget")
+                                   ///Envio de Mail                               
+                                   , $("<a class=" + Scope.estilo + " data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>").dxButton({
+                                       onClick: function () {
+                                           Scope.showModal = true;
+                                           email_destino = options.data.Email;
+                                           Scope.indetificacion = options.data.Identificacion;
+                                           $('#txtnitEmpresamail').dxTextBox({ value: options.data.Identificacion });
+                                           $("#txtnitEmpresamail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
+
+                                           Scope.serial = options.data.Serial;
+                                           $("#txtserialmail").dxTextBox({ value: options.data.Serial });
+                                           $("#txtserialmail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
+
+                                           $('#txtnombremail').dxTextBox({ value: options.data.RazonSocial });
+                                           $("#txtnombremail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
+
+                                           Scope.mail = email_destino;
+                                           $('input:text[name=EmailDestino]').val(email_destino);
+                                       }
+                                   }).removeClass("dx-button dx-button-normal dx-widget")
+                                   ).appendTo(container);
+                           }
+                       },
+
+                       {
+                           caption: "Identificacion",
+                           dataField: "Identificacion"
+                       },
+                       {
+                           caption: "Razón Social",
+                           dataField: "RazonSocial"
+                       },
+                       {
+                           caption: "Email",
+                           dataField: "Email"
+                       },
+                       {
+                           caption: "Serial",
+                           dataField: "Serial"
+                       },
+                       {
+                           caption: "Resolución",
+                           dataField: "Resolucion"
+                       }
+                   ],
+                filterRow: {
+                    visible: true
+                }
+            });
+
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+    }
+    return Scope;
+});
+
+//Controlador para gestionar el envio del Email con el serial desde el nuevo modal
+SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaController($scope, $http, $location, srvusuario) {
     
     //Formulario.
     $scope.formOptionsEmailEnvio = {
@@ -81,46 +189,46 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
                 }
 
                 var data = $.param({                                                           
-                    Identificacion: $scope.indetificacion,
-                    Mail: $scope.mail
+                    Identificacion: srvusuario.indetificacion,
+                    Mail: email_destino
                 });
                 if ($scope.serial == "") {
                     DevExpress.ui.notify("No se puede enviar email si no posee Serial", 'error', 10000);
                 }else{
-                $('#wait').show();
-                $http.post('/api/Empresas?'+ data).then(function (responseEnvio) {
-                    $('#wait').hide();
-                    var respuesta = responseEnvio.statusText;
+                    $('#wait').show();
+                    $http.post('/api/Empresas?'+ data).then(function (responseEnvio) {
+                        $('#wait').hide();
+                        var respuesta = responseEnvio.statusText;
 
-                    if (respuesta) {
-                        swal({
-                            title: 'Proceso Éxitoso',
-                            text: 'Se ha enviado el email a la siguiente dirección : ' + $scope.mail + ' con exito',
-                            type: 'success',
-                            confirmButtonColor: '#66BB6A',
-                            confirmButtonTex: 'Aceptar',
-                            animation: 'pop',
-                            html: true,
-                        });
-                    } else {
-                        swal({
-                            title: 'Error',
-                            text: 'Ocurrió un error en el envío del e-mail.',
-                            type: 'Error',
-                            confirmButtonColor: '#66BB6A',
-                            confirmButtonTex: 'Aceptar',
-                            animation: 'pop',
-                            html: true,
-                        });
-                    }
-                    $('input:text[name=EmailDestino]').val("");
-                    $("#modal_enviar_email").removeClass("modal fade in").addClass("modal fade");
-                    $('.modal-backdrop').remove();
+                        if (respuesta) {
+                            swal({
+                                title: 'Proceso Éxitoso',
+                                text: 'Se ha enviado el Serial a la siguiente dirección : ' + email_destino + ' con exito',
+                                type: 'success',
+                                confirmButtonColor: '#66BB6A',
+                                confirmButtonTex: 'Aceptar',
+                                animation: 'pop',
+                                html: true,
+                            });
+                        } else {
+                            swal({
+                                title: 'Error',
+                                text: 'Ocurrió un error en el envío del e-mail.',
+                                type: 'Error',
+                                confirmButtonColor: '#66BB6A',
+                                confirmButtonTex: 'Aceptar',
+                                animation: 'pop',
+                                html: true,
+                            });
+                        }
+                        $('input:text[name=EmailDestino]').val("");
+                        $("#modal_enviar_email").removeClass("modal fade in").addClass("modal fade");
+                        $('.modal-backdrop').remove();
 
-                }, function errorCallback(response) {
-                    $('#wait').hide();
-                    DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
-                });
+                    }, function errorCallback(response) {
+                        $('#wait').hide();
+                        DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
+                    });
                 }
             } catch (e) {
                 $('#wait').hide();
@@ -130,114 +238,11 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
     };
 
 
-
-    $("#wait").show();
-    $http.get('/api/Empresas?Facturador=true').then(function (response) {
-        $("#wait").hide();
-
-        $("#gridEmpresas").dxDataGrid({
-            dataSource: response.data,
-
-            paging: {
-                pageSize: 20
-            },
-            pager: {
-                showPageSizeSelector: true,
-                allowedPageSizes: [5, 10, 20],
-                showInfo: true
-            }
-
-               , columns: [
-                   {
-                       //href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'
-                       cssClass: "col-md-1 col-xs-2",
-                       cellTemplate: function (container, options) {
-                           if (options.data.Serial != "" && options.data.Serial != null) {
-                               $scope.estilo = 'icon-mail-read';
-                           } else {
-                               $scope.estilo = '1';
-                           };
-                           $("<div style='text-align:center'>")
-                               .append(
-
-                               $("<a class='icon-pencil3' data-toggle='modal' data-target='#modal_Serial_empresa' style='margin-left:12%; font-size:19px'></a>").dxButton({
-                                   onClick: function () {
-                                       $scope.email = options.data.Email;
-                                       $('#txtemail').dxTextBox({ value: $scope.email });
-                                       $("#txtemail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
-
-                                       $scope.nitEmpresa = options.data.Identificacion;
-                                       $('#txtnitEmpresa').dxTextBox({ value: $scope.nitEmpresa });
-                                       $("#txtnitEmpresa").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
-
-                                       $scope.nombre = options.data.RazonSocial;
-                                       $('#txtnombre').dxTextBox({ value: $scope.nombre });
-                                       $("#txtnombre").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
-
-                                       $("#txtResolucion").dxTextBox({ value: options.data.Resolucion });
-                                       $("#txtSerial").dxTextBox({ value: options.data.Serial });
-
-                                   }
-                               }).removeClass("dx-button dx-button-normal dx-widget")
-                               ///Envio de Mail                               
-                               , $("<a class=" + $scope.estilo + " data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>").dxButton({
-                                   onClick: function () {
-                                       $scope.showModal = true;
-                                       email_destino = options.data.Email;
-                                       $scope.indetificacion = options.data.Identificacion;
-                                       $('#txtnitEmpresamail').dxTextBox({ value: options.data.Identificacion });
-                                       $("#txtnitEmpresamail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
-
-                                       $scope.serial = options.data.Serial;
-                                       $("#txtserialmail").dxTextBox({ value: options.data.Serial });
-                                       $("#txtserialmail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
-
-                                       $('#txtnombremail').dxTextBox({ value: options.data.RazonSocial });
-                                       $("#txtnombremail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
-
-                                       $scope.mail = email_destino;
-                                       $('input:text[name=EmailDestino]').val(email_destino);
-                                   }
-                               }).removeClass("dx-button dx-button-normal dx-widget")
-                               ).appendTo(container);
-                       }
-                   },
-
-                   {
-                       caption: "Identificacion",
-                       dataField: "Identificacion"
-                   },
-                   {
-                       caption: "Razón Social",
-                       dataField: "RazonSocial"
-                   },
-                   {
-                       caption: "Email",
-                       dataField: "Email"
-                   },
-                   {
-                       caption: "Serial",
-                       dataField: "Serial"
-                   },
-                   {
-                       caption: "Resolución",
-                       dataField: "Resolucion"
-                   }
-               ],
-            filterRow: {
-                visible: true
-            }
-        });
-
-    }, function errorCallback(response) {
-        $('#wait').hide();
-        DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-    });
-
+     $scope.consulta = srvusuario.consulta();
 });
 
-
-ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalSerialEmpresaController($scope, $http, $location) {
+//Controlador para gestion el registro del serial
+ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalSerialEmpresaController($scope, $http, $location, srvusuario) {
 
     var Datos_Resolucion = "", Datos_Serial = "", Datos_correo = "";
 
@@ -288,12 +293,20 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
 
 
 
-        $("#txtnitEmpresa").dxTextBox({
+        $("#txtnitEmpresa").dxTextBox({            
             readOnly: true,
+            onValueChanged: function (data) {
+                console.log("NitEmpresa", data.value);
+                $scope.nitEmpresa = data.value;
+            }
         });
 
         $("#txtemail").dxTextBox({
             readOnly: true,
+            onValueChanged: function (data) {
+                console.log("txtSerial", data.value);
+                $scope.email = data.value;
+            }
         });
         $("#txtnombre").dxTextBox({
             readOnly: true,
@@ -338,7 +351,8 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
                     DevExpress.ui.notify({ message: "Se ha enviado un correo a " + $scope.email + " ", position: { my: "center top", at: "center top" } }, "success", 6000);
                     $("#btnActivar").hide();
                     $("#btncancelar").hide();
-                    setTimeout(IrAConsulta, 6000);
+                    $scope.consulta = srvusuario.consulta();
+                    setTimeout(IrAConsulta, 2000);
                 } catch (err) {
                     DevExpress.ui.notify(err.message, 'error', 3000);
                 }
@@ -365,7 +379,6 @@ function IrAConsulta() {
     Datos_Resolucion = '';
     Datos_Serial = ''
 }
-
 
 //Funcion para Buscar el indice el Array de los objetos, segun el id de base de datos
 function BuscarID(miArray, ID) {
