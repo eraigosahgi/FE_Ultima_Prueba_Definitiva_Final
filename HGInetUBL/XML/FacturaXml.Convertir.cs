@@ -34,6 +34,7 @@ namespace HGInetUBL
 			Adquiriente.Identificacion = factura_ubl.AccountingCustomerParty.Party.PartyIdentification[0].ID.Value;
 			Adquiriente.TipoPersona = Convert.ToInt16(factura_ubl.AccountingCustomerParty.AdditionalAccountID.Value);
 			Adquiriente.Regimen = Convert.ToInt16(factura_ubl.AccountingCustomerParty.Party.PartyTaxScheme[0].TaxLevelCode.Value);
+			//Adquiriente.TipoIdentificacion = factura_ubl.AccountingCustomerParty.Party.PartyIdentification
 
 
 			return factura_obj;

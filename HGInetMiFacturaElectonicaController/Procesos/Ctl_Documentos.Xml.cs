@@ -52,7 +52,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             catch (Exception excepcion)
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la generación del estandar UBL del documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-            }
+				LogExcepcion.Guardar(excepcion);
+			}
 
             return respuesta;
         }
@@ -85,7 +86,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             catch (Exception excepcion)
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-            }
+				LogExcepcion.Guardar(excepcion);
+			}
             return respuesta;
         }
 
@@ -130,7 +132,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             catch (Exception excepcion)
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el firmado del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-            }
+				LogExcepcion.Guardar(excepcion);
+			}
             return respuesta;
         }
 
@@ -161,7 +164,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             catch (Exception excepcion)
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la compresión del documento UBL en XML firmado. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-            }
+				LogExcepcion.Guardar(excepcion);
+			}
             return respuesta;
         }
 

@@ -54,12 +54,13 @@ namespace HGInetDIANServicios
                     DianFactura.EnvioFacturaElectronicaRespuesta respuesta = cliente.EnvioFacturaElectronica(peticion);
 
                     acuse = respuesta.EnvioFacturaElectronicaRespuesta1;
-                }
+					
+				}
                 catch (Exception e)
                 {
                     // valida si la excepción es diferente de serializar para lanzarla
                     if (!e.Message.Contains("deserializar") && !e.StackTrace.Contains("XmlSerializer") && !e.Message.Contains("Security") && !e.StackTrace.Contains("Security"))
-                        throw e;
+                        throw new ApplicationException(e.Message, e.InnerException);
                 }
                 finally
                 {

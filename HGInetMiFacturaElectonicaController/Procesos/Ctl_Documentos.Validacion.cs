@@ -2,6 +2,7 @@
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             catch (Exception excepcion)
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la validación del documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-            }
+				LogExcepcion.Guardar(excepcion);
+			}
             return respuesta;
         }
 

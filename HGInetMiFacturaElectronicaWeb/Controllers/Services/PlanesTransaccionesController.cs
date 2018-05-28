@@ -32,7 +32,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 TblPlanesTransacciones objeto_creacion = new TblPlanesTransacciones();
                 objeto_creacion.IntTipoProceso = IntTipoProceso;
-                objeto_creacion.StrEmpresa = StrEmpresa;
+                //objeto_creacion.StrEmpresa = StrEmpresa;
                 objeto_creacion.StrUsuario = StrUsuario;
                 objeto_creacion.IntNumTransaccCompra = IntNumTransaccCompra;
                 objeto_creacion.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
