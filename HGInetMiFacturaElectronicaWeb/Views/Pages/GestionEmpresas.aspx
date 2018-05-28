@@ -69,7 +69,7 @@
                                     </div>
 
                                     
-                                    <div class="col-md-12">
+                                    <div >
                                         <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observacaciones:</label>
                                         <div id="txtobservaciones"></div>
                                     </div>
