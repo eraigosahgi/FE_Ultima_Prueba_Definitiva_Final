@@ -292,6 +292,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             tbl_empresa.DatFechaIngreso = Fecha.GetFecha();
             tbl_empresa.IntAdquiriente = true;
             tbl_empresa.IntObligado = false;
+			tbl_empresa.IntHabilitacion = 0;
             tbl_empresa.DatFechaActualizacion = Fecha.GetFecha();
             tbl_empresa.StrIdSeguridad = Guid.NewGuid();
 
