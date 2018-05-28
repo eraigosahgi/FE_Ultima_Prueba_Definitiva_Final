@@ -23,17 +23,18 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public System.Guid StrIdSeguridad { get; set; }
         public System.DateTime DatFecha { get; set; }
         public byte IntTipoProceso { get; set; }
-        public string StrEmpresa { get; set; }
-        public string StrUsuario { get; set; }
-        public short IntNumTransaccCompra { get; set; }
-        public short IntNumTransaccProcesadas { get; set; }
+        public string StrEmpresaFacturador { get; set; }
+        public int IntNumTransaccCompra { get; set; }
+        public int IntNumTransaccProcesadas { get; set; }
         public decimal IntValor { get; set; }
         public bool BitProcesada { get; set; }
         public string StrObservaciones { get; set; }
+        public string StrEmpresaUsuario { get; set; }
+        public string StrUsuario { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
-        public virtual TblUsuarios TblUsuarios { get; set; }
         public virtual TblEmpresas TblEmpresas { get; set; }
+        public virtual TblUsuarios TblUsuarios { get; set; }
     }
 }
