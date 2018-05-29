@@ -56,6 +56,9 @@ namespace HGInetFacturaEServicios
 				{
 					if (item == null)
 						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioNotaDebito.NotaDebito"));
+					
+					if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
+						throw new Exception("El detalle del documento es inválido.");
 
 					item.DataKey = dataKey;
 				}

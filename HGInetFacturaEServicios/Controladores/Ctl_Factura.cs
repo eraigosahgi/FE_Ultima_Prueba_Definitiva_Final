@@ -54,8 +54,11 @@ namespace HGInetFacturaEServicios
 				foreach (ServicioFactura.Factura item in documentos_envio)
 				{
 					if (item == null)
-						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioFactura.Factura")); 
+						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioFactura.Factura"));
 						
+					if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
+						throw new Exception("El detalle del documento es inválido.");
+
 					item.DataKey = dataKey;
 				}
 
