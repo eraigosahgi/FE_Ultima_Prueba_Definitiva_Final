@@ -35,20 +35,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public TblEmpresas Validar(string datakey, string identificacion_obligado)
         {
             TblEmpresas datos = (from item in context.TblEmpresas
-                         where item.StrIdentificacion.Equals(identificacion_obligado)
-                         select item).FirstOrDefault();
+                                 where item.StrIdentificacion.Equals(identificacion_obligado)
+                                 select item).FirstOrDefault();
 
             if (datos != null)
             {
-               
-				string datakey_construido = datos.StrSerial.ToString() + datos.StrIdentificacion.ToString();
-				string datakey_encriptado = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
 
-				string datakey_construido_may = datos.StrSerial.ToString().ToUpper() + datos.StrIdentificacion.ToString();
-				string datakey_encriptado_may = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido_may);
+                string datakey_construido = datos.StrSerial.ToString() + datos.StrIdentificacion.ToString();
+                string datakey_encriptado = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
+
+                string datakey_construido_may = datos.StrSerial.ToString().ToUpper() + datos.StrIdentificacion.ToString();
+                string datakey_encriptado_may = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido_may);
 
 
-				if (datakey_encriptado.Equals(datakey) || datakey_encriptado_may.Equals(datakey))
+                if (datakey_encriptado.Equals(datakey) || datakey_encriptado_may.Equals(datakey))
                     return datos;
 
             }
@@ -64,11 +64,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <returns></returns>
         public TblEmpresas Obtener(string identificacion)
         {
-            
-                var datos = (from item in context.TblEmpresas
-                             where item.StrIdentificacion.Equals(identificacion)
-                             select item).FirstOrDefault(); 
-                return datos;            
+
+            var datos = (from item in context.TblEmpresas
+                         where item.StrIdentificacion.Equals(identificacion)
+                         select item).FirstOrDefault();
+            return datos;
         }
 
         /// <summary>
@@ -78,16 +78,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <returns></returns>
         public TblEmpresas Guardar(TblEmpresas empresa)
         {
-            try{
+            try
+            {
 
                 TblEmpresas ConsultaEmpresa = Obtener(empresa.StrIdentificacion);
-                if (ConsultaEmpresa!=null)
-                    throw new ApplicationException("La empresa :  " +  ConsultaEmpresa.StrRazonSocial  + " ya existe" );
+                if (ConsultaEmpresa != null)
+                    throw new ApplicationException("La empresa :  " + ConsultaEmpresa.StrRazonSocial + " ya existe");
 
                 if (empresa == null)
                     throw new ApplicationException("La empresa es incorrecta!, Error");
-                
-                if (String.IsNullOrEmpty(empresa.StrTipoIdentificacion))                
+
+                if (String.IsNullOrEmpty(empresa.StrTipoIdentificacion))
                     throw new ApplicationException("Debe ingresar el Tipo de Identificación");
 
                 if (String.IsNullOrEmpty(empresa.StrIdentificacion))
@@ -99,9 +100,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 if (String.IsNullOrEmpty(empresa.StrMail))
                     throw new ApplicationException("Debe ingresar el Email");
 
-                if (empresa.IntAdquiriente==false && empresa.IntObligado==false)
+                if (empresa.IntAdquiriente == false && empresa.IntObligado == false)
                     throw new ApplicationException("Debe Indicar el Perfil");
-                                               
+
 
                 empresa.IntIdentificacionDv = FuncionesIdentificacion.Dv(empresa.StrIdentificacion);
 
@@ -125,10 +126,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				return empresa;
             }
             catch (Exception excepcion)
-            {               
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);               
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
-           
+
         }
 
         /// <summary>
@@ -140,7 +141,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             try
             {
-              
+
                 if (empresa == null)
                     throw new ApplicationException("La empresa es incorrecta!, Error");
 
@@ -160,12 +161,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 //    throw new ApplicationException("Debe Indicar el Perfil");
 
                 TblEmpresas EmpresaActualiza = (from item in context.TblEmpresas
-                         where item.StrIdentificacion.Equals(empresa.StrIdentificacion)
-                         select item).FirstOrDefault();
+                                                where item.StrIdentificacion.Equals(empresa.StrIdentificacion)
+                                                select item).FirstOrDefault();
 
                 if (EmpresaActualiza == null)
                     throw new ApplicationException("La empresa que desea Actualizar no Existe");
-                
+
                 EmpresaActualiza.StrRazonSocial = empresa.StrRazonSocial;
                 EmpresaActualiza.StrMail = empresa.StrMail;
                 EmpresaActualiza.IntAdquiriente = empresa.IntAdquiriente;
@@ -178,6 +179,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 empresa.DatFechaActualizacion = Fecha.GetFecha();
 
                 Actualizar(EmpresaActualiza);
+
+                //Obtiene el usuario principal de la empresa.
+                Ctl_Usuario clase_usuario = new Ctl_Usuario();
+                TblUsuarios usuario_principal = clase_usuario.ObtenerUsuarios(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrIdentificacion).FirstOrDefault();
+                //Valida los permisos del usuario y los actualiza
+                clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, usuario_principal);
 
                 return EmpresaActualiza;
             }
@@ -194,14 +201,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <param name="Codigo_Serial"></param>
         /// <param name="Codigo_Resolucion"></param> 
         /// <returns></returns>
-        public TblEmpresas Editar(string Identificacion,string Serial, string Resolucion)
+        public TblEmpresas Editar(string Identificacion, string Serial, string Resolucion)
         {
             try
             {
 
                 if (String.IsNullOrEmpty(Identificacion) || string.IsNullOrEmpty(Serial) || string.IsNullOrEmpty(Resolucion))
                     throw new ApplicationException("Los datos estan incompletos");
-                
+
 
                 TblEmpresas EmpresaActualiza = (from item in context.TblEmpresas
                                                 where item.StrIdentificacion.Equals(Identificacion)
@@ -216,15 +223,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 List<TblUsuarios> lUsuario = new List<TblUsuarios>();
 
-                lUsuario = clUsuario.ObtenerUsuarios(EmpresaActualiza.StrIdentificacion,EmpresaActualiza.StrIdentificacion);
+                lUsuario = clUsuario.ObtenerUsuarios(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrIdentificacion);
 
-                if (lUsuario.Count<1)
+                if (lUsuario.Count < 1)
                     throw new ApplicationException("La empresa no se puede activar ya que no posee ningun usuario asociado");
 
-                TblUsuarios Usuario = lUsuario.FirstOrDefault();                
+                TblUsuarios Usuario = lUsuario.FirstOrDefault();
 
                 EmpresaActualiza.StrSerial = Serial.Trim();
-                EmpresaActualiza.StrResolucionDian = Resolucion.Trim();                
+                EmpresaActualiza.StrResolucionDian = Resolucion.Trim();
 
                 Actualizar(EmpresaActualiza);
                 
@@ -308,7 +315,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public List<TblEmpresas> ObtenerTodas()
         {
             List<TblEmpresas> datos = (from item in context.TblEmpresas
-                         select item).ToList();
+                                       select item).ToList();
 
             return datos;
         }
@@ -320,7 +327,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public List<TblEmpresas> ObtenerFacturadores()
         {
             List<TblEmpresas> datos = (from item in context.TblEmpresas
-                                       where item.IntObligado.Equals(true)  && item.IntHabilitacion==99
+                                       where item.IntObligado.Equals(true) && item.IntHabilitacion == 99
                                        select item).ToList();
 
             return datos;

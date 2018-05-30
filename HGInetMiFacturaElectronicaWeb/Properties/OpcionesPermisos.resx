@@ -118,47 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ActivacionSerial" xml:space="preserve">
-    <value>13223</value>
-    <comment>Opción de permiso para la consulta y activación de serial de la empresa</comment>
+    <value>1323</value>
   </data>
   <data name="ConsultaAcuseRecibo" xml:space="preserve">
     <value>1313</value>
-    <comment>Opción de permiso para la consulta de acuses de recibo</comment>
   </data>
   <data name="ConsultaDocumentosAdquiriente" xml:space="preserve">
     <value>1312</value>
-    <comment>Opción de permiso para la consulta de documentos por adquiriente</comment>
   </data>
   <data name="ConsultaDocumentosFacturador" xml:space="preserve">
     <value>1311</value>
-    <comment>Opción de permiso para la consulta de documentos por obligado</comment>
   </data>
-  <data name="ConsultaEmpresasSistema" xml:space="preserve">
-    <value>13221</value>
-    <comment>Opción de permiso para la consulta de empresas</comment>
-  </data>
-  <data name="ConsultaPlanesTransaccionales" xml:space="preserve">
-    <value>13232</value>
-    <comment>Opción de Permiso para la gestión de planes</comment>
-  </data>
-  <data name="ConsultaUsuariosSistema" xml:space="preserve">
-    <value>13211</value>
-    <comment>Opción de permiso para la consulta de usuarios del sistema</comment>
+  <data name="Empresas" xml:space="preserve">
+    <value>1322</value>
   </data>
   <data name="FacturacionElectronicaPrincipal" xml:space="preserve">
     <value>13</value>
-    <comment>Opción de permiso para la raíz del aplicativo</comment>
   </data>
-  <data name="GestionEmpresasSistema" xml:space="preserve">
-    <value>13222</value>
-    <comment>Opción de permiso para la gestión de empresas</comment>
+  <data name="PlanesTransacciones" xml:space="preserve">
+    <value>1324</value>
   </data>
-  <data name="GestionPlanesTransaccionales" xml:space="preserve">
-    <value>13231</value>
-    <comment>Opción de Permiso para la consulta de planes </comment>
-  </data>
-  <data name="GestionUsuariosSistema" xml:space="preserve">
-    <value>13212</value>
-    <comment>Opción de permiso para la gestión de usuarios</comment>
+  <data name="Usuarios" xml:space="preserve">
+    <value>1321</value>
   </data>
 </root>

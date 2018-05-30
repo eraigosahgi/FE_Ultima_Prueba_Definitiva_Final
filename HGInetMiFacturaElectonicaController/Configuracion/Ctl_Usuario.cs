@@ -71,16 +71,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             try
             {
-                Ctl_Permisos clase_permisos = new Ctl_Permisos();
+                Ctl_OpcionesPerfil clase_permisos = new Ctl_OpcionesPerfil();
                 List<TblOpcionesPerfil> opciones_perfil = new List<TblOpcionesPerfil>();
 
                 //Obtiene permisos del facturador.
                 if (datos_empresa.IntObligado)
-                    opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPerfiles((short)Perfiles.Facturador));
+                    opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Facturador));
 
                 //Obtiene permisos del adquiriente.
                 if (datos_empresa.IntAdquiriente)
-                    opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPerfiles((short)Perfiles.Adquiriente));
+                    opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Adquiriente));
 
                 List<TblOpcionesUsuario> opciones_usuario = new List<TblOpcionesUsuario>();
 
@@ -260,6 +260,75 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
+
+        /// <summary>
+        /// Valida los permisos del usuario y los actualiza.
+        /// </summary>
+        /// <param name="datos_empresa"></param>
+        /// <param name="datos_usuario"></param>
+        public void ValidarPermisosUsuario(TblEmpresas datos_empresa, TblUsuarios datos_usuario)
+        {
+            List<TblOpcionesPerfil> opciones_perfil = new List<TblOpcionesPerfil>();
+            List<TblOpcionesUsuario> opciones_usuario_bd = new List<TblOpcionesUsuario>();
+            Ctl_OpcionesUsuario clase_opc_usuarios = new Ctl_OpcionesUsuario();
+            Ctl_OpcionesPerfil clase_permisos = new Ctl_OpcionesPerfil();
+            Ctl_OpcionesUsuario clase_opc_usuario = new Ctl_OpcionesUsuario();
+            List<TblOpcionesUsuario> opciones_grabar = new List<TblOpcionesUsuario>();
+
+            //Obtiene las opciones del usuario en base de datos
+            opciones_usuario_bd = clase_opc_usuario.ObtenerOpcionesUsuarios(datos_usuario.StrUsuario, datos_usuario.StrEmpresa);
+
+            //Obtiene permisos del facturador.
+            if (datos_empresa.IntObligado)
+                opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Facturador));
+
+            //Obtiene permisos del adquiriente.
+            if (datos_empresa.IntAdquiriente)
+                opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Adquiriente));
+
+            opciones_perfil = opciones_perfil.GroupBy(x => x.IntIdOpcion).Select(d => d.First()).ToList();
+
+            //Recorre las opciones de base de datos y valida si estan contenidas en las opciones por perfil
+            //sino estan contenidas las elimina
+            foreach (var item_bd in opciones_usuario_bd)
+            {
+                TblOpcionesPerfil registro_bd = opciones_perfil.Where(x => x.IntIdOpcion == item_bd.IntIdOpcion).FirstOrDefault();
+
+                if (registro_bd == null)
+                {
+                    clase_opc_usuarios.Eliminar(item_bd);
+                }
+
+            }
+
+            //Recorre las opciones por perfil y valida si existen o no en base de datos
+            foreach (TblOpcionesPerfil item in opciones_perfil)
+            {
+                TblOpcionesUsuario registro_nuevo = opciones_usuario_bd.Where(x => x.IntIdOpcion == item.IntIdOpcion).FirstOrDefault();
+
+                if (registro_nuevo == null)
+                {
+                    TblOpcionesUsuario permiso = new TblOpcionesUsuario();
+
+                    permiso.IntAgregar = item.IntAgregar;
+                    permiso.IntAnular = item.IntAnular;
+                    permiso.IntConsultar = item.IntConsultar;
+                    permiso.IntEditar = item.IntEditar;
+                    permiso.IntEliminar = item.IntEliminar;
+                    permiso.IntGestion = item.IntGestion;
+                    permiso.IntIdOpcion = item.IntIdOpcion;
+                    permiso.StrUsuario = datos_empresa.StrIdentificacion;
+                    permiso.StrEmpresa = datos_empresa.StrIdentificacion;
+
+                    opciones_grabar.Add(permiso);
+                }
+            }
+
+            if (opciones_grabar.Count() > 0)
+                clase_opc_usuarios.CrearOpciones(opciones_grabar);
+        }
+
+
 
         #endregion
 

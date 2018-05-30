@@ -61,7 +61,7 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 13223.
+        ///   Busca una cadena traducida similar a 1323.
         /// </summary>
         internal static string ActivacionSerial {
             get {
@@ -97,29 +97,11 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 13221.
+        ///   Busca una cadena traducida similar a 1322.
         /// </summary>
-        internal static string ConsultaEmpresasSistema {
+        internal static string Empresas {
             get {
-                return ResourceManager.GetString("ConsultaEmpresasSistema", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 13232.
-        /// </summary>
-        internal static string ConsultaPlanesTransaccionales {
-            get {
-                return ResourceManager.GetString("ConsultaPlanesTransaccionales", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 13211.
-        /// </summary>
-        internal static string ConsultaUsuariosSistema {
-            get {
-                return ResourceManager.GetString("ConsultaUsuariosSistema", resourceCulture);
+                return ResourceManager.GetString("Empresas", resourceCulture);
             }
         }
         
@@ -133,29 +115,20 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 13222.
+        ///   Busca una cadena traducida similar a 1324.
         /// </summary>
-        internal static string GestionEmpresasSistema {
+        internal static string PlanesTransacciones {
             get {
-                return ResourceManager.GetString("GestionEmpresasSistema", resourceCulture);
+                return ResourceManager.GetString("PlanesTransacciones", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 13231.
+        ///   Busca una cadena traducida similar a 1321.
         /// </summary>
-        internal static string GestionPlanesTransaccionales {
+        internal static string Usuarios {
             get {
-                return ResourceManager.GetString("GestionPlanesTransaccionales", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 13212.
-        /// </summary>
-        internal static string GestionUsuariosSistema {
-            get {
-                return ResourceManager.GetString("GestionUsuariosSistema", resourceCulture);
+                return ResourceManager.GetString("Usuarios", resourceCulture);
             }
         }
     }

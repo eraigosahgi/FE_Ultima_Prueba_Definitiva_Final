@@ -15,6 +15,47 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
     public class UsuarioController : ApiController
     {
         /// <summary>
+        /// Obtiene el usuario de la sesión
+        /// </summary>
+        /// <returns></returns>
+        public IHttpActionResult Get()
+        {
+            try
+            {
+                List<TblUsuarios> datos = new List<TblUsuarios>();
+
+                datos.Add(Sesion.DatosUsuario);
+
+                var retorno = datos.Select(d => new
+                {
+                    FechaActualizacion = d.DatFechaActualizacion,
+                    FechaIngreso = d.DatFechaIngreso,
+                    FechaCambioClave = d.DatFechaCambioClave,
+                    Estado = d.IntIdEstado,
+                    Apellidos = d.StrApellidos,
+                    Cargo = d.StrCargo,
+                    Celular = d.StrCelular,
+                    Clave = d.StrClave,
+                    Empresa = d.StrEmpresa,
+                    Extension = d.StrExtension,
+                    IdCambioClave = d.StrIdCambioClave,
+                    IdSeguridad = d.StrIdSeguridad,
+                    Mail = d.StrMail,
+                    Nombres = d.StrNombres,
+                    Telefono = d.StrTelefono,
+                    CodigoUsuario = d.StrUsuario
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+        /// <summary>
         /// Valida la existencia de un usuario
         /// </summary>
         /// <param name="codigo_empresa"></param>
@@ -224,7 +265,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = resultado.Select(d => new
                 {
-                    StrEmpresa = d.StrEmpresa ,
+                    StrEmpresa = d.StrEmpresa,
                     StrUsuario = d.StrUsuario,
                     StrClave = d.StrClave,
                     StrNombres = d.StrNombres,
@@ -235,7 +276,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     StrCelular = d.StrCelular,
                     StrMail = d.StrMail,
                     IntIdEstado = d.IntIdEstado
-                    
                 });
 
                 return Ok(retorno);
@@ -277,7 +317,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 {
                     TblUsuarios usuario = new TblUsuarios();
                     usuario.StrEmpresa = StrEmpresa;
-                    usuario.StrUsuario = StrUsuario;                    
+                    usuario.StrUsuario = StrUsuario;
                     usuario.StrNombres = StrNombres;
                     usuario.StrApellidos = StrApellidos;
                     usuario.StrMail = StrMail;
@@ -293,7 +333,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 {
                     TblUsuarios usuario = new TblUsuarios();
                     usuario.StrEmpresa = StrEmpresa;
-                    usuario.StrUsuario = StrUsuario;                    
+                    usuario.StrUsuario = StrUsuario;
                     usuario.StrNombres = StrNombres;
                     usuario.StrApellidos = StrApellidos;
                     usuario.StrMail = StrMail;

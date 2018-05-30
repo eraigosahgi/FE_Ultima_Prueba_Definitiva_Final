@@ -2699,6 +2699,7 @@
     <Compile Include="Controllers\Services\EmpresasController.cs" />
     <Compile Include="Controllers\Services\FacturaController.cs" />
     <Compile Include="Controllers\Services\MaestrosEnumController.cs" />
+    <Compile Include="Controllers\Services\PermisosController.cs" />
     <Compile Include="Controllers\Services\Peticion.cs" />
     <Compile Include="Controllers\Services\PlanesTransaccionesController.cs" />
     <Compile Include="Controllers\Services\UsuarioController.cs" />
@@ -2947,7 +2948,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61428/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

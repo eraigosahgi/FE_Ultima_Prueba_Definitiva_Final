@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
-                    <h6 class="panel-title">Gestión de Usuario</h6>                    
+                    <h6 class="panel-title">Gestión de Usuario</h6>
                 </div>
 
                 <div class="panel-body">
@@ -81,24 +81,34 @@
 
                                 </div>
 
-                                <div class="dx-fieldset">                                    
+                                <div class="dx-fieldset">
                                     <div id="summary"></div>
                                 </div>
 
                             </div>
 
+
+                            <div class="col-md-12" style="margin-top: 3%">
+                                <label>Permisos de Usuario:</label>
+                                <div id="treeListOpcionesPermisos" dx-tree-list="treeListOpcionesPermisos">
+                                </div>
+                            </div>
+
+
                             <div class="col-md-12 text-right">
                                 <br />
                                 <br />
                                 <a id="btncancelar" class="btn btn-default" style="text-transform: initial !important; margin-right: 1%" href="/Views/Pages/ConsultaUsuarios.aspx" style="font-size: 14px; text-align: center;">Cancelar</a>
-                                <div id="button"></div>                            
+                                <div id="button"></div>
                             </div>
-                            
+
 
                         </form>
                     </div>
 
                 </div>
+
+
             </div>
         </div>
 

@@ -13,7 +13,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
     {
         protected void Page_Init(object sender, EventArgs e)
         {
-            this.CodigoOpcion = OpcionesPermisos.GestionUsuariosSistema;
+            this.CodigoOpcion = OpcionesPermisos.Usuarios;
         }
         protected void Page_Load(object sender, EventArgs e)
         {

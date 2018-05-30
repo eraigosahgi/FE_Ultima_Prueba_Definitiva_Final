@@ -120,9 +120,10 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         {
             try
             {
-                Ctl_Permisos ctl_permisos = new Ctl_Permisos();
+                Ctl_OpcionesUsuario ctl_opc_usuario = new Ctl_OpcionesUsuario();
+
                 // crea los parámetros para el servicio web
-                List<TblOpcionesUsuario> permisos_usuario = ctl_permisos.ObtenerOpcionesUsuarios(DatosUsuario.StrUsuario, DatosEmpresa.StrIdentificacion);
+                List<TblOpcionesUsuario> permisos_usuario = ctl_opc_usuario.ObtenerOpcionesUsuarios(DatosUsuario.StrUsuario, DatosEmpresa.StrIdentificacion);
 
                 if (permisos_usuario == null)
                     throw new ApplicationException("No se encontraron permisos asignados del usuario.");

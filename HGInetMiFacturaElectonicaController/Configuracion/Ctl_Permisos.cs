@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaData;
+﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using System;
@@ -11,49 +12,6 @@ namespace HGInetMiFacturaElectonicaController
 {
     public class Ctl_Permisos : BaseObject<TblOpciones>
     {
-        /// <summary>
-        /// Obtien las opciones de permiso por perfil
-        /// </summary>
-        /// <param name="id_perfil"></param>
-        /// <returns></returns>
-        public List<TblOpcionesPerfil> ObtenerOpcionesPerfiles(short id_perfil)
-        {
-            try
-            {
-                List<TblOpcionesPerfil> permisos_perfil = (from opc_perfil in context.TblOpcionesPerfil
-                                                           where (opc_perfil.IntIdPerfil == id_perfil)
-                                                           select opc_perfil).ToList();
-
-                return permisos_perfil;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
-
-        /// <summary>
-        /// Obtiene las opciones de permisos por usuario y empresa
-        /// </summary>
-        /// <param name="codigo_usuario"></param>
-        /// <param name="identificacion_empresa"></param>
-        /// <returns></returns>
-        public List<TblOpcionesUsuario> ObtenerOpcionesUsuarios(string codigo_usuario, string identificacion_empresa)
-        {
-            try
-            {
-                List<TblOpcionesUsuario> permisos_usuario = (from opcion in context.TblOpcionesUsuario
-                                                             where opcion.StrUsuario.Equals(codigo_usuario)
-                                                             && opcion.StrEmpresa.Equals(identificacion_empresa)
-                                                             select opcion).ToList();
-
-                return permisos_usuario;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
 
 
         /// <summary>
@@ -77,6 +35,10 @@ namespace HGInetMiFacturaElectonicaController
             }
         }
 
+        /// <summary>
+        /// Obtiene todas las opciones
+        /// </summary>
+        /// <returns></returns>
         public List<TblOpciones> ObtenerOpciones()
         {
             try
@@ -181,35 +143,27 @@ namespace HGInetMiFacturaElectonicaController
             return ruta_grupo;
         }
 
-
-
-        public void VallidarPermisosUsuario(TblEmpresas datos_empresa)
+        /// <summary>
+        /// Obtiene las opciones dependientes de un código de permiso.
+        /// </summary>
+        /// <param name="codigo_opcion"></param>
+        /// <returns></returns>
+        public List<TblOpciones> ObtenerDependencias(int codigo_opcion)
         {
-            List<TblOpcionesPerfil> opciones_perfil = new List<TblOpcionesPerfil>();
-            List<TblOpcionesUsuario> opciones_usuario = new List<TblOpcionesUsuario>();
-
-            //Obtiene permisos del facturador.
-            if (datos_empresa.IntObligado)
-                opciones_perfil = ObtenerOpcionesPerfiles((short)Perfiles.Facturador);
-
-            //Obtiene permisos del adquiriente.
-            if (datos_empresa.IntAdquiriente)
-                opciones_perfil = ObtenerOpcionesPerfiles((short)Perfiles.Adquiriente);
-
-            opciones_usuario = ObtenerOpcionesUsuarios(datos_empresa.StrIdentificacion, datos_empresa.StrIdentificacion);
-
-
-
-            foreach (TblOpcionesUsuario item_usuario in opciones_usuario)
+            try
             {
-                foreach (TblOpcionesPerfil item_perfil in opciones_perfil)
-                {
-                    //if(!item_usuario.contains)
-                }
+                List<TblOpciones> opciones = (from opc in context.TblOpciones
+                                              where opc.IntIdDependencia == codigo_opcion
+                                              select opc).ToList();
+
+                return opciones;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
 
         }
-
 
     }
 }
