@@ -289,7 +289,7 @@
                                                         <asp:HyperLink ID="link_1323" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresasSerial.aspx"><i class="icon-key"></i><span style="margin: -10px">Activación Serial</span></asp:HyperLink></li>
 
                                                     <li runat="server" id="menu_1324">
-                                                        <asp:HyperLink ID="link_1324" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaPlanesTransacciones.aspx"><i class="icon-drawer-in"></i><span style="margin: -10px">Consulta</span></asp:HyperLink></li>
+                                                        <asp:HyperLink ID="link_1324" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaPlanesTransacciones.aspx"><i class="icon-drawer-in"></i><span style="margin: -10px">Planes y Transacciones</span></asp:HyperLink></li>
 
                                                 </ul>
                                             </li>
