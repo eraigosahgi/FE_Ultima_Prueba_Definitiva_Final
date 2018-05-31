@@ -11,18 +11,15 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
            fecha_inicio = "",
            fecha_fin = "";
 
-    
-        $http.get('/api/DatosSesion/').then(function (response) {
 
-            console.log(response.data[0]);
+    $http.get('/api/DatosSesion/').then(function (response) {
+        codigo_adquiente = response.data[0].Identificacion;
 
-            codigo_adquiente = response.data[0].Identificacion;
-                      
-            consultar();
-        }),function errorCallback(response) {                
-           Mensaje(response.data.ExceptionMessage, "error");
-        };
-    
+        consultar();
+    }), function errorCallback(response) {
+        Mensaje(response.data.ExceptionMessage, "error");
+    };
+
     //Define los campos y las opciones
     $scope.filtros =
         {
@@ -32,7 +29,6 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 value: now,
                 displayFormat: "yyyy-MM-dd",
                 onValueChanged: function (data) {
-                    console.log("FechaInicial", new Date(data.value).toISOString());
                     fecha_inicio = new Date(data.value).toISOString();
                 }
             },
@@ -41,7 +37,6 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 value: now,
                 displayFormat: "yyyy-MM-dd",
                 onValueChanged: function (data) {
-                    console.log("FechaFinal", new Date(data.value).toISOString());
                     fecha_fin = new Date(data.value).toISOString();
                 }
             },
@@ -56,21 +51,19 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 Enabled: true,
                 placeholder: "Seleccione un Item",
                 onValueChanged: function (data) {
-                    console.log("EstadoRecibo", data.value.ID);
                     estado_recibo = data.value.ID;
                 }
             },
             NumeroDocumento: {
                 placeholder: "Ingrese Número Documento",
                 onValueChanged: function (data) {
-                    console.log("NumeroDocumento", data.value);
                     numero_documento = data.value;
                 }
             }
         }
 
     var mensaje_acuse = "";
-    
+
 
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
@@ -81,9 +74,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
     };
 
     //Consultar DOcumentos
-    function consultar() {        
-                
-        console.log("Ingresó al evento del botón");
+    function consultar() {
 
         if (fecha_inicio == "")
             fecha_inicio = now.toISOString();
@@ -91,17 +82,14 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
 
-        console.log("FILTROS DE BÚSQUEDA:\n" + "codigo_adquiente:", codigo_adquiente, "\nnumero_documento:", numero_documento, "\nestado_recibo:", estado_recibo, "\nfecha_inicio:", fecha_inicio, "\nfecha_fin:", fecha_fin);
-
         //Obtiene los datos del web api
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
         $('#wait').show();
         $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
-        $('#wait').hide();
-            console.log("Ingresó a cargar la data.");         
+            $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
-                dataSource: response.data,                
+                dataSource: response.data,
                 paging: {
                     pageSize: 20
                 },
@@ -116,9 +104,9 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         fieldHtml = "";
                     try {
                         if (options.columnIndex == 4) {//Columna de valor Total
-                            if (fieldData) {                                
-                                var inicial = fNumber.go(fieldData);                                
-                                options.cellElement.html(inicial);                                
+                            if (fieldData) {
+                                var inicial = fNumber.go(fieldData);
+                                options.cellElement.html(inicial);
                             }
                         }
                         //Valida el formato de fecha en la configuracion de fecha
@@ -129,10 +117,10 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                             }
                         }
                     } catch (err) {
-                       
+                        DevExpress.ui.notify(err.message, 'error', 3000);
                     }
                 }
-                ,columns: [
+                , columns: [
                     {
                         caption: "Archivos",
                         cssClass: "col-md-1 col-xs-2",
@@ -150,47 +138,43 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                                 visible_xml = "href='" + options.data.Xml + "' style='pointer-events:auto;cursor: pointer'";
                             else
                                 options.data.Xml = "#";
-
-                            console.log("PDF: " + options.data.Pdf);
-                            console.log("XML: " + options.data.Xml);
-
                             $("<div>")
-                                .append($("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"))                                
+                                .append($("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"))
                                 .append($(""))
                                 .appendTo(container);
                         }
                     },
                     {
                         caption: "Documento",
-                        dataField: "NumeroDocumento",                        
+                        dataField: "NumeroDocumento",
                         cssClass: "col-md-1 col-xs-3",
                     },
                     {
-                        caption: "Fecha Documento",                        
+                        caption: "Fecha Documento",
                         dataField: "DatFechaDocumento",
                         dataType: "date",
                         cssClass: "col-md-2 col-xs-3",
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
-                        }]                    
+                        }]
                     },
                     {
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
                         dataType: "date",
-                        cssClass:"hidden-xs col-md-2",                        
+                        cssClass: "hidden-xs col-md-2",
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
                         }]
-                    },                    
+                    },
                     {
                         caption: "Valor Total",
                         dataField: "IntVlrTotal",
                         cssClass: "col-md-1 col-xs-2",
                         width: '12%',
-                        Type: Number,                                                                                              
+                        Type: Number,
                     }
                     ,
                      {
@@ -233,12 +217,10 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     visible: true
                 },
             });
-            console.log("DATOS DE RETORNO DE WEB API", response.data);
-            console.log("Salió del método");                        
         });
     }
-   
-   
+
+
 });
 
 

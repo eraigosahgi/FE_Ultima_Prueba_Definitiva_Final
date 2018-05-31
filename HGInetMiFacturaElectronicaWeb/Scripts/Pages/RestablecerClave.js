@@ -15,7 +15,6 @@ DemoApp.controller('RestablecerClaveController', function DemoController($scope,
             $scope.RespuestaIdSeguridad = response.data;
 
         }, function errorCallback(response) {
-            console.log("data", response.data);
             Mensaje(response.data.ExceptionMessage, "error",13000);
             $("#divcontenido").hide();
         });

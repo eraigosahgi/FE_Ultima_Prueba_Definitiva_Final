@@ -16,9 +16,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            fecha_fin = "",
            codigo_adquiriente = "";
     $http.get('/api/DatosSesion/').then(function (response) {
-
-        console.log(response.data[0]);
-
         codigo_facturador = response.data[0].Identificacion;
         consultar();
     });
@@ -33,7 +30,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 value: now,
                 displayFormat: "yyyy-MM-dd",
                 onValueChanged: function (data) {
-                    console.log("FechaInicial", new Date(data.value).toISOString());
                     fecha_inicio = new Date(data.value).toISOString();
                 }
             },
@@ -42,7 +38,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 value: now,
                 displayFormat: "yyyy-MM-dd",
                 onValueChanged: function (data) {
-                    console.log("FechaFinal", new Date(data.value).toISOString());
                     fecha_fin = new Date(data.value).toISOString();
                 }
             }, EstadoDian: {
@@ -56,7 +51,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 Enabled: true,
                 placeholder: "Seleccione un Item",
                 onValueChanged: function (data) {
-                    console.log("EstadoDian", data.value.ID);
                     estado_dian = data.value.ID;
                 }
             },
@@ -71,21 +65,18 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 Enabled: true,
                 placeholder: "Seleccione un Item",
                 onValueChanged: function (data) {
-                    console.log("EstadoRecibo", data.value.ID);
                     estado_recibo = data.value.ID;
                 }
             },
             NumeroDocumento: {
                 placeholder: "Ingrese Número Documento",
                 onValueChanged: function (data) {
-                    console.log("NumeroDocumento", data.value);
                     numero_documento = data.value;
                 }
             },
             Adquiriente: {
                 placeholder: "Ingrese Identificación del Adquiriente",
                 onValueChanged: function (data) {
-                    console.log("Adquiriente", data.value);
                     codigo_adquiriente = data.value;
                 }
             }
@@ -101,15 +92,11 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
     function consultar() {
 
-        console.log("Ingresó al evento del botón");
-
         if (fecha_inicio == "")
             fecha_inicio = now.toISOString();
 
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
-
-        console.log("FILTROS DE BÚSQUEDA:\n" + "codigo_adquiriente:", codigo_adquiriente, "\nnumero_documento:", numero_documento, "\nestado_recibo:", estado_recibo, "\nfecha_inicio:", fecha_inicio, "\nfecha_fin:", fecha_fin);
 
         //Obtiene los datos del web api
         //ControladorApi: /Api/Documentos/
@@ -117,8 +104,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         $('#wait').show();
         $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
             $('#wait').hide();
-            console.log("Datos", response.data);
-
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
                 paging: {
@@ -149,7 +134,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         }
 
                     } catch (err) {
-                        console.log("Error: ", err.message);
+                        DevExpress.ui.notify(err.message, 'error', 3000);
                     }
 
                 }
@@ -173,12 +158,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                             else
                                 options.data.Xml = "#";
 
-                            console.log("PDF: " + options.data.Pdf);
-                            console.log("XML: " + options.data.Xml);
-
                             $("<div>")
                                 .append(
-                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),                                     
+                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),
                                     $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>").dxButton({
                                         onClick: function () {
                                             $scope.showModal = true;
@@ -262,9 +244,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     visible: true
                 },
             });
-            console.log("DATOS DE RETORNO DE WEB API", response.data);
-
-            console.log("Salió del método");
         }, function errorCallback(response) {
             $('#wait').hide();
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);

@@ -80,14 +80,10 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
     //Evento del botón.
     $scope.onFormSubmit = function (e) {
-        
-        console.log("Ingresó al evento del botón");
 
         dato_identificacion = $('input:text[name=Identificacion]').val();
         dato_usuario = $('input:text[name=Usuario]').val();
         dato_contrasena = $('input:password[name=Clave]').val();
-
-        console.log("Identificación:", dato_identificacion, " Usuario:", dato_usuario, " Contraseña:", dato_contrasena);
 
         //Obtiene los datos del web api
         //ControladorApi: /Api/Usuario/
@@ -185,8 +181,6 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 
     //Evento del botón.
     $scope.onFormSubmit = function (e) {
-        
-        console.log("Ingresó al evento del botón");
 
         dato_identificacion = $('input:text[name=TextBoxDocIdentificacion]').val();
         dato_usuario = $('input:text[name=TextBoxUsuario]').val();
@@ -196,8 +190,6 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
             codigo_empresa: dato_identificacion,
             codigo_usuario: dato_usuario
         });
-        console.log("Identificación:", dato_identificacion, " Usuario:", dato_usuario);
-
         //Obtiene los datos del web api
         //ControladorApi: /Api/Usuario/
         //Datos PUT: codigo_empresa - codigo_usuario

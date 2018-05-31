@@ -251,7 +251,6 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
         $("#txtSerial").dxTextBox({
 
             onValueChanged: function (data) {
-                console.log("txtSerial", data.value);
                 Datos_Serial = data.value;
             }
         })
@@ -270,7 +269,6 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
         $("#txtResolucion").dxTextBox({
 
             onValueChanged: function (data) {
-                console.log("txtResolucion", data.value);
                 Datos_Resolucion = data.value;
             }
         })
@@ -294,7 +292,6 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
         $("#txtnitEmpresa").dxTextBox({            
             readOnly: true,
             onValueChanged: function (data) {
-                console.log("NitEmpresa", data.value);
                 $scope.nitEmpresa = data.value;
             }
         });
@@ -302,7 +299,6 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
         $("#txtemail").dxTextBox({
             readOnly: true,
             onValueChanged: function (data) {
-                console.log("txtSerial", data.value);
                 $scope.email = data.value;
             }
         });

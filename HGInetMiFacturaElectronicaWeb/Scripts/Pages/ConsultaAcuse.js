@@ -14,9 +14,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
 
     $http.get('/api/DatosSesion/').then(function (response) {
-
-        console.log(response.data[0]);
-
         codigo_facturador = response.data[0].Identificacion;
         consultar();
     });
@@ -30,7 +27,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                    value: now,
                    displayFormat: "yyyy-MM-dd",
                    onValueChanged: function (data) {
-                       console.log("FechaInicial", new Date(data.value).toISOString());
                        fecha_inicio = new Date(data.value).toISOString();
                    }
                },
@@ -39,7 +35,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                    value: now,
                    displayFormat: "yyyy-MM-dd",
                    onValueChanged: function (data) {
-                       console.log("FechaFinal", new Date(data.value).toISOString());
                        fecha_fin = new Date(data.value).toISOString();
                    }
                },
@@ -54,21 +49,18 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                    Enabled: true,
                    placeholder: "Seleccione un Item",
                    onValueChanged: function (data) {
-                       console.log("EstadoRecibo", data.value.ID);
                        estado_acuse = data.value.ID;
                    }
                },
                NumeroDocumento: {
                    placeholder: "Ingrese Número Documento",
                    onValueChanged: function (data) {
-                       console.log("NumeroDocumento", data.value);
                        numero_documento = data.value;
                    }
                },
                Adquiriente: {
                    placeholder: "Ingrese Identificación del Adquiriente",
                    onValueChanged: function (data) {
-                       console.log("Adquiriente", data.value);
                        codigo_adquiriente = data.value;
                    }
                }
@@ -84,9 +76,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
 
     function consultar() {
-
-        console.log("Ingresó al evento del botón");
-
         if (fecha_inicio == "")
             fecha_inicio = now.toISOString();
 
@@ -99,8 +88,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         $('#wait').show();
         $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
             $('#wait').hide();
-            console.log("Datos", response.data);
-
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
                 paging: {
@@ -124,7 +111,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                         }
 
                     } catch (err) {
-                        console.log("Error: ", err.message);
+                         DevExpress.ui.notify(err.message, 'error', 3000);
                     }
 
                 }
@@ -179,9 +166,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                     visible: true
                 },
             });
-            console.log("DATOS DE RETORNO DE WEB API", response.data);
-
-            console.log("Salió del método");
         }, function errorCallback(response) {
             $('#wait').hide();
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);

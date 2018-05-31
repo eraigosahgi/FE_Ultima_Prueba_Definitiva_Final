@@ -17,7 +17,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
            fecha_fin = "",
            codigo_adquiriente = "";
     $http.get('/api/DatosSesion/').then(function (response) {
-        console.log("Datos", response.data);
         codigo_facturador = response.data[0].Identificacion;
         if (codigo_facturador == '811021438') {
             $scope.Admin = true;
@@ -49,7 +48,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             displayExpr: "Texto",
             dataSource: TiposIdentificacion,
             onValueChanged: function (data) {
-                console.log("EstadoRecibo", data.value.ID);
                 Datos_Tipoidentificacion = data.value.ID;
             }
         }).dxValidator({
@@ -61,7 +59,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
         $("#NumeroIdentificacion").dxTextBox({
             onValueChanged: function (data) {
-                console.log("NumeroDocumento", data.value);
                 Datos_Idententificacion = data.value;
             }
         })
@@ -72,7 +69,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             }, {
                 type: "stringLength",
                 max: 50,
-                min:6,
+                min: 6,
                 message: "El numero de Identificación no puede ser mayor a 50 digitos ni menor a 6"
             }, {
                 type: "numeric",
@@ -82,7 +79,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
         $("#txtRasonSocial").dxTextBox({
             onValueChanged: function (data) {
-                console.log("RasonSocial", data.value);
                 Datos_Razon_Social = data.value.toUpperCase();
             }
         })
@@ -99,7 +95,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
         $("#txtEmail").dxTextBox({
             onValueChanged: function (data) {
-                console.log("txtEmail", data.value);
                 Datos_Email = data.value;
             }
         })
@@ -122,31 +117,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             value: codigo_facturador,
             name: txtempresaasociada,
             onValueChanged: function (data) {
-                console.log("txtempresaasociada", data.value);
                 Datos_empresa_Asociada = data.value;
             }
         });
-
-        //$("#txtidentificciondev").dxTextBox({
-        //    onValueChanged: function (data) {
-        //        console.log("txtidentificciondev", data.value);
-        //        Datos_Email = data.value;
-        //    }
-        //})
-        //.dxValidator({
-        //    validationRules: [{
-        //        type: "required",
-        //        message: "Debe introducir el codigo del Facturador"
-        //    }]
-        //});
-
 
         $("#Facturador").dxCheckBox({
             name: "PerfilFacturador",
             text: "Facturador Electrónico",
             value: false,
             onValueChanged: function (data) {
-                console.log("Datos_Obligado", data.value);
                 Datos_Obligado = data.value;
             }
         }).dxValidator({
@@ -167,7 +146,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             text: "Adquiriente",
             value: false,
             onValueChanged: function (data) {
-                console.log("Datos_Adquiriente", data.value);
                 Datos_Adquiriente = data.value;
             }
         }).dxValidator({
@@ -195,7 +173,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             displayExpr: "Texto",
             Enabled: true,
             onValueChanged: function (data) {
-                console.log("Datos_Habilitacion", data.value.ID);
                 Datos_Habilitacion = data.value.ID;
             }
         }).dxValidator({
@@ -207,7 +184,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
         $("#txtobservaciones").dxTextArea({
             onValueChanged: function (data) {
-                console.log("txtobservaciones", data.value);
                 Datos_Observaciones = data.value.toUpperCase();
             }
         })
@@ -234,11 +210,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         });
 
         function validar() {
-            console.log("Datos_Adquiriente", Datos_Adquiriente);
-            console.log("Datos_Obligado", Datos_Obligado);
-
             if (Datos_Adquiriente == true || Datos_Obligado == true) {
-                console.log("Alguno de los dos es verdadero");
                 return false;
             }
             return true;

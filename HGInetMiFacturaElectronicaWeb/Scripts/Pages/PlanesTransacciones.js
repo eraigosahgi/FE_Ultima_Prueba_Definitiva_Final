@@ -18,7 +18,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
            codigo_adquiriente = "";
 
     $http.get('/api/DatosSesion/').then(function (response) {
-        console.log("Datos", response.data);
         codigo_facturador = response.data[0].Identificacion;
         if (codigo_facturador == '811021438') {
             $scope.Admin = true;
@@ -53,7 +52,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             displayExpr: "Texto",
             Enabled: true,
             onValueChanged: function (data) {
-                console.log("Datos_TiposProceso", data.value.ID);
                 Datos_TiposProceso = data.value.ID;
             }
         }
@@ -71,7 +69,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             value: codigo_empresa,
             name: txtempresaasociada,
             onValueChanged: function (data) {
-                console.log("EmpresaPlan", data.value);
                 datos_empresa_asociada = data.value;
             }
         }).dxValidator({
@@ -85,7 +82,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         $("#CantidadTransacciones").dxNumberBox({
             min: 1,
             onValueChanged: function (data) {
-                console.log("Datos_T_compra", data.value);
                 Datos_T_compra = data.value;
             }
         })
@@ -111,7 +107,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         $("#ValorPlan").dxNumberBox({
             min: 1,
             onValueChanged: function (data) {
-                console.log("Datos_valor_plan", data.value);
                 Datos_valor_plan = data.value;
             }
         })
@@ -142,7 +137,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             Enabled: true,
             onValueChanged: function (data) {
                 Datos_E_Plan = (data.value.ID > 0) ? 'true' : 'false';
-                console.log("Datos_E_Plan", Datos_E_Plan);
             }
         }).dxValidator({
             validationRules: [{
@@ -154,7 +148,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         //Observaciones
         $("#txtObservaciones").dxTextArea({
             onValueChanged: function (data) {
-                console.log("Datos_obsrvaciones", data.value);
                 Datos_obsrvaciones = data.value.toUpperCase();
             }
         })

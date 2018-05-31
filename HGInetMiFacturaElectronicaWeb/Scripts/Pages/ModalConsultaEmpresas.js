@@ -53,12 +53,9 @@ ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalCon
 });
 //Funcion para asignar la Empresa Asociada
 function ObtenerEmpresa(Empresa) {
-    console.log("AAA", DatosEmpresa);
     fLen = DatosEmpresa.length;
-    console.log("Longitud", fLen);
     for (i = 0; i < fLen; i++) {
         if (DatosEmpresa[i].Identificacion == Empresa) {
-            console.log("Identificacion", DatosEmpresa[i].Identificacion);
             Empresa = Empresa + ' --  ' + DatosEmpresa[i].RazonSocial;
             break;
         }
