@@ -170,18 +170,20 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
 
                 TblOpcionesUsuario datos_permiso = clase_permisos.ObtenerOpcionesUsuarios(DatosUsuario.StrUsuario, DatosUsuario.StrEmpresa, codigo_opcion).FirstOrDefault();
 
-                PropertyDescriptorCollection cols = TypeDescriptor.GetProperties((datos_permiso));
-
-                PropertyDescriptor campo = cols.Find(operacion_pagina.ToString(), true);
-
-                if (campo.Name.Equals(operacion_pagina.ToString()))
+                if (datos_permiso != null)
                 {
-                    if (Convert.ToBoolean(campo.GetValue(datos_permiso)))
-                        respuesta = true;
-                    else
-                        respuesta = false;
-                }
+                    PropertyDescriptorCollection cols = TypeDescriptor.GetProperties((datos_permiso));
 
+                    PropertyDescriptor campo = cols.Find(operacion_pagina.ToString(), true);
+
+                    if (campo.Name.Equals(operacion_pagina.ToString()))
+                    {
+                        if (Convert.ToBoolean(campo.GetValue(datos_permiso)))
+                            respuesta = true;
+                        else
+                            respuesta = false;
+                    }
+                }
             }
 
             return respuesta;
