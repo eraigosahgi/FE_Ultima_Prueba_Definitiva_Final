@@ -55,6 +55,41 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
 
+        public IHttpActionResult Get(string usuario_autenticado, string empresa_autenticada, string codigo_usuario, string identificacion_empresa)
+        {
+            try
+            {
+                Ctl_OpcionesUsuario clase_opc_usuario = new Ctl_OpcionesUsuario();
+
+                List<TblOpcionesUsuario> datos = clase_opc_usuario.ObtenerOpcionesUsuarios(usuario_autenticado, empresa_autenticada, codigo_usuario, identificacion_empresa);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    Codigo = d.IntIdOpcion,
+                    Descripcion = d.TblOpciones.StrDescripcion,
+                    Dependencia = d.TblOpciones.IntIdDependencia,
+                    Consultar = d.IntConsultar,
+                    Agregar = d.IntAgregar,
+                    Editar = d.IntEditar,
+                    Eliminar = d.IntEliminar,
+                    Anular = d.IntAnular,
+                    Gestion = d.IntGestion
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
         public IHttpActionResult Get(int codigo_opcion)
         {
             try

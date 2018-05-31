@@ -156,6 +156,69 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             }
         }
 
+        /// <summary>
+        /// Obtiene los permisos del usuario a gestionar, en base a los permisos del usuario autenticado.
+        /// </summary>
+        /// <param name="usuario_autenticado"></param>
+        /// <param name="empresa_autenticada"></param>
+        /// <param name="codigo_usuario"></param>
+        /// <param name="identificacion_empresa"></param>
+        /// <param name="codigo_opcion"></param>
+        /// <returns></returns>
+        public List<TblOpcionesUsuario> ObtenerOpcionesUsuarios(string usuario_autenticado, string empresa_autenticada, string codigo_usuario, string identificacion_empresa, string codigo_opcion = "*")
+        {
+            try
+            {
+                int cod_opcion = -1;
+                int.TryParse(codigo_opcion, out cod_opcion);
+
+
+                List<TblOpcionesUsuario> permisos_usuario_autenticado = (from opcion in context.TblOpcionesUsuario
+                                                                         where opcion.StrUsuario.Equals(usuario_autenticado)
+                                                                         && opcion.StrEmpresa.Equals(empresa_autenticada)
+                                                                         && (opcion.IntIdOpcion == cod_opcion || codigo_opcion.Equals("*"))
+                                                                         select opcion).ToList();
+
+                List<TblOpcionesUsuario> permisos_usuario = (from opcion in context.TblOpcionesUsuario
+                                                             where opcion.StrUsuario.Equals(codigo_usuario)
+                                                             && opcion.StrEmpresa.Equals(identificacion_empresa)
+                                                             && (opcion.IntIdOpcion == cod_opcion || codigo_opcion.Equals("*"))
+                                                             select opcion).ToList();
+
+
+                foreach (TblOpcionesUsuario item in permisos_usuario_autenticado)
+                {
+                    TblOpcionesUsuario item_registro = permisos_usuario.Where(d => d.IntIdOpcion == item.IntIdOpcion).FirstOrDefault();
+
+                    if (item_registro != null)
+                    {
+                        item.IntConsultar = item_registro.IntConsultar;
+                        item.IntAgregar = item_registro.IntAgregar;
+                        item.IntEditar = item_registro.IntEditar;
+                        item.IntEliminar = item_registro.IntEliminar;
+                        item.IntAnular = item_registro.IntAnular;
+                        item.IntGestion = item_registro.IntGestion;
+                    }
+                    else
+                    {
+                        item.IntConsultar = false;
+                        item.IntAgregar = false;
+                        item.IntEditar = false;
+                        item.IntEliminar = false;
+                        item.IntAnular = false;
+                        item.IntGestion = false;
+                    }
+                }
+
+                return permisos_usuario_autenticado;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
         #endregion
 
         #region Eliminar
