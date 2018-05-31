@@ -51,13 +51,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <summary>
         /// Obtiene el plan por Id de Seguridad
         /// </summary>       
-        /// <param name="StrIdSeguridad"></param>
+        /// <param name="IdSeguridad"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Get(System.Guid StrIdSeguridad)
+        public IHttpActionResult Get(System.Guid IdSeguridad)
         {
             Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-            List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.Obtener(StrIdSeguridad);
+            List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.Obtener(IdSeguridad);
 
             if (datos == null)
             {
