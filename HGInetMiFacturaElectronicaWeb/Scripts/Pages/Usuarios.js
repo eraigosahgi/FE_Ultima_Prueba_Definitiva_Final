@@ -473,7 +473,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
                 guardarPermisos();
 
-                DevExpress.ui.notify({ message: "Usuario Guardado con exito", position: { my: "center top", at: "center top" } }, "success", 6000);
+                DevExpress.ui.notify({ message: "Usuario Guardado con exito", position: { my: "center top", at: "center top" } }, "success", 3000);
                 $("#button").hide();
                 $("#btncancelar").hide();
                 setTimeout(IrAConsulta, 3000);
