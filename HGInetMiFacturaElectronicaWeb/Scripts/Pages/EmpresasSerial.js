@@ -32,13 +32,12 @@ angular.module("appsrvusuario", [])
                            cssClass: "col-md-1 col-xs-2",
                            cellTemplate: function (container, options) {
                                if (options.data.Serial != "" && options.data.Serial != null) {
-                                   Scope.estilo = 'icon-mail-read';
+                                   Scope.estilo = "'icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'";
                                } else {
-                                   Scope.estilo = '1';
+                                   Scope.estilo = "'icon-mail-read' style='margin-left:12%; font-size:19px; pointer-events:auto;cursor: not-allowed;'";
                                };
                                $("<div style='text-align:center'>")
                                    .append(
-
                                    $("<a class='icon-pencil3' data-toggle='modal' data-target='#modal_Serial_empresa' style='margin-left:12%; font-size:19px'></a>").dxButton({
                                        onClick: function () {
                                            Scope.email = options.data.Email;
@@ -55,11 +54,10 @@ angular.module("appsrvusuario", [])
 
                                            $("#txtResolucion").dxTextBox({ value: options.data.Resolucion });
                                            $("#txtSerial").dxTextBox({ value: options.data.Serial });
-
                                        }
                                    }).removeClass("dx-button dx-button-normal dx-widget")
                                    ///Envio de Mail                               
-                                   , $("<a class=" + Scope.estilo + " data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>").dxButton({
+                                   , $("<a class=" + Scope.estilo + "></a>").dxButton({
                                        onClick: function () {
                                            Scope.showModal = true;
                                            email_destino = options.data.Email;

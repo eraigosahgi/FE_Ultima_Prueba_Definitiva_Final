@@ -159,16 +159,17 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         cssClass: "col-xs-3 col-md-1",
                         cellTemplate: function (container, options) {
 
-                            var visible_pdf = "pointer-events:auto;cursor: not-allowed;";
-                            var visible_xml = "pointer-events:auto;cursor: not-allowed;";
+                            var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
+
+                            var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
 
                             if (options.data.Pdf)
-                                visible_pdf = "pointer-events:auto;cursor: pointer";
+                                visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer'";
                             else
                                 options.data.Pdf = "#";
 
                             if (options.data.Xml)
-                                visible_xml = "pointer-events:auto;cursor: pointer";
+                                visible_xml = "href='" + options.data.Xml + "' style='pointer-events:auto;cursor: pointer'";
                             else
                                 options.data.Xml = "#";
 
@@ -177,7 +178,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
                             $("<div>")
                                 .append(
-                                    $("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "' style='" + visible_pdf + "'>&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "' style='" + visible_xml + "'>&nbsp;&nbsp;"),
+                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),                                     
                                     $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>").dxButton({
                                         onClick: function () {
                                             $scope.showModal = true;

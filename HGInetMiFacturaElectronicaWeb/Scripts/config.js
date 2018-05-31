@@ -21,6 +21,27 @@ var fNumber = {
     }
 }
 
+//Controla el formato de numeros Ejemplo: 1.222.333,90
+var FormatoNumber = {
+    sepMil: ".", // separador para los miles
+    sepDec: ',', // separador para los decimales    
+    formatear: function (num) {
+        num += '';
+        var splitStr = num.split('.');
+        var splitLeft = splitStr[0];
+        var splitRight = splitStr.length > 1 ? this.sepDec + splitStr[1] : '';
+        var regx = /(\d+)(\d{3})/;
+        while (regx.test(splitLeft)) {
+            splitLeft = splitLeft.replace(regx, '$1' + this.sepMil + '$2');
+        }
+        return  splitLeft + splitRight;
+    },
+    go: function (num) {
+        return this.formatear(num);
+    }
+}
+
+
 //Controla los mensajes de Session
 function control_session(Ruta) {
     

@@ -6,7 +6,34 @@
 
     <script src="../../Scripts/Pages/PlanesTransacciones.js"></script>
 
-    <div ng-app="ConsultaPlanesApp" ng-controller="ConsultaPlanesController">
+    <div ng-app="GestionPlanesApp" ng-controller="ConsultaPlanesController">
+                <%--//Panel Grid--%>
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div>
+                    <br />
+                    
+                    <div class="col-md-12">
+                        <div class="col-md-10">
+                            <h6 class="panel-title">Datos</h6>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <a class="btn btn-primary" style="background: #337ab7" href="GestionPlanesTransacciones.aspx">Crear</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <br />
+                <div class="panel-body" style="margin-top: 2%">
+                    <div class="demo-container">
+                        <div id="grid"></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
     </div>
 
 </asp:Content>

@@ -137,8 +137,25 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         caption: "Archivos",
                         cssClass: "col-md-1 col-xs-2",
                         cellTemplate: function (container, options) {
+                            var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
+
+                            var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
+
+                            if (options.data.Pdf)
+                                visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer'";
+                            else
+                                options.data.Pdf = "#";
+
+                            if (options.data.Xml)
+                                visible_xml = "href='" + options.data.Xml + "' style='pointer-events:auto;cursor: pointer'";
+                            else
+                                options.data.Xml = "#";
+
+                            console.log("PDF: " + options.data.Pdf);
+                            console.log("XML: " + options.data.Xml);
+
                             $("<div>")
-                                .append($("<a target='_blank' class='icon-file-pdf' href='" + options.data.Pdf + "'> &nbsp;&nbsp; <a target='_blank' class='icon-file-xml' href='" + options.data.Xml + "'>"))
+                                .append($("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"))                                
                                 .append($(""))
                                 .appendTo(container);
                         }

@@ -1,9 +1,9 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx']);
+
 //Controlador para la gestion planes transaccionales
 GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location) {
 
@@ -16,25 +16,27 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
            fecha_inicio = "",
            fecha_fin = "",
            codigo_adquiriente = "";
+
     $http.get('/api/DatosSesion/').then(function (response) {
         console.log("Datos", response.data);
         codigo_facturador = response.data[0].Identificacion;
         if (codigo_facturador == '811021438') {
             $scope.Admin = true;
         } else {
+            $("#button").hide();
             $('#SelecionarEmpresa').hide();
-            $("#EmpresaPlan").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
+            $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
 
     });
 
-    var tipo_proceso = "",
+    var Datos_TiposProceso = "",
         codigo_empresa = "",
-        cantidad_transacciones = "",
-        valor_plan = "",
-        estado_plan = ""
+        Datos_T_compra = "",
+        Datos_valor_plan = "",
+        Datos_E_Plan = ""
     datos_empresa_asociada = "";
-
+    Datos_obsrvaciones = "";
 
     //Define los campos del Formulario  
     $(function () {
@@ -51,21 +53,23 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             displayExpr: "Texto",
             Enabled: true,
             onValueChanged: function (data) {
-                console.log("tipo_proceso", data.value.ID);
-                Datos_Habilitacion = data.value.ID;
+                console.log("Datos_TiposProceso", data.value.ID);
+                Datos_TiposProceso = data.value.ID;
             }
-        }).dxValidator({
+        }
+        ).dxValidator({
             validationRules: [{
                 type: "required",
                 message: "Debe indicar el tipo de proceso."
             }]
         });
 
+
         //Campo de selección de empresa.
-        $("#EmpresaPlan").dxTextBox({
+        $("#txtempresaasociada").dxTextBox({
             readOnly: true,
             value: codigo_empresa,
-            name: EmpresaPlan,
+            name: txtempresaasociada,
             onValueChanged: function (data) {
                 console.log("EmpresaPlan", data.value);
                 datos_empresa_asociada = data.value;
@@ -78,28 +82,37 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         });
 
         //Campo cantidad de transacciones del plan
-        $("#CantidadTransacciones").dxTextBox({
+        $("#CantidadTransacciones").dxNumberBox({
+            min: 1,
             onValueChanged: function (data) {
-                console.log("CantidadTransacciones", data.value);
-                cantidad_transacciones = data.value;
+                console.log("Datos_T_compra", data.value);
+                Datos_T_compra = data.value;
             }
         })
         .dxValidator({
             validationRules: [{
+                type: "stringLength",
+                max: 10,
+                message: "El número de transacciones no puede mayor a 10 digitos"
+            }, {
                 type: "required",
                 message: "Debe indicar la cantidad de transacciones del plan."
             }, {
                 type: "numeric",
                 message: "El campo sólo debe contener números."
+            }, {
+                type: 'pattern',
+                pattern: '^[0-9]+$',
+                message: 'No debe Incluir puntos(.) ni caracteres especiales'
             }]
         });
 
-
         //Campo Valor plan
-        $("#ValorPlan").dxTextBox({
+        $("#ValorPlan").dxNumberBox({
+            min: 1,
             onValueChanged: function (data) {
-                console.log("ValorPlan", data.value);
-                valor_plan = data.value;
+                console.log("Datos_valor_plan", data.value);
+                Datos_valor_plan = data.value;
             }
         })
         .dxValidator({
@@ -109,6 +122,10 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             }, {
                 type: "numeric",
                 message: "El campo sólo debe contener números."
+            }, {
+                type: 'pattern',
+                pattern: '^[0-9]+$',
+                message: 'No debe Incluir puntos(.) ni caracteres especiales'
             }]
         });
 
@@ -124,8 +141,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             displayExpr: "Texto",
             Enabled: true,
             onValueChanged: function (data) {
-                console.log("estado_plan", data.value.ID);
-                estado_plan = data.value.ID;
+                Datos_E_Plan = (data.value.ID > 0) ? 'true' : 'false';
+                console.log("Datos_E_Plan", Datos_E_Plan);
             }
         }).dxValidator({
             validationRules: [{
@@ -134,7 +151,20 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             }]
         });
 
-
+        //Observaciones
+        $("#txtObservaciones").dxTextArea({
+            onValueChanged: function (data) {
+                console.log("Datos_obsrvaciones", data.value);
+                Datos_obsrvaciones = data.value.toUpperCase();
+            }
+        })
+        .dxValidator({
+            validationRules: [{
+                type: "stringLength",
+                max: 200,
+                message: "El campo Observaciones no puede tener mas de 200 caracteres."
+            }]
+        });
 
         $("#button").dxButton({
             text: "Guardar",
@@ -144,7 +174,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 
         $("#form1").on("submit", function (e) {
-            guardarEmpresa();
+            GuardarPlan();
             e.preventDefault
                 ();
         });
@@ -164,24 +194,27 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         var empresa = datos_empresa_asociada.split(' -- ');
 
         var data = $.param({
-            TipoIdentificacion: Datos_Tipoidentificacion,
-            Identificacion: Datos_Idententificacion,
-            RazonSocial: Datos_Razon_Social,
-            Email: Datos_Email,
-            Intadquiriente: (Datos_Adquiriente) ? true : false,
-            IntObligado: (Datos_Obligado) ? true : false,
-            IntHabilitacion: Datos_Habilitacion,
-            StrEmpresaAsociada: empresa[0],
-            tipo: Datos_Tipo,
-            StrResolucionDian: Datos_Resolucion
+            IntTipoProceso: Datos_TiposProceso,
+            StrEmpresa: codigo_facturador,
+            StrUsuario: $('#LblCodigoUsuario').text(),
+            IntNumTransaccCompra: Datos_T_compra,
+            IntNumTransaccProcesadas: 0,
+            IntValor: Datos_valor_plan,
+            BitProcesada: Datos_E_Plan,
+            StrObservaciones: Datos_obsrvaciones,
+            StrEmpresaFacturador: empresa[0]
         });
 
+        var IdActualizar = (StrIdSeguridad) ? '&' + $.param({ StrIdSeguridad: StrIdSeguridad }) : '';
+
         $("#wait").show();
-        $http.post('/api/Empresas?' + data).then(function (response) {
+        $http.post('/api/PlanesTransacciones?' + data + IdActualizar).then(function (response) {
             $("#wait").hide();
             try {
                 DevExpress.ui.notify({ message: "El plan ha sido registrado con exito.", position: { my: "center top", at: "center top" } }, "success", 6000);
-
+                $("#button").hide();
+                $("#btncancelar").hide();
+                setTimeout(IrAConsulta, 1000);
             } catch (err) {
                 DevExpress.ui.notify(err.message, 'error', 3000);
             }
@@ -191,78 +224,230 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         });
     }
 
-});
 
+    //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
+    var StrIdSeguridad = location.search.split('StrIdSeguridad=')[1];
+    if (StrIdSeguridad != '' && StrIdSeguridad != null) {
+        Consultar(StrIdSeguridad);
+    }
 
+    function Consultar(StrIdSeguridad) {
+        $("#wait").show();
+        $http.get('/api/PlanesTransacciones?StrIdSeguridad=' + StrIdSeguridad).then(function (response) {
+            $("#wait").hide();
+            try {
+                Datos_TiposProceso = response.data[0].Tipo;
+                codigo_empresa = response.data[0].CodigoEmpresaFacturador;
+                Datos_T_compra = response.data[0].TCompra;
+                Datos_T_Procesadas = response.data[0].TProcesadas;
+                Datos_valor_plan = response.data[0].Valor;
+                Datos_obsrvaciones = response.data[0].Observaciones;
+                Datos_E_Plan = response.data[0].Estado;
+                Datos_Nombre_facturador = response.data[0].EmpresaFacturador;
 
+                if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2) {
+                    $("#TipoProceso").dxRadioGroup({ value: TiposProceso[BuscarID(TiposProceso, Datos_TiposProceso)] });
+                }
 
+                $("#txtempresaasociada").dxTextBox({ value: codigo_empresa + ' -- ' + Datos_Nombre_facturador });
 
+                $("#CantidadTransacciones").dxNumberBox({ value: Datos_T_compra });
 
+                $("#ValorPlan").dxNumberBox({ value: Datos_valor_plan });
 
-//Controlador para gestionar la consulta de empresas
-EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $location) {
+                $("#EstadoPlan").dxRadioGroup({ value: EstadosPlanes[BuscarID(EstadosPlanes, Datos_E_Plan)] });
 
-    $("#wait").show();
-    $http.get('/api/Empresas').then(function (response) {
-        $("#wait").hide();
+                if (Datos_obsrvaciones != null) {
+                    $("#txtObservaciones").dxTextArea({ value: Datos_obsrvaciones });
+                }
 
-        $("#gridEmpresas").dxDataGrid({
-            dataSource: response.data,
+                $("#CantidadTransacciones").dxNumberBox({ readOnly: true });
+                $("#ValorPlan").dxNumberBox({ readOnly: true });
+                $('#SelecionarEmpresa').hide();
+                $("#TipoProceso").dxRadioGroup({ readOnly: true });
 
-            paging: {
-                pageSize: 20
-            },
-            pager: {
-                showPageSizeSelector: true,
-                allowedPageSizes: [5, 10, 20],
-                showInfo: true
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 7000);
             }
-
-               , columns: [
-
-                   {
-                       caption: "Identificacion",
-                       dataField: "Identificacion"
-                   },
-                   {
-                       caption: "Razón Social",
-                       dataField: "RazonSocial"
-                   },
-                   {
-                       caption: "Email",
-                       dataField: "Email"
-                   },
-                   {
-                       caption: "Serial",
-                       dataField: "Serial"
-                   },
-                   {
-                       dataField: "Perfil"
-                   },
-                   {
-                       dataField: "Habilitacion"
-                   },
-                   {
-                       caption: "Editar",
-                       cssClass: "col-md-1 col-xs-2",
-                       cellTemplate: function (container, options) {
-                           $("<div style='text-align:center'>")
-                               .append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
-                               .appendTo(container);
-                       }
-                   }
-               ],
-            filterRow: {
-                visible: true
-            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
         });
-
-    }, function errorCallback(response) {
-        $('#wait').hide();
-        DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-    });
+    }
 
 });
+
+GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesController($scope, $http, $location) {
+    var now = new Date();
+
+    var codigo_facturador = "",
+           numero_documento = "",
+           estado_dian = "",
+           estado_recibo = "",
+           fecha_inicio = "",
+           fecha_fin = "",
+           codigo_adquiriente = "";
+
+    var estado = "";
+
+    CargarSession();
+
+    function CargarSession() {
+        $http.get('/api/DatosSesion/').then(function (response) {
+            codigo_facturador = response.data[0].Identificacion;
+            CargarConsulta();
+        }, function errorCallback(response) {
+
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
+        });
+    }
+    function CargarConsulta() {
+        $("#wait").show();
+        $http.get('/api/PlanesTransacciones?Identificacion=' + codigo_facturador).then(function (response) {
+            $("#wait").hide();
+            try {
+                $("#grid").dxDataGrid({
+                    dataSource: response.data,
+                    paging: {
+                        pageSize: 20
+
+                    },
+                    pager: {
+                        showPageSizeSelector: true,
+                        allowedPageSizes: [5, 10, 20],
+                        showInfo: true
+                    },
+                    groupPanel: {
+                        allowColumnDragging: true,
+                        emptyPanelText: "Arrastre la columna aqui",
+                        visible: true
+                    },
+                    masterDetail: {
+                        enabled: true,
+                        template: function (container, options) {
+                            var currentEmployeeData = options.data.Observaciones;
+                            container.append($('<div> <h4 class="form-control">OBSERVACIONES:</h4> <p > ' + currentEmployeeData + '</p> </div>'));
+                        }
+                    },
+
+
+                    //Formatos personalizados a las columnas en este caso para el monto
+                    onCellPrepared: function (options) {
+                        var fieldData = options.value,
+                            fieldHtml = "";
+                        try {
+                            if (options.columnIndex == 5) {//Columna de valor Total
+                                if (fieldData) {
+                                    var inicial = fNumber.go(fieldData);
+                                    options.cellElement.html(inicial);
+                                }
+                            }
+                            if (options.columnIndex == 4) {
+                                if (fieldData) {
+                                    var inicial = FormatoNumber.go(fieldData);
+                                    options.cellElement.html(inicial);
+                                }
+                            }
+
+                            if (options.data.Estado == 'Habilitado') {
+                                estado = " style='color:green;' title='Habilitado'";
+                            } else {
+                                estado = " style='color:red;' title='Inhabilitado'";
+                            }
+
+                        } catch (err) {
+
+                        }
+                    }
+                    , loadPanel: {
+                        enabled: true
+                    }
+                 , columns: [
+                     {
+                         cssClass: "col-md-1 col-xs-1",
+                         width: 50,
+                         cellTemplate: function (container, options) {
+                             $("<div style='text-align:center'>")
+                                 .append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionPlanesTransacciones.aspx?StrIdSeguridad=" + options.data.id + "'>"))
+                                 .appendTo(container);
+                         }
+                     },
+                     {
+                         cssClass: "col-md-2 col-xs-4",
+                         caption: "Fecha",
+                         dataField: "Fecha",
+                         dataType: "date",
+                         format: "yyyy-MM-dd  hh:mm a"
+                     },
+                      {
+                          cssClass: "col-md-2 col-xs-3",
+                          caption: "Empresa Compra",
+                          dataField: "EmpresaFacturador"
+                      },
+                     {
+                         cssClass: "col-md-1 col-xs-1",
+                         caption: "Transacciones",
+                         dataField: "TCompra"
+                     },
+                      {
+                          cssClass: "col-md-1 col-xs-1",
+                          caption: "Valor",
+                          dataField: "Valor"
+                      },
+                     {
+                         cssClass: "col-md-1 col-xs-2",
+                         caption: "Procesadas",
+                         dataField: "TProcesadas"
+                     }
+                     ,
+                     {
+                         cssClass: "col-md-1 col-xs-2",
+                         caption: "Saldo",
+                         dataField: "Saldo"
+                     }
+                      , {
+                          cssClass: "col-md-2 hidden-xs",
+                          caption: "Empresa",
+                          dataField: "Empresa",
+
+                      },
+                     {
+                         cssClass: "col-md-2 hidden-xs",
+                         caption: "Usuario",
+                         dataField: "Usuario"
+                     }
+                     ,
+                      {
+                          cssClass: "col-md-1 col-xs-1",
+                          caption: 'Estado',
+                          dataField: 'Estado',
+                          cellTemplate: function (container, options) {
+                              $("<div style='text-align:center'>")
+                                  .append($("<a taget=_self class='icon-circle2'" + estado + ">"))
+                                  .appendTo(container);
+                          }
+                      }
+                 ],
+                    filterRow: {
+                        visible: true
+                    }
+                });
+
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 7000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
+        });
+    }
+});
+
+//Esta funcion es para ir a la pagina de consulta
+function IrAConsulta() {
+    window.location.assign("../Pages/ConsultaPlanesTransacciones.aspx");
+}
 
 //Funcion para Buscar el indice el Array de los objetos, segun el id de base de datos
 function BuscarID(miArray, ID) {
@@ -272,9 +457,6 @@ function BuscarID(miArray, ID) {
         }
     }
 }
-
-
-
 
 var TiposProceso =
     [

@@ -13,12 +13,8 @@
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
-                    <h6 class="panel-title">Gestión de Planes Transaccionales<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
-                    <div class="heading-elements">
-                        <ul class="icons-list">
-                            <li><a data-action="collapse"></a></li>
-                        </ul>
-                    </div>
+                    <h6 class="panel-title">Gestión de Planes Transaccionales</h6>
+                    
                 </div>
 
                 <div class="panel-body">
@@ -30,16 +26,16 @@
 
                                 <div class="dx-fieldset">
 
-                                    <div class="col-md-6 col-xs-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
-                                        <div class="dx-field-label" style="font-size: 14px;">Tipo Proceso:</div>
+                                    <div class="col-md-6 col-xs-12" style=" margin-top: 16px; ">
+                                        <div class="dx-field-label" style="font-size: 14px;">Tipo Proceso:<strom style="color: red;">*</strom></div>
                                         <div class="dx-field-value">
                                             <div id="TipoProceso"></div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 col-xs-10">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Empresa:<strom style="color: red;">*</label>
-                                        <div id="EmpresaPlan"></div>
+                                        <label style=" margin-top: 16px;">Empresa:<strom style="color: red;">*</strom></label>
+                                        <div id="txtempresaasociada"></div>
                                     </div>
 
                                     <div class="col-md-2 col-xs-2">
@@ -49,22 +45,26 @@
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Cantidad Transacciones:</label>
+                                        <label style="margin-top: 16px; ">Cantidad Transacciones:<strom style="color: red;">*</strom></label>
                                         <div id="CantidadTransacciones"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Valor Plan:<strom style="color: red;">*</label>
+                                        <label style=" margin-top: 16px; ">Valor Plan:<strom style="color: red;">*</strom></label>
                                         <div id="ValorPlan"></div>
                                     </div>
 
-                                   <div class="col-md-6 col-xs-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
-                                        <div class="dx-field-label" style="font-size: 14px;">Estado:</div>
+                                   <div class="col-md-6 col-xs-12" style=" margin-top: 16px;">
+                                        <div class="dx-field-label" style="font-size: 14px;">Estado:<strom style="color: red;">*</strom></div>
                                         <div class="dx-field-value">
                                             <div id="EstadoPlan"></div>
                                         </div>
                                     </div>
 
+                                    <div class="col-md-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observaciones:</label>                                        
+                                            <div id="txtObservaciones"></div>                                        
+                                    </div>
 
                                 </div>
 
@@ -77,6 +77,7 @@
                             <div class="col-lg-12 text-right">
                                 <br />
                                 <br />
+                                <a id="btncancelar" class="btn btn-default" style="text-transform: initial !important; margin-right: 1%" href="/Views/Pages/ConsultaPlanesTransacciones.aspx" style="font-size: 14px; text-align: center;">Cancelar</a>
                                 <div id="button"></div>
                             </div>
 
