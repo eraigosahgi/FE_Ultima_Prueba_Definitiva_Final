@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectronicaWeb.Properties;
+﻿using HGInetMiFacturaElectonicaData.Enumerables;
+using HGInetMiFacturaElectronicaWeb.Properties;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
         protected void Page_Init(object sender, EventArgs e)
         {
             this.CodigoOpcion = OpcionesPermisos.ConsultaAcuseRecibo;
+            this.ProcesoPagina = OperacionesBD.IntConsultar;
         }
 
         protected void Page_Load(object sender, EventArgs e)

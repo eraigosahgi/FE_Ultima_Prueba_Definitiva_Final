@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 {
@@ -17,6 +18,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
         protected void Page_Init(object sender, EventArgs e)
         {
             this.CodigoOpcion = OpcionesPermisos.PlanesTransacciones;
+            this.ProcesoPagina = OperacionesBD.IntConsultar;
         }
 
         protected void Page_Load(object sender, EventArgs e)

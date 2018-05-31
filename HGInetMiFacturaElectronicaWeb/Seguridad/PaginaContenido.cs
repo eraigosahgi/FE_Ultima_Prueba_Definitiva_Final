@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Properties;
 using System;
@@ -14,6 +15,7 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         protected ContentPlaceHolder contenido;
         private PaginaPrincipal custom_master;
         private string codigo_opcion = string.Empty;
+        private OperacionesBD proceso_pagina;
         protected PaginaPermiso PermisoActual { get; set; }
 
         protected ContentPlaceHolder Contenido
@@ -48,6 +50,12 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         {
             get { return codigo_opcion; }
             set { codigo_opcion = value; }
+        }
+
+        protected OperacionesBD ProcesoPagina
+        {
+            get { return proceso_pagina; }
+            set { proceso_pagina = value; }
         }
 
         /// <summary>
@@ -107,7 +115,7 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
                 if (string.IsNullOrEmpty(OpcionesPermisos.FacturacionElectronicaPrincipal.Split(',').Where(_opcion => _opcion.Equals(CodigoOpcion)).FirstOrDefault()))
                 {
                     // valida el permiso en la cookie
-                    if (!Sesion.ValidarPermiso(CodigoOpcion))
+                    if (!Sesion.ValidarPermiso(CodigoOpcion, ProcesoPagina))
                         Response.Redirect("~/Views/Pages/Inicio.aspx");
                 }
             }

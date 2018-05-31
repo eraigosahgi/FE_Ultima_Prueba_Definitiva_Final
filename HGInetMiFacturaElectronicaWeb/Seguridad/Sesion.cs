@@ -1,8 +1,11 @@
 ﻿using HGInetMiFacturaElectonicaController;
 using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
+using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -150,13 +153,38 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         /// </summary>
         /// <param name="codigo_opcion"></param>
         /// <returns></returns>
-        public static bool ValidarPermiso(string codigo_opcion)
+        public static bool ValidarPermiso(string codigo_opcion, OperacionesBD operacion_pagina)
         {
+
+            bool respuesta = false;
+
+            if (operacion_pagina == 0)
+                return false;
+
             // valida que el usuario tenga el permiso en la sesión
             if (string.IsNullOrEmpty(PermisosUsuario.Split(',').Where(_permiso => _permiso.Equals(codigo_opcion)).FirstOrDefault()))
-                return false;
+                respuesta = false;
             else
-                return true;
+            {
+                Ctl_OpcionesUsuario clase_permisos = new Ctl_OpcionesUsuario();
+
+                TblOpcionesUsuario datos_permiso = clase_permisos.ObtenerOpcionesUsuarios(DatosUsuario.StrUsuario, DatosUsuario.StrEmpresa, codigo_opcion).FirstOrDefault();
+
+                PropertyDescriptorCollection cols = TypeDescriptor.GetProperties((datos_permiso));
+
+                PropertyDescriptor campo = cols.Find(operacion_pagina.ToString(), true);
+
+                if (campo.Name.Equals(operacion_pagina.ToString()))
+                {
+                    if (Convert.ToBoolean(campo.GetValue(datos_permiso)))
+                        respuesta = true;
+                    else
+                        respuesta = false;
+                }
+
+            }
+
+            return respuesta;
         }
 
 
