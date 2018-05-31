@@ -226,14 +226,14 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 
     //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
-    var StrIdSeguridad = location.search.split('StrIdSeguridad=')[1];
+    var StrIdSeguridad = location.search.split('IdSeguridad=')[1];
     if (StrIdSeguridad != '' && StrIdSeguridad != null) {
         Consultar(StrIdSeguridad);
     }
 
     function Consultar(StrIdSeguridad) {
         $("#wait").show();
-        $http.get('/api/PlanesTransacciones?StrIdSeguridad=' + StrIdSeguridad).then(function (response) {
+        $http.get('/api/PlanesTransacciones?IdSeguridad=' + StrIdSeguridad).then(function (response) {
             $("#wait").hide();
             try {
                 Datos_TiposProceso = response.data[0].Tipo;
@@ -368,7 +368,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                          width: 50,
                          cellTemplate: function (container, options) {
                              $("<div style='text-align:center'>")
-                                 .append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionPlanesTransacciones.aspx?StrIdSeguridad=" + options.data.id + "'>"))
+                                 .append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionPlanesTransacciones.aspx?IdSeguridad=" + options.data.id + "'>"))
                                  .appendTo(container);
                          }
                      },
