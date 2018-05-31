@@ -372,7 +372,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 $("#txtempresaasociada").dxTextBox({ value: (Datos_empresa) ? Datos_empresa : '' });
                 $("#txtempresaasociada").dxTextBox({ readOnly: true });
                 $("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
-
+                $('#SelecionarEmpresa').hide();
 
                 var empresa = Datos_empresa.split(' -- ');
 
