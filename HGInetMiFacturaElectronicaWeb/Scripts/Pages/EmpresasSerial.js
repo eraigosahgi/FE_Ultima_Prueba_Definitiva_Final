@@ -219,10 +219,8 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
                                 html: true,
                             });
                         }
-                        $('input:text[name=EmailDestino]').val("");
-                        $("#modal_enviar_email").removeClass("modal fade in").addClass("modal fade");
-                        $('.modal-backdrop').remove();
-
+                        $('#btncerrarmodal').click();
+                        $('input:text[name=EmailDestino]').val("");                        
                     }, function errorCallback(response) {
                         $('#wait').hide();
                         DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
