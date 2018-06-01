@@ -197,7 +197,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 TblOpcionesUsuario datos_dependencia = (from permiso in context.TblOpcionesUsuario
                                                         where permiso.StrUsuario.Equals(codigo_usuario)
                                                          && permiso.StrEmpresa.Equals(identificacion_empresa)
-                                                        && permiso.IntIdOpcion == codigo_dependencia
+                                                        && permiso.IntIdOpcion == codigo
                                                         select permiso).FirstOrDefault();
 
                 return datos_dependencia;
