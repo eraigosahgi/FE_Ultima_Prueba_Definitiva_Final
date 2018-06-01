@@ -563,6 +563,53 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
         }
 
+
+
+        #region ProcesarDocumentos
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="codigo_adquiente"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        public List<TblDocumentos> ObtenerDocumentosaProcesar(System.Guid? IdSeguridad,  string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        {
+            fecha_inicio = fecha_inicio.Date;
+            fecha_fin = fecha_fin.Date.AddDays(1);
+
+            //int num_doc = -1;
+            //int.TryParse(numero_documento, out num_doc);
+
+            short cod_estado_recibo = -1;
+            short.TryParse(estado_recibo, out cod_estado_recibo);
+
+            //fecha_inicio = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
+            //fecha_fin = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
+
+            //if (string.IsNullOrWhiteSpace(numero_documento))
+            //    numero_documento = "*";
+            if (string.IsNullOrWhiteSpace(estado_recibo))
+                estado_recibo = "*";
+
+            var respuesta = (from datos in context.TblDocumentos
+                             join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+                             where  ((datos.StrIdSeguridad==IdSeguridad) || IdSeguridad ==null)
+                             //&& (empresa.StrIdentificacion.Equals(codigo_adquiente) || codigo_adquiente.Equals("*"))
+                                           //&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+                                           && (datos.IntIdEstado == cod_estado_recibo || estado_recibo.Equals("*"))
+                                           && (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
+                             orderby datos.IntNumero descending
+                             select datos).ToList();
+
+            return respuesta;
+        }
+        #endregion
+
+
+
     }
 
 

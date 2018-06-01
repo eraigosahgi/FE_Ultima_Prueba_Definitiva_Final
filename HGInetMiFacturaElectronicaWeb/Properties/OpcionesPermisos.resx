@@ -138,6 +138,9 @@
   <data name="PlanesTransacciones" xml:space="preserve">
     <value>1324</value>
   </data>
+  <data name="ProcesarDocumentos" xml:space="preserve">
+    <value>1314</value>
+  </data>
   <data name="Usuarios" xml:space="preserve">
     <value>1321</value>
   </data>

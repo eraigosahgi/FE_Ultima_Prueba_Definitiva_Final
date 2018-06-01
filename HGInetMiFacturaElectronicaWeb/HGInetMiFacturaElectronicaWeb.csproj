@@ -1850,6 +1850,7 @@
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
+    <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
     <Content Include="Scripts\Pages\ModalConsultaEmpresas.js" />
@@ -2675,6 +2676,7 @@
     <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
+    <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
     <Content Include="Views\Pages\GestionEmpresas.aspx" />
@@ -2807,6 +2809,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConsultaUsuarios.aspx.designer.cs">
       <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ProcesarDocumentos.aspx.cs">
+      <DependentUpon>ProcesarDocumentos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ProcesarDocumentos.aspx.designer.cs">
+      <DependentUpon>ProcesarDocumentos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\DocumentosAdquiriente.aspx.cs">
       <DependentUpon>DocumentosAdquiriente.aspx</DependentUpon>
@@ -2957,7 +2966,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61430/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

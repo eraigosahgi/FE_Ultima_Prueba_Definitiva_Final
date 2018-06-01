@@ -124,6 +124,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1314.
+        /// </summary>
+        internal static string ProcesarDocumentos {
+            get {
+                return ResourceManager.GetString("ProcesarDocumentos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1321.
         /// </summary>
         internal static string Usuarios {

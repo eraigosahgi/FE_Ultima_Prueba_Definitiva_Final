@@ -268,6 +268,10 @@
                                                         <asp:HyperLink runat="server" ID="link_1313" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaAcuseRecibo.aspx"><i class="icon-sort-time-desc"></i><span style="margin: -10px">Consulta Acuse</span></asp:HyperLink>
                                                     </li>
 
+                                                    <li runat="server" id="menu_1314">
+                                                        <asp:HyperLink runat="server" ID="link_1314" class="legitRipple" NavigateUrl="~/Views/Pages/ProcesarDocumentos.aspx"><i class="dx-icon-doc"></i><span style="margin: -10px">Procesar Documentos</span></asp:HyperLink>
+                                                    </li>
+
                                                 </ul>
 
                                             </li>

@@ -5,12 +5,14 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Script.Serialization;
 using System.Xml;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
@@ -315,5 +317,98 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 return string.Format("Desconocido {0}", e);
             }
         }
+
+        #region Procesar Documentos
+
+        /// <summary>
+        /// Recibe lista de Documentos 
+        /// </summary>
+        /// <param name="objeto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult Post(Object objeto)
+        {
+            try
+            {
+                Ctl_Documento clase_doc = new Ctl_Documento();
+
+                var jobjeto = (dynamic)objeto;
+
+                string ListaDoc = jobjeto.Documentos;
+
+                List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
+
+                foreach (var item in ListadeDocumentos)
+                {   //Aca coloco lo que quiero hacer con mis documentos
+                    string doc = item.Documentos.ToString();
+                }
+
+
+                return Ok();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+            /// <summary>
+            /// Obtiene los documentos para ser procesados
+            /// </summary>
+            /// <param name="codigo_adquiente"></param>
+            /// <param name="numero_documento"></param>
+            /// <param name="estado_recibo"></param>
+            /// <param name="fecha_inicio"></param>
+            /// <param name="fecha_fin"></param>
+            /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult Get(System.Guid? IdSeguridad, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        {
+            try
+            {
+                
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar(IdSeguridad, estado_recibo, fecha_inicio, fecha_fin);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    IdSeguridad = d.StrIdSeguridad,
+                    //NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
+                    d.DatFechaIngreso,
+                    //d.DatFechaVencDocumento,
+                    //d.IntVlrTotal,
+                    EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    //d.StrAdquirienteMvoRechazo,
+                    IdentificacionFacturador = d.TblEmpresasFacturador.StrIdentificacion,
+                    Facturador = d.TblEmpresasFacturador.StrIdentificacion + " -- " + d.TblEmpresasFacturador.StrRazonSocial                    
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+
+
+   
+        public class DocumentosJSON
+        {
+
+            public System.Guid Documentos { get; set; }
+
+        }
+        #endregion
     }
 }

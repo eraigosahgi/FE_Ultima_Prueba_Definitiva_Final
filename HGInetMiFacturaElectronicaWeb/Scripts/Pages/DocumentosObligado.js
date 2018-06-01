@@ -328,6 +328,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                             html: true,
                         });
                     }                    
+                    $('input:text[name=EmailDestino]').val("");                    
                     $('#btncerrarModal').click();
                 }, function errorCallback(response) {
                     $('#wait').hide();
