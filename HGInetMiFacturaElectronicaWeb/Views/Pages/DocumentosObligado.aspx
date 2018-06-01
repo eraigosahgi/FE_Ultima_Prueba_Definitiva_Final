@@ -119,7 +119,7 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div id="EncabezadoModal" class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <button type="button" id="btncerrarModal" class="close" data-dismiss="modal">×</button>
                         <h5 style="margin-bottom: 10px" class="modal-title">Envío E-mail Adquiriente</h5>
                     </div>
 
