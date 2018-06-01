@@ -166,7 +166,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                             $scope.showModal = true;
                                             email_destino = options.data.MailAdquiriente;
                                             id_seguridad = options.data.StrIdSeguridad;
-                                            $('input:text[name=EmailDestino]').val(email_destino);
+                                            $('input:text[name=EmailDestino]').val(email_destino);                                            
                                         }
                                     }).removeClass("dx-button dx-button-normal dx-widget")
                             )
@@ -336,11 +336,8 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                             animation: 'pop',
                             html: true,
                         });
-                    }
-                    $('input:text[name=EmailDestino]').val("");
-                    $("#modal_enviar_email").removeClass("modal fade in").addClass("modal fade");
-                    $('.modal-backdrop').remove();
-
+                    }                    
+                    $('#btncerrarModal').click();
                 }, function errorCallback(response) {
                     $('#wait').hide();
                     DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
