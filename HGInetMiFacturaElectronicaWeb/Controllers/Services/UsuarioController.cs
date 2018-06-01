@@ -22,6 +22,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 List<TblUsuarios> datos = new List<TblUsuarios>();
 
                 datos.Add(Sesion.DatosUsuario);

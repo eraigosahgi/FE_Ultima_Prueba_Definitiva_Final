@@ -16,6 +16,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 List<TblEmpresas> datos = new List<TblEmpresas>();
 
                 datos.Add(Sesion.DatosEmpresa);
@@ -43,22 +45,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             {
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
-        }
-
-
-        public dynamic ConvertirEmpresa(List<TblEmpresas> empresa)
-        {
-
-            var datos = "";
-
-            var retorno = datos.Select(d => new
-            {
-
-
-            });
-
-
-            return retorno;
         }
 
     }

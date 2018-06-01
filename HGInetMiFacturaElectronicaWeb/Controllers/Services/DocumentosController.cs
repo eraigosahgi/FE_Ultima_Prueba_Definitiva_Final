@@ -3,6 +3,7 @@ using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 Ctl_Documento ctl_documento = new Ctl_Documento();
@@ -83,6 +86,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 Ctl_Documento ctl_documento = new Ctl_Documento();
@@ -168,6 +173,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 Ctl_Documento ctl_documento = new Ctl_Documento();
                 List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
 
@@ -201,6 +208,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 Ctl_Documento ctl_documento = new Ctl_Documento();
                 List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, "*", estado_recibo, fecha_inicio, fecha_fin).Where(x => x.IntAdquirienteRecibo != 0).ToList();
@@ -213,6 +222,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     FechaRespuesta = d.DatAdquirienteFechaRecibo,
                     Estado = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    Xml = d.StrUrlArchivoUbl,
+                    Pdf = d.StrUrlArchivoPdf,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
                 });
 

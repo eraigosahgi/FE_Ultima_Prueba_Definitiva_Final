@@ -4,6 +4,7 @@ using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get()
         {
+            Sesion.ValidarSesion();
 
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
             List<TblEmpresas> datos = ctl_empresa.ObtenerTodas();
@@ -56,6 +58,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get([FromUri] bool Facturador)
         {
+            Sesion.ValidarSesion();
 
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
             List<TblEmpresas> datos = ctl_empresa.ObtenerFacturadores();
@@ -88,6 +91,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get(System.Guid IdSeguridad)
         {
+            Sesion.ValidarSesion();
 
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
             List<TblEmpresas> datos = ctl_empresa.Obtener(IdSeguridad);
@@ -127,6 +131,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpPost]
         public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada,[FromUri]string StrObservaciones, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
+            Sesion.ValidarSesion();
+
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
             TblEmpresas Empresa = new TblEmpresas();
             try
@@ -169,6 +175,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpPost]
         public IHttpActionResult Post([FromUri]string Identificacion, [FromUri]string Serial, [FromUri]string Resolucion)
         {
+            Sesion.ValidarSesion();
+
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
             TblEmpresas Empresa = new TblEmpresas();
             try
@@ -199,7 +207,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         public IHttpActionResult Post([FromUri]string Identificacion, [FromUri]string Mail)
         {            
             try
-            {                   
+            {
+                Sesion.ValidarSesion();
+
                 Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
                 bool Enviarmail = Email.EnviaSerial(Identificacion, Mail);
 

@@ -1,5 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectronicaWeb.Seguridad;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
     public class PlanesTransaccionesController : ApiController
     {
-
-
-
-
+        
         /// <summary>
         /// Obtiene la lista 
         /// </summary>        
@@ -22,30 +20,39 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get([FromUri]string Identificacion)
         {
-            Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-            var datos = ctl_PlanesTransacciones.Obtener(Identificacion);
-
-            if (datos == null)
+            try
             {
-                return NotFound();
+                Sesion.ValidarSesion();
+
+                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+                var datos = ctl_PlanesTransacciones.Obtener(Identificacion);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
+                    Usuario = d.StrUsuario,
+                    Valor = d.IntValor,
+                    TCompra = d.IntNumTransaccCompra,
+                    TProcesadas = d.IntNumTransaccProcesadas,
+                    id = d.StrIdSeguridad,
+                    Fecha = d.DatFecha,
+                    EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
+                    Estado = (d.BitProcesada) ? "Habilitado" : "Inhabilitado",
+                    Observaciones = d.StrObservaciones,
+                    Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas
+                });
+
+                return Ok(retorno);
             }
-
-            var retorno = datos.Select(d => new
+            catch (Exception excepcion)
             {
-                Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
-                Usuario = d.StrUsuario,
-                Valor = d.IntValor,
-                TCompra = d.IntNumTransaccCompra,
-                TProcesadas = d.IntNumTransaccProcesadas,
-                id = d.StrIdSeguridad,
-                Fecha = d.DatFecha,
-                EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
-                Estado = (d.BitProcesada)? "Habilitado" : "Inhabilitado",
-                Observaciones = d.StrObservaciones,
-                Saldo = d.IntNumTransaccCompra-d.IntNumTransaccProcesadas
-            });
-
-            return Ok(retorno);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
         /// <summary>
@@ -56,32 +63,42 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         [HttpGet]
         public IHttpActionResult Get(System.Guid IdSeguridad)
         {
-            Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-            List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.Obtener(IdSeguridad);
-
-            if (datos == null)
+            try
             {
-                return NotFound();
+                Sesion.ValidarSesion();
+
+                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+                List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.Obtener(IdSeguridad);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    Empresa = d.StrEmpresaUsuario,
+                    Usuario = d.StrUsuario,
+                    Valor = d.IntValor,
+                    TCompra = d.IntNumTransaccCompra,
+                    TProcesadas = d.IntNumTransaccProcesadas,
+                    id = d.StrIdSeguridad,
+                    Fecha = d.DatFecha,
+                    CodigoEmpresaFacturador = d.TblEmpresas.StrIdentificacion,
+                    EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
+                    Tipo = d.IntTipoProceso,
+                    Observaciones = d.StrObservaciones,
+                    Estado = d.BitProcesada
+
+                });
+
+                return Ok(retorno);
+
             }
-
-            var retorno = datos.Select(d => new
+            catch (Exception excepcion)
             {
-                Empresa = d.StrEmpresaUsuario,
-                Usuario = d.StrUsuario,
-                Valor = d.IntValor,
-                TCompra = d.IntNumTransaccCompra,
-                TProcesadas = d.IntNumTransaccProcesadas,
-                id = d.StrIdSeguridad,
-                Fecha = d.DatFecha,
-                CodigoEmpresaFacturador = d.TblEmpresas.StrIdentificacion,
-                EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
-                Tipo = d.IntTipoProceso,
-                Observaciones = d.StrObservaciones,
-                Estado = d.BitProcesada
-
-            });
-
-            return Ok(retorno);
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
         }
 
         /// <summary>
@@ -102,6 +119,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 
                 TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
@@ -119,14 +138,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception excepcion)
             {
-
-                throw;
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
-
-
 
         /// <summary>
         /// Crea una transaccion ya existente en plan de transaccion
@@ -146,6 +162,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 
                 TblPlanesTransacciones ObjPTransacciones = new TblPlanesTransacciones();
@@ -164,10 +182,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception excepcion)
             {
-
-                throw;
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
 

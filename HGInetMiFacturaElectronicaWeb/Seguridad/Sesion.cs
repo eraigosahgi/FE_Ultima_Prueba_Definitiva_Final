@@ -168,7 +168,7 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
             {
                 Ctl_OpcionesUsuario clase_permisos = new Ctl_OpcionesUsuario();
 
-                TblOpcionesUsuario datos_permiso = clase_permisos.ObtenerOpcionesUsuarios(DatosUsuario.StrUsuario, DatosUsuario.StrEmpresa, codigo_opcion).FirstOrDefault();
+                TblOpcionesUsuario datos_permiso = clase_permisos.ObtenerOpcionesUsuarios(DatosUsuario.StrUsuario, DatosUsuario.StrEmpresa, codigo_opcion, true).FirstOrDefault();
 
                 if (datos_permiso != null)
                 {

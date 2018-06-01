@@ -25,9 +25,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 Ctl_OpcionesUsuario clase_opc_usuario = new Ctl_OpcionesUsuario();
 
-                List<TblOpcionesUsuario> datos = clase_opc_usuario.ObtenerOpcionesUsuarios(codigo_usuario, codigo_empresa);
+                List<TblOpcionesUsuario> datos = clase_opc_usuario.ObtenerOpcionesUsuarios(codigo_usuario, codigo_empresa, "*", false);
 
                 if (datos == null)
                 {
@@ -59,6 +61,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 Ctl_OpcionesUsuario clase_opc_usuario = new Ctl_OpcionesUsuario();
 
                 List<TblOpcionesUsuario> datos = clase_opc_usuario.ObtenerOpcionesUsuarios(usuario_autenticado, empresa_autenticada, codigo_usuario, identificacion_empresa);
@@ -94,6 +98,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 Ctl_Permisos clase_permisos = new Ctl_Permisos();
 
                 List<TblOpciones> datos = clase_permisos.ObtenerDependencias(codigo_opcion);
@@ -126,6 +132,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                Sesion.ValidarSesion();
+
                 Ctl_OpcionesUsuario clase_opc_usuario = new Ctl_OpcionesUsuario();
 
                 var jobjeto = (dynamic)objeto;

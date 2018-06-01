@@ -60,7 +60,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             {
                 //Obtiene los permisos del usuario actualmente en la base de datos.
                 List<TblOpcionesUsuario> opciones_usuario_bd = new List<TblOpcionesUsuario>();
-                opciones_usuario_bd = ObtenerOpcionesUsuarios(codigo_usuario, codigo_empresa);
+                opciones_usuario_bd = ObtenerOpcionesUsuarios(codigo_usuario, codigo_empresa, "*", false);
 
                 List<TblOpcionesUsuario> opciones_grabar = new List<TblOpcionesUsuario>();
 
@@ -135,20 +135,98 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <param name="codigo_usuario"></param>
         /// <param name="identificacion_empresa"></param>
         /// <returns></returns>
-        public List<TblOpcionesUsuario> ObtenerOpcionesUsuarios(string codigo_usuario, string identificacion_empresa, string codigo_opcion = "*")
+        public List<TblOpcionesUsuario> ObtenerOpcionesUsuarios(string codigo_usuario, string identificacion_empresa, string codigo_opcion = "*", bool validar_dependencia = true)
         {
             try
             {
                 int cod_opcion = -1;
                 int.TryParse(codigo_opcion, out cod_opcion);
 
-                List<TblOpcionesUsuario> permisos_usuario = (from opcion in context.TblOpcionesUsuario
-                                                             where opcion.StrUsuario.Equals(codigo_usuario)
-                                                             && opcion.StrEmpresa.Equals(identificacion_empresa)
-                                                             && (opcion.IntIdOpcion == cod_opcion || codigo_opcion.Equals("*"))
-                                                             select opcion).ToList();
+                List<TblOpcionesUsuario> permisos_usuario = (from permiso in context.TblOpcionesUsuario
+                                                             where permiso.StrUsuario.Equals(codigo_usuario)
+                                                             && permiso.StrEmpresa.Equals(identificacion_empresa)
+                                                             && (permiso.IntIdOpcion == cod_opcion || codigo_opcion.Equals("*"))
+                                                             select permiso).ToList();
+
+                if (validar_dependencia)
+                {
+                    for (int i = 0; i < permisos_usuario.Count(); i++)
+                    {
+                        Ctl_Permisos clase_permisos = new Ctl_Permisos();
+                        int dependencia = clase_permisos.ObtenerOpcion(permisos_usuario[i].IntIdOpcion).IntIdDependencia.Value;
+
+                        if (dependencia != 0)
+                        {
+
+                            TblOpcionesUsuario datos_dependencia = ObtenerPermiso(codigo_usuario, identificacion_empresa, dependencia);
+
+                            if (datos_dependencia == null)
+                            {
+                                List<TblOpcionesUsuario> opciones_dependientes = ObtenerOpcionesPorDependencia(codigo_usuario, identificacion_empresa, permisos_usuario[i].IntIdOpcion);
+
+                                foreach (var dependencia_item in opciones_dependientes)
+                                {
+                                    permisos_usuario.Remove(dependencia_item);
+                                }
+
+                                permisos_usuario.Remove(permisos_usuario[i]);
+                            }
+                        }
+                    }
+                }
 
                 return permisos_usuario;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene el permiso por código
+        /// </summary>
+        /// <param name="codigo_usuario"></param>
+        /// <param name="identificacion_empresa"></param>
+        /// <param name="codigo_dependencia"></param>
+        /// <returns></returns>
+        public TblOpcionesUsuario ObtenerPermiso(string codigo_usuario, string identificacion_empresa, int codigo)
+        {
+            try
+            {
+                TblOpcionesUsuario datos_dependencia = (from permiso in context.TblOpcionesUsuario
+                                                        where permiso.StrUsuario.Equals(codigo_usuario)
+                                                         && permiso.StrEmpresa.Equals(identificacion_empresa)
+                                                        && permiso.IntIdOpcion == codigo_dependencia
+                                                        select permiso).FirstOrDefault();
+
+                return datos_dependencia;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene las opciones por dependencia
+        /// </summary>
+        /// <param name="codigo_usuario"></param>
+        /// <param name="identificacion_empresa"></param>
+        /// <param name="codigo_dependencia"></param>
+        /// <returns></returns>
+        public List<TblOpcionesUsuario> ObtenerOpcionesPorDependencia(string codigo_usuario, string identificacion_empresa, int codigo_dependencia)
+        {
+            try
+            {
+                List<TblOpcionesUsuario> datos_dependencia = (from permiso in context.TblOpcionesUsuario
+                                                              join opcion in context.TblOpciones on permiso.IntIdOpcion equals opcion.IntId
+                                                              where permiso.StrUsuario.Equals(codigo_usuario)
+                                                               && permiso.StrEmpresa.Equals(identificacion_empresa)
+                                                              && opcion.IntIdDependencia == codigo_dependencia
+                                                              select permiso).ToList();
+
+                return datos_dependencia;
             }
             catch (Exception excepcion)
             {
