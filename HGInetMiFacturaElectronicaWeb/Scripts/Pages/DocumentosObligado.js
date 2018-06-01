@@ -229,15 +229,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           caption: "Motivo Rechazo",
                           cssClass: "hidden-xs col-md-1",
                           dataField: "MotivoRechazo",
-                      },
-                      {
-                          dataField: "",
-                          cssClass: "col-xs-2 col-md-1",
-                          cellTemplate: function (container, options) {
-                              $("<div>")
-                                  .append($("<a target='_blank' class='icon-check' href='" + options.data.RutaAcuse + "'>Acuse</a>"))
-                                  .appendTo(container);
-                          }
                       }
                 ],
                 filterRow: {
