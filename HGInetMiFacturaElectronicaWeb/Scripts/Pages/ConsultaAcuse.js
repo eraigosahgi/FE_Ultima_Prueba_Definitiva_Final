@@ -103,7 +103,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                     var fieldData = options.value;
                     try {
                         //Valida el formato de fecha en la configuracion de fecha
-                        if (options.columnIndex == 3) {
+                        if (options.columnIndex == 4) {
                             if (fieldData) {
                                 var inicial = convertDateFormat(options.text);
                                 options.cellElement.html(inicial);
@@ -111,12 +111,38 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                         }
 
                     } catch (err) {
-                         DevExpress.ui.notify(err.message, 'error', 3000);
+                        DevExpress.ui.notify(err.message, 'error', 3000);
                     }
 
                 }
 
                 , columns: [
+                    {
+                        caption: "Archivos",
+                        cssClass: "col-xs-3 col-md-1",
+                        cellTemplate: function (container, options) {
+
+                            var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
+
+                            var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
+
+                            if (options.data.Pdf)
+                                visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer'";
+                            else
+                                options.data.Pdf = "#";
+
+                            if (options.data.Xml)
+                                visible_xml = "href='" + options.data.Xml + "' style='pointer-events:auto;cursor: pointer'";
+                            else
+                                options.data.Xml = "#";
+
+                            $("<div>")
+                                .append(
+                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"))
+                                .append($(""))
+                                .appendTo(container);
+                        }
+                    },
                      {
                          caption: "Identificación Adquiriente",
                          cssClass: "hidden-xs col-md-1",
