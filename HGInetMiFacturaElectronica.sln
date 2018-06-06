@@ -74,7 +74,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Liberaciones", "Liberacione
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.2", "v2018.2", "{455E2F68-5469-4137-B886-347444F87FF4}"
 	ProjectSection(SolutionItems) = preProject
-		20180606.txt = 20180606.txt
+		Documentacion\Liberaciones\v2018.2\20180606 - TblEmpresas.txt = Documentacion\Liberaciones\v2018.2\20180606 - TblEmpresas.txt
 	EndProjectSection
 EndProject
 Global
