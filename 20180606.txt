@@ -1,2 +1,0 @@
-ALTER TABLE [dbo].[TblEmpresas] ADD  CONSTRAINT [DF_TblEmpresas_IntAdministrador]  DEFAULT ((0)) FOR [IntAdministrador]
-GO
