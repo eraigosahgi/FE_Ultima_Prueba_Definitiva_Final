@@ -88,9 +88,7 @@ namespace HGInetFirmaDigital
 				{
 					throw new ApplicationException(string.Format("No se encuentra el certificado en la ruta {0}", RutaCertificado));
 				}
-
-
-
+				
 				XadesService xadesService = new XadesService();
 				parametros = new SignatureParameters();
 
@@ -134,8 +132,27 @@ namespace HGInetFirmaDigital
 
 				// Política de firma 
 				parametros.SignaturePolicyInfo = new SignaturePolicyInfo();
-				parametros.SignaturePolicyInfo.PolicyIdentifier = "https://facturaelectronica.dian.gov.co/politicadefirma/v1/politicadefirmav1.pdf"; //JOSE CARLOS AGRUEGUE ESTA Y COMENTE LA ANTERIOR
-				parametros.SignaturePolicyInfo.PolicyHash = "61fInBICBQOCBwuTwlaOZSi9HKc="; //SEA AGREGO
+				//parametros.SignaturePolicyInfo.PolicyDigestAlgorithm = DigestMethod.SHA1;
+				
+				// Política DIAN v1
+				//parametros.SignaturePolicyInfo.PolicyIdentifier = "https://facturaelectronica.dian.gov.co/politicadefirma/v1/politicadefirmav1.pdf";
+				//parametros.SignaturePolicyInfo.PolicyHash = "61fInBICBQOCBwuTwlaOZSi9HKc=";
+
+				// Política DIAN v2
+				parametros.SignaturePolicyInfo.PolicyIdentifier = "https://facturaelectronica.dian.gov.co/politicadefirma/v2/politicadefirmav2.pdf"; 
+				parametros.SignaturePolicyInfo.PolicyHash = "sbcECQ7v+y/m3OcBCJyvmkBhtFs=";
+
+				/* GENERACIÓN PolicyHash - El valor lo generó Carlos Aguilar en Visual FoxPro
+					SET LIBRARY TO LOCFILE("vfpencryption.fll")
+					cufehex=STRCONV(Hash(FILETOSTR("E:\FECOLOMBIA\politicadefirmav1.pdf"), 1), 15) && Easy way to get the hexBinary equivalent
+					cufehex =Hash(FILETOSTR("E:\FECOLOMBIA\politicadefirmav1.pdf"), 1) && Easy way to get the hexBinary equivalent
+					cufehex1=Hash(FILETOSTR("E:\FECOLOMBIA\politicadefirmav2.pdf"), 1)
+
+					?STRCONV(cufehex,13)
+
+					?STRCONV(cufehex1,13)
+				 */
+
 				parametros.cDescripcionPolicy = "Política de firma para facturas electrónicas de la República de Colombia";
 				parametros.SignaturePackaging = SignaturePackaging.ENVELOPED;
 				parametros.InputMimeType = "text/xml";
@@ -221,10 +238,27 @@ namespace HGInetFirmaDigital
 
 				// Política de firma 
 				parametros.SignaturePolicyInfo = new SignaturePolicyInfo();
-				parametros.SignaturePolicyInfo.PolicyIdentifier = "https://facturaelectronica.dian.gov.co/politicadefirma/v1/politicadefirmav1.pdf"; //JOSE CARLOS AGRUEGUE ESTA Y COMENTE LA ANTERIOR
-				parametros.SignaturePolicyInfo.PolicyHash = "61fInBICBQOCBwuTwlaOZSi9HKc="; //SEA AGREGO
-				parametros.cDescripcionPolicy = "Política de firma para facturas electrónicas de la República de Colombia";
+				//parametros.SignaturePolicyInfo.PolicyDigestAlgorithm = DigestMethod.SHA1;
 
+				// Política DIAN v1
+				//parametros.SignaturePolicyInfo.PolicyIdentifier = "https://facturaelectronica.dian.gov.co/politicadefirma/v1/politicadefirmav1.pdf";
+				//parametros.SignaturePolicyInfo.PolicyHash = "61fInBICBQOCBwuTwlaOZSi9HKc=";
+
+				// Política DIAN v2
+				parametros.SignaturePolicyInfo.PolicyIdentifier = "https://facturaelectronica.dian.gov.co/politicadefirma/v2/politicadefirmav2.pdf";
+				parametros.SignaturePolicyInfo.PolicyHash = "sbcECQ7v+y/m3OcBCJyvmkBhtFs=";
+
+				/* GENERACIÓN PolicyHash - El valor lo generó Carlos Aguilar en Visual FoxPro
+					SET LIBRARY TO LOCFILE("vfpencryption.fll")
+					cufehex=STRCONV(Hash(FILETOSTR("E:\FECOLOMBIA\politicadefirmav1.pdf"), 1), 15) && Easy way to get the hexBinary equivalent
+					cufehex =Hash(FILETOSTR("E:\FECOLOMBIA\politicadefirmav1.pdf"), 1) && Easy way to get the hexBinary equivalent
+					cufehex1=Hash(FILETOSTR("E:\FECOLOMBIA\politicadefirmav2.pdf"), 1)
+
+					?STRCONV(cufehex,13)
+
+					?STRCONV(cufehex1,13)
+				 */
+				parametros.cDescripcionPolicy = "Política de firma para facturas electrónicas de la República de Colombia";
 				parametros.SignaturePackaging = SignaturePackaging.ENVELOPED;
 				parametros.InputMimeType = "text/xml";
 				parametros.cNombreCertificado = "";
