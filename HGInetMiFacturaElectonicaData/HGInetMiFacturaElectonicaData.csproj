@@ -81,6 +81,7 @@
     <Compile Include="Enumerables\OperacionesBD.cs" />
     <Compile Include="Enumerables\Perfiles.cs" />
     <Compile Include="Enumerables\ProcesoEstado.cs" />
+    <Compile Include="ModeloServicio\Documentos\Cuota.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoArchivo.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoDetalle.cs" />
     <Compile Include="ModeloServicio\Documentos\Factura.cs" />

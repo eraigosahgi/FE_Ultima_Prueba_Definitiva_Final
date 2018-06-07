@@ -652,6 +652,7 @@
     <Compile Include="Dian_CommonExtensionComponents\ExtensionVersionIDType.cs" />
     <Compile Include="Dian_CommonExtensionComponents\UBLExtensionsType.cs" />
     <Compile Include="Dian_CommonExtensionComponents\UBLExtensionType.cs" />
+    <Compile Include="Enumeraciones\Ctl_Enumeracion.cs" />
     <Compile Include="Objetos\DocumentoImpuestos.cs" />
     <Compile Include="Recursos\TipoImpuestos.Designer.cs">
       <AutoGen>True</AutoGen>

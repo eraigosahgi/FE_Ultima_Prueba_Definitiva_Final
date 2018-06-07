@@ -33,6 +33,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public int Documento { get; set; }
 
+		/// <summary>
+		/// Documento referencia
+		/// </summary>
+		public string DocumentoRef { get; set; }
+
         /// <summary>
         /// Número de Resolución del Documento asignado por la DIAN
         /// </summary>
@@ -150,6 +155,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Datos del formato del documento
 		/// </summary>
 		public Formato DocumentoFormato { get; set; }
+
+		/// <summary>
+		/// Cuotas del documento Factura
+		/// </summary>
+		public List<Cuota> Cuotas { get; set; }
 
 		#endregion
 

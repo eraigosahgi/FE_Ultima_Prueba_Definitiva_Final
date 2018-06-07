@@ -129,4 +129,12 @@
     <value>01</value>
     <comment>Impuestos IVA registrado en la Factura</comment>
   </data>
+  <data name="ReteFte" xml:space="preserve">
+    <value>05</value>
+    <comment>Retención en la Fuente por Renta</comment>
+  </data>
+  <data name="ReteIva" xml:space="preserve">
+    <value>06</value>
+    <comment>Retención en la Fuente por IVA</comment>
+  </data>
 </root>

@@ -86,5 +86,23 @@ namespace HGInetUBL.Recursos {
                 return ResourceManager.GetString("Iva", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 05.
+        /// </summary>
+        internal static string ReteFte {
+            get {
+                return ResourceManager.GetString("ReteFte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 06.
+        /// </summary>
+        internal static string ReteIva {
+            get {
+                return ResourceManager.GetString("ReteIva", resourceCulture);
+            }
+        }
     }
 }
