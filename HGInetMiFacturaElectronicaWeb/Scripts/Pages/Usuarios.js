@@ -389,11 +389,14 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                             var data = {};
                             //Recorre la información retornada y la añade a la lista de permisos para almacenar en bd
                             for (i = 0; i < PermisosUsuario.length; i++) {
-                                var data = {};
-                                data = { IntIdOpcion: PermisosUsuario[i].Codigo, IntConsultar: PermisosUsuario[i].Consultar, IntAgregar: PermisosUsuario[i].Agregar, IntEditar: PermisosUsuario[i].Editar, IntEliminar: PermisosUsuario[i].Eliminar, IntAnular: PermisosUsuario[i].Anular, IntGestion: PermisosUsuario[i].Gestion };
-                                OpcionesUsuario.push(data);
-                            }
 
+                                if (PermisosUsuario[i].Consultar || PermisosUsuario[i].Agregar || PermisosUsuario[i].Editar || PermisosUsuario[i].Eliminar || PermisosUsuario[i].Anular || PermisosUsuario[i].Gestion) {
+
+                                    var data = {};
+                                    data = { IntIdOpcion: PermisosUsuario[i].Codigo, IntConsultar: PermisosUsuario[i].Consultar, IntAgregar: PermisosUsuario[i].Agregar, IntEditar: PermisosUsuario[i].Editar, IntEliminar: PermisosUsuario[i].Eliminar, IntAnular: PermisosUsuario[i].Anular, IntGestion: PermisosUsuario[i].Gestion };
+                                    OpcionesUsuario.push(data);
+                                }
+                            }
                             GenerarTreeList(response.data);
 
                         } catch (err) {
