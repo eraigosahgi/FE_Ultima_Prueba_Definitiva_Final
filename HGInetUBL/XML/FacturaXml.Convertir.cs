@@ -128,8 +128,23 @@ namespace HGInetUBL
 				detalle.Codigo = Convert.ToInt16(factura_ubl.InvoiceLine[i].ID.Value);
 				detalle.ProductoCodigo = factura_ubl.InvoiceLine[i].Item.CatalogueItemIdentification.ID.Value;
 				detalle.ProductoNombre = factura_ubl.InvoiceLine[i].Item.Description[0].Value;
-				detalle.ProductoDescripcion = factura_ubl.InvoiceLine[i].Item.AdditionalInformation.Value;
+				if (!string.IsNullOrEmpty(factura_ubl.InvoiceLine[i].Item.AdditionalInformation.Value))
+				{
+					detalle.ProductoDescripcion = factura_ubl.InvoiceLine[i].Item.AdditionalInformation.Value;
+				}
+				else
+				{
+					detalle.ProductoDescripcion = string.Empty;
+				}
 				detalle.Cantidad = factura_ubl.InvoiceLine[i].InvoicedQuantity.Value;
+				if(!string.IsNullOrEmpty(factura_ubl.InvoiceLine[i].InvoicedQuantity.unitCode.ToString()))
+				{
+					detalle.UnidadCodigo = factura_ubl.InvoiceLine[i].InvoicedQuantity.unitCode.ToString();
+				}
+				else
+				{
+					detalle.UnidadCodigo = "S7";
+				}
 				detalle.ValorUnitario = factura_ubl.InvoiceLine[i].Price.PriceAmount.Value;
 				detalle.ValorSubtotal = factura_ubl.InvoiceLine[i].LineExtensionAmount.Value;
 				if (TipoImpuestos.Iva.Equals(factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxCategory.TaxScheme.ID.Value))
