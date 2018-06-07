@@ -44,7 +44,15 @@ namespace HGInetUBL
 				factura_obj.Documento = Convert.ToInt32(factura_ubl.ID.Value);
 			}
 
-			factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
+			if (!string.IsNullOrEmpty(factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value))
+			{
+				factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
+			}
+			else
+			{
+				factura_obj.DocumentoRef = string.Empty;
+			}
+
 			factura_obj.Fecha = factura_ubl.IssueDate.Value;
 			factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
 			factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
@@ -144,7 +152,7 @@ namespace HGInetUBL
 					detalle.ReteFuentePorcentaje = factura_ubl.TaxTotal[i].TaxSubtotal[0].Percent.Value;
 					detalle.ReteFuenteValor = factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxAmount.Value;
 				}
-				
+
 
 				list_detalle.Add(detalle);
 
