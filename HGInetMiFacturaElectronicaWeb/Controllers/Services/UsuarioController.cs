@@ -99,6 +99,23 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
+                //Se coloca esta valiacion para que no puedan enviar *,* por la webapi, se puede enviar el usuario*, pero no la empresa
+                if (codigo_empresa == "*")
+                    throw new ApplicationException("Error al consultar los datos de los usuarios *");
+
+                Sesion.ValidarSesion();
+
+                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+                datosSesion.Add(Sesion.DatosEmpresa);
+
+                TblEmpresas datosempresa = datosSesion.FirstOrDefault();
+
+                if (datosempresa.IntAdministrador)
+                {
+                    codigo_empresa = "*";
+                }
+
                 Ctl_Usuario ctl_usuario = new Ctl_Usuario();
                 //ObtenerUsuarios
                 List<TblUsuarios> datos = ctl_usuario.ObtenerUsuarios(codigo_usuario, codigo_empresa);
@@ -321,7 +338,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     usuario.StrEmpresa = StrEmpresa;
                     usuario.StrUsuario = StrUsuario;
                     usuario.StrNombres = StrNombres;
-                    usuario.StrApellidos = StrApellidos;
+                    usuario.StrApellidos = (StrApellidos != null) ? StrApellidos : "";
                     usuario.StrMail = StrMail;
                     usuario.StrTelefono = StrTelefono;
                     usuario.StrExtension = StrExtension;
@@ -337,7 +354,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     usuario.StrEmpresa = StrEmpresa;
                     usuario.StrUsuario = StrUsuario;
                     usuario.StrNombres = StrNombres;
-                    usuario.StrApellidos = StrApellidos;
+                    usuario.StrApellidos = (StrApellidos != null) ? StrApellidos : "";
                     usuario.StrMail = StrMail;
                     usuario.StrTelefono = StrTelefono;
                     usuario.StrExtension = StrExtension;

@@ -351,21 +351,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
-            /// <summary>
-            /// Obtiene los documentos para ser procesados
-            /// </summary>
-            /// <param name="codigo_adquiente"></param>
-            /// <param name="numero_documento"></param>
-            /// <param name="estado_recibo"></param>
-            /// <param name="fecha_inicio"></param>
-            /// <param name="fecha_fin"></param>
-            /// <returns></returns>
+        /// <summary>
+        /// Obtiene los documentos para ser procesados
+        /// </summary>
+        /// <param name="codigo_adquiente"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
         [HttpGet]
         public IHttpActionResult Get(System.Guid? IdSeguridad, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
             try
             {
-                
+
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 Ctl_Documento ctl_documento = new Ctl_Documento();
@@ -388,7 +388,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
                     //d.StrAdquirienteMvoRechazo,
                     IdentificacionFacturador = d.TblEmpresasFacturador.StrIdentificacion,
-                    Facturador = d.TblEmpresasFacturador.StrIdentificacion + " -- " + d.TblEmpresasFacturador.StrRazonSocial                    
+                    Facturador = d.TblEmpresasFacturador.StrIdentificacion + " -- " + d.TblEmpresasFacturador.StrRazonSocial
                 });
 
                 return Ok(retorno);
@@ -402,7 +402,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 
-   
+
         public class DocumentosJSON
         {
 

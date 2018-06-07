@@ -50,26 +50,26 @@
                                     </div>
 
                                     <div class="col-md-6 col-xs-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
-                                        <div class="dx-field-label" style="font-size: 14px;">Habilitación:<strom style="color: red;">*</strom></div>
+                                        <div class="dx-field-label" style="font-size: 14px;" id="idHabilitacion">Habilitación:<strom style="color: red;">*</strom></div>
                                         <div class="dx-field-value">
                                             <div id="Habilitacion"></div>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 col-xs-10">
+                                            <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%" >Empresa Asociada:</label>
+                                            <div id="txtempresaasociada" style="margin-left: -10px; margin-bottom: 1%"></div>
 
-                                    <div class="col-md-6 col-xs-10">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Empresa Asociada:</label>
-                                        <div id="txtempresaasociada"></div>
+                                        </div>
 
+                                        <div class="col-md-6 col-xs-2" style="margin-top: 2%">
+                                            <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba;">
+                                                <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
+                                            </a>
+                                        </div>
                                     </div>
-
-                                    <div class="col-md-6 col-xs-2" style="margin-top: 2%">
-                                        <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba;">
-                                            <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
-                                        </a>
-                                    </div>
-
                                     
-                                    <div >
+                                     <div class="col-md-12">
                                         <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observacaciones:</label>
                                         <div id="txtobservaciones"></div>
                                     </div>

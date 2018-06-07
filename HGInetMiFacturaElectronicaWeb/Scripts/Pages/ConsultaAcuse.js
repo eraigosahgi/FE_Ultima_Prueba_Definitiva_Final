@@ -19,25 +19,36 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
     });
 
 
+    $("#FechaInicial").dxDateBox({
+        value: now,
+        displayFormat: "yyyy-MM-dd",
+        onValueChanged: function (data) {
+            fecha_inicio = new Date(data.value).toISOString();
+            if (new Date(data.value).toISOString() > fecha_fin) {
+                DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
+                $("#FechaInicial").dxDateBox({ value: fecha_fin });
+                fecha_inicio: fecha_fin;
+            }
+        }
+
+    });
+
+    $("#FechaFinal").dxDateBox({
+        value: now,
+        displayFormat: "yyyy-MM-dd",
+        onValueChanged: function (data) {
+            fecha_fin = new Date(data.value).toISOString();
+            if (new Date(data.value).toISOString() < fecha_inicio) {
+                DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
+                $("#FechaFinal").dxDateBox({ value: fecha_inicio });
+                fecha_fin: fecha_inicio;
+            }
+        }
+
+    });
+
     $scope.filtros =
            {
-               //Control defecto ingreso de datos.
-               FechaInicial: {
-                   type: "date",
-                   value: now,
-                   displayFormat: "yyyy-MM-dd",
-                   onValueChanged: function (data) {
-                       fecha_inicio = new Date(data.value).toISOString();
-                   }
-               },
-               FechaFinal: {
-                   type: "date",
-                   value: now,
-                   displayFormat: "yyyy-MM-dd",
-                   onValueChanged: function (data) {
-                       fecha_fin = new Date(data.value).toISOString();
-                   }
-               },
                EstadoRecibo: {
                    searchEnabled: true,
                    //Carga la data del control
@@ -98,24 +109,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                     allowedPageSizes: [5, 10, 20],
                     showInfo: true
                 }
-                //Formatos personalizados a las columnas en este caso para el monto
-                , onCellPrepared: function (options) {
-                    var fieldData = options.value;
-                    try {
-                        //Valida el formato de fecha en la configuracion de fecha
-                        if (options.columnIndex == 4) {
-                            if (fieldData) {
-                                var inicial = convertDateFormat(options.text);
-                                options.cellElement.html(inicial);
-                            }
-                        }
-
-                    } catch (err) {
-                        DevExpress.ui.notify(err.message, 'error', 3000);
-                    }
-
-                }
-
                 , columns: [
                     {
                         caption: "Archivos",
@@ -162,6 +155,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                         caption: "Fecha Respuesta",
                         dataField: "FechaRespuesta",
                         dataType: "date",
+                        format: "yyyy-MM-dd hh:mm a",
                         cssClass: "col-xs-3 col-md-1",
                         validationRules: [{
                             type: "required",

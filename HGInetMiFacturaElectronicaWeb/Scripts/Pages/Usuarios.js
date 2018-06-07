@@ -42,6 +42,10 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                     allowedPageSizes: [5, 10, 20],
                     showInfo: true
                 },
+                loadPanel: {
+                    enabled: true
+                }
+            , allowColumnResizing: true,
                 columns: [
                      {
                          caption: "",
@@ -135,13 +139,13 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
     $http.get('/api/DatosSesion/').then(function (response) {
 
         codigo_facturador = response.data[0].Identificacion;
-        if (codigo_facturador == '811021438') {
+        var tipo = response.data[0].Admin;
+        if (tipo) {
             $scope.Admin = true;
         } else {
             $('#SelecionarEmpresa').hide();
             $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
-
     });
 
     var Datos_nombres = "",
@@ -184,8 +188,14 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         })
         .dxValidator({
             validationRules: [{
-                type: "required",
-                message: "Debe indicar el Apellido"
+                type: 'custom', validationCallback: function (options) {
+                    if ((Datos_empresa!=Datos_usuario)&& Datos_apellidos=='') {
+                        options.rule.message = "Debe Indicar el apellido";
+                        return false;
+                    } else {                        
+                        return true;
+                    }
+                }                
             }, {
                 type: 'stringLength',
                 max: 50,
@@ -216,8 +226,14 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         })
         .dxValidator({
             validationRules: [{
-                type: "required",
-                message: "Debe introducir el Teléfono"
+                type: 'custom', validationCallback: function (options) {
+                    if ((Datos_empresa!=Datos_usuario)&& Datos_telefono=='') {
+                        options.rule.message = "Debe introducir el Teléfono";
+                        return false;
+                    } else {                        
+                        return true;                       
+                    }
+                }                
             }, {
                 type: "stringLength",
                 max: 50,
@@ -278,10 +294,8 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             }
         })
        .dxValidator({
-           validationRules: [{
-               type: "required",
-               message: "Debe introducir el Cargo"
-           }, {
+           validationRules: [
+           {
                type: "stringLength",
                max: 50,
                message: "El Cargo no puede ser mayor a 50 caracteres"
@@ -374,8 +388,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 $("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
                 $('#SelecionarEmpresa').hide();
 
-                var empresa = Datos_empresa.split(' -- ');
-
+                var empresa = Datos_empresa.split(' -- ');                
 
                 $http.get('/api/Usuario/').then(function (response) {
                     //string usuario_autenticado, string empresa_autenticada, string codigo_usuario, string identificacion_empresa
@@ -408,6 +421,11 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                     });
                 });
 
+
+                if (Datos_empresa == Datos_usuario) {                 
+                    $('#lblapellido').text('Apellidos:');
+                    $('#lbltelefono').text('Teléfono:');
+                }
 
             } catch (err) {
                 DevExpress.ui.notify(err.message, 'error', 7000);
@@ -486,7 +504,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             }
         }, function errorCallback(response) {
             $('#wait').hide();
-            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);
         });
     }
 
@@ -522,21 +540,21 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                   .appendTo(container);
             }
         },
-{
-    caption: "Agregar",
-    cssClass: "col-xs-3 col-md-1",
-    cellTemplate: function (container, options) {
-        $("<div>")
-            .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
-                value: PermisosActuales(options.data.Codigo, 2),
-                onValueChanged: function (e) {
-                    IncluirItem(e, 2, options.data.Codigo);
-                }
-            }).removeClass("dx-button dx-button-normal dx-widget")
-            .append($(""))
-          .appendTo(container);
-    }
-},
+    {
+        caption: "Agregar",
+        cssClass: "col-xs-3 col-md-1",
+        cellTemplate: function (container, options) {
+            $("<div>")
+                .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
+                    value: PermisosActuales(options.data.Codigo, 2),
+                    onValueChanged: function (e) {
+                        IncluirItem(e, 2, options.data.Codigo);
+                    }
+                }).removeClass("dx-button dx-button-normal dx-widget")
+                .append($(""))
+              .appendTo(container);
+        }
+    },
                     {
                         caption: "Editar",
                         cssClass: "col-xs-3 col-md-1",
@@ -567,21 +585,21 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
           .appendTo(container);
             }
         },
-{
-    caption: "Anular",
-    cssClass: "col-xs-3 col-md-1",
-    cellTemplate: function (container, options) {
-        $("<div>")
-            .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
-                value: PermisosActuales(options.data.Codigo, 5),
-                onValueChanged: function (e) {
-                    IncluirItem(e, 5, options.data.Codigo);
-                }
-            }).removeClass("dx-button dx-button-normal dx-widget")
-            .append($(""))
-          .appendTo(container);
-    }
-},
+    {
+        caption: "Anular",
+        cssClass: "col-xs-3 col-md-1",
+        cellTemplate: function (container, options) {
+            $("<div>")
+                .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
+                    value: PermisosActuales(options.data.Codigo, 5),
+                    onValueChanged: function (e) {
+                        IncluirItem(e, 5, options.data.Codigo);
+                    }
+                }).removeClass("dx-button dx-button-normal dx-widget")
+                .append($(""))
+              .appendTo(container);
+        }
+    },
     {
         caption: "Gestión",
         cssClass: "col-xs-3 col-md-1",

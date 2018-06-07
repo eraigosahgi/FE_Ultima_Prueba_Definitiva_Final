@@ -19,7 +19,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
     $http.get('/api/DatosSesion/').then(function (response) {
         codigo_facturador = response.data[0].Identificacion;
-        if (codigo_facturador == '811021438') {
+        var tipo = response.data[0].Admin;
+        if (tipo) {
             $scope.Admin = true;
         } else {
             $("#button").hide();
@@ -355,6 +356,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                     , loadPanel: {
                         enabled: true
                     }
+                      , allowColumnResizing: true
                  , columns: [
                      {
                          cssClass: "col-md-1 col-xs-1",
@@ -409,6 +411,13 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                          caption: "Usuario",
                          dataField: "Usuario"
                      }
+                     ,
+                     {
+                         cssClass: "col-md-2",
+                         caption: "Tipo",
+                         dataField: "Tipoproceso"
+                     }
+
                      ,
                       {
                           cssClass: "col-md-1 col-xs-1",

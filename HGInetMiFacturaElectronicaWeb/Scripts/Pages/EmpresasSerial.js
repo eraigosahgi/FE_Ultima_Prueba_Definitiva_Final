@@ -6,10 +6,10 @@ var SerialEmpresaApp = angular.module('SerialEmpresaApp', ['ModalSerialEmpresaAp
 
 //Servicio para gestionar la consulta de las empresas 
 angular.module("appsrvusuario", [])
-.factory("srvusuario", function ( $http) {
+.factory("srvusuario", function ($http) {
 
-    var Scope = function () { }    
-    Scope.consulta = function () {    
+    var Scope = function () { }
+    Scope.consulta = function () {
         $("#wait").show();
         $http.get('/api/Empresas?Facturador=true').then(function (response) {
             $("#wait").hide();
@@ -25,7 +25,10 @@ angular.module("appsrvusuario", [])
                     allowedPageSizes: [5, 10, 20],
                     showInfo: true
                 }
-
+                 , loadPanel: {
+                     enabled: true
+                 }
+                      , allowColumnResizing: true
                    , columns: [
                        {
                            //href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'
@@ -116,7 +119,7 @@ angular.module("appsrvusuario", [])
 
 //Controlador para gestionar el envio del Email con el serial desde el nuevo modal
 SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaController($scope, $http, $location, srvusuario) {
-    
+
     //Formulario.
     $scope.formOptionsEmailEnvio = {
 
@@ -186,15 +189,15 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
                     throw new DOMException("El e-mail de destino es obligatorio.");
                 }
 
-                var data = $.param({                                                           
+                var data = $.param({
                     Identificacion: srvusuario.indetificacion,
                     Mail: email_destino
                 });
                 if ($scope.serial == "") {
                     DevExpress.ui.notify("No se puede enviar email si no posee Serial", 'error', 10000);
-                }else{
+                } else {
                     $('#wait').show();
-                    $http.post('/api/Empresas?'+ data).then(function (responseEnvio) {
+                    $http.post('/api/Empresas?' + data).then(function (responseEnvio) {
                         $('#wait').hide();
                         var respuesta = responseEnvio.statusText;
 
@@ -220,7 +223,7 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
                             });
                         }
                         $('#btncerrarmodal').click();
-                        $('input:text[name=EmailDestino]').val("");                        
+                        $('input:text[name=EmailDestino]').val("");
                     }, function errorCallback(response) {
                         $('#wait').hide();
                         DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
@@ -234,7 +237,7 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
     };
 
 
-     $scope.consulta = srvusuario.consulta();
+    $scope.consulta = srvusuario.consulta();
 });
 
 //Controlador para gestion el registro del serial
@@ -287,7 +290,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
 
 
 
-        $("#txtnitEmpresa").dxTextBox({            
+        $("#txtnitEmpresa").dxTextBox({
             readOnly: true,
             onValueChanged: function (data) {
                 $scope.nitEmpresa = data.value;

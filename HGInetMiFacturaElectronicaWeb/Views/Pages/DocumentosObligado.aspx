@@ -36,14 +36,15 @@
 
                                     <div class="col-md-3">
                                         <i class=" icon-calendar"></i>
-                                        <label>Fecha Inicial</label>
-                                        <div dx-date-box="filtros.FechaInicial"></div>
+                                        <label>Fecha Inicial:</label>
+                                        <div id="FechaInicial"></div>
                                     </div>
+
 
                                     <div class="col-md-3">
                                         <i class=" icon-calendar"></i>
-                                        <label>Fecha Final</label>
-                                        <div dx-date-box="filtros.FechaFinal"></div>
+                                        <label>Fecha Final:</label>
+                                        <div id="FechaFinal"></div>
                                     </div>
 
                                     <div class="col-md-3">
@@ -92,12 +93,7 @@
             <div class="col-md-12">
                 <div class="panel panel-white">
                     <div class="panel-heading">
-                        <h6 class="panel-title">Datos<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
-                        <div class="heading-elements">
-                            <ul class="icons-list">
-                                <li><a data-action="collapse"></a></li>
-                            </ul>
-                        </div>
+                        <h6 class="panel-title">Datos</h6>
                     </div>
 
                     <div class="panel-body">

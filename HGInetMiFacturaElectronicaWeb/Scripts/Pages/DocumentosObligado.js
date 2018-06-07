@@ -20,27 +20,37 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         consultar();
     });
 
+    $("#FechaInicial").dxDateBox({
+        value: now,
+        displayFormat: "yyyy-MM-dd",
+        onValueChanged: function (data) {
+            fecha_inicio = new Date(data.value).toISOString();
+            if (new Date(data.value).toISOString() > fecha_fin) {
+                DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
+                $("#FechaInicial").dxDateBox({ value: fecha_fin });
+                fecha_inicio: fecha_fin;
+            }
+        }
 
+    });
+
+    $("#FechaFinal").dxDateBox({
+        value: now,
+        displayFormat: "yyyy-MM-dd",
+        onValueChanged: function (data) {
+            fecha_fin = new Date(data.value).toISOString();
+            if (new Date(data.value).toISOString() < fecha_inicio) {
+                DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
+                $("#FechaFinal").dxDateBox({ value: fecha_inicio });
+                fecha_fin: fecha_inicio;
+            }
+        }
+
+    });
     //Define los campos y las opciones
     $scope.filtros =
         {
-            //Control defecto ingreso de datos.
-            FechaInicial: {
-                type: "date",
-                value: now,
-                displayFormat: "yyyy-MM-dd",
-                onValueChanged: function (data) {
-                    fecha_inicio = new Date(data.value).toISOString();
-                }
-            },
-            FechaFinal: {
-                type: "date",
-                value: now,
-                displayFormat: "yyyy-MM-dd",
-                onValueChanged: function (data) {
-                    fecha_fin = new Date(data.value).toISOString();
-                }
-            }, EstadoDian: {
+            EstadoDian: {
                 searchEnabled: true,
                 //Carga la data del control
                 dataSource: new DevExpress.data.ArrayStore({
@@ -137,7 +147,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         DevExpress.ui.notify(err.message, 'error', 3000);
                     }
 
+                }, loadPanel: {
+                    enabled: true
                 }
+                      , allowColumnResizing: true
                 , columns: [
                     {
                         caption: "Archivos",
@@ -166,7 +179,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                             $scope.showModal = true;
                                             email_destino = options.data.MailAdquiriente;
                                             id_seguridad = options.data.StrIdSeguridad;
-                                            $('input:text[name=EmailDestino]').val(email_destino);                                            
+                                            $('input:text[name=EmailDestino]').val(email_destino);
                                         }
                                     }).removeClass("dx-button dx-button-normal dx-widget")
                             )
@@ -327,8 +340,8 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                             animation: 'pop',
                             html: true,
                         });
-                    }                    
-                    $('input:text[name=EmailDestino]').val("");                    
+                    }
+                    $('input:text[name=EmailDestino]').val("");
                     $('#btncerrarModal').click();
                 }, function errorCallback(response) {
                     $('#wait').hide();

@@ -580,28 +580,21 @@ namespace HGInetMiFacturaElectonicaController.Registros
             fecha_inicio = fecha_inicio.Date;
             fecha_fin = fecha_fin.Date.AddDays(1);
 
-            //int num_doc = -1;
-            //int.TryParse(numero_documento, out num_doc);
-
             short cod_estado_recibo = -1;
             short.TryParse(estado_recibo, out cod_estado_recibo);
 
-            //fecha_inicio = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
-            //fecha_fin = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
-
-            //if (string.IsNullOrWhiteSpace(numero_documento))
-            //    numero_documento = "*";
+            fecha_inicio = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
+            fecha_fin = Convert.ToDateTime(fecha_fin.ToString(Fecha.formato_fecha_hginet));
+            
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
 
             var respuesta = (from datos in context.TblDocumentos
                              join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-                             where  ((datos.StrIdSeguridad==IdSeguridad) || IdSeguridad ==null)
-                             //&& (empresa.StrIdentificacion.Equals(codigo_adquiente) || codigo_adquiente.Equals("*"))
-                                           //&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+                             where  ((datos.StrIdSeguridad==IdSeguridad) || IdSeguridad ==null)                             
                                            && (datos.IntIdEstado == cod_estado_recibo || estado_recibo.Equals("*"))
                                            && (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
-                             orderby datos.IntNumero descending
+                             orderby datos.DatFechaIngreso descending
                              select datos).ToList();
 
             return respuesta;

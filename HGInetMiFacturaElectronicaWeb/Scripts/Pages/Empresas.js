@@ -1,11 +1,15 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
+var TiposHabilitacion = [];
 
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var EmpresasApp = angular.module('EmpresasApp', ['ModalEmpresasApp', 'dx']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
 EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location) {
+
+    //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
+    var id_seguridad = location.search.split('IdSeguridad=')[1];
 
     var now = new Date();
 
@@ -15,15 +19,20 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
+           Habilitacion = "",
            codigo_adquiriente = "";
+
     $http.get('/api/DatosSesion/').then(function (response) {
         codigo_facturador = response.data[0].Identificacion;
-        if (codigo_facturador == '811021438') {
+        Habilitacion = response.data[0].Habilitacion;
+        var tipo = response.data[0].Admin;
+        if (tipo) {
             $scope.Admin = true;
         } else {
             $('#SelecionarEmpresa').hide();
             $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
+        CargarFormulario();
     });
 
     var Datos_Tipoidentificacion = "",
@@ -40,7 +49,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
     //Define los campos del Formulario  
-    $(function () {
+    function CargarFormulario() {
         $("#summary").dxValidationSummary({});
 
         $("#TipoIndentificacion").dxSelectBox({
@@ -127,6 +136,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             value: false,
             onValueChanged: function (data) {
                 Datos_Obligado = data.value;
+                validarHabilitacion();
             }
         }).dxValidator({
             validationRules: [
@@ -147,6 +157,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             value: false,
             onValueChanged: function (data) {
                 Datos_Adquiriente = data.value;
+                validarHabilitacion();
             }
         }).dxValidator({
             validationRules: [
@@ -161,26 +172,75 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             ]
         });
 
+        function validarHabilitacion() {
+            console.log("Validando Información");
+            var caso = "";
 
 
-        $("#Habilitacion").dxRadioGroup({
-            searchEnabled: true,
-            caption: 'Habilitación',
-            dataSource: new DevExpress.data.ArrayStore({
-                data: TiposHabilitacion,
-                key: "ID"
-            }),
-            displayExpr: "Texto",
-            Enabled: true,
-            onValueChanged: function (data) {
-                Datos_Habilitacion = data.value.ID;
+            if (Datos_Adquiriente) {
+                caso = "Adquiriente";
             }
-        }).dxValidator({
-            validationRules: [{
-                type: "required",
-                message: "Debe indicar el tipo de Habilitacion"
-            }]
+            if (Datos_Obligado) {
+                caso = "Facturador";
+            }
+
+            switch (caso) {
+                case "Facturador":
+                    console.log("Facturador");
+                    Datos_Habilitacion = Habilitacion;
+                    $('#idHabilitacion').show();
+                    $("#Habilitacion").dxRadioGroup({ visible: true });
+                    $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
+                    break;
+                case "Adquiriente":
+                    console.log("Adquiriente");
+                    $('#idHabilitacion').hide();
+                    $("#Habilitacion").dxRadioGroup({ visible: false });
+                    $("#Habilitacion").dxRadioGroup({ value: "0" });
+                    Datos_Habilitacion = "0";
+                    break;
+                case "":
+                    console.log("Ninguno de los dos");
+                    $('#idHabilitacion').hide();
+                    $("#Habilitacion").dxRadioGroup({ visible: false });
+                    $("#Habilitacion").dxRadioGroup({ value: "" });
+                    Datos_Habilitacion = "0";
+            }
+
+            console.log("Datos_Obligado : ", Datos_Obligado);
+            console.log("Datos_Adquiriente : ", Datos_Adquiriente);
+            console.log("Datos_Habilitacion : ", Datos_Habilitacion);
+
+        }
+
+
+
+        $http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {
+            TiposHabilitacion = response.data;
+            $("#Habilitacion").dxRadioGroup({
+                searchEnabled: true,
+                caption: 'Habilitación',
+                dataSource: new DevExpress.data.ArrayStore({
+                    data: TiposHabilitacion,
+                    key: "ID"
+                }),
+                displayExpr: "Texto",
+                Enabled: true,
+                onValueChanged: function (data) {
+                    Datos_Habilitacion = data.value.ID;
+                    console.log("Datos_Habilitacion", Datos_Habilitacion);
+                }
+            }).dxValidator({
+                validationRules: [{
+                    type: "required",
+                    message: "Debe indicar el tipo de Habilitacion"
+                }]
+            });
+
+
+            if (id_seguridad) { consultar(); }
         });
+
 
         $("#txtobservaciones").dxTextArea({
             onValueChanged: function (data) {
@@ -216,11 +276,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             return true;
         }
 
-    });
+    };
 
-    //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
-    var id_seguridad = location.search.split('IdSeguridad=')[1];
-    if (id_seguridad) {
+    function consultar() {
         Datos_Tipo = "2";
         $("#wait").show();
         $http.get('/api/Empresas?IdSeguridad=' + id_seguridad).then(function (response) {
@@ -239,12 +297,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
                 Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
 
-                if (Datos_Obligado == 1) {
-                    $("#Facturador").dxCheckBox({ value: 1 });
-                }
-                if (Datos_Adquiriente == 1) {
-                    $("#Adquiriente").dxCheckBox({ value: 1 });
-                }
+
                 $("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
                 $("#NumeroIdentificacion").dxTextBox({ readOnly: true });
 
@@ -254,23 +307,29 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 $("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
                 $("#TipoIndentificacion").dxSelectBox({ readOnly: true });
 
-                $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
-
                 $("#txtempresaasociada").dxTextBox({ value: (Datos_empresa_Asociada) ? Datos_empresa_Asociada : '' });
                 if (Datos_Observaciones != null) {
                     $("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
                 }
 
+                if (Datos_Obligado == 1) {
+                    $("#Facturador").dxCheckBox({ value: 1 });
+                    $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
+                }
+                if (Datos_Adquiriente == 1) {
+                    $("#Adquiriente").dxCheckBox({ value: 1 });
+                }
 
             } catch (err) {
-                DevExpress.ui.notify(err.message, 'error', 7000);
+                DevExpress.ui.notify(err.message + ' Validar Estado Producción', 'error', 7000);
             }
         }, function errorCallback(response) {
             $('#wait').hide();
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
         });
-
     }
+
+
 
     $scope.ButtonGuardar = {
         text: 'Guardar',
@@ -343,7 +402,10 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
                 allowedPageSizes: [5, 10, 20],
                 showInfo: true
             }
-
+                 , loadPanel: {
+                     enabled: true
+                 }
+                      , allowColumnResizing: true
                , columns: [
                    {
                        cssClass: "col-md-1 col-xs-2",
@@ -395,7 +457,6 @@ function IrAConsulta() {
     window.location.assign("../Pages/ConsultaEmpresas.aspx");
 }
 
-
 //Funcion para Buscar el indice el Array de los objetos, segun el id de base de datos
 function BuscarID(miArray, ID) {
     for (var i = 0; i < miArray.length; i += 1) {
@@ -404,13 +465,6 @@ function BuscarID(miArray, ID) {
         }
     }
 }
-
-var TiposHabilitacion =
-    [
-        { ID: "0", Texto: 'VALIDA OBJETO' },
-        { ID: "1", Texto: 'PRUEBAS' },
-        { ID: "99", Texto: 'PRODUCCIÓN' }
-    ];
 
 var TiposIdentificacion =
     [

@@ -12,7 +12,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
     public class PlanesTransaccionesController : ApiController
     {
-        
+
         /// <summary>
         /// Obtiene la lista 
         /// </summary>        
@@ -43,8 +43,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Fecha = d.DatFecha,
                     EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
                     Estado = (d.BitProcesada) ? "Habilitado" : "Inhabilitado",
-                    Observaciones = d.StrObservaciones,
-                    Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas
+                    Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
+                    Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
+                    Tipoproceso = (d.IntTipoProceso == 1) ? "CORTESíA" : "COMPRA"
                 });
 
                 return Ok(retorno);

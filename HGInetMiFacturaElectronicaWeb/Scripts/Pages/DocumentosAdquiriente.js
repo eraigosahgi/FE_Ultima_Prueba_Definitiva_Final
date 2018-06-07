@@ -20,26 +20,40 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         Mensaje(response.data.ExceptionMessage, "error");
     };
 
+    $("#FechaInicial").dxDateBox({
+        value: now,
+        displayFormat: "yyyy-MM-dd",
+        onValueChanged: function (data) {
+            fecha_inicio = new Date(data.value).toISOString();
+            if (new Date(data.value).toISOString() > fecha_fin) {
+                DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
+                $("#FechaInicial").dxDateBox({ value: fecha_fin });
+                fecha_inicio: fecha_fin;
+            }
+        }
+
+    });
+
+    $("#FechaFinal").dxDateBox({
+        value: now,
+        displayFormat: "yyyy-MM-dd",
+        onValueChanged: function (data) {
+            fecha_fin = new Date(data.value).toISOString();
+            if (new Date(data.value).toISOString() < fecha_inicio) {
+                DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
+                $("#FechaFinal").dxDateBox({ value: fecha_inicio });
+                fecha_fin: fecha_inicio;
+            }
+        }
+
+    });
+
+
     //Define los campos y las opciones
     $scope.filtros =
         {
-            //Control defecto ingreso de datos.
-            FechaInicial: {
-                type: "date",
-                value: now,
-                displayFormat: "yyyy-MM-dd",
-                onValueChanged: function (data) {
-                    fecha_inicio = new Date(data.value).toISOString();
-                }
-            },
-            FechaFinal: {
-                type: "date",
-                value: now,
-                displayFormat: "yyyy-MM-dd",
-                onValueChanged: function (data) {
-                    fecha_fin = new Date(data.value).toISOString();
-                }
-            },
+
+
             EstadoRecibo: {
                 searchEnabled: true,
                 //Carga la data del control
@@ -109,17 +123,13 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                                 options.cellElement.html(inicial);
                             }
                         }
-                        //Valida el formato de fecha en la configuracion de fecha
-                        if (options.columnIndex == 3 || options.columnIndex == 2) {
-                            if (fieldData) {
-                                var inicial = convertDateFormat(options.text);
-                                options.cellElement.html(inicial);
-                            }
-                        }
                     } catch (err) {
                         DevExpress.ui.notify(err.message, 'error', 3000);
                     }
+                }, loadPanel: {
+                    enabled: true
                 }
+                      , allowColumnResizing: true
                 , columns: [
                     {
                         caption: "Archivos",
@@ -153,6 +163,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         caption: "Fecha Documento",
                         dataField: "DatFechaDocumento",
                         dataType: "date",
+                        format: "yyyy-MM-dd ",
                         cssClass: "col-md-2 col-xs-3",
                         validationRules: [{
                             type: "required",
@@ -163,6 +174,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
                         dataType: "date",
+                        format: "yyyy-MM-dd",
                         cssClass: "hidden-xs col-md-2",
                         validationRules: [{
                             type: "required",

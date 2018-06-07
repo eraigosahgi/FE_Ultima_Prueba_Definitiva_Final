@@ -8,7 +8,7 @@ angular.module('ProcesarDocumentosApp', ['dx'])
     var codigo_adquiente = "",
            numero_documento = "",
            estado_recibo = "",
-           fecha_inicio = "2018-03-01",
+           fecha_inicio = "",
            fecha_fin = "";
 
 
@@ -23,28 +23,36 @@ angular.module('ProcesarDocumentosApp', ['dx'])
         Mensaje(response.data.ExceptionMessage, "error");
     };
 
+    $("#FechaInicial").dxDateBox({
+        value: now,
+        displayFormat: "yyyy-MM-dd",
+        onValueChanged: function (data) {
+            fecha_inicio = new Date(data.value).toISOString();
+            if (new Date(data.value).toISOString() > fecha_fin) {
+                DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
+                $("#FechaInicial").dxDateBox({ value: fecha_fin });
+                fecha_inicio: fecha_fin;
+            }
+        }
+
+    });
+
+    $("#FechaFinal").dxDateBox({
+        value: now,
+        displayFormat: "yyyy-MM-dd",
+        onValueChanged: function (data) {
+            fecha_fin = new Date(data.value).toISOString();
+            if (new Date(data.value).toISOString() < fecha_inicio) {
+                DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
+                $("#FechaFinal").dxDateBox({ value: fecha_inicio });
+                fecha_fin: fecha_inicio;
+            }
+        }
+
+    });
     //Define los campos y las opciones
     $scope.filtros =
         {
-            //Control defecto ingreso de datos.
-            FechaInicial: {
-                type: "date",
-                value: "2018-03-26",
-                displayFormat: "yyyy-MM-dd",
-                onValueChanged: function (data) {
-                    console.log("FechaInicial", new Date(data.value).toISOString());
-                    fecha_inicio = new Date(data.value).toISOString();
-                }
-            },
-            FechaFinal: {
-                type: "date",
-                value: now,
-                displayFormat: "yyyy-MM-dd",
-                onValueChanged: function (data) {
-                    console.log("FechaFinal", new Date(data.value).toISOString());
-                    fecha_fin = new Date(data.value).toISOString();
-                }
-            },
             EstadoRecibo: {
                 searchEnabled: true,
                 //Carga la data del control
@@ -161,7 +169,6 @@ angular.module('ProcesarDocumentosApp', ['dx'])
                     visible: true
                 }
 
-
                 , onSelectionChanged: function (selectedItems) {
                     var lista = '';
                     var data = selectedItems.selectedRowsData;
@@ -174,19 +181,20 @@ angular.module('ProcesarDocumentosApp', ['dx'])
                             lista = "[" + lista + "]"
                             $scope.documentos = lista;
                             $('#lbltotaldocumentos').val('Documentos a Procesar : ' + data.length);
-                            console.log("Lista de Documentos a Procesar : " + data.length + " Lista de Documentos:  " + $scope.documentos);
+                            $scope.total = data.length;
+
                         } else {
                             lista += "{Documentos: '" + data[0].IdSeguridad + "'}";
                             lista = "[" + lista + "]"
                             $scope.documentos = lista;
                             $('#lbltotaldocumentos').val('Documento a Procesar : ' + data.length);
-                            console.log("Documento a Procesar : " + data.length + " Lista de Documentos:  " + $scope.documentos);
+                            $scope.total = data.length;
 
                         }
                     } else {
                         $('#lbltotaldocumentos').val('Ningun Documento Por Procesar');
                         $scope.documentos = "Ningun Documento Por Procesar";
-                        console.log($scope.documentos);
+                        $scope.total = 0;
 
                     }
                 }
@@ -211,20 +219,24 @@ angular.module('ProcesarDocumentosApp', ['dx'])
         onClick: ProcesarDocumentos
     });
 
-    function ProcesarDocumentos() {        
-        $('#wait').show();
-        $http({
-            url: '/api/Documentos/',
-            data: { Documentos: $scope.documentos },
-            method: 'Post'
+    function ProcesarDocumentos() {
+        if ($scope.total > 0) {
+            $('#wait').show();
+            $http({
+                url: '/api/Documentos/',
+                data: { Documentos: $scope.documentos },
+                method: 'Post'
 
-        }).then(function (response) {
-            $('#wait').hide();
-            DevExpress.ui.notify("Se procesaron los documentos exitosamente " , 'success', 2000);
-        })
-        , function errorCallback(response) {
-            $('#wait').hide();
-            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            }).then(function (response) {
+                $('#wait').hide();
+                DevExpress.ui.notify("Se procesaron los documentos exitosamente ", 'success', 2000);
+            })
+            , function errorCallback(response) {
+                $('#wait').hide();
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            }
+        } else {
+            DevExpress.ui.notify("No tiene documentos seleccionados", 'error', 3000);
         }
     }
 

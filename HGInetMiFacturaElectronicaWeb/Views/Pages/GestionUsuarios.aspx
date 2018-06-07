@@ -22,23 +22,23 @@
                                 <div class="dx-fieldset">
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nombres:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nombres:<strom style="color: red;">*</strom></label>
                                         <div id="txtnombres"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Apellidos:<strom style="color: red;">*</label>
+                                        <label id="lblapellido" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Apellidos:<strom  style="color: red;" >*</strom></label>
                                         <div id="txtapellidos"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Usuario:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Usuario:<strom style="color: red;">*</strom></label>
                                         <div id="txtusuario"></div>
                                     </div>
 
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Teléfono:<strom style="color: red;">*</label>
+                                        <label id="lbltelefono" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Teléfono:<strom  style="color: red;"  >*</strom></label>
                                         <div id="txttelefono"></div>
                                     </div>
 
@@ -53,17 +53,17 @@
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email:<strom style="color: red;">*</strom></label>
                                         <div id="txtemail"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Cargo:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Cargo:</label>
                                         <div id="txtcargo"></div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Estado:<strom style="color: red;">*</label>
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Estado:<strom style="color: red;">*</strom></label>
                                         <div id="cboestado"></div>
                                     </div>
 

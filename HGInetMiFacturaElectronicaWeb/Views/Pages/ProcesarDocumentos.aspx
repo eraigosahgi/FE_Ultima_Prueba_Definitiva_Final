@@ -29,16 +29,17 @@
 
                             <div class="dx-fieldset">
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Inicial:</label>
-                                    <div dx-date-box="filtros.FechaInicial"></div>
+                                    <div id="FechaInicial"></div>                                    
                                 </div>
 
-                                <div class="col-md-2">
+
+                                <div class="col-md-3">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Final:</label>
-                                    <div dx-date-box="filtros.FechaFinal"></div>
+                                     <div id="FechaFinal"></div> 
                                 </div>
 
                                 <div class="col-md-3">

@@ -134,6 +134,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             try
             {
+
+                //validar cantidad de usuarios por empresa
+                if (usuario.IntIdEstado == 1)
+                {
+                    int C_usuarios = (from u in context.TblUsuarios
+                                      where u.StrEmpresa.Equals(usuario.StrEmpresa)
+                                      && u.IntIdEstado.Equals(1)
+                                      select u).Count();
+
+                    if (C_usuarios >= 5)
+                        throw new ApplicationException("Supero el maximo de usuarios activos por empresa, si desea crear uno nuevo, debe Inactivar uno existente");
+                }
+
                 //Valido si es el usuario existe para la misma empresa
                 List<TblUsuarios> ConsultaUsuario = ObtenerUsuarios(usuario.StrUsuario, usuario.StrEmpresa);
                 if (ConsultaUsuario.Count > 0)
@@ -200,6 +213,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             try
             {
+                //validar cantidad de usuarios por empresa
+                if (usuario.IntIdEstado == 1)
+                {
+                    int C_usuarios = (from u in context.TblUsuarios
+                                      where u.StrEmpresa.Equals(usuario.StrEmpresa)
+                                      && u.IntIdEstado.Equals(1)
+                                      select u).Count();
+
+                    if (C_usuarios > 5)
+                        throw new ApplicationException("Supero el maximo de usuarios activos por empresa, si desea activar un usuario, debe Inactivar otro existente");
+
+                }
+
                 TblUsuarios UsuarioActiliza = (from item in context.TblUsuarios
                                                where item.StrUsuario.Equals(usuario.StrUsuario)
                                                && item.StrEmpresa.Equals(usuario.StrEmpresa)

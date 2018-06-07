@@ -3,15 +3,18 @@ using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Web.Http;
 using System.Xml;
 
@@ -43,7 +46,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 RazonSocial = d.StrRazonSocial,
                 Email = d.StrMail,
                 Serial = d.StrSerial,
-                Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente? "Adquiriente" : d.IntObligado ?  "Facturador" :"",
+                Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
                 Habilitacion = d.IntHabilitacion,
                 IdSeguridad = d.StrIdSeguridad
             });
@@ -129,7 +132,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="codigo_usuario"></param>        
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada,[FromUri]string StrObservaciones, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
@@ -137,22 +140,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             TblEmpresas Empresa = new TblEmpresas();
             try
             {
-                    Empresa.StrTipoIdentificacion = TipoIdentificacion;
-                    Empresa.StrIdentificacion = Identificacion;
-                    Empresa.StrRazonSocial = RazonSocial;
-                    Empresa.StrMail = Email;
-                    Empresa.IntAdquiriente = Intadquiriente;
-                    Empresa.IntHabilitacion = IntHabilitacion;
-                    Empresa.IntObligado = IntObligado;
-                    Empresa.StrEmpresaAsociada = StrEmpresaAsociada;
-                    Empresa.StrObservaciones = StrObservaciones;
+                Empresa.StrTipoIdentificacion = TipoIdentificacion;
+                Empresa.StrIdentificacion = Identificacion;
+                Empresa.StrRazonSocial = RazonSocial;
+                Empresa.StrMail = Email;
+                Empresa.IntAdquiriente = Intadquiriente;
+                Empresa.IntHabilitacion = IntHabilitacion;
+                Empresa.IntObligado = IntObligado;
+                Empresa.StrEmpresaAsociada = StrEmpresaAsociada;
+                Empresa.StrObservaciones = StrObservaciones;
                 if (tipo == 1)//Nuevo
-                {                
+                {
                     var datos = ctl_empresa.Guardar(Empresa);
                 }
 
                 if (tipo == 2)//Editar
-                {                 
+                {
                     var datos = ctl_empresa.Editar(Empresa);
                 }
 
@@ -185,7 +188,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Empresa.StrResolucionDian = Resolucion;
                 Empresa.StrSerial = Serial;
 
-                var datos = ctl_empresa.Editar(Identificacion,Serial,Resolucion);
+                var datos = ctl_empresa.Editar(Identificacion, Serial, Resolucion);
 
                 return Ok();
             }
@@ -205,7 +208,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <returns></returns>
         [HttpPost]
         public IHttpActionResult Post([FromUri]string Identificacion, [FromUri]string Mail)
-        {            
+        {
             try
             {
                 Sesion.ValidarSesion();
@@ -213,12 +216,60 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
                 bool Enviarmail = Email.EnviaSerial(Identificacion, Mail);
 
-                return Ok();                
+                return Ok();
             }
             catch (Exception excepcion)
             {
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
+        }
+
+
+        /// <summary>
+        /// Obtiene la lista de Habilitacion según el ambiente 
+        /// </summary>        
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult Get([FromUri] string tipo)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<ClsHabilitacion> lista = new List<ClsHabilitacion>();
+
+                string Tipoambiente = (tipo == "99") ? "99" : "0";
+
+                foreach (var value in Enum.GetValues(typeof(Habilitacion)))
+                {
+                    ClsHabilitacion habi = new ClsHabilitacion();
+
+                    FieldInfo fi = value.GetType().GetField(value.ToString());
+
+                    DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                    AmbientValueAttribute[] ambiente = (AmbientValueAttribute[])fi.GetCustomAttributes(typeof(AmbientValueAttribute), false);
+
+                    if (ambiente[0].Value.ToString() == Tipoambiente)
+                    {
+                        habi.ID = (int)value;
+                        habi.Texto = attributes[0].Description;
+
+                        lista.Add(habi);
+                    }
+                }
+                return Ok(lista);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        public class ClsHabilitacion
+        {
+            public int ID { get; set; }
+            public string Texto { get; set; }
+
         }
     }
 
