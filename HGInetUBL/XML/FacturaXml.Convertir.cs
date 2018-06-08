@@ -25,7 +25,7 @@ namespace HGInetUBL
 				{
 					factura_obj.NumeroResolucion = item.FirstChild.InnerText;
 				}
-				if (item.LocalName.Equals("AuthorizedInvoices"))
+				if (item.LocalName.Equals("AuthorizedInvoices") && item.FirstChild.LocalName.Equals("Prefix"))
 				{
 					factura_obj.Prefijo = item.FirstChild.InnerText;
 				}
@@ -44,7 +44,7 @@ namespace HGInetUBL
 				factura_obj.Documento = Convert.ToInt32(factura_ubl.ID.Value);
 			}
 
-			if (!string.IsNullOrEmpty(factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value))
+			if (factura_ubl.BillingReference != null)
 			{
 				factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
 			}
@@ -52,7 +52,7 @@ namespace HGInetUBL
 			{
 				factura_obj.DocumentoRef = string.Empty;
 			}
-
+			factura_obj.Cufe = factura_ubl.UUID.Value;
 			factura_obj.Fecha = factura_ubl.IssueDate.Value;
 			factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
 			factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
