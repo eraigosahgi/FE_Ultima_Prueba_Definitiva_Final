@@ -46,6 +46,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public string NumeroResolucion { get; set; }
 
 		/// <summary>
+		/// Cufe del Documento 
+		/// </summary>
+		public string Cufe { get; set; }
+
+
+		/// <summary>
 		/// Prefijo del Documento según la Resolución asignada por la DIAN
 		/// </summary>
 		public string Prefijo { get; set; }
