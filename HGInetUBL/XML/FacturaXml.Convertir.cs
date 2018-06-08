@@ -25,9 +25,16 @@ namespace HGInetUBL
 				{
 					factura_obj.NumeroResolucion = item.FirstChild.InnerText;
 				}
-				if (item.LocalName.Equals("AuthorizedInvoices") && item.FirstChild.LocalName.Equals("Prefix"))
+				if (item.LocalName.Equals("AuthorizedInvoices"))
 				{
-					factura_obj.Prefijo = item.FirstChild.InnerText;
+					if (item.FirstChild.LocalName.Equals("Prefix"))
+					{
+						factura_obj.Prefijo = item.FirstChild.InnerText;
+					}
+					else
+					{
+						factura_obj.Prefijo = string.Empty;
+					}
 				}
 			}
 
