@@ -102,7 +102,30 @@
             </div>
         </div>
         <!-- /DATOS -->
+                <div id="modal_enviar_email" class="modal fade" style="display: none; margin-top: 15%;" modal="showModal" ng-controller="EnvioEmailController">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div id="EncabezadoModal" class="modal-header">
+                        <button type="button" id="btncerrarModal" class="close" data-dismiss="modal">×</button>
+                        <h5 style="margin-bottom: 10px" class="modal-title">Envío E-mail Adquiriente</h5>
+                    </div>
 
+                    <div class="modal-body text-center">
+                        <h6>El siguiente E-mail corresponde al destinatario de este mensaje.
+                        </h6>
+
+                        <div id="formEmailEnvio" dx-form="formOptionsEmailEnvio">
+                        </div>
+
+                    </div>
+                    <div id="divsombra" class="modal-footer">
+                        <div dx-button="buttonCerrarModal" data-dismiss="modal"></div>
+                        <div dx-button="buttonEnviarEmail"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
     <!-- /CONTENEDOR PRINCIPAL -->
 

@@ -97,7 +97,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_facturador, codigo_adquiriente, numero_documento, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
-        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {            
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -109,6 +109,10 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                     allowedPageSizes: [5, 10, 20],
                     showInfo: true
                 }
+                 , loadPanel: {
+                     enabled: true
+                 }
+                      , allowColumnResizing: true
                 , columns: [
                     {
                         caption: "Archivos",
@@ -131,9 +135,17 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
                             $("<div>")
                                 .append(
-                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"))
-                                .append($(""))
-                                .appendTo(container);
+                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),                               
+                                    $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>&nbsp;&nbsp;").dxButton({
+                                        onClick: function () {
+                                            $scope.showModal = true;
+                                            email_destino = options.data.MailAdquiriente;
+                                            id_seguridad = options.data.StrIdSeguridad;
+                                            $('input:text[name=EmailDestino]').val(email_destino);
+                                        }
+                                    }).removeClass("dx-button dx-button-normal dx-widget"))
+                                        .append($(""))
+                                        .appendTo(container);
                         }
                     },
                      {
@@ -183,6 +195,106 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         });
 
     }
+
+
+});
+
+AcuseConsultaApp.controller('EnvioEmailController', function AcuseConsultaApp($scope, $http, $location) {
+
+    //Formulario.
+    $scope.formOptionsEmailEnvio = {
+
+        readOnly: false,
+        showColonAfterLabel: true,
+        showValidationSummary: true,
+        validationGroup: "DatosEmail",
+        onInitialized: function (e) {
+            formInstance = e.component;
+        },
+        items: [{
+            itemType: "group",
+            items: [
+                {
+                    dataField: "EmailDestino",
+                    editorType: "dxTextBox",
+                    label: {
+                        text: "E-mail"
+                    },
+                    validationRules: [{
+                        type: "required",
+                        message: "El e-mail de destino es obligatorio."
+                    }, {
+                        //Valida que el campo solo contenga números
+                        type: "pattern",
+                        pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$",
+                        message: "El campo no contiene el formato requerido."
+                    }]
+                }
+            ]
+        }
+        ]
+    };
+
+    //botón Cerrar Modal
+    $scope.buttonCerrarModal = {
+        text: "CERRAR"
+    };
+
+    //Botón Enviar email
+    $scope.buttonEnviarEmail = {
+        text: "ENVIAR",
+        type: "success",
+        //useSubmitBehavior: true,
+        //validationGroup: "DatosEmail",
+
+        onClick: function (e) {
+
+            try {
+
+                email_destino = $('input:text[name=EmailDestino]').val();
+
+                if (email_destino == "") {
+                    throw new DOMException("El e-mail de destino es obligatorio.");
+                }
+                $('#wait').show();
+                $http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino).then(function (responseEnvio) {
+                    $('#wait').hide();
+                    var respuesta = responseEnvio.data;
+
+                    if (respuesta) {
+                        swal({
+                            title: 'Proceso Éxitoso',
+                            text: 'El e-mail ha sido enviado con éxito.',
+                            type: 'success',
+                            confirmButtonColor: '#66BB6A',
+                            confirmButtonTex: 'Aceptar',
+                            animation: 'pop',
+                            html: true,
+                        });
+                    } else {
+                        swal({
+                            title: 'Error',
+                            text: 'Ocurrió un error en el envío del e-mail.',
+                            type: 'Error',
+                            confirmButtonColor: '#66BB6A',
+                            confirmButtonTex: 'Aceptar',
+                            animation: 'pop',
+                            html: true,
+                        });
+                    }
+                    $('input:text[name=EmailDestino]').val("");
+                    $('#btncerrarModal').click();
+                }, function errorCallback(response) {
+                    $('#wait').hide();
+                    DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 10000);
+                });
+
+            } catch (e) {
+                $('#wait').hide();
+                DevExpress.ui.notify(e.message, 'error', 10000);
+            }
+        }
+    };
 
 
 });

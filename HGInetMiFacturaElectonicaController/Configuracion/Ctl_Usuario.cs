@@ -144,7 +144,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                                       select u).Count();
 
                     if (C_usuarios >= 5)
-                        throw new ApplicationException("Supero el maximo de usuarios activos por empresa, si desea crear uno nuevo, debe Inactivar uno existente");
+                        throw new ApplicationException("Superó el máximo de usuarios activos por empresa, si desea crear uno nuevo, debe inactivar uno existente");
+                        
                 }
 
                 //Valido si es el usuario existe para la misma empresa
@@ -229,7 +230,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                                       select u).Count();
 
                     if (C_usuarios >= 5)
-                        throw new ApplicationException("Supero el maximo de usuarios activos por empresa, si desea activar un usuario, debe Inactivar otro existente");
+                        throw new ApplicationException("Superó el máximo de usuarios activos por empresa, si desea activar un usuario, debe inactivar otro existente");
 
                 }
 

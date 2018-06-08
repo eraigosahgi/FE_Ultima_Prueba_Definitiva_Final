@@ -112,7 +112,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
-        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {            
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -135,13 +135,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                 options.cellElement.html(inicial);
                             }
                         }
-                        //Valida el formato de fecha en la configuracion de fecha
-                        if (options.columnIndex == 3 || options.columnIndex == 2) {
-                            if (fieldData) {
-                                var inicial = convertDateFormat(options.text);
-                                options.cellElement.html(inicial);
-                            }
-                        }
+                       
 
                     } catch (err) {
                         DevExpress.ui.notify(err.message, 'error', 3000);
@@ -161,20 +155,27 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
                             var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
 
+                            var visible_acuse = " title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white;'";
+
                             if (options.data.Pdf)
-                                visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer'";
+                                visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer;'";
                             else
                                 options.data.Pdf = "#";
 
                             if (options.data.Xml)
-                                visible_xml = "href='" + options.data.Xml + "' style='pointer-events:auto;cursor: pointer'";
+                                visible_xml = "href='" + options.data.Xml + "' style='pointer-events:auto;cursor: pointer;'";
                             else
                                 options.data.Xml = "#";
 
+                            if (options.data.EstadoAcuse != 'Pendiente')
+                                visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; '";
+                            else
+                                options.data.RutaAcuse = "#";
+
                             $("<div>")
                                 .append(
-                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),
-                                    $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>").dxButton({
+                                    $("<a target='_blank' class='icon-file-eye2' " + visible_acuse + "></a>&nbsp;&nbsp;<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),
+                                    $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>&nbsp;&nbsp;").dxButton({
                                         onClick: function () {
                                             $scope.showModal = true;
                                             email_destino = options.data.MailAdquiriente;
@@ -182,6 +183,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                             $('input:text[name=EmailDestino]').val(email_destino);
                                         }
                                     }).removeClass("dx-button dx-button-normal dx-widget")
+
+                                    
+
                             )
                                 .append($(""))
                                 .appendTo(container);
@@ -197,6 +201,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         caption: "Fecha Documento",
                         dataField: "DatFechaDocumento",
                         dataType: "date",
+                        format: "yyyy-MM-dd",
                         cssClass: "col-xs-3 col-md-1",
                         validationRules: [{
                             type: "required",
@@ -207,6 +212,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
                         dataType: "date",
+                        format:"yyyy-MM-dd",
                         cssClass: "hidden-xs col-md-1",
                         validationRules: [{
                             type: "required",

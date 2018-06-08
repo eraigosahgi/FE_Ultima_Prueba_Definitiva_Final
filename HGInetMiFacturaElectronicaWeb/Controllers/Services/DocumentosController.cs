@@ -226,7 +226,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
                     Xml = d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,
-                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+                    d.StrIdSeguridad,
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMail
+
                 });
 
                 return Ok(retorno);

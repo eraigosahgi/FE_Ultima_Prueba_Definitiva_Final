@@ -92,13 +92,12 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         });
     }
 
-
+    $('#btnautenticar').show();    
     $http.get('/api/DatosSesion/').then(function (response) {
-
+        $('#btnautenticar').hide();
     }, function errorCallback(response) {
         $('#btnautenticar').show();
     });
-
 
 });
 
