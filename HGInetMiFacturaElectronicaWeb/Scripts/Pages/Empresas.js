@@ -312,13 +312,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                     $("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
                 }
 
-                if (Datos_Obligado == 1) {
-                    $("#Facturador").dxCheckBox({ value: 1 });
-                    $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
-                }
                 if (Datos_Adquiriente == 1) {
                     $("#Adquiriente").dxCheckBox({ value: 1 });
                 }
+
+                if (Datos_Obligado == 1) {
+                    $("#Facturador").dxCheckBox({ value: 1 });
+                    $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
+                }
+                
 
             } catch (err) {
                 DevExpress.ui.notify(err.message + ' Validar Estado Producción', 'error', 7000);
