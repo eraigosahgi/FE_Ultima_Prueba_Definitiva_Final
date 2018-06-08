@@ -128,7 +128,7 @@ namespace HGInetUBL
 				detalle.Codigo = Convert.ToInt16(factura_ubl.InvoiceLine[i].ID.Value);
 				detalle.ProductoCodigo = factura_ubl.InvoiceLine[i].Item.CatalogueItemIdentification.ID.Value;
 				detalle.ProductoNombre = factura_ubl.InvoiceLine[i].Item.Description[0].Value;
-				if (!string.IsNullOrEmpty(factura_ubl.InvoiceLine[i].Item.AdditionalInformation.Value))
+				if (factura_ubl.InvoiceLine[i].Item.AdditionalInformation != null)
 				{
 					detalle.ProductoDescripcion = factura_ubl.InvoiceLine[i].Item.AdditionalInformation.Value;
 				}
