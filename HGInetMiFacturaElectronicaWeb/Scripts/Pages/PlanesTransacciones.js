@@ -33,7 +33,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
     var Datos_TiposProceso = "",
         codigo_empresa = "",
         Datos_T_compra = "",
-        Datos_valor_plan = "",
+        Datos_valor_plan = 0,
         Datos_E_Plan = ""
     datos_empresa_asociada = "";
     Datos_obsrvaciones = "";
