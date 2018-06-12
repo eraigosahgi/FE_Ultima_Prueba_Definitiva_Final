@@ -154,28 +154,37 @@ namespace HGInetUBL
 				}
 				detalle.ValorUnitario = factura_ubl.InvoiceLine[i].Price.PriceAmount.Value;
 				detalle.ValorSubtotal = factura_ubl.InvoiceLine[i].LineExtensionAmount.Value;
-				if (TipoImpuestos.Iva.Equals(factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxCategory.TaxScheme.ID.Value))
-				{
-					detalle.IvaPorcentaje = factura_ubl.TaxTotal[i].TaxSubtotal[0].Percent.Value;
-					detalle.IvaValor = factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxAmount.Value;
-				}
-				else if (TipoImpuestos.Consumo.Equals(factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxCategory.TaxScheme.ID.Value))
-				{
-					detalle.ImpoConsumoPorcentaje = factura_ubl.TaxTotal[i].TaxSubtotal[0].Percent.Value;
-					detalle.ValorImpuestoConsumo = factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxAmount.Value;
-				}
-				else if (TipoImpuestos.Ica.Equals(factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxCategory.TaxScheme.ID.Value))
-				{
-					detalle.ReteIcaPorcentaje = factura_ubl.TaxTotal[i].TaxSubtotal[0].Percent.Value;
-					detalle.ReteIcaValor = factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxAmount.Value;
-				}
-				else if (TipoImpuestos.ReteFte.Equals(factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxCategory.TaxScheme.ID.Value))
-				{
-					detalle.ReteFuentePorcentaje = factura_ubl.TaxTotal[i].TaxSubtotal[0].Percent.Value;
-					detalle.ReteFuenteValor = factura_ubl.TaxTotal[i].TaxSubtotal[0].TaxAmount.Value;
-				}
 
 
+				for (int j = 0; j < factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal.Count(); j++)
+				{
+					string tipo_impto = factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.TaxScheme.ID.Value;
+					decimal porcentaje_impto = factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal[j].Percent.Value;
+					decimal valor_impto = factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal[j].TaxAmount.Value;
+
+					if (TipoImpuestos.Iva.Equals(tipo_impto))
+					{
+						detalle.IvaPorcentaje = porcentaje_impto;
+						detalle.IvaValor = valor_impto;
+					}
+					else if (TipoImpuestos.Consumo.Equals(tipo_impto))
+					{
+						detalle.ImpoConsumoPorcentaje = porcentaje_impto;
+						detalle.ValorImpuestoConsumo = valor_impto;
+					}
+					else if (TipoImpuestos.Ica.Equals(tipo_impto))
+					{
+						detalle.ReteIcaPorcentaje = porcentaje_impto;
+						detalle.ReteIcaValor = valor_impto;
+					}
+					else if (TipoImpuestos.ReteFte.Equals(tipo_impto))
+					{
+						detalle.ReteFuentePorcentaje = porcentaje_impto;
+						detalle.ReteFuenteValor = valor_impto;
+					}
+
+				}
+				
 				list_detalle.Add(detalle);
 
 			}
