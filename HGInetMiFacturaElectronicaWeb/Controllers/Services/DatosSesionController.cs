@@ -36,7 +36,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Observaciones = d.StrObservaciones,
                     RazonSocial = d.StrRazonSocial,
                     Serial = d.StrSerial,
-                    TipoIdentificacion = d.StrTipoIdentificacion
+                    TipoIdentificacion = d.StrTipoIdentificacion,
+                    Admin = d.IntAdministrador
                 });
 
                 return Ok(retorno);
