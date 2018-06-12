@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HGInetReports
+namespace HGInetFacturaEReports
 {
 	/// <summary>
 	/// Extensiones habilitadas para exportación de reportes

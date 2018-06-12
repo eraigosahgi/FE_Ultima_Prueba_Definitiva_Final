@@ -2,12 +2,12 @@
 
 using Telerik.Reporting;
 
-namespace HGInetReports
+namespace HGInetFacturaEReports
 {
 	/// <summary>
 	/// Funciones para la gestión de PDF
 	/// </summary>
-	partial class Reporte
+	public partial class Reporte
 	{
 
 		/// <summary>

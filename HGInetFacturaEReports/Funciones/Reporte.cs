@@ -5,12 +5,12 @@ using System.Text;
 using Telerik.Reporting;
 using Telerik.Reporting.Processing;
 
-namespace HGInetReports
+namespace HGInetFacturaEReports
 {
 	/// <summary>
 	/// Funciones para los reportes de Telerik
 	/// </summary>
-	partial class Reporte
+	public partial class Reporte
 	{
 		/// <summary>
 		/// Flujo de datos para almacenamiento
