@@ -1,13 +1,18 @@
-﻿using HGInetMiFacturaElectonicaController.Registros;
+﻿using HGInetFacturaEReports.Facturas;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUBL;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -52,6 +57,42 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         }
                     }
                 }
+				else
+				{
+					Formato1 reporte_pdf = new Formato1();
+
+					//XmlTextReader xml = new XmlTextReader(documentoBd.StrUrlArchivoUbl);
+
+					FileStream xml = new FileStream(string.Format("{0}{1}.xml", documento_result.RutaArchivosProceso,documento_result.NombreXml), FileMode.Open);
+
+					XmlSerializer serializacion = new XmlSerializer(typeof(InvoiceType));
+
+					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml);
+
+					Factura datos_documento = FacturaXML.Convertir(conversion);
+
+					reporte_pdf.DataSource = datos_documento;
+
+					xml.Close();
+
+
+					string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
+
+					string ruta = string.Format(@"{0}{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+					HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
+					x.GenerarPdf(reporte_pdf);
+
+					respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+
+					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
+
+					Ctl_Documento documento_tmp = new Ctl_Documento();
+					documentoBd = documento_tmp.Actualizar(documentoBd);
+				}
+
+
+
             }
             catch (Exception excepcion)
             {
