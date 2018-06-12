@@ -97,7 +97,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_facturador, codigo_adquiriente, numero_documento, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
-        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {            
+        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -135,7 +135,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
                             $("<div>")
                                 .append(
-                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),                               
+                                    $("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),
                                     $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>&nbsp;&nbsp;").dxButton({
                                         onClick: function () {
                                             $scope.showModal = true;
@@ -257,31 +257,19 @@ AcuseConsultaApp.controller('EnvioEmailController', function AcuseConsultaApp($s
                     throw new DOMException("El e-mail de destino es obligatorio.");
                 }
                 $('#wait').show();
-                $http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino).then(function (responseEnvio) {
+                $http.post('/api/Documentos?id_seguridad=' + id_seguridad + '&mail=' + email_destino).then(function (responseEnvio) {
                     $('#wait').hide();
-                    var respuesta = responseEnvio.data;
 
-                    if (respuesta) {
-                        swal({
-                            title: 'Proceso Éxitoso',
-                            text: 'El e-mail ha sido enviado con éxito.',
-                            type: 'success',
-                            confirmButtonColor: '#66BB6A',
-                            confirmButtonTex: 'Aceptar',
-                            animation: 'pop',
-                            html: true,
-                        });
-                    } else {
-                        swal({
-                            title: 'Error',
-                            text: 'Ocurrió un error en el envío del e-mail.',
-                            type: 'Error',
-                            confirmButtonColor: '#66BB6A',
-                            confirmButtonTex: 'Aceptar',
-                            animation: 'pop',
-                            html: true,
-                        });
-                    }
+                    swal({
+                        title: 'Proceso Éxitoso',
+                        text: 'El e-mail ha sido enviado con éxito.',
+                        type: 'success',
+                        confirmButtonColor: '#66BB6A',
+                        confirmButtonTex: 'Aceptar',
+                        animation: 'pop',
+                        html: true,
+                    });
+
                     $('input:text[name=EmailDestino]').val("");
                     $('#btncerrarModal').click();
                 }, function errorCallback(response) {

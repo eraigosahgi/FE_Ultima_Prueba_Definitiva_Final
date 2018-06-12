@@ -541,7 +541,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             }
         },
     {
-        caption: "Agregar",
+        caption: "Crear",
         cssClass: "col-xs-3 col-md-1",
         cellTemplate: function (container, options) {
             $("<div>")

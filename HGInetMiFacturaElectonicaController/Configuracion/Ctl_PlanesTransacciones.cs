@@ -25,6 +25,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             datos_plan = this.Add(datos_plan);
 
+            Ctl_Empresa empresa = new Ctl_Empresa();
+
+            TblEmpresas facturador = empresa.Obtener(datos_plan.StrEmpresaFacturador);
+
+            Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+
+            email.EnviaNotificacionRecarga(facturador.StrIdentificacion, facturador.StrMail, datos_plan);
+
             return datos_plan;
         }
 
@@ -69,6 +77,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             datos_plan = (from t in context.TblPlanesTransacciones
                           join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
                           join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
+                          where (empresa.StrIdentificacion.Equals(Identificacion) || Identificacion.Equals("*"))
                           orderby t.DatFecha descending
                           select t).ToList();
 

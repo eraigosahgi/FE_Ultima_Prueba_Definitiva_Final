@@ -173,6 +173,10 @@
     <value>emails\\plantilla_documento.html</value>
     <comment>Ruta de la plantilla Html de envío de documentos</comment>
   </data>
+  <data name="RutaPlantillaRecarga" xml:space="preserve">
+    <value>emails\\plantilla_recarga_transacciones.html</value>
+    <comment>Ruta de la plantilla Html de envió de recarga de transacciones</comment>
+  </data>
   <data name="RutaPlantillaRestablecer" xml:space="preserve">
     <value>emails\\plantilla_restablecer_clave.html</value>
     <comment>Ruta de la plantilla Html de envío restablecer contraseña</comment>

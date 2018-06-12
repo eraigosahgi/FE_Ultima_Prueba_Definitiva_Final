@@ -601,6 +601,51 @@ namespace HGInetMiFacturaElectonicaController.Registros
         }
         #endregion
 
+        #region Reenviar Acuse
+        /// <summary>
+        /// Actualiza la respuesta del acuse de recibo.
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <param name="estado"></param>
+        /// <param name="motivo_rechazo"></param>
+        /// <returns></returns>
+        public bool ReenviarRespuestaAcuse(System.Guid id_seguridad, string mail)
+        {
+            try
+            {
+                List<TblDocumentos> retorno = new List<TblDocumentos>();
+                TblDocumentos doc = ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
+
+                Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+
+                if (doc == null)
+                    throw new ArgumentException(string.Format(LibreriaGlobalHGInet.Properties.RecursoMensajes.ObjectNotExistError, "el documento", doc.IntNumero));
+
+
+                // obtiene los datos del facturador electrónico
+                TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
+
+                // obtiene los datos del adquiriente
+                TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
+
+                try
+                {   // envía el correo del acuse de recibo al facturador electrónico
+                    Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+                    email.RespuestaAcuse(doc, facturador, adquiriente, mail);
+
+                }
+                catch (Exception) { }
+
+
+                return true;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        #endregion
 
 
     }

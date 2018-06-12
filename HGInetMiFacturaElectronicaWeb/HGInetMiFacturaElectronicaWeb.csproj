@@ -129,6 +129,7 @@
     <Content Include="emails\plantilla_bienvenida_facturador.html" />
     <Content Include="emails\plantilla_documento.html" />
     <Content Include="emails\plantilla_documento_acuse.html" />
+    <Content Include="emails\plantilla_recarga_transacciones.html" />
     <Content Include="emails\plantilla_envio_serial.html" />
     <Content Include="emails\plantilla_restablecer_clave.html" />
     <Content Include="Scripts\assets\css\bootstrap.css" />

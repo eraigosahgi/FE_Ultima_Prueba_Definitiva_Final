@@ -413,5 +413,35 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
         }
         #endregion
+
+        #region Reeviar Acuse
+        /// <summary>
+        /// Reevia respuesta de acuse del documento.
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <param name="mail"></param>        
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri] string mail)
+        {
+            try
+            {
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                bool email = ctl_documento.ReenviarRespuestaAcuse(id_seguridad, mail);
+
+                if (email)
+                {
+                    return Ok();
+                }
+
+                return NotFound();
+
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+        #endregion
     }
 }

@@ -24,6 +24,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             {
                 Sesion.ValidarSesion();
 
+                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+                datosSesion.Add(Sesion.DatosEmpresa);
+
+                TblEmpresas datosempresa = datosSesion.FirstOrDefault();
+
+                if (datosempresa.IntAdministrador)
+                {
+                    Identificacion = "*";
+                }
+
                 Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
                 var datos = ctl_PlanesTransacciones.Obtener(Identificacion);
 
