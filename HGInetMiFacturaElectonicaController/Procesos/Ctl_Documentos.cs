@@ -19,6 +19,7 @@ using HGInetMiFacturaElectonicaData;
 using HGInetDIANServicios;
 using HGInetDIANServicios.DianResolucion;
 using HGInetMiFacturaElectonicaController.Properties;
+using LibreriaGlobalHGInet.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -111,14 +112,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 
-				if(lista_resolucion == null)
+				if (lista_resolucion == null)
 					throw new ApplicationException(string.Format("No se encontró la resolución para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
-				else if(!lista_resolucion.Any())
+				else if (!lista_resolucion.Any())
 					throw new ApplicationException(string.Format("No se encontró la resolución para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
-					
+
 
 				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
-				
+
 				foreach (Factura item in documentos)
 				{
 					if (string.IsNullOrEmpty(item.NumeroResolucion))
@@ -567,7 +568,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				// Obtiene la resolucion de la base de datos
 				Ctl_EmpresaResolucion _resolucion_factura = new Ctl_EmpresaResolucion();
-				lista_resolucion.Add(_resolucion_factura.Obtener(documentos.FirstOrDefault().DatosObligado.Identificacion, "*"));
+				lista_resolucion = _resolucion_factura.ObtenerResoluciones(documentos.FirstOrDefault().DatosObligado.Identificacion, "*");
 			}
 
 			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
@@ -688,6 +689,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (documento.Documento < 0)
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Documento", "int").Replace("no puede ser nulo", "no puede ser menor a 0"));
 
+			//Inicializa la propiedad, no es un campo requerido
+			if (string.IsNullOrEmpty(documento.DocumentoRef))
+				documento.DocumentoRef = string.Empty;
+
+			//setea el campo y lo deja en blanco
+			documento.Cufe = string.Empty;
+
 			//Validar que no este vacio y este vigente en los terminos.
 			if (string.IsNullOrEmpty(documento.NumeroResolucion))
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
@@ -697,7 +705,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ApplicationException(string.Format("La Resolución {0} no es valida", documento.NumeroResolucion));
 
 			//valida número de la Factura este entre los rangos
-			if (documento.Documento < resolucion.IntRangoInicial && documento.Documento > resolucion.IntRangoFinal)
+			if (documento.Documento < resolucion.IntRangoInicial || documento.Documento > resolucion.IntRangoFinal)
 				throw new ApplicationException(string.Format("El Número de la Factura {0} no es valida según Resolución", documento.Documento));
 
 			if (!resolucion.StrPrefijo.Equals(documento.Prefijo))
@@ -813,10 +821,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Tercero", tipo).Replace("de tipo", "del"));
 
 			//valida que la identificacion no contenga contener letras y/o caracteres especiales
-			Regex isnumber = new Regex("[^0-9]");
+			//Regex isnumber = new Regex("[^0-9]");
 			if (!string.IsNullOrEmpty(tercero.Identificacion))
 			{
-				if (isnumber.IsMatch(tercero.Identificacion))
+				if (!Texto.ValidarExpresion(TipoExpresion.Numero, tercero.Identificacion))
 					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener letras y/o caracteres especiales", "Identificacion", tipo));
 			}
 			else
@@ -837,9 +845,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (string.IsNullOrEmpty(tercero.Telefono))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
 
-			Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
-			if (!ismail.IsMatch(tercero.Email))
+			//Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+			if (!Texto.ValidarExpresion(TipoExpresion.Email, tercero.Email))
 				throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+
+			//Regex isweb = new Regex("([\\w-]+\\.)+(/[\\w- ./?%&=]*)?");
+			if (tercero.PaginaWeb == null)
+			{
+				tercero.PaginaWeb = string.Empty;
+			}
+			else if (!Texto.ValidarExpresion(TipoExpresion.PaginaWeb, tercero.PaginaWeb))
+				tercero.PaginaWeb = string.Empty;
 
 			if (string.IsNullOrEmpty(tercero.CodigoPais))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
@@ -888,14 +904,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				ValidarDetalleDocumento(documento.DocumentoDetalles);
 
-				Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
+				//Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
 
 				//Valida el Iva 
 				if (documento.ValorIva == 0)
 				{
 					documento.ValorIva = Convert.ToDecimal(0.00M);
 				}
-				if (!isnumber.IsMatch(Convert.ToString(documento.ValorIva).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorIva).Replace(",", ".")))
+					//if (!isnumber.IsMatch(Convert.ToString(documento.ValorIva).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor Iva {0} del encabezado no esta bien formado", documento.ValorIva));
 
 				//Valida el Descuento 
@@ -903,7 +920,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.ValorDescuento = Convert.ToDecimal(0.00M);
 				}
-				if (!isnumber.IsMatch(Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor Descuento {0} del encabezado no esta bien formado", documento.ValorDescuento));
 
 				//Valida el Subtotal 
@@ -911,7 +928,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.ValorSubtotal = Convert.ToDecimal(0.00M);
 				}
-				if (!isnumber.IsMatch(Convert.ToString(documento.ValorSubtotal).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorSubtotal).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El subtotal {0} del encabezado no esta bien formado", documento.ValorSubtotal));
 
 				//Valida el Impuesto al consumo 
@@ -919,7 +936,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.ValorImpuestoConsumo = Convert.ToDecimal(0.00M);
 				}
-				if (!isnumber.IsMatch(Convert.ToString(documento.ValorImpuestoConsumo).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorImpuestoConsumo).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El Impuesto al Consumo {0} del encabezado no esta bien formado", documento.ValorImpuestoConsumo));
 
 				//Valida la Retencion en la fuente
@@ -927,7 +944,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.ValorReteFuente = Convert.ToDecimal(0.00M);
 				}
-				if (!isnumber.IsMatch(Convert.ToString(documento.ValorReteFuente).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteFuente).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor ReteFuente {0} del encabezado no esta bien formado", documento.ValorReteFuente));
 
 				//Valida el ReteIca 
@@ -935,7 +952,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.ValorReteIca = Convert.ToDecimal(0.00M);
 				}
-				if (!isnumber.IsMatch(Convert.ToString(documento.ValorReteIca).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIca).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor ReteIca {0} del encabezado no esta bien formado", documento.ValorReteIca));
 
 				//Calculo del total con los campos enviados en el objeto
@@ -943,7 +960,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.Total = Convert.ToDecimal(0.00M);
 				}
-				if (!isnumber.IsMatch(Convert.ToString(documento.Total).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Total).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor Total {0} no esta bien formado", documento.Total));
 
 				//Suma de las retenciones del documento
@@ -954,7 +971,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.Neto = Convert.ToDecimal(0.00M);
 				}
-				if (isnumber.IsMatch(Convert.ToString(documento.Neto).Replace(",", ".")))
+				if (Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Neto).Replace(",", ".")))
 				{
 					if ((documento.Total - retencion_doc) != documento.Neto)
 						throw new ApplicationException(string.Format("El valor Neto {0} no es correcto.", documento.Neto));
@@ -970,7 +987,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento.ValorReteIva = Convert.ToDecimal(0.00M);
 				}
 
-				if (!isnumber.IsMatch(Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor ReteIva {0} no esta bien formado", documento.ValorReteIva));
 
 			}
@@ -1000,13 +1017,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 
 				//Validacion del valor unitario
-				Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
+				//Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
 
 				if (Docdet.ValorUnitario == 0)
 				{
 					Docdet.ValorUnitario = 0.00M;
 				}
-				if (!isnumber.IsMatch(Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor Unitario {0} no esta bien formado", Docdet.ValorUnitario));
 
 				if (Docdet.DescuentoPorcentaje > 1 || Docdet.DescuentoPorcentaje < 0)
@@ -1022,7 +1039,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					Docdet.IvaValor = Convert.ToDecimal(0.00M);
 				}
-				if (!isnumber.IsMatch(Convert.ToString(Docdet.IvaValor).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.IvaValor).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor Iva {0} del detalle no esta bien formado", Docdet.IvaValor));
 
 				//Validacion del Valor Subtotal
@@ -1031,15 +1048,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Docdet.ValorSubtotal = Convert.ToDecimal(0.00M);
 				}
 
-				if (!isnumber.IsMatch(Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El subtotal {0} del detalle no esta bien formado", Docdet.ValorSubtotal));
 
 				//Validacion del Valor del Impuesto al Consumo
 				if (Docdet.ValorImpuestoConsumo == 0)
 				{
+					Docdet.ImpoConsumoPorcentaje = 0.00M;
 					Docdet.ValorImpuestoConsumo = 0.00M;
 				}
-				if (!isnumber.IsMatch(Convert.ToString(Docdet.ValorImpuestoConsumo).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorImpuestoConsumo).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El Impuesto al Consumo {0} del detalle no esta bien formado", Docdet.ValorImpuestoConsumo));
 
 
@@ -1048,7 +1066,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					Docdet.ReteIcaValor = 0.00M;
 				}
-				if (!isnumber.IsMatch(Convert.ToString(Docdet.ReteIcaValor).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteIcaValor).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor ReteIca {0} del detalle no esta bien formado", Docdet.ReteIcaValor));
 
 				//Validacion del Valor del ReteFte
@@ -1056,7 +1074,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					Docdet.ReteFuenteValor = 0.00M;
 				}
-				if (!isnumber.IsMatch(Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor ReteFuente  {0} del detalle no esta bien formado", Docdet.ReteFuenteValor));
 
 				Iva_total += Docdet.IvaValor;
