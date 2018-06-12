@@ -12,9 +12,7 @@ angular.module('ProcesarDocumentosApp', ['dx'])
            fecha_fin = "";
 
 
-    $http.get('/api/DatosSesion/').then(function (response) {
-
-        console.log(response.data[0]);
+    $http.get('/api/DatosSesion/').then(function (response) {       
 
         codigo_adquiente = response.data[0].Identificacion;
 
@@ -63,15 +61,13 @@ angular.module('ProcesarDocumentosApp', ['dx'])
                 displayExpr: "Texto",
                 Enabled: true,
                 placeholder: "Seleccione un Item",
-                onValueChanged: function (data) {
-                    console.log("EstadoRecibo", data.value.ID);
+                onValueChanged: function (data) {                    
                     estado_recibo = data.value.ID;
                 }
             },
             NumeroDocumento: {
                 placeholder: "Identificador Documento",
-                onValueChanged: function (data) {
-                    console.log("NumeroDocumento", data.value);
+                onValueChanged: function (data) {                    
                     numero_documento = data.value;
                 }
             }
@@ -89,9 +85,7 @@ angular.module('ProcesarDocumentosApp', ['dx'])
     };
 
     //Consultar DOcumentos
-    function consultar() {
-
-        console.log("Ingresó al evento del botón");
+    function consultar() {       
 
         if (fecha_inicio == "")
             fecha_inicio = now.toISOString();
@@ -105,8 +99,7 @@ angular.module('ProcesarDocumentosApp', ['dx'])
         //Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
         $('#wait').show();
         $http.get('/api/Documentos?IdSeguridad=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
-            $('#wait').hide();
-            console.log("Ingresó a cargar la data.");
+            $('#wait').hide();            
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
                 paging: {
@@ -170,7 +163,7 @@ angular.module('ProcesarDocumentosApp', ['dx'])
                 }
 
                 , onSelectionChanged: function (selectedItems) {
-                    var lista = '';
+                    var lista='' ;
                     var data = selectedItems.selectedRowsData;
                     if (data.length > 0) {
                         if (data.length > 1) {
@@ -181,7 +174,7 @@ angular.module('ProcesarDocumentosApp', ['dx'])
                             lista = "[" + lista + "]"
                             $scope.documentos = lista;
                             $('#lbltotaldocumentos').val('Documentos a Procesar : ' + data.length);
-                            $scope.total = data.length;
+                            $scope.total = data.length;                            
 
                         } else {
                             lista += "{Documentos: '" + data[0].IdSeguridad + "'}";
