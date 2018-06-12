@@ -101,6 +101,10 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
                 type: 'pattern',
                 pattern: '^[0-9]+$',
                 message: 'No debe Incluir puntos(.) ni caracteres especiales'
+            }, {
+                type: 'range',
+                min: 1,
+                message: 'Debe indicar la cantidad de transacciones del plan'
             }]
         });
 
