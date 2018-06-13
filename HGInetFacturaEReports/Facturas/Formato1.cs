@@ -1,6 +1,7 @@
 namespace HGInetFacturaEReports.Facturas
 {
     using HGInetMiFacturaElectonicaData.ModeloServicio;
+    using LibreriaGlobalHGInet.Funciones;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -43,7 +44,11 @@ namespace HGInetFacturaEReports.Facturas
 
                 List<DocumentoDetalle> detalles_factura = datos_factura.DocumentoDetalles;
 
-                //asiganación de los datos al SubReporte
+                //Convierte el valor total de la factura  en letras
+                string valor_letras = Numero.EnLetras((Convert.ToDouble(datos_factura.Total)), "PESOS");
+                this.TextBoxValorLetras.Value = valor_letras;
+
+                //Asigna al SubReporte los detalles de la factura
                 Formato1Detalles reporte = new Formato1Detalles();
                 reporte.DataSource = detalles_factura;
                 subReportDetalles.ReportSource = reporte;
