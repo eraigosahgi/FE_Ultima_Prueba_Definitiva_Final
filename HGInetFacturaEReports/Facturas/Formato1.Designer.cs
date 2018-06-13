@@ -707,8 +707,8 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox32.Style.BorderStyle.Top = Telerik.Reporting.Drawing.BorderType.Solid;
             this.htmlTextBox32.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.htmlTextBox32.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.htmlTextBox32.Value = "000SUBTOTALTarifa de Retención en la Fuente de 3.5% de Acuerdo al decreto 2521 de" +
-    " 2011, aplica a licenciamiento o derecho de uso de software";
+            this.htmlTextBox32.Value = "Tarifa de Retención en la Fuente de 3.5% de Acuerdo al decreto 2521 de 2011, apli" +
+    "ca a licenciamiento o derecho de uso de software";
             // 
             // TextBoxValorSubtotal
             // 
