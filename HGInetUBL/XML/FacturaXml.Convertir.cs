@@ -70,13 +70,13 @@ namespace HGInetUBL
             factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
             factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
             factura_obj.Nota = factura_ubl.Note[0].Value;
-			if (factura_ubl.Note[1] != null)
-				factura_obj.Nota2 = factura_ubl.Note[1].Value;
-			else
+			if (factura_ubl.Note[1] == null)
 				factura_obj.Nota2 = string.Empty;
+			else
+				factura_obj.Nota2 = factura_ubl.Note[1].Value;
 
-            #region Adquiriente
-            Tercero adquiriente = new Tercero();
+			#region Adquiriente
+			Tercero adquiriente = new Tercero();
 
             adquiriente.Identificacion = factura_ubl.AccountingCustomerParty.Party.PartyIdentification[0].ID.Value;
             adquiriente.TipoPersona = Convert.ToInt16(factura_ubl.AccountingCustomerParty.AdditionalAccountID.Value);
