@@ -70,7 +70,7 @@ namespace HGInetUBL
             factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
             factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
             factura_obj.Nota = factura_ubl.Note[0].Value;
-			if (factura_ubl.Note[1] == null)
+			if (factura_ubl.Note.Length == 1)
 				factura_obj.Nota2 = string.Empty;
 			else
 				factura_obj.Nota2 = factura_ubl.Note[1].Value;
