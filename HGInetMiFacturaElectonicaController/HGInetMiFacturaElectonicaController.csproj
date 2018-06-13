@@ -57,6 +57,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Telerik.Reporting, Version=10.1.16.615, Culture=neutral, PublicKeyToken=a9d7983dfcc261be, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Reporting.Service, Version=10.1.16.615, Culture=neutral, PublicKeyToken=a9d7983dfcc261be, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
@@ -98,6 +100,10 @@
     <ProjectReference Include="..\HGInetDIANServicios\HGInetDIANServicios.csproj">
       <Project>{e87c13d9-aef2-442c-b377-7a5d7290502a}</Project>
       <Name>HGInetDIANServicios</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetFacturaEReports\HGInetFacturaEReports.csproj">
+      <Project>{1e3e0a55-1c61-44b2-bbb9-87fd753585aa}</Project>
+      <Name>HGInetFacturaEReports</Name>
     </ProjectReference>
     <ProjectReference Include="..\HGInetFirmaDigital\HGInetFirmaDigital.csproj">
       <Project>{9c888de6-5aae-45c6-9c50-e0844ef42a3c}</Project>
