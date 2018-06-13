@@ -133,7 +133,7 @@ namespace HGInetUBL
 
 				//TblTransacciones transaccion = documento.TblTransacciones;
 
-				string dian_resolucion = string.Format("{0} de {1} del {2}{3} al {4}{5}", resolucion.NumResolucion, resolucion.FechaResIni.ToString(Fecha.formato_fecha_hginet), prefijo, resolucion.RangoIni, prefijo, resolucion.RangoFin);
+				string dian_resolucion = string.Format(" {0} de {1} del {2}{3} al {4}{5}", resolucion.NumResolucion, resolucion.FechaResIni.ToString(Fecha.formato_fecha_hginet), prefijo, resolucion.RangoIni, prefijo, resolucion.RangoFin);
 
 				NoteType[] Notes = new NoteType[2];
 				NoteType Note = new NoteType();

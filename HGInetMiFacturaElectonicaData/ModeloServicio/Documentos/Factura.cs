@@ -71,6 +71,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public string Nota { get; set; }
 
+
+		/// <summary>
+		/// Observaciones del documento
+		/// </summary>
+		public string Nota2 { get; set; }
+
 		/// <summary>
 		/// Código de la moneda según tabla ISO 4217 (ej: COP = Pesos Colombianos).
 		/// </summary>
