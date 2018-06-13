@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
@@ -228,7 +229,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
         {
 
             fecha_inicio = fecha_inicio.Date;
-            fecha_fin = fecha_fin.Date.AddDays(1);
+            fecha_fin = fecha_fin.Date;
+
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
 
             int num_doc = -1;
             int.TryParse(numero_documento, out num_doc);
@@ -237,7 +241,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
             short.TryParse(estado_recibo, out cod_estado_recibo);
 
             //fecha_inicio = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
-            //fecha_fin = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
+            //fecha_fin = Convert.ToDateTime(fecha_fin.ToString(Fecha.formato_fecha_hginet));
 
             if (string.IsNullOrWhiteSpace(numero_documento))
                 numero_documento = "*";
@@ -270,7 +274,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
         public List<TblDocumentos> ObtenerPorFechasObligado(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
             fecha_inicio = fecha_inicio.Date;
-            fecha_fin = fecha_fin.Date.AddDays(1);
+           // fecha_fin = fecha_fin.Date.AddDays(1);
+
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59,999);
 
             int num_doc = -1;
             int.TryParse(numero_documento, out num_doc);
@@ -645,6 +651,32 @@ namespace HGInetMiFacturaElectonicaController.Registros
             }
         }
 
+        #endregion
+
+        #region Recibi lista de documentos para procesar
+        /// <summary>
+        /// procesa Lista de Documentos
+        /// </summary>
+        /// <param name="List_id_seguridad"></param>        
+        /// <returns></returns>
+        public bool ProcesarDocumentos(List<System.Guid> List_id_seguridad)
+        {
+            try
+            {
+                List<TblDocumentos> retorno = (from doc in context.TblDocumentos
+                                               where List_id_seguridad.Contains(doc.StrIdSeguridad)
+                                               select doc).ToList();
+
+                Ctl_Documentos.Procesar(retorno);
+
+                return true;
+
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
         #endregion
 
 
