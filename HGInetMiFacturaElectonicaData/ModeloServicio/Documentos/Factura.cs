@@ -71,12 +71,6 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public string Nota { get; set; }
 
-
-		/// <summary>
-		/// Observaciones del documento
-		/// </summary>
-		public string Nota2 { get; set; }
-
 		/// <summary>
 		/// Notas (observaciones) del documento
 		/// </summary>

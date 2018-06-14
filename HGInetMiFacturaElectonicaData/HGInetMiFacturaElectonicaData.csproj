@@ -91,6 +91,7 @@
     <Compile Include="ModeloServicio\General\DestinatarioEmail.cs" />
     <Compile Include="ModeloServicio\General\ExtensionDian.cs" />
     <Compile Include="ModeloServicio\General\Formato.cs" />
+    <Compile Include="ModeloServicio\General\FormatoCampo.cs" />
     <Compile Include="ModeloServicio\General\Tercero.cs" />
     <Compile Include="ModeloServicio\Respuestas\DocumentoRespuesta.cs" />
     <Compile Include="ModeloServicio\Respuestas\Resolucion.cs" />
