@@ -277,6 +277,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//guarda documento en BD
 						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, adquirienteBd, tipo_doc);
 
+						// genera el xml en ubl
+						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+
+						// almacena el xml en ubl
+						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+
+
 						try
 						{
 
@@ -289,16 +298,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 						}
-
-
-						// genera el xml en ubl
-						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
-
-
-						// almacena el xml en ubl
-						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
 
 
 						// almacena Formato
