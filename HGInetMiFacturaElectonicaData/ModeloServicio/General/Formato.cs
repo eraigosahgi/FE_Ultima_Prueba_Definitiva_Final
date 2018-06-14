@@ -13,10 +13,19 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 	public class Formato
 	{
 		/// <summary>
+		/// Código del formato
+		/// </summary>
+		public int Codigo { get; set; }
+
+		/// <summary>
+		/// Campos adicionales predeterminados en el formato
+		/// </summary>
+		public List<FormatoCampo> CamposPredeterminados { get; set; }
+
+		/// <summary>
 		/// Archivo PDF 
 		/// </summary>
 		public string ArchivoPdf { get; set; }
-
 
 	}
 }
