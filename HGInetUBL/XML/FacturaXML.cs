@@ -134,15 +134,31 @@ namespace HGInetUBL
 				//TblTransacciones transaccion = documento.TblTransacciones;
 
 				string dian_resolucion = string.Format(" {0} de {1} del {2}{3} al {4}{5}", resolucion.NumResolucion, resolucion.FechaResIni.ToString(Fecha.formato_fecha_hginet), prefijo, resolucion.RangoIni, prefijo, resolucion.RangoFin);
+				
 
-				NoteType[] Notes = new NoteType[2];
-				NoteType Note = new NoteType();
-				Note.Value = dian_resolucion;
-				Notes[0] = Note;
-				NoteType Note2 = new NoteType();
-				Note2.Value = documento.Nota;
-				Notes[1] = Note2;
+				List<string> notas_documento = new List<string>();
+				
+				// agrega la resolución en la 1ra posición
+				notas_documento.Add(dian_resolucion);
+
+				// agrega las observaciones del documento en la 2da posición
+				notas_documento.Add(documento.Nota);
+
+				// agrega las notas adicionales del documento
+				if(documento.Notas != null)
+					notas_documento.AddRange(documento.Notas);
+
+
+				NoteType[] Notes = new NoteType[notas_documento.Count];
+
+				for(int i= 0; i < notas_documento.Count; i++)
+				{
+					NoteType Note = new NoteType();
+					Note.Value = notas_documento[i];
+					Notes[i] = Note;
+				}
 				factura.Note = Notes;
+
 
 				#endregion
 
