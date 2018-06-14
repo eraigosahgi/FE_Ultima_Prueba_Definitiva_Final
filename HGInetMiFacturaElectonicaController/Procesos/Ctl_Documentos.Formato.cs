@@ -62,18 +62,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Formato1 reporte_pdf = new Formato1();
 
 					//XmlTextReader xml = new XmlTextReader(documentoBd.StrUrlArchivoUbl);
-
+					/*
 					FileStream xml = new FileStream(string.Format("{0}{1}.xml", documento_result.RutaArchivosProceso,documento_result.NombreXml), FileMode.Open);
 
 					XmlSerializer serializacion = new XmlSerializer(typeof(InvoiceType));
 
 					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml);
 
-					Factura datos_documento = FacturaXML.Convertir(conversion);
+					Factura datos_documento = FacturaXML.Convertir(conversion);*/
 
-					reporte_pdf.DataSource = datos_documento;
+					reporte_pdf.DataSource = documento;
 
-					xml.Close();
+					//xml.Close();
 
 
 					string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
