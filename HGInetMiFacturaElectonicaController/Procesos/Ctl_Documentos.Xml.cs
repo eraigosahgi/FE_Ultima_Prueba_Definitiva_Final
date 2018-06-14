@@ -39,8 +39,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
                 documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
                 
-                Ctl_Documento documento_tmp = new Ctl_Documento();
-                documento_tmp.Actualizar(documentoBd);
+                /*Ctl_Documento documento_tmp = new Ctl_Documento();
+                documento_tmp.Actualizar(documentoBd);*/
                 
                 //Genera Ubl
                 if (tipo_doc == TipoDocumento.Factura)
@@ -48,8 +48,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 else if (tipo_doc == TipoDocumento.NotaCredito)
                     documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridad, (NotaCredito)documento_obj, tipo_doc, empresa, resolucion);
 
-            }
-            catch (Exception excepcion)
+			}
+			catch (Exception excepcion)
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la generación del estandar UBL del documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 				LogExcepcion.Guardar(excepcion);
@@ -76,13 +76,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 // almacena el xml
                 documento_result = Ctl_Ubl.Almacenar(documento_result);
 
-                //Actualiza Documento en Base de Datos
-                documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+
+				// url pública del xml
+				string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
+				respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+
+				// url pública del zip
+				string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreZip);
+
+				//Actualiza Documento en Base de Datos
+				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
                 documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
-                Ctl_Documento documento_tmp = new Ctl_Documento();
-                documento_tmp.Actualizar(documentoBd);
-            }
+				documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
+				documentoBd.StrUrlArchivoZip = url_ppal_zip;
+				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+
+				//Ctl_Documento documento_tmp = new Ctl_Documento();
+				//documento_tmp.Actualizar(documentoBd);
+			}
             catch (Exception excepcion)
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
