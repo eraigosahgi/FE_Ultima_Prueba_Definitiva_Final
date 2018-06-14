@@ -132,7 +132,7 @@
     <value>Autorizo a la entidad HGI S.A.S o a quien represente la calidad del acreedor, a reportar, proesar, solicitar o divulgar a cualquier entidad que maneje o administre bases de datos la información referente a mi comportamiento comercial.</value>
   </data>
   <metadata name="$this.Zoom" type="System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>2</value>
+    <value>1.5</value>
   </metadata>
   <metadata name="$this.ShowSnapGrid" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
