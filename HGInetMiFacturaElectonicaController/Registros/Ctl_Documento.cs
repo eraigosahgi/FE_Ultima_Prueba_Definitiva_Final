@@ -410,7 +410,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <param name="adquiriente"></param>
         /// <param name="tipo_doc"></param>
         /// <returns></returns>
-        public static TblDocumentos Convertir(DocumentoRespuesta respuesta, object documento, TblEmpresasResoluciones resolucion, TblEmpresas empresa, TblEmpresas adquiriente, TipoDocumento tipo_doc)
+        public static TblDocumentos Convertir(DocumentoRespuesta respuesta, object documento, TblEmpresasResoluciones resolucion, TblEmpresas empresa, TipoDocumento tipo_doc)
         {
             try
             {
@@ -448,7 +448,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 tbl_documento.StrObligadoIdRegistro = documento_obj.CodigoRegistro;
                 tbl_documento.StrNumResolucion = resolucion.StrNumResolucion;
                 tbl_documento.StrEmpresaFacturador = empresa.StrIdentificacion;
-                tbl_documento.StrEmpresaAdquiriente = adquiriente.StrIdentificacion;
+                tbl_documento.StrEmpresaAdquiriente = documento_obj.DatosAdquiriente.Identificacion;
                 tbl_documento.StrCufe = respuesta.Cufe;
                 tbl_documento.IntVlrTotal = documento_obj.Total;
                 tbl_documento.StrIdSeguridad = Guid.Parse(respuesta.IdDocumento);
