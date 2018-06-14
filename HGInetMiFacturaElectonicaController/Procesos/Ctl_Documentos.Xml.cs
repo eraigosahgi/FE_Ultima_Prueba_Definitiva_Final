@@ -34,12 +34,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 respuesta.DescripcionProceso = "Genera información en estandar UBL.";
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
                 respuesta.IdProceso = ProcesoEstado.UBL.GetHashCode();
-
+				
+				/*
                 //Actualiza documento en la Base de Datos
                 documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
                 documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
                 
-                /*Ctl_Documento documento_tmp = new Ctl_Documento();
+                Ctl_Documento documento_tmp = new Ctl_Documento();
                 documento_tmp.Actualizar(documentoBd);*/
                 
                 //Genera Ubl
@@ -81,15 +82,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
 				respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
-				// url pública del zip
-				string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreZip);
-
 				//Actualiza Documento en Base de Datos
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
                 documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
 				documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
-				documentoBd.StrUrlArchivoZip = url_ppal_zip;
+				documentoBd.StrEmpresaAdquiriente = respuesta.Identificacion;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 
 				//Ctl_Documento documento_tmp = new Ctl_Documento();
