@@ -234,17 +234,28 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (empresa.IntHabilitacion > 0)
 					{
 
-						Ctl_Empresa empresa_config = new Ctl_Empresa();
-
-						TblEmpresas adquirienteBd = null;
-						TblUsuarios usuarioBd = null;
-
-						bool adquiriente_nuevo = false;
-
 						//Guarda la id de la Peticion con la que se esta haciendo el proceso
 						documento_result.IdSeguridad = id_peticion;
 
-						//Validacion de Adquiriente y usuario
+						Ctl_Documento documento_tmp = new Ctl_Documento();
+
+						//guarda documento en BD
+						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, tipo_doc);
+
+						// genera el xml en ubl
+						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+
+						// almacena el xml en ubl
+						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+
+
+						Ctl_Empresa empresa_config = new Ctl_Empresa();
+
+						TblEmpresas adquirienteBd = null;
+
+						//Validacion de Adquiriente
 						try
 						{
 
@@ -258,11 +269,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Creacion del Adquiriente
 								adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
 
-								//Creacion del Usuario del Adquiriente
-								Ctl_Usuario usuario = new Ctl_Usuario();
-								usuarioBd = usuario.Crear(adquirienteBd);
-
-								adquiriente_nuevo = true;
 							}
 						}
 						catch (Exception excepcion)
@@ -272,20 +278,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw excepcion;
 						}
 
-						Ctl_Documento documento_tmp = new Ctl_Documento();
-
-						//guarda documento en BD
-						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, adquirienteBd, tipo_doc);
-
-						// genera el xml en ubl
-						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
-
-						// almacena el xml en ubl
-						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
-
-
+						//Crea el documento en BD
 						try
 						{
 
@@ -481,6 +474,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (_estado_dian == true)
 						{
+
+							TblUsuarios usuarioBd = null;
+
+							bool adquiriente_nuevo = false;
+
+							Ctl_Usuario _usuario = new Ctl_Usuario();
+
+							usuarioBd = _usuario.ObtenerUsuarios(adquirienteBd.StrIdentificacion, adquirienteBd.StrIdentificacion).FirstOrDefault();
+
+							//Creacion del Usuario del Adquiriente
+							if (usuarioBd == null)
+							{
+								_usuario = new Ctl_Usuario();
+								usuarioBd = _usuario.Crear(adquirienteBd);
+
+								adquiriente_nuevo = true;
+							}
+
 							// envía el mail de documentos y de creación de adquiriente
 							respuesta = MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result);
 							ValidarRespuesta(respuesta);
