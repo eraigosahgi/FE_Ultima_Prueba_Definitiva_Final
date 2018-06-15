@@ -157,7 +157,7 @@ namespace HGInetUBL
                 };
 
                 // convierte el objeto en json
-                string formato_json = JsonConvert.SerializeObject(documento.DocumentoFormato.CamposPredeterminados, typeof(List<FormatoCampo>), config);
+                string formato_json = JsonConvert.SerializeObject(documento.DocumentoFormato, typeof(Formato), config);
 
                 // agrega los campos del formato del documento en la 3ra posición
                 notas_documento.Add(formato_json);
