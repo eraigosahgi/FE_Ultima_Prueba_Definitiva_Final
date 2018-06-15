@@ -48,6 +48,40 @@ namespace HGInetFacturaEReports.Facturas
                 string valor_letras = Numero.EnLetras((Convert.ToDouble(datos_factura.Total)), "PESOS");
                 this.TextBoxValorLetras.Value = valor_letras;
 
+                if (datos_factura.DocumentoFormato.CamposPredeterminados != null)
+                {
+                    List<FormatoCampo> campos = datos_factura.DocumentoFormato.CamposPredeterminados;
+
+                    foreach (FormatoCampo item in campos)
+                    {
+                        //Obtiene el control en el reporte, teniendo en cuenta la ubicacion
+                        ReportItemBase[] report_item_descripcion = this.Items.Find(string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()), true);
+
+                        if (report_item_descripcion != null)
+                        {
+                            HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
+
+                            if (campo_descripcion != null)
+                            {
+                                campo_descripcion.Value = item.Descripcion;
+                            }
+                        }
+
+                        //Obtiene el control en el reporte, teniendo en cuenta la ubicacion
+                        ReportItemBase[] report_item_valor = this.Items.Find(string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()), true);
+
+                        if (report_item_valor != null)
+                        {
+                            HtmlTextBox campo_valor = report_item_valor[0] as HtmlTextBox;
+
+                            if (campo_valor != null)
+                            {
+                                campo_valor.Value = item.Valor;
+                            }
+                        }
+                    }
+                }
+
                 //Asigna al SubReporte los detalles de la factura
                 Formato1Detalles reporte = new Formato1Detalles();
                 reporte.DataSource = detalles_factura;
