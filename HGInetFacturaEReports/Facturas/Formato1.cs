@@ -57,20 +57,20 @@ namespace HGInetFacturaEReports.Facturas
                         //Obtiene el control en el reporte, teniendo en cuenta la ubicacion
                         ReportItemBase[] report_item_descripcion = this.Items.Find(string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()), true);
 
-                        if (report_item_descripcion != null)
+                        if (report_item_descripcion.Length > 0)
                         {
                             HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
 
                             if (campo_descripcion != null)
                             {
-                                campo_descripcion.Value = item.Descripcion;
+                                campo_descripcion.Value = item.Descripcion.ToUpper();
                             }
                         }
 
                         //Obtiene el control en el reporte, teniendo en cuenta la ubicacion
                         ReportItemBase[] report_item_valor = this.Items.Find(string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()), true);
 
-                        if (report_item_valor != null)
+                        if (report_item_valor.Length > 0)
                         {
                             HtmlTextBox campo_valor = report_item_valor[0] as HtmlTextBox;
 
