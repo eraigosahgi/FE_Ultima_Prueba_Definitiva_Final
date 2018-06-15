@@ -34,7 +34,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 var documento_obj = (dynamic)null;
                 documento_obj = documento;
 
-                Formato formato_documento = (Formato) (dynamic)documento_obj.DocumentoFormato;
+                bool generar_pdf = true;
+
+                Formato formato_documento = (Formato)(dynamic)documento_obj.DocumentoFormato;
                 if (formato_documento != null)
                 {
                     if (!string.IsNullOrEmpty(formato_documento.ArchivoPdf))
@@ -55,14 +57,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             Ctl_Documento documento_tmp = new Ctl_Documento();
                             documentoBd = documento_tmp.Actualizar(documentoBd);
                         }
+
+                        generar_pdf = false;
                     }
                 }
-				else
-				{
-					Formato1 reporte_pdf = new Formato1();
 
-					//XmlTextReader xml = new XmlTextReader(documentoBd.StrUrlArchivoUbl);
-					/*
+                if (generar_pdf)
+                {
+                    Formato1 reporte_pdf = new Formato1();
+
+                    //XmlTextReader xml = new XmlTextReader(documentoBd.StrUrlArchivoUbl);
+                    /*
 					FileStream xml = new FileStream(string.Format("{0}{1}.xml", documento_result.RutaArchivosProceso,documento_result.NombreXml), FileMode.Open);
 
 					XmlSerializer serializacion = new XmlSerializer(typeof(InvoiceType));
@@ -71,25 +76,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					Factura datos_documento = FacturaXML.Convertir(conversion);*/
 
-					reporte_pdf.DataSource = documento;
+                    reporte_pdf.DataSource = documento;
 
-					//xml.Close();
+                    //xml.Close();
 
 
-					string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
+                    string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
 
-					string ruta = string.Format(@"{0}{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+                    string ruta = string.Format(@"{0}{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
-					HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
-					x.GenerarPdf(reporte_pdf);
+                    HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
+                    x.GenerarPdf(reporte_pdf);
 
-					respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+                    respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
-					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
+                    documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
 
-					Ctl_Documento documento_tmp = new Ctl_Documento();
-					documentoBd = documento_tmp.Actualizar(documentoBd);
-				}
+                    Ctl_Documento documento_tmp = new Ctl_Documento();
+                    documentoBd = documento_tmp.Actualizar(documentoBd);
+                }
 
 
 
@@ -101,6 +106,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
             return respuesta;
         }
-        
+
     }
 }
