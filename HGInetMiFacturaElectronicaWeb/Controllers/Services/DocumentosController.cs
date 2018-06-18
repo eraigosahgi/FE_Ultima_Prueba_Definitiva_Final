@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -341,12 +342,19 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
 
+                List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();                
+
+                List<System.Guid> List_id_seguridad = new List<Guid>();
+
                 foreach (var item in ListadeDocumentos)
-                {   //Aca coloco lo que quiero hacer con mis documentos
-                    string doc = item.Documentos.ToString();
+                {
+                    List_id_seguridad.Add(item.Documentos);
                 }
 
+                Ctl_Documento documento = new Ctl_Documento();
 
+                var lista = documento.ProcesarDocumentos(List_id_seguridad);
+                
                 return Ok();
             }
             catch (Exception excepcion)
