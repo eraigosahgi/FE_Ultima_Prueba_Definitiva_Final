@@ -996,7 +996,7 @@ namespace HGInetUBL
 					#region Descripcion producto
 					DescriptionType[] Descriptions = new DescriptionType[1];
 					DescriptionType Description = new DescriptionType();
-					Description.Value = DocDet.ProductoDescripcion;
+					Description.Value = DocDet.ProductoNombre;
 					Descriptions[0] = Description;
 					Item.Description = Descriptions;
 					#endregion
