@@ -584,13 +584,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
         public List<TblDocumentos> ObtenerDocumentosaProcesar(System.Guid? IdSeguridad,  string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
             fecha_inicio = fecha_inicio.Date;
-            fecha_fin = fecha_fin.Date.AddDays(1);
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
             short cod_estado_recibo = -1;
             short.TryParse(estado_recibo, out cod_estado_recibo);
 
-            fecha_inicio = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
-            fecha_fin = Convert.ToDateTime(fecha_fin.ToString(Fecha.formato_fecha_hginet));
             
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
@@ -653,7 +651,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
         #endregion
 
-        #region Recibi lista de documentos para procesar
+        #region Recibir lista de documentos para procesar
         /// <summary>
         /// procesa Lista de Documentos
         /// </summary>
