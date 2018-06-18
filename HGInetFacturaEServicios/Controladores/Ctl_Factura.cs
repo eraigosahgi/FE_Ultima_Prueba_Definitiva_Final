@@ -3,6 +3,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -55,10 +56,20 @@ namespace HGInetFacturaEServicios
 				{
 					if (item == null)
 						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioFactura.Factura"));
-						
+
 					if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
 						throw new Exception("El detalle del documento es inválido.");
 
+					if (item.DocumentoFormato != null)
+					{
+						if (!string.IsNullOrEmpty(item.DocumentoFormato.ArchivoPdf))
+						{
+							byte[] pdf = Convert.FromBase64String(item.DocumentoFormato.ArchivoPdf);
+							//valida el peso del formato
+							if (pdf.Length < 5120)
+								throw new Exception("El Formato de impresion es inválido.");
+						}
+					}
 					item.DataKey = dataKey;
 				}
 
@@ -167,7 +178,7 @@ namespace HGInetFacturaEServicios
 		public static string CalcularCUFE(string clave_tecnica, string numero_factura, DateTime fecha_factura, string nit_facturador, string tipo_identificacion_adquiriente, string nit_adquiriente, decimal total, decimal subtotal, decimal iva, decimal impto_consumo, decimal rte_ica)
 		{
 			try
-			{				
+			{
 				if (string.IsNullOrWhiteSpace(clave_tecnica))
 					throw new Exception(string.Format("Parámetro {0} inválido.", "clave_tecnica"));
 
@@ -217,7 +228,7 @@ namespace HGInetFacturaEServicios
 				NumAdq = /fe:Invoice/fe:AccountingCustomerParty/fe:Party/cac:PartyIdentification/cbc:ID
 				ClTec = no está en el XML 			 
 				*/
-				
+
 				string codigo_impuesto = string.Empty;
 				DateTime fecha = fecha_factura;
 				DateTime fecha_hora = Convert.ToDateTime(fecha_factura);
@@ -231,7 +242,7 @@ namespace HGInetFacturaEServicios
 
 				// formato para validación de valor con dos decimales
 				Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
-				
+
 				//Impuesto 1
 				string CodImp1 = "01";
 				decimal ValImp1 = iva;
@@ -241,7 +252,7 @@ namespace HGInetFacturaEServicios
 					ValImp1 = Convert.ToDecimal(0.00M);
 				else if (!isnumber.IsMatch(Convert.ToString(ValImp1).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor iva {0} no esta bien formado", iva));
-				
+
 				//Impuesto 2
 				string CodImp2 = "02";
 				decimal ValImp2 = impto_consumo;
@@ -251,24 +262,24 @@ namespace HGInetFacturaEServicios
 					ValImp2 = Convert.ToDecimal(0.00M);
 				else if (!isnumber.IsMatch(Convert.ToString(ValImp2).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor impto_consumo {0} no esta bien formado", impto_consumo));
-					
+
 				//Impuesto 3
 				string CodImp3 = "03";
 				decimal ValImp3 = rte_ica;
-				
+
 				//Valida el reteica
 				if (ValImp3 == 0)
 					ValImp3 = Convert.ToDecimal(0.00M);
 				else if (!isnumber.IsMatch(Convert.ToString(ValImp3).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor rte_ica {0} no esta bien formado", rte_ica));
-					
+
 				string ValImp = total.ToString();
 
 				string NitOFE = nit_facturador;
-				
+
 				string TipAdq = tipo_identificacion_adquiriente;
 				string NumAdq = nit_adquiriente;
-				
+
 				string cufe = NumFac
 					+ FecFac
 					+ ValFac.Replace(",", ".")
