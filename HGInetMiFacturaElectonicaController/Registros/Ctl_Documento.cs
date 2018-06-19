@@ -587,16 +587,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
             fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
             short cod_estado_recibo = -1;
-            short.TryParse(estado_recibo, out cod_estado_recibo);
-
+            short.TryParse(estado_recibo, out cod_estado_recibo);           
             
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
+            if (string.IsNullOrWhiteSpace(estado_recibo))
+                estado_recibo = "*";
+
+            if (estado_recibo.Equals("3"))
+                estado_recibo = "2,3";
+
+            List<string> estados = Coleccion.ConvertirLista(estado_recibo);
 
             var respuesta = (from datos in context.TblDocumentos
                              join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-                             where  ((datos.StrIdSeguridad==IdSeguridad) || IdSeguridad ==null)                             
-                                           && (datos.IntIdEstado == cod_estado_recibo || estado_recibo.Equals("*"))
+                             where  ((datos.StrIdSeguridad==IdSeguridad) || IdSeguridad ==null)
+                                           && (estados.Contains(datos.IntIdEstado.ToString()) || estado_recibo.Equals("*"))
                                            && (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
                              orderby datos.DatFechaIngreso descending
                              select datos).ToList();
