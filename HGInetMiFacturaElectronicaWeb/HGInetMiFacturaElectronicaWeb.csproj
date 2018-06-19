@@ -1860,6 +1860,9 @@
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
     <Content Include="Scripts\Pages\RestablecerClave.js" />
+    <Content Include="Scripts\Services\Loading.js" />
+    <Content Include="Scripts\Services\MaestrosEnum.js" />
+    <Content Include="Scripts\Services\SrvUsuario.js" />
     <Content Include="Views\Demos\Demo.aspx" />
     <Content Include="Views\Demos\Demos.aspx" />
     <Content Include="Global.asax" />
