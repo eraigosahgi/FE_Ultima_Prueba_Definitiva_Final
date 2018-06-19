@@ -690,7 +690,7 @@ namespace HGInetUBL
                 {
                     DocumentoImpuestos imp_doc = new DocumentoImpuestos();
                     List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
-                    BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
+                    BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => (docDet.ValorUnitario - docDet.DescuentoValor) * docDet.Cantidad), 2);
 
                     //imp_doc.Codigo = item.IntIva;
                     //imp_doc.Nombre = item.StrDescripcion;
@@ -719,7 +719,7 @@ namespace HGInetUBL
                         {
                             DocumentoImpuestos imp_doc = new DocumentoImpuestos();
                             List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).ToList();
-                            BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
+                            BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => (docDet.ValorUnitario - docDet.DescuentoValor) * docDet.Cantidad), 2);
 
                             //imp_doc.Codigo = item.IntImpConsumo.ToString();
                             //imp_doc.Nombre = item.StrDescripcion;
@@ -750,7 +750,7 @@ namespace HGInetUBL
                         {
                             DocumentoImpuestos imp_doc = new DocumentoImpuestos();
                             List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).ToList();
-                            BaseImponibleReteIca = decimal.Round(documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).Sum(docDet => docDet.ValorUnitario * docDet.Cantidad), 2);
+                            BaseImponibleReteIca = decimal.Round(documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).Sum(docDet => (docDet.ValorUnitario - docDet.DescuentoValor) * docDet.Cantidad), 2);
 
                             imp_doc.Porcentaje = decimal.Round(item.ReteIcaPorcentaje, 2);
                             imp_doc.TipoImpuesto = item.Ica;
