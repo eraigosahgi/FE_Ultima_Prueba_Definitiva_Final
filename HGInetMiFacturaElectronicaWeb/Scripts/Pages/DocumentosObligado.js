@@ -3,10 +3,11 @@
 var email_destino = "";
 var id_seguridad = "";
 
-var DocObligadoApp = angular.module('DocObligadoApp', ['dx']);
-DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location) {
+var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum']);
+DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum) {
 
     var now = new Date();
+    var Estado;
 
     var codigo_facturador = "",
            numero_documento = "",
@@ -20,77 +21,132 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         consultar();
     });
 
-    $("#FechaInicial").dxDateBox({
-        value: now,
-        displayFormat: "yyyy-MM-dd",
-        onValueChanged: function (data) {
-            fecha_inicio = new Date(data.value).toISOString();
-            if (new Date(data.value).toISOString() > fecha_fin) {
-                DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
-                $("#FechaInicial").dxDateBox({ value: fecha_fin });
-                fecha_inicio: fecha_fin;
-            }
-        }
-
+    SrvMaestrosEnum.ObtenerEnum(0).then(function (data) {
+        Estado = data;
+        cargarFiltros();
     });
 
-    $("#FechaFinal").dxDateBox({
-        value: now,
-        displayFormat: "yyyy-MM-dd",
-        onValueChanged: function (data) {
-            fecha_fin = new Date(data.value).toISOString();
-            if (new Date(data.value).toISOString() < fecha_inicio) {
-                DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
-                $("#FechaFinal").dxDateBox({ value: fecha_inicio });
-                fecha_fin: fecha_inicio;
+    function cargarFiltros() {
+        $("#FechaInicial").dxDateBox({
+            value: now,
+            displayFormat: "yyyy-MM-dd",
+            onValueChanged: function (data) {
+                fecha_inicio = new Date(data.value).toISOString();
+                $("#FechaFinal").dxDateBox({ min: fecha_inicio });
+                if (new Date(data.value).toISOString() > fecha_fin) {
+                    DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
+                    $("#FechaInicial").dxDateBox({ value: fecha_fin });
+                    fecha_inicio: fecha_fin;
+                }
             }
-        }
 
-    });
-    //Define los campos y las opciones
-    $scope.filtros =
-        {
-            EstadoDian: {
-                searchEnabled: true,
-                //Carga la data del control
-                dataSource: new DevExpress.data.ArrayStore({
-                    data: items_dian,
-                    key: "ID"
-                }),
-                displayExpr: "Texto",
-                Enabled: true,
-                placeholder: "Seleccione un Item",
-                onValueChanged: function (data) {
-                    estado_dian = data.value.ID;
-                }
-            },
-            EstadoRecibo: {
-                searchEnabled: true,
-                //Carga la data del control
-                dataSource: new DevExpress.data.ArrayStore({
-                    data: items_recibo,
-                    key: "ID"
-                }),
-                displayExpr: "Texto",
-                Enabled: true,
-                placeholder: "Seleccione un Item",
-                onValueChanged: function (data) {
-                    estado_recibo = data.value.ID;
-                }
-            },
-            NumeroDocumento: {
-                placeholder: "Ingrese Número Documento",
-                onValueChanged: function (data) {
-                    numero_documento = data.value;
-                }
-            },
-            Adquiriente: {
-                placeholder: "Ingrese Identificación del Adquiriente",
-                onValueChanged: function (data) {
-                    codigo_adquiriente = data.value;
+        });
+
+        $("#FechaFinal").dxDateBox({
+            value: now,
+            displayFormat: "yyyy-MM-dd",
+            onValueChanged: function (data) {
+                fecha_fin = new Date(data.value).toISOString();
+                $("#FechaInicial").dxDateBox({ max: fecha_fin });
+                if (new Date(data.value).toISOString() < fecha_inicio) {
+                    DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
+                    $("#FechaFinal").dxDateBox({ value: fecha_inicio });
+                    fecha_fin: fecha_inicio;
                 }
             }
-        }
+
+        });
+
+
+        var DatosEstados = function () {
+            return new DevExpress.data.CustomStore({
+                loadMode: "raw",
+                key: "ID",
+                load: function () {
+                    return JSON.parse(JSON.stringify(Estado));
+                }
+            });
+        };
+
+        $("#filtrosEstadoRecibo").dxDropDownBox({
+            valueExpr: "ID",
+            placeholder: "Seleccione un Item",
+            displayExpr: "Descripcion",
+            showClearButton: true,
+            dataSource: DatosEstados(),
+            contentTemplate: function (e) {
+                var value = e.component.option("value"),
+                    $dataGrid = $("<div>").dxDataGrid({
+                        dataSource: e.component.option("dataSource"),
+                        allowColumnResizing: true,
+                        columns:
+                            [
+                                 {
+                                     caption: "Descripción",
+                                     dataField: "Descripcion",
+                                     title: "Descripcion",
+                                     width: 500
+
+                                 }],
+                        hoverStateEnabled: true,
+                        paging: { enabled: true, pageSize: 10 },
+                        filterRow: { visible: true },
+                        scrolling: { mode: "infinite" },
+                        height: 300,
+                        selection: { mode: "multiple" },
+                        selectedRowKeys: value,
+                        onSelectionChanged: function (selectedItems) {
+                            var keys = selectedItems.selectedRowKeys;
+                            e.component.option("value", keys);
+                            estado_dian = keys;
+                        }
+                    });
+
+                dataGrid = $dataGrid.dxDataGrid("instance");
+
+                e.component.on("valueChanged", function (args) {
+                    var value = args.value;
+                    dataGrid.selectRows(value, false);
+                });
+
+                return $dataGrid;
+            }
+        });
+
+        //Define los campos y las opciones
+        $scope.filtros =
+            {
+                EstadoRecibo: {
+                    searchEnabled: true,
+                    //Carga la data del control
+                    dataSource: new DevExpress.data.ArrayStore({
+                        data: items_recibo,
+                        key: "ID"
+                    }),
+                    displayExpr: "Texto",
+                    Enabled: true,
+                    placeholder: "Seleccione un Item",
+                    onValueChanged: function (data) {
+                        estado_recibo = data.value.ID;
+                    }
+                },
+                NumeroDocumento: {
+                    placeholder: "Ingrese Número Documento",
+                    onValueChanged: function (data) {
+                        numero_documento = data.value;
+                    }
+                },
+                Adquiriente: {
+                    placeholder: "Ingrese Identificación del Adquiriente",
+                    onValueChanged: function (data) {
+                        codigo_adquiriente = data.value;
+                    }
+                }
+            }
+
+        $("#FechaFinal").dxDateBox({ min: now });
+        $("#FechaInicial").dxDateBox({ max: now });
+    }
 
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
@@ -112,7 +168,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
-        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {            
+        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -129,33 +185,46 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     var fieldData = options.value,
                         fieldHtml = "";
                     try {
-                        if (options.columnIndex == 4) {
+                        if (options.column.caption == "Valor Total") {
                             if (fieldData) {
                                 var inicial = fNumber.go(fieldData);
                                 options.cellElement.html(inicial);
                             }
                         }
-                       
-
                     } catch (err) {
-                        DevExpress.ui.notify(err.message, 'error', 3000);
                     }
 
                 }, loadPanel: {
                     enabled: true
+                },
+                headerFilter: {
+                    visible: true
                 }
-                      , allowColumnResizing: true
+                , allowColumnResizing: true
+                , allowColumnReordering: true
+                , columnChooser: {
+                    enabled: true,
+                    mode: "select",
+                    emptyPanelText: "Prueba"
+                },
+                groupPanel: {
+                    allowColumnDragging: true,
+                    emptyPanelText: "Arrastre la columna aqui",
+                    visible: true
+                }
+                //,columnAutoWidth: true
                 , columns: [
                     {
-                        caption: "Archivos",
-                        cssClass: "col-xs-3 col-md-1",
+                        caption: "  Lista de Archivos",
+                        cssClass: "col-xs-3 col-md-1",                        
+                        
                         cellTemplate: function (container, options) {
 
                             var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
 
                             var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
 
-                            var visible_acuse = " title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white;'";
+                            var visible_acuse = " title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";
 
                             if (options.data.Pdf)
                                 visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer;'";
@@ -168,14 +237,14 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                 options.data.Xml = "#";
 
                             if (options.data.EstadoAcuse != 'Pendiente')
-                                visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; '";
+                                visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
                             else
                                 options.data.RutaAcuse = "#";
 
                             $("<div>")
                                 .append(
-                                    $("<a target='_blank' class='icon-file-eye2' " + visible_acuse + "></a>&nbsp;&nbsp;<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"),
-                                    $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:12%; font-size:19px'></a>&nbsp;&nbsp;").dxButton({
+                                    $("<a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;' target='_blank' class='icon-file-xml' " + visible_xml + ">"),
+                                    $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:5%; font-size:19px'></a>").dxButton({
                                         onClick: function () {
                                             $scope.showModal = true;
                                             email_destino = options.data.MailAdquiriente;
@@ -184,10 +253,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                         }
                                     }).removeClass("dx-button dx-button-normal dx-widget")
 
-                                    
+
 
                             )
-                                .append($(""))
+                                .append($("<a target='_blank' class='icon-file-eye2' " + visible_acuse + "></a>"))
                                 .appendTo(container);
                         }
                     },
@@ -198,7 +267,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
                     },
                     {
-                        caption: "Fecha Documento",
+                        caption: "Fecha Doc",
                         dataField: "DatFechaDocumento",
                         dataType: "date",
                         format: "yyyy-MM-dd",
@@ -209,10 +278,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         }]
                     },
                     {
-                        caption: "Fecha Vencimiento",
+                        caption: "Fecha Venc",
                         dataField: "DatFechaVencDocumento",
                         dataType: "date",
-                        format:"yyyy-MM-dd",
+                        format: "yyyy-MM-dd",
                         cssClass: "hidden-xs col-md-1",
                         validationRules: [{
                             type: "required",
@@ -225,7 +294,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         dataField: "IntVlrTotal"
                     },
                      {
-                         caption: "Identificación Adquiriente",
+                         caption: "Adquiriente",
                          cssClass: "hidden-xs col-md-1",
                          dataField: "IdentificacionAdquiriente"
                      },
@@ -250,6 +319,21 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           dataField: "MotivoRechazo",
                       }
                 ],
+                summary: {
+                    groupItems: [{
+                        column: "IntVlrTotal",
+                        summaryType: "sum",
+                        displayFormat: " {0} Total ",
+                        valueFormat: "currency"
+                    }],
+                    totalItems: [{
+                        column: "IntVlrTotal",                        
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: "currency"
+                    }]
+                },
+                
                 filterRow: {
                     visible: true
                 },
@@ -373,19 +457,5 @@ var items_recibo =
     { ID: "2", Texto: 'Rechazado' }
     ];
 
-var items_dian =
-    [
-    { ID: "*", Texto: 'Obtener Todos' },
-    { ID: "1", Texto: 'Recepción' },
-    { ID: "2", Texto: 'Validación Documento' },
-    { ID: "3", Texto: 'Generación UBL' },
-    { ID: "4", Texto: 'Almacenamiento XML' },
-    { ID: "5", Texto: 'Firma XML' },
-    { ID: "6", Texto: 'Compresión XML' },
-    { ID: "7", Texto: 'Envío ZIP' },
-    { ID: "8", Texto: 'Envío E-mail Adquiriente' },
-    { ID: "9", Texto: 'Recepción Acuse' },
-    { ID: "10", Texto: 'Envío E-mail Acuse' },
-    { ID: "11", Texto: 'Fin Proceso' }
-    ];
+
 
