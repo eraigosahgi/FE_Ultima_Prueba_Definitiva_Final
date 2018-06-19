@@ -25,6 +25,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         displayFormat: "yyyy-MM-dd",
         onValueChanged: function (data) {
             fecha_inicio = new Date(data.value).toISOString();
+            $("#FechaFinal").dxDateBox({ min: fecha_inicio });
             if (new Date(data.value).toISOString() > fecha_fin) {
                 DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
                 $("#FechaInicial").dxDateBox({ value: fecha_fin });
@@ -39,6 +40,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         displayFormat: "yyyy-MM-dd",
         onValueChanged: function (data) {
             fecha_fin = new Date(data.value).toISOString();
+            $("#FechaInicial").dxDateBox({ max: fecha_fin });
             if (new Date(data.value).toISOString() < fecha_inicio) {
                 DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
                 $("#FechaFinal").dxDateBox({ value: fecha_inicio });
@@ -74,10 +76,12 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     numero_documento = data.value;
                 }
             }
+            
         }
 
     var mensaje_acuse = "";
-
+    $("#FechaFinal").dxDateBox({ min: now });
+    $("#FechaInicial").dxDateBox({ max: now });
 
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
@@ -117,7 +121,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     var fieldData = options.value,
                         fieldHtml = "";
                     try {
-                        if (options.columnIndex == 4) {//Columna de valor Total
+                        if (options.column.caption == "Valor Total") {
                             if (fieldData) {
                                 var inicial = fNumber.go(fieldData);
                                 options.cellElement.html(inicial);
@@ -128,8 +132,22 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     }
                 }, loadPanel: {
                     enabled: true
+                },
+                headerFilter: {
+                    visible: true
                 }
-                      , allowColumnResizing: true
+                , allowColumnResizing: true
+                , allowColumnReordering: true
+                , columnChooser: {
+                    enabled: true,
+                    mode: "select",
+                    emptyPanelText: "Prueba"
+                },
+                groupPanel: {
+                    allowColumnDragging: true,
+                    emptyPanelText: "Arrastre la columna aqui",
+                    visible: true
+                }
                 , columns: [
                     {
                         caption: "Archivos",
@@ -225,6 +243,20 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                           }
                       }
                 ],
+                summary: {
+                    groupItems: [{
+                        column: "IntVlrTotal",
+                        summaryType: "sum",
+                        displayFormat: " {0} Total ",
+                        valueFormat: "currency"
+                    }],
+                    totalItems: [{
+                        column: "IntVlrTotal",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                        valueFormat: "currency"
+                    }]
+                },
                 filterRow: {
                     visible: true
                 },
