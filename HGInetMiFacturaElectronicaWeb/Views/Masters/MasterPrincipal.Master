@@ -80,6 +80,8 @@
     <!-- JS Localización -->
     <script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
     <script src="../../Scripts/config.js"></script>
+    <script src="../../Scripts/Services/Loading.js"></script>
+
     <style>
         .swal-button {
             background-color: #337ab7;

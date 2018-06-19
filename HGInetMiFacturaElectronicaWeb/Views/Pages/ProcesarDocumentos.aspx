@@ -3,7 +3,11 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
       <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/ProcesarDocumentos.js"></script>
+
+    <script src="../../Scripts/Services/SrvUsuario.js"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js"></script>
+    <script src="../../Scripts/Pages/ProcesarDocumentos.js"></script>    
+    <script src="../../Scripts/Services/Loading.js"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div ng-app="ProcesarDocumentosApp" ng-controller="ProcesarDocumentosController">
@@ -29,32 +33,31 @@
 
                             <div class="dx-fieldset">
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Inicial:</label>
                                     <div id="FechaInicial"></div>                                    
                                 </div>
 
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Final:</label>
                                      <div id="FechaFinal"></div> 
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-5">
                                     <i class="icon-file-text"></i>
                                     <label>Estado:</label>
-                                    <div dx-select-box="filtros.EstadoRecibo"></div>
+                                    <div id="filtrosEstadoRecibo"></div>
                                 </div>
 
-                                <div class="col-md-5">
+                                <div class="col-md-3">
                                     <i class="icon-files-empty"></i>
                                     <label>Identificador Documento:</label>
                                     <div dx-autocomplete="filtros.NumeroDocumento"></div>
                                 </div>
-                                <div class="col-md-4">
-                                </div>
+                              
 
                             </div>
 

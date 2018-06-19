@@ -1,89 +1,158 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-angular.module('ProcesarDocumentosApp', ['dx'])
-.controller('ProcesarDocumentosController', function DocAdquirienteController($scope, $http, $location) {
-
-    var now = new Date();
-
-    var codigo_adquiente = "",
-           numero_documento = "",
-           estado_recibo = "",
-           fecha_inicio = "",
-           fecha_fin = "";
-
-
-    $http.get('/api/DatosSesion/').then(function (response) {       
-
-        codigo_adquiente = response.data[0].Identificacion;
-
-        consultar();
-    }), function errorCallback(response) {
-        Mensaje(response.data.ExceptionMessage, "error");
+angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvUsuario'])
+    
+.controller('ProcesarDocumentosController', function DocAdquirienteController($scope, SrvMaestrosEnum, SrvUsuario) {
+    
+    var codigo_adquiente = "", numero_documento = "", estado_recibo = "", fecha_inicio = "", fecha_fin = "", Estado = [], now = new Date();
+           
+    SrvMaestrosEnum.ObtenerEnum(0).then(function (data) {
+        Estado = data;
+        cargarFiltros();    
+    });
+          
+    SrvMaestrosEnum.ObtenerSesion().then(function (data) {    
+        codigo_adquiente = data[0].Identificacion;        
+        consultar();                      
+    });
+    
+    var makeAsyncDataSource = function () {        
+        return new DevExpress.data.CustomStore({
+            loadMode: "raw",
+            key: "ID",
+            load: function () {                                
+                return JSON.parse(JSON.stringify(Estado));
+            }
+        });
     };
 
-    $("#FechaInicial").dxDateBox({
-        value: now,
-        displayFormat: "yyyy-MM-dd",
-        onValueChanged: function (data) {
-            fecha_inicio = new Date(data.value).toISOString();
-            if (new Date(data.value).toISOString() > fecha_fin) {
-                DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
-                $("#FechaInicial").dxDateBox({ value: fecha_fin });
-                fecha_inicio: fecha_fin;
-            }
-        }
-
-    });
-
-    $("#FechaFinal").dxDateBox({
-        value: now,
-        displayFormat: "yyyy-MM-dd",
-        onValueChanged: function (data) {
-            fecha_fin = new Date(data.value).toISOString();
-            if (new Date(data.value).toISOString() < fecha_inicio) {
-                DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
-                $("#FechaFinal").dxDateBox({ value: fecha_inicio });
-                fecha_fin: fecha_inicio;
-            }
-        }
-
-    });
-    //Define los campos y las opciones
-    $scope.filtros =
-        {
-            EstadoRecibo: {
-                searchEnabled: true,
-                //Carga la data del control
-                dataSource: new DevExpress.data.ArrayStore({
-                    data: items,
-                    key: "ID"
-                }),
-                displayExpr: "Texto",
-                Enabled: true,
-                placeholder: "Seleccione un Item",
-                onValueChanged: function (data) {                    
-                    estado_recibo = data.value.ID;
-                }
-            },
-            NumeroDocumento: {
-                placeholder: "Identificador Documento",
-                onValueChanged: function (data) {                    
-                    numero_documento = data.value;
+    function cargarFiltros() {        
+        $("#FechaInicial").dxDateBox({
+            name:"txtf",
+            value: now,
+            max: fecha_fin,
+            displayFormat: "yyyy-MM-dd",            
+            onValueChanged: function (data) {
+                fecha_inicio = new Date(data.value).toISOString();
+                $("#FechaFinal").dxDateBox({ min: fecha_inicio });
+                            
+                if (new Date(data.value).toISOString() > fecha_fin) {
+                    DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
+                    $("#FechaInicial").dxDateBox({ value: fecha_fin });
+                    fecha_inicio: fecha_fin;
                 }
             }
-        }
 
-    var mensaje_acuse = "";
+        });
+
+        $("#FechaFinal").dxDateBox({
+            value: now,
+            displayFormat: "yyyy-MM-dd",
+            min: fecha_inicio,
+            onValueChanged: function (data) {
+                fecha_fin = new Date(data.value).toISOString();
+                $("#FechaInicial").dxDateBox({ max: fecha_fin });
+                if (new Date(data.value).toISOString() < fecha_inicio) {
+                    DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
+                    $("#FechaFinal").dxDateBox({ value: fecha_inicio });
+                    fecha_fin: fecha_inicio;
+                }
+            }
+
+        });
+        
+       
+
+        $("#filtrosEstadoRecibo").dxDropDownBox({            
+            valueExpr: "ID",
+            placeholder: "Seleccionar ",
+            displayExpr: "Descripcion",
+            showClearButton: true,
+            dataSource: makeAsyncDataSource(),
+            contentTemplate: function (e) {
+                var value = e.component.option("value"),
+                    $dataGrid = $("<div>").dxDataGrid({
+                        dataSource: e.component.option("dataSource"),
+                        allowColumnResizing: true,
+                        columns:
+                            [
+                                 {
+                                     caption: "Descripción",
+                                     dataField: "Descripcion",
+                                     title:"Descripcion",
+                                     width:500
+
+                                 }],
+                        hoverStateEnabled: true,
+                        paging: { enabled: true, pageSize: 10 },
+                        //filterRow: { visible: true },
+                        scrolling: { mode: "infinite" },
+                        height: 300,
+                        
+                        selection: { mode: "multiple" },
+                        selectedRowKeys: value,
+                        onSelectionChanged: function (selectedItems) {
+                            var keys = selectedItems.selectedRowKeys;
+                            e.component.option("value", keys);
+                            estado_recibo=keys;
+                        }
+                    });
+
+                dataGrid = $dataGrid.dxDataGrid("instance");
+
+                e.component.on("valueChanged", function (args) {
+                    var value = args.value;
+                    dataGrid.selectRows(value, false);
+                });
+
+                return $dataGrid;
+            }
+        });
 
 
-    $scope.ButtonOptionsConsultar = {
-        text: 'Consultar',
-        type: 'default',
-        onClick: function (e) {
-            consultar();
-        }
-    };
 
+        //Define los campos y las opciones       
+        $scope.filtros =
+
+
+                {
+/*
+                    EstadoRecibo: {
+                        searchEnabled: true,
+                        //Carga la data del control
+                        dataSource: new DevExpress.data.ArrayStore({
+                            data: Estado
+                            , key: "ID"
+                        }), displayExpr: "Descripcion",
+                        Enabled: true,
+                        placeholder: "Seleccione un Item",
+                        onValueChanged: function (data) {                            
+                            estado_recibo = data.value.ID;
+                            console.log("ss", estado_recibo);
+                        }
+                    },*/
+                    NumeroDocumento: {
+                        placeholder: "Identificador Documento",
+                        onValueChanged: function (data) {
+                            numero_documento = data.value;
+                        }
+                    }
+                }
+       
+        var mensaje_acuse = "";
+
+
+        $scope.ButtonOptionsConsultar = {
+            text: 'Consultar',
+            type: 'default',
+            onClick: function (e) {
+                consultar();
+            }
+        };
+
+        $("#FechaFinal").dxDateBox({ min: now });
+        $("#FechaInicial").dxDateBox({ max: now });
+    }
     //Consultar DOcumentos
     function consultar() {       
 
@@ -93,15 +162,10 @@ angular.module('ProcesarDocumentosApp', ['dx'])
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
 
-
-        //Obtiene los datos del web api
-        //ControladorApi: /Api/Documentos/
-        //Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
-        $('#wait').show();
-        $http.get('/api/Documentos?IdSeguridad=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
-            $('#wait').hide();            
+        
+        SrvMaestrosEnum.ObtenerDocumentos('IdSeguridad=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (data) {                           
             $("#gridDocumentos").dxDataGrid({
-                dataSource: response.data,
+                dataSource: data,
                 paging: {
                     pageSize: 20
                 },
@@ -162,9 +226,9 @@ angular.module('ProcesarDocumentosApp', ['dx'])
                     visible: true
                 }
 
-                , onSelectionChanged: function (selectedItems) {
+                , onSelectionChanged: function (selectedEstado) {
                     var lista='' ;
-                    var data = selectedItems.selectedRowsData;
+                    var data = selectedEstado.selectedRowsData;
                     if (data.length > 0) {
                         if (data.length > 1) {
                             for (var i = 0; i < data.length; i++) {
@@ -193,7 +257,7 @@ angular.module('ProcesarDocumentosApp', ['dx'])
                 }
 
                 , summary: {
-                    totalItems: [{
+                    totalEstado: [{
                         column: "IdSeguridad",
                         caption: "Total Documentos : ",
                         summaryType: "count"
@@ -215,7 +279,7 @@ angular.module('ProcesarDocumentosApp', ['dx'])
     function ProcesarDocumentos() {
         if ($scope.total > 0) {
             $('#wait').show();
-            $http({
+            return $http({
                 url: '/api/Documentos/',
                 data: { Documentos: $scope.documentos },
                 method: 'Post'
@@ -234,22 +298,4 @@ angular.module('ProcesarDocumentosApp', ['dx'])
     }
 
 });
-
-//Datos del control Estado
-var items =
-    [
-    { ID: "*", Texto: 'Obtener Todos' },
-    { ID: "1", Texto: 'Recepción' },
-    { ID: "2", Texto: 'Validación Documento' },
-    { ID: "3", Texto: 'Generación UBL' },
-    { ID: "4", Texto: 'Almacenamiento XML' },
-    { ID: "5", Texto: 'Firma XML' },
-    { ID: "6", Texto: 'Compresión XML' },
-    { ID: "7", Texto: 'Envío ZIP' },
-    { ID: "8", Texto: 'Envío E-mail Adquiriente' },
-    { ID: "9", Texto: 'Recepción Acuse' },
-    { ID: "10", Texto: 'Envío E-mail Acuse' },
-    { ID: "90", Texto: 'Error Dian, Finaliza Proceso' },
-    { ID: "99", Texto: 'Fin Proceso Exitoso' }
-    ];
 

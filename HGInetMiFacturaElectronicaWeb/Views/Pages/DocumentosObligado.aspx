@@ -7,6 +7,7 @@
 
     <!-- JS DocumentosAdquiriente-->
     <script src="../../Scripts/Pages/DocumentosObligado.js"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js"></script>
 
     <div ng-app="DocObligadoApp">
 
@@ -47,40 +48,43 @@
                                         <div id="FechaFinal"></div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        <i class="icon-file-text"></i>
-                                        <label>Estado DIAN</label>
-                                        <div dx-select-box="filtros.EstadoDian"></div>
-                                    </div>
 
                                     <div class="col-md-3">
                                         <i class="icon-file-text"></i>
-                                        <label>Estado Recibo</label>
+                                        <label>Estado Acuse:</label>
                                         <div dx-select-box="filtros.EstadoRecibo"></div>
                                     </div>
-
-                                    <div class="col-md-3">
+                                     <div class="col-md-3">
                                         <i class="icon-files-empty"></i>
                                         <label>Número Documento:</label>
                                         <div dx-autocomplete="filtros.NumeroDocumento"></div>
                                     </div>
+                                </div> 
+                                <div class="dx-fieldset" >
+                                    <div class="col-md-6" style="margin-top:1%">
+                                        <i class="icon-file-text"></i>
+                                        <label>Estado:</label>
+                                        <div id="filtrosEstadoRecibo"></div>
+                                    </div>
+                                   
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-6" style="margin-top:1%">
                                         <i class="icon-files-empty"></i>
                                         <label>Código Adquiriente:</label>
                                         <div dx-autocomplete="filtros.Adquiriente"></div>
                                     </div>
+                                </div>
+                               
+                            </div>
 
+
+                        </div>
+                         <div class="col-lg-12 text-right">
+                                    <br />
+                                    <br />
+                                    <div dx-button="ButtonOptionsConsultar"></div>
                                 </div>
 
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12 text-right">
-                            <br />
-                            <br />
-                            <div dx-button="ButtonOptionsConsultar"></div>
-                        </div>
 
                     </div>
 

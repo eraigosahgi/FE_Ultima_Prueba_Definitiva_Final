@@ -16,10 +16,10 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
         {
             this.CodigoOpcion = OpcionesPermisos.ProcesarDocumentos;
 
-            
-                this.ProcesoPagina = OperacionesBD.IntGestion;
-            
-                this.ProcesoPagina = OperacionesBD.IntConsultar;
+
+            this.ProcesoPagina = OperacionesBD.IntGestion;
+
+            this.ProcesoPagina = OperacionesBD.IntConsultar;
         }
         protected void Page_Load(object sender, EventArgs e)
         {
