@@ -27,7 +27,7 @@
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label id="lblapellido" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Apellidos:<strom  style="color: red;" >*</strom></label>
+                                        <label id="lblapellido" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Apellidos:<strom style="color: red;">*</strom></label>
                                         <div id="txtapellidos"></div>
                                     </div>
 
@@ -38,7 +38,7 @@
 
 
                                     <div class="col-md-6 col-xs-12">
-                                        <label id="lbltelefono" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Teléfono:<strom  style="color: red;"  >*</strom></label>
+                                        <label id="lbltelefono" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Teléfono:<strom style="color: red;">*</strom></label>
                                         <div id="txttelefono"></div>
                                     </div>
 

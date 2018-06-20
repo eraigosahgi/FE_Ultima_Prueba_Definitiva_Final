@@ -100,6 +100,12 @@
 
     <form id="form1" runat="server">
 
+        <asp:ScriptManager ID="ScriptManager1" runat="server">
+            <Scripts>
+                <asp:ScriptReference Path="../../Scripts/assets/js/plugins/notifications/sweet_alert.min.js"></asp:ScriptReference>
+            </Scripts>
+        </asp:ScriptManager>
+
         <!-- Barra de Navegación Principal -->
         <div class="navbar navbar-inverse bg-slate-800">
             <div class="navbar-header">
@@ -251,51 +257,63 @@
 
                                         <ul runat="server" id="ul_13">
 
-                                            <!-- Opciones Documentos -->
+                                            <!-- Opciones Documentos Obligado-->
                                             <li runat="server" id="menu_131">
 
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-folder-open"></i><span style="margin: -10px">Documentos</span></a>
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-user-tie"></i><span style="margin: -10px">Facturador</span></a>
 
                                                 <ul runat="server" id="ul_131">
 
                                                     <li runat="server" id="menu_1311">
-                                                        <asp:HyperLink runat="server" ID="link_1311" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosObligado.aspx"><i class="icon-reading"></i><span style="margin: -10px">Documentos Facturador</span></asp:HyperLink>
+                                                        <asp:HyperLink runat="server" ID="link_1311" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosObligado.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta Documentos</span></asp:HyperLink>
                                                     </li>
 
                                                     <li runat="server" id="menu_1312">
-                                                        <asp:HyperLink runat="server" ID="link_1312" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosAdquiriente.aspx"><i class="icon-reading"></i><span style="margin: -10px">Documentos Adquiriente</span></asp:HyperLink>
-                                                    </li>
-
-                                                    <li runat="server" id="menu_1313">
-                                                        <asp:HyperLink runat="server" ID="link_1313" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaAcuseRecibo.aspx"><i class="icon-sort-time-desc"></i><span style="margin: -10px">Consulta Acuse</span></asp:HyperLink>
-                                                    </li>
-
-                                                    <li runat="server" id="menu_1314">
-                                                        <asp:HyperLink runat="server" ID="link_1314" class="legitRipple" NavigateUrl="~/Views/Pages/ProcesarDocumentos.aspx"><i class="dx-icon-doc"></i><span style="margin: -10px">Procesar Documentos</span></asp:HyperLink>
+                                                        <asp:HyperLink runat="server" ID="link_1312" class="legitRipple" NavigateUrl="~/Views/Pages/ProcesarDocumentos.aspx"><i class="icon-sort-time-asc"></i><span style="margin: -10px">Procesar Documentos</span></asp:HyperLink>
                                                     </li>
 
                                                 </ul>
 
                                             </li>
-
                                             <!-- /Opciones Documentos -->
 
-                                            <!-- Opciones Configuración -->
+
+                                            <!-- Opciones Documentos Obligado-->
                                             <li runat="server" id="menu_132">
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-cogs"></i><span style="margin: -10px">Configuración</span></a>
+
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-reading"></i><span style="margin: -10px">Adquiriente</span></a>
+
                                                 <ul runat="server" id="ul_132">
 
                                                     <li runat="server" id="menu_1321">
-                                                        <asp:HyperLink ID="link_1321" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-user"></i><span style="margin: -10px">Usuarios</span></asp:HyperLink></li>
+                                                        <asp:HyperLink runat="server" ID="link_1321" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosAdquiriente.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta Documentos</span></asp:HyperLink>
+                                                    </li>
 
                                                     <li runat="server" id="menu_1322">
-                                                        <asp:HyperLink ID="link_1322" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresas.aspx"><i class="icon-home2"></i><span style="margin: -10px">Empresas</span></asp:HyperLink></li>
+                                                        <asp:HyperLink runat="server" ID="link_1322" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaAcuseRecibo.aspx"><i class="icon-history"></i><span style="margin: -10px">Consulta Acuse</span></asp:HyperLink>
+                                                    </li>
+                                                </ul>
 
-                                                    <li runat="server" id="menu_1323">
-                                                        <asp:HyperLink ID="link_1323" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresasSerial.aspx"><i class="icon-key"></i><span style="margin: -10px">Activación Serial</span></asp:HyperLink></li>
+                                            </li>
+                                            <!-- /Opciones Documentos -->
 
-                                                    <li runat="server" id="menu_1324">
-                                                        <asp:HyperLink ID="link_1324" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaPlanesTransacciones.aspx"><i class="icon-drawer-in"></i><span style="margin: -10px">Planes y Transacciones</span></asp:HyperLink></li>
+
+                                            <!-- Opciones Configuración -->
+                                            <li runat="server" id="menu_133">
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-cogs"></i><span style="margin: -10px">Configuración</span></a>
+                                                <ul runat="server" id="ul_133">
+
+                                                    <li runat="server" id="menu_1331">
+                                                        <asp:HyperLink ID="link_1331" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-user"></i><span style="margin: -10px">Usuarios</span></asp:HyperLink></li>
+
+                                                    <li runat="server" id="menu_1332">
+                                                        <asp:HyperLink ID="link_1332" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresas.aspx"><i class="icon-home2"></i><span style="margin: -10px">Empresas</span></asp:HyperLink></li>
+
+                                                    <li runat="server" id="menu_1333">
+                                                        <asp:HyperLink ID="link_1333" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresasSerial.aspx"><i class="icon-key"></i><span style="margin: -10px">Activación Serial</span></asp:HyperLink></li>
+
+                                                    <li runat="server" id="menu_1334">
+                                                        <asp:HyperLink ID="link_1334" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaPlanesTransacciones.aspx"><i class="icon-drawer-in"></i><span style="margin: -10px">Planes y Transacciones</span></asp:HyperLink></li>
 
                                                 </ul>
                                             </li>

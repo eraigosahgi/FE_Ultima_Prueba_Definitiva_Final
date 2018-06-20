@@ -1,11 +1,15 @@
 ﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Properties;
+using HGInetMiFacturaElectronicaWeb.Seguridad.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace HGInetMiFacturaElectronicaWeb.Seguridad
@@ -103,9 +107,10 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
                 throw;
             }
         }
-
         protected void Page_Load(object sender, EventArgs e)
         {
+            string ruta_redireccion = string.Empty;
+
             try
             {
                 // obtiene la opción de permiso de acuerdo con la página actual
@@ -114,9 +119,48 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
                 // valida las opciones que tienen permisos de usuario
                 if (string.IsNullOrEmpty(OpcionesPermisos.FacturacionElectronicaPrincipal.Split(',').Where(_opcion => _opcion.Equals(CodigoOpcion)).FirstOrDefault()))
                 {
-                    // valida el permiso en la cookie
+                    // valida el permiso.
                     if (!Sesion.ValidarPermiso(CodigoOpcion, ProcesoPagina))
-                        Response.Redirect("~/Views/Pages/Inicio.aspx");
+                        throw new ApplicationException("El usuario no tiene permisos para esta ejecución.");
+                }
+            }
+            catch (Exception excepcion)
+            {
+                if (excepcion.Message.Equals("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente."))
+                {
+                    PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+                    ruta_redireccion = plataforma.RutaPublica;
+                }
+                else
+                    ruta_redireccion = "Inicio.aspx";
+
+                CustomMaster.Modal = new SweetAlert("Alerta", excepcion.Message, true, ruta_redireccion, SweetAlert.TipoMensaje.warning);
+                CustomMaster.MostrarModal();
+            }
+        }
+
+        /// <summary>
+        /// Genera el javascript para mostrar el mensaje de notificación
+        /// </summary>
+        public void MostrarNotificacion(SweetAlert notificacion)
+        {
+            try
+            {
+                if (notificacion != null)
+                {
+                    ScriptManager sm = ScriptManager.GetCurrent(this.Page);
+
+                    string scriptKey = "NotifyMessageScript";
+
+                    if (sm != null && !sm.IsInAsyncPostBack)
+                    {
+                        if (!Page.ClientScript.IsClientScriptBlockRegistered(this.Page.GetType(), scriptKey))
+                        {
+                            StringBuilder script = notificacion.ObtenerScript();
+
+                            Page.ClientScript.RegisterClientScriptBlock(this.Page.GetType(), scriptKey, script.ToString(), true);
+                        }
+                    }
                 }
             }
             catch (Exception excepcion)

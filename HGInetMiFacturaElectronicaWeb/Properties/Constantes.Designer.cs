@@ -22,14 +22,14 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class OpcionesPermisos {
+    internal class Constantes {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal OpcionesPermisos() {
+        internal Constantes() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("HGInetMiFacturaElectronicaWeb.Properties.OpcionesPermisos", typeof(OpcionesPermisos).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("HGInetMiFacturaElectronicaWeb.Properties.Constantes", typeof(Constantes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,83 +61,20 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 1333.
+        ///   Busca una cadena traducida similar a Aceptar.
         /// </summary>
-        internal static string ActivacionSerial {
+        internal static string SweetAlert_confirmButtonText {
             get {
-                return ResourceManager.GetString("ActivacionSerial", resourceCulture);
+                return ResourceManager.GetString("SweetAlert_confirmButtonText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 1322.
+        ///   Busca una cadena traducida similar a 0.
         /// </summary>
-        internal static string ConsultaAcuseRecibo {
+        internal static string SweetAlert_delay {
             get {
-                return ResourceManager.GetString("ConsultaAcuseRecibo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 1321.
-        /// </summary>
-        internal static string ConsultaDocumentosAdquiriente {
-            get {
-                return ResourceManager.GetString("ConsultaDocumentosAdquiriente", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 1311.
-        /// </summary>
-        internal static string ConsultaDocumentosFacturador {
-            get {
-                return ResourceManager.GetString("ConsultaDocumentosFacturador", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 1332.
-        /// </summary>
-        internal static string Empresas {
-            get {
-                return ResourceManager.GetString("Empresas", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 13.
-        /// </summary>
-        internal static string FacturacionElectronicaPrincipal {
-            get {
-                return ResourceManager.GetString("FacturacionElectronicaPrincipal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 1334.
-        /// </summary>
-        internal static string PlanesTransacciones {
-            get {
-                return ResourceManager.GetString("PlanesTransacciones", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 1312.
-        /// </summary>
-        internal static string ProcesarDocumentos {
-            get {
-                return ResourceManager.GetString("ProcesarDocumentos", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a 1331.
-        /// </summary>
-        internal static string Usuarios {
-            get {
-                return ResourceManager.GetString("Usuarios", resourceCulture);
+                return ResourceManager.GetString("SweetAlert_delay", resourceCulture);
             }
         }
     }

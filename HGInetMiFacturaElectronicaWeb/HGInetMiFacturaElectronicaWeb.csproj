@@ -2704,6 +2704,11 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Properties\Constantes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Constantes.resx</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\Services\DatosSesionController.cs" />
     <Compile Include="Controllers\Services\DocumentosController.cs" />
     <Compile Include="Controllers\Services\EmpresasController.cs" />
@@ -2730,6 +2735,7 @@
     <Compile Include="Seguridad\PaginaPrincipal.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Seguridad\Plugins\SweetAlert.cs" />
     <Compile Include="Seguridad\Sesion.cs" />
     <Compile Include="Seguridad\SessionControllerHandler.cs" />
     <Compile Include="Seguridad\SessionHttpControllerRouteHandler.cs" />
@@ -2950,6 +2956,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Constantes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Constantes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\OpcionesPermisos.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OpcionesPermisos.Designer.cs</LastGenOutput>
@@ -2970,7 +2980,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61417/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

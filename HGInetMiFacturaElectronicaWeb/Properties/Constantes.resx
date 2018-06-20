@@ -117,31 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ActivacionSerial" xml:space="preserve">
-    <value>1333</value>
+  <data name="SweetAlert_confirmButtonText" xml:space="preserve">
+    <value>Aceptar</value>
   </data>
-  <data name="ConsultaAcuseRecibo" xml:space="preserve">
-    <value>1322</value>
-  </data>
-  <data name="ConsultaDocumentosAdquiriente" xml:space="preserve">
-    <value>1321</value>
-  </data>
-  <data name="ConsultaDocumentosFacturador" xml:space="preserve">
-    <value>1311</value>
-  </data>
-  <data name="Empresas" xml:space="preserve">
-    <value>1332</value>
-  </data>
-  <data name="FacturacionElectronicaPrincipal" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="PlanesTransacciones" xml:space="preserve">
-    <value>1334</value>
-  </data>
-  <data name="ProcesarDocumentos" xml:space="preserve">
-    <value>1312</value>
-  </data>
-  <data name="Usuarios" xml:space="preserve">
-    <value>1331</value>
+  <data name="SweetAlert_delay" xml:space="preserve">
+    <value>0</value>
   </data>
 </root>
