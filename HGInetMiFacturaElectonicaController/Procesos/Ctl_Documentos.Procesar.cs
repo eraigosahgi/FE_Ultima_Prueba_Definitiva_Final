@@ -4,9 +4,11 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Mail;
 using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -119,9 +121,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				// representación de datos en objeto
 				var documento_obj = (dynamic)null;
+				
+				// lee el archivo XML en UBL desde la ruta pública
+				//XmlTextReader xml_reader = new XmlTextReader(documento.StrUrlArchivoUbl);
 
 				// lee el archivo XML en UBL desde la ruta pública
-				XmlTextReader xml_reader = new XmlTextReader(documento.StrUrlArchivoUbl);
+				string contenido_xml = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
+
+				// valida el contenido del archivo
+				if(!string.IsNullOrWhiteSpace(contenido_xml))
+					throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
+					
+				// convierte el contenido de texto a xml
+				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
 
 				// convierte el objeto de acuerdo con el tipo de documento
 				XmlSerializer serializacion = null;
