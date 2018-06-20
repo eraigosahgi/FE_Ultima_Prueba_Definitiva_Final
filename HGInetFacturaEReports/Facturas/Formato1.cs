@@ -1,5 +1,6 @@
 namespace HGInetFacturaEReports.Facturas
 {
+    using Org.BouncyCastle.Utilities.Encoders;
     using HGInetMiFacturaElectonicaData.ModeloServicio;
     using LibreriaGlobalHGInet.Funciones;
     using System;
@@ -7,6 +8,7 @@ namespace HGInetFacturaEReports.Facturas
     using System.ComponentModel;
     using System.Drawing;
     using System.IO;
+    using System.Text.RegularExpressions;
     using System.Windows.Forms;
     using Telerik.Reporting;
     using Telerik.Reporting.Drawing;
@@ -54,29 +56,50 @@ namespace HGInetFacturaEReports.Facturas
 
                     foreach (FormatoCampo item in campos)
                     {
-                        //Obtiene el control en el reporte, teniendo en cuenta la ubicacion
-                        ReportItemBase[] report_item_descripcion = this.Items.Find(string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()), true);
-
-                        if (report_item_descripcion.Length > 0)
+                        if (item.Ubicacion.ToLowerInvariant().Equals("campo1"))
                         {
-                            HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
-
-                            if (campo_descripcion != null)
+                            try
                             {
-                                campo_descripcion.Value = item.Descripcion.ToUpper();
+                                byte[] bytes = Convert.FromBase64String(item.Valor);
+                                using (MemoryStream ms = new MemoryStream(bytes))
+                                {
+                                    Image logo = Image.FromStream(ms);
+                                    this.campo1_v.Value = logo;
+                                    this.campo1_v.Visible = true;
+                                }
                             }
-                        }
-
-                        //Obtiene el control en el reporte, teniendo en cuenta la ubicacion
-                        ReportItemBase[] report_item_valor = this.Items.Find(string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()), true);
-
-                        if (report_item_valor.Length > 0)
-                        {
-                            HtmlTextBox campo_valor = report_item_valor[0] as HtmlTextBox;
-
-                            if (campo_valor != null)
+                            catch (Exception)
                             {
-                                campo_valor.Value = item.Valor;
+                            }
+
+                        }
+                        else
+                        {
+
+                            //Obtiene el control en el reporte, teniendo en cuenta la ubicacion
+                            ReportItemBase[] report_item_descripcion = this.Items.Find(string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()), true);
+
+                            if (report_item_descripcion.Length > 0)
+                            {
+                                HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
+
+                                if (campo_descripcion != null)
+                                {
+                                    campo_descripcion.Value = item.Descripcion.ToUpper();
+                                }
+                            }
+
+                            //Obtiene el control en el reporte, teniendo en cuenta la ubicacion
+                            ReportItemBase[] report_item_valor = this.Items.Find(string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()), true);
+
+                            if (report_item_valor.Length > 0)
+                            {
+                                HtmlTextBox campo_valor = report_item_valor[0] as HtmlTextBox;
+
+                                if (campo_valor != null)
+                                {
+                                    campo_valor.Value = item.Valor;
+                                }
                             }
                         }
                     }

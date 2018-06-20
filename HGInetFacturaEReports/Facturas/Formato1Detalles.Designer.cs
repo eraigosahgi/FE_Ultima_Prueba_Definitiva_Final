@@ -61,7 +61,7 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox31.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.Solid;
             this.htmlTextBox31.Style.BorderStyle.Top = Telerik.Reporting.Drawing.BorderType.None;
             this.htmlTextBox31.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
-            this.htmlTextBox31.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
+            this.htmlTextBox31.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.htmlTextBox31.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
             this.htmlTextBox31.Value = "{Fields.Cantidad.ToString().Replace(\",\" , \".\")}";
             // 
@@ -94,7 +94,7 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox1.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.Solid;
             this.htmlTextBox1.Style.BorderStyle.Top = Telerik.Reporting.Drawing.BorderType.None;
             this.htmlTextBox1.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
-            this.htmlTextBox1.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
+            this.htmlTextBox1.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.htmlTextBox1.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
             this.htmlTextBox1.Value = "{Fields.ValorUnitario.ToString().Replace(\",\" , \".\")}";
             // 
@@ -110,7 +110,7 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox2.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.Solid;
             this.htmlTextBox2.Style.BorderStyle.Top = Telerik.Reporting.Drawing.BorderType.None;
             this.htmlTextBox2.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
-            this.htmlTextBox2.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
+            this.htmlTextBox2.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.htmlTextBox2.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
             this.htmlTextBox2.Value = "{Fields.ValorSubtotal.ToString().Replace(\",\" , \".\")}";
             // 
