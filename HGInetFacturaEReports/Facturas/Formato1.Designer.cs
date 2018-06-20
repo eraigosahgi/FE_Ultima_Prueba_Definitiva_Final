@@ -704,7 +704,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo3_v
             // 
-            this.campo3_v.Anchoring = ((Telerik.Reporting.AnchoringStyles)((Telerik.Reporting.AnchoringStyles.Top | Telerik.Reporting.AnchoringStyles.Bottom)));
+            this.campo3_v.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
             this.campo3_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0D), Telerik.Reporting.Drawing.Unit.Cm(3.490562915802002D));
             this.campo3_v.Name = "campo3_v";
             this.campo3_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(13.380000114440918D), Telerik.Reporting.Drawing.Unit.Cm(0.56999999284744263D));
@@ -718,7 +718,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo4_v
             // 
-            this.campo4_v.Anchoring = ((Telerik.Reporting.AnchoringStyles)((Telerik.Reporting.AnchoringStyles.Top | Telerik.Reporting.AnchoringStyles.Bottom)));
+            this.campo4_v.Anchoring = Telerik.Reporting.AnchoringStyles.None;
             this.campo4_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0.021359726786613464D), Telerik.Reporting.Drawing.Unit.Cm(4.270301342010498D));
             this.campo4_v.Name = "campo4_v";
             this.campo4_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(13.380000114440918D), Telerik.Reporting.Drawing.Unit.Cm(0.56999999284744263D));
