@@ -45,7 +45,7 @@ namespace HGInetFacturaEReports.Facturas
                 Factura datos_factura = (Factura)report.DataSource;
 
                 List<DocumentoDetalle> detalles_factura = datos_factura.DocumentoDetalles;
-
+				
                 //Convierte el valor total de la factura  en letras
                 string valor_letras = Numero.EnLetras((Convert.ToDouble(datos_factura.Total)), "PESOS");
                 this.TextBoxValorLetras.Value = valor_letras;
@@ -58,20 +58,23 @@ namespace HGInetFacturaEReports.Facturas
                     {
                         if (item.Ubicacion.ToLowerInvariant().Equals("campo1"))
                         {
-                            try
+							MemoryStream ms = null;
+						
+							try
                             {
                                 byte[] bytes = Convert.FromBase64String(item.Valor);
-                                using (MemoryStream ms = new MemoryStream(bytes))
+                                using (ms = new MemoryStream(bytes))
                                 {
                                     Image logo = Image.FromStream(ms);
                                     this.campo1_v.Value = logo;
                                     this.campo1_v.Visible = true;
                                 }
                             }
-                            catch (Exception)
+                            catch (Exception excepcion)
                             {
+								if (ms != null)
+									ms.Close();
                             }
-
                         }
                         else
                         {
@@ -81,7 +84,7 @@ namespace HGInetFacturaEReports.Facturas
 
                             if (report_item_descripcion.Length > 0)
                             {
-                                HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
+								HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
 
                                 if (campo_descripcion != null)
                                 {
@@ -104,11 +107,12 @@ namespace HGInetFacturaEReports.Facturas
                         }
                     }
                 }
-
+				
                 //Asigna al SubReporte los detalles de la factura
                 Formato1Detalles reporte = new Formato1Detalles();
                 reporte.DataSource = detalles_factura;
-                subReportDetalles.ReportSource = reporte;
+				
+				subReportDetalles.ReportSource = reporte;
             }
             catch (Exception excepcion)
             {
