@@ -7,7 +7,7 @@
     <script src="../../Scripts/Services/SrvUsuario.js"></script>
     <script src="../../Scripts/Services/MaestrosEnum.js"></script>
     <script src="../../Scripts/Pages/ProcesarDocumentos.js"></script>    
-    <script src="../../Scripts/Services/Loading.js"></script>
+    <script src="../../Scripts/Services/Loading.js"></script>    
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div ng-app="ProcesarDocumentosApp" ng-controller="ProcesarDocumentosController">
@@ -33,20 +33,20 @@
 
                             <div class="dx-fieldset">
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Inicial:</label>
                                     <div id="FechaInicial"></div>                                    
                                 </div>
 
 
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Final:</label>
                                      <div id="FechaFinal"></div> 
                                 </div>
 
-                                <div class="col-md-5">
+                                <div class="col-md-3">
                                     <i class="icon-file-text"></i>
                                     <label>Estado:</label>
                                     <div id="filtrosEstadoRecibo"></div>
@@ -54,7 +54,7 @@
 
                                 <div class="col-md-3">
                                     <i class="icon-files-empty"></i>
-                                    <label>Identificador Documento:</label>
+                                    <label>Documento:</label>
                                     <div dx-autocomplete="filtros.NumeroDocumento"></div>
                                 </div>
                               
