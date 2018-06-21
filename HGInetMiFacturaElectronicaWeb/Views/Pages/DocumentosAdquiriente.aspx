@@ -83,7 +83,10 @@
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
-                    <h6 class="panel-title">Datos</h6>                    
+                    <h6 class="panel-title">Datos</h6>  
+                    <div style="float: right; margin-right: 2%; margin-top: -20px;">
+                        <label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>
+                    </div>                  
                 </div>
 
                 <div class="panel-body">               
