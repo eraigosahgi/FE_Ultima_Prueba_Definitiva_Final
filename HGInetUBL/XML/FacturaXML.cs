@@ -135,14 +135,14 @@ namespace HGInetUBL
                 //TblTransacciones transaccion = documento.TblTransacciones;
 
                 string dian_resolucion = string.Format(" {0} de {1} del {2}{3} al {4}{5}", resolucion.NumResolucion, resolucion.FechaResIni.ToString(Fecha.formato_fecha_hginet), prefijo, resolucion.RangoIni, prefijo, resolucion.RangoFin);
-                
+
                 List<string> notas_documento = new List<string>();
 
                 // agrega la resolución en la 1ra posición
                 notas_documento.Add(dian_resolucion);
-                
+
                 // agrega los campos del formato adicionales en el XML 
-               
+
                 if (documento.DocumentoFormato == null)
                 {
                     documento.DocumentoFormato = new Formato();
@@ -152,12 +152,24 @@ namespace HGInetUBL
                 }
 
                 JsonSerializerSettings config = new JsonSerializerSettings()
-                {   Formatting = Newtonsoft.Json.Formatting.None,
+                {
+                    Formatting = Newtonsoft.Json.Formatting.None,
                     DateTimeZoneHandling = DateTimeZoneHandling.Utc
                 };
 
+                //añade el documento a una lista, para ser recorrida.
+                List<Formato> datos = new List<Formato>();
+                datos.Add(documento.DocumentoFormato);
+
+                //Construye el objeto a serializar.
+                var datos_json = datos.Select(d => new
+                {
+                    Codigo = d.Codigo,
+                    CamposPredeterminados = d.CamposPredeterminados
+                });
+
                 // convierte el objeto en json
-                string formato_json = JsonConvert.SerializeObject(documento.DocumentoFormato, typeof(Formato), config);
+                string formato_json = JsonConvert.SerializeObject(datos_json.FirstOrDefault(), typeof(Formato), config);
 
                 // agrega los campos del formato del documento en la 2da posición
                 notas_documento.Add(formato_json);
@@ -1065,7 +1077,7 @@ namespace HGInetUBL
                     TaxSubtotalIca.TaxCategory = TaxCategoryIca;
                     TaxesSubtotal[2] = TaxSubtotalIca;
                     #endregion
-					
+
                     TaxTotal.TaxSubtotal = TaxesSubtotal;
                     TaxesTotal[0] = TaxTotal;
                     InvoiceLineType1.TaxTotal = TaxesTotal;
@@ -1168,7 +1180,7 @@ namespace HGInetUBL
                     DocumentoImpuestos imp_doc = new DocumentoImpuestos();
                     List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
                     BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => (docDet.ValorUnitario - docDet.DescuentoValor) * docDet.Cantidad), 2);
-					
+
                     //imp_doc.Codigo = item.IntIva;
                     //imp_doc.Nombre = item.StrDescripcion;
                     imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje * 100, 2);
