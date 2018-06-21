@@ -89,6 +89,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
 				documentoBd.StrEmpresaAdquiriente = respuesta.Identificacion;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+                documentoBd.StrCufe = documento_result.CUFE;
 
 				//Ctl_Documento documento_tmp = new Ctl_Documento();
 				//documento_tmp.Actualizar(documentoBd);

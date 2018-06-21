@@ -292,9 +292,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw excepcion;
 						}
 
+                        //Asignación de Cufe a documento_obj. 
+                        documento_obj.Cufe = documento_result.CUFE;
 
-						// almacena Formato
-						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
+                        // almacena Formato
+                        respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
 
 
