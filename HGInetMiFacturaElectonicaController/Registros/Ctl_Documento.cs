@@ -189,8 +189,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 if (FechaFinal == null)
                     throw new ApplicationException("Fecha final inválida.");
 
-                FechaInicial = FechaInicial.Date;
-                FechaFinal = FechaFinal.Date.AddDays(1);
+                FechaInicial = FechaInicial.Date;                
+                FechaFinal = new DateTime(FechaFinal.Year, FechaFinal.Month, FechaFinal.Day, 23, 59, 59, 999);
 
                 List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
 
