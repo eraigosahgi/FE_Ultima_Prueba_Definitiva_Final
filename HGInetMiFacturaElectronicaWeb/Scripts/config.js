@@ -41,17 +41,15 @@ var FormatoNumber = {
     }
 }
 
-
-//Controla los mensajes de Session
-function control_session(Ruta) {
-    
-    swal({
-        title: "Tu sesión ha expirado",
-        icon: "warning"        
-    })
-    .then((willDelete) => {
-        window.location.assign(Ruta);
+//Sirve para fitlar los datos de un Json
+function FiltrarMayorJson(data,condicion) {
+    var nuevoJson = [];
+    $.each(data, function (i, item) {
+        if (item.ID > condicion) {            
+            nuevoJson.push(item); return item;
+        }
     });
+    return nuevoJson;
 }
 
 //Formato de fecha para los grid.
