@@ -770,9 +770,9 @@ namespace HGInetMiFacturaElectonicaController
 
                         mensaje = mensaje.Replace("{Tipo}", (plan.IntTipoProceso == 1) ? "Cortesía" : "Compra");
                         mensaje = mensaje.Replace("{Estado}", (plan.BitProcesada) ? "Habilitada" : "Inabilitada");
-                        mensaje = mensaje.Replace("{Costo}", (plan.IntValor > 0) ? plan.IntValor.ToString("C") : "Cortesía");
+                        mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
                         mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString());
-                        mensaje = mensaje.Replace("{Observaciones}", plan.StrObservaciones);
+                        mensaje = mensaje.Replace("{Observaciones}", (plan.StrObservaciones !=null) ? plan.StrObservaciones: "Ninguna");
 
                         string asunto = "NOTIFICACIÓN DE RECARGA DE TRANSACCIONES";
 
