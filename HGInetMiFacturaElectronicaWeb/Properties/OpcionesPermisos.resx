@@ -121,7 +121,7 @@
     <value>1333</value>
   </data>
   <data name="ConsultaAcuseRecibo" xml:space="preserve">
-    <value>1322</value>
+    <value>1312</value>
   </data>
   <data name="ConsultaDocumentosAdquiriente" xml:space="preserve">
     <value>1321</value>
@@ -139,7 +139,7 @@
     <value>1334</value>
   </data>
   <data name="ProcesarDocumentos" xml:space="preserve">
-    <value>1312</value>
+    <value>1341</value>
   </data>
   <data name="Usuarios" xml:space="preserve">
     <value>1331</value>

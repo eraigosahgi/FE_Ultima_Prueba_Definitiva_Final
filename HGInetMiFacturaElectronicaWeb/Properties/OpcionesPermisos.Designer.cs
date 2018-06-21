@@ -70,7 +70,7 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 1322.
+        ///   Busca una cadena traducida similar a 1312.
         /// </summary>
         internal static string ConsultaAcuseRecibo {
             get {
@@ -124,7 +124,7 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 1312.
+        ///   Busca una cadena traducida similar a 1341.
         /// </summary>
         internal static string ProcesarDocumentos {
             get {

@@ -257,7 +257,7 @@
 
                                         <ul runat="server" id="ul_13">
 
-                                            <!-- Opciones Documentos Obligado-->
+                                            <!-- Opciones Documentos Facturador -->
                                             <li runat="server" id="menu_131">
 
                                                 <a href="#" class="has-ul legitRipple"><i class="icon-user-tie"></i><span style="margin: -10px">Facturador</span></a>
@@ -269,16 +269,16 @@
                                                     </li>
 
                                                     <li runat="server" id="menu_1312">
-                                                        <asp:HyperLink runat="server" ID="link_1312" class="legitRipple" NavigateUrl="~/Views/Pages/ProcesarDocumentos.aspx"><i class="icon-sort-time-asc"></i><span style="margin: -10px">Procesar Documentos</span></asp:HyperLink>
+                                                        <asp:HyperLink runat="server" ID="link_1312" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaAcuseRecibo.aspx"><i class="icon-history"></i><span style="margin: -10px">Consulta Acuse</span></asp:HyperLink>
                                                     </li>
 
                                                 </ul>
 
                                             </li>
-                                            <!-- /Opciones Documentos -->
+                                            <!-- /Opciones Documentos Facturador-->
 
 
-                                            <!-- Opciones Documentos Obligado-->
+                                            <!-- Opciones Documentos Adquiriente -->
                                             <li runat="server" id="menu_132">
 
                                                 <a href="#" class="has-ul legitRipple"><i class="icon-reading"></i><span style="margin: -10px">Adquiriente</span></a>
@@ -288,14 +288,10 @@
                                                     <li runat="server" id="menu_1321">
                                                         <asp:HyperLink runat="server" ID="link_1321" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosAdquiriente.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta Documentos</span></asp:HyperLink>
                                                     </li>
-
-                                                    <li runat="server" id="menu_1322">
-                                                        <asp:HyperLink runat="server" ID="link_1322" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaAcuseRecibo.aspx"><i class="icon-history"></i><span style="margin: -10px">Consulta Acuse</span></asp:HyperLink>
-                                                    </li>
                                                 </ul>
 
                                             </li>
-                                            <!-- /Opciones Documentos -->
+                                            <!-- /Opciones Documentos Adquiriente -->
 
 
                                             <!-- Opciones Configuración -->
@@ -318,6 +314,19 @@
                                                 </ul>
                                             </li>
                                             <!-- /Opciones Configuración -->
+
+
+                                            <!-- Opciones Trazabilidad -->
+                                            <li runat="server" id="menu_134">
+                                                <a href="#" class="has-ul legitRipple"><i class="icon-tab"></i><span style="margin: -10px">Trazabilidad</span></a>
+                                                <ul runat="server" id="ul_134">
+
+                                                    <li runat="server" id="menu_1341">
+                                                        <asp:HyperLink runat="server" ID="link_1341" class="legitRipple" NavigateUrl="~/Views/Pages/ProcesarDocumentos.aspx"><i class="icon-sort-time-asc"></i><span style="margin: -10px">Procesar Documentos</span></asp:HyperLink>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <!-- /Opciones Trazabilidad -->
 
                                         </ul>
                                     </li>
