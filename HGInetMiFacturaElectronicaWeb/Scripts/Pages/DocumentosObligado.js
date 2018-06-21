@@ -1,8 +1,13 @@
-﻿DevExpress.localization.locale(navigator.language);
+﻿DevExpress.localization.locale('es-ES');
+
+var path = window.location.pathname;
+var ruta = window.location.href;
+ruta = ruta.replace(path, "/");
+document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
 
 var email_destino = "";
 var id_seguridad = "";
-
+var items_recibo =[];
 var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum']);
 DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum) {
 
@@ -21,10 +26,13 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         consultar();
     });
 
-    SrvMaestrosEnum.ObtenerEnum(0).then(function (data) {
-        Estado = data;
-        cargarFiltros();
-    });
+    SrvMaestrosEnum.ObtenerEnum(0).then(function (data) {                    
+        SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
+            Estado = FiltrarMayorJson(data, 7);
+            items_recibo = dataacuse;
+            cargarFiltros();
+        });
+    });  
 
     function cargarFiltros() {
         $("#FechaInicial").dxDateBox({
@@ -92,7 +100,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         paging: { enabled: true, pageSize: 10 },
                         filterRow: { visible: true },
                         scrolling: { mode: "infinite" },
-                        height: 300,
+                        height: 240,
                         selection: { mode: "multiple" },
                         selectedRowKeys: value,
                         onSelectionChanged: function (selectedItems) {
@@ -123,7 +131,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         data: items_recibo,
                         key: "ID"
                     }),
-                    displayExpr: "Texto",
+                    displayExpr: "Descripcion",
                     Enabled: true,
                     placeholder: "Seleccione un Item",
                     onValueChanged: function (data) {
@@ -157,7 +165,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
     };
 
     function consultar() {
-
+        $('#Total').text("");
         if (fecha_inicio == "")
             fecha_inicio = now.toISOString();
 
@@ -172,6 +180,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
+                keyExpr: "NumeroDocumento",
                 paging: {
                     pageSize: 20
                 },
@@ -186,7 +195,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         fieldHtml = "";
                     try {
                         if (options.column.caption == "Valor Total") {
-                            if (fieldData) {
+                            if (fieldData) {                                
                                 var inicial = fNumber.go(fieldData);
                                 options.cellElement.html(inicial);
                             }
@@ -195,7 +204,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     }
 
                 }, loadPanel: {
-                    enabled: true
+                    enabled: true,
+                    text: "H.G.I..."
                 },
                 headerFilter: {
                     visible: true
@@ -205,14 +215,12 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 , columnChooser: {
                     enabled: true,
                     mode: "select",
-                    emptyPanelText: "Prueba"
+                    title: "Selector de Columnas"
                 },
                 groupPanel: {
-                    allowColumnDragging: true,
-                    emptyPanelText: "Arrastre la columna aqui",
+                    allowColumnDragging: true,                    
                     visible: true
-                }
-                //,columnAutoWidth: true
+                }                
                 , columns: [
                     {
                         caption: "  Lista de Archivos",
@@ -267,7 +275,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
                     },
                     {
-                        caption: "Fecha Doc",
+                        caption: "Fecha Documento",
                         dataField: "DatFechaDocumento",
                         dataType: "date",
                         format: "yyyy-MM-dd",
@@ -278,7 +286,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         }]
                     },
                     {
-                        caption: "Fecha Venc",
+                        caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
                         dataType: "date",
                         format: "yyyy-MM-dd",
@@ -319,31 +327,56 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           dataField: "MotivoRechazo",
                       }
                 ],
+
                 summary: {
                     groupItems: [{
                         column: "IntVlrTotal",
-                        summaryType: "sum",
+                        summaryType: "sum",                        
                         displayFormat: " {0} Total ",
                         valueFormat: "currency"
-                    }],
-                    totalItems: [{
-                        column: "IntVlrTotal",                        
-                        summaryType: "sum",
+                    }]                                        
+                    , totalItems: [{
+                        name: "Suma",
+                        showInColumn: "IntVlrTotal",
                         displayFormat: "{0}",
-                        valueFormat: "currency"
-                    }]
-                },
-                
+                        valueFormat: "currency",
+                        summaryType: "custom"
+
+                    },
+                    {
+                        showInColumn: "DatFechaVencDocumento",
+                        displayFormat: "Total : ",
+                        alignment: "right"
+                    }
+                    ],
+                    calculateCustomSummary: function (options) {
+                        if (options.name === "Suma") {
+                            if (options.summaryProcess === "start") {
+                                options.totalValue = 0;
+                                $('#Total').text("");
+                            }
+                            if (options.summaryProcess === "calculate") {                               
+                                options.totalValue = options.totalValue + options.value.IntVlrTotal;
+                                $('#Total').text("Total: " +  fNumber.go(options.totalValue));
+                            }
+                        }
+                    }
+                }
+                ,   
                 filterRow: {
                     visible: true
-                },
+                }
+                
             });
+            
         }, function errorCallback(response) {
             $('#wait').hide();
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
         });
 
+        
     }
+    
 
 });
 
@@ -448,14 +481,8 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
 
 });
 
-//Datos del control EstadoRecibo.
-var items_recibo =
-    [
-    { ID: "*", Texto: 'Obtener Todos' },
-    { ID: "0", Texto: 'Pendiente' },
-    { ID: "1", Texto: 'Aprobado' },
-    { ID: "2", Texto: 'Rechazado' }
-    ];
+
+
 
 
 
