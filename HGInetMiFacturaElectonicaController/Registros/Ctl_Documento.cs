@@ -273,8 +273,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <returns></returns>
         public List<TblDocumentos> ObtenerPorFechasObligado(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
-            fecha_inicio = fecha_inicio.Date;
-           // fecha_fin = fecha_fin.Date.AddDays(1);
+            fecha_inicio = fecha_inicio.Date;           
 
             fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59,999);
 
