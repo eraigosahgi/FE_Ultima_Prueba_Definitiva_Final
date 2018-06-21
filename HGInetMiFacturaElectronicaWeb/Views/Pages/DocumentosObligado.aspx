@@ -4,10 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-
     <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/DocumentosObligado.js"></script>
-    <script src="../../Scripts/Services/MaestrosEnum.js"></script>
+    <script src="../../Scripts/Pages/DocumentosObligado.js"></script>    
 
     <div ng-app="DocObligadoApp">
 
@@ -97,7 +95,10 @@
             <div class="col-md-12">
                 <div class="panel panel-white">
                     <div class="panel-heading">
-                        <h6 class="panel-title">Datos</h6>
+                        <h6 class="panel-title ">Datos</h6>
+                        <div style="float: right; margin-right: 2%; margin-top:-20px;" >                            
+                                <label id="Total" class="text-semibold text-right" style="font-size:medium;"></label>                            
+                        </div>
                     </div>
 
                     <div class="panel-body">
