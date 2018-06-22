@@ -72,10 +72,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public string Nota { get; set; }
 
-        /// <summary>
-        /// Concepto por el cual genera la nota, codigo Según Tabla DIAN.
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		/// <summary>
+		/// Notas (observaciones) del documento
+		/// </summary>
+		public List<string> Notas { get; set; }
+
+		/// <summary>
+		/// Concepto por el cual genera la nota, codigo Según Tabla DIAN.
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string Concepto { get; set; }
 
         /// <summary>
