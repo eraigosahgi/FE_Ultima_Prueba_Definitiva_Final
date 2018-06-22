@@ -8,9 +8,15 @@
     <script src="../../Scripts/Services/MaestrosEnum.js"></script>
     <script src="../../Scripts/Pages/ProcesarDocumentos.js"></script>    
     <script src="../../Scripts/Services/Loading.js"></script>    
+    <!-- Se crea este Style independiente ya que el style original lo toma de una dms de devextreme y no se puede modificar la libreria en el proyecto-->
+    <style>
+        .dx-datagrid-rowsview .dx-select-checkboxes-hidden > tbody > tr > td > .dx-select-checkbox {
+            display: block !important;
+        }
+    </style>
 
     <!-- CONTENEDOR PRINCIPAL -->
-    <div ng-app="ProcesarDocumentosApp" ng-controller="ProcesarDocumentosController">
+    <div ng-app="ProcesarDocumentosApp" data-ng-controller="ProcesarDocumentosController">
 
         <!-- FILTROS DE BÚSQUEDA -->
 
