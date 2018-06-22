@@ -39,7 +39,8 @@
                                     </div>
 
                                     <div class="col-md-2 col-xs-2">
-                                        <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba;">
+                                        <label style=" margin-top: 16px;"></label>
+                                        <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba; margin-top: 16px;">
                                             <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
                                         </a>
                                     </div>
