@@ -5,6 +5,7 @@ using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,6 +106,51 @@ namespace HGInetUBL
 					Value =  documento.Nota
 					}
 				};
+
+				List<string> notas_documento = new List<string>();
+
+				// agrega los campos del formato adicionales en el XML 
+
+				if (documento.DocumentoFormato == null)
+				{
+					documento.DocumentoFormato = new Formato();
+
+					if (documento.DocumentoFormato.CamposPredeterminados == null)
+						documento.DocumentoFormato.CamposPredeterminados = new List<FormatoCampo>();
+				}
+
+				JsonSerializerSettings config = new JsonSerializerSettings()
+				{
+					Formatting = Newtonsoft.Json.Formatting.None,
+					DateTimeZoneHandling = DateTimeZoneHandling.Utc
+				};
+
+				// convierte el objeto en json
+				string formato_json = JsonConvert.SerializeObject(documento.DocumentoFormato, typeof(Formato), config);
+
+				// agrega los campos del formato del documento en la 2da posición
+				notas_documento.Add(formato_json);
+
+
+				// agrega las observaciones del documento en la 3ra posición
+				notas_documento.Add(documento.Nota);
+
+				// agrega las notas adicionales del documento
+				if (documento.Notas != null)
+					notas_documento.AddRange(documento.Notas);
+
+
+				NoteType[] Notes = new NoteType[notas_documento.Count];
+
+				for (int i = 0; i < notas_documento.Count; i++)
+				{
+					NoteType Note = new NoteType();
+					Note.Value = notas_documento[i];
+					Notes[i] = Note;
+				}
+				nota_credito.Note = Notes;
+
+
 				#endregion
 
 				#region nota_credito.DocumentCurrencyCode //Divisa de la nota_credito
@@ -181,7 +227,7 @@ namespace HGInetUBL
 				/*Impuesto Retenido: Elemento raíz compuesto utilizado para informar de un impuesto	retenido. 
 			    *Impuesto: Elemento raíz compuesto utilizado para informar de un impuesto.*/
 
-				nota_credito.TaxTotal = ObtenerImpuestos(documento.DocumentoDetalles.ToList());
+				nota_credito.TaxTotal = ObtenerImpuestos(documento.DocumentoDetalles.ToList(), documento.Moneda);
 				#endregion
 
 				#region nota_credito.LegalMonetaryTotal //Datos Importes Totales
@@ -222,7 +268,7 @@ namespace HGInetUBL
 
 				#region nota_credito.CreditNoteLine  //Línea de nota_credito
 				//Elemento que agrupa todos los campos de una línea de nota_credito
-				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(),documento.CufeFactura);
+				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(),documento.CufeFactura,documento.Moneda);
 
                 #endregion
 
@@ -672,7 +718,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="documentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo TaxTotalType1</returns>
-		public static TaxTotalType1[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle)
+		public static TaxTotalType1[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle, string moneda)
 		{
 			try
 			{
@@ -686,7 +732,10 @@ namespace HGInetUBL
 
                 decimal BaseImponibleImpuesto = 0;
 
-                foreach (var item in impuestos_iva)
+				// moneda del primer detalle
+				CurrencyCodeContentType moneda_detalle = Ctl_Enumeracion.ObtenerMoneda(moneda);
+
+				foreach (var item in impuestos_iva)
                 {
                     DocumentoImpuestos imp_doc = new DocumentoImpuestos();
                     List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
@@ -767,46 +816,6 @@ namespace HGInetUBL
                 }
 
 
-                #region Retencion en la Fuente (Pendiente)
-                //var retencion = documentoDetalle.Select(_retencion => new { _retencion.TblProductos.IntRetencion, _retencion.TblProductos.TblRetencionFte.IntBase, Recursos.TipoImpuestos.Retencion, _retencion.TblProductos.TblRetencionFte.StrDescripcion, _retencion.TblProductos.TblRetencionFte.IntIdRetencion, _retencion.TblProductos.TblRetencionFte.IntPorcentaje, _retencion.TblProductos.TblRetencionFte.IntPorcentajePn }).Distinct();
-                //decimal BaseImponibleRetencion = 0;
-
-
-                /*if (retencion.Count() > 0)
-				{
-					TblTerceros tercero = new TblTerceros();
-
-					foreach (var item in retencion)
-					{
-						DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-						List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).ToList();
-						BaseImponibleRetencion = decimal.Round(documentoDetalle.Where(docDet => docDet.TblProductos.IntRetencion == item.IntRetencion).Sum(docDet => docDet.IntValorUnitario * docDet.IntCantidad), 2);
-
-						imp_doc.Codigo = item.IntIdRetencion.ToString();
-						imp_doc.Nombre = item.StrDescripcion;
-
-						//Porcentaje de retencion segun el tipo de Persona: 1-Natural, 2-Juridica
-						if (tercero.IntTipoPersona == 1)
-						{
-							imp_doc.Porcentaje = decimal.Round(item.IntPorcentajePn, 2);
-						}
-						else
-						{
-							imp_doc.Porcentaje = decimal.Round(item.IntPorcentaje, 2);
-						}
-						imp_doc.BaseImponible = BaseImponibleRetencion;
-						foreach (var docDet in doc_)
-						{
-							imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IntReteFte,2);
-						}
-						doc_impuestos.Add(imp_doc);
-
-					}
-
-
-				}*/
-                #endregion
-
                 TaxTotalType1[] TaxTotals = new TaxTotalType1[doc_impuestos.Count];
 
                 int contador = 0;
@@ -817,7 +826,7 @@ namespace HGInetUBL
 
                     #region Importe Impuesto: Importe del impuesto retenido
                     TaxAmountType TaxAmount = new TaxAmountType();
-                    TaxAmount.currencyID = CurrencyCodeContentType.COP;
+                    TaxAmount.currencyID = moneda_detalle;
                     TaxAmount.Value = decimal.Round(item.ValorImpuesto, 2);
                     TaxTotal.TaxAmount = TaxAmount;
                     #endregion
@@ -835,7 +844,7 @@ namespace HGInetUBL
                     #region Base Imponible: Base	Imponible sobre la que se calcula la retención de impuesto
                     //Base Imponible = Importe bruto + cargos - descuentos
                     TaxableAmountType TaxableAmount = new TaxableAmountType();
-                    TaxableAmount.currencyID = CurrencyCodeContentType.COP;
+                    TaxableAmount.currencyID = moneda_detalle;
                     TaxableAmount.Value = decimal.Round(item.BaseImponible, 2);
                     TaxSubtotal.TaxableAmount = TaxableAmount;
                     #endregion
@@ -843,7 +852,7 @@ namespace HGInetUBL
                     #region Importe Impuesto (detalle): Importe del impuesto retenido
                     //Valor total del impuesto retenido
                     TaxAmountType TaxAmountSubtotal = new TaxAmountType();
-                    TaxAmountSubtotal.currencyID = CurrencyCodeContentType.COP;
+                    TaxAmountSubtotal.currencyID = moneda_detalle;
                     TaxAmountSubtotal.Value = decimal.Round(item.ValorImpuesto, 2);
                     TaxSubtotal.TaxAmount = TaxAmountSubtotal;
                     #endregion
@@ -947,7 +956,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo CreditNoteLineType</returns>
-		public static CreditNoteLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string cufefactura)
+		public static CreditNoteLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string cufefactura, string moneda)
 		{
 			try
 			{
@@ -962,6 +971,12 @@ namespace HGInetUBL
 
 				foreach (var DocDet in documentoDetalle)
 				{
+
+					CurrencyCodeContentType moneda_detalle = Ctl_Enumeracion.ObtenerMoneda(moneda);
+
+					if (string.IsNullOrEmpty(DocDet.UnidadCodigo))
+						DocDet.UnidadCodigo = "S7";
+
 					decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
 					CreditNoteLineType CreditNoteLine = new CreditNoteLineType();
 
@@ -980,14 +995,198 @@ namespace HGInetUBL
 					CreditedQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
 					CreditNoteLine.CreditedQuantity = CreditedQuantity;
 
-
+					// Unidad de medida
+					CreditedQuantity.unitCode = Ctl_Enumeracion.ObtenerUnidadMedida(DocDet.UnidadCodigo);
+					CreditNoteLine.CreditedQuantity = CreditedQuantity;
 					#endregion
 
 					#region Valor Total
 					LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
-					LineExtensionAmount.currencyID = CurrencyCodeContentType.COP; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					LineExtensionAmount.currencyID = moneda_detalle; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
 					LineExtensionAmount.Value = decimal.Round(valorTotal, 2);
 					CreditNoteLine.LineExtensionAmount = LineExtensionAmount;
+					#endregion
+
+					#region Impuestos del producto
+					// <cac:TaxTotal>
+					TaxTotalType[] TaxesTotal = new TaxTotalType[1];
+
+					TaxTotalType TaxTotal = new TaxTotalType();
+
+					// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+					// <cbc:TaxAmount>
+					TaxTotal.TaxAmount = new TaxAmountType()
+					{
+						currencyID = moneda_detalle,
+						Value = decimal.Round(DocDet.IvaValor + DocDet.ValorImpuestoConsumo + DocDet.ReteFuenteValor + DocDet.ReteIcaValor, 0)
+					};
+
+					// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+					// <cbc:TaxEvidenceIndicator>
+					TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+					{
+						Value = false
+					};
+
+					// subtotales cuya suma es igual a la cantidad total de impuestos para un régimen impositivo particular.
+					// http://www.datypic.com/sc/ubl21/e-cac_TaxSubtotal.html
+					// <cac:TaxSubtotal>
+					TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[4];
+
+
+					#region impuesto: IVA 
+					TaxSubtotalType TaxSubtotalIva = new TaxSubtotalType();
+
+					// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+					// <cbc:TaxAmount>
+					TaxSubtotalIva.TaxableAmount = new TaxableAmountType()
+					{
+						currencyID = moneda_detalle,
+						Value = DocDet.ValorSubtotal
+					};
+
+					// El monto de este subtotal fiscal.
+					// <cbc:TaxAmount>
+					TaxSubtotalIva.TaxAmount = new TaxAmountType()
+					{
+						currencyID = moneda_detalle,
+						Value = DocDet.IvaValor
+					};
+
+					// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+					// <cbc:Percent>
+					TaxSubtotalIva.Percent = new PercentType()
+					{
+						Value = decimal.Round((DocDet.IvaPorcentaje * 100), 2)
+					};
+
+					// categoría de impuestos aplicable a este subtotal.
+					// <cac:TaxCategory>
+					TaxCategoryType TaxCategoryIva = new TaxCategoryType();
+
+					// <cac:TaxScheme>
+					TaxSchemeType TaxSchemeIva = new TaxSchemeType()
+					{
+						ID = new IDType()
+						{
+							Value = TipoImpuestos.Iva
+						},
+
+						TaxTypeCode = new TaxTypeCodeType()
+						{
+							Value = TipoImpuestos.Iva
+						}
+					};
+
+					TaxCategoryIva.TaxScheme = TaxSchemeIva;
+					TaxSubtotalIva.TaxCategory = TaxCategoryIva;
+					TaxesSubtotal[0] = TaxSubtotalIva;
+					#endregion
+
+
+					#region impuesto: Consumo 
+					TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
+
+					// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+					// <cbc:TaxAmount>
+					TaxSubtotalConsumo.TaxableAmount = new TaxableAmountType()
+					{
+						currencyID = moneda_detalle,
+						Value = DocDet.ValorSubtotal
+					};
+
+					// El monto de este subtotal fiscal.
+					// <cbc:TaxAmount>
+					TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
+					{
+						currencyID = moneda_detalle,
+						Value = DocDet.ValorImpuestoConsumo
+					};
+
+					// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+					// <cbc:Percent>
+					TaxSubtotalConsumo.Percent = new PercentType()
+					{
+						Value = decimal.Round((DocDet.ImpoConsumoPorcentaje * 100), 2)
+					};
+
+					// categoría de impuestos aplicable a este subtotal.
+					// <cac:TaxCategory>
+					TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
+
+					// <cac:TaxScheme>
+					TaxSchemeType TaxSchemeConsumo = new TaxSchemeType()
+					{
+						ID = new IDType()
+						{
+							Value = TipoImpuestos.Consumo
+						},
+
+						TaxTypeCode = new TaxTypeCodeType()
+						{
+							Value = TipoImpuestos.Consumo
+						}
+					};
+
+					TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
+					TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
+					TaxesSubtotal[1] = TaxSubtotalConsumo;
+					#endregion
+
+
+					#region impuesto: Ica  
+					TaxSubtotalType TaxSubtotalIca = new TaxSubtotalType();
+
+					// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+					// <cbc:TaxAmount>
+					TaxSubtotalIca.TaxableAmount = new TaxableAmountType()
+					{
+						currencyID = moneda_detalle,
+						Value = DocDet.ValorSubtotal
+					};
+
+					// El monto de este subtotal fiscal.
+					// <cbc:TaxAmount>
+					TaxSubtotalIca.TaxAmount = new TaxAmountType()
+					{
+						currencyID = moneda_detalle,
+						Value = DocDet.ReteIcaValor
+					};
+
+					// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+					// <cbc:Percent>
+					TaxSubtotalIca.Percent = new PercentType()
+					{
+						Value = decimal.Round((DocDet.ReteIcaPorcentaje * 100), 2)
+					};
+
+					// categoría de impuestos aplicable a este subtotal.
+					// <cac:TaxCategory>
+					TaxCategoryType TaxCategoryIca = new TaxCategoryType();
+
+					// <cac:TaxScheme>
+					TaxSchemeType TaxSchemeIca = new TaxSchemeType()
+					{
+						ID = new IDType()
+						{
+							Value = TipoImpuestos.Ica
+						},
+
+						TaxTypeCode = new TaxTypeCodeType()
+						{
+							Value = TipoImpuestos.Ica
+						}
+					};
+
+					TaxCategoryIca.TaxScheme = TaxSchemeIca;
+					TaxSubtotalIca.TaxCategory = TaxCategoryIca;
+					TaxesSubtotal[2] = TaxSubtotalIca;
+					#endregion
+
+					TaxTotal.TaxSubtotal = TaxesSubtotal;
+					TaxesTotal[0] = TaxTotal;
+					CreditNoteLine.TaxTotal = TaxesTotal;
+
 					#endregion
 
 					#region Datos producto
@@ -1001,12 +1200,26 @@ namespace HGInetUBL
 					Item.Description = Descriptions;
 					#endregion
 
+					#region Descripcion producto
+					// 
+					AdditionalInformationType Additional = new AdditionalInformationType();
+					Additional.Value = DocDet.ProductoDescripcion;
+					Item.AdditionalInformation = Additional;
+					#endregion
+
 					#region Id producto definido por la Empresa ***///
 					ItemIdentificationType CatalogueItemIdentification = new ItemIdentificationType();
 					IDType IDItem = new IDType();
 					IDItem.Value = DocDet.ProductoCodigo;
 					CatalogueItemIdentification.ID = IDItem;
 					Item.CatalogueItemIdentification = CatalogueItemIdentification;
+
+					// <cac:StandardItemIdentification>
+					ItemIdentificationType StandardItemIdentification = new ItemIdentificationType();
+					IDType IDItemStandard = new IDType();
+					IDItemStandard.Value = DocDet.ProductoCodigo;
+					StandardItemIdentification.ID = IDItemStandard;
+					Item.StandardItemIdentification = StandardItemIdentification;
 					#endregion
 
 					CreditNoteLine.Item = Item;
@@ -1016,7 +1229,7 @@ namespace HGInetUBL
 					#region Valor Unitario producto
 					PriceType Price = new PriceType();
 					PriceAmountType PriceAmount = new PriceAmountType();
-					PriceAmount.currencyID = CurrencyCodeContentType.COP; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					PriceAmount.currencyID = moneda_detalle; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
 					PriceAmount.Value = decimal.Round(DocDet.ValorUnitario, 2);
 					Price.PriceAmount = PriceAmount;
 					CreditNoteLine.Price = Price;
