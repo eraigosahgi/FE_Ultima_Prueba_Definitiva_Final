@@ -12,6 +12,7 @@ namespace HGInetFacturaEReports.Facturas
     using System.Windows.Forms;
     using Telerik.Reporting;
     using Telerik.Reporting.Drawing;
+    using System.Globalization;
 
     /// <summary>
     /// Summary description for ReportDocumento.
@@ -30,11 +31,6 @@ namespace HGInetFacturaEReports.Facturas
             //
         }
 
-        private void pictureBox1_ItemDataBound(object sender, EventArgs e)
-        {
-
-        }
-
         private void Formato1_ItemDataBinding(object sender, EventArgs e)
         {
             try
@@ -45,9 +41,11 @@ namespace HGInetFacturaEReports.Facturas
                 Factura datos_factura = (Factura)report.DataSource;
 
                 List<DocumentoDetalle> detalles_factura = datos_factura.DocumentoDetalles;
-				
+
+                string tipo_moneda = LibreriaGlobalHGInet.Formato.ConfiguracionRegional.TipoMoneda(datos_factura.Moneda);
+
                 //Convierte el valor total de la factura  en letras
-                string valor_letras = Numero.EnLetras((Convert.ToDouble(datos_factura.Total)), "PESOS");
+                string valor_letras = Numero.EnLetras((Convert.ToDouble(datos_factura.Total)), tipo_moneda.ToUpper());
                 this.TextBoxValorLetras.Value = valor_letras;
 
                 if (datos_factura.DocumentoFormato.CamposPredeterminados != null)
@@ -58,9 +56,9 @@ namespace HGInetFacturaEReports.Facturas
                     {
                         if (item.Ubicacion.ToLowerInvariant().Equals("campo1"))
                         {
-							MemoryStream ms = null;
-						
-							try
+                            MemoryStream ms = null;
+
+                            try
                             {
                                 byte[] bytes = Convert.FromBase64String(item.Valor);
                                 using (ms = new MemoryStream(bytes))
@@ -72,8 +70,8 @@ namespace HGInetFacturaEReports.Facturas
                             }
                             catch (Exception excepcion)
                             {
-								if (ms != null)
-									ms.Close();
+                                if (ms != null)
+                                    ms.Close();
                             }
                         }
                         else
@@ -84,11 +82,12 @@ namespace HGInetFacturaEReports.Facturas
 
                             if (report_item_descripcion.Length > 0)
                             {
-								HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
+                                HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
 
                                 if (campo_descripcion != null)
                                 {
                                     campo_descripcion.Value = item.Descripcion.ToUpper();
+                                    campo_descripcion.Visible = true;
                                 }
                             }
 
@@ -102,17 +101,18 @@ namespace HGInetFacturaEReports.Facturas
                                 if (campo_valor != null)
                                 {
                                     campo_valor.Value = item.Valor;
+                                    campo_valor.Visible = true;
                                 }
                             }
                         }
                     }
                 }
-				
+
                 //Asigna al SubReporte los detalles de la factura
                 Formato1Detalles reporte = new Formato1Detalles();
                 reporte.DataSource = detalles_factura;
-				
-				subReportDetalles.ReportSource = reporte;
+
+                subReportDetalles.ReportSource = reporte;
             }
             catch (Exception excepcion)
             {
