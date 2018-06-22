@@ -327,7 +327,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public List<TblEmpresas> ObtenerFacturadores()
         {
             List<TblEmpresas> datos = (from item in context.TblEmpresas
-                                       where item.IntObligado.Equals(true) && item.IntHabilitacion == 99
+                                       where item.IntObligado.Equals(true) 
                                        select item).ToList();
 
             return datos;
