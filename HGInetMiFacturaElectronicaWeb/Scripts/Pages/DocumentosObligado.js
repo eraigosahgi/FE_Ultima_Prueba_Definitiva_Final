@@ -26,9 +26,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         consultar();
     });
 
-    SrvMaestrosEnum.ObtenerEnum(0).then(function (data) {                    
+    SrvMaestrosEnum.ObtenerEnum(0,"*").then(function (data) {                    
         SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
-            Estado = FiltrarMayorJson(data, 7);
+            Estado = data;
             items_recibo = dataacuse;
             cargarFiltros();
         });
