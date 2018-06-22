@@ -1,16 +1,14 @@
 ﻿
-var ModalEmpresasApp = angular.module('ModalEmpresasApp', ['dx']);
+var ModalEmpresasApp = angular.module('ModalEmpresasApp', ['dx', 'AppSrvEmpresa'])
 var DatosEmpresa = false;
 
 //Controlador para gestionar la consulta de empresas
-ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalConsultaEmpresasController($scope, $http, $location) {
+ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalConsultaEmpresasController($scope, $location, SrvEmpresa) {
 
-    $("#wait").show();
-    $http.get('/api/Empresas').then(function (response) {
-        $("#wait").hide();
-        DatosEmpresa = response.data;
+    SrvEmpresa.ObtenerFacturadores().then(function (data) {          
+        DatosEmpresa = data;
         $("#gridEmpresas").dxDataGrid({
-            dataSource: response.data,
+            dataSource: DatosEmpresa,
             paging: {
                 pageSize: 10
             },
@@ -44,11 +42,7 @@ ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalCon
             filterRow: {
                 visible: true
             }
-        });
-
-    }, function errorCallback(response) {
-        $('#wait').hide();
-        DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });   
     });
 });
 //Funcion para asignar la Empresa Asociada
@@ -62,3 +56,19 @@ function ObtenerEmpresa(Empresa) {
     }
     $("#txtempresaasociada").dxTextBox({ value: Empresa });
 }
+
+var AppSrvEmpresa = angular.module('AppSrvEmpresa', ['dx'])
+    .config(function ($httpProvider) {
+        $httpProvider.interceptors.push(myInterceptor);
+    })
+.service('SrvEmpresa', function ($http, $location, $q) {
+
+    this.ObtenerFacturadores = function () {
+        return $http.get('/api/Empresas?Facturador=true').then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });
+    }
+});
