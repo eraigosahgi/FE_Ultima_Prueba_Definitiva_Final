@@ -1,16 +1,21 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvUsuario'])
+var path = window.location.pathname;
+var ruta = window.location.href;
+ruta=ruta.replace(path, "/");
+document.write('<script type="text/javascript" src="'+ruta+'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
+
+angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento'])
     
-.controller('ProcesarDocumentosController', function DocAdquirienteController($scope, SrvMaestrosEnum, SrvUsuario) {
+.controller('ProcesarDocumentosController', function DocAdquirienteController($scope,$http,$location, SrvMaestrosEnum, SrvDocumento) {
     
     var codigo_adquiente = "", numero_documento = "", estado_recibo = "", fecha_inicio = "", fecha_fin = "", Estado = [], now = new Date();
            
-    SrvMaestrosEnum.ObtenerEnum(0).then(function (data) {
+    SrvMaestrosEnum.ObtenerEnum(0,"privado").then(function (data) {
         Estado = data;
         cargarFiltros();    
     });
-          
+      
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {    
         codigo_adquiente = data[0].Identificacion;        
         consultar();                      
@@ -116,21 +121,6 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvUsuario
 
 
                 {
-/*
-                    EstadoRecibo: {
-                        searchEnabled: true,
-                        //Carga la data del control
-                        dataSource: new DevExpress.data.ArrayStore({
-                            data: Estado
-                            , key: "ID"
-                        }), displayExpr: "Descripcion",
-                        Enabled: true,
-                        placeholder: "Seleccione un Item",
-                        onValueChanged: function (data) {                            
-                            estado_recibo = data.value.ID;
-                            console.log("ss", estado_recibo);
-                        }
-                    },*/
                     NumeroDocumento: {
                         placeholder: "Identificador Documento",
                         onValueChanged: function (data) {
@@ -163,7 +153,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvUsuario
             fecha_fin = now.toISOString();
 
         
-        SrvMaestrosEnum.ObtenerDocumentos('IdSeguridad=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (data) {                           
+        SrvDocumento.ObtenerDocumentos(numero_documento,estado_recibo,fecha_inicio,fecha_fin).then(function (data) {
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data,
                 paging: {
@@ -278,22 +268,9 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvUsuario
 
     function ProcesarDocumentos() {
         if ($scope.total > 0) {
-            $('#wait').show();
-            return $http({
-                url: '/api/Documentos/',
-                data: { Documentos: $scope.documentos },
-                method: 'Post'
-
-            }).then(function (response) {
-                $('#wait').hide();
+            SrvDocumento.ProcesarDocumentos($scope.documentos).then(function (data) {
                 DevExpress.ui.notify("Se procesaron los documentos exitosamente ", 'success', 2000);
-            })
-            , function errorCallback(response) {
-                $('#wait').hide();
-                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-            }
-        } else {
-            DevExpress.ui.notify("No tiene documentos seleccionados", 'error', 3000);
+            });
         }
     }
 
