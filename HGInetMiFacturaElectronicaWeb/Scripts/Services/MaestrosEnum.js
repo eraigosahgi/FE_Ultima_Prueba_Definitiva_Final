@@ -7,8 +7,8 @@ var AppMaestrosEnum = angular.module('AppMaestrosEnum', ['dx'])
 .service('SrvMaestrosEnum', function ($http, $q) {
                       
         //Obtiene los datos de un enumerable especifico (Se puede pasar el codigo por parametro)
-        this.ObtenerEnum = function (parametro) {           
-            return $http.get('/api/MaestrosEnum?tipo_enum='+parametro).then(function (response) {             
+    this.ObtenerEnum = function (parametro1,parametro2) {           
+        return $http.get('/api/MaestrosEnum?tipo_enum=' + parametro1 + '&tipo_ambiente='+parametro2).then(function (response) {
                 return response.data;
             }, function (response) {               
                 DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
