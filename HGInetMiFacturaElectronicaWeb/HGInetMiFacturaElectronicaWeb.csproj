@@ -1516,6 +1516,7 @@
     <Content Include="Scripts\cldr\unresolved.js" />
     <Content Include="Scripts\config.js" />
     <Content Include="Scripts\Demos\DataGrid.js" />
+    <Content Include="Scripts\devall.js" />
     <Content Include="Scripts\devextreme-localization\dx.messages.es.js" />
     <Content Include="Scripts\assets\css\icons\fontawesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Scripts\assets\css\icons\fontawesome\fonts\fontawesome-webfont.ttf" />
@@ -1862,6 +1863,7 @@
     <Content Include="Scripts\Pages\RestablecerClave.js" />
     <Content Include="Scripts\Services\Loading.js" />
     <Content Include="Scripts\Services\MaestrosEnum.js" />
+    <Content Include="Scripts\Services\SrvDocumentos.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
     <Content Include="Views\Demos\Demo.aspx" />
     <Content Include="Views\Demos\Demos.aspx" />
@@ -2980,7 +2982,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61433/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

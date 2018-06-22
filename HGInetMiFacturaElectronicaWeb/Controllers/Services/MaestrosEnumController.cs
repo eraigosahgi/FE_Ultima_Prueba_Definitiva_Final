@@ -1,17 +1,26 @@
 ﻿using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Web.Http;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
     public class MaestrosEnumController : ApiController
     {
-
-        public IHttpActionResult Get(int tipo_enum)
+        /// <summary>
+        /// Retorna una lista de enumerables, segun el parametro: 
+        /// tipo_enum : 0 - ProcesoEstado, 1 - AdquirienteRecibo
+        /// Si es publico, se refleja en los filtros de documentos
+        /// </summary>
+        /// <param name="tipo_enum"></param>
+        /// <param name="tipo_ambiente"></param>
+        /// <returns></returns>
+        public IHttpActionResult Get(int tipo_enum, string tipo_ambiente="*")
         {
             try
             {
@@ -20,11 +29,29 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 switch (tipo_enum)
                 {
                     case 0:
+                        
                         foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.ProcesoEstado)))
                         {
-                            string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>((int)value)))).Split(',');
 
-                            datos.Add(datos_enum);
+
+                            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+                            AmbientValueAttribute[] ambiente = (AmbientValueAttribute[])fi.GetCustomAttributes(typeof(AmbientValueAttribute), false);
+                            if (tipo_ambiente != "*")
+                            {
+                                if (ambiente[0].Value.ToString() == tipo_ambiente)
+                                {
+                                    string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>((int)value)))).Split(',');
+
+                                    datos.Add(datos_enum);
+                                }
+                            }
+                            else
+                            {
+                                string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>((int)value)))).Split(',');
+
+                                datos.Add(datos_enum);
+                            }
                         }
                         break;
                     case 1:
