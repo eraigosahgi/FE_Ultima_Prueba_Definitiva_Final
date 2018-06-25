@@ -86,9 +86,9 @@
 
                                     <div>
                                         <div class="text-center">
-                                            <img src="../../Scripts/Images/LogoPlataforma.PNG" class="img-responsive" style="width: 75%; height: 75%; margin-left: 15%; margin-right: 15%" />
+                                            <img src="../../Scripts/Images/LogoPlataforma.PNG" class="img-responsive" style="width: 70%; height: 70%; margin-left: 15%; margin-right: 15%" />
                                             <%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
-                                            <h5 class="content-group-lg">HGInet Facturación Electrónica<small class="display-block">Ingrese los datos de autenticación</small></h5>
+                                            <h5 class="content-group-lg"><small class="display-block">Ingrese los datos de autenticación</small></h5>
                                         </div>
 
                                         <div class="widget-container">
@@ -105,13 +105,18 @@
 
 
                                     </div>
-
                                 </form>
 
                                 <!-- /Formulario Autenticación -->
 
                             </div>
                             <!-- /Área de Contenido -->
+
+                            <span class="help-block text-center no-margin">
+                                <img src="/../Scripts/Images/Logo.png" style="align-content: center; width: 130px" class="img-responsive center-block" />
+                                Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S.</a>
+                                <br />
+                            </span>
 
                         </div>
                         <!-- /main content -->
