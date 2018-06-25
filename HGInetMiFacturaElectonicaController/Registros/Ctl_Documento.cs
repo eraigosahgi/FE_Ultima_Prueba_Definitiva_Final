@@ -227,22 +227,25 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <returns></returns>
         public List<TblDocumentos> ObtenerPorFechasAdquiriente(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
+            //---------------Valida los estos validos para esta vista
+            var estado_dian = "";
+            Ctl_MaestrosEnum Mastros = new Ctl_MaestrosEnum();
+
+            List<string[]> Lista_recibos = Mastros.ListaEnum(0, "publico");
+            estado_dian = Coleccion.ConvertirString(Lista_recibos);
+            //---------------
 
             fecha_inicio = fecha_inicio.Date;
             fecha_fin = fecha_fin.Date;
 
             fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
-
             int num_doc = -1;
             int.TryParse(numero_documento, out num_doc);
 
             short cod_estado_recibo = -1;
             short.TryParse(estado_recibo, out cod_estado_recibo);
-
-            //fecha_inicio = Convert.ToDateTime(fecha_inicio.ToString(Fecha.formato_fecha_hginet));
-            //fecha_fin = Convert.ToDateTime(fecha_fin.ToString(Fecha.formato_fecha_hginet));
-
+            
             if (string.IsNullOrWhiteSpace(numero_documento))
                 numero_documento = "*";
             if (string.IsNullOrWhiteSpace(estado_recibo))
@@ -254,6 +257,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                            && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
                                            && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
                                            && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
+                                           && (estado_dian.Contains(datos.IntIdEstado.ToString()))
                              orderby datos.IntNumero descending
                              select datos).ToList();
 
@@ -273,6 +277,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <returns></returns>
         public List<TblDocumentos> ObtenerPorFechasObligado(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
+
+            if (estado_dian == null || estado_dian=="")
+            {
+                Ctl_MaestrosEnum Mastros = new Ctl_MaestrosEnum();
+
+                List<string[]> Lista_recibos = Mastros.ListaEnum(0, "publico");                
+                estado_dian = Coleccion.ConvertirString(Lista_recibos);                
+            }
+
+
             fecha_inicio = fecha_inicio.Date;           
 
             fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59,999);
@@ -280,8 +294,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
             int num_doc = -1;
             int.TryParse(numero_documento, out num_doc);
 
-            short cod_estado_dian = -1;
-            short.TryParse(estado_dian, out cod_estado_dian);
+            //short cod_estado_dian = -1;
+            //short.TryParse(estado_dian, out cod_estado_dian);
 
             short cod_estado_recibo = -1;
             short.TryParse(estado_recibo, out cod_estado_recibo);
@@ -290,15 +304,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 numero_documento = "*";
             if (string.IsNullOrWhiteSpace(codigo_adquiriente))
                 codigo_adquiriente = "*";
-            if (string.IsNullOrWhiteSpace(estado_dian))
-                estado_dian = "*";
+            //if (string.IsNullOrWhiteSpace(estado_dian))
+            //    estado_dian = "*";
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
 
-            if (estado_dian.Equals("3"))
-                estado_dian = "2,3";
+            //if (estado_dian.Equals("3"))
+            //    estado_dian = "2,3";
 
-            List<string> estados = Coleccion.ConvertirLista(estado_dian);
+            //List<string> estados = Coleccion.ConvertirLista(estado_dian);
 
 
             List<TblDocumentos> documentos = (from datos in context.TblDocumentos
@@ -307,7 +321,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                               where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
                                             && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
                                             && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-                                            && (estados.Contains(datos.IntIdEstado.ToString()) || estado_dian.Equals("*"))
+                                            && (estado_dian.Contains(datos.IntIdEstado.ToString()) )
                                             && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
                                             && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
                                               orderby datos.IntNumero descending
@@ -582,26 +596,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <returns></returns>
         public List<TblDocumentos> ObtenerDocumentosaProcesar(System.Guid? IdSeguridad,  string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
+
+            if (estado_recibo == null || estado_recibo == "")
+            {
+                Ctl_MaestrosEnum Mastros = new Ctl_MaestrosEnum();
+
+                List<string[]> Lista_recibos = Mastros.ListaEnum(0, "privado");
+                estado_recibo = Coleccion.ConvertirString(Lista_recibos);
+            }
+
             fecha_inicio = fecha_inicio.Date;
-            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
-
-            short cod_estado_recibo = -1;
-            short.TryParse(estado_recibo, out cod_estado_recibo);           
-            
-            if (string.IsNullOrWhiteSpace(estado_recibo))
-                estado_recibo = "*";
-            if (string.IsNullOrWhiteSpace(estado_recibo))
-                estado_recibo = "*";
-
-            if (estado_recibo.Equals("3"))
-                estado_recibo = "2,3";
-
-            List<string> estados = Coleccion.ConvertirLista(estado_recibo);
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);      
 
             var respuesta = (from datos in context.TblDocumentos
                              join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
                              where  ((datos.StrIdSeguridad==IdSeguridad) || IdSeguridad ==null)
-                                           && (estados.Contains(datos.IntIdEstado.ToString()) || estado_recibo.Equals("*"))
+                                           && (estado_recibo.Contains(datos.IntIdEstado.ToString()) || estado_recibo.Equals("*"))
                                            && (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
                              orderby datos.DatFechaIngreso descending
                              select datos).ToList();
