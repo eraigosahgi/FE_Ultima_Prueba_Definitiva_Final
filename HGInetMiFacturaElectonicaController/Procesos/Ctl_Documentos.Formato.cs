@@ -84,7 +84,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     }
                     else if (documento_result.DocumentoTipo == TipoDocumento.NotaDebito)
                     {
-
+                        HGInetFacturaEReports.NotasDebito.Formato1 reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
+                        reporte_pdf.DataSource = documento;
+                        HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
+                        x.GenerarPdf(reporte_pdf);
                     }
 
                     respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
