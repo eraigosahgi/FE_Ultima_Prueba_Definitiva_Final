@@ -96,7 +96,7 @@ namespace HGInetFirmaDigital
 				parametros.DigestMethod = DigestMethod.SHA1;
 
 				parametros.SignerRole = new SignerRole();
-				parametros.SignerRole.ClaimedRoles.Add("supplier");
+				parametros.SignerRole.ClaimedRoles.Add("third party");
 
 				parametros.DatoIssuername = "";
 				parametros.DatoIssuername1 = "";
@@ -216,7 +216,7 @@ namespace HGInetFirmaDigital
 				parametros.DigestMethod = DigestMethod.SHA1;
 
 				parametros.SignerRole = new SignerRole();
-				parametros.SignerRole.ClaimedRoles.Add("supplier");
+				parametros.SignerRole.ClaimedRoles.Add("third party");
 
 				parametros.DatoIssuername = "";
 				parametros.DatoIssuername1 = "";
