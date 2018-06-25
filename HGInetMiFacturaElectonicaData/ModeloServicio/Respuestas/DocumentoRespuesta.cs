@@ -97,6 +97,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
 		public Error Error { get; set; }
 
+		/// <summary>
+		/// Objeto de tipo Respuesta entregada por la Dian despues de una consulta
+		/// </summary>
+		public RespuestaDian EstadoDian { get; set; }
+
 
 	}
 }
