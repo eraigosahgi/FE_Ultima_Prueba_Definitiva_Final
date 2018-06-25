@@ -105,6 +105,7 @@
     <Content Include="Content\dx.darkviolet.css" />
     <Content Include="Content\dx.greenmist.compact.css" />
     <Content Include="Content\dx.greenmist.css" />
+    <Content Include="Content\dx.hgi.css" />
     <Content Include="Content\dx.ios7.default.css" />
     <Content Include="Content\dx.light.compact.css" />
     <Content Include="Content\dx.light.css" />

@@ -56,21 +56,19 @@
                                     <label>Número Documento:</label>
                                     <div dx-autocomplete="filtros.NumeroDocumento"></div>
                                 </div>
-
-                                <div class="col-md-4">
-                                </div>
-
+                                                               
                             </div>
 
                         </div>
-
-                        <div class="col-lg-12 text-right">
-                            <br />
-                            <br />
-                            <div dx-button="ButtonOptionsConsultar"></div>
-                        </div>
+                        
+                        
 
                     </div>
+                    <div class="col-lg-12 text-right" >
+                            <br />
+                            <br />
+                            <div dx-button="ButtonOptionsConsultar" style="margin-right:20px"></div>
+                        </div>
 
                 </div>
 

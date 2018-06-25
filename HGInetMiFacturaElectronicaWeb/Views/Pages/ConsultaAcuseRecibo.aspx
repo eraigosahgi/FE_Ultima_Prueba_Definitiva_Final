@@ -30,37 +30,43 @@
 
                         <div class="row">
 
-                            <div class="dx-fieldset">
+                            <div class="dx-fieldset" >
 
-                               <div class="col-md-3">
+                               <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Inicial:</label>
                                     <div id="FechaInicial"></div>                                    
                                 </div>
 
 
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Final:</label>
                                      <div id="FechaFinal"></div> 
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-6" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class="icon-file-text"></i>
                                     <label>Código Adquiriente:</label>
                                     <div dx-autocomplete="filtros.Adquiriente"></div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class="icon-files-empty"></i>
                                     <label>Número Documento:</label>
                                     <div dx-autocomplete="filtros.NumeroDocumento"></div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class="icon-file-text"></i>
                                     <label>Estado Recibo</label>
                                     <div dx-select-box="filtros.EstadoRecibo"></div>
+                                </div>
+
+                                <div class="col-md-6 text-right" >
+                                    <br />
+                                    <br />
+                                    <div dx-button="ButtonOptionsConsultar" ></div>
                                 </div>
 
                             </div>
@@ -68,11 +74,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-12 text-right">
-                        <br />
-                        <br />
-                        <div dx-button="ButtonOptionsConsultar"></div>
-                    </div>
+                   
 
                 </div>
 

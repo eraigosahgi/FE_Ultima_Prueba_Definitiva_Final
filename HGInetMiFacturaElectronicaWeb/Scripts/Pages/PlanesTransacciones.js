@@ -317,7 +317,6 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                     },
                     groupPanel: {
                         allowColumnDragging: true,
-                        emptyPanelText: "Arrastre la columna aqui",
                         visible: true
                     },
                     masterDetail: {
@@ -433,8 +432,29 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                                   .appendTo(container);
                           }
                       }
-                 ],
-                    filterRow: {
+                 ], summary: {
+                     groupItems: [{
+                         column: "Valor",
+                         summaryType: "sum",
+                         displayFormat: " {0} Total ",
+                         valueFormat: "currency"
+                     }]
+                 
+                    , totalItems: [{                        
+                        column: "Valor",
+                        displayFormat: "{0}",
+                        valueFormat: "currency",
+                        summaryType: "sum"
+                    }, {
+                        column: "TCompra",
+                        summaryType: "sum",
+                        valueFormat: 'fixedPoint',
+                        displayFormat: '{0}'
+
+                    }                   
+                    ]
+                 }
+                    ,filterRow: {
                         visible: true
                     }
                 });

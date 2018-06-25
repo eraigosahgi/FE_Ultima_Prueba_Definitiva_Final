@@ -1,4 +1,4 @@
-﻿DevExpress.localization.locale(navigator.language);
+﻿DevExpress.localization.locale('es-ES');
 
 var path = window.location.pathname;
 var ruta = window.location.href;
@@ -32,6 +32,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
     function cargarFiltros() {
         $("#FechaInicial").dxDateBox({
             value: now,
+            width: '100%',
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_inicio = new Date(data.value).toISOString();
@@ -47,6 +48,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 
         $("#FechaFinal").dxDateBox({
             value: now,
+            width: '100%',
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_fin = new Date(data.value).toISOString();
@@ -89,7 +91,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             }
     }
     var mensaje_acuse = "";
-    $("#FechaFinal").dxDateBox({ min: now });
+    $("#FechaFinal").dxDateBox({ min: now });    
     $("#FechaInicial").dxDateBox({ max: now });
 
     $scope.ButtonOptionsConsultar = {
@@ -140,8 +142,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         DevExpress.ui.notify(err.message, 'error', 3000);
                     }
                 }, loadPanel: {
-                    enabled: true,
-                    text: "H.G.I..."
+                    enabled: true
                 },
                 headerFilter: {
                     visible: true
@@ -150,8 +151,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 , allowColumnReordering: true
                 , columnChooser: {
                     enabled: true,
-                    mode: "select",
-                    title: "Selector de Columnas"
+                    mode: "select"
                 },
                 groupPanel: {
                     allowColumnDragging: true,                    

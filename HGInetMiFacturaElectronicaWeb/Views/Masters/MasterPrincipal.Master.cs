@@ -47,9 +47,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
             catch (Exception excepcion)
             {
                 //Controla la session enviando la url a la pagina inicial para iniciar nuevamente la session
-                //PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-                //string script = @"<script type='text/javascript'>control_session('" + plataforma.RutaPublica + "');</script>";
-                //ScriptManager.RegisterStartupScript(this, typeof(Page), "control_session", script, false);
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+                string script = @"<script type='text/javascript'>control_session('" + plataforma.RutaPublica + "');</script>";
+                ScriptManager.RegisterStartupScript(this, typeof(Page), "control_session", script, false);
             }
         }
 

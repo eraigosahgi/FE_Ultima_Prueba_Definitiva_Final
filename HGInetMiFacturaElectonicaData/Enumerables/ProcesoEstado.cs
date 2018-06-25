@@ -49,11 +49,11 @@ namespace HGInetMiFacturaElectonicaData
         [AmbientValue("publico")]
         EnvioRespuestaAcuse = 10,
 
-		[Description("Error Dian, Finaliza Proceso")]
+        [Description("Error Dian, Finaliza Proceso")]
         [AmbientValue("publico")]
         FinalizacionErrorDian = 90,
 
-		[Description("Fin Proceso Exitoso")]
+        [Description("Fin Proceso Exitoso")]
         [AmbientValue("publico")]
         Finalizacion = 99
     }

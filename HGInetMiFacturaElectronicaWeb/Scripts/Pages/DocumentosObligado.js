@@ -26,7 +26,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         consultar();
     });
 
-    SrvMaestrosEnum.ObtenerEnum(0,"*").then(function (data) {                    
+    SrvMaestrosEnum.ObtenerEnum(0,"publico").then(function (data) {                    
         SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
             Estado = data;
             items_recibo = dataacuse;
@@ -37,6 +37,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
     function cargarFiltros() {
         $("#FechaInicial").dxDateBox({
             value: now,
+            width: '100%',
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_inicio = new Date(data.value).toISOString();
@@ -52,6 +53,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
         $("#FechaFinal").dxDateBox({
             value: now,
+            width: '100%',
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_fin = new Date(data.value).toISOString();
@@ -204,8 +206,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     }
 
                 }, loadPanel: {
-                    enabled: true,
-                    text: "H.G.I..."
+                    enabled: true
                 },
                 headerFilter: {
                     visible: true

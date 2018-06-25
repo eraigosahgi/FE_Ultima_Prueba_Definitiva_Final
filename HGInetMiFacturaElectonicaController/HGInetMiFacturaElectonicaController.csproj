@@ -68,6 +68,7 @@
     <Compile Include="Configuracion\Ctl_OpcionesPerfil.cs" />
     <Compile Include="Configuracion\Ctl_OpcionesUsuario.cs" />
     <Compile Include="Configuracion\Ctl_Permisos.cs" />
+    <Compile Include="Configuracion\Ctl_MestrosEnum.cs" />
     <Compile Include="Configuracion\Ctl_PlanesTransacciones.cs" />
     <Compile Include="Configuracion\Ctl_Planes.cs" />
     <Compile Include="Configuracion\Ctl_Usuario.cs" />

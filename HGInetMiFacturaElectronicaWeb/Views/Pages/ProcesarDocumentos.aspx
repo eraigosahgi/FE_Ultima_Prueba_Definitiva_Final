@@ -8,12 +8,7 @@
     <script src="../../Scripts/Services/MaestrosEnum.js"></script>
     <script src="../../Scripts/Pages/ProcesarDocumentos.js"></script>    
     <script src="../../Scripts/Services/Loading.js"></script>    
-    <!-- Se crea este Style independiente ya que el style original lo toma de una dms de devextreme y no se puede modificar la libreria en el proyecto-->
-    <style>
-        .dx-datagrid-rowsview .dx-select-checkboxes-hidden > tbody > tr > td > .dx-select-checkbox {
-            display: block !important;
-        }
-    </style>
+
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div ng-app="ProcesarDocumentosApp" data-ng-controller="ProcesarDocumentosController">
@@ -39,20 +34,20 @@
 
                             <div class="dx-fieldset">
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Inicial:</label>
                                     <div id="FechaInicial"></div>                                    
                                 </div>
 
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Final:</label>
                                      <div id="FechaFinal"></div> 
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-5">
                                     <i class="icon-file-text"></i>
                                     <label>Estado:</label>
                                     <div id="filtrosEstadoRecibo"></div>
@@ -69,12 +64,13 @@
 
                         </div>
 
-                        <div class="col-lg-12 text-right">
-                            <br />
-                            <br />
-                            <div dx-button="ButtonOptionsConsultar"></div>
-                        </div>
+                       
 
+                    </div>
+                    <div class="col-lg-12 text-right">
+                        <br />
+                        <br />
+                        <div dx-button="ButtonOptionsConsultar" style="margin-right: 20px;"></div>
                     </div>
 
                 </div>
@@ -97,7 +93,7 @@
                          <div class="col-lg-12 text-right">
                             <br />
                             <br />
-                            <div id="btnProcesar"></div>
+                            <div id="btnProcesar" style="margin-right: 20px;"></div>
                         </div>
                          
                     </div>

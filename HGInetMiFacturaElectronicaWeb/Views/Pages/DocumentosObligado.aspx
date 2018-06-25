@@ -5,8 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
     <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/DocumentosObligado.js"></script>    
-
+    <script src="../../Scripts/Pages/DocumentosObligado.js"></script>        
     <div ng-app="DocObligadoApp">
 
         <!-- CONTENEDOR PRINCIPAL -->
@@ -56,9 +55,7 @@
                                         <i class="icon-files-empty"></i>
                                         <label>Número Documento:</label>
                                         <div dx-autocomplete="filtros.NumeroDocumento"></div>
-                                    </div>
-                                </div> 
-                                <div class="dx-fieldset" >
+                                    </div>                               
                                     <div class="col-md-6" style="margin-top:1%">
                                         <i class="icon-file-text"></i>
                                         <label>Estado:</label>
@@ -71,17 +68,20 @@
                                         <label>Código Adquiriente:</label>
                                         <div dx-autocomplete="filtros.Adquiriente"></div>
                                     </div>
+
+                                   
                                 </div>
                                
                             </div>
 
 
                         </div>
-                         <div class="col-lg-12 text-right">
-                                    <br />
-                                    <br />
-                                    <div dx-button="ButtonOptionsConsultar"></div>
-                                </div>
+                        <div class="col-lg-12 text-right">
+                            <br />
+                            <br />
+                            <div dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
+                        </div>
+                         
 
 
                     </div>

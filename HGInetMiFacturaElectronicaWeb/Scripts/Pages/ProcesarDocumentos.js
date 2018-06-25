@@ -35,6 +35,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
         $("#FechaInicial").dxDateBox({
             name:"txtf",
             value: now,
+            width: '100%',
             max: fecha_fin,
             displayFormat: "yyyy-MM-dd",            
             onValueChanged: function (data) {
@@ -52,6 +53,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
         $("#FechaFinal").dxDateBox({
             value: now,
+            width: '100%',
             displayFormat: "yyyy-MM-dd",
             min: fecha_inicio,
             onValueChanged: function (data) {
@@ -210,7 +212,6 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                               caption: "Busqueda"
                           }
                       }
-
                 ],
                 filterRow: {
                     visible: true

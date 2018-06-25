@@ -21,9 +21,11 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
     $("#FechaInicial").dxDateBox({
         value: now,
+        width: '100%',
         displayFormat: "yyyy-MM-dd",
         onValueChanged: function (data) {
             fecha_inicio = new Date(data.value).toISOString();
+            $("#FechaFinal").dxDateBox({ min: fecha_inicio });
             if (new Date(data.value).toISOString() > fecha_fin) {
                 DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
                 $("#FechaInicial").dxDateBox({ value: fecha_fin });
@@ -35,9 +37,11 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
     $("#FechaFinal").dxDateBox({
         value: now,
+        width: '100%',
         displayFormat: "yyyy-MM-dd",
         onValueChanged: function (data) {
-            fecha_fin = new Date(data.value).toISOString();
+            fecha_fin = new Date(data.value).toISOString();            
+            $("#FechaInicial").dxDateBox({ max: fecha_fin });
             if (new Date(data.value).toISOString() < fecha_inicio) {
                 DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
                 $("#FechaFinal").dxDateBox({ value: fecha_inicio });
@@ -76,6 +80,9 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                    }
                }
            }
+
+        $("#FechaFinal").dxDateBox({ min: now });
+        $("#FechaInicial").dxDateBox({ max: now });
 
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
