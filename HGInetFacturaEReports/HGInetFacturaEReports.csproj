@@ -62,6 +62,18 @@
     <Compile Include="NotasCredito\Formato1Detalles.Designer.cs">
       <DependentUpon>Formato1Detalles.cs</DependentUpon>
     </Compile>
+    <Compile Include="NotasDebito\Formato1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotasDebito\Formato1.Designer.cs">
+      <DependentUpon>Formato1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotasDebito\Formato1Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotasDebito\Formato1Detalles.Designer.cs">
+      <DependentUpon>Formato1Detalles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\MensajesGenerales.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -91,6 +103,12 @@
       <DependentUpon>Formato1Detalles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NotasCredito\Formato1Detalles.resx">
+      <DependentUpon>Formato1Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotasDebito\Formato1.resx">
+      <DependentUpon>Formato1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotasDebito\Formato1Detalles.resx">
       <DependentUpon>Formato1Detalles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\MensajesGenerales.resx">
