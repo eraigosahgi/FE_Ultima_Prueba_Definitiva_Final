@@ -1,4 +1,6 @@
-﻿using HGInetMiFacturaElectonicaData;
+﻿using HGInetDIANServicios;
+using HGInetMiFacturaElectonicaController.Registros;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL;
@@ -119,9 +121,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
+
 				// representación de datos en objeto
 				var documento_obj = (dynamic)null;
-				
+
 				// lee el archivo XML en UBL desde la ruta pública
 				//XmlTextReader xml_reader = new XmlTextReader(documento.StrUrlArchivoUbl);
 
@@ -129,9 +132,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string contenido_xml = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
 
 				// valida el contenido del archivo
-				if(!string.IsNullOrWhiteSpace(contenido_xml))
+				if (string.IsNullOrWhiteSpace(contenido_xml))
 					throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
-					
+
 				// convierte el contenido de texto a xml
 				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
 
@@ -145,6 +148,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
 
 					documento_obj = FacturaXML.Convertir(conversion);
+					documento.StrCufe = documento_obj.Cufe;
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
@@ -157,7 +161,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// convierte los datos del objeto en texto XML 
 				StringBuilder txt_xml = new StringBuilder();
-				txt_xml.Append(xml_reader.ReadString());
+				txt_xml.Append(contenido_xml);
 
 				// cerrar la lectura del archivo xml
 				xml_reader.Close();
@@ -224,19 +228,38 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 				//Valida estado del documento en la Plataforma de la DIAN
-				//if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode())
-				// xxxxxxxx
+				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode())
+				{
+					respuesta = Consultar(documento, empresa, ref respuesta);
 
-
-				// envía el mail de documentos al adquiriente
-				//if (respuesta.IdProceso < ProcesoEstado.EnvioEmailAcuse.GetHashCode())
-				// xxxxxxxx
-
+					// envía el mail de documentos al adquiriente
+					if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
+					{
+						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+					}
+				}
 
 				// envía el mail de acuse de recibo al facturador electrónico
-				//if (respuesta.IdProceso < ProcesoEstado.EnvioRespuestaAcuse.GetHashCode())
-				// xxxxxxxx
+				if ((documento.IntAdquirienteRecibo > 0) && (documento.IntIdEstado != ProcesoEstado.Finalizacion.GetHashCode()))
+				{
 
+					Ctl_Documento ctl_documento = new Ctl_Documento();
+					bool email = ctl_documento.ReenviarRespuestaAcuse(documento.StrIdSeguridad, documento.TblEmpresasFacturador.StrMail);
+
+					if (email)
+					{
+						documento.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
+						documento.DatFechaActualizaEstado = fecha_actual;
+						ctl_documento.Actualizar(documento);
+						respuesta.IdProceso = documento.IntIdEstado;
+						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Finalizacion);
+						respuesta.MotivoRechazo = documento.StrAdquirienteMvoRechazo;
+						respuesta.FechaUltimoProceso = fecha_actual;
+						respuesta.ProcesoFinalizado = 1;
+					}
+
+				}
 			}
 			catch (Exception excepcion)
 			{

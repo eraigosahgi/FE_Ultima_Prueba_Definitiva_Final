@@ -95,6 +95,7 @@
     <Compile Include="ModeloServicio\General\Tercero.cs" />
     <Compile Include="ModeloServicio\Respuestas\DocumentoRespuesta.cs" />
     <Compile Include="ModeloServicio\Respuestas\Resolucion.cs" />
+    <Compile Include="ModeloServicio\Respuestas\RespuestaDian.cs" />
     <Compile Include="Modelo\ModeloAutenticacion.cs" />
     <Compile Include="Modelo\ModeloConexion.cs" />
     <Compile Include="Modelo\ModeloDatos.Context.cs">

@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Registros;
+﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
@@ -12,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
-    public partial class Ctl_Documentos
-    {
+	public partial class Ctl_Documentos
+	{
 
-        public static DocumentoRespuesta MailDocumentos(object documento, TblDocumentos documentoBd, TblEmpresas obligado, bool adquiriente_nuevo, TblEmpresas adquiriente, TblUsuarios adquiriente_usuario, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result) 
+		public static DocumentoRespuesta MailDocumentos(object documento, TblDocumentos documentoBd, TblEmpresas obligado, bool adquiriente_nuevo, TblEmpresas adquiriente, TblUsuarios adquiriente_usuario, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
 		{
 			Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 
@@ -28,15 +29,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
 				if (adquiriente_nuevo == true)
-				{	email.Bienvenida(adquiriente, adquiriente_usuario);
+				{
+					email.Bienvenida(adquiriente, adquiriente_usuario);
 				}
 
 				if (obligado.IntHabilitacion < 99)
-				{	//envío de los documentos al Obligado
+				{   //envío de los documentos al Obligado
 					email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
 				}
 				else
-				{	//envío de los documentos al Adquiriente
+				{   //envío de los documentos al Adquiriente
 					email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono);
 				}
 
@@ -55,12 +57,61 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-				
+
 			}
 			return respuesta;
 		}
 
+		/// <summary>
+		/// Valida usuario del adquiriente y hace el envio de la informacion
+		/// </summary>
+		/// <param name="documento"></param>
+		/// <param name="documentoBd"></param>
+		/// <param name="empresa"></param>
+		/// <param name="respuesta"></param>
+		/// <param name="documento_result"></param>
+		/// <returns></returns>
+		public static DocumentoRespuesta Envio(object documento, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+		{
+
+			try
+			{
+				TblUsuarios usuarioBd = null;
+				Ctl_Empresa empresa_config = new Ctl_Empresa();
+
+				TblEmpresas adquirienteBd = null;
+
+				//Obtiene la informacion del Adquiriente que se tiene en BD
+				adquirienteBd = empresa_config.Obtener(respuesta.Identificacion);
+
+				bool adquiriente_nuevo = false;
+
+				Ctl_Usuario _usuario = new Ctl_Usuario();
+
+				usuarioBd = _usuario.ObtenerUsuarios(respuesta.Identificacion, respuesta.Identificacion).FirstOrDefault();
+
+				//Creacion del Usuario del Adquiriente
+				if (usuarioBd == null)
+				{
+					_usuario = new Ctl_Usuario();
+					usuarioBd = _usuario.Crear(adquirienteBd);
+
+					adquiriente_nuevo = true;
+				}
+
+				// envía el mail de documentos y de creación de adquiriente
+				respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result);
+				ValidarRespuesta(respuesta);
+
+			}
+			catch (Exception excepcion)
+			{
+				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+			}
+
+			return respuesta;
 
 
-    }
+			}
+	}
 }

@@ -17,10 +17,12 @@ namespace HGInetDIANServicios
 
         public string ConsultaEstadoDescripcion { get; set; }
 
-        public string EstadoDian { get; set; }
+        public string CodigoEstadoDian { get; set; }
 
         public string EstadoDianDescripcion { get; set; }
+	
+		public EstadoDocumentoDian Estado { get; set; }
 
-        public string Mensaje { get; set; }
+		public string Mensaje { get; set; }
     }
 }
