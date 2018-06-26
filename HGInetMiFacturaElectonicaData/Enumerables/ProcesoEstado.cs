@@ -33,7 +33,7 @@ namespace HGInetMiFacturaElectonicaData
         [AmbientValue("privado")]
         CompresionXml = 6,
 
-        [Description("Envío ZIP")]
+        [Description("Envío Dian")]
         [AmbientValue("publico")]
         EnvioZip = 7,
 

@@ -1852,6 +1852,7 @@
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
+    <Content Include="Scripts\Pages\ConsultaDocumentosClientes.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
@@ -2678,6 +2679,7 @@
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConsultaDocumentosClientes.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresasSerial.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
@@ -2706,6 +2708,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
     <Compile Include="Properties\Constantes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2793,6 +2796,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.designer.cs">
       <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaDocumentosClientes.aspx.cs">
+      <DependentUpon>ConsultaDocumentosClientes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaDocumentosClientes.aspx.designer.cs">
+      <DependentUpon>ConsultaDocumentosClientes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaEmpresasSerial.aspx.cs">
       <DependentUpon>ConsultaEmpresasSerial.aspx</DependentUpon>
@@ -2982,7 +2992,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61433/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

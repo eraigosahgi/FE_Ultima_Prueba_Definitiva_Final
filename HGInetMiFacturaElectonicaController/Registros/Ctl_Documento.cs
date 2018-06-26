@@ -704,10 +704,39 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
-		#endregion
+        #endregion
 
 
-	}
 
 
-}
+        #region Consulta de documentos por cliente (Soporte)
+        /// <summary>
+        /// Obtiene un documento por empresa y los primeros 8 digitos del idseguridad o por la empresa-- Resolución y Numero del documento
+        /// </summary>
+        /// <param name="codigo_adquiente"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        public List<TblDocumentos> ObtenerDocumentoCliente(string codigo_facturador, int? numero_documento, string IdSeguridad = "*", string numero_resolucion = "*")
+        {
+
+
+            List<TblDocumentos> respuesta = (from datos in context.TblDocumentos
+                                             join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+                                             where datos.StrEmpresaFacturador.Equals(codigo_facturador)
+                                             && (datos.StrIdSeguridad.ToString().Contains(IdSeguridad) || IdSeguridad.Equals("*"))
+                                             && (numero_resolucion.Contains(datos.StrNumResolucion.ToString()) || numero_resolucion.Equals("*"))
+                                             && (datos.IntNumero==numero_documento || numero_documento==null)
+                                             orderby datos.DatFechaIngreso descending
+                                             select datos).ToList();
+            return respuesta;
+        }
+        #endregion      
+
+    }
+
+    }
+
+	

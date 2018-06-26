@@ -451,5 +451,53 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
         #endregion
+
+        #region Consulta de Documentos por Cliente (Soporte)
+        /// <summary>
+        /// Obtiene un documento por empresa y los primeros 8 digitos del idseguridad o por la empresa-- Resolución y Numero del documento
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="IdSeguridad"></param>
+        /// <param name="numero_resolucion"></param>        
+        /// <param name="numero_documento"></param>
+        /// <returns></returns>
+        public IHttpActionResult Get(string codigo_facturador, int? numero_documento,  string IdSeguridad="*", string numero_resolucion="*")
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                var  datos = ctl_documento.ObtenerDocumentoCliente(codigo_facturador, numero_documento, (IdSeguridad!=null)?IdSeguridad:"*", (numero_resolucion!=null)?numero_resolucion:"*");
+
+                var retorno = datos.Select(d => new
+                {
+                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
+                    d.DatFechaDocumento,
+                    d.DatFechaVencDocumento,
+                    d.IntVlrTotal,
+                    EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    d.StrAdquirienteMvoRechazo,
+                    IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+                    NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
+                    Xml = d.StrUrlArchivoUbl,
+                    Pdf = d.StrUrlArchivoPdf,
+                    d.StrIdSeguridad,
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
     }
 }
