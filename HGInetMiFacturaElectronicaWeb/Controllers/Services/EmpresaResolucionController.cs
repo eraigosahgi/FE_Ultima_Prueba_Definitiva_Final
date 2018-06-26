@@ -37,7 +37,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    ID = d.StrNumResolucion,
+                    ID =1,
                     Descripcion = d.StrNumResolucion
                 });
 

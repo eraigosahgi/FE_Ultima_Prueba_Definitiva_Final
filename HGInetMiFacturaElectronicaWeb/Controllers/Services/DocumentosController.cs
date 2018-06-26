@@ -4,6 +4,7 @@ using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
 using Newtonsoft.Json.Linq;
@@ -354,8 +355,34 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Ctl_Documento documento = new Ctl_Documento();
 
                 var lista = documento.ProcesarDocumentos(List_id_seguridad);
-                
-                return Ok();
+
+                List<DocumentoRespuesta> datos = Ctl_Documentos.Procesar(lista);
+
+                var retorno = datos.Select(d => new
+                {
+                    Aceptacion = d.Aceptacion,
+                    CodigoRegistro = d.CodigoRegistro,
+                    Cufe = d.Cufe,
+                    DescripcionProceso= (d.Error != null) ? d.Error.Mensaje: d.DescripcionProceso, 
+                    Documento =d.Documento,
+                    EstadoDianCodigoRespuesta = (d.EstadoDian!=null)? d.EstadoDian.CodigoRespuesta:"",
+                    EstadoDianDescripcion = (d.EstadoDian!=null)? d.EstadoDian.Descripcion: "",
+                    EstadoDianEstadoDocumento = (d.EstadoDian!=null)? d.EstadoDian.EstadoDocumento:0,
+                    EstadoDianUrlXmlRespuesta = (d.EstadoDian!=null)? d.EstadoDian.UrlXmlRespuesta:"",
+                    FechaRecepcion =d.FechaRecepcion,
+                    FechaUltimoProceso =d.FechaUltimoProceso,
+                    IdDocumento=d.IdDocumento,
+                    Identificacion=d.Identificacion,
+                    IdProceso=d.IdProceso,
+                    MotivoRechazo=d.MotivoRechazo,
+                    NumeroResolucion=d.NumeroResolucion,
+                    Prefijo=d.Prefijo,
+                    ProcesoFinalizado=d.ProcesoFinalizado,
+                    CodigoError = (d.Error!=null)? d.Error.Codigo:0 
+                    
+                });
+
+                return Ok(retorno);
             }
             catch (Exception excepcion)
             {

@@ -3,6 +3,7 @@ using HGInetDIANServicios.DianFactura;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaController.ServiciosDian;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
@@ -108,14 +109,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string archivo_xml = string.Format(@"{0}{1}.xml", documentoBd.StrPrefijo, documentoBd.IntNumero.ToString());
 
 				// ruta del xml
-				string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
-
-				// elimina el archivo xml si existe
-				if (Archivo.ValidarExistencia(ruta_xml))
+				string ruta_xml = string.Format(@"{0}{1}", carpeta_xml, archivo_xml);
+                
+                // elimina el archivo xml si existe
+                if (Archivo.ValidarExistencia(ruta_xml))
 					Archivo.Borrar(ruta_xml);
 
 				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-				if (empresa.IntHabilitacion < 99)
+				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
 					// obtiene los datos de prueba del proveedor tecnológico de la DIAN
 					DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;

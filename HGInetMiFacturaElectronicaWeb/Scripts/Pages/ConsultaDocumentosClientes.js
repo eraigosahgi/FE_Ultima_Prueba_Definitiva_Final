@@ -30,8 +30,19 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
     function cargarFiltros() {
 
+        $("#summary").dxValidationSummary({
+            readOnly: false,
+            showColonAfterLabel: true,
+            showValidationSummary: true,
+            validationGroup: "Consultasoporte",
+            onInitialized: function (e) {
+                formInstance = e.component;
+            }
+        });
+
         $("#txtempresaasociada").dxTextBox({
-            readOnly: true,            
+            readOnly: true,
+            validationGroup: "Consultasoporte",
             name: txtempresaasociada,
             onValueChanged: function (data) {
                 var empresa = null;
@@ -45,14 +56,25 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 }
                 Datos_empresa_Asociada = Asociada;                
             }
+        }).dxValidator({
+            validationRules: [{            
+                type: 'required',                
+                message: "Debe seleccionar la empresa"
+            }]
         });
 
         $("#txtcodigoplataforma").dxTextBox({            
             name: txtcodigoplataforma,
+            validationGroup: "Consultasoporte",
             maxLength:8,
             onValueChanged: function (data) {
                 Datos_codigo_plataforma = data.value;
             }
+        }).dxValidator({
+            validationRules: [{
+                type: 'required',
+                message: "Debe seleccionar el código de la plataforma"
+            }]
         });
       
 
@@ -94,7 +116,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             $('#divdocumento').show();
             Datos_codigo_plataforma = "*";
             //Obtener lista de Resoluciones
-            $http.get('/api/EmpresaResolucion?codigo_facturador=' + Datos_empresa_Asociada).then(function (response) {                
+            $http.get('/api/EmpresaResolucion?codigo_facturador=' + Datos_empresa_Asociada).then(function (response) {
+                console.log("Tipo: ", items_recibo);
+                console.log("Resolucion: ", JSON.parse(JSON.stringify(response.data)));
                 cargarResolucion( JSON.parse(JSON.stringify(response.data)));
             });
         } else {
@@ -107,39 +131,57 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
 
 
-    function cargarResolucion(Lista) {
-        //Define los campos y las opciones
-        $scope.Listaresolucion =
-            {
-                Resolucion: {
-                    searchEnabled: true,
-                    //Carga la data del control
-                    dataSource: new DevExpress.data.ArrayStore({
-                        data: Lista,
-                        key: "ID"
-                    }),
-                    displayExpr: "Descripcion",
-                    Enabled: true,
-                    placeholder: "Seleccione un Item",
-                    onValueChanged: function (data) {
-                        estado_recibo = data.value.ID;
-                        validarfiltros(estado_recibo);
-
+    function cargarResolucion(Lista) {  
+        $("#Listaresolucion").dxSelectBox({
+            placeholder: "seleccione el código de resolución",
+            displayExpr: "Descripcion",
+            dataSource: Lista,
+            onValueChanged: function (data) {
+                console.log("ID : ", data.value.ID);
+                Datos_Resolucion = data.value.Descripcion;
+            }
+        }).dxValidator({
+            validationRules: [
+                {
+                    type: 'custom', validationCallback: function (options) {
+                        if (validar()) {
+                            options.rule.message = "Debe seleccionar la resolución";
+                            return false;
+                        } else { return true; }
                     }
                 }
-            }
+            ]
+        });
     }
 
-
+    function validar() {       
+        if (Tipo != '1') {            
+            if (Datos_Resolucion.length>0 ){
+                console.log("Validacion Resolucion: ", Datos_Resolucion.length);
+                return true;
+            } else {
+                return false;
+            }
+                        
+        } else {
+            $('#divcodigoplataforma').show();
+            $('#divdocumento').hide();
+            Datos_Resolucion = "*";
+            Datos_Documento = "*";
+        }
+    }
 
 
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
         type: 'default',
+        validationGroup:"Consultasoporte",
         onClick: function (e) {
             consultar();
         }
     };
+
+
 
     function consultar() {
 

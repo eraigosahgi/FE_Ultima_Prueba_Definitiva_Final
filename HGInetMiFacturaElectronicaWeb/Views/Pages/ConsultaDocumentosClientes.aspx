@@ -14,7 +14,7 @@
         <div data-ng-controller="DocObligadoController">
             <div data-ng-include="'ModalConsultaEmpresas.aspx'"></div>
             <!-- FILTROS DE BÚSQUEDA -->
-
+            <form id="form1" action="your-action">
             <div class="col-md-12">
                 <div class="panel panel-white">
                     <div class="panel-heading">
@@ -63,7 +63,7 @@
                                     <div class="col-md-12 " id="divdocumento" hidden="hidden">
                                     <div class="col-md-6 " >
                                         <label style="margin-top: 16px; margin-bottom: 1%">Resolución:</label>                                        
-                                        <div data-dx-select-box="filtros.Listaresolucion" style="margin-left: -10px; margin-bottom: 1%"></div>
+                                        <div id="Listaresolucion" style="margin-left: -10px; margin-bottom: 1%"></div>
                                     </div>
                                     <div class="col-md-6 " >
                                         <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Número de Documento:</label>
@@ -79,15 +79,19 @@
                             <br />
                             <br />
                             <div dx-button="ButtonOptionsConsultar" style="margin-top:-30px; margin-right: 30px"></div>
+                            <div id="button"></div>
                         </div>
 
+                        <div class="dx-fieldset">
+                            <div id="summary"></div>
+                        </div>
 
 
                     </div>
 
                 </div>
             </div>
-
+                </form>
             <!--/FILTROS DE BÚSQUEDA -->
 
             <!-- DATOS -->

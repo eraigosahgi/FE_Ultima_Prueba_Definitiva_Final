@@ -174,7 +174,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                         caption: "Fecha Respuesta",
                         dataField: "FechaRespuesta",
                         dataType: "date",
-                        format: "yyyy-MM-dd hh:mm a",
+                        format: "yyyy-MM-dd HH:mm",
                         cssClass: "col-xs-3 col-md-1",
                         validationRules: [{
                             type: "required",

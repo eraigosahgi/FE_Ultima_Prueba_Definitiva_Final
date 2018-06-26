@@ -2,46 +2,46 @@
 
 var path = window.location.pathname;
 var ruta = window.location.href;
-ruta=ruta.replace(path, "/");
-document.write('<script type="text/javascript" src="'+ruta+'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
+ruta = ruta.replace(path, "/");
+document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
 
 angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento'])
-    
-.controller('ProcesarDocumentosController', function DocAdquirienteController($scope,$http,$location, SrvMaestrosEnum, SrvDocumento) {
-    
+
+.controller('ProcesarDocumentosController', function DocAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
+
     var codigo_adquiente = "", numero_documento = "", estado_recibo = "", fecha_inicio = "", fecha_fin = "", Estado = [], now = new Date();
-           
-    SrvMaestrosEnum.ObtenerEnum(0,"privado").then(function (data) {
+
+    SrvMaestrosEnum.ObtenerEnum(0, "privado").then(function (data) {
         Estado = data;
-        cargarFiltros();    
+        cargarFiltros();
     });
-      
-    SrvMaestrosEnum.ObtenerSesion().then(function (data) {    
-        codigo_adquiente = data[0].Identificacion;        
-        consultar();                      
+
+    SrvMaestrosEnum.ObtenerSesion().then(function (data) {
+        codigo_adquiente = data[0].Identificacion;
+        consultar();
     });
-    
-    var makeAsyncDataSource = function () {        
+
+    var makeAsyncDataSource = function () {
         return new DevExpress.data.CustomStore({
             loadMode: "raw",
             key: "ID",
-            load: function () {                                
+            load: function () {
                 return JSON.parse(JSON.stringify(Estado));
             }
         });
     };
 
-    function cargarFiltros() {        
+    function cargarFiltros() {
         $("#FechaInicial").dxDateBox({
-            name:"txtf",
+            name: "txtf",
             value: now,
             width: '100%',
             max: fecha_fin,
-            displayFormat: "yyyy-MM-dd",            
+            displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_inicio = new Date(data.value).toISOString();
                 $("#FechaFinal").dxDateBox({ min: fecha_inicio });
-                            
+
                 if (new Date(data.value).toISOString() > fecha_fin) {
                     DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
                     $("#FechaInicial").dxDateBox({ value: fecha_fin });
@@ -67,10 +67,10 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
             }
 
         });
-        
-       
 
-        $("#filtrosEstadoRecibo").dxDropDownBox({            
+
+
+        $("#filtrosEstadoRecibo").dxDropDownBox({
             valueExpr: "ID",
             placeholder: "Seleccionar ",
             displayExpr: "Descripcion",
@@ -86,8 +86,8 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                                  {
                                      caption: "Descripción",
                                      dataField: "Descripcion",
-                                     title:"Descripcion",
-                                     width:500
+                                     title: "Descripcion",
+                                     width: 500
 
                                  }],
                         hoverStateEnabled: true,
@@ -95,13 +95,13 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                         //filterRow: { visible: true },
                         scrolling: { mode: "infinite" },
                         height: 300,
-                        
+
                         selection: { mode: "multiple" },
                         selectedRowKeys: value,
                         onSelectionChanged: function (selectedItems) {
                             var keys = selectedItems.selectedRowKeys;
                             e.component.option("value", keys);
-                            estado_recibo=keys;
+                            estado_recibo = keys;
                         }
                     });
 
@@ -130,7 +130,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                         }
                     }
                 }
-       
+
         var mensaje_acuse = "";
 
 
@@ -146,16 +146,16 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
         $("#FechaInicial").dxDateBox({ max: now });
     }
     //Consultar DOcumentos
-    function consultar() {       
-
+    function consultar() {
+        $('#panelresultado').hide();
         if (fecha_inicio == "")
             fecha_inicio = now.toISOString();
 
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
 
-        
-        SrvDocumento.ObtenerDocumentos(numero_documento,estado_recibo,fecha_inicio,fecha_fin).then(function (data) {
+
+        SrvDocumento.ObtenerDocumentos(numero_documento, estado_recibo, fecha_inicio, fecha_fin).then(function (data) {
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data,
                 paging: {
@@ -183,7 +183,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                          caption: "Fecha Recepción",
                          dataField: "DatFechaIngreso",
                          dataType: "date",
-                         format: "yyyy-MM-dd hh:mm a",
+                         format: "yyyy-MM-dd HH:mm",
                          cssClass: "col-md-2"
 
                      },
@@ -218,7 +218,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                 }
 
                 , onSelectionChanged: function (selectedEstado) {
-                    var lista='' ;
+                    var lista = '';
                     var data = selectedEstado.selectedRowsData;
                     if (data.length > 0) {
                         if (data.length > 1) {
@@ -229,7 +229,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                             lista = "[" + lista + "]"
                             $scope.documentos = lista;
                             $('#lbltotaldocumentos').val('Documentos a Procesar : ' + data.length);
-                            $scope.total = data.length;                            
+                            $scope.total = data.length;
 
                         } else {
                             lista += "{Documentos: '" + data[0].IdSeguridad + "'}";
@@ -269,10 +269,125 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
     function ProcesarDocumentos() {
         if ($scope.total > 0) {
-            SrvDocumento.ProcesarDocumentos($scope.documentos).then(function (data) {
-                DevExpress.ui.notify("Se procesaron los documentos exitosamente ", 'success', 2000);
+            
+            SrvDocumento.ProcesarDocumentos($scope.documentos).then(function (data) {                
+                $("#gridDocumentosProcesados").dxDataGrid({
+                    dataSource: data,
+                    columnHidingEnabled: true,
+                    paging: {
+                        pageSize: 20
+                    },
+                    pager: {
+                        showPageSizeSelector: true,
+                        allowedPageSizes: [5, 10, 20],
+                        showInfo: true
+                    }
+
+                 , loadPanel: {
+                     enabled: true
+                 },
+                    headerFilter: {
+                        visible: true
+                    },
+                    //Formatos personalizados a las columnas 
+                    onCellPrepared: function (options) {
+                        var fieldData = options.value,
+                            fieldHtml = "";
+                        try {                          
+
+                            if (options.data.CodigoError == 0) {
+                                estado = " style='color:green;' title='Proceso exitoso'";
+                            } else {
+                                estado = " style='color:red;' title='Error'";
+                            }
+
+                        } catch (err) {
+
+                        }
+                    }
+               , allowColumnResizing: true
+               , columns: [
+                   {
+                       caption: 'Estado',
+                       dataField: 'Estado',
+                       cellTemplate: function (container, options) {
+                           $("<div style='text-align:center'>")
+                               .append($("<a taget=_self class='icon-circle2'" + estado + ">"))
+                               .appendTo(container);
+                       }
+                   },
+                    {
+                        caption: "Fecha Recepción",
+                        dataField: "FechaRecepcion",
+                        dataType: "date",
+                        format: "yyyy-MM-dd HH:mm"
+
+                    },
+
+                   {
+                       caption: "Fecha Ultimo Proceso",
+                       dataField: "FechaUltimoProceso",
+                       dataType: "date",
+                       format: "yyyy-MM-dd HH:mm"
+
+                   },
+                    {
+                        caption: "Resultado",
+                        dataField: "DescripcionProceso"
+                    },                                     
+                    "EstadoDianCodigoRespuesta" ,
+                    "EstadoDianDescripcion" ,
+                    "EstadoDianEstadoDocumento" ,
+                    "EstadoDianUrlXmlRespuesta" ,               
+               {
+                   caption: "Aceptacion",
+                   dataField: "Aceptacion"
+               },
+                     {
+                         caption: "CodigoRegistro",
+                         dataField: "CodigoRegistro"
+                     },
+                     {
+                         caption: "Cufe",
+                         dataField: "Cufe"
+                     },                   
+                     {
+                         caption: "Documento",
+                         dataField: "Documento"
+                     },
+                     {
+                         caption: "EstadoDian",
+                         dataField: "EstadoDian"
+                     },
+                     {
+                         caption: "IdDocumento",
+                         dataField: "IdDocumento"
+                     },
+                     {
+                         caption: "Identificacion",
+                         dataField: "Identificacion"
+                     },
+                     {
+                         caption: "IdProceso",
+                         dataField: "IdProceso"
+                     },
+                    {
+                        caption: "MotivoRechazo",
+                        dataField: "MotivoRechazo"
+                    },
+                    {
+                        caption: "NumeroResolucion",
+                        dataField: "NumeroResolucion"
+                    }
+
+               ]
+                }).dxDataGrid("instance");
+
+                consultar();
+                $('#panelresultado').show();
             });
         }
+        
     }
 
 });

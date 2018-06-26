@@ -263,7 +263,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException);
+				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException);
 
 				LogExcepcion.Guardar(excepcion);
 				// no se controla excepción

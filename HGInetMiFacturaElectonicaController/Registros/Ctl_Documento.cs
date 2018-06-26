@@ -606,27 +606,25 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <returns></returns>
         public List<TblDocumentos> ObtenerDocumentosaProcesar(System.Guid? IdSeguridad,  string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
+
+            if (estado_recibo == null || estado_recibo == "")
+            {
+                Ctl_MaestrosEnum Mastros = new Ctl_MaestrosEnum();
+
+                List<string[]> Lista_recibos = Mastros.ListaEnum(0, "privado");
+                estado_recibo = Coleccion.ConvertirString(Lista_recibos);
+            }
+
             fecha_inicio = fecha_inicio.Date;
-            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
-
-            short cod_estado_recibo = -1;
-            short.TryParse(estado_recibo, out cod_estado_recibo);           
-            
-            if (string.IsNullOrWhiteSpace(estado_recibo))
-                estado_recibo = "*";
-            if (string.IsNullOrWhiteSpace(estado_recibo))
-                estado_recibo = "*";
-
-            if (estado_recibo.Equals("3"))
-                estado_recibo = "2,3";
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);     
 
             List<string> estados = Coleccion.ConvertirLista(estado_recibo);
 
             var respuesta = (from datos in context.TblDocumentos
                              join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
                              where  ((datos.StrIdSeguridad==IdSeguridad) || IdSeguridad ==null)
-                                           && (estados.Contains(datos.IntIdEstado.ToString()) || estado_recibo.Equals("*"))
-                                           && (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
+                            && (estado_recibo.Contains(datos.IntIdEstado.ToString()))
+                            && (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
                              orderby datos.DatFechaIngreso descending
                              select datos).ToList();
 
@@ -686,17 +684,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="List_id_seguridad"></param>        
 		/// <returns></returns>
-		public bool ProcesarDocumentos(List<System.Guid> List_id_seguridad)
+		public List<TblDocumentos> ProcesarDocumentos(List<System.Guid> List_id_seguridad)
 		{
 			try
 			{
 				List<TblDocumentos> retorno = (from doc in context.TblDocumentos
 											   where List_id_seguridad.Contains(doc.StrIdSeguridad)
 											   select doc).ToList();
+                
 
-				Ctl_Documentos.Procesar(retorno);
-
-				return true;
+				return retorno;
 
 			}
 			catch (Exception excepcion)
