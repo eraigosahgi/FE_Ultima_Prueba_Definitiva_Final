@@ -1,5 +1,5 @@
 ﻿DevExpress.localization.locale(navigator.language);
-
+var opc_pagina = "1332";
 var TiposHabilitacion = [];
 
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
@@ -32,6 +32,35 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             $('#SelecionarEmpresa').hide();
             $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
+
+        //Obtiene el usuario autenticado.
+        $http.get('/api/Usuario/').then(function (response) {
+            //Obtiene el código del permiso.
+            $http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
+                $("#wait").hide();
+                try {
+                    var respuesta;
+
+                    //Valida si el id_seguridad contiene datos
+                    if (id_seguridad)
+                        respuesta = response.data[0].Editar;
+                    else
+                        respuesta = response.data[0].Agregar
+
+                    //Valida la visibilidad del control según los permisos.
+                    if (respuesta)
+                        $('#button').show();
+                    else
+                        $('#button').hide();
+                } catch (err) {
+                    DevExpress.ui.notify(err.message, 'error', 3000);
+                }
+            }, function errorCallback(response) {
+                $('#wait').hide();
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            });
+        });
+
         CargarFormulario();
     });
 
@@ -320,7 +349,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                     $("#Facturador").dxCheckBox({ value: 1 });
                     $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
                 }
-                
+
 
             } catch (err) {
                 DevExpress.ui.notify(err.message + ' Validar Estado Producción', 'error', 7000);

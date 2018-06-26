@@ -1,5 +1,5 @@
 ﻿DevExpress.localization.locale(navigator.language);
-
+var opc_pagina = "1333";
 var ModalSerialEmpresaApp = angular.module('ModalSerialEmpresaApp', []);
 
 var SerialEmpresaApp = angular.module('SerialEmpresaApp', ['ModalSerialEmpresaApp', 'dx', 'appsrvusuario']);
@@ -243,10 +243,38 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
 //Controlador para gestion el registro del serial
 ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalSerialEmpresaController($scope, $http, $location, srvusuario) {
 
+
+    $http.get('/api/DatosSesion/').then(function (response) {
+        var codigo_facturador = response.data[0].Identificacion;
+
+        //Obtiene el usuario autenticado.
+        $http.get('/api/Usuario/').then(function (response) {
+            //Obtiene el código del permiso.
+            $http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
+                $("#wait").hide();
+                try {
+
+                    $scope.Visibilidad = response.data[0].Editar;
+
+                } catch (err) {
+                    DevExpress.ui.notify(err.message, 'error', 3000);
+                }
+            }, function errorCallback(response) {
+                $('#wait').hide();
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            });
+        });
+    });
+
+
+
+
     var Datos_Resolucion = "", Datos_Serial = "", Datos_correo = "";
 
     //Define los campos del Formulario  
     $(function () {
+
+
         $("#summary").dxValidationSummary({});
 
         $("#txtSerial").dxTextBox({

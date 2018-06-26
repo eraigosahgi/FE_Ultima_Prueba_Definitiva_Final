@@ -57,6 +57,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
 
+        /// <summary>
+        /// Obtiene los permisos del usuario autenticado y el usuario que se  está gestionando (creando - actualizando)
+        /// </summary>
+        /// <param name="usuario_autenticado"></param>
+        /// <param name="empresa_autenticada"></param>
+        /// <param name="codigo_usuario"></param>
+        /// <param name="identificacion_empresa"></param>
+        /// <returns></returns>
         public IHttpActionResult Get(string usuario_autenticado, string empresa_autenticada, string codigo_usuario, string identificacion_empresa)
         {
             try
@@ -93,7 +101,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
 
-
+        /// <summary>
+        /// Obtiene el permiso por código
+        /// </summary>
+        /// <param name="codigo_opcion"></param>
+        /// <returns></returns>
         public IHttpActionResult Get(int codigo_opcion)
         {
             try
@@ -121,6 +133,50 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
+
+
+        /// <summary>
+        /// Obtiene permisos por código, empresa y usuario.
+        /// </summary>
+        /// <param name="codigo_usuario"></param>
+        /// <param name="identificacion_empresa"></param>
+        /// <param name="codigo_opcion"></param>
+        /// <returns></returns>
+        public IHttpActionResult Get(string codigo_usuario, string identificacion_empresa, string codigo_opcion)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                Ctl_OpcionesUsuario clase_opc_usuario = new Ctl_OpcionesUsuario();
+
+                List<TblOpcionesUsuario> datos = clase_opc_usuario.ObtenerOpcionesUsuarios(codigo_usuario, identificacion_empresa, codigo_opcion, false);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    Codigo = d.IntIdOpcion,
+                    Descripcion = d.TblOpciones.StrDescripcion,
+                    Consultar = d.IntConsultar,
+                    Agregar = d.IntAgregar,
+                    Editar = d.IntEditar,
+                    Eliminar = d.IntEliminar,
+                    Anular = d.IntAnular,
+                    Gestion = d.IntGestion
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
 
         /// <summary>
         /// Almacena los permisos del usuario en la base de datos

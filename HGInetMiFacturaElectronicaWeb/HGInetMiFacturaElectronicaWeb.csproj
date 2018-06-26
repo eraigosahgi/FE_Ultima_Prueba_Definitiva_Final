@@ -1840,6 +1840,7 @@
     <Content Include="Scripts\Images\Autenticacion2.jpg" />
     <Content Include="Scripts\Images\ImgIndex.jpg" />
     <Content Include="Scripts\Images\ImgIndex.png" />
+    <Content Include="Scripts\Images\Logo.png" />
     <Content Include="Scripts\Images\LogoHGInet.jpg" />
     <Content Include="Scripts\Images\LogoHGInet.PNG" />
     <Content Include="Scripts\Images\LogoPlataforma.png" />

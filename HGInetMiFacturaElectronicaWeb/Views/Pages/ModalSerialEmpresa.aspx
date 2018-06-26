@@ -8,9 +8,7 @@
 </head>
 <body>
 
-    <script src="../../Scripts/Pages/ModalSerial.js"></script>
-
-
+    
     <form id="form1">
         <div id="modal_Serial_empresa" class="modal fade" style="display: none;">
             <div class="modal-dialog">
@@ -25,28 +23,28 @@
 
                         <div class="panel panel-white">
                             <div class="col-md-2">
-                                <label  ">Nit:</label>
+                                <label>Nit:</label>
                             </div>
                             <div class="col-md-10 col-xs-12">
                                 <div id="txtnitEmpresa"></div>
                             </div>
 
                             <div class="col-md-2 col-xs-12">
-                                <label  ">Nombre:</label>
+                                <label>Nombre:</label>
                             </div>
                             <div class="col-md-10 col-xs-12">
                                 <div id="txtnombre"></div>
                             </div>
 
                             <div class="col-md-2 col-xs-12">
-                                <label  ">Email:</label>
+                                <label>Email:</label>
                             </div>
 
                             <div class="col-md-10 col-xs-12">
                                 <div id="txtemail"></div>
                             </div>
                             <div class="col-md-12">
-                                <label style="margin: 0px; margin-top: 16px; ">Serial de Activación:<strom style="color: red;">*</label>
+                                <label style="margin: 0px; margin-top: 16px;">Serial de Activación:<strom style="color: red;">*</label>
                                 <div id="txtSerial"></div>
                             </div>
 
@@ -64,7 +62,7 @@
                         </div>
                         <div id="divsombra" class="modal-footer">
                             <input id="btncancelar" type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar" style="margin: 1%;" />
-                            <div id="btnActivar" style="margin: 1%;"></div>
+                            <div ng-if="Visibilidad" id="btnActivar" style="margin: 1%;"></div>
                         </div>
 
                     </div>

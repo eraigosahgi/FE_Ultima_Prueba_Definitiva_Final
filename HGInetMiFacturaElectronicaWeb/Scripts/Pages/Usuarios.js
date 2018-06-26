@@ -1,5 +1,5 @@
 ﻿DevExpress.localization.locale(navigator.language);
-
+var opc_pagina = "1331";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var ConsultaUsuarioApp = angular.module('ConsultaUsuarioApp', ['dx', 'ModalEmpresasApp']);
@@ -146,6 +146,35 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             $('#SelecionarEmpresa').hide();
             $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
+
+        //Obtiene el usuario autenticado.
+        $http.get('/api/Usuario/').then(function (response) {
+            //Obtiene el código del permiso.
+            $http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
+                $("#wait").hide();
+                try {
+                    var respuesta;
+
+                    //Valida si el id_seguridad contiene datos
+                    if (id_seguridad)
+                        respuesta = response.data[0].Editar;
+                    else
+                        respuesta = response.data[0].Agregar
+
+                    //Valida la visibilidad del control según los permisos.
+                    if (respuesta)
+                        $('#button').show();
+                    else
+                        $('#button').hide();
+                } catch (err) {
+                    DevExpress.ui.notify(err.message, 'error', 3000);
+                }
+            }, function errorCallback(response) {
+                $('#wait').hide();
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            });
+        });
+
     });
 
     var Datos_nombres = "",
@@ -189,13 +218,13 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         .dxValidator({
             validationRules: [{
                 type: 'custom', validationCallback: function (options) {
-                    if ((Datos_empresa!=Datos_usuario)&& Datos_apellidos=='') {
+                    if ((Datos_empresa != Datos_usuario) && Datos_apellidos == '') {
                         options.rule.message = "Debe Indicar el apellido";
                         return false;
-                    } else {                        
+                    } else {
                         return true;
                     }
-                }                
+                }
             }, {
                 type: 'stringLength',
                 max: 50,
@@ -227,13 +256,13 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         .dxValidator({
             validationRules: [{
                 type: 'custom', validationCallback: function (options) {
-                    if ((Datos_empresa!=Datos_usuario)&& Datos_telefono=='') {
+                    if ((Datos_empresa != Datos_usuario) && Datos_telefono == '') {
                         options.rule.message = "Debe introducir el Teléfono";
                         return false;
-                    } else {                        
-                        return true;                       
+                    } else {
+                        return true;
                     }
-                }                
+                }
             }, {
                 type: "stringLength",
                 max: 50,
@@ -388,7 +417,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 $("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
                 $('#SelecionarEmpresa').hide();
 
-                var empresa = Datos_empresa.split(' -- ');                
+                var empresa = Datos_empresa.split(' -- ');
 
                 $http.get('/api/Usuario/').then(function (response) {
                     //string usuario_autenticado, string empresa_autenticada, string codigo_usuario, string identificacion_empresa
@@ -422,7 +451,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 });
 
 
-                if (Datos_empresa == Datos_usuario) {                 
+                if (Datos_empresa == Datos_usuario) {
                     $('#lblapellido').text('Apellidos:');
                     $('#lbltelefono').text('Teléfono:');
                 }

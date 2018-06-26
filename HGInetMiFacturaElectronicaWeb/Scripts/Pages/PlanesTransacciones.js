@@ -1,5 +1,5 @@
 ﻿DevExpress.localization.locale(navigator.language);
-
+var opc_pagina = "1334";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx']);
@@ -8,6 +8,8 @@ var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', '
 GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location) {
 
     var now = new Date();
+
+    var StrIdSeguridad = location.search.split('IdSeguridad=')[1];
 
     var codigo_facturador = "",
            numero_documento = "",
@@ -27,6 +29,34 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             $('#SelecionarEmpresa').hide();
             $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
+
+        //Obtiene el usuario autenticado.
+        $http.get('/api/Usuario/').then(function (response) {
+            //Obtiene el código del permiso.
+            $http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
+                $("#wait").hide();
+                try {
+                    var respuesta;
+
+                    //Valida si el id_seguridad contiene datos
+                    if (StrIdSeguridad)
+                        respuesta = response.data[0].Editar;
+                    else
+                        respuesta = response.data[0].Agregar
+
+                    //Valida la visibilidad del control según los permisos.
+                    if (respuesta)
+                        $('#button').show();
+                    else
+                        $('#button').hide();
+                } catch (err) {
+                    DevExpress.ui.notify(err.message, 'error', 3000);
+                }
+            }, function errorCallback(response) {
+                $('#wait').hide();
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            });
+        });
 
     });
 
@@ -224,7 +254,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 
     //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
-    var StrIdSeguridad = location.search.split('IdSeguridad=')[1];
+
     if (StrIdSeguridad != '' && StrIdSeguridad != null) {
         Consultar(StrIdSeguridad);
     }
@@ -439,8 +469,8 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                          displayFormat: " {0} Total ",
                          valueFormat: "currency"
                      }]
-                 
-                    , totalItems: [{                        
+
+                    , totalItems: [{
                         column: "Valor",
                         displayFormat: "{0}",
                         valueFormat: "currency",
@@ -451,10 +481,10 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                         valueFormat: 'fixedPoint',
                         displayFormat: '{0}'
 
-                    }                   
+                    }
                     ]
                  }
-                    ,filterRow: {
+                    , filterRow: {
                         visible: true
                     }
                 });
