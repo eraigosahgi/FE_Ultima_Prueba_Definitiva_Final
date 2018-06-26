@@ -24,9 +24,6 @@
     <link href="../../Scripts/assets/css/core.css" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/assets/css/components.css" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/assets/css/colors.css" rel="stylesheet" type="text/css" />
-    <link href="../../assets/css/extras/animate.min.css" rel="stylesheet" type="text/css" />
-     <link href="../../assets-custom/css/components.css" rel="stylesheet" type="text/css" />
-     <link href="../../assets-custom/css/colors.css" rel="stylesheet" type="text/css" />
     <!-- /global stylesheets -->
 
     <!-- Core JS files -->
@@ -91,6 +88,17 @@
         .swal-button {
             background-color: #337ab7;
         }
+
+        .divImg {
+            border-radius: 40px;
+            -moz-border-radius: 40px;
+            -webkit-border-radius: 50px;
+            border-style: solid;
+            border-color: white;
+            border-right-width: 15px;
+            border-left-width: 15px;
+            background-color: white;
+        }
     </style>
     <link href="../../Content/dx.hgi.css" rel="stylesheet" />
 
@@ -98,9 +106,9 @@
 <body>
     <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
-        <div class="modal" style="background-color: lightslategray; opacity: 0.4; display: block;"></div>
+        <div class="modal" style="background-color: lightslategray; opacity: 0.6; display: block;"></div>
         <div>
-            <img style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
+            <img class="divImg" style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
         </div>
 
     </div>
@@ -126,9 +134,9 @@
 
             <div class="navbar-collapse collapse" id="navbar-mobile">
                 <ul class="nav navbar-nav">
-                  <li><a class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
-                   
-                     <li class="dropdown">
+                    <li><a class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
+
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="icon-puzzle3"></i>
                         </a>
