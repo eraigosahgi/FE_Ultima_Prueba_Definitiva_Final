@@ -720,6 +720,20 @@ namespace HGInetMiFacturaElectonicaController.Registros
         {
 
 
+            if (codigo_facturador == "")
+                throw new ApplicationException("Debe Indicar el Facturador");
+
+            if (IdSeguridad == "*" && (numero_resolucion == "*" || numero_documento == 0 || numero_documento == null))
+                throw new ApplicationException("No se han especificado los criterios de búsqueda");
+
+            if ((IdSeguridad != "*" && IdSeguridad != null) && (numero_resolucion != "*" || numero_documento != null))
+                throw new ApplicationException("No se han especificado los criterios de búsqueda");
+
+            if (IdSeguridad != "*" && IdSeguridad != null)
+                if ((IdSeguridad.Length != 8))
+                    throw new ApplicationException("El codigo de plataforma debe ser de 8 digitos");
+
+
             List<TblDocumentos> respuesta = (from datos in context.TblDocumentos
                                              join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
                                              where datos.StrEmpresaFacturador.Equals(codigo_facturador)

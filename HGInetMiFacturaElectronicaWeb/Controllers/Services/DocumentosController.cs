@@ -378,7 +378,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroResolucion=d.NumeroResolucion,
                     Prefijo=d.Prefijo,
                     ProcesoFinalizado=d.ProcesoFinalizado,
-                    CodigoError = (d.Error!=null)? d.Error.Codigo:0 
+                    CodigoError = (d.Error!=null)? d.Error.Mensaje : ""
                     
                 });
 
@@ -496,6 +496,20 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 Ctl_Documento ctl_documento = new Ctl_Documento();
+
+                if (codigo_facturador=="")
+                    throw new ApplicationException("Debe Indicar el Facturador");
+
+                if (IdSeguridad == "*" && (numero_resolucion=="*" || numero_documento == 0 || numero_documento ==null))
+                    throw new ApplicationException("No se han especificado los criterios de búsqueda");
+
+                if ((IdSeguridad != "*" && IdSeguridad != null) && (numero_resolucion != "*" || numero_documento != null))
+                    throw new ApplicationException("No se han especificado los criterios de búsqueda");
+                
+                if (IdSeguridad != "*" && IdSeguridad != null )
+                    if ((IdSeguridad.Length != 8))
+                        throw new ApplicationException("El codigo de plataforma debe ser de 8 digitos");
+
                 var  datos = ctl_documento.ObtenerDocumentoCliente(codigo_facturador, numero_documento, (IdSeguridad!=null)?IdSeguridad:"*", (numero_resolucion!=null)?numero_resolucion:"*");
 
                 var retorno = datos.Select(d => new
@@ -519,10 +533,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 return Ok(retorno);
             }
-            catch (Exception)
+            catch (Exception excepcion)
             {
-
-                throw;
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
         #endregion

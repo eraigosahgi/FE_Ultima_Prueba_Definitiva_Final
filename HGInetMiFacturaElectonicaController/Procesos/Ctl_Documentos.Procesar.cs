@@ -50,7 +50,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Cufe = documento.StrCufe,
 						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
 						Documento = documento.IntNumero,
-						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 						FechaRecepcion = documento.DatFechaIngreso,
 						FechaUltimoProceso = documento.DatFechaActualizaEstado,
 						IdDocumento = documento.StrIdSeguridad.ToString(),

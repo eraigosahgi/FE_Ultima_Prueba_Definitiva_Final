@@ -5,8 +5,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
     <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/ConsultaDocumentosClientes.js"></script>    
-    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>    
+    <script src="../../Scripts/Pages/ConsultaDocumentosClientes.js"></script>
+    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
 
     <div data-ng-app="DocObligadoApp">
 
@@ -14,84 +14,85 @@
         <div data-ng-controller="DocObligadoController">
             <div data-ng-include="'ModalConsultaEmpresas.aspx'"></div>
             <!-- FILTROS DE BÚSQUEDA -->
-            <form id="form1" action="your-action">
-            <div class="col-md-12">
-                <div class="panel panel-white">
-                    <div class="panel-heading">
-                        <h6 class="panel-title">Filtros de Búsqueda<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
-                        <div class="heading-elements">
-                            <ul class="icons-list">
-                                <li><a data-action="collapse"></a></li>
-                            </ul>
+            <form id="form1" >
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading">
+                            <h6 class="panel-title">Filtros de Búsqueda<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
+                            <div class="heading-elements">
+                                <ul class="icons-list">
+                                    <li><a data-action="collapse"></a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="panel-body">
+                        <div class="panel-body">
 
-                        <div class="col-lg-12">
+                            <div class="col-lg-12">
 
-                            <div class="row">
+                                <div class="row">
 
-                                <div class="dx-fieldset">
+                                    <div class="dx-fieldset">
 
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 col-xs-10">
-                                            <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Empresa Asociada:</label>
-                                            <div id="txtempresaasociada" style="margin-left: -10px; margin-bottom: 1%"></div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 col-xs-10">
+                                                <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Empresa Asociada:</label>
+                                                <div id="txtempresaasociada" style="margin-left: -10px; margin-bottom: 1%"></div>
 
+                                            </div>
+
+                                            <div class="col-md-4 col-xs-2" style="margin-top: 2%">
+                                                <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba;">
+                                                    <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4" style="margin-top: 1%">
+                                                <i class="icon-file-text"></i>
+                                                <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Tipo de Busqueda:</label>
+                                                <div id="Tipo" style="margin-left: -10px; margin-bottom: 1%"></div>
+                                            </div>
                                         </div>
 
-                                        <div class="col-md-4 col-xs-2" style="margin-top: 2%">
-                                            <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba;">
-                                                <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
-                                            </a>
+
+                                    </div>
+                                    <div class="dx-fieldset">
+                                        <div class="col-md-12" id="divcodigoplataforma" hidden="hidden">
+                                            <label style="margin-bottom: 1%">Código de la plataforma:</label>
+                                            <div id="txtcodigoplataforma" style="margin-bottom: 1%; margin-right: 10px;"></div>
                                         </div>
-                                        <div class="col-md-4" style="margin-top: 1%">
-                                            <i class="icon-file-text"></i>
-                                            <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Tipo de Busqueda:</label>
-                                            <div data-dx-select-box="filtros.Tipo" style="margin-left: -10px; margin-bottom: 1%"></div>
+                                        <div class="col-md-12 " id="divdocumento" hidden="hidden">
+                                            <div class="col-md-6 ">
+                                                <label style="margin-top: 16px; margin-bottom: 1%">Resolución:</label>
+                                                <div id="Listaresolucion" style="margin-left: -10px; margin-bottom: 1%"></div>
+                                            </div>
+                                            <div class="col-md-6 ">
+                                                <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Número de Documento:</label>
+                                                <div id="txtDocumento" style="margin-left: -10px; margin-bottom: 1%"></div>
+                                            </div>
                                         </div>
                                     </div>
-
-
                                 </div>
-                                <div class="dx-fieldset">
-                                    <div class="col-md-12" id="divcodigoplataforma" hidden="hidden">
-                                        <label style="margin-bottom: 1%">Código de la plataforma:</label>
-                                        <div id="txtcodigoplataforma" style="margin-bottom: 1%; margin-right: 10px;"></div>
-                                    </div>
-                                    <div class="col-md-12 " id="divdocumento" hidden="hidden">
-                                    <div class="col-md-6 " >
-                                        <label style="margin-top: 16px; margin-bottom: 1%">Resolución:</label>                                        
-                                        <div id="Listaresolucion" style="margin-left: -10px; margin-bottom: 1%"></div>
-                                    </div>
-                                    <div class="col-md-6 " >
-                                        <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Número de Documento:</label>
-                                        <div id="txtDocumento" style="margin-left: -10px; margin-bottom: 1%"></div>
-                                    </div>
-                                        </div>
-                                </div>
+
+
+                            </div>
+                            <div class="col-lg-12 text-right">
+                                <br />
+                                <br />
+                                <!--<div dx-button="ButtonOptionsConsultar" style="margin-top: -30px; margin-right: 30px"></div>-->
+                                <div id="summary"></div>
+                                <div id="button"></div>
+                            </div>
+
+                            <div class="dx-fieldset">
+                                
                             </div>
 
 
                         </div>
-                        <div class="col-lg-12 text-right">
-                            <br />
-                            <br />
-                            <div dx-button="ButtonOptionsConsultar" style="margin-top:-30px; margin-right: 30px"></div>
-                            <div id="button"></div>
-                        </div>
-
-                        <div class="dx-fieldset">
-                            <div id="summary"></div>
-                        </div>
-
 
                     </div>
-
                 </div>
-            </div>
-                </form>
+            </form>
             <!--/FILTROS DE BÚSQUEDA -->
 
             <!-- DATOS -->

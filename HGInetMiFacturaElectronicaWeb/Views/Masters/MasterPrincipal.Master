@@ -339,6 +339,10 @@
                                                     <li runat="server" id="menu_1341">
                                                         <asp:HyperLink runat="server" ID="link_1341" class="legitRipple" NavigateUrl="~/Views/Pages/ProcesarDocumentos.aspx"><i class="icon-sort-time-asc"></i><span style="margin: -10px">Procesar Documentos</span></asp:HyperLink>
                                                     </li>
+
+                                                    <li runat="server" id="menu_1342">
+                                                        <asp:HyperLink runat="server" ID="HyperLink1" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaDocumentosClientes.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta de Documento</span></asp:HyperLink>
+                                                    </li>
                                                 </ul>
                                             </li>
                                             <!-- /Opciones Trazabilidad -->

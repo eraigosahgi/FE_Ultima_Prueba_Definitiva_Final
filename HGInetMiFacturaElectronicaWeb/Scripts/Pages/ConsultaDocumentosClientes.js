@@ -5,6 +5,7 @@ var ruta = window.location.href;
 ruta = ruta.replace(path, "/");
 document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
 
+var TipoConsulta;
 var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [{ "ID": 1 ,"Descripcion":"Codígo Plataforma"}, { "ID": 2 ,"Descripcion":"Documento"}];
@@ -26,23 +27,14 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
     });
    
     
-    cargarFiltros();
+    //cargarFiltros();
 
-    function cargarFiltros() {
-
-        $("#summary").dxValidationSummary({
-            readOnly: false,
-            showColonAfterLabel: true,
-            showValidationSummary: true,
-            validationGroup: "Consultasoporte",
-            onInitialized: function (e) {
-                formInstance = e.component;
-            }
-        });
+   // function cargarFiltros() {
+    $(function () {
+        $("#summary").dxValidationSummary({});
 
         $("#txtempresaasociada").dxTextBox({
-            readOnly: true,
-            validationGroup: "Consultasoporte",
+            readOnly: true,            
             name: txtempresaasociada,
             onValueChanged: function (data) {
                 var empresa = null;
@@ -50,75 +42,95 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 if (data.value != null && data.value != "") {
                     empresa = data.value.split(' -- ');
                     Asociada = empresa[0];
+                    Datos_empresa_Asociada = Asociada;
+                    if (TipoConsulta != null && TipoConsulta != '') {
+                        validarfiltros(TipoConsulta);
+                    }
                 } else {
                     empresa = Datos_Idententificacion;
                     Asociada = empresa;
+                    Datos_empresa_Asociada = Asociada;
                 }
-                Datos_empresa_Asociada = Asociada;                
-            }
-        }).dxValidator({
-            validationRules: [{            
-                type: 'required',                
-                message: "Debe seleccionar la empresa"
-            }]
-        });
-
-        $("#txtcodigoplataforma").dxTextBox({            
-            name: txtcodigoplataforma,
-            validationGroup: "Consultasoporte",
-            maxLength:8,
-            onValueChanged: function (data) {
-                Datos_codigo_plataforma = data.value;
+               
             }
         }).dxValidator({
             validationRules: [{
                 type: 'required',
-                message: "Debe seleccionar el código de la plataforma"
+                message: "Debe seleccionar la empresa"
             }]
         });
-      
 
+       
         $("#txtDocumento").dxTextBox({
             name: txtcodigoplataforma,
             onValueChanged: function (data) {
                 Datos_Documento = data.value;
             }
         });
-        
-               
-        //Define los campos y las opciones
-        $scope.filtros =
-            {
-                Tipo: {
-                    searchEnabled: true,
-                    //Carga la data del control
-                    dataSource: new DevExpress.data.ArrayStore({
-                        data: items_recibo,
-                        key: "ID"
-                    }),
-                    displayExpr: "Descripcion",
-                    Enabled: true,
-                    placeholder: "Seleccione un Item",
-                    onValueChanged: function (data) {
-                        estado_recibo = data.value.ID;
-                        validarfiltros(estado_recibo);
 
-                    }
-                }
+        $("#Tipo").dxSelectBox({
+            placeholder: "seleccione el tipo de busqueda",
+            displayExpr: "Descripcion",
+            dataSource: items_recibo,
+            onValueChanged: function (data) {
+                TipoConsulta = data.value.ID;                
+                    validarfiltros(TipoConsulta);                
             }
-      
-    }
+        }).dxValidator({
+            validationRules: [{
+                type: 'required',
+                message: "Debe indicar el tipo de busqueda"
+            }]
+        });
+       
 
-    function validarfiltros(Tipo) {        
-        console.log("El filtro fue: ", Tipo);
+
+         $("#txtcodigoplataforma").dxTextBox({
+            name: txtcodigoplataforma,
+            maxLength: 8,
+            onValueChanged: function (data) {
+                Datos_codigo_plataforma = data.value;
+            }
+        });
+
+         function validarCodigoPlataforma(){
+             if(TipoConsulta==1){
+                 if (Datos_codigo_plataforma.length != 8) {
+                     return true;
+                 } else {
+                     return false;
+                 }
+             } else {
+                 return false;
+             }
+        }
+
+
+
+
+
+
+
+        $("#form1").on("submit", function (e) {
+            consultar();
+            e.preventDefault();
+        });
+
+        $("#button").dxButton({
+            text: "Consultar",
+            type: "default",
+            useSubmitBehavior: true
+        });
+
+    });
+    
+    function validarfiltros(Tipo) {                
         if (Tipo != '1') {
             $('#divcodigoplataforma').hide();
             $('#divdocumento').show();
             Datos_codigo_plataforma = "*";
             //Obtener lista de Resoluciones
-            $http.get('/api/EmpresaResolucion?codigo_facturador=' + Datos_empresa_Asociada).then(function (response) {
-                console.log("Tipo: ", items_recibo);
-                console.log("Resolucion: ", JSON.parse(JSON.stringify(response.data)));
+            $http.get('/api/EmpresaResolucion?codigo_facturador=' + Datos_empresa_Asociada).then(function (response) {                
                 cargarResolucion( JSON.parse(JSON.stringify(response.data)));
             });
         } else {
@@ -128,7 +140,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             Datos_Documento = "*";
         }
     }
-
+    
 
 
     function cargarResolucion(Lista) {  
@@ -136,40 +148,12 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             placeholder: "seleccione el código de resolución",
             displayExpr: "Descripcion",
             dataSource: Lista,
-            onValueChanged: function (data) {
-                console.log("ID : ", data.value.ID);
+            onValueChanged: function (data) {                
                 Datos_Resolucion = data.value.Descripcion;
-            }
-        }).dxValidator({
-            validationRules: [
-                {
-                    type: 'custom', validationCallback: function (options) {
-                        if (validar()) {
-                            options.rule.message = "Debe seleccionar la resolución";
-                            return false;
-                        } else { return true; }
-                    }
-                }
-            ]
+            }             
         });
     }
-
-    function validar() {       
-        if (Tipo != '1') {            
-            if (Datos_Resolucion.length>0 ){
-                console.log("Validacion Resolucion: ", Datos_Resolucion.length);
-                return true;
-            } else {
-                return false;
-            }
-                        
-        } else {
-            $('#divcodigoplataforma').show();
-            $('#divdocumento').hide();
-            Datos_Resolucion = "*";
-            Datos_Documento = "*";
-        }
-    }
+  
 
 
     $scope.ButtonOptionsConsultar = {
@@ -182,9 +166,13 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
     };
 
 
+   
+
 
     function consultar() {
-
+        
+             $("#summary").dxValidationSummary({value:'Debe ingresar el codigo de plataforma'})
+        
         SrvDocumento.ObtenerDocumentosClientes(Datos_empresa_Asociada, Datos_Documento, Datos_codigo_plataforma, Datos_Resolucion).then(function (data) {
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data,
@@ -203,27 +191,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     } catch (err) {
                     }
 
-                }
-                /*
-                , loadPanel: {
-                    enabled: true
-                },
-                headerFilter: {
-                    visible: true
-                }
-                , allowColumnResizing: true
-                , allowColumnReordering: true
-                , columnChooser: {
-                    enabled: true,
-                    mode: "select",
-                    title: "Selector de Columnas"
-                }
-                
-                ,groupPanel: {
-                    allowColumnDragging: true,                    
-                    visible: true
-                }                
-                */
+                }              
                 , columns: [
                     {
                         caption: "  Lista de Archivos",

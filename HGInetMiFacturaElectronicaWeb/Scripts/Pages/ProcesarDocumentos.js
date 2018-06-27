@@ -272,8 +272,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
             
             SrvDocumento.ProcesarDocumentos($scope.documentos).then(function (data) {                
                 $("#gridDocumentosProcesados").dxDataGrid({
-                    dataSource: data,
-                    columnHidingEnabled: true,
+                    dataSource: data,                           
                     paging: {
                         pageSize: 20
                     },
@@ -288,31 +287,15 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                  },
                     headerFilter: {
                         visible: true
-                    },
-                    //Formatos personalizados a las columnas 
-                    onCellPrepared: function (options) {
-                        var fieldData = options.value,
-                            fieldHtml = "";
-                        try {                          
-
-                            if (options.data.CodigoError == 0) {
-                                estado = " style='color:green;' title='Proceso exitoso'";
-                            } else {
-                                estado = " style='color:red;' title='Error'";
-                            }
-
-                        } catch (err) {
-
-                        }
-                    }
-               , allowColumnResizing: true
+                    }                                   
                , columns: [
                    {
                        caption: 'Estado',
                        dataField: 'Estado',
+                       width:'5%',
                        cellTemplate: function (container, options) {
                            $("<div style='text-align:center'>")
-                               .append($("<a taget=_self class='icon-circle2'" + estado + ">"))
+                               .append($("<a taget=_self class='icon-circle2'" +  ((options.data.CodigoError != '') ? " style='color:red;' title='Error'" : " style='color:green;' title='Proceso exitoso'") + ">"))
                                .appendTo(container);
                        }
                    },
@@ -320,6 +303,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                         caption: "Fecha Recepción",
                         dataField: "FechaRecepcion",
                         dataType: "date",
+                        width: '15%',
                         format: "yyyy-MM-dd HH:mm"
 
                     },
@@ -328,56 +312,70 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                        caption: "Fecha Ultimo Proceso",
                        dataField: "FechaUltimoProceso",
                        dataType: "date",
+                       width: '15%',
                        format: "yyyy-MM-dd HH:mm"
 
                    },
                     {
                         caption: "Resultado",
+                        width: '70%',
                         dataField: "DescripcionProceso"
-                    },                                     
-                    "EstadoDianCodigoRespuesta" ,
-                    "EstadoDianDescripcion" ,
-                    "EstadoDianEstadoDocumento" ,
-                    "EstadoDianUrlXmlRespuesta" ,               
+                    },                                                         
                {
                    caption: "Aceptacion",
-                   dataField: "Aceptacion"
+                   dataField: "Aceptacion",
+                   hidingPriority: 0
                },
                      {
                          caption: "CodigoRegistro",
-                         dataField: "CodigoRegistro"
+                         dataField: "CodigoRegistro",
+                         hidingPriority: 1
                      },
                      {
                          caption: "Cufe",
-                         dataField: "Cufe"
+                         dataField: "Cufe",
+                         hidingPriority: 2
                      },                   
                      {
                          caption: "Documento",
-                         dataField: "Documento"
+                         dataField: "Documento",
+                         hidingPriority: 3
+
                      },
                      {
                          caption: "EstadoDian",
-                         dataField: "EstadoDian"
+                         dataField: "EstadoDian",
+                         hidingPriority: 4
+
                      },
                      {
                          caption: "IdDocumento",
-                         dataField: "IdDocumento"
+                         dataField: "IdDocumento",
+                         hidingPriority: 5
                      },
                      {
                          caption: "Identificacion",
-                         dataField: "Identificacion"
+                         dataField: "Identificacion",
+                         hidingPriority: 6
                      },
                      {
                          caption: "IdProceso",
-                         dataField: "IdProceso"
+                         dataField: "IdProceso",
+                         hidingPriority: 7
                      },
                     {
                         caption: "MotivoRechazo",
-                        dataField: "MotivoRechazo"
+                        dataField: "MotivoRechazo",
+                        hidingPriority: 8
                     },
                     {
                         caption: "NumeroResolucion",
-                        dataField: "NumeroResolucion"
+                        dataField: "NumeroResolucion",
+                        hidingPriority: 9
+                    }, {
+                        caption: "Descripcion Proceso",
+                        dataField: "DescripcionProceso",
+                        hidingPriority: 10
                     }
 
                ]
