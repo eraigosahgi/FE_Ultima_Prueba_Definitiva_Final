@@ -20,6 +20,11 @@ using HGInetDIANServicios;
 using HGInetDIANServicios.DianResolucion;
 using HGInetMiFacturaElectonicaController.Properties;
 using LibreriaGlobalHGInet.Enumerables;
+using HGInetUBL;
+using System.Xml.Serialization;
+using System.Xml;
+using System.IO;
+using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -53,7 +58,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
 				// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
-				if (facturador_electronico.IntHabilitacion < 99)
+				if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
 
 					Tercero DatosObligado = new Tercero()
@@ -122,39 +127,71 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				foreach (Factura item in documentos)
 				{
-					if (string.IsNullOrEmpty(item.NumeroResolucion))
-						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
-
-					Ctl_Documento num_doc = new Ctl_Documento();
-
-					//valida si el Documento ya existe en Base de Datos
-					TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento);
-
-					if (numero_documento != null)
-						throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
-
-					TblEmpresasResoluciones resolucion = null;
-
+					DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
 					try
 					{
-						ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
+						if (string.IsNullOrEmpty(item.NumeroResolucion))
+							throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
-						LogExcepcion.Guardar(exTMP);
 
-						// filtra la resolución del documento
-						resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+						Ctl_Documento num_doc = new Ctl_Documento();
+
+						//valida si el Documento ya existe en Base de Datos
+						TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento);
+
+						if (numero_documento != null)
+							throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
+
+						TblEmpresasResoluciones resolucion = null;
+
+						try
+						{
+							ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
+
+							LogExcepcion.Guardar(exTMP);
+
+							// filtra la resolución del documento
+							resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+						}
+						catch (Exception excepcion)
+						{
+							throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1}", item.NumeroResolucion, facturador_electronico.StrIdentificacion));
+						}
+
+
+						// realiza el proceso de envío a la DIAN del documento
+						item_respuesta = Procesar(id_peticion, item, TipoDocumento.Factura, resolucion, facturador_electronico);
 					}
 					catch (Exception excepcion)
 					{
-						throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1}", item.NumeroResolucion, facturador_electronico.StrIdentificacion));
+
+						ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
+						LogExcepcion.Guardar(excepcion);
+						item_respuesta = new DocumentoRespuesta()
+						{
+							Aceptacion = 0,
+							CodigoRegistro = item.CodigoRegistro,
+							Cufe = "",
+							DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+							Documento = item.Documento,
+							Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+							EstadoDian = null,
+							FechaRecepcion = fecha_actual,
+							FechaUltimoProceso = fecha_actual,
+							IdDocumento = "",
+							Identificacion = "",
+							IdProceso = proceso_actual.GetHashCode(),
+							MotivoRechazo = "",
+							NumeroResolucion = item.NumeroResolucion,
+							Prefijo = item.Prefijo,
+							ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+							UrlPdf = "",
+							UrlXmlUbl = ""
+						};
+
 					}
-
-
-					// realiza el proceso de envío a la DIAN del documento
-					DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.Factura, resolucion, facturador_electronico);
-
-					respuesta.Add(respuesta_tmp);
+					respuesta.Add(item_respuesta);
 				}
 
 				return respuesta;
@@ -235,7 +272,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 
 						//Guarda la id de la Peticion con la que se esta haciendo el proceso
-						documento_result.IdSeguridad = id_peticion;
+						documento_result.IdSeguridadPeticion = id_peticion;
+
+						//Guarda el Id del documento generado por la plataforma
+						documento_result.IdSeguridadDocumento = Guid.Parse(respuesta.IdDocumento);
 
 						Ctl_Documento documento_tmp = new Ctl_Documento();
 
@@ -292,11 +332,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw excepcion;
 						}
 
-                        //Asignación de Cufe a documento_obj. 
-                        documento_obj.Cufe = documento_result.CUFE;
+						//Asignación de Cufe a documento_obj. 
+						documento_obj.Cufe = documento_result.CUFE;
 
-                        // almacena Formato
-                        respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
+						// almacena Formato
+						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
 
 
@@ -313,11 +353,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						// envía el archivo zip con el xml firmado a la DIAN
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
-						
+
 
 						//Valida estado del documento en la Plataforma de la DIAN
 						respuesta = Consultar(documentoBd, empresa, ref respuesta);
-						
+
 
 						// envía el mail de documentos al adquiriente
 						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
@@ -365,7 +405,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
 			// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
-			if (facturador_electronico.IntHabilitacion < 99)
+			if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 			{
 
 				Tercero DatosObligado = new Tercero()
@@ -458,7 +498,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			DateTime fecha_actual = Fecha.GetFecha();
 
 			// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
-			if (facturador_electronico.IntHabilitacion < 99)
+			if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 			{
 
 				Tercero DatosObligado = new Tercero()
@@ -933,9 +973,151 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			return retorno;
 		}
 
+		/// <summary>
+		/// Procesa una lista de documentos tipo Documento Archivo
+		/// </summary>
+		/// <param name="documentos">documentos Documento Archivo</param>
+		/// <returns>objeto tipo Documento Respuesta</returns>
+		public static List<DocumentoRespuesta> Procesar(List<DocumentoArchivo> documentos)
+		{
 
+			if (documentos == null)
+				throw new ApplicationException("No se encontraron datos");
+			if (documentos.FirstOrDefault() == null)
+				throw new ApplicationException("No se encontraron datos en el primer registro");
+
+			Ctl_Empresa Peticion = new Ctl_Empresa();
+
+			//Válida que la key sea correcta.
+			TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().Identificacion);
+
+			if (!facturador_electronico.IntObligado)
+				throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
+
+			// genera un id único de la plataforma
+			Guid id_peticion = Guid.NewGuid();
+
+			DateTime fecha_actual = Fecha.GetFecha();
+			List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+
+			// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
+			if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+			{
+
+				//Valida que Resolucion tomar, con Prefijo o sin Prefijo
+				string resolucion_pruebas = string.Empty;
+				string nit_resolucion = string.Empty;
+				if (documentos.FirstOrDefault().Prefijo.Equals(string.Empty))
+				{
+					resolucion_pruebas = Constantes.ResolucionPruebas;
+					nit_resolucion = Constantes.NitResolucionsinPrefijo;
+
+				}
+				else
+				{
+					resolucion_pruebas = Constantes.ResolucionPruebas;
+					nit_resolucion = Constantes.NitResolucionconPrefijo;
+				}
+
+
+
+				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
+				lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas));
+
+			}
+			else
+			{
+				// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
+				lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, documentos.FirstOrDefault().Identificacion);
+			}
+
+
+			if (lista_resolucion == null)
+				throw new ApplicationException(string.Format("No se encontró la resolución para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
+			else if (!lista_resolucion.Any())
+				throw new ApplicationException(string.Format("No se encontró la resolución para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
+
+
+			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+
+			foreach (DocumentoArchivo objeto in documentos)
+			{
+
+
+				DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
+
+				try
+				{
+
+					if (string.IsNullOrEmpty(objeto.NumeroResolucion))
+						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
+
+
+					Ctl_Documento num_doc = new Ctl_Documento();
+
+					//valida si el Documento ya existe en Base de Datos
+					TblDocumentos numero_documento = num_doc.Obtener(objeto.NumeroResolucion, objeto.Documento);
+
+					if (numero_documento != null)
+						throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", objeto.Documento, facturador_electronico.StrIdentificacion));
+
+					TblEmpresasResoluciones resolucion = null;
+
+					try
+					{
+						ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
+
+						LogExcepcion.Guardar(exTMP);
+
+						// filtra la resolución del documento
+						resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(objeto.NumeroResolucion)).FirstOrDefault();
+					}
+					catch (Exception excepcion)
+					{
+						throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1}", objeto.NumeroResolucion, facturador_electronico.StrIdentificacion));
+					}
+
+
+					// procesa el documento
+					item_respuesta = Procesar(id_peticion, objeto, facturador_electronico, resolucion);
+				}
+				catch (Exception excepcion)
+				{
+
+					ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
+					LogExcepcion.Guardar(excepcion);
+					item_respuesta = new DocumentoRespuesta()
+					{
+						Aceptacion = 0,
+						CodigoRegistro = objeto.CodigoRegistro,
+						Cufe = "",
+						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						Documento = objeto.Documento,
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						EstadoDian = null,
+						FechaRecepcion = fecha_actual,
+						FechaUltimoProceso = fecha_actual,
+						IdDocumento = "",
+						Identificacion = "",
+						IdProceso = proceso_actual.GetHashCode(),
+						MotivoRechazo = "",
+						NumeroResolucion = objeto.NumeroResolucion,
+						Prefijo = objeto.Prefijo,
+						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+						UrlPdf = "",
+						UrlXmlUbl = ""
+					};
+
+				}
+				respuesta.Add(item_respuesta);
+			}
+
+			return respuesta;
+		}
 
 	}
 }
+
+
 
 
