@@ -188,7 +188,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// información del procesamiento del archivo
 				FacturaE_Documento documento_result = new FacturaE_Documento()
 				{
-					IdSeguridad = Guid.NewGuid(),
+					IdSeguridadPeticion = Guid.NewGuid(),
+					IdSeguridadDocumento = documento.StrIdSeguridad,
 					IdSeguridadTercero = empresa.StrIdSeguridad,
 					DocumentoTipo = tipo_documento,
 					CUFE = documento.StrCufe,

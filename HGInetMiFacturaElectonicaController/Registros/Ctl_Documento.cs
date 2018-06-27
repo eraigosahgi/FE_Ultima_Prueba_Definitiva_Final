@@ -464,7 +464,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				else
 				{
-					tbl_documento.StrPrefijo = (string.IsNullOrEmpty(documento_obj.Prefijo)) ? documento_obj.Prefijo : "";
+					tbl_documento.StrPrefijo = (!string.IsNullOrEmpty(documento_obj.Prefijo)) ? documento_obj.Prefijo : "";
 					tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
 				}
 				tbl_documento.DatFechaDocumento = documento_obj.Fecha;

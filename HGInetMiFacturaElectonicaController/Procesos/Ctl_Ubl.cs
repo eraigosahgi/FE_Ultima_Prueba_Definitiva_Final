@@ -70,7 +70,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             // convierte el documento 
             FacturaE_Documento resultado = FacturaXML.CrearDocumento(documento, extension_documento, tipo_doc);
             resultado.DocumentoTipo = tipo_doc;
-			resultado.IdSeguridad = id;
+			resultado.IdSeguridadDocumento = id;
             resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
             // genera el nombre del archivo ZIP
@@ -150,17 +150,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 // valida el nodo de ExtensionContent
                 documento.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(documento.DocumentoXml);
 
-                string nit_obligado = string.Empty;
+                string id_obligado = string.Empty;
 
                 switch (documento.DocumentoTipo)
                 {
                     case TipoDocumento.Factura:
                         Factura doc_factura = ((Factura)documento.Documento);
-                        nit_obligado = documento.IdSeguridadTercero.ToString();
+                        id_obligado = documento.IdSeguridadTercero.ToString();
                         break;
                     case TipoDocumento.NotaCredito:
                         NotaCredito doc_nota_credito = ((NotaCredito)documento.Documento);
-                        nit_obligado = documento.IdSeguridadTercero.ToString();
+						id_obligado = documento.IdSeguridadTercero.ToString();
                         break;
                     case TipoDocumento.NotaDebito:
                         /*NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
@@ -173,7 +173,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
                 // carpeta del xml
-                string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
+                string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), id_obligado);
                 carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
 
                 // valida la existencia de la carpeta
@@ -196,7 +196,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 documento.RutaArchivosProceso = carpeta_xml;
 
                 // carpeta del zip
-                string carpeta_zip = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), nit_obligado);
+                string carpeta_zip = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), id_obligado);
                 carpeta_zip = string.Format(@"{0}{1}", carpeta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
                 // directorio para el zip y xml firmado
