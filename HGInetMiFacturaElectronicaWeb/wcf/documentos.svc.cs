@@ -10,6 +10,7 @@ using LibreriaGlobalHGInet.Error;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
+using HGInetMiFacturaElectonicaController.Procesos;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -122,9 +123,9 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
             try
             {
 
+				throw new ApplicationException("Funcionalidad temporalmente fuera de servicio");
 
-
-                return null;
+				//return Ctl_Documentos.Procesar(documentos);
 
             }
             catch (Exception exec)

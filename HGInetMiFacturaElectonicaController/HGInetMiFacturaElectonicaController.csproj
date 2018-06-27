@@ -72,6 +72,7 @@
     <Compile Include="Configuracion\Ctl_PlanesTransacciones.cs" />
     <Compile Include="Configuracion\Ctl_Planes.cs" />
     <Compile Include="Configuracion\Ctl_Usuario.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.Archivo.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Dian.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Factura.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Formato.cs" />

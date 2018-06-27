@@ -22,6 +22,13 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string DataKey { get; set; }
 
 		/// <summary>
+		/// Número de identificación
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		[RegularExpression("^\\d+$", ErrorMessage = "La {0} debe contener sólo números.")]
+		public string Identificacion { get; set; }
+
+		/// <summary>
 		/// Identificador del Documento asigando por el Facturador Electrónico
 		/// </summary>
 		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
@@ -34,6 +41,24 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		[Required(ErrorMessage = "{0} es un campo obligatorio")]
 		[Range(typeof(decimal), "0", "3", ErrorMessage = "El campo {0} debe estar entre {1} y {2}")]
 		public int TipoDocumento { get; set; }
+
+		/// <summary>
+		/// Número del Documento
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		public int Documento { get; set; }
+
+		/// <summary>
+		/// Número de Resolución del Documento asignado por la DIAN
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		[RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
+		public string NumeroResolucion { get; set; }
+
+		/// <summary>
+		/// Prefijo del Documento según la Resolución asignada por la DIAN
+		/// </summary>
+		public string Prefijo { get; set; }
 
 		/// <summary>
 		/// Archivo XML en estandar UBL del Documento
