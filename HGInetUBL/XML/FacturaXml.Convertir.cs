@@ -61,19 +61,22 @@ namespace HGInetUBL
                 factura_obj.Documento = Convert.ToInt32(factura_ubl.ID.Value);
             }
 
-            if (factura_ubl.BillingReference != null)
-            {
-                factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
-            }
-            else
-            {
-                factura_obj.DocumentoRef = string.Empty;
-            }
-            factura_obj.Cufe = factura_ubl.UUID.Value;
-            factura_obj.Fecha = factura_ubl.IssueDate.Value;
-            factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
-            factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
-            factura_obj.Nota = factura_ubl.Note[0].Value;
+			if (factura_ubl.BillingReference != null)
+			{
+				factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
+			}
+			else
+			{
+				factura_obj.DocumentoRef = string.Empty;
+			}
+			factura_obj.Cufe = factura_ubl.UUID.Value;
+			factura_obj.Fecha = factura_ubl.IssueDate.Value;
+			if (factura_ubl.PaymentMeans != null)
+			{
+				factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
+			}
+			factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
+			factura_obj.Nota = factura_ubl.Note[0].Value;
 
             Formato documento_formato = new Formato();
             List<FormatoCampo> lista_campos = new List<FormatoCampo>();

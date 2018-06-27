@@ -338,7 +338,7 @@ namespace HGInetUBL
         /// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
         /// <param name="clave_tecnica">Clave técnica de la resolución</param>
         /// <returns>Texto con la encriptación del CUFE</returns>        
-        private static string CalcularCUFE(InvoiceType factura, string clave_tecnica)
+        public static string CalcularCUFE(InvoiceType factura, string clave_tecnica)
         {
             try
             {
