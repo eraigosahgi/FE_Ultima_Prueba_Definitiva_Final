@@ -17,14 +17,15 @@ var fNumber = {
         return this.simbol + splitLeft + splitRight;
     },
     go: function (num) {
-        return this.formatear(num);
+
+        return this.formatear(parseFloat(Math.round(num * 100) / 100).toFixed(2));
     }
 }
 
 //Controla el formato de numeros Ejemplo: 1.222.333,90
 var FormatoNumber = {
-    sepMil: ".", // separador para los miles
-    sepDec: ',', // separador para los decimales    
+    sepMil: ",", // separador para los miles
+    sepDec: '.', // separador para los decimales    
     formatear: function (num) {
         num += '';
         var splitStr = num.split('.');
@@ -33,10 +34,10 @@ var FormatoNumber = {
         var regx = /(\d+)(\d{3})/;
         while (regx.test(splitLeft)) {
             splitLeft = splitLeft.replace(regx, '$1' + this.sepMil + '$2');
-        }
+        }        
         return  splitLeft + splitRight;
     },
-    go: function (num) {
+    go: function (num) {        
         return this.formatear(num);
     }
 }
