@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="uf6xqJE35M7iZzLmaBaOtDNCwaM=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="sauly4/yf2mglo5oNmZx0HS9zN8=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="soap">
       <properties>
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="soap" contract="ServicioDocumento.ServicioDocumentos" bindingType="basicHttpBinding" address="http://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc" bindingConfiguration="soap">
+    <endpoint name="soap" contract="ServicioDocumento.ServicioDocumentos" bindingType="basicHttpBinding" address="http://192.168.0.251:8887/wcf/documentos.svc" bindingConfiguration="soap">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc</serializedValue>
+          <serializedValue>http://192.168.0.251:8887/wcf/documentos.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

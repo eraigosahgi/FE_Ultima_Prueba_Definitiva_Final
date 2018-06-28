@@ -72,6 +72,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private string NotaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<string> NotasField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string NumeroResolucionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -315,6 +318,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.NotaField, value) != true)) {
                     this.NotaField = value;
                     this.RaisePropertyChanged("Nota");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<string> Notas {
+            get {
+                return this.NotasField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NotasField, value) != true)) {
+                    this.NotasField = value;
+                    this.RaisePropertyChanged("Notas");
                 }
             }
         }
@@ -790,6 +806,12 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ArchivoPdfField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.FormatoCampo> CamposPredeterminadosField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int CodigoField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -809,6 +831,32 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.ArchivoPdfField, value) != true)) {
                     this.ArchivoPdfField = value;
                     this.RaisePropertyChanged("ArchivoPdf");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.FormatoCampo> CamposPredeterminados {
+            get {
+                return this.CamposPredeterminadosField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CamposPredeterminadosField, value) != true)) {
+                    this.CamposPredeterminadosField = value;
+                    this.RaisePropertyChanged("CamposPredeterminados");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Codigo {
+            get {
+                return this.CodigoField;
+            }
+            set {
+                if ((this.CodigoField.Equals(value) != true)) {
+                    this.CodigoField = value;
+                    this.RaisePropertyChanged("Codigo");
                 }
             }
         }
@@ -846,6 +894,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private decimal DescuentoValorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ImpoConsumoPorcentajeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal IvaPorcentajeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -856,6 +907,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ProductoDescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool ProductoGratisField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ProductoNombreField;
@@ -871,6 +925,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ReteIcaValorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UnidadCodigoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorImpuestoConsumoField;
@@ -944,6 +1001,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ImpoConsumoPorcentaje {
+            get {
+                return this.ImpoConsumoPorcentajeField;
+            }
+            set {
+                if ((this.ImpoConsumoPorcentajeField.Equals(value) != true)) {
+                    this.ImpoConsumoPorcentajeField = value;
+                    this.RaisePropertyChanged("ImpoConsumoPorcentaje");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public decimal IvaPorcentaje {
             get {
                 return this.IvaPorcentajeField;
@@ -991,6 +1061,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.ProductoDescripcionField, value) != true)) {
                     this.ProductoDescripcionField = value;
                     this.RaisePropertyChanged("ProductoDescripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool ProductoGratis {
+            get {
+                return this.ProductoGratisField;
+            }
+            set {
+                if ((this.ProductoGratisField.Equals(value) != true)) {
+                    this.ProductoGratisField = value;
+                    this.RaisePropertyChanged("ProductoGratis");
                 }
             }
         }
@@ -1061,6 +1144,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UnidadCodigo {
+            get {
+                return this.UnidadCodigoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UnidadCodigoField, value) != true)) {
+                    this.UnidadCodigoField = value;
+                    this.RaisePropertyChanged("UnidadCodigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public decimal ValorImpuestoConsumo {
             get {
                 return this.ValorImpuestoConsumoField;
@@ -1111,6 +1207,84 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="FormatoCampo", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class FormatoCampo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UbicacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Descripcion {
+            get {
+                return this.DescripcionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionField, value) != true)) {
+                    this.DescripcionField = value;
+                    this.RaisePropertyChanged("Descripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Ubicacion {
+            get {
+                return this.UbicacionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UbicacionField, value) != true)) {
+                    this.UbicacionField = value;
+                    this.RaisePropertyChanged("Ubicacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ValorField, value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DocumentoRespuesta", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
         "cio")]
     [System.SerializableAttribute()]
@@ -1136,6 +1310,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private LibreriaGlobalHGInet.Error.Error ErrorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFacturaEServicios.ServicioNotaCredito.RespuestaDian EstadoDianField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaRecepcionField;
@@ -1254,6 +1431,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.ErrorField, value) != true)) {
                     this.ErrorField = value;
                     this.RaisePropertyChanged("Error");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFacturaEServicios.ServicioNotaCredito.RespuestaDian EstadoDian {
+            get {
+                return this.EstadoDianField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.EstadoDianField, value) != true)) {
+                    this.EstadoDianField = value;
+                    this.RaisePropertyChanged("EstadoDian");
                 }
             }
         }
@@ -1397,6 +1587,116 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.UrlXmlUblField, value) != true)) {
                     this.UrlXmlUblField = value;
                     this.RaisePropertyChanged("UrlXmlUbl");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="RespuestaDian", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class RespuestaDian : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoRespuestaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int EstadoDocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaConsultaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlXmlRespuestaField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoRespuesta {
+            get {
+                return this.CodigoRespuestaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoRespuestaField, value) != true)) {
+                    this.CodigoRespuestaField = value;
+                    this.RaisePropertyChanged("CodigoRespuesta");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Descripcion {
+            get {
+                return this.DescripcionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionField, value) != true)) {
+                    this.DescripcionField = value;
+                    this.RaisePropertyChanged("Descripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int EstadoDocumento {
+            get {
+                return this.EstadoDocumentoField;
+            }
+            set {
+                if ((this.EstadoDocumentoField.Equals(value) != true)) {
+                    this.EstadoDocumentoField = value;
+                    this.RaisePropertyChanged("EstadoDocumento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaConsulta {
+            get {
+                return this.FechaConsultaField;
+            }
+            set {
+                if ((this.FechaConsultaField.Equals(value) != true)) {
+                    this.FechaConsultaField = value;
+                    this.RaisePropertyChanged("FechaConsulta");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlXmlRespuesta {
+            get {
+                return this.UrlXmlRespuestaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlXmlRespuestaField, value) != true)) {
+                    this.UrlXmlRespuestaField = value;
+                    this.RaisePropertyChanged("UrlXmlRespuesta");
                 }
             }
         }
