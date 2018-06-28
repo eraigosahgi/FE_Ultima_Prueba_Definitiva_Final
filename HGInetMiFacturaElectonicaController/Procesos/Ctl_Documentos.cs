@@ -141,7 +141,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento);
 
 						if (numero_documento != null)
-							throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
+							throw new ApplicationException(string.Format("El documento {0} ya existe para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
 
 						TblEmpresasResoluciones resolucion = null;
 
@@ -175,7 +175,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							Cufe = "",
 							DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
 							Documento = item.Documento,
-							Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+							Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 							EstadoDian = null,
 							FechaRecepcion = fecha_actual,
 							FechaUltimoProceso = fecha_actual,
@@ -191,6 +191,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						};
 
 					}
+					if (item_respuesta.Error == null)
+						item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
+
 					respuesta.Add(item_respuesta);
 				}
 
@@ -488,7 +491,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Cufe = "",
 						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
 						Documento = item.Documento,
-						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 						EstadoDian = null,
 						FechaRecepcion = fecha_actual,
 						FechaUltimoProceso = fecha_actual,
@@ -503,6 +506,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						UrlXmlUbl = ""
 					};
 				}
+				if (item_respuesta.Error == null)
+					item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
+
 				respuesta.Add(item_respuesta);
 			}
 
@@ -586,7 +592,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Cufe = "",
 						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
 						Documento = item.Documento,
-						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 						EstadoDian = null,
 						FechaRecepcion = fecha_actual,
 						FechaUltimoProceso = fecha_actual,
@@ -601,6 +607,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						UrlXmlUbl = ""
 					};
 				}
+				if (item_respuesta.Error == null)
+					item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
+
 				respuesta.Add(item_respuesta);
 			}
 
