@@ -453,24 +453,57 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			foreach (NotaCredito item in documentos)
 			{
-				if (string.IsNullOrEmpty(item.NumeroResolucion))
-					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
-				Ctl_Documento num_doc = new Ctl_Documento();
+				DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
 
-				//valida si el Documento ya existe en Base de Datos
-				TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento);
+				try
+				{
+					if (string.IsNullOrEmpty(item.NumeroResolucion))
+						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
-				if (numero_documento != null)
-					throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
+					Ctl_Documento num_doc = new Ctl_Documento();
 
-				// filtra la resolución del documento
-				TblEmpresasResoluciones resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+					//valida si el Documento ya existe en Base de Datos
+					TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento);
 
-				// realiza el proceso de envío a la DIAN del documento
-				DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaCredito, resolucion, facturador_electronico);
+					if (numero_documento != null)
+						throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
 
-				respuesta.Add(respuesta_tmp);
+					// filtra la resolución del documento
+					TblEmpresasResoluciones resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+
+					// realiza el proceso de envío a la DIAN del documento
+					item_respuesta = Procesar(id_peticion, item, TipoDocumento.NotaCredito, resolucion, facturador_electronico);
+
+				}
+				catch (Exception excepcion)
+				{
+
+					ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
+					LogExcepcion.Guardar(excepcion);
+					item_respuesta = new DocumentoRespuesta()
+					{
+						Aceptacion = 0,
+						CodigoRegistro = item.CodigoRegistro,
+						Cufe = "",
+						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						Documento = item.Documento,
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						EstadoDian = null,
+						FechaRecepcion = fecha_actual,
+						FechaUltimoProceso = fecha_actual,
+						IdDocumento = "",
+						Identificacion = "",
+						IdProceso = proceso_actual.GetHashCode(),
+						MotivoRechazo = "",
+						NumeroResolucion = item.NumeroResolucion,
+						Prefijo = "",
+						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+						UrlPdf = "",
+						UrlXmlUbl = ""
+					};
+				}
+				respuesta.Add(item_respuesta);
 			}
 
 			return respuesta;
@@ -529,13 +562,46 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			foreach (NotaDebito item in documentos)
 			{
 
-				if (string.IsNullOrEmpty(item.NumeroResolucion))
-					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
+				DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
 
-				// realiza el proceso de envío a la DIAN del documento
-				DocumentoRespuesta respuesta_tmp = Procesar(id_peticion, item, TipoDocumento.NotaDebito, null, facturador_electronico);
+				try
+				{
 
-				respuesta.Add(respuesta_tmp);
+					if (string.IsNullOrEmpty(item.NumeroResolucion))
+						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
+
+					// realiza el proceso de envío a la DIAN del documento
+					item_respuesta = Procesar(id_peticion, item, TipoDocumento.NotaDebito, null, facturador_electronico);
+
+				}
+				catch (Exception excepcion)
+				{
+
+					ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
+					LogExcepcion.Guardar(excepcion);
+					item_respuesta = new DocumentoRespuesta()
+					{
+						Aceptacion = 0,
+						CodigoRegistro = item.CodigoRegistro,
+						Cufe = "",
+						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						Documento = item.Documento,
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						EstadoDian = null,
+						FechaRecepcion = fecha_actual,
+						FechaUltimoProceso = fecha_actual,
+						IdDocumento = "",
+						Identificacion = "",
+						IdProceso = proceso_actual.GetHashCode(),
+						MotivoRechazo = "",
+						NumeroResolucion = item.NumeroResolucion,
+						Prefijo = "",
+						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+						UrlPdf = "",
+						UrlXmlUbl = ""
+					};
+				}
+				respuesta.Add(item_respuesta);
 			}
 
 			return respuesta;
