@@ -129,6 +129,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             $('#divcodigoplataforma').hide();
             $('#divdocumento').show();
             Datos_codigo_plataforma = "*";
+            $("#txtcodigoplataforma").dxTextBox({ value: '' });
             //Obtener lista de Resoluciones
             $http.get('/api/EmpresaResolucion?codigo_facturador=' + Datos_empresa_Asociada).then(function (response) {                
                 cargarResolucion( JSON.parse(JSON.stringify(response.data)));
@@ -138,6 +139,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             $('#divdocumento').hide();
             Datos_Resolucion = "*";
             Datos_Documento = "*";
+            $("#txtDocumento").dxTextBox({ value: '' });
         }
     }
     
