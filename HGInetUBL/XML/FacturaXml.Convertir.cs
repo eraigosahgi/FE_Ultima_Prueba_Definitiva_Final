@@ -61,37 +61,50 @@ namespace HGInetUBL
                 factura_obj.Documento = Convert.ToInt32(factura_ubl.ID.Value);
             }
 
-			if (factura_ubl.BillingReference != null)
-			{
-				factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
-			}
-			else
-			{
-				factura_obj.DocumentoRef = string.Empty;
-			}
-			factura_obj.Cufe = factura_ubl.UUID.Value;
-			factura_obj.Fecha = factura_ubl.IssueDate.Value;
-			if (factura_ubl.PaymentMeans != null)
-			{
-				factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
-			}
-			factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
-			factura_obj.Nota = factura_ubl.Note[0].Value;
+            if (factura_ubl.BillingReference != null)
+            {
+                factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
+            }
+            else
+            {
+                factura_obj.DocumentoRef = string.Empty;
+            }
+            factura_obj.Cufe = factura_ubl.UUID.Value;
+            factura_obj.Fecha = factura_ubl.IssueDate.Value;
+            if (factura_ubl.PaymentMeans != null)
+            {
+                factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
+            }
+            factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
+            factura_obj.Nota = factura_ubl.Note[0].Value;
 
             Formato documento_formato = new Formato();
             List<FormatoCampo> lista_campos = new List<FormatoCampo>();
 
-            //Deserializa la posición 1 y las convierte en FormatoCampo
-            dynamic jsonObj = JsonConvert.DeserializeObject(factura_ubl.Note[1].Value);
-
-            foreach (var obj in jsonObj.CamposPredeterminados)
+            try
             {
-                FormatoCampo campo = new FormatoCampo();
-                campo.Descripcion = obj.Descripcion;
-                campo.Ubicacion = obj.Ubicacion;
-                campo.Valor = obj.Valor;
+                //Deserializa la posición 1 y las convierte en FormatoCampo
+                dynamic jsonObj = JsonConvert.DeserializeObject(factura_ubl.Note[1].Value);
 
-                lista_campos.Add(campo);
+                documento_formato.Codigo = jsonObj.Codigo;
+
+                if (jsonObj.CamposPredeterminados != null)
+                {
+
+
+                    foreach (var obj in jsonObj.CamposPredeterminados)
+                    {
+                        FormatoCampo campo = new FormatoCampo();
+                        campo.Descripcion = obj.Descripcion;
+                        campo.Ubicacion = obj.Ubicacion;
+                        campo.Valor = obj.Valor;
+
+                        lista_campos.Add(campo);
+                    }
+                }
+            }
+            catch (Exception)
+            {
             }
 
             documento_formato.CamposPredeterminados = lista_campos;

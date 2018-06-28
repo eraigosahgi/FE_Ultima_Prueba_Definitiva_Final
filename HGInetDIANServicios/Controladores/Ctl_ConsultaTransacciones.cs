@@ -104,10 +104,10 @@ namespace HGInetDIANServicios
 			XmlDocument xmlDocument = new XmlDocument();
 			xmlDocument.LoadXml(soapResponse);
 
-			var soapBody = xmlDocument.GetElementsByTagName("ns3:ConsultaResultadoValidacionDocumentosRespuesta")[0];
+			var soapBody = xmlDocument.GetElementsByTagName("ns3:ConsultaResultadoValidacionDocumentosRespuesta")[0];            
 
-			// objeto de respuesta principal
-			DianResultadoTransacciones.DocumentosRecibidos acuse = new DianResultadoTransacciones.DocumentosRecibidos();
+            // objeto de respuesta principal
+            DianResultadoTransacciones.DocumentosRecibidos acuse = new DianResultadoTransacciones.DocumentosRecibidos();
 
 
 			foreach (XmlNode item in soapBody)
@@ -155,26 +155,62 @@ namespace HGInetDIANServicios
 									detalle.DatosBasicosDocumento.NumeroDocumento = item3.InnerText;
 							}
 
-							detalles.Add(detalle);
+                            detalle.DatosBasicosDocumento.DescripcionEstado = detalle.DatosBasicosDocumento.DescripcionEstado + " " + ObtenerErroresRespuesta(xmlDocument);
+                            detalles.Add(detalle);
 						}
 
 					}
+                   
 
-					acuse.DocumentoRecibido = detalles.ToArray();
+                    acuse.DocumentoRecibido = detalles.ToArray();
 
 				}
 			}
 
-			return acuse;
+            return acuse;
 
 		}
 
-		/// <summary>
-		/// Valida la respuesta de la consulta de transacciones
-		/// </summary>
-		/// <param name="documento">respuesta del servicio web</param>
-		/// <returns>validación propia de HGI</returns>
-		public static ConsultaDocumento ValidarTransaccion(DianResultadoTransacciones.DocumentosRecibidos documento)
+        /// <summary>
+        /// Retorna un string con la lista de errores del XML de respuesta de la Dian
+        /// </summary>
+        /// <param name="XmlDocument"></param>
+        /// <returns></returns>
+        public static string ObtenerErroresRespuesta(XmlDocument xmlDocument) {
+
+            string DetalleIncorrecto = "";            
+            var receivedJS = xmlDocument.GetElementsByTagName("ns3:VerificacionFuncional")[0];            
+
+            int i = 0;
+            foreach (XmlNode item2 in receivedJS)
+            {
+                if (item2.LocalName.Equals("VerificacionDocumento"))
+                {                    
+                    var seguimiento = xmlDocument.GetElementsByTagName("ns3:DescripcionVeriFunc")[i];
+
+                    foreach (XmlNode item3 in seguimiento)
+                    {
+                        if (item3.InnerText.Contains("Incorrecta:"))
+                        {
+                            DetalleIncorrecto = (DetalleIncorrecto != "") ? DetalleIncorrecto + ", " : DetalleIncorrecto;
+                            DetalleIncorrecto = DetalleIncorrecto + (item3.InnerText.Replace("Incorrecta:", (i + 1) + ". "));
+                        }
+
+                    }
+                    i = i + 1;                    
+                }
+
+            }
+            return DetalleIncorrecto;            
+        }
+
+
+        /// <summary>
+        /// Valida la respuesta de la consulta de transacciones
+        /// </summary>
+        /// <param name="documento">respuesta del servicio web</param>
+        /// <returns>validación propia de HGI</returns>
+        public static ConsultaDocumento ValidarTransaccion(DianResultadoTransacciones.DocumentosRecibidos documento)
 		{
 
 			ConsultaDocumento resultado = new ConsultaDocumento();
@@ -210,7 +246,8 @@ namespace HGInetDIANServicios
                     7200002 = EXITOSA
                     7200003 = EN PROCESO DE VALIDACIÓN
                     7200004 = FALLIDA (Documento no cumple 1 o más validaciones de DIAN)
-                    7200005 = ERROR (El xml no es válido)                */
+                    7200005 = ERROR (El xml no es válido)
+                */
 				resultado.CodigoEstadoDian = documento.DocumentoRecibido[0].DatosBasicosDocumento.EstadoDocumento;
 
 				switch (resultado.CodigoEstadoDian)
@@ -232,7 +269,7 @@ namespace HGInetDIANServicios
 						break;
 
 					case "7200004":
-						resultado.EstadoDianDescripcion = "FALLIDA (Documento no cumple 1 o más validaciones de DIAN)";
+						resultado.EstadoDianDescripcion =  documento.DocumentoRecibido[0].DatosBasicosDocumento.DescripcionEstado;
 						resultado.Estado = EstadoDocumentoDian.Rechazado;
 						break;
 
