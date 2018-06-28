@@ -216,7 +216,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, "*", estado_recibo, fecha_inicio, fecha_fin).Where(x => x.IntAdquirienteRecibo != 0).ToList();
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, null, estado_recibo, fecha_inicio, fecha_fin).Where(x => x.IntAdquirienteRecibo != 0).ToList();
 
                 var retorno = datos.Select(d => new
                 {
