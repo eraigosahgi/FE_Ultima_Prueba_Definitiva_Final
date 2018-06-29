@@ -252,10 +252,9 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
             //Obtiene el código del permiso.
             $http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
                 $("#wait").hide();
-                try {
-
+                try {                    
                     $scope.Visibilidad = response.data[0].Editar;
-
+                    CargarCampos();
                 } catch (err) {
                     DevExpress.ui.notify(err.message, 'error', 3000);
                 }
@@ -272,7 +271,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
     var Datos_Resolucion = "", Datos_Serial = "", Datos_correo = "";
 
     //Define los campos del Formulario  
-    $(function () {
+    function CargarCampos(){
 
 
         $("#summary").dxValidationSummary({});
@@ -339,7 +338,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
 
         $("#btnActivar").dxButton({
             text: "Guardar",
-            type: "default",
+            type: "default",            
             useSubmitBehavior: true
             , onClick: function () {
                 guardarSerial();
@@ -352,7 +351,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
         });
 
 
-    });
+    }
 
 
     function guardarSerial() {

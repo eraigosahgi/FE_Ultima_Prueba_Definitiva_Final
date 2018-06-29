@@ -17,7 +17,7 @@
                         <button type="button" id="cerrrarModal" class="close" data-dismiss="modal">×</button>
                         <h5 style="margin-bottom: 10px;" class="modal-title">Modulo de Activación</h5>
                     </div>
-                    <div ng-app="ModalSerialEmpresaApp" ng-controller="ModalSerialEmpresaController">
+                    <div data-ng-app="ModalSerialEmpresaApp" data-ng-controller="ModalSerialEmpresaController" data-ng-init="Visibilidad=true">
 
 
 
@@ -62,7 +62,9 @@
                         </div>
                         <div id="divsombra" class="modal-footer">
                             <input id="btncancelar" type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar" style="margin: 1%;" />
-                            <div ng-if="Visibilidad" id="btnActivar" style="margin: 1%;"></div>
+                            
+                                <div data-ng-if="Visibilidad"  id="btnActivar" style="margin: 1%;"></div>
+                            
                         </div>
 
                     </div>
