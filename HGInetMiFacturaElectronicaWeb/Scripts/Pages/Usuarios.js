@@ -313,7 +313,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 message: "El email no puede ser mayor a 200 caracteres"
             }, {
                 type: "email",
-                message: "El email no no tiene el formato correcto"
+                message: "El email no tiene el formato correcto"
             }]
         });
 

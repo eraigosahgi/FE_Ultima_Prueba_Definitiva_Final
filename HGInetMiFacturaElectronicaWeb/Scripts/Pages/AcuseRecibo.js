@@ -1,5 +1,5 @@
 ﻿
-
+DevExpress.localization.locale(navigator.language);
 
 var AcuseReciboApp = angular.module('AcuseReciboApp', ['dx']);
 AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboController($scope, $http) {
@@ -44,11 +44,22 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
                 ]
             }]
         };
+
+    }    
+    //ValidarEstado(1);
+    $scope.ValidarEstado = function (Estado) {
+        if (Estado == 1) {
+            $scope.AceptarVar = true;
+            $scope.RechazarVar = false;
+        } else {
+            $scope.AceptarVar = false;
+            $scope.RechazarVar = true;
+        }
     }
 
     //Botón Rechazar.
     $scope.ButtonOptionsAceptar = {
-        text: "Aceptar",
+        text: "Enviar",
         type: "success",
         onClick: function (e) {
             estado = 1;
@@ -59,7 +70,8 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 
     //Botón Aceptar.
     $scope.ButtonOptionsRechazar = {
-        text: "Rechazar",
+        text: "Enviar",
+        type: "success",
         validationGroup: "ObservacionesAcuse",
         useSubmitBehavior: true,
     };

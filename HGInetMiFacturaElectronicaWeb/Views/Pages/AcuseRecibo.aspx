@@ -8,10 +8,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>HGInet Facturación Electrónica</title>
+   <title>HGInet Facturación Electrónica</title>
 
     <!-- Global stylesheets -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css" />
+    <!-- /Global stylesheets -->
+    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <!-- Global stylesheets -->
     <link href="../../Scripts/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/assets/css/core.css" rel="stylesheet" type="text/css" />
@@ -27,27 +32,52 @@
     <!-- /core JS files -->
 
     <!-- Theme JS files -->
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/visualization/d3/d3.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/visualization/d3/d3_tooltip.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/styling/switchery.min.js"></script>
     <script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/moment/moment.min.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/headroom/headroom.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/headroom/headroom_jquery.min.js"></script>
+
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/pnotify.min.js"></script>
+    <%--<script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/sweet_alert.min.js"></script>--%>
+
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/media/fancybox.min.js"></script>
 
     <script type="text/javascript" src="../../Scripts/assets/js/core/app.js"></script>
-    <script type="text/javascript" src="../../Scripts/assets/js/pages/login.js"></script>
-
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/user_pages_team.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/components_popups.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/components_modals.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/layout_navbar_hideable.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/plugins/extensions/session_timeout.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/assets/js/pages/gallery.js"></script>
     <script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/ripple.min.js"></script>
+
     <!-- /theme JS files -->
 
 
     <!-- Estilos CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />    
+    <%-- <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" />--%>
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />
 
-    <!-- DevExtreme -->
+    <!-- Scripts Requeridos
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
-    <script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>
+    <!--<script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>    -->
+    <script src="../../Scripts/devall.js"></script>
     <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
-    <!-- /DevExtreme -->
+
+    
 
     <!-- JS AcuseRecibo -->
     <script src="../../Scripts/Pages/AcuseRecibo.js"></script>
@@ -108,6 +138,7 @@
                                 <span>{{datos.EstadoAcuse}}</span>
                             </div>
 
+
                             <div style="margin-top: 3%; margin-bottom: 4%" runat="server" id="DivObservaciones">
                                 <label class="text-bold">Observaciones: </label>
                                 <span>{{datos.MotivoRechazo}}</span>
@@ -122,16 +153,47 @@
 
 
                         <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
-                        <div id="PanelOpcionesAdquiriente" ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
+                        <div id="PanelOpcionesAdquiriente" data-ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
 
-                            <form ng-submit="onFormSubmit($event)">
-                                <div id="form" dx-form="TextAreaObservaciones">
+                            <form data-ng-submit="onFormSubmit($event)">
+
+                                <div >
+                                    <fieldset id="group1"> 
+                                        <h3>Respuesta Acuse:  </h3>
+                                        <br />                                        
+                                        <div class="col-md-12">
+                                            <div class="col-md-2 dx-item-content">
+                                                <label class="text-bold">Aprobar: </label>
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <input type="radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-2 dx-item-content">
+                                                <label class="text-bold">Rechazar: </label>
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <input type="radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+                                            </div>
+                                        </div>
+                                                                  
+                                    </fieldset>
+                                     <br />
+                                     <br />
                                 </div>
+
+                               <div id="form" data-dx-form="TextAreaObservaciones" data-ng-if="RechazarVar">
+                                   
+                                </div>
+                                <div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
                                 <br />
                                 <br />
-                                <div dx-button="ButtonOptionsRechazar"></div>
-                                &nbsp;&nbsp;&nbsp;
-                            <div dx-button="ButtonOptionsAceptar"></div>
+                                <div class="col-lg-12 text-right">
+                                    <div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    
+                                </div>
                                 <br />
                                 <br />
                             </form>
