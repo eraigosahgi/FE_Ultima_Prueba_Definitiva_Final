@@ -179,28 +179,33 @@ namespace HGInetDIANServicios
         public static string ObtenerErroresRespuesta(XmlDocument xmlDocument) {
 
             string DetalleIncorrecto = "";            
-            var receivedJS = xmlDocument.GetElementsByTagName("ns3:VerificacionFuncional")[0];            
+            var receivedJS = xmlDocument.GetElementsByTagName("ns3:VerificacionFuncional")[0];
 
-            int i = 0;
-            foreach (XmlNode item2 in receivedJS)
-            {
-                if (item2.LocalName.Equals("VerificacionDocumento"))
-                {                    
-                    var seguimiento = xmlDocument.GetElementsByTagName("ns3:DescripcionVeriFunc")[i];
+			if (receivedJS != null)
+			{
 
-                    foreach (XmlNode item3 in seguimiento)
-                    {
-                        if (item3.InnerText.Contains("Incorrecta:"))
-                        {
-                            DetalleIncorrecto = (DetalleIncorrecto != "") ? DetalleIncorrecto + ", " : DetalleIncorrecto;
-                            DetalleIncorrecto = DetalleIncorrecto + (item3.InnerText.Replace("Incorrecta:", (i + 1) + ". "));
-                        }
+				int i = 0;
+				foreach (XmlNode item2 in receivedJS)
+				{
+					if (item2.LocalName.Equals("VerificacionDocumento"))
+					{
+						var seguimiento = xmlDocument.GetElementsByTagName("ns3:DescripcionVeriFunc")[i];
 
-                    }
-                    i = i + 1;                    
-                }
+						foreach (XmlNode item3 in seguimiento)
+						{
+							if (item3.InnerText.Contains("Incorrecta:"))
+							{
+								DetalleIncorrecto = (DetalleIncorrecto != "") ? DetalleIncorrecto + ", " : DetalleIncorrecto;
+								DetalleIncorrecto = DetalleIncorrecto + (item3.InnerText.Replace("Incorrecta:", (i + 1) + ". "));
+							}
 
-            }
+						}
+						i = i + 1;
+					}
+
+				}
+			}
+
             return DetalleIncorrecto;            
         }
 
