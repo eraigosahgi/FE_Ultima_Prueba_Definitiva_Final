@@ -86,25 +86,27 @@ namespace HGInetUBL
                 //Deserializa la posición 1 y las convierte en FormatoCampo
                 dynamic jsonObj = JsonConvert.DeserializeObject(factura_ubl.Note[1].Value);
 
-                documento_formato.Codigo = jsonObj.Codigo;
-
-                if (jsonObj.CamposPredeterminados != null)
+                if (jsonObj != null)
                 {
+                    documento_formato.Codigo = jsonObj.Codigo;
 
-
-                    foreach (var obj in jsonObj.CamposPredeterminados)
+                    if (jsonObj.CamposPredeterminados != null)
                     {
-                        FormatoCampo campo = new FormatoCampo();
-                        campo.Descripcion = obj.Descripcion;
-                        campo.Ubicacion = obj.Ubicacion;
-                        campo.Valor = obj.Valor;
+                        foreach (var obj in jsonObj.CamposPredeterminados)
+                        {
+                            FormatoCampo campo = new FormatoCampo();
+                            campo.Descripcion = obj.Descripcion;
+                            campo.Ubicacion = obj.Ubicacion;
+                            campo.Valor = obj.Valor;
 
-                        lista_campos.Add(campo);
+                            lista_campos.Add(campo);
+                        }
                     }
                 }
             }
             catch (Exception)
             {
+                factura_obj.Notas.Add(factura_ubl.Note[1].Value);
             }
 
             documento_formato.CamposPredeterminados = lista_campos;
