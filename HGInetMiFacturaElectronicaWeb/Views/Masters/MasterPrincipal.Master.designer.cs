@@ -373,13 +373,13 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl menu_1342;
         
         /// <summary>
-        /// Control HyperLink1.
+        /// Control link_1342.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink HyperLink1;
+        protected global::System.Web.UI.WebControls.HyperLink link_1342;
         
         /// <summary>
         /// Control lb_TituloPagina.

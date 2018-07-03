@@ -52,6 +52,20 @@
     <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
     <!-- /DevExtreme -->
 
+
+    <style>
+        .divImg {
+            border-radius: 40px;
+            -moz-border-radius: 40px;
+            -webkit-border-radius: 50px;
+            border-style: solid;
+            border-color: white;
+            border-right-width: 15px;
+            border-left-width: 15px;
+            background-color: white;
+        }
+    </style>
+
     <script src="../../Scripts/Pages/Autenticacion.js"></script>
 
 </head>

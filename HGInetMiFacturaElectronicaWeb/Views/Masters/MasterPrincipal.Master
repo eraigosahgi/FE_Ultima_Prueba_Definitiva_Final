@@ -341,7 +341,7 @@
                                                     </li>
 
                                                     <li runat="server" id="menu_1342">
-                                                        <asp:HyperLink runat="server" ID="HyperLink1" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaDocumentosClientes.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta de Documento</span></asp:HyperLink>
+                                                        <asp:HyperLink runat="server" ID="link_1342" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaDocumentosClientes.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta de Documento</span></asp:HyperLink>
                                                     </li>
                                                 </ul>
                                             </li>

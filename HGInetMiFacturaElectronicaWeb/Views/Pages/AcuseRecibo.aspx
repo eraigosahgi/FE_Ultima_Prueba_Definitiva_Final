@@ -82,6 +82,19 @@
     <!-- JS AcuseRecibo -->
     <script src="../../Scripts/Pages/AcuseRecibo.js"></script>
 
+    <style>
+        .divImg {
+            border-radius: 40px;
+            -moz-border-radius: 40px;
+            -webkit-border-radius: 50px;
+            border-style: solid;
+            border-color: white;
+            border-right-width: 15px;
+            border-left-width: 15px;
+            background-color: white;
+        }
+    </style>
+
 </head>
 
 <body class="login-container" style="background-color: #eeeded">
