@@ -8,12 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-   <title>HGInet Facturación Electrónica</title>
+    <title>HGInet Facturación Electrónica</title>
 
     <!-- Global stylesheets -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css" />
     <!-- /Global stylesheets -->
-    
+
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <!-- Global stylesheets -->
@@ -77,23 +77,14 @@
     <script src="../../Scripts/devall.js"></script>
     <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
 
-    
+
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css" />
+
+
 
     <!-- JS AcuseRecibo -->
     <script src="../../Scripts/Pages/AcuseRecibo.js"></script>
 
-    <style>
-        .divImg {
-            border-radius: 40px;
-            -moz-border-radius: 40px;
-            -webkit-border-radius: 50px;
-            border-style: solid;
-            border-color: white;
-            border-right-width: 15px;
-            border-left-width: 15px;
-            background-color: white;
-        }
-    </style>
 
 </head>
 
@@ -170,45 +161,29 @@
 
                             <form data-ng-submit="onFormSubmit($event)">
 
-                                <div >
-                                    <fieldset id="group1"> 
-                                        <h3>Respuesta Acuse:  </h3>
-                                        <br />                                        
-                                        <div class="col-md-12">
-                                            <div class="col-md-2 dx-item-content">
-                                                <label class="text-bold">Aprobar: </label>
-                                            </div>
-                                            <div class="col-md-2 ">
-                                                <input type="radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-2 dx-item-content">
-                                                <label class="text-bold">Rechazar: </label>
-                                            </div>
-                                            <div class="col-md-2 ">
-                                                <input type="radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
-                                            </div>
-                                        </div>
-                                                                  
-                                    </fieldset>
-                                     <br />
-                                     <br />
+                                <div>
+
+                                    <h3>Respuesta Acuse:  </h3>
+                                    <br />
+                                    <div class="col-md-12 ">
+                                        <label><strong> Aprobar:</strong></label>
+                                        <input type="radio" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+
+                                        <label><strong>Rechazar:</strong></label>
+                                        <input type="radio" class="w3-radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+                                    </div>
+                                    <br />                                    
                                 </div>
 
-                               <div id="form" data-dx-form="TextAreaObservaciones" data-ng-if="RechazarVar">
-                                   
-                                </div>
-                                <div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
-                                <br />
-                                <br />
+                                <div id="form" data-dx-form="TextAreaObservaciones" style="padding-left:2%; padding-top:5%;" > </div>                                
+                                <br />                                
                                 <div class="col-lg-12 text-right">
                                     <div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
+                                    <div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
                                     &nbsp;&nbsp;&nbsp;
                                     
                                 </div>
-                                <br />
-                                <br />
+                                
                             </form>
 
                             <br />
@@ -228,17 +203,16 @@
 
                                 <a href="{{datos.Pdf}}" target="_blank" class="icon-file-pdf text-bold" style="color: #1E88E5;">Pdf</a>
                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                <a href="{{datos.Xml}}" target="_blank" class="icon-file-xml text-bold" style="color: #1E88E5;">Xml</a>                                
+                                <a href="{{datos.Xml}}" target="_blank" class="icon-file-xml text-bold" style="color: #1E88E5;">Xml</a>
                             </div>
                             <br />
-                            <div style="text-align: center;" >                                                                
-                                <a id="btnautenticar" class="btn btn-default" style="background:rgb(51, 122, 183); color:white; text-transform:initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size:14px;  text-align:center; ">Autenticar</a>
+                            <div style="text-align: center;">
+                                <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size: 14px; text-align: center;">Autenticar</a>
                                 <br />
                                 <br />
-                                <div class="footer text-muted" style="font-size:14px;">
-                                    
-                                    Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color:rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a> 
-                                </div>                                
+                                <div class="footer text-muted" style="font-size: 14px;">
+                                    Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a>
+                                </div>
                             </div>
 
                         </div>
@@ -261,8 +235,10 @@
     </div>
     <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
-        <div class="modal" style="background-color: white; opacity: 0.6; display: block; "></div>        
-        <div> <img class="divImg" style="position: absolute; left: 43%; top: 30%; z-index: 9999; width:20%; height:20%;" src="../../Content/icons/Loading.gif" /></div>        
+        <div class="modal" style="background-color: white; opacity: 0.6; display: block;"></div>
+        <div>
+            <img class="divImg" style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
+        </div>
     </div>
 </body>
 
