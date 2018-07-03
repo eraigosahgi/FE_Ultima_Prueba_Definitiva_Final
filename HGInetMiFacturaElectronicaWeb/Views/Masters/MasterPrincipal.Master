@@ -276,7 +276,6 @@
                                             <li runat="server" id="menu_131">
 
                                                 <a href="#" class="has-ul legitRipple"><i class="icon-user-tie"></i><span style="margin: -10px">Facturador</span></a>
-
                                                 <ul runat="server" id="ul_131">
 
                                                     <li runat="server" id="menu_1311">
@@ -297,12 +296,12 @@
                                             <li runat="server" id="menu_132">
 
                                                 <a href="#" class="has-ul legitRipple"><i class="icon-reading"></i><span style="margin: -10px">Adquiriente</span></a>
-
                                                 <ul runat="server" id="ul_132">
 
                                                     <li runat="server" id="menu_1321">
                                                         <asp:HyperLink runat="server" ID="link_1321" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosAdquiriente.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta Documentos</span></asp:HyperLink>
                                                     </li>
+
                                                 </ul>
 
                                             </li>
