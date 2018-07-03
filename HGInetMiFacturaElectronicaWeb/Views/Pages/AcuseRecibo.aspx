@@ -167,10 +167,10 @@
                                     <br />
                                     <div class="col-md-12 ">
                                         <label><strong> Aprobar:</strong></label>
-                                        <input type="radio" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+                                        <input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
                                         
                                         <label style="margin-left:20px;"><strong>Rechazar:</strong></label>
-                                        <input type="radio" class="w3-radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+                                        <input type="radio" style="cursor: pointer" class="w3-radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
                                     </div>
                                     <br />                                    
                                 </div>
