@@ -22,5 +22,11 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		[FaultContract(typeof(Error), Action = "Recepcion", Name = "Error")]
 		[WebInvoke(Method = "POST")]
 		List<DocumentoRespuesta> Recepcion(List<NotaCredito> documentos);
+
+		[OperationContract(Name = "ObtenerPorFechasAdquiriente")]
+		[FaultContract(typeof(Error), Action = "ObtenerPorFechasAdquiriente", Name = "Error")]
+		[WebInvoke(Method = "GET")]
+		List<NotaCreditoConsulta> ObtenerPorFechasAdquiriente(string DataKey, string Identificacion, DateTime FechaInicio, DateTime FechaFinal);
+
 	}
 }

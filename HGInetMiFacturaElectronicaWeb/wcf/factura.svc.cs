@@ -10,6 +10,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Error;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
+using HGInetMiFacturaElectonicaController.Registros;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -45,6 +46,40 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
 			}
 		}
+
+
+		/// <summary>
+		/// Obtiene los documentos facturas para un adquiriente específico
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado) en formato Sha1</param>
+		/// <param name="Identificacion">Número de identificación del adquiriente</param>
+		/// <param name="FechaInicial">fecha inicial del rango de búsqueda - aplica sobre la fecha del registro</param>
+		/// <param name="FechaFinal">fecha final del rango de búsqueda - aplica sobre la fecha del registro</param>
+		/// <returns>documentos facturas entre fechas por adquiriente</returns>
+		public List<FacturaConsulta> ObtenerPorFechasAdquiriente(string DataKey, string Identificacion, DateTime FechaInicio, DateTime FechaFinal)
+        {
+            try
+            {
+                List<FacturaConsulta> respuesta = new List<FacturaConsulta>();
+
+                //Válida que la key sea correcta.
+                Peticion.Validar(DataKey, Identificacion);
+
+                Ctl_Factura ctl_documento = new Ctl_Factura();
+
+                // obtiene los datos
+                respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);
+
+                return respuesta;
+
+            }
+            catch (Exception exec)
+            {
+                Error error = new Error(CodigoError.VALIDACION, exec);
+                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+            }
+        }
+
 
         /// <summary>
 		/// Método Web para probar Formato
