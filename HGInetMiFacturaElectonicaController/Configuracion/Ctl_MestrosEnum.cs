@@ -1,20 +1,16 @@
-﻿using HGInetMiFacturaElectonicaData;
-using HGInetMiFacturaElectonicaData.ControllerSql;
-using HGInetMiFacturaElectonicaData.Modelo;
-using LibreriaGlobalHGInet.Funciones;
+﻿using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
     public class Ctl_MaestrosEnum
     {
-        public List<string[]> ListaEnum(int tipo_enum,string tipo_ambiente = "*")
+        public static List<string[]> ListaEnum(int tipo_enum,string tipo_ambiente = "*")
         {
             try
             {
