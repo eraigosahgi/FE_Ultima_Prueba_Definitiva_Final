@@ -55,10 +55,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         [RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
         public string NumeroResolucion { get; set; }
 
-        /// <summary>
-        /// Fecha de la Nota Credito
-        /// </summary>
-        public DateTime Fecha { get; set; }
+		/// <summary>
+		/// Prefijo del Documento según la Resolución asignada por la DIAN
+		/// </summary>
+		public string Prefijo { get; set; }
+
+		/// <summary>
+		/// Fecha de la Nota Credito
+		/// </summary>
+		public DateTime Fecha { get; set; }
 
         /// <summary>
         /// Fecha de la Factura afectada
@@ -70,10 +75,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public string Nota { get; set; }
 
-        /// <summary>
-        /// Concepto por el cual genera la nota, codigo Según Tabla DIAN.
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		/// <summary>
+		/// Notas (observaciones) del documento
+		/// </summary>
+		public List<string> Notas { get; set; }
+
+		/// <summary>
+		/// Concepto por el cual genera la nota, codigo Según Tabla DIAN.
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string Concepto { get; set; }
 
         /// <summary>

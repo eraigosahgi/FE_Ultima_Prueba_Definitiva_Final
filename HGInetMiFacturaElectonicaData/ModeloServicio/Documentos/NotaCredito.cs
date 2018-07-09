@@ -57,10 +57,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         [RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
         public string NumeroResolucion { get; set; }
 
-        /// <summary>
-        /// Fecha de la Nota Credito
-        /// </summary>
-        public DateTime Fecha { get; set; }
+		/// <summary>
+		/// Prefijo del Documento según la Resolución asignada por la DIAN
+		/// </summary>
+		public string Prefijo { get; set; }
+
+		/// <summary>
+		/// Fecha de la Nota Credito
+		/// </summary>
+		public DateTime Fecha { get; set; }
 
         /// <summary>
         /// Fecha de la Factura afectada
