@@ -113,7 +113,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
             {
                 TipoDocumento = tipo_doc.GetHashCode(),
-                IdSoftware = IdSoftware,
+				Prefijo = documento.Prefijo,
+				IdSoftware = IdSoftware,
                 NitProveedor = NitProveedor,
                 ClaveTecnicaDIAN = resolucion.StrClaveTecnica,
                 PinSoftware = PinSoftware
@@ -131,10 +132,58 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             return resultado;
         }
 
-        public static FacturaE_Documento Generar(NotaDebito documento, bool pruebas = false)
+		/// <summary>
+		/// Genera la información del documento en formato UBL
+		/// </summary>
+		/// <param name="id">id único de identificación de la plataforma</param>
+		/// <param name="documento">datos del documento</param>
+		/// <param name="pruebas">indica si el documento es de pruebas (true)</param>
+		/// <returns>datos del documento</returns>
+		public static FacturaE_Documento Generar(Guid id, NotaDebito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
         {
-            return null;
-        }
+			// resolución del documento
+			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
+
+			// obtiene los datos del proveedor tecnológico de la DIAN
+			DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
+
+			// obtiene los datos de prueba del proveedor tecnológico de la DIAN
+			DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
+
+			string IdSoftware = data_dian.IdSoftware;
+			string PinSoftware = data_dian.Pin;
+			string NitProveedor = data_dian.NitProveedor;
+
+			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
+			if (empresa.IntHabilitacion < 99)
+			{
+				IdSoftware = data_dian_habilitacion.IdSoftware;
+				PinSoftware = data_dian_habilitacion.Pin;
+				NitProveedor = data_dian_habilitacion.NitProveedor;
+			}
+
+			// convierte la información de la resolución a la extensión DIAN
+			extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
+			{
+				TipoDocumento = tipo_doc.GetHashCode(),
+				Prefijo = documento.Prefijo,
+				IdSoftware = IdSoftware,
+				NitProveedor = NitProveedor,
+				ClaveTecnicaDIAN = resolucion.StrClaveTecnica,
+				PinSoftware = PinSoftware
+			};
+
+
+			// convierte el documento 
+			FacturaE_Documento resultado = NotaDebitoXML.CrearDocumento(documento, extension_documento, tipo_doc);
+			resultado.DocumentoTipo = tipo_doc;
+			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
+
+			// genera el nombre del archivo ZIP
+			resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc);
+
+			return resultado;
+		}
 
         /// <summary>
         /// Almacena el archivo Xml físicamente
@@ -163,9 +212,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						id_obligado = documento.IdSeguridadTercero.ToString();
                         break;
                     case TipoDocumento.NotaDebito:
-                        /*NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
-						nit_obligado = doc_nota_debito.DatosObligado.Identificacion;
-						*/
+                        NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
+						id_obligado = documento.IdSeguridadTercero.ToString();
+						
                         break;
                     default:
                         break;
