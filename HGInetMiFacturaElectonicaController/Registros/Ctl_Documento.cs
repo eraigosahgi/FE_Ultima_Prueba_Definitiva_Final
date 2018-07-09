@@ -80,7 +80,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
 		/// <param name="Identificacion">identificación obligado</param>
-		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota crédito - 3: nota débito</param>
+		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota débito - 3: nota crédito</param>
 		/// <param name="Numeros">número de los documentos (recibe varios números separados por coma)</param>
 		/// <returns></returns>
 		public List<DocumentoRespuesta> ConsultaPorNumeros(string identificacion_obligado, int tipo_documento, string Numeros)
@@ -136,7 +136,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
 		/// <param name="Identificacion">identificación obligado</param>
-		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota crédito - 3: nota débito</param>
+		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota débito - 3: nota crédito</param>
 		/// <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
 		/// <returns></returns>
 		public List<DocumentoRespuesta> ConsultaPorCodigoRegistro(string identificacion_obligado, int tipo_documento, string CodigosRegistros)
@@ -182,7 +182,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Obtiene los documentos por rangos de fecha de elaboración.
 		/// </summary>
 		/// <param name="identificacion_obligado">identificación obligado</param>
-		/// <param name="tipo_documento">tipo documento 1: factura - 2: nota crédito - 3: nota débito</param>
+		/// <param name="tipo_documento">tipo documento 1: factura - 2: nota débito - 3: nota crédito</param>
 		/// <param name="FechaInicial">fecha inicial del rango de búsqueda - aplica sobre la fecha del registro</param>
 		/// <param name="FechaFinal">fecha final del rango de búsqueda - aplica sobre la fecha del registro</param>
 		/// <returns></returns>
@@ -229,26 +229,25 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="codigo_adquiente"></param>
+		/// <param name="identificacion_adquiente"></param>
 		/// <param name="numero_documento"></param>
 		/// <param name="estado_recibo"></param>
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
+		/// <param name="tipo_documento">tipo documento 1: factura - 2: nota débito - 3: nota crédito - -1: todos</param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerPorFechasAdquiriente(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+		public List<TblDocumentos> ObtenerPorFechasAdquiriente(string identificacion_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			// Valida los estados de visibilidad pública para el adquiriente
 			var estado_dian = "";
 			estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico"));
 
 			fecha_inicio = fecha_inicio.Date;
-			fecha_fin = fecha_fin.Date;
-
-			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+			fecha_fin = fecha_fin.Date.AddDays(1);
 
 			int num_doc = -1;
 			int.TryParse(numero_documento, out num_doc);
-
+			
 			short cod_estado_recibo = -1;
 			short.TryParse(estado_recibo, out cod_estado_recibo);
 
@@ -259,10 +258,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			var respuesta = (from datos in context.TblDocumentos
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-							 where (empresa.StrIdentificacion.Equals(codigo_adquiente) || codigo_adquiente.Equals("*"))
-										   && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
+										&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 										   && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-										   && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
+										   && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento < fecha_fin)
 										   && (estado_dian.Contains(datos.IntIdEstado.ToString()))
 							 orderby datos.IntNumero descending
 							 select datos).ToList();
