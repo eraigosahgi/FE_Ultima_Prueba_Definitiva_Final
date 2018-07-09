@@ -35,8 +35,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     documento_obj = Validar((Factura)documento_obj, resolucion);
                 else if (tipo_doc == TipoDocumento.NotaCredito)
                     documento_obj = ValidarNotaCredito((NotaCredito)documento_obj, resolucion);
+				else if (tipo_doc == TipoDocumento.NotaDebito)
+					documento_obj = ValidarNotaDebito((NotaDebito)documento_obj, resolucion);
 
-            }
+
+			}
             catch (Exception excepcion)
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la validación del documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);

@@ -35,19 +35,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
                 respuesta.IdProceso = ProcesoEstado.UBL.GetHashCode();
 				
-				/*
-                //Actualiza documento en la Base de Datos
-                documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-                documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-                
-                Ctl_Documento documento_tmp = new Ctl_Documento();
-                documento_tmp.Actualizar(documentoBd);*/
-                
                 //Genera Ubl
                 if (tipo_doc == TipoDocumento.Factura)
                     documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (Factura)documento_obj, tipo_doc, empresa, resolucion);
                 else if (tipo_doc == TipoDocumento.NotaCredito)
                     documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaCredito)documento_obj, tipo_doc, empresa, resolucion);
+				else if (tipo_doc == TipoDocumento.NotaDebito)
+					documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaDebito)documento_obj, tipo_doc, empresa, resolucion);
 
 			}
 			catch (Exception excepcion)
