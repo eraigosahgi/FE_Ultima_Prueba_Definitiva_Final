@@ -24,18 +24,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 	public partial class Ctl_Documentos
 	{
 
+		/// <summary>
+		/// Procesa un archivo de documentos
+		/// </summary>
+		/// <param name="id_peticion">Peticion de la plataforma </param>
+		/// <param name="archivo">Objeto don informacion del XML-UBL</param>
+		/// <param name="facturador">Objeto BD del Facturador Electónico</param>
+		/// <param name="resolucion">Objeto BD de las Resoluciones del Facturador Electronico</param>
+		/// <returns>Objeto tipo DocumentoRespuesta</returns>
 		public static DocumentoRespuesta Procesar(Guid id_peticion, DocumentoArchivo archivo, TblEmpresas facturador, TblEmpresasResoluciones resolucion)
 		{
 
 			DateTime fecha_actual = Fecha.GetFecha();
 
 			// representación de datos en objeto
-			Factura documento_obj = (dynamic)null;
+			var documento_obj = (dynamic)null;
 
 			string contenido_xml = string.Empty;
 			string cufe_calculado = string.Empty;
-
-			InvoiceType conversion = new InvoiceType();
 
 			try
 			{
@@ -52,8 +58,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// convierte el objeto de acuerdo con el tipo de documento
 				XmlSerializer serializacion = null;
 
+				//Valida tipo de documento para hacer la deserializacion
 				if (archivo.TipoDocumento == TipoDocumento.Factura.GetHashCode())
 				{
+					InvoiceType conversion = new InvoiceType();
 
 					serializacion = new XmlSerializer(typeof(InvoiceType));
 
@@ -63,12 +71,54 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					cufe_calculado = HGInetUBL.FacturaXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica);
 
-					if(!cufe_calculado.Equals(documento_obj.Cufe) || string.IsNullOrEmpty(documento_obj.Cufe))
+					if (!cufe_calculado.Equals(documento_obj.Cufe) || string.IsNullOrEmpty(documento_obj.Cufe))
 						throw new ArgumentException("el CUFE enviado no esta bien formado");
 
 					documento_obj.DataKey = archivo.DataKey;
 					documento_obj.CodigoRegistro = archivo.CodigoRegistro;
 					documento_obj.Neto = (documento_obj.Total - (documento_obj.ValorReteFuente + documento_obj.ValorReteIca + documento_obj.ValorReteIva));
+
+				}
+				else if (archivo.TipoDocumento == TipoDocumento.NotaCredito.GetHashCode())
+				{
+
+					CreditNoteType conversion = new CreditNoteType();
+
+					serializacion = new XmlSerializer(typeof(CreditNoteType));
+
+					conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+
+					documento_obj = NotaCreditoXML.Convertir(conversion);
+
+					cufe_calculado = HGInetUBL.NotaCreditoXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica, documento_obj.CufeFactura);
+
+					if (!cufe_calculado.Equals(documento_obj.Cufe) || string.IsNullOrEmpty(documento_obj.Cufe))
+						throw new ArgumentException("el CUFE enviado no esta bien formado");
+
+					documento_obj.DataKey = archivo.DataKey;
+					documento_obj.CodigoRegistro = archivo.CodigoRegistro;
+					documento_obj.Neto = (documento_obj.Total - (documento_obj.ValorReteFuente + documento_obj.ValorReteIca + documento_obj.ValorReteIva));
+
+				}
+				else if (archivo.TipoDocumento == TipoDocumento.NotaDebito.GetHashCode())
+				{
+					DebitNoteType conversion = new DebitNoteType();
+
+					serializacion = new XmlSerializer(typeof(DebitNoteType));
+
+					conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+					documento_obj = NotaDebitoXML.Convertir(conversion);
+
+					cufe_calculado = HGInetUBL.NotaDebitoXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica, documento_obj.CufeFactura);
+
+					if (!cufe_calculado.Equals(documento_obj.Cufe) || string.IsNullOrEmpty(documento_obj.Cufe))
+						throw new ArgumentException("el CUFE enviado no esta bien formado");
+
+					documento_obj.DataKey = archivo.DataKey;
+					documento_obj.CodigoRegistro = archivo.CodigoRegistro;
+					documento_obj.Neto = (documento_obj.Total - (documento_obj.ValorReteFuente + documento_obj.ValorReteIca + documento_obj.ValorReteIva));
+
 
 				}
 
@@ -114,18 +164,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
-				TipoDocumento tipo_doc = new TipoDocumento();
-
-				if (archivo.TipoDocumento == TipoDocumento.Factura.GetHashCode())
-				{
-					tipo_doc = TipoDocumento.Factura;
-				}
-				else if (archivo.TipoDocumento == TipoDocumento.NotaCredito.GetHashCode())
-				{
-					tipo_doc = TipoDocumento.NotaCredito;
-				}
-				else if (archivo.TipoDocumento == TipoDocumento.NotaDebito.GetHashCode())
-					tipo_doc = TipoDocumento.NotaDebito;
+				//Obtiene el tipo de Documento segun el Enumerable
+				TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(archivo.TipoDocumento);
 
 				// valida la información del documento
 				respuesta = Validar(documento_obj, tipo_doc, resolucion, ref respuesta);
@@ -158,7 +198,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					Ctl_Documento documento_tmp = new Ctl_Documento();
 
-		
+
 					//guarda documento en BD
 					TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, facturador, tipo_doc);
 
