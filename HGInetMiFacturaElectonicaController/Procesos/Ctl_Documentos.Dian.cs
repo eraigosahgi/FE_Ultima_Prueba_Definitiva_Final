@@ -6,6 +6,7 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUBL;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
@@ -97,6 +98,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string clave = null;
 				string url_ws_consulta = null;
 
+				TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(documentoBd.IntDocTipo);
 
 				// carpeta del xml
 				string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), empresa.StrIdSeguridad.ToString());
@@ -105,8 +107,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// valida la existencia de la carpeta
 				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
 
-				// ruta del xml
-				string archivo_xml = string.Format(@"{0}{1}.xml", documentoBd.StrPrefijo, documentoBd.IntNumero.ToString());
+				// Nombre del archivo Xml 
+				string archivo_xml = string.Format(@"{0}.xml",NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo));
 
 				// ruta del xml
 				string ruta_xml = string.Format(@"{0}{1}", carpeta_xml, archivo_xml);
