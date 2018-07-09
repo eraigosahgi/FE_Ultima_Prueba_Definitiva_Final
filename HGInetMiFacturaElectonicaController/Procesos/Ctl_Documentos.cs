@@ -138,9 +138,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Ctl_Documento num_doc = new Ctl_Documento();
 
 						//valida si el Documento ya existe en Base de Datos
-						TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento);
+						TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.Factura.GetHashCode());
 
-						if (numero_documento != null)
+						if (numero_documento != null && item.Prefijo == numero_documento.StrPrefijo)
 							throw new ApplicationException(string.Format("El documento {0} ya existe para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
 
 						TblEmpresasResoluciones resolucion = null;
@@ -221,19 +221,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			string prefijo = string.Empty;
 
 			var documento_obj = (dynamic)null;
-
-			if (tipo_doc == TipoDocumento.Factura)
-			{
-				documento_obj = documento;
-				numero_resolucion = documento_obj.NumeroResolucion;
-				prefijo = documento_obj.Prefijo;
-			}
-			else if (tipo_doc == TipoDocumento.NotaCredito)
-			{
-				documento_obj = documento;
-			}
-			else if (tipo_doc == TipoDocumento.NotaDebito)
-				documento_obj = documento;
+			documento_obj = documento;
 
 			if (documento_obj != null)
 			{
@@ -256,8 +244,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Identificacion = documento_obj.DatosAdquiriente.Identificacion,
 					IdProceso = ProcesoEstado.Recepcion.GetHashCode(),
 					MotivoRechazo = "",
-					NumeroResolucion = numero_resolucion,
-					Prefijo = prefijo,
+					NumeroResolucion = documento_obj.NumeroResolucion,
+					Prefijo = documento_obj.Prefijo,
 					ProcesoFinalizado = 0,
 					UrlPdf = "",
 					UrlXmlUbl = ""
@@ -335,7 +323,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw excepcion;
 						}
 
-						//Asignación de Cufe a documento_obj. 
+						//Asignación de Cufe a documento_obj 
 						documento_obj.Cufe = documento_result.CUFE;
 
 						// almacena Formato
@@ -467,9 +455,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Ctl_Documento num_doc = new Ctl_Documento();
 
 					//valida si el Documento ya existe en Base de Datos
-					TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento);
+					TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.NotaCredito.GetHashCode());
 
-					if (numero_documento != null)
+					if (numero_documento != null && item.Prefijo == numero_documento.StrPrefijo)
 						throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
 
 					// filtra la resolución del documento
@@ -536,6 +524,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			DateTime fecha_actual = Fecha.GetFecha();
 
+			List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+
 			// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
 			if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 			{
@@ -562,7 +552,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					SegundoNombre = null
 				};
 
+				string resolucion_pruebas = Constantes.ResolucionPruebas;
+				string nit_resolucion = Constantes.NitResolucionsinPrefijo;
+
+				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
+				lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas));
+
+				foreach (var item in documentos)
+				{
+					item.NumeroResolucion = resolucion_pruebas;
+					item.DatosObligado = DatosObligado;
+
+				}
 			}
+			else
+			{
+				// Obtiene la resolucion de la base de datos
+				Ctl_EmpresaResolucion _resolucion_factura = new Ctl_EmpresaResolucion();
+				lista_resolucion = _resolucion_factura.ObtenerResoluciones(documentos.FirstOrDefault().DatosObligado.Identificacion, "*");
+			}
+
 			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
 			foreach (NotaDebito item in documentos)
@@ -576,8 +585,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (string.IsNullOrEmpty(item.NumeroResolucion))
 						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
+					Ctl_Documento num_doc = new Ctl_Documento();
+
+					//valida si el Documento ya existe en Base de Datos
+					TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.NotaDebito.GetHashCode());
+
+					if (numero_documento != null && item.Prefijo == numero_documento.StrPrefijo)
+						throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
+
+					// filtra la resolución del documento
+					TblEmpresasResoluciones resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+
 					// realiza el proceso de envío a la DIAN del documento
-					item_respuesta = Procesar(id_peticion, item, TipoDocumento.NotaDebito, null, facturador_electronico);
+					item_respuesta = Procesar(id_peticion, item, TipoDocumento.NotaDebito, resolucion, facturador_electronico);
 
 				}
 				catch (Exception excepcion)
@@ -731,6 +751,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (!resolucion.StrNumResolucion.Equals(documento.NumeroResolucion))
 				throw new ApplicationException(string.Format("La Resolución {0} no es valida", documento.NumeroResolucion));
 
+			//valida el prefijo si es null lo llena vacio
+			/*if (string.IsNullOrEmpty(documento.Prefijo))
+				documento.Prefijo = string.Empty;*/
+
 			//Validar que no este vacia la fecha
 			if (documento.Fecha == null)
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Fecha", "DateTime"));
@@ -758,6 +782,76 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			//Valida totales del objeto
 			ValidarTotales(null, documento, null, TipoDocumento.NotaCredito);
+
+			return documento;
+		}
+
+		/// <summary>
+		/// Validación del Objeto Nota Debito
+		/// </summary>
+		/// <param name="documento">Objeto NotaDebito</param>
+		/// <returns></returns>
+		public static NotaDebito ValidarNotaDebito(NotaDebito documento, TblEmpresasResoluciones resolucion)
+		{
+			// valida objeto recibido
+			if (documento == null)
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "documento", "Nota Débito"));
+
+			//valida que no este vacio y existencia
+			if (string.IsNullOrEmpty(documento.CodigoRegistro))
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoRegistro", "string"));
+
+			//valida que no este vacio y existencia
+			if (string.IsNullOrEmpty(documento.DataKey))
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "DataKey", "string"));
+
+			// validar el número del documento y validez con resolucion
+			if (documento.Documento < 0)
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Documento", "int").Replace("no puede ser nulo", "no puede ser menor a 0"));
+
+			//Validar que no este vacio
+			if (string.IsNullOrEmpty(documento.DocumentoRef))
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "DocumentoRef", "string"));
+
+			//Validar que no este vacia la fecha del documento de referencia
+			if (documento.FechaFactura == null)
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
+
+			//Validar que no este vacio
+			if (string.IsNullOrEmpty(documento.CufeFactura))
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "CufeFactura", "string"));
+
+			//valida resolucion
+			if (!resolucion.StrNumResolucion.Equals(documento.NumeroResolucion))
+				throw new ApplicationException(string.Format("La Resolución {0} no es valida", documento.NumeroResolucion));
+
+			//Validar que no este vacia la fecha
+			if (documento.Fecha == null)
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Fecha", "DateTime"));
+
+			//Valida que no este vacio el concepto
+			if (documento.Concepto == null)
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Concepto", "string"));
+
+			//Valida que la fecha este en los terminos
+			if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
+				throw new ApplicationException(string.Format("La fecha {0} no esta dentro los terminos.", documento.Fecha));
+
+			//Valida que no este vacio y Formato
+			if (string.IsNullOrEmpty(documento.Moneda))
+				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Moneda", "string"));
+
+			if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Moneda))
+				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
+
+			//Valida que no este vacio y este bien formado 
+			ValidarTercero(documento.DatosObligado, "Obligado");
+
+			//Valida que no este vacio y este bien formado 
+			ValidarTercero(documento.DatosAdquiriente, "Adquiriente");
+
+			//Valida totales del objeto
+			ValidarTotales(null, null, documento, TipoDocumento.NotaDebito);
 
 			return documento;
 		}
@@ -815,9 +909,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (!ConfiguracionRegional.ValidarCodigoPais(tercero.CodigoPais))
 				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "CodigoPais", tercero.CodigoPais, tipo));
-
-			if (string.IsNullOrEmpty(tercero.RazonSocial))
-				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial", tipo).Replace("de tipo", "del"));
 
 			if (string.IsNullOrEmpty(tercero.RazonSocial))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial", tipo).Replace("de tipo", "del"));
@@ -1131,7 +1222,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Ctl_Documento num_doc = new Ctl_Documento();
 
 					//valida si el Documento ya existe en Base de Datos
-					TblDocumentos numero_documento = num_doc.Obtener(objeto.NumeroResolucion, objeto.Documento);
+					TblDocumentos numero_documento = num_doc.Obtener(objeto.NumeroResolucion, objeto.Documento, objeto.TipoDocumento);
 
 					if (numero_documento != null)
 						throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", objeto.Documento, facturador_electronico.StrIdentificacion));
