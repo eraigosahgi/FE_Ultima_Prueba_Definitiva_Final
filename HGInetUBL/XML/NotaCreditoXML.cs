@@ -15,7 +15,7 @@ using System.Xml.Serialization;
 
 namespace HGInetUBL
 {
-	public class NotaCreditoXML
+	public partial class NotaCreditoXML
 	{
 
         /// <summary>
@@ -72,6 +72,14 @@ namespace HGInetUBL
 				};
 				#endregion
 
+				#region nota_credito.CustomizationID //
+
+				nota_credito.CustomizationID = new CustomizationIDType()
+				{
+					Value = documento.Prefijo
+				};
+				#endregion
+
 				#region nota_credito.ProfileID //Versión del documento DIAN_UBL.xsd publicado por la DIAN
 				nota_credito.ProfileID = new ProfileIDType()
 				{
@@ -80,9 +88,14 @@ namespace HGInetUBL
 				#endregion
 
 				#region nota_credito.ID //Número de documento: Número de nota_credito o nota_credito cambiaria.
+				string numero_documento = "";
+				if (!string.IsNullOrEmpty(documento.Prefijo))
+					numero_documento = string.Format("{0}", documento.Prefijo);
+
+				numero_documento = string.Format("{0}{1}", numero_documento, documento.Documento.ToString());
 				nota_credito.ID = new IDType();
 				IDType ID = new IDType();
-				ID.Value = documento.Documento.ToString();
+				ID.Value = numero_documento;
 				nota_credito.ID = ID;
 				#endregion
 

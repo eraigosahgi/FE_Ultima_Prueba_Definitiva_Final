@@ -1,7 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL.Objetos;
 using HGInetUBL.Recursos;
-using HGInetUBL.XML;
+using HGInetUBL;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Properties;
