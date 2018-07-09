@@ -54,14 +54,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		#region Obtener
 
-		public TblDocumentos Obtener(string numero_resolucion, int numero_documeto)
+		public TblDocumentos Obtener(string numero_resolucion, int numero_documeto, int tipo_doc)
 		{
 			try
 			{
 
 				TblDocumentos documento = (from documentos in context.TblDocumentos
 										   where (documentos.IntNumero == numero_documeto)
-										   && (documentos.TblEmpresasResoluciones.StrNumResolucion.Equals(numero_resolucion))
+										   && (documentos.TblEmpresasResoluciones.StrNumResolucion.Equals(numero_resolucion) 
+										   && (documentos.IntDocTipo == tipo_doc))
 										   select documentos).FirstOrDefault();
 
 				return documento;
@@ -426,34 +427,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			try
 			{
-				//Valida el tipo de documento enviado por el usuario
+				//Asigna a un objeto dinamico el objeto enviado por el usuario
 				var documento_obj = (dynamic)null;
-
-				if (tipo_doc == TipoDocumento.Factura)
-				{
-					documento_obj = documento;
-				}
-				else if (tipo_doc == TipoDocumento.NotaCredito)
-				{
-					documento_obj = documento;
-				}
-				else if (tipo_doc == TipoDocumento.NotaDebito)
-					documento_obj = documento;
+				documento_obj = documento;
 
 				TblDocumentos tbl_documento = new TblDocumentos();
 
 				tbl_documento.DatFechaIngreso = respuesta.FechaRecepcion;
-				tbl_documento.IntDocTipo = Convert.ToInt16(tipo_doc);
+				tbl_documento.IntDocTipo = tipo_doc.GetHashCode();
 				tbl_documento.IntNumero = documento_obj.Documento;
-
+				tbl_documento.StrPrefijo = (!string.IsNullOrEmpty(documento_obj.Prefijo)) ? documento_obj.Prefijo : "";
 				if (tipo_doc == TipoDocumento.NotaCredito || tipo_doc == TipoDocumento.NotaDebito)
 				{
-					tbl_documento.StrPrefijo = "";
 					tbl_documento.DatFechaVencDocumento = documento_obj.Fecha;
 				}
 				else
 				{
-					tbl_documento.StrPrefijo = (!string.IsNullOrEmpty(documento_obj.Prefijo)) ? documento_obj.Prefijo : "";
 					tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
 				}
 				tbl_documento.DatFechaDocumento = documento_obj.Fecha;
