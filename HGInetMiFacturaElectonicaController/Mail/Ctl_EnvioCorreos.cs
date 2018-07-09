@@ -439,24 +439,14 @@ namespace HGInetMiFacturaElectonicaController
 
 
                         //Datos del Documento
-                        string titulo_factura = string.Empty;
-
-                        switch (documento.IntDocTipo)
-                        {
-                            case 1:
-                                titulo_factura = "Factura";
-                                break;
-                            case 2:
-                                titulo_factura = "Nota Débito";
-                                break;
-                            case 3:
-                                titulo_factura = "Nota Crédito";
-                                break;
-                        }
-
+                        
+						// obtiene el título para el tipo de documento
+						TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(documento.IntDocTipo);
+						string  titulo_documento = Enumeracion.GetDescription(doc_tipo);
+						
                         string estado_factura = "Entregado DIAN";
 
-                        mensaje = mensaje.Replace("{TipoDocumento}", titulo_factura);
+                        mensaje = mensaje.Replace("{TipoDocumento}", titulo_documento);
                         mensaje = mensaje.Replace("{NumeroDocumento}", documento.IntNumero.ToString());
                         mensaje = mensaje.Replace("{FechaDocumento}", documento.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet));
                         mensaje = mensaje.Replace("{TotalDocumento}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
