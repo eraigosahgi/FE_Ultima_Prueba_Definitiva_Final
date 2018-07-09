@@ -152,11 +152,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
-					documento_obj = documento;
+					serializacion = new XmlSerializer(typeof(CreditNoteType));
+
+					CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+
+					documento_obj = NotaCreditoXML.Convertir(conversion);
+					documento.StrCufe = documento_obj.Cufe;
 				}
 				else if (tipo_documento == TipoDocumento.NotaDebito)
 				{
-					documento_obj = documento;
+					serializacion = new XmlSerializer(typeof(DebitNoteType));
+
+					DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+					documento_obj = NotaDebitoXML.Convertir(conversion);
+					documento.StrCufe = documento_obj.Cufe;
 				}
 
 				// convierte los datos del objeto en texto XML 
