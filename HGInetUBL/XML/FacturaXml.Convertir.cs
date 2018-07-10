@@ -67,7 +67,7 @@ namespace HGInetUBL
 			}
 
 			//Valida si tiene documento referencia
-			if (factura_ubl.BillingReference != null)
+			if (factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
 			{
 				factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
 			}
@@ -86,40 +86,44 @@ namespace HGInetUBL
 			factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
 			factura_obj.Nota = factura_ubl.Note[0].Value;
 
-			Formato documento_formato = new Formato();
-			List<FormatoCampo> lista_campos = new List<FormatoCampo>();
-
-			try
+			//Valida si trae mas notas para validar los campos
+			if (factura_ubl.Note.Length > 1)
 			{
-				//Deserializa la posición 1 y las convierte en FormatoCampo
-				dynamic jsonObj = JsonConvert.DeserializeObject(factura_ubl.Note[1].Value);
+				Formato documento_formato = new Formato();
+				List<FormatoCampo> lista_campos = new List<FormatoCampo>();
 
-				if (jsonObj != null)
+				try
 				{
-					documento_formato.Codigo = jsonObj.Codigo;
+					//Deserializa la posición 1 y las convierte en FormatoCampo
+					dynamic jsonObj = JsonConvert.DeserializeObject(factura_ubl.Note[1].Value);
 
-					if (jsonObj.CamposPredeterminados != null)
+					if (jsonObj != null)
 					{
-						foreach (var obj in jsonObj.CamposPredeterminados)
-						{
-							FormatoCampo campo = new FormatoCampo();
-							campo.Descripcion = obj.Descripcion;
-							campo.Ubicacion = obj.Ubicacion;
-							campo.Valor = obj.Valor;
+						documento_formato.Codigo = jsonObj.Codigo;
 
-							lista_campos.Add(campo);
+						if (jsonObj.CamposPredeterminados != null)
+						{
+							foreach (var obj in jsonObj.CamposPredeterminados)
+							{
+								FormatoCampo campo = new FormatoCampo();
+								campo.Descripcion = obj.Descripcion;
+								campo.Ubicacion = obj.Ubicacion;
+								campo.Valor = obj.Valor;
+
+								lista_campos.Add(campo);
+							}
 						}
 					}
 				}
-			}
-			catch (Exception)
-			{
-				factura_obj.Notas.Add(factura_ubl.Note[1].Value);
-			}
+				catch (Exception)
+				{
+					factura_obj.Notas.Add(factura_ubl.Note[1].Value);
+				}
 
-			documento_formato.CamposPredeterminados = lista_campos;
+				documento_formato.CamposPredeterminados = lista_campos;
 
-			factura_obj.DocumentoFormato = documento_formato;
+				factura_obj.DocumentoFormato = documento_formato;
+			}
 
 			#region Datos del Adquiriente
 			Tercero adquiriente = new Tercero();
@@ -233,16 +237,19 @@ namespace HGInetUBL
 						{
 							detalle.ImpoConsumoPorcentaje = porcentaje_impto;
 							detalle.ValorImpuestoConsumo = valor_impto;
+							factura_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
 						}
 						else if (TipoImpuestos.Ica.Equals(tipo_impto))
 						{
 							detalle.ReteIcaPorcentaje = porcentaje_impto;
 							detalle.ReteIcaValor = valor_impto;
+							factura_obj.ValorReteIca += detalle.ReteIcaValor;
 						}
 						else if (TipoImpuestos.ReteFte.Equals(tipo_impto))
 						{
 							detalle.ReteFuentePorcentaje = porcentaje_impto;
 							detalle.ReteFuenteValor = valor_impto;
+							factura_obj.ValorReteFuente += detalle.ReteFuenteValor;
 						}
 
 					}
@@ -257,8 +264,10 @@ namespace HGInetUBL
 			#region Totales
 			factura_obj.ValorSubtotal = factura_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
 			factura_obj.ValorDescuento = factura_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
+			factura_obj.Valor = factura_obj.ValorSubtotal + factura_obj.ValorDescuento;
 			factura_obj.ValorIva = factura_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value;
 			factura_obj.Total = factura_ubl.LegalMonetaryTotal.PayableAmount.Value;
+			factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
 
 			#endregion
 
