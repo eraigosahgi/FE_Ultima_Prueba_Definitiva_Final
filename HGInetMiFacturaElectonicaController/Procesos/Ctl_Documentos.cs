@@ -174,6 +174,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							CodigoRegistro = item.CodigoRegistro,
 							Cufe = "",
 							DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+							DocumentoTipo = TipoDocumento.Factura.GetHashCode(),
 							Documento = item.Documento,
 							Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 							EstadoDian = null,
@@ -236,6 +237,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					CodigoRegistro = documento_obj.CodigoRegistro,
 					Cufe = "",
 					DescripcionProceso = "Recepción - Información del documento.",
+					DocumentoTipo = tipo_doc.GetHashCode(),
 					Documento = documento_obj.Documento,
 					Error = null,
 					FechaRecepcion = fecha_actual,
@@ -478,6 +480,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						CodigoRegistro = item.CodigoRegistro,
 						Cufe = "",
 						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						DocumentoTipo = TipoDocumento.NotaCredito.GetHashCode(),
 						Documento = item.Documento,
 						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 						EstadoDian = null,
@@ -611,6 +614,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						CodigoRegistro = item.CodigoRegistro,
 						Cufe = "",
 						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						DocumentoTipo = TipoDocumento.NotaDebito.GetHashCode(),
 						Documento = item.Documento,
 						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 						EstadoDian = null,
@@ -867,12 +871,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (tercero == null)
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Tercero", tipo).Replace("de tipo", "del"));
 
-			//valida que la identificacion no contenga contener letras y/o caracteres especiales
+			//valida que la identificacion no contenga caracteres especiales
 			//Regex isnumber = new Regex("[^0-9]");
 			if (!string.IsNullOrEmpty(tercero.Identificacion))
 			{
-				if (!Texto.ValidarExpresion(TipoExpresion.Numero, tercero.Identificacion))
-					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener letras y/o caracteres especiales", "Identificacion", tipo));
+				if (!Texto.ValidarExpresion(TipoExpresion.Numero, tercero.Identificacion) && !Texto.ValidarExpresion(TipoExpresion.Alfanumerico, tercero.Identificacion))
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener caracteres especiales", "Identificacion", tipo));
 			}
 			else
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Identificacion", tipo).Replace("de tipo", "del"));
@@ -1258,6 +1262,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						CodigoRegistro = objeto.CodigoRegistro,
 						Cufe = "",
 						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						DocumentoTipo = objeto.TipoDocumento,
 						Documento = objeto.Documento,
 						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 						EstadoDian = null,

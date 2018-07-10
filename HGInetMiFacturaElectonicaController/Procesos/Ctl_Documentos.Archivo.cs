@@ -76,7 +76,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					documento_obj.DataKey = archivo.DataKey;
 					documento_obj.CodigoRegistro = archivo.CodigoRegistro;
-					documento_obj.Neto = (documento_obj.Total - (documento_obj.ValorReteFuente + documento_obj.ValorReteIca + documento_obj.ValorReteIva));
 
 				}
 				else if (archivo.TipoDocumento == TipoDocumento.NotaCredito.GetHashCode())
@@ -97,7 +96,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					documento_obj.DataKey = archivo.DataKey;
 					documento_obj.CodigoRegistro = archivo.CodigoRegistro;
-					documento_obj.Neto = (documento_obj.Total - (documento_obj.ValorReteFuente + documento_obj.ValorReteIca + documento_obj.ValorReteIva));
 
 				}
 				else if (archivo.TipoDocumento == TipoDocumento.NotaDebito.GetHashCode())
@@ -117,7 +115,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					documento_obj.DataKey = archivo.DataKey;
 					documento_obj.CodigoRegistro = archivo.CodigoRegistro;
-					documento_obj.Neto = (documento_obj.Total - (documento_obj.ValorReteFuente + documento_obj.ValorReteIca + documento_obj.ValorReteIva));
 
 
 				}
@@ -146,6 +143,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				Cufe = "",
 				DescripcionProceso = "Recepción - Información del documento.",
 				Documento = documento_obj.Documento,
+				DocumentoTipo = archivo.TipoDocumento,
 				Error = null,
 				FechaRecepcion = fecha_actual,
 				FechaUltimoProceso = fecha_actual,
