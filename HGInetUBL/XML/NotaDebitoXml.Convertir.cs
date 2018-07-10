@@ -195,16 +195,19 @@ namespace HGInetUBL
 						{
 							detalle.ImpoConsumoPorcentaje = porcentaje_impto;
 							detalle.ValorImpuestoConsumo = valor_impto;
+							nota_debito_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
 						}
 						else if (TipoImpuestos.Ica.Equals(tipo_impto))
 						{
 							detalle.ReteIcaPorcentaje = porcentaje_impto;
 							detalle.ReteIcaValor = valor_impto;
+							nota_debito_obj.ValorReteIca += detalle.ReteIcaValor;
 						}
 						else if (TipoImpuestos.ReteFte.Equals(tipo_impto))
 						{
 							detalle.ReteFuentePorcentaje = porcentaje_impto;
 							detalle.ReteFuenteValor = valor_impto;
+							nota_debito_obj.ValorReteFuente += detalle.ReteFuenteValor;
 						}
 
 					}
@@ -219,8 +222,10 @@ namespace HGInetUBL
 			#region Totales
 			nota_debito_obj.ValorSubtotal = nota_debito_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
 			nota_debito_obj.ValorDescuento = nota_debito_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
+			nota_debito_obj.Valor = nota_debito_obj.ValorSubtotal + nota_debito_obj.ValorDescuento;
 			nota_debito_obj.ValorIva = nota_debito_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value;
 			nota_debito_obj.Total = nota_debito_ubl.LegalMonetaryTotal.PayableAmount.Value;
+			nota_debito_obj.Neto = (nota_debito_obj.Total - (nota_debito_obj.ValorReteFuente + nota_debito_obj.ValorReteIca + nota_debito_obj.ValorReteIva));
 
 			#endregion
 

@@ -23,7 +23,7 @@ namespace HGInetUBL
 			NotaCredito nota_credito_obj = new NotaCredito();
 
 			//Valida el prefijo de la nota credito y captura el numero del documento
-			if (nota_credito_ubl.CustomizationID != null)
+			if (nota_credito_ubl.CustomizationID.Value != null)
 			{
 				nota_credito_obj.Prefijo = nota_credito_ubl.CustomizationID.Value;
 				string documento = nota_credito_ubl.ID.Value;
@@ -195,16 +195,19 @@ namespace HGInetUBL
 						{
 							detalle.ImpoConsumoPorcentaje = porcentaje_impto;
 							detalle.ValorImpuestoConsumo = valor_impto;
+							nota_credito_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
 						}
 						else if (TipoImpuestos.Ica.Equals(tipo_impto))
 						{
 							detalle.ReteIcaPorcentaje = porcentaje_impto;
 							detalle.ReteIcaValor = valor_impto;
+							nota_credito_obj.ValorReteIca += detalle.ReteIcaValor;
 						}
 						else if (TipoImpuestos.ReteFte.Equals(tipo_impto))
 						{
 							detalle.ReteFuentePorcentaje = porcentaje_impto;
 							detalle.ReteFuenteValor = valor_impto;
+							nota_credito_obj.ValorReteFuente += detalle.ReteFuenteValor;
 						}
 
 					}
@@ -219,8 +222,10 @@ namespace HGInetUBL
 			#region Totales
 			nota_credito_obj.ValorSubtotal = nota_credito_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
 			nota_credito_obj.ValorDescuento = nota_credito_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
+			nota_credito_obj.Valor = nota_credito_obj.ValorSubtotal + nota_credito_obj.ValorDescuento;
 			nota_credito_obj.ValorIva = nota_credito_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value;
 			nota_credito_obj.Total = nota_credito_ubl.LegalMonetaryTotal.PayableAmount.Value;
+			nota_credito_obj.Neto = (nota_credito_obj.Total - (nota_credito_obj.ValorReteFuente + nota_credito_obj.ValorReteIca + nota_credito_obj.ValorReteIva));
 
 			#endregion
 
