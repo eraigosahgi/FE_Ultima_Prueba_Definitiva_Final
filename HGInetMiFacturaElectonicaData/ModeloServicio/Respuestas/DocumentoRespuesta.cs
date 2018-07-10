@@ -42,6 +42,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public string Prefijo { get; set; }
 
+		/// <summary>
+		/// Indica el tipo de Documento(1: factura - 2: nota débito - 3: nota crédito)
+		/// </summary>
+		public int DocumentoTipo { get; set; }
+
         /// <summary>
         /// Número de Documento
         /// </summary>
