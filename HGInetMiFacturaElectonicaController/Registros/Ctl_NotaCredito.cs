@@ -54,6 +54,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				// convierte los registros de base de datos a objeto de servicio Nota Crédito y los añade a la lista de retorno
 				foreach (TblDocumentos item in respuesta)
 				{
+					var objeto = (dynamic)null;
+
+					try
+					{
+						if (item != null)
+						{
+							//Envia el objeto de Bd a convertir a objeto de servicio
+							objeto = Ctl_Documento.ConvertirServicio(item);
+
+							lista_respuesta.Add(objeto);
+						}
+					}
+					catch (Exception)
+					{
+
+					}
 
 				}
 

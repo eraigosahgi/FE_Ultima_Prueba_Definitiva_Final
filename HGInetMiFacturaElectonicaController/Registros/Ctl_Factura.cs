@@ -2,8 +2,10 @@
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUBL;
 using LibreriaGlobalHGInet.Error;
 using LibreriaGlobalHGInet.Formato;
+using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
@@ -30,7 +32,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				// valida que los parametros sean correctos.
 				if (string.IsNullOrWhiteSpace(identificacion_adquiriente) || identificacion_adquiriente.Equals("*"))
 					throw new ApplicationException("Número de identificación del adquiriente inválido.");
-					
+
 				// Valida los estados de visibilidad pública para el adquiriente
 				var estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico"));
 
@@ -54,7 +56,24 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				// convierte los registros de base de datos a objeto de servicio Factura y los añade a la lista de retorno
 				foreach (TblDocumentos item in respuesta)
 				{
+
+					var objeto = (dynamic)null;
+
+					try
+					{
+						if (item != null)
+						{
+							//Envia el objeto de Bd a convertir a objeto de servicio
+							objeto = Ctl_Documento.ConvertirServicio(item);
+
+							lista_respuesta.Add(objeto);
+						}
+					}
+					catch (Exception)
+					{
 					
+					}
+
 				}
 
 				return lista_respuesta;
