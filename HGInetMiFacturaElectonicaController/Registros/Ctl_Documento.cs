@@ -4,17 +4,23 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUBL;
 using LibreriaGlobalHGInet.Error;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Mail;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -61,7 +67,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				TblDocumentos documento = (from documentos in context.TblDocumentos
 										   where (documentos.IntNumero == numero_documeto)
-										   && (documentos.TblEmpresasResoluciones.StrNumResolucion.Equals(numero_resolucion) 
+										   && (documentos.TblEmpresasResoluciones.StrNumResolucion.Equals(numero_resolucion)
 										   && (documentos.IntDocTipo == tipo_doc))
 										   select documentos).FirstOrDefault();
 
@@ -248,7 +254,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			int num_doc = -1;
 			int.TryParse(numero_documento, out num_doc);
-			
+
 			short cod_estado_recibo = -1;
 			short.TryParse(estado_recibo, out cod_estado_recibo);
 
@@ -466,10 +472,130 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 		/// <summary>
+		/// Convierte un objeto de tipo de base de datos a objeto de servicio. 
+		/// </summary>
+		/// <param name="objetoBd"></param>
+		/// <param name="tipo_doc"></param>
+		/// <returns></returns>
+		public static object ConvertirServicio(TblDocumentos objetoBd)
+		{
+			//Asigna a un objeto dinamico el objeto enviado por el usuario
+			var documento_obj = (dynamic)null;
+
+			// lee el archivo XML en UBL desde la ruta pública
+			string contenido_xml = Archivo.ObtenerContenido(objetoBd.StrUrlArchivoUbl);
+
+			// valida el contenido del archivo
+			if (string.IsNullOrWhiteSpace(contenido_xml))
+				throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
+
+			// convierte el contenido de texto a xml
+			XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+
+			// convierte el objeto de acuerdo con el tipo de documento
+			XmlSerializer serializacion = null;
+
+			//Segun el tipo del documento lo asigna al objeto dinamico y convierte el Ubl en objeto de servicio
+			if (objetoBd.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+			{
+				FacturaConsulta factura = new FacturaConsulta();
+				documento_obj = factura;
+
+				serializacion = new XmlSerializer(typeof(InvoiceType));
+
+				InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+
+				documento_obj.DatosFactura = FacturaXML.Convertir(conversion);
+				documento_obj.DatosFactura.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
+
+			}
+			else if (objetoBd.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+			{
+
+				NotaCreditoConsulta nota_credito = new NotaCreditoConsulta();
+
+				documento_obj = nota_credito;
+
+				serializacion = new XmlSerializer(typeof(CreditNoteType));
+
+				CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+
+				documento_obj.DatosNotaCredito = NotaCreditoXML.Convertir(conversion);
+				documento_obj.DatosNotaCredito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
+			}
+			else if (objetoBd.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+			{
+
+				NotaDebitoConsulta nota_debito = new NotaDebitoConsulta();
+
+				documento_obj = nota_debito;
+
+				serializacion = new XmlSerializer(typeof(DebitNoteType));
+
+				DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+				documento_obj.DatosNotaDebito = NotaDebitoXML.Convertir(conversion);
+				documento_obj.DatosNotaDebito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
+
+			}
+			// cerrar la lectura del archivo xml
+			xml_reader.Close();
+
+			//convierte las demas propiedades del objeto de BD al objeto de servicio
+			documento_obj.IdDocumento = objetoBd.StrIdSeguridad.ToString();
+			documento_obj.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
+			documento_obj.Documento = objetoBd.IntNumero;
+			documento_obj.IdProceso = objetoBd.IntIdEstado;
+
+			//obtengo el estado del proceso
+			ProcesoEstado proceso_estado = Enumeracion.ParseToEnum<ProcesoEstado>((int)objetoBd.IntIdEstado);
+			documento_obj.DescripcionProceso = Enumeracion.GetDescription(proceso_estado);
+
+			documento_obj.IdentificacionFacturador = objetoBd.StrEmpresaFacturador;
+			documento_obj.Aceptacion = objetoBd.IntAdquirienteRecibo;
+			documento_obj.MotivoRechazo = objetoBd.StrAdquirienteMvoRechazo;
+			documento_obj.UrlPdf = objetoBd.StrUrlArchivoPdf;
+			documento_obj.UrlXmlUbl = objetoBd.StrUrlArchivoUbl;
+			documento_obj.FechaUltimoProceso = objetoBd.DatFechaActualizaEstado;
+
+			//Obtiene la carpeta donde quedo la consulta de la DIAN
+			TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(objetoBd.IntDocTipo);
+
+			// Nombre del archivo Xml 
+			string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(objetoBd.IntNumero.ToString(), objetoBd.StrEmpresaFacturador, doc_tipo));
+
+			//Url publica de la respuesta de la DIAN en xml
+			string url_ppal_respuesta = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", objetoBd.TblEmpresasFacturador.StrIdSeguridad.ToString());
+
+			string ruta_xml = string.Format(@"{0}{1}/{2}", url_ppal_respuesta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian, archivo_xml);
+
+			//Obtiene el archivo en la ruta Http
+			ArchivoUrl archivo_consulta = Archivo.Obtener(ruta_xml);
+
+			//Valida que el archivo si existe de lo contrario vuelve a consultar el documento en la DIAN.
+			if (archivo_consulta == null)
+			{
+
+				DocumentoRespuesta consulta_dian = new DocumentoRespuesta();
+
+				consulta_dian = Ctl_Documentos.Consultar(objetoBd, objetoBd.TblEmpresasFacturador, ref consulta_dian);
+
+				ruta_xml = consulta_dian.EstadoDian.UrlXmlRespuesta;
+
+			}
+
+			//asigna la ruta que tiene el archivo donde se guardo la consulta que se hizo a la DIAN
+			documento_obj.EstadoDian = new RespuestaDian();
+			documento_obj.EstadoDian.UrlXmlRespuesta = ruta_xml;
+
+			return documento_obj;
+		}
+
+		/// <summary>
 		/// Convierte un objeto de tipo de base de datos a objeto de servicio.
 		/// </summary>
 		/// <param name="respuesta">Objeto de tipo TblDocumentos</param>
-		/// <returns></returns>
+		/// <returns>Objeto Tipo DocumentoRespuesta</returns>
 		public static DocumentoRespuesta Convertir(TblDocumentos respuesta)
 		{
 			try
@@ -484,6 +610,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				obj_documento.Aceptacion = respuesta.IntAdquirienteRecibo;
 				obj_documento.CodigoRegistro = respuesta.StrObligadoIdRegistro;
 				obj_documento.Cufe = respuesta.StrCufe;
+				obj_documento.DocumentoTipo = respuesta.IntDocTipo;
 				obj_documento.Documento = respuesta.IntNumero;
 				obj_documento.FechaRecepcion = respuesta.DatFechaIngreso;
 				obj_documento.FechaUltimoProceso = respuesta.DatFechaActualizaEstado;
