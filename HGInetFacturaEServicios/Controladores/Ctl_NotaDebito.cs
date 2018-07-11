@@ -103,6 +103,79 @@ namespace HGInetFacturaEServicios
 
 
 		/// <summary>
+		/// Permite obtener los documentos enviados a la plataforma a nombre del Adquiriente
+		/// </summary>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="Identificacion">número de identificación del Adquiriente</param>
+		/// <param name="FechaInicio">fecha inicial de consulta</param>
+		/// <param name="FechaFin">fecha final de consulta</param>
+		/// <returns>Una lista de las Nota Credito generadas a nombre del adquiriente</returns>
+		public static List<ServicioNotaDebito.NotaDebitoConsulta> ObtenerNotaCreditoPorAdquiriente(string UrlWs, string Serial, string Identificacion, DateTime FechaInicio, DateTime FechaFin)
+		{
+			// valida la URL del servicio web
+			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			// valida el parámetro Serial
+			if (string.IsNullOrEmpty(Serial))
+				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
+
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(Identificacion))
+				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+			List<ServicioNotaDebito.NotaDebitoConsulta> datos = new List<ServicioNotaDebito.NotaDebitoConsulta>();
+
+			// conexión cliente para el servicio web
+			ServicioNotaDebito.ServicioNotaDebitoClient cliente_ws = new ServicioNotaDebito.ServicioNotaDebitoClient();
+			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			try
+			{
+				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+
+				// datos para la petición
+				ServicioNotaDebito.ObtenerPorFechasAdquirienteRequest peticion = new ServicioNotaDebito.ObtenerPorFechasAdquirienteRequest()
+				{
+					DataKey = dataKey,
+					Identificacion = Identificacion,
+					FechaInicio = FechaInicio,
+					FechaFinal = FechaFin,
+				};
+
+				// ejecución del servicio web
+				ServicioNotaDebito.ObtenerPorFechasAdquirienteResponse respuesta = cliente_ws.ObtenerPorFechasAdquiriente(peticion);
+
+				// resultado del servicio web
+				List<ServicioNotaDebito.NotaDebitoConsulta> result = respuesta.ObtenerPorFechasAdquirienteResult;
+
+				if (respuesta != null)
+					return result;
+				else
+					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			}
+			catch (FaultException excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion);
+			}
+			catch (CommunicationException excepcion)
+			{
+				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			}
+			catch (Exception excepcion)
+			{
+				throw excepcion;
+			}
+			finally
+			{
+				if (cliente_ws != null)
+					cliente_ws.Abort();
+			}
+		}
+
+		/// <summary>
 		/// Prueba del servicio web de la plataforma de Facturación Electrónica
 		/// </summary>
 		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
