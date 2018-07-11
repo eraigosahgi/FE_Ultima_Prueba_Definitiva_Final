@@ -23,14 +23,18 @@ namespace HGInetUBL
 			NotaCredito nota_credito_obj = new NotaCredito();
 
 			//Valida el prefijo de la nota credito y captura el numero del documento
-			if (nota_credito_ubl.CustomizationID.Value != null)
+			if (nota_credito_ubl.CustomizationID != null)
 			{
-				nota_credito_obj.Prefijo = nota_credito_ubl.CustomizationID.Value;
-				string documento = nota_credito_ubl.ID.Value;
-				if (documento.Substring(0, 4).Equals(nota_credito_obj.Prefijo))
+				if (nota_credito_ubl.CustomizationID.Value != null)
 				{
-					nota_credito_obj.Documento = Convert.ToInt32(documento.Substring(4));
+					nota_credito_obj.Prefijo = nota_credito_ubl.CustomizationID.Value;
+					string documento = nota_credito_ubl.ID.Value;
+					if (documento.Substring(0, 4).Equals(nota_credito_obj.Prefijo))
+					{
+						nota_credito_obj.Documento = Convert.ToInt32(documento.Substring(4));
+					}
 				}
+
 			}
 			else
 			{
@@ -45,7 +49,7 @@ namespace HGInetUBL
 			nota_credito_obj.DocumentoRef = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
 			nota_credito_obj.CufeFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID.Value;
 			nota_credito_obj.FechaFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate.Value;
-			
+
 			//valida las notas para llenar los campos del pdf
 			Formato documento_formato = new Formato();
 			List<FormatoCampo> lista_campos = new List<FormatoCampo>();

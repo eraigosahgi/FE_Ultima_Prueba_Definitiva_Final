@@ -23,13 +23,16 @@ namespace HGInetUBL
 			NotaDebito nota_debito_obj = new NotaDebito();
 
 			//Valida el prefijo de la nota credito y captura el numero del documento
-			if (nota_debito_ubl.CustomizationID.Value != null)
+			if (nota_debito_ubl.CustomizationID != null)
 			{
-				nota_debito_obj.Prefijo = nota_debito_ubl.CustomizationID.Value;
-				string documento = nota_debito_ubl.ID.Value;
-				if (documento.Substring(0, 4).Equals(nota_debito_obj.Prefijo))
+				if (nota_debito_ubl.CustomizationID.Value != null)
 				{
-					nota_debito_obj.Documento = Convert.ToInt32(documento.Substring(4));
+					nota_debito_obj.Prefijo = nota_debito_ubl.CustomizationID.Value;
+					string documento = nota_debito_ubl.ID.Value;
+					if (documento.Substring(0, 4).Equals(nota_debito_obj.Prefijo))
+					{
+						nota_debito_obj.Documento = Convert.ToInt32(documento.Substring(4));
+					}
 				}
 			}
 			else
