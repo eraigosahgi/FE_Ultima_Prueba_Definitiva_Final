@@ -57,6 +57,7 @@
           <Property Name="IntAdquiriente" Type="bit" Nullable="false" />
           <Property Name="IntObligado" Type="bit" Nullable="false" />
           <Property Name="IntAdministrador" Type="bit" Nullable="false" />
+          <Property Name="IntIntegrador" Type="bit" Nullable="false" />
           <Property Name="StrResolucionDian" Type="varchar" MaxLength="10" />
           <Property Name="DatFechaActualizacion" Type="datetime" Nullable="false" />
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
@@ -782,6 +783,7 @@
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblEmpresas" FromRole="TblEmpresas" ToRole="TblOpcionesUsuario" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblEmpresas" ToRole="TblUsuarios" />
+          <Property Name="IntIntegrador" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1031,6 +1033,7 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntIntegrador" ColumnName="IntIntegrador" />
                 <ScalarProperty Name="StrEmpresaAsociada" ColumnName="StrEmpresaAsociada" />
                 <ScalarProperty Name="IntHabilitacion" ColumnName="IntHabilitacion" />
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
