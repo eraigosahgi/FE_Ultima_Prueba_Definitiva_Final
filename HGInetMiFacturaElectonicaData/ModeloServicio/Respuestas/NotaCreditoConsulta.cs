@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibreriaGlobalHGInet.Error;
+using System;
 
 namespace HGInetMiFacturaElectonicaData.ModeloServicio
 {
@@ -72,6 +73,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Indica si el documento ha finalizado todos los procesos en la Plataforma (0: Procesos pendientes, 1: Procesos finalizados)
 		/// </summary>
 		public int ProcesoFinalizado { get; set; }
+
+		/// <summary>
+		/// Objeto de tipo Error 
+		/// </summary>
+		public Error Error { get; set; }
 
 		/// <summary>
 		/// Objeto de tipo Respuesta entregada por la Dian despues de una consulta

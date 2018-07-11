@@ -65,17 +65,16 @@ namespace HGInetUBL
 			{
 				factura_obj.Documento = Convert.ToInt32(factura_ubl.ID.Value);
 			}
-
+			factura_obj.DocumentoRef = string.Empty;
 			//Valida si tiene documento referencia
-			if (factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
+			if (factura_ubl.BillingReference != null)
 			{
-				factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
-			}
-			else
-			{
-				factura_obj.DocumentoRef = string.Empty;
-			}
+				if (factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
+				{
+					factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
+				}
 
+			}
 			factura_obj.Cufe = factura_ubl.UUID.Value;
 			factura_obj.Fecha = factura_ubl.IssueDate.Value;
 			//Valida la fecha de vencimiento 
@@ -85,6 +84,7 @@ namespace HGInetUBL
 			}
 			factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
 			factura_obj.Nota = factura_ubl.Note[0].Value;
+			factura_obj.Notas = new List<string>();
 
 			//Valida si trae mas notas para validar los campos
 			if (factura_ubl.Note.Length > 1)

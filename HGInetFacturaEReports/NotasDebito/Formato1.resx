@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CodigoQR.Value" xml:space="preserve">
-    <value>="NumFac:" + Fields.Prefijo + Fields.Documento + "
+    <value>="NumFac:" + Fields.Documento + "
 "+"FecFac:" + FORMAT('{0:yyyyMMddHHm}',Fields.Fecha) + "
 "+"NitFac:" + Fields.DatosObligado.Identificacion + "
 "+"DocAdq:" + Fields.DatosAdquiriente.Identificacion + "

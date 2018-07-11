@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
@@ -6,6 +7,7 @@ using HGInetUBL;
 using LibreriaGlobalHGInet.Error;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
@@ -66,14 +68,35 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							//Envia el objeto de Bd a convertir a objeto de servicio
 							objeto = Ctl_Documento.ConvertirServicio(item);
 
-							lista_respuesta.Add(objeto);
 						}
 					}
-					catch (Exception)
+					catch (Exception excepcion)
 					{
-					
+
+						ProcesoEstado proceso_estado = Enumeracion.ParseToEnum<ProcesoEstado>((int)item.IntIdEstado);
+						LogExcepcion.Guardar(excepcion);
+						objeto = new FacturaConsulta
+						{
+							Aceptacion = item.IntAdquirienteRecibo,
+							CodigoRegistro = item.StrObligadoIdRegistro.ToString(),
+							DatosFactura = null,
+							DescripcionProceso = Enumeracion.GetDescription(proceso_estado),
+							Documento = item.IntNumero,
+							Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+							FechaUltimoProceso = item.DatFechaActualizaEstado,
+							IdDocumento = item.StrIdSeguridad.ToString(),
+							IdentificacionFacturador = item.StrEmpresaFacturador,
+							IdProceso = item.IntIdEstado,
+							MotivoRechazo = item.StrAdquirienteMvoRechazo,
+							ProcesoFinalizado = (proceso_estado == ProcesoEstado.Finalizacion || proceso_estado == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+							UrlPdf = item.StrUrlArchivoPdf,
+							UrlXmlUbl = item.StrUrlArchivoUbl,
+							EstadoDian = null,
+
+						};
 					}
 
+					lista_respuesta.Add(objeto);
 				}
 
 				return lista_respuesta;
