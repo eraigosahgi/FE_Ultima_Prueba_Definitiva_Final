@@ -89,7 +89,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ServicioAcuseRecibo\acuserecibo.wsdl" />
     <None Include="Service References\ServicioAcuseRecibo\acuserecibo.xsd">
       <SubType>Designer</SubType>
@@ -147,10 +149,16 @@
     <None Include="Service References\ServicioFactura\factura4.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioFactura\HGInetFacturaEServicios.ServicioFactura.ObtenerPorFechasAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioFactura\HGInetFacturaEServicios.ServicioFactura.RecepcionResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioFactura\HGInetFacturaEServicios.ServicioFactura.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorFechasAdquirienteResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioNotaCredito\HGInetFacturaEServicios.ServicioNotaCredito.RecepcionResponse.datasource">
@@ -176,6 +184,9 @@
     <None Include="Service References\ServicioNotaCredito\notacredito4.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.ObtenerPorFechasAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.RecepcionResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -194,6 +205,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioNotaDebito\notadebito3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\notadebito4.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioResolucion\HGInetFacturaEServicios.ServicioResolucion.ConsultarResponse.datasource">
