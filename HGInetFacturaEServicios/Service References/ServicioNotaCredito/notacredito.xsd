@@ -28,6 +28,7 @@
       <xs:element minOccurs="0" name="Nota" nillable="true" type="xs:string" />
       <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Notas" nillable="true" type="q1:ArrayOfstring" />
       <xs:element minOccurs="0" name="NumeroResolucion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Total" type="xs:decimal" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorDescuento" type="xs:decimal" />
@@ -128,6 +129,7 @@
       <xs:element minOccurs="0" name="Cufe" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DescripcionProceso" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Documento" type="xs:int" />
+      <xs:element minOccurs="0" name="DocumentoTipo" type="xs:int" />
       <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q2:Error" />
       <xs:element minOccurs="0" name="EstadoDian" nillable="true" type="tns:RespuestaDian" />
       <xs:element minOccurs="0" name="FechaRecepcion" type="xs:dateTime" />
@@ -154,4 +156,30 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="RespuestaDian" nillable="true" type="tns:RespuestaDian" />
+  <xs:complexType name="ArrayOfNotaCreditoConsulta">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="NotaCreditoConsulta" nillable="true" type="tns:NotaCreditoConsulta" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfNotaCreditoConsulta" nillable="true" type="tns:ArrayOfNotaCreditoConsulta" />
+  <xs:complexType name="NotaCreditoConsulta">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Aceptacion" type="xs:int" />
+      <xs:element minOccurs="0" name="CodigoRegistro" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DatosNotaCredito" nillable="true" type="tns:NotaCredito" />
+      <xs:element minOccurs="0" name="DescripcionProceso" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Documento" type="xs:int" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q3:Error" />
+      <xs:element minOccurs="0" name="EstadoDian" nillable="true" type="tns:RespuestaDian" />
+      <xs:element minOccurs="0" name="FechaUltimoProceso" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="IdDocumento" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdProceso" type="xs:int" />
+      <xs:element minOccurs="0" name="IdentificacionFacturador" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MotivoRechazo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProcesoFinalizado" type="xs:int" />
+      <xs:element minOccurs="0" name="UrlPdf" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UrlXmlUbl" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="NotaCreditoConsulta" nillable="true" type="tns:NotaCreditoConsulta" />
 </xs:schema>

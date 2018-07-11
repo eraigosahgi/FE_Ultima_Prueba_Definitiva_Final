@@ -24,6 +24,7 @@
   </MetadataSources>
   <Metadata>
     <MetadataFile FileName="notadebito.wsdl" MetadataType="Wsdl" ID="05269094-c2c9-41a6-90c9-08ccac524dba" SourceId="1" SourceUrl="http://192.168.0.251:8887/wcf/notadebito.svc?wsdl" />
+    <MetadataFile FileName="notadebito4.xsd" MetadataType="Schema" ID="0a636e7e-d020-4c2e-8830-66292e531b4a" SourceId="1" SourceUrl="http://192.168.0.251:8887/wcf/notadebito.svc?xsd=xsd4" />
     <MetadataFile FileName="notadebito1.wsdl" MetadataType="Wsdl" ID="a89cbfb5-07cd-435b-a983-4ba3c05b1788" SourceId="1" SourceUrl="http://192.168.0.251:8887/wcf/notadebito.svc?wsdl=wsdl0" />
     <MetadataFile FileName="notadebito.xsd" MetadataType="Schema" ID="b239418a-4017-441e-8787-3322786e3614" SourceId="1" SourceUrl="http://192.168.0.251:8887/wcf/notadebito.svc?xsd=xsd2" />
     <MetadataFile FileName="notadebito1.xsd" MetadataType="Schema" ID="6f65aa7e-08f3-43cf-9191-5d7ff6f7d4ff" SourceId="1" SourceUrl="http://192.168.0.251:8887/wcf/notadebito.svc?xsd=xsd3" />

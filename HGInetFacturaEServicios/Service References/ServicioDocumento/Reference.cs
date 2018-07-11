@@ -39,6 +39,9 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         private int DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int DocumentoTipoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private LibreriaGlobalHGInet.Error.Error ErrorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -148,6 +151,19 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
                 if ((this.DocumentoField.Equals(value) != true)) {
                     this.DocumentoField = value;
                     this.RaisePropertyChanged("Documento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int DocumentoTipo {
+            get {
+                return this.DocumentoTipoField;
+            }
+            set {
+                if ((this.DocumentoTipoField.Equals(value) != true)) {
+                    this.DocumentoTipoField = value;
+                    this.RaisePropertyChanged("DocumentoTipo");
                 }
             }
         }

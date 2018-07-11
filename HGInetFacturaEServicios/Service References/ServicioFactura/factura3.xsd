@@ -142,6 +142,7 @@
       <xs:element minOccurs="0" name="Cufe" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DescripcionProceso" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Documento" type="xs:int" />
+      <xs:element minOccurs="0" name="DocumentoTipo" type="xs:int" />
       <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q2:Error" />
       <xs:element minOccurs="0" name="EstadoDian" nillable="true" type="tns:RespuestaDian" />
       <xs:element minOccurs="0" name="FechaRecepcion" type="xs:dateTime" />
@@ -168,4 +169,30 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="RespuestaDian" nillable="true" type="tns:RespuestaDian" />
+  <xs:complexType name="ArrayOfFacturaConsulta">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FacturaConsulta" nillable="true" type="tns:FacturaConsulta" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFacturaConsulta" nillable="true" type="tns:ArrayOfFacturaConsulta" />
+  <xs:complexType name="FacturaConsulta">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Aceptacion" type="xs:int" />
+      <xs:element minOccurs="0" name="CodigoRegistro" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DatosFactura" nillable="true" type="tns:Factura" />
+      <xs:element minOccurs="0" name="DescripcionProceso" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Documento" type="xs:int" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q3:Error" />
+      <xs:element minOccurs="0" name="EstadoDian" nillable="true" type="tns:RespuestaDian" />
+      <xs:element minOccurs="0" name="FechaUltimoProceso" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="IdDocumento" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdProceso" type="xs:int" />
+      <xs:element minOccurs="0" name="IdentificacionFacturador" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MotivoRechazo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProcesoFinalizado" type="xs:int" />
+      <xs:element minOccurs="0" name="UrlPdf" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UrlXmlUbl" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FacturaConsulta" nillable="true" type="tns:FacturaConsulta" />
 </xs:schema>

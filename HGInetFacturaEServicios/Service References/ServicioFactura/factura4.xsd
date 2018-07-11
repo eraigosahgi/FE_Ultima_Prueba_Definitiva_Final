@@ -29,4 +29,21 @@
     </xs:complexType>
   </xs:element>
   <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" name="Error" nillable="true" type="q3:Error" />
+  <xs:element name="ObtenerPorFechasAdquiriente">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="DataKey" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="FechaInicio" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="FechaFinal" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ObtenerPorFechasAdquirienteResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="ObtenerPorFechasAdquirienteResult" nillable="true" type="q4:ArrayOfFacturaConsulta" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>

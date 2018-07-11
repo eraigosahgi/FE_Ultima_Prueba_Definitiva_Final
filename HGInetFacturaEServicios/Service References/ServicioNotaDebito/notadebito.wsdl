@@ -25,6 +25,18 @@
         <soap:fault use="literal" name="Error" namespace="" />
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="ObtenerPorFechasAdquiriente">
+      <soap:operation soapAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaDebito/ObtenerPorFechasAdquiriente" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="Error">
+        <soap:fault use="literal" name="Error" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="notadebito">
     <wsdl:port name="soap" binding="tns:soap">

@@ -14,6 +14,7 @@
       <xs:element minOccurs="0" name="Cufe" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DescripcionProceso" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Documento" type="xs:int" />
+      <xs:element minOccurs="0" name="DocumentoTipo" type="xs:int" />
       <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q1:Error" />
       <xs:element minOccurs="0" name="EstadoDian" nillable="true" type="tns:RespuestaDian" />
       <xs:element minOccurs="0" name="FechaRecepcion" type="xs:dateTime" />
