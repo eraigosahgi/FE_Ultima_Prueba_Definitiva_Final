@@ -23,23 +23,27 @@ namespace HGInetUBL
 			NotaCredito nota_credito_obj = new NotaCredito();
 
 			//Valida el prefijo de la nota credito y captura el numero del documento
-			if (nota_credito_ubl.CustomizationID != null)
+			nota_credito_obj.Prefijo = string.Empty;
+
+			if (nota_credito_ubl.CustomizationID == null)
+			{
+				nota_credito_obj.Documento = Convert.ToInt32(nota_credito_ubl.ID.Value);
+			}
+			else
 			{
 				if (nota_credito_ubl.CustomizationID.Value != null)
 				{
 					nota_credito_obj.Prefijo = nota_credito_ubl.CustomizationID.Value;
 					string documento = nota_credito_ubl.ID.Value;
-					if (documento.Substring(0, 4).Equals(nota_credito_obj.Prefijo))
+					if (documento.Substring(0, nota_credito_obj.Prefijo.Length).Equals(nota_credito_obj.Prefijo))
 					{
-						nota_credito_obj.Documento = Convert.ToInt32(documento.Substring(4));
+						nota_credito_obj.Documento = Convert.ToInt32(documento.Substring(nota_credito_obj.Prefijo.Length));
 					}
 				}
-
-			}
-			else
-			{
-				nota_credito_obj.Documento = Convert.ToInt32(nota_credito_ubl.ID.Value);
-				nota_credito_obj.Prefijo = string.Empty;
+				else
+				{
+					nota_credito_obj.Documento = Convert.ToInt32(nota_credito_ubl.ID.Value);
+				}
 			}
 			//Capturo la informacion del encabezado del documento
 			nota_credito_obj.Cufe = nota_credito_ubl.UUID.Value;
