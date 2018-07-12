@@ -63,6 +63,7 @@
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IntHabilitacion" Type="tinyint" />
           <Property Name="StrEmpresaAsociada" Type="varchar" MaxLength="50" />
+          <Property Name="IntNumUsuarios" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -784,6 +785,7 @@
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblEmpresas" ToRole="TblUsuarios" />
           <Property Name="IntIntegrador" Type="Boolean" Nullable="false" />
+          <Property Name="IntNumUsuarios" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1033,6 +1035,7 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntNumUsuarios" ColumnName="IntNumUsuarios" />
                 <ScalarProperty Name="IntIntegrador" ColumnName="IntIntegrador" />
                 <ScalarProperty Name="StrEmpresaAsociada" ColumnName="StrEmpresaAsociada" />
                 <ScalarProperty Name="IntHabilitacion" ColumnName="IntHabilitacion" />
