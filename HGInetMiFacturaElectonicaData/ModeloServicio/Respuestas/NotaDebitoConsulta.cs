@@ -65,6 +65,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string UrlPdf { get; set; }
 
 		/// <summary>
+		/// Ruta http para realizar el acuse de recibo desde la plataforma web con el documento.
+		/// </summary>
+		public string UrlAcuse { get; set; }
+
+		/// <summary>
 		/// Fecha del último proceso del documento realizado por la Plataforma
 		/// </summary>
 		public DateTime FechaUltimoProceso { get; set; }

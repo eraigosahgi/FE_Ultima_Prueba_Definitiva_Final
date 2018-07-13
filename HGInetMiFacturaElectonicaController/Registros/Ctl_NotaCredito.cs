@@ -34,6 +34,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (string.IsNullOrWhiteSpace(identificacion_adquiriente) || identificacion_adquiriente.Equals("*"))
 					throw new ApplicationException("Número de identificación del adquiriente inválido.");
 
+				// valida los parámetros de fechas
+				if (FechaInicial == null)
+					throw new ApplicationException("Fecha inicial inválida.");
+				if (FechaFinal == null)
+					throw new ApplicationException("Fecha final inválida.");
+
+				if (FechaFinal < FechaInicial)
+					throw new ApplicationException("Fecha final debe ser mayor o igual que la fecha inicial.");
 				// Valida los estados de visibilidad pública para el adquiriente
 				var estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico"));
 
@@ -87,6 +95,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							ProcesoFinalizado = (proceso_estado == ProcesoEstado.Finalizacion || proceso_estado == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
 							UrlPdf = item.StrUrlArchivoPdf,
 							UrlXmlUbl = item.StrUrlArchivoUbl,
+							UrlAcuse = null,
 							EstadoDian = null,
 
 						};

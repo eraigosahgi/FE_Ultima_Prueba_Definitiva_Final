@@ -66,6 +66,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					serializacion = new XmlSerializer(typeof(InvoiceType));
 
 					conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+					
+					// agrega los campos de la Dian correspondientes al Proveedor Tecnológico
+					//conversion = (InvoiceType)AgregarCamposDian(conversion, TipoDocumento.Factura, facturador);
+					
 
 					documento_obj = FacturaXML.Convertir(conversion);
 
@@ -87,6 +91,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
 
+					// agrega los campos de la Dian correspondientes al Proveedor Tecnológico
+					//conversion = (CreditNoteType)AgregarCamposDian(conversion, TipoDocumento.NotaCredito, facturador);
+
+
 					documento_obj = NotaCreditoXML.Convertir(conversion);
 
 					cufe_calculado = HGInetUBL.NotaCreditoXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica, documento_obj.CufeFactura);
@@ -105,6 +113,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					serializacion = new XmlSerializer(typeof(DebitNoteType));
 
 					conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+
+					// agrega los campos de la Dian correspondientes al Proveedor Tecnológico
+					//conversion = (DebitNoteType)AgregarCamposDian(conversion, TipoDocumento.NotaDebito, facturador);
+
 
 					documento_obj = NotaDebitoXML.Convertir(conversion);
 
@@ -203,6 +216,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					// almacena el xml en ubl
 					respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
+					ValidarRespuesta(respuesta);
+
+					//llena los datos de la extension DIAN en el XML enviado
+					CamposDian(ref documento_result, facturador, ref respuesta);
 					ValidarRespuesta(respuesta);
 
 

@@ -55,6 +55,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string MotivoRechazo { get; set; }
 
 		/// <summary>
+		/// Ruta http para realizar el acuse de recibo desde la plataforma web con el documento.
+		/// </summary>
+		public string UrlAcuse { get; set; }
+
+		/// <summary>
 		/// Ruta http del archivo XML en estándar UBL relacionado con el documento.
 		/// </summary>
 		public string UrlXmlUbl { get; set; }

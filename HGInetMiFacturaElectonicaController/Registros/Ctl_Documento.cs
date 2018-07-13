@@ -1,5 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Procesos;
+using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
@@ -587,6 +588,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			//asigna la ruta que tiene el archivo donde se guardo la consulta que se hizo a la DIAN
 			documento_obj.EstadoDian = new RespuestaDian();
 			documento_obj.EstadoDian.UrlXmlRespuesta = ruta_xml;
+
+			//Construye la url publica para el acuse de recibo del documento
+			PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+			documento_obj.UrlAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", objetoBd.StrIdSeguridad.ToString()));
 
 			return documento_obj;
 		}

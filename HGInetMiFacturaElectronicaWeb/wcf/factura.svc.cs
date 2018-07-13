@@ -60,12 +60,27 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
         {
             try
             {
-                List<FacturaConsulta> respuesta = new List<FacturaConsulta>();
+                
+				if (string.IsNullOrEmpty(DataKey))
+					throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
 
-                //Válida que la key sea correcta.
-                Peticion.Validar(DataKey, Identificacion);
+				if (string.IsNullOrEmpty(Identificacion))
+					throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
-                Ctl_Factura ctl_documento = new Ctl_Factura();
+				if (FechaInicio == null)
+					throw new ApplicationException("Fecha inicial inválida.");
+				if (FechaFinal == null)
+					throw new ApplicationException("Fecha final inválida.");
+
+				if (FechaFinal < FechaInicio)
+					throw new ApplicationException("Fecha final inválida.");
+
+				List<FacturaConsulta> respuesta = new List<FacturaConsulta>();
+
+				//Válida que la key sea correcta.
+				Peticion.Validar(DataKey, Identificacion);
+
+				Ctl_Factura ctl_documento = new Ctl_Factura();
 
                 // obtiene los datos
                 respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);

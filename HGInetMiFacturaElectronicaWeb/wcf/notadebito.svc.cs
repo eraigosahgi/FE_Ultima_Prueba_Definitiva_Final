@@ -36,9 +36,9 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 			try
 			{
 
-                return Ctl_Documentos.Procesar(documentos);
+				return Ctl_Documentos.Procesar(documentos);
 
-            }
+			}
 			catch (Exception exec)
 			{
 				Error error = new Error(CodigoError.VALIDACION, exec);
@@ -58,6 +58,20 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		{
 			try
 			{
+				if (string.IsNullOrEmpty(DataKey))
+					throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
+
+				if (string.IsNullOrEmpty(Identificacion))
+					throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+				if (FechaInicio == null)
+					throw new ApplicationException("Fecha inicial inválida.");
+				if (FechaFinal == null)
+					throw new ApplicationException("Fecha final inválida.");
+
+				if (FechaFinal < FechaInicio)
+					throw new ApplicationException("Fecha final inválida.");
+
 				List<NotaDebitoConsulta> respuesta = new List<NotaDebitoConsulta>();
 
 				//Válida que la key sea correcta.

@@ -98,7 +98,21 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
         {
             try
             {
-                List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+				if (string.IsNullOrEmpty(DataKey))
+					throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
+
+				if (string.IsNullOrEmpty(Identificacion))
+					throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+				if (FechaInicial == null)
+					throw new ApplicationException("Fecha inicial inválida.");
+				if (FechaFinal == null)
+					throw new ApplicationException("Fecha final inválida.");
+
+				if (FechaFinal < FechaInicial)
+					throw new ApplicationException("Fecha final inválida.");
+
+				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
                 //Válida que la key sea correcta.
                 Peticion.Validar(DataKey, Identificacion);
@@ -123,9 +137,9 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
             try
             {
 
-				throw new ApplicationException("Funcionalidad temporalmente fuera de servicio");
+				//throw new ApplicationException("Funcionalidad temporalmente fuera de servicio");
 
-				//return Ctl_Documentos.Procesar(documentos);
+				return Ctl_Documentos.Procesar(documentos);
 
             }
             catch (Exception exec)
