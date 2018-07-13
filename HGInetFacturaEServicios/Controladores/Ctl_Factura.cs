@@ -132,6 +132,14 @@ namespace HGInetFacturaEServicios
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
+			if (FechaInicio == null)
+				throw new ApplicationException("Fecha inicial inválida.");
+			if (FechaFin == null)
+				throw new ApplicationException("Fecha final inválida.");
+
+			if (FechaFin < FechaInicio)
+				throw new ApplicationException("Fecha final debe ser mayor o igual que la fecha inicial.");
+
 			List<ServicioFactura.FacturaConsulta> datos = new List<ServicioFactura.FacturaConsulta>();
 
 			// conexión cliente para el servicio web
