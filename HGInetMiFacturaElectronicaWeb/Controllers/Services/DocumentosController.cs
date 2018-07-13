@@ -63,7 +63,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     RutaPublica = plataforma.RutaPublica,
-                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
                 });
 
                 return Ok(retorno);
@@ -118,7 +119,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Xml = d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
-                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
                 });
 
                 return Ok(retorno);
@@ -379,8 +381,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroResolucion=d.NumeroResolucion,
                     Prefijo=d.Prefijo,
                     ProcesoFinalizado=d.ProcesoFinalizado,
-                    CodigoError = (d.Error!=null)? d.Error.Mensaje : ""
-                    
+                    CodigoError = (d.Error!=null)? d.Error.Mensaje : "",
+                    tipodoc = (d.DocumentoTipo == 1) ? "Factura" : (d.DocumentoTipo == 2) ? "Nota Debito" : "Nota Crédito"
+
                 });
 
                 return Ok(retorno);
@@ -417,17 +420,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    IdSeguridad = d.StrIdSeguridad,
-                    //NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
-                    d.DatFechaIngreso,
-                    //d.DatFechaVencDocumento,
-                    //d.IntVlrTotal,
+                    IdSeguridad = d.StrIdSeguridad,                    
+                    d.DatFechaIngreso,                    
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
-                    //d.StrAdquirienteMvoRechazo,
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,                    
                     IdentificacionFacturador = d.TblEmpresasFacturador.StrIdentificacion,
-                    Facturador = d.TblEmpresasFacturador.StrIdentificacion + " -- " + d.TblEmpresasFacturador.StrRazonSocial
+                    Facturador = d.TblEmpresasFacturador.StrIdentificacion + " -- " + d.TblEmpresasFacturador.StrRazonSocial,
+                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
                 });
 
                 return Ok(retorno);
@@ -529,7 +529,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Xml = d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
-                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString()))
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
                 });
 
                 return Ok(retorno);

@@ -119,7 +119,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 IntIdentificacionDv = d.IntIdentificacionDv,
                 StrResolucionDian = d.StrResolucionDian,
                 StrEmpresaAsociada = d.StrEmpresaAsociada,
-                StrObservaciones = d.StrObservaciones
+                StrObservaciones = d.StrObservaciones,
+                IntIntegrador = d.IntIntegrador,
+                IntNumUsuarios = d.IntNumUsuarios
             });
 
             return Ok(retorno);
@@ -132,7 +134,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="codigo_usuario"></param>        
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones,[FromUri] bool IntIntegrador,[FromUri] int IntNumUsuarios, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
@@ -149,6 +151,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Empresa.IntObligado = IntObligado;
                 Empresa.StrEmpresaAsociada = StrEmpresaAsociada;
                 Empresa.StrObservaciones = StrObservaciones;
+                Empresa.IntIntegrador = IntIntegrador;
+                Empresa.IntNumUsuarios = IntNumUsuarios;
+
                 if (tipo == 1)//Nuevo
                 {
                     var datos = ctl_empresa.Guardar(Empresa);

@@ -29,7 +29,10 @@ namespace HGInetMiFacturaElectronicaWeb
 			configuration.Formatters.Remove(GlobalConfiguration.Configuration.Formatters.XmlFormatter);
 			
 			GlobalConfiguration.Configure(WebApiConfig.Register);
-		}
+
+            RegisterRoutes(RouteTable.Routes);
+
+        }
 
 		/// <summary>
 		/// Evento al empezar una solicitud web
@@ -46,7 +49,14 @@ namespace HGInetMiFacturaElectronicaWeb
 			{
 				response.End();
 			}
-		}
+            RegisterRoutes(RouteTable.Routes);
+        }
 
-	}
+        void RegisterRoutes(RouteCollection routes)
+        {
+           // routes.MapPageRoute("", "HGI/Login", "~/Views/Login/Default.aspx");
+           // routes.MapPageRoute("", "AcuseRecibo/{id_seguridad}", "~/Views/Pages/AcuseRecibo.aspx");
+        }
+
+    }
 }

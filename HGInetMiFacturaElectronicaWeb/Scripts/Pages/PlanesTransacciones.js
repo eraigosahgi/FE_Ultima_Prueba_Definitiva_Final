@@ -63,7 +63,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
     var Datos_TiposProceso = "",
         codigo_empresa = "",
         Datos_T_compra = "",
-        Datos_valor_plan = 0,
+        Datos_valor_plan = "",
         Datos_E_Plan = ""
     datos_empresa_asociada = "";
     Datos_obsrvaciones = "";
@@ -76,6 +76,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         $("#TipoProceso").dxRadioGroup({
             searchEnabled: true,
             caption: 'TipoProceso',
+            layout: "horizontal",
             dataSource: new DevExpress.data.ArrayStore({
                 data: TiposProceso,
                 key: "ID"
@@ -84,6 +85,33 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             Enabled: true,
             onValueChanged: function (data) {
                 Datos_TiposProceso = data.value.ID;
+                //Post-Pago
+                if (Datos_TiposProceso == 3) {
+                    $('#divValorPlan').hide();
+                    $('#divCantTransacciones').hide();
+                    $("#CantidadTransacciones").dxNumberBox({ value: 0 });
+                    $("#ValorPlan").dxNumberBox({ value: 0 });
+                    //Datos_T_compra = "0";
+                    //Datos_valor_plan = "0";
+                    ValidarCantTransacciones();
+                }
+                //Compra
+                if (Datos_TiposProceso == 2) {
+                    $('#divValorPlan').show();
+                    $('#divCantTransacciones').show();
+                    //Datos_T_compra = "";
+                    //Datos_valor_plan = "";
+                    ValidarCantTransacciones();
+                }
+                //Cortesía
+                if (Datos_TiposProceso == 1) {
+                    $('#divValorPlan').hide();
+                    $('#divCantTransacciones').show();
+                    $("#ValorPlan").dxNumberBox({ value: 0 });
+                    //Datos_T_compra = "";
+                    //Datos_valor_plan = "0";
+                    ValidarCantTransacciones();
+                }                
             }
         }
         ).dxValidator({
@@ -94,6 +122,35 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         });
 
 
+        function ValidarCantTransacciones() {
+            $("#CantidadTransacciones").dxValidator({
+                validationRules: [{
+                    type: 'custom', validationCallback: function (options) {
+                        if ((Datos_TiposProceso == 1 || Datos_TiposProceso == 2) && Datos_T_compra < 1) {
+                            options.rule.message = "Debe Indicar la cantidad de transacciones";
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }]
+            });
+
+            $("#ValorPlan").dxValidator({
+                validationRules: [{
+                    type: 'custom', validationCallback: function (options) {
+                        if ((Datos_TiposProceso == 2) && Datos_valor_plan < 1) {
+                            options.rule.message = "Debe Indicar el valor de las transacciones";
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }]
+            });
+
+        }
+
         //Campo de selección de empresa.
         $("#txtempresaasociada").dxTextBox({
             readOnly: true,
@@ -101,6 +158,10 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             name: txtempresaasociada,
             onValueChanged: function (data) {
                 datos_empresa_asociada = data.value;
+            },
+            onFocusIn: function (data) {
+                if ($scope.Admin && StrIdSeguridad == undefined)
+                    $('#modal_Buscar_empresa').modal('show');
             }
         }).dxValidator({
             validationRules: [{
@@ -111,7 +172,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
         //Campo cantidad de transacciones del plan
         $("#CantidadTransacciones").dxNumberBox({
-            min: 1,
+            format: "#,##0",
+            validationGroup: "ValidacionDatosPlan",
             onValueChanged: function (data) {
                 Datos_T_compra = data.value;
             }
@@ -131,16 +193,43 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
                 type: 'pattern',
                 pattern: '^[0-9]+$',
                 message: 'No debe Incluir puntos(.) ni caracteres especiales'
+            },
+            {
+                type: 'custom', validationCallback: function (options) {
+                    if ((Datos_TiposProceso == 1 || Datos_TiposProceso == 2) && Datos_T_compra < 1) {
+                        options.rule.message = "Debe Indicar la cantidad de transacciones";
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+
+            ]
+        });
+
+        /*
+         .dxValidator({
+            validationRules: [{
+                type: 'custom', validationCallback: function (options) {
+                    if ((Datos_empresa != Datos_usuario) && Datos_apellidos == '') {
+                        options.rule.message = "Debe Indicar el apellido";
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
             }, {
-                type: 'range',
-                min: 1,
-                message: 'Debe indicar la cantidad de transacciones del plan'
+                type: 'stringLength',
+                max: 50,
+                message: "El apellido no puede ser mayor a 50 caracteres"
             }]
         });
+        */
 
         //Campo Valor plan
         $("#ValorPlan").dxNumberBox({
-            min: 1,
+            format: "$ #,##0",
             onValueChanged: function (data) {
                 Datos_valor_plan = data.value;
             }
@@ -164,6 +253,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         $("#EstadoPlan").dxRadioGroup({
             searchEnabled: true,
             caption: 'EstadoPlan',
+            layout: "horizontal",
             dataSource: new DevExpress.data.ArrayStore({
                 data: EstadosPlanes,
                 key: "ID"
@@ -239,7 +329,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         $http.post('/api/PlanesTransacciones?' + data + IdActualizar).then(function (response) {
             $("#wait").hide();
             try {
-                DevExpress.ui.notify({ message: "El plan ha sido registrado con exito.", position: { my: "center top", at: "center top" } }, "success", 6000);
+                DevExpress.ui.notify({ message: "El plan ha sido registrado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
                 $("#button").hide();
                 $("#btncancelar").hide();
                 setTimeout(IrAConsulta, 1000);
@@ -273,7 +363,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
                 Datos_E_Plan = response.data[0].Estado;
                 Datos_Nombre_facturador = response.data[0].EmpresaFacturador;
 
-                if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2) {
+                if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2 || Datos_TiposProceso == 3) {
                     $("#TipoProceso").dxRadioGroup({ value: TiposProceso[BuscarID(TiposProceso, Datos_TiposProceso)] });
                 }
 
@@ -369,7 +459,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                                     options.cellElement.html(inicial);
                                 }
                             }
-                            if (options.columnIndex == 4) {
+                            if (options.columnIndex == 4 || options.columnIndex == 7) {
                                 if (fieldData) {
                                     var inicial = FormatoNumber.go(fieldData);
                                     options.cellElement.html(inicial);
@@ -405,7 +495,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                          caption: "Fecha",
                          dataField: "Fecha",
                          dataType: "date",
-                         format: "yyyy-MM-dd  hh:mm a"
+                         format: "yyyy-MM-dd HH:mm"
                      },
                       {
                           cssClass: "col-md-2 col-xs-3",
@@ -518,6 +608,7 @@ var TiposProceso =
     [
         { ID: "1", Texto: 'Cortesía' },
         { ID: "2", Texto: 'Compra' },
+        { ID: "3", Texto: 'Post-Pago' },
     ];
 
 var EstadosPlanes =

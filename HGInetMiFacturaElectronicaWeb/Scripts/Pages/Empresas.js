@@ -8,6 +8,14 @@ var EmpresasApp = angular.module('EmpresasApp', ['ModalEmpresasApp', 'dx']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
 EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location) {
 
+
+
+    $('#modal_Buscar_empresa').modal('show');
+
+
+
+
+
     //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
     var id_seguridad = location.search.split('IdSeguridad=')[1];
 
@@ -28,10 +36,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         var tipo = response.data[0].Admin;
         if (tipo) {
             $scope.Admin = true;
+
         } else {
+            $scope.Admin = false;
             $('#SelecionarEmpresa').hide();
             $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
+        $scope.AdminIntegrador = $scope.Admin;
 
         //Obtiene el usuario autenticado.
         $http.get('/api/Usuario/').then(function (response) {
@@ -74,7 +85,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
     Datos_IdentificacionDv = "",
     Datos_Tipo = "1",
     Datos_Observaciones = "",
-    Datos_empresa_Asociada = ""
+    Datos_empresa_Asociada = "",
+    Datos_Integrador = false,
+    Datos_Numero_usuarios = 1
 
 
     //Define los campos del Formulario  
@@ -155,7 +168,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             value: codigo_facturador,
             name: txtempresaasociada,
             onValueChanged: function (data) {
+
                 Datos_empresa_Asociada = data.value;
+            },
+            onFocusIn: function (data) {
+                if ($scope.Admin)
+                    $('#modal_Buscar_empresa').modal('show');
             }
         });
 
@@ -165,7 +183,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             value: false,
             onValueChanged: function (data) {
                 Datos_Obligado = data.value;
+                ValidarSeleccionPerfil();
                 validarHabilitacion();
+
             }
         }).dxValidator({
             validationRules: [
@@ -179,6 +199,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 }
             ]
         });
+
 
         $("#Adquiriente").dxCheckBox({
             name: "PerfilAdquiriente",
@@ -186,7 +207,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             value: false,
             onValueChanged: function (data) {
                 Datos_Adquiriente = data.value;
+                ValidarSeleccionPerfil();
                 validarHabilitacion();
+
             }
         }).dxValidator({
             validationRules: [
@@ -201,8 +224,40 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             ]
         });
 
+        $("#txtUsuarios").dxNumberBox({
+            value: Datos_Numero_usuarios,
+            onValueChanged: function (data) {
+                Datos_Numero_usuarios = data.value;
+            }
+        }).dxValidator({
+            validationRules: [
+                {
+                    type: "required",
+                    message: "Debe introducir el número de usuarios"
+                }]
+        });
+
+        $("#Integradora").dxCheckBox({
+            name: "Empresa_Integradora",
+            text: "Integrador",
+            value: false,
+            onValueChanged: function (data) {
+                Datos_Integrador = data.value;
+                //Si es verdadero, entonces inabilito el modal popop de selección de empresa
+                if (data.value) {
+                    $scope.Admin = false;
+                    $("#txtempresaasociada").dxTextBox({ value: Datos_Idententificacion });
+                } else {
+                    //Si No es verdadero, entonces primero pregunto si no es empresa Administradora ya
+                    //que no debe tener permisos para el modal popop de selección de empresa
+                    if ($scope.AdminIntegrador)
+                        $scope.Admin = true;
+                }
+            }
+        })
+
+
         function validarHabilitacion() {
-            console.log("Validando Información");
             var caso = "";
 
 
@@ -215,32 +270,57 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
             switch (caso) {
                 case "Facturador":
-                    console.log("Facturador");
                     Datos_Habilitacion = Habilitacion;
                     $('#idHabilitacion').show();
                     $("#Habilitacion").dxRadioGroup({ visible: true });
                     $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
                     break;
                 case "Adquiriente":
-                    console.log("Adquiriente");
                     $('#idHabilitacion').hide();
                     $("#Habilitacion").dxRadioGroup({ visible: false });
                     $("#Habilitacion").dxRadioGroup({ value: "0" });
                     Datos_Habilitacion = "0";
                     break;
                 case "":
-                    console.log("Ninguno de los dos");
                     $('#idHabilitacion').hide();
                     $("#Habilitacion").dxRadioGroup({ visible: false });
                     $("#Habilitacion").dxRadioGroup({ value: "" });
                     Datos_Habilitacion = "0";
             }
 
-            console.log("Datos_Obligado : ", Datos_Obligado);
-            console.log("Datos_Adquiriente : ", Datos_Adquiriente);
-            console.log("Datos_Habilitacion : ", Datos_Habilitacion);
 
         }
+
+
+
+        //Valido Si esta seleccionado alguno de los dos perfiles, Facturador o adquiriente
+        function ValidarSeleccionPerfil() {
+            $("#Adquiriente").dxValidator({
+                validationRules: [{
+                    type: 'custom', validationCallback: function (options) {
+                        if (!Datos_Adquiriente && !Datos_Obligado) {
+                            options.rule.message = "Debe Indicar si es adquiriente o Facturador";
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }]
+            });
+            $("#Facturador").dxValidator({
+                validationRules: [{
+                    type: 'custom', validationCallback: function (options) {
+                        if (!Datos_Adquiriente && !Datos_Obligado) {
+                            options.rule.message = "Debe Indicar si es adquiriente o Facturador";
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }]
+            });
+        }
+
 
 
 
@@ -257,7 +337,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Enabled: true,
                 onValueChanged: function (data) {
                     Datos_Habilitacion = data.value.ID;
-                    console.log("Datos_Habilitacion", Datos_Habilitacion);
                 }
             }).dxValidator({
                 validationRules: [{
@@ -323,8 +402,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Datos_Habilitacion = response.data[0].Habilitacion;
                 Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
                 Datos_Observaciones = response.data[0].StrObservaciones;
-
                 Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
+                Datos_Integrador = response.data[0].IntIntegrador;
+                Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
 
 
                 $("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
@@ -344,6 +424,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 if (Datos_Adquiriente == 1) {
                     $("#Adquiriente").dxCheckBox({ value: 1 });
                 }
+
+                if (Datos_Integrador == 1)
+                    $("#Integradora").dxCheckBox({ value: 1 });
+
+
+                $("#txtUsuarios").dxNumberBox({ value: Datos_Numero_usuarios });
 
                 if (Datos_Obligado == 1) {
                     $("#Facturador").dxCheckBox({ value: 1 });
@@ -392,7 +478,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             IntHabilitacion: Datos_Habilitacion,
             StrEmpresaAsociada: Asociada,
             tipo: Datos_Tipo,
-            StrObservaciones: Datos_Observaciones
+            StrObservaciones: Datos_Observaciones,
+            IntIntegrador: Datos_Integrador,
+            IntNumUsuarios: Datos_Numero_usuarios
         });
 
         $("#wait").show();
@@ -400,7 +488,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             $("#wait").hide();
             try {
                 //Aqui se debe colocar los pasos a seguir
-                DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 6000);
+                DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
                 $("#button").hide();
                 $("#btncancelar").hide();
                 setTimeout(IrAConsulta, 2000);

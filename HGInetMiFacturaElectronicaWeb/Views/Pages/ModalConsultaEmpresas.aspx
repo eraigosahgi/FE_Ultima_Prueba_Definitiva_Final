@@ -10,7 +10,7 @@
     
     <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
     <form>
-        <div id="modal_Buscar_empresa" class="modal fade" style="display: none;">
+        <div id="modal_Buscar_empresa" class="modal fade" style="display: none; z-index:999999;" >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div id="EncabezadoModal" class="modal-header">
@@ -23,7 +23,7 @@
                             <!-- JS Modal Empresas-->                            
                             
                             <!-- CONTENEDOR PRINCIPAL -->
-                            <div ng-app="ModalEmpresasApp" ng-controller="ModalConsultaEmpresasController">
+                            <div data-ng-app="ModalEmpresasApp" data-ng-controller="ModalConsultaEmpresasController">
                                 
                                 <%--//Panel Grid--%>
                                 <div class="col-md-12">
@@ -57,9 +57,7 @@
                         </div>
                     </div>
                     
-                    <div id="divsombra" class="modal-footer" style="margin-top: 22%">
-                        <%--<div dx-button="buttonCerrarRestablecer" data-dismiss="modal"></div>
-                        <div dx-button="buttonRestablecer"></div>--%>
+                    <div id="divsombra" class="modal-footer" style="margin-top: 22%">                        
                     </div>
 
                 </div>

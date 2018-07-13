@@ -8,6 +8,8 @@ var OpcionesUsuario = [];
 
 var PermisosUsuario = [];
 
+var ValidacionHP = false;
+
 
 ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsuarioController($scope, $http, $location) {
 
@@ -44,6 +46,27 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                 },
                 loadPanel: {
                     enabled: true
+                },  //Formatos personalizados a las columnas en este caso para el monto
+                onCellPrepared: function (options) {
+                    var fieldData = options.value,
+                        fieldHtml = "";
+                    try {
+                        if (options.data.Estado == 1) {
+                            estado = " style='color:green;' title='Activo'";
+                        } else {
+                            estado = " style='color:red;' title='Inactivo'";
+                        }
+
+                    } catch (err) {
+
+                    }
+
+                }, headerFilter: {
+                    visible: true
+                },
+                groupPanel: {
+                    allowColumnDragging: true,
+                    visible: true
                 }
             , allowColumnResizing: true,
                 columns: [
@@ -110,8 +133,25 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                          {
                              caption: "Email",
                              dataField: "Mail"
+                         }, {
+                             cssClass: "col-md-1 col-xs-1",
+                             caption: 'Estado',
+                             dataField: 'Estado',
+                             cellTemplate: function (container, options) {
+                                 $("<div style='text-align:center'>")
+                                     .append($("<a taget=_self class='icon-circle2'" + estado + ">"))
+                                     .appendTo(container);
+                             }
                          }
-                ],
+                ], summary: {
+                    groupItems: [{
+                        column: "Empresa",
+                        summaryType: "count",
+                        displayFormat: " {0} Cantidad ",
+                        valueFormat: "fixedPoint"
+                    }]
+
+                },
                 filterRow: {
                     visible: true
                 },
@@ -335,6 +375,10 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             readOnly: true,
             onValueChanged: function (data) {
                 Datos_empresa = data.value;
+            },
+            onFocusIn: function (data) {
+                if ($scope.Admin)
+                    $('#modal_Buscar_empresa').modal('show');
             }
         })
          .dxValidator({
@@ -468,7 +512,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
     if (id_seguridad == null) {
         $http.get('/api/Usuario/').then(function (response) {
-
+            console.log("Datos para crear Treelist: ", response.data);
             $("#wait").show();
             $http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&codigo_empresa=' + response.data[0].Empresa).then(function (response) {
                 $("#wait").hide();
@@ -523,7 +567,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
                 guardarPermisos();
 
-                DevExpress.ui.notify({ message: "Usuario Guardado con exito", position: { my: "center top", at: "center top" } }, "success", 3000);
+                DevExpress.ui.notify({ message: "Usuario Guardado con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
                 $("#button").hide();
                 $("#btncancelar").hide();
                 setTimeout(IrAConsulta, 3000);
@@ -537,9 +581,106 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         });
     }
 
+    //chkOculto = nomenclatura inicial para los opcion hidden
+    //chkVisible = nomenclatura inicial para los opcion que estan visibles
+    function ValidarConsultar(Nombre, chkOculto, chkVisible) {
+        var menu = 6;
+        if (ValidacionHP == false) {
+            var optActual = $("input[name='" + Nombre + "']").val();
+            try {
+                ValidacionHP = true;
+                //Valido si estoy desmarcando la opción
+                if (optActual == "false" || optActual == 0) {
+                    var chkopcion = Nombre.replace(chkOculto, chkVisible);
+                    //Recorro y borro todos mis hijos
+                    for (var i = 1; i < menu; i++) {
+                        console.log("opcion: ", "#" + Nombre.replace(chkOculto, chkVisible) + i);
+                        $("#" + chkopcion + i).dxCheckBox({ value: 0 });
+                        var hijo = chkopcion + i;
+                        //Valido si tengo mas hijos
+                        for (var j = 1; j < menu; j++) {
+                            $("#" + hijo + j).dxCheckBox({ value: 0 });
+                        }
+                    }
+
+                    ///Valido si desmarco a mi padre  
+                    //Padre
+                    var padre = chkopcion.substr(0, chkopcion.length - 1);
+                    padre = padre.replace(chkVisible, chkOculto)
+                    var otroHijoMarcado = false;
+                    for (var i = 1; i < menu; i++) {
+                        var otroHijo = $("input[name='" + padre + i + "']").val();
+                        if (otroHijo == "true" || otroHijo == 1) {
+                            otroHijoMarcado = true;
+                            break;
+                        }
+                    }
+
+                    if (!otroHijoMarcado) {
+                        padre = padre.replace(chkOculto, chkVisible);
+                        $("#" + padre).dxCheckBox({ value: 0 });
+                    }
+                    ////////////////////////Fin validación padre
+
+                    otroHijoMarcado = false;
+                    ////////////////////////////Entra validacion padre de mi padre
+                    ///Valido si desmarco a mi padre  
+                    //Padre de mi padre
+                    var padre = padre.substr(0, padre.length - 1);
+                    padre = padre.replace(chkVisible, chkOculto)
+                    var otroHijoMarcado = false;
+                    for (var i = 1; i < menu; i++) {
+                        var otroHijo = $("input[name='" + padre + i + "']").val();
+                        if (otroHijo == "true" || otroHijo == 1) {
+                            otroHijoMarcado = true;
+                            break;
+                        }
+                    }
+
+                    if (!otroHijoMarcado) {
+                        padre = padre.replace(chkOculto, chkVisible);
+                        $("#" + padre).dxCheckBox({ value: 0 });
+                    }
+                    ////////////////////////////////////////Finvalidacion padre de mi padre
+
+                    ValidacionHP = false;
+                } else {
+                    ValidacionHP = true;
+                    var chkopcion = Nombre.replace(chkOculto, chkVisible);
+                    //Debo Marcar al padre ya que estoy marcando al Hijo                                        
+
+
+                    //Marco todos los Hijos
+                    for (var i = 1; i < menu; i++) {
+                        $("#" + chkopcion + i).dxCheckBox({ value: 1 });
+                        var hijo = chkopcion + i;
+                        //Valido si tengo mas hijos
+                        for (var j = 1; j < menu; j++) {
+                            $("#" + hijo + j).dxCheckBox({ value: 1 });
+                        }
+                    }
+                    //Marco a Mi padre
+                    var padre = chkopcion.substr(0, chkopcion.length - 1);
+                    $("#" + padre).dxCheckBox({ value: 1 });
+
+                    //Marco al padre de mi padre
+                    var padrePadre = padre.substr(0, padre.length - 1);
+                    $("#" + padrePadre).dxCheckBox({ value: 1 });
+
+                    ValidacionHP = false;
+                }
+
+            } catch (err) {
+
+            }
+        }
+    }
+
+
+
+
     //Construye el TreeList
     function GenerarTreeList(data) {
-
         $("#treeListOpcionesPermisos").dxTreeList({
             dataSource: data,
             keyExpr: "Codigo",
@@ -558,10 +699,12 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             caption: "Consultar",
             cssClass: "col-xs-3 col-md-1",
             cellTemplate: function (container, options) {
-                $("<div>")
+                $("<div  id='Consultar_" + options.data.Codigo + "'>")
                     .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
                         value: PermisosActuales(options.data.Codigo, 1),
+                        name: 'IConsultar_' + options.data.Codigo,
                         onValueChanged: function (e) {
+                            ValidarConsultar("IConsultar_" + options.data.Codigo, "IConsultar", "Consultar");
                             IncluirItem(e, 1, options.data.Codigo);
                         }
                     }).removeClass("dx-button dx-button-normal dx-widget")
@@ -573,10 +716,12 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         caption: "Crear",
         cssClass: "col-xs-3 col-md-1",
         cellTemplate: function (container, options) {
-            $("<div>")
+            $("<div  id='Crear_" + options.data.Codigo + "'>")
                 .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
                     value: PermisosActuales(options.data.Codigo, 2),
+                    name: 'ICrear_' + options.data.Codigo,
                     onValueChanged: function (e) {
+                        ValidarConsultar("ICrear_" + options.data.Codigo, "ICrear", "Crear");
                         IncluirItem(e, 2, options.data.Codigo);
                     }
                 }).removeClass("dx-button dx-button-normal dx-widget")
@@ -588,10 +733,12 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                         caption: "Editar",
                         cssClass: "col-xs-3 col-md-1",
                         cellTemplate: function (container, options) {
-                            $("<div>")
+                            $("<div  id='Editar_" + options.data.Codigo + "'>")
                                 .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
                                     value: PermisosActuales(options.data.Codigo, 3),
+                                    name: 'IEditar_' + options.data.Codigo,
                                     onValueChanged: function (e) {
+                                        ValidarConsultar("IEditar_" + options.data.Codigo, "IEditar", "Editar");
                                         IncluirItem(e, 3, options.data.Codigo);
                                     }
                                 }).removeClass("dx-button dx-button-normal dx-widget")
@@ -603,10 +750,12 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             caption: "Eliminar",
             cssClass: "col-xs-3 col-md-1",
             cellTemplate: function (container, options) {
-                $("<div>")
+                $("<div  id='Eliminar_" + options.data.Codigo + "'>")
             .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
                 value: PermisosActuales(options.data.Codigo, 4),
+                name: 'IEliminar_' + options.data.Codigo,
                 onValueChanged: function (e) {
+                    ValidarConsultar("IEliminar_" + options.data.Codigo, "IEliminar", "Eliminar");
                     IncluirItem(e, 4, options.data.Codigo);
                 }
             }).removeClass("dx-button dx-button-normal dx-widget")
@@ -618,10 +767,12 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         caption: "Anular",
         cssClass: "col-xs-3 col-md-1",
         cellTemplate: function (container, options) {
-            $("<div>")
+            $("<div  id='Anular_" + options.data.Codigo + "'>")
                 .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
                     value: PermisosActuales(options.data.Codigo, 5),
+                    name: 'IAnular_' + options.data.Codigo,
                     onValueChanged: function (e) {
+                        ValidarConsultar("IAnular_" + options.data.Codigo, "IAnular", "Anular");
                         IncluirItem(e, 5, options.data.Codigo);
                     }
                 }).removeClass("dx-button dx-button-normal dx-widget")
@@ -633,10 +784,12 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         caption: "Gestión",
         cssClass: "col-xs-3 col-md-1",
         cellTemplate: function (container, options) {
-            $("<div>")
+            $("<div  id='Gestion_" + options.data.Codigo + "'>")
         .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
             value: PermisosActuales(options.data.Codigo, 6),
+            name: 'IGestion_' + options.data.Codigo,
             onValueChanged: function (e) {
+                ValidarConsultar("IGestion_" + options.data.Codigo, "IGestion", "Gestion");
                 IncluirItem(e, 6, options.data.Codigo);
             }
         }).removeClass("dx-button dx-button-normal dx-widget")
@@ -687,7 +840,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
         }), function errorCallback(response) {
             $('#wait').hide();
-            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 1500);
         }
 
     }

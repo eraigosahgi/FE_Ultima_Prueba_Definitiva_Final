@@ -8,33 +8,33 @@ document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services
 var TipoConsulta;
 var email_destino = "";
 var id_seguridad = "";
-var items_recibo = [{ "ID": 1 ,"Descripcion":"Codígo Plataforma"}, { "ID": 2 ,"Descripcion":"Documento"}];
+var items_recibo = [{ "ID": 1, "Descripcion": "Codígo Plataforma" }, { "ID": 2, "Descripcion": "Documento" }];
 var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'ModalEmpresasApp', 'AppSrvDocumento']);
-DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope,$http, $location, SrvDocumento) {
+DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvDocumento) {
 
     var now = new Date();
     var Estado;
 
-    var codigo_facturador = "",           
+    var codigo_facturador = "",
            Datos_codigo_plataforma = "",
            Datos_Resolucion = "",
            Datos_Documento = "";
-         
-           
+
+
     $http.get('/api/DatosSesion/').then(function (response) {
         codigo_facturador = response.data[0].Identificacion;
-       
+
     });
-   
-    
+
+
     //cargarFiltros();
 
-   // function cargarFiltros() {
+    // function cargarFiltros() {
     $(function () {
         $("#summary").dxValidationSummary({});
 
         $("#txtempresaasociada").dxTextBox({
-            readOnly: true,            
+            readOnly: true,
             name: txtempresaasociada,
             onValueChanged: function (data) {
                 var empresa = null;
@@ -51,7 +51,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     Asociada = empresa;
                     Datos_empresa_Asociada = Asociada;
                 }
-               
+
+            },
+            onFocusIn: function (data) {                
+                    $('#modal_Buscar_empresa').modal('show');
             }
         }).dxValidator({
             validationRules: [{
@@ -60,7 +63,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             }]
         });
 
-       
+
         $("#txtDocumento").dxTextBox({
             name: txtcodigoplataforma,
             onValueChanged: function (data) {
@@ -73,8 +76,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             displayExpr: "Descripcion",
             dataSource: items_recibo,
             onValueChanged: function (data) {
-                TipoConsulta = data.value.ID;                
-                    validarfiltros(TipoConsulta);                
+                TipoConsulta = data.value.ID;
+                validarfiltros(TipoConsulta);
             }
         }).dxValidator({
             validationRules: [{
@@ -82,10 +85,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 message: "Debe indicar el tipo de busqueda"
             }]
         });
-       
 
 
-         $("#txtcodigoplataforma").dxTextBox({
+
+        $("#txtcodigoplataforma").dxTextBox({
             name: txtcodigoplataforma,
             maxLength: 8,
             onValueChanged: function (data) {
@@ -93,16 +96,16 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             }
         });
 
-         function validarCodigoPlataforma(){
-             if(TipoConsulta==1){
-                 if (Datos_codigo_plataforma.length != 8) {
-                     return true;
-                 } else {
-                     return false;
-                 }
-             } else {
-                 return false;
-             }
+        function validarCodigoPlataforma() {
+            if (TipoConsulta == 1) {
+                if (Datos_codigo_plataforma.length != 8) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
 
 
@@ -123,16 +126,16 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         });
 
     });
-    
-    function validarfiltros(Tipo) {                
+
+    function validarfiltros(Tipo) {
         if (Tipo != '1') {
             $('#divcodigoplataforma').hide();
             $('#divdocumento').show();
             Datos_codigo_plataforma = "*";
             $("#txtcodigoplataforma").dxTextBox({ value: '' });
             //Obtener lista de Resoluciones
-            $http.get('/api/EmpresaResolucion?codigo_facturador=' + Datos_empresa_Asociada).then(function (response) {                
-                cargarResolucion( JSON.parse(JSON.stringify(response.data)));
+            $http.get('/api/EmpresaResolucion?codigo_facturador=' + Datos_empresa_Asociada).then(function (response) {
+                cargarResolucion(JSON.parse(JSON.stringify(response.data)));
             });
         } else {
             $('#divcodigoplataforma').show();
@@ -142,50 +145,50 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             $("#txtDocumento").dxTextBox({ value: '' });
         }
     }
-    
 
 
-    function cargarResolucion(Lista) {  
+
+    function cargarResolucion(Lista) {
         $("#Listaresolucion").dxSelectBox({
             placeholder: "seleccione el código de resolución",
             displayExpr: "Descripcion",
             dataSource: Lista,
-            onValueChanged: function (data) {                
+            onValueChanged: function (data) {
                 Datos_Resolucion = data.value.Descripcion;
-            }             
+            }
         });
     }
-  
+
 
 
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
         type: 'default',
-        validationGroup:"Consultasoporte",
+        validationGroup: "Consultasoporte",
         onClick: function (e) {
             consultar();
         }
     };
 
 
-   
+
 
 
     function consultar() {
-        
-             $("#summary").dxValidationSummary({value:'Debe ingresar el codigo de plataforma'})
-        
+
+        $("#summary").dxValidationSummary({ value: 'Debe ingresar el codigo de plataforma' })
+
         SrvDocumento.ObtenerDocumentosClientes(Datos_empresa_Asociada, Datos_Documento, Datos_codigo_plataforma, Datos_Resolucion).then(function (data) {
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data,
-                keyExpr: "NumeroDocumento"               
+                keyExpr: "NumeroDocumento"
                 //Formatos personalizados a las columnas en este caso para el monto
                 , onCellPrepared: function (options) {
                     var fieldData = options.value,
                         fieldHtml = "";
                     try {
                         if (options.column.caption == "Valor Total") {
-                            if (fieldData) {                                
+                            if (fieldData) {
                                 var inicial = fNumber.go(fieldData);
                                 options.cellElement.html(inicial);
                             }
@@ -193,12 +196,13 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     } catch (err) {
                     }
 
-                }              
+                }
+                 , allowColumnResizing: true
                 , columns: [
                     {
                         caption: "  Lista de Archivos",
-                        cssClass: "col-xs-3 col-md-1",                        
-                        
+                        cssClass: "col-xs-3 col-md-1",
+
                         cellTemplate: function (container, options) {
 
                             var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
@@ -285,6 +289,11 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           dataField: "NombreAdquiriente"
                       },
                       {
+                          caption: "Tipo Documento",
+                          cssClass: "hidden-xs col-md-1",
+                          dataField: "tipodoc"
+                      },
+                      {
                           caption: "Estado",
                           cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoFactura",
@@ -300,13 +309,13 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           dataField: "MotivoRechazo",
                       }
                 ],
-                  
-            });                    
+
+            });
         });
 
-        
+
     }
-    
+
 
 });
 

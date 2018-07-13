@@ -7,7 +7,7 @@
     <script src="../../Scripts/Pages/PlanesTransacciones.js"></script>
         <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
 
-    <div ng-app="GestionPlanesApp" ng-controller="GestionPlanesController">
+    <div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController" >
 
 
         <div class="col-md-12">
@@ -24,46 +24,46 @@
                         <form id="form1" action="your-action">
                             <div class="row">
 
-                                <div class="dx-fieldset">
+                                <div class="col-md-12">
 
-                                    <div class="col-md-6 col-xs-12" style=" margin-top: 16px; ">
-                                        <div class="dx-field-label" style="font-size: 14px;">Tipo Proceso:<strom style="color: red;">*</strom></div>
+                                    <div class="col-md-6 col-xs-12" style=" margin-top: 16px; z-index:9;">
+                                        <div class="dx-field-label" style="font-size: 14px; width:auto; ">Tipo Proceso:<strom style="color: red;">*</strom></div>
                                         <div class="dx-field-value">
-                                            <div id="TipoProceso"></div>
+                                            <div id="TipoProceso" style="margin-left:-4%;"></div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 col-xs-10">
-                                        <label style=" margin-top: 16px;">Empresa:<strom style="color: red;">*</strom></label>
+                                    <div class="col-md-6 col-xs-12"  style="z-index:9;">
+                                        <label style=" margin-top: 16px; font-size:14px;">Empresa:<strom style="color: red;">*</strom></label>
                                         <div id="txtempresaasociada"></div>
                                     </div>
 
-                                    <div class="col-md-2 col-xs-2">
+                                    <!--<div class="col-md-2 col-xs-2">
                                         <label style=" margin-top: 16px;"></label>
                                         <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba; margin-top: 16px;">
                                             <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
                                         </a>
-                                    </div>
+                                    </div>-->
 
-                                    <div class="col-md-6 col-xs-12">
-                                        <label style="margin-top: 16px; ">Cantidad Transacciones:<strom style="color: red;">*</strom></label>
+                                    <div class="col-md-6 col-xs-12"  style="z-index:9;" id="divCantTransacciones">
+                                        <label style="margin-top: 16px; " >Cantidad Transacciones:<strom style="color: red;" >*</strom></label>
                                         <div id="CantidadTransacciones"></div>
                                     </div>
 
-                                    <div class="col-md-6 col-xs-12">
+                                    <div class="col-md-6 col-xs-12" style="z-index:9; " id="divValorPlan">
                                         <label style=" margin-top: 16px; ">Valor Plan:<strom style="color: red;">*</strom></label>
                                         <div id="ValorPlan"></div>
                                     </div>
 
-                                   <div class="col-md-6 col-xs-12" style=" margin-top: 16px;">
+                                   <div class="col-md-6 col-xs-12" style=" margin-top: 16px; z-index:9;">
                                         <div class="dx-field-label" style="font-size: 14px;">Estado:<strom style="color: red;">*</strom></div>
                                         <div class="dx-field-value">
-                                            <div id="EstadoPlan"></div>
+                                            <div id="EstadoPlan" style="margin-left:-4%;"></div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observaciones:</label>                                        
+                                    <div class="col-md-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index:0; ">
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%; font-size:14px;">Observaciones:</label>                                        
                                             <div id="txtObservaciones"></div>                                        
                                     </div>
 
@@ -89,8 +89,8 @@
                 </div>
             </div>
         </div>
-        <div ng-if="Admin">
-            <div ng-include="'ModalConsultaEmpresas.aspx'"></div>
+        <div data-ng-if="Admin">
+            <div data-ng-include="'ModalConsultaEmpresas.aspx'"></div>
         </div>
     </div>
 

@@ -56,7 +56,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Estado = (d.BitProcesada) ? "Habilitado" : "Inhabilitado",
                     Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
                     Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
-                    Tipoproceso = (d.IntTipoProceso == 1) ? "CORTESíA" : "COMPRA"
+                    Tipoproceso = (d.IntTipoProceso == 1) ? "CORTESíA" : (d.IntTipoProceso == 2) ? "COMPRA" : "POST-PAGO"
                 });
 
                 return Ok(retorno);

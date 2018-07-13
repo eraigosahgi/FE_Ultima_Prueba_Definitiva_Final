@@ -138,14 +138,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 //validar cantidad de usuarios por empresa
                 if (usuario.IntIdEstado == 1)
                 {
-                    int C_usuarios = (from u in context.TblUsuarios
-                                      where u.StrEmpresa.Equals(usuario.StrEmpresa)
-                                      && u.IntIdEstado.Equals(1)
-                                      select u).Count();
-
-                    if (C_usuarios >= 5)
+                    if (CantUsuariosActivos(usuario.StrEmpresa) >= CantUsuariosEmpresa(usuario.StrEmpresa))
                         throw new ApplicationException("Superó el máximo de usuarios activos por empresa, si desea crear uno nuevo, debe inactivar uno existente");
-                        
+
                 }
 
                 //Valido si es el usuario existe para la misma empresa
@@ -220,19 +215,25 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                                                && item.StrEmpresa.Equals(usuario.StrEmpresa)
                                                select item).FirstOrDefault();
 
+                //Creo variable para validar la cantidad de usuarios activos
+                int cantidadUsuariosActivos = CantUsuariosActivos(usuario.StrEmpresa);
+                //Creo variables para validar cantidad usuarios activos permitidos para esa empresa
+                int CantUsuariosPermitidos = CantUsuariosEmpresa(usuario.StrEmpresa);
 
-                //validar cantidad de usuarios por empresa
-                if (usuario.IntIdEstado == 1 && UsuarioActiliza.IntIdEstado != 1)
-                {
-                    int C_usuarios = (from u in context.TblUsuarios
-                                      where u.StrEmpresa.Equals(usuario.StrEmpresa)
-                                      && u.IntIdEstado.Equals(1)
-                                      select u).Count();
 
-                    if (C_usuarios >= 5)
-                        throw new ApplicationException("Superó el máximo de usuarios activos por empresa, si desea activar un usuario, debe inactivar otro existente");
+                if (cantidadUsuariosActivos == CantUsuariosPermitidos)
+                    //Si entra aqui pueda actualizar cualquier usuario pero no puede pasar un usuario de Inactivo a Activo
+                    if (usuario.IntIdEstado == 1 && UsuarioActiliza.IntIdEstado != 1)
+                    {
+                        throw new ApplicationException(string.Format("Superó el máximo de usuarios activos({0}) de la empresa", CantUsuariosPermitidos));
+                    }
 
-                }
+                if (cantidadUsuariosActivos > CantUsuariosPermitidos)
+                    if (usuario.IntIdEstado != 2)
+                    {
+                        throw new ApplicationException(string.Format("Superó el máximo de usuarios activos({0}) de la empresa", CantUsuariosPermitidos));
+                    }
+
 
 
                 if (UsuarioActiliza != null)
@@ -269,6 +270,39 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         #endregion
 
         #region Validar
+
+
+
+        /// <summary>
+        /// Cantidad de Usuarios Activos por Empresa, se debe pasar el StrIdEmpresa
+        /// </summary>
+        /// <param name="IdentificacionEmpresa"></param>
+        /// <returns></returns>
+        public int CantUsuariosActivos(string IdentificacionEmpresa)
+        {
+            int C_usuarios = (from u in context.TblUsuarios
+                              where u.StrEmpresa.Equals(IdentificacionEmpresa)
+                              && u.IntIdEstado.Equals(1)
+                              select u).Count();
+            return C_usuarios;
+        }
+
+        /// <summary>
+        /// Retorna la cantidad de usuarios Activos para una empresa especifica
+        /// </summary>
+        /// <param name="IdentificacionEmpresa"></param>
+        /// <returns></returns>
+        public int CantUsuariosEmpresa(string IdentificacionEmpresa)
+        {
+            int C_usuarios = (from empresa in context.TblEmpresas
+                              where empresa.StrIdentificacion.Equals(IdentificacionEmpresa)
+                              select empresa.IntNumUsuarios).FirstOrDefault();
+
+            return C_usuarios;
+        }
+
+
+
 
         public List<TblUsuarios> ValidarExistencia(string codigo_empresa, string codigo_usuario, string clave)
         {

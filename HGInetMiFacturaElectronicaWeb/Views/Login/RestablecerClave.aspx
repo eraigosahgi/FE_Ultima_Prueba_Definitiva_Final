@@ -48,14 +48,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
     <script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>
     <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
+    <link href="../../Content/dx.hgi.css" rel="stylesheet" />
+
     <!-- /DevExtreme -->
 
     <%--<script src="../../Scripts/Pages/Autenticacion.js"></script>--%>
     <script src="../../Scripts/Pages/RestablecerClave.js"></script>
+
+
+    <style>
+        div.dx-progressbar-range {
+            background-color: red;
+            position: relative;
+            border: 1px solid red;
+        }
+    </style>
 </head>
 <body class="login-container" style="background-color: #eeeded">
 
-    <div class="demo-container" ng-app="RestablecerClaveApp" ng-controller="RestablecerClaveController">
+    <div class="demo-container" data-ng-app="RestablecerClaveApp" data-ng-controller="RestablecerClaveController">
         <!-- Contenedor de Página -->
         <div class="page-container">
 
@@ -67,24 +78,45 @@
 
                     <!-- Área de Contenido -->
                     <div class="content">
-                        <form action="your-action" ng-submit="onFormSubmit($event)" class="ng-pristine ng-valid">
+                        <form action="your-action" data-ng-submit="onFormSubmit($event)" class="ng-pristine ng-valid">
 
                             <div class="panel panel-body login-form widget-container" id="divcontenido">
                                 <div class="text-center">
-                                     <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
-                                   <%-- <div class="icon-object border-primary-800 text-primary-800"><i class="icon-lock2"></i></div>--%>
+                                    <img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
+                                    <%-- <div class="icon-object border-primary-800 text-primary-800"><i class="icon-lock2"></i></div>--%>
                                     <h5 class="content-group-lg">Restablecimiento de Contraseña</h5>
                                 </div>
 
                                 <div class="widget-container">
-                                    <div id="form" dx-form="formOptions">
+
+                                    <div id="pswd_info" style="text-align:justify;">
+                                        <h4>La contraseña debe cumplir con el 60% de seguridad de acuerdo con los siguientes criterios:</h4>
+                                        <ul>
+                                            <li id="length" class="invalid"><strong>Ocho caracteres</strong>
+                                            </li>
+                                            <li id="letter" class="invalid"><strong>Una letra minúscula</strong>
+                                            </li>
+                                            <li id="capital" class="invalid"><strong>Una letra mayúscula</strong>
+                                            </li>
+                                            <li id="simbolo" class="invalid"><strong>Un caracter especial</strong>
+                                            </li>
+                                            <li id="number" class="invalid"><strong>Un número</strong>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                    <div id="form" data-dx-form="formOptions">
                                     </div>
                                 </div>
                                 <br />
 
                                 <div id="PanelControles" runat="server">
-
-                                    <div dx-button="buttonAceptar"></div>
+                                    
+                                    <div id="progress" >
+                                        <div id="progressBarStatus"></div>
+                                    </div>
+                                    <div data-dx-button="buttonAceptar"></div>
                                     <br />
                                     <br />
                                 </div>

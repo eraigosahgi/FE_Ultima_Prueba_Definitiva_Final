@@ -370,7 +370,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
                 $("#wait").hide();
                 try {
                     //Aqui se debe colocar los pasos a seguir
-                    DevExpress.ui.notify({ message: "Se ha enviado un correo a " + $scope.email + " ", position: { my: "center top", at: "center top" } }, "success", 6000);
+                    DevExpress.ui.notify({ message: "Se ha enviado un correo a " + $scope.email + " ", position: { my: "center top", at: "center top" } }, "success", 1500);
                     $("#btnActivar").hide();
                     $("#btncancelar").hide();
                     $scope.consulta = srvusuario.consulta();

@@ -36,12 +36,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_inicio = new Date(data.value).toISOString();
-                $("#FechaFinal").dxDateBox({ min: fecha_inicio });
-                if (new Date(data.value).toISOString() > fecha_fin) {
-                    DevExpress.ui.notify("La fecha inicial no puede ser mayor a la fecha final", 'error', 3000);
-                    $("#FechaInicial").dxDateBox({ value: fecha_fin });
-                    fecha_inicio: fecha_fin;
-                }
+                $("#FechaFinal").dxDateBox({ min: fecha_inicio });                
             }
 
         });
@@ -52,12 +47,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_fin = new Date(data.value).toISOString();
-                $("#FechaInicial").dxDateBox({ max: fecha_fin });
-                if (new Date(data.value).toISOString() < fecha_inicio) {
-                    DevExpress.ui.notify("La fecha final no puede ser menor a la fecha inicial", 'error', 3000);
-                    $("#FechaFinal").dxDateBox({ value: fecha_inicio });
-                    fecha_fin: fecha_inicio;
-                }
+                $("#FechaInicial").dxDateBox({ max: fecha_fin });                
             }
 
         });
@@ -201,7 +191,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         caption: "Fecha Vencimiento",
                         dataField: "DatFechaVencDocumento",
                         dataType: "date",
-                        format: "yyyy-MM-dd",
+                        format: "yyyy-MM-dd ",
                         cssClass: "hidden-xs col-md-2",
                         validationRules: [{
                             type: "required",
@@ -232,6 +222,11 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                           cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoFactura",
                       },
+                       {
+                           caption: "Tipo Documento",
+                           cssClass: "hidden-xs col-md-1",
+                           dataField: "tipodoc"
+                       },
                       {
                           caption: "Estado Acuse",
                           cssClass: "hidden-xs col-md-1",

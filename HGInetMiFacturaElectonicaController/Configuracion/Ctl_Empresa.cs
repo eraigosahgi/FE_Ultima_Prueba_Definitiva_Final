@@ -175,6 +175,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 EmpresaActualiza.StrEmpresaAsociada = empresa.StrEmpresaAsociada;
                 EmpresaActualiza.StrResolucionDian = empresa.StrResolucionDian;
                 EmpresaActualiza.StrObservaciones = empresa.StrObservaciones;
+                EmpresaActualiza.IntIntegrador = empresa.IntIntegrador;
+                EmpresaActualiza.IntNumUsuarios = empresa.IntNumUsuarios;
 
                 empresa.DatFechaActualizacion = Fecha.GetFecha();
 

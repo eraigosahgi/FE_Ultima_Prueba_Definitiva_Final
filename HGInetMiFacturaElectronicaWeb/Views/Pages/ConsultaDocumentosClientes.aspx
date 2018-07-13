@@ -35,18 +35,13 @@
                                     <div class="dx-fieldset">
 
                                         <div class="col-md-12">
-                                            <div class="col-md-4 col-xs-10">
+                                            <div class="col-md-6">
                                                 <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Empresa Asociada:</label>
                                                 <div id="txtempresaasociada" style="margin-left: -10px; margin-bottom: 1%"></div>
 
                                             </div>
-
-                                            <div class="col-md-4 col-xs-2" style="margin-top: 2%">
-                                                <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba;">
-                                                    <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
-                                                </a>
-                                            </div>
-                                            <div class="col-md-4" style="margin-top: 1%">
+                                            
+                                            <div class="col-md-6" >
                                                 <i class="icon-file-text"></i>
                                                 <label style="margin-left: -10px; margin-top: 16px; margin-bottom: 1%">Tipo de Busqueda:</label>
                                                 <div id="Tipo" style="margin-left: -10px; margin-bottom: 1%"></div>

@@ -758,7 +758,7 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());
                         mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
-                        mensaje = mensaje.Replace("{Tipo}", (plan.IntTipoProceso == 1) ? "Cortesía" : "Compra");
+                        mensaje = mensaje.Replace("{Tipo}", (plan.IntTipoProceso == 1) ? "Cortesía" : (plan.IntTipoProceso == 2) ? "Compra":"Post-Pago");
                         mensaje = mensaje.Replace("{Estado}", (plan.BitProcesada) ? "Habilitada" : "Inabilitada");
                         mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
                         mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString());
