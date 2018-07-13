@@ -1793,6 +1793,9 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         private int ProcesoFinalizadoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlAcuseField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UrlPdfField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1973,6 +1976,19 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
                 if ((this.ProcesoFinalizadoField.Equals(value) != true)) {
                     this.ProcesoFinalizadoField = value;
                     this.RaisePropertyChanged("ProcesoFinalizado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlAcuse {
+            get {
+                return this.UrlAcuseField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlAcuseField, value) != true)) {
+                    this.UrlAcuseField = value;
+                    this.RaisePropertyChanged("UrlAcuse");
                 }
             }
         }

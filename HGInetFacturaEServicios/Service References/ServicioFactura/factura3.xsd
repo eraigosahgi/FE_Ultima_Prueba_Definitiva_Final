@@ -190,6 +190,7 @@
       <xs:element minOccurs="0" name="IdentificacionFacturador" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="MotivoRechazo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProcesoFinalizado" type="xs:int" />
+      <xs:element minOccurs="0" name="UrlAcuse" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UrlPdf" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UrlXmlUbl" nillable="true" type="xs:string" />
     </xs:sequence>
