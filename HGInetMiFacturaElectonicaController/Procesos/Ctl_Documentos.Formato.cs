@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Telerik.Reporting;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -63,32 +64,36 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 if (generar_pdf)
                 {
-
                     string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
                     string ruta = string.Format(@"{0}{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+                    Report reporte_pdf = new Report();
 
                     //Valida el tipo de documento para generar el formato PDF
                     if (documento_result.DocumentoTipo == TipoDocumento.Factura)
                     {
-                        HGInetFacturaEReports.Facturas.Formato1 reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
-                        reporte_pdf.DataSource = documento;
-                        HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
-                        x.GenerarPdf(reporte_pdf);
+                        switch (formato_documento.Codigo)
+                        {
+                            case 1:
+                                reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
+                                break;
+                            case 2:
+                                reporte_pdf = new HGInetFacturaEReports.Facturas.Formato2();
+                                break;
+                        }
                     }
                     else if (documento_result.DocumentoTipo == TipoDocumento.NotaCredito)
                     {
-                        HGInetFacturaEReports.NotasCredito.Formato1 reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
-                        reporte_pdf.DataSource = documento;
-                        HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
-                        x.GenerarPdf(reporte_pdf);
+                        reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
                     }
                     else if (documento_result.DocumentoTipo == TipoDocumento.NotaDebito)
                     {
-                        HGInetFacturaEReports.NotasDebito.Formato1 reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
-                        reporte_pdf.DataSource = documento;
-                        HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
-                        x.GenerarPdf(reporte_pdf);
+                        reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
                     }
+
+                    //Asigna los datos al reporte y genera el pdf
+                    reporte_pdf.DataSource = documento;
+                    HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
+                    x.GenerarPdf(reporte_pdf);
 
                     respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
                     documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
