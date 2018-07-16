@@ -81,13 +81,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					{
 						ProcesoEstado proceso_estado = Enumeracion.ParseToEnum<ProcesoEstado>((int)item.IntIdEstado);
 						LogExcepcion.Guardar(excepcion);
-						objeto = new NotaDebitoConsulta()
-						{
-							Aceptacion = item.IntAdquirienteRecibo,
-							CodigoRegistro = item.StrObligadoIdRegistro.ToString(),
-							DatosNotaDebito = null,
-							DescripcionProceso = Enumeracion.GetDescription(proceso_estado),
-							Documento = item.IntNumero,
+                        objeto = new NotaDebitoConsulta()
+                        {
+                            Aceptacion = item.IntAdquirienteRecibo,
+                            CodigoRegistro = item.StrObligadoIdRegistro.ToString(),
+                            DatosNotaDebito = null,
+                            DescripcionProceso = Enumeracion.GetDescription(proceso_estado),
+                            Documento = item.IntNumero.Value,
 							Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 							FechaUltimoProceso = item.DatFechaActualizaEstado,
 							IdDocumento = item.StrIdSeguridad.ToString(),

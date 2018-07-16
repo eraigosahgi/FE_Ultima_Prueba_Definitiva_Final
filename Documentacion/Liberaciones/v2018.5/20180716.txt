@@ -1,0 +1,1 @@
+ALTER TABLE TblDocumentos ALTER COLUMN IntNumero bigint;

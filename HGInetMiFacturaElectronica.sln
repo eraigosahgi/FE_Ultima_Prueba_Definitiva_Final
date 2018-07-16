@@ -84,6 +84,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.5", "v2018.5", "{6C83
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\v2018.5\20180711.txt = Documentacion\Liberaciones\v2018.5\20180711.txt
 		Documentacion\Liberaciones\v2018.5\20180712.txt = Documentacion\Liberaciones\v2018.5\20180712.txt
+		Documentacion\Liberaciones\v2018.5\20180716.txt = Documentacion\Liberaciones\v2018.5\20180716.txt
 	EndProjectSection
 EndProject
 Global

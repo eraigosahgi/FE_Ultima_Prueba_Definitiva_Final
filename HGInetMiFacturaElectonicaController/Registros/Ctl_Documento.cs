@@ -616,7 +616,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				obj_documento.CodigoRegistro = respuesta.StrObligadoIdRegistro;
 				obj_documento.Cufe = respuesta.StrCufe;
 				obj_documento.DocumentoTipo = respuesta.IntDocTipo;
-				obj_documento.Documento = respuesta.IntNumero;
+				obj_documento.Documento = respuesta.IntNumero.Value;
 				obj_documento.FechaRecepcion = respuesta.DatFechaIngreso;
 				obj_documento.FechaUltimoProceso = respuesta.DatFechaActualizaEstado;
 				obj_documento.IdDocumento = respuesta.StrIdSeguridad.ToString();

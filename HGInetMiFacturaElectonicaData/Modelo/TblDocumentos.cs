@@ -20,7 +20,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrEmpresaFacturador { get; set; }
         public string StrNumResolucion { get; set; }
         public string StrPrefijo { get; set; }
-        public int IntNumero { get; set; }
+        public Nullable<long> IntNumero { get; set; }
         public string StrCufe { get; set; }
         public System.DateTime DatFechaDocumento { get; set; }
         public System.DateTime DatFechaVencDocumento { get; set; }

@@ -25,7 +25,7 @@
           <Property Name="StrEmpresaFacturador" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrNumResolucion" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="StrPrefijo" Type="varchar" MaxLength="5" />
-          <Property Name="IntNumero" Type="int" Nullable="false" />
+          <Property Name="IntNumero" Type="bigint" />
           <Property Name="StrCufe" Type="varchar" MaxLength="100" />
           <Property Name="DatFechaDocumento" Type="datetime" Nullable="false" />
           <Property Name="DatFechaVencDocumento" Type="datetime" Nullable="false" />
@@ -496,7 +496,7 @@
           <Property Name="StrEmpresaFacturador" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrNumResolucion" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="StrPrefijo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="IntNumero" Type="Int32" Nullable="false" />
+          <Property Name="IntNumero" Type="Int64" />
           <Property Name="StrCufe" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="DatFechaDocumento" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DatFechaVencDocumento" Type="DateTime" Nullable="false" Precision="3" />

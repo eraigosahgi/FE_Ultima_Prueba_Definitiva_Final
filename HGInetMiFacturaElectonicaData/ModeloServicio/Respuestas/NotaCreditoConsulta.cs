@@ -32,7 +32,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// <summary>
 		/// Número de Documento
 		/// </summary>
-		public int Documento { get; set; }
+		public long Documento { get; set; }
 
 		/// <summary>
 		/// Indica el id del proceso actual del documento en la Plataforma.
