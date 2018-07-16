@@ -90,7 +90,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							CodigoRegistro = item.StrObligadoIdRegistro.ToString(),
 							DatosFactura = null,
 							DescripcionProceso = Enumeracion.GetDescription(proceso_estado),
-							Documento = item.IntNumero.Value,
+							Documento = item.IntNumero,
 							Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 							FechaUltimoProceso = item.DatFechaActualizaEstado,
 							IdDocumento = item.StrIdSeguridad.ToString(),
