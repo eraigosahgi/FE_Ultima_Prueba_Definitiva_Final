@@ -56,7 +56,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 //Obtiene la resolucion de la DIAN para el Obligado enviado
                 ResolucionesFacturacion resoluciones_dian = Ctl_Resolucion.Obtener(id_peticion, data_dian.IdSoftware, data_dian.ClaveAmbiente, identificacion_obligado, data_dian.NitProveedor, fecha_actual);
 
-                if (!resoluciones_dian.CodigoOperacion.Equals("OK"))
+                if (resoluciones_dian.CodigoOperacion.Equals("OK"))
                 {
                     // crea o actualiza las resoluciones obtenidas en la base de datos
                     Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
