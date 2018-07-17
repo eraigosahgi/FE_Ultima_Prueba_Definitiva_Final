@@ -146,7 +146,7 @@ namespace HGInetFacturaEReports.Facturas
             this.campo29_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.campo29_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.campo29_v.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.campo29_v.Value = "0";
+            this.campo29_v.Value = "{Fields.Bodega}";
             // 
             // htmlTextBox30
             // 

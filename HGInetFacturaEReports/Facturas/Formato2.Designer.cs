@@ -1231,7 +1231,7 @@ namespace HGInetFacturaEReports.Facturas
             this.campo36_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.campo36_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.campo36_v.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.campo36_v.Value = "";
+            this.campo36_v.Value = "Bod.";
             // 
             // htmlTextBox29
             // 
