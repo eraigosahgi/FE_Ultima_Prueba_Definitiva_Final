@@ -51,10 +51,10 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                     var fieldData = options.value,
                         fieldHtml = "";
                     try {
-                        if (options.data.Estado == 1) {
-                            estado = " style='color:green;' title='Activo'";
+                        if (options.data.Estado == 1) {                            
+                            estado = " style='color:green; cursor:default;' title='Activo'";
                         } else {
-                            estado = " style='color:red;' title='Inactivo'";
+                            estado = " style='color:red; cursor:default;' title='Inactivo'";
                         }
 
                     } catch (err) {
@@ -138,7 +138,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                              caption: 'Estado',
                              dataField: 'Estado',
                              cellTemplate: function (container, options) {
-                                 $("<div style='text-align:center'>")
+                                 $("<div style='text-align:center; cursor:default;'>")
                                      .append($("<a taget=_self class='icon-circle2'" + estado + ">"))
                                      .appendTo(container);
                              }

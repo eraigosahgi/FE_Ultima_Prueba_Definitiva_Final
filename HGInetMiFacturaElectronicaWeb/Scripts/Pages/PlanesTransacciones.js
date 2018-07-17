@@ -471,9 +471,9 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                             }
 
                             if (options.data.Estado == 'Habilitado') {
-                                estado = " style='color:green;' title='Habilitado'";
+                                estado = " style='color:green; cursor:default;' title='Habilitado'";
                             } else {
-                                estado = " style='color:red;' title='Inhabilitado'";
+                                estado = " style='color:red; cursor:default;' title='Inhabilitado'";
                             }
 
                         } catch (err) {
