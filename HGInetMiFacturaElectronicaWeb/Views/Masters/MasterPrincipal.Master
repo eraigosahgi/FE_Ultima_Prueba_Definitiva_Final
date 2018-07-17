@@ -101,7 +101,12 @@
         }
     </style>
     <link href="../../Content/dx.hgi.css" rel="stylesheet" />
-
+    <script>
+        function onready() {
+            var dt = new Date();            
+            window.setInterval("ValidarSesion()", 300000);
+        }
+    </script>
 </head>
 <body>
     <%--Panel carga o Loading--%>
