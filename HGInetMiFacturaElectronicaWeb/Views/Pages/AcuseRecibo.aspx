@@ -101,7 +101,7 @@
 
                         <div id="PanelInformacionFactura" style="font-size: medium" class="dx-fieldset">
 
-                            <h4 class="panel-title text-bold text-center">Información de Factura</h4>
+                            <h4 class="panel-title text-bold text-center">Información de {{datos.tipodoc}}</h4>
 
                             <div style="margin-top: 3%">
                                 <label id="Label2" class="text-bold">Número Documento: </label>
@@ -162,8 +162,7 @@
                             <form data-ng-submit="onFormSubmit($event)">
 
                                 <div>
-
-                                    <h3>Respuesta Acuse:  </h3>
+                                    <h4 class="panel-title text-bold text-center">Respuesta Acuse</h4>                                    
                                     <br />
                                     <div class="col-md-12 ">
                                         <label><strong> Aprobar:</strong></label>
