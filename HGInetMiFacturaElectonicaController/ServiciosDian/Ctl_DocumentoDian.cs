@@ -65,14 +65,14 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 					break;
 				case TipoDocumento.NotaCredito:
 					NotaCredito doc_nota_credito = ((NotaCredito)documento.Documento);
-					prefijo = doc_nota_credito.Prefijo.ToString();
+					prefijo = doc_nota_credito.Prefijo;
 					numero = doc_nota_credito.Documento.ToString();
 					nit_obligado = doc_nota_credito.DatosObligado.Identificacion;
 					fecha = doc_nota_credito.Fecha;
 					break;
 				case TipoDocumento.NotaDebito:
 					NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
-					prefijo = doc_nota_debito.Prefijo.ToString();
+					prefijo = doc_nota_debito.Prefijo;
 					numero = doc_nota_debito.Documento.ToString();
 					nit_obligado = doc_nota_debito.DatosObligado.Identificacion;
 					fecha = doc_nota_debito.Fecha;

@@ -31,7 +31,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// Numero de Documento
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        public int Documento { get; set; }
+        public long Documento { get; set; }
         
         /// <summary>
         /// Documento afectado

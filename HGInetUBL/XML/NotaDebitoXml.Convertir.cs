@@ -27,7 +27,7 @@ namespace HGInetUBL
 
 			if (nota_debito_ubl.CustomizationID == null)
 			{
-				nota_debito_obj.Documento = Convert.ToInt32(nota_debito_ubl.ID.Value);
+				nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
 			}
 			else
 			{
@@ -37,12 +37,12 @@ namespace HGInetUBL
 					string documento = nota_debito_ubl.ID.Value;
 					if (documento.Substring(0, nota_debito_obj.Prefijo.Length).Equals(nota_debito_obj.Prefijo))
 					{
-						nota_debito_obj.Documento = Convert.ToInt32(documento.Substring(nota_debito_obj.Prefijo.Length));
+						nota_debito_obj.Documento = Convert.ToInt64(documento.Substring(nota_debito_obj.Prefijo.Length));
 					}
 				}
 				else
 				{
-					nota_debito_obj.Documento = Convert.ToInt32(nota_debito_ubl.ID.Value);
+					nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
 				}
 			}
 			//Capturo la informacion del encabezado del documento

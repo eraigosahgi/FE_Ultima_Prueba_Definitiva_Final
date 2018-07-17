@@ -43,13 +43,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 
 			// ruta del xml
-            string ruta_xml = string.Format(@"{0}{1}.xml", documento.RutaArchivosEnvio, documento.NombreXml);
+            string ruta_xml = string.Format(@"{0}\{1}.xml", documento.RutaArchivosEnvio, documento.NombreXml);
 
             // valida la existencia de la carpeta
             documento.RutaArchivosEnvio = Directorio.CrearDirectorio(documento.RutaArchivosEnvio);
 
 			// ruta del zip
-			string ruta_zip = string.Format(@"{0}{1}.zip", documento.RutaArchivosEnvio, documento.NombreZip);
+			string ruta_zip = string.Format(@"{0}\{1}.zip", documento.RutaArchivosEnvio, documento.NombreZip);
 			
 			// elimina el archivo zip si existe
 			if (Archivo.ValidarExistencia(ruta_zip))
