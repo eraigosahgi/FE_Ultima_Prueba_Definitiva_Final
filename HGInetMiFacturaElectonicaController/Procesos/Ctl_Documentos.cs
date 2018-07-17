@@ -1067,6 +1067,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Validacion del valor unitario
 				//Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
 
+
+				if (string.IsNullOrEmpty(Docdet.Bodega))
+					Docdet.Bodega = string.Empty;
+
 				if (Docdet.ValorUnitario == 0)
 				{
 					Docdet.ValorUnitario = 0.00M;

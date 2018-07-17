@@ -58,12 +58,12 @@ namespace HGInetUBL
 				string documento = factura_ubl.ID.Value;
 				if (documento.Substring(0, 4).Equals(factura_obj.Prefijo))
 				{
-					factura_obj.Documento = Convert.ToInt32(documento.Substring(4));
+					factura_obj.Documento = Convert.ToInt64(documento.Substring(4));
 				}
 			}
 			else
 			{
-				factura_obj.Documento = Convert.ToInt32(factura_ubl.ID.Value);
+				factura_obj.Documento = Convert.ToInt64(factura_ubl.ID.Value);
 			}
 			factura_obj.DocumentoRef = string.Empty;
 			//Valida si tiene documento referencia
@@ -179,11 +179,14 @@ namespace HGInetUBL
 			obligado.Ciudad = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.CityName.Value;
 			obligado.Departamento = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.Department.Value;
 			obligado.CodigoPais = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
-			obligado.Telefono = factura_ubl.AccountingSupplierParty.Party.Contact.Telephone.Value;
-			obligado.Email = factura_ubl.AccountingSupplierParty.Party.Contact.ElectronicMail.Value;
-			//Valida si tiene pagina web
-			if (factura_ubl.AccountingSupplierParty.Party.WebsiteURI != null)
-				obligado.PaginaWeb = factura_ubl.AccountingSupplierParty.Party.WebsiteURI.Value;
+			if (factura_ubl.AccountingSupplierParty.Party.Contact != null)
+			{
+				obligado.Telefono = factura_ubl.AccountingSupplierParty.Party.Contact.Telephone.Value;
+				obligado.Email = factura_ubl.AccountingSupplierParty.Party.Contact.ElectronicMail.Value;
+				//Valida si tiene pagina web
+				if (factura_ubl.AccountingSupplierParty.Party.WebsiteURI != null)
+					obligado.PaginaWeb = factura_ubl.AccountingSupplierParty.Party.WebsiteURI.Value;
+			}
 			factura_obj.DatosObligado = obligado;
 
 			#endregion
@@ -197,7 +200,14 @@ namespace HGInetUBL
 
 				DocumentoDetalle detalle = new DocumentoDetalle();
 				detalle.Codigo = Convert.ToInt16(factura_ubl.InvoiceLine[i].ID.Value);
-				detalle.ProductoCodigo = factura_ubl.InvoiceLine[i].Item.CatalogueItemIdentification.ID.Value;
+				if (factura_ubl.InvoiceLine[i].Item.CatalogueItemIdentification != null)
+				{
+					detalle.ProductoCodigo = factura_ubl.InvoiceLine[i].Item.CatalogueItemIdentification.ID.Value;
+				}
+				else if (factura_ubl.InvoiceLine[i].Item.StandardItemIdentification != null)
+				{
+					detalle.ProductoCodigo = factura_ubl.InvoiceLine[i].Item.StandardItemIdentification.ID.Value;
+				}
 				detalle.ProductoNombre = factura_ubl.InvoiceLine[i].Item.Description[0].Value;
 				if (factura_ubl.InvoiceLine[i].Item.AdditionalInformation != null)
 				{

@@ -1119,11 +1119,20 @@ namespace HGInetUBL
                     IDItemStandard.Value = DocDet.ProductoCodigo;
                     StandardItemIdentification.ID = IDItemStandard;
                     Item.StandardItemIdentification = StandardItemIdentification;
-                    #endregion
+					#endregion
 
-                    InvoiceLineType1.Item = Item;
-                    #endregion
+					#region Bodega del producto
+					AddressType[] Address = new AddressType[1];
+					AddressType Origen = new AddressType();
+					IDType IDItemOrigen = new IDType();
+					IDItemOrigen.Value = DocDet.Bodega;
+					Origen.ID = IDItemOrigen;
+					Address[0] = Origen;
+					Item.OriginAddress = Address;
+					#endregion
 
+					InvoiceLineType1.Item = Item;
+                    #endregion
 
                     #region Valor Unitario producto
                     // <fe:Price>

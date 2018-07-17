@@ -39,6 +39,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string ProductoDescripcion { get; set; }
 
 		/// <summary>
+		/// Bodega del producto registrado
+		/// </summary>
+		public string Bodega { get; set; }
+
+		/// <summary>
 		/// Cantidad del producto y/o servicio
 		/// </summary>
 		[Required(ErrorMessage = "{0} es un campo obligatorio")]
