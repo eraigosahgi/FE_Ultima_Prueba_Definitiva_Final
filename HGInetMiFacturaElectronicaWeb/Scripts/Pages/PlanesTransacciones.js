@@ -311,6 +311,10 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
     function GuardarPlan() {
         var empresa = datos_empresa_asociada.split(' -- ');
 
+        if (Datos_T_compra == "") { Datos_T_compra = "0" }
+
+        if (Datos_valor_plan == "") { Datos_valor_plan = "0" }
+
         var data = $.param({
             IntTipoProceso: Datos_TiposProceso,
             StrEmpresa: codigo_facturador,

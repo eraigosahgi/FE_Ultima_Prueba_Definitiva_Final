@@ -18,30 +18,33 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
         {
             try
             {
-                // obtiene los datos de la sesión para mostrarlos
-                if (Sesion.DatosEmpresa != null && Sesion.DatosUsuario != null)
+                if (!Page.IsPostBack)
                 {
-                    // carga los datos de la empresa en la página master
-                    TblEmpresas datos_empresa = Sesion.DatosEmpresa;
-                    LblNombreEmpresa.InnerText = datos_empresa.StrRazonSocial;
-
-                    // carga los datos del usuario en la página master
-                    TblUsuarios datos_usuario = Sesion.DatosUsuario;
-                    LblCodigoUsuario.InnerText = datos_usuario.StrUsuario;
-                    LblNombreUsuarioDet.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
-                    lblEmailUsuario.InnerText = datos_usuario.StrMail;
-                    LblNombreUsuario.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
-
-                    if (PermisoActual != null)
+                    // obtiene los datos de la sesión para mostrarlos
+                    if (Sesion.DatosEmpresa != null && Sesion.DatosUsuario != null)
                     {
-                        lb_TituloPagina.Text = this.PermisoActual.Titulo;
-                        lb_GrupoPagina.Text = this.PermisoActual.GrupoPagina;
+                        // carga los datos de la empresa en la página master
+                        TblEmpresas datos_empresa = Sesion.DatosEmpresa;
+                        LblNombreEmpresa.InnerText = datos_empresa.StrRazonSocial;
 
-                        ActivarMenu(this.PermisoActual);
-                        OpcionesMenu();
+                        // carga los datos del usuario en la página master
+                        TblUsuarios datos_usuario = Sesion.DatosUsuario;
+                        LblCodigoUsuario.InnerText = datos_usuario.StrUsuario;
+                        LblNombreUsuarioDet.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
+                        lblEmailUsuario.InnerText = datos_usuario.StrMail;
+                        LblNombreUsuario.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
+
+                        if (PermisoActual != null)
+                        {
+                            lb_TituloPagina.Text = this.PermisoActual.Titulo;
+                            lb_GrupoPagina.Text = this.PermisoActual.GrupoPagina;
+
+                            ActivarMenu(this.PermisoActual);
+                            OpcionesMenu();
+                        }
+
+
                     }
-
-
                 }
             }
             catch (Exception excepcion)

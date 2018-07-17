@@ -337,12 +337,68 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			return documentos;
 		}
 
-		/// <summary>
-		/// Obtiene los documentos por id se seguridad.
+        #region Documentos Administrador
+        /// <summary>
+		/// Obtiene todos los documentos para el administrador de Sistema (Solo Gerencia)
 		/// </summary>
-		/// <param name="id_seguridad"></param>
+		/// <param name="codigo_facturador"></param>
+		/// <param name="numero_documento"></param>
+		/// <param name="codigo_tercero"></param>
+		/// <param name="estado_dian"></param>
+		/// <param name="estado_recibo"></param>
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerPorIdSeguridad(System.Guid id_seguridad)
+		public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento)
+        {
+
+            if (estado_dian == null || estado_dian == "")
+                estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico")) + "," + Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));
+
+            fecha_inicio = fecha_inicio.Date;
+
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+            int num_doc = -1;
+            int.TryParse(numero_documento, out num_doc);           
+
+            short cod_estado_recibo = -1;
+            short.TryParse(estado_recibo, out cod_estado_recibo);
+
+            if (string.IsNullOrWhiteSpace(numero_documento))
+                numero_documento = "*";
+            if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+                codigo_adquiriente = "*";
+            
+            if (string.IsNullOrWhiteSpace(estado_recibo))
+                estado_recibo = "*";
+            
+
+
+            List<TblDocumentos> documentos = (from datos in context.TblDocumentos
+                                              join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+                                              join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+                                              where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+                                            && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+                                            && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+                                            && (estado_dian.Contains(datos.IntIdEstado.ToString()))
+                                            && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+                                            && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
+                                            && (datos.IntDocTipo.Equals(TipoDocumento) || TipoDocumento ==0  )
+                                              orderby datos.IntNumero descending
+                                              select datos).ToList();
+
+            return documentos;
+        }
+        #endregion
+
+
+        /// <summary>
+        /// Obtiene los documentos por id se seguridad.
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <returns></returns>
+        public List<TblDocumentos> ObtenerPorIdSeguridad(System.Guid id_seguridad)
 		{
 
 			try

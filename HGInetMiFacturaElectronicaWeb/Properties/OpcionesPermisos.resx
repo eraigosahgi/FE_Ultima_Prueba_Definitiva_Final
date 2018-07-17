@@ -132,6 +132,9 @@
   <data name="ConsultaDocumentosFacturador" xml:space="preserve">
     <value>1311</value>
   </data>
+  <data name="DocumetosAdmin" xml:space="preserve">
+    <value>1343</value>
+  </data>
   <data name="Empresas" xml:space="preserve">
     <value>1332</value>
   </data>

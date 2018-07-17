@@ -106,6 +106,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1343.
+        /// </summary>
+        internal static string DocumetosAdmin {
+            get {
+                return ResourceManager.GetString("DocumetosAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1332.
         /// </summary>
         internal static string Empresas {

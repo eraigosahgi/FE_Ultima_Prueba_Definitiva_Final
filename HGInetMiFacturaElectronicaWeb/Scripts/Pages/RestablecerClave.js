@@ -217,8 +217,7 @@ $(document).ready(function () {
     });
       
         
-    $("#registro").submit(function (event) {
-        alert("hola");
+    $("#registro").submit(function (event) {        
         if (longitud && minuscula && numero && mayuscula) {
             alert("password correcto");
             $("#registro").submit();

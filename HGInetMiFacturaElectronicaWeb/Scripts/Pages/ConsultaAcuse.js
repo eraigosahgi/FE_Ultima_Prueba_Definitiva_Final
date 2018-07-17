@@ -1,7 +1,7 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx']);
-AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, $http, $location) {
+var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx', 'AppMaestrosEnum']);
+AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, $http, $location, SrvMaestrosEnum) {
 
     var now = new Date();
 
@@ -10,11 +10,10 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                numero_documento = "",
                fecha_inicio = "",
                fecha_fin = "",
-               estado_acuse = "";
+               estado_acuse = "";    
 
-
-    $http.get('/api/DatosSesion/').then(function (response) {
-        codigo_facturador = response.data[0].Identificacion;
+    SrvMaestrosEnum.ObtenerSesion().then(function (data) {
+        codigo_facturador = data[0].Identificacion;
         consultar();
     });
 

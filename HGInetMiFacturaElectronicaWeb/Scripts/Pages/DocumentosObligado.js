@@ -20,11 +20,13 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
-           codigo_adquiriente = "";
-    $http.get('/api/DatosSesion/').then(function (response) {
-        codigo_facturador = response.data[0].Identificacion;
+           codigo_adquiriente = "";    
+
+    SrvMaestrosEnum.ObtenerSesion().then(function (data) {
+        codigo_facturador = data[0].Identificacion;
         consultar();
     });
+
 
     SrvMaestrosEnum.ObtenerEnum(0,"publico").then(function (data) {                    
         SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {

@@ -1,11 +1,11 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Masters/MasterPrincipal.Master" AutoEventWireup="true" CodeBehind="GestionUsuarios.aspx.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Pages.GestionUsuarios" %>
+﻿<%@ Page Title=""  EnableEventValidation="false" Language="C#" MasterPageFile="~/Views/Masters/MasterPrincipal.Master" AutoEventWireup="true" CodeBehind="GestionUsuarios.aspx.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Pages.GestionUsuarios" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
     <script src="../../Scripts/Pages/Usuarios.js"></script>
     <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
-    <div ng-app="ConsultaUsuarioApp" ng-controller="GestionUsuarioController">
+    <div data-ng-app="ConsultaUsuarioApp" data-ng-controller="GestionUsuarioController">
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">

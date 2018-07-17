@@ -1,17 +1,23 @@
 ﻿
 var myInterceptor = function ($q) {
     return {
+        //Inicia Proceso
         request: function (config) {
-            $('#wait').show();            
+            $('#wait').show();
             return config;
         },
+        //Termina correctamente
         response: function (result) {
-            $('#wait').hide();            
+            $('#wait').hide();
             return result;
         },
-        responseError: function (rejection) {
-            $('#wait').hide();            
-            return $q.reject(rejection);
+        //Error en el proceso
+        responseError: function (rejection) {            
+            $('#wait').hide();
+            if (rejection.data.ExceptionMessage == "No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.") {
+                sesionexpiro();
+            }
+            return $q.reject(rejection.data.ExceptionMessage);
         }
     }
 }

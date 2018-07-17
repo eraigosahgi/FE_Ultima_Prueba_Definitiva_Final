@@ -147,7 +147,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                     groupItems: [{
                         column: "Empresa",
                         summaryType: "count",
-                        displayFormat: " {0} Cantidad ",
+                        displayFormat: " {0} Usuario(s) ",
                         valueFormat: "fixedPoint"
                     }]
 

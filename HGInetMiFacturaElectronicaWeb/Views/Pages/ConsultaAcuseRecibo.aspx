@@ -4,12 +4,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-
+    <script src="../../Scripts/Services/MaestrosEnum.js"></script>
     <!-- JS DocumentosAdquiriente-->
     <script src="../../Scripts/Pages/ConsultaAcuse.js"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
-    <div ng-app="AcuseConsultaApp" ng-controller="AcuseConsultaController">
+    <div data-ng-app="AcuseConsultaApp" data-ng-controller="AcuseConsultaController">
 
         <!-- FILTROS DE BÚSQUEDA -->
 

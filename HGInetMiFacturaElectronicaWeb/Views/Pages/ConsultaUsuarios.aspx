@@ -9,7 +9,7 @@
     <script src="../../Scripts/Pages/Usuarios.js"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
-    <div ng-app="ConsultaUsuarioApp" ng-controller="ConsultaUsuarioController">
+    <div data-ng-app="ConsultaUsuarioApp" data-ng-controller="ConsultaUsuarioController">
 
         <!-- DATOS -->
         <div class="col-md-12">

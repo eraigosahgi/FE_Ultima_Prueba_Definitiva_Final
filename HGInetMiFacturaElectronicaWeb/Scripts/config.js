@@ -159,3 +159,24 @@ function PorcentajeGrafico(element, radius, border, color, end, iconClass, iconC
     })();
 }
 
+function sesionexpiro() {
+    swal({
+        title: 'Alerta',
+        text: 'No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.',
+        type: 'warning',
+        confirmButtonColor: '#FF7043',
+        confirmButtonText: 'Aceptar',
+        animation: 'pop',
+        html: true,
+        closeOnConfirm: false
+    });
+   
+    setTimeout(IrAPaginaPrincipal, 3000);
+
+}
+
+
+
+function IrAPaginaPrincipal() {
+    window.location.assign("../Login/Default.aspx");
+}
