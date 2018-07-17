@@ -111,7 +111,7 @@ namespace HGInetFacturaEServicios
 		/// <param name="FechaInicio">fecha inicial de consulta</param>
 		/// <param name="FechaFin">fecha final de consulta</param>
 		/// <returns>Una lista de las Nota Credito generadas a nombre del adquiriente</returns>
-		public static List<ServicioNotaDebito.NotaDebitoConsulta> ObtenerNotaCreditoPorAdquiriente(string UrlWs, string Serial, string Identificacion, DateTime FechaInicio, DateTime FechaFin)
+		public static List<ServicioNotaDebito.NotaDebitoConsulta> ObtenerNotaDebitoPorAdquiriente(string UrlWs, string Serial, string Identificacion, DateTime FechaInicio, DateTime FechaFin)
 		{
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
