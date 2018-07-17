@@ -231,7 +231,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,
                     RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
-                    CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
+                    CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
+                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
                 });
 
                 return Ok(retorno);
