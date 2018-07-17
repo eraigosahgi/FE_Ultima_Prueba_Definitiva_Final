@@ -244,6 +244,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode())
 				{
 					respuesta = Consultar(documento, empresa, ref respuesta);
+					
+					//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
+					if (respuesta.EstadoDian.CodigoRespuesta == null)
+					{
+						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+					}
 
 					// envía el mail de documentos al adquiriente
 					if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())

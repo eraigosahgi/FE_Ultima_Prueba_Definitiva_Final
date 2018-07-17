@@ -35,22 +35,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					nit_obligado = doc_nota_credito.DatosObligado.Identificacion;
 					break;
 				case TipoDocumento.NotaDebito:
-					/*NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
+					NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
 					nit_obligado = doc_nota_debito.DatosObligado.Identificacion;
-					*/
 					break;
 				default:
 					break;
 			}
 
 			// ruta del xml
-            string ruta_xml = string.Format(@"{0}\{1}.xml", documento.RutaArchivosEnvio, documento.NombreXml);
+            string ruta_xml = string.Format(@"{0}{1}.xml", documento.RutaArchivosEnvio, documento.NombreXml);
 
             // valida la existencia de la carpeta
             documento.RutaArchivosEnvio = Directorio.CrearDirectorio(documento.RutaArchivosEnvio);
 
 			// ruta del zip
-			string ruta_zip = string.Format(@"{0}\{1}.zip", documento.RutaArchivosEnvio, documento.NombreZip);
+			string ruta_zip = string.Format(@"{0}{1}.zip", documento.RutaArchivosEnvio, documento.NombreZip);
 			
 			// elimina el archivo zip si existe
 			if (Archivo.ValidarExistencia(ruta_zip))

@@ -217,6 +217,14 @@ namespace HGInetUBL
 				{
 					detalle.ProductoDescripcion = string.Empty;
 				}
+				if (factura_ubl.InvoiceLine[i].Item.OriginAddress != null)
+				{
+					detalle.Bodega = factura_ubl.InvoiceLine[i].Item.OriginAddress[0].ID.Value;
+				}
+				else
+				{
+					detalle.Bodega = string.Empty;
+				}
 				detalle.Cantidad = factura_ubl.InvoiceLine[i].InvoicedQuantity.Value;
 				if (!string.IsNullOrEmpty(factura_ubl.InvoiceLine[i].InvoicedQuantity.unitCode.ToString()))
 				{
