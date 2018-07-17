@@ -61,7 +61,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		#region Obtener
 
-		public TblDocumentos Obtener(string numero_resolucion, int numero_documeto, int tipo_doc)
+		public TblDocumentos Obtener(string numero_resolucion, long numero_documeto, int tipo_doc)
 		{
 			try
 			{
