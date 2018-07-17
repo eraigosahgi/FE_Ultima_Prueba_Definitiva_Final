@@ -250,6 +250,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
+
+						//Valida de nuevo el estado del documento si fue enviado y hay respuesta de la DIAN
+						respuesta = Consultar(documento, empresa, ref respuesta);
 					}
 
 					// envía el mail de documentos al adquiriente
