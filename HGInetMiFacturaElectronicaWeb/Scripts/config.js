@@ -170,7 +170,7 @@ function sesionexpiro() {
         html: true,
         closeOnConfirm: false
     });
-   
+
     setTimeout(IrAPaginaPrincipal, 3000);
 
 }
@@ -180,3 +180,23 @@ function sesionexpiro() {
 function IrAPaginaPrincipal() {
     window.location.assign("../Login/Default.aspx");
 }
+
+
+function ValidarSesion() {
+
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "/api/DatosSesion/",
+    })
+ .done(function (data, textStatus, jqXHR) {
+     //Aqui se podria validar el el usuario tiene movimiento y alargar un poco mas la sesión     
+ })
+ .fail(function (jqXHR, textStatus, errorThrown) {
+     //Cierro la sesión ya que no hay datos
+     sesionexpiro();
+ });
+
+}
+
+
