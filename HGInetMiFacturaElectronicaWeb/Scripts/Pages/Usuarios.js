@@ -577,7 +577,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
             }
         }, function errorCallback(response) {
             $('#wait').hide();
-            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);
+            DevExpress.ui.notify(response, 'error', 6000);
         });
     }
 
