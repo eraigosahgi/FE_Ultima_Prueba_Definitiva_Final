@@ -426,7 +426,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 }
 
                 if (Datos_Integrador == 1)
-                    $("#Integradora").dxCheckBox({ value: 1 });
+                    $("#Integradora").dxCheckBox({ value: true });
 
 
                 $("#txtUsuarios").dxNumberBox({ value: Datos_Numero_usuarios });
