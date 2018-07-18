@@ -122,7 +122,7 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox33.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.htmlTextBox33.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.htmlTextBox33.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.htmlTextBox33.Value = "{Fields.ValorUnitario.ToString().Replace(\",\" , \".\")}";
+            this.htmlTextBox33.Value = "=FORMAT(\'{0:###,##0.}\', Fields.ValorUnitario)";
             // 
             // htmlTextBox32
             // 
