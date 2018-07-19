@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
@@ -19,76 +20,11 @@ using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Xml;
 
+
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
     public class DocumentosController : ApiController
     {
-
-
-        #region Docuemntos Admin
-        /// <summary>
-        /// Obtiene los documentos para el administrador (Solo Gerencia)
-        /// </summary>
-        /// <param name="codigo_facturador"></param>
-        /// <param name="numero_documento"></param>
-        /// <param name="codigo_adquiriente"></param>
-        /// <param name="estado_dian"></param>
-        /// <param name="estado_recibo"></param>
-        /// <param name="fecha_inicio"></param>
-        /// <param name="fecha_fin"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin,int TipoDocumento)
-        {
-            try
-            {
-                Sesion.ValidarSesion();
-
-                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-                Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerAdmin(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento);
-
-                if (datos == null)
-                {
-                    return NotFound();
-                }
-
-                var retorno = datos.Select(d => new
-                {
-                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
-                    d.DatFechaDocumento,
-                    d.DatFechaVencDocumento,
-                    d.IntVlrTotal,
-                    EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
-                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
-                    d.StrAdquirienteMvoRechazo,
-                    IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
-                    NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
-                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
-                    Xml = d.StrUrlArchivoUbl,
-                    Pdf = d.StrUrlArchivoPdf,
-                    d.StrIdSeguridad,
-                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"                    
-                });
-
-                return Ok(retorno);
-            }
-            catch (Exception excepcion)
-            {
-
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-
-        }
-        #endregion
-
-
-
-
-
         /// <summary>
         /// Obtiene los documentos por adquiriente
         /// </summary>
@@ -608,6 +544,94 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             {
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
+        }
+        #endregion
+
+        #region Zonas de pago
+        /// <summary>
+        /// Obtiene link para el pago de factura
+        /// </summary>
+        /// <param name="strIdSeguridad"></param>        
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/GenerarPago/")]
+        public String GenerarPago(System.Guid strIdSeguridad)
+        {
+            try
+            {
+                Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+                var datos = Pago.ReportePagoElectronico(strIdSeguridad);
+              
+                return datos;
+            }
+            catch (Exception excepcion)
+            {
+
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+
+        }
+      
+        #endregion
+
+        #region Docuemntos Admin
+        /// <summary>
+        /// Obtiene los documentos para el administrador (Solo Gerencia)
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="codigo_adquiriente"></param>
+        /// <param name="estado_dian"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerAdmin(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
+                    d.DatFechaDocumento,
+                    d.DatFechaVencDocumento,
+                    d.IntVlrTotal,
+                    EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    d.StrAdquirienteMvoRechazo,
+                    IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+                    NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
+                    Xml = d.StrUrlArchivoUbl,
+                    Pdf = d.StrUrlArchivoPdf,
+                    d.StrIdSeguridad,
+                    RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+
         }
         #endregion
     }
