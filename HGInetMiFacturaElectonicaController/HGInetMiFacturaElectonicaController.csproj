@@ -72,6 +72,7 @@
     <Compile Include="Configuracion\Ctl_PlanesTransacciones.cs" />
     <Compile Include="Configuracion\Ctl_Planes.cs" />
     <Compile Include="Configuracion\Ctl_Usuario.cs" />
+    <Compile Include="PagosElectronicos\Ctl_PagosElectronicos.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Archivo.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Dian.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Factura.cs" />
@@ -125,6 +126,10 @@
     <ProjectReference Include="..\HGInetUtilidadAzure\HGInetUtilidadAzure.csproj">
       <Project>{f112edd7-aae3-46ce-9a87-0bfaf3edaf3e}</Project>
       <Name>HGInetUtilidadAzure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetZonaPagos\HGInetZonaPagos.csproj">
+      <Project>{a8136c0b-c54e-4ecf-b547-4e1371b3a6b9}</Project>
+      <Name>HGInetZonaPagos</Name>
     </ProjectReference>
     <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
       <Project>{a966a394-f6cc-482f-87a4-56ec1af05e5e}</Project>
