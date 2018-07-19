@@ -264,7 +264,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 
                         $("<div>")
 
-                        $('<img src="../../Scripts/Images/pse40x40.png" />').dxButton({
+                        $('<img src="../../Scripts/Images/LogoPSE40x40" />').dxButton({
                             onClick: function () {
                                                                
                                 $http.post('/api/GenerarPago?strIdSeguridad=' + options.data.StrIdSeguridad).then(function (response) {
