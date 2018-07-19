@@ -36,7 +36,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_inicio = new Date(data.value).toISOString();
-                $("#FechaFinal").dxDateBox({ min: fecha_inicio });                
+                $("#FechaFinal").dxDateBox({ min: fecha_inicio });
             }
 
         });
@@ -47,7 +47,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_fin = new Date(data.value).toISOString();
-                $("#FechaInicial").dxDateBox({ max: fecha_fin });                
+                $("#FechaInicial").dxDateBox({ max: fecha_fin });
             }
 
         });
@@ -81,7 +81,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             }
     }
     var mensaje_acuse = "";
-    $("#FechaFinal").dxDateBox({ min: now });    
+    $("#FechaFinal").dxDateBox({ min: now });
     $("#FechaInicial").dxDateBox({ max: now });
 
     $scope.ButtonOptionsConsultar = {
@@ -91,6 +91,9 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
             consultar();
         }
     };
+
+
+
 
     //Consultar DOcumentos
     function consultar() {
@@ -105,9 +108,9 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
         $('#wait').show();
-        $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+        $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {            
             $('#wait').hide();
-            $("#gridDocumentos").dxDataGrid({
+            $("#gridDocumentos").dxDataGrid({                
                 dataSource: response.data,
                 paging: {
                     pageSize: 20
@@ -144,7 +147,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     mode: "select"
                 },
                 groupPanel: {
-                    allowColumnDragging: true,                    
+                    allowColumnDragging: true,
                     visible: true
                 }
                 , columns: [
@@ -245,7 +248,35 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                                   .append($("<a target='_blank' href='" + options.data.RutaAcuse + "'>Acuse</a>"))
                                   .appendTo(container);
                           }
-                      }
+                      },
+                {
+                    caption: "Pago",
+                    cssClass: "col-md-1 col-xs-2",
+                    cellTemplate: function (container, options) {
+
+                        var visible_pago = "style='pointer-events:auto;cursor: not-allowed;'";
+
+                        if (options.data.Pdf)
+                            visible_pago = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer'";
+                        else
+                            options.data.Pdf = "#";
+
+
+                        $("<div>")
+
+                        $('<img src="../../Scripts/Images/pse40x40.png" />').dxButton({
+                            onClick: function () {
+                                                               
+                                $http.post('/api/GenerarPago?strIdSeguridad=' + options.data.StrIdSeguridad).then(function (response) {
+                                    window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
+                                }, function (error) {
+                                });
+                            }
+                        }).removeClass("dx-button dx-button-normal dx-widget")
+                            .append($(""))
+                            .appendTo(container);
+                    }
+                }
                 ],
                 summary: {
                     groupItems: [{
@@ -285,7 +316,8 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 },
             });
         });
+
     }
-
-
+    
 });
+
