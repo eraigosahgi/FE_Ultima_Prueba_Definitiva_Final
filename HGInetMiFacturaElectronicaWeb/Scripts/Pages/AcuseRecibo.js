@@ -6,6 +6,18 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 
 
     var IdSeguridad = location.search.split('id_seguridad=')[1];
+
+
+    $(document).ready(function () {
+        $('#Butonpago').on('click', function () {
+            $http.post('/api/GenerarPago?strIdSeguridad=' + IdSeguridad).then(function (response) {
+                window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
+            }, function (error) {
+            });
+        });
+    });
+
+
     var estado = "";
     var motivo_rechazo = "";
     consultar();
@@ -45,7 +57,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
             }]
         };
 
-    }    
+    }
     //ValidarEstado(1);
     $scope.ValidarEstado = function (Estado) {
         if (Estado == 1) {
@@ -104,12 +116,17 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         });
     }
 
-    $('#btnautenticar').show();    
+    $('#btnautenticar').show();
     $http.get('/api/DatosSesion/').then(function (response) {
         $('#btnautenticar').hide();
     }, function errorCallback(response) {
         $('#btnautenticar').show();
     });
 
+    
+
+
+
 });
+
 
