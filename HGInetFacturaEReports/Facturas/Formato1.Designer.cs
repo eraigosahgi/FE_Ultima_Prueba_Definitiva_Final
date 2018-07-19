@@ -427,7 +427,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxValor.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.TextBoxValor.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.TextBoxValor.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.TextBoxValor.Value = "{Fields.Total.ToString().Replace(\",\" , \".\")}";
+            this.TextBoxValor.Value = "<p style=\"text-align: left\">=FORMAT(\'{0:###,##0.}\', Fields.Valor)</p>";
             // 
             // htmlTextBox21
             // 
@@ -459,7 +459,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxValorDescuento.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.TextBoxValorDescuento.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.TextBoxValorDescuento.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.TextBoxValorDescuento.Value = "{Fields.ValorDescuento.ToString().Replace(\",\" , \".\")}";
+            this.TextBoxValorDescuento.Value = "<p style=\"text-align: left\">=FORMAT(\'{0:###,##0.}\', Fields.ValorDescuento)</p>";
             // 
             // htmlTextBox27
             // 
@@ -491,7 +491,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxValorSubtotal.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.TextBoxValorSubtotal.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.TextBoxValorSubtotal.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.TextBoxValorSubtotal.Value = "{Fields.ValorSubtotal.ToString().Replace(\",\" , \".\")}";
+            this.TextBoxValorSubtotal.Value = "<p style=\"text-align: left\">=FORMAT(\'{0:###,##0.}\', Fields.ValorSubtotal)</p>";
             // 
             // htmlTextBox33
             // 
@@ -523,7 +523,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxValorIva.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.TextBoxValorIva.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.TextBoxValorIva.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.TextBoxValorIva.Value = "{Fields.ValorIva.ToString().Replace(\",\" , \".\")}";
+            this.TextBoxValorIva.Value = "<p style=\"text-align: left\">=FORMAT(\'{0:###,##0.}\', Fields.ValorIva)</p>";
             // 
             // htmlTextBox35
             // 
@@ -555,7 +555,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxTotal.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.TextBoxTotal.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.TextBoxTotal.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.TextBoxTotal.Value = "{Fields.Total.ToString().Replace(\",\" , \".\")}";
+            this.TextBoxTotal.Value = "<p style=\"text-align: left\">=FORMAT(\'{0:###,##0.}\', Fields.Total)</p>";
             // 
             // htmlTextBox44
             // 
@@ -587,7 +587,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxValorReteFuente.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.TextBoxValorReteFuente.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.TextBoxValorReteFuente.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.TextBoxValorReteFuente.Value = "{Fields.ValorReteFuente.ToString().Replace(\",\" , \".\")}";
+            this.TextBoxValorReteFuente.Value = "<p style=\"text-align: left\">=FORMAT(\'{0:###,##0.}\', Fields.ValorReteFuente)</p>";
             // 
             // htmlTextBox46
             // 
@@ -619,7 +619,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxValorReteIva.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.TextBoxValorReteIva.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.TextBoxValorReteIva.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.TextBoxValorReteIva.Value = "{Fields.ValorReteIva.ToString().Replace(\",\" , \".\")}";
+            this.TextBoxValorReteIva.Value = "<p style=\"text-align: left\">=FORMAT(\'{0:###,##0.}\', Fields.ValorReteIva)</p>";
             // 
             // htmlTextBox48
             // 
@@ -651,7 +651,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxNeto.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.TextBoxNeto.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.TextBoxNeto.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.TextBoxNeto.Value = "{Fields.Neto.ToString().Replace(\",\" , \".\")}";
+            this.TextBoxNeto.Value = "<p style=\"text-align: left\">=FORMAT(\'{0:###,##0.}\', Fields..Neto)</p>";
             // 
             // htmlTextBox50
             // 
