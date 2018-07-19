@@ -162,27 +162,27 @@
                             <form data-ng-submit="onFormSubmit($event)">
 
                                 <div>
-                                    <h4 class="panel-title text-bold text-center">Respuesta Acuse</h4>                                    
+                                    <h4 class="panel-title text-bold text-center">Respuesta Acuse</h4>
                                     <br />
                                     <div class="col-md-12 ">
-                                        <label><strong> Aprobar:</strong></label>
+                                        <label><strong>Aprobar:</strong></label>
                                         <input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
-                                        
-                                        <label style="margin-left:20px;"><strong>Rechazar:</strong></label>
+
+                                        <label style="margin-left: 20px;"><strong>Rechazar:</strong></label>
                                         <input type="radio" style="cursor: pointer" class="w3-radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
                                     </div>
-                                    <br />                                    
+                                    <br />
                                 </div>
 
-                                <div id="form" data-dx-form="TextAreaObservaciones" style="padding-left:2%; padding-top:5%;" > </div>                                
-                                <br />                                
+                                <div id="form" data-dx-form="TextAreaObservaciones" style="padding-left: 2%; padding-top: 5%;"></div>
+                                <br />
                                 <div class="col-lg-12 text-right">
                                     <div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
                                     <div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
                                     &nbsp;&nbsp;&nbsp;
                                     
                                 </div>
-                                
+
                             </form>
 
                             <br />
@@ -206,6 +206,11 @@
                             </div>
                             <br />
                             <div style="text-align: center;">
+
+                                <div id="Butonpago" style='pointer-events: auto; cursor: pointer'>
+                                    <img src="../../Scripts/Images/LogoPSE90x90.png" />
+                                </div>
+
                                 <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size: 14px; text-align: center;">Autenticar</a>
                                 <br />
                                 <br />
