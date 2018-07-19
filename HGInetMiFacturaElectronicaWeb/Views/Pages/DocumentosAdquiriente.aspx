@@ -21,8 +21,7 @@
                             <li><a data-action="collapse"></a></li>
                         </ul>
                     </div>
-                </div>
-
+                </div>                
                 <div class="panel-body">
 
                     <div class="col-lg-12">
