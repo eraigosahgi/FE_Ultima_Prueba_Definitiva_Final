@@ -44,14 +44,14 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
             HGInetZonaPagos.Pago datos_pago = new HGInetZonaPagos.Pago();
 
-            datos_pago.id_pago = id_seguridad_documento.ToString();
+            datos_pago.id_pago = datos_documento.IntNumero.ToString();
             datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
             datos_pago.total_con_iva = Convert.ToDouble(datos_documento.IntVlrTotal);
             datos_pago.valor_iva = 0;
             datos_pago.codigo_servicio_principal = codigo_servicio;
-            datos_pago.info_opcional1 = "";
-            datos_pago.info_opcional2 = "";
-            datos_pago.info_opcional3 = "";
+            datos_pago.info_opcional1 = "opciona1";
+            datos_pago.info_opcional2 = "opcional2";
+            datos_pago.info_opcional3 = "opcional3";
             datos_pago.lista_codigos_servicio_multicredito = null;
             datos_pago.lista_nit_codigos_servicio_multicredito = null;
             datos_pago.lista_valores_con_iva = null;
