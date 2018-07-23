@@ -6,30 +6,38 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 
 
     var IdSeguridad = location.search.split('id_seguridad=')[1];
-
-
-    $(document).ready(function () {
-        $('#Butonpago').on('click', function () {
-            $http.post('/api/GenerarPago?strIdSeguridad=' + IdSeguridad).then(function (response) {
-                window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
-            }, function (error) {
-            });
-        });
-    });
-
+    //Almacena el parametro Zpago para ver si debe enviarlo a la pantalla de pago
+    var Zpago = location.search.split('Zpago=')[1];    
 
     var estado = "";
     var motivo_rechazo = "";
+
+    $scope.habilitar = function () {
+        console.log("Prueba");
+        $http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&pago=true').then(function (response) {
+            window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
+            //Si lo envia a la pantalla de pago, cierra la pantalla actual
+            if (Zpago)
+                window.close();
+        }, function (error) {
+        });
+    };
+
+    if (Zpago == 'true') {
+        //Si parametro Zpago = true entonces lo envia a la pantalla de pago
+        $scope.habilitar();       
+    }   
+
     consultar();
     function consultar() {
         //Obtiene los datos del web api
         //ControladorApi: /Api/Documentos/
         //Datos GET: id_seguridad
         $http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
-            $scope.RespuestaAcuse = response.data;
-
+            $scope.RespuestaAcuse = response.data;            
         });
-
+        
+         
         $scope.TextAreaObservaciones = {
 
             readOnly: false,
@@ -122,11 +130,6 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     }, function errorCallback(response) {
         $('#btnautenticar').show();
     });
-
-    
-
-
-
 });
 
 

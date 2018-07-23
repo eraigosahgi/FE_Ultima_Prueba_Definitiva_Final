@@ -184,7 +184,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         dataField: "DatFechaDocumento",
                         dataType: "date",
                         format: "yyyy-MM-dd ",
-                        cssClass: "col-md-2 col-xs-3",
+                        cssClass: "col-md-1 col-xs-3",
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
@@ -195,7 +195,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         dataField: "DatFechaVencDocumento",
                         dataType: "date",
                         format: "yyyy-MM-dd ",
-                        cssClass: "hidden-xs col-md-2",
+                        cssClass: "hidden-xs col-md-1",
                         validationRules: [{
                             type: "required",
                             message: "El campo Fecha es obligatorio."
@@ -204,7 +204,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     {
                         caption: "Valor Total",
                         dataField: "IntVlrTotal",
-                        cssClass: "col-md-1 col-xs-2",
+                        cssClass: "col-md-1 col-xs-1",
                         width: '12%',
                         Type: Number,
                     }
@@ -249,9 +249,11 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                                   .appendTo(container);
                           }
                       },
-                {
-                    caption: "Pago",
-                    cssClass: "col-md-1 col-xs-2",
+                {                    
+                    
+                    cssClass: "col-md-1",
+                    width:"80px",
+                   
                     cellTemplate: function (container, options) {
 
                         var visible_pago = "style='pointer-events:auto;cursor: not-allowed;'";
@@ -262,7 +264,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                             options.data.Pdf = "#";
                         var imagen = "";
                         if (options.data.tipodoc == 'Factura') {
-                            imagen = "<img src='../../Scripts/Images/LogoPSE40x40.png' />";
+                            imagen = "<a class='btn-primary' >Pagar</a>'";//"<img src='../../Scripts/Images/LogoPSE40x40.png' />";
                         } else {
                             imagen = "";
 
@@ -272,6 +274,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         // ng-show=' + options.data.tipodoc + '=='Factura'
                         
                         $(imagen).dxButton({
+                            type: "default",
                             onClick: function () {
                                                                                               
                                 $http.get('/api/Documentos?strIdSeguridad=' + options.data.StrIdSeguridad + '&pago=true').then(function (response) {
@@ -279,7 +282,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                                 }, function (error) {
                                 });
                             }
-                        }).removeClass("dx-button dx-button-normal dx-widget")
+                        }).removeClass("dx-button-content")
                             .append($(""))
                             .appendTo(container)
                         $("</div>");
