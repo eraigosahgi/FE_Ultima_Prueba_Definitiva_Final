@@ -553,26 +553,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// </summary>
         /// <param name="strIdSeguridad"></param>        
         /// <returns></returns>
-        [HttpPost]
-        [Route("api/GenerarPago/")]
-        public String GenerarPago(System.Guid strIdSeguridad)
-        {
-            try
-            {
-                Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
-
-                var datos = Pago.ReportePagoElectronico(strIdSeguridad);
+ 
               
-                return datos;
-            }
-            catch (Exception excepcion)
-            {
+        public IHttpActionResult Get(System.Guid strIdSeguridad,bool pago)
+        {
+            Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-
+            var datos = Pago.ReportePagoElectronico(strIdSeguridad);
+            return Ok(datos);
+            
         }
-      
+
         #endregion
 
         #region Docuemntos Admin

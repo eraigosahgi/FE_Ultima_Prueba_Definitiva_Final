@@ -260,21 +260,29 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                             visible_pago = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer'";
                         else
                             options.data.Pdf = "#";
+                        var imagen = "";
+                        if (options.data.tipodoc == 'Factura') {
+                            imagen = "<img src='../../Scripts/Images/LogoPSE40x40.png' />";
+                        } else {
+                            imagen = "";
 
+                        }
 
                         $("<div>")
-
-                        $('<img src="../../Scripts/Images/LogoPSE40x40" />').dxButton({
+                        // ng-show=' + options.data.tipodoc + '=='Factura'
+                        
+                        $(imagen).dxButton({
                             onClick: function () {
-                                                               
-                                $http.post('/api/GenerarPago?strIdSeguridad=' + options.data.StrIdSeguridad).then(function (response) {
+                                                                                              
+                                $http.get('/api/Documentos?strIdSeguridad=' + options.data.StrIdSeguridad + '&pago=true').then(function (response) {
                                     window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
                                 }, function (error) {
                                 });
                             }
                         }).removeClass("dx-button dx-button-normal dx-widget")
                             .append($(""))
-                            .appendTo(container);
+                            .appendTo(container)
+                        $("</div>");
                     }
                 }
                 ],

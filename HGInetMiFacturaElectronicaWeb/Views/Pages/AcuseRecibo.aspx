@@ -150,10 +150,11 @@
 
                             <div style="margin-top: 3%;" runat="server" id="Div1">
                                 <label class="text-bold">Fecha: </label>
-                                <span>{{datos.FechaRespuesta | date: "yyyy-MM-dd"}}</span>
+                                <span>{{datos.FechaRespuesta | date: "yyyy-MM-dd HH:mm"}}</span>
                             </div>
 
                         </div>
+                        
 
 
                         <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
@@ -206,11 +207,8 @@
                             </div>
                             <br />
                             <div style="text-align: center;">
-
-                                <div id="Butonpago" style='pointer-events: auto; cursor: pointer'>
-                                    <img src="../../Scripts/Images/LogoPSE90x90.png" />
-                                </div>
-
+                                
+                                <img src="../../Scripts/Images/LogoPSE90x90.png" data-ng-click="habilitar()" style='pointer-events:auto;cursor: pointer' ng-show="datos.tipodoc=='Factura'" />
                                 <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size: 14px; text-align: center;">Autenticar</a>
                                 <br />
                                 <br />
