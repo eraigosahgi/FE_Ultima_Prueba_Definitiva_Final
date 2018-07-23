@@ -12,8 +12,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     var estado = "";
     var motivo_rechazo = "";
 
-    $scope.habilitar = function () {
-        console.log("Prueba");
+    $scope.habilitar = function () {        
         $http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&pago=true').then(function (response) {
             window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
             //Si lo envia a la pantalla de pago, cierra la pantalla actual
