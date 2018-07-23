@@ -1,5 +1,6 @@
 ﻿using HGInetEmailServicios.ServicioEnvio;
 using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
@@ -439,11 +440,11 @@ namespace HGInetMiFacturaElectonicaController
 
 
                         //Datos del Documento
-                        
-						// obtiene el título para el tipo de documento
-						TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(documento.IntDocTipo);
-						string  titulo_documento = Enumeracion.GetDescription(doc_tipo);
-						
+
+                        // obtiene el título para el tipo de documento
+                        TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(documento.IntDocTipo);
+                        string titulo_documento = Enumeracion.GetDescription(doc_tipo);
+
                         string estado_factura = "Entregado DIAN";
 
                         mensaje = mensaje.Replace("{TipoDocumento}", titulo_documento);
@@ -452,8 +453,27 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{TotalDocumento}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
                         mensaje = mensaje.Replace("{EstadoDianDocumento}", estado_factura);
 
-                        mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", documento.StrIdSeguridad.ToString())));
+                        string ruta_acuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", documento.StrIdSeguridad.ToString()));
 
+                        mensaje = mensaje.Replace("{RutaUrl}", ruta_acuse);
+
+
+                        if (doc_tipo == TipoDocumento.Factura)
+                        {
+                            string ruta_pse = ruta_acuse + "&Zpago=true";
+
+                            mensaje = mensaje.Replace("{PSETexto}", "o el pago del documento");
+
+                            string otro_boton = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_pse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Pagar</a></td>";
+
+                            mensaje = mensaje.Replace("{PSE}", otro_boton);
+
+
+
+                        }
+
+                        mensaje = mensaje.Replace("{PSETexto}", "");
+                        mensaje = mensaje.Replace("{ContenidoPagoPSE}", "");
 
                         List<Adjunto> archivos = new List<Adjunto>();
 
@@ -758,11 +778,11 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());
                         mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
-                        mensaje = mensaje.Replace("{Tipo}", (plan.IntTipoProceso == 1) ? "Cortesía" : (plan.IntTipoProceso == 2) ? "Compra":"Post-Pago");
+                        mensaje = mensaje.Replace("{Tipo}", (plan.IntTipoProceso == 1) ? "Cortesía" : (plan.IntTipoProceso == 2) ? "Compra" : "Post-Pago");
                         mensaje = mensaje.Replace("{Estado}", (plan.BitProcesada) ? "Habilitada" : "Inabilitada");
                         mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
                         mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString("N0"));
-                        mensaje = mensaje.Replace("{Observaciones}", (plan.StrObservaciones !=null) ? plan.StrObservaciones: "Ninguna");
+                        mensaje = mensaje.Replace("{Observaciones}", (plan.StrObservaciones != null) ? plan.StrObservaciones : "Ninguna");
 
                         string asunto = "NOTIFICACIÓN DE RECARGA DE TRANSACCIONES";
 

@@ -1844,6 +1844,8 @@
     <Content Include="Scripts\Images\LogoHGInet.jpg" />
     <Content Include="Scripts\Images\LogoHGInet.PNG" />
     <Content Include="Scripts\Images\LogoPlataforma.png" />
+    <Content Include="Scripts\Images\LogoPSE40x40.png" />
+    <Content Include="Scripts\Images\LogoPSE90x90.png" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
