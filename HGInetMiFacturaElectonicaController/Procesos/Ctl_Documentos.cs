@@ -1079,7 +1079,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException(string.Format("El valor Unitario {0} no esta bien formado", Docdet.ValorUnitario));
 
 				if (Docdet.DescuentoPorcentaje > 1 || Docdet.DescuentoPorcentaje < 0)
-					throw new ApplicationException(string.Format("El porcentaje Descuento {0} no es correcto", Docdet.DescuentoValor));
+					throw new ApplicationException(string.Format("El porcentaje Descuento {0} no es correcto", Docdet.DescuentoPorcentaje));
 
 				if (Docdet.DescuentoValor == 0)
 				{
