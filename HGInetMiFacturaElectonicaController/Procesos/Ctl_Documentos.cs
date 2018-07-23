@@ -1078,7 +1078,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor Unitario {0} no esta bien formado", Docdet.ValorUnitario));
 
-				if (Docdet.DescuentoPorcentaje > 1 || Docdet.DescuentoPorcentaje < 0)
+				if (Docdet.DescuentoPorcentaje < 0 || Docdet.DescuentoPorcentaje > 100)
 					throw new ApplicationException(string.Format("El porcentaje Descuento {0} no es correcto", Docdet.DescuentoPorcentaje));
 
 				if (Docdet.DescuentoValor == 0)
