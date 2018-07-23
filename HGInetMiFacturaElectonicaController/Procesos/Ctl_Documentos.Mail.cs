@@ -1,6 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
@@ -33,7 +34,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					email.Bienvenida(adquiriente, adquiriente_usuario);
 				}
 
-				if (obligado.IntHabilitacion < 99)
+				if (obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{   //envío de los documentos al Obligado
 					email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
 				}

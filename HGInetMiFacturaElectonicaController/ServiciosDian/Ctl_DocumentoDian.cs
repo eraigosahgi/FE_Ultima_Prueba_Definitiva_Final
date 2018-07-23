@@ -11,6 +11,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.ServiciosDian
 {
@@ -25,7 +26,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 			string clave = null;
 			string UrlServicioWeb = null;
 			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-			if (empresa.IntHabilitacion < 99)
+			if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 			{
 				// obtiene los datos de prueba del proveedor tecnológico de la DIAN
 				DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;

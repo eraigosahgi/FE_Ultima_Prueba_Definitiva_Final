@@ -261,7 +261,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					ValidarRespuesta(respuesta);
 
 
-					if (empresa.IntHabilitacion > 0)
+					if (empresa.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode())
 					{
 
 						//Guarda la id de la Peticion con la que se esta haciendo el proceso

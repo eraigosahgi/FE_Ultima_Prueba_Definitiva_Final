@@ -12,6 +12,7 @@ using HGInetUBL;
 using HGInetUBL.Objetos;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -45,7 +46,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             string NitProveedor = data_dian.NitProveedor;
 
             // sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-            if (empresa.IntHabilitacion < 99)
+            if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
             {   IdSoftware = data_dian_habilitacion.IdSoftware;
                 PinSoftware = data_dian_habilitacion.Pin;
                 NitProveedor = data_dian_habilitacion.NitProveedor;
@@ -102,7 +103,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             string NitProveedor = data_dian.NitProveedor;
 
             // sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-            if (empresa.IntHabilitacion < 99)
+            if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
             {
                 IdSoftware = data_dian_habilitacion.IdSoftware;
                 PinSoftware = data_dian_habilitacion.Pin;
@@ -155,7 +156,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			string NitProveedor = data_dian.NitProveedor;
 
 			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-			if (empresa.IntHabilitacion < 99)
+			if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 			{
 				IdSoftware = data_dian_habilitacion.IdSoftware;
 				PinSoftware = data_dian_habilitacion.Pin;
