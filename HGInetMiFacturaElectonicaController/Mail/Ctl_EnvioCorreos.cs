@@ -611,8 +611,8 @@ namespace HGInetMiFacturaElectonicaController
 
                 string asunto = "Respuesta Acuse de Recibo";
 
-                // envía como email de respuesta el Adquiriente
-                DestinatarioEmail remitente = new DestinatarioEmail();
+				// envía como email de respuesta el Adquiriente
+				DestinatarioEmail remitente = new DestinatarioEmail();
                 remitente.Nombre = adquiriente.StrRazonSocial;
                 remitente.Email = adquiriente.StrMail;
 
@@ -690,10 +690,11 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{TipoDocumento}", titulo_factura);
                         mensaje = mensaje.Replace("{NumeroDocumento}", documento.IntNumero.ToString());
                         mensaje = mensaje.Replace("{Estadorespuesta}", estado_respuesta);
+						mensaje = mensaje.Replace("{FechaDocumento}", documento.DatAdquirienteFechaRecibo.Value.ToString(Fecha.formato_fecha_hora));
 
 
-                        // envía el correo electrónico
-                        EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+						// envía el correo electrónico
+						EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
 
                     }
                 }
