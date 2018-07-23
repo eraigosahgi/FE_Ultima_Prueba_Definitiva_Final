@@ -90,7 +90,7 @@
 
 <body class="login-container" style="background-color: #eeeded">
 
-    <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController">
+    <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController" data-ng-cloak="">
         <div style="margin: 4%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
 
             <!-- Visualización Información Factura -->
