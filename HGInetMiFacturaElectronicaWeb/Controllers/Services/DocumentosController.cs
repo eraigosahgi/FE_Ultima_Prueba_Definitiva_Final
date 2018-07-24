@@ -57,7 +57,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
-                    IntVlrTotal = (d.IntDocTipo == 2) ? -d.IntVlrTotal : d.IntVlrTotal,
+                    IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
@@ -113,7 +113,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
-                    IntVlrTotal = (d.IntDocTipo == 2)? -d.IntVlrTotal: d.IntVlrTotal,
+                    IntVlrTotal = (d.IntDocTipo == 3)? -d.IntVlrTotal: d.IntVlrTotal,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
@@ -387,9 +387,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroResolucion=d.NumeroResolucion,
                     Prefijo=d.Prefijo,
                     ProcesoFinalizado=d.ProcesoFinalizado,
-                    CodigoError = (d.Error!=null)? d.Error.Mensaje : "",
-                    tipodoc = (d.DocumentoTipo == 1) ? "Factura" : (d.DocumentoTipo == 2) ? "Nota Debito" : "Nota Crédito"
-
+                    CodigoError = (d.Error!=null)? d.Error.Mensaje : "",                    
+                    tipodoc = (d.DocumentoTipo == 1) ? TipoDocumento.Factura.ToString() : (d.DocumentoTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
                 });
 
                 return Ok(retorno);
@@ -524,7 +523,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
-                    d.IntVlrTotal,
+                    IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
@@ -536,7 +535,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
+                    tipodoc = (d.IntDocTipo == 1) ? TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
                 });
 
                 return Ok(retorno);
@@ -601,7 +600,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
-                    d.IntVlrTotal,
+                    IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
