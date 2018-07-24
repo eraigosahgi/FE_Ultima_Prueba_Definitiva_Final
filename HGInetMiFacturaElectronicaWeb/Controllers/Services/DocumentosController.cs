@@ -9,6 +9,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using HGInetMiFacturaElectronicaWeb.Seguridad.Plugins;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.Objetos;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
-                    d.IntVlrTotal,
+                    IntVlrTotal = (d.IntDocTipo == 2) ? -d.IntVlrTotal : d.IntVlrTotal,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
@@ -68,7 +69,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     d.StrIdSeguridad,
                     RutaPublica = plataforma.RutaPublica,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
+                    tipodoc = (d.IntDocTipo == 1) ? TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
                 });
 
                 return Ok(retorno);
@@ -112,7 +113,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
-                    d.IntVlrTotal,
+                    IntVlrTotal = (d.IntDocTipo == 2)? -d.IntVlrTotal: d.IntVlrTotal,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
@@ -124,7 +125,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
+                    tipodoc = (d.IntDocTipo == 1) ? TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
                 });
 
                 return Ok(retorno);
@@ -168,7 +169,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
                     CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
-                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
+                    tipodoc = (d.IntDocTipo == 1) ? TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
                 });
 
                 return Ok(retorno);
@@ -612,7 +613,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
+                    tipodoc = (d.IntDocTipo == 1) ? LibreriaGlobalHGInet.Objetos.TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? LibreriaGlobalHGInet.Objetos.TipoDocumento.NotaDebito.ToString() : LibreriaGlobalHGInet.Objetos.TipoDocumento.NotaCredito.ToString()
                 });
 
                 return Ok(retorno);

@@ -50,9 +50,12 @@
                                     <div class="col-md-12" style="z-index: 9;">
                                         <div class="col-md-6 col-xs-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index: 9;">
                                             <div class="dx-field-label" style="font-size: 14px;">Perfil:<strom style="color: red;">*</strom></div>
-                                            <div id="Facturador" style="margin-top: 2.15%"></div>
+                                            <div id="Facturador" style="margin-top: 1%"></div>
                                             <br />
-                                            <div id="Adquiriente"></div>
+                                            <div id="Adquiriente" style="margin-top: 1%" ></div>
+                                            <br />
+                                            <div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
+                                            <div id="Integradora" style="margin-top: 1%"></div>
                                         </div>
 
                                         <div class="col-md-6 col-xs-12" style="z-index: 9; margin: 0px; margin-top: 16px; margin-bottom: 1%">
@@ -70,16 +73,13 @@
 
                                         </div>
 
-                                        <div class="col-md-2 col-xs-4 " style="z-index: 9; margin-left: 0px">
+                                        <div class="col-md-6 col-xs-12 " style="z-index: 9; margin-left: 0px">
                                             <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nª Usuarios:</label>
                                             <div id="txtUsuarios"></div>
 
                                         </div>
 
-                                        <div class="col-md-4 col-xs-8 text-left" style="z-index: 9; margin: 0px; margin-top: 16px; margin-bottom: 1%">
-                                            <div id="Integradora" style="margin-top: 30px"></div>
-
-                                        </div>
+                                       
 
                                         <!--<div class="col-md-6 col-xs-2" style="margin-top: 2%">
                                             <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba;">

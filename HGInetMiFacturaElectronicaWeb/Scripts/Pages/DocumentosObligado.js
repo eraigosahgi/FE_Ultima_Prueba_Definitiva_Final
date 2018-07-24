@@ -355,7 +355,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                             }
                             if (options.summaryProcess === "calculate") {                               
                                 options.totalValue = options.totalValue + options.value.IntVlrTotal;
-                                $('#Total').text("Total: " +  fNumber.go(options.totalValue));
+                                $('#Total').text("Total: " +   fNumber.go(options.totalValue).replace("$-","-$"));
                             }
                         }
                     }

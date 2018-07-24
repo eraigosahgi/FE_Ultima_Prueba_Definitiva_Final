@@ -316,8 +316,8 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                                 $('#Total').text("");
                             }
                             if (options.summaryProcess === "calculate") {
-                                options.totalValue = options.totalValue + options.value.IntVlrTotal;
-                                $('#Total').text("Total: " + fNumber.go(options.totalValue));
+                                options.totalValue = options.totalValue + options.value.IntVlrTotal;                                
+                                $('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
                             }
                         }
                     }
