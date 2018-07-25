@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
@@ -610,6 +611,24 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
 
         }
+        #endregion
+        #region Zonas de pago
+        /// <summary>
+        /// Obtiene link para el pago de factura
+        /// </summary>
+        /// <param name="strIdSeguridad"></param>        
+        /// <returns></returns>
+
+
+        public IHttpActionResult Get(System.Guid strIdSeguridad, bool pago)
+        {
+            Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+            var datos = Pago.ReportePagoElectronico(strIdSeguridad);
+            return Ok(datos);
+
+        }
+
         #endregion
     }
 }

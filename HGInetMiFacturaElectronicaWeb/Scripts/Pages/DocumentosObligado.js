@@ -190,7 +190,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     try {
                         if (options.column.caption == "Valor Total") {
                             if (fieldData) {                                
-                                var inicial = fNumber.go(fieldData);
+                                var inicial = fNumber.go(fieldData).replace("$-", "-$");
                                 options.cellElement.html(inicial);
                             }
                         }
