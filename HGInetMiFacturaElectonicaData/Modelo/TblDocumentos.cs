@@ -14,6 +14,12 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     
     public partial class TblDocumentos
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public TblDocumentos()
+        {
+            this.TblPagosElectronicos = new HashSet<TblPagosElectronicos>();
+        }
+    
         public System.Guid StrIdSeguridad { get; set; }
         public System.DateTime DatFechaIngreso { get; set; }
         public int IntDocTipo { get; set; }
@@ -41,5 +47,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
         public virtual TblEmpresas TblEmpresasAdquiriente { get; set; }
         public virtual TblEmpresas TblEmpresasFacturador { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
     }
 }

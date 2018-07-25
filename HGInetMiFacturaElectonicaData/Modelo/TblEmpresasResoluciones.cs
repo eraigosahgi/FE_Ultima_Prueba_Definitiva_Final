@@ -35,9 +35,11 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public System.DateTime DatFechaIngreso { get; set; }
         public System.DateTime DatFechaActualizacion { get; set; }
         public string StrRespuestaServicioWeb { get; set; }
+        public string StrComercioId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
         public virtual TblEmpresas TblEmpresas { get; set; }
+        public virtual TblEmpresasPasarela TblEmpresasPasarela { get; set; }
     }
 }
