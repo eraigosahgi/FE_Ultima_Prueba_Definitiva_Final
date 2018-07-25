@@ -1,5 +1,4 @@
 ﻿using HGInetMiFacturaElectonicaController;
-using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
@@ -54,10 +53,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
+                    NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
-                    IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
+                    IntVlrTotal = (d.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode()) ? -d.IntVlrTotal : d.IntVlrTotal,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
@@ -69,7 +68,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     d.StrIdSeguridad,
                     RutaPublica = plataforma.RutaPublica,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
                 });
 
                 return Ok(retorno);
@@ -110,10 +109,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
+                    NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
-                    IntVlrTotal = (d.IntDocTipo == 3)? -d.IntVlrTotal: d.IntVlrTotal,
+                    IntVlrTotal = (d.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode()) ? -d.IntVlrTotal : d.IntVlrTotal,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
@@ -125,7 +124,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
                 });
 
                 return Ok(retorno);
@@ -169,7 +168,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
                     CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
-                    tipodoc = (d.IntDocTipo == 1) ? TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
                 });
 
                 return Ok(retorno);
@@ -351,7 +350,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
 
-                List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();                
+                List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();
 
                 List<System.Guid> List_id_seguridad = new List<Guid>();
 
@@ -371,24 +370,24 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Aceptacion = d.Aceptacion,
                     CodigoRegistro = d.CodigoRegistro,
                     Cufe = d.Cufe,
-                    DescripcionProceso= (d.Error != null) ? d.Error.Mensaje: d.DescripcionProceso,
-					DocumentoTipo = d.DocumentoTipo, 
-                    Documento =d.Documento,
-                    EstadoDianCodigoRespuesta = (d.EstadoDian!=null)? d.EstadoDian.CodigoRespuesta:"",
-                    EstadoDianDescripcion = (d.EstadoDian!=null)? d.EstadoDian.Descripcion: "",
-                    EstadoDianEstadoDocumento = (d.EstadoDian!=null)? d.EstadoDian.EstadoDocumento:0,
-                    EstadoDianUrlXmlRespuesta = (d.EstadoDian!=null)? d.EstadoDian.UrlXmlRespuesta:"",
-                    FechaRecepcion =d.FechaRecepcion,
-                    FechaUltimoProceso =d.FechaUltimoProceso,
-                    IdDocumento=d.IdDocumento,
-                    Identificacion=d.Identificacion,
-                    IdProceso=d.IdProceso,
-                    MotivoRechazo=d.MotivoRechazo,
-                    NumeroResolucion=d.NumeroResolucion,
-                    Prefijo=d.Prefijo,
-                    ProcesoFinalizado=d.ProcesoFinalizado,
-                    CodigoError = (d.Error!=null)? d.Error.Mensaje : "",                    
-                    tipodoc = (d.DocumentoTipo == 1) ? TipoDocumento.Factura.ToString() : (d.DocumentoTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
+                    DescripcionProceso = (d.Error != null) ? d.Error.Mensaje : d.DescripcionProceso,
+                    DocumentoTipo = d.DocumentoTipo,
+                    Documento = d.Documento,
+                    EstadoDianCodigoRespuesta = (d.EstadoDian != null) ? d.EstadoDian.CodigoRespuesta : "",
+                    EstadoDianDescripcion = (d.EstadoDian != null) ? d.EstadoDian.Descripcion : "",
+                    EstadoDianEstadoDocumento = (d.EstadoDian != null) ? d.EstadoDian.EstadoDocumento : 0,
+                    EstadoDianUrlXmlRespuesta = (d.EstadoDian != null) ? d.EstadoDian.UrlXmlRespuesta : "",
+                    FechaRecepcion = d.FechaRecepcion,
+                    FechaUltimoProceso = d.FechaUltimoProceso,
+                    IdDocumento = d.IdDocumento,
+                    Identificacion = d.Identificacion,
+                    IdProceso = d.IdProceso,
+                    MotivoRechazo = d.MotivoRechazo,
+                    NumeroResolucion = d.NumeroResolucion,
+                    Prefijo = d.Prefijo,
+                    ProcesoFinalizado = d.ProcesoFinalizado,
+                    CodigoError = (d.Error != null) ? d.Error.Mensaje : "",
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.DocumentoTipo))
                 });
 
                 return Ok(retorno);
@@ -425,14 +424,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    IdSeguridad = d.StrIdSeguridad,                    
-                    d.DatFechaIngreso,                    
+                    IdSeguridad = d.StrIdSeguridad,
+                    d.DatFechaIngreso,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-                    MotivoRechazo = d.StrAdquirienteMvoRechazo,                    
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
                     IdentificacionFacturador = d.TblEmpresasFacturador.StrIdentificacion,
                     Facturador = d.TblEmpresasFacturador.StrIdentificacion + " -- " + d.TblEmpresasFacturador.StrRazonSocial,
-                    tipodoc = (d.IntDocTipo == 1) ? "Factura" : (d.IntDocTipo == 2) ? "Nota Debito" : "Nota Crédito"
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
                 });
 
                 return Ok(retorno);
@@ -494,7 +493,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="numero_resolucion"></param>        
         /// <param name="numero_documento"></param>
         /// <returns></returns>
-        public IHttpActionResult Get(string codigo_facturador, int? numero_documento,  string IdSeguridad="*", string numero_resolucion="*")
+        public IHttpActionResult Get(string codigo_facturador, int? numero_documento, string IdSeguridad = "*", string numero_resolucion = "*")
         {
             try
             {
@@ -503,24 +502,28 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 Ctl_Documento ctl_documento = new Ctl_Documento();
 
-                if (codigo_facturador=="")
+                // comparadores de string con Equals...
+                if (codigo_facturador.Equals(""))
                     throw new ApplicationException("Debe Indicar el Facturador");
 
-                if (IdSeguridad == "*" && (numero_resolucion=="*" || numero_documento == 0 || numero_documento ==null))
+                if (IdSeguridad.Equals("*") && (numero_resolucion.Equals("*") || numero_documento == 0 || numero_documento == null))
                     throw new ApplicationException("No se han especificado los criterios de búsqueda");
 
-                if ((IdSeguridad != "*" && IdSeguridad != null) && (numero_resolucion != "*" || numero_documento != null))
+
+                //  !string.IsNullOrEmpty(IdSeguridad)
+
+                if ((!IdSeguridad.Equals("*") && !string.IsNullOrEmpty(IdSeguridad)) && (!numero_resolucion.Equals("*") || numero_documento != null))
                     throw new ApplicationException("No se han especificado los criterios de búsqueda");
-                
-                if (IdSeguridad != "*" && IdSeguridad != null )
+
+                if (!IdSeguridad.Equals("*") && !string.IsNullOrEmpty(IdSeguridad))
                     if ((IdSeguridad.Length != 8))
                         throw new ApplicationException("El codigo de plataforma debe ser de 8 digitos");
 
-                var  datos = ctl_documento.ObtenerDocumentoCliente(codigo_facturador, numero_documento, (IdSeguridad!=null)?IdSeguridad:"*", (numero_resolucion!=null)?numero_resolucion:"*");
+                var datos = ctl_documento.ObtenerDocumentoCliente(codigo_facturador, numero_documento, (!string.IsNullOrEmpty(IdSeguridad)) ? IdSeguridad : "*", (numero_resolucion != null) ? numero_resolucion : "*");
 
                 var retorno = datos.Select(d => new
                 {
-                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
+                    NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
                     IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
@@ -535,7 +538,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? TipoDocumento.NotaDebito.ToString() : TipoDocumento.NotaCredito.ToString()
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
                 });
 
                 return Ok(retorno);
@@ -545,25 +548,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
-        #endregion
-
-        #region Zonas de pago
-        /// <summary>
-        /// Obtiene link para el pago de factura
-        /// </summary>
-        /// <param name="strIdSeguridad"></param>        
-        /// <returns></returns>
- 
-              
-        public IHttpActionResult Get(System.Guid strIdSeguridad,bool pago)
-        {
-            Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
-
-            var datos = Pago.ReportePagoElectronico(strIdSeguridad);
-            return Ok(datos);
-            
-        }
-
         #endregion
 
         #region Docuemntos Admin
@@ -597,7 +581,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo != "0") ? d.StrPrefijo : "", d.IntNumero),
+                    IdFacturador = d.TblEmpresasFacturador.StrIdentificacion,
+                    Facturador = d.TblEmpresasFacturador.StrRazonSocial,
+                    NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
                     IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
@@ -612,7 +598,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = (d.IntDocTipo == 1) ? LibreriaGlobalHGInet.Objetos.TipoDocumento.Factura.ToString() : (d.IntDocTipo == 2) ? LibreriaGlobalHGInet.Objetos.TipoDocumento.NotaDebito.ToString() : LibreriaGlobalHGInet.Objetos.TipoDocumento.NotaCredito.ToString()
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
                 });
 
                 return Ok(retorno);

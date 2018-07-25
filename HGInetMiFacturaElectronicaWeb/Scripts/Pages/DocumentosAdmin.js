@@ -24,7 +24,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            fecha_inicio = "",
            fecha_fin = "",
            codigo_adquiriente = "",
-           Datos_Tipo="0";
+           Datos_Tipo = "0";
 
     $http.get('/api/DatosSesion/').then(function (response) {
         codigo_facturador = response.data[0].Identificacion;
@@ -39,7 +39,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         });
     });
 
-    
+
     function cargarFiltros() {
         $("#FechaInicial").dxDateBox({
             value: now,
@@ -301,6 +301,15 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                             type: "required",
                             message: "El campo Fecha es obligatorio."
                         }]
+                    },
+                    {
+                        caption: "IdFacturador",
+                        cssClass: "col-xs-1 col-md-1",
+                        dataField: "IdFacturador"
+                    }, {
+                        caption: "Facturador",
+                        cssClass: "col-xs-1 col-md-1",
+                        dataField: "Facturador"
                     },
                     {
                         caption: "Valor Total",
