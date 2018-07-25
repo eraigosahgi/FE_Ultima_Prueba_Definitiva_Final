@@ -1011,23 +1011,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Total).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor Total {0} no esta bien formado", documento.Total));
 
-				//Suma de las retenciones del documento
-				decimal retencion_doc = (documento.ValorReteFuente + documento.ValorReteIca + documento.ValorReteIva);
-
 				//Validacion del Neto calculado con el que es enviado en el documento
 				if (documento.Neto == 0)
 				{
 					documento.Neto = Convert.ToDecimal(0.00M);
 				}
-				if (Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Neto).Replace(",", ".")))
-				{
-					if ((documento.Total - retencion_doc) != documento.Neto)
-						throw new ApplicationException(string.Format("El valor Neto {0} no es correcto.", documento.Neto));
-				}
-				else
-				{
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Neto).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El valor Neto {0} no esta bien formado", documento.Neto));
-				}
 
 				//Validacion del ReteIva calculado con el que es enviado en el documento
 				if (documento.ValorReteIva == 0)
