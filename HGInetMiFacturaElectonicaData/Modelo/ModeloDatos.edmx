@@ -97,6 +97,7 @@
           <Property Name="DatFechaActualizacion" Type="datetime" Nullable="false" />
           <Property Name="StrRespuestaServicioWeb" Type="varchar(max)" />
           <Property Name="StrComercioId" Type="varchar" MaxLength="50" />
+          <Property Name="IntTipoDoc" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblOpciones">
           <Key>
@@ -645,6 +646,7 @@
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresas" />
           <Property Name="StrComercioId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TblEmpresasPasarela" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresasPasarela" />
+          <Property Name="IntTipoDoc" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1080,6 +1082,7 @@
           <EntitySetMapping Name="TblEmpresasResoluciones">
             <EntityTypeMapping TypeName="Modelo.TblEmpresasResoluciones">
               <MappingFragment StoreEntitySet="TblEmpresasResoluciones">
+                <ScalarProperty Name="IntTipoDoc" ColumnName="IntTipoDoc" />
                 <ScalarProperty Name="StrComercioId" ColumnName="StrComercioId" />
                 <ScalarProperty Name="StrRespuestaServicioWeb" ColumnName="StrRespuestaServicioWeb" />
                 <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
