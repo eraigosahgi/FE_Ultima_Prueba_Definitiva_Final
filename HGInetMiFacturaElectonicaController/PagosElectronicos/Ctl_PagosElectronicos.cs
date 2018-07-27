@@ -260,7 +260,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                 HGInetZonaPagos.Pago datos_pago = new HGInetZonaPagos.Pago();
 
-                datos_pago.id_pago = Texto.DatosAleatorios(20, 2);
+                datos_pago.id_pago = Texto.DatosAleatorios(9, 2);
                 datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
                 datos_pago.total_con_iva = Convert.ToDouble(datos_documento.IntVlrTotal);
                 datos_pago.valor_iva = 0;
