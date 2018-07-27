@@ -84,7 +84,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             return datos_plan;
         }
 
+        /// <summary>
+        /// Obtiene el plan transaccional por id de seguridad.
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <returns></returns>
+        public TblPlanesTransacciones ObtenerIdSeguridad(System.Guid id_seguridad)
+        {
+            TblPlanesTransacciones datos_plan = (from plan in context.TblPlanesTransacciones
+                                                 where plan.StrIdSeguridad.Equals(id_seguridad)
+                                                 select plan).FirstOrDefault();
 
+            return datos_plan;
+        }
 
 
         /// <summary>
