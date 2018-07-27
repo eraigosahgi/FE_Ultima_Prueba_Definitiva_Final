@@ -68,10 +68,10 @@
         <EntityType Name="TblEmpresasPasarela">
           <Key>
             <PropertyRef Name="StrEmpresa" />
-            <PropertyRef Name="StrComercioId" />
+            <PropertyRef Name="IntComercioId" />
           </Key>
           <Property Name="StrEmpresa" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="StrComercioId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IntComercioId" Type="int" Nullable="false" />
           <Property Name="StrComercioIdRuta" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrCodigoServicio" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrComercioClave" Type="varchar" MaxLength="50" Nullable="false" />
@@ -96,7 +96,7 @@
           <Property Name="DatFechaIngreso" Type="datetime" Nullable="false" />
           <Property Name="DatFechaActualizacion" Type="datetime" Nullable="false" />
           <Property Name="StrRespuestaServicioWeb" Type="varchar(max)" />
-          <Property Name="StrComercioId" Type="varchar" MaxLength="50" />
+          <Property Name="IntComercioId" Type="int" />
           <Property Name="IntTipoDoc" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblOpciones">
@@ -109,6 +109,8 @@
           <Property Name="IntHabilitado" Type="bit" Nullable="false" />
           <Property Name="IntIdPerfilSuperior" Type="smallint" Nullable="false" />
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StrClaseMenu" Type="varchar" MaxLength="100" />
+          <Property Name="StrRutaMenu" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="TblOpcionesPerfil">
           <Key>
@@ -296,11 +298,11 @@
           <ReferentialConstraint>
             <Principal Role="TblEmpresasPasarela">
               <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrComercioId" />
+              <PropertyRef Name="IntComercioId" />
             </Principal>
             <Dependent Role="TblEmpresasResoluciones">
               <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrComercioId" />
+              <PropertyRef Name="IntComercioId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -513,14 +515,9 @@
       <Schema Namespace="Modelo" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ModeloConexion" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="TblDocumentos" EntityType="Modelo.TblDocumentos" />
-          <EntitySet Name="TblEmpresasResoluciones" EntityType="Modelo.TblEmpresasResoluciones" />
           <EntitySet Name="TblOpcionesUsuario" EntityType="Modelo.TblOpcionesUsuario" />
           <EntitySet Name="TblPlanes" EntityType="Modelo.TblPlanes" />
           <EntitySet Name="TblUsuarios" EntityType="Modelo.TblUsuarios" />
-          <AssociationSet Name="FK_TblDocumentos_TblEmpresasResoluciones" Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones">
-            <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
-            <End Role="TblDocumentos" EntitySet="TblDocumentos" />
-          </AssociationSet>
           <AssociationSet Name="FK_TblOpcionesUsuario_TblUsuarios" Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios">
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
             <End Role="TblOpcionesUsuario" EntitySet="TblOpcionesUsuario" />
@@ -559,10 +556,6 @@
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
           </AssociationSet>
-          <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresas" Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas">
-            <End Role="TblEmpresas" EntitySet="TblEmpresas" />
-            <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
-          </AssociationSet>
           <AssociationSet Name="FK_TblOpcionesUsuario_TblEmpresas" Association="Modelo.FK_TblOpcionesUsuario_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblOpcionesUsuario" EntitySet="TblOpcionesUsuario" />
@@ -575,19 +568,28 @@
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
           </AssociationSet>
-          <EntitySet Name="TblEmpresasPasarela" EntityType="Modelo.TblEmpresasPasarela" />
           <EntitySet Name="TblPagosElectronicos" EntityType="Modelo.TblPagosElectronicos" />
           <AssociationSet Name="FK_TblPagosElectronicos_TblDocumentos" Association="Modelo.FK_TblPagosElectronicos_TblDocumentos">
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
             <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
           </AssociationSet>
-          <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresasPasarela" Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela">
-            <End Role="TblEmpresasPasarela" EntitySet="TblEmpresasPasarela" />
-            <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
-          </AssociationSet>
           <AssociationSet Name="FK_TblPagosElectronicos_TblPlanesTransacciones" Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones">
             <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
             <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
+          </AssociationSet>
+          <EntitySet Name="TblEmpresasPasarela" EntityType="Modelo.TblEmpresasPasarela" />
+          <EntitySet Name="TblEmpresasResoluciones" EntityType="Modelo.TblEmpresasResoluciones" />
+          <AssociationSet Name="FK_TblDocumentos_TblEmpresasResoluciones" Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones">
+            <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
+            <End Role="TblDocumentos" EntitySet="TblDocumentos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresas" Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas">
+            <End Role="TblEmpresas" EntitySet="TblEmpresas" />
+            <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresasPasarela" Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela">
+            <End Role="TblEmpresasPasarela" EntitySet="TblEmpresasPasarela" />
+            <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="TblDocumentos">
@@ -616,37 +618,11 @@
           <Property Name="StrIdPlanTransaccion" Type="Guid" />
           <Property Name="IntIdEstado" Type="Int16" Nullable="false" />
           <Property Name="DatFechaActualizaEstado" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblDocumentos" ToRole="TblEmpresasResoluciones" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblDocumentos" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblPagosElectronicos" Relationship="Modelo.FK_TblPagosElectronicos_TblDocumentos" FromRole="TblDocumentos" ToRole="TblPagosElectronicos" />
-        </EntityType>
-        <EntityType Name="TblEmpresasResoluciones">
-          <Key>
-            <PropertyRef Name="StrEmpresa" />
-            <PropertyRef Name="StrNumResolucion" />
-          </Key>
-          <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrNumResolucion" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="StrPrefijo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="IntRangoInicial" Type="Int32" Nullable="false" />
-          <Property Name="IntRangoFinal" Type="Int32" Nullable="false" />
-          <Property Name="DatFechaVigenciaDesde" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="DatFechaVigenciaHasta" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="StrClaveTecnica" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="IntIdPlantillaPdf" Type="Int16" Nullable="false" />
-          <Property Name="IntIdPlantillaMail" Type="Int16" Nullable="false" />
-          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
-          <Property Name="StrObservaciones" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DatFechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DatFechaActualizacion" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="StrRespuestaServicioWeb" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblEmpresasResoluciones" ToRole="TblDocumentos" />
-          <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresas" />
-          <Property Name="StrComercioId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="TblEmpresasPasarela" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresasPasarela" />
-          <Property Name="IntTipoDoc" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblDocumentos" ToRole="TblEmpresasResoluciones" />
         </EntityType>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -708,20 +684,6 @@
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblUsuarios" FromRole="TblUsuarios" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblUsuarios" ToRole="TblEmpresas" />
         </EntityType>
-        <Association Name="FK_TblDocumentos_TblEmpresasResoluciones">
-          <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="1" />
-          <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblEmpresasResoluciones">
-              <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrNumResolucion" />
-            </Principal>
-            <Dependent Role="TblDocumentos">
-              <PropertyRef Name="StrEmpresaFacturador" />
-              <PropertyRef Name="StrNumResolucion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TblOpcionesUsuario_TblUsuarios">
           <End Type="Modelo.TblUsuarios" Role="TblUsuarios" Multiplicity="1" />
           <End Type="Modelo.TblOpcionesUsuario" Role="TblOpcionesUsuario" Multiplicity="*" />
@@ -764,6 +726,8 @@
           <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
           <NavigationProperty Name="TblOpcionesPerfil" Relationship="Modelo.FK_TblOpcionesPerfil_TblOpciones" FromRole="TblOpciones" ToRole="TblOpcionesPerfil" />
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblOpciones" FromRole="TblOpciones" ToRole="TblOpcionesUsuario" />
+          <Property Name="StrClaseMenu" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StrRutaMenu" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_TblOpcionesPerfil_TblOpciones">
           <End Type="Modelo.TblOpciones" Role="TblOpciones" Multiplicity="1" />
@@ -889,12 +853,12 @@
           <Property Name="StrEmpresaAsociada" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblDocumentos1" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
-          <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresasResoluciones" />
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblEmpresas" FromRole="TblEmpresas" ToRole="TblOpcionesUsuario" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblEmpresas" ToRole="TblUsuarios" />
           <Property Name="IntIntegrador" Type="Boolean" Nullable="false" />
           <Property Name="IntNumUsuarios" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresasResoluciones" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -917,18 +881,6 @@
             </Principal>
             <Dependent Role="TblDocumentos">
               <PropertyRef Name="StrEmpresaFacturador" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
-          <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
-          <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblEmpresas">
-              <PropertyRef Name="StrIdentificacion" />
-            </Principal>
-            <Dependent Role="TblEmpresasResoluciones">
-              <PropertyRef Name="StrEmpresa" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -968,18 +920,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TblEmpresasPasarela">
-          <Key>
-            <PropertyRef Name="StrEmpresa" />
-            <PropertyRef Name="StrComercioId" />
-          </Key>
-          <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrComercioId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrComercioIdRuta" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrCodigoServicio" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrComercioClave" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasPasarela" ToRole="TblEmpresasResoluciones" />
-        </EntityType>
         <EntityType Name="TblPagosElectronicos">
           <Key>
             <PropertyRef Name="StrIdSeguridadPago" />
@@ -1019,20 +959,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_TblEmpresasResoluciones_TblEmpresasPasarela">
-          <End Type="Modelo.TblEmpresasPasarela" Role="TblEmpresasPasarela" Multiplicity="0..1" />
-          <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblEmpresasPasarela">
-              <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrComercioId" />
-            </Principal>
-            <Dependent Role="TblEmpresasResoluciones">
-              <PropertyRef Name="StrEmpresa" />
-              <PropertyRef Name="StrComercioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TblPagosElectronicos_TblPlanesTransacciones">
           <End Type="Modelo.TblPlanesTransacciones" Role="TblPlanesTransacciones" Multiplicity="0..1" />
           <End Type="Modelo.TblPagosElectronicos" Role="TblPagosElectronicos" Multiplicity="*" />
@@ -1042,6 +968,84 @@
             </Principal>
             <Dependent Role="TblPagosElectronicos">
               <PropertyRef Name="StrIdSeguridadPlanes" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TblEmpresasPasarela">
+          <Key>
+            <PropertyRef Name="StrEmpresa" />
+            <PropertyRef Name="IntComercioId" />
+          </Key>
+          <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntComercioId" Type="Int32" Nullable="false" />
+          <Property Name="StrComercioIdRuta" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrCodigoServicio" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrComercioClave" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasPasarela" ToRole="TblEmpresasResoluciones" />
+        </EntityType>
+        <EntityType Name="TblEmpresasResoluciones">
+          <Key>
+            <PropertyRef Name="StrEmpresa" />
+            <PropertyRef Name="StrNumResolucion" />
+          </Key>
+          <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrNumResolucion" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StrPrefijo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="IntRangoInicial" Type="Int32" Nullable="false" />
+          <Property Name="IntRangoFinal" Type="Int32" Nullable="false" />
+          <Property Name="DatFechaVigenciaDesde" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DatFechaVigenciaHasta" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="StrClaveTecnica" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IntIdPlantillaPdf" Type="Int16" Nullable="false" />
+          <Property Name="IntIdPlantillaMail" Type="Int16" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <Property Name="StrObservaciones" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DatFechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DatFechaActualizacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StrRespuestaServicioWeb" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IntComercioId" Type="Int32" />
+          <Property Name="IntTipoDoc" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblEmpresasResoluciones" ToRole="TblDocumentos" />
+          <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresas" />
+          <NavigationProperty Name="TblEmpresasPasarela" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresasPasarela" />
+        </EntityType>
+        <Association Name="FK_TblDocumentos_TblEmpresasResoluciones">
+          <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="1" />
+          <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresasResoluciones">
+              <PropertyRef Name="StrEmpresa" />
+              <PropertyRef Name="StrNumResolucion" />
+            </Principal>
+            <Dependent Role="TblDocumentos">
+              <PropertyRef Name="StrEmpresaFacturador" />
+              <PropertyRef Name="StrNumResolucion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
+          <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
+          <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresas">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblEmpresasResoluciones">
+              <PropertyRef Name="StrEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TblEmpresasResoluciones_TblEmpresasPasarela">
+          <End Type="Modelo.TblEmpresasPasarela" Role="TblEmpresasPasarela" Multiplicity="0..1" />
+          <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresasPasarela">
+              <PropertyRef Name="StrEmpresa" />
+              <PropertyRef Name="IntComercioId" />
+            </Principal>
+            <Dependent Role="TblEmpresasResoluciones">
+              <PropertyRef Name="StrEmpresa" />
+              <PropertyRef Name="IntComercioId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1076,29 +1080,6 @@
                 <ScalarProperty Name="IntDocTipo" ColumnName="IntDocTipo" />
                 <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TblEmpresasResoluciones">
-            <EntityTypeMapping TypeName="Modelo.TblEmpresasResoluciones">
-              <MappingFragment StoreEntitySet="TblEmpresasResoluciones">
-                <ScalarProperty Name="IntTipoDoc" ColumnName="IntTipoDoc" />
-                <ScalarProperty Name="StrComercioId" ColumnName="StrComercioId" />
-                <ScalarProperty Name="StrRespuestaServicioWeb" ColumnName="StrRespuestaServicioWeb" />
-                <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
-                <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
-                <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
-                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
-                <ScalarProperty Name="IntIdPlantillaMail" ColumnName="IntIdPlantillaMail" />
-                <ScalarProperty Name="IntIdPlantillaPdf" ColumnName="IntIdPlantillaPdf" />
-                <ScalarProperty Name="StrClaveTecnica" ColumnName="StrClaveTecnica" />
-                <ScalarProperty Name="DatFechaVigenciaHasta" ColumnName="DatFechaVigenciaHasta" />
-                <ScalarProperty Name="DatFechaVigenciaDesde" ColumnName="DatFechaVigenciaDesde" />
-                <ScalarProperty Name="IntRangoFinal" ColumnName="IntRangoFinal" />
-                <ScalarProperty Name="IntRangoInicial" ColumnName="IntRangoInicial" />
-                <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
-                <ScalarProperty Name="StrNumResolucion" ColumnName="StrNumResolucion" />
-                <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1173,6 +1154,8 @@
           <EntitySetMapping Name="TblOpciones">
             <EntityTypeMapping TypeName="Modelo.TblOpciones">
               <MappingFragment StoreEntitySet="TblOpciones">
+                <ScalarProperty Name="StrRutaMenu" ColumnName="StrRutaMenu" />
+                <ScalarProperty Name="StrClaseMenu" ColumnName="StrClaseMenu" />
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
                 <ScalarProperty Name="IntIdPerfilSuperior" ColumnName="IntIdPerfilSuperior" />
                 <ScalarProperty Name="IntHabilitado" ColumnName="IntHabilitado" />
@@ -1244,17 +1227,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TblEmpresasPasarela">
-            <EntityTypeMapping TypeName="Modelo.TblEmpresasPasarela">
-              <MappingFragment StoreEntitySet="TblEmpresasPasarela">
-                <ScalarProperty Name="StrComercioClave" ColumnName="StrComercioClave" />
-                <ScalarProperty Name="StrCodigoServicio" ColumnName="StrCodigoServicio" />
-                <ScalarProperty Name="StrComercioIdRuta" ColumnName="StrComercioIdRuta" />
-                <ScalarProperty Name="StrComercioId" ColumnName="StrComercioId" />
-                <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TblPagosElectronicos">
             <EntityTypeMapping TypeName="Modelo.TblPagosElectronicos">
               <MappingFragment StoreEntitySet="TblPagosElectronicos">
@@ -1277,6 +1249,40 @@
                 <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
                 <ScalarProperty Name="StrIdPlataforma" ColumnName="StrIdPlataforma" />
                 <ScalarProperty Name="StrIdSeguridadPago" ColumnName="StrIdSeguridadPago" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblEmpresasPasarela">
+            <EntityTypeMapping TypeName="Modelo.TblEmpresasPasarela">
+              <MappingFragment StoreEntitySet="TblEmpresasPasarela">
+                <ScalarProperty Name="StrComercioClave" ColumnName="StrComercioClave" />
+                <ScalarProperty Name="StrCodigoServicio" ColumnName="StrCodigoServicio" />
+                <ScalarProperty Name="StrComercioIdRuta" ColumnName="StrComercioIdRuta" />
+                <ScalarProperty Name="IntComercioId" ColumnName="IntComercioId" />
+                <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblEmpresasResoluciones">
+            <EntityTypeMapping TypeName="Modelo.TblEmpresasResoluciones">
+              <MappingFragment StoreEntitySet="TblEmpresasResoluciones">
+                <ScalarProperty Name="IntTipoDoc" ColumnName="IntTipoDoc" />
+                <ScalarProperty Name="IntComercioId" ColumnName="IntComercioId" />
+                <ScalarProperty Name="StrRespuestaServicioWeb" ColumnName="StrRespuestaServicioWeb" />
+                <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+                <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
+                <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="IntIdPlantillaMail" ColumnName="IntIdPlantillaMail" />
+                <ScalarProperty Name="IntIdPlantillaPdf" ColumnName="IntIdPlantillaPdf" />
+                <ScalarProperty Name="StrClaveTecnica" ColumnName="StrClaveTecnica" />
+                <ScalarProperty Name="DatFechaVigenciaHasta" ColumnName="DatFechaVigenciaHasta" />
+                <ScalarProperty Name="DatFechaVigenciaDesde" ColumnName="DatFechaVigenciaDesde" />
+                <ScalarProperty Name="IntRangoFinal" ColumnName="IntRangoFinal" />
+                <ScalarProperty Name="IntRangoInicial" ColumnName="IntRangoInicial" />
+                <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+                <ScalarProperty Name="StrNumResolucion" ColumnName="StrNumResolucion" />
+                <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

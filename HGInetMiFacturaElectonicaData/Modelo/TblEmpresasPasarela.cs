@@ -21,7 +21,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         }
     
         public string StrEmpresa { get; set; }
-        public string StrComercioId { get; set; }
+        public int IntComercioId { get; set; }
         public string StrComercioIdRuta { get; set; }
         public string StrCodigoServicio { get; set; }
         public string StrComercioClave { get; set; }

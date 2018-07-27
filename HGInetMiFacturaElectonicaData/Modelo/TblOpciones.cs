@@ -27,6 +27,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntHabilitado { get; set; }
         public short IntIdPerfilSuperior { get; set; }
         public System.Guid StrIdSeguridad { get; set; }
+        public string StrClaseMenu { get; set; }
+        public string StrRutaMenu { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblOpcionesPerfil> TblOpcionesPerfil { get; set; }
