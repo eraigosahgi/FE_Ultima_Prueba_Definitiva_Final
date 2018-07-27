@@ -147,6 +147,40 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 		/// <summary>
+		/// Convierte una resolucion de un Objeto tipo Nota Credito o Nota Debito a Objeto de BD
+		/// </summary>
+		/// <param name="facturador">Identificacion del Obligado a Factuar</param>
+		/// <param name="prefijo">Prefijo del documento</param>
+		/// <param name="tipo_doc">Tipo de documento</param>
+		/// <returns>Tbl de resolucion</returns>
+		public static TblEmpresasResoluciones Convertir(string facturador, string prefijo, int tipo_doc)
+		{
+
+			DateTime fecha_actual = Fecha.GetFecha();
+
+			Guid resolucion_info = Guid.NewGuid();
+
+			TblEmpresasResoluciones tbl_resolucion = new TblEmpresasResoluciones()
+			{
+				StrEmpresa = facturador,
+				StrNumResolucion = resolucion_info.ToString(),
+				StrPrefijo = (!string.IsNullOrEmpty(prefijo)) ? prefijo : "",
+				IntRangoInicial = 0,
+				IntRangoFinal = 0,
+				DatFechaVigenciaDesde = fecha_actual,
+				DatFechaVigenciaHasta = fecha_actual,
+				StrClaveTecnica = resolucion_info.ToString(),
+				IntIdPlantillaPdf = 1,
+				IntIdPlantillaMail = 1,
+				StrIdSeguridad = resolucion_info,
+				DatFechaIngreso = fecha_actual,
+				DatFechaActualizacion = fecha_actual,
+				IntTipoDoc = tipo_doc
+			};
+			return tbl_resolucion;
+		}
+
+		/// <summary>
 		/// Convierte una Objeto de Base de Datos a un Objeto de respuesta de Resolución
 		/// </summary>
 		/// <param name="resolucion_bd">Resolución obtenida de BD</param>

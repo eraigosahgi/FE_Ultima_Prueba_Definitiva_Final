@@ -1859,6 +1859,7 @@
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\ConsultaDocumentosClientes.js" />
+    <Content Include="Scripts\Pages\DocumentosAdmin.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
@@ -2691,6 +2692,7 @@
     <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
+    <Content Include="Views\Pages\DocumentosAdmin.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
@@ -2838,6 +2840,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConsultaUsuarios.aspx.designer.cs">
       <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\DocumentosAdmin.aspx.cs">
+      <DependentUpon>DocumentosAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\DocumentosAdmin.aspx.designer.cs">
+      <DependentUpon>DocumentosAdmin.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ProcesarDocumentos.aspx.cs">
       <DependentUpon>ProcesarDocumentos.aspx</DependentUpon>

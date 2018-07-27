@@ -448,7 +448,7 @@ namespace HGInetMiFacturaElectonicaController
                         string estado_factura = "Entregado DIAN";
 
                         mensaje = mensaje.Replace("{TipoDocumento}", titulo_documento);
-                        mensaje = mensaje.Replace("{NumeroDocumento}", documento.IntNumero.ToString());
+                        mensaje = mensaje.Replace("{NumeroDocumento}", String.Format("{0}{1}",documento.StrPrefijo, documento.IntNumero.ToString()));
                         mensaje = mensaje.Replace("{FechaDocumento}", documento.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet));
                         mensaje = mensaje.Replace("{TotalDocumento}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
                         mensaje = mensaje.Replace("{EstadoDianDocumento}", estado_factura);

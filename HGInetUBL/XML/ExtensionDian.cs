@@ -89,7 +89,7 @@ namespace HGInetUBL
 				DianExtensions.InvoiceControl = InvoiceControl;
 			}
 
-			//PENDIENTE!!
+			
 			#region Datos de expedición de la factura
 			/*País de expedición de la factura
             REGLA: Para el DOCUMENTO FACTURA DE VENTA, el valor de este elemento será “CO” */

@@ -74,7 +74,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// url pública del xml
 				string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
-				respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+				respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento_result.NombreXml);
 
 				//Actualiza Documento en Base de Datos
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;

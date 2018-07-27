@@ -141,42 +141,11 @@ namespace HGInetUBL
                 // agrega la resolución en la 1ra posición
                 notas_documento.Add(dian_resolucion);
 
-                // agrega los campos del formato adicionales en el XML 
+				// agrega los campos adicionales en el XML
+				notas_documento = FormatoNotas.CamposPredeterminados(documento.DocumentoFormato);
 
-                if (documento.DocumentoFormato == null)
-                {
-                    documento.DocumentoFormato = new Formato();
-
-                    if (documento.DocumentoFormato.CamposPredeterminados == null)
-                        documento.DocumentoFormato.CamposPredeterminados = new List<FormatoCampo>();
-                }
-
-                JsonSerializerSettings config = new JsonSerializerSettings()
-                {
-                    Formatting = Newtonsoft.Json.Formatting.None,
-                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
-                };
-
-                //añade el documento a una lista, para ser recorrida.
-                List<Formato> datos = new List<Formato>();
-                datos.Add(documento.DocumentoFormato);
-
-                //Construye el objeto a serializar.
-                var datos_json = datos.Select(d => new
-                {
-                    Codigo = d.Codigo,
-                    CamposPredeterminados = d.CamposPredeterminados
-                });
-
-                // convierte el objeto en json
-                string formato_json = JsonConvert.SerializeObject(datos_json.FirstOrDefault(), typeof(Formato), config);
-
-                // agrega los campos del formato del documento en la 2da posición
-                notas_documento.Add(formato_json);
-
-
-                // agrega las observaciones del documento en la 3ra posición
-                notas_documento.Add(documento.Nota);
+				// agrega las observaciones del documento en la 3ra posición
+				notas_documento.Add(documento.Nota);
 
                 // agrega las notas adicionales del documento
                 if (documento.Notas != null)

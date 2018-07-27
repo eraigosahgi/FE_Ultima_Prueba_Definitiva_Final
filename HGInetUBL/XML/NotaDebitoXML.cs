@@ -120,28 +120,8 @@ namespace HGInetUBL
 
 				List<string> notas_documento = new List<string>();
 
-				// agrega los campos del formato adicionales en el XML 
-
-				if (documento.DocumentoFormato == null)
-				{
-					documento.DocumentoFormato = new Formato();
-
-					if (documento.DocumentoFormato.CamposPredeterminados == null)
-						documento.DocumentoFormato.CamposPredeterminados = new List<FormatoCampo>();
-				}
-
-				JsonSerializerSettings config = new JsonSerializerSettings()
-				{
-					Formatting = Newtonsoft.Json.Formatting.None,
-					DateTimeZoneHandling = DateTimeZoneHandling.Utc
-				};
-
-				// convierte el objeto en json
-				string formato_json = JsonConvert.SerializeObject(documento.DocumentoFormato, typeof(Formato), config);
-
-				// agrega los campos del formato del documento en la 2da posición
-				notas_documento.Add(formato_json);
-
+				// agrega los campos adicionales en el XML
+				notas_documento = FormatoNotas.CamposPredeterminados(documento.DocumentoFormato);
 
 				// agrega las observaciones del documento en la 3ra posición
 				notas_documento.Add(documento.Nota);

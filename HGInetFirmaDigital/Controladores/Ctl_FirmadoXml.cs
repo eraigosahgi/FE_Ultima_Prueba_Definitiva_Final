@@ -346,6 +346,9 @@ namespace HGInetFirmaDigital
 				{
 					try
 					{
+						// valida el directorio de los archivos xml firmados
+						archivo.RutaArchivosProceso = Directorio.CrearDirectorio(archivo.RutaArchivosProceso);
+
 						archivo_xml = string.Format(@"{0}{1}.xml", archivo.RutaArchivosProceso, archivo.NombreXml);
 
 						// lee el archivo xml para firmar
