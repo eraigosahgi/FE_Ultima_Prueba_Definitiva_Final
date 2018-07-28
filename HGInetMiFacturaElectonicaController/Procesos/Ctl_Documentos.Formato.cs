@@ -79,6 +79,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             case 2:
                                 reporte_pdf = new HGInetFacturaEReports.Facturas.Formato2();
                                 break;
+                            case 3:
+                                reporte_pdf = new HGInetFacturaEReports.Facturas.Formato3();
+                                break;
                         }
                     }
                     else if (documento_result.DocumentoTipo == TipoDocumento.NotaCredito)

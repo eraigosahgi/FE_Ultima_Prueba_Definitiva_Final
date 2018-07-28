@@ -66,6 +66,18 @@
     <Compile Include="Facturas\Formato2Detalles.Designer.cs">
       <DependentUpon>Formato2Detalles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Facturas\Formato3.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato3.Designer.cs">
+      <DependentUpon>Formato3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato3Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato3Detalles.Designer.cs">
+      <DependentUpon>Formato3Detalles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Funciones\Reporte.cs" />
     <Compile Include="Funciones\Reporte.Pdf.cs" />
     <Compile Include="NotasCredito\Formato1Detalles.cs">
@@ -119,6 +131,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Facturas\Formato2Detalles.resx">
       <DependentUpon>Formato2Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato3.resx">
+      <DependentUpon>Formato3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato3Detalles.resx">
+      <DependentUpon>Formato3Detalles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NotasCredito\Formato1Detalles.resx">
       <DependentUpon>Formato1Detalles.cs</DependentUpon>
