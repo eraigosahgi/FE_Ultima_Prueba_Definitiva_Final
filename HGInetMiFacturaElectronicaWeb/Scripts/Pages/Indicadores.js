@@ -1,7 +1,159 @@
 ﻿DevExpress.localization.locale('es-ES');
 
 var IndicadoresApp = angular.module('IndicadoresApp', ['dx']);
-IndicadoresApp.controller('IndicadoresController', function DocObligadoController($scope, $http, $location) {
+IndicadoresApp.controller('IndicadoresController', function DocObligadoController($scope, $sce, $http, $location) {
+
+
+    var identificacion_empresa_autenticada = "";
+
+    $http.get('/api/DatosSesion/').then(function (response) {
+
+        identificacion_empresa_autenticada = response.data[0].Identificacion;
+
+
+        //REPORTE DOCUMENTOS POR ESTADO FACTURADOR
+        $http.get('/Api/ReporteDocumentosPorEstado?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2').then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteDocumentosEstadoFacturador = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE ACUSE MENSUAL FACTURADOR
+        $http.get('/Api/ReporteEstadosAcuse?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2' + '&mensual=' + true).then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteAcuseMensualFacturador = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE ACUSE ACUMULADO FACTURADOR
+        $http.get('/Api/ReporteEstadosAcuse?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2' + '&mensual=' + false).then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteAcuseAcumuladoFacturador = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE TIPO DOCUMENTO ACUMULADO FACTURADOR
+        $http.get('/Api/ReporteDocumentosPorTipo?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2').then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteDocumentosTipoFacturador = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE TIPO DOCUMENTO ANUAL FACTURADOR
+        $http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2').then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $("#ReporteTipoDocumentoAnualFacturador").dxChart({
+                    palette: chartOptions.gamaAzul,
+                    dataSource: response.data,
+                    tooltip: {
+                        enabled: true,
+                        format: "largeNumber",
+                        customizeTooltip: function (arg) {
+
+                            var datos = response.data.filter(x => x.DescripcionMes == arg.argument);
+
+                            var mensaje = "";
+
+                            if (datos.length > 0) {
+                                if (arg.seriesName == "Facturas")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadFacturas + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorFacturas);
+                                else if (arg.seriesName == "NotasCredito")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasCredito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasCredito);
+                                else if (arg.seriesName == "NotasDebido")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasDebido + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasDebido);
+                            }
+
+                            return {
+                                text: mensaje
+                            };
+                        }
+                    },
+                    commonSeriesSettings: {
+                        ignoreEmptyPoints: true,
+                        argumentField: "DescripcionMes",
+                        type: "bar"
+                    },
+                    series: [
+                         { valueField: "ValorFacturas", name: "CantidadFacturas" },
+                         { valueField: "ValorNotasCredito", name: "CantidadNotasCredito" },
+                         { valueField: "ValorNotasDebido", name: "CantidadNotasDebido" }
+                    ],
+                    legend: {
+                        verticalAlignment: "bottom",
+                        horizontalAlignment: "center"
+                    },
+                    title: ""
+                });
+
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE DOCUMENTOS POR ESTADO ADMINISTRADOR
+        $http.get('/Api/ReporteDocumentosPorEstado?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1').then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteDocumentosEstadoAdmin = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+
+        //Construye el indicador de porcentaje
+        $scope.htmlTrusted = function (id, color, porcentaje, titulo, descripcion) {
+            return $sce.trustAsHtml(PorcentajeGrafico('#' + id, 32, 4, color, porcentaje, "icon-file-download2", color, titulo, descripcion));
+        }
+
+
+    }), function errorCallback(response) {
+        Mensaje(response.data.ExceptionMessage, "error");
+    };
+
 
     //********************************** DATOS DOCUMENTOS POR RESPUESTA ACUSE **********************************
     var datosReporteMesActualEstadoAcuse = [{
@@ -52,63 +204,64 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
     };
 
     //********************************** DATOS DOCUMENTOS POR TIPO ANUAL **********************************
-    var datosReporteTipoDocumentoAnual = [{
-        Mes: "Enero",
-        Facturas: 200,
-        ValorFactura: 12000000,
-        NotasCredito: 45,
-        ValorNotaCredito: 1850000,
-        NotasDebito: 40,
-        ValorNotaDebido: 1850000
-    }, {
-        Mes: "Febrero",
-        Facturas: 200,
-        ValorFactura: 13000000,
-        NotasCredito: 45,
-        ValorNotaCredito: 3500000,
-        NotasDebito: 40,
-        ValorNotaDebido: 3100000
-    }, {
-        Mes: "Marzo",
-        Facturas: 200,
-        ValorFactura: 10000000,
-        NotasCredito: 45,
-        ValorNotaCredito: 2583000,
-        NotasDebito: 40,
-        ValorNotaDebido: 1250000
-    }, {
-        Mes: "Abril",
-        Facturas: 200,
-        ValorFactura: 1500000,
-        NotasCredito: 45,
-        ValorNotaCredito: 150000,
-        NotasDebito: 40,
-        ValorNotaDebido: 150000
-    }, {
-        Mes: "Mayo",
-        Facturas: 200,
-        ValorFactura: 11600000,
-        NotasCredito: 45,
-        ValorNotaCredito: 1990000,
-        NotasDebito: 40,
-        ValorNotaDebido: 1580000
-    }, {
-        Mes: "Junio",
-        Facturas: 200,
-        ValorFactura: 9000000,
-        NotasCredito: 45,
-        ValorNotaCredito: 150000,
-        NotasDebito: 40,
-        ValorNotaDebido: 150000
-    }, {
-        Mes: "Julio",
-        Facturas: 200,
-        ValorFactura: 2000000,
-        NotasCredito: 45,
-        ValorNotaCredito: 150000,
-        NotasDebito: 40,
-        ValorNotaDebido: 150000
-    }
+    var datosReporteTipoDocumentoAnual = [
+        {
+            Mes: "Enero",
+            Facturas: 200,
+            ValorFactura: 12000000,
+            NotasCredito: 45,
+            ValorNotaCredito: 1850000,
+            NotasDebito: 40,
+            ValorNotaDebido: 1850000
+        }, {
+            Mes: "Febrero",
+            Facturas: 200,
+            ValorFactura: 13000000,
+            NotasCredito: 45,
+            ValorNotaCredito: 3500000,
+            NotasDebito: 40,
+            ValorNotaDebido: 3100000
+        }, {
+            Mes: "Marzo",
+            Facturas: 200,
+            ValorFactura: 10000000,
+            NotasCredito: 45,
+            ValorNotaCredito: 2583000,
+            NotasDebito: 40,
+            ValorNotaDebido: 1250000
+        }, {
+            Mes: "Abril",
+            Facturas: 200,
+            ValorFactura: 1500000,
+            NotasCredito: 45,
+            ValorNotaCredito: 150000,
+            NotasDebito: 40,
+            ValorNotaDebido: 150000
+        }, {
+            Mes: "Mayo",
+            Facturas: 200,
+            ValorFactura: 11600000,
+            NotasCredito: 45,
+            ValorNotaCredito: 1990000,
+            NotasDebito: 40,
+            ValorNotaDebido: 1580000
+        }, {
+            Mes: "Junio",
+            Facturas: 200,
+            ValorFactura: 9000000,
+            NotasCredito: 45,
+            ValorNotaCredito: 150000,
+            NotasDebito: 40,
+            ValorNotaDebido: 150000
+        }, {
+            Mes: "Julio",
+            Facturas: 200,
+            ValorFactura: 2000000,
+            NotasCredito: 45,
+            ValorNotaCredito: 150000,
+            NotasDebito: 40,
+            ValorNotaDebido: 150000
+        }
     ];
 
     //********************************** REPORTE DE VENTAS **********************************
@@ -685,16 +838,6 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
     PorcentajeGrafico('#ReporteDocumentosAprobados', 32, 4, "#62C415", 0.90, "icon-checkmark4", "#62C415", 'Aprobados', '25 Documentos');
 
 
-    //Reportes estados documentos administrador
-    PorcentajeGrafico('#ReporteDocumentosRecibidos', 32, 4, "#EEE713", 1, "icon-file-download2", "#EEE713", 'Recibidos', '100 Documentos');
-    PorcentajeGrafico('#ReporteDocumentosEnviados', 32, 4, "#2196f3", 0.80, "icon-file-upload2", "#2196f3", 'Enviados DIAN', '90 Documentos');
-    PorcentajeGrafico('#ReporteDocumentosPendientes', 32, 4, "#717171", 0.10, "icon-spam", "#717171", 'Pendientes Acuse', '8 Documentos');
-    PorcentajeGrafico('#ReporteDocumentosFinalizados', 32, 4, "#62C415", 0.80, "icon-checkmark4", "#62C415", 'Finalizados', '84 Documentos');
-
-
-
-
-
     //***************************************************************************** PERFIL FACTURADOR ****************************************************************************
 
     //ReporteMesActualEstadoAcuseFacturador
@@ -793,53 +936,6 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
         });
     });
 
-    //ReporteTipoDocumentoAnualAdquirienteFacturador
-    $(function () {
-        $("#ReporteTipoDocumentoAnualFacturador").dxChart({
-            palette: chartOptions.gamaAzul,
-            dataSource: datosReporteTipoDocumentoAnual,
-            tooltip: {
-                enabled: true,
-                format: "largeNumber",
-                customizeTooltip: function (arg) {
-
-                    var datos = datosReporteTipoDocumentoAnual.filter(x => x.Mes == arg.argument);
-
-                    var mensaje = "";
-
-                    if (datos.length > 0) {
-
-                        if (arg.seriesName == "Facturas")
-                            mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].Facturas + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorFactura);
-                        else if (arg.seriesName == "NotasCredito")
-                            mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].NotasCredito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotaCredito);
-                        else if (arg.seriesName == "NotasDebido")
-                            mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].NotasDebito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotaDebido);
-                    }
-
-                    return {
-                        text: mensaje
-                    };
-                }
-            },
-            commonSeriesSettings: {
-                ignoreEmptyPoints: true,
-                argumentField: "Mes",
-                type: "bar"
-            },
-            series: [
-                { valueField: "ValorFactura", name: "Facturas" },
-                 { valueField: "ValorNotaCredito", name: "NotasCredito" },
-                 { valueField: "ValorNotaDebido", name: "NotasDebido" }
-            ],
-            legend: {
-                verticalAlignment: "bottom",
-                horizontalAlignment: "center"
-            },
-            title: ""
-        });
-    });
-
     //ReporteAcumuladoTipoDocumentoFacturador
     $(function () {
         $("#ReporteAcumuladoTipoDocumentoFacturador").dxPieChart({
@@ -872,61 +968,73 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
         });
     });
 
-    //ReporteVentasFacturador
-    $(function () {
-        $("#ReporteVentasFacturador").dxChart({
-            palette: chartOptions.paleta,
-            dataSource: datosReporteVentas,
-            tooltip: {
-                enabled: true,
-                format: "largeNumber",
-                customizeTooltip: function (arg) {
+    $scope.ReporteDocumentosEstados = [
+       {
+           ID: "RecibidosFacturador",
+           Color: "#EEE713",
+           Porcentaje: 1,
+           Icono: "icon-file-download2",
+           Titulo: "Recibidos",
+           Descripcion: "50 Documentos"
+       }, {
+           ID: "GeneracionUblFacturador",
+           Color: "#EEE713",
+           Porcentaje: 0.90,
+           Icono: "icon-user",
+           Titulo: "Generación UBL",
+           Descripcion: "50 Documentos"
+       }, {
+           ID: "FirmadoUblFacturadorFirmadoUbl",
+           Color: "#EEE713",
+           Porcentaje: 0.90,
+           Icono: "icon-file-download2",
+           Titulo: "Firmado UBL",
+           Descripcion: "50 Documentos"
+       }, {
+           ID: "CompresionXmlFacturador",
+           Color: "#EEE713",
+           Porcentaje: 0.90,
+           Icono: "icon-file-download2",
+           Titulo: "Compresión XML",
+           Descripcion: "50 Documentos"
+       }, {
+           ID: "EnvioDianFacturador",
+           Color: "#EEE713",
+           Porcentaje: 0.88,
+           Icono: "icon-file-download2",
+           Titulo: "Envío DIAN",
+           Descripcion: "50 Documentos"
+       }, {
+           ID: "EnvioAdquirienteFacturador",
+           Color: "#EEE713",
+           Porcentaje: 0.88,
+           Icono: "icon-file-download2",
+           Titulo: "Envío Adquiriente",
+           Descripcion: "50 Documentos"
+       }, {
+           ID: "PendienteAcuseFacturador",
+           Color: "#EEE713",
+           Porcentaje: 0.12,
+           Icono: "icon-file-download2",
+           Titulo: "Pendiente Acuse",
+           Descripcion: "50 Documentos"
+       }, {
+           ID: "EnvioRespuestaFacturador",
+           Color: "#EEE713",
+           Porcentaje: 0.88,
+           Icono: "icon-file-download2",
+           Titulo: "Envío Respuesta",
+           Descripcion: "50 Documentos"
+       }, {
+           ID: "FinalizadosFacturador",
+           Color: "#62C415",
+           Porcentaje: 0.88,
+           Icono: "icon-file-download2",
+           Titulo: "Finalizados",
+           Descripcion: "50 Documentos"
+       }
+    ];
 
-
-                    var opc_permiso = datosReporteVentas.filter(x => x.Mes == arg.argument);
-
-                    var mensaje = "";
-
-                    if (opc_permiso.length > 0) {
-
-                        if (arg.seriesName == "CantidadCortesia")
-                            mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + opc_permiso[0].CantidadCortesia;
-                        else if (arg.seriesName == "CantidadVentas")
-                            mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + opc_permiso[0].CantidadVentas + "<br/>" + "Valor: " + fNumber.go(opc_permiso[0].ValorVentas);
-                    }
-                    return {
-                        text: mensaje
-                    };
-                }
-            },
-            commonSeriesSettings: {
-                ignoreEmptyPoints: true,
-                argumentField: "Mes",
-                type: "bar"
-            },
-            series: [
-                { valueField: "CantidadVentas", name: "CantidadVentas" },
-                { valueField: "CantidadCortesia", name: "CantidadCortesia" }
-            ],
-            legend: {
-                verticalAlignment: "bottom",
-                horizontalAlignment: "center"
-            },
-            title: "",
-        });
-    });
-
-    //Reportes estados documentos facturador.
-    PorcentajeGrafico('#ReporteDocumentosRecibidosFacturador', 32, 4, "#EEE713", 1, "icon-file-download2", "#EEE713", 'Recibidos', '50 Documentos');
-    PorcentajeGrafico('#ReporteDocumentosEnviadosFacturador', 32, 4, "#2196f3", 0.80, "icon-file-upload2", "#2196f3", 'Enviados DIAN', '45 Documentos');
-    PorcentajeGrafico('#ReporteDocumentosPendientesFacturador', 32, 4, "#717171", 0.10, "icon-spam", "#717171", 'Pendientes Acuse', '15 Documentos');
-    PorcentajeGrafico('#ReporteDocumentosFinalizadosFacturador', 32, 4, "#62C415", 0.80, "icon-checkmark4", "#62C415", 'Finalizados', '45 Documentos');
-
-
-    //Carga la información de los documentos pendientes por procesar hasta el día actual. 
-    PorcentajeGrafico('#ReporteDocumentosRechazadosFacturador', 32, 4, "#E70000", 0.10, "icon-cross2", "#E70000", 'Rechazados', '10 Documentos');
-    //Carga la información de los documentos procesados el día actual.
-    PorcentajeGrafico('#ReporteDocumentosAprobadosFacturador', 32, 4, "#62C415", 0.90, "icon-checkmark4", "#62C415", 'Aprobados', '50 Documentos');
 
     //***************************************************************************** PERFIL ADQUIRIENTE ****************************************************************************
 
@@ -1040,5 +1148,18 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
             }]
         });
     });
+
+
+    $scope.cambiaInclude = function (perfil) {
+
+        switch (perfil) {
+            case 1: $scope.include = 'Indicadores/IndicadoresAdministrador.aspx'; break;
+            case 2: $scope.include = 'Indicadores/IndicadoresFacturador.aspx'; break;
+            case 3: $scope.include = 'Indicadores/IndicadoresAdquiriente.aspx'; break;
+        }
+
+    }
+
+
 
 });

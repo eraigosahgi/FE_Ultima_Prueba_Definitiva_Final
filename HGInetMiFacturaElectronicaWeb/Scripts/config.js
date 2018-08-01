@@ -65,19 +65,18 @@ function convertDateFormat(string) {
 }
 
 //gráfica un porcentaje en un div.
-function PorcentajeGrafico(element, radius, border, color, end, iconClass, iconColor, textTitle, textAverage) {
+function PorcentajeGrafico(element, radio, bordo, colorTexto, porcentaje, claseIcono, ColorIcono, textoTitulo, observaciones) {
 
     // Variables
     var d3Container = d3.select(element),
         startPercent = 0,
-        iconSize = 32,
-        endPercent = end,
+        iconSize = 28,
+        endPercent = porcentaje,
         twoPi = Math.PI * 2,
-        formatPercent = d3.format('.0%'),
-        boxSize = radius * 2;
+        boxSize = radio * 2;
 
-    // Calores Contador
-    var count = Math.abs((endPercent - startPercent) / 0.01);
+    // Valores Contador
+    var count = Math.abs((endPercent - startPercent));
 
     // Valores step
     var step = endPercent < startPercent ? -0.01 : 0.01;
@@ -95,56 +94,48 @@ function PorcentajeGrafico(element, radius, border, color, end, iconClass, iconC
     // Arc
     var arc = d3.svg.arc()
         .startAngle(0)
-        .innerRadius(radius)
-        .outerRadius(radius - border);
+        .innerRadius(radio)
+        .outerRadius(radio - bordo);
 
     // Fondo
     svg.append('path')
         .attr('class', 'd3-progress-background')
-        .attr('d', arc.endAngle(twoPi))
+        //.attr('d', arc.endAngle(twoPi))
         .style('fill', '#eee');
 
     // Primer plano
     var foreground = svg.append('path')
         .attr('class', 'd3-progress-foreground')
         .attr('filter', 'url(#blur)')
-        .style('fill', color)
-        .style('stroke', color);
+        .style('fill', colorTexto)
+        .style('stroke', colorTexto);
 
     //Frontal
     var front = svg.append('path')
         .attr('class', 'd3-progress-front')
-        .style('fill', color)
+        .style('fill', colorTexto)
         .style('fill-opacity', 1);
-
-
-    // Texto Valor Porcentaje
-    var numberText = d3.select(element)
-        .append('h2')
-            .attr('class', 'mt-15 mb-5')
 
     // Icono
     d3.select(element)
-        .append("i")
-            .attr("class", iconClass + " counter-icon")
-            .attr('style', 'top: ' + ((boxSize - iconSize) / 2) + 'px; color:' + iconColor);
+        .append("label").attr("class", "counter-icon").attr('style', 'top: ' + ((boxSize - iconSize) / 2) + 'px; text-align:center;font-size:16px; color:' + ColorIcono).text(endPercent + '%');
 
     // Título
     d3.select(element)
         .append('div')
-            .text(textTitle);
+            .text(textoTitulo);
 
     // Subtitulo
     d3.select(element)
         .append('div')
             .attr('class', 'text-size-small text-muted')
-            .text(textAverage);
+            .text(observaciones);
 
     // Animación
     function updateProgress(progress) {
         foreground.attr('d', arc.endAngle(twoPi * progress));
         front.attr('d', arc.endAngle(twoPi * progress));
-        numberText.text(formatPercent(progress));
+        //numberText.text(formatPercent(progress));
     }
 
     // Animación Texto
@@ -189,10 +180,10 @@ function ValidarSesion() {
         dataType: "json",
         url: "/api/DatosSesion/",
     })
- .done(function (data, textStatus, jqXHR) {
+ .done(function(data, textStatus, jqXHR) {
      //Aqui se podria validar el el usuario tiene movimiento y alargar un poco mas la sesión     
  })
- .fail(function (jqXHR, textStatus, errorThrown) {
+ .fail(function(jqXHR, textStatus, errorThrown) {
      //Cierro la sesión ya que no hay datos
      sesionexpiro();
  });

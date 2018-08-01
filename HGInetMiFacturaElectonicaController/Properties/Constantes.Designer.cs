@@ -61,6 +61,33 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Acceso Plataforma Mi Factura en Línea.
+        /// </summary>
+        public static string AsuntoEmailBienvenida {
+            get {
+                return ResourceManager.GetString("AsuntoEmailBienvenida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Serial de activacion Mi Factura en Línea.
+        /// </summary>
+        public static string AsuntoEnviaSerial {
+            get {
+                return ResourceManager.GetString("AsuntoEnviaSerial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Factura en Línea.
+        /// </summary>
+        public static string AsuntoNotificacionDocumento {
+            get {
+                return ResourceManager.GetString("AsuntoNotificacionDocumento", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a tic@hgi.com.co.
         /// </summary>
         public static string EmailCopiaOculta {
@@ -97,7 +124,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a HGInet Facturación Electrónica.
+        ///   Busca una cadena traducida similar a Mi Factura en Línea.
         /// </summary>
         public static string NombreRemitenteEmail {
             get {

@@ -223,7 +223,7 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClave.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
                         mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
-                        string asunto = "Acceso Plataforma Facturación Electrónica";
+                        string asunto = Constantes.AsuntoEmailBienvenida;
 
                         DestinatarioEmail remitente = new DestinatarioEmail();
                         remitente.Email = Constantes.EmailRemitente;
@@ -309,7 +309,7 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());
                         mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
-                        string asunto = "Serial de activacion Facturación Electrónica";
+                        string asunto = Constantes.AsuntoEnviaSerial;
 
                         DestinatarioEmail remitente = new DestinatarioEmail();
                         remitente.Email = Constantes.EmailRemitente;
@@ -366,7 +366,7 @@ namespace HGInetMiFacturaElectonicaController
 
                 string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaHtmlDocumentos);
 
-                string asunto = "Factura Electrónica";
+                string asunto = Constantes.AsuntoNotificacionDocumento;
 
                 // obtiene los datos del facturador electrónico
                 Ctl_Empresa facturador_electronico = new Ctl_Empresa();
@@ -448,7 +448,7 @@ namespace HGInetMiFacturaElectonicaController
                         string estado_factura = "Entregado DIAN";
 
                         mensaje = mensaje.Replace("{TipoDocumento}", titulo_documento);
-                        mensaje = mensaje.Replace("{NumeroDocumento}", String.Format("{0}{1}",documento.StrPrefijo, documento.IntNumero.ToString()));
+                        mensaje = mensaje.Replace("{NumeroDocumento}", String.Format("{0}{1}", documento.StrPrefijo, documento.IntNumero.ToString()));
                         mensaje = mensaje.Replace("{FechaDocumento}", documento.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet));
                         mensaje = mensaje.Replace("{TotalDocumento}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
                         mensaje = mensaje.Replace("{EstadoDianDocumento}", estado_factura);
@@ -611,8 +611,8 @@ namespace HGInetMiFacturaElectonicaController
 
                 string asunto = "Respuesta Acuse de Recibo";
 
-				// envía como email de respuesta el Adquiriente
-				DestinatarioEmail remitente = new DestinatarioEmail();
+                // envía como email de respuesta el Adquiriente
+                DestinatarioEmail remitente = new DestinatarioEmail();
                 remitente.Nombre = adquiriente.StrRazonSocial;
                 remitente.Email = adquiriente.StrMail;
 
@@ -690,11 +690,11 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{TipoDocumento}", titulo_factura);
                         mensaje = mensaje.Replace("{NumeroDocumento}", documento.IntNumero.ToString());
                         mensaje = mensaje.Replace("{Estadorespuesta}", estado_respuesta);
-						mensaje = mensaje.Replace("{FechaDocumento}", documento.DatAdquirienteFechaRecibo.Value.ToString(Fecha.formato_fecha_hora));
+                        mensaje = mensaje.Replace("{FechaDocumento}", documento.DatAdquirienteFechaRecibo.Value.ToString(Fecha.formato_fecha_hora));
 
 
-						// envía el correo electrónico
-						EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+                        // envía el correo electrónico
+                        EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
 
                     }
                 }

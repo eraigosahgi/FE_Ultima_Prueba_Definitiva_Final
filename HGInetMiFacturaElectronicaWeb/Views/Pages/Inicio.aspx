@@ -4,13 +4,13 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-<script src="../../Scripts/Pages/Indicadores.js"></script>
+    <script src="../../Scripts/Pages/Indicadores.js"></script>
 
     <div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController">
 
         <div class="panel-body">
 
-            <ul class="nav nav-tabs">
+            <%--            <ul class="nav nav-tabs">
                 <li class="active"><a href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
                 <li><a href="#TabFacturador" data-toggle="tab">Facturador</a></li>
                 <li><a href="#TabAdquiriente" data-toggle="tab" aria-expanded="false">Adquiriente</a></li>
@@ -170,17 +170,40 @@
 
                     <div class="row">
 
-                        <!-- REPORTE ESTADO ACUSE -->
-                        <div class="col-md-4">
+                        <!-- REPORTE ESTADOS DOCUMENTO -->
+                        <div class="col-md-12">
+                            <div class="panel">
+
+                                <div class="panel-body">
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Estado</h4>
+                                    <div data-ng-repeat="c in ReporteDocumentosEstadoFacturador">
+                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}" data-ng-bind-html="htmlTrusted(c.IdControl,c.Color, c.Porcentaje,c.Titulo, c.Observaciones)"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /REPORTE ESTADOS DOCUMENTO -->
+
+                        <!-- REPORTE ESTADO ACUSE MENSUAL-->
+                        <div class="col-md-6">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Documentos por Respuesta de Acuse</h4>
-                                    <label class="text-muted">Indica el porcentaje de documentos según el estado del acuse.</label>
-                                    <div class="col-md-6" style="margin-top: -40px;">
-                                        <div id="ReporteMesActualEstadoAcuseFacturador"></div>
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Respuesta de Acuse Mensual</h4>
+                                    <div data-ng-repeat="c in ReporteAcuseMensualFacturador">
+                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}" data-ng-bind-html="htmlTrusted(c.IdControl,c.Color, c.Porcentaje,c.Titulo, c.Observaciones)"></div>
                                     </div>
-                                    <div class="col-md-6" style="margin-top: -40px;">
-                                        <div id="ReporteAcumuladoEstadoAcuseFacturador"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /REPORTE ESTADO ACUSE -->
+
+                        <!-- REPORTE ESTADO ACUSE ACUMULADO-->
+                        <div class="col-md-6">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Respuesta de Acuse Acumulado</h4>
+                                    <div data-ng-repeat="c in ReporteAcuseAcumuladoFacturador">
+                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}" data-ng-bind-html="htmlTrusted(c.IdControl,c.Color, c.Porcentaje,c.Titulo, c.Observaciones)"></div>
                                     </div>
                                 </div>
                             </div>
@@ -188,10 +211,10 @@
                         <!-- /REPORTE ESTADO ACUSE -->
 
                         <!-- REPORTE TIPO DOCUMENTO ANUAL -->
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Documentos por Tipo</h4>
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Tipo</h4>
                                     <label class="text-muted">Indica la cantidad de documentos generados por tipo.</label>
                                     <div id="ReporteTipoDocumentoAnualFacturador"></div>
                                 </div>
@@ -203,69 +226,17 @@
                         <div class="col-md-4">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Acumulado Documentos por Tipo</h4>
-                                    <label class="text-muted">Informa el porcentaje acumulado de documentos generados por tipo.</label>
-                                    <div id="ReporteAcumuladoTipoDocumentoFacturador"></div>
+                                    <h4 class="text-bold" style="margin-top: -10px;">Acumulado Documentos por Tipo</h4>
+                                    <div data-ng-repeat="c in ReporteDocumentosTipoFacturador">
+                                        <div class="content-group-sm svg-center position-relative col-md-12 text-center" id="{{c.IdControl}}" data-ng-bind-html="htmlTrusted(c.IdControl,c.Color, c.Porcentaje,c.Titulo, c.Observaciones)"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <!-- /REPORTE ACUMULADO TIPO DOCUMENTO -->
 
-                        <!-- REPORTE ESTADOS DOCUMENTO -->
-                        <div class="col-md-9">
-                            <div class="panel">
-
-                                <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Estado</h4>
-                                    <div class="col-md-3 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosRecibidosFacturador"></div>
-                                    </div>
-                                    <div class="col-md-3 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosEnviadosFacturador"></div>
-                                    </div>
-                                    <div class="col-md-3 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosPendientesFacturador"></div>
-                                    </div>
-                                    <div class="col-md-3 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosFinalizadosFacturador"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /REPORTE ESTADOS DOCUMENTO -->
-
-                         <!-- REPORTE ESTADOS RESPUESTA -->
-                        <div class="col-md-3">
-                            <div class="panel">
-
-                                <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Respuesta Documentos</h4>
-                                    <div class="col-md-6 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosRechazadosFacturador"></div>
-                                    </div>
-                                    <div class="col-md-6 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosAprobadosFacturador"></div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <!-- /REPORTE ESTADOS RESPUESTA -->
-
-                        <!-- REPORTE VENTAS -->
-                        <div class="col-md-5">
-                            <div class="panel">
-                                <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Ventas</h4>
-                                    <label class="text-muted">Indica el nivel de ventas durante los últimos 12 meses.</label>
-                                    <div id="ReporteVentasFacturador"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /REPORTE VENTAS -->
 
                     </div>
-
                 </div>
                 <!-- /TAB FACTURADOR -->
 
@@ -317,7 +288,15 @@
                 </div>
                 <!-- TAB ADQUIRIENTE -->
 
+            </div>--%>
+
+            <div class="btn-group btn-group-justified">
+                <a href="#" class="btn btn-default btn-raised" data-ng-click="cambiaInclude(1)">Administrador</a>
+                <a href="#" class="btn btn-default btn-raised" data-ng-click="cambiaInclude(2)">Facturador</a>
+                <a href="#" class="btn btn-default btn-raised" data-ng-click="cambiaInclude(3)">Adquiriente</a>
             </div>
+            <br />
+            <div data-ng-include="include"></div>
 
         </div>
     </div>

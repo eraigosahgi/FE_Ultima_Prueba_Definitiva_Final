@@ -47,6 +47,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.ServiceModel" />
@@ -73,6 +74,9 @@
     <Compile Include="Configuracion\Ctl_PlanesTransacciones.cs" />
     <Compile Include="Configuracion\Ctl_Planes.cs" />
     <Compile Include="Configuracion\Ctl_Usuario.cs" />
+    <Compile Include="Indicadores\Ctl_Indicadores.cs" />
+    <Compile Include="Indicadores\Objetos\PorcentajesResumen.cs" />
+    <Compile Include="Indicadores\Objetos\ValoresTipoDocumento.cs" />
     <Compile Include="PagosElectronicos\Ctl_EmpresasPasarela.cs" />
     <Compile Include="PagosElectronicos\Ctl_PagosElectronicos.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Archivo.cs" />
