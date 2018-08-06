@@ -233,8 +233,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         /// <param name="id_seguridad">Id de seguridad del documento o plan transaccional</param>
         /// <param name="tipo_pago">indica si el pago es para un documento o una compra de planes (0: Documento - 1: Plan).</param>
         /// <param name="registrar_pago">indica si se registra el pago en base de datos.</param>
+        /// <param name="valor_pago">valor a pagar.</param>
         /// <returns></returns>
-        public string ReportePagoElectronico(System.Guid id_seguridad, int tipo_pago = 0, bool registrar_pago = true)
+        public string ReportePagoElectronico(System.Guid id_seguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0)
         {
             try
             {
@@ -249,6 +250,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 //Objetos para reportar el pago
                 Cliente datos_cliente = new Cliente();
                 Pago datos_pago = new Pago();
+
+                datos_pago.id_pago = Texto.DatosAleatorios(9, 2);
 
                 //Valida si el pago es de un documento o una compra de planes.
                 if (tipo_pago == 0)
@@ -293,7 +296,17 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         datos_cliente.tipo_id = datos_documento.TblEmpresasAdquiriente.StrTipoIdentificacion.ToString();
 
                         datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
-                        datos_pago.total_con_iva = Convert.ToDouble(datos_documento.IntVlrTotal);
+
+                        if (valor_pago <= 0)
+                            datos_pago.total_con_iva = Convert.ToDouble(datos_documento.IntVlrTotal);
+                        else
+                        {
+                            if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
+                                throw new ApplicationException("El valor a pagar no puede ser superior al valor total del documento.");
+
+                            datos_pago.total_con_iva = valor_pago;
+                        }
+
                         datos_pago.valor_iva = 0;
                         datos_pago.codigo_servicio_principal = codigo_servicio;
                         datos_pago.info_opcional1 = "opciona1";
@@ -336,7 +349,16 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         datos_cliente.tipo_id = datos_empresa.StrTipoIdentificacion.ToString();
 
                         datos_pago.descripcion_pago = string.Format("{0}", datos_plan.StrObservaciones);
-                        datos_pago.total_con_iva = Convert.ToDouble(datos_plan.IntValor);
+
+                        if (valor_pago <= 0)
+                            datos_pago.total_con_iva = Convert.ToDouble(datos_plan.IntValor);
+                        else
+                        {
+                            if (valor_pago > Convert.ToDouble(datos_plan.IntValor))
+                                throw new ApplicationException("El valor a pagar no puede ser superior al valor total de la compra.");
+
+                            datos_pago.total_con_iva = valor_pago;
+                        }
                         datos_pago.valor_iva = 0;
                         datos_pago.codigo_servicio_principal = codigo_servicio;
                         datos_pago.info_opcional1 = "opciona1";
@@ -349,8 +371,6 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         datos_pago.total_codigos_servicio = 0;
 
                     }
-
-                    datos_pago.id_pago = Texto.DatosAleatorios(9, 2);
 
                     ProcesoPago clase_proceso_pago = new ProcesoPago(comercio_id, comercio_clave, comercio_ruta);
 
@@ -379,7 +399,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                                 else throw new ApplicationException(string.Format("Identificador de pago inválido."));
                             }
                         }
-                        TblPagosElectronicos pago = CrearPago(datos_pago.id_pago, id_plataforma, new Guid("f603c53b-6f72-49e8-bea5-ab2f63f08ea7"), 0, 2500.00M);
+                        TblPagosElectronicos pago = CrearPago(datos_pago.id_pago, id_plataforma, id_seguridad, 0, 2500.00M);
                     }
                 }
                 else
@@ -391,7 +411,6 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             {
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
-
         }
 
         /// <summary>
