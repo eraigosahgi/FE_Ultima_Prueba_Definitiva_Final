@@ -191,6 +191,29 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             }
         }
 
+
+        /// <summary>
+        /// Obtiene el pago de la base de datos por códigos principales (StrIdSeguridadPago y StrIdPlataforma).
+        /// </summary>
+        /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
+        /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
+        /// <returns></returns>
+        public List<TblPagosElectronicos> Obtener(System.Guid StrIdSeguridadDoc)
+        {
+            try
+            {
+                List<TblPagosElectronicos> datos_pago = (from pago in context.TblPagosElectronicos
+                                                   where pago.StrIdSeguridadDoc==StrIdSeguridadDoc                                                  
+                                                   select pago).ToList();
+
+                return datos_pago;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
         /// <summary>
         /// obtiene los pagos por estado de verificación (consulta por DatFechaVerificacion, si esta null no se encuentra verificado). ¿FECHAS?
         /// </summary>
