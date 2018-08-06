@@ -421,18 +421,23 @@ namespace HGInetMiFacturaElectonicaController
                         // Datos Facturador Electronico
                         mensaje = mensaje.Replace("{ImagenLogo}", "<img id='ImgLogo' src='" + "" + "' style='border: none; border-radius: 0px; display: block; outline: none; text-decoration: none; width: 100%; height: auto;' width='233' />");
                         mensaje = mensaje.Replace("{NombreFacturador}", empresa_obligado.StrRazonSocial);
-                        mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
+						mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
                         mensaje = mensaje.Replace("{DigitovFacturador}", empresa_obligado.IntIdentificacionDv.ToString());
                         mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMail);
 
 
                         if (!string.IsNullOrWhiteSpace(telefono))
-                            mensaje = mensaje.Replace("{TelefonoFacturador}", string.Format("Teléfono: {0}", telefono));
+                            mensaje = mensaje.Replace("{TelefonoFacturador}", telefono);
                         else
                             mensaje = mensaje.Replace("{TelefonoFacturador}", "");
 
                         // Datos del Tercero
-                        mensaje = mensaje.Replace("{NombreTercero}", empresa_adquiriente.StrRazonSocial);
+						if (empresa_adquiriente.StrTipoIdentificacion.Equals("31"))
+							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
+						else
+							mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
+
+						mensaje = mensaje.Replace("{NombreTercero}", empresa_adquiriente.StrRazonSocial);
                         mensaje = mensaje.Replace("{NitTercero}", empresa_adquiriente.StrIdentificacion);
                         mensaje = mensaje.Replace("{Digitov}", empresa_adquiriente.IntIdentificacionDv.ToString());
                         mensaje = mensaje.Replace("{CorreoTercero}", empresa_adquiriente.StrMail);
@@ -445,13 +450,10 @@ namespace HGInetMiFacturaElectonicaController
                         TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(documento.IntDocTipo);
                         string titulo_documento = Enumeracion.GetDescription(doc_tipo);
 
-                        string estado_factura = "Entregado DIAN";
-
                         mensaje = mensaje.Replace("{TipoDocumento}", titulo_documento);
                         mensaje = mensaje.Replace("{NumeroDocumento}", String.Format("{0}{1}", documento.StrPrefijo, documento.IntNumero.ToString()));
                         mensaje = mensaje.Replace("{FechaDocumento}", documento.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet));
                         mensaje = mensaje.Replace("{TotalDocumento}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
-                        mensaje = mensaje.Replace("{EstadoDianDocumento}", estado_factura);
 
                         string ruta_acuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", documento.StrIdSeguridad.ToString()));
 
