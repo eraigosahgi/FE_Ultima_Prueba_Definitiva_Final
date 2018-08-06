@@ -5,6 +5,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
     public class Ctl_Indicadores : BaseObject<TblDocumentos>
     {
         /// <summary>
-        /// 
+        /// Obtiene los porcentajes de documentos por estado.
         /// </summary>
         /// <param name="identificacion_empresa"></param>
         /// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
@@ -42,7 +43,6 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 
                 foreach (PorcentajesResumen item in documentos_estado)
                 {
-
                     switch (item.Estado)
                     {
                         case 90: item.Color = "#FF2D00"; break;
@@ -94,7 +94,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 
                 List<PorcentajesResumen> documentos_acuse = (from documento in context.TblDocumentos
                                                              where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
-                                                              && ((mensual) ? (documento.DatAdquirienteFechaRecibo.Value.Month == mes_actual && documento.DatAdquirienteFechaRecibo.Value.Year == anyo_actual) : documento.DatAdquirienteFechaRecibo.Value != null)
+                                                              && ((mensual) ? (documento.DatFechaDocumento.Month == mes_actual && documento.DatFechaDocumento.Year == anyo_actual) : documento.DatFechaDocumento != null)
                                                              orderby documento.IntAdquirienteRecibo ascending
                                                              group documento by new { documento.IntAdquirienteRecibo } into documento_estado
                                                              select new PorcentajesResumen
@@ -239,7 +239,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
                             break;
                         case 3:
                             datos_valores.CantidadNotasDebito = item.Cantidad;
-                            datos_valores.ValorNotasDebito = item.Valor;
+                            datos_valores.ValorNotasDebito = Math.Round(item.Valor, 0);
                             break;
                     }
 
@@ -254,5 +254,130 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
             }
         }
 
+
+        /// <summary>
+        /// Obtiene los planes adquiridos por el facturador.
+        /// </summary>
+        /// <param name="identificacion_empresa"></param>
+        /// <returns></returns>
+        public List<dynamic> ResumenPlanesAdquiridos(string identificacion_empresa)
+        {
+            try
+            {
+                DateTime fecha_actual = Fecha.GetFecha();
+
+                var planes_adquiridos = (from plan in context.TblPlanesTransacciones
+                                         where plan.StrEmpresaFacturador.Equals(identificacion_empresa)
+                                         && SqlFunctions.DateAdd("month", 12, plan.DatFecha).Value > fecha_actual
+                                         orderby plan.DatFecha descending
+                                         select plan).ToList();
+
+                var resumen_planes = planes_adquiridos.Select(x => new
+                {
+                    IdSeguridad = x.StrIdSeguridad,
+                    FechaCompra = x.DatFecha,
+                    FechaVencimiento = x.DatFecha.AddMonths(12),
+                    CantidadCompradas = x.IntNumTransaccCompra,
+                    CantidadProcesadas = x.IntNumTransaccProcesadas
+                });
+
+                var plan_actual = resumen_planes.Where(x => x.FechaVencimiento > fecha_actual && x.CantidadProcesadas != 0 && (x.CantidadProcesadas < x.CantidadCompradas)).FirstOrDefault();
+
+                List<dynamic> retorno = new List<dynamic>();
+                dynamic resumen = new System.Dynamic.ExpandoObject();
+                if (plan_actual != null)
+                {
+                    resumen.PlanesAdquiridos = resumen_planes;
+                    resumen.SaldoPlanActual = plan_actual.CantidadCompradas;
+                    resumen.SaldoConsumoPlanActual = plan_actual.CantidadProcesadas;
+                    resumen.SaldoCompras = resumen_planes.Where(x => x.IdSeguridad != plan_actual.IdSeguridad).Sum(x => x.CantidadCompradas);
+                    resumen.SaldoDisponible = resumen.SaldoCompras + (plan_actual.CantidadCompradas - plan_actual.CantidadProcesadas);
+                }
+                else
+                {
+                    resumen.PlanesAdquiridos = 0;
+                    resumen.SaldoPlanActual = 0;
+                    resumen.SaldoConsumoPlanActual = 0;
+                    resumen.SaldoCompras = 0;
+                    resumen.SaldoDisponible = 0;
+                }
+                retorno.Add(resumen);
+
+                return retorno;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+        public List<ValoresTipoDocumento> VentasAnual()
+        {
+            try
+            {
+                DateTime fecha_actual = Fecha.GetFecha();
+                DateTime inicio = new DateTime(fecha_actual.AddMonths(-12).Year, fecha_actual.AddMonths(-12).Month, 1);
+
+                List<ValoresTipoDocumento> documentos_tipo = (from documento in context.TblPlanesTransacciones
+                                                              where (documento.DatFecha >= inicio && documento.DatFecha <= fecha_actual)
+                                                              orderby documento.DatFecha.Year, documento.DatFecha.Month, documento.IntTipoProceso ascending
+                                                              group documento by new { documento.DatFecha.Year, documento.DatFecha.Month, documento.IntTipoProceso } into documento_tipo
+                                                              select new ValoresTipoDocumento
+                                                              {
+                                                                  Anyo = documento_tipo.FirstOrDefault().DatFecha.Year,
+                                                                  Mes = documento_tipo.FirstOrDefault().DatFecha.Month,
+                                                                  TipoDoc = documento_tipo.FirstOrDefault().IntTipoProceso,
+                                                                  Cantidad = documento_tipo.Count(),
+                                                                  Valor = documento_tipo.Sum(x => x.IntValor)
+                                                              }).ToList();
+
+
+                List<ValoresTipoDocumento> datos_respuesta = new List<ValoresTipoDocumento>();
+
+
+
+                foreach (var item in documentos_tipo)
+                {
+                    ValoresTipoDocumento datos_valores = new ValoresTipoDocumento();
+
+                    datos_valores.Mes = item.Mes;
+                    datos_valores.DescripcionMes = Fecha.MesLetras(new DateTime(item.Anyo, item.Mes, 1));
+                    datos_valores.Anyo = item.Anyo;
+
+                    var item_retorno = datos_respuesta.Where(x => x.Anyo == item.Anyo && x.Mes == item.Mes).FirstOrDefault();
+
+                    if (item_retorno != null)
+                    {
+                        datos_valores = item_retorno;
+                        datos_respuesta.Remove(item_retorno);
+                    }
+
+                    switch (item.TipoDoc)
+                    {
+                        case 1:
+                            datos_valores.CantidadFacturas = item.Cantidad;
+                            datos_valores.ValorFacturas = item.Valor;
+                            break;
+                        case 2:
+                            datos_valores.CantidadNotasCredito = item.Cantidad;
+                            datos_valores.ValorNotasCredito = item.Valor;
+                            break;
+                        case 3:
+                            datos_valores.CantidadNotasDebito = item.Cantidad;
+                            datos_valores.ValorNotasDebito = Math.Round(item.Valor, 0);
+                            break;
+                    }
+
+                    datos_respuesta.Add(datos_valores);
+                }
+
+                return datos_respuesta.OrderBy(x => x.Anyo).ThenBy(x => x.Mes).ToList();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
     }
 }

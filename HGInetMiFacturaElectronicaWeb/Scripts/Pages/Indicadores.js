@@ -1,8 +1,21 @@
 ﻿DevExpress.localization.locale('es-ES');
 
 var IndicadoresApp = angular.module('IndicadoresApp', ['dx']);
-IndicadoresApp.controller('IndicadoresController', function DocObligadoController($scope, $sce, $http, $location) {
+IndicadoresApp.controller('IndicadoresController', function IndicadoresController($scope, $sce, $http, $location) {
 
+    var IndicadoresPorcentuales;
+
+
+
+    //Opciones Adicionales de las gráficas.
+    var chartOptions = {
+        gamaAzul: ["rgb(0,22,245,1)", "rgb(0,22,245,0.7)", "rgb(0,22,245,0.4)"]
+    };
+
+    //Construye el indicador de porcentajes
+    $scope.htmlTrusted = function (id, color, porcentaje, titulo, descripcion) {
+        return $sce.trustAsHtml(PorcentajeGrafico('#' + id, 32, 4, color, porcentaje, "icon-file-download2", color, titulo, descripcion));
+    }
 
     var identificacion_empresa_autenticada = "";
 
@@ -10,6 +23,94 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
 
         identificacion_empresa_autenticada = response.data[0].Identificacion;
 
+        /*************************************************************************** ADQUIRIENTE ***************************************************************************/
+        //REPORTE ACUSE ACUMULADO ADQUIRIENTE
+        $http.get('/Api/ReporteEstadosAcuse?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '3' + '&mensual=' + false).then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteAcuseAcumuladoAdquiriente = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE TIPO DOCUMENTO ANUAL ADQUIRIENTE
+        $http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '3').then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $("#ReporteTipoDocumentoAnualAdquiriente").dxChart({
+                    palette: chartOptions.gamaAzul,
+                    dataSource: response.data,
+                    tooltip: {
+                        enabled: true,
+                        format: "largeNumber",
+                        customizeTooltip: function (arg) {
+
+                            var datos = response.data.filter(x => x.DescripcionMes == arg.argument);
+
+                            var mensaje = "";
+
+                            if (datos.length > 0) {
+                                if (arg.seriesName == "Facturas")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadFacturas + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorFacturas);
+                                else if (arg.seriesName == "NotasCredito")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasCredito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasCredito);
+                                else if (arg.seriesName == "CantidadNotasDebito")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasDebito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasDebito);
+                            }
+
+                            return {
+                                text: mensaje
+                            };
+                        }
+                    },
+                    commonSeriesSettings: {
+                        ignoreEmptyPoints: true,
+                        argumentField: "DescripcionMes",
+                        type: "bar"
+                    },
+                    series: [
+                         { valueField: "CantidadFacturas", name: "Facturas" },
+                         { valueField: "CantidadNotasCredito", name: "NotasCredito" },
+                         { valueField: "CantidadNotasDebito", name: "NotasDebito" }
+                    ],
+                    legend: {
+                        verticalAlignment: "bottom",
+                        horizontalAlignment: "center"
+                    },
+                    title: ""
+                });
+
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE TIPO DOCUMENTO ACUMULADO ADQUIRIENTE
+        $http.get('/Api/ReporteDocumentosPorTipo?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '3').then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteDocumentosTipoAdquiriente = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+        /*************************************************************************** FACTURADOR ***************************************************************************/
 
         //REPORTE DOCUMENTOS POR ESTADO FACTURADOR
         $http.get('/Api/ReporteDocumentosPorEstado?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2').then(function (response) {
@@ -93,8 +194,8 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
                                     mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadFacturas + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorFacturas);
                                 else if (arg.seriesName == "NotasCredito")
                                     mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasCredito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasCredito);
-                                else if (arg.seriesName == "NotasDebido")
-                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasDebido + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasDebido);
+                                else if (arg.seriesName == "CantidadNotasDebito")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasDebito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasDebito);
                             }
 
                             return {
@@ -108,9 +209,9 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
                         type: "bar"
                     },
                     series: [
-                         { valueField: "ValorFacturas", name: "CantidadFacturas" },
-                         { valueField: "ValorNotasCredito", name: "CantidadNotasCredito" },
-                         { valueField: "ValorNotasDebido", name: "CantidadNotasDebido" }
+                         { valueField: "CantidadFacturas", name: "Facturas" },
+                         { valueField: "CantidadNotasCredito", name: "NotasCredito" },
+                         { valueField: "CantidadNotasDebito", name: "NotasDebito" }
                     ],
                     legend: {
                         verticalAlignment: "bottom",
@@ -128,11 +229,67 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
         });
 
+        //REPORTE RESUMEN TRANSACCIONAL
+        $http.get('/Api/ReporteResumenPlanesAdquiridos?identificacion_empresa=' + identificacion_empresa_autenticada).then(function (response) {
+            $("#wait").hide();
+            try {
+                $scope.SaldoPlanActual = response.data[0].SaldoPlanActual;
+                $scope.SaldoConsumoPlanActual = response.data[0].SaldoConsumoPlanActual;
+                $scope.SaldoCompras = response.data[0].SaldoCompras;
+                $scope.SaldoDisponible = response.data[0].SaldoDisponible;
+
+
+                $("#ResumenPlanesAdquiridosFacturador").dxDataGrid({
+                    dataSource: response.data[0].PlanesAdquiridos,
+                    showBorders: false,
+                    showRowLines: false,
+                    showColumnLines: false,
+                    rowAlternationEnabled: true,
+                    noDataText: "No se encontraron Planes Transaccionales Registrados.",
+                    paging: {
+                        pageSize: 5
+                    },
+                    pager: {
+                        showInfo: true
+                    },
+                    columns: [
+                        {
+                            caption: "Fecha Compra",
+                            dataField: "FechaCompra",
+                            dataType: "date",
+                            format: "yyyy-MM-dd HH:mm",
+                        },
+                        {
+                            caption: "Transacciones Plan",
+                            dataField: "CantidadCompradas",
+                        },
+                        {
+                            caption: "Transacciones Procesadas",
+                            dataField: "CantidadProcesadas",
+                        },
+                        {
+                            caption: "Fecha Vencimiento",
+                            dataField: "FechaVencimiento",
+                            dataType: "date",
+                            format: "yyyy-MM-dd HH:mm",
+                        }
+                    ]
+                });
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        /*************************************************************************** ADMINISTRADOR ***************************************************************************/
+
         //REPORTE DOCUMENTOS POR ESTADO ADMINISTRADOR
         $http.get('/Api/ReporteDocumentosPorEstado?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1').then(function (response) {
             $("#wait").hide();
             try {
-
                 $scope.ReporteDocumentosEstadoAdmin = response.data;
 
             } catch (err) {
@@ -143,17 +300,188 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
         });
 
+        //REPORTE ACUSE MENSUAL ADMINISTRADOR
+        $http.get('/Api/ReporteEstadosAcuse?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1' + '&mensual=' + true).then(function (response) {
+            $("#wait").hide();
+            try {
 
-        //Construye el indicador de porcentaje
-        $scope.htmlTrusted = function (id, color, porcentaje, titulo, descripcion) {
-            return $sce.trustAsHtml(PorcentajeGrafico('#' + id, 32, 4, color, porcentaje, "icon-file-download2", color, titulo, descripcion));
-        }
+                $scope.ReporteAcuseMensualAdmin = response.data;
 
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE ACUSE ACUMULADO ADMINISTRADOR
+        $http.get('/Api/ReporteEstadosAcuse?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1' + '&mensual=' + false).then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteAcuseAcumuladoAdmin = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE TIPO DOCUMENTO ACUMULADO ADMINISTRADOR
+        $http.get('/Api/ReporteDocumentosPorTipo?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1').then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $scope.ReporteDocumentosTipoAdmin = response.data;
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
+
+        //REPORTE TIPO DOCUMENTO ANUAL ADMINISTRADOR
+        $http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1').then(function (response) {
+            $("#wait").hide();
+            try {
+
+                $("#ReporteTipoDocumentoAnualAdmin").dxChart({
+                    palette: chartOptions.gamaAzul,
+                    dataSource: response.data,
+                    tooltip: {
+                        enabled: true,
+                        format: "largeNumber",
+                        customizeTooltip: function (arg) {
+
+                            var datos = response.data.filter(x => x.DescripcionMes == arg.argument);
+
+                            var mensaje = "";
+
+                            if (datos.length > 0) {
+                                if (arg.seriesName == "CantidadFacturas")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadFacturas + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorFacturas);
+                                else if (arg.seriesName == "CantidadNotasCredito")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasCredito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasCredito);
+                                else if (arg.seriesName == "CantidadNotasDebito")
+                                    mensaje = "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos[0].CantidadNotasDebito + "<br/>" + "Valor: " + fNumber.go(datos[0].ValorNotasDebito);
+                            }
+
+                            return {
+                                text: mensaje
+                            };
+                        }
+                    },
+                    commonSeriesSettings: {
+                        ignoreEmptyPoints: true,
+                        argumentField: "DescripcionMes",
+                        type: "bar"
+                    },
+                    series: [
+                         { valueField: "CantidadFacturas", name: "CantidadFacturas" },
+                         { valueField: "CantidadNotasCredito", name: "CantidadNotasCredito" },
+                         { valueField: "CantidadNotasDebito", name: "CantidadNotasDebito" }
+                    ],
+                    legend: {
+                        verticalAlignment: "bottom",
+                        horizontalAlignment: "center"
+                    },
+                    title: ""
+                });
+
+
+            } catch (err) {
+                DevExpress.ui.notify(err.message, 'error', 3000);
+            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        });
 
     }), function errorCallback(response) {
         Mensaje(response.data.ExceptionMessage, "error");
     };
 
+    /*************************************************************************** CARGA PORCENTAJES ADMINISTRADOR ***************************************************************************/
+    $scope.CargarDocumentosEstadoAdmin = function () {
+        var Indicador = $scope.ReporteDocumentosEstadoAdmin
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+    $scope.CargarAcuseMensualAdmin = function () {
+        var Indicador = $scope.ReporteAcuseMensualAdmin
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+    $scope.CargarAcuseAcumuladoAdmin = function () {
+        var Indicador = $scope.ReporteAcuseAcumuladoAdmin
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+    $scope.CargarDocumentosTipoAdmin = function () {
+        var Indicador = $scope.ReporteDocumentosTipoAdmin
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+    /*************************************************************************** CARGA PORCENTAJES FACTURADOR ***************************************************************************/
+
+    $scope.CargarDocumentosEstadoFacturador = function () {
+        var Indicador = $scope.ReporteDocumentosEstadoFacturador
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+    
+    $scope.CargarAcuseMensualFacturador = function () {
+        var Indicador = $scope.ReporteAcuseMensualFacturador
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+    
+    $scope.CargarAcuseAcumuladoFacturador = function () {
+        var Indicador = $scope.ReporteAcuseAcumuladoFacturador
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+    $scope.CargarDocumentosTipoFacturador = function () {
+        var Indicador = $scope.ReporteDocumentosTipoFacturador
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+    /*************************************************************************** CARGA PORCENTAJES ADQUIRIENTE ***************************************************************************/
+
+    $scope.CargarAcuseAcumuladoAdquiriente = function () {
+        var Indicador = $scope.ReporteAcuseAcumuladoAdquiriente
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+    $scope.CargarDocumentosTipoAdquiriente = function () {
+        var Indicador = $scope.ReporteDocumentosTipoAdquiriente
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 32, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+    /*
 
     //********************************** DATOS DOCUMENTOS POR RESPUESTA ACUSE **********************************
     var datosReporteMesActualEstadoAcuse = [{
@@ -196,12 +524,6 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
     for (var i = 0; i < datosReporteAcumuladoEstadoAcuse.length; i++) {
         TotalReporteAcumuladoEstadoAcuse += datosReporteAcumuladoEstadoAcuse[i].Cantidad;
     }
-
-    //Opciones Adicionales de las gráficas.
-    var chartOptions = {
-        paleta: ["#62C415", "#EEE713", "#C8C8C8"],
-        gamaAzul: ["rgb(0,22,245,1)", "rgb(0,22,245,0.7)", "rgb(0,22,245,0.4)"]
-    };
 
     //********************************** DATOS DOCUMENTOS POR TIPO ANUAL **********************************
     var datosReporteTipoDocumentoAnual = [
@@ -1149,7 +1471,7 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
         });
     });
 
-
+    
     $scope.cambiaInclude = function (perfil) {
 
         switch (perfil) {
@@ -1161,5 +1483,7 @@ IndicadoresApp.controller('IndicadoresController', function DocObligadoControlle
     }
 
 
-
+    */
 });
+
+

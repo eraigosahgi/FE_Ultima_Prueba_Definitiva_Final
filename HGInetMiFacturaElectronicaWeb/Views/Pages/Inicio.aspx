@@ -10,7 +10,7 @@
 
         <div class="panel-body">
 
-            <%--            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs">
                 <li class="active"><a href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
                 <li><a href="#TabFacturador" data-toggle="tab">Facturador</a></li>
                 <li><a href="#TabAdquiriente" data-toggle="tab" aria-expanded="false">Adquiriente</a></li>
@@ -23,33 +23,54 @@
 
                     <div class="row">
 
-                        <!-- REPORTE ESTADO ACUSE -->
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Documentos por Respuesta de Acuse</h4>
-                                    <label class="text-muted">Indica el porcentaje de documentos según el estado del acuse.</label>
-                                    <div class="col-md-6" style="margin-top: -40px;">
-                                        <div id="ReporteMesActualEstadoAcuse"></div>
-                                    </div>
-                                    <div class="col-md-6" style="margin-top: -40px;">
-                                        <div id="ReporteAcumuladoEstadoAcuse"></div>
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Estado</h4>
+                                    <div data-ng-repeat="c in ReporteDocumentosEstadoAdmin">
+                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarDocumentosEstadoAdmin()"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- /REPORTE ESTADO ACUSE -->
+
+                        <!-- REPORTE ESTADO ACUSE MENSUAL-->
+                        <div class="col-md-6">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Respuesta de Acuse Mensual</h4>
+                                    <div data-ng-repeat="c in ReporteAcuseMensualAdmin">
+                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarAcuseMensualAdmin()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /REPORTE ESTADO ACUSE MENSUAL -->
+
+                        <!-- REPORTE ESTADO ACUSE ACUMULADO -->
+                        <div class="col-md-6">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Respuesta de Acuse Acumulado</h4>
+                                    <div data-ng-repeat="c in ReporteAcuseAcumuladoAdmin">
+                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarAcuseAcumuladoAdmin()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /REPORTE ESTADO ACUSE ACUMULADO -->
 
                         <!-- REPORTE TIPO DOCUMENTO ANUAL -->
-                        <div class="col-md-5">
+                        <div class="col-md-8">
                             <div class="panel">
-
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Documentos por Tipo</h4>
-                                    <label class="text-muted">Indica la cantidad de documentos generados por tipo.</label>
-                                    <div id="ReporteTipoDocumentoAnual"></div>
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Tipo</h4>
+                                    <label class="text-muted">Indica la cantidad de documentos generados por tipo durante los últimos 12 meses.</label>
+                                    <div id="ReporteTipoDocumentoAnualAdmin"></div>
                                 </div>
-
                             </div>
                         </div>
                         <!-- /REPORTE TIPO DOCUMENTO ANUAL -->
@@ -71,24 +92,6 @@
                             </div>
                         </div>
                         <!-- /REPORTE FLUJO DOCUMENTOS -->
-
-                        <!-- REPORTE ESTADOS RESPUESTA -->
-                        <div class="col-md-3">
-                            <div class="panel">
-
-                                <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Respuesta Documentos</h4>
-                                    <div class="col-md-6 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosRechazados"></div>
-                                    </div>
-                                    <div class="col-md-6 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosAprobados"></div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <!-- /REPORTE ESTADOS RESPUESTA -->
 
                         <!-- REPORTE VENTAS -->
                         <div class="col-md-5">
@@ -130,38 +133,17 @@
                         <div class="col-md-4">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Acumulado Documentos por Tipo</h4>
-                                    <label class="text-muted">Informa el porcentaje acumulado de documentos generados por tipo.</label>
-                                    <div id="ReporteAcumuladoTipoDocumento"></div>
+                                    <h4 class="text-bold" style="margin-top: -10px;">Acumulado Documentos por Tipo</h4>
+                                    <div data-ng-repeat="c in ReporteDocumentosTipoAdmin">
+                                        <div class="content-group-sm svg-center position-relative col-md-12 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarDocumentosTipoAdmin()"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <!-- /REPORTE ACUMULADO TIPO DOCUMENTO -->
 
-                        <!-- REPORTE ESTADOS DOCUMENTO -->
-                        <div class="col-md-12">
-                            <div class="panel">
-
-                                <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Estado</h4>
-                                    <div class="col-md-3 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosRecibidos"></div>
-                                    </div>
-                                    <div class="col-md-3 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosEnviados"></div>
-                                    </div>
-                                    <div class="col-md-3 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosPendientes"></div>
-                                    </div>
-                                    <div class="col-md-3 text-center">
-                                        <div class="content-group-sm svg-center position-relative" id="ReporteDocumentosFinalizados"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /REPORTE ESTADOS DOCUMENTO -->
                     </div>
-
                 </div>
                 <!-- /TAB ADMINISTRADOR -->
 
@@ -170,32 +152,84 @@
 
                     <div class="row">
 
+                        <!-- REPORTE SALDOS TRANSACCIONALES -->
+                        <div class="col-md-12">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <h4 class="text-bold" style="margin-top: -10px;">Resumen Transaccional</h4>
+                                    <div class="table-responsive">
+
+
+                                        <div class="col-md-1"></div>
+
+                                        <div class="col-md-3">
+
+                                            <div class="content-group">
+                                                <h4 class="text-semibold no-margin"><i class="icon-copy4 position-left text-slate"></i>
+                                                    <label>{{SaldoPlanActual}}</label></h4>
+                                                <span class="no-margin text-size-small text-muted">Total Plan Actual</span>
+                                            </div>
+
+                                            <div class="content-group">
+                                                <h4 class="text-semibold no-margin"><i class="icon-cart-remove position-left text-danger"></i>
+                                                    <label>{{SaldoConsumoPlanActual}}</label></h4>
+                                                <span class="no-margin text-size-small text-muted">Consumo Plan Actual</span>
+                                            </div>
+
+                                            <div class="content-group">
+                                                <h4 class="text-semibold no-margin"><i class="icon-cart-add2 position-left text-success"></i>
+                                                    <label>{{SaldoCompras}}</label></h4>
+                                                <span class="no-margin text-size-small text-muted">Saldo Nuevas Compras</span>
+                                            </div>
+
+                                            <div class="content-group">
+                                                <h4 class="text-semibold no-margin"><i class="icon-file-check2 position-left text-success"></i>
+                                                    <label>{{SaldoDisponible}}</label></h4>
+                                                <span class="no-margin text-size-small text-muted">Saldo Disponible</span>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-7">
+                                            <h4 class="text-semibold">Planes Adquiridos</h4>
+                                            <div id="ResumenPlanesAdquiridosFacturador"></div>
+                                        </div>
+
+                                        <div class="col-md-1"></div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /SALDOS TRANSACCIONALES -->
+
                         <!-- REPORTE ESTADOS DOCUMENTO -->
                         <div class="col-md-12">
                             <div class="panel">
-
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px;">Documentos por Estado</h4>
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoFacturador">
-                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}" data-ng-bind-html="htmlTrusted(c.IdControl,c.Color, c.Porcentaje,c.Titulo, c.Observaciones)"></div>
+                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarDocumentosEstadoFacturador()"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- /REPORTE ESTADOS DOCUMENTO -->
 
-                        <!-- REPORTE ESTADO ACUSE MENSUAL-->
+                        <!-- REPORTE ESTADO ACUSE MENSUAL -->
                         <div class="col-md-6">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px;">Documentos por Respuesta de Acuse Mensual</h4>
                                     <div data-ng-repeat="c in ReporteAcuseMensualFacturador">
-                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}" data-ng-bind-html="htmlTrusted(c.IdControl,c.Color, c.Porcentaje,c.Titulo, c.Observaciones)"></div>
+                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarAcuseMensualFacturador()"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- /REPORTE ESTADO ACUSE -->
+                        <!-- /REPORTE ESTADO ACUSE MENSUAL -->
 
                         <!-- REPORTE ESTADO ACUSE ACUMULADO-->
                         <div class="col-md-6">
@@ -203,19 +237,20 @@
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px;">Documentos por Respuesta de Acuse Acumulado</h4>
                                     <div data-ng-repeat="c in ReporteAcuseAcumuladoFacturador">
-                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}" data-ng-bind-html="htmlTrusted(c.IdControl,c.Color, c.Porcentaje,c.Titulo, c.Observaciones)"></div>
+                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarAcuseAcumuladoFacturador()"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- /REPORTE ESTADO ACUSE -->
+                        <!-- /REPORTE ESTADO ACUSE ACUMULADO -->
 
                         <!-- REPORTE TIPO DOCUMENTO ANUAL -->
                         <div class="col-md-8">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px;">Documentos por Tipo</h4>
-                                    <label class="text-muted">Indica la cantidad de documentos generados por tipo.</label>
+                                    <label class="text-muted">Indica la cantidad de documentos generados por tipo durante los últimos 12 meses.</label>
                                     <div id="ReporteTipoDocumentoAnualFacturador"></div>
                                 </div>
                             </div>
@@ -228,7 +263,8 @@
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px;">Acumulado Documentos por Tipo</h4>
                                     <div data-ng-repeat="c in ReporteDocumentosTipoFacturador">
-                                        <div class="content-group-sm svg-center position-relative col-md-12 text-center" id="{{c.IdControl}}" data-ng-bind-html="htmlTrusted(c.IdControl,c.Color, c.Porcentaje,c.Titulo, c.Observaciones)"></div>
+                                        <div class="content-group-sm svg-center position-relative col-md-12 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarDocumentosTipoFacturador()"></div>
                                     </div>
                                 </div>
                             </div>
@@ -245,60 +281,62 @@
 
                     <div class="row">
 
-                        <!-- REPORTE ESTADO ACUSE -->
-                        <div class="col-md-4">
+                        <!-- REPORTE ESTADO ACUSE ACUMULADO-->
+                        <div class="col-md-6">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Documentos por Respuesta de Acuse</h4>
-                                    <label class="text-muted">Indica el porcentaje de documentos según el estado del acuse.</label>
-                                    <div class="col-md-12">
-                                        <div id="ReporteAcumEstadoAcuseAdquiriente"></div>
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Respuesta de Acuse Acumulado</h4>
+                                    <div data-ng-repeat="c in ReporteAcuseAcumuladoAdquiriente">
+                                        <div class="content-group-sm svg-center position-relative col-md-4 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarAcuseAcumuladoAdquiriente()"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- /REPORTE MES ACTUAL ESTADO ACUSE -->
+                        <!-- /REPORTE ESTADO ACUSE ACUMULADO-->
 
-                        <!-- REPORTE TIPO DOCUMENTO ANUAL -->
+                        <!-- REPORTE ACUMULADO TIPO DOCUMENTO -->
                         <div class="col-md-4">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Documentos por Tipo</h4>
-                                    <label class="text-muted">Indica la cantidad de documentos generados por tipo.</label>
+                                    <h4 class="text-bold" style="margin-top: -10px;">Acumulado Documentos por Tipo</h4>
+                                    <div data-ng-repeat="c in ReporteDocumentosTipoAdquiriente">
+                                        <div class="content-group-sm svg-center position-relative col-md-12 text-center" id="{{c.IdControl}}"></div>
+                                        <div ng-if="$last" data-ng-init="CargarDocumentosTipoAdquiriente()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /REPORTE ACUMULADO TIPO DOCUMENTO -->
+
+                        <!-- REPORTE TIPO DOCUMENTO ANUAL -->
+                        <div class="col-md-6">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <h4 class="text-bold" style="margin-top: -10px;">Documentos por Tipo</h4>
+                                    <label class="text-muted">Indica la cantidad de documentos generados por tipo durante los últimos 12 meses.</label>
                                     <div id="ReporteTipoDocumentoAnualAdquiriente"></div>
                                 </div>
                             </div>
                         </div>
                         <!-- /REPORTE TIPO DOCUMENTO ANUAL -->
 
-                        <!-- REPORTE ACUMULADO TIPO DOCUMENTO -->
-                        <div class="col-md-4">
-                            <div class="panel">
-                                <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Acumulado Documentos por Tipo</h4>
-                                    <label class="text-muted">Informa el porcentaje acumulado de documentos generados por tipo.</label>
-                                    <div id="ReporteAcumuladoTipoDocumentoAdquiriente"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /REPORTE ACUMULADO TIPO DOCUMENTO -->
 
                     </div>
 
                 </div>
                 <!-- TAB ADQUIRIENTE -->
 
-            </div>--%>
-
-            <div class="btn-group btn-group-justified">
-                <a href="#" class="btn btn-default btn-raised" data-ng-click="cambiaInclude(1)">Administrador</a>
-                <a href="#" class="btn btn-default btn-raised" data-ng-click="cambiaInclude(2)">Facturador</a>
-                <a href="#" class="btn btn-default btn-raised" data-ng-click="cambiaInclude(3)">Adquiriente</a>
             </div>
-            <br />
-            <div data-ng-include="include"></div>
-
         </div>
+
+
+
+        <div id="content"></div>
+
+
     </div>
+
+
 
 </asp:Content>
