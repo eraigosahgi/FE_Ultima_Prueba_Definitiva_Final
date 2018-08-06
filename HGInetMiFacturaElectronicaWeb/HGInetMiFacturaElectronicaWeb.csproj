@@ -1850,6 +1850,7 @@
     <Content Include="Scripts\Images\LogoPlataforma.png" />
     <Content Include="Scripts\Images\LogoPSE40x40.png" />
     <Content Include="Scripts\Images\LogoPSE90x90.png" />
+    <Content Include="Scripts\Images\Pagar.png" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -2694,6 +2695,10 @@
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
+    <Content Include="Views\Pages\Indicadores\IndicadoresAdministrador.aspx" />
+    <Content Include="Views\Pages\Indicadores\IndicadoresAdquiriente.aspx" />
+    <Content Include="Views\Pages\Indicadores\IndicadoresFacturador.aspx" />
+    <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
@@ -2849,6 +2854,13 @@
     </Compile>
     <Compile Include="Views\Pages\DocumentosAdmin.aspx.designer.cs">
       <DependentUpon>DocumentosAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ModalPagos.aspx.cs">
+      <DependentUpon>ModalPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ModalPagos.aspx.designer.cs">
+      <DependentUpon>ModalPagos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ProcesarDocumentos.aspx.cs">
       <DependentUpon>ProcesarDocumentos.aspx</DependentUpon>
@@ -3010,7 +3022,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61428/</IISUrl>
+          <IISUrl>http://localhost:61433/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

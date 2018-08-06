@@ -11,7 +11,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Login
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            try {
 
+                Session["Usuario"] = ""; 
+
+                Response.Cookies["UserSettings"]["HtmlMenu"] = "";
+            }
+            catch { }
+
+            
         }
     }
 }

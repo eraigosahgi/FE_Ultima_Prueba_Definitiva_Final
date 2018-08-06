@@ -5,14 +5,16 @@ var ruta = window.location.href;
 ruta = ruta.replace(path, "/");
 document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
 
+
 var email_destino = "";
 var id_seguridad = "";
 var items_recibo =[];
 var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum']);
 DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum) {
-
+    
     var now = new Date();
     var Estado;
+    var ResolucionesPrefijo;
 
     var codigo_facturador = "",
            numero_documento = "",
@@ -20,19 +22,26 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
-           codigo_adquiriente = "";    
+           codigo_adquiriente = "";
+           resolucion="";
 
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {
-        codigo_facturador = data[0].Identificacion;
-        consultar();
+        codigo_facturador = data[0].Identificacion;         
     });
-
-
+     
     SrvMaestrosEnum.ObtenerEnum(0,"publico").then(function (data) {                    
         SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
             Estado = data;
             items_recibo = dataacuse;
-            cargarFiltros();
+
+            $http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
+                console.log("Prefijo", response.data);
+                ResolucionesPrefijo = response.data;
+                cargarFiltros();
+            }, function (response) {
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            });
+
         });
     });  
 
@@ -60,12 +69,12 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         });
 
 
-        var DatosEstados = function () {
+        var DataCheckBox = function (Datos) {
             return new DevExpress.data.CustomStore({
                 loadMode: "raw",
                 key: "ID",
                 load: function () {
-                    return JSON.parse(JSON.stringify(Estado));
+                    return JSON.parse(JSON.stringify(Datos));
                 }
             });
         };
@@ -75,7 +84,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             placeholder: "Seleccione un Item",
             displayExpr: "Descripcion",
             showClearButton: true,
-            dataSource: DatosEstados(),
+            dataSource: DataCheckBox(Estado),
             contentTemplate: function (e) {
                 var value = e.component.option("value"),
                     $dataGrid = $("<div>").dxDataGrid({
@@ -115,6 +124,60 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             }
         });
 
+
+        //Resolucion - Prefijo
+        $("#filtrosResolucion").dxDropDownBox({
+            valueExpr: "ID",
+            placeholder: "Seleccione un Item",
+            displayExpr: "Descripcion",
+            showClearButton: true,
+            dataSource: DataCheckBox(ResolucionesPrefijo),
+            contentTemplate: function (e) {
+                var value = e.component.option("value"),
+                    $dataGrid = $("<div>").dxDataGrid({
+                        dataSource: e.component.option("dataSource"),
+                        allowColumnResizing: true,
+                        columns:
+                            [
+                                 {
+                                     caption: "Descripción",
+                                     dataField: "Descripcion",
+                                     title: "Descripcion",
+                                     width: 500
+
+                                 }],
+                        hoverStateEnabled: true,
+                        paging: { enabled: true, pageSize: 10 },
+                        filterRow: { visible: true },
+                        scrolling: { mode: "infinite" },
+                        height: 240,
+                        selection: { mode: "multiple" },
+                        selectedRowKeys: value,
+                        onSelectionChanged: function (selectedItems) {
+                            var keys = selectedItems.selectedRowKeys;
+                            e.component.option("value", keys);
+                            resolucion = keys;
+                            console.log("resolucion", resolucion);
+                        }
+                    });
+
+                dataGrid = $dataGrid.dxDataGrid("instance");
+
+                e.component.on("valueChanged", function (args) {
+                    var value = args.value;
+                    dataGrid.selectRows(value, false);
+                });
+
+                return $dataGrid;
+            }
+        });
+
+
+
+
+
+
+
         //Define los campos y las opciones
         $scope.filtros =
             {
@@ -148,6 +211,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
         $("#FechaFinal").dxDateBox({ min: now });
         $("#FechaInicial").dxDateBox({ max: now });
+        consultar();
     }
 
     $scope.ButtonOptionsConsultar = {
@@ -166,11 +230,14 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
 
+        if (resolucion == "")
+            resolucion = "*";
+
         //Obtiene los datos del web api
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
-        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&resolucion=' + resolucion).then(function (response) {
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -217,7 +284,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 , columns: [
                     {
                         caption: "  Lista de Archivos",
-                        cssClass: "col-xs-3 col-md-1",                        
+                        cssClass: "col-xs-3 col-md-1",
+                        width:"auto",
                         
                         cellTemplate: function (container, options) {
 

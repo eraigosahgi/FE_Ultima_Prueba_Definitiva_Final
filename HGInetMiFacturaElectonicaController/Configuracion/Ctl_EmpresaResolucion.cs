@@ -52,7 +52,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			List<TblEmpresasResoluciones> datos = (from item in context.TblEmpresasResoluciones
 												   where (item.StrNumResolucion.Equals(numero_resolucion) || numero_resolucion.Equals("*"))
 												   && item.TblEmpresas.StrIdentificacion.Equals(documento_empresa)
-												   select item).ToList();
+                                                   orderby item.IntTipoDoc,item.StrNumResolucion,item.StrPrefijo
+                                                   select item).ToList();
 
 			return datos;
 

@@ -309,8 +309,8 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
                 message: "El codigo de Resolución debe ser numerico"
             }, {
                 type: "stringLength",
-                max: 10,
-                message: "El Nª de Resolución no puede ser mayor a 10 Digitos"
+                max: 20,
+                message: "El Nª de Resolución no puede ser mayor a 20 Digitos"
             }]
         });
 

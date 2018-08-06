@@ -41,5 +41,14 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
             return $q.reject(response.data);
         });
     }
+    ///Obtiene El prefijo de los tipos de documentos por resolución
+    this.ObtenerResPrefijo = function (codigo_facturador) {
+        return $http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });
+    }
     
 });

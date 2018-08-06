@@ -557,5 +557,34 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
         #endregion
 
+
+        #region Permisos Usuarios
+        /// <summary>
+        /// Renorta los permisos de consulta del usuario(Menu)
+        /// </summary>
+        /// <param name="codigo_usuario"></param>Usuario Logeado
+        /// /// <param name="codigo_empresa"></param>Empresa Logeada
+        /// <returns></returns>
+        public List<TblOpciones> ObtenerPermisos(string codigo_usuario, string codigo_empresa)
+        {
+            try
+            {
+                var respuesta = (from opciones in context.TblOpciones
+                                 join opcionesUsuario in context.TblOpcionesUsuario on opciones.IntId equals opcionesUsuario.IntIdOpcion
+                                 where (opcionesUsuario.StrUsuario.Equals(codigo_usuario) && opcionesUsuario.StrEmpresa.Equals(codigo_empresa))
+                                 && opcionesUsuario.IntConsultar == true
+
+                                 select opciones);
+
+                return respuesta.ToList();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        #endregion
+
     }
 }

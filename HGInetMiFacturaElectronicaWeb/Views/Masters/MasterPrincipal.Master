@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true"  CodeBehind="MasterPrincipal.master.cs"  Inherits="HGInetMiFacturaElectronicaWeb.Views.Masters.MasterPrincipal" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPrincipal.master.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Masters.MasterPrincipal" %>
 
 <!DOCTYPE html>
 
@@ -15,7 +15,7 @@
     <!-- /Global stylesheets -->
 
     <asp:ContentPlaceHolder ID="head" runat="server">
-    </asp:ContentPlaceHolder>    
+    </asp:ContentPlaceHolder>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <!-- Global stylesheets -->
@@ -102,13 +102,34 @@
     </style>
     <link href="../../Content/dx.hgi.css" rel="stylesheet" />
     <script>
+
         $(document).ready(function () {
             var dt = new Date();
             window.setInterval("ValidarSesion()", 300000);
         });
+
+
+        
+        // jQuery
+        $(document).ready(function () {
+
+
+            $('#Menuocultar').on('click', function () {
+                //$('#sidebar').toggle();
+                //$('#sidebar').animate({ display: 'hide' }, "slow");
+                $('#sidebar').animate({ width: 'toggle' });
+            });
+
+
+        });
+
+        
+
+
     </script>
 </head>
 <body>
+
     <%--Panel carga o Loading--%>
     <div id="wait" style="display: none; z-index: 9999;">
         <div class="modal" style="background-color: lightslategray; opacity: 0.6; display: block;"></div>
@@ -139,7 +160,7 @@
 
             <div class="navbar-collapse collapse" id="navbar-mobile">
                 <ul class="nav navbar-nav">
-                    <li><a class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
+                    <li><a id="Menuocultar" class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -233,7 +254,7 @@
             <div class="page-content">
 
                 <!-- Barra Lateral Principal -->
-                <div class="sidebar sidebar-main sidebar-default">
+                <div id="sidebar" class="sidebar sidebar-main sidebar-default ">
                     <div class="sidebar-content">
 
                         <!-- Menú de Usuario-->
@@ -264,105 +285,13 @@
                         <!-- Navegación Principal -->
                         <div class="sidebar-category sidebar-category-visible">
                             <div class="category-content no-padding">
-                                <ul class="navigation navigation-main navigation-accordion" id="MenuPrincipal" runat="server">
-
-                                    <!-- Principal -->
-                                    <li class="navigation-header"><span style="margin: -10px">Menú</span> <i class="icon-menu" title="Menú"></i></li>
-
-                                    <!-- /Principal -->
-
-                                    <!-- HGInet Facturación electrónica -->
-                                    <li class="active" runat="server" id="menu_13">
-                                        <a href="#" class="has-ul legitRipple"><i class="icon-typewriter"></i><span style="margin: -10px">Facturación Electrónica</span></a>
-
-                                        <ul runat="server" id="ul_13">
-
-                                            <!-- Opciones Documentos Facturador -->
-                                            <li runat="server" id="menu_131">
-
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-user-tie"></i><span style="margin: -10px">Facturador</span></a>
-                                                <ul runat="server" id="ul_131">
-
-                                                    <li runat="server" id="menu_1311">
-                                                        <asp:HyperLink runat="server" ID="link_1311" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosObligado.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta Documentos</span></asp:HyperLink>
-                                                    </li>
-
-                                                    <li runat="server" id="menu_1312">
-                                                        <asp:HyperLink runat="server" ID="link_1312" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaAcuseRecibo.aspx"><i class="icon-history"></i><span style="margin: -10px">Consulta Acuse</span></asp:HyperLink>
-                                                    </li>
-
-                                                </ul>
-
-                                            </li>
-                                            <!-- /Opciones Documentos Facturador-->
-
-
-                                            <!-- Opciones Documentos Adquiriente -->
-                                            <li runat="server" id="menu_132">
-
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-reading"></i><span style="margin: -10px">Adquiriente</span></a>
-                                                <ul runat="server" id="ul_132">
-
-                                                    <li runat="server" id="menu_1321">
-                                                        <asp:HyperLink runat="server" ID="link_1321" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosAdquiriente.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta Documentos</span></asp:HyperLink>
-                                                    </li>
-
-                                                </ul>
-
-                                            </li>
-                                            <!-- /Opciones Documentos Adquiriente -->
-
-
-                                            <!-- Opciones Configuración -->
-                                            <li runat="server" id="menu_133">
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-cogs"></i><span style="margin: -10px">Configuración</span></a>
-                                                <ul runat="server" id="ul_133">
-
-                                                    <li runat="server" id="menu_1331">
-                                                        <asp:HyperLink ID="link_1331" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaUsuarios.aspx"><i class="icon-user"></i><span style="margin: -10px">Usuarios</span></asp:HyperLink></li>
-
-                                                    <li runat="server" id="menu_1332">
-                                                        <asp:HyperLink ID="link_1332" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresas.aspx"><i class="icon-home2"></i><span style="margin: -10px">Empresas</span></asp:HyperLink></li>
-
-                                                    <li runat="server" id="menu_1333">
-                                                        <asp:HyperLink ID="link_1333" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaEmpresasSerial.aspx"><i class="icon-key"></i><span style="margin: -10px">Activación Serial</span></asp:HyperLink></li>
-
-                                                    <li runat="server" id="menu_1334">
-                                                        <asp:HyperLink ID="link_1334" runat="server" class="active legitRipple" NavigateUrl="~/Views/Pages/ConsultaPlanesTransacciones.aspx"><i class="icon-drawer-in"></i><span style="margin: -10px">Planes y Transacciones</span></asp:HyperLink></li>
-
-                                                </ul>
-                                            </li>
-                                            <!-- /Opciones Configuración -->
-
-
-                                            <!-- Opciones Trazabilidad -->
-                                            <li runat="server" id="menu_134">
-                                                <a href="#" class="has-ul legitRipple"><i class="icon-tab"></i><span style="margin: -10px">Trazabilidad</span></a>
-                                                <ul runat="server" id="ul_134">
-
-                                                    <li runat="server" id="menu_1341">
-                                                        <asp:HyperLink runat="server" ID="link_1341" class="legitRipple" NavigateUrl="~/Views/Pages/ProcesarDocumentos.aspx"><i class="icon-sort-time-asc"></i><span style="margin: -10px">Procesar Documentos</span></asp:HyperLink>
-                                                    </li>
-
-                                                    <li runat="server" id="menu_1342">
-                                                        <asp:HyperLink runat="server" ID="link_1342" class="legitRipple" NavigateUrl="~/Views/Pages/ConsultaDocumentosClientes.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta de Documento</span></asp:HyperLink>
-                                                    </li>
-
-                                                    <li runat="server" id="menu_1343">
-                                                        <asp:HyperLink runat="server" ID="HyperLink1" class="legitRipple" NavigateUrl="~/Views/Pages/DocumentosAdmin.aspx"><i class="icon-folder-search"></i><span style="margin: -10px">Consulta de Documentos Administración</span></asp:HyperLink>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <!-- /Opciones Trazabilidad -->
-
-                                        </ul>
-                                    </li>
-                                    <!-- /HGInet Facturación electrónica -->
-
-                                </ul>
+                                <div id="DivMenu" runat="server">
+                                </div>
                             </div>
                         </div>
                         <!-- /Navegación Principal  -->
+
+
 
                     </div>
                 </div>

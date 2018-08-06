@@ -52,6 +52,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                             datos.Add(datos_enum);
                         }
                         break;
+                    case 2:
+                        //Metodo para obtener los datos del enumerable de tipo de documento
+                        foreach (var value in Enum.GetValues(typeof(LibreriaGlobalHGInet.Objetos.TipoDocumento)))
+                        {
+                            string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<LibreriaGlobalHGInet.Objetos.TipoDocumento>((int)value)))).Split(',');
+
+                            datos.Add(datos_enum);
+                        }
+                        break;
                 }
 
                 

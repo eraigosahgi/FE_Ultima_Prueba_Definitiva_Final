@@ -4,6 +4,11 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.js"></script>
+
+
     <!-- JS DocumentosAdquiriente-->
     <script src="../../Scripts/Pages/DocumentosObligado.js"></script>        
     <div ng-app="DocObligadoApp">
@@ -49,24 +54,30 @@
                                     <div class="col-md-3">
                                         <i class="icon-file-text"></i>
                                         <label>Estado Acuse:</label>
-                                        <div dx-select-box="filtros.EstadoRecibo"></div>
+                                        <div data-dx-select-box="filtros.EstadoRecibo"></div>
                                     </div>
                                      <div class="col-md-3">
                                         <i class="icon-files-empty"></i>
                                         <label>Número Documento:</label>
-                                        <div dx-autocomplete="filtros.NumeroDocumento"></div>
+                                        <div data-dx-autocomplete="filtros.NumeroDocumento"></div>
                                     </div>                               
-                                    <div class="col-md-6" style="margin-top:1%">
+                                    <div class="col-md-4" style="margin-top:1%">
                                         <i class="icon-file-text"></i>
                                         <label>Estado:</label>
                                         <div id="filtrosEstadoRecibo"></div>
                                     </div>
                                    
 
-                                    <div class="col-md-6" style="margin-top:1%">
+                                    <div class="col-md-3" style="margin-top:1%">
                                         <i class="icon-files-empty"></i>
                                         <label>Código Adquiriente:</label>
-                                        <div dx-autocomplete="filtros.Adquiriente"></div>
+                                        <div data-dx-autocomplete="filtros.Adquiriente"></div>
+                                    </div>
+
+                                    <div class="col-md-5" style="margin-top:1%">
+                                        <i class="icon-files-empty"></i>
+                                        <label>Resolución-Prefijo:</label>
+                                        <div id="filtrosResolucion"></div>
                                     </div>
 
                                    
@@ -79,10 +90,10 @@
                         <div class="col-lg-12 text-right">
                             <br />
                             <br />
-                            <div dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
+                            <div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
                         </div>
-                         
-
+                                                 
+                        <p data-ng-bind-html="message"></p>
 
                     </div>
 

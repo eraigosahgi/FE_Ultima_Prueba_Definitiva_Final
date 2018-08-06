@@ -69,7 +69,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     d.StrIdSeguridad,
                     RutaPublica = plataforma.RutaPublica,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))  ,
+                    poseeIdComercio =1,
+                    FacturaCenlada= d.IntIdEstado
                 });
 
                 return Ok(retorno);
@@ -92,7 +94,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="fecha_fin"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, string Resolucion)
         {
             try
             {
@@ -101,7 +103,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin);
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Resolucion);
 
                 if (datos == null)
                 {
@@ -224,7 +226,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, null, estado_recibo, fecha_inicio, fecha_fin).Where(x => x.IntAdquirienteRecibo != 0).ToList();
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, null, estado_recibo, fecha_inicio, fecha_fin, "*").Where(x => x.IntAdquirienteRecibo != 0).ToList();
 
                 var retorno = datos.Select(d => new
                 {
@@ -425,6 +427,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
+                    //NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+                    NumeroDocumento = d.IntNumero,
+                    Prefijo = d.StrPrefijo,
                     IdSeguridad = d.StrIdSeguridad,
                     d.DatFechaIngreso,
                     EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
@@ -619,15 +624,58 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="strIdSeguridad"></param>        
         /// <returns></returns>
 
-
-        public IHttpActionResult Get(System.Guid strIdSeguridad, bool pago)
+        public IHttpActionResult Get(System.Guid strIdSeguridad,int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0)
         {
             Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-            var datos = Pago.ReportePagoElectronico(strIdSeguridad);
+            var datos = Pago.ReportePagoElectronico(strIdSeguridad , tipo_pago ,registrar_pago , valor_pago );
             return Ok(datos);
 
         }
+
+
+
+        /// <summary>
+        /// Obtiene la lista de pagos de un documento en especifico
+        /// </summary>
+        /// <param name="strIdSeguridad"></param>        
+        /// <returns></returns>
+
+        [HttpGet]
+        [Route("Api/ConsultarPagos")]
+        public IHttpActionResult ConsultarPagos(System.Guid StrIdSeguridadDoc)
+        {
+
+            try
+            {
+                Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+                var datos = Pago.Obtener(StrIdSeguridadDoc);
+
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+
+
+                var retorno = datos.Select(d => new
+                {
+                    FechaVerificacion = d.DatFechaVerificacion,
+                    Monto = d.IntValorPago,
+                    StrIdSeguridadPago = d.StrIdSeguridadPago,
+                    StrIdPlataforma= d.StrIdPlataforma
+                });
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
 
         #endregion
     }

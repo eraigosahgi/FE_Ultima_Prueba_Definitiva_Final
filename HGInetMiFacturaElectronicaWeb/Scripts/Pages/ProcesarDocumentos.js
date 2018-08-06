@@ -40,7 +40,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
             displayFormat: "yyyy-MM-dd",
             onValueChanged: function (data) {
                 fecha_inicio = new Date(data.value).toISOString();
-                $("#FechaFinal").dxDateBox({ min: fecha_inicio });               
+                $("#FechaFinal").dxDateBox({ min: fecha_inicio });
             }
 
         });
@@ -52,7 +52,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
             min: fecha_inicio,
             onValueChanged: function (data) {
                 fecha_fin = new Date(data.value).toISOString();
-                $("#FechaInicial").dxDateBox({ max: fecha_fin });               
+                $("#FechaInicial").dxDateBox({ max: fecha_fin });
             }
 
         });
@@ -173,12 +173,30 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                          dataField: "DatFechaIngreso",
                          dataType: "date",
                          format: "yyyy-MM-dd HH:mm",
-                         cssClass: "col-md-2"
+                         cssClass: "col-md-1"
+
+                     },
+                     {
+                         caption: "Prefijo",
+                         dataField: "Prefijo",
+                         cssClass: "col-md-1",
+                         headerFilter: {
+                             allowSearch: false
+                         }
+
+                     },                     
+                     {
+                         caption: "Documento",
+                         dataField: "NumeroDocumento",
+                         cssClass: "col-md-1",
+                         headerFilter: {
+                             allowSearch: false
+                         }
 
                      },
 
                     {
-                        caption: "Documento",
+                        caption: "IdSeguridad",
                         dataField: "IdSeguridad",
                         cssClass: "col-md-3",
                         headerFilter: {
@@ -262,10 +280,10 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
     function ProcesarDocumentos() {
         if ($scope.total > 0) {
-            
-            SrvDocumento.ProcesarDocumentos($scope.documentos).then(function (data) {                
+
+            SrvDocumento.ProcesarDocumentos($scope.documentos).then(function (data) {
                 $("#gridDocumentosProcesados").dxDataGrid({
-                    dataSource: data,                           
+                    dataSource: data,
                     paging: {
                         pageSize: 20
                     },
@@ -280,15 +298,15 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                  },
                     headerFilter: {
                         visible: true
-                    }                                   
+                    }
                , columns: [
                    {
                        caption: 'Estado',
                        dataField: 'Estado',
-                       width:'5%',
+                       width: '5%',
                        cellTemplate: function (container, options) {
                            $("<div style='text-align:center'>")
-                               .append($("<a taget=_self class='icon-circle2'" +  ((options.data.CodigoError != '') ? " style='color:red;' title='Error'" : " style='color:green;' title='Proceso exitoso'") + ">"))
+                               .append($("<a taget=_self class='icon-circle2'" + ((options.data.CodigoError != '') ? " style='color:red;' title='Error'" : " style='color:green;' title='Proceso exitoso'") + ">"))
                                .appendTo(container);
                        }
                    },
@@ -313,7 +331,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                         caption: "Resultado",
                         width: '70%',
                         dataField: "DescripcionProceso"
-                    },                                                         
+                    },
                {
                    caption: "Aceptacion",
                    dataField: "Aceptacion",
@@ -328,7 +346,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                          caption: "Cufe",
                          dataField: "Cufe",
                          hidingPriority: 2
-                     },                   
+                     },
                      {
                          caption: "Documento",
                          dataField: "Documento",
@@ -383,7 +401,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                 $('#panelresultado').show();
             });
         }
-        
+
     }
 
 });
