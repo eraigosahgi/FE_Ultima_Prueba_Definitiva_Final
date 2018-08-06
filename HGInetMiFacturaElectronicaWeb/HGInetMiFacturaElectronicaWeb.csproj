@@ -2694,9 +2694,6 @@
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
-    <Content Include="Views\Pages\Indicadores\IndicadoresAdministrador.aspx" />
-    <Content Include="Views\Pages\Indicadores\IndicadoresAdquiriente.aspx" />
-    <Content Include="Views\Pages\Indicadores\IndicadoresFacturador.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
@@ -2852,27 +2849,6 @@
     </Compile>
     <Compile Include="Views\Pages\DocumentosAdmin.aspx.designer.cs">
       <DependentUpon>DocumentosAdmin.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Indicadores\IndicadoresAdministrador.aspx.cs">
-      <DependentUpon>IndicadoresAdministrador.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Pages\Indicadores\IndicadoresAdministrador.aspx.designer.cs">
-      <DependentUpon>IndicadoresAdministrador.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Indicadores\IndicadoresAdquiriente.aspx.cs">
-      <DependentUpon>IndicadoresAdquiriente.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Pages\Indicadores\IndicadoresAdquiriente.aspx.designer.cs">
-      <DependentUpon>IndicadoresAdquiriente.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Indicadores\IndicadoresFacturador.aspx.cs">
-      <DependentUpon>IndicadoresFacturador.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Pages\Indicadores\IndicadoresFacturador.aspx.designer.cs">
-      <DependentUpon>IndicadoresFacturador.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ProcesarDocumentos.aspx.cs">
       <DependentUpon>ProcesarDocumentos.aspx</DependentUpon>
