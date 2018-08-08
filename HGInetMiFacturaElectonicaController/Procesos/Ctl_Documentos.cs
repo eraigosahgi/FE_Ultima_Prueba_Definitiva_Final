@@ -125,6 +125,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
+                Parallel.ForEach<Factura>(documentos, item => {
+                    DocumentoRespuesta item_respuesta = ProcesoUno(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+                    respuesta.Add(item_respuesta);
+                });
+
+                /*
 				foreach (Factura item in documentos)
 				{
 
@@ -197,7 +203,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					respuesta.Add(item_respuesta);
 				}
-
+                */
 				return respuesta;
 			}
 			catch (Exception ex)
@@ -206,6 +212,82 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ApplicationException(ex.Message);
 			}
 		}
+
+
+
+        public static DocumentoRespuesta ProcesoUno(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
+        {
+            DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
+            try
+            {
+                if (string.IsNullOrEmpty(item.NumeroResolucion))
+                    throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
+
+
+                Ctl_Documento num_doc = new Ctl_Documento();
+
+                //valida si el Documento ya existe en Base de Datos
+                TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.Factura.GetHashCode());
+
+                if (numero_documento != null && item.Prefijo == numero_documento.StrPrefijo)
+                    throw new ApplicationException(string.Format("El documento {0} ya existe para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
+
+                TblEmpresasResoluciones resolucion = null;
+
+                try
+                {
+                    ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
+
+                    LogExcepcion.Guardar(exTMP);
+
+                    // filtra la resolución del documento
+                    resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+                }
+                catch (Exception excepcion)
+                {
+                    throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1}", item.NumeroResolucion, facturador_electronico.StrIdentificacion));
+                }
+
+
+                // realiza el proceso de envío a la DIAN del documento
+                item_respuesta = Procesar(id_peticion, item, TipoDocumento.Factura, resolucion, facturador_electronico);
+            }
+            catch (Exception excepcion)
+            {
+
+                ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
+                LogExcepcion.Guardar(excepcion);
+                item_respuesta = new DocumentoRespuesta()
+                {
+                    Aceptacion = 0,
+                    CodigoRegistro = item.CodigoRegistro,
+                    Cufe = "",
+                    DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+                    DocumentoTipo = TipoDocumento.Factura.GetHashCode(),
+                    Documento = item.Documento,
+                    Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+                    EstadoDian = null,
+                    FechaRecepcion = fecha_actual,
+                    FechaUltimoProceso = fecha_actual,
+                    IdDocumento = "",
+                    Identificacion = "",
+                    IdProceso = proceso_actual.GetHashCode(),
+                    MotivoRechazo = "",
+                    NumeroResolucion = item.NumeroResolucion,
+                    Prefijo = item.Prefijo,
+                    ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+                    UrlPdf = "",
+                    UrlXmlUbl = ""
+                };
+
+            }
+            if (item_respuesta.Error == null)
+                item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
+
+            return item_respuesta;
+
+        }
+
 
 
 		/// <summary>
