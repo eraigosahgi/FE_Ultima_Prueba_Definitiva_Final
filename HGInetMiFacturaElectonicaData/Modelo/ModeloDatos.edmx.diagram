@@ -29,7 +29,7 @@
         <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.5" PointX="11" PointY="3.5" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" />
-        <EntityTypeShape EntityType="Modelo.TblEmpresas" Width="1.875" PointX="6.375" PointY="1.875" />
+        <EntityTypeShape EntityType="Modelo.TblEmpresas" Width="1.875" PointX="6.5" PointY="1.5" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasFacturador" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" />

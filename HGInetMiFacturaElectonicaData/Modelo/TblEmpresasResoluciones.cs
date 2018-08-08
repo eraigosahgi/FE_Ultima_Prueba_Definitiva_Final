@@ -37,6 +37,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrRespuestaServicioWeb { get; set; }
         public Nullable<int> IntComercioId { get; set; }
         public int IntTipoDoc { get; set; }
+        public Nullable<bool> IntPermiteParciales { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }

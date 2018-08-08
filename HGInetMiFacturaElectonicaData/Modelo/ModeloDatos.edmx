@@ -58,12 +58,13 @@
           <Property Name="IntObligado" Type="bit" Nullable="false" />
           <Property Name="IntAdministrador" Type="bit" Nullable="false" />
           <Property Name="IntIntegrador" Type="bit" Nullable="false" />
-          <Property Name="StrResolucionDian" Type="varchar" MaxLength="20" />
+          <Property Name="StrResolucionDian" Type="varchar" MaxLength="80" />
           <Property Name="DatFechaActualizacion" Type="datetime" Nullable="false" />
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IntHabilitacion" Type="tinyint" />
           <Property Name="StrEmpresaAsociada" Type="varchar" MaxLength="50" />
           <Property Name="IntNumUsuarios" Type="int" Nullable="false" />
+          <Property Name="StrTelefono" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="TblEmpresasPasarela">
           <Key>
@@ -98,6 +99,7 @@
           <Property Name="StrRespuestaServicioWeb" Type="varchar(max)" />
           <Property Name="IntComercioId" Type="int" />
           <Property Name="IntTipoDoc" Type="int" Nullable="false" />
+          <Property Name="IntPermiteParciales" Type="bit" />
         </EntityType>
         <EntityType Name="TblOpciones">
           <Key>
@@ -919,6 +921,7 @@
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblEmpresasResoluciones" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresasPasarela" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresasPasarela" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresas" />
+          <Property Name="IntPermiteParciales" Type="Boolean" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasResoluciones">
           <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="1" />
@@ -964,7 +967,7 @@
           <Property Name="IntObligado" Type="Boolean" Nullable="false" />
           <Property Name="IntAdministrador" Type="Boolean" Nullable="false" />
           <Property Name="IntIntegrador" Type="Boolean" Nullable="false" />
-          <Property Name="StrResolucionDian" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="StrResolucionDian" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="DatFechaActualizacion" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
           <Property Name="IntHabilitacion" Type="Byte" />
@@ -976,6 +979,7 @@
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblEmpresas" FromRole="TblEmpresas" ToRole="TblOpcionesUsuario" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblEmpresas" ToRole="TblUsuarios" />
+          <Property Name="StrTelefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1242,6 +1246,7 @@
           <EntitySetMapping Name="TblEmpresasResoluciones">
             <EntityTypeMapping TypeName="Modelo.TblEmpresasResoluciones">
               <MappingFragment StoreEntitySet="TblEmpresasResoluciones">
+                <ScalarProperty Name="IntPermiteParciales" ColumnName="IntPermiteParciales" />
                 <ScalarProperty Name="IntTipoDoc" ColumnName="IntTipoDoc" />
                 <ScalarProperty Name="IntComercioId" ColumnName="IntComercioId" />
                 <ScalarProperty Name="StrRespuestaServicioWeb" ColumnName="StrRespuestaServicioWeb" />
@@ -1265,6 +1270,7 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="StrTelefono" ColumnName="StrTelefono" />
                 <ScalarProperty Name="IntNumUsuarios" ColumnName="IntNumUsuarios" />
                 <ScalarProperty Name="StrEmpresaAsociada" ColumnName="StrEmpresaAsociada" />
                 <ScalarProperty Name="IntHabilitacion" ColumnName="IntHabilitacion" />
