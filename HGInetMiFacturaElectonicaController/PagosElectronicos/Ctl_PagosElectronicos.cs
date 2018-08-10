@@ -203,8 +203,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             try
             {
                 List<TblPagosElectronicos> datos_pago = (from pago in context.TblPagosElectronicos
-                                                   where pago.StrIdSeguridadDoc==StrIdSeguridadDoc                                                  
-                                                   select pago).ToList();
+                                                         where pago.StrIdSeguridadDoc == StrIdSeguridadDoc
+                                                         select pago).ToList();
 
                 return datos_pago;
             }
@@ -269,10 +269,12 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 string comercio_clave = string.Empty;
                 string comercio_ruta = string.Empty;
                 string codigo_servicio = string.Empty;
+                string identificacion_empresa = string.Empty;
 
                 //Objetos para reportar el pago
                 Cliente datos_cliente = new Cliente();
                 Pago datos_pago = new Pago();
+
 
                 datos_pago.id_pago = Texto.DatosAleatorios(9, 2);
 
@@ -281,6 +283,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 {
                     Ctl_Documento clase_documento = new Ctl_Documento();
                     TblDocumentos datos_documento = clase_documento.ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
+
+                    identificacion_empresa = datos_documento.StrEmpresaAdquiriente;
 
                     //valisa que el documento no sea null.
                     if (datos_documento != null)
@@ -311,36 +315,15 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         else
                             throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el número de Resolución", datos_documento.StrNumResolucion));
 
-                        datos_cliente.email = datos_documento.TblEmpresasAdquiriente.StrMail;
-                        datos_cliente.id_cliente = datos_documento.StrEmpresaAdquiriente;
-                        datos_cliente.nombre = datos_documento.TblEmpresasAdquiriente.StrRazonSocial;
-                        //Empresa no tiene telefono.
-                        datos_cliente.telefono = "444 45 84";
-                        datos_cliente.tipo_id = datos_documento.TblEmpresasAdquiriente.StrTipoIdentificacion.ToString();
-
                         datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
 
                         if (valor_pago <= 0)
-                            datos_pago.total_con_iva = Convert.ToDouble(datos_documento.IntVlrTotal);
+                            valor_pago = Convert.ToDouble(datos_documento.IntVlrTotal);
                         else
                         {
                             if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
                                 throw new ApplicationException("El valor a pagar no puede ser superior al valor total del documento.");
-
-                            datos_pago.total_con_iva = valor_pago;
                         }
-
-                        datos_pago.valor_iva = 0;
-                        datos_pago.codigo_servicio_principal = codigo_servicio;
-                        datos_pago.info_opcional1 = "opciona1";
-                        datos_pago.info_opcional2 = "opcional2";
-                        datos_pago.info_opcional3 = "opcional3";
-                        datos_pago.lista_codigos_servicio_multicredito = null;
-                        datos_pago.lista_nit_codigos_servicio_multicredito = null;
-                        datos_pago.lista_valores_con_iva = null;
-                        datos_pago.lista_valores_iva = null;
-                        datos_pago.total_codigos_servicio = 0;
-
                     }
                     else
                     {
@@ -354,46 +337,49 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
                         TblPlanesTransacciones datos_plan = clase_planes.ObtenerIdSeguridad(id_seguridad);
 
+                        identificacion_empresa = datos_plan.StrEmpresaFacturador;
+
                         if (datos_plan == null)
                             throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el Plan", id_seguridad));
-
-                        //Obtiene los datos del facturador.
-                        Ctl_Empresa clase_empresa = new Ctl_Empresa();
-                        TblEmpresas datos_empresa = clase_empresa.Obtener(datos_plan.StrEmpresaFacturador);
-
-                        if (datos_plan == null)
-                            throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el Facturador", datos_plan.StrEmpresaFacturador));
-
-                        datos_cliente.email = datos_empresa.StrMail;
-                        datos_cliente.id_cliente = datos_plan.StrEmpresaFacturador;
-                        datos_cliente.nombre = datos_empresa.StrRazonSocial;
-                        //Empresa no tiene telefono.
-                        datos_cliente.telefono = "444 45 84";
-                        datos_cliente.tipo_id = datos_empresa.StrTipoIdentificacion.ToString();
 
                         datos_pago.descripcion_pago = string.Format("{0}", datos_plan.StrObservaciones);
 
                         if (valor_pago <= 0)
-                            datos_pago.total_con_iva = Convert.ToDouble(datos_plan.IntValor);
+                            valor_pago = Convert.ToDouble(datos_plan.IntValor);
                         else
                         {
                             if (valor_pago > Convert.ToDouble(datos_plan.IntValor))
                                 throw new ApplicationException("El valor a pagar no puede ser superior al valor total de la compra.");
-
-                            datos_pago.total_con_iva = valor_pago;
                         }
-                        datos_pago.valor_iva = 0;
-                        datos_pago.codigo_servicio_principal = codigo_servicio;
-                        datos_pago.info_opcional1 = "opciona1";
-                        datos_pago.info_opcional2 = "opcional2";
-                        datos_pago.info_opcional3 = "opcional3";
-                        datos_pago.lista_codigos_servicio_multicredito = null;
-                        datos_pago.lista_nit_codigos_servicio_multicredito = null;
-                        datos_pago.lista_valores_con_iva = null;
-                        datos_pago.lista_valores_iva = null;
-                        datos_pago.total_codigos_servicio = 0;
-
                     }
+
+
+                    datos_pago.total_con_iva = valor_pago;
+                    datos_pago.valor_iva = 0;
+                    datos_pago.codigo_servicio_principal = codigo_servicio;
+                    datos_pago.info_opcional1 = "opciona1";
+                    datos_pago.info_opcional2 = "opcional2";
+                    datos_pago.info_opcional3 = "opcional3";
+                    datos_pago.lista_codigos_servicio_multicredito = null;
+                    datos_pago.lista_nit_codigos_servicio_multicredito = null;
+                    datos_pago.lista_valores_con_iva = null;
+                    datos_pago.lista_valores_iva = null;
+                    datos_pago.total_codigos_servicio = 0;
+
+
+                    //Obtiene los datos del cliente.
+                    Ctl_Empresa clase_empresa = new Ctl_Empresa();
+                    TblEmpresas datos_empresa = clase_empresa.Obtener(identificacion_empresa);
+
+                    if (datos_empresa == null)
+                        throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "la empresa", datos_empresa.StrIdentificacion));
+
+                    datos_cliente.tipo_id = datos_empresa.StrTipoIdentificacion.ToString();
+                    datos_cliente.id_cliente = datos_empresa.StrIdentificacion;
+                    datos_cliente.nombre = datos_empresa.StrRazonSocial;
+                    datos_cliente.telefono = datos_empresa.StrTelefono;
+                    datos_cliente.email = datos_empresa.StrMail;
+
 
                     ProcesoPago clase_proceso_pago = new ProcesoPago(comercio_id, comercio_clave, comercio_ruta);
 
@@ -422,7 +408,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                                 else throw new ApplicationException(string.Format("Identificador de pago inválido."));
                             }
                         }
-                        TblPagosElectronicos pago = CrearPago(datos_pago.id_pago, id_plataforma, id_seguridad, 0, 2500.00M);
+                        TblPagosElectronicos pago = CrearPago(datos_pago.id_pago, id_plataforma, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago));
                     }
                 }
                 else
