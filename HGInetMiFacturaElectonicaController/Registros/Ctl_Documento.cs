@@ -546,7 +546,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Convierte un objeto de tipo de base de datos a objeto de servicio. 
 		/// </summary>
 		/// <param name="objetoBd"></param>
-		/// <param name="tipo_doc"></param>
 		/// <returns></returns>
 		public static object ConvertirServicio(TblDocumentos objetoBd)
 		{
@@ -613,7 +612,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			xml_reader.Close();
 
 			//convierte las demas propiedades del objeto de BD al objeto de servicio
-			documento_obj.IdDocumento = objetoBd.StrIdSeguridad.ToString();
+			documento_obj.IdDocumento = objetoBd.StrObligadoIdRegistro.ToString();
 			documento_obj.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 			documento_obj.Documento = objetoBd.IntNumero;
 			documento_obj.IdProceso = objetoBd.IntIdEstado;
@@ -635,8 +634,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			// Nombre del archivo Xml 
 			string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(objetoBd.IntNumero.ToString(), objetoBd.StrEmpresaFacturador, doc_tipo));
 
-			//Url publica de la respuesta de la DIAN en xml
-			string url_ppal_respuesta = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", objetoBd.TblEmpresasFacturador.StrIdSeguridad.ToString());
+            PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+            //Url publica de la respuesta de la DIAN en xml
+            string url_ppal_respuesta = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, objetoBd.TblEmpresasFacturador.StrIdSeguridad.ToString());
 
 			string ruta_xml = string.Format(@"{0}{1}/{2}", url_ppal_respuesta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian, archivo_xml);
 
