@@ -36,6 +36,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             TblEmpresas datos = (from item in context.TblEmpresas
                                  where item.StrIdentificacion.Equals(identificacion_obligado)
+                                 && (!string.IsNullOrEmpty(item.StrSerial))
                                  select item).FirstOrDefault();
 
             if (datos != null)
@@ -113,17 +114,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 empresa = this.Add(empresa);
 
-				//Creacion de usuario generico 
-				TblUsuarios UsuarioBd = null;
+                //Creacion de usuario generico 
+                TblUsuarios UsuarioBd = null;
                 Ctl_Usuario Usuario = new Ctl_Usuario();
-				UsuarioBd = Usuario.Crear(empresa);
+                UsuarioBd = Usuario.Crear(empresa);
 
-				//Envia correo de bienvenida al usuario creado
-				Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+                //Envia correo de bienvenida al usuario creado
+                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
 
-				bool Enviarmail = Email.Bienvenida(empresa, UsuarioBd);
+                bool Enviarmail = Email.Bienvenida(empresa, UsuarioBd);
 
-				return empresa;
+                return empresa;
             }
             catch (Exception excepcion)
             {
@@ -236,10 +237,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 EmpresaActualiza.StrResolucionDian = Resolucion.Trim();
 
                 Actualizar(EmpresaActualiza);
-                
-                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();     
 
-                bool Enviarmail= Email.EnviaSerial(EmpresaActualiza.StrIdentificacion,EmpresaActualiza.StrMail);
+                Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+
+                bool Enviarmail = Email.EnviaSerial(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMail);
 
                 return EmpresaActualiza;
             }
@@ -301,10 +302,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             tbl_empresa.DatFechaIngreso = Fecha.GetFecha();
             tbl_empresa.IntAdquiriente = true;
             tbl_empresa.IntObligado = false;
-			tbl_empresa.IntHabilitacion = 0;
+            tbl_empresa.IntHabilitacion = 0;
             tbl_empresa.DatFechaActualizacion = Fecha.GetFecha();
             tbl_empresa.StrIdSeguridad = Guid.NewGuid();
-			tbl_empresa.IntNumUsuarios = 1;
+            tbl_empresa.IntNumUsuarios = 1;
 
             return tbl_empresa;
         }
@@ -330,7 +331,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public List<TblEmpresas> ObtenerFacturadores()
         {
             List<TblEmpresas> datos = (from item in context.TblEmpresas
-                                       where item.IntObligado.Equals(true) 
+                                       where item.IntObligado.Equals(true)
                                        select item).ToList();
 
             return datos;
