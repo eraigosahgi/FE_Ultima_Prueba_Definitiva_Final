@@ -32,12 +32,13 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrObservaciones { get; set; }
         public string StrEmpresaUsuario { get; set; }
         public string StrUsuario { get; set; }
+        public Nullable<System.DateTime> DatFechaVencimiento { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
-        public virtual TblUsuarios TblUsuarios { get; set; }
+        public virtual TblEmpresas TblEmpresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
-        public virtual TblEmpresas TblEmpresas { get; set; }
+        public virtual TblUsuarios TblUsuarios { get; set; }
     }
 }

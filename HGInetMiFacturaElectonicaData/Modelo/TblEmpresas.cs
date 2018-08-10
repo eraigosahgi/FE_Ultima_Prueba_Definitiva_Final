@@ -21,8 +21,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
             this.TblDocumentos1 = new HashSet<TblDocumentos>();
             this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
             this.TblOpcionesUsuario = new HashSet<TblOpcionesUsuario>();
-            this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
             this.TblUsuarios = new HashSet<TblUsuarios>();
+            this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
         }
     
         public string StrIdentificacion { get; set; }
@@ -54,8 +54,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblOpcionesUsuario> TblOpcionesUsuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblUsuarios> TblUsuarios { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
     }
 }

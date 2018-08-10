@@ -33,10 +33,10 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual DbSet<TblOpciones> TblOpciones { get; set; }
         public virtual DbSet<TblPerfiles> TblPerfiles { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
         public virtual DbSet<TblPagosElectronicos> TblPagosElectronicos { get; set; }
         public virtual DbSet<TblEmpresasPasarela> TblEmpresasPasarela { get; set; }
         public virtual DbSet<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }
         public virtual DbSet<TblEmpresas> TblEmpresas { get; set; }
+        public virtual DbSet<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
     }
 }
