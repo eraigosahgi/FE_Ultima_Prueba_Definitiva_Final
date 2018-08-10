@@ -71,9 +71,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 // almacena el xml
                 documento_result = Ctl_Ubl.Almacenar(documento_result);
 
+                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData; 
 
-				// url pública del xml
-				string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
+                // url pública del xml
+                string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, documento_result.IdSeguridadTercero.ToString());
 				respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento_result.NombreXml);
 
 				//Actualiza Documento en Base de Datos

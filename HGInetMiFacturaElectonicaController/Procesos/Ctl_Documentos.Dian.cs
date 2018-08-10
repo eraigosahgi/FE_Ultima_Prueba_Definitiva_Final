@@ -51,9 +51,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 
 			respuesta.Cufe = documento_result.CUFE;
-			
-			// url pública del xml
-			string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", documento_result.IdSeguridadTercero.ToString());
+
+            PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+            // url pública del xml
+            string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, documento_result.IdSeguridadTercero.ToString());
 			respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 			
 			// url pública del zip
@@ -150,8 +152,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				ConsultaDocumento resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
 
-				//Url publica de la respuesta de la DIAN en xml
-				string url_ppal_respuesta = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", empresa.StrIdSeguridad.ToString());
+                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+                //Url publica de la respuesta de la DIAN en xml
+                string url_ppal_respuesta = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, empresa.StrIdSeguridad.ToString());
 
 				// se indica la respuesta de la DIAN
 				respuesta.EstadoDian = new RespuestaDian();

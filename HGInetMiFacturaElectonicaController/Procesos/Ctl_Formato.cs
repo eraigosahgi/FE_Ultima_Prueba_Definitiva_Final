@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
+﻿using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System;
@@ -84,9 +85,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 //convierte el array de byte en archivo pdf
                 File.WriteAllBytes(ruta_pdf, Convert.FromBase64String(archivo.ArchivoPdf));
 
+                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 // url pública del pdf
-                string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", directorio);
+                string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, directorio);
 
                 nombre_pdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre);
 
