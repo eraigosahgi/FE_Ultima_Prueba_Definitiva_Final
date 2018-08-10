@@ -33,6 +33,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 datos_EstadoAcuseMensual = clase_indicadores.ReporteEstadosAcuse(identificacion_empresa, tipo_empresa, mensual);
 
+                if (datos_EstadoAcuseMensual == null)
+                {
+                    return NotFound();
+                }
+
                 return Ok(datos_EstadoAcuseMensual);
             }
             catch (Exception excepcion)
@@ -59,6 +64,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
                 datos_tipos = clase_indicadores.DocumentosPorTipo(identificacion_empresa, tipo_empresa);
+
+                if (datos_tipos == null)
+                {
+                    return NotFound();
+                }
 
                 return Ok(datos_tipos);
             }
@@ -87,6 +97,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 datos_estados = clase_indicadores.DocumentosPorEstado(identificacion_empresa, tipo_empresa);
 
+                if (datos_estados == null)
+                {
+                    return NotFound();
+                }
+
                 return Ok(datos_estados);
             }
             catch (Exception excepcion)
@@ -114,6 +129,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 datos_tipos = clase_indicadores.DocumentosPorTipoAnual(identificacion_empresa, tipo_empresa);
 
+                if (datos_tipos == null)
+                {
+                    return NotFound();
+                }
+
                 return Ok(datos_tipos);
             }
             catch (Exception excepcion)
@@ -135,21 +155,98 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             {
                 Sesion.ValidarSesion();
 
-                List<dynamic> datos_saldos = new List<dynamic>();
+                List<ResumenPlanes> planes_adquiridos = new List<ResumenPlanes>();
                 Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
-                datos_saldos = clase_indicadores.ResumenPlanesAdquiridos(identificacion_empresa);
+                planes_adquiridos = clase_indicadores.ResumenPlanesAdquiridos(identificacion_empresa);
 
-                var datos_retorno = datos_saldos.Select(x => new
+                if (planes_adquiridos == null)
                 {
-                    PlanesAdquiridos = x.PlanesAdquiridos,
-                    SaldoPlanActual = x.SaldoPlanActual,
-                    SaldoConsumoPlanActual = x.SaldoConsumoPlanActual,
-                    SaldoCompras = x.SaldoCompras,
-                    SaldoDisponible = x.SaldoDisponible
-                });
+                    return NotFound();
+                }
 
-                return Ok(datos_retorno);
+                return Ok(planes_adquiridos);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("Api/ReporteVentasAnuales")]
+        public IHttpActionResult ReporteVentasAnuales()
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<VentasMensuales> ventas = new List<VentasMensuales>();
+                Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
+
+                 ventas = clase_indicadores.VentasAnuales();
+
+                if (ventas == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(ventas);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        [HttpGet]
+        [Route("Api/ReporteTopCompradores")]
+        public IHttpActionResult ReporteTopCompradores()
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<TopCompradores> top_compradores = new List<TopCompradores>();
+                Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
+
+                top_compradores = clase_indicadores.TopCompradores();
+
+                if (top_compradores == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(top_compradores);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("Api/ReporteTopTransaccional")]
+        public IHttpActionResult ReporteTopTransaccional()
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<TopTransaccional> top_transaccional = new List<TopTransaccional>();
+                Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
+
+                top_transaccional = clase_indicadores.TopTransaccional();
+
+                if (top_transaccional == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(top_transaccional);
             }
             catch (Exception excepcion)
             {

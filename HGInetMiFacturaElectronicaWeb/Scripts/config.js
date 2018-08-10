@@ -116,26 +116,33 @@ function PorcentajeGrafico(element, radio, bordo, colorTexto, porcentaje, claseI
         .style('fill', colorTexto)
         .style('fill-opacity', 1);
 
+    var n = porcentaje.toString().length;
+
+    var margin = -24;
+
+    if (n <= 2)
+        margin = -15;
+
     // Icono
     d3.select(element)
-        .append("label").attr("class", "counter-icon").attr('style', 'top: ' + ((boxSize - iconSize) / 2) + 'px; text-align:center;font-size:16px; color:' + ColorIcono).text(endPercent + '%');
+        .append("label").attr('style', 'top: ' + ((boxSize - iconSize) / 2) + 'px; margin-left:' + margin + 'px; position: absolute; text-align:center;font-size:19px; color:' + ColorIcono).text(endPercent + '%');
 
     // Título
     d3.select(element)
         .append('div')
+            .attr('class', 'text-size-large text-semibold').attr('style', 'margin-top:10px')
             .text(textoTitulo);
 
     // Subtitulo
     d3.select(element)
         .append('div')
-            .attr('class', 'text-size-small text-muted')
+            .attr('class', 'text-size-small text-regular')
             .text(observaciones);
 
     // Animación
     function updateProgress(progress) {
         foreground.attr('d', arc.endAngle(twoPi * progress));
         front.attr('d', arc.endAngle(twoPi * progress));
-        //numberText.text(formatPercent(progress));
     }
 
     // Animación Texto
@@ -180,10 +187,10 @@ function ValidarSesion() {
         dataType: "json",
         url: "/api/DatosSesion/",
     })
- .done(function(data, textStatus, jqXHR) {
+ .done(function (data, textStatus, jqXHR) {
      //Aqui se podria validar el el usuario tiene movimiento y alargar un poco mas la sesión     
  })
- .fail(function(jqXHR, textStatus, errorThrown) {
+ .fail(function (jqXHR, textStatus, errorThrown) {
      //Cierro la sesión ya que no hay datos
      sesionexpiro();
  });

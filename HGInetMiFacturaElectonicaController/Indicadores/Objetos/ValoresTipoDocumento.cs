@@ -8,9 +8,6 @@ namespace HGInetMiFacturaElectonicaController.Indicadores.Objetos
 {
     public class ValoresTipoDocumento
     {
-        public int TipoDoc { get; set; }
-        public int Cantidad { get; set; }
-        public decimal Valor { get; set; }
         public int Mes { get; set; }
         public string DescripcionMes { get; set; }
         public int Anyo { get; set; }
