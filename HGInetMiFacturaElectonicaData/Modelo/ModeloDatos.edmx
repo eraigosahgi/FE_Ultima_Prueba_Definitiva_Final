@@ -41,6 +41,7 @@
           <Property Name="StrIdPlanTransaccion" Type="uniqueidentifier" />
           <Property Name="IntIdEstado" Type="smallint" Nullable="false" />
           <Property Name="DatFechaActualizaEstado" Type="datetime" Nullable="false" />
+          <Property Name="StrVersion" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -626,6 +627,7 @@
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblDocumentos" ToRole="TblPlanesTransacciones" />
+          <Property Name="StrVersion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1064,6 +1066,7 @@
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
+                <ScalarProperty Name="StrVersion" ColumnName="StrVersion" />
                 <ScalarProperty Name="DatFechaActualizaEstado" ColumnName="DatFechaActualizaEstado" />
                 <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
                 <ScalarProperty Name="StrIdPlanTransaccion" ColumnName="StrIdPlanTransaccion" />

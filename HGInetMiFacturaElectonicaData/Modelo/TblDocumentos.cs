@@ -42,6 +42,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public Nullable<System.Guid> StrIdPlanTransaccion { get; set; }
         public short IntIdEstado { get; set; }
         public System.DateTime DatFechaActualizaEstado { get; set; }
+        public string StrVersion { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
