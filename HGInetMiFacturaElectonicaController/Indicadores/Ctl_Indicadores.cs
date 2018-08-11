@@ -233,6 +233,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
             try
             {
                 DateTime fecha_actual = Fecha.GetFecha();
+                DateTime fecha_siguiente = Fecha.GetFecha().AddDays(1);
 
                 List<ResumenPlanes> planes_adquiridos = (from plan in context.TblPlanesTransacciones
                                                          where plan.StrEmpresaFacturador.Equals(identificacion_empresa)
@@ -242,8 +243,9 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
                                                          {
                                                              TransaccionesAdquiridas = planes.Select(x => x.IntNumTransaccCompra).Sum(),
                                                              TransaccionesProcesadas = planes.Select(x => x.IntNumTransaccProcesadas).Sum(),
-                                                             TransaccionesDisponibles = planes.Where(d => SqlFunctions.DateAdd("month", 12, d.DatFecha).Value > fecha_actual).Select(x => x.IntNumTransaccCompra).Sum() - planes.Where(d => SqlFunctions.DateAdd("month", 12, d.DatFecha).Value > fecha_actual).Select(x => x.IntNumTransaccProcesadas).Sum(),
-                                                             PlanesAdquiridos = planes.Select(x => new { x.StrIdSeguridad, x.DatFecha, SqlFunctions.DateAdd("month", 12, x.DatFecha).Value, x.IntNumTransaccCompra, x.IntNumTransaccProcesadas }).OrderByDescending(x => x.DatFecha).Take(5)
+                                                             // esta linea obtiene los planes vigentes o sin fechas de vencimientos y calcula las transacciones vigentes sobre el resultado, si la fecha de vencimiento es null, suma un día al día actual y lo toma en cuenta para el calculo.
+                                                             TransaccionesDisponibles = (planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_actual) > fecha_actual || d.DatFechaVencimiento == null).Count() > 0) ? planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_siguiente) > fecha_actual).Select(d => d.IntNumTransaccCompra).Sum() - planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_siguiente) > fecha_actual).Select(d => d.IntNumTransaccProcesadas).Sum() : 0,
+                                                             PlanesAdquiridos = planes.Select(x => new { x.StrIdSeguridad, x.DatFecha, x.DatFechaVencimiento, x.IntNumTransaccCompra, x.IntNumTransaccProcesadas }).OrderByDescending(x => x.DatFecha).Take(5)
                                                          }).ToList();
 
                 return planes_adquiridos;
@@ -277,7 +279,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
                                                             CantidadTransaccionesCortesias = (datos_ventas.Where(x => x.IntTipoProceso == 1).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 1).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
                                                             CantidadTransaccionesVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
                                                             CantidadTransaccionesPostVenta = (datos_ventas.Where(x => x.IntTipoProceso == 3).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 3).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
-                                                            ValorVentas = datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => x.IntValor).Sum()
+                                                            ValorVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => x.IntValor).Sum() : 0
                                                         }).ToList();
 
                 foreach (VentasMensuales item in resumen_ventas)

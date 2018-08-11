@@ -260,7 +260,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                         },
                         {
                             caption: "Fecha Vencimiento",
-                            dataField: "Value",
+                            dataField: "DatFechaVencimiento",
                             dataType: "date",
                             format: "yyyy-MM-dd",
                         }
