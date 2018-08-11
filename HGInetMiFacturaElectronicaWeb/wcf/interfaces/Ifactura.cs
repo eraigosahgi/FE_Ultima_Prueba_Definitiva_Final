@@ -26,5 +26,10 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		[FaultContract(typeof(Error), Action = "ObtenerPorFechasAdquiriente", Name = "Error")]
 		[WebInvoke(Method = "GET")]
 		List<FacturaConsulta> ObtenerPorFechasAdquiriente(string DataKey, string Identificacion, DateTime FechaInicio, DateTime FechaFinal);
-	}
+
+        [OperationContract(Name = "ObtenerPorIdSeguridadAdquiriente")]
+        [FaultContract(typeof(Error), Action = "ObtenerPorIdSeguridadAdquiriente", Name = "Error")]
+        [WebInvoke(Method = "GET")]
+        List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros);
+    }
 }

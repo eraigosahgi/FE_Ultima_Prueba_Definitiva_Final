@@ -49,7 +49,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 
 		/// <summary>
-		/// Obtiene los documentos facturas para un adquiriente específico
+		/// Obtiene los documentos facturas para un adquiriente específico en un rango de tiempo especifico
 		/// </summary>
 		/// <param name="DataKey">Clave compuesta (serial + identificación obligado) en formato Sha1</param>
 		/// <param name="Identificacion">Número de identificación del adquiriente</param>
@@ -84,6 +84,45 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
                 // obtiene los datos
                 respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);
+
+                return respuesta;
+
+            }
+            catch (Exception exec)
+            {
+                Error error = new Error(CodigoError.VALIDACION, exec);
+                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+            }
+        }
+
+        /// <summary>
+		/// Obtiene los documentos facturas para un adquiriente específico en un rango de tiempo especifico
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado) en formato Sha1</param>
+		/// <param name="Identificacion">Número de identificación del adquiriente</param>
+		/// <param  <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
+		/// <returns>documentos facturas entre fechas por adquiriente</returns>
+		public List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros)
+        {
+            try
+            {
+
+                if (string.IsNullOrEmpty(DataKey))
+                    throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
+
+                if (string.IsNullOrEmpty(Identificacion))
+                    throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+
+                List<FacturaConsulta> respuesta = new List<FacturaConsulta>();
+
+                //Válida que la key sea correcta.
+                Peticion.Validar(DataKey, Identificacion);
+
+                Ctl_Factura ctl_documento = new Ctl_Factura();
+
+                // obtiene los datos
+                respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros);
 
                 return respuesta;
 
