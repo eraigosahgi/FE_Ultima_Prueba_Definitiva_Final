@@ -3,6 +3,7 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL;
+using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System;
@@ -73,29 +74,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     string ruta = string.Format(@"{0}{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
                     Report reporte_pdf = new Report();
 
-                    //Valida el tipo de documento para generar el formato PDF
-                    if (documento_result.DocumentoTipo == TipoDocumento.Factura)
+                    switch (formato_documento.Codigo)
                     {
-                        switch (formato_documento.Codigo)
-                        {
-                            case 1:
-                                reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
-                                break;
-                            case 2:
-                                reporte_pdf = new HGInetFacturaEReports.Facturas.Formato2();
-                                break;
-                            case 3:
-                                reporte_pdf = new HGInetFacturaEReports.Facturas.Formato3();
-                                break;
-                        }
-                    }
-                    else if (documento_result.DocumentoTipo == TipoDocumento.NotaCredito)
-                    {
-                        reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
-                    }
-                    else if (documento_result.DocumentoTipo == TipoDocumento.NotaDebito)
-                    {
-                        reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
+                        case 1:
+                            switch (documento_result.DocumentoTipo)
+                            {
+                                case TipoDocumento.Factura:
+                                    reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
+                                    break;
+                                case TipoDocumento.NotaDebito:
+                                    reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
+                                    break;
+                                case TipoDocumento.NotaCredito:
+                                    reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
+                                    break;
+                            }
+                            break;
+                        case 2:
+                            reporte_pdf = new HGInetFacturaEReports.Facturas.Formato2();
+                            reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
+                            break;
+                        case 3:
+                            reporte_pdf = new HGInetFacturaEReports.Facturas.Formato3();
+                            reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
+                            break;
                     }
 
                     //Asigna los datos al reporte y genera el pdf
