@@ -986,7 +986,7 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox90.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
             this.htmlTextBox90.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.htmlTextBox90.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.htmlTextBox90.Value = "NETO";
+            this.htmlTextBox90.Value = "TOTAL A PAGAR";
             // 
             // htmlTextBox91
             // 
