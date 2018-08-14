@@ -74,6 +74,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     string ruta = string.Format(@"{0}{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
                     Report reporte_pdf = new Report();
 
+
+                    /*
+                     Para la contrucción de formatos se debe tener en cuenta el envío del parametro TipoDocumento de caracter obligatorio
+                     para el reporte pdf, ya que este valor es implementado para la carga de información desde cada formato.
+                     */
                     switch (formato_documento.Codigo)
                     {
                         case 1:
@@ -96,6 +101,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             break;
                         case 3:
                             reporte_pdf = new HGInetFacturaEReports.Facturas.Formato3();
+                            reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
+                            break;
+                        case 4:
+                            reporte_pdf = new HGInetFacturaEReports.Facturas.Formato4();
                             reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
                             break;
                     }
