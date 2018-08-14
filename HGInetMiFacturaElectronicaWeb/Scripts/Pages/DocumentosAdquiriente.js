@@ -277,7 +277,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 
                         }
 
-                        if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCenlada == 8) {//aqui se debe colocar el status que indica el pago de la factura                            
+                        if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCenlada == 100) {//aqui se debe colocar el status que indica el pago de la factura                            
                             imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Ver</a>"
                         }
 
