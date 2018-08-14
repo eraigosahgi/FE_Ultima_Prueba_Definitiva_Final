@@ -29,6 +29,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public System.Guid StrIdSeguridad { get; set; }
         public string StrClaseMenu { get; set; }
         public string StrRutaMenu { get; set; }
+        public Nullable<int> IntTipo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblOpcionesPerfil> TblOpcionesPerfil { get; set; }

@@ -114,6 +114,7 @@
           <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
           <Property Name="StrClaseMenu" Type="varchar" MaxLength="100" />
           <Property Name="StrRutaMenu" Type="varchar" MaxLength="100" />
+          <Property Name="IntTipo" Type="int" />
         </EntityType>
         <EntityType Name="TblOpcionesPerfil">
           <Key>
@@ -733,6 +734,7 @@
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblOpciones" FromRole="TblOpciones" ToRole="TblOpcionesUsuario" />
           <Property Name="StrClaseMenu" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="StrRutaMenu" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntTipo" Type="Int32" />
         </EntityType>
         <Association Name="FK_TblOpcionesPerfil_TblOpciones">
           <End Type="Modelo.TblOpciones" Role="TblOpciones" Multiplicity="1" />
@@ -1163,6 +1165,7 @@
           <EntitySetMapping Name="TblOpciones">
             <EntityTypeMapping TypeName="Modelo.TblOpciones">
               <MappingFragment StoreEntitySet="TblOpciones">
+                <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
                 <ScalarProperty Name="StrRutaMenu" ColumnName="StrRutaMenu" />
                 <ScalarProperty Name="StrClaseMenu" ColumnName="StrClaseMenu" />
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
