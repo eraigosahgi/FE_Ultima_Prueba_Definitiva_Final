@@ -533,6 +533,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.IntAdquirienteRecibo = 0;
 				tbl_documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 				tbl_documento.DatFechaActualizaEstado = Fecha.GetFecha();
+                tbl_documento.StrVersion = documento_obj.VersionAplicativo;
 
 				return tbl_documento;
 			}

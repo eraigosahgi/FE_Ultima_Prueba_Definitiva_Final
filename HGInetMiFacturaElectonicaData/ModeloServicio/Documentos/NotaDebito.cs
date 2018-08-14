@@ -180,7 +180,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// <summary>
 		/// Version de la aplicacion donde fue generado el documento
 		/// </summary>
-		public string versionAplicativo { get; set; }
+		public string VersionAplicativo { get; set; }
 
         #endregion
     }
