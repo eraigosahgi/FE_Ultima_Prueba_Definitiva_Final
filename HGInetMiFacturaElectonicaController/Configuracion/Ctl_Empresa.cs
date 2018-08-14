@@ -306,6 +306,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             tbl_empresa.DatFechaActualizacion = Fecha.GetFecha();
             tbl_empresa.StrIdSeguridad = Guid.NewGuid();
             tbl_empresa.IntNumUsuarios = 1;
+            tbl_empresa.StrTelefono = empresa.Telefono;
 
             return tbl_empresa;
         }
