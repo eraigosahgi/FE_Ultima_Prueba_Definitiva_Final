@@ -45,7 +45,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private HGInetFacturaEServicios.ServicioNotaCredito.Tercero DatosObligadoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int DocumentoField;
+        private long DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.DocumentoDetalle> DocumentoDetallesField;
@@ -106,6 +106,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorSubtotalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string VersionAplicativoField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -209,7 +212,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Documento {
+        public long Documento {
             get {
                 return this.DocumentoField;
             }
@@ -477,6 +480,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((this.ValorSubtotalField.Equals(value) != true)) {
                     this.ValorSubtotalField = value;
                     this.RaisePropertyChanged("ValorSubtotal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string VersionAplicativo {
+            get {
+                return this.VersionAplicativoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.VersionAplicativoField, value) != true)) {
+                    this.VersionAplicativoField = value;
+                    this.RaisePropertyChanged("VersionAplicativo");
                 }
             }
         }
@@ -898,6 +914,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string BodegaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal CantidadField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -961,6 +980,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Bodega {
+            get {
+                return this.BodegaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.BodegaField, value) != true)) {
+                    this.BodegaField = value;
+                    this.RaisePropertyChanged("Bodega");
+                }
             }
         }
         
@@ -1322,7 +1354,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private string DescripcionProcesoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int DocumentoField;
+        private long DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int DocumentoTipoField;
@@ -1429,7 +1461,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Documento {
+        public long Documento {
             get {
                 return this.DocumentoField;
             }
@@ -1766,7 +1798,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private string DescripcionProcesoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int DocumentoField;
+        private long DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private LibreriaGlobalHGInet.Error.Error ErrorField;
@@ -1864,7 +1896,7 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Documento {
+        public long Documento {
             get {
                 return this.DocumentoField;
             }
@@ -2062,6 +2094,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         System.IAsyncResult BeginObtenerPorFechasAdquiriente(HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorFechasAdquirienteRequest request, System.AsyncCallback callback, object asyncState);
         
         HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorFechasAdquirienteResponse EndObtenerPorFechasAdquiriente(System.IAsyncResult result);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorIdSeguridadAd" +
+            "quiriente", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorIdSeguridadAd" +
+            "quirienteResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="ObtenerPorIdSeguridadAdquiriente", Name="Error")]
+        HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse ObtenerPorIdSeguridadAdquiriente(HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorIdSeguridadAd" +
+            "quiriente", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorIdSeguridadAd" +
+            "quirienteResponse")]
+        System.IAsyncResult BeginObtenerPorIdSeguridadAdquiriente(HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest request, System.AsyncCallback callback, object asyncState);
+        
+        HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse EndObtenerPorIdSeguridadAdquiriente(System.IAsyncResult result);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -2165,6 +2210,46 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ObtenerPorIdSeguridadAdquiriente", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ObtenerPorIdSeguridadAdquirienteRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public string DataKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=1)]
+        public string Identificacion;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
+        public string CodigosRegistros;
+        
+        public ObtenerPorIdSeguridadAdquirienteRequest() {
+        }
+        
+        public ObtenerPorIdSeguridadAdquirienteRequest(string DataKey, string Identificacion, string CodigosRegistros) {
+            this.DataKey = DataKey;
+            this.Identificacion = Identificacion;
+            this.CodigosRegistros = CodigosRegistros;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ObtenerPorIdSeguridadAdquirienteResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ObtenerPorIdSeguridadAdquirienteResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.NotaCreditoConsulta> ObtenerPorIdSeguridadAdquirienteResult;
+        
+        public ObtenerPorIdSeguridadAdquirienteResponse() {
+        }
+        
+        public ObtenerPorIdSeguridadAdquirienteResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.NotaCreditoConsulta> ObtenerPorIdSeguridadAdquirienteResult) {
+            this.ObtenerPorIdSeguridadAdquirienteResult = ObtenerPorIdSeguridadAdquirienteResult;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface ServicioNotaCreditoChannel : HGInetFacturaEServicios.ServicioNotaCredito.ServicioNotaCredito, System.ServiceModel.IClientChannel {
     }
@@ -2228,6 +2313,25 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class ObtenerPorIdSeguridadAdquirienteCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        public ObtenerPorIdSeguridadAdquirienteCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        public HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse Result {
+            get {
+                base.RaiseExceptionIfNecessary();
+                return ((HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse)(this.results[0]));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public partial class ServicioNotaCreditoClient : System.ServiceModel.ClientBase<HGInetFacturaEServicios.ServicioNotaCredito.ServicioNotaCredito>, HGInetFacturaEServicios.ServicioNotaCredito.ServicioNotaCredito {
         
         private BeginOperationDelegate onBeginTestDelegate;
@@ -2247,6 +2351,12 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private EndOperationDelegate onEndObtenerPorFechasAdquirienteDelegate;
         
         private System.Threading.SendOrPostCallback onObtenerPorFechasAdquirienteCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginObtenerPorIdSeguridadAdquirienteDelegate;
+        
+        private EndOperationDelegate onEndObtenerPorIdSeguridadAdquirienteDelegate;
+        
+        private System.Threading.SendOrPostCallback onObtenerPorIdSeguridadAdquirienteCompletedDelegate;
         
         public ServicioNotaCreditoClient() {
         }
@@ -2272,6 +2382,8 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         public event System.EventHandler<RecepcionCompletedEventArgs> RecepcionCompleted;
         
         public event System.EventHandler<ObtenerPorFechasAdquirienteCompletedEventArgs> ObtenerPorFechasAdquirienteCompleted;
+        
+        public event System.EventHandler<ObtenerPorIdSeguridadAdquirienteCompletedEventArgs> ObtenerPorIdSeguridadAdquirienteCompleted;
         
         public HGInetFacturaEServicios.ServicioNotaCredito.TestResponse Test(HGInetFacturaEServicios.ServicioNotaCredito.TestRequest request) {
             return base.Channel.Test(request);
@@ -2421,6 +2533,56 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
             }
             base.InvokeAsync(this.onBeginObtenerPorFechasAdquirienteDelegate, new object[] {
                         request}, this.onEndObtenerPorFechasAdquirienteDelegate, this.onObtenerPorFechasAdquirienteCompletedDelegate, userState);
+        }
+        
+        public HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse ObtenerPorIdSeguridadAdquiriente(HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest request) {
+            return base.Channel.ObtenerPorIdSeguridadAdquiriente(request);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginObtenerPorIdSeguridadAdquiriente(HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest request, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginObtenerPorIdSeguridadAdquiriente(request, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse EndObtenerPorIdSeguridadAdquiriente(System.IAsyncResult result) {
+            return base.Channel.EndObtenerPorIdSeguridadAdquiriente(result);
+        }
+        
+        private System.IAsyncResult OnBeginObtenerPorIdSeguridadAdquiriente(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest request = ((HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest)(inValues[0]));
+            return this.BeginObtenerPorIdSeguridadAdquiriente(request, callback, asyncState);
+        }
+        
+        private object[] OnEndObtenerPorIdSeguridadAdquiriente(System.IAsyncResult result) {
+            HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse retVal = this.EndObtenerPorIdSeguridadAdquiriente(result);
+            return new object[] {
+                    retVal};
+        }
+        
+        private void OnObtenerPorIdSeguridadAdquirienteCompleted(object state) {
+            if ((this.ObtenerPorIdSeguridadAdquirienteCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.ObtenerPorIdSeguridadAdquirienteCompleted(this, new ObtenerPorIdSeguridadAdquirienteCompletedEventArgs(e.Results, e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void ObtenerPorIdSeguridadAdquirienteAsync(HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest request) {
+            this.ObtenerPorIdSeguridadAdquirienteAsync(request, null);
+        }
+        
+        public void ObtenerPorIdSeguridadAdquirienteAsync(HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest request, object userState) {
+            if ((this.onBeginObtenerPorIdSeguridadAdquirienteDelegate == null)) {
+                this.onBeginObtenerPorIdSeguridadAdquirienteDelegate = new BeginOperationDelegate(this.OnBeginObtenerPorIdSeguridadAdquiriente);
+            }
+            if ((this.onEndObtenerPorIdSeguridadAdquirienteDelegate == null)) {
+                this.onEndObtenerPorIdSeguridadAdquirienteDelegate = new EndOperationDelegate(this.OnEndObtenerPorIdSeguridadAdquiriente);
+            }
+            if ((this.onObtenerPorIdSeguridadAdquirienteCompletedDelegate == null)) {
+                this.onObtenerPorIdSeguridadAdquirienteCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnObtenerPorIdSeguridadAdquirienteCompleted);
+            }
+            base.InvokeAsync(this.onBeginObtenerPorIdSeguridadAdquirienteDelegate, new object[] {
+                        request}, this.onEndObtenerPorIdSeguridadAdquirienteDelegate, this.onObtenerPorIdSeguridadAdquirienteCompletedDelegate, userState);
         }
     }
 }
