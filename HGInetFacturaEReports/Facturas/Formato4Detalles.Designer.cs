@@ -14,6 +14,7 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox25 = new Telerik.Reporting.HtmlTextBox();
             this.htmlTextBox26 = new Telerik.Reporting.HtmlTextBox();
             this.htmlTextBox24 = new Telerik.Reporting.HtmlTextBox();
+            this.htmlTextBox1 = new Telerik.Reporting.HtmlTextBox();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // detail
@@ -22,14 +23,15 @@ namespace HGInetFacturaEReports.Facturas
             this.detail.Items.AddRange(new Telerik.Reporting.ReportItemBase[] {
             this.htmlTextBox25,
             this.htmlTextBox24,
-            this.htmlTextBox26});
+            this.htmlTextBox26,
+            this.htmlTextBox1});
             this.detail.Name = "detail";
             // 
             // htmlTextBox25
             // 
-            this.htmlTextBox25.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0D), Telerik.Reporting.Drawing.Unit.Cm(0D));
+            this.htmlTextBox25.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(1.8001999855041504D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox25.Name = "htmlTextBox25";
-            this.htmlTextBox25.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(13.859999656677246D), Telerik.Reporting.Drawing.Unit.Cm(0.47990003228187561D));
+            this.htmlTextBox25.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(12.059800148010254D), Telerik.Reporting.Drawing.Unit.Cm(0.47990003228187561D));
             this.htmlTextBox25.Style.BorderStyle.Bottom = Telerik.Reporting.Drawing.BorderType.None;
             this.htmlTextBox25.Style.BorderStyle.Left = Telerik.Reporting.Drawing.BorderType.None;
             this.htmlTextBox25.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.None;
@@ -37,7 +39,7 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox25.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.htmlTextBox25.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
             this.htmlTextBox25.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.htmlTextBox25.Value = "=FORMAT(\'{0}  {1}\', Fields.ProductoCodigo, Fields.ProductoNombre)";
+            this.htmlTextBox25.Value = "=Fields.ProductoNombre";
             // 
             // htmlTextBox26
             // 
@@ -67,6 +69,20 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox24.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
             this.htmlTextBox24.Value = "=FORMAT(\'{0:###,##0.}\',Fields.ValorUnitario)";
             // 
+            // htmlTextBox1
+            // 
+            this.htmlTextBox1.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0D), Telerik.Reporting.Drawing.Unit.Cm(0.00010002215276472271D));
+            this.htmlTextBox1.Name = "htmlTextBox1";
+            this.htmlTextBox1.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.8000001907348633D), Telerik.Reporting.Drawing.Unit.Cm(0.47990003228187561D));
+            this.htmlTextBox1.Style.BorderStyle.Bottom = Telerik.Reporting.Drawing.BorderType.None;
+            this.htmlTextBox1.Style.BorderStyle.Left = Telerik.Reporting.Drawing.BorderType.None;
+            this.htmlTextBox1.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.None;
+            this.htmlTextBox1.Style.Font.Bold = true;
+            this.htmlTextBox1.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
+            this.htmlTextBox1.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
+            this.htmlTextBox1.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
+            this.htmlTextBox1.Value = "=Fields.ProductoCodigo";
+            // 
             // Formato4Detalles
             // 
             this.Items.AddRange(new Telerik.Reporting.ReportItemBase[] {
@@ -90,5 +106,6 @@ namespace HGInetFacturaEReports.Facturas
         private Telerik.Reporting.HtmlTextBox htmlTextBox25;
         private Telerik.Reporting.HtmlTextBox htmlTextBox26;
         private Telerik.Reporting.HtmlTextBox htmlTextBox24;
+        private Telerik.Reporting.HtmlTextBox htmlTextBox1;
     }
 }
