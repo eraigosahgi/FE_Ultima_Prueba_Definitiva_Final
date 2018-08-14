@@ -198,21 +198,210 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
         /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
         /// <returns></returns>
-        public List<TblPagosElectronicos> Obtener(System.Guid StrIdSeguridadDoc)
+        public List<TblDocumentos> Obtener(System.Guid StrIdSeguridadDoc)
         {
             try
             {
-                List<TblPagosElectronicos> datos_pago = (from pago in context.TblPagosElectronicos
-                                                         where pago.StrIdSeguridadDoc == StrIdSeguridadDoc
-                                                         select pago).ToList();
 
-                return datos_pago;
+                List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
+                                                  where documentos.StrIdSeguridad == StrIdSeguridadDoc
+                                                  select documentos).ToList();
+
+
+                List<TblDocumentos> ListDocFinal = new List<TblDocumentos>();
+
+
+                foreach (TblDocumentos doc in datos_pago)
+                {
+
+                    if (doc.TblPagosElectronicos.Count() > 0)
+                    {
+                        foreach (TblPagosElectronicos docPago in doc.TblPagosElectronicos)
+                        {
+                            TblDocumentos DocFinal = new TblDocumentos();
+
+                            DocFinal.StrEmpresaFacturador = doc.TblEmpresasFacturador.StrRazonSocial;
+                            //Guardo la Indentificacion del Facturador en el campo StrEmpresaAdquiriente para poder enviar un solo objeto tipado
+                            DocFinal.StrEmpresaAdquiriente = doc.TblEmpresasFacturador.StrIdentificacion;
+
+                            //Guardo el Telefono aqui
+                            DocFinal.StrCufe = doc.TblEmpresasFacturador.StrTelefono;
+                            DocFinal.StrUrlArchivoUbl = doc.TblEmpresasFacturador.StrMail;
+
+                            DocFinal.IntDocTipo = doc.IntDocTipo;
+                            DocFinal.IntNumero = doc.IntNumero;
+                            DocFinal.DatFechaDocumento = doc.DatFechaDocumento;
+                            DocFinal.IntVlrTotal = docPago.IntValorPago;
+                            DocFinal.DatFechaIngreso = docPago.DatFechaRegistro;
+                            DocFinal.StrUrlArchivoZip = docPago.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hginet);
+                            DocFinal.StrNumResolucion = docPago.StrIdSeguridadPago;
+                            DocFinal.StrPrefijo = docPago.IntEstadoPago.ToString();
+                            ListDocFinal.Add(DocFinal);
+                        }
+                    }
+                    else
+                    {
+                        TblDocumentos DocFinal = new TblDocumentos();
+
+                        DocFinal.StrEmpresaFacturador = doc.TblEmpresasFacturador.StrRazonSocial;
+                        //Guardo la Indentificacion del Facturador en el campo StrEmpresaAdquiriente para poder enviar un solo objeto tipado
+                        DocFinal.StrEmpresaAdquiriente = doc.TblEmpresasFacturador.StrIdentificacion;
+
+                        //Guardo el Telefono aqui
+                        DocFinal.StrCufe = doc.TblEmpresasFacturador.StrTelefono;
+                        DocFinal.StrUrlArchivoUbl = doc.TblEmpresasFacturador.StrMail;
+
+                        DocFinal.IntDocTipo = doc.IntDocTipo;
+                        DocFinal.IntNumero = doc.IntNumero;
+                        DocFinal.DatFechaDocumento = doc.DatFechaDocumento;
+                        ListDocFinal.Add(DocFinal);
+                    }
+
+
+                }
+                return ListDocFinal;
             }
             catch (Exception excepcion)
             {
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
+
+
+        /// <summary>
+        /// Obtiene el Saldo Pendiente de un Documento
+        /// </summary>
+        /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>        
+        /// <returns></returns>
+        public String ConsultaSaldoDocumento(System.Guid StrIdSeguridadDoc)
+        {
+            try
+            {
+                var Valor_Documento = (from Doc in context.TblDocumentos
+                                       where Doc.StrIdSeguridad == StrIdSeguridadDoc
+                                       select Doc.IntVlrTotal).FirstOrDefault();
+
+                int Pago_pendiente = (from pagos in context.TblPagosElectronicos
+                                      where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                                      && pagos.IntEstadoPago == 999
+                                      select pagos.IntValorPago).Count();
+                if (Pago_pendiente > 0)
+                {
+                    return "PagoPendiente";
+                }
+
+                var Datos_pago = (from pagos in context.TblPagosElectronicos
+                                  where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                                  select pagos.IntValorPago).Sum();
+
+
+                if (Datos_pago >= Valor_Documento)
+                {
+                    return "DocumentoCancelado";
+                }
+
+                return (Valor_Documento - Datos_pago).ToString();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// Obtiene la lista de pagos del Facturador
+        /// </summary>
+        /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
+        /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
+        /// <returns></returns>
+        public List<TblPagosElectronicos> ObtenerPagosFacturador(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string Resolucion)
+        {
+
+            fecha_inicio = fecha_inicio.Date;
+
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+            int num_doc = -1;
+            int.TryParse(numero_documento, out num_doc);
+
+            short cod_estado_recibo = -1;
+            short.TryParse(estado_recibo, out cod_estado_recibo);
+
+            if (string.IsNullOrWhiteSpace(numero_documento))
+                numero_documento = "*";
+            if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+                codigo_adquiriente = "*";
+
+            if (string.IsNullOrWhiteSpace(estado_recibo))
+                estado_recibo = "*";
+
+            List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
+
+
+
+            var documentos = (from Pagos in context.TblPagosElectronicos
+                              where Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador)
+                              && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
+                              && (LstResolucion.Contains(Pagos.TblDocumentos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
+                              && (Pagos.TblDocumentos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+                              && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))
+                              orderby Pagos.TblDocumentos.StrEmpresaAdquiriente ascending, Pagos.TblDocumentos.IntNumero ascending
+                              select Pagos).ToList();
+
+
+            return documentos;
+
+        }
+
+
+        /// <summary>
+        /// Obtiene la lista de pagos del Adquiriente
+        /// </summary>
+        /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
+        /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
+        /// <returns></returns>
+        public List<TblPagosElectronicos> ObtenerPagosAdquiriente(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo)
+        {
+
+            fecha_inicio = fecha_inicio.Date;
+
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+            int num_doc = -1;
+            int.TryParse(numero_documento, out num_doc);
+
+            short cod_estado_recibo = -1;
+            short.TryParse(estado_recibo, out cod_estado_recibo);
+
+            if (string.IsNullOrWhiteSpace(numero_documento))
+                numero_documento = "*";
+            if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+                codigo_adquiriente = "*";
+
+            if (string.IsNullOrWhiteSpace(estado_recibo))
+                estado_recibo = "*";
+
+
+            var documentos = (from Pagos in context.TblPagosElectronicos
+                              where Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_adquiriente)
+                              && Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*")
+                              && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
+                              && (Pagos.TblDocumentos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+                              && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))
+                              orderby Pagos.TblDocumentos.StrEmpresaAdquiriente ascending, Pagos.TblDocumentos.IntNumero ascending
+                              select Pagos).ToList();
+
+
+            return documentos;
+
+        }
+
+
+
+
 
         /// <summary>
         /// obtiene los pagos por estado de verificación (consulta por DatFechaVerificacion, si esta null no se encuentra verificado). ¿FECHAS?

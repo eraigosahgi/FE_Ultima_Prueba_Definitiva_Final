@@ -43,31 +43,34 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
                         lblEmailUsuario.InnerText = datos_usuario.StrMail;
                         LblNombreUsuario.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
 
-                        if (PermisoActual != null)
-                        {
-                            lb_TituloPagina.Text = this.PermisoActual.Titulo;
-                            lb_GrupoPagina.Text = this.PermisoActual.GrupoPagina;
-                            //Valido si tengo una Cookies con la 
-                            if (Request.Cookies["UserSettings"] != null)
-                            {                                
-                                if (Request.Cookies["UserSettings"]["HtmlMenu"] != null && Request.Cookies["UserSettings"]["HtmlMenu"]!="")
-                                {
-                                    string NuevoCookies = Request.Cookies["UserSettings"]["HtmlMenu"];                                    
-                                    NuevoCookies = NuevoCookies.Replace("xxx", "<").Replace("zzz", ">").Replace("%0d%0a","").Replace("Ã³","ó").Replace("Ãº","Ú");
-                                    DivMenu.InnerHtml = NuevoCookies;
+                        //  if (PermisoActual != null)
+                        //{
 
-                                }else
-                                {
-                                    //Si no esta creado en session, crea el menu desde la base de datos
-                                    ActivarMenu(Sesion.DatosUsuario.StrUsuario, Sesion.DatosEmpresa.StrIdentificacion);
-                                }
+                        //Valido si tengo una Cookies con la 
+                        if (Request.Cookies["UserSettings"] != null)
+                        {
+                            if (Request.Cookies["UserSettings"]["HtmlMenu"] != null && Request.Cookies["UserSettings"]["HtmlMenu"] != "")
+                            {
+                                string NuevoCookies = Request.Cookies["UserSettings"]["HtmlMenu"];
+                                NuevoCookies = NuevoCookies.Replace("xxx", "<").Replace("zzz", ">").Replace("%0d%0a", "").Replace("Ã³", "ó").Replace("Ãº", "Ú");
+                                DivMenu.InnerHtml = NuevoCookies;
+
                             }
                             else
                             {
                                 //Si no esta creado en session, crea el menu desde la base de datos
                                 ActivarMenu(Sesion.DatosUsuario.StrUsuario, Sesion.DatosEmpresa.StrIdentificacion);
-                            }                          
+                            }
                         }
+                        else
+                        {
+                            
+                            //Si no esta creado en session, crea el menu desde la base de datos
+                            ActivarMenu(Sesion.DatosUsuario.StrUsuario, Sesion.DatosEmpresa.StrIdentificacion);
+                        }
+                        lb_TituloPagina.Text = this.PermisoActual.Titulo;
+                        lb_GrupoPagina.Text = this.PermisoActual.GrupoPagina;
+                        //}
 
 
                     }

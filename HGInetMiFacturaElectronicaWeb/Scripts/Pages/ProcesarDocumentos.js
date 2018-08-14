@@ -175,16 +175,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                          format: "yyyy-MM-dd HH:mm",
                          cssClass: "col-md-1"
 
-                     },
-                     {
-                         caption: "Prefijo",
-                         dataField: "Prefijo",
-                         cssClass: "col-md-1",
-                         headerFilter: {
-                             allowSearch: false
-                         }
-
-                     },                     
+                     },                                 
                      {
                          caption: "Documento",
                          dataField: "NumeroDocumento",

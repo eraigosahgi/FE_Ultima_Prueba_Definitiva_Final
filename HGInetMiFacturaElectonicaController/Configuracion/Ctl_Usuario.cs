@@ -572,6 +572,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 var respuesta = (from opciones in context.TblOpciones
                                  join opcionesUsuario in context.TblOpcionesUsuario on opciones.IntId equals opcionesUsuario.IntIdOpcion
                                  where (opcionesUsuario.StrUsuario.Equals(codigo_usuario) && opcionesUsuario.StrEmpresa.Equals(codigo_empresa))
+                                 && opciones.IntTipo==0
                                  && opcionesUsuario.IntConsultar == true
 
                                  select opciones);

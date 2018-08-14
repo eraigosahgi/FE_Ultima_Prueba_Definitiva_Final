@@ -1861,6 +1861,7 @@
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\ConsultaDocumentosClientes.js" />
+    <Content Include="Scripts\Pages\ConsultaPagosFacturador.js" />
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
@@ -2689,9 +2690,11 @@
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConsultaAdquirientePagos.aspx" />
     <Content Include="Views\Pages\ConsultaDocumentosClientes.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresasSerial.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
+    <Content Include="Views\Pages\ConsultaFacturadorPagos.aspx" />
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
@@ -2813,6 +2816,13 @@
     <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.designer.cs">
       <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ConsultaAdquirientePagos.aspx.cs">
+      <DependentUpon>ConsultaAdquirientePagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaAdquirientePagos.aspx.designer.cs">
+      <DependentUpon>ConsultaAdquirientePagos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ConsultaDocumentosClientes.aspx.cs">
       <DependentUpon>ConsultaDocumentosClientes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2833,6 +2843,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConsultaEmpresas.aspx.designer.cs">
       <DependentUpon>ConsultaEmpresas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaFacturadorPagos.aspx.cs">
+      <DependentUpon>ConsultaFacturadorPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaFacturadorPagos.aspx.designer.cs">
+      <DependentUpon>ConsultaFacturadorPagos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaPlanesTransacciones.aspx.cs">
       <DependentUpon>ConsultaPlanesTransacciones.aspx</DependentUpon>
@@ -3005,6 +3022,7 @@
     <EmbeddedResource Include="Properties\OpcionesPermisos.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OpcionesPermisos.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -3022,7 +3040,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61434/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

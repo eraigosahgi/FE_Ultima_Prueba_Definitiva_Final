@@ -7,25 +7,42 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 
     var IdSeguridad = location.search.split('id_seguridad=')[1];
     //Almacena el parametro Zpago para ver si debe enviarlo a la pantalla de pago
-    var Zpago = location.search.split('Zpago=')[1];    
+    var Zpago = location.search.split('Zpago=')[1];
 
     var estado = "";
     var motivo_rechazo = "";
 
-    $scope.habilitar = function () {        
-        $http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&pago=true').then(function (response) {
-            window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
-            //Si lo envia a la pantalla de pago, cierra la pantalla actual
-            if (Zpago)
-                window.close();
+    $scope.habilitar = function () {
+
+        //$http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&pago=true').then(function (response) {
+
+        $http.get('/api/ConsultaSaldoDocumento?StrIdSeguridadDoc=' + IdSeguridad).then(function (response) {
+            if (response.data != "PagoPendiente" && response.data != "DocumentoCancelado") {
+
+                $http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + response.data).then(function (response) {
+
+                    window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
+                    //Si lo envia a la pantalla de pago, cierra la pantalla actual
+                    if (Zpago)
+                        window.close();
+                }, function (error) {
+                });
+            } else {
+                if (response.data == "PagoPendiente") {
+                    DevExpress.ui.notify("No puede hacer pagos mientras tenga pagos pendientes", 'error', 7000);                    
+                }
+                if (response.data == "DocumentoCancelado") {
+                    DevExpress.ui.notify("Este documento ya fue pagado", 'error', 7000);                    
+                }
+            }
         }, function (error) {
         });
     };
 
     if (Zpago == 'true') {
         //Si parametro Zpago = true entonces lo envia a la pantalla de pago
-        $scope.habilitar();       
-    }   
+        $scope.habilitar();
+    }
 
     consultar();
     function consultar() {
@@ -33,10 +50,10 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         //ControladorApi: /Api/Documentos/
         //Datos GET: id_seguridad
         $http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
-            $scope.RespuestaAcuse = response.data;            
+            $scope.RespuestaAcuse = response.data;
         });
-        
-         
+
+
         $scope.TextAreaObservaciones = {
 
             readOnly: false,

@@ -5,12 +5,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.js"></script>-->
 
 
     <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/DocumentosObligado.js"></script>        
+    <script src="../../Scripts/Pages/DocumentosObligado.js"></script>
     <div ng-app="DocObligadoApp">
 
         <!-- CONTENEDOR PRINCIPAL -->
@@ -37,52 +37,54 @@
 
                                 <div class="dx-fieldset">
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-2" style="margin-top: 1%">
                                         <i class=" icon-calendar"></i>
                                         <label>Fecha Inicial:</label>
                                         <div id="FechaInicial"></div>
                                     </div>
 
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-2" style="margin-top: 1%">
                                         <i class=" icon-calendar"></i>
                                         <label>Fecha Final:</label>
                                         <div id="FechaFinal"></div>
                                     </div>
+                                    <div class="col-md-2" style="margin-top: 1%">
+                                        <i class="icon-files-empty"></i>
+                                        <label>Doc. Adquiriente:</label>
+                                        <div data-dx-autocomplete="filtros.Adquiriente"></div>
+                                    </div>
+                                    <div class="col-md-3" style="margin-top: 1%">
+                                        <i class="icon-files-empty"></i>
+                                        <label>Número Documento:</label>
+                                        <div data-dx-autocomplete="filtros.NumeroDocumento"></div>
+                                    </div>
 
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" style="margin-top: 1%">
                                         <i class="icon-file-text"></i>
                                         <label>Estado Acuse:</label>
                                         <div data-dx-select-box="filtros.EstadoRecibo"></div>
                                     </div>
-                                     <div class="col-md-3">
-                                        <i class="icon-files-empty"></i>
-                                        <label>Número Documento:</label>
-                                        <div data-dx-autocomplete="filtros.NumeroDocumento"></div>
-                                    </div>                               
-                                    <div class="col-md-4" style="margin-top:1%">
+
+                                    <div class="col-md-6" style="margin-top: 1%">
                                         <i class="icon-file-text"></i>
                                         <label>Estado:</label>
                                         <div id="filtrosEstadoRecibo"></div>
                                     </div>
-                                   
 
-                                    <div class="col-md-3" style="margin-top:1%">
-                                        <i class="icon-files-empty"></i>
-                                        <label>Código Adquiriente:</label>
-                                        <div data-dx-autocomplete="filtros.Adquiriente"></div>
-                                    </div>
 
-                                    <div class="col-md-5" style="margin-top:1%">
+
+
+                                    <div class="col-md-6" style="margin-top: 1%">
                                         <i class="icon-files-empty"></i>
-                                        <label>Resolución-Prefijo:</label>
+                                        <label>Resolución:</label>
                                         <div id="filtrosResolucion"></div>
                                     </div>
 
-                                   
+
                                 </div>
-                               
+
                             </div>
 
 
@@ -92,7 +94,7 @@
                             <br />
                             <div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
                         </div>
-                                                 
+
                         <p data-ng-bind-html="message"></p>
 
                     </div>
@@ -107,8 +109,8 @@
                 <div class="panel panel-white">
                     <div class="panel-heading">
                         <h6 class="panel-title ">Datos</h6>
-                        <div style="float: right; margin-right: 2%; margin-top:-20px;" >                            
-                                <label id="Total" class="text-semibold text-right" style="font-size:medium;"></label>                            
+                        <div style="float: right; margin-right: 2%; margin-top: -20px;">
+                            <label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>
                         </div>
                     </div>
 

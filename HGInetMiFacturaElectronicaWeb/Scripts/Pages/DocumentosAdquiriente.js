@@ -259,79 +259,37 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                           }
                       },
                 {
-
+                    ///Opción de pago
                     cssClass: "col-md-1 ",
                     width: "80px",
                     alignment:"center",
 
                     cellTemplate: function (container, options) {
-                                                
+
+                        var RazonSocial = options.data.NombreFacturador.replace(" ", "_%%_");
+                        var click = "onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "')";
+                        
                         var imagen = "";
-                        if (options.data.tipodoc == 'Factura' && options.data.poseeIdComercio == 1) {
-                            imagen = "<img src='../../Scripts/Images/Pagar.png' data-toggle='modal'  data-target='#modal_Pagos_Electronicos' />";
+                        if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1) {
+                            imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Pagar</a>";
                         } else {
                             imagen = "";
 
                         }
 
-                        if (options.data.tipodoc == 'Factura' && options.data.poseeIdComercio == 1 && options.data.FacturaCenlada == 8) {//aqui se debe colocar el status que indica el pago de la factura
-                            imagen = "<a class='icon-eye' data-toggle='modal' data-target='#modal_Pagos_Electronicos' ></a>";
-                        }
-                        
-
-                        $("<div>").removeClass("dx-button-content")
-                        // ng-show=' + options.data.tipodoc + '=='Factura'
-
-                        $(imagen).dxButton({
-                            onClick: function () {
-                                // "68c671b9-90ac-4b35-957a-89eae06f3052"
-                                $rootScope.ConsultarPago(options.data.StrIdSeguridad, options.data.IntVlrTotal);
-                                /*
-                                $http.get('/api/Documentos?strIdSeguridad=' + options.data.StrIdSeguridad + '&pago=true').then(function (response) {
-                                    window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
-                                }, function (error) {
-                                    DevExpress.ui.notify(error, 'error', 6000);
-                                });
-                                */
-                            }
-                        }).removeClass("dx-button-content")
-                            .append($("")).removeClass("dx-button dx-button-normal dx-widget")
-                            .appendTo(container).removeClass("dx-button-default")
-                        $("</div>")
-                    }
-                },/*
-                {
-                    width: "auto",                    
-                    cellTemplate: function (container, options) {
-
-                        $scope.Poseecodigocomercio = (options.data.IntComercioId != null) ? true : false;
-                        var visible_pago = "style='pointer-events:auto;cursor: not-allowed;'";
-                        
-                        var imagen = "";
-                        if (options.data.tipodoc == 'Factura' && options.data.poseeIdComercio==1) {
-                            imagen = "<a class='btn-primary' >Pagar</a>'";
-                        } else {
-                            imagen = "";
-
+                        if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCenlada == 8) {//aqui se debe colocar el status que indica el pago de la factura                            
+                            imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Ver</a>"
                         }
 
                         $("<div>")
-                        .append(
-                                    //"<a class='icon-eye' data-toggle='modal' data-target='#modal_Pagos_Electronicos' style='margin-left:5%; font-size:19px'></a>"
-                                    $(imagen).dxButton({
-                                        onClick: function () {
-                                            //LLamo a la funcion del controlador de pagos                                            
-                                            $rootScope.ConsultarPago("68c671b9-90ac-4b35-957a-89eae06f3052", options.data.IntVlrTotal);
-                                        }
-                                    }).removeClass("dx-button dx-button-normal dx-widget")
+                        .append($(imagen))
 
-                            )
-                                .appendTo(container);
-                    },*/
-
-
+                         .appendTo(container);                                                
+                    }
+                },
 
                 ],
+                //Totales y agrupaciones
                 summary: {
                     groupItems: [{
                         column: "IntVlrTotal",
@@ -373,9 +331,10 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 
     }
 
-
-
-
+    //Redirecciona el pago interno al metodo del controlador de pago    
+    ConsultarPago1 = function (IdSeguridad, Monto, PagosParciales) {
+        $rootScope.ConsultarPago(IdSeguridad, Monto, PagosParciales);
+    };
 
 
 });
@@ -386,8 +345,21 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     $("#summary").dxValidationSummary({});
     $scope.valoraPendiente = 0;
 
-    $rootScope.ConsultarPago = function (IdSeguridad, Monto) {
+    /////Parametros de la tabla
+    $scope.fechadoc = "";
+    $scope.documento = "";
+    $scope.tipoDoc = "";
+    $scope.email = "";
+    $scope.telefono = "";
+    $scope.nit = "";
+    $scope.razonsocial = "";
+
+    $rootScope.ConsultarPago = function (IdSeguridad, Monto, PagosParciales) {
         $("#PanelPago").show();
+        $("#MontoPago").dxNumberBox({ readOnly: (PagosParciales == "1") ? false : true });
+        $("#Detallepagos").hide();        
+       
+
 
         ///Este es el monto total de la factura
         $scope.montoFactura = Monto;
@@ -404,10 +376,28 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         $scope.EnProceso = false;
 
 
-        $scope.valoraPendiente = Monto;        
+        $scope.valoraPendiente = Monto;
+        $scope.valoraPagar = Monto;
         $("#divValorPendiente").text(fNumber.go($scope.valoraPendiente));
+        $("#MontoPago").dxNumberBox({ value: $scope.valoraPendiente });
         //Consulto los pagos de este documento
         $http.get('/api/ConsultarPagos?StrIdSeguridadDoc=' + IdSeguridad).then(function (response) {
+
+            if (response.data[0].Monto > 0) {
+                $("#Detallepagos").show();
+            }
+
+            /////Parametros de la tabla
+            $scope.fechadoc = response.data[0].FechaDocumento;
+            $scope.documento = response.data[0].IntNumero;
+            $scope.tipoDoc = response.data[0].DocTipo;
+            $scope.email = response.data[0].Mail;//(Email != "null" && Email != "undefined") ? Email : "";
+            $scope.telefono = response.data[0].Telefono;//(Telefono != "null" && Telefono != "undefined") ? Telefono : "";
+            $scope.nit = response.data[0].NitFacturador;
+            $scope.razonsocial = response.data[0].RazonSocialFacturador;
+
+
+
 
             $("#button").dxButton({ visible: true });
 
@@ -426,7 +416,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                    var fieldData = options.value,
                        fieldHtml = "";
                    try {
-                       if (options.column.caption == "Monto") {
+                       if (options.column.caption == "Valor") {
                            if (fieldData) {
                                var inicial = fNumber.go(fieldData).replace("$-", "-$");
                                options.cellElement.html(inicial);
@@ -442,32 +432,36 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                , allowColumnReordering: true
 
                , columns: [
-
                    {
-                       caption: "Monto",
-                       dataField: "Monto",
-                       cssClass: "col-md-1 col-xs-3",
+                       caption: "Cód.Transacción",
+                       dataField: "StrIdSeguridadPago"                       
+
                    },
                    {
-                       caption: "FechaVerificacion",
+                       caption: "Fecha Pago",
+                       dataField: "FechaRegistro",
+                       dataType: "date",
+                       format: "yyyy-MM-dd "                       
+                   },
+
+                   {
+                       caption: "Valor",
+                       dataField: "Monto"                       
+                   },
+                   {
+                       caption: "Estado",
+                       dataField: "Estado"
+                   },
+                   
+                   {
+                       caption: "Fecha Verificación",
                        dataField: "FechaVerificacion",
                        dataType: "date",
-                       format: "yyyy-MM-dd ",
-                       cssClass: "col-md-1 col-xs-3"
-                   },
-                   {
-                       caption: "StrIdSeguridadPago",
-                       dataField: "StrIdSeguridadPago",
-                       cssClass: "col-md-1 col-xs-1"
-
+                       format: "yyyy-MM-dd "                       
                    }
-                   ,
-                    {
-                        caption: "StrIdPlataforma",
-                        cssClass: "hidden-xs col-md-1",
-                        dataField: "StrIdPlataforma"
-
-                    }
+                   
+                   
+                   
                ],
 
                 summary: {
@@ -487,20 +481,27 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                                 $scope.TotalPago = 0;
                             }
                             if (options.summaryProcess === "calculate") {
-                                options.totalValue = options.totalValue + options.value.Monto;
-                                $scope.TotalPago = $scope.TotalPago + options.totalValue;
-                                ///Monto pendiente por pagar
-                                $scope.valoraPendiente = $scope.montoFactura - options.totalValue;
-                                $("#MontoPago").dxNumberBox({ placeholder: "$ " + $scope.valoraPendiente });
-                                $("#divValorPendiente").text(fNumber.go($scope.valoraPendiente));
+                                if (options.value.Estado == "Aprobado") {
+                                    options.totalValue = options.totalValue + options.value.Monto;
+                                    $scope.TotalPago = $scope.TotalPago + options.totalValue;
+                                    ///Monto pendiente por pagar
+                                    $scope.valoraPendiente = $scope.montoFactura - options.totalValue;
+                                    $("#MontoPago").dxNumberBox({ value: $scope.valoraPendiente });
+                                    $("#divValorPendiente").text(fNumber.go($scope.valoraPendiente));
+                                }
                                 if ($scope.valoraPendiente == 0) {
                                     $("#button").dxButton({ visible: false });
                                     $("#summary").dxValidationSummary({ visible: false });
+                                    $("#MontoPago").hide();
                                     $("#PanelPago").hide();
+                                    $("#Pagar").hide();
                                 } else {
                                     $("#button").dxButton({ visible: true });
                                     $("#summary").dxValidationSummary({ visible: true });
                                     $("#PanelPago").show();
+                                    $("#MontoPago").show();
+                                    $("#Pagar").show();
+                                    
                                 }
                             }
                         }
