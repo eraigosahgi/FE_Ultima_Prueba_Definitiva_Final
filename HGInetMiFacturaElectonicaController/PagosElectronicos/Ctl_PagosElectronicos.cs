@@ -290,9 +290,17 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     return "PagoPendiente";
                 }
 
-                var Datos_pago = (from pagos in context.TblPagosElectronicos
+                var Pagos = (from pagos in context.TblPagosElectronicos
+                                  where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                                  select pagos.IntValorPago).FirstOrDefault();
+
+                decimal Datos_pago=0;
+                if (Pagos >0)
+                {
+                    Datos_pago = (from pagos in context.TblPagosElectronicos
                                   where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
                                   select pagos.IntValorPago).Sum();
+                }
 
 
                 if (Datos_pago >= Valor_Documento)
