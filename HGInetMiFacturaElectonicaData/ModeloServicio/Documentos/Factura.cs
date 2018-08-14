@@ -172,7 +172,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public List<Cuota> Cuotas { get; set; }
 
-		#endregion
+        /// <summary>
+		/// Version de la aplicacion donde fue generado el documento
+		/// </summary>
+		public string versionAplicativo { get; set; }
 
-	}
+        #endregion
+
+    }
 }
