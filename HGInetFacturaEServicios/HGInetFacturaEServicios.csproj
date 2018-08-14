@@ -132,24 +132,27 @@
     <None Include="Service References\ServicioDocumento\HGInetFacturaEServicios.ServicioDocumento.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioFactura\factura.wsdl" />
-    <None Include="Service References\ServicioFactura\factura.xsd">
+    <None Include="Service References\ServicioFactura\factura2.wsdl" />
+    <None Include="Service References\ServicioFactura\factura21.wsdl" />
+    <None Include="Service References\ServicioFactura\factura5.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura1.wsdl" />
-    <None Include="Service References\ServicioFactura\factura1.xsd">
+    <None Include="Service References\ServicioFactura\factura51.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura2.xsd">
+    <None Include="Service References\ServicioFactura\factura52.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura3.xsd">
+    <None Include="Service References\ServicioFactura\factura53.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura4.xsd">
+    <None Include="Service References\ServicioFactura\factura54.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioFactura\HGInetFacturaEServicios.ServicioFactura.ObtenerPorFechasAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioFactura\HGInetFacturaEServicios.ServicioFactura.ObtenerPorIdSeguridadAdquirienteResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioFactura\HGInetFacturaEServicios.ServicioFactura.RecepcionResponse.datasource">
@@ -161,30 +164,36 @@
     <None Include="Service References\ServicioNotaCredito\HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorFechasAdquirienteResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ServicioNotaCredito\HGInetFacturaEServicios.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioNotaCredito\HGInetFacturaEServicios.ServicioNotaCredito.RecepcionResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioNotaCredito\HGInetFacturaEServicios.ServicioNotaCredito.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito.wsdl" />
-    <None Include="Service References\ServicioNotaCredito\notacredito.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito2.wsdl" />
+    <None Include="Service References\ServicioNotaCredito\notacredito21.wsdl" />
+    <None Include="Service References\ServicioNotaCredito\notacredito5.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito1.wsdl" />
-    <None Include="Service References\ServicioNotaCredito\notacredito1.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito51.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito2.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito52.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito3.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito53.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito4.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito54.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.ObtenerPorFechasAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.RecepcionResponse.datasource">
@@ -193,21 +202,21 @@
     <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito.wsdl" />
-    <None Include="Service References\ServicioNotaDebito\notadebito.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito2.wsdl" />
+    <None Include="Service References\ServicioNotaDebito\notadebito21.wsdl" />
+    <None Include="Service References\ServicioNotaDebito\notadebito5.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito1.wsdl" />
-    <None Include="Service References\ServicioNotaDebito\notadebito1.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito51.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito2.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito52.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito3.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito53.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito4.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito54.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioResolucion\HGInetFacturaEServicios.ServicioResolucion.ConsultarResponse.datasource">
@@ -324,16 +333,16 @@
     <None Include="Service References\ServicioDocumento\documentos.disco" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioFactura\factura.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioNotaCredito\notacredito.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioNotaDebito\notadebito.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioResolucion\resolucion.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\factura1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaCredito\notacredito1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaDebito\notadebito1.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
