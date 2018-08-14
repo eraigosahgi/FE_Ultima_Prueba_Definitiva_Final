@@ -69,7 +69,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
                 resumen_inicio.Color = "#EEE713";
                 documentos_estado.Add(resumen_inicio);
 
-                return documentos_estado;
+                return documentos_estado.OrderBy(x => x.Estado).ToList();
             }
             catch (Exception excepcion)
             {
