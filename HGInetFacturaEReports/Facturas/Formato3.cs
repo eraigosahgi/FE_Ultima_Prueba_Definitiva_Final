@@ -41,23 +41,26 @@ namespace HGInetFacturaEReports.Facturas
 
                 //Obtiene el dato del parametro TipoDocumento para obtener el título del documento.
                 int tipo = Convert.ToInt32(report.Parameters["TipoDocumento"].Value);
-                TextBoxTituloDocumento.Value = string.Format("{0} No.", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo)).ToUpper());
+
+                TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo);
+
+                TextBoxTituloDocumento.Value = string.Format("{0} No.", Enumeracion.GetDescription(tipo_doc).ToUpper());
 
                 DateTime fecha_vence = new DateTime();
 
-                switch (tipo)
+                switch (tipo_doc)
                 {
-                    case 1:
+                    case TipoDocumento.Factura:
                         TextBoxTituloFecha.Value = "FECHA FACTURA";
                         TextBoxTituloVencimiento.Value = "VENCIMIENTO";
                         fecha_vence = datos_documento.FechaVence;
                         break;
-                    case 2:
+                    case TipoDocumento.NotaCredito:
                         TextBoxTituloFecha.Value = "FECHA";
                         TextBoxTituloVencimiento.Value = "FECHA FACTURA";
                         fecha_vence = datos_documento.FechaFactura;
                         break;
-                    case 3:
+                    case TipoDocumento.NotaDebito:
                         TextBoxTituloFecha.Value = "FECHA";
                         TextBoxTituloVencimiento.Value = "FECHA FACTURA";
                         fecha_vence = datos_documento.FechaFactura;
@@ -68,7 +71,7 @@ namespace HGInetFacturaEReports.Facturas
 
                 string cod_qr =
 
-                cod_qr = string.Format("NumFac:{0} {1}\r\nFecFac:{2}\r\nNitFac:{3}\r\nDocAdq:{4}\r\n", datos_documento.Prefijo, datos_documento.Documento, Convert.ToDateTime(datos_documento.Fecha).ToString("dd-MMMM-yyyy"), datos_documento.DatosObligado.Identificacion, datos_documento.DatosAdquiriente.Identificacion);
+                   cod_qr = string.Format("NumFac:{0} {1}\r\nFecFac:{2}\r\nNitFac:{3}\r\nDocAdq:{4}\r\n", datos_documento.Prefijo, datos_documento.Documento, Convert.ToDateTime(datos_documento.Fecha).ToString("yyyyMMddHHm"), datos_documento.DatosObligado.Identificacion, datos_documento.DatosAdquiriente.Identificacion);
                 cod_qr = cod_qr + string.Format("ValFac:{0}\r\nValIva:{1}\r\nValOtroImp:{2}\r\n", datos_documento.ValorSubtotal.ToString().Replace(",", "."), datos_documento.ValorIva.ToString().Replace(",", "."), datos_documento.ValorImpuestoConsumo.ToString().Replace(",", "."));
                 cod_qr = cod_qr + string.Format("ValFacIm:{0}\r\nCUFE:{1}", datos_documento.Total.ToString().Replace(",", "."), datos_documento.Cufe);
                 CodigoQR.Value = cod_qr;
