@@ -182,12 +182,88 @@ namespace HGInetFacturaEServicios
 		}
 
 
-		/// <summary>
-		/// Prueba del servicio web de la plataforma de Facturación Electrónica
+        /// <summary>
+		/// Permite obtener los documentos enviados a la plataforma a nombre del Adquiriente
 		/// </summary>
 		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
-		/// <returns></returns>
-		public static string Test(string UrlWs)
+		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="Identificacion">número de identificación del Adquiriente</param>
+		/// <param name="CodigosDocumentos">còdigos de documentos del Facturador Electrónico para consulta separados por el caracter coma (,)</param>
+		/// <returns>Una lista de las Notas Credito generadas a nombre del adquiriente</returns>
+		public static List<ServicioNotaCredito.NotaCreditoConsulta> ObtenerPorIdSeguridadAdquiriente(string UrlWs, string Serial, string Identificacion, string CodigosDocumentos)
+        {
+            // valida la URL del servicio web
+            UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+            // valida el parámetro Serial
+            if (string.IsNullOrEmpty(Serial))
+                throw new ApplicationException("Parámetro Serial de tipo string inválido.");
+
+            // valida el parámetro Identificacion
+            if (string.IsNullOrEmpty(Identificacion))
+                throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+            // valida el parámetro Identificacion
+            if (string.IsNullOrEmpty(CodigosDocumentos))
+                throw new ApplicationException("Parámetro CodigosDocumentos de tipo string inválido.");
+
+            List<ServicioNotaCredito.NotaCreditoConsulta> datos = new List<ServicioNotaCredito.NotaCreditoConsulta>();
+
+            // conexión cliente para el servicio web
+            ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient();
+            cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+            try
+            {
+                // configura la cadena de autenticación para la ejecución del servicio web en SHA1
+                string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+
+                // datos para la petición
+                ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest peticion = new ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest()
+                {
+                    DataKey = dataKey,
+                    Identificacion = Identificacion,
+                    CodigosRegistros = CodigosDocumentos,
+                };
+
+                // ejecución del servicio web
+                ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse respuesta = cliente_ws.ObtenerPorIdSeguridadAdquiriente(peticion);
+
+                // resultado del servicio web
+                List<ServicioNotaCredito.NotaCreditoConsulta> result = respuesta.ObtenerPorIdSeguridadAdquirienteResult;
+
+                if (respuesta != null)
+                    return result;
+                else
+                    throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+            }
+            catch (FaultException excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion);
+            }
+            catch (CommunicationException excepcion)
+            {
+                throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+            }
+            catch (Exception excepcion)
+            {
+                throw excepcion;
+            }
+            finally
+            {
+                if (cliente_ws != null)
+                    cliente_ws.Abort();
+            }
+        }
+
+
+        /// <summary>
+        /// Prueba del servicio web de la plataforma de Facturación Electrónica
+        /// </summary>
+        /// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+        /// <returns></returns>
+        public static string Test(string UrlWs)
 		{   // valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
