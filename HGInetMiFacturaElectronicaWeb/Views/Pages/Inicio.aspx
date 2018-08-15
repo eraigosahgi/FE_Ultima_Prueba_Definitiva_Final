@@ -14,9 +14,9 @@
 
             <!-- MENÚ TABS -->
             <ul class="nav nav-tabs">
-                <li class="active"><a id="Panel1351" data-ng-if="Panel1351" data-ng-init="Panel1351=true" href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
-                <li><a id="Panel1352" data-ng-if="Panel1352" data-ng-init="Panel1352=true" href="#TabFacturador" data-toggle="tab">Facturador</a></li>
-                <li><a id="Panel1353" data-ng-if="Panel1353" data-ng-init="Panel1353=true" href="#TabAdquiriente" data-toggle="tab" aria-expanded="false">Adquiriente</a></li>
+                <li class="active"><a href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
+                <li><a href="#TabFacturador" data-toggle="tab">Facturador</a></li>
+                <li><a href="#TabAdquiriente" data-toggle="tab" aria-expanded="false">Adquiriente</a></li>
             </ul>
             <!--  /MENÚ TABS -->
 
