@@ -7,71 +7,71 @@
 <head runat="server">
     <title></title>
     <style type="text/css">
-		#outlook a {
-			padding: 0;
-		}
+        #outlook a {
+            padding: 0;
+        }
 
-		.ReadMsgBody {
-			width: 100%;
-		}
+        .ReadMsgBody {
+            width: 100%;
+        }
 
-		.ExternalClass {
-			width: 100%;
-		}
+        .ExternalClass {
+            width: 100%;
+        }
 
-			.ExternalClass * {
-				line-height: 100%;
-			}
+            .ExternalClass * {
+                line-height: 100%;
+            }
 
-		body {
-			margin: 0;
-			padding: 0;
-			-webkit-text-size-adjust: 100%;
-			-ms-text-size-adjust: 100%;
-		}
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
 
-		table, td {
-			border-collapse: collapse;
-			mso-table-lspace: 0pt;
-			mso-table-rspace: 0pt;
-		}
+        table, td {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
 
-		img {
-			border: 0;
-			height: auto;
-			line-height: 100%;
-			outline: none;
-			text-decoration: none;
-			-ms-interpolation-mode: bicubic;
-		}
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+        }
 
-		p {
-			display: block;
-			margin: 10px 0;
-		}
+        p {
+            display: block;
+            margin: 10px 0;
+        }
 
-		.tg td {
-			font-family: Arial, Ubuntu;
-			padding: 2px;
-			border-style: solid;
-			border-width: 4px;
-			overflow: hidden;
-			word-break: normal;
-			border-color: #FFFFFF;
-		}
+        .tg td {
+            font-family: Arial, Ubuntu;
+            padding: 2px;
+            border-style: solid;
+            border-width: 4px;
+            overflow: hidden;
+            word-break: normal;
+            border-color: #FFFFFF;
+        }
 
-		.tg th {
-			font-family: Arial, Ubuntu;
-			font-size: 14px;
-			font-weight: normal;
-			padding: 10px 5px;
-			border-style: none;
-			border-width: 1px;
-			overflow: hidden;
-			word-break: normal;
-			border-color: Gray;
-		}
-	</style>
+        .tg th {
+            font-family: Arial, Ubuntu;
+            font-size: 14px;
+            font-weight: normal;
+            padding: 10px 5px;
+            border-style: none;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+            border-color: Gray;
+        }
+    </style>
 </head>
 <body>
     <!--Link de Js con logica de WebApi-->
@@ -93,7 +93,7 @@
                             <!-- JS Modal Pagos-->
 
                             <!-- CONTENEDOR PRINCIPAL -->
-                            <div data-ng-app="ModalpagosApp" data-ng-controller="ModalPagosController" data-ng-init="Stop=true">
+                            <div data-ng-app="ModalpagosApp" data-ng-controller="ModalPagosController" data-ng-init="Stop=true" data-ng-init="SinpagosPendiente=true">
                                 <form id="form" action="your-action">
 
                                     <div class="col-md-12">
@@ -150,7 +150,7 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Valor:</td>
-                                                                                <td style="background-color: #ffffff; vertical-align: top">   {{montoFactura | currency:"$ " }}</td>
+                                                                                <td style="background-color: #ffffff; vertical-align: top">{{montoFactura | currency:"$ " }}</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">
@@ -185,20 +185,20 @@
                                                         <div style="visibility: hidden" id="PagoTotal"></div>
                                                     </div>
                                                 </div>-->
+                                                <div id="panelPagoPendiente">
+                                                    <div class="col-md-12 text-right" id="PanelPago" >
+                                                        <br />
 
-                                                <div class="col-md-12 text-right" id="PanelPago">
-                                                    <br />
-
-                                                    <div id="button"></div>
+                                                        <div id="button"></div>
 
 
-                                                    <div data-dx-button="buttonProcesar" data-ng-if="EnProceso">
-                                                        <i class="icon-spinner6 spinner mr-2"></i>
+                                                        <div data-dx-button="buttonProcesar" data-ng-if="EnProceso">
+                                                            <i class="icon-spinner6 spinner mr-2"></i>
+                                                        </div>
+
+
                                                     </div>
-
-
                                                 </div>
-
 
                                                 <div class="dx-fieldset">
                                                     <div id="summary"></div>
