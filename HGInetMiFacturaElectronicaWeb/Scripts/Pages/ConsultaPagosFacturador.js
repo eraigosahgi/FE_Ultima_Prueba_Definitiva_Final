@@ -35,7 +35,6 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
             items_recibo = dataacuse;
 
             $http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
-                console.log("Prefijo", response.data);
                 ResolucionesPrefijo = response.data;
                 cargarFiltros();
             }, function (response) {
@@ -114,7 +113,6 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
                             var keys = selectedItems.selectedRowKeys;
                             e.component.option("value", keys);
                             resolucion = keys;
-                            console.log("resolucion", resolucion);
                         }
                     });
 
@@ -149,7 +147,16 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
                     Enabled: true,
                     placeholder: "Seleccione un Item",
                     onValueChanged: function (data) {
-                        estado_recibo = data.value.ID;
+                        estado_recibo = "*";
+                        if (data.value.ID == 0) {
+                            estado_recibo = "999";
+                        }
+                        if (data.value.ID == 1) {
+                            estado_recibo = "1";
+                        }
+                        if (data.value.ID == 2) {
+                            estado_recibo = "0";
+                        }                        
                     }
                 },
                 NumeroDocumento: {
@@ -197,8 +204,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
-        $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion).then(function (response) {
-            console.log(response.data);
+        $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion).then(function (response) {            
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -275,15 +281,15 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
                 }
         , columns: [
              {
-                 caption: "Estado",                 
+                 caption: "Estado",
                  dataField: "EstadoFactura",
              }, {
-                 caption: "Adquiriente",                 
+                 caption: "Adquiriente",
                  dataField: "StrEmpresaAdquiriente"
              },
 
               {
-                  caption: "Nombre Adquiriente",                  
+                  caption: "Nombre Adquiriente",
                   dataField: "NombreAdquiriente"
               },
               {
@@ -294,16 +300,16 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
               },
             {
-                caption: "Documento",                
+                caption: "Documento",
                 dataField: "NumeroDocumento",
 
             },
              {
-                 caption: "Cod. Transacción",                 
+                 caption: "Cod. Transacción",
                  dataField: "idseguridadpago",
              },
               {
-                  caption: "Valor",                  
+                  caption: "Valor",
                   dataField: "PagoFactura"
               },
 
@@ -386,15 +392,15 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {
         codigo_facturador = data[0].Identificacion;
-        
+
         SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
             items_recibo = dataacuse;
             cargarFiltros();
         });
     });
-   
-   
-    
+
+
+
 
     function cargarFiltros() {
         $("#FechaInicial").dxDateBox({
@@ -434,8 +440,18 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                     Enabled: true,
                     placeholder: "Seleccione un Item",
                     onValueChanged: function (data) {
-                        estado_recibo = data.value.ID;
+                        estado_recibo = "*";
+                        if (data.value.ID == 0) {
+                            estado_recibo = "999";
+                        }
+                        if (data.value.ID == 1) {
+                            estado_recibo = "1";
+                        }
+                        if (data.value.ID == 2) {
+                            estado_recibo = "0";
+                        }                        
                     }
+
                 },
                 NumeroDocumento: {
                     placeholder: "Ingrese Número Documento",
@@ -483,7 +499,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
         //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
         $http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo).then(function (response) {
-            console.log(response.data);
+            
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,

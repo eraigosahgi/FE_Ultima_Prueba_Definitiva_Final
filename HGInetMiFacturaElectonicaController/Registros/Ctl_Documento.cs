@@ -255,8 +255,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
             fecha_inicio = fecha_inicio.Date;
             fecha_fin = fecha_fin.Date.AddDays(1);
 
-            int num_doc = -1;
-            int.TryParse(numero_documento, out num_doc);
+            long num_doc = -1;
+            long.TryParse(numero_documento, out num_doc);
 
             short cod_estado_recibo = -1;
             short.TryParse(estado_recibo, out cod_estado_recibo);
@@ -301,8 +301,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
             fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
-            int num_doc = -1;
-            int.TryParse(numero_documento, out num_doc);
+            long num_doc = -1;
+            long.TryParse(numero_documento, out num_doc);
 
             //short cod_estado_dian = -1;
             //short.TryParse(estado_dian, out cod_estado_dian);
@@ -374,8 +374,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
             fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
-            int num_doc = -1;
-            int.TryParse(numero_documento, out num_doc);
+            long num_doc = -1;
+            long.TryParse(numero_documento, out num_doc);
 
             short cod_estado_recibo = -1;
             short.TryParse(estado_recibo, out cod_estado_recibo);

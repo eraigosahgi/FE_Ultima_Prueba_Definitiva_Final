@@ -150,7 +150,7 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Valor:</td>
-                                                                                <td style="background-color: #ffffff; vertical-align: top">{{montoFactura | currency }}</td>
+                                                                                <td style="background-color: #ffffff; vertical-align: top">   {{montoFactura | currency:"$ " }}</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">

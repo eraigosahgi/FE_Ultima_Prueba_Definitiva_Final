@@ -292,6 +292,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                 var Pagos = (from pagos in context.TblPagosElectronicos
                                   where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                                  && pagos.IntEstadoPago==1
                                   select pagos.IntValorPago).FirstOrDefault();
 
                 decimal Datos_pago=0;
@@ -332,8 +333,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
             fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
-            int num_doc = -1;
-            int.TryParse(numero_documento, out num_doc);
+            long num_doc = -1;
+            long.TryParse(numero_documento, out num_doc);
+                       
 
             short cod_estado_recibo = -1;
             short.TryParse(estado_recibo, out cod_estado_recibo);
@@ -354,8 +356,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                               where Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador)
                               && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
                               && (LstResolucion.Contains(Pagos.TblDocumentos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
-                              && (Pagos.TblDocumentos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+                              && (Pagos.IntEstadoPago.Equals(cod_estado_recibo) || estado_recibo.Equals("*"))
                               && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))
+                              && (Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
                               orderby Pagos.TblDocumentos.StrEmpresaAdquiriente ascending, Pagos.TblDocumentos.IntNumero ascending
                               select Pagos).ToList();
 

@@ -519,8 +519,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         //Valido el monto Total menos el monto pagado
 
         $("#MontoPago").dxNumberBox({
-            format: "$ #,##0",
-            placeholder: fNumber.go($scope.valoraPendiente),
+            format: "$ #,##0.##",
             validationGroup: "ValidarPago",
             onValueChanged: function (data) {
                 $scope.valoraPagar = data.value;
@@ -551,7 +550,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
           , {
               type: 'pattern',
-              pattern: '^[0-9]+$',
+              pattern: '^[0-9-.]+$',
               message: 'No debe Incluir puntos(.) ni caracteres especiales'
           }
           , {

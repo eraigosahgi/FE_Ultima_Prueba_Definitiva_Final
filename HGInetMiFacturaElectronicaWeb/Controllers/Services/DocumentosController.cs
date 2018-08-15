@@ -72,7 +72,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
                     poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId != null) ? 1 : 0,
                     FacturaCenlada = d.IntIdEstado,
-                    PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales.Value == true) ? 1 : 0,
+                    PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales==null)? 0:(d.TblEmpresasResoluciones?.IntPermiteParciales == true ) ? 1 :0,
                     Telefono = d.TblEmpresasFacturador.StrTelefono,
                     Email = d.TblEmpresasFacturador.StrMail
                 });
@@ -758,7 +758,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hginet) : "",
                     DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hginet) : "",
                     PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
-                    EstadoFactura = (d.IntEstadoPago == 0) ? "Pendiente" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Rechazado" : "",
+                    EstadoFactura = (d.IntEstadoPago == 0) ? "Rechazado" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Pendiente" : "",
                     idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago
 
 

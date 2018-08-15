@@ -26,16 +26,20 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
                     if (Zpago)
                         window.close();
                 }, function (error) {
+                    DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
                 });
             } else {
                 if (response.data == "PagoPendiente") {
-                    DevExpress.ui.notify("No puede hacer pagos mientras tenga pagos pendientes", 'error', 7000);                    
+                    DevExpress.ui.notify("No puede hacer pagos mientras tenga pagos pendientes", 'error', 7000);
+                    window.close();
                 }
                 if (response.data == "DocumentoCancelado") {
-                    DevExpress.ui.notify("Este documento ya fue pagado", 'error', 7000);                    
+                    DevExpress.ui.notify("Este documento ya fue pagado", 'error', 7000);
+                    window.close();
                 }
             }
         }, function (error) {
+            DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
         });
     };
 
