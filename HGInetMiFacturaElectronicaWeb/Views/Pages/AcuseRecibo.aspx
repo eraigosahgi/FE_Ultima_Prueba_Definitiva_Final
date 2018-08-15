@@ -90,7 +90,7 @@
 
 <body class="login-container" style="background-color: #eeeded">
 
-    <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController" data-ng-cloak="">
+    <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController" data-ng-cloak="" data-ng-init="DetalleAcuse=true">
         <div style="margin: 4%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
 
             <!-- Visualización Información Factura -->
@@ -154,70 +154,70 @@
                             </div>
 
                         </div>
-                        
 
 
-                        <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
-                        <div id="PanelOpcionesAdquiriente" data-ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
+                        <div data-ng-if="DetalleAcuse">
+                            <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
+                            <div id="PanelOpcionesAdquiriente" data-ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
 
-                            <form data-ng-submit="onFormSubmit($event)">
+                                <form data-ng-submit="onFormSubmit($event)">
 
-                                <div>
-                                    <h4 class="panel-title text-bold text-center">Respuesta Acuse</h4>
-                                    <br />
-                                    <div class="col-md-12 ">
-                                        <label><strong>Aprobar:</strong></label>
-                                        <input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+                                    <div>
+                                        <h4 class="panel-title text-bold text-center">Respuesta Acuse</h4>
+                                        <br />
+                                        <div class="col-md-12 ">
+                                            <label><strong>Aprobar:</strong></label>
+                                            <input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
 
-                                        <label style="margin-left: 20px;"><strong>Rechazar:</strong></label>
-                                        <input type="radio" style="cursor: pointer" class="w3-radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+                                            <label style="margin-left: 20px;"><strong>Rechazar:</strong></label>
+                                            <input type="radio" style="cursor: pointer" class="w3-radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+                                        </div>
+                                        <br />
                                     </div>
+
+                                    <div id="form" data-dx-form="TextAreaObservaciones" style="padding-left: 2%; padding-top: 5%;"></div>
                                     <br />
-                                </div>
-
-                                <div id="form" data-dx-form="TextAreaObservaciones" style="padding-left: 2%; padding-top: 5%;"></div>
-                                <br />
-                                <div class="col-lg-12 text-right">
-                                    <div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
-                                    <div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
-                                    &nbsp;&nbsp;&nbsp;
+                                    <div class="col-lg-12 text-right">
+                                        <div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
+                                        <div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
+                                        &nbsp;&nbsp;&nbsp;
                                     
-                                </div>
+                                    </div>
 
-                            </form>
+                                </form>
 
-                            <br />
-                            <br />
+                                <br />
+                                <br />
 
+                            </div>
+                        </div>
+                    <div id="PanelInformacionArchivos" style="font-size: medium" class="dx-fieldset">
+
+                        <h4 class="panel-title text-bold text-center">Archivos</h4>
+
+                        <div style="margin-top: 3%; text-align: justify;">
+                            Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
                         </div>
 
-                        <div id="PanelInformacionArchivos" style="font-size: medium" class="dx-fieldset">
+                        <div style="margin-top: 3%; text-align: center;">
 
-                            <h4 class="panel-title text-bold text-center">Archivos</h4>
-
-                            <div style="margin-top: 3%; text-align: justify;">
-                                Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
-                            </div>
-
-                            <div style="margin-top: 3%; text-align: center;">
-
-                                <a href="{{datos.Pdf}}" target="_blank" class="icon-file-pdf text-bold" style="color: #1E88E5;">Pdf</a>
-                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                            <a href="{{datos.Pdf}}" target="_blank" class="icon-file-pdf text-bold" style="color: #1E88E5;">Pdf</a>
+                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 <a href="{{datos.Xml}}" target="_blank" class="icon-file-xml text-bold" style="color: #1E88E5;">Xml</a>
-                            </div>
-                            <br />
-                            <div style="text-align: center;">
-                                
-                                <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;"   data-ng-click="habilitar()" data-ng-show="datos.tipodoc=='Factura'" >Pagar</a>                                
-                                <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size: 14px; text-align: center;">Autenticar</a>
-                                <br />
-                                <br />
-                                <div class="footer text-muted" style="font-size: 14px;">
-                                    Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a>
-                                </div>
-                            </div>
-
                         </div>
+                        <br />
+                        <div style="text-align: center;">
+
+                            <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc=='Factura'">Pagar</a>
+                            <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size: 14px; text-align: center;">Autenticar</a>
+                            <br />
+                            <br />
+                            <div class="footer text-muted" style="font-size: 14px;">
+                                Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a>
+                            </div>
+                        </div>
+
+                    </div>
 
                     </div>
 
