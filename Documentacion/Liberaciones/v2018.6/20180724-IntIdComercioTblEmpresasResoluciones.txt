@@ -1,0 +1,3 @@
+ALTER TABLE dbo.TblEmpresasResoluciones ADD
+	IntComercioId INTEGER NULL DEFAULT ((0))
+GO

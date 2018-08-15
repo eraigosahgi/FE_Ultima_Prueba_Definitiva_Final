@@ -1,0 +1,3 @@
+update TblEmpresas set IntNumUsuarios = 1 where IntAdquiriente = 1 and StrIdentificacion <> '811021438'
+
+update TblEmpresas set IntNumUsuarios = 5 where IntObligado = 1 and StrIdentificacion <> '811021438'

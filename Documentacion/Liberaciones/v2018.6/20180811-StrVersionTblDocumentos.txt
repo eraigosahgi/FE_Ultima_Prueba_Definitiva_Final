@@ -1,0 +1,3 @@
+ALTER TABLE TblDocumentos ADD
+	StrVersion varchar(50)  NULL
+GO

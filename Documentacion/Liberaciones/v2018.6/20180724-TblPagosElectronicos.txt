@@ -1,0 +1,46 @@
+CREATE TABLE [dbo].[TblPagosElectronicos](
+	[StrIdSeguridadPago] [varchar](30) NOT NULL,
+	[StrIdPlataforma] [varchar](50) NOT NULL,
+	[StrIdSeguridadDoc] [uniqueidentifier] NULL,
+	[StrIdSeguridadPlanes] [uniqueidentifier] NULL,
+	[DatFechaRegistro] [datetime] NOT NULL,
+	[DatFechaVerificacion] [datetime] NULL,
+	[IntEstadoPago] [int] NOT NULL,
+	[StrTicketID] [varchar](50) NULL,
+	[StrTransaccionCUS] [varchar](50) NULL,
+	[IntValorPago] [numeric](17, 2) NOT NULL,
+	[IntClicloTransaccion] [int] NULL,
+	[StrCodigoBanco] [varchar](50) NULL,
+	[IntCodigoServicio] [int] NULL,
+	[IntFormaPago] [int] NULL,
+	[StrCodigoFranquicia] [varchar](50) NULL,
+	[StrMensaje] [varchar](500) NULL,
+	[StrCampo1] [varchar](50) NULL,
+	[StrCampo2] [varchar](50) NULL,
+	[StrCampo3] [varchar](50) NULL,
+ CONSTRAINT [PK_TblPagosElectronicos] PRIMARY KEY CLUSTERED 
+(
+	[StrIdSeguridadPago] ASC,
+	[StrIdPlataforma] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TblPagosElectronicos] ADD  CONSTRAINT [DF_TblPagosElectronicos_Valor]  DEFAULT ((0)) FOR [IntEstadoPago]
+GO
+
+ALTER TABLE [dbo].[TblPagosElectronicos]  WITH CHECK ADD  CONSTRAINT [FK_TblPagosElectronicos_TblDocumentos] FOREIGN KEY([StrIdSeguridadDoc])
+REFERENCES [dbo].[TblDocumentos] ([StrIdSeguridad])
+ON UPDATE CASCADE
+GO
+
+ALTER TABLE [dbo].[TblPagosElectronicos] CHECK CONSTRAINT [FK_TblPagosElectronicos_TblDocumentos]
+GO
+
+ALTER TABLE [dbo].[TblPagosElectronicos]  WITH CHECK ADD  CONSTRAINT [FK_TblPagosElectronicos_TblPlanesTransacciones] FOREIGN KEY([StrIdSeguridadPlanes])
+REFERENCES [dbo].[TblPlanesTransacciones] ([StrIdSeguridad])
+ON UPDATE CASCADE
+GO
+
+ALTER TABLE [dbo].[TblPagosElectronicos] CHECK CONSTRAINT [FK_TblPagosElectronicos_TblPlanesTransacciones]
+GO

@@ -91,6 +91,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.5", "v2018.5", "{6C83
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetZonaPagos", "HGInetZonaPagos\HGInetZonaPagos.csproj", "{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F6933ED-0456-49B4-8DB6-F333AA02BD63}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt = Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt
+		Documentacion\Liberaciones\v2018.6\20180424-RelacionComercioResolucion.txt = Documentacion\Liberaciones\v2018.6\20180424-RelacionComercioResolucion.txt
+		Documentacion\Liberaciones\v2018.6\20180724-IntIdComercioTblEmpresasResoluciones.txt = Documentacion\Liberaciones\v2018.6\20180724-IntIdComercioTblEmpresasResoluciones.txt
+		Documentacion\Liberaciones\v2018.6\20180724-NumUsuariosEmpresa.txt = Documentacion\Liberaciones\v2018.6\20180724-NumUsuariosEmpresa.txt
+		Documentacion\Liberaciones\v2018.6\20180724-TblEmpresasPasarela.txt = Documentacion\Liberaciones\v2018.6\20180724-TblEmpresasPasarela.txt
+		Documentacion\Liberaciones\v2018.6\20180724-TblPagosElectronicos.txt = Documentacion\Liberaciones\v2018.6\20180724-TblPagosElectronicos.txt
+		Documentacion\Liberaciones\v2018.6\20180725-Campo IntTipoDoc.txt = Documentacion\Liberaciones\v2018.6\20180725-Campo IntTipoDoc.txt
+		Documentacion\Liberaciones\v2018.6\20180726-TblOpcionesCamposMenu.txt = Documentacion\Liberaciones\v2018.6\20180726-TblOpcionesCamposMenu.txt
+		Documentacion\Liberaciones\v2018.6\20180730-TblEmpresasCampoStrResolucionDian.txt = Documentacion\Liberaciones\v2018.6\20180730-TblEmpresasCampoStrResolucionDian.txt
+		Documentacion\Liberaciones\v2018.6\20180808-IntPermiteParciales.txt = Documentacion\Liberaciones\v2018.6\20180808-IntPermiteParciales.txt
+		Documentacion\Liberaciones\v2018.6\20180808-StrTelefonoTblEmpresas.txt = Documentacion\Liberaciones\v2018.6\20180808-StrTelefonoTblEmpresas.txt
+		Documentacion\Liberaciones\v2018.6\20180811-StrVersionTblDocumentos.txt = Documentacion\Liberaciones\v2018.6\20180811-StrVersionTblDocumentos.txt
+		Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt = Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -215,5 +232,6 @@ Global
 		{F68822E5-02C3-462C-BCDB-847EEA6D72A6} = {1B150BCF-D3BC-4E30-B239-74891D9AFC1E}
 		{455E2F68-5469-4137-B886-347444F87FF4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{6C8336DF-8668-454E-BFDF-DA7EEFFC2E40} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{4F6933ED-0456-49B4-8DB6-F333AA02BD63} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal
