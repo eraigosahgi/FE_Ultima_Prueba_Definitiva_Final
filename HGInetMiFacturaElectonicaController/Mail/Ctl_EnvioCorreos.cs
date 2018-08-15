@@ -460,8 +460,11 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{RutaUrl}", ruta_acuse);
 
 
-                        if (doc_tipo == TipoDocumento.Factura)
+                        bool IdPago = (documento.TblEmpresasResoluciones.IntComercioId == null) ? false : (documento.TblEmpresasResoluciones.IntComercioId >0)?true:false;
+
+                        if (doc_tipo == TipoDocumento.Factura && IdPago)
                         {
+
                             string ruta_pse = ruta_acuse + "&Zpago=true";
 
                             mensaje = mensaje.Replace("{PSETexto}", "o el pago del documento");
@@ -469,8 +472,6 @@ namespace HGInetMiFacturaElectonicaController
                             string otro_boton = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_pse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Pagar</a></td>";
 
                             mensaje = mensaje.Replace("{PSE}", otro_boton);
-
-
 
                         }
 
