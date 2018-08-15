@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaData.ControllerSql;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using System;
 using System.Collections.Generic;
@@ -296,6 +297,34 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             }
         }
 
+
+        /// <summary>
+        /// Obtiene los permisos de los usuarios por tipo
+        /// </summary>
+        /// <param name="codigo_usuario"></param>
+        /// <param name="identificacion_empresa"></param>
+        /// <param name="tipo"></param>
+        /// <returns></returns>
+        public List<TblOpcionesUsuario> ObtenerOpcionesTipo(string codigo_usuario, string identificacion_empresa, TipoOpciones tipo)
+        {
+            try
+            {
+
+                int tipo_valor = tipo.GetHashCode();
+                List<TblOpcionesUsuario> permisos_tipo = (from opc_usuario in context.TblOpcionesUsuario
+                                                          join opc in context.TblOpciones on opc_usuario.IntIdOpcion equals opc.IntId
+                                                          where opc_usuario.StrUsuario.Equals(codigo_usuario)
+                                                          && opc_usuario.StrEmpresa.Equals(identificacion_empresa)
+                                                          && opc.IntTipo == tipo_valor
+                                                          select opc_usuario).ToList();
+
+                return permisos_tipo;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
 
         #endregion
 

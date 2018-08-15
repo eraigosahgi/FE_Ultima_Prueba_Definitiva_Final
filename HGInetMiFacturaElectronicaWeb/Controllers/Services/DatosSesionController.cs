@@ -48,5 +48,46 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
 
+
+        [HttpGet]
+        [Route("Api/SesionDatosUsuario")]
+        public IHttpActionResult SesionDatosUsuario()
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<TblUsuarios> datos = new List<TblUsuarios>();
+
+                datos.Add(Sesion.DatosUsuario);
+
+                var retorno = datos.Select(d => new
+                {
+                    FechaActualizacion = d.DatFechaActualizacion,
+                    FechaCambioClave = d.DatFechaCambioClave,
+                    d.DatFechaIngreso,
+                    FechaIngreso = d.IntIdEstado,
+                    Apellidos = d.StrApellidos,
+                    Cargo = d.StrCargo,
+                    Celular = d.StrCelular,
+                    IdentificacionEmpresa = d.StrEmpresa,
+                    Extension = d.StrExtension,
+                    IdCambioClave = d.StrIdCambioClave,
+                    IdSeguridad = d.StrIdSeguridad,
+                    Mail = d.StrMail,
+                    Nombres = d.StrNombres,
+                    Telefono = d.StrTelefono,
+                    Usuario = d.StrUsuario
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
     }
 }

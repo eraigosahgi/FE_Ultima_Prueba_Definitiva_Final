@@ -179,6 +179,49 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
         /// <summary>
+        /// Obtiene los permisos de las opciones de tipo indicadores.
+        /// </summary>
+        /// <param name="codigo_usuario"></param>
+        /// <param name="identificacion_empresa"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Api/PermisosIndicadores")]
+        public IHttpActionResult PermisosIndicadores(string codigo_usuario, string identificacion_empresa)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                Ctl_OpcionesUsuario clase_opciones = new Ctl_OpcionesUsuario();
+
+                List<TblOpcionesUsuario> opciones_indicadores = clase_opciones.ObtenerOpcionesTipo(codigo_usuario, identificacion_empresa, HGInetMiFacturaElectonicaData.Enumerables.TipoOpciones.Indicador);
+
+                if (opciones_indicadores == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = opciones_indicadores.Select(d => new
+                {
+                    Codigo = d.IntIdOpcion,
+                    Descripcion = d.TblOpciones.StrDescripcion,
+                    Consultar = d.IntConsultar,
+                    Agregar = d.IntAgregar,
+                    Editar = d.IntEditar,
+                    Eliminar = d.IntEliminar,
+                    Anular = d.IntAnular,
+                    Gestion = d.IntGestion
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        /// <summary>
         /// Almacena los permisos del usuario en la base de datos
         /// </summary>
         /// <param name="objeto"></param>
