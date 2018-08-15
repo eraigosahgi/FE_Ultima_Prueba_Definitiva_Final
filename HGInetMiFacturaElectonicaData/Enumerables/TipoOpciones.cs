@@ -13,7 +13,7 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         Menu = 0,
 
         [Description("Indicador")]
-        Indicadore = 1,
+        Indicador = 1,
 
     }
 }
