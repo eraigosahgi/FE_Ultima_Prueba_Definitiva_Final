@@ -397,7 +397,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         try
                         {
 
-                            documento_tmp.Crear(documentoBd);
+                            documentoBd = documento_tmp.Crear(documentoBd);
+                            
+                            documentoBd.TblEmpresasResoluciones = resolucion;
+                            
 
                         }
                         catch (Exception excepcion)
