@@ -8,7 +8,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     var IdSeguridad = location.search.split('id_seguridad=')[1];
     //Almacena el parametro Zpago para ver si debe enviarlo a la pantalla de pago
     var Zpago = location.search.split('Zpago=')[1];
-
+    $scope.DetalleAcuse = true;
     var estado = "";
     var motivo_rechazo = "";
 
@@ -27,6 +27,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
                         window.close();
                 }, function (error) {
                     DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
+                    $scope.DetalleAcuse = false;
                 });
             } else {
                 if (response.data == "PagoPendiente") {
@@ -39,7 +40,9 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
                 }
             }
         }, function (error) {
+            $scope.DetalleAcuse = false;
             DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
+
         });
     };
 
