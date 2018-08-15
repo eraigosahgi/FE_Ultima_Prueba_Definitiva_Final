@@ -130,8 +130,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
-                });
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
+                    poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false
+            });
 
                 return Ok(retorno);
             }
@@ -174,7 +175,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
                     CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
-                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
+                    poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false
                 });
 
                 return Ok(retorno);

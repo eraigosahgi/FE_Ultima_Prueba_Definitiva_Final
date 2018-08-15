@@ -208,7 +208,7 @@
                         <br />
                         <div style="text-align: center;">
 
-                            <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc=='Factura'">Pagar</a>
+                            <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc=='Factura' && datos.poseeIdComercio==true">Pagar</a>
                             <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size: 14px; text-align: center;">Autenticar</a>
                             <br />
                             <br />
