@@ -9,7 +9,7 @@ document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services
 var Estado;
 var DocAdquirienteApp = angular.module('DocAdquirienteApp', ['dx', 'AppMaestrosEnum']);
 //Controlador para la consulta de documentos Adquiriente
-DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquirienteController($scope, $rootScope, $http, $location, SrvMaestrosEnum) {   
+DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquirienteController($scope, $rootScope, $http, $location, SrvMaestrosEnum) {
 
     var now = new Date();
 
@@ -111,7 +111,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
         $('#wait').show();
-        $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {            
+        $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -262,13 +262,13 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     ///Opción de pago
                     cssClass: "col-md-1 ",
                     width: "80px",
-                    alignment:"center",
+                    alignment: "center",
 
                     cellTemplate: function (container, options) {
 
                         var RazonSocial = options.data.NombreFacturador.replace(" ", "_%%_");
                         var click = "onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "')";
-                        
+
                         var imagen = "";
                         if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1) {
                             imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Pagar</a>";
@@ -284,7 +284,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         $("<div>")
                         .append($(imagen))
 
-                         .appendTo(container);                                                
+                         .appendTo(container);
                     }
                 },
 
@@ -353,12 +353,13 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     $scope.telefono = "";
     $scope.nit = "";
     $scope.razonsocial = "";
+    $scope.SinpagosPendiente = true;
 
     $rootScope.ConsultarPago = function (IdSeguridad, Monto, PagosParciales) {
         $("#PanelPago").show();
         $("#MontoPago").dxNumberBox({ readOnly: (PagosParciales == "1") ? false : true });
-        $("#Detallepagos").hide();        
-       
+        $("#Detallepagos").hide();
+        $("#panelPagoPendiente").show();
 
 
         ///Este es el monto total de la factura
@@ -422,6 +423,15 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                                options.cellElement.html(inicial);
                            }
                        }
+
+                       if (options.column.caption == "Estado") {
+                           if (fieldData) {
+                               if (fieldData == "Pendiente") {
+                                   $("#panelPagoPendiente").hide();
+                               }
+                           }
+                       }
+
                    } catch (err) {
                        DevExpress.ui.notify(err.message, 'error', 3000);
                    }
@@ -434,34 +444,32 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                , columns: [
                    {
                        caption: "Cód.Transacción",
-                       dataField: "StrIdSeguridadPago"                       
+                       dataField: "StrIdSeguridadPago"
 
                    },
                    {
                        caption: "Fecha Pago",
                        dataField: "FechaRegistro",
                        dataType: "date",
-                       format: "yyyy-MM-dd "                       
+                       format: "yyyy-MM-dd "
                    },
 
                    {
                        caption: "Valor",
-                       dataField: "Monto"                       
+                       dataField: "Monto"
                    },
                    {
                        caption: "Estado",
                        dataField: "Estado"
                    },
-                   
+
                    {
                        caption: "Fecha Verificación",
                        dataField: "FechaVerificacion",
                        dataType: "date",
-                       format: "yyyy-MM-dd "                       
+                       format: "yyyy-MM-dd "
                    }
-                   
-                   
-                   
+
                ],
 
                 summary: {
@@ -501,7 +509,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                                     $("#PanelPago").show();
                                     $("#MontoPago").show();
                                     $("#Pagar").show();
-                                    
+
                                 }
                             }
                         }
@@ -605,6 +613,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
 
     $("#form").on("submit", function (e) {
+
         $("#button").dxButton({ visible: false });
         $scope.EnProceso = true;
         $http.get('/api/Documentos?strIdSeguridad=' + $scope.IdSeguridad + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + $scope.valoraPagar).then(function (response) {
@@ -623,6 +632,8 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
         });
         e.preventDefault();
+
+
     });
 
     $("#button").dxButton({
