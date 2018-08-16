@@ -24,7 +24,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
     {
 
         /// <summary>
-        /// Obtiene la lista 
+        /// Obtiene la lista de empresas
+        /// 
         /// </summary>        
         /// <returns></returns>
         [HttpGet]
@@ -34,6 +35,66 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
             List<TblEmpresas> datos = ctl_empresa.ObtenerTodas();
+
+            if (datos == null)
+            {
+                return NotFound();
+            }
+
+            var retorno = datos.Select(d => new
+            {
+                Identificacion = d.StrIdentificacion,
+                RazonSocial = d.StrRazonSocial,
+                Email = d.StrMail,
+                Serial = d.StrSerial,
+                Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
+                Habilitacion = d.IntHabilitacion,
+                IdSeguridad = d.StrIdSeguridad
+            });
+
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Obtiene la empresa o lista de empresas
+        /// Si es Admin en la tabla de empresas, muestra todas las empresas
+        /// 
+        /// Si es Adquiriente, solo muestra esa empresa
+        /// 
+        /// Si es Facturador y no administrador, muestra su empresa y las empresas donde fue seleccionado como asociado
+        /// 
+        /// (El campo integrador no afectaria aqui ya que la empresa seleccionada como asociado no solo son integradores, si no todos los facturadores)
+        /// </summary>
+        /// <param name="IdentificacionEmpresa"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/ObtenerEmpresas")]
+        public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa)
+        {
+            Sesion.ValidarSesion();
+
+            Ctl_Empresa CtEmpresa = new Ctl_Empresa();
+
+            TblEmpresas empresa = new TblEmpresas();
+
+            List<TblEmpresas> datos = new List<TblEmpresas>();
+
+            empresa = CtEmpresa.Obtener(IdentificacionEmpresa);
+
+
+            if (empresa.IntAdministrador)
+            {
+                datos = CtEmpresa.ObtenerTodas();
+            }
+            else
+            {
+                datos = CtEmpresa.ObtenerAsociadas(IdentificacionEmpresa);
+            }
+
+
+
+
+
 
             if (datos == null)
             {
@@ -134,7 +195,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="codigo_usuario"></param>        
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones,[FromUri] bool IntIntegrador,[FromUri] int IntNumUsuarios, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
