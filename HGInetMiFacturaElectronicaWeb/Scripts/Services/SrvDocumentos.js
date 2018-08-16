@@ -34,7 +34,7 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
     }
 
     this.ObtenerDocumentosAdmin = function (codigo_facturador, numero_documento, codigo_adquiriente, estado_dian,estado_recibo, fecha_inicio, fecha_fin, TipoDocumento) {
-        return $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&TipoDocumento=' + TipoDocumento).then(function (response) {
+        return $http.get('/api/Documentos?codigo_facturador=*&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&TipoDocumento=' + TipoDocumento).then(function (response) {
             return response.data;
         }, function (response) {
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
