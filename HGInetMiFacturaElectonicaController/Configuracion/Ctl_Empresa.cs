@@ -73,6 +73,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         }
 
         /// <summary>
+        /// Obtiene todas las empresa asociadas al facturador
+        /// </summary>
+        /// <param name="identificacion">Identificacion de Obligado o Adquiriente</param>
+        /// <returns></returns>
+        public List<TblEmpresas> ObtenerAsociadas(string identificacion)
+        {
+
+            var datos = (from item in context.TblEmpresas
+                         where item.StrIdentificacion.Equals(identificacion) || item.StrEmpresaAsociada.Equals(identificacion)
+                         select item).ToList();
+
+            return datos;
+        }
+
+        /// <summary>
         /// Crea una empresa en la BD
         /// </summary>
         /// <param name="empresa">Objeto BD de la empresa a crear</param>

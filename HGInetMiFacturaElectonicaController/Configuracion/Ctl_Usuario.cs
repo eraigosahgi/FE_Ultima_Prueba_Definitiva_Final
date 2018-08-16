@@ -310,12 +310,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             {
                 clave = LibreriaGlobalHGInet.General.Encriptar.Encriptar_MD5(clave);
 
-                var respuesta = from usuario in context.TblUsuarios
+                var respuesta = (from usuario in context.TblUsuarios
                                 join empresa in context.TblEmpresas on usuario.StrEmpresa equals empresa.StrIdentificacion
                                 where empresa.StrIdentificacion.Equals(codigo_empresa)
                                 && usuario.StrUsuario.Equals(codigo_usuario)
-                                && usuario.StrClave.Equals(clave)
-                                select usuario;
+                                && usuario.StrClave.Equals(clave)                                                               
+                                select usuario).ToList();
+
+                if (respuesta.Count>0)
+                    if (respuesta[0].IntIdEstado!=1)                
+                    throw new ApplicationException("Usuario Inactivo");
+                
 
                 return respuesta.ToList();
             }
@@ -420,6 +425,31 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
+
+
+
+        /// <summary>
+        /// Obtiene la lista de usuarios de la empresa y de la lista de empresas asociadas
+        /// </summary>
+        /// <param name="codigo_usuario"></param>
+        /// <returns></returns>
+        public List<TblUsuarios> ObtenerListaUsuarios(string codigo_usuario,string codigo_empresa)
+        {
+            try
+            {
+                var respuesta = from usuario in context.TblUsuarios
+                                where (usuario.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
+                                && (usuario.StrEmpresa.Equals(codigo_empresa) || usuario.TblEmpresas.StrEmpresaAsociada.Equals(codigo_empresa))
+                                select usuario;
+
+                return respuesta.ToList();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
 
         /// <summary>
         /// Obtiene el usuario por id seguridad

@@ -103,7 +103,7 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
            
         }, function errorCallback(response) {
             $('#wait').hide();
-            DevExpress.ui.notify("Datos de autenticación inválidos.", 'error', 3000);
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
         });
 
     };

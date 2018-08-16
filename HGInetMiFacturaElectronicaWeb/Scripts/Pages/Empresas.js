@@ -8,13 +8,7 @@ var EmpresasApp = angular.module('EmpresasApp', ['ModalEmpresasApp', 'dx']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
 EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location) {
 
-
-
     $('#modal_Buscar_empresa').modal('show');
-
-
-
-
 
     //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
     var id_seguridad = location.search.split('IdSeguridad=')[1];
@@ -507,61 +501,68 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $location) {
 
     $("#wait").show();
-    $http.get('/api/Empresas').then(function (response) {
-        $("#wait").hide();
+    $http.get('/api/DatosSesion/').then(function (response) {
+        codigo_facturador = response.data[0].Identificacion;
 
-        $("#gridEmpresas").dxDataGrid({
-            dataSource: response.data,
+        $http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador).then(function (response) {
+            $('#wait').hide();
+            $("#gridEmpresas").dxDataGrid({
+                dataSource: response.data,
 
-            paging: {
-                pageSize: 20
-            },
-            pager: {
-                showPageSizeSelector: true,
-                allowedPageSizes: [5, 10, 20],
-                showInfo: true
-            }
-                 , loadPanel: {
-                     enabled: true
-                 }
-                      , allowColumnResizing: true
-               , columns: [
-                   {
-                       cssClass: "col-md-1 col-xs-2",
-                       cellTemplate: function (container, options) {
-                           $("<div style='text-align:center'>")
-                               .append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
-                               .appendTo(container);
+                paging: {
+                    pageSize: 20
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20],
+                    showInfo: true
+                }
+                     , loadPanel: {
+                         enabled: true
+                     }
+                          , allowColumnResizing: true
+                   , columns: [
+                       {
+                           cssClass: "col-md-1 col-xs-2",
+                           cellTemplate: function (container, options) {
+                               $("<div style='text-align:center'>")
+                                   .append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
+                                   .appendTo(container);
+                           }
+                       },
+
+                       {
+                           caption: "Identificacion",
+                           dataField: "Identificacion"
+                       },
+                       {
+                           caption: "Razón Social",
+                           dataField: "RazonSocial"
+                       },
+                       {
+                           caption: "Email",
+                           dataField: "Email"
+                       },
+                       {
+                           caption: "Serial",
+                           dataField: "Serial"
+                       },
+                       {
+                           dataField: "Perfil"
                        }
-                   },
+                       //,
+                       //{
+                       //    dataField: "Habilitacion"
+                       //}                   
+                   ],
+                filterRow: {
+                    visible: true
+                }
+            });
 
-                   {
-                       caption: "Identificacion",
-                       dataField: "Identificacion"
-                   },
-                   {
-                       caption: "Razón Social",
-                       dataField: "RazonSocial"
-                   },
-                   {
-                       caption: "Email",
-                       dataField: "Email"
-                   },
-                   {
-                       caption: "Serial",
-                       dataField: "Serial"
-                   },
-                   {
-                       dataField: "Perfil"
-                   }
-                   //,
-                   //{
-                   //    dataField: "Habilitacion"
-                   //}                   
-               ],
-            filterRow: {
-                visible: true
-            }
+        }, function errorCallback(response) {
+            $('#wait').hide();
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
         });
 
     }, function errorCallback(response) {
