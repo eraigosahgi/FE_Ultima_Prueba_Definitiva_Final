@@ -72,15 +72,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Ctl_Usuario ctl_usuario = new Ctl_Usuario();
                 List<TblUsuarios> datos = ctl_usuario.ValidarExistencia(codigo_empresa, codigo_usuario, clave);
 
-                if (datos == null)
+                if (datos == null || datos.Count == 0)
                 {
-                    return NotFound();
+                    throw new ApplicationException("Datos de autenticación inválidos.");
                 }
 
                 var retorno = datos.Select(d => new
                 {
                     Token = d.StrIdSeguridad
                 });
+
+                
 
                 return Ok(retorno);
             }
@@ -118,8 +120,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 Ctl_Usuario ctl_usuario = new Ctl_Usuario();
                 //ObtenerUsuarios
-                List<TblUsuarios> datos = ctl_usuario.ObtenerUsuarios(codigo_usuario, codigo_empresa);
-
+                //List<TblUsuarios> datos = ctl_usuario.ObtenerUsuarios(codigo_usuario, codigo_empresa);
+                List<TblUsuarios> datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario,codigo_empresa); 
                 if (datos == null)
                 {
                     return NotFound();
