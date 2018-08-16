@@ -592,7 +592,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 {
                     IdFacturador = d.TblEmpresasFacturador.StrIdentificacion,
                     Facturador = d.TblEmpresasFacturador.StrRazonSocial,
-                    NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+                    NumeroDocumento = string.Format("{0}{1}",  (d.StrPrefijo == null)?"":  (!d.StrPrefijo.Equals("0"))? d.StrPrefijo:"" , d.IntNumero),                    
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
                     IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
