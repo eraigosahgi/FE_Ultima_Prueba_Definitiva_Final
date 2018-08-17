@@ -300,7 +300,7 @@ namespace HGInetFacturaEReports.Facturas
             this.TextBoxValorVencimiento.CanGrow = false;
             this.TextBoxValorVencimiento.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(17.264987945556641D), Telerik.Reporting.Drawing.Unit.Cm(1.1003999710083008D));
             this.TextBoxValorVencimiento.Name = "TextBoxValorVencimiento";
-            this.TextBoxValorVencimiento.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.789691686630249D), Telerik.Reporting.Drawing.Unit.Cm(0.60020005702972412D));
+            this.TextBoxValorVencimiento.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.7992970943450928D), Telerik.Reporting.Drawing.Unit.Cm(0.60020005702972412D));
             this.TextBoxValorVencimiento.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.Solid;
             this.TextBoxValorVencimiento.Style.BorderStyle.Top = Telerik.Reporting.Drawing.BorderType.Solid;
             this.TextBoxValorVencimiento.Style.Font.Bold = false;
@@ -331,7 +331,7 @@ namespace HGInetFacturaEReports.Facturas
             this.campo6_v.CanGrow = false;
             this.campo6_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(14.761458396911621D), Telerik.Reporting.Drawing.Unit.Cm(3.58622145652771D));
             this.campo6_v.Name = "campo6_v";
-            this.campo6_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(5.2932209968566895D), Telerik.Reporting.Drawing.Unit.Cm(1.1584267616271973D));
+            this.campo6_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(5.3028264045715332D), Telerik.Reporting.Drawing.Unit.Cm(1.1584267616271973D));
             this.campo6_v.Style.BorderStyle.Default = Telerik.Reporting.Drawing.BorderType.Solid;
             this.campo6_v.Style.BorderStyle.Top = Telerik.Reporting.Drawing.BorderType.None;
             this.campo6_v.Style.Font.Bold = false;
@@ -557,7 +557,7 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox60.CanGrow = false;
             this.htmlTextBox60.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(17.264884948730469D), Telerik.Reporting.Drawing.Unit.Cm(2.3011999130249023D));
             this.htmlTextBox60.Name = "htmlTextBox60";
-            this.htmlTextBox60.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.789794921875D), Telerik.Reporting.Drawing.Unit.Cm(1.2848212718963623D));
+            this.htmlTextBox60.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.7994003295898438D), Telerik.Reporting.Drawing.Unit.Cm(1.2848212718963623D));
             this.htmlTextBox60.Style.BorderStyle.Default = Telerik.Reporting.Drawing.BorderType.Solid;
             this.htmlTextBox60.Style.BorderStyle.Left = Telerik.Reporting.Drawing.BorderType.None;
             this.htmlTextBox60.Style.BorderStyle.Top = Telerik.Reporting.Drawing.BorderType.None;
