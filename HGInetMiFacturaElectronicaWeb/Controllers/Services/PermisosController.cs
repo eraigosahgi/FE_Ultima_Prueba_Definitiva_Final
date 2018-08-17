@@ -186,7 +186,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <returns></returns>
         [HttpGet]
         [Route("Api/PermisosIndicadores")]
-        public IHttpActionResult PermisosIndicadores(string codigo_usuario, string identificacion_empresa)
+        public IHttpActionResult PermisosIndicadores(string codigo_usuario, string identificacion_empresa, int tipo_perfil)
         {
             try
             {
@@ -194,7 +194,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 Ctl_OpcionesUsuario clase_opciones = new Ctl_OpcionesUsuario();
 
-                List<TblOpcionesUsuario> opciones_indicadores = clase_opciones.ObtenerOpcionesTipo(codigo_usuario, identificacion_empresa, HGInetMiFacturaElectonicaData.Enumerables.TipoOpciones.Indicador);
+                List<TblOpcionesUsuario> opciones_indicadores = clase_opciones.ObtenerOpcionesTipo(codigo_usuario, identificacion_empresa, HGInetMiFacturaElectonicaData.Enumerables.TipoOpciones.Indicador, tipo_perfil);
 
                 if (opciones_indicadores == null)
                 {

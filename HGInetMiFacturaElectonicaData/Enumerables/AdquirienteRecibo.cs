@@ -12,15 +12,15 @@ namespace HGInetMiFacturaElectonicaData
 
         [Description("Pendiente")]
         [AmbientValue("0")]
-        Recepcion = 0,
+        Pendiente = 0,
 
         [Description("Aprobado")]
         [AmbientValue("1")]
-        Validacion = 1,
+        Aprobado = 1,
 
         [Description("Rechazado")]
         [AmbientValue("2")]
-        UBL = 2
+        Rechazado = 2
 
     }
 }

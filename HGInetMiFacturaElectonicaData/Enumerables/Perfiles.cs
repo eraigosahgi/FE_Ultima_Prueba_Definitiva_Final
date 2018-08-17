@@ -9,9 +9,17 @@ namespace HGInetMiFacturaElectonicaData
 {
     public enum Perfiles
     {
-        Administrador = 1,
-        Facturador = 2,
-        Adquiriente = 3
 
+        [Description("Administrador")]
+        Administrador = 1,
+
+        [Description("Facturador")]
+        Facturador = 2,
+
+        [Description("Adquiriente")]
+        Adquiriente = 3,
+
+        [Description("Integrador")]
+        Integrador = 4
     }
 }

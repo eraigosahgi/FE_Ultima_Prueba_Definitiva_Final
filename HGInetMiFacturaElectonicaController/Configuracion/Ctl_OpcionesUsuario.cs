@@ -303,21 +303,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// </summary>
         /// <param name="codigo_usuario"></param>
         /// <param name="identificacion_empresa"></param>
-        /// <param name="tipo"></param>
+        /// <param name="tipo_opcion">indica si es menú (0) o indicador (1)</param>
         /// <returns></returns>
-        public List<TblOpcionesUsuario> ObtenerOpcionesTipo(string codigo_usuario, string identificacion_empresa, TipoOpciones tipo)
+        public List<TblOpcionesUsuario> ObtenerOpcionesTipo(string codigo_usuario, string identificacion_empresa, TipoOpciones tipo_opcion, int tipo_perfil)
         {
             try
             {
-
-                int tipo_valor = tipo.GetHashCode();
+                int tipo_valor = tipo_opcion.GetHashCode();
                 List<TblOpcionesUsuario> permisos_tipo = (from opc_usuario in context.TblOpcionesUsuario
                                                           join opc in context.TblOpciones on opc_usuario.IntIdOpcion equals opc.IntId
                                                           where opc_usuario.StrUsuario.Equals(codigo_usuario)
                                                           && opc_usuario.StrEmpresa.Equals(identificacion_empresa)
                                                           && opc.IntTipo == tipo_valor
+                                                          && (tipo_perfil == 1 ? opc.IntIdDependencia == 1351 : tipo_perfil == 2 ? opc.IntIdDependencia == 1352 : tipo_perfil == 3 ? opc.IntIdDependencia == 1353 : opc.IntIdDependencia != null)
+                                                          //(tipo_perfil == 1 ? opc_usuario.IntIdOpcion == 1351 : tipo_perfil == 2 ? opc_usuario.IntIdOpcion == 1352 : tipo_perfil == 3 ? opc_usuario.IntIdOpcion == 1353 : opc_usuario.IntIdOpcion > 0)
                                                           select opc_usuario).ToList();
-
                 return permisos_tipo;
             }
             catch (Exception excepcion)

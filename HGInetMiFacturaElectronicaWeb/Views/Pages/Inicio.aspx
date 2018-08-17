@@ -14,9 +14,9 @@
 
             <!-- MENÚ TABS -->
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
-                <li><a href="#TabFacturador" data-toggle="tab">Facturador</a></li>
-                <li><a href="#TabAdquiriente" data-toggle="tab" aria-expanded="false">Adquiriente</a></li>
+                <li id="LiTabAdministrador"><a id="LinkTabAdministrador" data-ng-if="LinkTabAdministrador" data-ng-init="LinkTabAdministrador=true" href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
+                <li id="LiTabFacturador"><a id="LinkTabFacturador" data-ng-if="LinkTabFacturador" data-ng-init="LinkTabFacturador=true" href="#TabFacturador" data-toggle="tab">Facturador</a></li>
+                <li id="LiTabAdquiriente"><a id="LinkTabAdquiriente" data-ng-if="LinkTabAdquiriente" data-ng-init="LinkTabAdquiriente=true" href="#TabAdquiriente" data-toggle="tab">Adquiriente</a></li>
             </ul>
             <!--  /MENÚ TABS -->
 
@@ -29,7 +29,7 @@
                     <div class="row">
 
                         <!-- REPORTE ESTADOS DOCUMENTO -->
-                        <div class="col-md-12" id="Panel13511" data-ng-if="Panel13511" data-ng-init="Panel13511=true">
+                        <div class="col-md-12" id="Panel13511" data-ng-if="Panel13511" data-ng-init="Panel13511=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>
@@ -43,7 +43,7 @@
                         <!-- /REPORTE ESTADOS DOCUMENTO -->
 
                         <!-- REPORTE ESTADO ACUSE MENSUAL-->
-                        <div class="col-md-6" id="Panel13512" data-ng-if="Panel13512" data-ng-init="Panel13512=true">
+                        <div class="col-md-6" id="Panel13512" data-ng-if="Panel13512" data-ng-init="Panel13512=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Acuse de Respuesta Mes Actual</h4>
@@ -57,7 +57,7 @@
                         <!-- /REPORTE ESTADO ACUSE MENSUAL -->
 
                         <!-- REPORTE ESTADO ACUSE ACUMULADO -->
-                        <div class="col-md-6" id="Panel13513" data-ng-if="Panel13513" data-ng-init="Panel13513=true">
+                        <div class="col-md-6" id="Panel13513" data-ng-if="Panel13513" data-ng-init="Panel13513=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Acuse de Respuesta Acumulado</h4>
@@ -71,7 +71,7 @@
                         <!-- /REPORTE ESTADO ACUSE ACUMULADO -->
 
                         <!-- REPORTE TIPO DOCUMENTO ANUAL -->
-                        <div class="col-md-8" id="Panel13514" data-ng-if="Panel13514" data-ng-init="Panel13514=true">
+                        <div class="col-md-8" id="Panel13514" data-ng-if="Panel13514" data-ng-init="Panel13514=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Tipos de Documento por Mes</h4>
@@ -83,7 +83,7 @@
                         <!-- /REPORTE TIPO DOCUMENTO ANUAL -->
 
                         <!-- REPORTE ACUMULADO TIPO DOCUMENTO -->
-                        <div class="col-md-4" id="Panel13515" data-ng-if="Panel13515" data-ng-init="Panel13515=true">
+                        <div class="col-md-4" id="Panel13515" data-ng-if="Panel13515" data-ng-init="Panel13515=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Tipos de Documento Acumulado</h4>
@@ -97,7 +97,7 @@
                         <!-- /REPORTE ACUMULADO TIPO DOCUMENTO -->
 
                         <!-- REPORTE VENTAS -->
-                        <div class="col-md-12" id="Panel13516" data-ng-if="Panel13516" data-ng-init="Panel13516=true">
+                        <div class="col-md-12" id="Panel13516" data-ng-if="Panel13516" data-ng-init="Panel13516=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Ventas</h4>
@@ -109,7 +109,7 @@
                         <!-- /REPORTE VENTAS -->
 
                         <!-- REPORTE TOP COMPRADORES -->
-                        <div class="col-md-6" id="Panel13517" data-ng-if="Panel13517" data-ng-init="Panel13517=true">
+                        <div class="col-md-6" id="Panel13517" data-ng-if="Panel13517" data-ng-init="Panel13517=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Top Compradores</h4>
@@ -121,7 +121,7 @@
                         <!-- /REPORTE TOP COMPRADORES -->
 
                         <!-- REPORTE TOP MOVIMIENTOS -->
-                        <div class="col-md-6" id="Panel13518" data-ng-if="Panel13518" data-ng-init="Panel13518=true">
+                        <div class="col-md-6" id="Panel13518" data-ng-if="Panel13518" data-ng-init="Panel13518=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Flujo Transaccional</h4>
@@ -143,7 +143,7 @@
                     <div class="row">
 
                         <!-- REPORTE ESTADOS DOCUMENTO -->
-                        <div class="col-md-12" id="Panel13521" data-ng-if="Panel13521" data-ng-init="Panel13521=true">
+                        <div class="col-md-12" id="Panel13521" data-ng-if="Panel13521" data-ng-init="Panel13521=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>
@@ -157,7 +157,7 @@
                         <!-- /REPORTE ESTADOS DOCUMENTO -->
 
                         <!-- REPORTE SALDOS TRANSACCIONALES -->
-                        <div class="col-md-12" id="Panel13522" data-ng-if="Panel13522" data-ng-init="Panel13522=true">
+                        <div class="col-md-12" id="Panel13522" data-ng-if="Panel13522" data-ng-init="Panel13522=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Resumen Transaccional</h4>
@@ -202,7 +202,7 @@
                         <!-- /SALDOS TRANSACCIONALES -->
 
                         <!-- REPORTE ESTADO ACUSE MENSUAL -->
-                        <div class="col-md-6" id="Panel13523" data-ng-if="Panel13523" data-ng-init="Panel13523=true">
+                        <div class="col-md-6" id="Panel13523" data-ng-if="Panel13523" data-ng-init="Panel13523=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Acuse de Respuesta Mes Actual</h4>
@@ -216,7 +216,7 @@
                         <!-- /REPORTE ESTADO ACUSE MENSUAL -->
 
                         <!-- REPORTE ESTADO ACUSE ACUMULADO-->
-                        <div class="col-md-6" id="Panel13524" data-ng-if="Panel13524" data-ng-init="Panel13524=true">
+                        <div class="col-md-6" id="Panel13524" data-ng-if="Panel13524" data-ng-init="Panel13524=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Acuse de Respuesta Acumulado</h4>
@@ -230,7 +230,7 @@
                         <!-- /REPORTE ESTADO ACUSE ACUMULADO -->
 
                         <!-- REPORTE TIPO DOCUMENTO ANUAL -->
-                        <div class="col-md-8" id="Panel13525" data-ng-if="Panel13525" data-ng-init="Panel13525=true">
+                        <div class="col-md-8" id="Panel13525" data-ng-if="Panel13525" data-ng-init="Panel13525=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Tipos de Documento por Mes</h4>
@@ -242,7 +242,7 @@
                         <!-- /REPORTE TIPO DOCUMENTO ANUAL -->
 
                         <!-- REPORTE ACUMULADO TIPO DOCUMENTO -->
-                        <div class="col-md-4" id="Panel13526" data-ng-if="Panel13526" data-ng-init="Panel13526=true">
+                        <div class="col-md-4" id="Panel13526" data-ng-if="Panel13526" data-ng-init="Panel13526=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Tipos de Documento Acumulado</h4>
@@ -266,7 +266,7 @@
                     <div class="row">
 
                         <!-- REPORTE ESTADO ACUSE ACUMULADO-->
-                        <div class="col-md-6" id="Panel13531" data-ng-if="Panel13531" data-ng-init="Panel13531=true">
+                        <div class="col-md-6" id="Panel13531" data-ng-if="Panel13531" data-ng-init="Panel13531=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Acuse de Respuesta Acumulado</h4>
@@ -280,7 +280,7 @@
                         <!-- /REPORTE ESTADO ACUSE ACUMULADO-->
 
                         <!-- REPORTE ACUMULADO TIPO DOCUMENTO -->
-                        <div class="col-md-6" id="Panel13532" data-ng-if="Panel13532" data-ng-init="Panel13532=true">
+                        <div class="col-md-6" id="Panel13532" data-ng-if="Panel13532" data-ng-init="Panel13532=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Tipos de Documento Acumulado</h4>
@@ -294,7 +294,7 @@
                         <!-- /REPORTE ACUMULADO TIPO DOCUMENTO -->
 
                         <!-- REPORTE TIPO DOCUMENTO ANUAL -->
-                        <div class="col-md-6" id="Panel13533" data-ng-if="Panel13533" data-ng-init="Panel13533=true">
+                        <div class="col-md-6" id="Panel13533" data-ng-if="Panel13533" data-ng-init="Panel13533=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Tipos de Documento por Mes</h4>
