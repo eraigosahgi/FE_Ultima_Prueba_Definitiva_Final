@@ -724,7 +724,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             this.campo18_d.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(10.500398635864258D), Telerik.Reporting.Drawing.Unit.Cm(0.50019985437393188D));
             this.campo18_d.Name = "campo18_d";
-            this.campo18_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.7519195079803467D), Telerik.Reporting.Drawing.Unit.Cm(0.50295847654342651D));
+            this.campo18_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.3966553211212158D), Telerik.Reporting.Drawing.Unit.Cm(0.50295847654342651D));
             this.campo18_d.Style.Font.Bold = false;
             this.campo18_d.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo18_d.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
@@ -736,7 +736,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             this.campo22_d.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(10.500398635864258D), Telerik.Reporting.Drawing.Unit.Cm(1.0033582448959351D));
             this.campo22_d.Name = "campo22_d";
-            this.campo22_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.7519195079803467D), Telerik.Reporting.Drawing.Unit.Cm(0.49879637360572815D));
+            this.campo22_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.3966553211212158D), Telerik.Reporting.Drawing.Unit.Cm(0.49879637360572815D));
             this.campo22_d.Style.Font.Bold = false;
             this.campo22_d.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo22_d.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
@@ -746,9 +746,9 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo19_d
             // 
-            this.campo19_d.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(15.380039215087891D), Telerik.Reporting.Drawing.Unit.Cm(0.50029999017715454D));
+            this.campo19_d.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(15.178199768066406D), Telerik.Reporting.Drawing.Unit.Cm(0.50315970182418823D));
             this.campo19_d.Name = "campo19_d";
-            this.campo19_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.1486833095550537D), Telerik.Reporting.Drawing.Unit.Cm(0.50285863876342773D));
+            this.campo19_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.1486833095550537D), Telerik.Reporting.Drawing.Unit.Cm(0.49879476428031921D));
             this.campo19_d.Style.Font.Bold = false;
             this.campo19_d.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo19_d.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
@@ -758,7 +758,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo23_d
             // 
-            this.campo23_d.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(15.380038261413574D), Telerik.Reporting.Drawing.Unit.Cm(1.0033582448959351D));
+            this.campo23_d.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(15.178200721740723D), Telerik.Reporting.Drawing.Unit.Cm(1.0024557113647461D));
             this.campo23_d.Name = "campo23_d";
             this.campo23_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.1486821174621582D), Telerik.Reporting.Drawing.Unit.Cm(0.49879530072212219D));
             this.campo23_d.Style.Font.Bold = false;
@@ -770,9 +770,9 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo25_d
             // 
-            this.campo25_d.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(15.380039215087891D), Telerik.Reporting.Drawing.Unit.Cm(1.5023543834686279D));
+            this.campo25_d.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(15.17819881439209D), Telerik.Reporting.Drawing.Unit.Cm(1.5023541450500488D));
             this.campo25_d.Name = "campo25_d";
-            this.campo25_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(3.0231904983520508D), Telerik.Reporting.Drawing.Unit.Cm(0.5D));
+            this.campo25_d.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(3.2212028503417969D), Telerik.Reporting.Drawing.Unit.Cm(0.5D));
             this.campo25_d.Style.Font.Bold = false;
             this.campo25_d.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo25_d.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
@@ -820,7 +820,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             this.campo24_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(2.39979887008667D), Telerik.Reporting.Drawing.Unit.Cm(1.5023543834686279D));
             this.campo24_v.Name = "campo24_v";
-            this.campo24_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(12.980040550231934D), Telerik.Reporting.Drawing.Unit.Cm(0.5D));
+            this.campo24_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(12.778203964233398D), Telerik.Reporting.Drawing.Unit.Cm(0.5D));
             this.campo24_v.Style.Font.Bold = false;
             this.campo24_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo24_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
@@ -830,9 +830,9 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo19_v
             // 
-            this.campo19_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(17.52891731262207D), Telerik.Reporting.Drawing.Unit.Cm(0.50315940380096436D));
+            this.campo19_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(17.327079772949219D), Telerik.Reporting.Drawing.Unit.Cm(0.50315940380096436D));
             this.campo19_v.Name = "campo19_v";
-            this.campo19_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.7706840038299561D), Telerik.Reporting.Drawing.Unit.Cm(0.5D));
+            this.campo19_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.9725213050842285D), Telerik.Reporting.Drawing.Unit.Cm(0.5D));
             this.campo19_v.Style.Font.Bold = false;
             this.campo19_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo19_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
@@ -842,9 +842,9 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo22_v
             // 
-            this.campo22_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(13.252517700195313D), Telerik.Reporting.Drawing.Unit.Cm(1.0033584833145142D));
+            this.campo22_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(12.897254943847656D), Telerik.Reporting.Drawing.Unit.Cm(1.0033600330352783D));
             this.campo22_v.Name = "campo22_v";
-            this.campo22_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.1273212432861328D), Telerik.Reporting.Drawing.Unit.Cm(0.49879449605941772D));
+            this.campo22_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.2807469367980957D), Telerik.Reporting.Drawing.Unit.Cm(0.49879449605941772D));
             this.campo22_v.Style.Font.Bold = false;
             this.campo22_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo22_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
@@ -866,9 +866,9 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo18_v
             // 
-            this.campo18_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(13.252517700195313D), Telerik.Reporting.Drawing.Unit.Cm(0.50029969215393066D));
+            this.campo18_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(12.897254943847656D), Telerik.Reporting.Drawing.Unit.Cm(0.5003013014793396D));
             this.campo18_v.Name = "campo18_v";
-            this.campo18_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.1273210048675537D), Telerik.Reporting.Drawing.Unit.Cm(0.50285863876342773D));
+            this.campo18_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.2807466983795166D), Telerik.Reporting.Drawing.Unit.Cm(0.50285863876342773D));
             this.campo18_v.Style.Font.Bold = false;
             this.campo18_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo18_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
@@ -1016,9 +1016,9 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // campo23_v
             // 
-            this.campo23_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(17.528915405273438D), Telerik.Reporting.Drawing.Unit.Cm(1.003359317779541D));
+            this.campo23_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(17.327077865600586D), Telerik.Reporting.Drawing.Unit.Cm(1.003359317779541D));
             this.campo23_v.Name = "campo23_v";
-            this.campo23_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.7706859111785889D), Telerik.Reporting.Drawing.Unit.Cm(0.49879422783851624D));
+            this.campo23_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.9725232124328613D), Telerik.Reporting.Drawing.Unit.Cm(0.49879422783851624D));
             this.campo23_v.Style.Font.Bold = false;
             this.campo23_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo23_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
@@ -1030,7 +1030,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             this.campo27_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(5.3528318405151367D), Telerik.Reporting.Drawing.Unit.Cm(2.0025546550750732D));
             this.campo27_v.Name = "campo27_v";
-            this.campo27_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(10.027007102966309D), Telerik.Reporting.Drawing.Unit.Cm(0.5D));
+            this.campo27_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(9.8251705169677734D), Telerik.Reporting.Drawing.Unit.Cm(0.5D));
             this.campo27_v.Style.Font.Bold = false;
             this.campo27_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo27_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
