@@ -82,7 +82,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Token = d.StrIdSeguridad
                 });
 
-                
+
 
                 return Ok(retorno);
             }
@@ -113,15 +113,26 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 TblEmpresas datosempresa = datosSesion.FirstOrDefault();
 
+
+                List<TblUsuarios> datos = new List<TblUsuarios>();
+                Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+
                 if (datosempresa.IntAdministrador)
                 {
                     codigo_empresa = "*";
+
+                    datos = ctl_usuario.ObtenerUsuarios(codigo_usuario, codigo_empresa);
+                }
+                else
+                {
+                    datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario, codigo_empresa);
                 }
 
-                Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+
                 //ObtenerUsuarios
                 //List<TblUsuarios> datos = ctl_usuario.ObtenerUsuarios(codigo_usuario, codigo_empresa);
-                List<TblUsuarios> datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario,codigo_empresa); 
+
+
                 if (datos == null)
                 {
                     return NotFound();
