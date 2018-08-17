@@ -241,8 +241,8 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
                                                          group plan by new { plan.StrEmpresaFacturador } into planes
                                                          select new ResumenPlanes
                                                          {
-                                                             TransaccionesAdquiridas = planes.Select(x => x.IntNumTransaccCompra).Sum(),
-                                                             TransaccionesProcesadas = planes.Select(x => x.IntNumTransaccProcesadas).Sum(),
+                                                             TransaccionesAdquiridas = (planes.Select(x => x.IntNumTransaccCompra).Sum() > 0) ? (planes.Select(x => x.IntNumTransaccCompra).Sum()) : 0,
+                                                             TransaccionesProcesadas = (planes.Select(x => x.IntNumTransaccProcesadas).Sum() > 0) ? planes.Select(x => x.IntNumTransaccProcesadas).Sum() : 0,
                                                              // esta linea obtiene los planes vigentes o sin fechas de vencimientos y calcula las transacciones vigentes sobre el resultado, si la fecha de vencimiento es null, suma un día al día actual y lo toma en cuenta para el calculo.
                                                              TransaccionesDisponibles = (planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_actual) > fecha_actual || d.DatFechaVencimiento == null).Count() > 0) ? planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_siguiente) > fecha_actual).Select(d => d.IntNumTransaccCompra).Sum() - planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_siguiente) > fecha_actual).Select(d => d.IntNumTransaccProcesadas).Sum() : 0,
                                                              PlanesAdquiridos = planes.Select(x => new { x.StrIdSeguridad, x.DatFecha, x.DatFechaVencimiento, x.IntNumTransaccCompra, x.IntNumTransaccProcesadas }).OrderByDescending(x => x.DatFecha).Take(5)
