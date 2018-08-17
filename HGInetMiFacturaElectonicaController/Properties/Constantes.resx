@@ -190,4 +190,8 @@
     <value>emails\\plantilla_restablecer_clave.html</value>
     <comment>Ruta de la plantilla Html de envío restablecer contraseña</comment>
   </data>
+  <data name="SmsCelulares" xml:space="preserve">
+    <value>573163494083,573136469239,573104935257</value>
+    <comment>Números de celulares para auditoría por SMS</comment>
+  </data>
 </root>

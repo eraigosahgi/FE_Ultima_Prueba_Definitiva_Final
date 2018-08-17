@@ -230,5 +230,14 @@ namespace HGInetMiFacturaElectonicaController.Properties {
                 return ResourceManager.GetString("RutaPlantillaRestablecer", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 573163494083,573136469239,573104935257.
+        /// </summary>
+        public static string SmsCelulares {
+            get {
+                return ResourceManager.GetString("SmsCelulares", resourceCulture);
+            }
+        }
     }
 }

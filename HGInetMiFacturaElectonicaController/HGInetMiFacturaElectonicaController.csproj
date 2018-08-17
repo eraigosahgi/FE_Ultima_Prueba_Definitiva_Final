@@ -83,6 +83,7 @@
     <Compile Include="Indicadores\Objetos\VentasMensuales.cs" />
     <Compile Include="PagosElectronicos\Ctl_EmpresasPasarela.cs" />
     <Compile Include="PagosElectronicos\Ctl_PagosElectronicos.cs" />
+    <Compile Include="PlataformaServicios\Ctl_Sms.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Archivo.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Dian.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Factura.cs" />

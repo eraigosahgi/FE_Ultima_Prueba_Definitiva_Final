@@ -129,6 +129,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     DocumentoRespuesta item_respuesta = ProcesoUno(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
                     respuesta.Add(item_respuesta);
                 });
+                
+
+                int docs_ok = respuesta.Where(_x => _x.IdProceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode()).Count();
+
+                int docs_error = respuesta.Where(_x => (!_x.Error.Codigo.Equals(LibreriaGlobalHGInet.Error.CodigoError.OK) && (_x.Error.Mensaje == "") )).Count();
+                
+                int docs_pd = documentos.Count - docs_ok - docs_error;
+
+                string mensaje_sms = "HGInetMiFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
+                    + " "+ "Ambiente= "+facturador_electronico.IntHabilitacion + " env= " + documentos.Count  + " ok= " + docs_ok + " pd= " + docs_pd + " error= " + docs_error;
+
+                List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
+
+                Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
+
 
                 /*
 				foreach (Factura item in documentos)
@@ -896,10 +911,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             if (documento.FechaFactura == null)
                 throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
 
-            //Validar que no este vacio
-            if (string.IsNullOrEmpty(documento.CufeFactura))
-                throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "CufeFactura", "string"));
-
             //valida resolucion
             if (!resolucion.StrNumResolucion.Equals(documento.NumeroResolucion))
                 throw new ApplicationException(string.Format("La Resolución {0} no es valida", documento.NumeroResolucion));
@@ -969,10 +980,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             //Validar que no este vacia la fecha del documento de referencia
             if (documento.FechaFactura == null)
                 throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
-
-            //Validar que no este vacio
-            if (string.IsNullOrEmpty(documento.CufeFactura))
-                throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "CufeFactura", "string"));
 
             //valida resolucion
             if (!resolucion.StrNumResolucion.Equals(documento.NumeroResolucion))
