@@ -97,6 +97,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             try
             {
 
+
                 TblEmpresas ConsultaEmpresa = Obtener(empresa.StrIdentificacion);
                 if (ConsultaEmpresa != null)
                     throw new ApplicationException("La empresa :  " + ConsultaEmpresa.StrRazonSocial + " ya existe");
@@ -348,6 +349,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             List<TblEmpresas> datos = (from item in context.TblEmpresas
                                        where item.IntObligado.Equals(true)
+                                       select item).ToList();
+
+            return datos;
+        }
+
+        /// <summary>
+        /// Obtiene las empresas propias facturadoras  y las asociadas
+        /// </summary>        
+        /// <returns></returns>
+        public List<TblEmpresas> ObtenerFacturadores(string Identificacion)
+        {
+            List<TblEmpresas> datos = (from item in context.TblEmpresas
+                                       where item.IntObligado.Equals(true)
+                                       && item.StrIdentificacion.Equals(Identificacion) || item.StrEmpresaAsociada.Equals(Identificacion)
                                        select item).ToList();
 
             return datos;

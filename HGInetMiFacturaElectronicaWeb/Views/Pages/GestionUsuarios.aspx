@@ -111,9 +111,9 @@
 
             </div>
         </div>
-
-        <div ng-if="Admin">
-            <div ng-include="'ModalConsultaEmpresas.aspx'"></div>
+        <!--<div ng-if="Admin">-->
+        <div >
+            <div data-ng-include="'ModalConsultaEmpresas.aspx'"></div>
         </div>
 
     </div>

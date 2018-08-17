@@ -499,11 +499,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 //Controlador para gestionar la consulta de empresas
 EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $location) {
-
+    $scope.Admin = false;
     $("#wait").show();
     $http.get('/api/DatosSesion/').then(function (response) {
-        codigo_facturador = response.data[0].Identificacion;
-
+        codigo_facturador = response.data[0].Identificacion;        
+        var tipo = response.data[0].Admin;
+        if (tipo) {
+            $scope.Admin = true;
+        };
         $http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador).then(function (response) {
             $('#wait').hide();
             $("#gridEmpresas").dxDataGrid({

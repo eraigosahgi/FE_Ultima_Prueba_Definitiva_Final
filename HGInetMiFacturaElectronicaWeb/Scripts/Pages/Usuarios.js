@@ -183,8 +183,8 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
         if (tipo) {
             $scope.Admin = true;
         } else {
-            $('#SelecionarEmpresa').hide();
-            $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
+           // $('#SelecionarEmpresa').hide();
+           // $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
 
         //Obtiene el usuario autenticado.
@@ -377,7 +377,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                 Datos_empresa = data.value;
             },
             onFocusIn: function (data) {
-                if ($scope.Admin)
+                //if ($scope.Admin)
                     $('#modal_Buscar_empresa').modal('show');
             }
         })

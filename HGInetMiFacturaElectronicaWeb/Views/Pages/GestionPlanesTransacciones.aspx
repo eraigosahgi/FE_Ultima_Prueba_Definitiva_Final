@@ -89,7 +89,8 @@
                 </div>
             </div>
         </div>
-        <div data-ng-if="Admin">
+        <!--<div data-ng-if="Admin">-->
+        <div >
             <div data-ng-include="'ModalConsultaEmpresas.aspx'"></div>
         </div>
     </div>

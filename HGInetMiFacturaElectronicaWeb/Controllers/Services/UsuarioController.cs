@@ -125,7 +125,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 }
                 else
                 {
-                    datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario, codigo_empresa);
+                    if (datosempresa.IntIntegrador)
+                    {
+                        datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario, codigo_empresa);
+                    }
+                    else
+                    {
+                        datos = ctl_usuario.ObtenerUsuarios(codigo_usuario, codigo_empresa);
+                    }
                 }
 
 

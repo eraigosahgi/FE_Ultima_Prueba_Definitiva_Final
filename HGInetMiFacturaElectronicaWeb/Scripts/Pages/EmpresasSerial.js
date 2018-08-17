@@ -9,9 +9,9 @@ angular.module("appsrvusuario", [])
 .factory("srvusuario", function ($http) {
 
     var Scope = function () { }
-    Scope.consulta = function () {
+    Scope.consulta = function (Identificacion) {
         $("#wait").show();
-        $http.get('/api/Empresas?Facturador=true').then(function (response) {
+        $http.get('/api/ObtenerFacLicencias?IdentificacionEmpresa=' + Identificacion).then(function (response) {
             $("#wait").hide();
 
             $("#gridEmpresas").dxDataGrid({
@@ -236,8 +236,10 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
         }
     };
 
-
-    $scope.consulta = srvusuario.consulta();
+    $http.get('/api/DatosSesion/').then(function (response) {
+        var codigo_facturador = response.data[0].Identificacion;
+        $scope.consulta = srvusuario.consulta(codigo_facturador);
+    });
 });
 
 //Controlador para gestion el registro del serial
@@ -373,7 +375,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
                     DevExpress.ui.notify({ message: "Se ha enviado un correo a " + $scope.email + " ", position: { my: "center top", at: "center top" } }, "success", 1500);
                     $("#btnActivar").hide();
                     $("#btncancelar").hide();
-                    $scope.consulta = srvusuario.consulta();
+                    $scope.consulta = srvusuario.consulta(codigo_facturador);
                     setTimeout(IrAConsulta, 2000);
                 } catch (err) {
                     DevExpress.ui.notify(err.message, 'error', 3000);

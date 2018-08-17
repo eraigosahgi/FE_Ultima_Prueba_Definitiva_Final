@@ -70,7 +70,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 var retorno = datos.Select(d => new
                 {                    
                     ID = d.StrNumResolucion,
-                    Descripcion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntTipoDoc)) + "-" + ((!d.StrPrefijo.Equals("") ? d.StrPrefijo : "S/PREFIJO"))  + ((d.IntTipoDoc==1)? "-" + d.StrNumResolucion :"") 
+                    Descripcion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntTipoDoc)) + "-" + ((d.StrPrefijo==null)? "S / PREFIJO":(!d.StrPrefijo.Equals("")) ? d.StrPrefijo : "S/PREFIJO")  + ((d.IntTipoDoc==1)? "-" + d.StrNumResolucion :"") 
                 });
 
                 return Ok(retorno);

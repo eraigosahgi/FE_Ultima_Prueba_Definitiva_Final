@@ -34,8 +34,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             Estado = data;
             items_recibo = dataacuse;
 
-            $http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
-                console.log("Prefijo", response.data);
+            $http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {                
                 ResolucionesPrefijo = response.data;
                 cargarFiltros();
             }, function (response) {
@@ -156,8 +155,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         onSelectionChanged: function (selectedItems) {
                             var keys = selectedItems.selectedRowKeys;
                             e.component.option("value", keys);
-                            resolucion = keys;
-                            console.log("resolucion", resolucion);
+                            resolucion = keys;                            
                         }
                     });
 

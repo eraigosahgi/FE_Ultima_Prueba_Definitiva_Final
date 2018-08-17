@@ -77,7 +77,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             datos_plan = (from t in context.TblPlanesTransacciones
                           join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
                           join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
-                          where (empresa.StrIdentificacion.Equals(Identificacion) || Identificacion.Equals("*"))
+                          where (empresa.StrIdentificacion.Equals(Identificacion) || Identificacion.Equals("*") || empresa.StrEmpresaAsociada.Equals(Identificacion))
                           orderby t.DatFecha descending
                           select t).ToList();
 

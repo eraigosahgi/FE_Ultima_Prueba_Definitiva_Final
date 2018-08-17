@@ -25,9 +25,9 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         if (tipo) {
             $scope.Admin = true;
         } else {
-            $("#button").hide();
-            $('#SelecionarEmpresa').hide();
-            $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
+           // $("#button").hide();
+           // $('#SelecionarEmpresa').hide();
+           // $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
 
         //Obtiene el usuario autenticado.
@@ -160,7 +160,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
                 datos_empresa_asociada = data.value;
             },
             onFocusIn: function (data) {
-                if ($scope.Admin && StrIdSeguridad == undefined)
+                //if ($scope.Admin && StrIdSeguridad == undefined)
                     $('#modal_Buscar_empresa').modal('show');
             }
         }).dxValidator({

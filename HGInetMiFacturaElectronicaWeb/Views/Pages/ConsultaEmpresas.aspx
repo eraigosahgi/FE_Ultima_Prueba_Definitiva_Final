@@ -7,7 +7,7 @@
     <script src="../../Scripts/Pages/Empresas.js"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
-    <div ng-app="EmpresasApp" ng-controller="ConsultaEmpresasController">
+    <div data-ng-app="EmpresasApp" data-ng-controller="ConsultaEmpresasController" data-ng-init="Admin=false">
 
         <%--//Panel Grid--%>
         <div class="col-md-12">
@@ -19,7 +19,7 @@
                         <div class="col-md-10">
                             <h6 class="panel-title">Datos</h6>
                         </div>
-                        <div class="col-md-12 text-right">
+                        <div class="col-md-12 text-right" data-ng-show="Admin">
                             <a class="btn btn-primary" style="background: #337ab7" href="GestionEmpresas.aspx">Crear</a>
                         </div>
                     </div>

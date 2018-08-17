@@ -88,13 +88,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
             else
             {
-                datos = CtEmpresa.ObtenerAsociadas(IdentificacionEmpresa);
+                if (empresa.IntIntegrador)
+                {
+                    datos = CtEmpresa.ObtenerAsociadas(IdentificacionEmpresa);
+                }
+                else
+                {
+                    datos = CtEmpresa.Obtener(empresa.StrIdSeguridad);
+                }
             }
-
-
-
-
-
 
             if (datos == null)
             {
@@ -120,13 +122,37 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// </summary>        
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Get([FromUri] bool Facturador)
+        public IHttpActionResult Get(bool Facturador)
         {
+
             Sesion.ValidarSesion();
 
             Ctl_Empresa ctl_empresa = new Ctl_Empresa();
-            List<TblEmpresas> datos = ctl_empresa.ObtenerFacturadores();
 
+            List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+            datosSesion.Add(Sesion.DatosEmpresa);
+
+            TblEmpresas empresa = datosSesion.FirstOrDefault();
+
+
+            List<TblEmpresas> datos = new List<TblEmpresas>();
+
+            if (empresa.IntAdministrador)
+            {
+                datos = ctl_empresa.ObtenerFacturadores();
+            }
+            else
+            {
+                if (empresa.IntIntegrador)
+                {
+                    datos = ctl_empresa.ObtenerAsociadas(empresa.StrIdentificacion);
+                }
+                else
+                {
+                    datos = ctl_empresa.Obtener(empresa.StrIdSeguridad);
+                }
+            }
             if (datos == null)
             {
                 return NotFound();
@@ -146,6 +172,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
             return Ok(retorno);
         }
+
+
+
 
         /// <summary>
         /// Obtiene la lista 
@@ -217,7 +246,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 if (tipo == 1)//Nuevo
                 {
-                    var datos = ctl_empresa.Guardar(Empresa);
+
+                    List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+                    datosSesion.Add(Sesion.DatosEmpresa);
+
+                    TblEmpresas empresaSession = datosSesion.FirstOrDefault();
+
+                    if (empresaSession.IntAdministrador)
+                    {
+                        var datos = ctl_empresa.Guardar(Empresa);
+                    }
+                    else
+                    {
+                        throw new ApplicationException("No tiene permisos para crear Empresas");
+                    }
+
                 }
 
                 if (tipo == 2)//Editar
