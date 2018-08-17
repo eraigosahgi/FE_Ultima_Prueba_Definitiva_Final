@@ -42,6 +42,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox29
             // 
             this.htmlTextBox29.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox29.CanGrow = false;
             this.htmlTextBox29.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox29.Name = "htmlTextBox29";
             this.htmlTextBox29.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.0999999046325684D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -54,6 +55,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox39
             // 
             this.htmlTextBox39.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox39.CanGrow = false;
             this.htmlTextBox39.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(18.3997802734375D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox39.Name = "htmlTextBox39";
             this.htmlTextBox39.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.8899999856948853D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -67,6 +69,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox38
             // 
             this.htmlTextBox38.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox38.CanGrow = false;
             this.htmlTextBox38.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(17.199581146240234D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox38.Name = "htmlTextBox38";
             this.htmlTextBox38.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.2000000476837158D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -79,6 +82,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox36
             // 
             this.htmlTextBox36.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox36.CanGrow = false;
             this.htmlTextBox36.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(15.999381065368652D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox36.Name = "htmlTextBox36";
             this.htmlTextBox36.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.2000000476837158D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -91,6 +95,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox37
             // 
             this.htmlTextBox37.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox37.CanGrow = false;
             this.htmlTextBox37.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(14.099181175231934D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox37.Name = "htmlTextBox37";
             this.htmlTextBox37.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.8999999761581421D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -103,6 +108,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox34
             // 
             this.htmlTextBox34.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox34.CanGrow = false;
             this.htmlTextBox34.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(12.898981094360352D), Telerik.Reporting.Drawing.Unit.Cm(0.00010002215276472271D));
             this.htmlTextBox34.Name = "htmlTextBox34";
             this.htmlTextBox34.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.2000000476837158D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -115,6 +121,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox33
             // 
             this.htmlTextBox33.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox33.CanGrow = false;
             this.htmlTextBox33.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(10.998781204223633D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox33.Name = "htmlTextBox33";
             this.htmlTextBox33.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.8999999761581421D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -127,6 +134,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox32
             // 
             this.htmlTextBox32.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox32.CanGrow = false;
             this.htmlTextBox32.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(9.7985801696777344D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox32.Name = "htmlTextBox32";
             this.htmlTextBox32.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.2000000476837158D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -139,6 +147,7 @@ namespace HGInetFacturaEReports.Facturas
             // campo29_v
             // 
             this.campo29_v.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.campo29_v.CanGrow = false;
             this.campo29_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(8.5983800888061523D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.campo29_v.Name = "campo29_v";
             this.campo29_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(1.1999996900558472D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));
@@ -151,6 +160,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox30
             // 
             this.htmlTextBox30.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox30.CanGrow = false;
             this.htmlTextBox30.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(2.1002004146575928D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.htmlTextBox30.Name = "htmlTextBox30";
             this.htmlTextBox30.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(6.4979791641235352D), Telerik.Reporting.Drawing.Unit.Cm(0.44999998807907104D));

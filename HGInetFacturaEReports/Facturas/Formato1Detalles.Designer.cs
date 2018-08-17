@@ -14,12 +14,12 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox18 = new Telerik.Reporting.HtmlTextBox();
             this.htmlTextBox31 = new Telerik.Reporting.HtmlTextBox();
             this.htmlTextBox17 = new Telerik.Reporting.HtmlTextBox();
+            this.htmlTextBox8 = new Telerik.Reporting.HtmlTextBox();
+            this.htmlTextBox1 = new Telerik.Reporting.HtmlTextBox();
             this.htmlTextBox6 = new Telerik.Reporting.HtmlTextBox();
             this.htmlTextBox5 = new Telerik.Reporting.HtmlTextBox();
             this.htmlTextBox4 = new Telerik.Reporting.HtmlTextBox();
             this.htmlTextBox3 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox8 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox1 = new Telerik.Reporting.HtmlTextBox();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // detail
@@ -36,6 +36,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox18
             // 
             this.htmlTextBox18.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox18.CanGrow = false;
             this.htmlTextBox18.CanShrink = false;
             this.htmlTextBox18.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(3.0597743988037109D), Telerik.Reporting.Drawing.Unit.Cm(2.7991390538772976E-07D));
             this.htmlTextBox18.Name = "htmlTextBox18";
@@ -52,6 +53,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox31
             // 
             this.htmlTextBox31.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox31.CanGrow = false;
             this.htmlTextBox31.CanShrink = false;
             this.htmlTextBox31.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(12.660500526428223D), Telerik.Reporting.Drawing.Unit.Cm(2.7991390538772976E-07D));
             this.htmlTextBox31.Name = "htmlTextBox31";
@@ -68,6 +70,7 @@ namespace HGInetFacturaEReports.Facturas
             // htmlTextBox17
             // 
             this.htmlTextBox17.Anchoring = Telerik.Reporting.AnchoringStyles.Bottom;
+            this.htmlTextBox17.CanGrow = false;
             this.htmlTextBox17.CanShrink = false;
             this.htmlTextBox17.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0D), Telerik.Reporting.Drawing.Unit.Cm(2.7991390538772976E-07D));
             this.htmlTextBox17.Name = "htmlTextBox17";
@@ -81,6 +84,36 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox17.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
             this.htmlTextBox17.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
             this.htmlTextBox17.Value = "{Fields.ProductoCodigo}";
+            // 
+            // htmlTextBox8
+            // 
+            this.htmlTextBox8.CanGrow = false;
+            this.htmlTextBox8.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(14.160900115966797D), Telerik.Reporting.Drawing.Unit.Cm(0.00010002215276472271D));
+            this.htmlTextBox8.Name = "htmlTextBox8";
+            this.htmlTextBox8.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.1997010707855225D), Telerik.Reporting.Drawing.Unit.Cm(0.56999409198760986D));
+            this.htmlTextBox8.Style.BorderStyle.Bottom = Telerik.Reporting.Drawing.BorderType.Dotted;
+            this.htmlTextBox8.Style.BorderStyle.Default = Telerik.Reporting.Drawing.BorderType.None;
+            this.htmlTextBox8.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.Solid;
+            this.htmlTextBox8.Style.Font.Bold = false;
+            this.htmlTextBox8.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
+            this.htmlTextBox8.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
+            this.htmlTextBox8.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
+            this.htmlTextBox8.Value = "=FORMAT(\'{0:###,##0.}\',Fields.ValorUnitario)";
+            // 
+            // htmlTextBox1
+            // 
+            this.htmlTextBox1.CanGrow = false;
+            this.htmlTextBox1.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(16.360801696777344D), Telerik.Reporting.Drawing.Unit.Cm(9.9988508736714721E-05D));
+            this.htmlTextBox1.Name = "htmlTextBox1";
+            this.htmlTextBox1.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.2391958236694336D), Telerik.Reporting.Drawing.Unit.Cm(0.56999409198760986D));
+            this.htmlTextBox1.Style.BorderStyle.Bottom = Telerik.Reporting.Drawing.BorderType.Dotted;
+            this.htmlTextBox1.Style.BorderStyle.Default = Telerik.Reporting.Drawing.BorderType.None;
+            this.htmlTextBox1.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.None;
+            this.htmlTextBox1.Style.Font.Bold = false;
+            this.htmlTextBox1.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
+            this.htmlTextBox1.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
+            this.htmlTextBox1.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
+            this.htmlTextBox1.Value = "=FORMAT(\'{0:###,##0.}\',Fields.ValorSubtotal)";
             // 
             // htmlTextBox6
             // 
@@ -139,34 +172,6 @@ namespace HGInetFacturaEReports.Facturas
             this.htmlTextBox3.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Center;
             this.htmlTextBox3.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
             this.htmlTextBox3.Value = "DESCRIPCIÓN";
-            // 
-            // htmlTextBox8
-            // 
-            this.htmlTextBox8.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(14.160900115966797D), Telerik.Reporting.Drawing.Unit.Cm(0.00010002215276472271D));
-            this.htmlTextBox8.Name = "htmlTextBox8";
-            this.htmlTextBox8.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.1997010707855225D), Telerik.Reporting.Drawing.Unit.Cm(0.56999409198760986D));
-            this.htmlTextBox8.Style.BorderStyle.Bottom = Telerik.Reporting.Drawing.BorderType.Dotted;
-            this.htmlTextBox8.Style.BorderStyle.Default = Telerik.Reporting.Drawing.BorderType.None;
-            this.htmlTextBox8.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.Solid;
-            this.htmlTextBox8.Style.Font.Bold = false;
-            this.htmlTextBox8.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
-            this.htmlTextBox8.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
-            this.htmlTextBox8.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.htmlTextBox8.Value = "=FORMAT(\'{0:###,##0.}\',Fields.ValorUnitario)";
-            // 
-            // htmlTextBox1
-            // 
-            this.htmlTextBox1.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(16.360801696777344D), Telerik.Reporting.Drawing.Unit.Cm(9.9988508736714721E-05D));
-            this.htmlTextBox1.Name = "htmlTextBox1";
-            this.htmlTextBox1.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(2.2391958236694336D), Telerik.Reporting.Drawing.Unit.Cm(0.56999409198760986D));
-            this.htmlTextBox1.Style.BorderStyle.Bottom = Telerik.Reporting.Drawing.BorderType.Dotted;
-            this.htmlTextBox1.Style.BorderStyle.Default = Telerik.Reporting.Drawing.BorderType.None;
-            this.htmlTextBox1.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.None;
-            this.htmlTextBox1.Style.Font.Bold = false;
-            this.htmlTextBox1.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(8D);
-            this.htmlTextBox1.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
-            this.htmlTextBox1.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.htmlTextBox1.Value = "=FORMAT(\'{0:###,##0.}\',Fields.ValorSubtotal)";
             // 
             // Formato1Detalles
             // 
