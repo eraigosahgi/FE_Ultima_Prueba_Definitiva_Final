@@ -9,9 +9,9 @@ angular.module("appsrvusuario", [])
 .factory("srvusuario", function ($http) {
 
     var Scope = function () { }
-    Scope.consulta = function (Identificacion) {
+    Scope.consulta = function () {
         $("#wait").show();
-        $http.get('/api/ObtenerFacLicencias?IdentificacionEmpresa=' + Identificacion).then(function (response) {
+        $http.get('/api/Empresas?Facturador=true').then(function (response) {
             $("#wait").hide();
 
             $("#gridEmpresas").dxDataGrid({
@@ -236,10 +236,10 @@ SerialEmpresaApp.controller('SerialEmpresaController', function SerialEmpresaCon
         }
     };
 
-    $http.get('/api/DatosSesion/').then(function (response) {
-        var codigo_facturador = response.data[0].Identificacion;
-        $scope.consulta = srvusuario.consulta(codigo_facturador);
-    });
+    // $http.get('/api/DatosSesion/').then(function (response) {
+    //   var codigo_facturador = response.data[0].Identificacion;
+    $scope.consulta = srvusuario.consulta();
+    //});
 });
 
 //Controlador para gestion el registro del serial
@@ -254,7 +254,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
             //Obtiene el código del permiso.
             $http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
                 $("#wait").hide();
-                try {                    
+                try {
                     $scope.Visibilidad = response.data[0].Editar;
                     CargarCampos();
                 } catch (err) {
@@ -273,7 +273,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
     var Datos_Resolucion = "", Datos_Serial = "", Datos_correo = "";
 
     //Define los campos del Formulario  
-    function CargarCampos(){
+    function CargarCampos() {
 
 
         $("#summary").dxValidationSummary({});
@@ -340,7 +340,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
 
         $("#btnActivar").dxButton({
             text: "Guardar",
-            type: "default",            
+            type: "default",
             useSubmitBehavior: true
             , onClick: function () {
                 guardarSerial();
@@ -375,7 +375,7 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
                     DevExpress.ui.notify({ message: "Se ha enviado un correo a " + $scope.email + " ", position: { my: "center top", at: "center top" } }, "success", 1500);
                     $("#btnActivar").hide();
                     $("#btncancelar").hide();
-                    $scope.consulta = srvusuario.consulta(codigo_facturador);
+                    $scope.consulta = srvusuario.consulta();
                     setTimeout(IrAConsulta, 2000);
                 } catch (err) {
                     DevExpress.ui.notify(err.message, 'error', 3000);
