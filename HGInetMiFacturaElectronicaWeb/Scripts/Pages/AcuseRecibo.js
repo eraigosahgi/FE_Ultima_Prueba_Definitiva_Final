@@ -15,11 +15,11 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     $scope.habilitar = function () {
 
         //$http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&pago=true').then(function (response) {
-
-        $http.get('/api/ConsultaSaldoDocumento?StrIdSeguridadDoc=' + IdSeguridad).then(function (response) {
+        var id = IdSeguridad.split('&')[0];
+        $http.get('/api/ConsultaSaldoDocumento?StrIdSeguridadDoc=' + id).then(function (response) {
             if (response.data != "PagoPendiente" && response.data != "DocumentoCancelado") {
-
-                $http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + response.data).then(function (response) {
+               
+                $http.get('/api/Documentos?strIdSeguridad=' + id + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + response.data).then(function (response) {
 
                     window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
                     //Si lo envia a la pantalla de pago, cierra la pantalla actual
@@ -129,18 +129,22 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     //Función para actualizar los datos
     function ActualizarDatos() {
 
+
+        var id = IdSeguridad.split('&')[0];
+
         var data = $.param({
-            id_seguridad: IdSeguridad,
+            id_seguridad: id,
             estado: estado,
             motivo_rechazo: motivo_rechazo
         });
+
 
         $('#wait').show();
 
         $http.post('/api/Documentos?' + data).then(function (data, response) {
             $scope.ServerResponse = data;
             consultar();
-            var id = IdSeguridad;
+            var id = id;
             $('#wait').hide();
         }, function errorCallback(response) {
             $('#wait').hide();
