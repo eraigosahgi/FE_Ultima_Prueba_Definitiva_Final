@@ -3,6 +3,7 @@ using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectonicaData.ModeloServicio.General;
@@ -366,11 +367,20 @@ namespace HGInetMiFacturaElectonicaController
 
                 string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaHtmlDocumentos);
 
-                string asunto = Constantes.AsuntoNotificacionDocumento;
+                string asunto = string.Empty;
 
                 // obtiene los datos del facturador electrónico
                 Ctl_Empresa facturador_electronico = new Ctl_Empresa();
                 TblEmpresas empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
+
+                if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+                {
+                    asunto = string.Format("{0} (HABILITACIÓN)", Constantes.AsuntoNotificacionDocumento);
+                }
+                else
+                {
+                    asunto = Constantes.AsuntoNotificacionDocumento;
+                }
 
                 // envía como email de respuesta facturador electrónico
                 DestinatarioEmail remitente = new DestinatarioEmail();
@@ -418,10 +428,22 @@ namespace HGInetMiFacturaElectonicaController
 
                     if (file != null)
                     {
+
+                        if(empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+                        {
+                            string div_prueba = "<div style='cursor:auto;background-color:#AAA1A1;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><style></style><p style='margin: 10px 0;'><span style='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'>Este Documento es de prueba y no tiene validez comercial.</span></p></div>";
+
+                            mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+                        }
+                        else
+                        {
+                            mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+                        }
+
                         // Datos Facturador Electronico
                         mensaje = mensaje.Replace("{ImagenLogo}", "<img id='ImgLogo' src='" + "" + "' style='border: none; border-radius: 0px; display: block; outline: none; text-decoration: none; width: 100%; height: auto;' width='233' />");
                         mensaje = mensaje.Replace("{NombreFacturador}", empresa_obligado.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
+                        mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
                         mensaje = mensaje.Replace("{DigitovFacturador}", empresa_obligado.IntIdentificacionDv.ToString());
                         mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMail);
 
@@ -432,12 +454,12 @@ namespace HGInetMiFacturaElectonicaController
                             mensaje = mensaje.Replace("{TelefonoFacturador}", "");
 
                         // Datos del Tercero
-						if (empresa_adquiriente.StrTipoIdentificacion.Equals("31"))
-							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
-						else
-							mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
+                        if (empresa_adquiriente.StrTipoIdentificacion.Equals("31"))
+                            mensaje = mensaje.Replace("{TipoPersona}", "Señores");
+                        else
+                            mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
 
-						mensaje = mensaje.Replace("{NombreTercero}", empresa_adquiriente.StrRazonSocial);
+                        mensaje = mensaje.Replace("{NombreTercero}", empresa_adquiriente.StrRazonSocial);
                         mensaje = mensaje.Replace("{NitTercero}", empresa_adquiriente.StrIdentificacion);
                         mensaje = mensaje.Replace("{Digitov}", empresa_adquiriente.IntIdentificacionDv.ToString());
                         mensaje = mensaje.Replace("{CorreoTercero}", empresa_adquiriente.StrMail);
@@ -460,7 +482,7 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{RutaUrl}", ruta_acuse);
 
 
-                        bool IdPago = (documento.TblEmpresasResoluciones.IntComercioId == null) ? false : (documento.TblEmpresasResoluciones.IntComercioId >0)?true:false;
+                        bool IdPago = (documento.TblEmpresasResoluciones.IntComercioId == null) ? false : (documento.TblEmpresasResoluciones.IntComercioId > 0) ? true : false;
 
                         if (doc_tipo == TipoDocumento.Factura && IdPago)
                         {
