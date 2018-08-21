@@ -124,7 +124,7 @@
     <value>Serial de activacion Mi Factura en Línea</value>
   </data>
   <data name="AsuntoNotificacionDocumento" xml:space="preserve">
-    <value>Factura en Línea</value>
+    <value>Facturación Electrónica</value>
   </data>
   <data name="EmailCopiaOculta" xml:space="preserve">
     <value>tic@hgi.com.co</value>

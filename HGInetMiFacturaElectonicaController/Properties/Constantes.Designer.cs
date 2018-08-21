@@ -79,7 +79,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Factura en Línea.
+        ///   Busca una cadena traducida similar a Facturación Electrónica.
         /// </summary>
         public static string AsuntoNotificacionDocumento {
             get {
