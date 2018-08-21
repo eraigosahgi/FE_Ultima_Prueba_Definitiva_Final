@@ -129,22 +129,35 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     DocumentoRespuesta item_respuesta = ProcesoUno(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
                     respuesta.Add(item_respuesta);
                 });
-                
-                int docs_proc = respuesta.Where(_x => _x.IdProceso > ProcesoEstado.Validacion.GetHashCode()).Count();
 
-                int docs_ok = respuesta.Where(_x => _x.IdProceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode()).Count();
+                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-                int docs_error = respuesta.Where(_x => (!_x.Error.Codigo.Equals(LibreriaGlobalHGInet.Error.CodigoError.OK) && (_x.Error.Mensaje == "") )).Count();
-                
-                int docs_pd = documentos.Count - docs_ok - docs_error;
+                if (!plataforma_datos.RutaPublica.Contains("localhost"))
+                {
+                    int docs_proc = respuesta.Where(_x => _x.IdProceso > ProcesoEstado.Validacion.GetHashCode()).Count();
 
-                string mensaje_sms = "HGInetMiFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
-                    + " "+ "Ambiente= "+facturador_electronico.IntHabilitacion + " env= " + documentos.Count  + " ok= " + docs_ok + " pd= " + docs_pd + " error= " + docs_error;
+                    if (docs_proc > 0)
+                    {
 
-                List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
+                        string hora = Fecha.GetFecha().ToString(Fecha.formato_hora);
 
-                Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
+                        string ambiente = Enumeracion.GetEnumObjectByValue<Habilitacion>(Convert.ToInt32(facturador_electronico.IntHabilitacion)).ToString();
 
+                        int docs_ok = respuesta.Where(_x => _x.IdProceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode()).Count();
+
+                        int docs_error = respuesta.Where(_x => (!(_x.Error.Codigo.Equals(LibreriaGlobalHGInet.Error.CodigoError.OK)) && (_x.Error.Mensaje != ""))).Count();
+
+                        int docs_pd = documentos.Count - docs_ok - docs_error;
+
+                        string mensaje_sms = "HGInetMiFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
+                            + " " + ambiente + " env= " + documentos.Count + " docs_proc= " + docs_proc + " ok= " + docs_ok + " pd= " + docs_pd + " error= " + docs_error
+                            + " " + hora;
+
+                        List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
+
+                        Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
+                    }
+                }
 
                 /*
 				foreach (Factura item in documentos)
