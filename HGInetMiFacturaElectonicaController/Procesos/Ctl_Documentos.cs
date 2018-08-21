@@ -130,6 +130,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     respuesta.Add(item_respuesta);
                 });
                 
+                int docs_proc = respuesta.Where(_x => _x.IdProceso > ProcesoEstado.Validacion.GetHashCode()).Count();
 
                 int docs_ok = respuesta.Where(_x => _x.IdProceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode()).Count();
 
@@ -591,6 +592,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         else
                         {
                             resolucion = resolucion_doc;
+                            item.NumeroResolucion = resolucion.StrNumResolucion;
                         }
                     }
                     else
@@ -756,6 +758,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         else
                         {
                             resolucion = resolucion_doc;
+                            item.NumeroResolucion = resolucion.StrNumResolucion;
                         }
                     }
                     else
