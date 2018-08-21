@@ -107,6 +107,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             reporte_pdf = new HGInetFacturaEReports.Facturas.Formato4();
                             reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
                             break;
+
+                        default:
+                            switch (documento_result.DocumentoTipo)
+                            {
+                                case TipoDocumento.Factura:
+                                    reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
+                                    break;
+                                case TipoDocumento.NotaDebito:
+                                    reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
+                                    break;
+                                case TipoDocumento.NotaCredito:
+                                    reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
+                                    break;
+                            }
+                            break;
+                           
+
                     }
 
                     //Asigna los datos al reporte y genera el pdf
