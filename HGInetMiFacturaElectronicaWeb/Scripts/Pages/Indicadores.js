@@ -64,7 +64,11 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
         $http.get('/api/PermisosIndicadores?codigo_usuario=' + usuario_autenticado + '&identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_perfil=' + 1).then(function (response) {
 
             var opciones_permisos = response.data;
-
+            if (opciones_permisos.length < 1) {
+                $scope.IndicadoresAdmin = false;
+            } else {
+                $scope.IndicadoresAdmin = true;
+            }
             for (var i = 0; i < opciones_permisos.length; i++) {
                 var cod_div = 'Panel' + opciones_permisos[i].Codigo;
                 $scope[cod_div] = opciones_permisos[i].Consultar;
@@ -480,6 +484,11 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
         $http.get('/api/PermisosIndicadores?codigo_usuario=' + usuario_autenticado + '&identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_perfil=' + 2).then(function (response) {
 
             var opciones_permisos = response.data;
+            if (opciones_permisos.length < 1) {
+                $scope.IndicadoresFacturador = false;
+            } else {
+                $scope.IndicadoresFacturador = true;
+            }
             for (var i = 0; i < opciones_permisos.length; i++) {
                 var cod_div = 'Panel' + opciones_permisos[i].Codigo;
                 $scope[cod_div] = opciones_permisos[i].Consultar;
@@ -680,7 +689,11 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
         $http.get('/api/PermisosIndicadores?codigo_usuario=' + usuario_autenticado + '&identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_perfil=' + 3).then(function (response) {
 
             var opciones_permisos = response.data;
-
+            if (opciones_permisos.length < 1) {
+                $scope.IndicadoresAdquiriente = false;
+            } else {
+                $scope.IndicadoresAdquiriente = true;
+            }
             for (var i = 0; i < opciones_permisos.length; i++) {
                 var cod_div = 'Panel' + opciones_permisos[i].Codigo;
                 $scope[cod_div] = opciones_permisos[i].Consultar;
