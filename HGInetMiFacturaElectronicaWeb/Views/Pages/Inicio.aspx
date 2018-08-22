@@ -8,7 +8,7 @@
 
     <style>
         .nav-tabs:before {
-            content: 'Perfiles' !important;
+            content: 'Indicadores' !important;
         }
     </style>
 
