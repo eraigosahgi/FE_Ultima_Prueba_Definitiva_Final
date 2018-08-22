@@ -6,17 +6,23 @@
 
     <script src="../../Scripts/Pages/Indicadores.js"></script>
 
+    <style>
+        .nav-tabs:before {
+            content: 'Perfiles' !important;
+        }
+    </style>
+
     <!-- CONTENEDOR PRINCIPAL -->
-    <div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController">
+    <div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController" data-ng-cloak>
 
         <!-- CONTENIDO PANEL-->
         <div class="panel-body">
 
             <!-- MENÚ TABS -->
-            <ul class="nav nav-tabs">
-                <li id="LiTabAdministrador"><a id="LinkTabAdministrador" data-ng-if="LinkTabAdministrador" data-ng-init="LinkTabAdministrador=true" href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
-                <li id="LiTabFacturador"><a id="LinkTabFacturador" data-ng-if="LinkTabFacturador" data-ng-init="LinkTabFacturador=true" href="#TabFacturador" data-toggle="tab">Facturador</a></li>
-                <li id="LiTabAdquiriente"><a id="LinkTabAdquiriente" data-ng-if="LinkTabAdquiriente" data-ng-init="LinkTabAdquiriente=true" href="#TabAdquiriente" data-toggle="tab">Adquiriente</a></li>
+            <ul class="nav nav-tabs">                 
+                <li id="LiTabAdministrador" data-ng-show="IndicadoresAdmin" ><a id="LinkTabAdministrador" data-ng-if="LinkTabAdministrador" data-ng-init="LinkTabAdministrador=true" href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
+                <li id="LiTabFacturador" data-ng-class="{'active':!IndicadoresAdmin}" data-ng-show="IndicadoresFacturador" ><a id="LinkTabFacturador" data-ng-if="LinkTabFacturador" data-ng-init="LinkTabFacturador=true" href="#TabFacturador" data-toggle="tab">Facturador</a></li>
+                <li id="LiTabAdquiriente" data-ng-class="{'active':!IndicadoresAdmin && !IndicadoresFacturador }" data-ng-show="IndicadoresAdquiriente"><a id="LinkTabAdquiriente" data-ng-if="LinkTabAdquiriente" data-ng-init="LinkTabAdquiriente=true" href="#TabAdquiriente" data-toggle="tab">Adquiriente</a></li>
             </ul>
             <!--  /MENÚ TABS -->
 
@@ -138,7 +144,7 @@
                 <!-- /TAB ADMINISTRADOR -->
 
                 <!-- TAB FACTURADOR -->
-                <div class="tab-pane" id="TabFacturador">
+                <div data-ng-class="{'tab-pane active':!IndicadoresAdmin}"  id="TabFacturador">
 
                     <div class="row">
 
@@ -261,7 +267,7 @@
                 <!-- /TAB FACTURADOR -->
 
                 <!-- TAB ADQUIRIENTE -->
-                <div class="tab-pane" id="TabAdquiriente">
+                <div data-ng-class="{'tab-pane active':!IndicadoresAdmin && !IndicadoresFacturador }"  id="TabAdquiriente">
 
                     <div class="row">
 
@@ -312,7 +318,9 @@
 
             </div>
             <!-- /CONTENIDOS TABS -->
-
+            <div>
+                <img src="../../Scripts/Images/ImgIndex.PNG"  class="img-responsive" data-ng-hide="IndicadoresFacturador || IndicadoresAdquiriente || IndicadoresAdmin " />
+            </div>
         </div>
         <!-- /CONTENIDO PANEL-->
 
