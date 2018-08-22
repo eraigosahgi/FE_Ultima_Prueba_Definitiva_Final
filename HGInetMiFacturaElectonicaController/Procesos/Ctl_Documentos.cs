@@ -153,9 +153,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             + " " + ambiente + " env= " + documentos.Count + " docs_proc= " + docs_proc + " ok= " + docs_ok + " pd= " + docs_pd + " error= " + docs_error
                             + " " + hora;
 
-                        List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
+                        if (facturador_electronico.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
+                        {
 
-                        Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
+                            List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
+
+                            Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
+                        }
+                        else
+                        {
+                            if (docs_pd > 0)
+                            {
+                                List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
+
+                                Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
+                            }
+                        }
                     }
                 }
 
