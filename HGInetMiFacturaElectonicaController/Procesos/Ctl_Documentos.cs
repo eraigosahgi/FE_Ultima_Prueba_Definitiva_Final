@@ -145,13 +145,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                         int docs_ok = respuesta.Where(_x => _x.IdProceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode()).Count();
 
-                        int docs_error = respuesta.Where(_x => (!(_x.Error.Codigo.Equals(LibreriaGlobalHGInet.Error.CodigoError.OK)) && (_x.Error.Mensaje != ""))).Count();
+                        int docs_pd = documentos.Count - docs_ok ;
 
-                        int docs_pd = documentos.Count - docs_ok - docs_error;
-
-                        string mensaje_sms = "HGInetMiFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
-                            + " " + ambiente + " env= " + documentos.Count + " docs_proc= " + docs_proc + " ok= " + docs_ok + " pd= " + docs_pd + " error= " + docs_error
-                            + " " + hora;
+                        string mensaje_sms = hora + " " + "HGInetMiFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
+                            + " " + ambiente + " env= " + documentos.Count + " proc= " + docs_proc + " ok= " + docs_ok + " pd= " + docs_pd;
 
                         if (facturador_electronico.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
                         {
