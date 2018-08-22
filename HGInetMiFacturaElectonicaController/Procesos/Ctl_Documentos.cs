@@ -125,7 +125,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
-                Parallel.ForEach<Factura>(documentos, item => {
+                Parallel.ForEach<Factura>(documentos, item =>
+                {
                     DocumentoRespuesta item_respuesta = ProcesoUno(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
                     respuesta.Add(item_respuesta);
                 });
@@ -145,7 +146,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                         int docs_ok = respuesta.Where(_x => _x.IdProceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode()).Count();
 
-                        int docs_pd = documentos.Count - docs_ok ;
+                        int docs_pd = documentos.Count - docs_ok;
 
                         string mensaje_sms = hora + " " + "HGInetMiFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
                             + " " + ambiente + " env= " + documentos.Count + " proc= " + docs_proc + " ok= " + docs_ok + " pd= " + docs_pd;
@@ -437,9 +438,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         {
 
                             documentoBd = documento_tmp.Crear(documentoBd);
-                            
+
                             documentoBd.TblEmpresasResoluciones = resolucion;
-                            
+
 
                         }
                         catch (Exception excepcion)
@@ -893,6 +894,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Moneda))
                 throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
 
+            //Valida que el codigo del formato que envia este disponible.
+            if (string.IsNullOrEmpty(documento.DocumentoFormato.ArchivoPdf))
+            {
+                if (documento.DocumentoFormato.Codigo < 1 || documento.DocumentoFormato.Codigo > 4)
+                    throw new ApplicationException(string.Format("El Formato {0} no se encuentra disponible en la plataforma.", documento.DocumentoFormato.Codigo));
+            }
+
             //Valida que no este vacio y este bien formado 
             ValidarTercero(documento.DatosObligado, "Obligado");
 
@@ -964,6 +972,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Moneda))
                 throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
 
+            //Valida que el codigo del formato que envia este disponible.
+            if (string.IsNullOrEmpty(documento.DocumentoFormato.ArchivoPdf))
+            {
+                if (documento.DocumentoFormato.Codigo < 1 || documento.DocumentoFormato.Codigo > 4)
+                    throw new ApplicationException(string.Format("El Formato {0} no se encuentra disponible en la plataforma.", documento.DocumentoFormato.Codigo));
+            }
+
             //Valida que no este vacio y este bien formado 
             ValidarTercero(documento.DatosObligado, "Obligado");
 
@@ -1029,6 +1044,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
             if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Moneda))
                 throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
+
+            //Valida que el codigo del formato que envia este disponible.
+            if (string.IsNullOrEmpty(documento.DocumentoFormato.ArchivoPdf))
+            {
+                if (documento.DocumentoFormato.Codigo < 1 || documento.DocumentoFormato.Codigo > 4)
+                    throw new ApplicationException(string.Format("El Formato {0} no se encuentra disponible en la plataforma.", documento.DocumentoFormato.Codigo));
+            }
 
             //Valida que no este vacio y este bien formado 
             ValidarTercero(documento.DatosObligado, "Obligado");
