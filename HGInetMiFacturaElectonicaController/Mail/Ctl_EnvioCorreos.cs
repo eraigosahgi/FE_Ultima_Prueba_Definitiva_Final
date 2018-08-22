@@ -429,9 +429,9 @@ namespace HGInetMiFacturaElectonicaController
                     if (file != null)
                     {
 
-                        if(empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+                        if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
                         {
-                            string div_prueba = "<td style='word - wrap:break-word; background:#E7F122;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;' align='left' background='#E7F122'><div style='cursor:auto;background-color:#E7F122;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><style></style><p style='margin: 10px 0;'><span style='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'>Este Documento es de prueba y no tiene validez comercial.</span></p></div></td>";
+                            string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
 
                             mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
                         }
