@@ -121,10 +121,13 @@
                 $('#sidebar').animate({ width: 'toggle' });
             });
 
+            
 
         });
 
-        
+        function inicio() {
+            window.location.assign("/Views/Pages/Inicio.aspx");
+        }
 
 
     </script>
@@ -168,6 +171,7 @@
                             <i class="icon-puzzle3"></i>
                         </a>
 
+                      
                         <div class="dropdown-menu dropdown-content">
                             <div class="dropdown-content-heading">
                                 Actualizaciones
@@ -197,6 +201,7 @@
                             </div>
                         </div>
                     </li>
+                    <li><a href="/Views/Pages/Inicio.aspx"  class="icon-home2"></a></li>
                 </ul>
 
                 <div class="navbar-right navbar-collapse collapse" id="Div2">
@@ -262,7 +267,7 @@
                         <div class="sidebar-user-material">
                             <div class="category-content-custom">
                                 <div class="sidebar-user-material-content">
-                                    <img src="../../Scripts/Images/LogoPlataforma.PNG" class="img-responsive" />
+                                    <img onclick="inicio();" style="pointer-events:auto;cursor: pointer;" src="../../Scripts/Images/LogoPlataforma.PNG" class="img-responsive" />
                                 </div>
                             </div>
 
