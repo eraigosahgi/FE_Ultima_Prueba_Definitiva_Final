@@ -584,7 +584,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
     //chkOculto = nomenclatura inicial para los opcion hidden
     //chkVisible = nomenclatura inicial para los opcion que estan visibles
     function ValidarConsultar(Nombre, chkOculto, chkVisible) {
-        var menu = 6;
+        var menu = 40;
         if (ValidacionHP == false) {
             var optActual = $("input[name='" + Nombre + "']").val();
             try {
@@ -594,7 +594,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                     var chkopcion = Nombre.replace(chkOculto, chkVisible);
                     //Recorro y borro todos mis hijos
                     for (var i = 1; i < menu; i++) {
-                        console.log("opcion: ", "#" + Nombre.replace(chkOculto, chkVisible) + i);
+                     
                         $("#" + chkopcion + i).dxCheckBox({ value: 0 });
                         var hijo = chkopcion + i;
                         //Valido si tengo mas hijos
@@ -642,8 +642,41 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                         $("#" + padre).dxCheckBox({ value: 0 });
                     }
                     ////////////////////////////////////////Finvalidacion padre de mi padre
-
                     ValidacionHP = false;
+
+
+
+
+
+                    ////////////////////////////Entra validacion padre de mi padre
+                    ///Valido si desmarco a mi padre  
+                    //Padre de mi padre
+                    var padre = padre.substr(0, padre.length - 1);
+                    padre = padre.replace(chkVisible, chkOculto)
+                    var otroHijoMarcado = false;
+                    for (var i = 1; i < menu; i++) {
+                        var otroHijo = $("input[name='" + padre + i + "']").val();
+                        if (otroHijo == "true" || otroHijo == 1) {
+                            otroHijoMarcado = true;
+                            break;
+                        }
+                    }
+
+                    if (!otroHijoMarcado) {
+                        padre = padre.replace(chkOculto, chkVisible);
+                        $("#" + padre).dxCheckBox({ value: 0 });
+                    }
+                    ////////////////////////////////////////Finvalidacion padre de mi padre
+
+
+
+
+
+
+
+
+
+
                 } else {
                     ValidacionHP = true;
                     var chkopcion = Nombre.replace(chkOculto, chkVisible);
@@ -666,6 +699,9 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
                     //Marco al padre de mi padre
                     var padrePadre = padre.substr(0, padre.length - 1);
                     $("#" + padrePadre).dxCheckBox({ value: 1 });
+
+                    var padrePadrePadre = padrePadre.substr(0, padrePadre.length - 1);
+                    $("#" + padrePadrePadre).dxCheckBox({ value: 1 });
 
                     ValidacionHP = false;
                 }
