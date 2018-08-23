@@ -127,7 +127,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 Parallel.ForEach<Factura>(documentos, item =>
                 {
-                    DocumentoRespuesta item_respuesta = ProcesoUno(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+                    DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
                     respuesta.Add(item_respuesta);
                 });
 
@@ -169,81 +169,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                         }
                     }
                 }
-
-                /*
-				foreach (Factura item in documentos)
-				{
-
-					DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
-					try
-					{
-						if (string.IsNullOrEmpty(item.NumeroResolucion))
-							throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
-
-
-						Ctl_Documento num_doc = new Ctl_Documento();
-
-						//valida si el Documento ya existe en Base de Datos
-						TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.Factura.GetHashCode());
-
-						if (numero_documento != null && item.Prefijo == numero_documento.StrPrefijo)
-							throw new ApplicationException(string.Format("El documento {0} ya existe para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
-
-						TblEmpresasResoluciones resolucion = null;
-
-						try
-						{
-							ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
-
-							LogExcepcion.Guardar(exTMP);
-
-							// filtra la resolución del documento
-							resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
-						}
-						catch (Exception excepcion)
-						{
-							throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1}", item.NumeroResolucion, facturador_electronico.StrIdentificacion));
-						}
-
-
-						// realiza el proceso de envío a la DIAN del documento
-						item_respuesta = Procesar(id_peticion, item, TipoDocumento.Factura, resolucion, facturador_electronico);
-					}
-					catch (Exception excepcion)
-					{
-
-						ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
-						LogExcepcion.Guardar(excepcion);
-						item_respuesta = new DocumentoRespuesta()
-						{
-							Aceptacion = 0,
-							CodigoRegistro = item.CodigoRegistro,
-							Cufe = "",
-							DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
-							DocumentoTipo = TipoDocumento.Factura.GetHashCode(),
-							Documento = item.Documento,
-							Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
-							EstadoDian = null,
-							FechaRecepcion = fecha_actual,
-							FechaUltimoProceso = fecha_actual,
-							IdDocumento = "",
-							Identificacion = "",
-							IdProceso = proceso_actual.GetHashCode(),
-							MotivoRechazo = "",
-							NumeroResolucion = item.NumeroResolucion,
-							Prefijo = item.Prefijo,
-							ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
-							UrlPdf = "",
-							UrlXmlUbl = ""
-						};
-
-					}
-					if (item_respuesta.Error == null)
-						item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
-
-					respuesta.Add(item_respuesta);
-				}
-                */
+                
                 return respuesta;
             }
             catch (Exception ex)
@@ -254,8 +180,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         }
 
 
-
-        public static DocumentoRespuesta ProcesoUno(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
+        /// <summary>
+        /// Procesa un documento por paralelismo
+        /// </summary>
+        /// <param name="item">objeto de datos factura</param>
+        /// <param name="facturador_electronico">facturador electrónico del documento</param>
+        /// <param name="id_peticion">identificador de petición</param>
+        /// <param name="fecha_actual">fecha actual de recepción del documento</param>
+        /// <param name="lista_resolucion">resoluciones habilitadas para el facturador electrónico</param>
+        /// <returns>resultado del proceso</returns>
+        private static DocumentoRespuesta Procesar(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
         {
             DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
             try
@@ -327,17 +261,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             return item_respuesta;
 
         }
-
-
-
+        
         /// <summary>
-        /// Realiza el proceso de la plataforma para el documento
-        /// 1. Generar UBL - 2. Firmar - 3. Almacenar XML - 4. Comprimir - 5. Enviar DIAN
+        /// Realiza el proceso en la plataforma para un documento
+        /// 1. Generar UBL - 2. Firmar - 3. Almacenar XML - 4. Comprimir - 5. Enviar DIAN - 6. Envío Adquiriente
         /// </summary>
         /// <param name="id_peticion">id único de identificación de la plataforma</param>
-        /// <param name="documento_obj">datos del documento</param>
-        /// <param name="pruebas">indica si el documento es de pruebas (true)</param>
-        /// <returns>datos de resultado para el documento</returns>
+        /// <param name="documento">datos del documento</param>
+        /// <param name="tipo_doc">tipo de documento a procesar</param>
+        /// <param name="resolucion">resolución del documento</param>
+        /// <param name="empresa">facturador electrónico del documento</param>
+        /// <returns>resultado del proceso</returns>
         public static DocumentoRespuesta Procesar(Guid id_peticion, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa)
         {
             string numero_resolucion = string.Empty;
