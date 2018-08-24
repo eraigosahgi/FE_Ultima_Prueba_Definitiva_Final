@@ -47,7 +47,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el envío del archivo ZIP con el XML firmado a la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-				return null;
+                LogExcepcion.Guardar(excepcion);
+                return null;
 			}
 
 			respuesta.Cufe = documento_result.CUFE;
