@@ -350,14 +350,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                             //Obtiene la informacion del Adquiriente que se tiene en BD
                             adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
-
-                            //Si no existe Adquiriente se crea en BD y se crea Usuario
-                            if (adquirienteBd == null)
+                            try
                             {
-                                empresa_config = new Ctl_Empresa();
-                                //Creacion del Adquiriente
-                                adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
 
+                                //Si no existe Adquiriente se crea en BD y se crea Usuario
+                                if (adquirienteBd == null)
+                                {
+                                    empresa_config = new Ctl_Empresa();
+                                    //Creacion del Adquiriente
+                                    adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
+
+                                }
+                            }
+                            catch (Exception excepcion)
+                            {
+                                string msg_excepcion = Excepcion.Mensaje(excepcion);
+
+                                if (!msg_excepcion.ToLowerInvariant().Contains("insert duplicate key"))
+                                    throw excepcion;
+                                else
+                                    adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
                             }
                         }
                         catch (Exception excepcion)
