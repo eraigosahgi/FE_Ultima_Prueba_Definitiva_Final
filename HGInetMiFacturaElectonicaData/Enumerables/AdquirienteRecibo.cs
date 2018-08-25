@@ -20,7 +20,11 @@ namespace HGInetMiFacturaElectonicaData
 
         [Description("Rechazado")]
         [AmbientValue("2")]
-        Rechazado = 2
+        Rechazado = 2,
+
+        [Description("Aprobado Tácito")]
+        [AmbientValue("2")]
+        AprobadoTacito = 3
 
     }
 }
