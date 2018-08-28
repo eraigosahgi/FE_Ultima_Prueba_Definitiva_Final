@@ -261,6 +261,109 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         }
 
 
+        #region Proceso para acuse de documentos (Tacito)
+        /// <summary>
+        /// Obtiene los datos de los acuse vista Tacito
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="codigo_adquiriente"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+
+        [HttpGet]
+            [Route("api/ConsultaAcuseTacito")]
+        public IHttpActionResult ConsultaAcuseTacito(string codigo_facturador, string codigo_adquiriente, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerAcuseTacito(codigo_facturador, numero_documento, codigo_adquiriente);
+
+                //short dias = ctl_documento.CantDiasTacito(codigo_facturador);
+
+                var retorno = datos.Select(d => new
+                {
+                    IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+                    RazonSocial = d.TblEmpresasAdquiriente.StrRazonSocial,
+                    NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    Fecha = d.DatFechaDocumento,
+                    FechaIngreso = d.DatFechaIngreso,
+                    Estado = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    MotivoRechazo = d.StrAdquirienteMvoRechazo,
+                    //Xml = d.StrUrlArchivoUbl,
+                    //Pdf = d.StrUrlArchivoPdf,
+                    d.StrIdSeguridad,
+                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
+                    dias = DateTime.Now.Subtract(d.DatFechaIngreso).Days
+                });
+                //.Where(x => x.dias >= dias);
+
+                return Ok(retorno);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// Generar Acuse Tacito a Documentos
+        /// </summary>
+        /// <param name="objeto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/GenerarAcuseTacito")]
+        public IHttpActionResult GenerarAcuseTacito(Object objeto)
+        {
+            try
+            {
+                Ctl_Documento clase_doc = new Ctl_Documento();
+
+                var jobjeto = (dynamic)objeto;
+
+                string ListaDoc = jobjeto.Documentos;
+
+                List<DocumentosTacito> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosTacito>>(ListaDoc);
+
+                List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();
+
+                List<long> List_id_seguridad = new List<long>();
+
+                foreach (var item in ListadeDocumentos)
+                {
+                    List_id_seguridad.Add(item.Documentos);
+                }
+
+                Ctl_Documento documento = new Ctl_Documento();
+
+                var lista = documento.DocumentosAcuseTacito(List_id_seguridad);
+
+                var  datos = documento.GenerarAcuseTacito(lista);                
+
+                return Ok();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+
+
+
+
+        #endregion
 
         /// <summary>
         /// Actualiza la respuesta de acuse del documento.
@@ -461,6 +564,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
 
             public System.Guid Documentos { get; set; }
+
+        }
+        public class DocumentosTacito
+        {
+            public long Documentos { get; set; }
 
         }
         #endregion
