@@ -141,11 +141,11 @@ namespace HGInetUBL
                 // agrega la resolución en la 1ra posición
                 notas_documento.Add(dian_resolucion);
 
-				// agrega los campos adicionales en el XML
-				notas_documento = FormatoNotas.CamposPredeterminados(documento.DocumentoFormato);
+                // agrega los campos adicionales en el XML
+                notas_documento = FormatoNotas.CamposPredeterminados(documento.DocumentoFormato);
 
-				// agrega las observaciones del documento en la 3ra posición
-				notas_documento.Add(documento.Nota);
+                // agrega las observaciones del documento en la 3ra posición
+                notas_documento.Add(documento.Nota);
 
                 // agrega las notas adicionales del documento
                 if (documento.Notas != null)
@@ -240,7 +240,7 @@ namespace HGInetUBL
 
                 #region factura.LegalMonetaryTotal //Datos Importes Totales
                 /*Agrupación de campos relativos a los importes totales aplicables a la	factura. Estos importes son calculados teniendo
-				en cuenta las líneas de factura y elementos a nivel de factura, como descuentos, cargos, impuestos, etc*/
+                en cuenta las líneas de factura y elementos a nivel de factura, como descuentos, cargos, impuestos, etc*/
                 factura.LegalMonetaryTotal = ObtenerTotales(documento);
 
                 #endregion
@@ -480,39 +480,6 @@ namespace HGInetUBL
                 if (empresa == null)
                     throw new Exception("Los datos de la empresa son inválidos.");
 
-                /* Tipo de persona en el ERP 
-					 1 Natural
-					 2 Jurídica                      
-				   para la Dian
-					 1 Persona jurídica
-					 2 Persona natural             
-
-				string dian_tipoPersona = string.Empty;
-				if (empresa.TipoPersona == 1)
-					dian_tipoPersona = "2";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)         
-				else if (empresa.TipoPersona == 2)
-					dian_tipoPersona = "1";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-
-                */
-                /* Tipo de regimen en el ERP 
-					 1 Simplificado
-					 2 Comun                  
-					Para la Dian
-					 0 Simplificado
-					 2 Común                  
-
-				string dian_regimen = string.Empty;
-				if (empresa.Regimen == 1)
-					dian_regimen = "0";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-				else if (empresa.Regimen == 2)
-					dian_regimen = "2";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-
-				string dian_tipoDocumento = string.Empty;
-				if (empresa.TipoIdentificacion.Equals("NI"))
-					dian_tipoDocumento = "31";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-				else if (empresa.TipoIdentificacion.Equals("CC"))
-					dian_tipoDocumento = "13";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)*/
-
                 // Datos del obligado a facturar
                 SupplierPartyType1 AccountingSupplierParty = new SupplierPartyType1();
                 PartyType1 Party = new PartyType1();
@@ -627,41 +594,6 @@ namespace HGInetUBL
             {
                 if (tercero == null)
                     throw new Exception("Los datos del tercero son inválidos.");
-
-
-                /* Tipo de persona en el ERP 
-					 1 Natural
-					 2 Jurídica                      
-				   para la Dian
-					 1 Persona jurídica
-					 2 Persona natural             
-
-				string dian_tipoPersona = string.Empty;
-				if (tercero.TipoPersona == 1)
-					dian_tipoPersona = "2";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)         
-				else if (tercero.TipoPersona == 2)
-					dian_tipoPersona = "1";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)*/
-
-                /* Tipo de regimen en el ERP 
-					 1 Simplificado
-					 2 Comun                  
-					Para la Dian
-					 0 Simplificado
-					 2 Común                 
-
-				string dian_regimen = string.Empty;
-				if (tercero.Regimen == 1)
-					dian_regimen = "0";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-				else if (tercero.Regimen == 2)
-					dian_regimen = "2";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-
-				string dian_tipoDocumento = string.Empty;
-				if (tercero.TipoIdentificacion.Equals("NI"))
-					dian_tipoDocumento = "31";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-				else if (tercero.TipoIdentificacion.Equals("CC"))
-					dian_tipoDocumento = "13";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-				else if (tercero.TipoIdentificacion.Equals("CE"))
-					dian_tipoDocumento = "22";  //(LISTADO DE VALORES DEFINIDO POR LA DIAN) */
 
                 // Datos del adquiriente de la factura
                 CustomerPartyType1 AccountingCustomerParty = new CustomerPartyType1();
@@ -834,6 +766,7 @@ namespace HGInetUBL
 
                     // Unidad de medida
                     InvoicedQuantity.unitCode = Ctl_Enumeracion.ObtenerUnidadMedida(DocDet.UnidadCodigo);
+                    InvoicedQuantity.unitCodeSpecified = true;
                     InvoiceLineType1.InvoicedQuantity = InvoicedQuantity;
                     #endregion
 
@@ -842,8 +775,7 @@ namespace HGInetUBL
                     // <cbc:LineExtensionAmount>
                     LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
                     LineExtensionAmount.currencyID = moneda_detalle;
-                    decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
-                    LineExtensionAmount.Value = decimal.Round(valorTotal, 2);
+                    LineExtensionAmount.Value = decimal.Round(DocDet.ValorSubtotal, 2);
                     InvoiceLineType1.LineExtensionAmount = LineExtensionAmount;
                     #endregion
 
@@ -857,15 +789,30 @@ namespace HGInetUBL
                     #endregion
 
 
-                    #region Cargo adicional ¿?
+                    #region Cargo adicional
                     // <cac:AllowanceCharge>
                     AllowanceChargeType[] AllowanceCharges = new AllowanceChargeType[1];
                     AllowanceChargeType AllowanceCharge = new AllowanceChargeType();
                     AllowanceCharge.ChargeIndicator = new ChargeIndicatorType();
                     AllowanceCharge.ChargeIndicator.Value = false;
+                    AllowanceCharge.AllowanceChargeReason = new AllowanceChargeReasonType();
+                    AllowanceCharge.AllowanceChargeReason.Value = "Descuento comercial";
+                    AllowanceCharge.MultiplierFactorNumeric = new MultiplierFactorNumericType();
+                    AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 2);
                     AllowanceCharge.Amount = new AmountType1();
                     AllowanceCharge.Amount.currencyID = moneda_detalle;
-                    AllowanceCharge.Amount.Value = decimal.Round(0M, 2);
+                    AllowanceCharge.Amount.Value = decimal.Round(DocDet.DescuentoValor, 2);
+                    AllowanceCharge.BaseAmount = new BaseAmountType();
+                    AllowanceCharge.BaseAmount.currencyID = moneda_detalle;
+                    if (DocDet.DescuentoPorcentaje > 0)
+                    {
+                        decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
+                        AllowanceCharge.BaseAmount.Value = decimal.Round(valorTotal, 2);
+                    }
+                    else
+                    {
+                        AllowanceCharge.BaseAmount.Value = 0.00M;
+                    }
                     AllowanceCharges[0] = AllowanceCharge;
                     InvoiceLineType1.AllowanceCharge = AllowanceCharges;
                     #endregion
@@ -882,7 +829,7 @@ namespace HGInetUBL
                     TaxTotal.TaxAmount = new TaxAmountType()
                     {
                         currencyID = moneda_detalle,
-                        Value = decimal.Round(DocDet.IvaValor + DocDet.ValorImpuestoConsumo + DocDet.ReteFuenteValor + DocDet.ReteIcaValor, 0)
+                        Value = decimal.Round(DocDet.IvaValor + DocDet.ValorImpuestoConsumo + DocDet.ReteIcaValor, 2)
                     };
 
                     // indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
@@ -921,7 +868,7 @@ namespace HGInetUBL
                     // <cbc:Percent>
                     TaxSubtotalIva.Percent = new PercentType()
                     {
-                        Value = decimal.Round((DocDet.IvaPorcentaje * 100), 2)
+                        Value = decimal.Round((DocDet.IvaPorcentaje), 2)
                     };
 
                     // categoría de impuestos aplicable a este subtotal.
@@ -933,7 +880,9 @@ namespace HGInetUBL
                     {
                         ID = new IDType()
                         {
-                            Value = TipoImpuestos.Iva
+                            Value = TipoImpuestos.Iva,
+                            schemeName = "VALOR TOTAL DE IVA"
+
                         },
 
                         TaxTypeCode = new TaxTypeCodeType()
@@ -971,7 +920,7 @@ namespace HGInetUBL
                     // <cbc:Percent>
                     TaxSubtotalConsumo.Percent = new PercentType()
                     {
-                        Value = decimal.Round((DocDet.ImpoConsumoPorcentaje * 100), 2)
+                        Value = decimal.Round((DocDet.ImpoConsumoPorcentaje), 2)
                     };
 
                     // categoría de impuestos aplicable a este subtotal.
@@ -983,7 +932,8 @@ namespace HGInetUBL
                     {
                         ID = new IDType()
                         {
-                            Value = TipoImpuestos.Consumo
+                            Value = TipoImpuestos.Consumo,
+                            schemeName = "VALOR TOTAL DE IMPOCONSUMO"
                         },
 
                         TaxTypeCode = new TaxTypeCodeType()
@@ -1021,7 +971,7 @@ namespace HGInetUBL
                     // <cbc:Percent>
                     TaxSubtotalIca.Percent = new PercentType()
                     {
-                        Value = decimal.Round((DocDet.ReteIcaPorcentaje * 100), 2)
+                        Value = decimal.Round((DocDet.ReteIcaPorcentaje), 2)
                     };
 
                     // categoría de impuestos aplicable a este subtotal.
@@ -1033,7 +983,8 @@ namespace HGInetUBL
                     {
                         ID = new IDType()
                         {
-                            Value = TipoImpuestos.Ica
+                            Value = TipoImpuestos.Ica,
+                            schemeName = "VALOR TOTAL DE ICA"
                         },
 
                         TaxTypeCode = new TaxTypeCodeType()
@@ -1088,19 +1039,29 @@ namespace HGInetUBL
                     IDItemStandard.Value = DocDet.ProductoCodigo;
                     StandardItemIdentification.ID = IDItemStandard;
                     Item.StandardItemIdentification = StandardItemIdentification;
-					#endregion
+                    #endregion
 
-					#region Bodega del producto
-					AddressType[] Address = new AddressType[1];
-					AddressType Origen = new AddressType();
-					IDType IDItemOrigen = new IDType();
-					IDItemOrigen.Value = DocDet.Bodega;
-					Origen.ID = IDItemOrigen;
-					Address[0] = Origen;
-					Item.OriginAddress = Address;
-					#endregion
+                    #region Bodega del producto
+                    AddressType[] Address = new AddressType[1];
+                    AddressType Origen = new AddressType();
+                    IDType IDItemOrigen = new IDType();
+                    IDItemOrigen.Value = DocDet.Bodega;
+                    Origen.ID = IDItemOrigen;
+                    Address[0] = Origen;
+                    Item.OriginAddress = Address;
+                    #endregion
 
-					InvoiceLineType1.Item = Item;
+                    
+                    ItemPropertyType[] Property = new ItemPropertyType[1];
+                    ItemPropertyType Oculto = new ItemPropertyType();
+                    Oculto.Name = new NameType1();
+                    Oculto.Name.Value="Item Oculto para Impresion";
+                    Oculto.Value = new ValueType();
+                    Oculto.Value.Value = DocDet.OcultarItem.ToString();
+                    Property[0] = Oculto;
+                    Item.AdditionalItemProperty = Property;
+
+                    InvoiceLineType1.Item = Item;
                     #endregion
 
                     #region Valor Unitario producto
@@ -1114,6 +1075,8 @@ namespace HGInetUBL
                     Price.PriceAmount = PriceAmount;
                     InvoiceLineType1.Price = Price;
                     #endregion
+
+
 
 
                     InvoicesLineType1[contadorPosicion] = InvoiceLineType1;
@@ -1157,11 +1120,11 @@ namespace HGInetUBL
                 {
                     DocumentoImpuestos imp_doc = new DocumentoImpuestos();
                     List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
-                    BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => (docDet.ValorUnitario - docDet.DescuentoValor) * docDet.Cantidad), 2);
+                    BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorSubtotal), 2);
 
                     //imp_doc.Codigo = item.IntIva;
                     //imp_doc.Nombre = item.StrDescripcion;
-                    imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje * 100, 2);
+                    imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje, 2);
                     imp_doc.TipoImpuesto = item.Iva;
                     imp_doc.BaseImponible = BaseImponibleImpuesto;
 
@@ -1169,7 +1132,8 @@ namespace HGInetUBL
                     {
                         imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IvaValor, 2);
                     }
-                    doc_impuestos.Add(imp_doc);
+                    if (imp_doc.Porcentaje > 0)
+                        doc_impuestos.Add(imp_doc);
                 }
 
                 //Toma el impuesto al consumo de los productos que esten el detalle
@@ -1187,18 +1151,19 @@ namespace HGInetUBL
                         {
                             DocumentoImpuestos imp_doc = new DocumentoImpuestos();
                             List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).ToList();
-                            BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => (docDet.ValorUnitario - docDet.DescuentoValor) * docDet.Cantidad), 2);
+                            BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorSubtotal), 2);
 
                             //imp_doc.Codigo = item.IntImpConsumo.ToString();
                             //imp_doc.Nombre = item.StrDescripcion;
-                            imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo * 100, 2);
+                            imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2);
                             imp_doc.TipoImpuesto = item.Consumo;
                             imp_doc.BaseImponible = BaseImponibleImpConsumo;
                             foreach (var docDet in doc_)
                             {
                                 imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2);
                             }
-                            doc_impuestos.Add(imp_doc);
+                            if (imp_doc.Porcentaje > 0)
+                                doc_impuestos.Add(imp_doc);
                         }
 
                     }
@@ -1218,16 +1183,17 @@ namespace HGInetUBL
                         {
                             DocumentoImpuestos imp_doc = new DocumentoImpuestos();
                             List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).ToList();
-                            BaseImponibleReteIca = decimal.Round(documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).Sum(docDet => (docDet.ValorUnitario - docDet.DescuentoValor) * docDet.Cantidad), 2);
+                            BaseImponibleReteIca = decimal.Round(documentoDetalle.Where(docDet => docDet.ReteIcaValor != 0).Sum(docDet => docDet.ValorSubtotal), 2);
 
-                            imp_doc.Porcentaje = decimal.Round(item.ReteIcaPorcentaje * 100, 2);
+                            imp_doc.Porcentaje = decimal.Round(item.ReteIcaPorcentaje, 2);
                             imp_doc.TipoImpuesto = item.Ica;
                             imp_doc.BaseImponible = BaseImponibleReteIca;
                             foreach (var docDet in doc_)
                             {
                                 imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ReteIcaValor, 2);
                             }
-                            doc_impuestos.Add(imp_doc);
+                            if (imp_doc.Porcentaje > 0)
+                                doc_impuestos.Add(imp_doc);
                         }
 
                     }

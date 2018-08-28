@@ -126,6 +126,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string UnidadCodigo { get; set; }
 
+        /// <summary>
+        /// Indica si este detalle va hacer visible para la impresion (True - False)
+        /// </summary>
+        public int OcultarItem { get; set; }
+
 
 		#endregion
 

@@ -124,6 +124,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             {
                 Sesion.ValidarSesion();
 
+                ResumenMovimientos movimientos = new ResumenMovimientos();
+
+                Ctl_Indicadores prueba_indicador = new Ctl_Indicadores();
+
+                //movimientos = prueba_indicador.MovimientosDocumentos("900011659", 2, new DateTime(2018, 1, 16), new DateTime(2018, 8, 16));
+
+
                 List<ValoresTipoDocumento> datos_tipos = new List<ValoresTipoDocumento>();
                 Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 

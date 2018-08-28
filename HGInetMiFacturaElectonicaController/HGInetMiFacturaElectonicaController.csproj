@@ -76,6 +76,7 @@
     <Compile Include="Configuracion\Ctl_Usuario.cs" />
     <Compile Include="Indicadores\Ctl_Indicadores.cs" />
     <Compile Include="Indicadores\Objetos\PorcentajesResumen.cs" />
+    <Compile Include="Indicadores\Objetos\ResumenMovimientos.cs" />
     <Compile Include="Indicadores\Objetos\ResumenPlanes.cs" />
     <Compile Include="Indicadores\Objetos\TopCompradores.cs" />
     <Compile Include="Indicadores\Objetos\TopTransaccional.cs" />
