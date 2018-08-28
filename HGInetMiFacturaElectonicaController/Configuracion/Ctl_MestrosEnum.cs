@@ -61,6 +61,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                             datos.Add(datos_enum);
                         }
                         break;
+                    case 3:
+                        //Metodo para obtener los datos del enumerable de tipo de Compra: 1: Cortesía, 2 Compra, 3 Post-Pago
+                        foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.TipoCompra)))
+                        {
+                            string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.TipoCompra>((int)value)))).Split(',');
+
+                            datos.Add(datos_enum);
+                        }
+                        break;
                 }
 
                 

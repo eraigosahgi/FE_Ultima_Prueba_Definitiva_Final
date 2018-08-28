@@ -81,7 +81,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
     Datos_Observaciones = "",
     Datos_empresa_Asociada = "",
     Datos_Integrador = false,
-    Datos_Numero_usuarios = 1
+    Datos_Numero_usuarios = 1,
+    Datos_Dias_Acuse = 10;
 
 
     //Define los campos del Formulario  
@@ -228,6 +229,23 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 {
                     type: "required",
                     message: "Debe introducir el número de usuarios"
+                }]
+        });
+
+
+
+        
+
+        $("#txtDiasAcuse").dxNumberBox({
+            value: Datos_Dias_Acuse,
+            onValueChanged: function (data) {
+                Datos_Dias_Acuse = data.value;
+            }
+        }).dxValidator({
+            validationRules: [
+                {
+                    type: "required",
+                    message: "Debe introducir el número días para el acuse"
                 }]
         });
 
@@ -399,7 +417,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
                 Datos_Integrador = response.data[0].IntIntegrador;
                 Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
-
+                Datos_Dias_Acuse = response.data[0].IntAcuseTacito;
 
                 $("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
                 $("#NumeroIdentificacion").dxTextBox({ readOnly: true });
@@ -422,8 +440,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 if (Datos_Integrador == 1)
                     $("#Integradora").dxCheckBox({ value: true });
 
-
                 $("#txtUsuarios").dxNumberBox({ value: Datos_Numero_usuarios });
+
+                $("#txtDiasAcuse").dxNumberBox({ value: Datos_Dias_Acuse });
 
                 if (Datos_Obligado == 1) {
                     $("#Facturador").dxCheckBox({ value: 1 });
@@ -474,7 +493,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             tipo: Datos_Tipo,
             StrObservaciones: Datos_Observaciones,
             IntIntegrador: Datos_Integrador,
-            IntNumUsuarios: Datos_Numero_usuarios
+            IntNumUsuarios: Datos_Numero_usuarios,
+            IntAcuseTacito: Datos_Dias_Acuse
         });
 
         $("#wait").show();

@@ -79,6 +79,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1314.
+        /// </summary>
+        internal static string ConsultaAcuseTacito {
+            get {
+                return ResourceManager.GetString("ConsultaAcuseTacito", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1342.
         /// </summary>
         internal static string ConsultaDocumentoCliente {

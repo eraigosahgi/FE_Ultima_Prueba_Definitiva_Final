@@ -50,5 +50,24 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
             return $q.reject(response.data);
         });
     }
+
+    //Consulta la lista de documentos que no tienen acuse y ya han pasado los dias que el facturador a dado para su acuse
+    this.ObtenerDocumentosTacito = function (codigo_facturador, codigo_adquiriente, numero_documento, fecha_inicio, fecha_fin) {
+        return $http.get('/api/ConsultaAcuseTacito?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });
+    }
+
+    this.GenerarAcuseTacito = function (documentos) {
+        return $http({ url: '/api/GenerarAcuseTacito/', data: { Documentos: documentos }, method: 'Post' }).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });
+    }
     
 });

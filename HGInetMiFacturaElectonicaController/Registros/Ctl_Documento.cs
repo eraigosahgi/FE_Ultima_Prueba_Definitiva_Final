@@ -253,7 +253,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
             estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico"));
 
             fecha_inicio = fecha_inicio.Date;
-            fecha_fin = fecha_fin.Date.AddDays(1);
+            //            fecha_fin = fecha_fin.Date.AddDays(1);
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
             long num_doc = -1;
             long.TryParse(numero_documento, out num_doc);
@@ -332,7 +333,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
             List<TblDocumentos> documentos = (from datos in context.TblDocumentos
                                               join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
-                                              join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion                                              
+                                              join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
 
                                               where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
                                               && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
@@ -352,19 +353,86 @@ namespace HGInetMiFacturaElectonicaController.Registros
             return documentos;
         }
 
+        #region Acuse tacito
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Obtiene los documentos que no se le han dado acuse y estan vencidos
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="codigo_tercero"></param>        
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        public List<TblDocumentos> ObtenerAcuseTacito(string codigo_facturador, string numero_documento, string codigo_adquiriente)
+        {
+          
+            long num_doc = -1;
+            long.TryParse(numero_documento, out num_doc);
+
+            if (string.IsNullOrWhiteSpace(numero_documento))
+                numero_documento = "*";
+            if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+                codigo_adquiriente = "*";
+
+            DateTime DiasTranscurridos = DateTime.Now.Subtract(new TimeSpan(CantDiasTacito(codigo_facturador), 0, 0, 0));
+
+
+            List<TblDocumentos> documentos = (from datos in context.TblDocumentos
+                                              join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+                                              join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+
+                                              where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+                                              && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+                                              && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+
+                                              && (datos.IntAdquirienteRecibo.Equals(0))
+                                              
+                                              && (datos.DatFechaIngreso <= DiasTranscurridos)
+                                              
+                                              orderby datos.IntNumero descending
+                                              select datos).ToList();           
+
+
+            return documentos;
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Retorna la cantidad de dias que posee un facturador para dias Tacito del acuse
+        /// </summary>
+        /// <param name="CodFacturador"></param>
+        /// <returns></returns>
+        public short CantDiasTacito(string CodFacturador)
+        {
+            var numero = (from d in context.TblEmpresas
+                          where d.StrIdentificacion.Equals(CodFacturador)
+                          select d.IntAcuseTacito).FirstOrDefault();
+            if (numero != null)
+            {
+                return numero.Value;
+            }
+
+            return 0;
+        }
+        #endregion
+
+
+
+
+
         #region Documentos Administrador
         /// <summary>
-		/// Obtiene todos los documentos para el administrador de Sistema (Solo Gerencia)
-		/// </summary>
-		/// <param name="codigo_facturador"></param>
-		/// <param name="numero_documento"></param>
-		/// <param name="codigo_tercero"></param>
-		/// <param name="estado_dian"></param>
-		/// <param name="estado_recibo"></param>
-		/// <param name="fecha_inicio"></param>
-		/// <param name="fecha_fin"></param>
-		/// <returns></returns>
-		public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento)
+        /// Obtiene todos los documentos para el administrador de Sistema (Solo Gerencia)
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="codigo_tercero"></param>
+        /// <param name="estado_dian"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento)
         {
 
             if (estado_dian == null || estado_dian == "")
@@ -544,16 +612,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
             }
         }
 
-		/// <summary>
-		/// Convierte un objeto de tipo de base de datos a objeto de servicio. 
-		/// </summary>
-		/// <param name="objetoBd"></param>
-		/// <param name="tipo_doc"></param>
-		/// <returns></returns>
-		public static object ConvertirServicio(TblDocumentos objetoBd)
-		{
-			//Asigna a un objeto dinamico el objeto enviado por el usuario
-			var documento_obj = (dynamic)null;
+        /// <summary>
+        /// Convierte un objeto de tipo de base de datos a objeto de servicio. 
+        /// </summary>
+        /// <param name="objetoBd"></param>
+        /// <param name="tipo_doc"></param>
+        /// <returns></returns>
+        public static object ConvertirServicio(TblDocumentos objetoBd)
+        {
+            //Asigna a un objeto dinamico el objeto enviado por el usuario
+            var documento_obj = (dynamic)null;
 
             // lee el archivo XML en UBL desde la ruta pública
             string contenido_xml = Archivo.ObtenerContenido(objetoBd.StrUrlArchivoUbl);
@@ -614,11 +682,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
             // cerrar la lectura del archivo xml
             xml_reader.Close();
 
-			//convierte las demas propiedades del objeto de BD al objeto de servicio
-			documento_obj.IdDocumento = objetoBd.StrObligadoIdRegistro.ToString();
-			documento_obj.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
-			documento_obj.Documento = objetoBd.IntNumero;
-			documento_obj.IdProceso = objetoBd.IntIdEstado;
+            //convierte las demas propiedades del objeto de BD al objeto de servicio
+            documento_obj.IdDocumento = objetoBd.StrObligadoIdRegistro.ToString();
+            documento_obj.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
+            documento_obj.Documento = objetoBd.IntNumero;
+            documento_obj.IdProceso = objetoBd.IntIdEstado;
 
             //obtengo el estado del proceso
             ProcesoEstado proceso_estado = Enumeracion.ParseToEnum<ProcesoEstado>((int)objetoBd.IntIdEstado);
@@ -880,10 +948,30 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
+
+        /// <summary>
+        /// Retorna lista de documentos para dar acuse tacito
+        /// </summary>
+        /// <param name="List_Documentos"></param>        
+        /// <returns></returns>
+        public List<TblDocumentos> DocumentosAcuseTacito(List<long> List_Documentos)
+        {
+            try
+            {
+                List<TblDocumentos> retorno = (from doc in context.TblDocumentos
+                                               where List_Documentos.Contains(doc.IntNumero)
+                                               select doc).ToList();
+
+
+                return retorno;
+
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
         #endregion
-
-
-
 
         #region Consulta de documentos por cliente (Soporte)
         /// <summary>
@@ -922,6 +1010,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                              orderby datos.DatFechaIngreso descending
                                              select datos).ToList();
             return respuesta;
+        }
+        #endregion
+
+        #region Generar Acuse Tacito
+        public bool GenerarAcuseTacito(List<TblDocumentos> lista)
+        {
+            //Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
+            foreach (TblDocumentos item in lista)
+            {
+                item.IntAdquirienteRecibo = 1;
+                item.StrAdquirienteMvoRechazo = "Acuse Tácito";
+                item.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+                this.Edit(item);
+            }
+
+            return true;
         }
         #endregion
 

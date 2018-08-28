@@ -13,7 +13,7 @@
     </style>
 
     <!-- CONTENEDOR PRINCIPAL -->
-    <div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController" data-ng-cloak>
+    <div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController" data-ng-cloak="">
 
         <!-- CONTENIDO PANEL-->
         <div class="panel-body">

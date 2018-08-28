@@ -4,17 +4,18 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
+    <script src="../../Scripts/Services/MaestrosEnum.js"></script>
     <script src="../../Scripts/Pages/PlanesTransacciones.js"></script>
-        <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
+    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
 
-    <div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController" >
+    <div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController">
 
 
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
                     <h6 class="panel-title">Gestión de Planes Transaccionales</h6>
-                    
+
                 </div>
 
                 <div class="panel-body">
@@ -26,15 +27,15 @@
 
                                 <div class="col-md-12">
 
-                                    <div class="col-md-6 col-xs-12" style=" margin-top: 16px; z-index:9;">
-                                        <div class="dx-field-label" style="font-size: 14px; width:auto; ">Tipo Proceso:<strom style="color: red;">*</strom></div>
+                                    <div class="col-md-6 col-xs-12" style="margin-top: 16px; z-index: 9;">
+                                        <div class="dx-field-label" style="font-size: 14px; width: auto;">Tipo Proceso:<strom style="color: red;">*</strom></div>
                                         <div class="dx-field-value">
-                                            <div id="TipoProceso" style="margin-left:-4%;"></div>
+                                            <div id="TipoProceso" style="margin-left: -4%;"></div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 col-xs-12"  style="z-index:9;">
-                                        <label style=" margin-top: 16px; font-size:14px;">Empresa:<strom style="color: red;">*</strom></label>
+                                    <div class="col-md-6 col-xs-12" style="z-index: 9;">
+                                        <label style="margin-top: 16px; font-size: 14px;">Empresa:<strom style="color: red;">*</strom></label>
                                         <div id="txtempresaasociada"></div>
                                     </div>
 
@@ -45,26 +46,26 @@
                                         </a>
                                     </div>-->
 
-                                    <div class="col-md-6 col-xs-12"  style="z-index:9;" id="divCantTransacciones">
-                                        <label style="margin-top: 16px; " >Cantidad Transacciones:<strom style="color: red;" >*</strom></label>
+                                    <div class="col-md-6 col-xs-12" style="z-index: 9;" id="divCantTransacciones">
+                                        <label style="margin-top: 16px;">Cantidad Transacciones:<strom style="color: red;">*</strom></label>
                                         <div id="CantidadTransacciones"></div>
                                     </div>
 
-                                    <div class="col-md-6 col-xs-12" style="z-index:9; " id="divValorPlan">
-                                        <label style=" margin-top: 16px; ">Valor Plan:<strom style="color: red;">*</strom></label>
+                                    <div class="col-md-6 col-xs-12" style="z-index: 9;" id="divValorPlan">
+                                        <label style="margin-top: 16px;">Valor Plan:<strom style="color: red;">*</strom></label>
                                         <div id="ValorPlan"></div>
                                     </div>
 
-                                   <div class="col-md-6 col-xs-12" style=" margin-top: 16px; z-index:9;">
+                                    <div class="col-md-6 col-xs-12" style="margin-top: 16px; z-index: 9;">
                                         <div class="dx-field-label" style="font-size: 14px;">Estado:<strom style="color: red;">*</strom></div>
                                         <div class="dx-field-value">
-                                            <div id="EstadoPlan" style="margin-left:-4%;"></div>
+                                            <div id="EstadoPlan" style="margin-left: -4%;"></div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index:0; ">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%; font-size:14px;">Observaciones:</label>                                        
-                                            <div id="txtObservaciones"></div>                                        
+                                    <div class="col-md-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index: 0;">
+                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%; font-size: 14px;">Observaciones:</label>
+                                        <div id="txtObservaciones"></div>
                                     </div>
 
                                 </div>
@@ -90,7 +91,7 @@
             </div>
         </div>
         <!--<div data-ng-if="Admin">-->
-        <div >
+        <div>
             <div data-ng-include="'ModalConsultaEmpresas.aspx'"></div>
         </div>
     </div>

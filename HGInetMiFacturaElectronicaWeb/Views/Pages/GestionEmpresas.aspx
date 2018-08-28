@@ -73,9 +73,15 @@
 
                                         </div>
 
-                                        <div class="col-md-6 col-xs-12 " style="z-index: 9; margin-left: 0px">
+                                        <div class="col-md-3 col-xs-6 " style="z-index: 9; margin-left: 0px">
                                             <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nª Usuarios:</label>
                                             <div id="txtUsuarios"></div>
+
+                                        </div>
+
+                                        <div class="col-md-3 col-xs-6 " style="z-index: 9; margin-left: 0px">
+                                            <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nª días acuse:</label>
+                                            <div id="txtDiasAcuse"></div>
 
                                         </div>
 

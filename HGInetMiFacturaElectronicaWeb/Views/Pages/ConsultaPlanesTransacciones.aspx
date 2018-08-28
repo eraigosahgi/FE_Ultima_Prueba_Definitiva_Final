@@ -3,10 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-
+    <script src="../../Scripts/Services/MaestrosEnum.js"></script>
     <script src="../../Scripts/Pages/PlanesTransacciones.js"></script>
 
-    <div ng-app="GestionPlanesApp" ng-controller="ConsultaPlanesController">
+    <div data-ng-app="GestionPlanesApp" data-ng-controller="ConsultaPlanesController">
                 <%--//Panel Grid--%>
         <div class="col-md-12">
             <div class="panel panel-white">

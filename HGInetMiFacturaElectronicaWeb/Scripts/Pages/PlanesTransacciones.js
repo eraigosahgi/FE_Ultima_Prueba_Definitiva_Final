@@ -2,11 +2,12 @@
 var opc_pagina = "1334";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx']);
+var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum']);
 
 //Controlador para la gestion planes transaccionales
-GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location) {
+GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum) {
 
+    var TiposProceso = [];
     var now = new Date();
 
     var StrIdSeguridad = location.search.split('IdSeguridad=')[1];
@@ -25,9 +26,9 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         if (tipo) {
             $scope.Admin = true;
         } else {
-           // $("#button").hide();
-           // $('#SelecionarEmpresa').hide();
-           // $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
+            // $("#button").hide();
+            // $('#SelecionarEmpresa').hide();
+            // $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
         };
 
         //Obtiene el usuario autenticado.
@@ -68,59 +69,67 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
     datos_empresa_asociada = "";
     Datos_obsrvaciones = "";
 
+
     //Define los campos del Formulario  
     $(function () {
         $("#summary").dxValidationSummary({});
-
-        //Selección Tipo de Proceso
-        $("#TipoProceso").dxRadioGroup({
-            searchEnabled: true,
-            caption: 'TipoProceso',
-            layout: "horizontal",
-            dataSource: new DevExpress.data.ArrayStore({
-                data: TiposProceso,
-                key: "ID"
-            }),
-            displayExpr: "Texto",
-            Enabled: true,
-            onValueChanged: function (data) {
-                Datos_TiposProceso = data.value.ID;
-                //Post-Pago
-                if (Datos_TiposProceso == 3) {
-                    $('#divValorPlan').hide();
-                    $('#divCantTransacciones').hide();
-                    $("#CantidadTransacciones").dxNumberBox({ value: 0 });
-                    $("#ValorPlan").dxNumberBox({ value: 0 });
-                    //Datos_T_compra = "0";
-                    //Datos_valor_plan = "0";
-                    ValidarCantTransacciones();
+        SrvMaestrosEnum.ObtenerEnum(3).then(function (data) {
+            TiposProceso = data;
+            //Selección Tipo de Proceso
+            $("#TipoProceso").dxRadioGroup({
+                searchEnabled: true,
+                caption: 'TipoProceso',
+                layout: "horizontal",
+                dataSource: new DevExpress.data.ArrayStore({
+                    data: TiposProceso,
+                    key: "ID"
+                }),
+                displayExpr: "Descripcion",
+                Enabled: true,
+                onValueChanged: function (data) {
+                    Datos_TiposProceso = data.value.ID;
+                    //Post-Pago
+                    if (Datos_TiposProceso == 3) {
+                        $('#divValorPlan').hide();
+                        $('#divCantTransacciones').hide();
+                        $("#CantidadTransacciones").dxNumberBox({ value: 0 });
+                        $("#ValorPlan").dxNumberBox({ value: 0 });
+                        //Datos_T_compra = "0";
+                        //Datos_valor_plan = "0";
+                        ValidarCantTransacciones();
+                    }
+                    //Compra
+                    if (Datos_TiposProceso == 2) {
+                        $('#divValorPlan').show();
+                        $('#divCantTransacciones').show();
+                        //Datos_T_compra = "";
+                        //Datos_valor_plan = "";
+                        ValidarCantTransacciones();
+                    }
+                    //Cortesía
+                    if (Datos_TiposProceso == 1) {
+                        $('#divValorPlan').hide();
+                        $('#divCantTransacciones').show();
+                        $("#ValorPlan").dxNumberBox({ value: 0 });
+                        //Datos_T_compra = "";
+                        //Datos_valor_plan = "0";
+                        ValidarCantTransacciones();
+                    }
                 }
-                //Compra
-                if (Datos_TiposProceso == 2) {
-                    $('#divValorPlan').show();
-                    $('#divCantTransacciones').show();
-                    //Datos_T_compra = "";
-                    //Datos_valor_plan = "";
-                    ValidarCantTransacciones();
-                }
-                //Cortesía
-                if (Datos_TiposProceso == 1) {
-                    $('#divValorPlan').hide();
-                    $('#divCantTransacciones').show();
-                    $("#ValorPlan").dxNumberBox({ value: 0 });
-                    //Datos_T_compra = "";
-                    //Datos_valor_plan = "0";
-                    ValidarCantTransacciones();
-                }                
             }
-        }
-        ).dxValidator({
-            validationRules: [{
-                type: "required",
-                message: "Debe indicar el tipo de proceso."
-            }]
-        });
+            ).dxValidator({
+                validationRules: [{
+                    type: "required",
+                    message: "Debe indicar el tipo de proceso."
+                }]
+            });
 
+
+
+            if (StrIdSeguridad != '' && StrIdSeguridad != null) {
+                Consultar(StrIdSeguridad);
+            }
+        });
 
         function ValidarCantTransacciones() {
             $("#CantidadTransacciones").dxValidator({
@@ -161,7 +170,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             },
             onFocusIn: function (data) {
                 //if ($scope.Admin && StrIdSeguridad == undefined)
-                    $('#modal_Buscar_empresa').modal('show');
+                $('#modal_Buscar_empresa').modal('show');
             }
         }).dxValidator({
             validationRules: [{
@@ -348,10 +357,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 
     //Consultar por el id de seguridad para obtener los datos de la empresa a modificar
-
-    if (StrIdSeguridad != '' && StrIdSeguridad != null) {
-        Consultar(StrIdSeguridad);
-    }
+   
 
     function Consultar(StrIdSeguridad) {
         $("#wait").show();
@@ -607,14 +613,14 @@ function BuscarID(miArray, ID) {
         }
     }
 }
-
+/*
 var TiposProceso =
     [
         { ID: "1", Texto: 'Cortesía' },
         { ID: "2", Texto: 'Compra' },
         { ID: "3", Texto: 'Post-Pago' },
     ];
-
+    */
 var EstadosPlanes =
     [
         { ID: "0", Texto: 'Inhabilitar' },
