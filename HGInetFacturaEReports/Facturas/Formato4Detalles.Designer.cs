@@ -9,6 +9,7 @@ namespace HGInetFacturaEReports.Facturas
         /// </summary>
         private void InitializeComponent()
         {
+            Telerik.Reporting.Drawing.FormattingRule formattingRule1 = new Telerik.Reporting.Drawing.FormattingRule();
             Telerik.Reporting.Drawing.StyleRule styleRule1 = new Telerik.Reporting.Drawing.StyleRule();
             this.detail = new Telerik.Reporting.DetailSection();
             this.htmlTextBox25 = new Telerik.Reporting.HtmlTextBox();
@@ -19,6 +20,10 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // detail
             // 
+            formattingRule1.Filters.Add(new Telerik.Reporting.Filter("=Fields.OcultarItem", Telerik.Reporting.FilterOperator.Equal, "1"));
+            formattingRule1.Style.Visible = false;
+            this.detail.ConditionalFormatting.AddRange(new Telerik.Reporting.Drawing.FormattingRule[] {
+            formattingRule1});
             this.detail.Height = Telerik.Reporting.Drawing.Unit.Cm(0.48000001907348633D);
             this.detail.Items.AddRange(new Telerik.Reporting.ReportItemBase[] {
             this.htmlTextBox25,
