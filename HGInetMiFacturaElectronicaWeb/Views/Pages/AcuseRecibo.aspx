@@ -153,14 +153,7 @@
                                 <span>{{datos.FechaRespuesta | date: "yyyy-MM-dd HH:mm"}}</span>
                             </div>
 
-                        </div>
-
-
-
-                        <!-- http://localhost:61433/api/Documentos?id_seguridad=f37f93a6-4879-4bfd-b4c0-2ad2029bdfbe&estado=1&motivo_rechazo=prueba-->
-                             http://localhost:61433/api/Documentos?id_seguridad=f37f93a6-4879-4bfd-b4c0-2ad2029bdfbe&Zpago=true&estado=1&motivo_rechazo=prueba
-
-
+                        </div>                    
 
                         <!--data-ng-if="DetalleAcuse"-->
                         <div >
