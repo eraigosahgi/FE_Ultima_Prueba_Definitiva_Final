@@ -280,7 +280,7 @@ namespace HGInetFacturaEReports.Facturas
             this.campo1_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0.0010076904436573386D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.campo1_v.Name = "campo1_v";
             this.campo1_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(4.9989919662475586D), Telerik.Reporting.Drawing.Unit.Cm(4.094871997833252D));
-            this.campo1_v.Sizing = Telerik.Reporting.Drawing.ImageSizeMode.Stretch;
+            this.campo1_v.Sizing = Telerik.Reporting.Drawing.ImageSizeMode.ScaleProportional;
             this.campo1_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Center;
             this.campo1_v.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
             // 
