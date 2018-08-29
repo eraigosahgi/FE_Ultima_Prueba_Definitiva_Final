@@ -353,6 +353,85 @@ namespace HGInetMiFacturaElectonicaController.Registros
             return documentos;
         }
 
+        /// <summary>
+        /// Obtiene los documentos del Acuse Recibo
+        /// </summary>
+        /// <param name="codigo_facturador"></param>
+        /// <param name="numero_documento"></param>
+        /// <param name="codigo_tercero"></param>
+        /// <param name="estado_dian"></param>
+        /// <param name="estado_recibo"></param>
+        /// <param name="fecha_inicio"></param>
+        /// <param name="fecha_fin"></param>
+        /// <returns></returns>
+        public List<TblDocumentos> ObtenerAcuseRecibo(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, string Resolucion,int tipo_fecha)
+        {
+
+            if (estado_dian == null || estado_dian == "")
+                estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico"));
+
+            fecha_inicio = fecha_inicio.Date;
+
+            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+            long num_doc = -1;
+            long.TryParse(numero_documento, out num_doc);
+
+            //short cod_estado_dian = -1;
+            //short.TryParse(estado_dian, out cod_estado_dian);
+
+            short cod_estado_recibo = -1;
+            short.TryParse(estado_recibo, out cod_estado_recibo);
+
+            if (string.IsNullOrWhiteSpace(numero_documento))
+                numero_documento = "*";
+            if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+                codigo_adquiriente = "*";
+            //if (string.IsNullOrWhiteSpace(estado_dian))
+            //    estado_dian = "*";
+            if (string.IsNullOrWhiteSpace(estado_recibo))
+                estado_recibo = "*";
+
+            //if (estado_dian.Equals("3"))
+            //    estado_dian = "2,3";
+
+            List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
+
+            //array
+            /*
+             
+             foreach(array)
+             */
+
+            List<TblDocumentos> documentos = (from datos in context.TblDocumentos
+                                              join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+                                              join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+
+                                              where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+                                              && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+                                              && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+
+                                              && (estado_dian.Contains(datos.IntIdEstado.ToString()))
+
+                                              && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+
+                                              && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
+
+                                              
+                                              && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_fecha ==2)
+
+
+                                              && ((datos.DatAdquirienteFechaRecibo >= fecha_inicio && datos.DatAdquirienteFechaRecibo <= fecha_fin) || tipo_fecha == 1)
+
+
+
+
+                                              orderby datos.IntNumero descending
+                                              select datos).ToList();
+
+            return documentos;
+        }
+
         #region Acuse tacito
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
@@ -375,7 +454,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
             if (string.IsNullOrWhiteSpace(codigo_adquiriente))
                 codigo_adquiriente = "*";
 
-            DateTime DiasTranscurridos = DateTime.Now.Subtract(new TimeSpan(CantDiasTacito(codigo_facturador), 0, 0, 0));
+            DateTime DiasTranscurridos = DateTime.Now.Subtract(new TimeSpan(0, CantDiasTacito(codigo_facturador), 0, 0));
 
 
             List<TblDocumentos> documentos = (from datos in context.TblDocumentos
@@ -412,7 +491,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 return numero.Value;
             }
 
-            return 0;
+            return 72;
         }
         #endregion
 
@@ -1019,8 +1098,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
             //Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
             foreach (TblDocumentos item in lista)
             {
-                item.IntAdquirienteRecibo = 1;
-                item.StrAdquirienteMvoRechazo = "Acuse Tácito";
+                item.IntAdquirienteRecibo = 3;
+                item.StrAdquirienteMvoRechazo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(3));
                 item.DatAdquirienteFechaRecibo = Fecha.GetFecha();
                 this.Edit(item);
             }

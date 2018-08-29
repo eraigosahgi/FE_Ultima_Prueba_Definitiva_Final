@@ -10,7 +10,8 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                numero_documento = "",
                fecha_inicio = "",
                fecha_fin = "",
-               estado_acuse = "";    
+               estado_acuse = "";
+               Filtro_fecha = 2;
 
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {
         codigo_facturador = data[0].Identificacion;
@@ -42,15 +43,31 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
     $scope.filtros =
            {
-               EstadoRecibo: {
-                   searchEnabled: true,
+               Fecha: {                   
+                   //Carga la data del control
+                   dataSource: new DevExpress.data.ArrayStore({
+                       data: items_Fecha,
+                       key: "ID"
+                   }),
+                   displayExpr: "Texto",                   
+                   value: items_Fecha[1],
+                   
+                   onValueChanged: function (data) {
+                       if (data.value!= null) {
+                           Filtro_fecha = data.value.ID;                           
+                       } else {
+                           Filtro_fecha = 1;                           
+                       }
+                       console.log("Fecha: ", Filtro_fecha);
+                   }
+               },
+               EstadoRecibo: {                   
                    //Carga la data del control
                    dataSource: new DevExpress.data.ArrayStore({
                        data: items_recibo,
                        key: "ID"
                    }),
-                   displayExpr: "Texto",
-                   Enabled: true,
+                   displayExpr: "Texto",                   
                    placeholder: "Seleccione un Item",
                    onValueChanged: function (data) {
                        estado_acuse = data.value.ID;
@@ -63,13 +80,14 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                    }
                },
                Adquiriente: {
-                   placeholder: "Ingrese Identificación del Adquiriente",
+                   placeholder: "Identificación del Adquiriente",
                    onValueChanged: function (data) {
                        codigo_adquiriente = data.value;
                    }
                }
            }
 
+        
         $("#FechaFinal").dxDateBox({ min: now });
         $("#FechaInicial").dxDateBox({ max: now });
 
@@ -93,7 +111,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         //ControladorApi: /Api/Documentos/
         //Datos GET: codigo_facturador, codigo_adquiriente, numero_documento, estado_recibo, fecha_inicio, fecha_fin
         $('#wait').show();
-        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+        $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -288,4 +306,11 @@ var items_recibo =
     { ID: "*", Texto: 'Obtener Todos' },
     { ID: "1", Texto: 'Aprobado' },
     { ID: "2", Texto: 'Rechazado' }
+    ];
+
+
+var items_Fecha =
+    [
+    { ID: "1", Texto: 'Fecha-Documento' },
+    { ID: "2", Texto: 'Fecha-Acuse' }    
     ];

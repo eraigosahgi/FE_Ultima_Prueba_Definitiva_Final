@@ -225,7 +225,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="fecha_inicio"></param>
         /// <param name="fecha_fin"></param>
         /// <returns></returns>
-        public IHttpActionResult Get(string codigo_facturador, string codigo_adquiriente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        public IHttpActionResult Get(string codigo_facturador, string codigo_adquiriente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin,int tipo_fecha)
         {
             try
             {
@@ -233,7 +233,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerPorFechasObligado(codigo_facturador, numero_documento, codigo_adquiriente, null, estado_recibo, fecha_inicio, fecha_fin, "*").Where(x => x.IntAdquirienteRecibo != 0).ToList();
+                List<TblDocumentos> datos = ctl_documento.ObtenerAcuseRecibo(codigo_facturador, numero_documento, codigo_adquiriente, null, estado_recibo, fecha_inicio, fecha_fin, "*", tipo_fecha).Where(x => x.IntAdquirienteRecibo != 0).ToList();
 
                 var retorno = datos.Select(d => new
                 {
@@ -300,8 +300,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     //Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
                     MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
-                    dias = DateTime.Now.Subtract(d.DatFechaIngreso).Days
+                    dias = Math.Truncate(DateTime.Now.Subtract(d.DatFechaIngreso).TotalHours)
                 });
+
+               
                 //.Where(x => x.dias >= dias);
 
                 return Ok(retorno);

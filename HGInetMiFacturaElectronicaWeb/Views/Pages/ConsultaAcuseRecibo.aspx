@@ -30,22 +30,28 @@
 
                         <div class="row">
 
-                            <div class="dx-fieldset" >
+                            <div class="dx-fieldset">
 
-                               <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
+                                    <i class="icon-file-text"></i>
+                                    <label>Filtro Fecha</label>
+                                    <div data-dx-select-box="filtros.Fecha"></div>
+                                </div>
+
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Inicial:</label>
-                                    <div id="FechaInicial"></div>                                    
+                                    <div id="FechaInicial"></div>
                                 </div>
 
 
                                 <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class=" icon-calendar"></i>
                                     <label>Fecha Final:</label>
-                                     <div id="FechaFinal"></div> 
+                                    <div id="FechaFinal"></div>
                                 </div>
 
-                                <div class="col-md-6" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class="icon-file-text"></i>
                                     <label>Código Adquiriente:</label>
                                     <div dx-autocomplete="filtros.Adquiriente"></div>
@@ -63,10 +69,10 @@
                                     <div dx-select-box="filtros.EstadoRecibo"></div>
                                 </div>
 
-                                <div class="col-md-6 text-right" >
+                                <div class="col-md-6 text-right">
                                     <br />
                                     <br />
-                                    <div dx-button="ButtonOptionsConsultar" ></div>
+                                    <div dx-button="ButtonOptionsConsultar"></div>
                                 </div>
 
                             </div>
@@ -74,7 +80,7 @@
                         </div>
                     </div>
 
-                   
+
 
                 </div>
 
@@ -87,7 +93,7 @@
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
-                    <h6 class="panel-title">Datos</h6>                    
+                    <h6 class="panel-title">Datos</h6>
                 </div>
 
                 <div class="panel-body">
@@ -99,7 +105,7 @@
             </div>
         </div>
         <!-- /DATOS -->
-                <div id="modal_enviar_email" class="modal fade" style="display: none; margin-top: 15%;" modal="showModal" ng-controller="EnvioEmailController">
+        <div id="modal_enviar_email" class="modal fade" style="display: none; margin-top: 15%;" modal="showModal" ng-controller="EnvioEmailController">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div id="EncabezadoModal" class="modal-header">

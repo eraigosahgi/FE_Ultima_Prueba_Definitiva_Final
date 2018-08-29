@@ -26,7 +26,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         consultar();
     });
 
-
+    /*
     $("#FechaInicial").dxDateBox({
         value: now,
         width: '100%',
@@ -48,7 +48,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         }
 
     });
-
+    */
     $scope.filtros =
            {
                NumeroDocumento: {
@@ -135,7 +135,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                       },
                       
                        {
-                           caption: "Días",
+                           caption: "Horas",
                            dataField: "dias",
                        },
                        /*
