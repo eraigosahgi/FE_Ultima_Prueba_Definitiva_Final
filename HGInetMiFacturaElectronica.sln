@@ -90,8 +90,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.5", "v2018.5", "{6C83
 		Documentacion\Liberaciones\v2018.5\20180717.txt = Documentacion\Liberaciones\v2018.5\20180717.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetZonaPagos", "HGInetZonaPagos\HGInetZonaPagos.csproj", "{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F6933ED-0456-49B4-8DB6-F333AA02BD63}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt = Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt
@@ -108,6 +106,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F69
 		Documentacion\Liberaciones\v2018.6\20180811-StrVersionTblDocumentos.txt = Documentacion\Liberaciones\v2018.6\20180811-StrVersionTblDocumentos.txt
 		Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt = Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetZonaPagos", "HGInetZonaPagos\HGInetZonaPagos.csproj", "{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
