@@ -9,15 +9,15 @@ namespace HGInetMiFacturaElectonicaData
 {
     public enum TipoCompra
     {
-        
-            [Description("Cortesía")]
-            Administrador = 1,
 
-            [Description("Compra")]
-            Facturador = 2,
+        [Description("Cortesía")]
+        Cortesia = 1,
 
-            [Description("Post-Pago")]
-            Adquiriente = 3            
-        
+        [Description("Compra")]
+        Compra = 2,
+
+        [Description("Post-Pago")]
+        PostPago = 3
+
     }
 }
