@@ -22,7 +22,8 @@
             <ul class="nav nav-tabs">                 
                 <li id="LiTabAdministrador" data-ng-show="IndicadoresAdmin" ><a id="LinkTabAdministrador" data-ng-if="LinkTabAdministrador" data-ng-init="LinkTabAdministrador=true" href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
                 <li id="LiTabFacturador" data-ng-class="{'active':!IndicadoresAdmin}" data-ng-show="IndicadoresFacturador" ><a id="LinkTabFacturador" data-ng-if="LinkTabFacturador" data-ng-init="LinkTabFacturador=true" href="#TabFacturador" data-toggle="tab">Facturador</a></li>
-                <li id="LiTabAdquiriente" data-ng-class="{'active':!IndicadoresAdmin && !IndicadoresFacturador }" data-ng-show="IndicadoresAdquiriente"><a id="LinkTabAdquiriente" data-ng-if="LinkTabAdquiriente" data-ng-init="LinkTabAdquiriente=true" href="#TabAdquiriente" data-toggle="tab">Adquiriente</a></li>
+                <%--<li id="LiTabAdquiriente" data-ng-class="{'active':!IndicadoresAdmin && !IndicadoresFacturador }" data-ng-show="IndicadoresAdquiriente"><a id="LinkTabAdquiriente" data-ng-if="LinkTabAdquiriente" data-ng-init="LinkTabAdquiriente=true" href="#TabAdquiriente" data-toggle="tab">Adquiriente</a></li>--%>
+                <li id="LiTabAdquiriente" data-ng-class="{'active':!IndicadoresAdmin && !IndicadoresFacturador }" data-ng-show="IndicadoresAdquiriente"><a id="LinkTabAdquiriente"  href="#TabAdquiriente" data-toggle="tab" data-ng-click="validarActivo(3);" >Adquiriente</a></li>
             </ul>
             <!--  /MENÚ TABS -->
 
@@ -144,8 +145,7 @@
                 <!-- /TAB ADMINISTRADOR -->
 
                 <!-- TAB FACTURADOR -->
-                <div data-ng-class="{'tab-pane active':!IndicadoresAdmin}"  id="TabFacturador">
-
+                <div data-ng-class="{'tab-pane active':!IndicadoresAdmin}"  id="TabFacturador">                    
                     <div class="row">
 
                         <!-- REPORTE ESTADOS DOCUMENTO -->
@@ -268,7 +268,7 @@
 
                 <!-- TAB ADQUIRIENTE -->
                 <div data-ng-class="{'tab-pane active':!IndicadoresAdmin && !IndicadoresFacturador }"  id="TabAdquiriente">
-
+                                        
                     <div class="row">
 
                         <!-- REPORTE ESTADO ACUSE ACUMULADO-->

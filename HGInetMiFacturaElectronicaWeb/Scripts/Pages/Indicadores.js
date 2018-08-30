@@ -3,6 +3,16 @@
 var IndicadoresApp = angular.module('IndicadoresApp', ['dx']);
 IndicadoresApp.controller('IndicadoresController', function IndicadoresController($scope, $sce, $http, $location) {
 
+
+
+    $scope.validarActivo = function (tipo) {        
+        $('#TabFacturador').addClass("tab-pane");
+    }
+
+
+
+
+
     //Opciones Adicionales de las gráficas.
     var chartOptions = {
         gamaAzul: ["rgb(0,22,245,1)", "rgb(0,22,245,0.7)", "rgb(0,22,245,0.4)"]
@@ -26,11 +36,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
             if (response.data[0].Adquiriente)
                 PerfilAdquiriente();
-
-
-            console.log(response.data[0].Administrador);
-            console.log(response.data[0].Obligado);
-            console.log(response.data[0].Adquiriente);
 
             if (response.data[0].Administrador) {
                 $('#LiTabAdministrador').addClass('active');
@@ -84,6 +89,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                         $scope.Panel13511 = false;
                     else {
                         $scope.ReporteDocumentosEstadoAdmin = response.data;
+                        console.log(response.data);
                     }
                 } catch (err) {
                     DevExpress.ui.notify(err.message, 'error', 3000);

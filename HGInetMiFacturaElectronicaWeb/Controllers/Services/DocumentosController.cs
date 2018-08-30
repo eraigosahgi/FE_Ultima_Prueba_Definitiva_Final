@@ -275,7 +275,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
         [HttpGet]
             [Route("api/ConsultaAcuseTacito")]
-        public IHttpActionResult ConsultaAcuseTacito(string codigo_facturador, string codigo_adquiriente, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin)
+        public IHttpActionResult ConsultaAcuseTacito(string codigo_facturador, string codigo_adquiriente, string numero_documento)
         {
             try
             {
@@ -283,9 +283,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerAcuseTacito(codigo_facturador, numero_documento, codigo_adquiriente);
-
-                //short dias = ctl_documento.CantDiasTacito(codigo_facturador);
+                List<TblDocumentos> datos = ctl_documento.ObtenerAcuseTacito(codigo_facturador, numero_documento, codigo_adquiriente);                
 
                 var retorno = datos.Select(d => new
                 {
@@ -296,15 +294,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     FechaIngreso = d.DatFechaIngreso,
                     Estado = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
                     MotivoRechazo = d.StrAdquirienteMvoRechazo,
-                    //Xml = d.StrUrlArchivoUbl,
-                    //Pdf = d.StrUrlArchivoPdf,
+                    IdentificacionFacturador = d.TblEmpresasFacturador.StrIdentificacion,
+                    NombreFacturador = d.TblEmpresasFacturador.StrRazonSocial,
                     d.StrIdSeguridad,
                     MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
                     dias = Math.Truncate(DateTime.Now.Subtract(d.DatFechaIngreso).TotalHours)
-                });
-
-               
-                //.Where(x => x.dias >= dias);
+                });                              
 
                 return Ok(retorno);
             }

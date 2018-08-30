@@ -20,37 +20,22 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                fecha_inicio = "",
                fecha_fin = "",
                estado_acuse = "";
+               codigo_Facturador_consulta = "";
 
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {
         codigo_facturador = data[0].Identificacion;
         consultar();
     });
 
-    /*
-    $("#FechaInicial").dxDateBox({
-        value: now,
-        width: '100%',
-        displayFormat: "yyyy-MM-dd",
-        onValueChanged: function (data) {
-            fecha_inicio = new Date(data.value).toISOString();
-            $("#FechaFinal").dxDateBox({ min: fecha_inicio });
-        }
-
-    });
-
-    $("#FechaFinal").dxDateBox({
-        value: now,
-        width: '100%',
-        displayFormat: "yyyy-MM-dd",
-        onValueChanged: function (data) {
-            fecha_fin = new Date(data.value).toISOString();
-            $("#FechaInicial").dxDateBox({ max: fecha_fin });
-        }
-
-    });
-    */
     $scope.filtros =
            {
+
+               Facturador:{
+                   placeholder: "Ingrese Identificación del Facturador",
+                   onValueChanged: function (data) {
+                       codigo_Facturador_consulta = data.value;
+                   }
+               },
                NumeroDocumento: {
                    placeholder: "Ingrese Número Documento",
                    onValueChanged: function (data) {
@@ -65,8 +50,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                }
            }
 
-    $("#FechaFinal").dxDateBox({ min: now });
-    $("#FechaInicial").dxDateBox({ max: now });
 
     $scope.ButtonOptionsConsultar = {
         text: 'Consultar',
@@ -78,16 +61,16 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
 
 
-   
+
     function consultar() {
         if (fecha_inicio == "")
             fecha_inicio = now.toISOString();
 
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
-     
-        SrvDocumento.ObtenerDocumentosTacito(codigo_facturador,codigo_adquiriente,numero_documento,fecha_inicio,fecha_fin).then(function (data) {
-        //$http.get('/api/ConsultaAcuseTacito?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {            
+
+        SrvDocumento.ObtenerDocumentosTacito(codigo_Facturador_consulta, codigo_adquiriente, numero_documento).then(function (data) {
+            //$http.get('/api/ConsultaAcuseTacito?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {            
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data,
                 paging: {
@@ -103,13 +86,22 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
                 }
 
-            
+
                  , loadPanel: {
                      enabled: true
                  }
                       , allowColumnResizing: true
                 , columns: [
 
+
+                {
+                    caption: "Identificación Facturador",
+                    dataField: "IdentificacionFacturador"
+                },
+                    {
+                        caption: "Nombre Facturador",
+                        dataField: "NombreFacturador"
+                    },
                      {
                          caption: "Identificación Adquiriente",
                          dataField: "IdentificacionAdquiriente"
@@ -133,7 +125,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                           dataType: "date",
                           format: "yyyy-MM-dd HH:mm",
                       },
-                      
+
                        {
                            caption: "Horas",
                            dataField: "dias",
@@ -162,7 +154,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                             $scope.$apply(function () {
                                 $scope.total = data.length;
                             });
-                            
+
 
                         } else {
                             lista += "{Documentos: '" + data[0].NumeroDocumento + "'}";
@@ -199,7 +191,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
     });
 
     function ProcesarDocumentos() {
-        
+
         SrvDocumento.GenerarAcuseTacito($scope.documentos).then(function (data) {
             DevExpress.ui.notify("Documentos actualizados con exito", "success", 3000);
             consultar();

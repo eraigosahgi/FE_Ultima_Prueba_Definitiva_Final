@@ -22,6 +22,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Data.Entity.SqlServer;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -449,6 +450,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
             long num_doc = -1;
             long.TryParse(numero_documento, out num_doc);
 
+            if (string.IsNullOrWhiteSpace(codigo_facturador))
+                codigo_facturador = "*";
             if (string.IsNullOrWhiteSpace(numero_documento))
                 numero_documento = "*";
             if (string.IsNullOrWhiteSpace(codigo_adquiriente))
@@ -461,20 +464,26 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                               join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
                                               join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
 
+                                              //let d = SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, DateTime.Now)
+
                                               where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
                                               && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
                                               && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
 
                                               && (datos.IntAdquirienteRecibo.Equals(0))
-                                              
-                                              && (datos.DatFechaIngreso <= DiasTranscurridos)
+                                             
+                                              && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, DateTime.Now) && datos.TblEmpresasFacturador.IntAcuseTacito.Value>0)                                             
                                               
                                               orderby datos.IntNumero descending
-                                              select datos).ToList();           
+                                              select  datos).ToList();           
 
 
             return documentos;
         }
+        
+
+
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         /// Retorna la cantidad de dias que posee un facturador para dias Tacito del acuse
@@ -1101,6 +1110,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 item.IntAdquirienteRecibo = 3;
                 item.StrAdquirienteMvoRechazo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(3));
                 item.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+                item.IntIdEstado = 99;
+                item.DatFechaActualizaEstado = Fecha.GetFecha();
                 this.Edit(item);
             }
 

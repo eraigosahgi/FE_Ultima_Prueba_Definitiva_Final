@@ -34,20 +34,25 @@
                             <div class="dx-fieldset">
 
                               
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
+                                    <i class="icon-file-text"></i>
+                                    <label>Código Facturador:</label>
+                                    <div data-dx-autocomplete="filtros.Facturador"></div>
+                                </div>
 
-                                <div class="col-md-4" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class="icon-file-text"></i>
                                     <label>Código Adquiriente:</label>
                                     <div data-dx-autocomplete="filtros.Adquiriente"></div>
                                 </div>
 
-                                <div class="col-md-4" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
+                                <div class="col-md-3" style="margin: 0px; margin-top: 16px; margin-bottom: 1%">
                                     <i class="icon-files-empty"></i>
                                     <label>Número Documento:</label>
                                     <div data-dx-autocomplete="filtros.NumeroDocumento"></div>
                                 </div>
 
-                                <div class="col-md-4 text-right" style="margin-top: 0px;">
+                                <div class="col-md-3 text-right" style="margin-top: 0px;">
                                     <br />
                                     <br />
                                     <div data-dx-button="ButtonOptionsConsultar"></div>

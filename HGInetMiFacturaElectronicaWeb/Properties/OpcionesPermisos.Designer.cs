@@ -79,7 +79,7 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 1314.
+        ///   Busca una cadena traducida similar a 1344.
         /// </summary>
         internal static string ConsultaAcuseTacito {
             get {

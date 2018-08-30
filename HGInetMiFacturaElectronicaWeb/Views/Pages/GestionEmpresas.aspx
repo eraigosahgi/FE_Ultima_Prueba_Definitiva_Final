@@ -74,13 +74,13 @@
                                         </div>
 
                                         <div class="col-md-3 col-xs-6 " style="z-index: 9; margin-left: 0px">
-                                            <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nª Usuarios:</label>
+                                            <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nº Usuarios:</label>
                                             <div id="txtUsuarios"></div>
 
                                         </div>
 
                                         <div class="col-md-3 col-xs-6 " style="z-index: 9; margin-left: 0px">
-                                            <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nª Horas acuse:</label>
+                                            <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nº Horas acuse:</label>
                                             <div id="txtDiasAcuse"></div>
 
                                         </div>
