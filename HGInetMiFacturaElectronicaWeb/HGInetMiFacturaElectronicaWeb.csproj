@@ -2700,9 +2700,6 @@
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
-    <Content Include="Views\Pages\Indicadores\IndicadoresAdministrador.aspx" />
-    <Content Include="Views\Pages\Indicadores\IndicadoresAdquiriente.aspx" />
-    <Content Include="Views\Pages\Indicadores\IndicadoresFacturador.aspx" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
