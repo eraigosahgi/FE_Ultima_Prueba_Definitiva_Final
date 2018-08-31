@@ -784,7 +784,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     FechaRegistro = (d.DatFechaIngreso.Year > 2000) ? d.DatFechaIngreso.ToString(Fecha.formato_fecha_hginet) : "",
                     FechaVerificacion = d.StrUrlArchivoZip,
                     StrIdSeguridadPago = d.StrNumResolucion,
-                    Estado = (d.StrPrefijo == "1") ? "Aprobado" : (d.StrPrefijo == "0") ? "Rechazado" : (d.StrPrefijo == "999") ? "Pendiente" : ""
+                    Estado = (d.StrUrlArchivoZip==null)? "Pendiente" :(d.StrPrefijo == "1") ? "Aprobado" : (d.StrPrefijo == "0") ? "Rechazado" : (d.StrPrefijo == "999") ? "Pendiente" : ""
                 });
 
                 return Ok(retorno);
