@@ -531,7 +531,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
 
                         //Datos de la pasarela electrónica.
-                        comercio_id = pasarela.IdComercio;
+                        comercio_id = Convert.ToInt32(pasarela.IdComercio);
                         comercio_clave = pasarela.ClaveComercio;
                         comercio_ruta = pasarela.RutaComercio;
                         codigo_servicio = pasarela.CodigoServicio;

@@ -11,9 +11,9 @@ namespace HGInetMiFacturaElectonicaData
     {
 
         [ConfigurationProperty("IdComercio", DefaultValue = "", IsKey = true, IsRequired = true)]
-        public int IdComercio
+        public string IdComercio
         {
-            get { return (int)this["IdComercio"]; }
+            get { return (string)this["IdComercio"]; }
             set { this["IdComercio"] = value; }
         }
 
