@@ -1,5 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetZonaPagos;
@@ -291,12 +292,12 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 }
 
                 var Pagos = (from pagos in context.TblPagosElectronicos
-                                  where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-                                  && pagos.IntEstadoPago==1
-                                  select pagos.IntValorPago).FirstOrDefault();
+                             where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                             && pagos.IntEstadoPago == 1
+                             select pagos.IntValorPago).FirstOrDefault();
 
-                decimal Datos_pago=0;
-                if (Pagos >0)
+                decimal Datos_pago = 0;
+                if (Pagos > 0)
                 {
                     Datos_pago = (from pagos in context.TblPagosElectronicos
                                   where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
@@ -335,7 +336,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
             long num_doc = -1;
             long.TryParse(numero_documento, out num_doc);
-                       
+
 
             short cod_estado_recibo = -1;
             short.TryParse(estado_recibo, out cod_estado_recibo);
@@ -527,11 +528,13 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     }
                     else
                     {
+                        PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
+
                         //Datos de la pasarela electrónica.
-                        comercio_id = 2651;
-                        comercio_clave = "2651HGI";
-                        comercio_ruta = "t_pruebasHGI";
-                        codigo_servicio = "2701";
+                        comercio_id = pasarela.IdComercio;
+                        comercio_clave = pasarela.ClaveComercio;
+                        comercio_ruta = pasarela.RutaComercio;
+                        codigo_servicio = pasarela.CodigoServicio;
 
                         //Obtiene el plan de transacciones.
                         Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();

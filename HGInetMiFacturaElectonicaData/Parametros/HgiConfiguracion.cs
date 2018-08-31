@@ -92,5 +92,17 @@ namespace HGInetMiFacturaElectonicaData
             }
 
         }
+
+        [ConfigurationProperty("PasarelaPagos")]
+        public PasarelaPagos PasarelaPagos
+        {
+            get
+            {
+                PasarelaPagos pasarela_tmp = this["PasarelaPagos"] as PasarelaPagos;
+
+                return pasarela_tmp;
+            }
+
+        }
     }
 }
