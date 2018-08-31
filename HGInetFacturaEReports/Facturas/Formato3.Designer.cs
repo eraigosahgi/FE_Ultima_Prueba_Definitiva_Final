@@ -584,9 +584,9 @@ namespace HGInetFacturaEReports.Facturas
             // campo3_v
             // 
             this.campo3_v.CanGrow = false;
-            this.campo3_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(3.9999995231628418D), Telerik.Reporting.Drawing.Unit.Cm(4.8538656234741211D));
+            this.campo3_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0.39999991655349731D), Telerik.Reporting.Drawing.Unit.Cm(4.8538656234741211D));
             this.campo3_v.Name = "campo3_v";
-            this.campo3_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(11.699798583984375D), Telerik.Reporting.Drawing.Unit.Cm(0.35822570323944092D));
+            this.campo3_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(19.30000114440918D), Telerik.Reporting.Drawing.Unit.Cm(0.35822570323944092D));
             this.campo3_v.Style.Font.Bold = false;
             this.campo3_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(6D);
             this.campo3_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Center;
@@ -820,7 +820,7 @@ namespace HGInetFacturaEReports.Facturas
             this.campo29_d.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo29_d.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
             this.campo29_d.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.campo29_d.Style.Visible = false;
+            this.campo29_d.Style.Visible = true;
             this.campo29_d.Value = "";
             // 
             // htmlTextBox89
@@ -847,7 +847,7 @@ namespace HGInetFacturaEReports.Facturas
             this.campo30_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo30_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.campo30_v.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.campo30_v.Style.Visible = false;
+            this.campo30_v.Style.Visible = true;
             this.campo30_v.Value = "";
             // 
             // campo29_v
@@ -861,7 +861,7 @@ namespace HGInetFacturaEReports.Facturas
             this.campo29_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(7D);
             this.campo29_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Right;
             this.campo29_v.Style.VerticalAlign = Telerik.Reporting.Drawing.VerticalAlign.Middle;
-            this.campo29_v.Style.Visible = false;
+            this.campo29_v.Style.Visible = true;
             this.campo29_v.Value = "";
             // 
             // panel5
