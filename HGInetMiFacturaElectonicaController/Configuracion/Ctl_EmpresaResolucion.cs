@@ -28,13 +28,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="documento_empresa">documento de la empresa</param>
 		/// <param name="numero_resolucion">número de resolución</param>
 		/// <returns>datos de la resolución</returns>
-		public TblEmpresasResoluciones Obtener(string documento_empresa, string numero_resolucion)
+		public TblEmpresasResoluciones Obtener(string documento_empresa, string numero_resolucion, string clave_tecnica = "*")
 		{
 
 			var datos = (from item in context.TblEmpresasResoluciones
 						 where (item.StrNumResolucion.Equals(numero_resolucion) || numero_resolucion.Equals("*"))
 						 && item.TblEmpresas.StrIdentificacion.Equals(documento_empresa)
-						 select item).FirstOrDefault();
+                         && (item.StrClaveTecnica.Equals(clave_tecnica) || clave_tecnica.Equals("*"))
+                         select item).FirstOrDefault();
 
 			return datos;
 
@@ -88,7 +89,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			foreach (RangoFacturacion item in resoluciones.RangoFacturacion)
 			{
 				//Valida si la Resolucion ya existe en BD
-				TblEmpresasResoluciones tbl_resolucion_actual = Obtener(empresaBd.StrIdentificacion, item.NumeroResolucion.ToString());
+				TblEmpresasResoluciones tbl_resolucion_actual = Obtener(empresaBd.StrIdentificacion, item.NumeroResolucion.ToString(), item.ClaveTecnica);
 
 				// convierte el objeto del servicio a base de datos
 				TblEmpresasResoluciones tbl_resolucion = Convertir(item, empresaBd);
@@ -132,8 +133,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				StrEmpresa = empresa.StrIdentificacion,
 				StrNumResolucion = item.NumeroResolucion.ToString(),
 				StrPrefijo = (!string.IsNullOrEmpty(item.Prefijo)) ? item.Prefijo : "",
-				IntRangoInicial = Convert.ToInt16(item.RangoInicial),
-				IntRangoFinal = Convert.ToInt16(item.RangoFinal),
+				IntRangoInicial = Convert.ToInt32(item.RangoInicial),
+				IntRangoFinal = Convert.ToInt32(item.RangoFinal),
 				DatFechaVigenciaDesde = item.FechaVigenciaDesde,
 				DatFechaVigenciaHasta = item.FechaVigenciaHasta,
 				StrClaveTecnica = item.ClaveTecnica,
@@ -142,7 +143,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				StrIdSeguridad = Guid.NewGuid(),
 				DatFechaIngreso = Fecha.GetFecha(),
 				DatFechaActualizacion = Fecha.GetFecha()
-			};
+                
+            };
 
 			return tbl_resolucion;
 		}
