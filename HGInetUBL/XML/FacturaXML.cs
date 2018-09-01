@@ -28,11 +28,12 @@ namespace HGInetUBL
         /// <summary>
         /// Crea el XML con la informacion de la factura en formato UBL
         /// </summary>
+        /// <param name="id_documento">id del documento en base de datos (GUID)</param>
         /// <param name="documento">Objeto de tipo TblDocumentos que contiene la informacion de la factura</param>
         /// <param name="resolucion">Objeto que contiene los parametros de la DIAN</param>
         /// <param name="tipo">Indica el tipo de documento</param>
         /// <returns>Ruta donde se guardo el archivo XML</returns>  
-        public static FacturaE_Documento CrearDocumento(Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo)
+        public static FacturaE_Documento CrearDocumento(Guid id_documento, Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo)
         {
             try
             {
@@ -267,7 +268,7 @@ namespace HGInetUBL
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml("<firma></firma>");
 
-                UBLExtensionType[] UBLExtensions = new UBLExtensionType[2];
+                UBLExtensionType[] UBLExtensions = new UBLExtensionType[3];
 
                 #region Extension de la Dian
                 UBLExtensionType UBLExtensionDian = new UBLExtensionType();
@@ -280,6 +281,15 @@ namespace HGInetUBL
                 UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
                 UBLExtensions[1] = UBLExtensionFirma;
                 #endregion
+
+
+                #region Extension de HGI
+                UBLExtensionType UBLExtensionHgi = new UBLExtensionType();
+                UBLExtensionHgi.ExtensionContent = ExtensionHgiSas.Obtener(id_documento, documento);
+                UBLExtensions[2] = UBLExtensionHgi;
+                #endregion
+
+
 
                 factura.UBLExtensions = UBLExtensions;
                 #endregion

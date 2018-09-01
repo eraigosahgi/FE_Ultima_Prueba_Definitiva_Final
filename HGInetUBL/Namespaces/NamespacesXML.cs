@@ -28,7 +28,10 @@ namespace HGInetUBL
             namespaces.Add("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
             namespaces.Add("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
             namespaces.Add("fe", "http://www.dian.gov.co/contratos/facturaelectronica/v1");
-			return namespaces;
+            namespaces.Add("hst", "http://www.mifacturaenlinea.com.co/v1/Structures");
+            namespaces.Add("hac", "urn:hginet:names:specification:ubl:colombia:schema:xsd:HgiNetAggregateComponents-1");
+
+            return namespaces;
         }
 
         /// <summary>
@@ -41,6 +44,19 @@ namespace HGInetUBL
             namespaces.Add("sts", "http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures");
             namespaces.Add("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
             return namespaces;
+        }
+
+        /// <summary>
+        /// Obtiene los namespaces que seran utilizados para extension de HGI SAS
+        /// </summary>
+        /// <returns>Namespaces</returns>
+        public static XmlSerializerNamespaces ObtenerExtensionHgi()
+        {
+            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            namespaces.Add("hst", "http://www.mifacturaenlinea.com.co/v1/Structures");
+            namespaces.Add("hac", "urn:hginet:names:specification:ubl:colombia:schema:xsd:HgiNetAggregateComponents-1");
+            return namespaces;
+            
         }
     }
 }
