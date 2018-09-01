@@ -145,7 +145,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				IntIdPlantillaMail = 0,
 				StrIdSeguridad = Guid.NewGuid(),
 				DatFechaIngreso = Fecha.GetFecha(),
-				DatFechaActualizacion = Fecha.GetFecha()
+				DatFechaActualizacion = Fecha.GetFecha(),
+                IntTipoDoc = 1
+               
                 
             };
 
