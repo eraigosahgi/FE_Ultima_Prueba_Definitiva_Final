@@ -25,11 +25,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <summary>
         /// Genera la información del documento en formato UBL
         /// </summary>
-        /// <param name="id">id único de identificación de la plataforma</param>
+        /// <param name="id_documento">id único de identificación de la plataforma</param>
         /// <param name="documento">datos del documento</param>
         /// <param name="pruebas">indica si el documento es de pruebas (true)</param>
         /// <returns>datos del documento</returns>
-        public static FacturaE_Documento Generar(Guid id, Factura documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
+        public static FacturaE_Documento Generar(Guid id_documento, Factura documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
         {
 
             // resolución del documento
@@ -69,9 +69,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             };
             
             // convierte el documento 
-            FacturaE_Documento resultado = FacturaXML.CrearDocumento(documento, extension_documento, tipo_doc);
+            FacturaE_Documento resultado = FacturaXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
             resultado.DocumentoTipo = tipo_doc;
-			resultado.IdSeguridadDocumento = id;
+			resultado.IdSeguridadDocumento = id_documento;
             resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
             // genera el nombre del archivo ZIP
