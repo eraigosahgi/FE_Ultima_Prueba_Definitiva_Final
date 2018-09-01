@@ -154,6 +154,10 @@
     <value>/Views/Login/RestablecerClave.aspx?id_seguridad={id_seguridad}</value>
     <comment>Ruta de redireccion página restablecer contraseña</comment>
   </data>
+  <data name="PrefijoResolucionPruebas" xml:space="preserve">
+    <value>PRUE</value>
+    <comment>Prefijo de la Resolucion de Pruebas</comment>
+  </data>
   <data name="ResolucionPruebas" xml:space="preserve">
     <value>9000000033394696</value>
     <comment>Numero de Resolución de Pruebas de HGI </comment>

@@ -492,7 +492,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     {
                         //consulta la resolución para obtener el comercio que tiene asociado.
                         Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
-                        TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion);
+                        TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
 
                         //Valida que la resolución no sea null.
                         if (datos_resolucion != null)
@@ -655,7 +655,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     {
                         //consulta la resolución para obtener el comercio que tiene asociado.
                         Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
-                        TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion);
+                        TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
 
                         //Valida que la resolución no sea null.
                         if (datos_resolucion != null)

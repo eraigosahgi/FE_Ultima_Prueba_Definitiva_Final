@@ -151,6 +151,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a PRUE.
+        /// </summary>
+        public static string PrefijoResolucionPruebas {
+            get {
+                return ResourceManager.GetString("PrefijoResolucionPruebas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 9000000033394696.
         /// </summary>
         public static string ResolucionPruebas {

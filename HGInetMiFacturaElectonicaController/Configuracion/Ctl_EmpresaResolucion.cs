@@ -28,13 +28,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="documento_empresa">documento de la empresa</param>
 		/// <param name="numero_resolucion">número de resolución</param>
 		/// <returns>datos de la resolución</returns>
-		public TblEmpresasResoluciones Obtener(string documento_empresa, string numero_resolucion, string clave_tecnica = "*")
+		public TblEmpresasResoluciones Obtener(string documento_empresa, string numero_resolucion, string prefijo)
 		{
 
 			var datos = (from item in context.TblEmpresasResoluciones
 						 where (item.StrNumResolucion.Equals(numero_resolucion) || numero_resolucion.Equals("*"))
 						 && item.TblEmpresas.StrIdentificacion.Equals(documento_empresa)
-                         && (item.StrClaveTecnica.Equals(clave_tecnica) || clave_tecnica.Equals("*"))
+                         && (item.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
                          select item).FirstOrDefault();
 
 			return datos;
@@ -88,8 +88,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			foreach (RangoFacturacion item in resoluciones.RangoFacturacion)
 			{
+                if (string.IsNullOrEmpty(item.Prefijo))
+                    item.Prefijo = string.Empty;
+
 				//Valida si la Resolucion ya existe en BD
-				TblEmpresasResoluciones tbl_resolucion_actual = Obtener(empresaBd.StrIdentificacion, item.NumeroResolucion.ToString(), item.ClaveTecnica);
+				TblEmpresasResoluciones tbl_resolucion_actual = Obtener(empresaBd.StrIdentificacion, item.NumeroResolucion.ToString(), item.Prefijo);
 
 				// convierte el objeto del servicio a base de datos
 				TblEmpresasResoluciones tbl_resolucion = Convertir(item, empresaBd);

@@ -86,6 +86,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     //Valida que Resolucion tomar, con Prefijo o sin Prefijo
                     string resolucion_pruebas = string.Empty;
                     string nit_resolucion = string.Empty;
+                    string prefijo_prueba = string.Empty;
                     if (documentos.FirstOrDefault().Prefijo.Equals(string.Empty))
                     {
                         resolucion_pruebas = Constantes.ResolucionPruebas;
@@ -96,17 +97,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     {
                         resolucion_pruebas = Constantes.ResolucionPruebas;
                         nit_resolucion = Constantes.NitResolucionconPrefijo;
+                        prefijo_prueba = Constantes.PrefijoResolucionPruebas;
                     }
 
 
 
                     Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
-                    lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas));
+                    lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas,prefijo_prueba));
 
                     foreach (var item in documentos)
                     {
                         item.NumeroResolucion = resolucion_pruebas;
                         item.DatosObligado = DatosObligado;
+                        item.Prefijo = prefijo_prueba;
 
                     }
                 }
@@ -215,7 +218,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     LogExcepcion.Guardar(exTMP);
 
                     // filtra la resolución del documento
-                    resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+                    resolucion = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
+                                                                                    _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
+                                                                                    && _resolucion_doc.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
                 }
                 catch (Exception excepcion)
                 {
@@ -472,6 +477,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
             string resolucion_pruebas = Constantes.ResolucionPruebas;
             string nit_resolucion = Constantes.NitResolucionsinPrefijo;
+            string prefijo_pruebas = string.Empty;
 
             // sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
             if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
@@ -500,7 +506,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 };
 
                 //obtiene la resolucion de factura de pruebas
-                lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas));
+                lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_pruebas));
 
                 foreach (var item in documentos)
                 {
@@ -638,6 +644,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
             string resolucion_pruebas = Constantes.ResolucionPruebas;
             string nit_resolucion = Constantes.NitResolucionsinPrefijo;
+            string prefijo_pruebas = string.Empty;
 
             // sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
             if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
@@ -666,7 +673,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 };
 
                 //obtiene la resolucion de factura de pruebas
-                lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas));
+                lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_pruebas));
 
                 foreach (var item in documentos)
                 {
@@ -1324,6 +1331,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 //Valida que Resolucion tomar, con Prefijo o sin Prefijo
                 string resolucion_pruebas = string.Empty;
                 string nit_resolucion = string.Empty;
+                string prefijo_pruebas = string.Empty;
                 if (documentos.FirstOrDefault().Prefijo.Equals(string.Empty))
                 {
                     resolucion_pruebas = Constantes.ResolucionPruebas;
@@ -1334,12 +1342,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 {
                     resolucion_pruebas = Constantes.ResolucionPruebas;
                     nit_resolucion = Constantes.NitResolucionconPrefijo;
+                    prefijo_pruebas = Constantes.PrefijoResolucionPruebas;
                 }
 
 
 
                 Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
-                lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas));
+                lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_pruebas));
 
             }
             else
