@@ -35,7 +35,7 @@ namespace HGInetUBL
 					throw new Exception("La documento es inválido.");
 
 				//Obtiene el nombre del archivo XML
-				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo);
+				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo, documento.Prefijo);
 
 
 				CreditNoteType nota_credito = new CreditNoteType();

@@ -83,7 +83,14 @@ namespace HGInetUBL
             if (factura_ubl.PaymentMeans != null)
             {
                 factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
+                //factura_obj.FormaPago = factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value;
             }
+            /*
+            if(factura_ubl.PaymentTerms !=null)
+            {
+                factura_obj.Plazo = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure.Value);
+            }*/
+
             factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
             factura_obj.Nota = factura_ubl.Note[0].Value;
             factura_obj.Notas = new List<string>();

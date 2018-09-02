@@ -15,7 +15,7 @@ namespace HGInetUBL
         /// <param name="identificacion" type="string">Identificación del obligado a facturar</param>
         /// <param name="tipo_documento" type="TipoDocumento">Tipo de documento XML que generar (Factura-NotaCredito-NotaDebido)</param>
         /// <returns>Nombre del archivo</returns>
-        public static string ObtenerXml(string consecutivo_documento, string identificacion, TipoDocumento tipo_documento)
+        public static string ObtenerXml(string consecutivo_documento, string identificacion, TipoDocumento tipo_documento, string prefijo)
         {
             string nombre_archivo = string.Empty;
             try
@@ -44,7 +44,7 @@ namespace HGInetUBL
                     nombre_archivo = Recursos.NombreArchivos.nombre_xml_nota_credito;
                 }
 
-                nombre_archivo = string.Format("{0}{1}{2}", nombre_archivo, identificacion, hex_id_factura);
+                nombre_archivo = string.Format("{0}{1}{2}{3}", nombre_archivo, identificacion, prefijo , hex_id_factura);
 
                 return nombre_archivo;
             }

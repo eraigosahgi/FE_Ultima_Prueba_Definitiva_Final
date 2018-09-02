@@ -106,7 +106,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 8110214384.
+        ///   Busca una cadena traducida similar a 811021438.
         /// </summary>
         public static string NitResolucionconPrefijo {
             get {

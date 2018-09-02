@@ -135,7 +135,7 @@
     <comment>email del remitente</comment>
   </data>
   <data name="NitResolucionconPrefijo" xml:space="preserve">
-    <value>8110214384</value>
+    <value>811021438</value>
     <comment>Nit de pruebas para Resolucion con Prefijo</comment>
   </data>
   <data name="NitResolucionsinPrefijo" xml:space="preserve">

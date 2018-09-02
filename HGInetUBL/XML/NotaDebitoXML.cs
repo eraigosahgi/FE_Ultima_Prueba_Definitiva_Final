@@ -32,7 +32,7 @@ namespace HGInetUBL
 					throw new Exception("La documento es inválido.");
 
 				//Obtiene el nombre del archivo XML
-				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo);
+				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo, documento.Prefijo);
 				
 				DebitNoteType nota_debito = new DebitNoteType();
 				XmlSerializerNamespaces namespaces_xml = NamespacesXML.Obtener();
@@ -1255,7 +1255,7 @@ namespace HGInetUBL
 		/// <summary>
 		/// Llena los objetos con la informacion que corresponde a una nota debito
 		/// </summary>
-		public void NotaDebito()
+		/*public void NotaDebito()
 		{
 			//DebitNoteLineType DebitNoteType = new DebitNoteLineType();
 			//UBLExtensionsType UBLExtensions = new UBLExtensionsType();
@@ -1334,7 +1334,7 @@ namespace HGInetUBL
 				viene asegurada por la firma digital, no es
 				necesaria ninguna medida más para asegurar que
 				ningún campo ha sido alterado
-			 */
+			
 			nota_debito.UUID = new UUIDType()
 			{
 				Value = ""
@@ -1435,7 +1435,7 @@ namespace HGInetUBL
 
 			#region nota_debito.AccountingSupplierParty //Información del obligado a facturar
 
-			/*Campos segun peru*/
+			/*Campos segun peru
 			nota_debito.AccountingSupplierParty = new SupplierPartyType1()//Obligado a facturar
 			{
 
@@ -1525,7 +1525,7 @@ namespace HGInetUBL
 			/* Persona natural o jurídica que adquiere bienes y/o servicios y debe exigir factura
 				51 o documento equivalente y, que tratándose de la factura electrónica, 
 			    la recibe, rechaza, cuando
-				52 sea del caso, y conserva para su posterior exhibición*/
+				52 sea del caso, y conserva para su posterior exhibición
 
 			nota_debito.AccountingCustomerParty = new CustomerPartyType1()
 			{
@@ -1615,7 +1615,7 @@ namespace HGInetUBL
 			/*Receptor del Pago: Participante, Entidad,
 				Departamento, Unidad, destinatario de la
 				factura. Suele coincidir con el obligado a
-				facturar Ver composición en la estructura común*/
+				facturar Ver composición en la estructura común
 			nota_debito.PayeeParty = new PartyType()
 			{
 
@@ -1627,7 +1627,7 @@ namespace HGInetUBL
 			#region	nota_debito.TaxTotal //Impuesto y Impuesto Retenido
 			/*Impuesto Retenido: Elemento raíz compuesto utilizado para informar de un impuesto	retenido. 
 			 *Impuesto: Elemento raíz compuesto utilizado para informar de un impuesto.
-			 */
+			 
 			nota_debito.TaxTotal = new TaxTotalType1[1]
 			{
 				 new TaxTotalType1()
@@ -1679,7 +1679,7 @@ namespace HGInetUBL
 				nota_debito. Estos importes son calculados teniendo
 				en cuenta las líneas de nota_debito y elementos a
 				nivel de nota_debito, como descuentos, cargos,
-				impuestos, etc*/
+				impuestos, etc
 			nota_debito.LegalMonetaryTotal = new MonetaryTotalType1()
 			{
 				//Total de venta
@@ -1711,7 +1711,7 @@ namespace HGInetUBL
 			XmlSerializerNamespaces namespaces_xml = NamespacesXML.Obtener();
 			CrearArchivo(nota_debito, "811021438", namespaces_xml);
 			#endregion
-		}
+		}*/
 
 		/// <summary>
 		/// Crea el archivo XML
@@ -1723,11 +1723,11 @@ namespace HGInetUBL
 		{
 			try
 			{
-				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(nota_dedito.ID.Value, identificacion, TipoDocumento.NotaDebito);
+				//string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(nota_dedito.ID.Value, identificacion, TipoDocumento.NotaDebito);
 				string nombre_archivo_zip = NombramientoArchivo.ObtenerZip(nota_dedito.ID.Value, identificacion, TipoDocumento.NotaDebito);
 				string ruta = @"C:\Users\dmonsalve\Downloads\xml\";
 
-				Xml.GuardarObjeto(nota_dedito, ruta, nombre_archivo_xml, namespaces_xml);
+				//Xml.GuardarObjeto(nota_dedito, ruta, nombre_archivo_xml, namespaces_xml);
 				//	Zip.Comprimir(ruta, nombre_archivo_xml);
 				//	Archivo.ModificarNombre(ruta,( nombre_archivo_xml + ".zip"), nombre_archivo_zip);
 

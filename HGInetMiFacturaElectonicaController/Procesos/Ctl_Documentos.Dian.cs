@@ -115,7 +115,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
 
 				// Nombre del archivo Xml 
-				string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo));
+				string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo,documentoBd.StrPrefijo));
 
 				// ruta del xml
 				string ruta_xml = string.Format(@"{0}{1}", carpeta_xml, archivo_xml);

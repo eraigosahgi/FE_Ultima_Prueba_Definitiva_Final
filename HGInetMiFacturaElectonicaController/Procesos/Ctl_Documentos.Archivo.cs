@@ -201,7 +201,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento_result.DocumentoXml = txt_xml;
 
 					//Obtiene el nombre del archivo XML
-					documento_result.NombreXml = NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc);
+					documento_result.NombreXml = NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
 					documento_result.NombrePdf = documento_result.NombreXml;
 
 					// genera el nombre del archivo ZIP

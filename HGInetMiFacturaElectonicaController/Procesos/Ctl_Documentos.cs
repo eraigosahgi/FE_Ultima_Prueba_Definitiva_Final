@@ -204,7 +204,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 Ctl_Documento num_doc = new Ctl_Documento();
 
                 //valida si el Documento ya existe en Base de Datos
-                TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.Factura.GetHashCode());
+                TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.Factura.GetHashCode(), item.Prefijo);
 
                 if (numero_documento != null && item.Prefijo == numero_documento.StrPrefijo)
                     throw new ApplicationException(string.Format("El documento {0} ya existe para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
@@ -218,10 +218,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     LogExcepcion.Guardar(exTMP);
 
                     // filtra la resolución del documento
-                    resolucion = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) 
+                    resolucion = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion)
                                                                             && _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
                                                                             && _resolucion_doc.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
-                    
+
                 }
                 catch (Exception excepcion)
                 {
@@ -538,49 +538,44 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 try
                 {
-                    /*if (string.IsNullOrEmpty(item.NumeroResolucion))
-						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));*/
 
                     Ctl_Documento num_doc = new Ctl_Documento();
 
                     //valida si el Documento ya existe en Base de Datos
-                    TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.NotaCredito.GetHashCode());
+                    TblDocumentos numero_documento = num_doc.Obtener(item.DatosObligado.Identificacion, item.Documento, TipoDocumento.NotaCredito.GetHashCode(), item.Prefijo);
 
-                    if (numero_documento != null && item.Prefijo == numero_documento.StrPrefijo)
-                        throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
+                    if (numero_documento != null)
+                        throw new ApplicationException(string.Format("El documento '{0}' con prefijo '{1}' ya xiste para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
 
-                    //Valida que no sea un documento de prueba
-                    if (!item.NumeroResolucion.Equals(resolucion_pruebas))
+                    // filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
+                    TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
+                                                                                    _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
+                                                                                    && _resolucion_doc.IntTipoDoc == TipoDocumento.NotaCredito.GetHashCode()).FirstOrDefault();
+                    //si no existe la resolucion la crea
+                    if (resolucion_doc == null)
                     {
-
-                        // filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
-                        TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
-                                                                                        _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
-                                                                                        && _resolucion_doc.IntTipoDoc == TipoDocumento.NotaCredito.GetHashCode()).FirstOrDefault();
-                        //si no existe la resolucion la crea
-                        if (resolucion_doc == null)
+                        //Se crea Resolucion
+                        TblEmpresasResoluciones tbl_resolucion = new TblEmpresasResoluciones();
+                        if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
                         {
-                            //Se crea Resolucion
-                            TblEmpresasResoluciones tbl_resolucion = new TblEmpresasResoluciones();
-                            tbl_resolucion = Ctl_EmpresaResolucion.Convertir(documentos.FirstOrDefault().DatosObligado.Identificacion, documentos.FirstOrDefault().Prefijo, TipoDocumento.NotaCredito.GetHashCode());
-
-                            // crea el registro en base de datos
-                            tbl_resolucion = _resolucion.Crear(tbl_resolucion);
-                            lista_resolucion.Add(tbl_resolucion);
-                            resolucion = tbl_resolucion;
-                            item.NumeroResolucion = resolucion.StrNumResolucion;
+                            tbl_resolucion = Ctl_EmpresaResolucion.Convertir(facturador_electronico.StrIdentificacion, documentos.FirstOrDefault().Prefijo, TipoDocumento.NotaCredito.GetHashCode());
                         }
                         else
                         {
-                            resolucion = resolucion_doc;
-                            item.NumeroResolucion = resolucion.StrNumResolucion;
+                            tbl_resolucion = Ctl_EmpresaResolucion.Convertir(documentos.FirstOrDefault().DatosObligado.Identificacion, documentos.FirstOrDefault().Prefijo, TipoDocumento.NotaCredito.GetHashCode());
                         }
+                        // crea el registro en base de datos
+                        tbl_resolucion = _resolucion.Crear(tbl_resolucion);
+                        lista_resolucion.Add(tbl_resolucion);
+                        resolucion = tbl_resolucion;
+                        item.NumeroResolucion = resolucion.StrNumResolucion;
                     }
                     else
                     {
-                        resolucion = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
-
+                        resolucion = resolucion_doc;
+                        item.NumeroResolucion = resolucion.StrNumResolucion;
                     }
+
                     // realiza el proceso de envío a la DIAN del documento
                     item_respuesta = Procesar(id_peticion, item, TipoDocumento.NotaCredito, resolucion, facturador_electronico);
 
@@ -706,48 +701,38 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 try
                 {
 
-                    /*if (string.IsNullOrEmpty(item.NumeroResolucion))
-						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
-						*/
+
                     Ctl_Documento num_doc = new Ctl_Documento();
 
                     //valida si el Documento ya existe en Base de Datos
-                    TblDocumentos numero_documento = num_doc.Obtener(item.NumeroResolucion, item.Documento, TipoDocumento.NotaDebito.GetHashCode());
+                     TblDocumentos numero_documento = num_doc.Obtener(item.DatosObligado.Identificacion, item.Documento, TipoDocumento.NotaDebito.GetHashCode(), item.Prefijo);
 
-                    if (numero_documento != null && item.Prefijo == numero_documento.StrPrefijo)
-                        throw new ApplicationException(string.Format("El documento {0} ya xiste para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
-                    //Valida que no sea un documento de prueba
-                    if (!item.NumeroResolucion.Equals(resolucion_pruebas))
+                    if (numero_documento != null)
+                        throw new ApplicationException(string.Format("El documento '{0}' con prefijo '{1}' ya xiste para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
+
+                    // filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
+                    TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
+                                                                                    _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
+                                                                                    && _resolucion_doc.IntTipoDoc == TipoDocumento.NotaDebito.GetHashCode()).FirstOrDefault();
+                    //si no existe la resolucion la crea
+                    if (resolucion_doc == null)
                     {
+                        //Se crea Resolucion
+                        TblEmpresasResoluciones tbl_resolucion = new TblEmpresasResoluciones();
+                        tbl_resolucion = Ctl_EmpresaResolucion.Convertir(documentos.FirstOrDefault().DatosObligado.Identificacion, documentos.FirstOrDefault().Prefijo, TipoDocumento.NotaDebito.GetHashCode());
 
-                        // filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
-                        TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
-                                                                                        _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
-                                                                                        && _resolucion_doc.IntTipoDoc == TipoDocumento.NotaDebito.GetHashCode()).FirstOrDefault();
-                        //si no existe la resolucion la crea
-                        if (resolucion_doc == null)
-                        {
-                            //Se crea Resolucion
-                            TblEmpresasResoluciones tbl_resolucion = new TblEmpresasResoluciones();
-                            tbl_resolucion = Ctl_EmpresaResolucion.Convertir(documentos.FirstOrDefault().DatosObligado.Identificacion, documentos.FirstOrDefault().Prefijo, TipoDocumento.NotaDebito.GetHashCode());
-
-                            // crea el registro en base de datos
-                            tbl_resolucion = _resolucion.Crear(tbl_resolucion);
-                            lista_resolucion.Add(tbl_resolucion);
-                            resolucion = tbl_resolucion;
-                            item.NumeroResolucion = resolucion.StrNumResolucion;
-                        }
-                        else
-                        {
-                            resolucion = resolucion_doc;
-                            item.NumeroResolucion = resolucion.StrNumResolucion;
-                        }
+                        // crea el registro en base de datos
+                        tbl_resolucion = _resolucion.Crear(tbl_resolucion);
+                        lista_resolucion.Add(tbl_resolucion);
+                        resolucion = tbl_resolucion;
+                        item.NumeroResolucion = resolucion.StrNumResolucion;
                     }
                     else
                     {
-                        resolucion = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
-
+                        resolucion = resolucion_doc;
+                        item.NumeroResolucion = resolucion.StrNumResolucion;
                     }
+
                     // realiza el proceso de envío a la DIAN del documento
                     item_respuesta = Procesar(id_peticion, item, TipoDocumento.NotaDebito, resolucion, facturador_electronico);
 
@@ -840,7 +825,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             //Valida que la fecha este en los terminos
             if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
                 throw new ApplicationException(string.Format("La fecha de elaboración '{0}' no está dentro los términos.", documento.Fecha));
-            
+
             if (documento.FechaVence.Date < documento.Fecha.Date)
                 throw new ApplicationException(string.Format("La fecha de vencimiento '{0}' debe ser mayor o igual a la fecha de elaboración del documento '{1}'", documento.FechaVence, documento.Fecha));
 
@@ -1387,7 +1372,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     Ctl_Documento num_doc = new Ctl_Documento();
 
                     //valida si el Documento ya existe en Base de Datos
-                    TblDocumentos numero_documento = num_doc.Obtener(objeto.NumeroResolucion, objeto.Documento, objeto.TipoDocumento);
+                    TblDocumentos numero_documento = num_doc.Obtener(objeto.NumeroResolucion, objeto.Documento, objeto.TipoDocumento, objeto.Prefijo);
 
                     if (numero_documento != null)
                         throw new ApplicationException(string.Format("El documento número '{0}' con prefijo '{1}' ya xiste para el Facturador Electrónico {2}", objeto.Documento, objeto.Prefijo, facturador_electronico.StrIdentificacion));

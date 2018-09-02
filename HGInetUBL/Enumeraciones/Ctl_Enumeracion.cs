@@ -52,5 +52,40 @@ namespace HGInetUBL
 			}
 		}
 
-	}
+        /// <summary>
+        /// Obtiene el Medio de Pago del documento
+        /// http://www.unece.org/trade/untdid/d16a/tred/tred4461.htm
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns>Medio de pago</returns>
+        public static Meanscode ObtenerMedioPago(int codigo)
+        {
+            try
+            {
+                Meanscode enumerable = Enumeracion.ParseToEnum<Meanscode>(codigo);
+
+                return enumerable;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(string.Format("Error al obtener la enumeración {0} con código {1}. Detalle: {2}", "Meanscode", codigo, excepcion.Message));
+            }
+        }
+
+
+        public static termstype ObtenerTerminoPago(int codigo)
+        {
+            try
+            {
+                termstype enumerable = Enumeracion.ParseToEnum<termstype>(codigo);
+
+                return enumerable;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(string.Format("Error al obtener la enumeración {0} con código {1}. Detalle: {2}", "Meanscode", codigo, excepcion.Message));
+            }
+        }
+
+    }
 }

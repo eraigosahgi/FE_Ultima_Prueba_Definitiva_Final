@@ -62,16 +62,32 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
         #region Obtener
 
-        public TblDocumentos Obtener(string numero_resolucion, long numero_documeto, int tipo_doc)
+        public TblDocumentos Obtener(string numero_resolucion, long numero_documeto, int tipo_doc, string prefijo)
         {
             try
             {
+                TblDocumentos documento = new TblDocumentos();
 
-                TblDocumentos documento = (from documentos in context.TblDocumentos
-                                           where (documentos.IntNumero == numero_documeto)
-                                           && (documentos.TblEmpresasResoluciones.StrNumResolucion.Equals(numero_resolucion)
-                                           && (documentos.IntDocTipo == tipo_doc))
-                                           select documentos).FirstOrDefault();
+                //si es factura busca por numero resolucion, de lo contrario la resolucion se convierte en la identifacion del obligado 
+                if (tipo_doc == TipoDocumento.Factura.GetHashCode())
+                {
+                    documento = (from documentos in context.TblDocumentos
+                                               where (documentos.IntNumero == numero_documeto)
+                                               && (documentos.TblEmpresasResoluciones.StrNumResolucion.Equals(numero_resolucion)
+                                               && (documentos.IntDocTipo == tipo_doc)
+                                               && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
+                                               select documentos).FirstOrDefault();
+                }
+                else
+                {
+                    documento = (from documentos in context.TblDocumentos
+                                 where (documentos.IntNumero == numero_documeto)
+                                 && (documentos.TblEmpresasResoluciones.StrEmpresa.Equals(numero_resolucion)
+                                 && (documentos.IntDocTipo == tipo_doc)
+                                 && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
+                                 select documentos).FirstOrDefault();
+                }
+
 
                 return documento;
 
@@ -791,7 +807,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
             TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(objetoBd.IntDocTipo);
 
             // Nombre del archivo Xml 
-            string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(objetoBd.IntNumero.ToString(), objetoBd.StrEmpresaFacturador, doc_tipo));
+            string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(objetoBd.IntNumero.ToString(), objetoBd.StrEmpresaFacturador, doc_tipo,objetoBd.StrPrefijo));
 
             PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 

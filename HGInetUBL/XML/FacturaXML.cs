@@ -41,7 +41,7 @@ namespace HGInetUBL
                     throw new Exception("La documento es inválido.");
 
                 //Obtiene el nombre del archivo XML
-                string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion.ToString(), tipo);
+                string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion.ToString(), tipo, documento.Prefijo);
 
                 if (string.IsNullOrWhiteSpace(nombre_archivo_xml))
                     throw new ApplicationException("El nombre del archivo es inválido.");
@@ -104,8 +104,39 @@ namespace HGInetUBL
                     PaymentMeansType[] PaymentMeans = new PaymentMeansType[1];
                     PaymentMeansType PaymentMean = new PaymentMeansType();
                     PaymentMeansCodeType1 MeansCode = new PaymentMeansCodeType1();
+                    //MeansCode.Value = documento.FormaPago;
                     MeansCode.Value = "24";
+                    //MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(Convert.ToInt16(documento.FormaPago)).ToString();
                     PaymentMean.PaymentMeansCode = MeansCode;
+
+                    //Terminos de pago de la Factura
+                    /*
+                    PaymentTermsType[] PaymentTermsTypes = new PaymentTermsType[1];
+                    PaymentTermsType TermsType = new PaymentTermsType();
+                    TermsType.ID = new IDType();
+                    TermsType.ID.Value = documento.Documento.ToString();
+                    NoteType[] Note_Terms = new NoteType[1];
+                    NoteType Note_term = new NoteType();
+                    Note_term.Value = string.Format("Pago a {0} dias", documento.Plazo);
+                    Note_Terms[0] = Note_term;
+                    TermsType.Note = Note_Terms;
+                    TermsType.PaymentMeansID = new PaymentMeansIDType();
+                    TermsType.PaymentMeansID.Value = documento.TerminoPago;
+                    TermsType.PaymentMeansID.schemeName = Ctl_Enumeracion.ObtenerTerminoPago(Convert.ToInt16(documento.TerminoPago)).ToString();
+                    TermsType.Amount = new AmountType1();
+                    TermsType.Amount.Value = documento.Total;
+                    CurrencyCodeContentType moneda_documento = Ctl_Enumeracion.ObtenerMoneda(documento.Moneda);
+                    TermsType.Amount.currencyID = moneda_documento;
+                    TermsType.SettlementPeriod = new PeriodType();
+                    TermsType.SettlementPeriod.StartDate = new StartDateType();
+                    TermsType.SettlementPeriod.StartDate.Value = Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet));
+                    TermsType.SettlementPeriod.EndDate = new EndDateType();
+                    TermsType.SettlementPeriod.EndDate.Value = Convert.ToDateTime(documento.FechaVence.ToString(Fecha.formato_fecha_hginet));
+                    TermsType.SettlementPeriod.DurationMeasure = new DurationMeasureType();
+                    TermsType.SettlementPeriod.DurationMeasure.Value = documento.Plazo;
+                    PaymentTermsTypes[0] = TermsType;
+                    factura.PaymentTerms = PaymentTermsTypes;*/
+
                     #endregion
 
                     #region factura.DueDate - Fecha vencimiento de la factura
@@ -805,6 +836,8 @@ namespace HGInetUBL
                     AllowanceChargeType AllowanceCharge = new AllowanceChargeType();
                     AllowanceCharge.ChargeIndicator = new ChargeIndicatorType();
                     AllowanceCharge.ChargeIndicator.Value = false;
+                    AllowanceCharge.AllowanceChargeReasonCode = new AllowanceChargeReasonCodeType1();
+                    AllowanceCharge.AllowanceChargeReasonCode.Value = "19";
                     AllowanceCharge.AllowanceChargeReason = new AllowanceChargeReasonType();
                     AllowanceCharge.AllowanceChargeReason.Value = "Descuento comercial";
                     AllowanceCharge.MultiplierFactorNumeric = new MultiplierFactorNumericType();
@@ -1061,11 +1094,11 @@ namespace HGInetUBL
                     Item.OriginAddress = Address;
                     #endregion
 
-                    
+
                     ItemPropertyType[] Property = new ItemPropertyType[1];
                     ItemPropertyType Oculto = new ItemPropertyType();
                     Oculto.Name = new NameType1();
-                    Oculto.Name.Value="Item Oculto para Impresion";
+                    Oculto.Name.Value = "Item Oculto para Impresion";
                     Oculto.Value = new ValueType();
                     Oculto.Value.Value = DocDet.OcultarItem.ToString();
                     Property[0] = Oculto;
@@ -1311,11 +1344,14 @@ namespace HGInetUBL
                 PaymentMean.ID = ID;
 
                 PaymentMeansCodeType1 MeansCode = new PaymentMeansCodeType1();
+                //MeansCode.Value = medio_pago;
                 MeansCode.Value = "24";
+                //MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(Convert.ToInt16(medio_pago)).ToString();
                 PaymentMean.PaymentMeansCode = MeansCode;
 
                 InstructionNoteType[] Instructions = new InstructionNoteType[1];
                 InstructionNoteType Instruction = new InstructionNoteType();
+                //Instruction.Value = string.Format("Cuota {0} de {1}",item.Codigo, cuota.Count());
                 Instruction.Value = item.Valor.ToString();
                 Instructions[0] = Instruction;
                 PaymentMean.InstructionNote = Instructions;
@@ -1324,8 +1360,15 @@ namespace HGInetUBL
                 DueDate.Value = Convert.ToDateTime(item.FechaVence.ToString(Fecha.formato_fecha_hginet));
                 PaymentMean.PaymentDueDate = DueDate;
                 PaymentMeans[contador] = PaymentMean;
-                contador++;
 
+                //Terminos de pago
+               /* PaymentTermsType[] PaymentTermsTypes = new PaymentTermsType[1];
+                PaymentTermsType TermsType = new PaymentTermsType();
+                TermsType.Amount = new AmountType1();
+                TermsType.Amount.Value = item.Valor;
+                PaymentTermsTypes[contador] = TermsType;*/
+
+                contador++;
 
             }
 

@@ -1,4 +1,10 @@
-using System;using System.Collections.Generic;using System.Linq;using System.Text;using System.Threading.Tasks;namespace HGInetUBL
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+namespace HGInetUBL
 {
 	/// <comentarios/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
@@ -87,4 +93,67 @@ using System;using System.Collections.Generic;using System.Linq;using System.Tex
 			}
 		}
 	}
+
+    
+    /// <summary>
+    /// Enumerable de las Formas de pagos
+    /// </summary>
+    public enum Meanscode
+    {
+        /// <comentarios/>
+		[System.Xml.Serialization.XmlEnumAttribute("10 - Efectivo")]
+        Efectivo = 10,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("20 - Cheque")]
+        Cheque = 20,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("24 - Factura electrónica esperando que el adquirente la ACEPTE")]
+        Factura_electronica = 24,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("41 - Transferencia bancaria")]
+        Transferencia = 41,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("42 - Consignación bancaria")]
+        Consignación = 42,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("54 - Tarjeta crédito")]
+        Tarjeta_credito = 54,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("55 - Tarjeta débito")]
+        Tarjeta_debito = 55,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("68 - Servicio de pago en línea")]
+        Pago_linea = 68,
+
+    }
+
+    /// <summary>
+    /// Enumerable Terminos de Pago
+    /// </summary>
+    public enum termstype
+    {
+
+        /// <comentarios/>
+		[System.Xml.Serialization.XmlEnumAttribute("2 - Fin de mes")]
+        Fin_mes = 2,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("3 - Fecha fija")]
+        Fecha_fija = 3,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("14 - Pago contra entrega")]
+        Contra_entrega = 14,
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlEnumAttribute("78 - Factoring")]
+        Factoring = 78,
+    }
 }
