@@ -299,30 +299,24 @@ namespace HGInetUBL
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml("<firma></firma>");
 
-                UBLExtensionType[] UBLExtensions = new UBLExtensionType[3];
+                List<UBLExtensionType> UBLExtensions = new List<UBLExtensionType>();
 
-                #region Extension de la Dian
+                // Extension de la Dian
                 UBLExtensionType UBLExtensionDian = new UBLExtensionType();
                 UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo);
-                UBLExtensions[0] = UBLExtensionDian;
-                #endregion
+                UBLExtensions.Add(UBLExtensionDian);
 
-                #region Extension de la firma
+                // Extension de la firma
                 UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
                 UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
-                UBLExtensions[1] = UBLExtensionFirma;
-                #endregion
-
-
-                #region Extension de HGI
+                UBLExtensions.Add(UBLExtensionFirma);
+                
+                // Extension de HGI
                 UBLExtensionType UBLExtensionHgi = new UBLExtensionType();
                 UBLExtensionHgi.ExtensionContent = ExtensionHgiSas.Obtener(id_documento, documento);
-                UBLExtensions[2] = UBLExtensionHgi;
-                #endregion
-
-
-
-                factura.UBLExtensions = UBLExtensions;
+                UBLExtensions.Add(UBLExtensionHgi);
+               
+                factura.UBLExtensions = UBLExtensions.ToArray();
                 #endregion
 
                 // convierte los datos del objeto en texto XML 

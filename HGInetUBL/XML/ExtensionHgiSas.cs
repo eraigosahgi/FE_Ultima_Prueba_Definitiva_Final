@@ -21,7 +21,7 @@ namespace HGInetUBL
 		/// Obtiene la extension de HGI SAS
 		/// </summary>
 		/// <returns> XmlElement que contiene la extension HGI SAS</returns>
-		public static XmlElement Obtener(Guid id_documento, Factura documento)
+		public static XmlElement Obtener(Guid id_documento, dynamic documento)
         {
             HGInet hgiExtensions = new HGInet()
             {

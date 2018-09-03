@@ -83,11 +83,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <summary>
         /// Genera la información del documento en formato UBL
         /// </summary>
-        /// <param name="id">id único de identificación de la plataforma</param>
+        /// <param name="id_seguridad">id único de identificación de la plataforma</param>
         /// <param name="documento">datos del documento</param>
         /// <param name="pruebas">indica si el documento es de pruebas (true)</param>
         /// <returns>datos del documento</returns>
-        public static FacturaE_Documento Generar(Guid id, NotaCredito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
+        public static FacturaE_Documento Generar(Guid id_seguridad, NotaCredito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
         {
             // resolución del documento
             HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
@@ -123,7 +123,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
             // convierte el documento 
-            FacturaE_Documento resultado = NotaCreditoXML.CrearDocumento(documento, extension_documento, tipo_doc);
+            FacturaE_Documento resultado = NotaCreditoXML.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc);
             resultado.DocumentoTipo = tipo_doc;
             resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
@@ -133,14 +133,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             return resultado;
         }
 
-		/// <summary>
-		/// Genera la información del documento en formato UBL
-		/// </summary>
-		/// <param name="id">id único de identificación de la plataforma</param>
-		/// <param name="documento">datos del documento</param>
-		/// <param name="pruebas">indica si el documento es de pruebas (true)</param>
-		/// <returns>datos del documento</returns>
-		public static FacturaE_Documento Generar(Guid id, NotaDebito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
+        /// <summary>
+        /// Genera la información del documento en formato UBL
+        /// </summary>
+        /// <param name="id_documento">id único de identificación de la plataforma</param>
+        /// <param name="documento">datos del documento</param>
+        /// <param name="pruebas">indica si el documento es de pruebas (true)</param>
+        /// <returns>datos del documento</returns>
+        public static FacturaE_Documento Generar(Guid id_documento, NotaDebito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
         {
 			// resolución del documento
 			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
@@ -176,7 +176,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 			// convierte el documento 
-			FacturaE_Documento resultado = NotaDebitoXML.CrearDocumento(documento, extension_documento, tipo_doc);
+			FacturaE_Documento resultado = NotaDebitoXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
 			resultado.DocumentoTipo = tipo_doc;
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 

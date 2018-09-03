@@ -17,14 +17,15 @@ namespace HGInetUBL
 	public partial class NotaDebitoXML
 	{
 
-		/// <summary>
-		/// Crea el XML con la informacion de la nota debito en formato UBL
-		/// </summary>
-		/// <param name="documento">Objeto de tipo NotaDebito que contiene la informacion de la nota debito</param>
-		/// <param name="resolucion">Objeto de tipo Extension DIAN </param>
-		/// <param name="tipo">Indica el tipo de documento</param>
-		/// <returns>Ruta donde se guardo el archivo XML</returns>  
-		public static FacturaE_Documento CrearDocumento(NotaDebito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo)
+        /// <summary>
+        /// Crea el XML con la informacion de la nota debito en formato UBL
+        /// </summary>
+        /// <param name="id_documento">Id de seguridad del documento generado por la plataforma</param>
+        /// <param name="documento">Objeto de tipo NotaDebito que contiene la informacion de la nota debito</param>
+        /// <param name="resolucion">Objeto de tipo Extension DIAN </param>
+        /// <param name="tipo">Indica el tipo de documento</param>
+        /// <returns>Ruta donde se guardo el archivo XML</returns>  
+        public static FacturaE_Documento CrearDocumento(Guid id_documento, NotaDebito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo)
 		{
 			try
 			{
@@ -42,21 +43,24 @@ namespace HGInetUBL
 				XmlDocument doc = new XmlDocument();
 				doc.LoadXml("<firma></firma>");
 
-				UBLExtensionType[] UBLExtensions = new UBLExtensionType[2];
+				List<UBLExtensionType> UBLExtensions = new List<UBLExtensionType>();
 
-				#region Extension de la Dian
+				// Extension de la Dian
 				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
 				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo);
-				UBLExtensions[0] = UBLExtensionDian;
-				#endregion
-
-				#region Extension de la firma
+				UBLExtensions.Add(UBLExtensionDian);
+				
+				//Extension de la firma
 				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
 				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
-				UBLExtensions[1] = UBLExtensionFirma;
-				#endregion
-
-				nota_debito.UBLExtensions = UBLExtensions;
+                UBLExtensions.Add(UBLExtensionFirma);
+                                
+                // Extension de HGI
+                UBLExtensionType UBLExtensionHgi = new UBLExtensionType();
+                UBLExtensionHgi.ExtensionContent = ExtensionHgiSas.Obtener(id_documento, documento);
+                UBLExtensions.Add(UBLExtensionHgi);
+                
+                nota_debito.UBLExtensions = UBLExtensions.ToArray();
 
 				#endregion
 
