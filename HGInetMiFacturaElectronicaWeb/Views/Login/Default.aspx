@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
      <meta http-equiv="Pragma" content="no-cache"/>
 
-    <title>Mi Factura en Línea</title>
+    <title>HGInet Factura Electrónica</title>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- Global stylesheets -->

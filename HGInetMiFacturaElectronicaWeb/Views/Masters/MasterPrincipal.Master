@@ -190,7 +190,7 @@
                                         <b>
                                             <asp:Label runat="server" ID="Label_version_actualizacion"></asp:Label></b>
                                         <br />
-                                        Nueva Versión Mi Factura en Línea
+                                        Nueva Versión HGInet Factura Electrónica
 									<div class="media-annotation">HGI SAS</div>
                                     </div>
                                 </li>
@@ -329,7 +329,7 @@
                                         <div class="modal-header bg-primary" style="background-color: #0C4995; color: white">
                                             <button style="color: white" type="button" class="close" data-dismiss="modal">&times;</button>
                                             <%--<h5 class="modal-title">HGInet Smart</h5>--%>
-                                            <h4 class="modal-title" style="margin-top: 2%;">Mi Factura en Línea</h4>
+                                            <h4 class="modal-title" style="margin-top: 2%;">HGInet Factura Electrónica</h4>
                                         </div>
 
                                         <div class="modal-body">
@@ -421,7 +421,7 @@
 
                         <!-- Pie de Página -->
                         <div class="footer text-muted">
-                            Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S - Mi Factura en Línea</a>
+                            Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S - HGInet Factura Electrónica</a>
                         </div>
                         <!-- /Pie de Página -->
 
