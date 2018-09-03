@@ -136,7 +136,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-                if (!plataforma_datos.RutaPublica.Contains("localhost"))
+                if (plataforma_datos.EnvioSms)
                 {
                     int docs_proc = respuesta.Where(_x => _x.IdProceso > ProcesoEstado.Validacion.GetHashCode()).Count();
 

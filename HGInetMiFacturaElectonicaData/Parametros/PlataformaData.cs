@@ -45,7 +45,15 @@ namespace HGInetMiFacturaElectonicaData
 			set { this["IdentificacionHGInetMail"] = value; }
 		}
 
-		public PlataformaData() { }
+        [ConfigurationProperty("EnvioSms", DefaultValue = (bool)false, IsRequired = true)]
+
+        public bool EnvioSms
+        {
+            get { return (bool)this["EnvioSms"]; }
+            set { this["EnvioSms"] = value; }
+        }
+
+        public PlataformaData() { }
 
 	}
 }

@@ -241,7 +241,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 573163494083,573136469239,573104935257.
+        ///   Busca una cadena traducida similar a 573163494083,573136469239,573104935257,573053954360.
         /// </summary>
         public static string SmsCelulares {
             get {
