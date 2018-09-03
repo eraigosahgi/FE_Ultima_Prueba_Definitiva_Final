@@ -741,7 +741,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // detail
             // 
-            this.detail.Height = Telerik.Reporting.Drawing.Unit.Cm(8.7113628387451172D);
+            this.detail.Height = Telerik.Reporting.Drawing.Unit.Cm(8.0114574432373047D);
             this.detail.Items.AddRange(new Telerik.Reporting.ReportItemBase[] {
             this.panel9});
             this.detail.Name = "detail";
@@ -752,7 +752,7 @@ namespace HGInetFacturaEReports.Facturas
             this.subReportDetalles});
             this.panel9.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0D), Telerik.Reporting.Drawing.Unit.Cm(0D));
             this.panel9.Name = "panel9";
-            this.panel9.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(20.290000915527344D), Telerik.Reporting.Drawing.Unit.Cm(8.7113628387451172D));
+            this.panel9.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(20.290000915527344D), Telerik.Reporting.Drawing.Unit.Cm(8.01125717163086D));
             this.panel9.Style.BorderStyle.Left = Telerik.Reporting.Drawing.BorderType.Solid;
             this.panel9.Style.BorderStyle.Right = Telerik.Reporting.Drawing.BorderType.Solid;
             // 
