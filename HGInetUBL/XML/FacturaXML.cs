@@ -173,9 +173,6 @@ namespace HGInetUBL
                 // agrega la resolución en la 1ra posición
                 notas_documento.Add(dian_resolucion);
 
-                // agrega los campos adicionales en el XML
-                notas_documento = FormatoNotas.CamposPredeterminados(documento.DocumentoFormato);
-
                 // agrega las observaciones del documento en la 3ra posición
                 notas_documento.Add(documento.Nota);
 

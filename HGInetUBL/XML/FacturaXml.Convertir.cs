@@ -96,42 +96,45 @@ namespace HGInetUBL
             factura_obj.Notas = new List<string>();
 
             //Valida si trae mas notas para validar los campos
-            if (factura_ubl.Note.Length > 1)
+            foreach (XmlNode item in factura_ubl.UBLExtensions[2].ExtensionContent.ChildNodes)
             {
-                Formato documento_formato = new Formato();
-                List<FormatoCampo> lista_campos = new List<FormatoCampo>();
-
-                try
+                if (item.LocalName.Equals("PdfFormat"))
                 {
-                    //Deserializa la posición 1 y las convierte en FormatoCampo
-                    dynamic jsonObj = JsonConvert.DeserializeObject(factura_ubl.Note[1].Value);
+                    Formato documento_formato = new Formato();
+                    List<FormatoCampo> lista_campos = new List<FormatoCampo>();
 
-                    if (jsonObj != null)
+                    try
                     {
-                        documento_formato.Codigo = jsonObj.Codigo;
+                        //Deserializa la posición 1 y las convierte en FormatoCampo
+                        dynamic jsonObj = JsonConvert.DeserializeObject(item.InnerText);
 
-                        if (jsonObj.CamposPredeterminados != null)
+                        if (jsonObj != null)
                         {
-                            foreach (var obj in jsonObj.CamposPredeterminados)
-                            {
-                                FormatoCampo campo = new FormatoCampo();
-                                campo.Descripcion = obj.Descripcion;
-                                campo.Ubicacion = obj.Ubicacion;
-                                campo.Valor = obj.Valor;
+                            documento_formato.Codigo = jsonObj.Codigo;
 
-                                lista_campos.Add(campo);
+                            if (jsonObj.CamposPredeterminados != null)
+                            {
+                                foreach (var obj in jsonObj.CamposPredeterminados)
+                                {
+                                    FormatoCampo campo = new FormatoCampo();
+                                    campo.Descripcion = obj.Descripcion;
+                                    campo.Ubicacion = obj.Ubicacion;
+                                    campo.Valor = obj.Valor;
+
+                                    lista_campos.Add(campo);
+                                }
                             }
                         }
                     }
-                }
-                catch (Exception)
-                {
-                    factura_obj.Notas.Add(factura_ubl.Note[1].Value);
+                    catch (Exception)
+                    {
+                        factura_obj.Notas.Add(item.InnerText);
+                    }
+
+                    documento_formato.CamposPredeterminados = lista_campos;
+                    factura_obj.DocumentoFormato = documento_formato;
                 }
 
-                documento_formato.CamposPredeterminados = lista_campos;
-
-                factura_obj.DocumentoFormato = documento_formato;
             }
 
             #region Datos del Adquiriente
