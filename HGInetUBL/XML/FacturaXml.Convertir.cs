@@ -58,9 +58,9 @@ namespace HGInetUBL
             if (!string.IsNullOrEmpty(factura_obj.Prefijo))
             {
                 string documento = factura_ubl.ID.Value;
-                if (documento.Substring(0, 4).Equals(factura_obj.Prefijo))
+                if (documento.Substring(0, factura_obj.Prefijo.Count()).Equals(factura_obj.Prefijo))
                 {
-                    factura_obj.Documento = Convert.ToInt64(documento.Substring(4));
+                    factura_obj.Documento = Convert.ToInt64(documento.Substring(factura_obj.Prefijo.Count()));
                 }
             }
             else
