@@ -149,18 +149,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                         int docs_ok = respuesta.Where(_x => _x.IdProceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode()).Count();
 
-                        int docs_pd = documentos.Count - docs_ok;
+                        int docs_error = respuesta.Where(_x => (!(_x.Error.Codigo.Equals(LibreriaGlobalHGInet.Error.CodigoError.OK)) && (_x.Error.Mensaje != ""))).Count();
 
-                        string mensaje_sms = hora + " " + "HGInetMiFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
-                            + " " + ambiente + " env= " + documentos.Count + " proc= " + docs_proc + " ok= " + docs_ok + " pd= " + docs_pd;
+                        int docs_pd = documentos.Count - docs_ok - docs_error;
 
-                        if (facturador_electronico.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
-                        {
+                        string mensaje_sms = hora + " " + "HGInetFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
+                            + " " + ambiente + " env= " + documentos.Count + " proc= " + docs_proc + " ok= " + docs_ok + " pd= " + docs_pd + " error= " + docs_error;
+
+                        //if (facturador_electronico.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
+                        //{
 
                             List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
 
                             Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
-                        }
+                        /*}
                         else
                         {
                             if (docs_pd > 0)
@@ -169,7 +171,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                                 Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
                             }
-                        }
+                        }*/
                     }
                 }
 

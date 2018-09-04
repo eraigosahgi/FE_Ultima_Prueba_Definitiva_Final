@@ -34,14 +34,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     email.Bienvenida(adquiriente, adquiriente_usuario);
                 }
 
-                if (obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
-                {   //envío de los documentos al Obligado
-                    email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
-                }
-                else
-                {   //envío de los documentos al Adquiriente
-                    email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono);
-                }
+                //Envia correo al adquiriente que tiene el objeto
+                email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
 
                 //Actualiza la respuesta
                 respuesta.DescripcionProceso = "Envío correo adquiriente.";
