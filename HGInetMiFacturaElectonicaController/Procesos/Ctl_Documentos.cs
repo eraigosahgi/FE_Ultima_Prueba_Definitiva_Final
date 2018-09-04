@@ -138,41 +138,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 if (plataforma_datos.EnvioSms)
                 {
-                    int docs_proc = respuesta.Where(_x => _x.IdProceso > ProcesoEstado.Validacion.GetHashCode()).Count();
+                    Ctl_Sms.EnviarSms(respuesta, id_peticion, facturador_electronico, documentos);
 
-                    if (docs_proc > 0)
-                    {
-
-                        string hora = Fecha.GetFecha().ToString(Fecha.formato_hora);
-
-                        string ambiente = Enumeracion.GetEnumObjectByValue<Habilitacion>(Convert.ToInt32(facturador_electronico.IntHabilitacion)).ToString();
-
-                        int docs_ok = respuesta.Where(_x => _x.IdProceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode()).Count();
-
-                        int docs_error = respuesta.Where(_x => (!(_x.Error.Codigo.Equals(LibreriaGlobalHGInet.Error.CodigoError.OK)) && (_x.Error.Mensaje != ""))).Count();
-
-                        int docs_pd = documentos.Count - docs_ok - docs_error;
-
-                        string mensaje_sms = hora + " " + "HGInetFacturaE " + facturador_electronico.StrIdentificacion + " " + facturador_electronico.StrRazonSocial
-                            + " " + ambiente + " env= " + documentos.Count + " proc= " + docs_proc + " ok= " + docs_ok + " pd= " + docs_pd + " error= " + docs_error;
-
-                        //if (facturador_electronico.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
-                        //{
-
-                            List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
-
-                            Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
-                        /*}
-                        else
-                        {
-                            if (docs_pd > 0)
-                            {
-                                List<string> celulares = Constantes.SmsCelulares.Split(',').ToList();
-
-                                Ctl_Sms.Enviar(mensaje_sms, id_peticion.ToString(), celulares);
-                            }
-                        }*/
-                    }
                 }
 
                 return respuesta;
