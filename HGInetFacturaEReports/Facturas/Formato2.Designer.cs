@@ -1342,7 +1342,9 @@ namespace HGInetFacturaEReports.Facturas
             this.campo29_d,
             this.htmlTextBox89,
             this.campo30_v,
-            this.campo29_v});
+            this.campo29_v,
+            this.TextBoxCufe,
+            this.htmlTextBox99});
             this.panel4.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(-5.0465263967680585E-08D), Telerik.Reporting.Drawing.Unit.Cm(9.9315635452512652E-05D));
             this.panel4.Name = "panel4";
             this.panel4.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(11.49849796295166D), Telerik.Reporting.Drawing.Unit.Cm(4.5019040107727051D));
@@ -1670,7 +1672,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // reportFooterSection1
             // 
-            this.reportFooterSection1.Height = Telerik.Reporting.Drawing.Unit.Cm(10.90000057220459D);
+            this.reportFooterSection1.Height = Telerik.Reporting.Drawing.Unit.Cm(10.499999046325684D);
             this.reportFooterSection1.Items.AddRange(new Telerik.Reporting.ReportItemBase[] {
             this.panel4,
             this.panel5,
@@ -1682,8 +1684,6 @@ namespace HGInetFacturaEReports.Facturas
             this.campo35_v,
             this.campo36_v,
             this.CodigoQR,
-            this.TextBoxCufe,
-            this.htmlTextBox99,
             this.htmlTextBox91});
             this.reportFooterSection1.Name = "reportFooterSection1";
             // 
@@ -1772,7 +1772,7 @@ namespace HGInetFacturaEReports.Facturas
             this.campo36_v.CanGrow = false;
             this.campo36_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0.00010119967919308692D), Telerik.Reporting.Drawing.Unit.Cm(7.6395916938781738D));
             this.campo36_v.Name = "campo36_v";
-            this.campo36_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(13.499999046325684D), Telerik.Reporting.Drawing.Unit.Cm(3.1793675422668457D));
+            this.campo36_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(13.499999046325684D), Telerik.Reporting.Drawing.Unit.Cm(2.6604070663452148D));
             this.campo36_v.Style.Font.Bold = false;
             this.campo36_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(6D);
             this.campo36_v.Style.TextAlign = Telerik.Reporting.Drawing.HorizontalAlign.Left;
@@ -1793,7 +1793,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // TextBoxCufe
             // 
-            this.TextBoxCufe.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(14.546083450317383D), Telerik.Reporting.Drawing.Unit.Cm(9.98960018157959D));
+            this.TextBoxCufe.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0.92037743330001831D), Telerik.Reporting.Drawing.Unit.Cm(4.0999026298522949D));
             this.TextBoxCufe.Name = "TextBoxCufe";
             this.TextBoxCufe.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(5.4000020027160645D), Telerik.Reporting.Drawing.Unit.Cm(0.29999992251396179D));
             this.TextBoxCufe.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(6.5D);
@@ -1801,7 +1801,7 @@ namespace HGInetFacturaEReports.Facturas
             // 
             // htmlTextBox99
             // 
-            this.htmlTextBox99.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(13.626811981201172D), Telerik.Reporting.Drawing.Unit.Cm(9.98960018157959D));
+            this.htmlTextBox99.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0.0011078134411945939D), Telerik.Reporting.Drawing.Unit.Cm(4.0999026298522949D));
             this.htmlTextBox99.Name = "htmlTextBox99";
             this.htmlTextBox99.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(0.91906946897506714D), Telerik.Reporting.Drawing.Unit.Cm(0.29999992251396179D));
             this.htmlTextBox99.Style.Font.Bold = true;
