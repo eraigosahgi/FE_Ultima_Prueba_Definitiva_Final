@@ -90,6 +90,8 @@
     <Compile Include="Procesos\Ctl_Documentos.Factura.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Formato.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Mail.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.NotaCredito.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.NotaDebito.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Procesar.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Validacion.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Xml.cs" />

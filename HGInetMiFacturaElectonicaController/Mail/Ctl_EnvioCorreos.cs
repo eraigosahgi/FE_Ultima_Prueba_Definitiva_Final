@@ -547,7 +547,7 @@ namespace HGInetMiFacturaElectonicaController
 
 
                         // envía el correo electrónico
-                        EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, correos_copia_oculta, "", "", archivos);
+                        EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 
                     }
                 }
