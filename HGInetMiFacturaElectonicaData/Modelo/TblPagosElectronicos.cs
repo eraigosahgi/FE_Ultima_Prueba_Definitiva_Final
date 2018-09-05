@@ -14,6 +14,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     
     public partial class TblPagosElectronicos
     {
+        public System.Guid StrIdRegistro { get; set; }
         public string StrIdSeguridadPago { get; set; }
         public string StrIdPlataforma { get; set; }
         public Nullable<System.Guid> StrIdSeguridadDoc { get; set; }
@@ -34,7 +35,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrCampo2 { get; set; }
         public string StrCampo3 { get; set; }
     
-        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
         public virtual TblDocumentos TblDocumentos { get; set; }
+        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
     }
 }

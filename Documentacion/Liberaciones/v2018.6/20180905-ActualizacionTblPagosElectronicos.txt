@@ -1,0 +1,101 @@
+/*
+   miércoles, 5 de septiembre de 20189:32:56
+   User: Hgi
+   Server: ATILA\SQL2014
+   Database: DEV_FacturacionElectronica
+   Application: 
+*/
+
+/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.TblPlanesTransacciones SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblPlanesTransacciones', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblPlanesTransacciones', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblPlanesTransacciones', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.TblDocumentos SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.TblPagosElectronicos
+	DROP CONSTRAINT DF_TblPagosElectronicos_Valor
+GO
+CREATE TABLE dbo.Tmp_TblPagosElectronicos
+	(
+	StrIdRegistro uniqueidentifier NOT NULL,
+	StrIdSeguridadPago varchar(30) NULL,
+	StrIdPlataforma varchar(50) NULL,
+	StrIdSeguridadDoc uniqueidentifier NULL,
+	StrIdSeguridadPlanes uniqueidentifier NULL,
+	DatFechaRegistro datetime NOT NULL,
+	DatFechaVerificacion datetime NULL,
+	IntEstadoPago int NOT NULL,
+	StrTicketID varchar(50) NULL,
+	StrTransaccionCUS varchar(50) NULL,
+	IntValorPago numeric(17, 2) NOT NULL,
+	IntClicloTransaccion int NULL,
+	StrCodigoBanco varchar(50) NULL,
+	IntCodigoServicio int NULL,
+	IntFormaPago int NULL,
+	StrCodigoFranquicia varchar(50) NULL,
+	StrMensaje varchar(500) NULL,
+	StrCampo1 varchar(50) NULL,
+	StrCampo2 varchar(50) NULL,
+	StrCampo3 varchar(50) NULL
+	)  ON [PRIMARY]
+GO
+ALTER TABLE dbo.Tmp_TblPagosElectronicos SET (LOCK_ESCALATION = TABLE)
+GO
+ALTER TABLE dbo.Tmp_TblPagosElectronicos ADD CONSTRAINT
+	DF_TblPagosElectronicos_Valor DEFAULT ((0)) FOR IntEstadoPago
+GO
+IF EXISTS(SELECT * FROM dbo.TblPagosElectronicos)
+	 EXEC('INSERT INTO dbo.Tmp_TblPagosElectronicos (StrIdSeguridadPago, StrIdPlataforma, StrIdSeguridadDoc, StrIdSeguridadPlanes, DatFechaRegistro, DatFechaVerificacion, IntEstadoPago, StrTicketID, StrTransaccionCUS, IntValorPago, IntClicloTransaccion, StrCodigoBanco, IntCodigoServicio, IntFormaPago, StrCodigoFranquicia, StrMensaje, StrCampo1, StrCampo2, StrCampo3)
+		SELECT StrIdSeguridadPago, StrIdPlataforma, StrIdSeguridadDoc, StrIdSeguridadPlanes, DatFechaRegistro, DatFechaVerificacion, IntEstadoPago, StrTicketID, StrTransaccionCUS, IntValorPago, IntClicloTransaccion, StrCodigoBanco, IntCodigoServicio, IntFormaPago, StrCodigoFranquicia, StrMensaje, StrCampo1, StrCampo2, StrCampo3 FROM dbo.TblPagosElectronicos WITH (HOLDLOCK TABLOCKX)')
+GO
+DROP TABLE dbo.TblPagosElectronicos
+GO
+EXECUTE sp_rename N'dbo.Tmp_TblPagosElectronicos', N'TblPagosElectronicos', 'OBJECT' 
+GO
+ALTER TABLE dbo.TblPagosElectronicos ADD CONSTRAINT
+	PK_TblPagosElectronicos_1 PRIMARY KEY CLUSTERED 
+	(
+	StrIdRegistro
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+GO
+ALTER TABLE dbo.TblPagosElectronicos ADD CONSTRAINT
+	FK_TblPagosElectronicos_TblDocumentos FOREIGN KEY
+	(
+	StrIdSeguridadDoc
+	) REFERENCES dbo.TblDocumentos
+	(
+	StrIdSeguridad
+	) ON UPDATE  CASCADE 
+	 ON DELETE  NO ACTION 
+	
+GO
+ALTER TABLE dbo.TblPagosElectronicos ADD CONSTRAINT
+	FK_TblPagosElectronicos_TblPlanesTransacciones FOREIGN KEY
+	(
+	StrIdSeguridadPlanes
+	) REFERENCES dbo.TblPlanesTransacciones
+	(
+	StrIdSeguridad
+	) ON UPDATE  CASCADE 
+	 ON DELETE  NO ACTION 
+	
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'CONTROL') as Contr_Per 
