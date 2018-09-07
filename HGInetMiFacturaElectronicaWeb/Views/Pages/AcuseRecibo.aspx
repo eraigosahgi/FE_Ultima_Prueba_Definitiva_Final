@@ -91,41 +91,46 @@
 <body class="login-container" style="background-color: #eeeded">
 
     <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController" data-ng-cloak="" data-ng-init="DetalleAcuse=true">
-        <div style="margin: 4%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
+        <div style="margin:1%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
 
             <!-- Visualización Información Factura -->
             <div class="col-md-6">
-                <div class="panel panel-flat form-horizontal">
+                <div class="panel panel-flat form-horizontal" style="height:850px">
 
-                    <div class="panel-body" style="display: block; margin: 3%">
+                    <div class="col-md-12"style="margin-bottom:3%">
+                        <img alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/4krt/x80qh.png" style="border-style: none; border-color: inherit; border-width: medium; border-radius:; display: block; font-size: 13px; outline: none; text-decoration: none; width: 103.5%; height: 100px; margin-left: -10px;margin-right:-10px">
+                    </div>
 
-                        <div id="PanelInformacionFactura" style="font-size: medium" class="dx-fieldset">
+                    <div class="panel-body" style="display: block">
+
+
+                        <div id="PanelInformacionFactura" style="font-size: 15px" class="dx-fieldset">
 
                             <h4 class="panel-title text-bold text-center">Información de {{datos.tipodoc}}</h4>
 
-                            <div style="margin-top: 3%">
+                            <div style="margin-top: 15%">
                                 <label id="Label2" class="text-bold">Número Documento: </label>
                                 <label id="LblNumeroDocumento"></label>
                                 <span>{{datos.NumeroDocumento}}</span>
                             </div>
 
-                            <div style="margin-top: 3%">
-                                <label id="Label5" class="text-bold">identificación Tercero: </label>
+                            <div style="margin-top: 0%">
+                                <label id="Label5" class="text-bold">Identificación Tercero: </label>
                                 <span>{{datos.IdAdquiriente}}</span>
                             </div>
 
-                            <div style="margin-top: 3%">
+                            <div style="margin-top: 0%">
                                 <label id="Label9" class="text-bold">Nombre Tercero: </label>
                                 <span>{{datos.NombreAdquiriente}}</span>
                             </div>
 
-                            <div style="margin-top: 3%">
+                            <div style="margin-top: 0%;width:90%">
                                 <label class="text-bold">CUFE: </label>
                                 <span>{{datos.Cufe}}</span>
                             </div>
 
-                            <div style="margin-top: 3%; margin-bottom: 7%">
-                                <label class="text-bold">Código de Seguridad: </label>
+                            <div style="margin-bottom: 0%">
+                                <label class="text-bold">Radicado: </label>
                                 <span>{{datos.IdSeguridad}}</span>
                             </div>
 
@@ -133,32 +138,32 @@
 
 
                         <!-- PANEL CONTIENE LA RESPUESTA SI YA LA TIENE-->
-                        <div id="PanelRespuestaAdquiriente" style="font-size: medium" ng-show="{{datos.RespuestaVisible}}" class="dx-fieldset">
+                        <div id="PanelRespuestaAdquiriente" style="margin-top:-25px; font-size: 15px" ng-show="{{datos.RespuestaVisible}}" class="dx-fieldset">
 
                             <h4 class="panel-title text-bold text-center">Respuesta Adquiriente</h4>
 
-                            <div style="margin-top: 3%;" runat="server" id="DivEstadoRespuesta">
+                            <div style="margin-top: 1%;" runat="server" id="DivEstadoRespuesta">
                                 <label class="text-bold">Estado: </label>
                                 <span>{{datos.EstadoAcuse}}</span>
                             </div>
 
 
-                            <div style="margin-top: 3%; margin-bottom: 4%" runat="server" id="DivObservaciones">
+                            <div style="margin-top: 1%; margin-bottom: 4%" runat="server" id="DivObservaciones">
                                 <label class="text-bold">Observaciones: </label>
                                 <span>{{datos.MotivoRechazo}}</span>
                             </div>
 
-                            <div style="margin-top: 3%;" runat="server" id="Div1">
+                            <div style="margin-top: 1%;" runat="server" id="Div1">
                                 <label class="text-bold">Fecha: </label>
                                 <span>{{datos.FechaRespuesta | date: "yyyy-MM-dd HH:mm"}}</span>
                             </div>
 
-                        </div>                    
+                        </div>
 
                         <!--data-ng-if="DetalleAcuse"-->
-                        <div >
+                        <div>
                             <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
-                            <div id="PanelOpcionesAdquiriente" data-ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
+                            <div id="PanelOpcionesAdquiriente" style="margin-top:-25px" data-ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
 
                                 <form data-ng-submit="onFormSubmit($event)">
 
@@ -177,7 +182,7 @@
 
                                     <div id="form" data-dx-form="TextAreaObservaciones" style="padding-left: 2%; padding-top: 5%;"></div>
                                     <br />
-                                    <div class="col-lg-12 text-right">
+                                    <div class="col-lg-12 text-right" style="margin-top:-15px">
                                         <div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
                                         <div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
                                         &nbsp;&nbsp;&nbsp;
@@ -186,48 +191,45 @@
 
                                 </form>
 
-                                <br />
-                                <br />
-
                             </div>
                         </div>
-                    <div id="PanelInformacionArchivos" style="font-size: medium" class="dx-fieldset">
+                        <div id="PanelInformacionArchivos" style="font-size: 15px" class="dx-fieldset">
 
-                        <h4 class="panel-title text-bold text-center">Archivos</h4>
+                            <h4 class="panel-title text-bold text-center">Archivos</h4>
 
-                        <div style="margin-top: 3%; text-align: justify;">
-                            Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
-                        </div>
+                            <div style="margin-top: 1%; text-align: justify;">
+                                Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
+                            </div>
 
-                        <div style="margin-top: 3%; text-align: center;">
+                            <div style="margin-top: 1%; text-align: center;">
 
-                            <a href="{{datos.Pdf}}" target="_blank" class="icon-file-pdf text-bold" style="color: #1E88E5;">Pdf</a>
-                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                <a href="{{datos.Xml}}" target="_blank" class="icon-file-xml text-bold" style="color: #1E88E5;">Xml</a>
-                        </div>
-                        <br />
-                        <div style="text-align: center;">
-
-                            <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true">Pagar</a>
-                            <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; display: none;" href="http://habilitacion.mifacturaenlinea.com.co" style="font-size: 14px; text-align: center;">Autenticar</a>
+                                <a href="{{datos.Pdf}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;">Pdf</a>
+                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                <a href="{{datos.Xml}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;">Xml</a>
+                            </div>
                             <br />
-                            <br />
-                            <div class="footer text-muted" style="font-size: 14px;">
-                                Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a>
+                            <div style="text-align: center;">
+
+                                <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true">Pagar</a>
+                                <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important" href="../Login/Default.aspx" style="font-size: 14px; text-align: center;">Autenticar</a>
                             </div>
                         </div>
-
+                        <div class="col-md-12" style="margin-top:-15px">
+                            <img alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/6572/x80n7.png" style="border-style: none; border-color: inherit; border-width: medium; border-radius: ; display: block; font-size: 13px; outline: none; text-decoration: none; width: 100%; height: 100px; margin-left: -10x; margin-right: -10px">
+                        </div>
                     </div>
 
+                    <div class="footer text-muted" style="font-size: 14px; text-align: center">
+                        Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a>
                     </div>
-
                 </div>
+
             </div>
 
             <!-- Visualización PDF -->
             <div class="col-md-6">
 
-                <embed width="100%" height="800px" name="plugin" id="plugin" src="{{datos.Pdf}}" type="application/pdf">
+                <embed width="100%" height="850px" name="plugin" id="plugin" src="{{datos.Pdf}}" type="application/pdf">
             </div>
             <!-- /Visualización PDF -->
 
