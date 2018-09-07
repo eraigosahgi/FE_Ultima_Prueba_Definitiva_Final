@@ -140,7 +140,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 TblDocumentos numero_documento = num_doc.Obtener(item.DatosObligado.Identificacion, item.Documento, item.Prefijo);
 
                 if (numero_documento != null)
-                    throw new ApplicationException(string.Format("El documento '{0}' con prefijo '{1}' ya xiste para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
+                    throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
 
                 // filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
                 TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
