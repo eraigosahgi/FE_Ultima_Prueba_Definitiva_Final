@@ -6420,6 +6420,9 @@ h3.panel-title,
 h4.panel-title,
 .h4.panel-title {
   font-size: 19px;
+    top: -3px;
+    left: 0px;
+    height: 29px;
 }
 h5.panel-title,
 .h5.panel-title {
