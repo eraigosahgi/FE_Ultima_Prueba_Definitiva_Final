@@ -91,24 +91,22 @@
 <body class="login-container" style="background-color: #eeeded">
 
     <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController" data-ng-cloak="" data-ng-init="DetalleAcuse=true">
-        <div style="margin:1%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
+        <div style="margin: 1%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
 
             <!-- Visualización Información Factura -->
             <div class="col-md-6">
-                <div class="panel panel-flat form-horizontal" style="height:850px">
+                <div class="panel panel-flat form-horizontal">
 
-                    <div class="col-md-12"style="margin-bottom:3%">
-                        <img alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/4krt/x80qh.png" style="border-style: none; border-color: inherit; border-width: medium; border-radius:; display: block; font-size: 13px; outline: none; text-decoration: none; width: 103.5%; height: 100px; margin-left: -10px;margin-right:-10px">
-                    </div>
+
+                    <img class="img-responsive" alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/4krt/x80qh.png" />
 
                     <div class="panel-body" style="display: block">
 
-
                         <div id="PanelInformacionFactura" style="font-size: 15px" class="dx-fieldset">
 
-                            <h4 class="panel-title text-bold text-center">Información de {{datos.tipodoc}}</h4>
+                            <h4 class="panel-title text-bold text-center" style="margin-bottom: 5%">Información de {{datos.tipodoc}}</h4>
 
-                            <div style="margin-top: 15%">
+                            <div>
                                 <label id="Label2" class="text-bold">Número Documento: </label>
                                 <label id="LblNumeroDocumento"></label>
                                 <span>{{datos.NumeroDocumento}}</span>
@@ -124,7 +122,7 @@
                                 <span>{{datos.NombreAdquiriente}}</span>
                             </div>
 
-                            <div style="margin-top: 0%;width:90%">
+                            <div style="margin-top: 0%; width: 90%">
                                 <label class="text-bold">CUFE: </label>
                                 <span>{{datos.Cufe}}</span>
                             </div>
@@ -138,7 +136,7 @@
 
 
                         <!-- PANEL CONTIENE LA RESPUESTA SI YA LA TIENE-->
-                        <div id="PanelRespuestaAdquiriente" style="margin-top:-25px; font-size: 15px" ng-show="{{datos.RespuestaVisible}}" class="dx-fieldset">
+                        <div id="PanelRespuestaAdquiriente" style="margin-top: -25px; font-size: 15px" ng-show="{{datos.RespuestaVisible}}" class="dx-fieldset">
 
                             <h4 class="panel-title text-bold text-center">Respuesta Adquiriente</h4>
 
@@ -148,7 +146,7 @@
                             </div>
 
 
-                            <div style="margin-top: 1%; margin-bottom: 4%" runat="server" id="DivObservaciones">
+                            <div style="margin-top: 1%;" runat="server" id="DivObservaciones">
                                 <label class="text-bold">Observaciones: </label>
                                 <span>{{datos.MotivoRechazo}}</span>
                             </div>
@@ -163,7 +161,7 @@
                         <!--data-ng-if="DetalleAcuse"-->
                         <div>
                             <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
-                            <div id="PanelOpcionesAdquiriente" style="margin-top:-25px" data-ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
+                            <div id="PanelOpcionesAdquiriente" style="margin-top: -25px" data-ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
 
                                 <form data-ng-submit="onFormSubmit($event)">
 
@@ -182,7 +180,7 @@
 
                                     <div id="form" data-dx-form="TextAreaObservaciones" style="padding-left: 2%; padding-top: 5%;"></div>
                                     <br />
-                                    <div class="col-lg-12 text-right" style="margin-top:-15px">
+                                    <div class="col-lg-12 text-right" style="margin-top: -15px">
                                         <div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
                                         <div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
                                         &nbsp;&nbsp;&nbsp;
@@ -214,12 +212,12 @@
                                 <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important" href="../Login/Default.aspx" style="font-size: 14px; text-align: center;">Autenticar</a>
                             </div>
                         </div>
-                        <div class="col-md-12" style="margin-top:-15px">
+                        <div class="col-md-12" style="margin-top: -15px; margin-bottom: 8%">
                             <img alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/6572/x80n7.png" style="border-style: none; border-color: inherit; border-width: medium; border-radius: ; display: block; font-size: 13px; outline: none; text-decoration: none; width: 100%; height: 100px; margin-left: -10x; margin-right: -10px">
                         </div>
                     </div>
 
-                    <div class="footer text-muted" style="font-size: 14px; text-align: center">
+                    <div class="footer text-muted" style="font-size: 14px; text-align: center; margin-bottom: 5%">
                         Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a>
                     </div>
                 </div>
