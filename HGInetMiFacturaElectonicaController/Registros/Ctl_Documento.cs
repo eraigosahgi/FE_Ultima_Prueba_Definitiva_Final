@@ -939,15 +939,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
         #region ProcesarDocumentos
+
         /// <summary>
-        /// 
+        /// Obtiene los documentos que esten pendientes por procesar
         /// </summary>
-        /// <param name="codigo_adquiente"></param>
-        /// <param name="numero_documento"></param>
-        /// <param name="estado_recibo"></param>
-        /// <param name="fecha_inicio"></param>
-        /// <param name="fecha_fin"></param>
-        /// <returns></returns>
+        /// <param name="IdSeguridad">Id del documento</param>
+        /// <param name="estado_recibo">Estado del proceso del documento</param>
+        /// <param name="fecha_inicio">Fecha inicio</param>
+        /// <param name="fecha_fin">Fecha Fin</param>
+        /// <returns>Objeto de tipo respuesta</returns>
         public List<TblDocumentos> ObtenerDocumentosaProcesar(System.Guid? IdSeguridad, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
         {
 
