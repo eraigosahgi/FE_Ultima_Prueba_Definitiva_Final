@@ -163,7 +163,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 TblDocumentos numero_documento = num_doc.Obtener(item.DatosObligado.Identificacion, item.Documento, item.Prefijo);
 
                 if (numero_documento != null)
-                    throw new ApplicationException(string.Format("El documento {0} ya existe para el Facturador Electrónico {1} como {2}", item.Documento, facturador_electronico.StrIdentificacion));
+                    throw new ApplicationException(string.Format("El documento {0} ya existe para el Facturador Electrónico {1}", item.Documento, facturador_electronico.StrIdentificacion));
 
                 TblEmpresasResoluciones resolucion = null;
 
