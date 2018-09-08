@@ -11,11 +11,16 @@ using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
+using LibreriaGlobalHGInet.General;
 
 namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 {
@@ -52,23 +57,21 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         /// <param name="tipo_pago">indica si el pago es para un documento o una compra de planes (0: Documento - 1: Plan).</param>
         /// <param name="valor"></param>
         /// <returns></returns>
-        public TblPagosElectronicos CrearPago(string id_seguridad_pago, string id_plataforma, System.Guid id_seguridad, int tipo_pago, decimal valor)
+        public TblPagosElectronicos CrearPago(Guid StrIdRegistro, System.Guid id_seguridad, int tipo_pago, decimal valor)
         {
             try
             {
                 TblPagosElectronicos datos_registro = new TblPagosElectronicos();
-
+                /*
                 if (string.IsNullOrWhiteSpace(id_plataforma))
                     throw new ApplicationException("El ID de seguridad de la plataforma no puede estar vacío.");
                 if (id_seguridad == null)
                     throw new ApplicationException("El ID de seguridad no puede estar vacío.");
+                    */
                 if (valor <= 0)
                     throw new ApplicationException("El valor del pago no puede ");
 
-                //Id de seguridad generado por la plataforma de pagos en línea.
-                datos_registro.StrIdPlataforma = id_plataforma;
-                //Id de seguridad alfanumérico de 20 carcateres.
-                datos_registro.StrIdSeguridadPago = id_seguridad_pago;
+                datos_registro.StrIdRegistro = StrIdRegistro;
 
                 //Valida que tipo de pago se realiza (0: Documento - 1: Planes)
                 if (tipo_pago == 0)
@@ -122,13 +125,13 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
         /// <param name="datos_pago">datos de la verificación del pago.</param>
         /// <returns></returns>
-        public TblPagosElectronicos ActualizarPago(string id_seguridad_pago, string id_plataforma, VerificaPago datos_pago)
+        public TblPagosElectronicos ActualizarPago(Guid StrIdSeguridadDoc, Guid StrIdSeguridadRegistro, VerificaPago datos_pago)
         {
             try
             {
                 TblPagosElectronicos datos_registro = new TblPagosElectronicos();
 
-                datos_registro = Obtener(id_seguridad_pago, id_plataforma);
+                datos_registro = Obtener(StrIdSeguridadDoc, StrIdSeguridadRegistro);
 
                 if (datos_registro == null)
                     throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el pago", datos_pago.detalle_pago.FirstOrDefault().id_pago));
@@ -138,14 +141,27 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     //valida si el objeto contiene detalles.
                     if (datos_pago.detalle_pago.Count > 0)
                     {
-                        datos_registro.StrCodigoBanco = datos_pago.detalle_pago.FirstOrDefault().codigo_banco.ToString();
-                        datos_registro.StrCodigoFranquicia = datos_pago.detalle_pago.FirstOrDefault().franquicia_codigo;
-                        datos_registro.IntClicloTransaccion = datos_pago.detalle_pago.FirstOrDefault().ciclo_transaccion;
-                        datos_registro.IntCodigoServicio = datos_pago.detalle_pago.FirstOrDefault().codigo_servicio;
-                        datos_registro.IntEstadoPago = datos_pago.detalle_pago.FirstOrDefault().estado_pago;
-                        datos_registro.IntFormaPago = datos_pago.detalle_pago.FirstOrDefault().forma_pago_codigo;
-                        datos_registro.StrTicketID = datos_pago.detalle_pago.FirstOrDefault().ticketID;
-                        datos_registro.StrTransaccionCUS = datos_pago.detalle_pago.FirstOrDefault().codigo_transaccion;
+                        if (datos_pago.detalle_pago.FirstOrDefault().estado_pago != 888)
+                        {
+                            datos_registro.StrCodigoBanco = datos_pago.detalle_pago.FirstOrDefault().codigo_banco.ToString();
+                            datos_registro.StrCodigoFranquicia = datos_pago.detalle_pago.FirstOrDefault().franquicia_codigo;
+                            datos_registro.IntClicloTransaccion = datos_pago.detalle_pago.FirstOrDefault().ciclo_transaccion;
+                            datos_registro.IntCodigoServicio = datos_pago.detalle_pago.FirstOrDefault().codigo_servicio;
+                            datos_registro.IntEstadoPago = datos_pago.detalle_pago.FirstOrDefault().estado_pago;
+                            datos_registro.IntFormaPago = datos_pago.detalle_pago.FirstOrDefault().forma_pago_codigo;
+                            datos_registro.StrTicketID = datos_pago.detalle_pago.FirstOrDefault().ticketID;
+                            datos_registro.StrTransaccionCUS = datos_pago.detalle_pago.FirstOrDefault().codigo_transaccion;
+                            datos_registro.StrIdSeguridadPago = datos_pago.detalle_pago.FirstOrDefault().id_pago;
+                        }
+                        else
+                        {
+                            datos_registro.IntEstadoPago = datos_pago.detalle_pago.FirstOrDefault().estado_pago;
+                            datos_registro.StrIdSeguridadPago = datos_pago.detalle_pago.FirstOrDefault().id_pago;
+                        }
+                    }
+                    else
+                    {
+                        datos_registro.IntEstadoPago = 0;
                     }
 
                     if (datos_pago.estado_verificacion)
@@ -175,16 +191,23 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
         /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
         /// <returns></returns>
-        public TblPagosElectronicos Obtener(string id_seguridad_pago, string id_plataforma)
+        public TblPagosElectronicos Obtener(Guid id_seguridad_doc, Guid id_Seguridad_Registro)
         {
             try
             {
-                TblPagosElectronicos datos_pago = (from pago in context.TblPagosElectronicos
-                                                   where pago.StrIdSeguridadPago.Equals(id_seguridad_pago)
-                                                   && pago.StrIdPlataforma.Equals(id_plataforma)
-                                                   select pago).FirstOrDefault();
 
-                return datos_pago;
+                /*  Guid variable = Guid.Parse(id_seguridad_pago);
+                  TblPagosElectronicos datos_pago = (from pago in context.TblPagosElectronicos
+                                                     where pago.StrIdSeguridadPago.Equals(id_seguridad_pago)
+                                                     && pago.StrIdPlataforma.Equals(id_plataforma)
+                                                     select pago).FirstOrDefault();
+                                                     */
+                TblPagosElectronicos datos_pago1 = (from pago in context.TblPagosElectronicos
+                                                    where pago.StrIdSeguridadDoc == id_seguridad_doc
+                                                    && pago.StrIdRegistro == id_Seguridad_Registro
+                                                    select pago).FirstOrDefault();
+
+                return datos_pago1;
             }
             catch (Exception excepcion)
             {
@@ -205,6 +228,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             {
 
                 List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
+                                                      //   join pago in context.TblPagosElectronicos on documentos.StrIdSeguridad equals pago.StrIdSeguridadDoc                                                  
                                                   where documentos.StrIdSeguridad == StrIdSeguridadDoc
                                                   select documentos).ToList();
 
@@ -227,16 +251,27 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                             //Guardo el Telefono aqui
                             DocFinal.StrCufe = doc.TblEmpresasFacturador.StrTelefono;
+                            //Mail
                             DocFinal.StrUrlArchivoUbl = doc.TblEmpresasFacturador.StrMail;
-
+                            //Tipo Documento
                             DocFinal.IntDocTipo = doc.IntDocTipo;
+                            //Numero de Documento
                             DocFinal.IntNumero = doc.IntNumero;
+                            //Fecha del Documento
                             DocFinal.DatFechaDocumento = doc.DatFechaDocumento;
+                            //Valor del documento
                             DocFinal.IntVlrTotal = docPago.IntValorPago;
+                            //Fecha de recibido
                             DocFinal.DatFechaIngreso = docPago.DatFechaRegistro;
+                            //Fecha de verificacion
                             DocFinal.StrUrlArchivoZip = docPago.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hginet);
+                            //Id de Seguridad del Pago
                             DocFinal.StrNumResolucion = docPago.StrIdSeguridadPago;
+                            //Estado del Pago
                             DocFinal.StrPrefijo = docPago.IntEstadoPago.ToString();
+                            //Id de Pago(New Guid)                          
+                            DocFinal.StrAdquirienteMvoRechazo = docPago.StrIdRegistro.ToString();
+
                             ListDocFinal.Add(DocFinal);
                         }
                     }
@@ -250,11 +285,15 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                         //Guardo el Telefono aqui
                         DocFinal.StrCufe = doc.TblEmpresasFacturador.StrTelefono;
+                        //Mail
                         DocFinal.StrUrlArchivoUbl = doc.TblEmpresasFacturador.StrMail;
-
+                        //Tipo Documento
                         DocFinal.IntDocTipo = doc.IntDocTipo;
+                        //Numero del documento
                         DocFinal.IntNumero = doc.IntNumero;
+                        //Fecha del documento
                         DocFinal.DatFechaDocumento = doc.DatFechaDocumento;
+                        //Guardo el documento en la lista
                         ListDocFinal.Add(DocFinal);
                     }
 
@@ -447,7 +486,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         #endregion
 
         #region GestionPagos
-
+        /*
         /// <summary>
         /// Realiza el registro del pago en la plataforma electrónica.
         /// Consulta el documento por id de seguridad para la construcción del objeto de envío de los datos del pago.
@@ -625,6 +664,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             }
         }
 
+        /*
         /// <summary>
         /// Realiza el proceso de verificar y actualizar el pago.
         /// </summary>
@@ -702,7 +742,276 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
-
+        */
         #endregion
+
+        #region Plataforma intermedia
+
+
+
+        /// <summary>
+        /// Realiza el registro del pago en la plataforma electrónica.
+        /// Consulta el documento por id de seguridad para la construcción del objeto de envío de los datos del pago.
+        /// Retorna la url con el id virtual para la redirección a la página de inicio del proceso de pago.
+        /// Si el pago es de un documento los datos de la pasarela son tomados desde el comercio asociado en la resolución del mismo, de lo contrario lso datos serán obtenidos del web.config
+        /// </summary>
+        /// <param name="id_seguridad">Id de seguridad del documento o plan transaccional</param>
+        /// <param name="tipo_pago">indica si el pago es para un documento o una compra de planes (0: Documento - 1: Plan).</param>
+        /// <param name="registrar_pago">indica si se registra el pago en base de datos.</param>
+        /// <param name="valor_pago">valor a pagar.</param>
+        /// <returns></returns>
+        public dynamic ReportePagoElectronicoPI(System.Guid id_seguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0)
+        {
+            try
+            {
+                //Ruta retornada por el servicio, redirecciona a la  página de inicio del pago (Selección de tipo persona, forma pago y banco).
+                string ruta_inicio = string.Empty;
+                //Datos de la pasarela electrónica.
+                int comercio_id = 0;
+                string comercio_clave = string.Empty;
+                string comercio_ruta = string.Empty;
+                string codigo_servicio = string.Empty;
+                string identificacion_empresa = string.Empty;
+
+                //Objetos para reportar el pago
+                Cliente datos_cliente = new Cliente();
+                Pago datos_pago = new Pago();
+
+
+                TblPasarelaPagosPI ObjPago = new TblPasarelaPagosPI();
+
+                ObjPago.StrIdSeguridadDoc = id_seguridad;
+
+                //ObjPago.StrIdSeguridadRegistro = Guid.NewGuid();
+                ObjPago.StrIdSeguridadRegistro = Guid.NewGuid();
+
+                ObjPago.DatFechaRegistro = Fecha.GetFecha();
+
+                ObjPago.DatFechaSync = Fecha.GetFecha();
+                ObjPago.DatFechaVerificacion = Fecha.GetFecha();
+
+                ObjPago.StrAuthIdEmpresa = "";
+                ObjPago.IntSincronizacion = true;
+
+                ObjPago.StrAuthToken = "";
+
+                ObjPago.StrRutaSync = "http://localhost:61433/Api/SrcActualizaEstado";
+
+                ObjPago.StrRutaDestino = "";
+
+                ObjPago.StrRutaProcedencia = "";
+
+                ObjPago.StrPagoIdPlataforma = "";
+
+                //Valida si el pago es de un documento o una compra de planes.
+                if (tipo_pago == 0)
+                {
+                    Ctl_Documento clase_documento = new Ctl_Documento();
+                    TblDocumentos datos_documento = clase_documento.ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
+
+                    //Enviar Informacion facturador
+                    //ObjPago.StrIdentificacionFacturador= datos_documento.TblEmpresasFacturador.StrIdentificacion;
+                    //ObjPago.StrRazonSocialFacturador = datos_documento.TblEmpresasFacturador.StrRazonSocial;
+                    //ObjPago.StrTelefonoFacturador = datos_documento.TblEmpresasFacturador.StrTelefono;
+                    //ObjPago.StrMailFacturador = datos_documento.TblEmpresasFacturador.StrMail;
+                    //ObjPago.StrImagenFacturador = datos_documento.TblEmpresasFacturador.StrImagenEmpresa;
+
+                    identificacion_empresa = datos_documento.StrEmpresaAdquiriente;
+
+                    //valisa que el documento no sea null.
+                    if (datos_documento != null)
+                    {
+                        //consulta la resolución para obtener el comercio que tiene asociado.
+                        Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
+                        TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
+
+                        //Valida que la resolución no sea null.
+                        if (datos_resolucion != null)
+                        {
+                            if (datos_resolucion.IntComercioId.Value <= 0)
+                                throw new ApplicationException(string.Format("La Resuloción N.{0} para el Facturador {1}, no tiene configurado un comercio.", datos_documento.StrNumResolucion, datos_documento.StrEmpresaFacturador));
+
+                            //Obtiene los datos de la pasarela.
+                            Ctl_EmpresasPasarela clase_pasarela = new Ctl_EmpresasPasarela();
+                            TblEmpresasPasarela datos_pasarela = clase_pasarela.Obtener(datos_documento.StrEmpresaFacturador, datos_resolucion.IntComercioId.Value);
+
+                            if (datos_pasarela != null)
+                            {
+                                ObjPago.IntComercioId = datos_pasarela.IntComercioId;
+                                ObjPago.StrComercioClave = datos_pasarela.StrComercioClave;
+                                ObjPago.StrComercioIdRuta = datos_pasarela.StrComercioIdRuta;
+                                ObjPago.StrCodigoServicio = datos_pasarela.StrCodigoServicio;
+
+                            }
+                        }
+                        else
+                            throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el número de Resolución", datos_documento.StrNumResolucion));
+
+                        datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
+
+                        if (valor_pago <= 0)
+                            valor_pago = Convert.ToDouble(datos_documento.IntVlrTotal);
+                        else
+                        {
+                            if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
+                                throw new ApplicationException("El valor a pagar no puede ser superior al valor total del documento.");
+                        }
+                    }
+                    else
+                    {
+                        PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
+
+                        //Datos de la pasarela electrónica.
+                        ObjPago.IntComercioId = Convert.ToInt32(pasarela.IdComercio);
+                        ObjPago.StrComercioClave = pasarela.ClaveComercio;
+                        ObjPago.StrComercioIdRuta = pasarela.RutaComercio;
+                        ObjPago.StrCodigoServicio = pasarela.CodigoServicio;
+
+                        //Obtiene el plan de transacciones.
+                        Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
+                        TblPlanesTransacciones datos_plan = clase_planes.ObtenerIdSeguridad(id_seguridad);
+
+                        identificacion_empresa = datos_plan.StrEmpresaFacturador;
+
+                        if (datos_plan == null)
+                            throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el Plan", id_seguridad));
+
+                        datos_pago.descripcion_pago = string.Format("{0}", datos_plan.StrObservaciones);
+
+                        if (valor_pago <= 0)
+                            valor_pago = Convert.ToDouble(datos_plan.IntValor);
+                        else
+                        {
+                            if (valor_pago > Convert.ToDouble(datos_plan.IntValor))
+                                throw new ApplicationException("El valor a pagar no puede ser superior al valor total de la compra.");
+                        }
+                    }
+
+
+                    ObjPago.IntValor = decimal.Parse(valor_pago.ToString());
+                    ObjPago.IntValorIva = 0;
+                    /*
+                    datos_pago.codigo_servicio_principal = codigo_servicio;
+                   
+                    datos_pago.info_opcional1 = "opciona1";
+                    datos_pago.info_opcional2 = "opcional2";
+                    datos_pago.info_opcional3 = "opcional3";
+
+
+                    datos_pago.lista_codigos_servicio_multicredito = null;
+                    datos_pago.lista_nit_codigos_servicio_multicredito = null;
+                    datos_pago.lista_valores_con_iva = null;
+                    datos_pago.lista_valores_iva = null;
+                    datos_pago.total_codigos_servicio = 0;
+                    */
+
+                    //Obtiene los datos del cliente.
+                    Ctl_Empresa clase_empresa = new Ctl_Empresa();
+                    TblEmpresas datos_empresa = clase_empresa.Obtener(identificacion_empresa);
+
+                    if (datos_empresa == null)
+                        throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "la empresa", datos_empresa.StrIdentificacion));
+
+
+                    ObjPago.StrClienteTipoId = datos_empresa.StrTipoIdentificacion.ToString();
+
+                    ObjPago.StrClienteIdentificacion = datos_empresa.StrIdentificacion;
+
+                    ObjPago.StrClienteNombre = datos_empresa.StrRazonSocial;
+
+                    ObjPago.StrClienteTelefono = datos_empresa.StrTelefono;
+
+                    ObjPago.StrClienteEmail = datos_empresa.StrMail;
+
+                    //Encriptar datos de seguridad secundaria
+                    ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.IntComercioId);
+
+                    //Registro el Pago Local                    
+                    TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago));
+
+                    //convierto el Objeto de pago en Json
+                    var ObjetoPago = JsonConvert.SerializeObject(ObjPago);
+
+                    //Retorno el Objeto Json Cifrado 
+                    
+                    return new { Ruta = EncriptarObjeto(ObjetoPago.ToString()), IdRegistro = ObjPago.StrIdSeguridadRegistro }; 
+
+                }
+                else
+                    throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el documento", id_seguridad));
+
+                return ruta_inicio;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Cifra el Objeto de pago Json para enviarlo a la pagina intermedia de pago
+        /// </summary>
+        /// <param name="_cadenaAencriptar"></param>
+        /// <returns></returns>
+        private static string EncriptarObjeto(string _cadenaAencriptar)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(_cadenaAencriptar);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+
+
+        /// <summary>
+        /// Objeto Tpado de Pago de plataforma intermedia
+        /// </summary>
+        public class TblPasarelaPagosPI
+        {
+            public string StrIdSeguridad { get; set; }
+            public System.Guid StrIdSeguridadRegistro { get; set; }
+            public System.DateTime DatFechaRegistro { get; set; }
+            public string StrComercioData { get; set; }
+            public int IntComercioId { get; set; }
+            public string StrComercioIdRuta { get; set; }
+            public string StrCodigoServicio { get; set; }
+            public string StrComercioClave { get; set; }
+            public string StrPagoIdPlataforma { get; set; }
+            public int IntPagoEstado { get; set; }
+            public decimal IntValor { get; set; }
+            public decimal IntValorIva { get; set; }
+            public string StrDescripcionPago { get; set; }
+            public string StrCampo1 { get; set; }
+            public string StrCampo2 { get; set; }
+            public string StrCampo3 { get; set; }
+            public string StrClienteTipoId { get; set; }
+            public string StrClienteIdentificacion { get; set; }
+            public string StrClienteNombre { get; set; }
+            public string StrClienteEmail { get; set; }
+            public string StrClienteTelefono { get; set; }
+            public string StrPagoTicketID { get; set; }
+            public string StrPagoTransaccionCUS { get; set; }
+            public int IntPagoClicloTransaccion { get; set; }
+            public string StrPagoCodBanco { get; set; }
+            public int IntPagoCodServicio { get; set; }
+            public int IntPagoFormaPago { get; set; }
+            public string StrPagoCodFranquicia { get; set; }
+            public System.DateTime DatFechaVerificacion { get; set; }
+            public string StrMensajeVerificacion { get; set; }
+            public int IntIdAplicativo { get; set; }
+            public string StrRutaProcedencia { get; set; }
+            public string StrRutaDestino { get; set; }
+            public string StrRutaSync { get; set; }
+            public string StrAuthToken { get; set; }
+            public string StrAuthIdEmpresa { get; set; }
+            public int IntAuthCompania { get; set; }
+            public int IntAuthEmpresa { get; set; }
+            public bool IntSincronizacion { get; set; }
+            public System.DateTime DatFechaSync { get; set; }
+            public string StrIdSeguridadPago { get; set; }
+            public string StrIdPlataforma { get; set; }
+            public System.Guid StrIdSeguridadDoc { get; set; }
+        }
+        #endregion
+
+
     }
 }

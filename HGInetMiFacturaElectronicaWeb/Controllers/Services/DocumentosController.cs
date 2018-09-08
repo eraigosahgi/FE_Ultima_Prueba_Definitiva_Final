@@ -8,8 +8,11 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using HGInetMiFacturaElectronicaWeb.Seguridad.Plugins;
+using HGInetZonaPagos;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -73,7 +76,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
                     poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId != null) ? 1 : 0,
                     FacturaCenlada = d.IntIdEstado,
-                    PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales==null)? 0:(d.TblEmpresasResoluciones?.IntPermiteParciales == true ) ? 1 :0,
+                    PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales == null) ? 0 : (d.TblEmpresasResoluciones?.IntPermiteParciales == true) ? 1 : 0,
                     Telefono = d.TblEmpresasFacturador.StrTelefono,
                     Email = d.TblEmpresasFacturador.StrMail
                 });
@@ -116,7 +119,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    NumeroDocumento=string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
                     //NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
@@ -134,7 +137,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
                     tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
                     poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false
-            });
+                });
 
                 return Ok(retorno);
             }
@@ -225,7 +228,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="fecha_inicio"></param>
         /// <param name="fecha_fin"></param>
         /// <returns></returns>
-        public IHttpActionResult Get(string codigo_facturador, string codigo_adquiriente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin,int tipo_fecha)
+        public IHttpActionResult Get(string codigo_facturador, string codigo_adquiriente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_fecha)
         {
             try
             {
@@ -274,7 +277,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <returns></returns>
 
         [HttpGet]
-            [Route("api/ConsultaAcuseTacito")]
+        [Route("api/ConsultaAcuseTacito")]
         public IHttpActionResult ConsultaAcuseTacito(string codigo_facturador, string codigo_adquiriente, string numero_documento)
         {
             try
@@ -283,7 +286,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerAcuseTacito(codigo_facturador, numero_documento, codigo_adquiriente);                
+                List<TblDocumentos> datos = ctl_documento.ObtenerAcuseTacito(codigo_facturador, numero_documento, codigo_adquiriente);
 
                 var retorno = datos.Select(d => new
                 {
@@ -299,7 +302,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     d.StrIdSeguridad,
                     MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
                     dias = Math.Truncate(DateTime.Now.Subtract(d.DatFechaIngreso).TotalHours)
-                });                              
+                });
 
                 return Ok(retorno);
             }
@@ -345,7 +348,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var lista = documento.DocumentosAcuseTacito(List_id_seguridad);
 
-                var  datos = documento.GenerarAcuseTacito(lista);                
+                var datos = documento.GenerarAcuseTacito(lista);
 
                 return Ok();
             }
@@ -699,7 +702,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 {
                     IdFacturador = d.TblEmpresasFacturador.StrIdentificacion,
                     Facturador = d.TblEmpresasFacturador.StrRazonSocial,
-                    NumeroDocumento = string.Format("{0}{1}",  (d.StrPrefijo == null)?"":  (!d.StrPrefijo.Equals("0"))? d.StrPrefijo:"" , d.IntNumero),                    
+                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
                     d.DatFechaDocumento,
                     d.DatFechaVencDocumento,
                     IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
@@ -727,6 +730,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
         }
         #endregion
+
         #region Zonas de pago
         /// <summary>
         /// Obtiene link para el pago de factura
@@ -738,7 +742,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-            var datos = Pago.ReportePagoElectronico(strIdSeguridad, tipo_pago, registrar_pago, valor_pago);
+            var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago);            
             return Ok(datos);
 
         }
@@ -783,8 +787,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Monto = d.IntVlrTotal,
                     FechaRegistro = (d.DatFechaIngreso.Year > 2000) ? d.DatFechaIngreso.ToString(Fecha.formato_fecha_hginet) : "",
                     FechaVerificacion = d.StrUrlArchivoZip,
+                    //Id de seguridad del Documento
                     StrIdSeguridadPago = d.StrNumResolucion,
-                    Estado = (d.StrUrlArchivoZip==null)? "Pendiente" :(d.StrPrefijo == "1") ? "Aprobado" : (d.StrPrefijo == "0") ? "Rechazado" : (d.StrPrefijo == "999") ? "Pendiente" : ""
+                    Estado = (d.StrUrlArchivoZip == null) ? "Pendiente" : (d.StrPrefijo == "1") ? "Aprobado" : (d.StrPrefijo == "0") ? "Rechazado" : (d.StrPrefijo == "999") ? "Pendiente" : "",
+                    //Aqui guardo el codigo de registro (New Guid)
+                    IdRegistro = d.StrAdquirienteMvoRechazo
                 });
 
                 return Ok(retorno);
@@ -854,13 +861,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     return NotFound();
                 }
 
-
-
                 var retorno = datos.Select(d => new
                 {
-
-
-
                     NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
                     StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaAdquiriente,
                     NombreAdquiriente = d.TblDocumentos.TblEmpresasAdquiriente.StrRazonSocial,
@@ -935,8 +937,87 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
         }
 
+        /// <summary>
+        /// Actualiza el estado del pago 
+        /// </summary>
+        /// <param name="IdSeguridad">Id New Guid con el que se crea el pago</param>
+        /// <param name="StrIdSeguridadRegistro">Id de seguridad del Documento</param>
+        /// <param name="Pago">Objeto de pago que retorna la plataforma de zona de pagos</param>
+        /// Aqui se debe colocar un parametro adicional con un cifrado para validar que quien 
+        /// esta solicitando la actualizacion es una de las plataformas autorizadas
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Api/ActualizarEstado")]
+
+        public IHttpActionResult ActualizarEstado(Guid IdSeguridad, Guid StrIdSeguridadRegistro, string Pago)
+        {
+
+            var ObjetoPago = JsonConvert.DeserializeObject<VerificaPago>(Pago);
+
+            Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
+
+            var Detalle = pago.ActualizarPago(IdSeguridad, StrIdSeguridadRegistro, ObjetoPago);
+
+            return Ok();
+        }
 
 
+
+        /// <summary>
+        /// Actualiza el estado del pago, esta es llamada desde la plataforma de pago intermadia para actualizar los datos del pago mediante la sonda.
+        /// </summary>
+        /// <param name="IdSeguridad">Id New Guid con el que se crea el pago</param>
+        /// <param name="StrIdSeguridadRegistro">Id de seguridad del Documento</param>
+        /// <param name="Pago">Objeto de pago que retorna la plataforma de zona de pagos</param>
+        /// Aqui se debe colocar un parametro adicional con un cifrado para validar que quien 
+        /// esta solicitando la actualizacion es una de las plataformas autorizadas
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Api/SrcActualizaEstado")]
+        public IHttpActionResult SrcActualizaEstado(Guid IdSeguridad, Guid StrIdSeguridadRegistro, string Pago, string CodValidacion)
+        {
+            try
+            {
+                var ObjetoPago = JsonConvert.DeserializeObject<VerificaPago>(Pago);
+
+                Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
+
+                string CifradoSecundario = Encriptar.Encriptar_SHA256(StrIdSeguridadRegistro + "-" + ObjetoPago.detalle_pago.FirstOrDefault().id_comercio);
+
+                var Detalle = pago.ActualizarPago(IdSeguridad, StrIdSeguridadRegistro, ObjetoPago);
+
+                return Ok(true);
+            }
+            catch (Exception)
+            {
+
+                return Ok(false);
+            }
+        }
+
+
+
+
+        [HttpPost]
+        [Route("Api/prueba")]
+        public HttpResponseMessage prueba([FromBody] ObjPago obj )
+        {
+           
+                HttpResponseMessage ss = new HttpResponseMessage();
+                string tt=obj.CodValidacion;
+                return ss;
+           
+        }
+
+
+
+        public class ObjPago
+        {
+            public Guid IdSeguridad { get; set; }
+            public Guid StrIdSeguridadRegistro { get; set; }
+            public string Pago { get; set; }
+            public string CodValidacion { get; set; }
+        }
 
         #endregion
     }

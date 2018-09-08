@@ -186,7 +186,7 @@
                                                     </div>
                                                 </div>-->
                                                 <div id="panelPagoPendiente">
-                                                    <div class="col-md-12 text-right" id="PanelPago" >
+                                                    <div class="col-md-12 text-right" id="PanelPago">
                                                         <br />
 
                                                         <div id="button"></div>
@@ -197,8 +197,17 @@
                                                         </div>
 
 
+
+
                                                     </div>
+
+                                                    
+
                                                 </div>
+                                                <div class="col-md-12 text-right" id="PanelVerificacion">
+                                                        <div data-dx-button="buttonVerificar" >                                                            
+                                                        </div>
+                                                    </div>
 
                                                 <div class="dx-fieldset">
                                                     <div id="summary"></div>

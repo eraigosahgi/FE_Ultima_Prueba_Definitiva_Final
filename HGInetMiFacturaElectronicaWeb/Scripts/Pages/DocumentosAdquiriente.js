@@ -340,7 +340,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 });
 
 //Controlador de Pagos
-DocAdquirienteApp.controller('ModalPagosController', function ModalPagosController($scope, $rootScope, $location, $http) {
+DocAdquirienteApp.controller('ModalPagosController', function ModalPagosController($scope, $rootScope, $location, $http, $timeout) {
 
     $("#summary").dxValidationSummary({});
     $scope.valoraPendiente = 0;
@@ -354,12 +354,16 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     $scope.nit = "";
     $scope.razonsocial = "";
     $scope.SinpagosPendiente = true;
+    //Este es el new Guid con el que se guarda el documento
+    //Se utiliza aqui solo si se va a verificar el estado de un pago
+    $scope.Idregistro = "";
 
     $rootScope.ConsultarPago = function (IdSeguridad, Monto, PagosParciales) {
         $("#PanelPago").show();
         $("#MontoPago").dxNumberBox({ readOnly: (PagosParciales == "1") ? false : true });
         $("#Detallepagos").hide();
         $("#panelPagoPendiente").show();
+        $("#PanelVerificacion").hide();
 
 
         ///Este es el monto total de la factura
@@ -381,11 +385,13 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         $scope.valoraPagar = Monto;
         $("#divValorPendiente").text(fNumber.go($scope.valoraPendiente));
         $("#MontoPago").dxNumberBox({ value: $scope.valoraPendiente });
-        //Consulto los pagos de este documento
+        //Consulto los pagos de este documento        
         $http.get('/api/ConsultarPagos?StrIdSeguridadDoc=' + IdSeguridad).then(function (response) {
 
             if (response.data[0].Monto > 0) {
                 $("#Detallepagos").show();
+            } else {
+                $("#panelPagoPendiente").show();
             }
 
             /////Parametros de la tabla
@@ -427,7 +433,12 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                        if (options.column.caption == "Estado") {
                            if (fieldData) {
                                if (fieldData == "Pendiente") {
-                                   $("#panelPagoPendiente").hide();
+                                   if (response.data[0].Monto > 0) {
+                                       $("#panelPagoPendiente").hide();
+                                       $("#PanelVerificacion").show();
+                                       $scope.Idregistro = options.data.IdRegistro;
+                                   }
+
                                }
                            }
                        }
@@ -609,7 +620,13 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     };
 
 
-
+    $scope.buttonVerificar = {
+        text: 'Verificar',
+        type: "success",
+        onClick: function (e) {
+            VerificarEstado();
+        }
+    }
 
 
     $("#form").on("submit", function (e) {
@@ -617,11 +634,19 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         $("#button").dxButton({ visible: false });
         $scope.EnProceso = true;
         $http.get('/api/Documentos?strIdSeguridad=' + $scope.IdSeguridad + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + $scope.valoraPagar).then(function (response) {
-            window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
-            $("#button").dxButton({ visible: true });
-            $scope.EnProceso = false;
-            $("#MontoPago").dxNumberBox({ value: "" });
-            $rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura);
+
+            var RutaServicio = "http://localhost:50145/Views/Pago.aspx?IdSeguridad=";
+
+            $scope.Idregistro = response.data.IdRegistro;
+
+            window.open(RutaServicio + response.data.Ruta, "_blank");
+            //$scope.EnProceso = false;
+            //$("#MontoPago").dxNumberBox({ value: "" });
+
+            $timeout(function callAtTimeout() {
+                VerificarEstado();
+            }, 60000);
+
         }, function (error) {
 
             if (error != undefined) {
@@ -630,10 +655,13 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                 $scope.EnProceso = false;
             }
 
+            $scope.$apply(function () {
+                $scope.EnProceso = false;
+            });
+            
+
         });
         e.preventDefault();
-
-
     });
 
     $("#button").dxButton({
@@ -641,5 +669,32 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         type: "success",
         useSubmitBehavior: true
     });
+
+
+    function VerificarEstado() {
+        $('#wait').show();
+
+
+        $http.get('http://localhost:50145/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+            //Esto retorna un objeto  de la plataforma intermedia que sirve para actualizar el pago local
+            var ObjeRespuestaPI = response.data;
+            //////////////////////////////////////////////////////////////////////
+            $http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
+                $('#wait').hide();
+                $rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura);
+                $scope.EnProceso = false;
+            }), function (response) {
+                $('#wait').hide();
+                $scope.EnProceso = false;
+                Mensaje(response.data.ExceptionMessage, "error");
+            };
+
+        }), function (response) {
+            $('#wait').hide();
+            $scope.EnProceso = false;
+            Mensaje(response.data.ExceptionMessage, "error");
+        }
+
+    }
 
 });
