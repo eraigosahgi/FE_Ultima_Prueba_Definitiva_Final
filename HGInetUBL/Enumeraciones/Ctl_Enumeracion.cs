@@ -58,13 +58,17 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="codigo"></param>
         /// <returns>Medio de pago</returns>
-        public static Meanscode ObtenerMedioPago(int codigo)
+        public static string ObtenerMedioPago(int codigo)
         {
             try
             {
-                Meanscode enumerable = Enumeracion.ParseToEnum<Meanscode>(codigo);
+                int medio = Enumeracion.ParseToEnum<Meanscode>(codigo).GetHashCode();
+                if (medio == 0)
+                    codigo = 24;
 
-                return enumerable;
+                string descripcion = Enumeracion.GetDescription((Meanscode)codigo);
+
+                return descripcion;
             }
             catch (Exception excepcion)
             {
@@ -73,13 +77,22 @@ namespace HGInetUBL
         }
 
 
-        public static termstype ObtenerTerminoPago(int codigo)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
+        public static string ObtenerTerminoPago(int codigo)
         {
             try
             {
-                termstype enumerable = Enumeracion.ParseToEnum<termstype>(codigo);
+                int medio = Enumeracion.ParseToEnum<termstype>(codigo).GetHashCode();
+                if (medio == 0)
+                    codigo = 3;
 
-                return enumerable;
+                string descripcion = Enumeracion.GetDescription((termstype)codigo);
+
+                return descripcion;
             }
             catch (Exception excepcion)
             {

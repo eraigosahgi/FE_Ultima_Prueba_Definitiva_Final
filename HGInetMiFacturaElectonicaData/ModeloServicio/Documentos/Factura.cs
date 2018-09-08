@@ -177,6 +177,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string VersionAplicativo { get; set; }
 
+        /// <summary>
+        /// Plazo de la Factura
+        /// </summary>
+        public int Plazo { get; set; }
+
+        /// <summary>
+        /// Forma de pago del documento(Toma por defecto Factura Electronica codigo 24)
+        /// </summary>
+        public int FormaPago { get; set; }
+
+        /// <summary>
+        /// Termino de Pago del documento ( Toma por defecto Fecha fija codigo 3)
+        /// </summary>
+        public int TerminoPago { get; set; }
+
         #endregion
 
     }

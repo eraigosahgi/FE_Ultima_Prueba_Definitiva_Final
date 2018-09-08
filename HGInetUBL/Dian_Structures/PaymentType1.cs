@@ -101,35 +101,35 @@ namespace HGInetUBL
     public enum Meanscode
     {
         /// <comentarios/>
-		[System.Xml.Serialization.XmlEnumAttribute("10 - Efectivo")]
+		[Description("10 - Efectivo")]
         Efectivo = 10,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("20 - Cheque")]
+        [Description("20 - Cheque")]
         Cheque = 20,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("24 - Factura electrónica esperando que el adquirente la ACEPTE")]
+        [Description("24 - Factura electrónica esperando que el adquirente la ACEPTE")]
         Factura_electronica = 24,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("41 - Transferencia bancaria")]
+        [Description("41 - Transferencia bancaria")]
         Transferencia = 41,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("42 - Consignación bancaria")]
+        [Description("42 - Consignación bancaria")]
         Consignación = 42,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("54 - Tarjeta crédito")]
+        [Description("54 - Tarjeta crédito")]
         Tarjeta_credito = 54,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("55 - Tarjeta débito")]
+        [Description("55 - Tarjeta débito")]
         Tarjeta_debito = 55,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("68 - Servicio de pago en línea")]
+        [Description("68 - Servicio de pago en línea")]
         Pago_linea = 68,
 
     }
@@ -141,19 +141,19 @@ namespace HGInetUBL
     {
 
         /// <comentarios/>
-		[System.Xml.Serialization.XmlEnumAttribute("2 - Fin de mes")]
+		[Description("2 - Fin de mes")]
         Fin_mes = 2,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("3 - Fecha fija")]
+        [Description("3 - Fecha fija")]
         Fecha_fija = 3,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("14 - Pago contra entrega")]
+        [Description("14 - Pago contra entrega")]
         Contra_entrega = 14,
 
         /// <comentarios/>
-        [System.Xml.Serialization.XmlEnumAttribute("78 - Factoring")]
+        [Description("78 - Factoring")]
         Factoring = 78,
     }
 }

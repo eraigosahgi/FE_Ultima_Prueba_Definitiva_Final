@@ -95,7 +95,7 @@ namespace HGInetUBL
                 #region Cuotas Factura
                 if (documento.Cuotas != null && documento.Cuotas.Any())
                 {
-                    factura.PaymentMeans = ObtenerCuotas(documento.Cuotas.ToList());
+                    factura.PaymentMeans = ObtenerCuotas(documento.Cuotas.ToList(),documento.FormaPago);
                 }
                 else
                 {
@@ -104,13 +104,13 @@ namespace HGInetUBL
                     PaymentMeansType[] PaymentMeans = new PaymentMeansType[1];
                     PaymentMeansType PaymentMean = new PaymentMeansType();
                     PaymentMeansCodeType1 MeansCode = new PaymentMeansCodeType1();
-                    //MeansCode.Value = documento.FormaPago;
-                    MeansCode.Value = "24";
-                    //MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(Convert.ToInt16(documento.FormaPago)).ToString();
+                    MeansCode.Value = documento.FormaPago.ToString();
+                    //MeansCode.Value = "24";
+                    MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(documento.FormaPago);
                     PaymentMean.PaymentMeansCode = MeansCode;
 
                     //Terminos de pago de la Factura
-                    /*
+                    
                     PaymentTermsType[] PaymentTermsTypes = new PaymentTermsType[1];
                     PaymentTermsType TermsType = new PaymentTermsType();
                     TermsType.ID = new IDType();
@@ -121,8 +121,8 @@ namespace HGInetUBL
                     Note_Terms[0] = Note_term;
                     TermsType.Note = Note_Terms;
                     TermsType.PaymentMeansID = new PaymentMeansIDType();
-                    TermsType.PaymentMeansID.Value = documento.TerminoPago;
-                    TermsType.PaymentMeansID.schemeName = Ctl_Enumeracion.ObtenerTerminoPago(Convert.ToInt16(documento.TerminoPago)).ToString();
+                    TermsType.PaymentMeansID.Value = documento.TerminoPago.ToString();
+                    TermsType.PaymentMeansID.schemeName = Ctl_Enumeracion.ObtenerTerminoPago(documento.TerminoPago);
                     TermsType.Amount = new AmountType1();
                     TermsType.Amount.Value = documento.Total;
                     CurrencyCodeContentType moneda_documento = Ctl_Enumeracion.ObtenerMoneda(documento.Moneda);
@@ -135,7 +135,7 @@ namespace HGInetUBL
                     TermsType.SettlementPeriod.DurationMeasure = new DurationMeasureType();
                     TermsType.SettlementPeriod.DurationMeasure.Value = documento.Plazo;
                     PaymentTermsTypes[0] = TermsType;
-                    factura.PaymentTerms = PaymentTermsTypes;*/
+                    factura.PaymentTerms = PaymentTermsTypes;
 
                     #endregion
 
@@ -1319,7 +1319,7 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="cuota">Datos de las cuotas</param>
         /// <returns>Objeto tipo PaymentMeansType</returns>
-        private static PaymentMeansType[] ObtenerCuotas(List<Cuota> cuota)
+        private static PaymentMeansType[] ObtenerCuotas(List<Cuota> cuota, int medio_pago)
         {
 
             PaymentMeansType[] PaymentMeans = new PaymentMeansType[cuota.Count];
@@ -1335,15 +1335,15 @@ namespace HGInetUBL
                 PaymentMean.ID = ID;
 
                 PaymentMeansCodeType1 MeansCode = new PaymentMeansCodeType1();
-                //MeansCode.Value = medio_pago;
-                MeansCode.Value = "24";
-                //MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(Convert.ToInt16(medio_pago)).ToString();
+                MeansCode.Value = medio_pago.ToString();
+                //MeansCode.Value = "24";
+                MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(medio_pago);
                 PaymentMean.PaymentMeansCode = MeansCode;
 
                 InstructionNoteType[] Instructions = new InstructionNoteType[1];
                 InstructionNoteType Instruction = new InstructionNoteType();
-                //Instruction.Value = string.Format("Cuota {0} de {1}",item.Codigo, cuota.Count());
-                Instruction.Value = item.Valor.ToString();
+                Instruction.Value = string.Format("Cuota {0} de {1}",item.Codigo, cuota.Count());
+                //Instruction.Value = item.Valor.ToString();
                 Instructions[0] = Instruction;
                 PaymentMean.InstructionNote = Instructions;
 
@@ -1353,11 +1353,11 @@ namespace HGInetUBL
                 PaymentMeans[contador] = PaymentMean;
 
                 //Terminos de pago
-               /* PaymentTermsType[] PaymentTermsTypes = new PaymentTermsType[1];
+                PaymentTermsType[] PaymentTermsTypes = new PaymentTermsType[1];
                 PaymentTermsType TermsType = new PaymentTermsType();
                 TermsType.Amount = new AmountType1();
                 TermsType.Amount.Value = item.Valor;
-                PaymentTermsTypes[contador] = TermsType;*/
+                PaymentTermsTypes[contador] = TermsType;
 
                 contador++;
 
