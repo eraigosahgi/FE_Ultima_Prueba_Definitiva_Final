@@ -837,7 +837,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                             if (datos_pasarela != null)
                             {
-                                ObjPago.IntComercioId = datos_pasarela.IntComercioId;
+                                ObjPago.StrComercioId = datos_pasarela.IntComercioId.ToString();
+                                //ObjPago.IntComercioId = datos_pasarela.IntComercioId;
                                 ObjPago.StrComercioClave = datos_pasarela.StrComercioClave;
                                 ObjPago.StrComercioIdRuta = datos_pasarela.StrComercioIdRuta;
                                 ObjPago.StrCodigoServicio = datos_pasarela.StrCodigoServicio;
@@ -862,7 +863,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
 
                         //Datos de la pasarela electrónica.
-                        ObjPago.IntComercioId = Convert.ToInt32(pasarela.IdComercio);
+                        //ObjPago.IntComercioId = Convert.ToInt32(pasarela.IdComercio);
+                        ObjPago.StrComercioId = pasarela.IdComercio;
                         ObjPago.StrComercioClave = pasarela.ClaveComercio;
                         ObjPago.StrComercioIdRuta = pasarela.RutaComercio;
                         ObjPago.StrCodigoServicio = pasarela.CodigoServicio;
@@ -924,7 +926,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     ObjPago.StrClienteEmail = datos_empresa.StrMail;
 
                     //Encriptar datos de seguridad secundaria
-                    ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.IntComercioId);
+                    ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrComercioId);
 
                     //Registro el Pago Local                    
                     TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago));
@@ -970,7 +972,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             public System.Guid StrIdSeguridadRegistro { get; set; }
             public System.DateTime DatFechaRegistro { get; set; }
             public string StrComercioData { get; set; }
-            public int IntComercioId { get; set; }
+            //public int IntComercioId { get; set; }
+            public string StrComercioId { get; set; }
             public string StrComercioIdRuta { get; set; }
             public string StrCodigoServicio { get; set; }
             public string StrComercioClave { get; set; }
