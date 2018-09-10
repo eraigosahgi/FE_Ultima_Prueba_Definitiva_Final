@@ -21,10 +21,11 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
                
                 $http.get('/api/Documentos?strIdSeguridad=' + id + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + response.data).then(function (response) {
 
-                    window.open(response.data, "Zona de Pago", $(window).height(), $(window).width());
+                    window.open("http://cloudservices.hginet.co/Views/Pago.aspx?IdSeguridad=" + response.data.Ruta, "_blank");
+                    
                     //Si lo envia a la pantalla de pago, cierra la pantalla actual
-                    if (Zpago)
-                        window.close();
+                    //if (Zpago)
+                       // window.close();
                 }, function (error) {
                     DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
                     $scope.DetalleAcuse = false;
@@ -32,11 +33,11 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
             } else {
                 if (response.data == "PagoPendiente") {
                     DevExpress.ui.notify("No puede hacer pagos mientras tenga pagos pendientes", 'error', 7000);
-                    window.close();
+//                    window.close();
                 }
                 if (response.data == "DocumentoCancelado") {
                     DevExpress.ui.notify("Este documento ya fue pagado", 'error', 7000);
-                    window.close();
+  //                  window.close();
                 }
             }
         }, function (error) {
