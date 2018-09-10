@@ -227,6 +227,10 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             try
             {
 
+      
+
+                
+
                 List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
                                                       //   join pago in context.TblPagosElectronicos on documentos.StrIdSeguridad equals pago.StrIdSeguridadDoc                                                  
                                                   where documentos.StrIdSeguridad == StrIdSeguridadDoc
@@ -299,7 +303,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 
                 }
+                
                 return ListDocFinal;
+                
             }
             catch (Exception excepcion)
             {
@@ -323,7 +329,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                 int Pago_pendiente = (from pagos in context.TblPagosElectronicos
                                       where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-                                      && pagos.IntEstadoPago == 999
+                                      && (pagos.IntEstadoPago == 999 || pagos.IntEstadoPago == 888)
                                       select pagos.IntValorPago).Count();
                 if (Pago_pendiente > 0)
                 {
