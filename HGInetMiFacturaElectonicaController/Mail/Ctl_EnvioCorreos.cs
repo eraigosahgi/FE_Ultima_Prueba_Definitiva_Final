@@ -254,7 +254,7 @@ namespace HGInetMiFacturaElectonicaController
 
                         Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-                        clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, correos_copia_oculta, null, "", "");
+                        clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
                     }
                 }
                 return true;
@@ -337,7 +337,7 @@ namespace HGInetMiFacturaElectonicaController
 
                         Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-                        clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, correos_copia_oculta, null, "", "");
+                        clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
                     }
                 }
 
@@ -837,7 +837,7 @@ namespace HGInetMiFacturaElectonicaController
 
                         Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-                        clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, correos_copia_oculta, null, "", "");
+                        clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
 
                     }
                 }
