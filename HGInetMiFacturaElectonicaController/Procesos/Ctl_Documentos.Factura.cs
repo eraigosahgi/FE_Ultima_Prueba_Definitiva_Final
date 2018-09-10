@@ -265,34 +265,34 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
             //valida resolucion
             if (!resolucion.StrNumResolucion.Equals(documento.NumeroResolucion))
-                throw new ApplicationException(string.Format("El número de resolución '{0}' no es válido", documento.NumeroResolucion));
+                throw new ApplicationException(string.Format("El número de resolución {0} no es válido", documento.NumeroResolucion));
 
             //valida número de la Factura este entre los rangos
             if (documento.Documento < resolucion.IntRangoInicial || documento.Documento > resolucion.IntRangoFinal)
-                throw new ApplicationException(string.Format("El número del documento '{0}' no es válido según la resolución", documento.Documento));
+                throw new ApplicationException(string.Format("El número del documento {0} no es válido según la resolución", documento.Documento));
 
             if (!resolucion.StrPrefijo.Equals(documento.Prefijo))
                 throw new ApplicationException(string.Format("El prefijo '{0}' no es válido según Resolución", documento.Prefijo));
 
             //Valida que la fecha este en los terminos
             if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
-                throw new ApplicationException(string.Format("La fecha de elaboración '{0}' no está dentro los términos.", documento.Fecha));
+                throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
 
             if (documento.FechaVence.Date < documento.Fecha.Date)
-                throw new ApplicationException(string.Format("La fecha de vencimiento '{0}' debe ser mayor o igual a la fecha de elaboración del documento '{1}'", documento.FechaVence, documento.Fecha));
+                throw new ApplicationException(string.Format("La fecha de vencimiento {0} debe ser mayor o igual a la fecha de elaboración del documento {1}", documento.FechaVence, documento.Fecha));
 
             //Valida que no este vacio y Formato
             if (string.IsNullOrEmpty(documento.Moneda))
                 throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Moneda", "string"));
 
             if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Moneda))
-                throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor '{1}' según ISO 4217", "Moneda", documento.Moneda));
+                throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
 
             //Valida que el codigo del formato que envia este disponible.
             if (string.IsNullOrEmpty(documento.DocumentoFormato.ArchivoPdf))
             {
                 if (documento.DocumentoFormato.Codigo < 1 || documento.DocumentoFormato.Codigo > 4)
-                    throw new ApplicationException(string.Format("El Formato '{0}' no se encuentra disponible en la plataforma.", documento.DocumentoFormato.Codigo));
+                    throw new ApplicationException(string.Format("El Formato {0} no se encuentra disponible en la plataforma.", documento.DocumentoFormato.Codigo));
             }
 
             //Valida que no este vacio y este bien formado 

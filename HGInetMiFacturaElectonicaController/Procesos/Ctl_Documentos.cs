@@ -271,13 +271,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
 
             if (!ConfiguracionRegional.ValidarCodigoPais(tercero.CodigoPais))
-                throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor '{1}' según ISO 3166-1 alfa-2 en el {2} ", "CodigoPais", tercero.CodigoPais, tipo));
+                throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "CodigoPais", tercero.CodigoPais, tipo));
 
             if (string.IsNullOrEmpty(tercero.RazonSocial))
                 throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial", tipo).Replace("de tipo", "del"));
 
             if ((tercero.TipoPersona < 1) || (tercero.TipoPersona > 2))
-                throw new ArgumentException(string.Format("El parámetro {0} con valor '{1}' del {2} no esta bien formado", "TipoPersona", tercero.TipoPersona, tipo));
+                throw new ArgumentException(string.Format("El parámetro {0} con valor {1} del {2} no esta bien formado", "TipoPersona", tercero.TipoPersona, tipo));
 
             if (tercero.TipoPersona == 2)
             {
@@ -323,7 +323,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorIva).Replace(",", ".")))
                     //if (!isnumber.IsMatch(Convert.ToString(documento.ValorIva).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Iva", documento.ValorIva));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Iva", documento.ValorIva));
 
                 //Valida el Descuento 
                 if (documento.ValorDescuento == 0)
@@ -332,7 +332,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 }
 
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
 
                 //Valida el Subtotal 
                 if (documento.ValorSubtotal == 0)
@@ -340,7 +340,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     documento.ValorSubtotal = Convert.ToDecimal(0.00M);
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorSubtotal).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Subtotal", documento.ValorSubtotal));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", documento.ValorSubtotal));
 
                 //Valida el Impuesto al consumo 
                 if (documento.ValorImpuestoConsumo == 0)
@@ -348,7 +348,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     documento.ValorImpuestoConsumo = Convert.ToDecimal(0.00M);
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorImpuestoConsumo).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Impuesto al Consumo", documento.ValorImpuestoConsumo));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Impuesto al Consumo", documento.ValorImpuestoConsumo));
 
                 //Valida la Retencion en la fuente
                 if (documento.ValorReteFuente == 0)
@@ -356,7 +356,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     documento.ValorReteFuente = Convert.ToDecimal(0.00M);
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteFuente).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "ReteFuente", documento.ValorReteFuente));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", documento.ValorReteFuente));
 
                 //Valida el ReteIca 
                 if (documento.ValorReteIca == 0)
@@ -364,7 +364,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     documento.ValorReteIca = Convert.ToDecimal(0.00M);
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIca).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "ReteIca", documento.ValorReteIca));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIca", documento.ValorReteIca));
 
                 //Calculo del total con los campos enviados en el objeto
                 if (documento.Total == 0)
@@ -372,7 +372,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     documento.Total = Convert.ToDecimal(0.00M);
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Total).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Total", documento.Total));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Total", documento.Total));
 
                 //Validacion del Neto calculado con el que es enviado en el documento
                 if (documento.Neto == 0)
@@ -380,7 +380,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     documento.Neto = Convert.ToDecimal(0.00M);
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Neto).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Valor Neto", documento.Neto));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Valor Neto", documento.Neto));
 
                 //Validacion del ReteIva calculado con el que es enviado en el documento
                 if (documento.ValorReteIva == 0)
@@ -389,7 +389,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 }
 
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "ReteIva", documento.ValorReteIva));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIva", documento.ValorReteIva));
 
             }
         }
@@ -429,10 +429,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     Docdet.ValorUnitario = 0.00M;
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
 
                 if (Docdet.DescuentoPorcentaje < 0 || Docdet.DescuentoPorcentaje > 100)
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Porcentaje Descuento", Docdet.DescuentoPorcentaje));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Porcentaje Descuento", Docdet.DescuentoPorcentaje));
 
                 if (Docdet.DescuentoValor == 0)
                 {
@@ -445,7 +445,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     Docdet.IvaValor = Convert.ToDecimal(0.00M);
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.IvaValor).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Iva", Docdet.IvaValor));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Iva", Docdet.IvaValor));
 
                 //Validacion del Valor Subtotal
                 if (Docdet.ValorSubtotal == 0)
@@ -454,7 +454,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 }
 
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Subtotal", Docdet.ValorSubtotal));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", Docdet.ValorSubtotal));
 
                 //Validacion del Valor del Impuesto al Consumo
                 if (Docdet.ValorImpuestoConsumo == 0)
@@ -463,7 +463,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     Docdet.ValorImpuestoConsumo = 0.00M;
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorImpuestoConsumo).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "Impuesto al Consumo", Docdet.ValorImpuestoConsumo));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Impuesto al Consumo", Docdet.ValorImpuestoConsumo));
 
 
                 //Validacion del Valor del ReteICA
@@ -472,7 +472,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     Docdet.ReteIcaValor = 0.00M;
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteIcaValor).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "ReteIca", Docdet.ReteIcaValor));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIca", Docdet.ReteIcaValor));
 
                 //Validacion del Valor del ReteFte
                 if (Docdet.ReteFuenteValor == 0)
@@ -480,7 +480,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     Docdet.ReteFuenteValor = 0.00M;
                 }
                 if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo '{0}' con valor '{1}' del encabezado no está bien formado", "ReteFuente", Docdet.ReteFuenteValor));
+                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", Docdet.ReteFuenteValor));
 
                 Iva_total += Docdet.IvaValor;
                 Desc_total += Docdet.DescuentoValor;
@@ -519,7 +519,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().Identificacion);
 
             if (!facturador_electronico.IntObligado)
-                throw new ApplicationException(string.Format("Licencia inválida para la identificación '{0}'.", facturador_electronico.StrIdentificacion));
+                throw new ApplicationException(string.Format("Licencia inválida para la identificación {0}.", facturador_electronico.StrIdentificacion));
 
             // genera un id único de la plataforma
             Guid id_peticion = Guid.NewGuid();
@@ -562,9 +562,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
             if (lista_resolucion == null)
-                throw new ApplicationException(string.Format("No se encontraron resoluciones para el Facturador Electrónico '{0}'", facturador_electronico.StrIdentificacion));
+                throw new ApplicationException(string.Format("No se encontraron resoluciones para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
             else if (!lista_resolucion.Any())
-                throw new ApplicationException(string.Format("No se encontraron resoluciones para el Facturador Electrónico '{0}'", facturador_electronico.StrIdentificacion));
+                throw new ApplicationException(string.Format("No se encontraron resoluciones para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
 
 
             List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
@@ -588,7 +588,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     TblDocumentos numero_documento = num_doc.Obtener(objeto.Identificacion, objeto.Documento, objeto.Prefijo);
 
                     if (numero_documento != null)
-                        throw new ApplicationException(string.Format("El documento número '{0}' con prefijo '{1}' ya xiste para el Facturador Electrónico {2}", objeto.Documento, objeto.Prefijo, facturador_electronico.StrIdentificacion));
+                        throw new ApplicationException(string.Format("El documento número {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}", objeto.Documento, objeto.Prefijo, facturador_electronico.StrIdentificacion));
 
                     TblEmpresasResoluciones resolucion = null;
 
