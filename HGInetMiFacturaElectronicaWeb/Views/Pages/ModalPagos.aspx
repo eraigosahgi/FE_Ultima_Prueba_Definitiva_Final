@@ -71,6 +71,11 @@
             word-break: normal;
             border-color: Gray;
         }
+
+        .modal-dialog {
+            width: 60%;
+            margin: 30px auto;
+        }
     </style>
 </head>
 <body>

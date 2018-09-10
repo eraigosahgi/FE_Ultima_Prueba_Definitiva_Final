@@ -258,13 +258,13 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                             //Numero de Documento
                             DocFinal.IntNumero = doc.IntNumero;
                             //Fecha del Documento
-                            DocFinal.DatFechaDocumento = doc.DatFechaDocumento;
+                            DocFinal.DatFechaDocumento = docPago.DatFechaRegistro;
                             //Valor del documento
                             DocFinal.IntVlrTotal = docPago.IntValorPago;
                             //Fecha de recibido
                             DocFinal.DatFechaIngreso = docPago.DatFechaRegistro;
                             //Fecha de verificacion
-                            DocFinal.StrUrlArchivoZip = docPago.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hginet);
+                            DocFinal.StrUrlArchivoZip = docPago.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora);
                             //Id de Seguridad del Pago
                             DocFinal.StrNumResolucion = docPago.StrIdSeguridadPago;
                             //Estado del Pago
@@ -794,8 +794,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 ObjPago.IntSincronizacion = true;
 
                 ObjPago.StrAuthToken = "";
-
-                ObjPago.StrRutaSync = "http://localhost:61433/Api/SrcActualizaEstado";
+                
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+                ObjPago.StrRutaSync = plataforma.RutaPublica.ToString() +"/Api/SrcActualizaEstado";
 
                 ObjPago.StrRutaDestino = "";
 

@@ -785,7 +785,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
                     //Pago
                     Monto = d.IntVlrTotal,
-                    FechaRegistro = (d.DatFechaIngreso.Year > 2000) ? d.DatFechaIngreso.ToString(Fecha.formato_fecha_hginet) : "",
+                    FechaRegistro = (d.DatFechaIngreso.Year > 2000) ? d.DatFechaIngreso.ToString(Fecha.formato_fecha_hora) : "",
                     FechaVerificacion = d.StrUrlArchivoZip,
                     //Id de seguridad del Documento
                     StrIdSeguridadPago = d.StrNumResolucion,

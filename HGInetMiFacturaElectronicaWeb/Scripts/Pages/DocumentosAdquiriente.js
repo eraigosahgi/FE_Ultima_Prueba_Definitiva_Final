@@ -462,7 +462,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                        caption: "Fecha Pago",
                        dataField: "FechaRegistro",
                        dataType: "date",
-                       format: "yyyy-MM-dd "
+                       format: "yyyy-MM-dd HH:mm"
                    },
 
                    {
@@ -478,7 +478,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                        caption: "Fecha Verificación",
                        dataField: "FechaVerificacion",
                        dataType: "date",
-                       format: "yyyy-MM-dd "
+                       format: "yyyy-MM-dd HH:mm"
                    }
 
                ],
@@ -645,7 +645,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
             $timeout(function callAtTimeout() {
                 VerificarEstado();
-            }, 60000);
+            }, 180000);
 
         }, function (error) {
 
