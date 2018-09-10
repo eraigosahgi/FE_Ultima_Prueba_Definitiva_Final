@@ -776,6 +776,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
+                    /*
+                    RazonSocialFacturador=d.TblEmpresasFacturador.StrRazonSocial,
+                    NitFacturador=d.TblEmpresasAdquiriente.StrRazonSocial,
+                    Telefono=d.TblEmpresasFacturador.StrTelefono,
+                    Mail=d.TblEmpresasFacturador.StrMail,
+                    */
+
                     RazonSocialFacturador = d.StrEmpresaFacturador,
                     NitFacturador = d.StrEmpresaAdquiriente,
                     Telefono = d.StrCufe,
