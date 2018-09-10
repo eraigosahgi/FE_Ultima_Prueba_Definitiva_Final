@@ -74,7 +74,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     RutaPublica = plataforma.RutaPublica,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
                     tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
-                    poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId != null) ? 1 : 0,
+                    poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId != null) ? (d.IntIdEstado!=90) ?1:0 : 0,
                     FacturaCenlada = d.IntIdEstado,
                     PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales == null) ? 0 : (d.TblEmpresasResoluciones?.IntPermiteParciales == true) ? 1 : 0,
                     Telefono = d.TblEmpresasFacturador.StrTelefono,
