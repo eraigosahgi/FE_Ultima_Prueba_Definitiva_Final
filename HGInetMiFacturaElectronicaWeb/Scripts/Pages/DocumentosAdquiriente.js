@@ -635,7 +635,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         $scope.EnProceso = true;
         $http.get('/api/Documentos?strIdSeguridad=' + $scope.IdSeguridad + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + $scope.valoraPagar).then(function (response) {
 
-            var RutaServicio = "http://localhost:50145/Views/Pago.aspx?IdSeguridad=";
+            var RutaServicio = "http://cloudservices.hginet.co/Views/Pago.aspx?IdSeguridad=";
 
             $scope.Idregistro = response.data.IdRegistro;
 
@@ -673,9 +673,9 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
     function VerificarEstado() {
         $('#wait').show();
-
-
-        $http.get('http://localhost:50145/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+        
+        //$http.get('http://localhost:50145/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+        $http.get('http://cloudservices.hginet.co/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
             //Esto retorna un objeto  de la plataforma intermedia que sirve para actualizar el pago local
             var ObjeRespuestaPI = response.data;
             //////////////////////////////////////////////////////////////////////
