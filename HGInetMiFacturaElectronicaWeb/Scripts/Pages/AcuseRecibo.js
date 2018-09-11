@@ -17,7 +17,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         //$http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&pago=true').then(function (response) {
         var id = IdSeguridad.split('&')[0];
         $http.get('/api/ConsultaSaldoDocumento?StrIdSeguridadDoc=' + id).then(function (response) {
-            if (response.data != "PagoPendiente" && response.data != "DocumentoCancelado") {
+            if (response.data != "PagoPendiente" && response.data != "DocumentoCancelado" && response.data != "ErrorDian") {
                
                 $http.get('/api/Documentos?strIdSeguridad=' + id + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + response.data).then(function (response) {
 
@@ -33,12 +33,16 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
             } else {
                 if (response.data == "PagoPendiente") {
                     DevExpress.ui.notify("No puede hacer pagos mientras tenga pagos pendientes", 'error', 7000);
-//                    window.close();
                 }
                 if (response.data == "DocumentoCancelado") {
                     DevExpress.ui.notify("Este documento ya fue pagado", 'error', 7000);
-  //                  window.close();
                 }
+
+                if (response.data == "ErrorDian") {
+                    DevExpress.ui.notify("El estado actual del documento, no permite hacer pagos", 'error', 7000);                    
+                }
+                
+
             }
         }, function (error) {
             $scope.DetalleAcuse = false;
