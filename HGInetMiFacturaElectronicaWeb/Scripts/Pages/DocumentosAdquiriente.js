@@ -357,6 +357,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     //Este es el new Guid con el que se guarda el documento
     //Se utiliza aqui solo si se va a verificar el estado de un pago
     $scope.Idregistro = "";
+    $scope.PermitePagosParciales = false;
 
     $rootScope.ConsultarPago = function (IdSeguridad, Monto, PagosParciales) {
         $("#PanelPago").show();
@@ -364,6 +365,8 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         $("#Detallepagos").hide();
         $("#panelPagoPendiente").show();
         $("#PanelVerificacion").hide();
+
+        $scope.PermitePagosParciales = PagosParciales;
 
 
         ///Este es el monto total de la factura
@@ -645,7 +648,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
             $timeout(function callAtTimeout() {
                 VerificarEstado();
-            }, 180000);
+            }, 60000);
 
         }, function (error) {
 
@@ -681,7 +684,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
             //////////////////////////////////////////////////////////////////////
             $http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
                 $('#wait').hide();
-                $rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura);
+                $rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura, $scope.PermitePagosParciales);
                 $scope.EnProceso = false;
             }), function (response) {
                 $('#wait').hide();
