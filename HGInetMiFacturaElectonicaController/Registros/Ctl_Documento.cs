@@ -240,13 +240,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
         }
 
         /// <summary>
-        /// 
+        ///  Obtiene la lista de documentos de la vista de adquiriente, con estados Dian publicos, excepto el error dian
         /// </summary>
-        /// <param name="identificacion_adquiente"></param>
-        /// <param name="numero_documento"></param>
-        /// <param name="estado_recibo"></param>
-        /// <param name="fecha_inicio"></param>
-        /// <param name="fecha_fin"></param>
+        /// <param name="identificacion_adquiente">Identificación adquiriente</param>
+        /// <param name="numero_documento">Numero de Documento int</param>
+        /// <param name="estado_recibo">Estados de recibo, Pendiente,Aprobado, etc</param>
+        /// <param name="fecha_inicio">Fecha inicio del documento en la plataforma</param>
+        /// <param name="fecha_fin">Fecha inicio del documento en la plataforma</param>
         /// <param name="tipo_documento">tipo documento 1: factura - 2: nota débito - 3: nota crédito - -1: todos</param>
         /// <returns></returns>
         public List<TblDocumentos> ObtenerPorFechasAdquiriente(string identificacion_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
@@ -272,6 +272,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
 
+            int ErrorDian = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
+
             var respuesta = (from datos in context.TblDocumentos
                              join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 
@@ -280,6 +282,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                            && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
                                            && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento < fecha_fin)
                                            && (estado_dian.Contains(datos.IntIdEstado.ToString()))
+                                           && (datos.IntIdEstado!= ErrorDian)
                              orderby datos.IntNumero descending
                              select datos).ToList();
 
