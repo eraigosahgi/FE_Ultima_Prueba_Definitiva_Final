@@ -84,6 +84,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 //valor del documento.
                 datos_registro.IntValorPago = valor;
 
+                datos_registro.IntEstadoPago = 888;
+
                 Crear(datos_registro);
 
                 return datos_registro;
@@ -227,9 +229,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             try
             {
 
-      
 
-                
+
+
 
                 List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
                                                       //   join pago in context.TblPagosElectronicos on documentos.StrIdSeguridad equals pago.StrIdSeguridadDoc                                                  
@@ -303,9 +305,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 
                 }
-                
+
                 return ListDocFinal;
-                
+
             }
             catch (Exception excepcion)
             {
@@ -323,9 +325,16 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         {
             try
             {
-                var Valor_Documento = (from Doc in context.TblDocumentos
-                                       where Doc.StrIdSeguridad == StrIdSeguridadDoc
-                                       select Doc.IntVlrTotal).FirstOrDefault();
+                TblDocumentos Valor_Documento = (from Doc in context.TblDocumentos
+                                                 where Doc.StrIdSeguridad == StrIdSeguridadDoc
+                                                 select Doc).FirstOrDefault();
+
+
+                if (Valor_Documento.IntIdEstado == ProcesoEstado.FinalizacionErrorDian.GetHashCode())
+                {
+                    return "ErrorDian";
+                }
+
 
                 int Pago_pendiente = (from pagos in context.TblPagosElectronicos
                                       where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
@@ -346,16 +355,17 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 {
                     Datos_pago = (from pagos in context.TblPagosElectronicos
                                   where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                                   && pagos.IntEstadoPago == 1
                                   select pagos.IntValorPago).Sum();
                 }
 
 
-                if (Datos_pago >= Valor_Documento)
+                if (Datos_pago >= Valor_Documento.IntVlrTotal)
                 {
                     return "DocumentoCancelado";
                 }
 
-                return (Valor_Documento - Datos_pago).ToString();
+                return (Valor_Documento.IntVlrTotal - Datos_pago).ToString();
             }
             catch (Exception excepcion)
             {
@@ -800,9 +810,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 ObjPago.IntSincronizacion = true;
 
                 ObjPago.StrAuthToken = "";
-                
+
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-                ObjPago.StrRutaSync = plataforma.RutaPublica.ToString() +"/Api/SrcActualizaEstado";
+                ObjPago.StrRutaSync = plataforma.RutaPublica.ToString() + "/Api/SrcActualizaEstado";
 
                 ObjPago.StrRutaDestino = "";
 
@@ -815,6 +825,14 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 {
                     Ctl_Documento clase_documento = new Ctl_Documento();
                     TblDocumentos datos_documento = clase_documento.ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
+
+
+
+                    var Monto_Pendiente = (from pagos in context.TblPagosElectronicos
+                                           where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad
+                                            && pagos.IntEstadoPago == 1
+                                           select pagos.IntValorPago).Sum();
+
 
                     //Enviar Informacion facturador
                     //ObjPago.StrIdentificacionFacturador= datos_documento.TblEmpresasFacturador.StrIdentificacion;
@@ -843,12 +861,11 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                             TblEmpresasPasarela datos_pasarela = clase_pasarela.Obtener(datos_documento.StrEmpresaFacturador, datos_resolucion.IntComercioId.Value);
 
                             if (datos_pasarela != null)
-                            {                                
+                            {
                                 ObjPago.IntComercioId = datos_pasarela.IntComercioId;
                                 ObjPago.StrComercioClave = datos_pasarela.StrComercioClave;
                                 ObjPago.StrComercioIdRuta = datos_pasarela.StrComercioIdRuta;
                                 ObjPago.StrCodigoServicio = datos_pasarela.StrCodigoServicio;
-
                             }
                         }
                         else
@@ -857,7 +874,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
 
                         if (valor_pago <= 0)
-                            valor_pago = Convert.ToDouble(datos_documento.IntVlrTotal);
+                            valor_pago = Convert.ToDouble(Monto_Pendiente);
+
+
                         else
                         {
                             if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
@@ -869,7 +888,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
 
                         //Datos de la pasarela electrónica.
-                        ObjPago.IntComercioId = Convert.ToInt32(pasarela.IdComercio);                        
+                        ObjPago.IntComercioId = Convert.ToInt32(pasarela.IdComercio);
                         ObjPago.StrComercioClave = pasarela.ClaveComercio;
                         ObjPago.StrComercioIdRuta = pasarela.RutaComercio;
                         ObjPago.StrCodigoServicio = pasarela.CodigoServicio;
@@ -940,8 +959,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     var ObjetoPago = JsonConvert.SerializeObject(ObjPago);
 
                     //Retorno el Objeto Json Cifrado 
-                    
-                    return new { Ruta = EncriptarObjeto(ObjetoPago.ToString()), IdRegistro = ObjPago.StrIdSeguridadRegistro }; 
+
+                    return new { Ruta = EncriptarObjeto(ObjetoPago.ToString()), IdRegistro = ObjPago.StrIdSeguridadRegistro };
 
                 }
                 else
@@ -977,7 +996,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             public System.Guid StrIdSeguridadRegistro { get; set; }
             public System.DateTime DatFechaRegistro { get; set; }
             public string StrComercioData { get; set; }
-            public int IntComercioId { get; set; }            
+            public int IntComercioId { get; set; }
             public string StrComercioIdRuta { get; set; }
             public string StrCodigoServicio { get; set; }
             public string StrComercioClave { get; set; }
