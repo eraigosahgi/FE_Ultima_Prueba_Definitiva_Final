@@ -105,8 +105,14 @@ namespace HGInetUBL
                 }
                 else
                 {
-                    factura_obj.Plazo = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure.Value);
-                    factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID.Value);
+                    if (factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure != null)
+                    {
+                        factura_obj.Plazo = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure.Value);
+                    }
+                    if (factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID != null)
+                    {
+                        factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID.Value);
+                    }
                 }
             }
 

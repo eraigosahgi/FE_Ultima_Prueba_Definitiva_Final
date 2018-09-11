@@ -95,11 +95,18 @@ namespace HGInetUBL
 
                 #region factura forma de pago.
 
+                //Valida si este dato no llega y pone por defecto 24 - Factura Electronica
+                if (documento.FormaPago == 0)
+                    documento.FormaPago = 24;
+
+                //Valida que el termino de pago no este en 0 y lo pone por defecto en 3 - Fecha fija
+                if (documento.TerminoPago == 0)
+                    documento.TerminoPago = 3;
+
                 List<PaymentMeansType> PaymentMeans = new List<PaymentMeansType>();
                 PaymentMeansType PaymentMean = new PaymentMeansType();
                 PaymentMeansCodeType1 MeansCode = new PaymentMeansCodeType1();
                 MeansCode.Value = documento.FormaPago.ToString();
-                //MeansCode.Value = "24";
                 MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(documento.FormaPago);
                 PaymentMean.PaymentMeansCode = MeansCode;
 
