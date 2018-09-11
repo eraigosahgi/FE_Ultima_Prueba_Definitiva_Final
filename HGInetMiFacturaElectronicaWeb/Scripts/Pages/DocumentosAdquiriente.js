@@ -354,6 +354,10 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     $scope.nit = "";
     $scope.razonsocial = "";
     $scope.SinpagosPendiente = true;
+
+    //Esta variable es para marcarla como true si hay un pago pendiente y asi poder seguir consultando su estado
+    $scope.pagoenVerificacion = false;
+
     //Este es el new Guid con el que se guarda el documento
     //Se utiliza aqui solo si se va a verificar el estado de un pago
     $scope.Idregistro = "";
@@ -368,6 +372,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
         $scope.PermitePagosParciales = PagosParciales;
 
+        $scope.pagoenVerificacion = false;
 
         ///Este es el monto total de la factura
         $scope.montoFactura = Monto;
@@ -440,6 +445,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                                        $("#panelPagoPendiente").hide();
                                        $("#PanelVerificacion").show();
                                        $scope.Idregistro = options.data.IdRegistro;
+                                       $scope.pagoenVerificacion = true;
                                    }
 
                                }
@@ -643,8 +649,6 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
             $scope.Idregistro = response.data.IdRegistro;
 
             window.open(RutaServicio + response.data.Ruta, "_blank");
-            //$scope.EnProceso = false;
-            //$("#MontoPago").dxNumberBox({ value: "" });
 
             $timeout(function callAtTimeout() {
                 VerificarEstado();
@@ -661,7 +665,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
             $scope.$apply(function () {
                 $scope.EnProceso = false;
             });
-            
+
 
         });
         e.preventDefault();
@@ -675,8 +679,8 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
 
     function VerificarEstado() {
-        $('#wait').show();
         
+
         //$http.get('http://localhost:50145/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
         $http.get('http://cloudservices.hginet.co/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
             //Esto retorna un objeto  de la plataforma intermedia que sirve para actualizar el pago local
@@ -686,14 +690,23 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                 $('#wait').hide();
                 $rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura, $scope.PermitePagosParciales);
                 $scope.EnProceso = false;
+
+                ///Se va a ejecutar automaticamente la sonda de consulta mientras el pago este pendiente
+                if ($scope.pagoenVerificacion) {
+                    $timeout(function callAtTimeout() {
+                        VerificarEstado();
+                    }, 60000);
+                }
+                /////////////////////////////////////////////////////////////////////////////////////////
+
             }), function (response) {
-                $('#wait').hide();
+                
                 $scope.EnProceso = false;
                 Mensaje(response.data.ExceptionMessage, "error");
             };
 
         }), function (response) {
-            $('#wait').hide();
+            
             $scope.EnProceso = false;
             Mensaje(response.data.ExceptionMessage, "error");
         }
