@@ -1003,29 +1003,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         }
 
 
-
-
-        [HttpPost]
-        [Route("Api/prueba")]
-        public HttpResponseMessage prueba([FromBody] ObjPago obj )
-        {
-           
-                HttpResponseMessage ss = new HttpResponseMessage();
-                string tt=obj.CodValidacion;
-                return ss;
-           
-        }
-
-
-
-        public class ObjPago
-        {
-            public Guid IdSeguridad { get; set; }
-            public Guid StrIdSeguridadRegistro { get; set; }
-            public string Pago { get; set; }
-            public string CodValidacion { get; set; }
-        }
-
+       
         #endregion
     }
 }
