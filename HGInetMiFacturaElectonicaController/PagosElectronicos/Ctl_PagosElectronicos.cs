@@ -224,43 +224,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             try
             {
 
-
-                IQueryable lista = (from d in context.TblDocumentos.Include("TblPagosElectronicos")
-                                    where d.StrIdSeguridad == StrIdSeguridadDoc
-                                    select d);
-
-                var ObjLista = new { RazonSocialFacturador="" };
-
-                foreach (var doc in lista)
-                {
-                    ObjLista = new { RazonSocialFacturador= ""};
-                }
-                /*
-                    var li= lista.se
-                {
-
-                    RazonSocialFacturador = d.StrEmpresaFacturador,
-                                        NitFacturador = d.StrEmpresaAdquiriente,
-                                        Telefono = d.TblEmpresasFacturador.StrTelefono,
-                                        Mail = d.TblEmpresasFacturador.StrMail,
-                                        DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
-                                        IntNumero = d.IntNumero,
-                                        FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
-                                        //Pago
-                                        Monto = d.IntVlrTotal,
-                                        FechaRegistro = (d.DatFechaIngreso.Year > 2000) ? d.DatFechaIngreso.ToString(Fecha.formato_fecha_hora) : "",
-                                        FechaVerificacion = d.dat
-                                        //Id de seguridad del Documento
-                                        StrIdSeguridadPago = d.StrNumResolucion,
-                                        Estado = (d.StrUrlArchivoZip == null) ? "Pendiente" : (d.StrPrefijo == "1") ? "Aprobado" : (d.StrPrefijo == "0") ? "Rechazado" : (d.StrPrefijo == "999") ? "Pendiente" : "",
-                                        //Aqui guardo el codigo de registro (New Guid)
-                                        IdRegistro = d.StrAdquirienteMvoRechazo
-
-                                    });
-
-
-                
-                */
+               
                 List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
                                                       //   join pago in context.TblPagosElectronicos on documentos.StrIdSeguridad equals pago.StrIdSeguridadDoc                                                  
                                                   where documentos.StrIdSeguridad == StrIdSeguridadDoc
