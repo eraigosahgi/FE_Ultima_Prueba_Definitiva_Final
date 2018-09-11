@@ -823,22 +823,22 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     Ctl_Documento clase_documento = new Ctl_Documento();
                     TblDocumentos datos_documento = clase_documento.ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
 
-                   
-
-
+                    //Valido si este documento tiene algún pago
                     var Pagos = (from pagos in context.TblPagosElectronicos
                                  where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad
                                  && pagos.IntEstadoPago == 1
                                  select pagos.IntValorPago).FirstOrDefault();
 
-                    decimal Datos_pago = 0;
+                    //Si tiene algún pago, entonces valido cuanto es el total de todos los pagos
                     if (Pagos > 0)
                     {
+                        //Le asigno la suma de los pagos a la siguiente variable
                         Monto_Pendiente = (from pagos in context.TblPagosElectronicos
                                                where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad
                                                 && pagos.IntEstadoPago == 1
                                                select pagos.IntValorPago).Sum();
 
+                        //Luego Resto, el total del documento menos la suma de pagos
                         Monto_Pendiente = datos_documento.IntVlrTotal-Monto_Pendiente;
 
                     }
@@ -882,14 +882,14 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                             throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el número de Resolución", datos_documento.StrNumResolucion));
 
                         datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
-
+                        //Si la variable de pago viene sin valor
                         if (valor_pago <= 0)
-                            if (Monto_Pendiente > 0)
+                            if (Monto_Pendiente > 0) //Pregunto si el pago pendiente este presente
                             {
-                                valor_pago = Convert.ToDouble(Monto_Pendiente);
+                                valor_pago = Convert.ToDouble(Monto_Pendiente);//Si esta presente le asigno la variable pendiente al pago
                             }else
                             {
-                                valor_pago = Convert.ToInt32(datos_documento.IntVlrTotal);
+                                valor_pago = Convert.ToInt32(datos_documento.IntVlrTotal);//Si no, entonces busco el monto total del pago
                             }
 
 
