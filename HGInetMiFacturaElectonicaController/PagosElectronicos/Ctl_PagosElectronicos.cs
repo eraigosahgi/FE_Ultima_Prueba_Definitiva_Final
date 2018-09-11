@@ -21,6 +21,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 {
@@ -198,18 +199,12 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             try
             {
 
-                /*  Guid variable = Guid.Parse(id_seguridad_pago);
-                  TblPagosElectronicos datos_pago = (from pago in context.TblPagosElectronicos
-                                                     where pago.StrIdSeguridadPago.Equals(id_seguridad_pago)
-                                                     && pago.StrIdPlataforma.Equals(id_plataforma)
-                                                     select pago).FirstOrDefault();
-                                                     */
-                TblPagosElectronicos datos_pago1 = (from pago in context.TblPagosElectronicos
+                TblPagosElectronicos datos_pago = (from pago in context.TblPagosElectronicos
                                                     where pago.StrIdSeguridadDoc == id_seguridad_doc
                                                     && pago.StrIdRegistro == id_Seguridad_Registro
                                                     select pago).FirstOrDefault();
 
-                return datos_pago1;
+                return datos_pago;
             }
             catch (Exception excepcion)
             {
@@ -230,9 +225,42 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             {
 
 
+                IQueryable lista = (from d in context.TblDocumentos.Include("TblPagosElectronicos")
+                                    where d.StrIdSeguridad == StrIdSeguridadDoc
+                                    select d);
+
+                var ObjLista = new { RazonSocialFacturador="" };
+
+                foreach (var doc in lista)
+                {
+                    ObjLista = new { RazonSocialFacturador= ""};
+                }
+                /*
+                    var li= lista.se
+                {
+
+                    RazonSocialFacturador = d.StrEmpresaFacturador,
+                                        NitFacturador = d.StrEmpresaAdquiriente,
+                                        Telefono = d.TblEmpresasFacturador.StrTelefono,
+                                        Mail = d.TblEmpresasFacturador.StrMail,
+                                        DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
+                                        IntNumero = d.IntNumero,
+                                        FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
+                                        //Pago
+                                        Monto = d.IntVlrTotal,
+                                        FechaRegistro = (d.DatFechaIngreso.Year > 2000) ? d.DatFechaIngreso.ToString(Fecha.formato_fecha_hora) : "",
+                                        FechaVerificacion = d.dat
+                                        //Id de seguridad del Documento
+                                        StrIdSeguridadPago = d.StrNumResolucion,
+                                        Estado = (d.StrUrlArchivoZip == null) ? "Pendiente" : (d.StrPrefijo == "1") ? "Aprobado" : (d.StrPrefijo == "0") ? "Rechazado" : (d.StrPrefijo == "999") ? "Pendiente" : "",
+                                        //Aqui guardo el codigo de registro (New Guid)
+                                        IdRegistro = d.StrAdquirienteMvoRechazo
+
+                                    });
 
 
-
+                
+                */
                 List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
                                                       //   join pago in context.TblPagosElectronicos on documentos.StrIdSeguridad equals pago.StrIdSeguridadDoc                                                  
                                                   where documentos.StrIdSeguridad == StrIdSeguridadDoc
@@ -307,6 +335,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 }
 
                 return ListDocFinal;
+                
+                    
+                //return lista;
 
             }
             catch (Exception excepcion)
@@ -820,18 +851,33 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                 ObjPago.StrPagoIdPlataforma = "";
 
+                decimal Monto_Pendiente=0;
+
                 //Valida si el pago es de un documento o una compra de planes.
                 if (tipo_pago == 0)
                 {
                     Ctl_Documento clase_documento = new Ctl_Documento();
                     TblDocumentos datos_documento = clase_documento.ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
 
+                   
 
 
-                    var Monto_Pendiente = (from pagos in context.TblPagosElectronicos
-                                           where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad
-                                            && pagos.IntEstadoPago == 1
-                                           select pagos.IntValorPago).Sum();
+                    var Pagos = (from pagos in context.TblPagosElectronicos
+                                 where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad
+                                 && pagos.IntEstadoPago == 1
+                                 select pagos.IntValorPago).FirstOrDefault();
+
+                    decimal Datos_pago = 0;
+                    if (Pagos > 0)
+                    {
+                        Monto_Pendiente = (from pagos in context.TblPagosElectronicos
+                                               where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad
+                                                && pagos.IntEstadoPago == 1
+                                               select pagos.IntValorPago).Sum();
+
+                        Monto_Pendiente = datos_documento.IntVlrTotal-Monto_Pendiente;
+
+                    }
 
 
                     //Enviar Informacion facturador
@@ -874,14 +920,20 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
 
                         if (valor_pago <= 0)
-                            valor_pago = Convert.ToDouble(Monto_Pendiente);
+                            if (Monto_Pendiente > 0)
+                            {
+                                valor_pago = Convert.ToDouble(Monto_Pendiente);
+                            }else
+                            {
+                                valor_pago = Convert.ToInt32(datos_documento.IntVlrTotal);
+                            }
 
 
-                        else
-                        {
-                            if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
-                                throw new ApplicationException("El valor a pagar no puede ser superior al valor total del documento.");
-                        }
+                            else
+                            {
+                                if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
+                                    throw new ApplicationException("El valor a pagar no puede ser superior al valor total del documento.");
+                            }
                     }
                     else
                     {
