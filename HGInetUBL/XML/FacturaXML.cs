@@ -92,15 +92,10 @@ namespace HGInetUBL
                 factura.IssueTime = IssueTime;
                 #endregion
 
-                #region Cuotas Factura
-                if (documento.Cuotas != null && documento.Cuotas.Any())
-                {
-                    factura.PaymentMeans = ObtenerCuotas(documento.Cuotas.ToList(), documento.FormaPago);
-                }
 
                 #region factura forma de pago.
 
-                PaymentMeansType[] PaymentMeans = new PaymentMeansType[1];
+                List<PaymentMeansType> PaymentMeans = new List<PaymentMeansType>();
                 PaymentMeansType PaymentMean = new PaymentMeansType();
                 PaymentMeansCodeType1 MeansCode = new PaymentMeansCodeType1();
                 MeansCode.Value = documento.FormaPago.ToString();
@@ -108,45 +103,54 @@ namespace HGInetUBL
                 MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(documento.FormaPago);
                 PaymentMean.PaymentMeansCode = MeansCode;
 
-                //Terminos de pago de la Factura
+                PaymentDueDateType DueDate = new PaymentDueDateType();
+                DueDate.Value = Convert.ToDateTime(documento.FechaVence.ToString(Fecha.formato_fecha_hginet));
+                PaymentMean.PaymentDueDate = DueDate;
+                PaymentMeans.Add(PaymentMean);
+                factura.PaymentMeans = PaymentMeans.ToArray();
+                #endregion
 
-                PaymentTermsType[] PaymentTermsTypes = new PaymentTermsType[1];
+                #region Cuotas Factura
+                List<PaymentTermsType> PaymentTermsTypes = new List<PaymentTermsType>();
                 PaymentTermsType TermsType = new PaymentTermsType();
-                TermsType.ID = new IDType();
-                TermsType.ID.Value = documento.Documento.ToString();
-                NoteType[] Note_Terms = new NoteType[1];
-                NoteType Note_term = new NoteType();
-                Note_term.Value = string.Format("Pago a {0} dias", documento.Plazo);
-                Note_Terms[0] = Note_term;
-                TermsType.Note = Note_Terms;
-                TermsType.PaymentMeansID = new PaymentMeansIDType();
-                TermsType.PaymentMeansID.Value = documento.TerminoPago.ToString();
-                TermsType.PaymentMeansID.schemeName = Ctl_Enumeracion.ObtenerTerminoPago(documento.TerminoPago);
-                TermsType.Amount = new AmountType1();
-                TermsType.Amount.Value = documento.Total;
-                CurrencyCodeContentType moneda_documento = Ctl_Enumeracion.ObtenerMoneda(documento.Moneda);
-                TermsType.Amount.currencyID = moneda_documento;
-                TermsType.SettlementPeriod = new PeriodType();
-                TermsType.SettlementPeriod.StartDate = new StartDateType();
-                TermsType.SettlementPeriod.StartDate.Value = Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet));
-                TermsType.SettlementPeriod.EndDate = new EndDateType();
-                TermsType.SettlementPeriod.EndDate.Value = Convert.ToDateTime(documento.FechaVence.ToString(Fecha.formato_fecha_hginet));
-                TermsType.SettlementPeriod.DurationMeasure = new DurationMeasureType();
-                TermsType.SettlementPeriod.DurationMeasure.Value = documento.Plazo;
-                TermsType.SettlementPeriod.DurationMeasure.unitCode = Ctl_Enumeracion.ObtenerUnidadMedida("DAY");
-                PaymentTermsTypes[0] = TermsType;
-                factura.PaymentTerms = PaymentTermsTypes;
 
+                if (documento.Cuotas != null && documento.Cuotas.Any())
+                {
+                    PaymentTermsTypes = (ObtenerCuotas(documento.Cuotas.ToList(), documento.FormaPago, documento.Moneda).ToList());
+                }
+                else
+                {
+                    //Terminos de pago de la Factura
+                    TermsType.ID = new IDType();
+                    TermsType.ID.Value = documento.Documento.ToString();
+                    NoteType[] Note_Terms = new NoteType[1];
+                    NoteType Note_term = new NoteType();
+                    Note_term.Value = string.Format("Pago a {0} dias", documento.Plazo);
+                    Note_Terms[0] = Note_term;
+                    TermsType.Note = Note_Terms;
+                    TermsType.PaymentMeansID = new PaymentMeansIDType();
+                    TermsType.PaymentMeansID.Value = documento.TerminoPago.ToString();
+                    TermsType.PaymentMeansID.schemeName = Ctl_Enumeracion.ObtenerTerminoPago(documento.TerminoPago);
+                    TermsType.Amount = new AmountType1();
+                    TermsType.Amount.Value = documento.Total;
+                    CurrencyCodeContentType moneda_documento = Ctl_Enumeracion.ObtenerMoneda(documento.Moneda);
+                    TermsType.Amount.currencyID = moneda_documento;
+                    TermsType.SettlementPeriod = new PeriodType();
+                    TermsType.SettlementPeriod.StartDate = new StartDateType();
+                    TermsType.SettlementPeriod.StartDate.Value = Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet));
+                    TermsType.SettlementPeriod.EndDate = new EndDateType();
+                    TermsType.SettlementPeriod.EndDate.Value = Convert.ToDateTime(documento.FechaVence.ToString(Fecha.formato_fecha_hginet));
+                    TermsType.SettlementPeriod.DurationMeasure = new DurationMeasureType();
+                    TermsType.SettlementPeriod.DurationMeasure.Value = documento.Plazo;
+                    TermsType.SettlementPeriod.DurationMeasure.unitCode = Ctl_Enumeracion.ObtenerUnidadMedida("DAY");
+                    PaymentTermsTypes.Add(TermsType);
+                }
+                factura.PaymentTerms = PaymentTermsTypes.ToArray();
                 #endregion
 
                 #region factura.DueDate - Fecha vencimiento de la factura
 
-                PaymentDueDateType DueDate = new PaymentDueDateType();
-                DueDate.Value = Convert.ToDateTime(documento.FechaVence.ToString(Fecha.formato_fecha_hginet));
-                PaymentMean.PaymentDueDate = DueDate;
-                PaymentMeans[0] = PaymentMean;
-                factura.PaymentMeans = PaymentMeans;
-                #endregion
+
 
                 #endregion
 
@@ -1319,52 +1323,47 @@ namespace HGInetUBL
         /// </summary>
         /// <param name="cuota">Datos de las cuotas</param>
         /// <returns>Objeto tipo PaymentMeansType</returns>
-        private static PaymentMeansType[] ObtenerCuotas(List<Cuota> cuota, int medio_pago)
+        private static List<PaymentTermsType> ObtenerCuotas(List<Cuota> cuota, int medio_pago, string moneda)
         {
 
-            PaymentMeansType[] PaymentMeans = new PaymentMeansType[cuota.Count];
+            List<PaymentTermsType> PaymentTerms = new List<PaymentTermsType>();
 
-            int contador = 0;
             foreach (Cuota item in cuota)
             {
 
-                PaymentMeansType PaymentMean = new PaymentMeansType();
+                PaymentTermsType TermsType = new PaymentTermsType();
 
                 IDType ID = new IDType();
                 ID.Value = item.Codigo.ToString();
-                PaymentMean.ID = ID;
+                TermsType.ID = ID;
 
-                PaymentMeansCodeType1 MeansCode = new PaymentMeansCodeType1();
+                //PaymentMeansCodeType1 MeansCode = new PaymentMeansCodeType1();
+                PaymentMeansIDType MeansCode = new PaymentMeansIDType();
                 MeansCode.Value = medio_pago.ToString();
                 //MeansCode.Value = "24";
-                MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(medio_pago);
-                PaymentMean.PaymentMeansCode = MeansCode;
+                MeansCode.schemeName = Ctl_Enumeracion.ObtenerMedioPago(medio_pago);
+                TermsType.PaymentMeansID = MeansCode;
 
-                InstructionNoteType[] Instructions = new InstructionNoteType[1];
-                InstructionNoteType Instruction = new InstructionNoteType();
+                List<NoteType> Instructions = new List<NoteType>();
+                NoteType Instruction = new NoteType();
                 Instruction.Value = string.Format("Cuota {0} de {1}", item.Codigo, cuota.Count());
                 //Instruction.Value = item.Valor.ToString();
-                Instructions[0] = Instruction;
-                PaymentMean.InstructionNote = Instructions;
-
-                PaymentDueDateType DueDate = new PaymentDueDateType();
-                DueDate.Value = Convert.ToDateTime(item.FechaVence.ToString(Fecha.formato_fecha_hginet));
-                PaymentMean.PaymentDueDate = DueDate;
-                PaymentMeans[contador] = PaymentMean;
+                Instructions.Add(Instruction);
+                TermsType.Note = Instructions.ToArray();
 
                 //Terminos de pago
-                PaymentTermsType[] PaymentTermsTypes = new PaymentTermsType[1];
-                PaymentTermsType TermsType = new PaymentTermsType();
+                TermsType.SettlementPeriod = new PeriodType();
+                TermsType.SettlementPeriod.EndDate = new EndDateType();
+                TermsType.SettlementPeriod.EndDate.Value = Convert.ToDateTime(item.FechaVence.ToString(Fecha.formato_fecha_hginet));
                 TermsType.Amount = new AmountType1();
                 TermsType.Amount.Value = item.Valor;
-                PaymentTermsTypes[contador] = TermsType;
-
-                contador++;
+                TermsType.Amount.currencyID = Ctl_Enumeracion.ObtenerMoneda(moneda);
+                PaymentTerms.Add(TermsType);
 
             }
 
 
-            return PaymentMeans;
+            return PaymentTerms;
         }
 
         /// <summary>
