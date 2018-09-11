@@ -106,6 +106,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F69
 		Documentacion\Liberaciones\v2018.6\20180811-StrVersionTblDocumentos.txt = Documentacion\Liberaciones\v2018.6\20180811-StrVersionTblDocumentos.txt
 		Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt = Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt
 		Documentacion\Liberaciones\v2018.6\20180905-ActualizacionTblPagosElectronicos.txt = Documentacion\Liberaciones\v2018.6\20180905-ActualizacionTblPagosElectronicos.txt
+		Documentacion\Liberaciones\v2018.6\20180911-Opcion1344 Acuse Tacito.txt = Documentacion\Liberaciones\v2018.6\20180911-Opcion1344 Acuse Tacito.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetZonaPagos", "HGInetZonaPagos\HGInetZonaPagos.csproj", "{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}"
