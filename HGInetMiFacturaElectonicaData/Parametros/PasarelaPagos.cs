@@ -7,36 +7,44 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaData
 {
-    public class PasarelaPagos : ConfigurationElement
-    {
+	public class PasarelaPagos : ConfigurationElement
+	{
 
-        [ConfigurationProperty("IdComercio", DefaultValue = "", IsKey = true, IsRequired = true)]
-        public string IdComercio
-        {
-            get { return (string)this["IdComercio"]; }
-            set { this["IdComercio"] = value; }
-        }
+		[ConfigurationProperty("IdComercio", DefaultValue = "", IsKey = true, IsRequired = true)]
+		public string IdComercio
+		{
+			get { return (string)this["IdComercio"]; }
+			set { this["IdComercio"] = value; }
+		}
 
-        [ConfigurationProperty("ClaveComercio", DefaultValue = "", IsKey = true, IsRequired = true)]
-        public string ClaveComercio
-        {
-            get { return (string)this["ClaveComercio"]; }
-            set { this["ClaveComercio"] = value; }
-        }
+		[ConfigurationProperty("ClaveComercio", DefaultValue = "", IsKey = true, IsRequired = true)]
+		public string ClaveComercio
+		{
+			get { return (string)this["ClaveComercio"]; }
+			set { this["ClaveComercio"] = value; }
+		}
 
-        [ConfigurationProperty("RutaComercio", DefaultValue = "", IsKey = true, IsRequired = true)]
-        public string RutaComercio
-        {
-            get { return (string)this["RutaComercio"]; }
-            set { this["RutaComercio"] = value; }
-        }
+		[ConfigurationProperty("RutaComercio", DefaultValue = "", IsKey = true, IsRequired = true)]
+		public string RutaComercio
+		{
+			get { return (string)this["RutaComercio"]; }
+			set { this["RutaComercio"] = value; }
+		}
 
-        [ConfigurationProperty("CodigoServicio", DefaultValue = "", IsKey = true, IsRequired = true)]
-        public string CodigoServicio
-        {
-            get { return (string)this["CodigoServicio"]; }
-            set { this["CodigoServicio"] = value; }
-        }
+		[ConfigurationProperty("CodigoServicio", DefaultValue = "", IsKey = true, IsRequired = true)]
+		public string CodigoServicio
+		{
+			get { return (string)this["CodigoServicio"]; }
+			set { this["CodigoServicio"] = value; }
+		}
 
-    }
+		[ConfigurationProperty("RutaPlataforma", DefaultValue = "", IsKey = true, IsRequired = true)]
+		public string RutaPlataforma
+		{
+			get { return (string)this["RutaPlataforma"]; }
+			set { this["RutaPlataforma"] = value; }
+		}
+
+
+	}
 }
