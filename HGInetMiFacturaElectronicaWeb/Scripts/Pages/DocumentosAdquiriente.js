@@ -394,13 +394,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         $("#divValorPendiente").text(fNumber.go($scope.valoraPendiente));
         $("#MontoPago").dxNumberBox({ value: $scope.valoraPendiente });
         //Consulto los pagos de este documento        
-        $http.get('/api/ConsultarPagos?StrIdSeguridadDoc=' + IdSeguridad).then(function (response) {
-
-            if (response.data[0].Monto > 0) {
-                $("#Detallepagos").show();
-            } else {
-                $("#panelPagoPendiente").show();
-            }
+        $http.get('/api/ConsultarPagos?StrIdSeguridadDoc=' + IdSeguridad).then(function (response) {           
 
             /////Parametros de la tabla
             $scope.fechadoc = response.data[0].FechaDocumento;
@@ -417,7 +411,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
             $("#button").dxButton({ visible: true });
 
             $("#grid").dxDataGrid({
-                dataSource: response.data,
+                dataSource: response.data[0].Pagos,
                 paging: {
                     pageSize: 20
                 },
@@ -441,11 +435,12 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                        if (options.column.caption == "Estado") {
                            if (fieldData) {
                                if (fieldData == "Pendiente") {
-                                   if (response.data[0].Monto > 0) {
+                                   if (response.data[0].Pagos[0].Monto > 0) {
                                        $("#panelPagoPendiente").hide();
                                        $("#PanelVerificacion").show();
                                        $scope.Idregistro = options.data.IdRegistro;
                                        $scope.pagoenVerificacion = true;
+                                       EsperayValida();
                                    }
 
                                }
@@ -538,6 +533,15 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
             });
 
 
+            try {
+                if (response.data[0].Pagos[0].Monto > 0) {
+                    $("#Detallepagos").show();
+                } else {
+                    $("#panelPagoPendiente").show();
+                }
+            } catch (e) {
+
+            }
 
         }), function errorCallback(response) {
             Mensaje(response.data.ExceptionMessage, "error");
@@ -644,7 +648,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         $scope.EnProceso = true;
         $http.get('/api/Documentos?strIdSeguridad=' + $scope.IdSeguridad + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + $scope.valoraPagar).then(function (response) {
 
-        	var RutaServicio = "http://atila.hginet.co:8890/CloudServices/Views/Pago.aspx?IdSeguridad=";
+            var RutaServicio = "http://atila.hginet.co:8890/CloudServices/Views/Pago.aspx?IdSeguridad=";
 
             $scope.Idregistro = response.data.IdRegistro;
 
@@ -678,25 +682,30 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     });
 
 
+    function EsperayValida() {
+        ///Se va a ejecutar automaticamente la sonda de consulta mientras el pago este pendiente
+        if ($scope.pagoenVerificacion) {
+            $timeout(function callAtTimeout() {
+                VerificarEstado();
+            }, 60000);
+        }
+    }
+
+
     function VerificarEstado() {
         
-
-        //$http.get('http://localhost:50145/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
-    	$http.get('http://atila.hginet.co:8890/CloudServices/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+        
+        $http.get('http://atila.hginet.co:8890/CloudServices/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
             //Esto retorna un objeto  de la plataforma intermedia que sirve para actualizar el pago local
             var ObjeRespuestaPI = response.data;
             //////////////////////////////////////////////////////////////////////
             $http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
                 $('#wait').hide();
-                $rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura, $scope.PermitePagosParciales);
-                $scope.EnProceso = false;
 
-                ///Se va a ejecutar automaticamente la sonda de consulta mientras el pago este pendiente
-                if ($scope.pagoenVerificacion) {
-                    $timeout(function callAtTimeout() {
-                        VerificarEstado();
-                    }, 60000);
-                }
+                $rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura, $scope.PermitePagosParciales);                                                    
+
+                $scope.EnProceso = false;                
+                                   
                 /////////////////////////////////////////////////////////////////////////////////////////
 
             }), function (response) {

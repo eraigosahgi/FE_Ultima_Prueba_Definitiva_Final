@@ -4,6 +4,7 @@ using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
@@ -74,7 +75,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     RutaPublica = plataforma.RutaPublica,
                     RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
                     tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
-                    poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId != null) ? (d.IntIdEstado!=90) ?1:0 : 0,
+                    poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId != null) ? (d.IntIdEstado != 90) ? 1 : 0 : 0,
                     FacturaCenlada = d.IntIdEstado,
                     PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales == null) ? 0 : (d.TblEmpresasResoluciones?.IntPermiteParciales == true) ? 1 : 0,
                     Telefono = d.TblEmpresasFacturador.StrTelefono,
@@ -160,6 +161,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Ctl_Documento ctl_documento = new Ctl_Documento();
                 List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
 
+                Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
                 if (datos == null)
                 {
                     return NotFound();
@@ -181,7 +183,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
                     CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
                     tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
-                    poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false
+                    poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
+                    Estatus = Pago.VerificarSaldo(id_seguridad),
+                    pago =d.TblPagosElectronicos.Select(p => new
+                    {
+                        p.StrIdRegistro,
+                        p.IntEstadoPago
+                    }
+                    //Se coloca este codigo adicional, para validar si el documento tiene un pago pendiente, y si es asi, este debe retornar un segundo objeto
+                    //con el codigo unico de pago en la plataforma de FE, para poder hacer la consulta desde acuse y validar en la plataforma intermedia el estado del documento
+                    ).Where(x=> x.IntEstadoPago.Equals(EstadoPago.Pendiente.GetHashCode()) ||  x.IntEstadoPago.Equals(EstadoPago.Pendiente2.GetHashCode()))
                 });
 
                 return Ok(retorno);
@@ -742,7 +753,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-            var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago);            
+            var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago);
             return Ok(datos);
 
         }
@@ -772,33 +783,28 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     return NotFound();
                 }
 
-
-
                 var retorno = datos.Select(d => new
                 {
-                    /*
-                    RazonSocialFacturador=d.TblEmpresasFacturador.StrRazonSocial,
-                    NitFacturador=d.TblEmpresasAdquiriente.StrRazonSocial,
-                    Telefono=d.TblEmpresasFacturador.StrTelefono,
-                    Mail=d.TblEmpresasFacturador.StrMail,
-                    */
-
+                    //Encabezado del pago
                     RazonSocialFacturador = d.StrEmpresaFacturador,
                     NitFacturador = d.StrEmpresaAdquiriente,
-                    Telefono = d.StrCufe,
-                    Mail = d.StrUrlArchivoUbl,
+                    Telefono = d.TblEmpresasFacturador.StrTelefono,
+                    Mail = d.TblEmpresasFacturador.StrMail,
                     DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
                     IntNumero = d.IntNumero,
                     FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
-                    //Pago
-                    Monto = d.IntVlrTotal,
-                    FechaRegistro = (d.DatFechaIngreso.Year > 2000) ? d.DatFechaIngreso.ToString(Fecha.formato_fecha_hora) : "",
-                    FechaVerificacion = d.StrUrlArchivoZip,
-                    //Id de seguridad del Documento
-                    StrIdSeguridadPago = d.StrNumResolucion,
-                    Estado = (d.StrUrlArchivoZip == null) ? "Pendiente" : (d.StrPrefijo == "1") ? "Aprobado" : (d.StrPrefijo == "0") ? "Rechazado" : (d.StrPrefijo == "999") ? "Pendiente" : "",
-                    //Aqui guardo el codigo de registro (New Guid)
-                    IdRegistro = d.StrAdquirienteMvoRechazo
+
+                    //Detalle del pago
+                    Pagos = d.TblPagosElectronicos.Select(p => new
+                    {                       
+                        Monto = p.IntValorPago,                        
+                        FechaRegistro = p.DatFechaRegistro,
+                        FechaVerificacion = p.DatFechaVerificacion,
+                        StrIdSeguridadPago = p.StrIdSeguridadPago,
+                        IdRegistro = p.StrIdRegistro,                        
+                        Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(p.IntEstadoPago)),
+                    })
+                    
                 });
 
                 return Ok(retorno);
@@ -873,10 +879,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
                     StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaAdquiriente,
                     NombreAdquiriente = d.TblDocumentos.TblEmpresasAdquiriente.StrRazonSocial,
-                    DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hginet) : "",
-                    DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hginet) : "",
+                    DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+                    DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
                     PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
-                    EstadoFactura = (d.IntEstadoPago == 0) ? "Rechazado" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Pendiente" : "",
+                    //EstadoFactura = (d.IntEstadoPago == 0) ? "Rechazado" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Pendiente" : "",
+                    EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
                     idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago
 
 
@@ -925,10 +932,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
                     StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaFacturador,
                     NombreAdquiriente = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
-                    DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hginet) : "",
-                    DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hginet) : "",
+                    DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+                    DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
                     PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
-                    EstadoFactura = (d.IntEstadoPago == 0) ? "Pendiente" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Rechazado" : "",
+                    //EstadoFactura = (d.IntEstadoPago == 0) ? "Pendiente" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Rechazado" : "",
+                    EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
                     idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago
 
                 });
@@ -1003,7 +1011,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         }
 
 
-       
+
         #endregion
     }
 }

@@ -296,7 +296,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
                   caption: "Fecha Pago",
                   dataField: "DatAdquirienteFechaRecibo",
                   dataType: "date",
-                  format: "yyyy-MM-dd"
+                  format: "yyyy-MM-dd HH:mm"
 
               },
             {
@@ -317,7 +317,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
                 caption: "Fecha Verificación",
                 dataField: "DatFechaVencDocumento",
                 dataType: "date",
-                format: "yyyy-MM-dd"
+                format: "yyyy-MM-dd HH:mm"
             }
 
         ],
@@ -591,7 +591,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                   caption: "Fecha Pago",
                   dataField: "DatAdquirienteFechaRecibo",
                   dataType: "date",
-                  format: "yyyy-MM-dd"
+                  format: "yyyy-MM-dd HH:mm"
 
               },
             {
@@ -612,7 +612,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                 caption: "Fecha Verificación",
                 dataField: "DatFechaVencDocumento",
                 dataType: "date",
-                format: "yyyy-MM-dd"
+                format: "yyyy-MM-dd HH:mm"
             }
 
         ],

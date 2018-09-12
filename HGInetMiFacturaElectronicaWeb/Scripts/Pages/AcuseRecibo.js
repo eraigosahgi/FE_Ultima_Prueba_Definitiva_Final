@@ -11,6 +11,9 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     $scope.DetalleAcuse = true;
     var estado = "";
     var motivo_rechazo = "";
+    //Id unico de registro de pago
+    $scope.Idregistro;
+    $scope.IdSeguridad = IdSeguridad;
 
     $scope.habilitar = function () {
 
@@ -21,8 +24,9 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
                
                 $http.get('/api/Documentos?strIdSeguridad=' + id + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + response.data).then(function (response) {
 
-                    window.open("http://cloudservices.hginet.co/Views/Pago.aspx?IdSeguridad=" + response.data.Ruta, "_blank");
-                    
+                    //window.open("http://cloudservices.hginet.co/Views/Pago.aspx?IdSeguridad=" + response.data.Ruta, "_blank");
+                    window.open("http://atila.hginet.co:8890/CloudServices/Views/Pago.aspx?IdSeguridad=" + response.data.Ruta, "_blank");
+
                     //Si lo envia a la pantalla de pago, cierra la pantalla actual
                     //if (Zpago)
                        // window.close();
@@ -63,6 +67,12 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
         //Datos GET: id_seguridad
         $http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
             $scope.RespuestaAcuse = response.data;
+            console.log("Estatus del pago: ", response.data[0].Estatus);
+            //Si estatus es igual a 2, entonces asigo los valores a las variables para ejecutar la consulta de saldo
+            if (response.data[0].Estatus==2) {
+                $scope.Idregistro = response.data[0].pago[0].StrIdRegistro                
+                VerificarEstado();
+            }
         });
 
 
@@ -162,6 +172,50 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
     }, function errorCallback(response) {
         $('#btnautenticar').show();
     });
+
+
+
+    ////Verificación de pago pendiente
+
+    function EsperayValida() {
+        ///Se va a ejecutar automaticamente la sonda de consulta mientras el pago este pendiente
+        if ($scope.pagoenVerificacion) {
+            $timeout(function callAtTimeout() {
+                VerificarEstado();
+            }, 60000);
+        }
+    }
+
+
+    function VerificarEstado() {
+
+            $http.get('http://atila.hginet.co:8890/CloudServices/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+            //$http.get('http://localhost:50145/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+            // $http.get('http://cloudservices.hginet.co/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+            //Esto retorna un objeto  de la plataforma intermedia que sirve para actualizar el pago local
+            var ObjeRespuestaPI = response.data;
+            //////////////////////////////////////////////////////////////////////
+            $http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
+                
+              
+            }), function (response) {
+
+                $scope.EnProceso = false;
+                Mensaje(response.data.ExceptionMessage, "error");
+            };
+
+        }), function (response) {
+
+            $scope.EnProceso = false;
+            Mensaje(response.data.ExceptionMessage, "error");
+        }
+
+    }
+
+
+
+
+
 });
 
 

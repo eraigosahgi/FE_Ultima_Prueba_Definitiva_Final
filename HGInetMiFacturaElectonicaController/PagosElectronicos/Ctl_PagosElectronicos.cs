@@ -222,86 +222,13 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         public List<TblDocumentos> Obtener(System.Guid StrIdSeguridadDoc)
         {
             try
-            {
+            {               
 
-               
                 List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
-                                                      //   join pago in context.TblPagosElectronicos on documentos.StrIdSeguridad equals pago.StrIdSeguridadDoc                                                  
                                                   where documentos.StrIdSeguridad == StrIdSeguridadDoc
                                                   select documentos).ToList();
-
-
-                List<TblDocumentos> ListDocFinal = new List<TblDocumentos>();
-
-
-                foreach (TblDocumentos doc in datos_pago)
-                {
-
-                    if (doc.TblPagosElectronicos.Count() > 0)
-                    {
-                        foreach (TblPagosElectronicos docPago in doc.TblPagosElectronicos)
-                        {
-                            TblDocumentos DocFinal = new TblDocumentos();
-
-                            DocFinal.StrEmpresaFacturador = doc.TblEmpresasFacturador.StrRazonSocial;
-                            //Guardo la Indentificacion del Facturador en el campo StrEmpresaAdquiriente para poder enviar un solo objeto tipado
-                            DocFinal.StrEmpresaAdquiriente = doc.TblEmpresasFacturador.StrIdentificacion;
-
-                            //Guardo el Telefono aqui
-                            DocFinal.StrCufe = doc.TblEmpresasFacturador.StrTelefono;
-                            //Mail
-                            DocFinal.StrUrlArchivoUbl = doc.TblEmpresasFacturador.StrMail;
-                            //Tipo Documento
-                            DocFinal.IntDocTipo = doc.IntDocTipo;
-                            //Numero de Documento
-                            DocFinal.IntNumero = doc.IntNumero;
-                            //Fecha del Documento
-                            DocFinal.DatFechaDocumento = docPago.DatFechaRegistro;
-                            //Valor del documento
-                            DocFinal.IntVlrTotal = docPago.IntValorPago;
-                            //Fecha de recibido
-                            DocFinal.DatFechaIngreso = docPago.DatFechaRegistro;
-                            //Fecha de verificacion
-                            DocFinal.StrUrlArchivoZip = docPago.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora);
-                            //Id de Seguridad del Pago
-                            DocFinal.StrNumResolucion = docPago.StrIdSeguridadPago;
-                            //Estado del Pago
-                            DocFinal.StrPrefijo = docPago.IntEstadoPago.ToString();
-                            //Id de Pago(New Guid)                          
-                            DocFinal.StrAdquirienteMvoRechazo = docPago.StrIdRegistro.ToString();
-
-                            ListDocFinal.Add(DocFinal);
-                        }
-                    }
-                    else
-                    {
-                        TblDocumentos DocFinal = new TblDocumentos();
-
-                        DocFinal.StrEmpresaFacturador = doc.TblEmpresasFacturador.StrRazonSocial;
-                        //Guardo la Indentificacion del Facturador en el campo StrEmpresaAdquiriente para poder enviar un solo objeto tipado
-                        DocFinal.StrEmpresaAdquiriente = doc.TblEmpresasFacturador.StrIdentificacion;
-
-                        //Guardo el Telefono aqui
-                        DocFinal.StrCufe = doc.TblEmpresasFacturador.StrTelefono;
-                        //Mail
-                        DocFinal.StrUrlArchivoUbl = doc.TblEmpresasFacturador.StrMail;
-                        //Tipo Documento
-                        DocFinal.IntDocTipo = doc.IntDocTipo;
-                        //Numero del documento
-                        DocFinal.IntNumero = doc.IntNumero;
-                        //Fecha del documento
-                        DocFinal.DatFechaDocumento = doc.DatFechaDocumento;
-                        //Guardo el documento en la lista
-                        ListDocFinal.Add(DocFinal);
-                    }
-
-
-                }
-
-                return ListDocFinal;
-                
-                    
-                //return lista;
+             
+                return datos_pago;                
 
             }
             catch (Exception excepcion)
@@ -367,6 +294,72 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
+
+
+
+
+        /// <summary>
+        /// Retorna uno de los siguientes valores: 
+        /// 1 si el documento esta totalmente pagado
+        /// 2 si tiene un pago pendiente por verificar 
+        /// 3 No pagado totalmente el documento(Es decir que no tiene ningun pago sin verificar, pero si tiene aun saldo pendiente en la factura)
+        /// </summary>
+        /// <param name="id_seguridad_pago">ID de seguridad del documento.</param>        
+        /// <returns></returns>
+        public int VerificarSaldo(System.Guid StrIdSeguridadDoc)
+        {
+            try
+            {
+                //Obtengo el documento
+                TblDocumentos Valor_Documento = (from Doc in context.TblDocumentos
+                                                 where Doc.StrIdSeguridad == StrIdSeguridadDoc
+                                                 select Doc).FirstOrDefault();
+                
+
+                //Luego valido si tiene algún pago pendiente (estatus 888,999)
+                int Pago_pendiente = (from pagos in context.TblPagosElectronicos
+                                      where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                                      && (pagos.IntEstadoPago == 999 || pagos.IntEstadoPago == 888)
+                                      select pagos.IntValorPago).Count();
+
+                if (Pago_pendiente > 0)
+                {
+                    return 2;
+                }
+
+                //Luego Valido si tiene pagos
+                var Pagos = (from pagos in context.TblPagosElectronicos
+                             where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                             && pagos.IntEstadoPago == 1
+                             select pagos.IntValorPago).FirstOrDefault();
+
+                decimal Datos_pago = 0;
+                if (Pagos > 0)
+                {
+                    Datos_pago = (from pagos in context.TblPagosElectronicos
+                                  where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+                                   && pagos.IntEstadoPago == 1
+                                  select pagos.IntValorPago).Sum();
+                }
+
+                //Pago totalmente cancelado
+                if (Datos_pago >= Valor_Documento.IntVlrTotal)
+                {
+                    return 1;
+                }
+                //no ha pagado totalmente el documento
+                return 3;
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+
+
+
 
 
 
@@ -851,11 +844,16 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     //ObjPago.StrMailFacturador = datos_documento.TblEmpresasFacturador.StrMail;
                     //ObjPago.StrImagenFacturador = datos_documento.TblEmpresasFacturador.StrImagenEmpresa;
 
+
+                    //Id del erp que envia el pago
+                    ObjPago.StrIdDocumento = datos_documento.StrObligadoIdRegistro;
+
                     identificacion_empresa = datos_documento.StrEmpresaAdquiriente;
 
                     //valisa que el documento no sea null.
                     if (datos_documento != null)
                     {
+
                         //consulta la resolución para obtener el comercio que tiene asociado.
                         Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
                         TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
@@ -929,6 +927,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         }
                     }
 
+
+               
 
                     ObjPago.IntValor = decimal.Parse(valor_pago.ToString());
                     ObjPago.IntValorIva = 0;
@@ -1017,6 +1017,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             public string StrCodigoServicio { get; set; }
             public string StrComercioClave { get; set; }
             public string StrPagoIdPlataforma { get; set; }
+            public string StrIdDocumento { get; set; }
             public int IntPagoEstado { get; set; }
             public decimal IntValor { get; set; }
             public decimal IntValorIva { get; set; }
