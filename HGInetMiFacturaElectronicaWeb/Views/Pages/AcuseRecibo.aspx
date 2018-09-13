@@ -98,8 +98,10 @@
                 <div class="panel panel-flat form-horizontal">
 
 
-                    <img class="img-responsive" alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/4krt/x80qh.png" />
-
+                    <img class="img-responsive" alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/6572/x8s6k.png" style="float: right;" />
+                    <br />
+                    <br />
+                    <br />
                     <div class="panel-body" style="display: block">
 
                         <div id="PanelInformacionFactura" style="font-size: 15px" class="dx-fieldset">
@@ -212,14 +214,12 @@
                                 <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important" href="../Login/Default.aspx" style="font-size: 14px; text-align: center;">Autenticar</a>
                             </div>
                         </div>
-                        <div class="col-md-12" style="margin-top: -15px; margin-bottom: 8%">
-                            <img alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/6572/x80n7.png" style="border-style: none; border-color: inherit; border-width: medium; border-radius: ; display: block; font-size: 13px; outline: none; text-decoration: none; width: 100%; height: 100px; margin-left: -10x; margin-right: -10px">
-                        </div>
-                    </div>
 
-                    <div class="footer text-muted" style="font-size: 14px; text-align: center; margin-bottom: 5%">
+                    </div>
+                    <div class="footer text-muted" style="font-size: 14px; text-align: center;">
                         Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a>
                     </div>
+
                 </div>
 
             </div>
