@@ -56,6 +56,9 @@ namespace HGInetDIANServicios
                 }
 				finally
 				{
+                    if (behavior.Inspector.XmlResponse == null)
+                        throw new ApplicationException("No hay respuesta del servicio de la DIAN consultando resoluciones");
+
                     string carpeta = string.Format(@"{0}_LogFacturaE\", Dms.ObtenerCarpetaPrincipal("", identificacion_empresa));
                     
                     carpeta = Directorio.CrearDirectorio(carpeta);

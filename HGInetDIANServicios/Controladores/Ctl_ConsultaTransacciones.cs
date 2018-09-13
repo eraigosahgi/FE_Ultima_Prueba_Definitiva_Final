@@ -69,7 +69,10 @@ namespace HGInetDIANServicios
 				}
 				finally
 				{
-					string carpeta = Path.GetDirectoryName(ruta_log) + @"\";
+                    if (behavior.Inspector.XmlResponse == null)
+                        throw new ApplicationException("No hay respuesta del servicio de la DIAN consultando estado del documento");
+
+                    string carpeta = Path.GetDirectoryName(ruta_log) + @"\";
 
 					string archivo = Path.GetFileNameWithoutExtension(ruta_log) + ".xml";
 
