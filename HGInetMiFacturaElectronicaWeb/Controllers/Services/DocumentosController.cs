@@ -786,8 +786,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 var retorno = datos.Select(d => new
                 {
                     //Encabezado del pago
-                    RazonSocialFacturador = d.StrEmpresaFacturador,
-                    NitFacturador = d.StrEmpresaAdquiriente,
+                    RazonSocialFacturador = d.TblEmpresasFacturador.StrRazonSocial,
+                    NitFacturador = d.TblEmpresasFacturador.StrIdentificacion,
                     Telefono = d.TblEmpresasFacturador.StrTelefono,
                     Mail = d.TblEmpresasFacturador.StrMail,
                     DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),

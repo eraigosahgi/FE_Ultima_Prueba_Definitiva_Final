@@ -150,9 +150,13 @@
                 <asp:ScriptReference Path="../../Scripts/assets/js/plugins/notifications/sweet_alert.min.js"></asp:ScriptReference>
             </Scripts>
         </asp:ScriptManager>
+        <!--Ruta de servicios de plataforma de pago-->
+        <input type="hidden" id="Hdf_RutaPagos"  runat="server"/>
+        <input type="hidden" id="Hdf_RutaSrvPagos"  runat="server"/>
 
         <!-- Barra de Navegación Principal -->
         <div class="navbar navbar-inverse bg-slate-800">
+            
             <div class="navbar-header">
                 <h4 class="navbar-brand" style="margin: 0%">HGInet Factura Electrónica</h4>
 

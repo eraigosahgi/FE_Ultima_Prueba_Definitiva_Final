@@ -22,6 +22,24 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl PanelInformacion;
         
         /// <summary>
+        /// Control Hdf_RutaPagos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hdf_RutaPagos;
+        
+        /// <summary>
+        /// Control Hdf_RutaSrvPagos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hdf_RutaSrvPagos;
+        
+        /// <summary>
         /// Control DivEstadoRespuesta.
         /// </summary>
         /// <remarks>

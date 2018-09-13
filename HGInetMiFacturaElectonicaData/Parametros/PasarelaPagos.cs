@@ -45,6 +45,12 @@ namespace HGInetMiFacturaElectonicaData
 			set { this["RutaPlataforma"] = value; }
 		}
 
+        [ConfigurationProperty("RutaServicio",DefaultValue ="",IsKey =true,IsRequired =true)]
+        public string RutaServicio
+        {
+            get { return (string)this["RutaServicio"]; }
+            set { this["RutaServicio"] = value; }
+        }
 
-	}
+    }
 }

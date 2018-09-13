@@ -22,6 +22,7 @@ using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using System.Globalization;
 
 namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 {
@@ -801,7 +802,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 ObjPago.StrRutaSync = plataforma.RutaPublica.ToString() + "/Api/SrcActualizaEstado";
-
+                
                 ObjPago.StrRutaDestino = "";
 
                 ObjPago.StrRutaProcedencia = "";
@@ -966,7 +967,10 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     ObjPago.StrClienteEmail = datos_empresa.StrMail;
 
                     //Encriptar datos de seguridad secundaria
-                    ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.IntComercioId);
+                    //ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.IntComercioId);
+
+                    
+                    ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-"+ ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t",CultureInfo.InvariantCulture) +  ObjPago.IntComercioId + "-" + ObjPago.IntValor.ToString("0.##"));
 
                     //Registro el Pago Local                    
                     TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago));

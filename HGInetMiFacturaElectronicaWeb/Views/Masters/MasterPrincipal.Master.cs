@@ -72,7 +72,14 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
                         lb_GrupoPagina.Text = this.PermisoActual.GrupoPagina;
                         //}
 
+                        //Ruta de servicio para generar el pago en la plataforma intermedia (Pagos electronicos)
+                        PasarelaPagos Ruta_Pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
+                        Hdf_RutaPagos.Value = Ruta_Pago.RutaPlataforma.ToString();
 
+                        //Ruta de consulta de estado de pago en la plataforma intermedia(Pagos electronicos)
+                        PasarelaPagos Ruta_servicio_pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
+                        Hdf_RutaSrvPagos.Value = Ruta_servicio_pago.RutaServicio.ToString();
+                        
                     }
                 }
             }

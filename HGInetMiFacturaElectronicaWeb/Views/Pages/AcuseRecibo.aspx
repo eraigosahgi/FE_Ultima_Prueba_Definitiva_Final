@@ -92,7 +92,9 @@
 
     <div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController" data-ng-cloak="" data-ng-init="DetalleAcuse=true">
         <div style="margin: 1%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
-
+            <!--Ruta de servicios de plataforma de pago-->
+            <input type="hidden" id="Hdf_RutaPagos" runat="server" />
+            <input type="hidden" id="Hdf_RutaSrvPagos" runat="server" />
             <!-- Visualización Información Factura -->
             <div class="col-md-6">
                 <div class="panel panel-flat form-horizontal">
@@ -212,6 +214,13 @@
 
                                 <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true && datos.Estatus ==3">Pagar</a>
                                 <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important" href="../Login/Default.aspx" style="font-size: 14px; text-align: center;">Autenticar</a>
+                                <div id="pnl_Verificar_Pago" data-ng-if="EnProceso">
+                                    <hr />
+                                    <div class="col-md-12">Verificando estado del pago</div>
+                                    <div data-dx-button="buttonProcesar">
+                                        <i class="icon-spinner6 spinner mr-2"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

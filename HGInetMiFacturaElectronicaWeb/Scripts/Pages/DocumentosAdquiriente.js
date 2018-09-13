@@ -355,6 +355,9 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     $scope.razonsocial = "";
     $scope.SinpagosPendiente = true;
 
+    //Variable contadora para verificar pagos
+    $scope.NumVerificacion = 1;
+
     //Esta variable es para marcarla como true si hay un pago pendiente y asi poder seguir consultando su estado
     $scope.pagoenVerificacion = false;
 
@@ -388,6 +391,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
         $scope.EnProceso = false;
 
+        
 
         $scope.valoraPendiente = Monto;
         $scope.valoraPagar = Monto;
@@ -440,7 +444,9 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                                        $("#PanelVerificacion").show();
                                        $scope.Idregistro = options.data.IdRegistro;
                                        $scope.pagoenVerificacion = true;
-                                       EsperayValida();
+                                       if ($scope.NumVerificacion <= 4) {
+                                           EsperayValida();
+                                       }
                                    }
 
                                }
@@ -648,7 +654,11 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         $scope.EnProceso = true;
         $http.get('/api/Documentos?strIdSeguridad=' + $scope.IdSeguridad + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + $scope.valoraPagar).then(function (response) {
 
-            var RutaServicio = "http://atila.hginet.co:8890/CloudServices/Views/Pago.aspx?IdSeguridad=";
+            //Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
+            $scope.NumVerificacion = 1;
+
+            //Ruta servicio
+            var RutaServicio = $('#Hdf_RutaPagos').val()+"?IdSeguridad=";
 
             $scope.Idregistro = response.data.IdRegistro;
 
@@ -694,13 +704,17 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
     function VerificarEstado() {
         
-        
-        $http.get('http://atila.hginet.co:8890/CloudServices/api/VerificarEstado?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+        var RutaServicio = $('#Hdf_RutaSrvPagos').val();
+
+        $http.get(RutaServicio+ '?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
             //Esto retorna un objeto  de la plataforma intermedia que sirve para actualizar el pago local
             var ObjeRespuestaPI = response.data;
             //////////////////////////////////////////////////////////////////////
             $http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
                 $('#wait').hide();
+
+                //Incremento la variable consulta para llegar a un maximo de tres consultar al servicio de zona virtual
+                $scope.NumVerificacion = $scope.NumVerificacion + 1;
 
                 $rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura, $scope.PermitePagosParciales);                                                    
 
