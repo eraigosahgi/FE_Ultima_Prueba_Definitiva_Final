@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System.Globalization;
+using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 {
@@ -86,7 +87,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 //valor del documento.
                 datos_registro.IntValorPago = valor;
 
-                datos_registro.IntEstadoPago = 888;
+                datos_registro.IntEstadoPago = EstadoPago.Pendiente.GetHashCode();
 
                 Crear(datos_registro);
 
@@ -201,9 +202,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             {
 
                 TblPagosElectronicos datos_pago = (from pago in context.TblPagosElectronicos
-                                                    where pago.StrIdSeguridadDoc == id_seguridad_doc
-                                                    && pago.StrIdRegistro == id_Seguridad_Registro
-                                                    select pago).FirstOrDefault();
+                                                   where pago.StrIdSeguridadDoc == id_seguridad_doc
+                                                   && pago.StrIdRegistro == id_Seguridad_Registro
+                                                   select pago).FirstOrDefault();
 
                 return datos_pago;
             }
@@ -223,13 +224,13 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         public List<TblDocumentos> Obtener(System.Guid StrIdSeguridadDoc)
         {
             try
-            {               
+            {
 
                 List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
                                                   where documentos.StrIdSeguridad == StrIdSeguridadDoc
                                                   select documentos).ToList();
-             
-                return datos_pago;                
+
+                return datos_pago;
 
             }
             catch (Exception excepcion)
@@ -253,6 +254,13 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                                                  select Doc).FirstOrDefault();
 
 
+
+                int Pendiente1 = EstadoPago.Pendiente.GetHashCode();//Pendiente por iniciar
+                int Pendiente2 = EstadoPago.Pendiente2.GetHashCode();//Pendiente por Finalizar
+                int Aprobado = EstadoPago.Aprobado.GetHashCode();
+
+
+
                 if (Valor_Documento.IntIdEstado == ProcesoEstado.FinalizacionErrorDian.GetHashCode())
                 {
                     return "ErrorDian";
@@ -261,7 +269,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                 int Pago_pendiente = (from pagos in context.TblPagosElectronicos
                                       where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-                                      && (pagos.IntEstadoPago == 999 || pagos.IntEstadoPago == 888)
+                                      && (pagos.IntEstadoPago == Pendiente1 || pagos.IntEstadoPago == Pendiente2)
                                       select pagos.IntValorPago).Count();
                 if (Pago_pendiente > 0)
                 {
@@ -270,7 +278,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                 var Pagos = (from pagos in context.TblPagosElectronicos
                              where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-                             && pagos.IntEstadoPago == 1
+                             && pagos.IntEstadoPago == Aprobado
                              select pagos.IntValorPago).FirstOrDefault();
 
                 decimal Datos_pago = 0;
@@ -278,7 +286,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 {
                     Datos_pago = (from pagos in context.TblPagosElectronicos
                                   where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-                                   && pagos.IntEstadoPago == 1
+                                   && pagos.IntEstadoPago == Aprobado
                                   select pagos.IntValorPago).Sum();
                 }
 
@@ -315,12 +323,15 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 TblDocumentos Valor_Documento = (from Doc in context.TblDocumentos
                                                  where Doc.StrIdSeguridad == StrIdSeguridadDoc
                                                  select Doc).FirstOrDefault();
-                
+
+                int Pendiente1 = EstadoPago.Pendiente.GetHashCode();//Pendiente por iniciar
+                int Pendiente2 = EstadoPago.Pendiente2.GetHashCode();//Pendiente por Finalizar
+                int Aprobado = EstadoPago.Aprobado.GetHashCode();
 
                 //Luego valido si tiene algún pago pendiente (estatus 888,999)
                 int Pago_pendiente = (from pagos in context.TblPagosElectronicos
                                       where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-                                      && (pagos.IntEstadoPago == 999 || pagos.IntEstadoPago == 888)
+                                      && (pagos.IntEstadoPago == Pendiente1 || pagos.IntEstadoPago == Pendiente2)
                                       select pagos.IntValorPago).Count();
 
                 if (Pago_pendiente > 0)
@@ -331,7 +342,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 //Luego Valido si tiene pagos
                 var Pagos = (from pagos in context.TblPagosElectronicos
                              where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-                             && pagos.IntEstadoPago == 1
+                             && pagos.IntEstadoPago == Aprobado
                              select pagos.IntValorPago).FirstOrDefault();
 
                 decimal Datos_pago = 0;
@@ -339,7 +350,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                 {
                     Datos_pago = (from pagos in context.TblPagosElectronicos
                                   where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-                                   && pagos.IntEstadoPago == 1
+                                   && pagos.IntEstadoPago == Aprobado
                                   select pagos.IntValorPago).Sum();
                 }
 
@@ -371,7 +382,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
         /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
         /// <returns></returns>
-        public List<TblPagosElectronicos> ObtenerPagosFacturador(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string Resolucion)
+        public List<TblPagosElectronicos> ObtenerPagosFacturador(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string Resolucion, int tipo_fecha)
         {
 
             fecha_inicio = fecha_inicio.Date;
@@ -399,12 +410,15 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
             var documentos = (from Pagos in context.TblPagosElectronicos
                               where Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador)
-                              && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
+                              //Valida si la fecha es documento o fecha pago
+                              && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
+                              && ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)
+
                               && (LstResolucion.Contains(Pagos.TblDocumentos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
                               && (Pagos.IntEstadoPago.Equals(cod_estado_recibo) || estado_recibo.Equals("*"))
                               && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))
                               && (Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-                              orderby Pagos.TblDocumentos.StrEmpresaAdquiriente ascending, Pagos.TblDocumentos.IntNumero ascending
+                              orderby Pagos.DatFechaRegistro descending
                               select Pagos).ToList();
 
 
@@ -419,7 +433,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
         /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
         /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
         /// <returns></returns>
-        public List<TblPagosElectronicos> ObtenerPagosAdquiriente(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo)
+        public List<TblPagosElectronicos> ObtenerPagosAdquiriente(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha)
         {
 
             fecha_inicio = fecha_inicio.Date;
@@ -443,11 +457,15 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
             var documentos = (from Pagos in context.TblPagosElectronicos
                               where Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_adquiriente)
-                              && Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*")
-                              && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
-                              && (Pagos.TblDocumentos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+                               && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
+                              && ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)
+
+                              //&& Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_facturador) || codigo_facturador.Equals("*")
+                             // && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
+                              //&& (Pagos.TblDocumentos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+                              && (Pagos.IntEstadoPago == cod_estado_recibo || estado_recibo.Equals("*"))
                               && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))
-                              orderby Pagos.TblDocumentos.StrEmpresaAdquiriente ascending, Pagos.TblDocumentos.IntNumero ascending
+                              orderby Pagos.DatFechaRegistro descending
                               select Pagos).ToList();
 
 
@@ -802,14 +820,14 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                 ObjPago.StrRutaSync = plataforma.RutaPublica.ToString() + "/Api/SrcActualizaEstado";
-                
+
                 ObjPago.StrRutaDestino = "";
 
                 ObjPago.StrRutaProcedencia = "";
 
                 ObjPago.StrPagoIdPlataforma = "";
 
-                decimal Monto_Pendiente=0;
+                decimal Monto_Pendiente = 0;
 
                 //Valida si el pago es de un documento o una compra de planes.
                 if (tipo_pago == 0)
@@ -828,12 +846,12 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     {
                         //Le asigno la suma de los pagos a la siguiente variable
                         Monto_Pendiente = (from pagos in context.TblPagosElectronicos
-                                               where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad
-                                                && pagos.IntEstadoPago == 1
-                                               select pagos.IntValorPago).Sum();
+                                           where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad
+                                            && pagos.IntEstadoPago == 1
+                                           select pagos.IntValorPago).Sum();
 
                         //Luego Resto, el total del documento menos la suma de pagos
-                        Monto_Pendiente = datos_documento.IntVlrTotal-Monto_Pendiente;
+                        Monto_Pendiente = datos_documento.IntVlrTotal - Monto_Pendiente;
 
                     }
 
@@ -886,17 +904,18 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                             if (Monto_Pendiente > 0) //Pregunto si el pago pendiente este presente
                             {
                                 valor_pago = Convert.ToDouble(Monto_Pendiente);//Si esta presente le asigno la variable pendiente al pago
-                            }else
+                            }
+                            else
                             {
                                 valor_pago = Convert.ToInt32(datos_documento.IntVlrTotal);//Si no, entonces busco el monto total del pago
                             }
 
 
-                            else
-                            {
-                                if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
-                                    throw new ApplicationException("El valor a pagar no puede ser superior al valor total del documento.");
-                            }
+                        else
+                        {
+                            if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
+                                throw new ApplicationException("El valor a pagar no puede ser superior al valor total del documento.");
+                        }
                     }
                     else
                     {
@@ -929,7 +948,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     }
 
 
-               
+
 
                     ObjPago.IntValor = decimal.Parse(valor_pago.ToString());
                     ObjPago.IntValorIva = 0;
@@ -969,8 +988,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                     //Encriptar datos de seguridad secundaria
                     //ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.IntComercioId);
 
-                    
-                    ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-"+ ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t",CultureInfo.InvariantCulture) +  ObjPago.IntComercioId + "-" + ObjPago.IntValor.ToString("0.##"));
+
+                    ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-" + ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ObjPago.IntComercioId + "-" + ObjPago.IntValor.ToString("0.##"));
 
                     //Registro el Pago Local                    
                     TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago));

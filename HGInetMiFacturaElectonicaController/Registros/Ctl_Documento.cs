@@ -399,17 +399,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
             //    estado_dian = "*";
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
-
-            //if (estado_dian.Equals("3"))
-            //    estado_dian = "2,3";
+            
 
             List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
-
-            //array
-            /*
-             
-             foreach(array)
-             */
+            
 
             List<TblDocumentos> documentos = (from datos in context.TblDocumentos
                                               join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
@@ -951,22 +944,19 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <param name="fecha_inicio">Fecha inicio</param>
         /// <param name="fecha_fin">Fecha Fin</param>
         /// <returns>Objeto de tipo respuesta</returns>
-        public List<TblDocumentos> ObtenerDocumentosaProcesar(System.Guid? IdSeguridad, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        public List<TblDocumentos> ObtenerDocumentosaProcesar()
         {
-
-            if (estado_recibo == null || estado_recibo == "")
-                estado_recibo = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));
-
-            fecha_inicio = fecha_inicio.Date;
-            fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
-
+            string estado_recibo= string.Empty;
+            
+            estado_recibo = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));            
+            
             List<string> estados = Coleccion.ConvertirLista(estado_recibo);
 
             var respuesta = (from datos in context.TblDocumentos
                              join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-                             where ((datos.StrIdSeguridad == IdSeguridad) || IdSeguridad == null)
-                            && (estado_recibo.Contains(datos.IntIdEstado.ToString()))
-                            && (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
+                             where (estado_recibo.Contains(datos.IntIdEstado.ToString()))
+                             && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss",15 , DateTime.Now)
+                            
                              orderby datos.DatFechaIngreso descending
                              select datos).ToList();
 

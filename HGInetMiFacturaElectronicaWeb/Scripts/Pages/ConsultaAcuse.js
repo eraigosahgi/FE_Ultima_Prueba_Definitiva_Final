@@ -57,8 +57,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                            Filtro_fecha = data.value.ID;                           
                        } else {
                            Filtro_fecha = 1;                           
-                       }
-                       console.log("Fecha: ", Filtro_fecha);
+                       }                       
                    }
                },
                EstadoRecibo: {                   

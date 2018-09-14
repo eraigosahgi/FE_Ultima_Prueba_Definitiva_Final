@@ -531,7 +531,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="fecha_fin"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Get(System.Guid? IdSeguridad, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+        [Route("api/DocumentosAProcesar")]
+        //public IHttpActionResult Get(System.Guid? IdSeguridad, string estado_recibo)
+        public IHttpActionResult Get()
         {
             try
             {
@@ -539,7 +541,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar(IdSeguridad, estado_recibo, fecha_inicio, fecha_fin);
+                List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar();
 
                 if (datos == null)
                 {
@@ -859,14 +861,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
         [HttpGet]
         [Route("Api/ObtenerPagosFacturador")]
-        public IHttpActionResult ObtenerPagosFacturador(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion)
+        public IHttpActionResult ObtenerPagosFacturador(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
         {
 
             try
             {
                 Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-                var datos = Pago.ObtenerPagosFacturador(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion);
+                var datos = Pago.ObtenerPagosFacturador(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
 
 
                 if (datos == null)
@@ -909,22 +911,20 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
         [HttpGet]
         [Route("Api/ObtenerPagosAdquiriente")]
-        public IHttpActionResult ObtenerPagosAdquiriente(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string codigo_facturador = "*")
+        public IHttpActionResult ObtenerPagosAdquiriente(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string codigo_facturador, int tipo_fecha)
         {
 
             try
             {
                 Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-                var datos = Pago.ObtenerPagosAdquiriente((string.IsNullOrEmpty(codigo_facturador)) ? "*" : codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo);
+                var datos = Pago.ObtenerPagosAdquiriente((string.IsNullOrEmpty(codigo_facturador)) ? "*" : codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
 
 
                 if (datos == null)
                 {
                     return NotFound();
                 }
-
-
 
                 var retorno = datos.Select(d => new
                 {
@@ -934,11 +934,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     NombreAdquiriente = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
                     DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
                     DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
-                    PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
-                    //EstadoFactura = (d.IntEstadoPago == 0) ? "Pendiente" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Rechazado" : "",
+                    PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,                    
                     EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-                    idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago
-
+                    CodEstado = d.IntEstadoPago,
+                    idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+                    StrIdRegistro =d.StrIdRegistro,
+                    StrIdSeguridadDoc=d.StrIdSeguridadDoc
                 });
 
                 return Ok(retorno);

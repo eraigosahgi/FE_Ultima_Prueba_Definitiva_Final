@@ -12,10 +12,10 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         [Description("Rechazado")]
         Rechazado = 0,
 
-        [Description("Pendiente")]
+        [Description("Pendiente por Iniciar")]
         Pendiente = 888,
 
-        [Description("Pendiente")]
+        [Description("Pendiente por Finalizar")]
         Pendiente2 = 999,
 
         [Description("Aprobado")]

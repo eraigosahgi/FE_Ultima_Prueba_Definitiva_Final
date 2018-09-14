@@ -9,6 +9,15 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
 .controller('ProcesarDocumentosController', function DocAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
 
+    $("#btnProcesar").dxButton({
+        text: "Enviar Documentos",
+        type: "default",
+        onClick: ProcesarDocumentos
+    });
+
+
+    //Numero de documentos a Procesar
+    $scope.total = 0;
     var codigo_adquiente = "", numero_documento = "", estado_recibo = "", fecha_inicio = "", fecha_fin = "", Estado = [], now = new Date();
 
     SrvMaestrosEnum.ObtenerEnum(0, "privado").then(function (data) {
@@ -144,7 +153,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
             fecha_fin = now.toISOString();
 
 
-        SrvDocumento.ObtenerDocumentos(numero_documento, estado_recibo, fecha_inicio, fecha_fin).then(function (data) {
+        SrvDocumento.ObtenerDocumentos().then(function (data) {
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data,
                 paging: {
@@ -247,6 +256,10 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                         $scope.total = 0;
 
                     }
+                    $scope.$apply(function () {
+                        $scope.total = $scope.total;
+                    });
+
                 }
 
                 , summary: {
@@ -263,11 +276,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
         });
     }
 
-    $("#btnProcesar").dxButton({
-        text: "Enviar Documentos",
-        type: "default",
-        onClick: ProcesarDocumentos
-    });
+   
 
     function ProcesarDocumentos() {
         if ($scope.total > 0) {
@@ -305,7 +314,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                         caption: "Fecha Recepción",
                         dataField: "FechaRecepcion",
                         dataType: "date",
-                        width: '15%',
+                        width: '16%',
                         format: "yyyy-MM-dd HH:mm"
 
                     },
@@ -314,13 +323,19 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                        caption: "Fecha Ultimo Proceso",
                        dataField: "FechaUltimoProceso",
                        dataType: "date",
-                       width: '15%',
+                       width: '16%',
                        format: "yyyy-MM-dd HH:mm"
+
+                   },
+                   {
+                       caption: "Documento",
+                       dataField: "Documento",
+                       width: '10%',                       
 
                    },
                     {
                         caption: "Resultado",
-                        width: '70%',
+                        width: '50%',
                         dataField: "DescripcionProceso"
                     },
                {
@@ -337,13 +352,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                          caption: "Cufe",
                          dataField: "Cufe",
                          hidingPriority: 2
-                     },
-                     {
-                         caption: "Documento",
-                         dataField: "Documento",
-                         hidingPriority: 3
-
-                     },
+                     },                     
                      {
                          caption: "EstadoDian",
                          dataField: "EstadoDian",

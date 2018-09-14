@@ -5,16 +5,16 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
      $httpProvider.interceptors.push(myInterceptor);
  })
 .service('SrvDocumento', function ($http, $location, $q) {
-    
-    this.ObtenerDocumentos = function (numero_documento, estado_recibo, fecha_inicio, fecha_fin) {
-        return $http.get('/api/Documentos?IdSeguridad=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+    //Obtiene los documentos para ser procesados
+    this.ObtenerDocumentos = function () {
+        return $http.get('/api/DocumentosAProcesar').then(function (response) {
             return response.data;
         }, function (response) {
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
             return $q.reject(response.data);
         });
     }
-
+    //Procesa los documentos
     this.ProcesarDocumentos = function (documentos) {
         return $http({url: '/api/Documentos/',data: { Documentos: documentos },method: 'Post'}).then(function (response) {
             return response.data;
@@ -23,7 +23,7 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
             return $q.reject(response.data);
         });
     }
-
+    //Obtiene los documentos de cliente (Soporte)
     this.ObtenerDocumentosClientes = function (codigo_facturador,  numero_documento,   IdSeguridad,  numero_resolucion) {
         return $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&IdSeguridad=' + IdSeguridad + '&numero_resolucion=' + numero_resolucion).then(function (response) {
             return response.data;
@@ -32,7 +32,7 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
             return $q.reject(response.data);
         });
     }
-
+    //Obtiene los documentos Admin
     this.ObtenerDocumentosAdmin = function (codigo_facturador, numero_documento, codigo_adquiriente, estado_dian,estado_recibo, fecha_inicio, fecha_fin, TipoDocumento) {
         return $http.get('/api/Documentos?codigo_facturador=*&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&TipoDocumento=' + TipoDocumento).then(function (response) {
             return response.data;
@@ -60,7 +60,7 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
             return $q.reject(response.data);
         });
     }
-
+    //Genera el acuse Tacito
     this.GenerarAcuseTacito = function (documentos) {
         return $http({ url: '/api/GenerarAcuseTacito/', data: { Documentos: documentos }, method: 'Post' }).then(function (response) {
             return response.data;
@@ -69,5 +69,18 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
             return $q.reject(response.data);
         });
     }
+
+    //Valida el estado de una lista de pagos
+    this.ValidarEstadoPagos = function (documentos) {
+        return $http.get('/api/ListaEstadoPagos?ListaPagos=' + documentos ).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });
+    }
+
+
+
     
 });

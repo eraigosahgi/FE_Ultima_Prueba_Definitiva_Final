@@ -1,9 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Masters/MasterPrincipal.Master" AutoEventWireup="true" CodeBehind="ConsultaFacturadorPagos.aspx.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Pages.ConsultaFacturadorPagos" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-      <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/ConsultaPagosFacturador.js"></script>        
+    <!-- JS DocumentosAdquiriente-->
+    <script src="../../Scripts/Pages/ConsultaPagosFacturador.js"></script>
 
     <div data-ng-app="PagosFacturadorApp">
 
@@ -31,14 +32,20 @@
 
                                 <div class="dx-fieldset">
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" >
+                                        <i class="icon-file-text"></i>
+                                        <label>Filtro Fecha</label>
+                                        <div data-dx-select-box="filtros.Fecha"></div>
+                                    </div>
+
+                                    <div class="col-md-2">
                                         <i class=" icon-calendar"></i>
                                         <label>Fecha Inicial:</label>
                                         <div id="FechaInicial"></div>
                                     </div>
 
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <i class=" icon-calendar"></i>
                                         <label>Fecha Final:</label>
                                         <div id="FechaFinal"></div>
@@ -50,29 +57,29 @@
                                         <label>Estado Pago:</label>
                                         <div data-dx-select-box="filtros.EstadoRecibo"></div>
                                     </div>
-                                    <div class="col-md-4" style="margin-top:1%">
+                                    <div class="col-md-4" style="margin-top: 1%">
                                         <i class="icon-files-empty"></i>
                                         <label>Número Documento:</label>
                                         <div data-dx-autocomplete="filtros.NumeroDocumento"></div>
-                                    </div>                               
-                                    
-                                   
+                                    </div>
 
-                                    <div class="col-md-4" style="margin-top:1%">
+
+
+                                    <div class="col-md-4" style="margin-top: 1%">
                                         <i class="icon-files-empty"></i>
                                         <label>Código Adquiriente:</label>
                                         <div data-dx-autocomplete="filtros.Adquiriente"></div>
                                     </div>
 
-                                    <div class="col-md-4" style="margin-top:1%">
+                                    <div class="col-md-4" style="margin-top: 1%">
                                         <i class="icon-files-empty"></i>
                                         <label>Resolución-Prefijo:</label>
                                         <div id="filtrosResolucion"></div>
                                     </div>
 
-                                   
+
                                 </div>
-                               
+
                             </div>
 
 
@@ -82,7 +89,7 @@
                             <br />
                             <div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
                         </div>
-                                                 
+
                         <p data-ng-bind-html="message"></p>
 
                     </div>
@@ -97,8 +104,8 @@
                 <div class="panel panel-white">
                     <div class="panel-heading">
                         <h6 class="panel-title ">Datos</h6>
-                        <div style="float: right; margin-right: 2%; margin-top:-20px;" >                            
-                                <label id="Total" class="text-semibold text-right" style="font-size:medium;"></label>                            
+                        <div style="float: right; margin-right: 2%; margin-top: -20px;">
+                            <label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>
                         </div>
                     </div>
 

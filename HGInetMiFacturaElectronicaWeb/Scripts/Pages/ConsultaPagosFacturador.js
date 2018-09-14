@@ -3,13 +3,16 @@
 var path = window.location.pathname;
 var ruta = window.location.href;
 ruta = ruta.replace(path, "/");
+//imprimir MaestrosEnum.js para tener acceso a sus funciones
 document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
+//imprimir SrvDocumentos.js para tener acceso a sus funciones
+document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
 
 
 var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [];
-var PagosFacturadorApp = angular.module('PagosFacturadorApp', ['dx', 'AppMaestrosEnum']);
+var PagosFacturadorApp = angular.module('PagosFacturadorApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento']);
 PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum) {
 
     var now = new Date();
@@ -24,13 +27,14 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
            fecha_fin = "",
            codigo_adquiriente = "";
     resolucion = "";
+    Filtro_fecha = 2;
 
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {
         codigo_facturador = data[0].Identificacion;
     });
 
     SrvMaestrosEnum.ObtenerEnum(0, "publico").then(function (data) {
-        SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
+        SrvMaestrosEnum.ObtenerEnum(4).then(function (dataacuse) {
             Estado = data;
             items_recibo = dataacuse;
 
@@ -127,15 +131,26 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
             }
         });
 
-
-
-
-
-
-
         //Define los campos y las opciones
         $scope.filtros =
             {
+                Fecha: {
+                    //Carga la data del control
+                    dataSource: new DevExpress.data.ArrayStore({
+                        data: items_Fecha,
+                        key: "ID"
+                    }),
+                    displayExpr: "Texto",
+                    value: items_Fecha[1],
+
+                    onValueChanged: function (data) {
+                        if (data.value != null) {
+                            Filtro_fecha = data.value.ID;
+                        } else {
+                            Filtro_fecha = 1;
+                        }
+                    }
+                },
                 EstadoRecibo: {
                     searchEnabled: true,
                     //Carga la data del control
@@ -147,16 +162,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
                     Enabled: true,
                     placeholder: "Seleccione un Item",
                     onValueChanged: function (data) {
-                        estado_recibo = "*";
-                        if (data.value.ID == 0) {
-                            estado_recibo = "999";
-                        }
-                        if (data.value.ID == 1) {
-                            estado_recibo = "1";
-                        }
-                        if (data.value.ID == 2) {
-                            estado_recibo = "0";
-                        }                        
+                        estado_recibo = (data.value == null) ? "*" : data.value.ID;
                     }
                 },
                 NumeroDocumento: {
@@ -200,11 +206,9 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
         if (resolucion == "")
             resolucion = "*";
 
-        //Obtiene los datos del web api
-        //ControladorApi: /Api/Documentos/
-        //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
+        //Obtiene los datos del web api        
         $('#wait').show();
-        $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion).then(function (response) {            
+        $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -224,11 +228,9 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
         if (resolucion == "")
             resolucion = "*";
 
-        //Obtiene los datos del web api
-        //ControladorApi: /Api/Documentos/
-        //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
+        //Obtiene los datos del web api        
         $('#wait').show();
-        $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion).then(function (response) {
+        $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -375,7 +377,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 });
 
 
-PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquirienteController($scope, $http, $location, SrvMaestrosEnum) {
+PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
 
     var now = new Date();
     var Estado;
@@ -387,13 +389,23 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
-           codigo_adquiriente = "";
-    resolucion = "";
+           codigo_adquiriente = "",
+    resolucion = "",
+    Filtro_fecha = 2
+    Estado_Documento = "";
+
+
+    //Objecto json con documentos pendientes
+    var datos = [];
+    var objeto = {};
+
+    $scope.CantidaddocPendientes = 0;
+
 
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {
         codigo_facturador = data[0].Identificacion;
 
-        SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
+        SrvMaestrosEnum.ObtenerEnum(4).then(function (dataacuse) {
             items_recibo = dataacuse;
             cargarFiltros();
         });
@@ -429,6 +441,23 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
         //Define los campos y las opciones
         $scope.filtros =
             {
+                Fecha: {
+                    //Carga la data del control
+                    dataSource: new DevExpress.data.ArrayStore({
+                        data: items_Fecha,
+                        key: "ID"
+                    }),
+                    displayExpr: "Texto",
+                    value: items_Fecha[1],
+
+                    onValueChanged: function (data) {
+                        if (data.value != null) {
+                            Filtro_fecha = data.value.ID;
+                        } else {
+                            Filtro_fecha = 1;
+                        }
+                    }
+                },
                 EstadoRecibo: {
                     searchEnabled: true,
                     //Carga la data del control
@@ -440,16 +469,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                     Enabled: true,
                     placeholder: "Seleccione un Item",
                     onValueChanged: function (data) {
-                        estado_recibo = "*";
-                        if (data.value.ID == 0) {
-                            estado_recibo = "999";
-                        }
-                        if (data.value.ID == 1) {
-                            estado_recibo = "1";
-                        }
-                        if (data.value.ID == 2) {
-                            estado_recibo = "0";
-                        }                        
+                        estado_recibo = (data.value == null) ? "*" : data.value.ID;
                     }
 
                 },
@@ -476,36 +496,40 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
         text: 'Consultar',
         type: 'default',
         onClick: function (e) {
-            consultar2();
+            consultar();
         }
     };
 
 
 
 
-    function consultar2() {
-        $('#Total').text("");
-        if (fecha_inicio == "")
-            fecha_inicio = now.toISOString();
+    //function consultar2() {
+    //    $('#Total').text("");
+    //    if (fecha_inicio == "")
+    //        fecha_inicio = now.toISOString();
 
-        if (fecha_fin == "")
-            fecha_fin = now.toISOString();
+    //    if (fecha_fin == "")
+    //        fecha_fin = now.toISOString();
 
-        if (resolucion == "")
-            resolucion = "*";
 
-        //Obtiene los datos del web api
-        //ControladorApi: /Api/Documentos/
-        //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
-        $('#wait').show();
-        $http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo).then(function (response) {
-            
-            $('#wait').hide();
-            $("#gridDocumentos").dxDataGrid({
-                dataSource: response.data,
-            })
-        });
-    }
+    //    //Obtiene los datos del web api
+    //    $scope.CantidaddocPendientes = 0;
+    //    $('#wait').show();
+    //    $http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
+    //        response.data.forEach(function (valor, indice, array) {
+    //            if (valor.CodEstado == 888 || valor.CodEstado == 999)
+    //            {
+    //                $scope.CantidaddocPendientes = $scope.CantidaddocPendientes+1;
+    //            }
+    //        });
+    //        console.log("Documentos Pendientes: ", $scope.CantidaddocPendientes);
+
+    //        $('#wait').hide();
+    //        $("#gridDocumentos").dxDataGrid({
+    //            dataSource: response.data,
+    //        })
+    //    });
+    //}
 
 
     function consultar() {
@@ -516,15 +540,16 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
 
-        if (resolucion == "")
-            resolucion = "*";
+
 
         //Obtiene los datos del web api
-        //ControladorApi: /Api/Documentos/
-        //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
+        $scope.CantidaddocPendientes = 0;
         $('#wait').show();
-        $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion).then(function (response) {
+        $http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
             $('#wait').hide();
+
+            //Aqui va el codigo de validacion de pagos
+
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
                 keyExpr: "NumeroDocumento",
@@ -552,8 +577,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                                 options.cellElement.html(inicial);
                             }
                         }
-
-
+                       
                     } catch (err) {
                     }
 
@@ -575,10 +599,31 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                     visible: true
                 }
         , columns: [
+
+
+            //{
+
+            //    caption: "Estado",
+            //    width: "auto",
+            //    cellTemplate: function (container, options) {
+
+            //        if (options.data.EstadoFactura != "Aprobado" && options.data.EstadoFactura != "Rechazado")
+            //            Estado_Documento = "style='color:blue'";
+            //        else
+            //            Estado_Documento = String.valueOf;
+
+            //        $("<div>")
+            //            .append($("<td " + Estado_Documento + ">" + options.data.EstadoFactura + "</td>"))
+            //            .append($(""))
+            //            .appendTo(container);
+            //    }
+            //},
+
              {
                  caption: "Estado",
                  dataField: "EstadoFactura",
-             }, {
+             },
+             {
                  caption: "Facturador",
                  dataField: "StrEmpresaAdquiriente"
              },
@@ -604,16 +649,17 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                  dataField: "idseguridadpago",
              },
               {
+                  caption: "Fecha Verificación",
+                  dataField: "DatFechaVencDocumento",
+                  dataType: "date",
+                  format: "yyyy-MM-dd HH:mm"
+              },
+              {
                   caption: "Valor",
                   dataField: "PagoFactura"
-              },
+              }
 
-            {
-                caption: "Fecha Verificación",
-                dataField: "DatFechaVencDocumento",
-                dataType: "date",
-                format: "yyyy-MM-dd HH:mm"
-            }
+           
 
         ],
 
@@ -668,3 +714,10 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 
 });
+
+
+var items_Fecha =
+    [
+    { ID: "1", Texto: 'Fecha-Documento' },
+    { ID: "2", Texto: 'Fecha-Pago' }
+    ];
