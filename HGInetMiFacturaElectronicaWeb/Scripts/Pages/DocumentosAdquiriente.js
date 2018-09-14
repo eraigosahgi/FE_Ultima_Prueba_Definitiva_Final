@@ -438,7 +438,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
                        if (options.column.caption == "Estado") {
                            if (fieldData) {
-                               if (fieldData == "Pendiente") {
+                               if (fieldData != "Aprobado" && fieldData != "Rechazado"  ) {
                                    if (response.data[0].Pagos[0].Monto > 0) {
                                        $("#panelPagoPendiente").hide();
                                        $("#PanelVerificacion").show();
