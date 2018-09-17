@@ -404,7 +404,14 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
 
-            List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
+            List<string> LstResolucion= new List<string>();
+
+            if (string.IsNullOrWhiteSpace(Resolucion)){
+                Resolucion = "*";
+            }
+            else {
+                LstResolucion = Coleccion.ConvertirLista(Resolucion);
+            }
 
 
 
@@ -412,8 +419,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                               where Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador)
                               //Valida si la fecha es documento o fecha pago
                               && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
+                              //&& ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)
                               && ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)
-
                               && (LstResolucion.Contains(Pagos.TblDocumentos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
                               && (Pagos.IntEstadoPago.Equals(cod_estado_recibo) || estado_recibo.Equals("*"))
                               && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))

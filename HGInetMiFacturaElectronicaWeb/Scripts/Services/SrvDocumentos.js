@@ -72,7 +72,7 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
 
     //Valida el estado de una lista de pagos
     this.ValidarEstadoPagos = function (documentos) {
-        return $http.get('/api/ListaEstadoPagos?ListaPagos=' + documentos ).then(function (response) {
+        return $http({ url: '/api/ListaEstadoPagos/', data: { ListaPagos: documentos }, method: 'Post' } ).then(function (response) {
             return response.data;
         }, function (response) {
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
@@ -80,6 +80,28 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
         });
     }
 
+    
+    //Valida el estado del documento
+    this.ActualizaEstatusPago = function (RutaServicio, IdSeguridad, Idregistro) {
+        return $http.get(RutaServicio + '?IdSeguridadPago=' + IdSeguridad + "&StrIdSeguridadRegistro=" + Idregistro).then(function (response) {            
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });              
+    }
+
+
+    this.ActualizaEstatusPagoInterno = function (IdSeguridad, Idregistro, ObjeRespuestaPI) {
+        //var ObjeRespuestaPI = response.data;
+        //////////////////////////////////////////////////////////////////////
+        return $http.get('/Api/ActualizarEstado?IdSeguridad=' + IdSeguridad + "&StrIdSeguridadRegistro=" + Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });
+    }
 
 
     

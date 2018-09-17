@@ -886,8 +886,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
                     //EstadoFactura = (d.IntEstadoPago == 0) ? "Rechazado" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Pendiente" : "",
                     EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-                    idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago
-
+                    CodEstado = d.IntEstadoPago,
+                    idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+                    StrIdRegistro = d.StrIdRegistro,
+                    StrIdSeguridadDoc = d.StrIdSeguridadDoc
 
 
                 });

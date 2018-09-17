@@ -13,7 +13,7 @@ var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [];
 var PagosFacturadorApp = angular.module('PagosFacturadorApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento']);
-PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum) {
+PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
 
     var now = new Date();
     var Estado;
@@ -29,24 +29,40 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
     resolucion = "";
     Filtro_fecha = 2;
 
+    Estado_Documento = "";
+
+    $scope.documentosPendientes = false;
+
+    $scope.Verificando = false;
+
+    //Objecto json con documentos pendientes
+    var datos = [];
+    var objeto = {};
+
+    $scope.CantidaddocPendientes = 0;
+
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {
         codigo_facturador = data[0].Identificacion;
-    });
 
-    SrvMaestrosEnum.ObtenerEnum(0, "publico").then(function (data) {
-        SrvMaestrosEnum.ObtenerEnum(4).then(function (dataacuse) {
-            Estado = data;
-            items_recibo = dataacuse;
 
-            $http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
-                ResolucionesPrefijo = response.data;
-                cargarFiltros();
-            }, function (response) {
-                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        SrvMaestrosEnum.ObtenerEnum(0, "publico").then(function (data) {
+            SrvMaestrosEnum.ObtenerEnum(4).then(function (dataacuse) {
+                Estado = data;
+                items_recibo = dataacuse;
+
+                $http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
+                    ResolucionesPrefijo = response.data;
+                    cargarFiltros();
+                }, function (response) {
+                    DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+                });
+
             });
-
         });
+
     });
+
+    
 
     function cargarFiltros() {
         $("#FechaInicial").dxDateBox({
@@ -181,6 +197,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
         $("#FechaFinal").dxDateBox({ min: now });
         $("#FechaInicial").dxDateBox({ max: now });
+        validarEstado();
         consultar();
     }
 
@@ -188,14 +205,26 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
         text: 'Consultar',
         type: 'default',
         onClick: function (e) {
-            consultar2();
+            consultar();
+        }
+    };
+
+
+
+    $scope.buttonProcesar = {
+        type: "success",
+        onClick: function (e) {                      
+            validarEstado();
+            consultar();
         }
     };
 
 
 
 
-    function consultar2() {
+
+    function validarEstado() {
+
         $('#Total').text("");
         if (fecha_inicio == "")
             fecha_inicio = now.toISOString();
@@ -203,17 +232,42 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
 
-        if (resolucion == "")
-            resolucion = "*";
 
-        //Obtiene los datos del web api        
         $('#wait').show();
         $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
             $('#wait').hide();
-            $("#gridDocumentos").dxDataGrid({
-                dataSource: response.data,
-            })
+            datos = [];
+            //Recorro la data para ver la cantidad de documentos pendientes por procesar
+            response.data.forEach(function (valor, indice, array) {
+                if (valor.CodEstado == 888 || valor.CodEstado == 999) {
+                    datos.push({ "StrIdRegistro": valor.StrIdRegistro, "StrIdSeguridadDoc": valor.StrIdSeguridadDoc });
+                }
+            });
+
+            objeto.datos = datos;
+
+            if (objeto.datos.length > 0) {
+                var RutaServicio = $('#Hdf_RutaSrvPagos').val();
+
+                objeto.datos.forEach(function (valor, indice, array) {
+                    //Conuslto el estado del documento en PI
+                    SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
+                        //Actualizado datos de plataforma intermedia, en la plataforma de FE
+                        SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro, data1).then(function (data2) {
+                            consultar();
+                        });
+
+
+                    });
+
+                });
+            }
         });
+        /*
+        $scope.$apply(function () {
+            $scope.Verificando = false;
+        });
+        */
     }
 
 
@@ -232,6 +286,27 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
         $('#wait').show();
         $http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
             $('#wait').hide();
+
+
+
+            datos = [];
+            //Recorro la data para ver la cantidad de documentos pendientes por procesar
+            response.data.forEach(function (valor, indice, array) {
+                if (valor.CodEstado == 888 || valor.CodEstado == 999) {
+                    datos.push({ "StrIdRegistro": valor.StrIdRegistro, "StrIdSeguridadDoc": valor.StrIdSeguridadDoc });
+                }
+            });
+
+
+            objeto.datos = datos;
+
+            if (objeto.datos.length > 0) {                
+                $scope.documentosPendientes = true;                
+            } else {                
+                $scope.documentosPendientes = false;                
+            }
+
+
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
                 keyExpr: "NumeroDocumento",
@@ -310,17 +385,18 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
                  caption: "Cod. Transacción",
                  dataField: "idseguridadpago",
              },
-              {
-                  caption: "Valor",
-                  dataField: "PagoFactura"
-              },
 
             {
                 caption: "Fecha Verificación",
                 dataField: "DatFechaVencDocumento",
                 dataType: "date",
                 format: "yyyy-MM-dd HH:mm"
-            }
+            },
+              {
+                  caption: "Valor",
+                  dataField: "PagoFactura"
+              }
+
 
         ],
 
@@ -394,6 +470,9 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
     Filtro_fecha = 2
     Estado_Documento = "";
 
+    $scope.documentosPendientes = false;
+
+    $scope.Verificando = false;
 
     //Objecto json con documentos pendientes
     var datos = [];
@@ -489,6 +568,8 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
         $("#FechaFinal").dxDateBox({ min: now });
         $("#FechaInicial").dxDateBox({ max: now });
+
+        validarEstado();
         consultar();
     }
 
@@ -496,40 +577,72 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
         text: 'Consultar',
         type: 'default',
         onClick: function (e) {
+            validarEstado();
             consultar();
         }
     };
 
 
+    $scope.buttonProcesar = {
+        type: "success",
+        onClick: function (e) {
+            validarEstado();
+            consultar();
+        }
+    };
+
+    $scope.buttonVerificando = {
+        type: "success",
+        onClick: function (e) {
+            DevExpress.ui.notify("Aun no ha terminado el proceso actual", 'error', 3000);
+        }
+    };
 
 
-    //function consultar2() {
-    //    $('#Total').text("");
-    //    if (fecha_inicio == "")
-    //        fecha_inicio = now.toISOString();
+    function validarEstado() {
 
-    //    if (fecha_fin == "")
-    //        fecha_fin = now.toISOString();
+        $('#Total').text("");
+        if (fecha_inicio == "")
+            fecha_inicio = now.toISOString();
+
+        if (fecha_fin == "")
+            fecha_fin = now.toISOString();
 
 
-    //    //Obtiene los datos del web api
-    //    $scope.CantidaddocPendientes = 0;
-    //    $('#wait').show();
-    //    $http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
-    //        response.data.forEach(function (valor, indice, array) {
-    //            if (valor.CodEstado == 888 || valor.CodEstado == 999)
-    //            {
-    //                $scope.CantidaddocPendientes = $scope.CantidaddocPendientes+1;
-    //            }
-    //        });
-    //        console.log("Documentos Pendientes: ", $scope.CantidaddocPendientes);
+        $('#wait').show();
+        $http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
+            $('#wait').hide();
+            datos = [];
+            //Recorro la data para ver la cantidad de documentos pendientes por procesar
+            response.data.forEach(function (valor, indice, array) {
+                if (valor.CodEstado == 888 || valor.CodEstado == 999) {
+                    datos.push({ "StrIdRegistro": valor.StrIdRegistro, "StrIdSeguridadDoc": valor.StrIdSeguridadDoc });
+                }
+            });
 
-    //        $('#wait').hide();
-    //        $("#gridDocumentos").dxDataGrid({
-    //            dataSource: response.data,
-    //        })
-    //    });
-    //}
+            objeto.datos = datos;
+
+            if (objeto.datos.length > 0) {
+                var RutaServicio = $('#Hdf_RutaSrvPagos').val();
+
+                objeto.datos.forEach(function (valor, indice, array) {
+                    //Conuslto el estado del documento en PI
+                    SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
+                        //Actualizado datos de plataforma intermedia, en la plataforma de FE
+                        SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro, data1).then(function (data2) {
+                            consultar();
+                        });
+
+
+                    });
+
+                });
+            }
+        });
+        $scope.$apply(function () {
+            $scope.Verificando = false;
+        });
+    }
 
 
     function consultar() {
@@ -540,15 +653,28 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
 
-
-
-        //Obtiene los datos del web api
-        $scope.CantidaddocPendientes = 0;
+        //Obtiene los datos del web api        
         $('#wait').show();
         $http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
             $('#wait').hide();
 
-            //Aqui va el codigo de validacion de pagos
+
+            datos = [];
+            //Recorro la data para ver la cantidad de documentos pendientes por procesar
+            response.data.forEach(function (valor, indice, array) {
+                if (valor.CodEstado == 888 || valor.CodEstado == 999) {
+                    datos.push({ "StrIdRegistro": valor.StrIdRegistro, "StrIdSeguridadDoc": valor.StrIdSeguridadDoc });
+                }
+            });
+
+
+            objeto.datos = datos;
+
+            if (objeto.datos.length > 0) {
+                $scope.documentosPendientes = true;
+            } else {
+                $scope.documentosPendientes = false;
+            }
 
             $("#gridDocumentos").dxDataGrid({
                 dataSource: response.data,
@@ -577,7 +703,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                                 options.cellElement.html(inicial);
                             }
                         }
-                       
+
                     } catch (err) {
                     }
 
@@ -659,7 +785,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
                   dataField: "PagoFactura"
               }
 
-           
+
 
         ],
 

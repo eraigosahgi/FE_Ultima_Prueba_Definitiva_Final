@@ -33,7 +33,7 @@
                                 <div class="dx-fieldset">
 
 
-                                    <div class="col-md-3" >
+                                    <div class="col-md-3">
                                         <i class="icon-file-text"></i>
                                         <label>Filtro Fecha</label>
                                         <div data-dx-select-box="filtros.Fecha"></div>
@@ -71,8 +71,8 @@
                                     </div>
 
                                     <div class="col-md-6 text-right" style="margin-top: 1%">
-                                        <br />                                        
-                                        <div data-dx-button="ButtonOptionsConsultar" ></div>
+                                        <br />
+                                        <div data-dx-button="ButtonOptionsConsultar"></div>
                                     </div>
 
 
@@ -81,7 +81,7 @@
                             </div>
 
 
-                        </div>                       
+                        </div>
 
                         <p data-ng-bind-html="message"></p>
 
@@ -95,9 +95,21 @@
             <!-- DATOS -->
             <div class="col-md-12">
                 <div class="panel panel-white">
-                    <div class="panel-heading">
-                        <h6 class="panel-title ">Datos</h6>
-                        <div style="float: right; margin-right: 2%; margin-top: -20px;">
+                    <div class="panel-heading" style="height: 60px">
+                        <div class="col-md-2">
+                            <h6 class="panel-title ">Datos</h6>
+                        </div>
+
+                        <div id="pnl_Verificar_Pago" class="col-md-7 text-right">
+                            
+                            <div data-ng-show="documentosPendientes">
+                                <div data-dx-button="buttonProcesar">
+                                    <i class="icon-spinner11"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
                             <label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>
                         </div>
                     </div>
