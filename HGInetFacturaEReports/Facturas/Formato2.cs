@@ -112,11 +112,11 @@ namespace HGInetFacturaEReports.Facturas
 
                             if (report_item_descripcion.Length > 0)
                             {
-                                HtmlTextBox campo_descripcion = report_item_descripcion[0] as HtmlTextBox;
+								Telerik.Reporting.TextBox campo_descripcion = report_item_descripcion[0] as Telerik.Reporting.TextBox;
 
                                 if (campo_descripcion != null)
                                 {
-                                    campo_descripcion.Value = item.Descripcion.ToUpper();
+                                    campo_descripcion.Value = item.Descripcion.Replace("<br />", "\n").Replace("<br/>", "\n").Replace("<br>", "\n").Replace("</br>", "\n").ToUpper();
                                     campo_descripcion.Visible = true;
                                 }
                             }
@@ -126,11 +126,11 @@ namespace HGInetFacturaEReports.Facturas
 
                             if (report_item_valor.Length > 0)
                             {
-                                HtmlTextBox campo_valor = report_item_valor[0] as HtmlTextBox;
+								Telerik.Reporting.TextBox campo_valor = report_item_valor[0] as Telerik.Reporting.TextBox;
 
                                 if (campo_valor != null)
                                 {
-                                    campo_valor.Value = item.Valor;
+                                    campo_valor.Value = item.Valor.Replace("<br />", "\n").Replace("<br/>", "\n").Replace("<br>", "\n").Replace("</br>", "\n");
                                     campo_valor.Visible = true;
                                 }
                             }

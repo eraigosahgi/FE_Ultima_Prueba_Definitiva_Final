@@ -11,15 +11,15 @@ namespace HGInetFacturaEReports.Facturas
         {
             Telerik.Reporting.Drawing.StyleRule styleRule1 = new Telerik.Reporting.Drawing.StyleRule();
             this.detail = new Telerik.Reporting.DetailSection();
-            this.htmlTextBox18 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox31 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox17 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox8 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox1 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox6 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox5 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox4 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox3 = new Telerik.Reporting.HtmlTextBox();
+            this.htmlTextBox18 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox31 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox17 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox8 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox1 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox6 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox5 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox4 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox3 = new Telerik.Reporting.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // detail
@@ -182,7 +182,7 @@ namespace HGInetFacturaEReports.Facturas
             this.PageSettings.PaperKind = System.Drawing.Printing.PaperKind.A4;
             styleRule1.Selectors.AddRange(new Telerik.Reporting.Drawing.ISelector[] {
             new Telerik.Reporting.Drawing.TypeSelector(typeof(Telerik.Reporting.TextItemBase)),
-            new Telerik.Reporting.Drawing.TypeSelector(typeof(Telerik.Reporting.HtmlTextBox))});
+            new Telerik.Reporting.Drawing.TypeSelector(typeof(Telerik.Reporting.TextBox))});
             styleRule1.Style.Padding.Left = Telerik.Reporting.Drawing.Unit.Point(2D);
             styleRule1.Style.Padding.Right = Telerik.Reporting.Drawing.Unit.Point(2D);
             this.StyleSheet.AddRange(new Telerik.Reporting.Drawing.StyleRule[] {
@@ -193,14 +193,14 @@ namespace HGInetFacturaEReports.Facturas
         }
         #endregion
         private Telerik.Reporting.DetailSection detail;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox18;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox31;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox17;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox6;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox5;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox4;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox3;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox8;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox1;
+        private Telerik.Reporting.TextBox htmlTextBox18;
+        private Telerik.Reporting.TextBox htmlTextBox31;
+        private Telerik.Reporting.TextBox htmlTextBox17;
+        private Telerik.Reporting.TextBox htmlTextBox6;
+        private Telerik.Reporting.TextBox htmlTextBox5;
+        private Telerik.Reporting.TextBox htmlTextBox4;
+        private Telerik.Reporting.TextBox htmlTextBox3;
+        private Telerik.Reporting.TextBox htmlTextBox8;
+        private Telerik.Reporting.TextBox htmlTextBox1;
     }
 }

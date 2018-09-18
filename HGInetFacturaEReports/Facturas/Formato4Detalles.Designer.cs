@@ -12,10 +12,10 @@ namespace HGInetFacturaEReports.Facturas
             Telerik.Reporting.Drawing.FormattingRule formattingRule1 = new Telerik.Reporting.Drawing.FormattingRule();
             Telerik.Reporting.Drawing.StyleRule styleRule1 = new Telerik.Reporting.Drawing.StyleRule();
             this.detail = new Telerik.Reporting.DetailSection();
-            this.htmlTextBox25 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox24 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox26 = new Telerik.Reporting.HtmlTextBox();
-            this.htmlTextBox1 = new Telerik.Reporting.HtmlTextBox();
+            this.htmlTextBox25 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox24 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox26 = new Telerik.Reporting.TextBox();
+            this.htmlTextBox1 = new Telerik.Reporting.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // detail
@@ -101,7 +101,7 @@ namespace HGInetFacturaEReports.Facturas
             this.PageSettings.PaperKind = System.Drawing.Printing.PaperKind.A4;
             styleRule1.Selectors.AddRange(new Telerik.Reporting.Drawing.ISelector[] {
             new Telerik.Reporting.Drawing.TypeSelector(typeof(Telerik.Reporting.TextItemBase)),
-            new Telerik.Reporting.Drawing.TypeSelector(typeof(Telerik.Reporting.HtmlTextBox))});
+            new Telerik.Reporting.Drawing.TypeSelector(typeof(Telerik.Reporting.TextBox))});
             styleRule1.Style.Padding.Left = Telerik.Reporting.Drawing.Unit.Point(2D);
             styleRule1.Style.Padding.Right = Telerik.Reporting.Drawing.Unit.Point(2D);
             this.StyleSheet.AddRange(new Telerik.Reporting.Drawing.StyleRule[] {
@@ -112,9 +112,9 @@ namespace HGInetFacturaEReports.Facturas
         }
         #endregion
         private Telerik.Reporting.DetailSection detail;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox25;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox26;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox24;
-        private Telerik.Reporting.HtmlTextBox htmlTextBox1;
+        private Telerik.Reporting.TextBox htmlTextBox25;
+        private Telerik.Reporting.TextBox htmlTextBox26;
+        private Telerik.Reporting.TextBox htmlTextBox24;
+        private Telerik.Reporting.TextBox htmlTextBox1;
     }
 }
