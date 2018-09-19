@@ -10,6 +10,9 @@ namespace HGInetMiFacturaElectronicaWeb
     {
         public static void Register(HttpConfiguration config)
         {
+
+            config.EnableCors();
+
             // Manejo de sesión para Web Api
             var httpControllerRouteHandler = typeof(HttpControllerRouteHandler).GetField("_instance",
                 System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);

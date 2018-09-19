@@ -21,6 +21,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Xml;
@@ -28,6 +29,8 @@ using System.Xml;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
+
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class DocumentosController : ApiController
     {
         /// <summary>
