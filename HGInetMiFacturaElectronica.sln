@@ -92,6 +92,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.5", "v2018.5", "{6C83
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F6933ED-0456-49B4-8DB6-F333AA02BD63}"
 	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2018.6\2018-09-18 DropCamposPlantillasResoluciones.txt = Documentacion\Liberaciones\v2018.6\2018-09-18 DropCamposPlantillasResoluciones.txt
 		Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt = Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt
 		Documentacion\Liberaciones\v2018.6\20180424-RelacionComercioResolucion.txt = Documentacion\Liberaciones\v2018.6\20180424-RelacionComercioResolucion.txt
 		Documentacion\Liberaciones\v2018.6\20180724-IntIdComercioTblEmpresasResoluciones.txt = Documentacion\Liberaciones\v2018.6\20180724-IntIdComercioTblEmpresasResoluciones.txt

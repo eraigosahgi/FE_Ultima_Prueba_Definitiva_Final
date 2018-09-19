@@ -28,8 +28,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public System.DateTime DatFechaVigenciaDesde { get; set; }
         public System.DateTime DatFechaVigenciaHasta { get; set; }
         public string StrClaveTecnica { get; set; }
-        public short IntIdPlantillaPdf { get; set; }
-        public short IntIdPlantillaMail { get; set; }
         public System.Guid StrIdSeguridad { get; set; }
         public string StrObservaciones { get; set; }
         public System.DateTime DatFechaIngreso { get; set; }

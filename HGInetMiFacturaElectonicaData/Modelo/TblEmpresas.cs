@@ -23,6 +23,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
             this.TblDocumentos = new HashSet<TblDocumentos>();
             this.TblDocumentos1 = new HashSet<TblDocumentos>();
             this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
+            this.TblFormatos = new HashSet<TblFormatos>();
         }
     
         public string StrIdentificacion { get; set; }
@@ -58,5 +59,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual ICollection<TblDocumentos> TblDocumentos1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblFormatos> TblFormatos { get; set; }
     }
 }

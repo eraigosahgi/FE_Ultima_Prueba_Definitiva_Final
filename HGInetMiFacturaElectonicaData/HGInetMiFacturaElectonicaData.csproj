@@ -84,6 +84,7 @@
     <Compile Include="Enumerables\Perfiles.cs" />
     <Compile Include="Enumerables\ProcesoEstado.cs" />
     <Compile Include="Enumerables\TipoCompra.cs" />
+    <Compile Include="Enumerables\TipoFormato.cs" />
     <Compile Include="Enumerables\TipoOpciones.cs" />
     <Compile Include="ModeloServicio\Documentos\Cuota.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoArchivo.cs" />
@@ -132,6 +133,9 @@
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\TblEmpresasResoluciones.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblFormatos.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\TblOpciones.cs">
