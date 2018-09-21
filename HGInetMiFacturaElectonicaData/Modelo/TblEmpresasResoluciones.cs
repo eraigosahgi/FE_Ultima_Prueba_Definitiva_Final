@@ -37,9 +37,9 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public int IntTipoDoc { get; set; }
         public Nullable<bool> IntPermiteParciales { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
         public virtual TblEmpresas TblEmpresas { get; set; }
         public virtual TblEmpresasPasarela TblEmpresasPasarela { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
     }
 }
