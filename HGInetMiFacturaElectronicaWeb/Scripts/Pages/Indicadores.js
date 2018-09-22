@@ -89,7 +89,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                         $scope.Panel13511 = false;
                     else {
                         $scope.ReporteDocumentosEstadoAdmin = response.data;
-                        console.log(response.data);
                     }
                 } catch (err) {
                     DevExpress.ui.notify(err.message, 'error', 3000);

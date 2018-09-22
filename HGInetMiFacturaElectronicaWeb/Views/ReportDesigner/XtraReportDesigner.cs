@@ -12,6 +12,5 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 		{
 			InitializeComponent();
 		}
-
 	}
 }

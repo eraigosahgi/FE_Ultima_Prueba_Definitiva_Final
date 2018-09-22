@@ -2734,6 +2734,7 @@
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
+    <Content Include="Views\Pages\GestionReportes.aspx" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
@@ -2745,6 +2746,9 @@
     <Content Include="Views\Pages\ModalSerialEmpresa.aspx" />
     <Content Include="Views\Pages\ModalConsultaEmpresas.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
+    <Content Include="Views\ReportDesigner\XmlReporteBase.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="wcf\acuserecibo.svc" />
     <Content Include="wcf\documentos.svc" />
     <Content Include="wcf\factura.svc" />
@@ -2761,6 +2765,7 @@
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
+    <Compile Include="Controllers\Services\FormatosController.cs" />
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
     <Compile Include="Controllers\Services\PagosController.cs" />
     <Compile Include="Properties\Constantes.Designer.cs">
@@ -2921,6 +2926,13 @@
     <Compile Include="Views\Pages\DocumentosAdmin.aspx.designer.cs">
       <DependentUpon>DocumentosAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\GestionReportes.aspx.cs">
+      <DependentUpon>GestionReportes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\GestionReportes.aspx.designer.cs">
+      <DependentUpon>GestionReportes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ModalPagos.aspx.cs">
       <DependentUpon>ModalPagos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3057,6 +3069,10 @@
       <Project>{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}</Project>
       <Name>HGInetFirmaDigital</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HGInetInteroperabilidad\HGInetInteroperabilidad.csproj">
+      <Project>{c5391cee-225b-40f7-ba3c-a4d475ed6a5d}</Project>
+      <Name>HGInetInteroperabilidad</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaController\HGInetMiFacturaElectonicaController.csproj">
       <Project>{29cb08f8-08ea-40ae-afd6-7a2a6c0d13d0}</Project>
       <Name>HGInetMiFacturaElectonicaController</Name>
@@ -3086,10 +3102,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Constantes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\OpcionesPermisos.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OpcionesPermisos.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ReportDesigner\XtraReportDesigner.resx">
+      <DependentUpon>XtraReportDesigner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -3107,7 +3127,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61433/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

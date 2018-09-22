@@ -107,8 +107,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                             reporte_pdf = new HGInetFacturaEReports.Facturas.Formato4();
                             reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
                             break;
+						case 5:
+							reporte_pdf = new HGInetFacturaEReports.Facturas.Formato5();
+							reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
+							break;
 
-                        default:
+						default:
                             switch (documento_result.DocumentoTipo)
                             {
                                 case TipoDocumento.Factura:
