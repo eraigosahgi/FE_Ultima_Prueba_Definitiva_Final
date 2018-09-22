@@ -628,7 +628,7 @@ namespace HGInetMiFacturaElectonicaController
         /// </summary>
         /// <param name="documento">Datos del documento</param>
         /// <returns></returns>
-        public bool RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente, string mail = "")
+        public bool RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente,string ruta_archivo , string mail = "" )
         {
             try
             {
@@ -718,8 +718,25 @@ namespace HGInetMiFacturaElectonicaController
                         mensaje = mensaje.Replace("{FechaDocumento}", documento.DatAdquirienteFechaRecibo.Value.ToString(Fecha.formato_fecha_hora));
 
 
+                        List<Adjunto> archivos = new List<Adjunto>();
+
+                        if (string.IsNullOrEmpty(ruta_archivo))
+                            throw new ApplicationException("No se encontró ruta de archivo xml");
+
+                        byte[] bytes_xml = Archivo.ObtenerWeb(ruta_archivo);
+                        string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
+                        string nombre_xml = Path.GetFileName(ruta_archivo);
+
+                        if (!string.IsNullOrEmpty(ruta_fisica_xml))
+                        {
+                            Adjunto adjunto = new Adjunto();
+                            adjunto.ContenidoB64 = ruta_fisica_xml;
+                            adjunto.Nombre = nombre_xml;
+                            archivos.Add(adjunto);
+                        }
+
                         // envía el correo electrónico
-                        EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+                        EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "",archivos);
 
                     }
                 }

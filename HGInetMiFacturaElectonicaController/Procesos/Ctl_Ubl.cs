@@ -217,6 +217,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						id_obligado = documento.IdSeguridadTercero.ToString();
 						
                         break;
+                    case TipoDocumento.AcuseRecibo:
+                        Acuse doc_acuse_recibo = ((Acuse)documento.Documento);
+                        id_obligado = documento.IdSeguridadTercero.ToString();
+
+                        break;
+
                     default:
                         break;
                 }

@@ -328,7 +328,27 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             return tbl_empresa;
         }
 
+        /// <summary>
+        /// Convierte un Objeto de Bd en objeto de Servicio
+        /// </summary>
+        /// <param name="empresa">Objeto BD</param>
+        /// <returns>Objeto de Servicio Tercero</returns>
+        public static Tercero Convertir(TblEmpresas empresa)
+        {
+            if (empresa == null)
+                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "empresa", "Ctl_Empresa"));
 
+            Tercero empresa_obj = new Tercero();
+
+            empresa_obj.Identificacion = empresa.StrIdentificacion;
+            empresa_obj.IdentificacionDv = empresa.IntIdentificacionDv;
+            empresa_obj.TipoIdentificacion = Convert.ToInt16(empresa.StrTipoIdentificacion);
+            empresa_obj.RazonSocial = empresa.StrRazonSocial;
+            empresa_obj.Email = empresa.StrMail;
+            empresa_obj.Telefono = empresa.StrTelefono;
+
+            return empresa_obj;
+        }
 
         /// <summary>
         /// Obtiene Todas las empresas
