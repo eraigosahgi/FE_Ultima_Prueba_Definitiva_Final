@@ -282,7 +282,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                            && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
                                            && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento < fecha_fin)
                                            && (estado_dian.Contains(datos.IntIdEstado.ToString()))
-                                           && (datos.IntIdEstado!= ErrorDian)
+                                           && (datos.IntIdEstado != ErrorDian)
                              orderby datos.IntNumero descending
                              select datos).ToList();
 
@@ -399,10 +399,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
             //    estado_dian = "*";
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
-            
+
 
             List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
-            
+
 
             List<TblDocumentos> documentos = (from datos in context.TblDocumentos
                                               join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
@@ -619,18 +619,27 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 // obtiene los datos del facturador electrónico
                 TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
 
+                //obtiene los datos del proveedor del facturador
+                TblEmpresas proveedor_emisor = ctl_empresa.Obtener(Constantes.NitResolucionsinPrefijo);
+
                 // obtiene los datos del adquiriente
                 TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
+
+                //obtiene los datos del proveedor del adquirirente
+                //TblEmpresas proveedor_receptor = ctl_empresa.Obtener("811021438");
+
+                FacturaE_Documento resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente,proveedor_emisor, proveedor_emisor, estado, motivo_rechazo);
 
                 try
                 {   // envía el correo del acuse de recibo al facturador electrónico
                     Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-                    email.RespuestaAcuse(doc, facturador, adquiriente);
+                    email.RespuestaAcuse(doc, facturador, adquiriente, resultado.RutaArchivosProceso);
                     doc.IntIdEstado = 99;
                 }
                 catch (Exception) { }
 
                 doc.DatFechaActualizaEstado = Fecha.GetFecha();
+                doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
                 doc = Actualizar(doc);
 
                 doc.TblEmpresasFacturador = facturador;
@@ -647,6 +656,66 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
         #endregion
 
+        /// <summary>
+        /// Convierte respuesta a un objeto de Acuse y Ubl
+        /// </summary>
+        /// <param name="doc">Documento al que dieron acuse</param>
+        /// <param name="facturador">Informacion del emisor del documento electronico </param>
+        /// <param name="adquiriente">Informacion del receptor del documento electronico</param>
+        /// <param name="estado">estado del Acuse</param>
+        /// <param name="motivo_rechazo">descripcion del acuse</param>
+        /// <returns></returns>
+        public static FacturaE_Documento ConvertirAcuse(TblDocumentos doc, TblEmpresas facturador, TblEmpresas adquiriente,TblEmpresas proveedor_emisor,TblEmpresas proveedor_receptor, short estado, string motivo_rechazo)
+        {
+
+            //Crea el Acuse
+            Acuse doc_acuse = new Acuse();
+            doc_acuse.IdAcuse = Guid.NewGuid().ToString();
+            doc_acuse.IdSeguridad = doc.StrIdSeguridad.ToString();
+            doc_acuse.Documento = doc.IntNumero;
+            doc_acuse.MvoRespuesta = motivo_rechazo;
+            doc_acuse.Fecha = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
+            doc_acuse.CodigoRespuesta = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.ResponseCode>(estado));
+            doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.DocumentType>(doc.IntDocTipo));
+            doc_acuse.DatosAdquiriente = Ctl_Empresa.Convertir(adquiriente);
+            doc_acuse.DatosObligado = Ctl_Empresa.Convertir(facturador);
+
+            //Convierte el objeto en archivo XML-UBL
+            FacturaE_Documento resultado = AcuseReciboXML.CrearDocumento(doc_acuse, proveedor_emisor, proveedor_emisor, TipoDocumento.AcuseRecibo);
+            resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
+            resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
+            resultado.IdSeguridadPeticion = new Guid(doc_acuse.IdAcuse);
+            resultado.DocumentoTipo = TipoDocumento.AcuseRecibo;
+
+            string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), resultado.IdSeguridadTercero.ToString());
+            carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+            // nombre del xml
+            string archivo_xml = string.Format(@"{0}.xml", resultado.NombreXml);
+
+            // ruta del xml
+            string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
+
+            // elimina el archivo xml si existe
+            if (Archivo.ValidarExistencia(ruta_xml))
+                Archivo.Borrar(ruta_xml);
+
+            // almacena el archivo xml
+            string ruta_save = Xml.Guardar(resultado.DocumentoXml, carpeta_xml, archivo_xml);
+
+            // asigna la ruta del directorio para los archivos
+            resultado.RutaArchivosProceso = carpeta_xml;
+
+            //resultado = Ctl_Ubl.Almacenar(resultado);
+
+            PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+            // url pública del xml
+            string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, resultado.IdSeguridadTercero.ToString());
+            resultado.RutaArchivosProceso = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, resultado.NombreXml);
+
+            return resultado;
+        }
 
         /// <summary>
         /// Convierte un Objeto de Servicio a un Objeto de Bd
@@ -946,17 +1015,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
         /// <returns>Objeto de tipo respuesta</returns>
         public List<TblDocumentos> ObtenerDocumentosaProcesar()
         {
-            string estado_recibo= string.Empty;
-            
-            estado_recibo = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));            
-            
+            string estado_recibo = string.Empty;
+
+            estado_recibo = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));
+
             List<string> estados = Coleccion.ConvertirLista(estado_recibo);
 
             var respuesta = (from datos in context.TblDocumentos
                              join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
                              where (estado_recibo.Contains(datos.IntIdEstado.ToString()))
-                             && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss",15 , DateTime.Now)
-                            
+                             && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", 15, DateTime.Now)
+
                              orderby datos.DatFechaIngreso descending
                              select datos).ToList();
 
@@ -988,13 +1057,35 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 // obtiene los datos del facturador electrónico
                 TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
 
+                //obtiene los datos del proveedor del facturador
+                TblEmpresas proveedor_emisor = ctl_empresa.Obtener(Constantes.NitResolucionsinPrefijo);
+
                 // obtiene los datos del adquiriente
                 TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
+
+                //obtiene los datos del proveedor del facturador
+                //TblEmpresas proveedor_receptor = ctl_empresa.Obtener("811021438");
+
+                string ruta_acuse = string.Empty;
+
+                //Valida si ya tiene 
+                if (string.IsNullOrEmpty(doc.StrUrlAcuseUbl))
+                {
+                    FacturaE_Documento resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_emisor, doc.IntAdquirienteRecibo, doc.StrAdquirienteMvoRechazo);
+                    ruta_acuse = resultado.RutaArchivosProceso;
+                    doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
+                    doc.DatFechaActualizaEstado = Fecha.GetFecha();
+                    doc = Actualizar(doc);
+                }
+                else
+                {
+                    ruta_acuse = doc.StrUrlAcuseUbl;
+                }
 
                 try
                 {   // envía el correo del acuse de recibo al facturador electrónico
                     Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-                    email.RespuestaAcuse(doc, facturador, adquiriente, mail);
+                    email.RespuestaAcuse(doc, facturador, adquiriente, ruta_acuse, mail);
 
                 }
                 catch (Exception) { }

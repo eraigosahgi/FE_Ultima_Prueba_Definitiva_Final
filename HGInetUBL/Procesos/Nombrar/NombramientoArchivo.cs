@@ -43,6 +43,10 @@ namespace HGInetUBL
                 {
                     nombre_archivo = Recursos.NombreArchivos.nombre_xml_nota_credito;
                 }
+                else if (tipo_documento == TipoDocumento.AcuseRecibo)
+                {
+                    nombre_archivo = Recursos.NombreArchivos.nombre_xml_acuse_recibo;
+                }
 
                 nombre_archivo = string.Format("{0}{1}{2}{3}", nombre_archivo, identificacion, prefijo , hex_id_factura);
 

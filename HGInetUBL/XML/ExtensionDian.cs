@@ -176,13 +176,16 @@ namespace HGInetUBL
 			XmlDocument xmlDoc = Xml.ConvertirXmlDocument(xml);
 			xmlDoc.PreserveWhitespace = true;
 
-			var indiceNodo = 1;
-			var nodoExtension = xmlDoc.GetElementsByTagName("ExtensionContent", "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2").Item(indiceNodo);
-			
-			if (nodoExtension != null)
-				nodoExtension.RemoveAll();
-			else
-				throw new InvalidOperationException("No se pudo encontrar el nodo ExtensionContent en el XML");
+            if (xmlDoc.DocumentElement.Name != "fe:ApplicationResponse")
+            {
+                var indiceNodo = 1;
+                var nodoExtension = xmlDoc.GetElementsByTagName("ExtensionContent", "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2").Item(indiceNodo);
+
+                if (nodoExtension != null)
+                    nodoExtension.RemoveAll();
+                else
+                    throw new InvalidOperationException("No se pudo encontrar el nodo ExtensionContent en el XML");
+            }
 			
 			return Xml.Convertir(xmlDoc);
 		}

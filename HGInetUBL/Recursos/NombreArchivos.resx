@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="nombre_xml_acuse_recibo" xml:space="preserve">
+    <value>face_a</value>
+    <comment>Nombre del archivo XML que contiene datos correspondientes a un acuse de recibo.</comment>
+  </data>
   <data name="nombre_xml_factura" xml:space="preserve">
     <value>face_f</value>
     <comment>Nombre del archivo XML que contiene datos correspondientes a una factura. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>

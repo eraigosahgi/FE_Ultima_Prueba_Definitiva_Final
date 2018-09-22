@@ -61,6 +61,15 @@ namespace HGInetUBL.Recursos {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a face_a.
+        /// </summary>
+        internal static string nombre_xml_acuse_recibo {
+            get {
+                return ResourceManager.GetString("nombre_xml_acuse_recibo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a face_f.
         /// </summary>
         internal static string nombre_xml_factura {

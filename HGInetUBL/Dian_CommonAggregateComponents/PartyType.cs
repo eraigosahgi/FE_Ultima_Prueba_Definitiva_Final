@@ -1,4 +1,6 @@
-using System;using System.Collections.Generic;using System.Linq;using System.Text;using System.Threading.Tasks;namespace HGInetUBL
+using System;using System.Collections.Generic;using System.Linq;using System.Text;using System.Threading.Tasks;
+using System.Xml.Serialization;
+namespace HGInetUBL
 {
 	/// <comentarios/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
@@ -6,7 +8,7 @@ using System;using System.Collections.Generic;using System.Linq;using System.Tex
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
 	[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
-	[System.Xml.Serialization.XmlRootAttribute("AgentParty", Namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2", IsNullable=false)]
+	[System.Xml.Serialization.XmlRootAttribute("AgentParty", Namespace= "http://www.dian.gov.co/contratos/facturaelectronica/v1", IsNullable=false)]
 	public partial class PartyType {
         
 		private MarkCareIndicatorType markCareIndicatorField;
@@ -187,9 +189,10 @@ using System;using System.Collections.Generic;using System.Linq;using System.Tex
 				this.personField = value;
 			}
 		}
-        
-		/// <comentarios/>
-		public PartyType AgentParty {
+
+        /// <comentarios/>
+        [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://www.dian.gov.co/contratos/facturaelectronica/v1")]
+        public PartyType AgentParty {
 			get {
 				return this.agentPartyField;
 			}

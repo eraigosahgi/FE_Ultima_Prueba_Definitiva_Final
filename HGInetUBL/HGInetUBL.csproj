@@ -656,6 +656,7 @@
     <Compile Include="Dian_CommonExtensionComponents\ExtensionVersionIDType.cs" />
     <Compile Include="Dian_CommonExtensionComponents\UBLExtensionsType.cs" />
     <Compile Include="Dian_CommonExtensionComponents\UBLExtensionType.cs" />
+    <Compile Include="Dian_Structures\ApplicationResponseType.cs" />
     <Compile Include="Enumeraciones\Ctl_Enumeracion.cs" />
     <Compile Include="Hgi_Structures\HgiNetExtensionsType.cs" />
     <Compile Include="Objetos\DocumentoImpuestos.cs" />
@@ -733,6 +734,7 @@
     <Content Include="Dian_UBL_Recursos\DIAN.txt" />
     <Content Include="Xades\Xades-Scheme\xades_xmldsig-core-schema.txt" />
     <Compile Include="Xades\XAdESTimeStampType.cs" />
+    <Compile Include="XML\AcuseReciboXML.cs" />
     <Compile Include="XML\ExtensionHgiSas.cs" />
     <Compile Include="XML\FacturaXml.Convertir.cs" />
     <Compile Include="XML\FacturaXML.cs" />
