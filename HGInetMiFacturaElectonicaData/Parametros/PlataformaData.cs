@@ -53,6 +53,21 @@ namespace HGInetMiFacturaElectonicaData
             set { this["EnvioSms"] = value; }
         }
 
+        [ConfigurationProperty("RutaDmsFisica", DefaultValue = "", IsKey = true, IsRequired = true)]
+        public string RutaDmsFisica
+        {
+            get { return (string)this["RutaDmsFisica"]; }
+            set { this["RutaDmsFisica"] = value; }
+        }
+
+        [ConfigurationProperty("RutaDmsPublica", DefaultValue = "", IsKey = true, IsRequired = true)]
+        public string RutaDmsPublica
+        {
+            get { return (string)this["RutaDmsPublica"]; }
+            set { this["RutaDmsPublica"] = value; }
+        }
+
+
         public PlataformaData() { }
 
 	}

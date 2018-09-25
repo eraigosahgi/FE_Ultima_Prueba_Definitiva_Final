@@ -13,7 +13,7 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
     public enum DocumentType
     {
         [Description("FV")]
-        Factura = 1,
+        FacturaNacional = 1,
 
         [Description("ND")]
         NotaDebito = 2,
@@ -23,6 +23,21 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
 
         [Description("FC")]
         FacturaContingencia = 4,
+
+        [Description("FE")]
+        FacturaExportacion = 5,
+
+        [Description("Acuse de Recibo")]
+        AcuseDeRecibo = 6,
+
+        [Description("Aceptacion")]
+        Aceptacion = 7,
+
+        [Description("Rechazo")]
+        Rechazo = 8,
+
+        [Description("Otro")]
+        Otro = 9,
     }
 
     /// <summary>
@@ -45,4 +60,40 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         [Description("PAID")]
         Pagado = 4
     }
+
+    public enum RespuestaInterOperabilidad
+    {
+        [Description("El zip se radicó exitosamente")]
+        ZipRadicado = 200,
+
+        [Description("Documento encolado para procesamiento")]
+        PendienteProcesamiento = 201,
+
+        [Description("Documento no se encontrado en el archivo ZIP ")]
+        DocumentoNoEncontrado = 404,
+
+        [Description("El cliente destinatario de la factura electrónica no tiene convenio con el receptor ")]
+        ClienteNoEncontrado = 406,
+
+        [Description("Error interno del receptor del documento electrónico ")]
+        ErrorInternoReceptor = 500,
+
+        [Description("Usuario no autenticado ")]
+        UsuarioNoAutenticado = 401,
+
+        [Description("El documento especificado en el campo nombre no existe en el servidor SFTP")]
+        DocumentoNoEncontradoZip = 412,
+
+        [Description("El archivo comprimido contiene más de 100 documentos electrónicos ")]
+        ZipSuperaMaximo = 414,
+
+        [Description("El zip especificado no contiene documentos electrónicos ")]
+        Zipvacio = 415,
+
+        [Description("El zip se procesó parcialmente ")]
+        ProcesamientoParcial = 409,
+
+    }
+
+
 }

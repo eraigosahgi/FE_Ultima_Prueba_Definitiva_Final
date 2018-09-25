@@ -96,6 +96,7 @@
     <Compile Include="Procesos\Ctl_Documentos.Dian.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Factura.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Formato.cs" />
+    <Compile Include="Procesos\Ctl_Documentos.InterOperabilidad.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Mail.cs" />
     <Compile Include="Procesos\Ctl_Documentos.NotaCredito.cs" />
     <Compile Include="Procesos\Ctl_Documentos.NotaDebito.cs" />
@@ -135,6 +136,10 @@
     <ProjectReference Include="..\HGInetFirmaDigital\HGInetFirmaDigital.csproj">
       <Project>{9c888de6-5aae-45c6-9c50-e0844ef42a3c}</Project>
       <Name>HGInetFirmaDigital</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetInteroperabilidad\HGInetInteroperabilidad.csproj">
+      <Project>{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}</Project>
+      <Name>HGInetInteroperabilidad</Name>
     </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
