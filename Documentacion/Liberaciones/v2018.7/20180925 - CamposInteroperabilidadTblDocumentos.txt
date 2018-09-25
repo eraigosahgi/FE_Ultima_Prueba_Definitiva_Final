@@ -1,0 +1,11 @@
+ALTER TABLE TblDocumentos ADD
+	StrProveedorEmisor varchar(50) NULL
+GO
+
+ALTER TABLE TblDocumentos ADD
+	StrProveedorReceptor varchar(50) NULL
+GO
+
+ALTER TABLE TblDocumentos ADD
+	TrackingID uniqueidentifier NULL
+GO

@@ -1,0 +1,1 @@
+update TblDocumentos set StrProveedorEmisor = '811021438'

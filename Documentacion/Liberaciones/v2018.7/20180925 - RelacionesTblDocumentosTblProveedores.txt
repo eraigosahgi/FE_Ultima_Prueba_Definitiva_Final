@@ -1,0 +1,24 @@
+ALTER TABLE dbo.TblDocumentos ADD CONSTRAINT
+	FK_TblDocumentos_TblDocumentosEmisor FOREIGN KEY
+	(
+	StrProveedorEmisor
+	) REFERENCES dbo.TblProveedores
+	(
+	StrIdentificacion
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+ALTER TABLE dbo.TblDocumentos ADD CONSTRAINT
+	FK_TblDocumentos_TblDocumentosReceptor FOREIGN KEY
+	(
+	StrProveedorReceptor
+	) REFERENCES dbo.TblProveedores
+	(
+	StrIdentificacion
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+ALTER TABLE dbo.TblDocumentos SET (LOCK_ESCALATION = TABLE)
+GO

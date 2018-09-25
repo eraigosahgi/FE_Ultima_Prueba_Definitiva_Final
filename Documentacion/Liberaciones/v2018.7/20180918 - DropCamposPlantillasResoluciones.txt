@@ -1,0 +1,2 @@
+ALTER TABLE TblEmpresasResoluciones DROP COLUMN IntIdPlantillaPdf; 
+ALTER TABLE TblEmpresasResoluciones DROP COLUMN IntIdPlantillaMail; 
