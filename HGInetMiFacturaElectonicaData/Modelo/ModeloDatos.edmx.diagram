@@ -29,14 +29,17 @@
         <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.875" PointX="10.125" PointY="2.625" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" />
-        <EntityTypeShape EntityType="Modelo.TblFormatos" Width="2.25" PointX="2.875" PointY="5.25" />
-        <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
-        <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="1.75" PointX="14.875" PointY="2" />
+        <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="2.625" PointX="14.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Modelo.TblFormatos" Width="2.125" PointX="2.75" PointY="4.5" />
+        <EntityTypeShape EntityType="Modelo.TblProveedores" Width="2" PointX="21.375" PointY="0.5" />
+        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblDocumentosEmisor" />
+        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblDocumentosReceptor" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasFacturador" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblPlanesTransacciones" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblDocumentos" />
+        <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

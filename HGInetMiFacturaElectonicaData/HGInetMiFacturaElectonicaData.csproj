@@ -161,6 +161,9 @@
     <Compile Include="Modelo\TblPlanesTransacciones.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblProveedores.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblUsuarios.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
