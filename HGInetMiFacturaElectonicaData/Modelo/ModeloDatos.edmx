@@ -1158,7 +1158,7 @@
           <Property Name="StrUrlAcuseUbl" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="StrProveedorEmisor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrProveedorReceptor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TrackingID" Type="Guid" />
+          <Property Name="StrIdInteroperabilidad" Type="Guid" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidad" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidad1" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
@@ -1511,7 +1511,7 @@
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
-                <ScalarProperty Name="TrackingID" ColumnName="TrackingID" />
+                <ScalarProperty Name="StrIdInteroperabilidad" ColumnName="TrackingID" />
                 <ScalarProperty Name="StrProveedorReceptor" ColumnName="StrProveedorReceptor" />
                 <ScalarProperty Name="StrProveedorEmisor" ColumnName="StrProveedorEmisor" />
                 <ScalarProperty Name="StrUrlAcuseUbl" ColumnName="StrUrlAcuseUbl" />

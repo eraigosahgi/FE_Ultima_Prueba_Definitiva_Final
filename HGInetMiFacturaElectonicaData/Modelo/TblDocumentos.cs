@@ -46,7 +46,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrUrlAcuseUbl { get; set; }
         public string StrProveedorEmisor { get; set; }
         public string StrProveedorReceptor { get; set; }
-        public Nullable<System.Guid> TrackingID { get; set; }
+        public Nullable<System.Guid> StrIdInteroperabilidad { get; set; }
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidad { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidad1 { get; set; }
