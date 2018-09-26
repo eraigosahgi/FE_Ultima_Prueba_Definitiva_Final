@@ -132,6 +132,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.7", "v2018.7", "{0A44
 		Documentacion\Liberaciones\v2018.7\20180925 - UpdateStrProveedorEmisor.txt = Documentacion\Liberaciones\v2018.7\20180925 - UpdateStrProveedorEmisor.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Soap", "Soap", "{E0F33763-DA85-46D9-9491-B799C4CAC3B0}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Soap\HGInetFacturaElectronica-Soapui-Project.xml = Documentacion\Soap\HGInetFacturaElectronica-Soapui-Project.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -267,5 +272,6 @@ Global
 		{4F6933ED-0456-49B4-8DB6-F333AA02BD63} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{ABC6BEBB-CCE9-4BEB-92A9-AD83FFC3D3BD} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 		{0A447660-D629-4B59-A1B7-48FDA5CE1EA7} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{E0F33763-DA85-46D9-9491-B799C4CAC3B0} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 	EndGlobalSection
 EndGlobal
