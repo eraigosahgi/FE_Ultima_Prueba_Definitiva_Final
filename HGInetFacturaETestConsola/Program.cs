@@ -1,5 +1,9 @@
 ﻿using HGInetDIANServicios;
 using HGInetFacturaEServicios;
+using HGInetMiFacturaElectonicaController.Registros;
+using HGInetMiFacturaElectonicaData.Modelo;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using System;
@@ -16,8 +20,48 @@ namespace HGInetFacturaETestConsola
         {
             try
             {
-                
-                List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> resoluciones = HGInetFacturaEServicios.Ctl_Resolucion.Obtener("http://localhost:61499/", "CE61061C-9AD2-4942-97F5-A48206F2680D", "811021438");
+				
+
+
+
+
+				try
+				{
+
+					Pdf.LeerEstructura1(@"E:\testpdf\FacturaFormato.pdf");
+
+					Pdf.DescomponerPdf(@"E:\testpdf\FacturaFormato.pdf", @"E:\testpdf\pdf2", "FacturaFormato.pdf");
+
+					FormatoPdf.VerySimpleReplaceText(@"E:\FacturaFormato.pdf", @"E:\FacturaFormato2.pdf", "@RazonSocial", "HGI S.A.S.");
+
+					FormatoPdf.Leer();
+
+					using (PdfReader pdf = new PdfReader(@"E:\FacturaFormato.pdf"))
+					{
+
+						ITextExtractionStrategy texto = new iTextSharp.text.pdf.parser.SimpleTextExtractionStrategy();
+
+						string texto_pfd = PdfTextExtractor.GetTextFromPage(pdf, 1);
+
+					}
+				}
+				catch (Exception excepcion)
+				{
+
+					throw excepcion;
+				}
+
+
+
+
+
+
+
+
+
+
+
+					List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> resoluciones = HGInetFacturaEServicios.Ctl_Resolucion.Obtener("http://localhost:61499/", "CE61061C-9AD2-4942-97F5-A48206F2680D", "811021438");
 
 
 
@@ -123,7 +167,7 @@ namespace HGInetFacturaETestConsola
                 System.Diagnostics.Debug.WriteLine("CUFE GENERADO : " + cufe);
 
 
-                string cufeNC = Ctl_NotaCredito.CalcularCUFE("5790af0483698d226240b7c4abafd49eb0dc8d480f6a7e44dfe4a523fed2129a", "3d03ae717f28dab49c7588ffa4ef006f776ac468", "602", new DateTime(2018, 4, 23), "811021438", "13", "79758318", 687196.00M, 607870.00M, 109720.00M, 0.00M, 0.00M);
+                string cufeNC = HGInetFacturaEServicios.Ctl_NotaCredito.CalcularCUFE("5790af0483698d226240b7c4abafd49eb0dc8d480f6a7e44dfe4a523fed2129a", "3d03ae717f28dab49c7588ffa4ef006f776ac468", "602", new DateTime(2018, 4, 23), "811021438", "13", "79758318", 687196.00M, 607870.00M, 109720.00M, 0.00M, 0.00M);
 
                 System.Diagnostics.Debug.WriteLine("cufeNC GENERADO : " + cufeNC);
 

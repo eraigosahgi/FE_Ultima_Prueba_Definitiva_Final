@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HGInetFacturaETestConsola</RootNamespace>
     <AssemblyName>HGInetFacturaETestConsola</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -35,6 +35,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -47,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormatoPdf.cs" />
+    <Compile Include="Pdf.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,6 +60,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HGInetDIANServicios\HGInetDIANServicios.csproj">
@@ -63,6 +70,14 @@
     <ProjectReference Include="..\HGInetFacturaEServicios\HGInetFacturaEServicios.csproj">
       <Project>{ee6399c8-f3c3-4537-b048-dbf0ad505f4d}</Project>
       <Name>HGInetFacturaEServicios</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetMiFacturaElectonicaController\HGInetMiFacturaElectonicaController.csproj">
+      <Project>{29cb08f8-08ea-40ae-afd6-7a2a6c0d13d0}</Project>
+      <Name>HGInetMiFacturaElectonicaController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
+      <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
+      <Name>HGInetMiFacturaElectonicaData</Name>
     </ProjectReference>
     <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
       <Project>{A966A394-F6CC-482F-87A4-56EC1AF05E5E}</Project>
