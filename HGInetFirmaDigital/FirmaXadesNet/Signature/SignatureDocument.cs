@@ -91,9 +91,17 @@ namespace FirmaXadesNet.Signature
         public void Save(string fileName)
         {
             CheckSignatureDocument(this);
+            
+            XmlWriterSettings settings = new XmlWriterSettings()
+            {
+                Encoding = new UTF8Encoding(),
+                Indent = true,
+                IndentChars = "\t",
+                CheckCharacters = true,
+                ConformanceLevel = ConformanceLevel.Document
+            };
 
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UTF8Encoding();
+
             using (var writer = XmlWriter.Create(fileName, settings))
             {
                 this.Document.Save(writer);
@@ -106,8 +114,17 @@ namespace FirmaXadesNet.Signature
         /// <param name="output"></param>
         public void Save(Stream output)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UTF8Encoding();
+
+            XmlWriterSettings settings = new XmlWriterSettings()
+            {
+                Encoding = new UTF8Encoding(),
+                Indent = true,
+                IndentChars = "\t",
+                CheckCharacters = true,
+                ConformanceLevel = ConformanceLevel.Document,
+                NewLineOnAttributes = true
+            };
+
             using (var writer = XmlWriter.Create(output, settings))
             {
                 this.Document.Save(writer);
