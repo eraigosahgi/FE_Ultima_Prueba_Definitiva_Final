@@ -41,5 +41,26 @@ namespace HGInetFacturaEServicios
 			return sb.ToString();
 		}
 
+        public static System.ServiceModel.Channels.Binding ObtenerBinding(string url, string binding_name)
+        {
+
+            string http_tipo = url.ToLowerInvariant().Split(':')[0];
+
+            if (http_tipo.Equals("https"))
+            {
+                return new System.ServiceModel.WSHttpBinding();
+
+            }
+            else
+            {
+                System.ServiceModel.BasicHttpBinding binding = new System.ServiceModel.BasicHttpBinding();
+
+                if (!string.IsNullOrEmpty(binding_name))
+                    binding = new System.ServiceModel.BasicHttpBinding(binding_name);
+                
+                return binding;
+            }
+        }
+
 	}
 }
