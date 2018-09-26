@@ -48,8 +48,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrProveedorReceptor { get; set; }
         public Nullable<System.Guid> StrIdInteroperabilidad { get; set; }
     
-        public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidad { get; set; }
-        public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidad1 { get; set; }
+        public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
+        public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }
         public virtual TblEmpresas TblEmpresasAdquiriente { get; set; }
         public virtual TblEmpresas TblEmpresasFacturador { get; set; }
         public virtual TblEmpresasResoluciones TblEmpresasResoluciones { get; set; }

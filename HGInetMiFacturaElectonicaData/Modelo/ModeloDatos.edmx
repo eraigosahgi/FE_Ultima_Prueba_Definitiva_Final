@@ -68,7 +68,7 @@
           <Property Name="StrUrlAcuseUbl" Type="varchar" MaxLength="300" />
           <Property Name="StrProveedorEmisor" Type="varchar" MaxLength="50" />
           <Property Name="StrProveedorReceptor" Type="varchar" MaxLength="50" />
-          <Property Name="TrackingID" Type="uniqueidentifier" />
+          <Property Name="StrIdInteroperabilidad" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -1159,8 +1159,8 @@
           <Property Name="StrProveedorEmisor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrProveedorReceptor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrIdInteroperabilidad" Type="Guid" />
-          <NavigationProperty Name="TblConfiguracionInteroperabilidad" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
-          <NavigationProperty Name="TblConfiguracionInteroperabilidad1" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
+          <NavigationProperty Name="TblConfiguracionInteroperabilidadEmisor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
+          <NavigationProperty Name="TblConfiguracionInteroperabilidadReceptor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblDocumentos" ToRole="TblEmpresasResoluciones" />
@@ -1511,7 +1511,7 @@
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
-                <ScalarProperty Name="StrIdInteroperabilidad" ColumnName="TrackingID" />
+                <ScalarProperty Name="StrIdInteroperabilidad" ColumnName="StrIdInteroperabilidad" />
                 <ScalarProperty Name="StrProveedorReceptor" ColumnName="StrProveedorReceptor" />
                 <ScalarProperty Name="StrProveedorEmisor" ColumnName="StrProveedorEmisor" />
                 <ScalarProperty Name="StrUrlAcuseUbl" ColumnName="StrUrlAcuseUbl" />
