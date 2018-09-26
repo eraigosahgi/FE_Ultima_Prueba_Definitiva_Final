@@ -12,10 +12,10 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     using System;
     using System.Collections.Generic;
     
-    public partial class TblProveedores
+    public partial class TblConfiguracionInteroperabilidad
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public TblProveedores()
+        public TblConfiguracionInteroperabilidad()
         {
             this.TblDocumentos = new HashSet<TblDocumentos>();
             this.TblDocumentos1 = new HashSet<TblDocumentos>();
@@ -24,19 +24,21 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrIdentificacion { get; set; }
         public string StrRazonSocial { get; set; }
         public string StrMail { get; set; }
-        public System.DateTime DatFechaIngreso { get; set; }
-        public string StrObservaciones { get; set; }
-        public System.DateTime DatFechaActualizacion { get; set; }
         public string StrTelefono { get; set; }
-        public string StrRutaFTP { get; set; }
-        public string StrUsuarioReceptor { get; set; }
-        public string StrClaveReceptor { get; set; }
-        public System.DateTime DatFechaExpiracionReceptor { get; set; }
-        public string StrUsuarioEmisor { get; set; }
-        public string StrClaveEmisor { get; set; }
-        public System.DateTime DatFechaExpiracionEmisor { get; set; }
-        public string StrTokenEmisor { get; set; }
-        public Nullable<System.DateTime> DatFechaTokenEmisor { get; set; }
+        public string StrObservaciones { get; set; }
+        public System.DateTime DatFechaIngreso { get; set; }
+        public System.DateTime DatFechaActualizacion { get; set; }
+        public string StrUsuario { get; set; }
+        public string StrClave { get; set; }
+        public System.DateTime DatFechaExpiracion { get; set; }
+        public string StrHgiUsuario { get; set; }
+        public string StrHgiClave { get; set; }
+        public System.DateTime DatHgiFechaExpiracion { get; set; }
+        public string StrHgiToken { get; set; }
+        public Nullable<System.DateTime> DatHgiFechaToken { get; set; }
+        public string StrUrlApi { get; set; }
+        public string StrUrlFtp { get; set; }
+        public bool BitActivo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
