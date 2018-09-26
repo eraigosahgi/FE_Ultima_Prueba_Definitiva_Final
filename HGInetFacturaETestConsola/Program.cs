@@ -2,15 +2,19 @@
 using HGInetFacturaEServicios;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUBL;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace HGInetFacturaETestConsola
 {
@@ -20,36 +24,68 @@ namespace HGInetFacturaETestConsola
         {
             try
             {
-				
+                //Se lee un xml de una ruta
+                FileStream xml_reader = new FileStream(@"E:\Desarrollo\jzea\Pruebas\face_f0811021438003B023973.xml", FileMode.Open);
+
+                XmlSerializer xml_ser = new XmlSerializer(typeof(InvoiceType));
+
+                InvoiceType objeto = (InvoiceType)xml_ser.Deserialize(xml_reader);
+
+                // representación de datos en objeto
+                var documento_obj = (dynamic)null;
+
+                //Asigno objeto dinamico a Objeto tipo Factura
+                Factura factura = new Factura();
+
+                //Convierto XML-UBL en Objeto
+                factura = FacturaXML.Convertir(objeto);
+
+                List<HGInetFacturaEServicios.ServicioFactura.Factura> list_factura = new List<HGInetFacturaEServicios.ServicioFactura.Factura>();
+
+                HGInetFacturaEServicios.ServicioFactura.Factura factura_envio = new HGInetFacturaEServicios.ServicioFactura.Factura();
+
+                documento_obj = factura;
+
+                factura_envio = documento_obj;
+
+                list_factura.Add(factura_envio);
+
+                //Ejecuto libreria de servicios para el envio de documentos
+                HGInetFacturaEServicios.Ctl_Factura.Enviar("http://habilitacion.mifacturaenlinea.com.co", "4C2B77AFA43D621B091EF6802", "811021438", list_factura);
+
+                // cerrar la lectura del archivo xml
+                xml_reader.Close();
+
+
+                try
+                {
+
+                    Pdf.LeerEstructura1(@"E:\testpdf\FacturaFormato.pdf");
+
+                    Pdf.DescomponerPdf(@"E:\testpdf\FacturaFormato.pdf", @"E:\testpdf\pdf2", "FacturaFormato.pdf");
+
+                    FormatoPdf.VerySimpleReplaceText(@"E:\FacturaFormato.pdf", @"E:\FacturaFormato2.pdf", "@RazonSocial", "HGI S.A.S.");
+
+                    FormatoPdf.Leer();
+
+                    using (PdfReader pdf = new PdfReader(@"E:\FacturaFormato.pdf"))
+                    {
+
+                        ITextExtractionStrategy texto = new iTextSharp.text.pdf.parser.SimpleTextExtractionStrategy();
+
+                        string texto_pfd = PdfTextExtractor.GetTextFromPage(pdf, 1);
+
+                    }
+                }
+                catch (Exception excepcion)
+                {
+
+                    throw excepcion;
+                }
 
 
 
 
-				try
-				{
-
-					Pdf.LeerEstructura1(@"E:\testpdf\FacturaFormato.pdf");
-
-					Pdf.DescomponerPdf(@"E:\testpdf\FacturaFormato.pdf", @"E:\testpdf\pdf2", "FacturaFormato.pdf");
-
-					FormatoPdf.VerySimpleReplaceText(@"E:\FacturaFormato.pdf", @"E:\FacturaFormato2.pdf", "@RazonSocial", "HGI S.A.S.");
-
-					FormatoPdf.Leer();
-
-					using (PdfReader pdf = new PdfReader(@"E:\FacturaFormato.pdf"))
-					{
-
-						ITextExtractionStrategy texto = new iTextSharp.text.pdf.parser.SimpleTextExtractionStrategy();
-
-						string texto_pfd = PdfTextExtractor.GetTextFromPage(pdf, 1);
-
-					}
-				}
-				catch (Exception excepcion)
-				{
-
-					throw excepcion;
-				}
 
 
 
@@ -57,11 +93,7 @@ namespace HGInetFacturaETestConsola
 
 
 
-
-
-
-
-					List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> resoluciones = HGInetFacturaEServicios.Ctl_Resolucion.Obtener("http://localhost:61499/", "CE61061C-9AD2-4942-97F5-A48206F2680D", "811021438");
+                List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> resoluciones = HGInetFacturaEServicios.Ctl_Resolucion.Obtener("http://localhost:61499/", "CE61061C-9AD2-4942-97F5-A48206F2680D", "811021438");
 
 
 
@@ -101,7 +133,7 @@ namespace HGInetFacturaETestConsola
                 prefijo = "";
                 fecha_documento = new DateTime(2018, 4, 10);
 
-                
+
                 // documento correcto
                 documento = "990000396";
                 cufe = "1de20e628084240a92f19d6019d92cd711dfe782";
