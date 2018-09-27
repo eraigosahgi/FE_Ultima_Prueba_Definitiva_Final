@@ -22,6 +22,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         }
     
         public string StrIdentificacion { get; set; }
+        public System.Guid StrIdSeguridad { get; set; }
         public string StrRazonSocial { get; set; }
         public string StrMail { get; set; }
         public string StrTelefono { get; set; }

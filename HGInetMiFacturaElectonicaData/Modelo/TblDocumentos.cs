@@ -48,13 +48,13 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrProveedorReceptor { get; set; }
         public Nullable<System.Guid> StrIdInteroperabilidad { get; set; }
     
-        public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
-        public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }
         public virtual TblEmpresas TblEmpresasAdquiriente { get; set; }
         public virtual TblEmpresas TblEmpresasFacturador { get; set; }
         public virtual TblEmpresasResoluciones TblEmpresasResoluciones { get; set; }
         public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
+        public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
+        public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadRecepctor { get; set; }
     }
 }
