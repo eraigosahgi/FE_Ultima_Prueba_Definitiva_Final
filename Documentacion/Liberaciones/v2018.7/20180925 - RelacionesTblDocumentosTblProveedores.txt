@@ -1,8 +1,8 @@
 ALTER TABLE dbo.TblDocumentos ADD CONSTRAINT
-	FK_TblDocumentos_TblDocumentosEmisor FOREIGN KEY
+	FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor FOREIGN KEY
 	(
 	StrProveedorEmisor
-	) REFERENCES dbo.TblProveedores
+	) REFERENCES dbo.TblConfiguracionInteroperabilidad
 	(
 	StrIdentificacion
 	) ON UPDATE  NO ACTION 
@@ -10,10 +10,10 @@ ALTER TABLE dbo.TblDocumentos ADD CONSTRAINT
 	
 GO
 ALTER TABLE dbo.TblDocumentos ADD CONSTRAINT
-	FK_TblDocumentos_TblDocumentosReceptor FOREIGN KEY
+	FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor FOREIGN KEY
 	(
 	StrProveedorReceptor
-	) REFERENCES dbo.TblProveedores
+	) REFERENCES dbo.TblConfiguracionInteroperabilidad
 	(
 	StrIdentificacion
 	) ON UPDATE  NO ACTION 

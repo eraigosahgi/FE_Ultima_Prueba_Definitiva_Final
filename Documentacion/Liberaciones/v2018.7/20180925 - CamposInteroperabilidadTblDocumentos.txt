@@ -7,5 +7,5 @@ ALTER TABLE TblDocumentos ADD
 GO
 
 ALTER TABLE TblDocumentos ADD
-	TrackingID uniqueidentifier NULL
+	StrIdInteroperabilidad uniqueidentifier NULL
 GO
