@@ -166,6 +166,18 @@
     <value>http://habilitacion.mifacturaenlinea.com.co</value>
     <comment>Ruta de eacceso a la plataforma web.</comment>
   </data>
+  <data name="RutaInteroperabilidadEnvio" xml:space="preserve">
+    <value>interoperabilidad\\operacion\\envio\\</value>
+    <comment>Ruta fisica para el proceso de envio de los documentos a interoperabilidad</comment>
+  </data>
+  <data name="RutaInteroperabilidadFtp" xml:space="preserve">
+    <value>interoperabilidad\\publico\\</value>
+    <comment>Ruta fisica para el ftp interoperabilidad</comment>
+  </data>
+  <data name="RutaInteroperabilidadRecepcion" xml:space="preserve">
+    <value>interoperabilidad\\operacion\\recepcion\\</value>
+    <comment>Ruta fisica para el proceso de recepcion de los documentos a interoperabilidad</comment>
+  </data>
   <data name="RutaPlantillaAcuse" xml:space="preserve">
     <value>emails\\plantilla_documento_acuse.html</value>
     <comment>Ruta de la plantilla Html de envío acuse de recibo</comment>
