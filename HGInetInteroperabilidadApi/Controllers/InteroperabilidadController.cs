@@ -17,6 +17,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using System;
 using System.Linq;
 using LibreriaGlobalHGInet.Funciones;
+using HGInetInteroperabilidad.Procesos;
 
 namespace WebApi.Jwt.Controllers
 {
@@ -93,7 +94,7 @@ namespace WebApi.Jwt.Controllers
             string Proveedor = usernameClaim.Value;
 
 
-            RegistroListaDocRespuesta respuesta = HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.Procesar(registroRespuesta, @"E:\Desarrollo\jzea\Ubl-Lmsoftware");
+            RegistroListaDocRespuesta respuesta = Ctl_Recepcion.Procesar(registroRespuesta, @"E:\Desarrollo\jzea\Ubl-Lmsoftware","");
 
 
             //Aqui recibo la respuesta y la envio

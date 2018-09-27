@@ -286,10 +286,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// </summary>
         /// <param name="empresa">Objeto de servicio de la empresa a crear</param>
         /// <returns></returns>
-        public TblEmpresas Crear(Tercero empresa)
+        public TblEmpresas Crear(Tercero empresa, bool adquiriente = true)
         {
             // convierte el objeto del servicio
-            TblEmpresas tbl_empresa = Convertir(empresa);
+            TblEmpresas tbl_empresa = Convertir(empresa, adquiriente);
 
             // agrega el objeto
             tbl_empresa = Crear(tbl_empresa);
@@ -303,7 +303,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// </summary>
         /// <param name="empresa">Informacion de la empresa</param>
         /// <returns></returns>
-        public static TblEmpresas Convertir(Tercero empresa)
+        public static TblEmpresas Convertir(Tercero empresa, bool adquiriente = true)
         {
 
             if (empresa == null)
@@ -317,8 +317,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             tbl_empresa.StrRazonSocial = empresa.RazonSocial;
             tbl_empresa.StrMail = empresa.Email;
             tbl_empresa.DatFechaIngreso = Fecha.GetFecha();
-            tbl_empresa.IntAdquiriente = true;
-            tbl_empresa.IntObligado = false;
+            tbl_empresa.IntAdquiriente = adquiriente;
+            tbl_empresa.IntObligado = (adquiriente == false) ? (true) : false;
             tbl_empresa.IntHabilitacion = 0;
             tbl_empresa.DatFechaActualizacion = Fecha.GetFecha();
             tbl_empresa.StrIdSeguridad = Guid.NewGuid();

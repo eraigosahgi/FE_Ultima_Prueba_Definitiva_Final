@@ -64,13 +64,22 @@
     <Compile Include="Objetos\RegistroListaDocRespuesta.cs" />
     <Compile Include="Objetos\RegistroDocRespuesta.cs" />
     <Compile Include="Objetos\Usuario.cs" />
+    <Compile Include="Procesos\Ctl_Recepcion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\Ctl_ClienteWebApi.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HGInetMiFacturaElectonicaController\HGInetMiFacturaElectonicaController.csproj">
+      <Project>{29cb08f8-08ea-40ae-afd6-7a2a6c0d13d0}</Project>
+      <Name>HGInetMiFacturaElectonicaController</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
       <Name>HGInetMiFacturaElectonicaData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetUBL\HGInetUBL.csproj">
+      <Project>{E571F23F-B598-4DB1-893B-D94EC0354775}</Project>
+      <Name>HGInetUBL</Name>
     </ProjectReference>
     <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
       <Project>{a966a394-f6cc-482f-87a4-56ec1af05e5e}</Project>
@@ -81,6 +90,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

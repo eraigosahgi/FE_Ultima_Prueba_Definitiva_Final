@@ -127,6 +127,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetInteroperabilidadApi"
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetInteroperabilidad", "HGInetInteroperabilidad\HGInetInteroperabilidad.csproj", "{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0} = {29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Soap", "Soap", "{E0F33763-DA85-46D9-9491-B799C4CAC3B0}"
 	ProjectSection(SolutionItems) = preProject
