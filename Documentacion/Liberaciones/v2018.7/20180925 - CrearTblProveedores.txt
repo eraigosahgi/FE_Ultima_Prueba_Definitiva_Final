@@ -5,7 +5,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[TblConfiguracionInteroperabilidad](
-	[StrIdentificacion] [varchar](50) NOT NULL,
+[StrIdentificacion] [varchar](50) NOT NULL,
+[StrIdSeguridad] [uniqueidentifier] NOT NULL,
 [StrRazonSocial] [varchar](200) NOT NULL,
 [StrMail] [varchar](200) NOT NULL,
 [StrTelefono] [varchar](50) NOT NULL,
