@@ -1,5 +1,6 @@
 ﻿
 
+using DevExpress.XtraReports.UI;
 using Telerik.Reporting;
 
 namespace HGInetFacturaEReports
@@ -18,6 +19,11 @@ namespace HGInetFacturaEReports
 		public bool GenerarPdf(IReportDocument report)
 		{
 			return this.Generar(report, Extensiones.Pdf);
+		}
+
+		public void GenerarPdfDev(XtraReport report, string nit_facturador)
+		{
+			this.GenerarPdf(report, nit_facturador);
 		}
 	}
 }

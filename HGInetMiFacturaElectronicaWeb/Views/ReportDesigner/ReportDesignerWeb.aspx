@@ -45,11 +45,10 @@
 	<form id="form1" runat="server">
 
 		<dx:ASPxReportDesigner ID="ASPxReportDesignerWeb" runat="server" ColorScheme="dark" ClientSideEvents-OnServerError="reportDesigner_OnServerError"
+			ClientSideEvents-ExitDesigner="ExitDesignerfunction"
 			ClientSideEvents-CustomizeMenuActions="reportDesigner_CustomizeMenuActions" DisableHttpHandlerValidation="False" ClientSideEvents-SaveCommandExecute="reportDesigner_SaveCommandExecute"
 			ShouldDisposeDataSources="true" OnSaveReportLayout="ASPxReportDesignerWeb_SaveReportLayout" ClientSideEvents-EndCallback="reportDesigner_EndCallback">
 		</dx:ASPxReportDesigner>
-
-		<asp:Button runat="server" ID="BtnGenerar" Text="¡ Hola Mundo !" OnClick="BtnGenerar_Click" />
 
 	</form>
 </body>

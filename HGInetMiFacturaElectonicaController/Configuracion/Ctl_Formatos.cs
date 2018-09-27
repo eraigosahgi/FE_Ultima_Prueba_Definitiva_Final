@@ -135,29 +135,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return formato;
 		}
 
-		public TblFormatos Actualizar(TblFormatos formato)
-		{
-			formato = this.Edit(formato);
-
-			return formato;
-		}
-
-		public TblFormatos AlmacenarFormato(string identificacion_empresa, byte[] byte_formato, int tipo_formato)
+		public TblFormatos AlmacenarFormatoPdf(TblFormatos datos_formato)
 		{
 			try
 			{
 				System.Guid id_seguridad = System.Guid.NewGuid();
-
-				//Construye el objeto de almacenamiento
-				TblFormatos datos_formato = new TblFormatos();
-				datos_formato.StrEmpresa = identificacion_empresa;
-				datos_formato.IntCodigoFormato = ObtenerIdFormato(identificacion_empresa);
-				datos_formato.StrIdSeguridad = id_seguridad;
-				datos_formato.IntTipo = tipo_formato;
 				datos_formato.DatFechaRegistro = Fecha.GetFecha();
-				datos_formato.IntEstado = true;
-				datos_formato.IntGenerico = false;
-				datos_formato.Formato = byte_formato;
+				datos_formato.StrIdSeguridad = id_seguridad;
+				datos_formato.IntCodigoFormato = ObtenerIdFormato(datos_formato.StrEmpresa);
+				datos_formato.IntTipo = TipoFormato.FormatoPDF.GetHashCode();
 
 				//Crea el registro en base de datos.
 				TblFormatos datos_respueta = Crear(datos_formato);
@@ -166,27 +152,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				return null;
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
-
-		public TblFormatos ActualizarFormato(int id_formato, string identificacion_empresa, byte[] byte_formato, int tipo_formato)
-		{
-			try
-			{
-				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
-				datos_formato.DatFechaActualización = Fecha.GetFecha();
-				datos_formato.Formato = byte_formato;
-
-				//Crea el registro en base de datos.
-				TblFormatos datos_respueta = Actualizar(datos_formato);
-
-				return datos_respueta;
-			}
-			catch (Exception excepcion)
-			{
-				return null;
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -218,6 +183,82 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+		#endregion
+
+
+		#region Actualizar
+
+
+		public TblFormatos Actualizar(TblFormatos formato)
+		{
+			formato = this.Edit(formato);
+
+			return formato;
+		}
+
+		/// <summary>
+		/// Actualiza los datos del formato (diseño)
+		/// </summary>
+		/// <param name="id_formato"></param>
+		/// <param name="identificacion_empresa"></param>
+		/// <param name="byte_formato"></param>
+		/// <param name="tipo_formato"></param>
+		/// <returns></returns>
+		public TblFormatos ActualizarFormato(int id_formato, string identificacion_empresa, byte[] byte_formato, int tipo_formato)
+		{
+			try
+			{
+				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
+				datos_formato.DatFechaActualización = Fecha.GetFecha();
+				datos_formato.Formato = byte_formato;
+
+				//Actualiza el registro en base de datos.
+				TblFormatos datos_respueta = Actualizar(datos_formato);
+
+				return datos_respueta;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		/// <summary>
+		/// Actualiza el estado del formato
+		/// </summary>
+		/// <param name="id_formato"></param>
+		/// <param name="identificacion_empresa"></param>
+		/// <param name="estado_actual"></param>
+		/// <param name="tipo_formato"></param>
+		/// <returns></returns>
+		public TblFormatos ActualizarEstadoFormato(int id_formato, string identificacion_empresa, bool estado_actual, int tipo_formato)
+		{
+			try
+			{
+				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
+				datos_formato.DatFechaActualización = Fecha.GetFecha();
+
+				bool estado_formato = false;
+
+				if (estado_actual)
+					estado_formato = false;
+				else
+					estado_formato = true;
+
+				datos_formato.IntEstado = estado_formato;
+
+				//Actualiza el registro en base de datos.
+				TblFormatos datos_respueta = Actualizar(datos_formato);
+
+				return datos_respueta;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 		#endregion
 
@@ -258,10 +299,43 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
-				List<TblFormatos> formato_resultado = (from formato in context.TblFormatos
-													   where formato.StrEmpresa.Equals(identificacion_empresa)
-													   select formato).ToList();
-				return formato_resultado;
+				Ctl_Empresa clase_empresa = new Ctl_Empresa();
+				TblEmpresas datos_empresa = clase_empresa.Obtener(identificacion_empresa);
+
+				List<TblFormatos> listado_formatos = new List<TblFormatos>();
+
+				List<string> empresas_asociadas = new List<string>();
+				empresas_asociadas.Add(identificacion_empresa);
+
+				if (datos_empresa.IntAdministrador)
+				{
+					listado_formatos = (from formato in context.TblFormatos
+										where formato.IntTipo == tipo_formato
+										select formato).ToList();
+				}
+				else if (datos_empresa.IntIntegrador)
+				{
+					empresas_asociadas = clase_empresa.ObtenerAsociadas(identificacion_empresa).Select(x => x.StrIdentificacion).ToList();
+
+					foreach (string item in empresas_asociadas)
+					{
+						listado_formatos.AddRange((from formato in context.TblFormatos
+												   where formato.StrEmpresa.Equals(item)
+													&& formato.IntTipo == tipo_formato
+												   select formato).ToList());
+					}
+				}
+				else if (datos_empresa.IntObligado && !datos_empresa.IntIntegrador)
+				{
+					listado_formatos = (from formato in context.TblFormatos
+										where formato.StrEmpresa.Equals(identificacion_empresa)
+										&& formato.IntTipo == tipo_formato
+										&& formato.IntEstado
+										select formato).ToList();
+				}
+
+
+				return listado_formatos;
 			}
 			catch (Exception excepcion)
 			{

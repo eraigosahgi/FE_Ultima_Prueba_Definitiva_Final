@@ -1,4 +1,4 @@
-﻿namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
+﻿namespace HGInetFacturaEReports.ReportDesigner
 {
 	partial class XtraReportDesigner
 	{
@@ -61,6 +61,7 @@
             this.TopMargin,
             this.BottomMargin});
 			this.Version = "17.2";
+			this.BeforePrint += new System.Drawing.Printing.PrintEventHandler(this.XtraReportDesigner_BeforePrint);
 			((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
 		}

@@ -1875,6 +1875,7 @@
     <Content Include="Scripts\globalize\unit.js" />
     <Content Include="Scripts\Images\Autenticacion1.jpg" />
     <Content Include="Scripts\Images\Autenticacion2.jpg" />
+    <Content Include="Scripts\Images\FormatoPDF.png" />
     <Content Include="Scripts\Images\ImgIndex.jpg" />
     <Content Include="Scripts\Images\ImgIndex.png" />
     <Content Include="Scripts\Images\Logo.png" />
@@ -1898,6 +1899,7 @@
     <Content Include="Scripts\Pages\ConsultaPagosFacturador.js" />
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
+    <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
@@ -2736,6 +2738,7 @@
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
     <Content Include="Views\Pages\GestionReportes.aspx" />
+    <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
@@ -2935,6 +2938,13 @@
     <Compile Include="Views\Pages\GestionReportes.aspx.designer.cs">
       <DependentUpon>GestionReportes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ModalAsignarFormato.aspx.cs">
+      <DependentUpon>ModalAsignarFormato.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ModalAsignarFormato.aspx.designer.cs">
+      <DependentUpon>ModalAsignarFormato.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ModalPagos.aspx.cs">
       <DependentUpon>ModalPagos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3020,12 +3030,6 @@
       <DependentUpon>ReportDesignerWeb.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\ReportDesigner\SerializeReport.cs" />
-    <Compile Include="Views\ReportDesigner\XtraReportDesigner.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\ReportDesigner\XtraReportDesigner.Designer.cs">
-      <DependentUpon>XtraReportDesigner.cs</DependentUpon>
-    </Compile>
     <Compile Include="wcf\acuserecibo.svc.cs">
       <DependentUpon>acuserecibo.svc</DependentUpon>
     </Compile>
@@ -3074,6 +3078,10 @@
     <Folder Include="Views\Formatos\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HGInetFacturaEReports\HGInetFacturaEReports.csproj">
+      <Project>{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}</Project>
+      <Name>HGInetFacturaEReports</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HGInetFirmaDigital\HGInetFirmaDigital.csproj">
       <Project>{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}</Project>
       <Name>HGInetFirmaDigital</Name>
@@ -3117,9 +3125,6 @@
       <LastGenOutput>OpcionesPermisos.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ReportDesigner\XtraReportDesigner.resx">
-      <DependentUpon>XtraReportDesigner.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -3136,7 +3141,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61433/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

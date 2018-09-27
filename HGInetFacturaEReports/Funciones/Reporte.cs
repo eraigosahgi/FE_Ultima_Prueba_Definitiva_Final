@@ -1,5 +1,10 @@
-﻿using System;
+﻿using DevExpress.XtraPrinting;
+using DevExpress.XtraReports.UI;
+using HGInetFacturaEReports.ReportDesigner;
+using LibreriaGlobalHGInet.General;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Telerik.Reporting;
@@ -21,7 +26,7 @@ namespace HGInetFacturaEReports
 		/// Nombre del archivo para almacenamiento
 		/// </summary>
 		private string NombreArchivo { get; set; }
-		
+
 		/// <summary>
 		/// Ruta física del archivo para almacenamiento
 		/// </summary>
@@ -36,7 +41,7 @@ namespace HGInetFacturaEReports
 		/// Modo de creación del archivo para almacenamiento
 		/// </summary>
 		private FileMode ModoArchivo { get; set; }
-			
+
 		/// <summary>
 		/// Constructor del objeto reporte para almacenamiento
 		/// </summary>
@@ -59,13 +64,13 @@ namespace HGInetFacturaEReports
 		private bool Generar(IReportDocument report, Extensiones extension)
 		{
 			try
-			{	// nombre del archivo necesario para renderizar
+			{   // nombre del archivo necesario para renderizar
 				string nombre = this.NombreArchivo;
 
 				// tipo de formato para exportación, ejemplo: "PDF"
 				// https://docs.telerik.com/reporting/configuring-rendering-extensions
 				string formato = Enum.GetName(typeof(Extensiones), extension);
-				
+
 				ReportProcessor reportProcessor = new ReportProcessor();
 
 				Hashtable deviceInfo = new Hashtable();
@@ -86,6 +91,46 @@ namespace HGInetFacturaEReports
 				throw new ApplicationException("Error creando el archivo: " + this.RutaArchivo, exception);
 			}
 		}
+
+		/// <summary>
+		/// Almacena el reporte en formato PDF 
+		/// </summary>
+		/// <param name="report">Reporte</param>
+		/// <param name="nit_facturador">nit del facturador del documento</param>
+		private void GenerarPdf(XtraReport report, string nit_facturador)
+		{
+			try
+			{
+				// Especifica las opciones de exportación específicas de PDF.
+				PdfExportOptions pdfOptions = report.ExportOptions.Pdf;
+
+				// Especifique las páginas que se exportarán. 
+				//pdfOptions.PageRange = "1, 3-5";
+
+				// Especifica la calidad de las imágenes exportadas. 
+				pdfOptions.ConvertImagesToJpeg = false;
+				pdfOptions.ImageQuality = PdfJpegImageQuality.Medium;
+
+				// Especifica la compatibilidad PDF/A-3b.
+				pdfOptions.PdfACompatibility = PdfACompatibility.PdfA3b;
+
+				// Especifica las opciones del documento. 
+				pdfOptions.DocumentOptions.Application = "HGInet Factura Electrónica";
+				pdfOptions.DocumentOptions.Author = "HGI SAS";
+				pdfOptions.DocumentOptions.Producer = Environment.UserName.ToString();
+				pdfOptions.DocumentOptions.Subject = "Representación Gráfica";
+				pdfOptions.DocumentOptions.Title = this.NombreArchivo;
+
+				this.RutaArchivo = Path.Combine(this.Ruta, string.Format("{0}.{1}", this.NombreArchivo, Extensiones.Pdf));
+
+				report.ExportToPdf(this.RutaArchivo, pdfOptions);
+			}
+			catch (Exception exception)
+			{
+				throw new ApplicationException(exception.Message, exception.InnerException);
+			}
+		}
+
 
 		/// <summary>
 		/// Almacena físicamente el formato PDF
