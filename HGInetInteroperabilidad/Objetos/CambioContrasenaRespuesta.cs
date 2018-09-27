@@ -12,7 +12,7 @@ namespace HGInetInteroperabilidad.Objetos
     /// De esta forma vamos a recibir la respuesta del cambio de contraseña, al igual que vamos a enviar nosotros cuando
     /// otro proveedor cambie la contraseña en nuestra plataforma
     /// </summary>
-    class CambioClaveRespuesta
+    class CambioContrasenaRespuesta
     {
         public string mensajeGlobal { get; set; }
         public DateTime timeStamp { get; set; }
