@@ -178,6 +178,33 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a interoperabilidad\\operacion\\envio\\.
+        /// </summary>
+        public static string RutaInteroperabilidadEnvio {
+            get {
+                return ResourceManager.GetString("RutaInteroperabilidadEnvio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a interoperabilidad\\publico\\.
+        /// </summary>
+        public static string RutaInteroperabilidadFtp {
+            get {
+                return ResourceManager.GetString("RutaInteroperabilidadFtp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a interoperabilidad\\operacion\\recepcion\\.
+        /// </summary>
+        public static string RutaInteroperabilidadRecepcion {
+            get {
+                return ResourceManager.GetString("RutaInteroperabilidadRecepcion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_documento_acuse.html.
         /// </summary>
         public static string RutaPlantillaAcuse {
