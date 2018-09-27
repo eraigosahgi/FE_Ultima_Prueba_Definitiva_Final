@@ -49,6 +49,18 @@ namespace HGInetMiFacturaElectonicaData
         [AmbientValue("publico")]
         EnvioRespuestaAcuse = 10,
 
+        [Description("Documento Pendiente Envío Proveedor")]
+        [AmbientValue("publico")]
+        PendienteEnvioProveedorDoc = 11,
+
+        [Description("Envío Exisoto Proveedor")]
+        [AmbientValue("publico")]
+        EnvioExitosoProveedor = 12,
+
+        [Description("Acuse Pendiente Envío Proveedor")]
+        [AmbientValue("publico")]
+        PendienteEnvioProveedorAcuse = 13,
+
         [Description("Error Dian, Finaliza Proceso")]
         [AmbientValue("publico")]
         FinalizacionErrorDian = 90,
