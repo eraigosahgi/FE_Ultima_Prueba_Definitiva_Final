@@ -3078,6 +3078,10 @@
       <Project>{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}</Project>
       <Name>HGInetFirmaDigital</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HGInetInteroperabilidad\HGInetInteroperabilidad.csproj">
+      <Project>{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}</Project>
+      <Name>HGInetInteroperabilidad</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaController\HGInetMiFacturaElectonicaController.csproj">
       <Project>{29cb08f8-08ea-40ae-afd6-7a2a6c0d13d0}</Project>
       <Name>HGInetMiFacturaElectonicaController</Name>
