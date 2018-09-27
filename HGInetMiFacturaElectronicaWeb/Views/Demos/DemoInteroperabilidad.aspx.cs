@@ -1,10 +1,16 @@
 ﻿
 using HGInetInteroperabilidad.Objetos;
+using HGInetInteroperabilidad.Servicios;
 using LibreriaGlobalHGInet.Funciones;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -12,8 +18,8 @@ using System.Web.UI.WebControls;
 namespace HGInetMiFacturaElectronicaWeb.Views.Demos
 {
     public partial class DemoInteroperabilidad : System.Web.UI.Page
-    {       
-           
+    {
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -47,15 +53,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Demos
 
             LstD.Add(d1);
             //----------------------------------------------------------------------------------
-
-            d1.nombre = "face_f0900364710000000031f.xml";
-            d1.sha256 = "db74c940d447e877d119df613edd2700c4a84cd1cf08beb7cbc319bcfaeab97a";
-            d1.tipo = "FacturaNacional";
-            d1.notaDeEntrega = "Facturas de caja menor";
-            d1.adjuntos = true;
-            d1.representacionGraficas = true;
-            d1.identificacionDestinatario = "17120703";
-            d1.extensiones = De;
+            Documentos d2 = new Documentos();
+            d2.nombre = "face_f0900364710000004587588.xml";
+            d2.sha256 = "db74c940d447e877d119df613edd2fferrtertert15sd46f6548rw65er4w6e8rt";
+            d2.tipo = "NotaDebito";
+            d2.notaDeEntrega = "Facturas de caja mayor";
+            d2.adjuntos = true;
+            d2.representacionGraficas = true;
+            d2.identificacionDestinatario = "811021438";
+            d2.extensiones = De;
 
             LstD.Add(d1);
 
@@ -157,5 +163,121 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Demos
 
 
         }
+
+        public class Usuario
+        {
+            public string username { get; set; }
+            public string password { get; set; }
+        }
+
+       
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                Usuario u = new Usuario();
+                u.username = "811021438";
+                u.password = "clave";
+
+                string jsonUsuario = JsonConvert.SerializeObject(u);
+
+                string Resultado= Ctl_ClienteWebApi.Inter_login(jsonUsuario, "http://localhost:39048/");
+
+                txtresp.Text = Resultado;
+
+                AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(Resultado);
+                txttoken.Text = r.jwtToken;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(string.Format("AddVehicle - Error: {0}", ex.Message));
+            }
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+
+                //Serializar el objeto lista facturas
+                Extensiones De = new Extensiones();
+                De.nombreExt = "ext1";
+                De.valorExt = "Valor1";
+
+                List<Documentos> LstD = new List<Documentos>();
+
+                Documentos d1 = new Documentos();
+
+                d1.nombre = "face_f0900364710000000031f.xml";
+                d1.sha256 = "db74c940d447e877d119df613edd2700c4a84cd1cf08beb7cbc319bcfaeab97a";
+                d1.tipo = "FacturaNacional";
+                d1.notaDeEntrega = "Facturas de caja menor";
+                d1.adjuntos = true;
+                d1.representacionGraficas = true;
+                d1.identificacionDestinatario = "17120703";
+                d1.extensiones = De;
+
+                LstD.Add(d1);
+                //----------------------------------------------------------------------------------
+                Documentos d2 = new Documentos();
+                d2.nombre = "face_f0900364710000004587588.xml";
+                d2.sha256 = "db74c940d447e877d119df613edd2fferrtertert15sd46f6548rw65er4w6e8rt";
+                d2.tipo = "NotaDebito";
+                d2.notaDeEntrega = "Facturas de caja mayor";
+                d2.adjuntos = true;
+                d2.representacionGraficas = true;
+                d2.identificacionDestinatario = "811021438";
+                d2.extensiones = De;
+
+                LstD.Add(d1);
+
+
+                RegistroListaDoc Ld = new RegistroListaDoc();
+
+                Ld.nombre = "face_f0900364710000000031f.xml";
+                Ld.uuid = "4455-dserre-r487rtr-trgr4JJd-s";
+                Ld.extensiones = De;
+
+                Ld.documentos = LstD;
+
+                string jsonListaFacturas = JsonConvert.SerializeObject(Ld);
+
+                txtresconsulta.Text = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, txttoken.Text, "http://localhost:39048/");
+                //Registrar Documentos
+
+            }
+            catch (Exception ex)
+            {
+
+                txtresconsulta.Text = ex.Message;
+            }
+        }
+
+        protected void cmdCambiarclave_Click(object sender, EventArgs e)
+        {
+            txtresconsulta.Text= Ctl_ClienteWebApi.Inter_CambiarContrasena("811021438", "123456", "987654123", "http://localhost:39048/");
+        }
+
+
+        protected void cmdConsultaruuid_Click(object sender, EventArgs e)
+        {
+            txtresconsulta.Text = Ctl_ClienteWebApi.Inter_ConsultarEstado("1425365412",txttoken.Text, "http://localhost:39048/");
+        }
+
+
+
+        protected void cmdConsultaAcuse_Click(object sender, EventArgs e)
+        {
+            txtresconsulta.Text =  Ctl_ClienteWebApi.Inter_ConsultaAcuse("1425365412", txttoken.Text, "http://localhost:39048/");
+        }
+
+
+      
+
+       
     }
 }

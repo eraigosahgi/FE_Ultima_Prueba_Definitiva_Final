@@ -84,6 +84,7 @@
       <HintPath>..\..\Codigo\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -2745,6 +2746,7 @@
     <Content Include="Views\Pages\Inicio.aspx" />
     <Content Include="Views\Pages\ModalSerialEmpresa.aspx" />
     <Content Include="Views\Pages\ModalConsultaEmpresas.aspx" />
+    <Content Include="Views\Pages\ProcesarInteroperabilidad.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
     <Content Include="Views\ReportDesigner\XmlReporteBase.xml">
       <SubType>Designer</SubType>
@@ -3003,6 +3005,13 @@
     <Compile Include="Views\Pages\ModalConsultaEmpresas.aspx.designer.cs">
       <DependentUpon>ModalConsultaEmpresas.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ProcesarInteroperabilidad.aspx.cs">
+      <DependentUpon>ProcesarInteroperabilidad.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ProcesarInteroperabilidad.aspx.designer.cs">
+      <DependentUpon>ProcesarInteroperabilidad.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\ReportDesigner\ReportDesignerWeb.aspx.cs">
       <DependentUpon>ReportDesignerWeb.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3127,7 +3136,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61433/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
