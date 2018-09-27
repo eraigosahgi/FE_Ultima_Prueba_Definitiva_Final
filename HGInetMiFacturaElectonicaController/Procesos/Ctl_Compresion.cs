@@ -11,58 +11,102 @@ using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
-	/// <summary>
-	/// Controlador para la compresión de archivos
-	/// </summary>
-	public class Ctl_Compresion
-	{
-		/// <summary>
-		/// Comprime el archivo XML en ZIP
-		/// </summary>
-		/// <param name="documento">datos del documento procesado</param>
-		public static string Comprimir(FacturaE_Documento documento)
-		{
-			string nit_obligado = string.Empty;
+    /// <summary>
+    /// Controlador para la compresión de archivos
+    /// </summary>
+    public class Ctl_Compresion
+    {
+        /// <summary>
+        /// Comprime el archivo XML en ZIP
+        /// </summary>
+        /// <param name="documento">datos del documento procesado</param>
+        public static string Comprimir(FacturaE_Documento documento)
+        {
+            string nit_obligado = string.Empty;
 
-			switch (documento.DocumentoTipo)
-			{
-				case TipoDocumento.Factura:
-					Factura doc_factura = ((Factura)documento.Documento);
-					nit_obligado = doc_factura.DatosObligado.Identificacion;
-					break;
-				case TipoDocumento.NotaCredito:
-					NotaCredito doc_nota_credito = ((NotaCredito)documento.Documento);
-					nit_obligado = doc_nota_credito.DatosObligado.Identificacion;
-					break;
-				case TipoDocumento.NotaDebito:
-					NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
-					nit_obligado = doc_nota_debito.DatosObligado.Identificacion;
-					break;
-				default:
-					break;
-			}
+            switch (documento.DocumentoTipo)
+            {
+                case TipoDocumento.Factura:
+                    Factura doc_factura = ((Factura)documento.Documento);
+                    nit_obligado = doc_factura.DatosObligado.Identificacion;
+                    break;
+                case TipoDocumento.NotaCredito:
+                    NotaCredito doc_nota_credito = ((NotaCredito)documento.Documento);
+                    nit_obligado = doc_nota_credito.DatosObligado.Identificacion;
+                    break;
+                case TipoDocumento.NotaDebito:
+                    NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
+                    nit_obligado = doc_nota_debito.DatosObligado.Identificacion;
+                    break;
+                default:
+                    break;
+            }
 
-			// ruta del xml
+            // ruta del xml
             string ruta_xml = string.Format(@"{0}\{1}.xml", documento.RutaArchivosEnvio, documento.NombreXml);
 
             // valida la existencia de la carpeta
             documento.RutaArchivosEnvio = Directorio.CrearDirectorio(documento.RutaArchivosEnvio);
 
-			// ruta del zip
-			string ruta_zip = string.Format(@"{0}\{1}.zip", documento.RutaArchivosEnvio, documento.NombreZip);
-			
-			// elimina el archivo zip si existe
-			if (Archivo.ValidarExistencia(ruta_zip))
-				Archivo.Borrar(ruta_zip);
-			
-			// genera la compresión del archivo en zip
-			using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
-			{
-				archive.CreateEntryFromFile(ruta_xml, Path.GetFileName(ruta_xml));
-			}
+            // ruta del zip
+            string ruta_zip = string.Format(@"{0}\{1}.zip", documento.RutaArchivosEnvio, documento.NombreZip);
 
-			return documento.NombreZip;
-		}
+            // elimina el archivo zip si existe
+            if (Archivo.ValidarExistencia(ruta_zip))
+                Archivo.Borrar(ruta_zip);
 
-	}
+            // genera la compresión del archivo en zip
+            using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
+            {
+                archive.CreateEntryFromFile(ruta_xml, Path.GetFileName(ruta_xml));
+            }
+
+            return documento.NombreZip;
+        }
+
+
+        /// <summary>
+        /// Proceso para generar el archivo Zip que se debe enviar al proveedor receptor
+        /// </summary>
+        /// <param name="ruta_zip"></param>
+        /// <param name="ruta_archivos"></param>
+        /// <param name="NombreArchivo"></param>
+        /// <returns></returns>
+        public static string ComprimirLista(string ruta_zip, string ruta_archivos, string NombreArchivo)
+        {
+
+
+
+            try
+            {
+                // genera la compresión del archivo en zip
+                ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update);
+                //Aqui se debe iterear una lista que debe enviar el proceso anterior para poder ubicar los archivos que se van a comprimir
+                for (int i = 1; i < 5; i++)
+                {
+
+
+                    string Arc = @"E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Codigo\HGInetMiFacturaElectronicaWeb\dms\eb821fbe-02ba-4cfc-a7a9-248711513591\FacturaEDian\face_f0811021438003B0235A" + i + ".pdf";
+
+                    // elimina el archivo zip si existe
+                    //  if (!Archivo.ValidarExistencia(Arc))
+                    //{
+                    archive.CreateEntryFromFile(Arc, Path.GetFileName(Arc));
+                    //}
+
+                }
+
+                archive.Dispose();
+
+
+                return "";
+            }
+            catch (Exception excepcion)
+            {
+                return excepcion.ToString();
+
+            }
+        }
+
+    }
 }
