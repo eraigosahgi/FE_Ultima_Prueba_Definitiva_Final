@@ -95,7 +95,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.5", "v2018.5", "{6C83
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F6933ED-0456-49B4-8DB6-F333AA02BD63}"
 	ProjectSection(SolutionItems) = preProject
-		Documentacion\Liberaciones\v2018.6\2018-09-18 DropCamposPlantillasResoluciones.txt = Documentacion\Liberaciones\v2018.6\2018-09-18 DropCamposPlantillasResoluciones.txt
 		Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt = Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt
 		Documentacion\Liberaciones\v2018.6\20180424-RelacionComercioResolucion.txt = Documentacion\Liberaciones\v2018.6\20180424-RelacionComercioResolucion.txt
 		Documentacion\Liberaciones\v2018.6\20180724-IntIdComercioTblEmpresasResoluciones.txt = Documentacion\Liberaciones\v2018.6\20180724-IntIdComercioTblEmpresasResoluciones.txt
@@ -111,7 +110,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F69
 		Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt = Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt
 		Documentacion\Liberaciones\v2018.6\20180905-ActualizacionTblPagosElectronicos.txt = Documentacion\Liberaciones\v2018.6\20180905-ActualizacionTblPagosElectronicos.txt
 		Documentacion\Liberaciones\v2018.6\20180911-Opcion1344 Acuse Tacito.txt = Documentacion\Liberaciones\v2018.6\20180911-Opcion1344 Acuse Tacito.txt
-		Documentacion\Liberaciones\v2018.6\20180920 - Opcion1335 Formatos.txt = Documentacion\Liberaciones\v2018.6\20180920 - Opcion1335 Formatos.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetZonaPagos", "HGInetZonaPagos\HGInetZonaPagos.csproj", "{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}"
@@ -134,6 +132,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Soap", "Soap", "{E0F33763-DA85-46D9-9491-B799C4CAC3B0}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Soap\HGInetFacturaElectronica-Soapui-Project.xml = Documentacion\Soap\HGInetFacturaElectronica-Soapui-Project.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.7", "v2018.7", "{816DBCC8-33A5-4D4D-87B8-EB3D5BC4494F}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2018.7\201800925 - StrUrlAcuseUbl.txt = Documentacion\Liberaciones\v2018.7\201800925 - StrUrlAcuseUbl.txt
+		Documentacion\Liberaciones\v2018.7\20180918 - DropCamposPlantillasResoluciones.txt = Documentacion\Liberaciones\v2018.7\20180918 - DropCamposPlantillasResoluciones.txt
+		Documentacion\Liberaciones\v2018.7\20180920 - Opcion1335 Formatos.txt = Documentacion\Liberaciones\v2018.7\20180920 - Opcion1335 Formatos.txt
+		Documentacion\Liberaciones\v2018.7\20180925 - CamposInteroperabilidadTblDocumentos.txt = Documentacion\Liberaciones\v2018.7\20180925 - CamposInteroperabilidadTblDocumentos.txt
+		Documentacion\Liberaciones\v2018.7\20180925 - CrearTblProveedores.txt = Documentacion\Liberaciones\v2018.7\20180925 - CrearTblProveedores.txt
+		Documentacion\Liberaciones\v2018.7\20180925 - RelacionesTblDocumentosTblProveedores.txt = Documentacion\Liberaciones\v2018.7\20180925 - RelacionesTblDocumentosTblProveedores.txt
+		Documentacion\Liberaciones\v2018.7\20180925 - UpdateStrProveedorEmisor.txt = Documentacion\Liberaciones\v2018.7\20180925 - UpdateStrProveedorEmisor.txt
 	EndProjectSection
 EndProject
 Global
@@ -279,5 +288,6 @@ Global
 		{4F6933ED-0456-49B4-8DB6-F333AA02BD63} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{ABC6BEBB-CCE9-4BEB-92A9-AD83FFC3D3BD} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 		{E0F33763-DA85-46D9-9491-B799C4CAC3B0} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{816DBCC8-33A5-4D4D-87B8-EB3D5BC4494F} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal

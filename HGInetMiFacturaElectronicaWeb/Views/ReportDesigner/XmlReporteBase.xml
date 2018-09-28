@@ -118,7 +118,7 @@
 					</ExpressionBindings>
 					<StylePriority Ref="64" UseFont="false" UseBorders="false" UseTextAlignment="false" />
 				</Item23>
-				<Item24 Ref="65" ControlType="XRLabel" Name="label32" CanGrow="false" Text="label32" TextAlignment="MiddleCenter" WordWrap="false" SizeF="103.62,91.66" LocationFloat="695.97, 176.46" Font="Arial, 8pt, style=Bold" Padding="2,2,0,0,100" Borders="All">
+				<Item24 Ref="65" ControlType="XRLabel" Name="label32" CanGrow="false" Text="label32" TextAlignment="MiddleCenter" SizeF="103.62,91.66" LocationFloat="695.97, 176.46" Font="Arial, 8pt, style=Bold" Padding="2,2,0,0,100" Borders="All">
 					<ExpressionBindings>
 						<Item1 Ref="66" Expression="'Factura N.' + NewLine() + [Prefijo] + [Documento] " PropertyName="Text" EventName="BeforePrint" />
 					</ExpressionBindings>
@@ -190,7 +190,7 @@
 				</Item2>
 			</Bands>
 		</Item3>
-		<Item4 Ref="100" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="220.04" TextAlignment="TopLeft" Padding="0,0,0,0,100">
+		<Item4 Ref="100" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="220" TextAlignment="TopLeft" Padding="0,0,0,0,100">
 			<Controls>
 				<Item1 Ref="101" ControlType="XRLabel" Name="label68" CanGrow="false" Text="OBSERVACIONES" AnchorVertical="Both" AnchorHorizontal="Left" TextAlignment="MiddleLeft" SizeF="123.55,23.19" LocationFloat="0, 10.41" Font="Arial, 8pt, style=Bold" Padding="2,2,0,0,100" Borders="Left, Top, Bottom">
 					<StylePriority Ref="102" UseFont="false" UseBorders="false" UseTextAlignment="false" />

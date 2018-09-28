@@ -29,18 +29,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			datos.Fecha = new DateTime(2018, 07, 31);
 			datos.FechaVence = new DateTime(2018, 07, 31);
 			datos.Moneda = "COP";
-			datos.Neto = 9000.00M;
+			datos.Neto = 0.00M;
 			datos.NumeroResolucion = "9000000033394696";
 			datos.Prefijo = "PRUE";
-			datos.Total = 10710.00M;
-			datos.Valor = 10710.00M;
+			datos.Total = 0.00M;
+			datos.Valor = 0.00M;
 			datos.ValorDescuento = 0.00M;
 			datos.ValorImpuestoConsumo = 0.00M;
-			datos.ValorIva = 1710.00M;
+			datos.ValorIva = 0.00M;
 			datos.ValorReteFuente = 0.00M;
 			datos.ValorReteIca = 0.00M;
 			datos.ValorReteIva = 0.00M;
-			datos.ValorSubtotal = 9000.00M;
+			datos.ValorSubtotal = 0.00M;
 			datos.DatosObligado = new Tercero();
 			datos.DatosAdquiriente = new Tercero();
 
@@ -56,7 +56,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			obj_tercero.Identificacion = "Identificación Facturador";
 			obj_tercero.IdentificacionDv = 0;
 			obj_tercero.NombreComercial = "Nombre Comercial Facturador";
-			obj_tercero.PaginaWeb = "Página Web";
+			obj_tercero.PaginaWeb = "Página Web Facturador";
 			obj_tercero.PrimerApellido = "Primer Apellido";
 			obj_tercero.PrimerNombre = "Primer Nombre";
 			obj_tercero.RazonSocial = "Razón social Facturador";
@@ -66,7 +66,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			obj_tercero.Telefono = "Teléfono";
 			obj_tercero.TipoIdentificacion = 13;
 			obj_tercero.TipoPersona = 2;
-			datos.DatosAdquiriente = obj_tercero;
+			datos.DatosObligado = obj_tercero;
 
 			//DATOS ADQUIRIENTE
 			obj_tercero = new Tercero();
@@ -100,7 +100,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			detalles_doc.DescuentoValor = 0.00M;
 			detalles_doc.ImpoConsumoPorcentaje = 0.00M;
 			detalles_doc.IvaPorcentaje = 0.00M;
-			detalles_doc.IvaValor = 1710.00M;
+			detalles_doc.IvaValor = 0.00M;
 			detalles_doc.ProductoCodigo = "1001";
 			detalles_doc.ProductoDescripcion = "Producto de venta n.1";
 			detalles_doc.ProductoGratis = false;
@@ -111,11 +111,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			detalles_doc.ReteIcaValor = 0.00M;
 			detalles_doc.UnidadCodigo = "Und";
 			detalles_doc.ValorImpuestoConsumo = 0.00M;
-			detalles_doc.ValorSubtotal = 9000.00M;
-			detalles_doc.ValorUnitario = 9000.00M;
+			detalles_doc.ValorSubtotal = 0.00M;
+			detalles_doc.ValorUnitario = 0.00M;
 			datos.DocumentoDetalles.Add(detalles_doc);
 
 			datos.DocumentoDetalles.Add(detalles_doc);
+
+			List<FormatoCampo> campos_predeterminados = new List<FormatoCampo>();
+			datos.DocumentoFormato = new Formato();
+			datos.DocumentoFormato.CamposPredeterminados = new List<FormatoCampo>();
+			datos.DocumentoFormato.CamposPredeterminados.AddRange(campos_predeterminados);
 
 			datos_reporte.Add(datos);
 
