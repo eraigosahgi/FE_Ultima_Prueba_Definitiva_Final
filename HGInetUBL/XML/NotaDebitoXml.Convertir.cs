@@ -12,13 +12,14 @@ namespace HGInetUBL
     public partial class NotaDebitoXML
     {
 
-        /// <summary>
-        /// Convierte el XML-UBL en un objeto de Servicio
-        /// </summary>
-        /// <param name="nota_debito_ubl">Archivo XML-UBL</param>
-        /// <returns>objeto tipo NotaDebito</returns>
-        public static NotaDebito Convertir(DebitNoteType nota_debito_ubl)
-        {
+		/// <summary>
+		/// Convierte el XML-UBL en un objeto de Servicio
+		/// </summary>
+		/// <param name="nota_debito_ubl">Archivo XML-UBL</param>
+		/// <param name="interopeabilidad">Indica si la conversión del archivo XML-UBL es sólo de encabezados</param>
+		/// <returns>objeto tipo NotaDebito</returns>
+		public static NotaDebito Convertir(DebitNoteType nota_debito_ubl, bool interopeabilidad = false)
+		{
 
             NotaDebito nota_debito_obj = new NotaDebito();
 
@@ -45,6 +46,7 @@ namespace HGInetUBL
                     nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
                 }
             }
+
             //Capturo la informacion del encabezado del documento
             nota_debito_obj.Cufe = nota_debito_ubl.UUID.Value;
             nota_debito_obj.Fecha = nota_debito_ubl.IssueDate.Value;
@@ -54,47 +56,51 @@ namespace HGInetUBL
             nota_debito_obj.CufeFactura = nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID.Value;
             nota_debito_obj.FechaFactura = nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate.Value;
 
-            //valida las notas para llenar los campos del pdf
-            Formato documento_formato = new Formato();
-            List<FormatoCampo> lista_campos = new List<FormatoCampo>();
+			if (!interopeabilidad)
+			{
+				//valida las notas para llenar los campos del pdf
+				Formato documento_formato = new Formato();
+				List<FormatoCampo> lista_campos = new List<FormatoCampo>();
 
-            try
-            {
-                if (nota_debito_ubl.Note[0].Value != null)
-                {
-                    //Deserializa la posición 1 y las convierte en FormatoCampo
-                    dynamic jsonObj = JsonConvert.DeserializeObject(nota_debito_ubl.Note[0].Value);
+				try
+				{
+					if (nota_debito_ubl.Note[0].Value != null)
+					{
+						//Deserializa la posición 1 y las convierte en FormatoCampo
+						dynamic jsonObj = JsonConvert.DeserializeObject(nota_debito_ubl.Note[0].Value);
 
-                    if (jsonObj != null)
-                    {
-                        documento_formato.Codigo = jsonObj.Codigo;
+						if (jsonObj != null)
+						{
+							documento_formato.Codigo = jsonObj.Codigo;
 
-                        if (jsonObj.CamposPredeterminados != null)
-                        {
-                            foreach (var obj in jsonObj.CamposPredeterminados)
-                            {
-                                FormatoCampo campo = new FormatoCampo();
-                                campo.Descripcion = obj.Descripcion;
-                                campo.Ubicacion = obj.Ubicacion;
-                                campo.Valor = obj.Valor;
+							if (jsonObj.CamposPredeterminados != null)
+							{
+								foreach (var obj in jsonObj.CamposPredeterminados)
+								{
+									FormatoCampo campo = new FormatoCampo();
+									campo.Descripcion = obj.Descripcion;
+									campo.Ubicacion = obj.Ubicacion;
+									campo.Valor = obj.Valor;
 
-                                lista_campos.Add(campo);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                nota_debito_obj.Notas.Add(nota_debito_ubl.Note[0].Value);
-            }
+									lista_campos.Add(campo);
+								}
+							}
+						}
+					}
+				}
+				catch (Exception)
+				{
+					nota_debito_obj.Notas.Add(nota_debito_ubl.Note[0].Value);
+				}
 
-            documento_formato.CamposPredeterminados = lista_campos;
+				documento_formato.CamposPredeterminados = lista_campos;
 
-            nota_debito_obj.DocumentoFormato = documento_formato;
+				nota_debito_obj.DocumentoFormato = documento_formato;
 
-            if ((nota_debito_ubl.Note.Count() > 1) && (nota_debito_ubl.Note[1].Value != null))
-                nota_debito_obj.Nota = nota_debito_ubl.Note[1].Value;
+				if ((nota_debito_ubl.Note.Count() > 1) && (nota_debito_ubl.Note[1].Value != null))
+					nota_debito_obj.Nota = nota_debito_ubl.Note[1].Value;
+			}
+
 
             #region Datos del Adquiriente
             Tercero adquiriente = new Tercero();
@@ -161,74 +167,76 @@ namespace HGInetUBL
 
             #region Detalle de Documento
             List<DocumentoDetalle> list_detalle = new List<DocumentoDetalle>();
+			if (!interopeabilidad)
+			{
+				//Recorre todo el detalle del documento
+				for (int i = 0; i < nota_debito_ubl.DebitNoteLine.Length; i++)
+				{
 
-            //Recorre todo el detalle del documento
-            for (int i = 0; i < nota_debito_ubl.DebitNoteLine.Length; i++)
-            {
+					DocumentoDetalle detalle = new DocumentoDetalle();
+					detalle.Codigo = Convert.ToInt16(nota_debito_ubl.DebitNoteLine[i].ID.Value);
+					detalle.ProductoCodigo = nota_debito_ubl.DebitNoteLine[i].Item.CatalogueItemIdentification.ID.Value;
+					detalle.ProductoNombre = nota_debito_ubl.DebitNoteLine[i].Item.Description[0].Value;
+					if (nota_debito_ubl.DebitNoteLine[i].Item.AdditionalInformation != null)
+					{
+						detalle.ProductoDescripcion = nota_debito_ubl.DebitNoteLine[i].Item.AdditionalInformation.Value;
+					}
+					else
+					{
+						detalle.ProductoDescripcion = string.Empty;
+					}
+					detalle.Cantidad = nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.Value;
+					if (!string.IsNullOrEmpty(nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.unitCode.ToString()))
+					{
+						detalle.UnidadCodigo = nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.unitCode.ToString();
+					}
+					else
+					{
+						detalle.UnidadCodigo = "S7";
+					}
+					detalle.ValorUnitario = nota_debito_ubl.DebitNoteLine[i].Price.PriceAmount.Value;
+					detalle.ValorSubtotal = nota_debito_ubl.DebitNoteLine[i].LineExtensionAmount.Value;
 
-                DocumentoDetalle detalle = new DocumentoDetalle();
-                detalle.Codigo = Convert.ToInt16(nota_debito_ubl.DebitNoteLine[i].ID.Value);
-                detalle.ProductoCodigo = nota_debito_ubl.DebitNoteLine[i].Item.CatalogueItemIdentification.ID.Value;
-                detalle.ProductoNombre = nota_debito_ubl.DebitNoteLine[i].Item.Description[0].Value;
-                if (nota_debito_ubl.DebitNoteLine[i].Item.AdditionalInformation != null)
-                {
-                    detalle.ProductoDescripcion = nota_debito_ubl.DebitNoteLine[i].Item.AdditionalInformation.Value;
-                }
-                else
-                {
-                    detalle.ProductoDescripcion = string.Empty;
-                }
-                detalle.Cantidad = nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.Value;
-                if (!string.IsNullOrEmpty(nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.unitCode.ToString()))
-                {
-                    detalle.UnidadCodigo = nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.unitCode.ToString();
-                }
-                else
-                {
-                    detalle.UnidadCodigo = "S7";
-                }
-                detalle.ValorUnitario = nota_debito_ubl.DebitNoteLine[i].Price.PriceAmount.Value;
-                detalle.ValorSubtotal = nota_debito_ubl.DebitNoteLine[i].LineExtensionAmount.Value;
+					// valida que el detalle contenga el tag TaxTotal
+					if (nota_debito_ubl.DebitNoteLine[i].TaxTotal != null)
+					{
+						for (int j = 0; j < nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal.Count(); j++)
+						{
+							string tipo_impto = nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.TaxScheme.ID.Value;
+							decimal porcentaje_impto = nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].Percent.Value;
+							decimal valor_impto = nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].TaxAmount.Value;
 
-                // valida que el detalle contenga el tag TaxTotal
-                if (nota_debito_ubl.DebitNoteLine[i].TaxTotal != null)
-                {
-                    for (int j = 0; j < nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal.Count(); j++)
-                    {
-                        string tipo_impto = nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.TaxScheme.ID.Value;
-                        decimal porcentaje_impto = nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].Percent.Value;
-                        decimal valor_impto = nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].TaxAmount.Value;
+							if (TipoImpuestos.Iva.Equals(tipo_impto))
+							{
+								detalle.IvaPorcentaje = porcentaje_impto;
+								detalle.IvaValor = valor_impto;
+							}
+							else if (TipoImpuestos.Consumo.Equals(tipo_impto))
+							{
+								detalle.ImpoConsumoPorcentaje = porcentaje_impto;
+								detalle.ValorImpuestoConsumo = valor_impto;
+								nota_debito_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
+							}
+							else if (TipoImpuestos.Ica.Equals(tipo_impto))
+							{
+								detalle.ReteIcaPorcentaje = porcentaje_impto;
+								detalle.ReteIcaValor = valor_impto;
+								nota_debito_obj.ValorReteIca += detalle.ReteIcaValor;
+							}
+							else if (TipoImpuestos.ReteFte.Equals(tipo_impto))
+							{
+								detalle.ReteFuentePorcentaje = porcentaje_impto;
+								detalle.ReteFuenteValor = valor_impto;
+								nota_debito_obj.ValorReteFuente += detalle.ReteFuenteValor;
+							}
 
-                        if (TipoImpuestos.Iva.Equals(tipo_impto))
-                        {
-                            detalle.IvaPorcentaje = porcentaje_impto;
-                            detalle.IvaValor = valor_impto;
-                        }
-                        else if (TipoImpuestos.Consumo.Equals(tipo_impto))
-                        {
-                            detalle.ImpoConsumoPorcentaje = porcentaje_impto;
-                            detalle.ValorImpuestoConsumo = valor_impto;
-                            nota_debito_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
-                        }
-                        else if (TipoImpuestos.Ica.Equals(tipo_impto))
-                        {
-                            detalle.ReteIcaPorcentaje = porcentaje_impto;
-                            detalle.ReteIcaValor = valor_impto;
-                            nota_debito_obj.ValorReteIca += detalle.ReteIcaValor;
-                        }
-                        else if (TipoImpuestos.ReteFte.Equals(tipo_impto))
-                        {
-                            detalle.ReteFuentePorcentaje = porcentaje_impto;
-                            detalle.ReteFuenteValor = valor_impto;
-                            nota_debito_obj.ValorReteFuente += detalle.ReteFuenteValor;
-                        }
+						}
+					}
 
-                    }
-                }
+					list_detalle.Add(detalle);
 
-                list_detalle.Add(detalle);
-
-            }
+				}
+			}
             nota_debito_obj.DocumentoDetalles = list_detalle;
             #endregion
 

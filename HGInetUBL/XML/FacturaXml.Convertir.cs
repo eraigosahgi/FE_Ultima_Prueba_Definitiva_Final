@@ -17,12 +17,13 @@ namespace HGInetUBL
 {
     public partial class FacturaXML
     {
-        /// <summary>
-        /// Convierte el XML-UBL en un objeto de Servicio
-        /// </summary>
-        /// <param name="factura_ubl">Archivo XML-UBL</param>
-        /// <returns>objeto tipo Factura</returns>
-        public static Factura Convertir(InvoiceType factura_ubl, bool interopeabilidad = false)
+		/// <summary>
+		/// Convierte el XML-UBL en un objeto de Servicio
+		/// </summary>
+		/// <param name="factura_ubl">Archivo XML-UBL</param>
+		/// <param name="interopeabilidad">Indica si la conversión del archivo XML-UBL es sólo de encabezados</param>
+		/// <returns>objeto tipo Factura</returns>
+		public static Factura Convertir(InvoiceType factura_ubl, bool interopeabilidad = false)
         {
             Factura factura_obj = new Factura();
 
