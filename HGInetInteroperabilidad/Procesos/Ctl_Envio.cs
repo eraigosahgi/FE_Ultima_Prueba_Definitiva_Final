@@ -2,6 +2,7 @@
 using HGInetInteroperabilidad.Servicios;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
@@ -25,10 +26,10 @@ namespace HGInetInteroperabilidad.Procesos
             ///Obtener todos los documentos de todos los proveedores
             ///
 
-            string ProveedorEmisor = "811021438";
 
 
-            Ctl_ConfiguracionInteroperabilidad Controlador = new Ctl_ConfiguracionInteroperabilidad();
+            Ctl_Documento Controlador = new Ctl_Documento();
+
             List<TblConfiguracionInteroperabilidad> ListaProveedores = new List<TblConfiguracionInteroperabilidad>();
 
             //Consulto lista de proveedores con documentos pendientes para envio
@@ -50,6 +51,9 @@ namespace HGInetInteroperabilidad.Procesos
             foreach (var ProveedorDoc in ListadeProveedores)
             {
 
+                //Aqui estoy seleccionado el proveedor Emisor que debe ser HGI
+                string ProveedorEmisor = ProveedorDoc.StrProveedorEmisor;
+
                 Usuario usuario = new Usuario();
 
                 usuario.username = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
@@ -67,6 +71,10 @@ namespace HGInetInteroperabilidad.Procesos
                 AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(Token);
                 Token = r.jwtToken;
 
+
+                
+
+
                 //Aqui se crea archio zip por proveedor
                 //Serializar el objeto lista facturas
                 Extensiones ExtensionPaquete = new Extensiones();
@@ -80,14 +88,14 @@ namespace HGInetInteroperabilidad.Procesos
                 PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 //Aqui busco la unicacion de la carpeta del proveedor tecnologico, esperar por la ruta real
-                string RutaProveedor = (string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica , Constantes.RutaInteroperabilidadEnvio));
-                             
+                string RutaProveedor = (string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEnvio));
+
                 Directorio.CrearDirectorio(RutaProveedor);
 
 
 
                 Guid idenvio = Guid.NewGuid();
-                
+
                 //Nombre del archivo
                 string NombreArchivoComprimido = ProveedorEmisor + "_" + ProveedorDoc.StrProveedorReceptor + "_" + idenvio + ".zip";
 
@@ -124,19 +132,25 @@ namespace HGInetInteroperabilidad.Procesos
                         //Archivo pdf                                       
                         RegDocumentoAcuse.nombre = Path.GetFileName(Documento.StrUrlAcuseUbl);
                         RegDocumentoAcuse.sha256 = "sha256";
-                        RegDocumentoAcuse.tipo = Enumeracion.GetEnumObjectByValue<DocumentType>(Documento.IntDocTipo).ToString();
+                        RegDocumentoAcuse.tipo = Enumeracion.GetEnumObjectByValue<DocumentType>(DocumentType.AcuseDeRecibo.GetHashCode()).ToString();
                         RegDocumentoAcuse.notaDeEntrega = "";
                         RegDocumentoAcuse.adjuntos = false;
                         RegDocumentoAcuse.representacionGraficas = true;
                         RegDocumentoAcuse.identificacionDestinatario = Documento.StrEmpresaAdquiriente;
                         RegDocumentoAcuse.extensiones = ExtensionPaquete;
                         LstD.Add(RegDocumentoAcuse);
-                        
+
+
+
+
+
                     }
                     else
-                    {                       
+                    {
 
                         archive.CreateEntryFromFile(RutaArchivos + "\\" + Path.GetFileName(Documento.StrUrlArchivoUbl), Path.GetFileName(Documento.StrUrlArchivoUbl));
+
+                        archive.CreateEntryFromFile(RutaArchivos + "\\" + Path.GetFileName(Documento.StrUrlArchivoPdf), Path.GetFileName(Documento.StrUrlArchivoPdf));
 
                         Documentos RegDocumentoXml = new Documentos();
                         //Archivo xml
@@ -151,8 +165,8 @@ namespace HGInetInteroperabilidad.Procesos
 
                         LstD.Add(RegDocumentoXml);
 
-                    }             
-                   
+                    }
+
 
                 }
 
@@ -168,11 +182,11 @@ namespace HGInetInteroperabilidad.Procesos
 
                 // Clienteftp.SubirArchivoFTP(ProveedorDoc.StrUrlFtp + NombreArchivoComprimido, ProveedorDoc.StrHgiUsuario, ProveedorDoc.StrClave, RutaProveedor + RutaOrganizar + NombreArchivoComprimido);
 
-                string ruta_fisica = string.Format(@"{0}\{1}\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.StrIdSeguridad, "");
+                string ruta_fisica = string.Format(@"{0}\{1}\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrIdSeguridad, "");
 
                 Directorio.CrearDirectorio(ruta_fisica);
 
-                Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido),string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
+                Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
 
 
                 //Aqui elimino el archivo Zip si todo esta OK
@@ -181,6 +195,16 @@ namespace HGInetInteroperabilidad.Procesos
                 //Aqui se debe hacer peticion webapi
 
                 string RespuestaRegistro = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                //string RespuestaRegistro = "{\"timeStamp\":\"2018-09-28T14:19:51.9956354\",\"trackingIds\":[{\"nombreDocumento\":\"face_f0811021438003B0235A0.xml\",\"uuid\":\"34bd6e95-f7b5-46cc-ad97-aa90117e44b4\",\"codigoError\":\"201\",\"mensaje\":\"Documento encolado para procesamiento en el ZIP 811021438_860028580_0b334803-d6d2-4c8e-aa41-b2564df91bfe.zip\"},{\"nombreDocumento\":\"face_f0811021438003B0235A1.xml\",\"uuid\":\"12b0929c-f340-4f69-9158-be8426f5caf3\",\"codigoError\":\"201\",\"mensaje\":\"Documento encolado para procesamiento en el ZIP 811021438_860028580_0b334803-d6d2-4c8e-aa41-b2564df91bfe.zip\"},{\"nombreDocumento\":null,\"uuid\":null,\"codigoError\":null,\"mensaje\":null}],\"mensajeGlobal\":\"Documento 811021438_860028580_0b334803-d6d2-4c8e-aa41-b2564df91bfe.zip El zip se radicó exitosamente\"}";
+                RegistroListaDocRespuesta Respuesta = JsonConvert.DeserializeObject<RegistroListaDocRespuesta>(RespuestaRegistro);
+
+                foreach (var Detalle in Respuesta.trackingIds)
+                {
+                    bool Actualiza= ActualizaRespuesta(Detalle);
+                }
+
+
+
 
 
             }
@@ -189,5 +213,71 @@ namespace HGInetInteroperabilidad.Procesos
             return true;
 
         }
+
+        /// <summary>
+        /// Actualiza el detalle del documento en la tabla tbldocumentos
+        /// </summary>
+        /// <param name="Detalle">Recibe un objeto de tipo RegistroListaDetalleDocRespuesta con el detalle del documento del proveedor tecnologico</param>
+        /// <returns></returns>
+        public static bool ActualizaRespuesta(RegistroListaDetalleDocRespuesta Detalle)
+        {
+
+            if (Detalle != null)
+            {
+                if (Detalle.nombreDocumento != null)
+                {
+                    string Nombre = Detalle.nombreDocumento.Replace(".xml", "");
+
+                    int Largo = Nombre.Length;
+                    int LargoPrefijo = 0;
+                    string Prefijo = string.Empty;
+
+                    string Nit = Nombre.Substring(6, 10);
+
+                    if (Largo > 26)
+                    {
+                        LargoPrefijo = Largo - 26;
+                        Prefijo = Nombre.Substring(16, LargoPrefijo);
+                    }
+
+
+                    int NitFacturador = Convert.ToInt32(Nit);
+                    string DocumentoHexadecimal = Nombre.Substring(16 + LargoPrefijo, 10);
+
+
+                    int NumeroDocumento = int.Parse(DocumentoHexadecimal, System.Globalization.NumberStyles.HexNumber);
+
+                    Ctl_Documento Documentos = new Ctl_Documento();
+
+                    //TblDocumentos Doc=  Documentos.Obtener(NitFacturador.ToString(), NumeroDocumento, Prefijo);
+                    TblDocumentos Doc = Documentos.Obtenerporxml(Detalle.nombreDocumento);
+
+
+                    //Se debe validar si la respuesta es de un documento o de un acuse
+                    //Si el documento con el que me estan respondiento, tiene StrIdInteroperabilidad y status 13, entonces actualizo el acuse
+                    if (Doc.StrIdInteroperabilidad ==  Guid.Parse(Detalle.uuid) && Doc.IntIdEstado == (Int16)ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode())
+                    {
+                        //Actualizo Acuse
+                        Doc.DatFechaActualizaEstado = Fecha.GetFecha();
+                        Doc.IntIdEstado = (Int16)(ProcesoEstado.Finalizacion.GetHashCode());
+                    }else
+                    {
+                        //Aqui actualizo el Estado del documento y el id de interoperabilidad
+                        Doc.StrIdInteroperabilidad = new Guid(Detalle.uuid);
+                        Doc.IntIdEstado = (Int16)(ProcesoEstado.EnvioEmailAcuse.GetHashCode());
+                        Doc.DatFechaActualizaEstado = Fecha.GetFecha();
+                    }
+
+
+
+                    Documentos.Actualizar(Doc);
+                    
+
+                }
+            }
+
+            return true;
+        }
+        
     }
 }

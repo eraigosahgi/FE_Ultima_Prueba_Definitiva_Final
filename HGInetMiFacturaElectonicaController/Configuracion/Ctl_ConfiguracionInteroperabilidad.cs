@@ -67,31 +67,48 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 
+        
+
         /// <summary>
-        /// Obtiene una lista de documentos pendientes para enviar
-        /// Esto debe ir en el controlador de documentos.interoperabilidad
+        /// Actualiza el token de nuestro de hgi en un proveedor especifico
         /// </summary>
+        /// <param name="IdentificacionProveedor">Nit del proveedor</param>
+        /// <param name="Token">Token generado por el proveedor externo</param>
+        /// <param name="FechaToken">Fecha de expiracion del Token</param>
         /// <returns></returns>
-		public List<TblDocumentos> ObtenerDocumentosProveedores(string IdentificacionProveedor)
+        public bool GuardarToken(string IdentificacionProveedor,string Token,DateTime FechaToken)
         {
-            int DocPendiente = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
-            int AcusePendiente = ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();            
+            TblConfiguracionInteroperabilidad Proveedor = (from prov in context.TblConfiguracionInteroperabilidad
+                                                           where prov.StrIdentificacion.Equals(IdentificacionProveedor)
+                                                           select prov).FirstOrDefault();
+            if (Proveedor != null)
+            {
+                Proveedor.StrHgiToken = Token;
+                Proveedor.DatHgiFechaToken = FechaToken;
+                Actualizar_Proveedor(Proveedor);
+            }
+            else
+            {
+                return false;
+            }
 
-            List<TblDocumentos> Doc = (from doc in context.TblDocumentos
-                                       where (doc.IntIdEstado == DocPendiente || doc.IntIdEstado == AcusePendiente)                                       
-                                       select doc).ToList();
-
-
-            return Doc;
-        }
-
-
-
-        public bool GuardarToken(string Token)
-        {
             return true;
         }
 
+
+        /// <summary>
+        /// Actualiza el usuario en la base ded atos
+        /// </summary>
+        /// <param name="usuario">información del Usuario</param>
+        /// <returns>información del usuario</returns>
+
+        public TblConfiguracionInteroperabilidad Actualizar_Proveedor(TblConfiguracionInteroperabilidad Proveedor)
+        {
+            Proveedor = this.Edit(Proveedor);
+
+            return Proveedor;
+
+        }
 
 
     }

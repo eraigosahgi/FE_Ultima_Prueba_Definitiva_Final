@@ -1207,6 +1207,45 @@ namespace HGInetMiFacturaElectonicaController.Registros
         }
         #endregion
 
+
+        #region Interoperabilidad
+        /// <summary>
+        /// Obtiene una lista de documentos pendientes para enviar
+        /// Esto debe ir en el controlador de documentos.interoperabilidad
+        /// </summary>
+        /// <returns></returns>
+		public List<TblDocumentos> ObtenerDocumentosProveedores(string IdentificacionProveedor)
+        {
+            int DocPendiente = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+            int AcusePendiente = ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();
+
+            List<TblDocumentos> Doc = (from doc in context.TblDocumentos
+                                       where (doc.IntIdEstado == DocPendiente || doc.IntIdEstado == AcusePendiente)
+                                       select doc).ToList();
+
+
+            return Doc;
+        }
+
+        /// <summary>
+        /// Obtiene un documento por el nombre del archivo xml
+        /// con el fin de actualizar el estado
+        /// </summary>
+        /// <param name="NombreArchivo"></param>
+        /// <returns></returns>
+        public TblDocumentos Obtenerporxml(string NombreArchivo)
+        {
+            TblDocumentos Doc = (from doc in context.TblDocumentos
+                                       where doc.StrUrlArchivoUbl.Contains(NombreArchivo)
+                                       select doc).FirstOrDefault();
+            return Doc;
+        }
+        
+
+
+
+        #endregion
+
     }
 
 }
