@@ -63,6 +63,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private System.DateTime FechaFacturaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionProveedorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MonedaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -285,6 +288,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((this.FechaFacturaField.Equals(value) != true)) {
                     this.FechaFacturaField = value;
                     this.RaisePropertyChanged("FechaFactura");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionProveedor {
+            get {
+                return this.IdentificacionProveedorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionProveedorField, value) != true)) {
+                    this.IdentificacionProveedorField = value;
+                    this.RaisePropertyChanged("IdentificacionProveedor");
                 }
             }
         }
@@ -938,6 +954,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private decimal IvaValorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int OcultarItemField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ProductoCodigoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1083,6 +1102,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((this.IvaValorField.Equals(value) != true)) {
                     this.IvaValorField = value;
                     this.RaisePropertyChanged("IvaValor");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int OcultarItem {
+            get {
+                return this.OcultarItemField;
+            }
+            set {
+                if ((this.OcultarItemField.Equals(value) != true)) {
+                    this.OcultarItemField = value;
+                    this.RaisePropertyChanged("OcultarItem");
                 }
             }
         }

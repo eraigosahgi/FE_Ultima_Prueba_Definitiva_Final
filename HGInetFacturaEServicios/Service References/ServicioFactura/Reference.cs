@@ -60,6 +60,12 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private System.DateTime FechaVenceField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int FormaPagoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionProveedorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MonedaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -75,7 +81,13 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private string NumeroResolucionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int PlazoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string PrefijoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int TerminoPagoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal TotalField;
@@ -274,6 +286,32 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int FormaPago {
+            get {
+                return this.FormaPagoField;
+            }
+            set {
+                if ((this.FormaPagoField.Equals(value) != true)) {
+                    this.FormaPagoField = value;
+                    this.RaisePropertyChanged("FormaPago");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionProveedor {
+            get {
+                return this.IdentificacionProveedorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionProveedorField, value) != true)) {
+                    this.IdentificacionProveedorField = value;
+                    this.RaisePropertyChanged("IdentificacionProveedor");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Moneda {
             get {
                 return this.MonedaField;
@@ -339,6 +377,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Plazo {
+            get {
+                return this.PlazoField;
+            }
+            set {
+                if ((this.PlazoField.Equals(value) != true)) {
+                    this.PlazoField = value;
+                    this.RaisePropertyChanged("Plazo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Prefijo {
             get {
                 return this.PrefijoField;
@@ -347,6 +398,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((object.ReferenceEquals(this.PrefijoField, value) != true)) {
                     this.PrefijoField = value;
                     this.RaisePropertyChanged("Prefijo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int TerminoPago {
+            get {
+                return this.TerminoPagoField;
+            }
+            set {
+                if ((this.TerminoPagoField.Equals(value) != true)) {
+                    this.TerminoPagoField = value;
+                    this.RaisePropertyChanged("TerminoPago");
                 }
             }
         }
@@ -1000,6 +1064,9 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private decimal IvaValorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int OcultarItemField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ProductoCodigoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1145,6 +1212,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((this.IvaValorField.Equals(value) != true)) {
                     this.IvaValorField = value;
                     this.RaisePropertyChanged("IvaValor");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int OcultarItem {
+            get {
+                return this.OcultarItemField;
+            }
+            set {
+                if ((this.OcultarItemField.Equals(value) != true)) {
+                    this.OcultarItemField = value;
+                    this.RaisePropertyChanged("OcultarItem");
                 }
             }
         }
