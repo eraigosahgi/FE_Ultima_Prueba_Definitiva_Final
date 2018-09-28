@@ -52,7 +52,7 @@ namespace WebApi.Jwt.Filters
             if (!identity.IsAuthenticated)
                 return false;
 
-            var usernameClaim = identity.FindFirst("iss");
+            var usernameClaim = identity.FindFirst("username");
             username = usernameClaim?.Value;
 
             if (string.IsNullOrEmpty(username))
@@ -77,7 +77,7 @@ namespace WebApi.Jwt.Filters
                 var claims = new List<Claim>
                 {
                     //new Claim(ClaimTypes.Name, username),
-                    new Claim("iss",username)                                    
+                    new Claim("username",username)                                    
                    
                 };
 
