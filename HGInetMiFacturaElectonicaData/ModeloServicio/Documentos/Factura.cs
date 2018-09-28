@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaData.ModeloServicio
 {
-    /// <summary>
-    /// Documento tipo Factura de Venta
-    /// </summary>
-    public class Factura
-    {
+	/// <summary>
+	/// Documento tipo Factura de Venta
+	/// </summary>
+	public class Factura
+	{
 		#region Propiedades
 
 		/// <summary>
@@ -25,25 +25,25 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Identificador del Documento asigando por el Facturador Electrónico
 		/// </summary>
 		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        public string CodigoRegistro { get; set; }
+		public string CodigoRegistro { get; set; }
 
-        /// <summary>
-        /// Número del Documento
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        public long Documento { get; set; }
+		/// <summary>
+		/// Número del Documento
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		public long Documento { get; set; }
 
 		/// <summary>
 		/// Documento referencia
 		/// </summary>
 		public string DocumentoRef { get; set; }
 
-        /// <summary>
-        /// Número de Resolución del Documento asignado por la DIAN
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        [RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
-        public string NumeroResolucion { get; set; }
+		/// <summary>
+		/// Número de Resolución del Documento asignado por la DIAN
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		[RegularExpression("^\\d+$", ErrorMessage = "El {0} debe contener sólo números.")]
+		public string NumeroResolucion { get; set; }
 
 		/// <summary>
 		/// Cufe del Documento 
@@ -55,21 +55,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Prefijo del Documento según la Resolución asignada por la DIAN
 		/// </summary>
 		public string Prefijo { get; set; }
-		
-        /// <summary>
-        /// Fecha del Documento
-        /// </summary>
-        public DateTime Fecha { get; set; }
 
-        /// <summary>
-        /// Fecha de Vencimiento del Documento
-        /// </summary>
-        public DateTime FechaVence { get; set; }
+		/// <summary>
+		/// Fecha del Documento
+		/// </summary>
+		public DateTime Fecha { get; set; }
 
-        /// <summary>
-        /// Observaciones del documento
-        /// </summary>
-        public string Nota { get; set; }
+		/// <summary>
+		/// Fecha de Vencimiento del Documento
+		/// </summary>
+		public DateTime FechaVence { get; set; }
+
+		/// <summary>
+		/// Observaciones del documento
+		/// </summary>
+		public string Nota { get; set; }
 
 		/// <summary>
 		/// Notas (observaciones) del documento
@@ -80,87 +80,87 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Código de la moneda según tabla ISO 4217 (ej: COP = Pesos Colombianos).
 		/// </summary>
 		[Required(ErrorMessage = "{0} es un campo obligatorio")]
-        [MaxLength(3, ErrorMessage = "La {0} no puede superar los {1} caracteres")]
-        public string Moneda { get; set; }
+		[MaxLength(3, ErrorMessage = "La {0} no puede superar los {1} caracteres")]
+		public string Moneda { get; set; }
 
-        /// <summary>
-        /// Datos del Obligado a facturar
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        public Tercero DatosObligado { get; set; }
+		/// <summary>
+		/// Datos del Obligado a facturar
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		public Tercero DatosObligado { get; set; }
 
-        /// <summary>
-        /// Datos del Adquiriente de la Factura
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        public Tercero DatosAdquiriente { get; set; }
+		/// <summary>
+		/// Datos del Adquiriente de la Factura
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		public Tercero DatosAdquiriente { get; set; }
 
-        /// <summary>
-        /// Valor del documento sin descuentos y sin impuestos
-        /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal Valor { get; set; }
+		/// <summary>
+		/// Valor del documento sin descuentos y sin impuestos
+		/// </summary>
+		[Required(ErrorMessage = "{0} es un campo obligatorio")]
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		public decimal Valor { get; set; }
 
-        /// <summary>
-        /// Subtotal del documento: valor del documento con descuentos y sin impuestos
-        /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal ValorSubtotal { get; set; }
+		/// <summary>
+		/// Subtotal del documento: valor del documento con descuentos y sin impuestos
+		/// </summary>
+		[Required(ErrorMessage = "{0} es un campo obligatorio")]
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		public decimal ValorSubtotal { get; set; }
 
-        /// <summary>
-        /// Valor de descuento total del documento
-        /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal ValorDescuento { get; set; }
+		/// <summary>
+		/// Valor de descuento total del documento
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		public decimal ValorDescuento { get; set; }
 
-        /// <summary>
-        /// Valor total de IVA del documento
-        /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal ValorIva { get; set; }
+		/// <summary>
+		/// Valor total de IVA del documento
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		public decimal ValorIva { get; set; }
 
 		/// <summary>
 		/// Valor total de Retención de IVA del documento
 		/// </summary>
 		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal ValorReteIva { get; set; }
+		public decimal ValorReteIva { get; set; }
 
 		/// <summary>
 		/// Valor total de Impuesto al consumo del documento
 		/// </summary>
 		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal ValorImpuestoConsumo { get; set; }
+		public decimal ValorImpuestoConsumo { get; set; }
 
 		/// <summary>
 		/// Valor total de Retención en la Fuente del documento
 		/// </summary>
 		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal ValorReteFuente { get; set; }
+		public decimal ValorReteFuente { get; set; }
 
 		/// <summary>
 		/// Valor total de Retención de ICA del documento.
 		/// </summary>
 		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal ValorReteIca { get; set; }
+		public decimal ValorReteIca { get; set; }
 
-        /// <summary>
-        /// Valor total del documento: Subtotal incluyendo descuentos e impuestos agregados
-        /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal Total { get; set; }
+		/// <summary>
+		/// Valor total del documento: Subtotal incluyendo descuentos e impuestos agregados
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		public decimal Total { get; set; }
 
-        /// <summary>
-        /// Valor neto del documento aplicando impuestos de retención
-        /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
-        public decimal Neto { get; set; }
+		/// <summary>
+		/// Valor neto del documento aplicando impuestos de retención
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		public decimal Neto { get; set; }
 
-        /// <summary>
-        /// Detalle del documento
-        /// </summary>
-        public List<DocumentoDetalle> DocumentoDetalles { get; set; }
+		/// <summary>
+		/// Detalle del documento
+		/// </summary>
+		public List<DocumentoDetalle> DocumentoDetalles { get; set; }
 
 		/// <summary>
 		/// Datos del formato del documento
@@ -172,27 +172,32 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public List<Cuota> Cuotas { get; set; }
 
-        /// <summary>
+		/// <summary>
 		/// Version de la aplicacion donde fue generado el documento
 		/// </summary>
 		public string VersionAplicativo { get; set; }
 
-        /// <summary>
-        /// Plazo de la Factura
-        /// </summary>
-        public int Plazo { get; set; }
+		/// <summary>
+		/// Plazo de la Factura
+		/// </summary>
+		public int Plazo { get; set; }
 
-        /// <summary>
-        /// Forma de pago del documento(Toma por defecto Factura Electronica codigo 24)
-        /// </summary>
-        public int FormaPago { get; set; }
+		/// <summary>
+		/// Forma de pago del documento(Toma por defecto Factura Electronica codigo 24)
+		/// </summary>
+		public int FormaPago { get; set; }
 
-        /// <summary>
-        /// Termino de Pago del documento ( Toma por defecto Fecha fija codigo 3)
-        /// </summary>
-        public int TerminoPago { get; set; }
+		/// <summary>
+		/// Termino de Pago del documento ( Toma por defecto Fecha fija codigo 3)
+		/// </summary>
+		public int TerminoPago { get; set; }
 
-        #endregion
+		/// <summary>
+		/// Número de identificación del proveedor tecnológico 
+		/// </summary>
+		public string IdentificacionProveedor { get; set; }
 
-    }
+		#endregion
+
+	}
 }
