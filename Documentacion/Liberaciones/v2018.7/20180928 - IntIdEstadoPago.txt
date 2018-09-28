@@ -1,0 +1,3 @@
+ALTER TABLE TblDocumentos ADD
+	IntIdEstadoPago smallint Default(0)
+GO
