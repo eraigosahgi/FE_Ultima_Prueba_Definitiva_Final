@@ -91,6 +91,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     // elimina el archivo zip si existe
                     //  if (!Archivo.ValidarExistencia(Arc))
                     //{
+                    string ss = Path.GetFileName(Arc);
+
                     archive.CreateEntryFromFile(Arc, Path.GetFileName(Arc));
                     //}
 

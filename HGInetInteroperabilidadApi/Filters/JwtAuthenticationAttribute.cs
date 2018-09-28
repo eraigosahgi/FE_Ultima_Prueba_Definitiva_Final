@@ -77,10 +77,7 @@ namespace WebApi.Jwt.Filters
                 var claims = new List<Claim>
                 {
                     //new Claim(ClaimTypes.Name, username),
-                    new Claim("iss",username),
-                       //new Claim("iss",ProveedorEmisor),
-                       //new Claim("username",ProveedorReceptor),
-                       //new Claim("displayName",razonSocial)
+                    new Claim("iss",username)                                    
                    
                 };
 

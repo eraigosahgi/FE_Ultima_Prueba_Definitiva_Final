@@ -50,10 +50,10 @@ namespace HGInetInteroperabilidad.Servicios
                 return resp;
             }
 
-            catch (Exception)
+            catch (Exception Exception)
             {
 
-                throw;
+                return Exception.Message;
             }
         }
 
@@ -190,10 +190,10 @@ namespace HGInetInteroperabilidad.Servicios
 
                 return resp;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
 
-                throw;
+                return exception.Message;
             }
         }
 

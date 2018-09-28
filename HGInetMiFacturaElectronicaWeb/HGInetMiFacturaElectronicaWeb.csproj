@@ -3025,7 +3025,6 @@
     </Compile>
     <Compile Include="Views\ReportDesigner\ReportDesigner.aspx.cs">
       <DependentUpon>ReportDesigner.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Views\ReportDesigner\ReportDesigner.aspx.designer.cs">
       <DependentUpon>ReportDesigner.aspx</DependentUpon>
@@ -3149,7 +3148,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61433/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

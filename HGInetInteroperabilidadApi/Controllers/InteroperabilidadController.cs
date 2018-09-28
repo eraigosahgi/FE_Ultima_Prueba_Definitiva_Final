@@ -18,6 +18,8 @@ using System;
 using System.Linq;
 using LibreriaGlobalHGInet.Funciones;
 using HGInetInteroperabilidad.Procesos;
+using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData.Modelo;
 
 namespace WebApi.Jwt.Controllers
 {
@@ -33,13 +35,16 @@ namespace WebApi.Jwt.Controllers
         [Route("interoperabilidad/api/v1_0/login")]
         public IHttpActionResult login(Usuario usuario)
         {
+            TblConfiguracionInteroperabilidad Proveedor = new TblConfiguracionInteroperabilidad();
+            Ctl_ConfiguracionProveedores conf = new Ctl_ConfiguracionProveedores();
 
-            if (CheckUser(usuario.username, usuario.password))
+
+            Proveedor = conf.CheckUser(usuario.username, usuario.password);
+            if (Proveedor!=null)
             {                
-
                 AutenticacionRespuesta respuesta = new AutenticacionRespuesta();
 
-                respuesta.jwtToken = JwtManager.GenerateToken(usuario.username,"811021438", "HGI SAS");
+                respuesta.jwtToken = JwtManager.GenerateToken(usuario.username, Proveedor.StrIdentificacion, Proveedor.StrRazonSocial);
                 respuesta.passwordExpiration = Fecha.GetFecha();
 
                 return Ok(respuesta);
@@ -88,13 +93,13 @@ namespace WebApi.Jwt.Controllers
         {
 
             var identity = User?.Identity as ClaimsIdentity;
-            var usernameClaim = identity.FindFirst("iss");
+            var usernameClaim = identity.FindFirst("username");
 
             //Aqui envio los datos al controlador de proceso
             string Proveedor = usernameClaim.Value;
 
 
-            RegistroListaDocRespuesta respuesta = Ctl_Recepcion.Procesar(registroRespuesta, @"E:\Desarrollo\jzea\Ubl-Lmsoftware","");
+            RegistroListaDocRespuesta respuesta = Ctl_Recepcion.Procesar(registroRespuesta, @"E:\DmsFacturaElectronica\interoperabilidad\publico\7164132d-6dc1-4b58-82a9-3386e58d91e8", "860028580");
 
 
             //Aqui recibo la respuesta y la envio
@@ -183,22 +188,6 @@ namespace WebApi.Jwt.Controllers
             return Ok(Respuesta);
 
         }
-
-
-
-
-
-        //Validacion de inicio de session del proveedor tecnologico
-        public bool CheckUser(string username, string password)
-        {
-            // should check in the database
-            return true;
-        }
-
-
-
-
-
 
 
     }

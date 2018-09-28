@@ -55,10 +55,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns>datos de configuración si es encontrado o null si no</returns>
 		public TblConfiguracionInteroperabilidad Validar(string usuario, string clave)
 		{
-			// se encripta la clave en SHA256 para comparación con la base de datos
-			string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
-
-			TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
+            // se encripta la clave en SHA256 para comparación con la base de datos
+            //string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
+            string clave_sha256 = clave;
+            TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
 													   where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
 													   select item).FirstOrDefault();
 
@@ -66,5 +66,33 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 
-	}
+
+        /// <summary>
+        /// Obtiene una lista de documentos pendientes para enviar
+        /// Esto debe ir en el controlador de documentos.interoperabilidad
+        /// </summary>
+        /// <returns></returns>
+		public List<TblDocumentos> ObtenerDocumentosProveedores(string IdentificacionProveedor)
+        {
+            int DocPendiente = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+            int AcusePendiente = ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();            
+
+            List<TblDocumentos> Doc = (from doc in context.TblDocumentos
+                                       where (doc.IntIdEstado == DocPendiente || doc.IntIdEstado == AcusePendiente)                                       
+                                       select doc).ToList();
+
+
+            return Doc;
+        }
+
+
+
+        public bool GuardarToken(string Token)
+        {
+            return true;
+        }
+
+
+
+    }
 }
