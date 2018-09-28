@@ -52,8 +52,8 @@ namespace HGInetInteroperabilidad.Procesos
 
                 Usuario usuario = new Usuario();
 
-                usuario.username = ProveedorDoc.TblConfiguracionInteroperabilidadRecepctor.StrHgiUsuario;
-                usuario.password = ProveedorDoc.TblConfiguracionInteroperabilidadRecepctor.StrHgiClave;
+                usuario.username = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
+                usuario.password = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
 
                 //Serializo el objeto para enviarlo al cliente webapi
                 string jsonUsuario = JsonConvert.SerializeObject(usuario);
@@ -62,7 +62,7 @@ namespace HGInetInteroperabilidad.Procesos
 
                 //Lo primero es validar si tiene tenemos usuario y password activo con el proveedor
                 //Se debe validar si tengo un tokken activo, antes de solicitar otro
-                string Token = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadRecepctor.StrUrlApi);
+                string Token = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
                 AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(Token);
                 Token = r.jwtToken;
@@ -180,7 +180,7 @@ namespace HGInetInteroperabilidad.Procesos
 
                 //Aqui se debe hacer peticion webapi
 
-                string RespuestaRegistro = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadRecepctor.StrUrlApi);
+                string RespuestaRegistro = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
 
             }
