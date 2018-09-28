@@ -66,7 +66,7 @@ namespace WebApi.Jwt.Controllers
         {
             var identity = User?.Identity as ClaimsIdentity;
 
-            var usernameClaim = identity.FindFirst("iss");
+            var usernameClaim = identity.FindFirst("username");
 
             RegistroDocRespuesta datos = new RegistroDocRespuesta();
 
@@ -99,7 +99,7 @@ namespace WebApi.Jwt.Controllers
             string Proveedor = usernameClaim.Value;
 
 
-            RegistroListaDocRespuesta respuesta = Ctl_Recepcion.Procesar(registroRespuesta, @"E:\DmsFacturaElectronica\interoperabilidad\publico\7164132d-6dc1-4b58-82a9-3386e58d91e8", "860028580");
+            RegistroListaDocRespuesta respuesta = Ctl_Recepcion.Procesar(registroRespuesta, @"E:\DmsFacturaElectronica\interoperabilidad\publico\7164132d-6dc1-4b58-82a9-3386e58d91e8", Proveedor);
 
 
             //Aqui recibo la respuesta y la envio
@@ -174,7 +174,7 @@ namespace WebApi.Jwt.Controllers
         {
             var identity = User?.Identity as ClaimsIdentity;
 
-            var usernameClaim = identity.FindFirst("iss");
+            var usernameClaim = identity.FindFirst("username");
 
             //Aqui debo generar el proceso que valida el estado del documento
 
