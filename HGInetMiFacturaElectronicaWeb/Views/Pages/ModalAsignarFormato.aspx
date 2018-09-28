@@ -16,7 +16,7 @@
 				<div class="modal-content">
 					<div id="EncabezadoModal" class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h5 style="margin-bottom: 10px;" class="modal-title">Busqueda de Empresa</h5>
+						<h5 style="margin-bottom: 10px;" class="modal-title">Asignación de Formatos</h5>
 					</div>
 
 					<div class="modal-body">

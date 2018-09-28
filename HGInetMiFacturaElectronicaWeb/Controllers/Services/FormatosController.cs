@@ -46,7 +46,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					ClavePrimaria = string.Format("{0}-{1}", d.IntCodigoFormato, d.StrEmpresa),
 					CodigoFormato = d.IntCodigoFormato,
-					Generico = d.IntGenerico,
+					Generico = (Sesion.DatosEmpresa.IntAdministrador) ? false : d.IntGenerico,
 					FechaRegistro = d.DatFechaRegistro.ToString(Fecha.formato_fecha_hginet),
 					Titulo = (d.IntGenerico) ? "Prediseñado" : "Personalizado",
 					Estado = d.IntEstado,

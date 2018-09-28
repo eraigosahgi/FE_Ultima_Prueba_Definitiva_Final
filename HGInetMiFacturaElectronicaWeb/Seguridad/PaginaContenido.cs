@@ -14,160 +14,164 @@ using System.Web.UI.WebControls;
 
 namespace HGInetMiFacturaElectronicaWeb.Seguridad
 {
-    public class PaginaContenido : System.Web.UI.Page
-    {
-        protected ContentPlaceHolder contenido;
-        private PaginaPrincipal custom_master;
-        private string codigo_opcion = string.Empty;
-        private OperacionesBD proceso_pagina;
-        protected PaginaPermiso PermisoActual { get; set; }
+	public class PaginaContenido : System.Web.UI.Page
+	{
+		protected ContentPlaceHolder contenido;
+		private PaginaPrincipal custom_master;
+		private string codigo_opcion = string.Empty;
+		private OperacionesBD proceso_pagina;
+		private string ruta_redireccion_alerta = "Inicio.aspx";
 
-        protected ContentPlaceHolder Contenido
-        {
-            get
-            {
-                if (contenido == null)
-                {
-                    if (Page.Master != null)
-                        contenido = Page.Master.FindControl("ContenidoPagina") as ContentPlaceHolder;
-                    else
-                        contenido = new ContentPlaceHolder();
-                }
-                return contenido;
-            }
-        }
+		protected PaginaPermiso PermisoActual { get; set; }
 
-        protected PaginaPrincipal CustomMaster
-        {
-            get
-            {
-                if (custom_master == null)
-                    custom_master = this.Master as PaginaPrincipal;
+		protected ContentPlaceHolder Contenido
+		{
+			get
+			{
+				if (contenido == null)
+				{
+					if (Page.Master != null)
+						contenido = Page.Master.FindControl("ContenidoPagina") as ContentPlaceHolder;
+					else
+						contenido = new ContentPlaceHolder();
+				}
+				return contenido;
+			}
+		}
+
+		protected PaginaPrincipal CustomMaster
+		{
+			get
+			{
+				if (custom_master == null)
+					custom_master = this.Master as PaginaPrincipal;
 
 
-                return custom_master;
-            }
-            set { custom_master = value; }
-        }
+				return custom_master;
+			}
+			set { custom_master = value; }
+		}
 
-        protected string CodigoOpcion
-        {
-            get { return codigo_opcion; }
-            set { codigo_opcion = value; }
-        }
+		protected string CodigoOpcion
+		{
+			get { return codigo_opcion; }
+			set { codigo_opcion = value; }
+		}
 
-        protected OperacionesBD ProcesoPagina
-        {
-            get { return proceso_pagina; }
-            set { proceso_pagina = value; }
-        }
+		protected OperacionesBD ProcesoPagina
+		{
+			get { return proceso_pagina; }
+			set { proceso_pagina = value; }
+		}
 
-        /// <summary>
-        /// Carga la opción de permiso
-        /// </summary>
-        /// <param name="codigo"></param>
-        /// <returns></returns>
-        private PaginaPermiso CargarOpcion(int codigo)
-        {
-            try
-            {
-                Ctl_Permisos permisos = new Ctl_Permisos();
-                TblOpciones opcion = permisos.ObtenerOpcion(codigo);
+		protected string RutaRedireccionAlerta
+		{
+			get { return ruta_redireccion_alerta; }
+			set { ruta_redireccion_alerta = value; }
+		}
 
-                PaginaPermiso permiso = new PaginaPermiso();
+		/// <summary>
+		/// Carga la opción de permiso
+		/// </summary>
+		/// <param name="codigo"></param>
+		/// <returns></returns>
+		private PaginaPermiso CargarOpcion(int codigo)
+		{
+			try
+			{
+				Ctl_Permisos permisos = new Ctl_Permisos();
+				TblOpciones opcion = permisos.ObtenerOpcion(codigo);
 
-                string ruta_grupo = string.Empty;
+				PaginaPermiso permiso = new PaginaPermiso();
 
-                if (opcion != null)
-                {
-                    // obtener las opciones de base de datos
-                    List<TblOpciones> opciones = permisos.ObtenerAsociadas(codigo, false);
+				string ruta_grupo = string.Empty;
 
-                    permiso.CodigosAsociados.AddRange(opciones.Select(_x => _x.IntId.ToString()).ToList());
+				if (opcion != null)
+				{
+					// obtener las opciones de base de datos
+					List<TblOpciones> opciones = permisos.ObtenerAsociadas(codigo, false);
 
-                    ruta_grupo = permisos.ObtenerRutaGrupo(codigo, false, -1, opciones);
+					permiso.CodigosAsociados.AddRange(opciones.Select(_x => _x.IntId.ToString()).ToList());
 
-                    permiso.Codigo = codigo.ToString();
+					ruta_grupo = permisos.ObtenerRutaGrupo(codigo, false, -1, opciones);
 
-                    permiso.Titulo = opcion.StrDescripcion;
+					permiso.Codigo = codigo.ToString();
 
-                    permiso.GrupoPagina = ruta_grupo;
+					permiso.Titulo = opcion.StrDescripcion;
 
-                    permiso.RutaPaginaInicioUrl = "#";
-                }
+					permiso.GrupoPagina = ruta_grupo;
 
-                this.PermisoActual = permiso;
-                this.CustomMaster.PermisoActual = permiso;
+					permiso.RutaPaginaInicioUrl = "#";
+				}
 
-                return permiso;
-            }
-            catch (Exception)
-            {
+				this.PermisoActual = permiso;
+				this.CustomMaster.PermisoActual = permiso;
 
-                throw;
-            }
-        }
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            string ruta_redireccion = string.Empty;
+				return permiso;
+			}
+			catch (Exception)
+			{
 
-            try
-            {
-                // obtiene la opción de permiso de acuerdo con la página actual
-                this.CargarOpcion(Convert.ToInt32(CodigoOpcion));
+				throw;
+			}
+		}
+		protected void Page_Load(object sender, EventArgs e)
+		{
+			try
+			{
+				// obtiene la opción de permiso de acuerdo con la página actual
+				this.CargarOpcion(Convert.ToInt32(CodigoOpcion));
 
-                // valida las opciones que tienen permisos de usuario
-                if (string.IsNullOrEmpty(OpcionesPermisos.FacturacionElectronicaPrincipal.Split(',').Where(_opcion => _opcion.Equals(CodigoOpcion)).FirstOrDefault()))
-                {
-                    // valida el permiso.
-                    if (!Sesion.ValidarPermiso(CodigoOpcion, ProcesoPagina))
-                        throw new ApplicationException("El usuario no tiene permisos para esta ejecución.");
-                }
-            }
-            catch (Exception excepcion)
-            {
-                if (excepcion.Message.Equals("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente."))
-                {
-                    PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-                    ruta_redireccion = plataforma.RutaPublica;
-                }
-                else
-                    ruta_redireccion = "Inicio.aspx";
+				// valida las opciones que tienen permisos de usuario
+				if (string.IsNullOrEmpty(OpcionesPermisos.FacturacionElectronicaPrincipal.Split(',').Where(_opcion => _opcion.Equals(CodigoOpcion)).FirstOrDefault()))
+				{
+					// valida el permiso.
+					if (!Sesion.ValidarPermiso(CodigoOpcion, ProcesoPagina))
+						throw new ApplicationException("El usuario no tiene permisos para esta ejecución.");
+				}
+			}
+			catch (Exception excepcion)
+			{
+				if (excepcion.Message.Equals("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente."))
+				{
+					PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+					this.RutaRedireccionAlerta = plataforma.RutaPublica;
+				}
 
-                CustomMaster.Modal = new SweetAlert("Alerta", excepcion.Message, true, ruta_redireccion, SweetAlert.TipoMensaje.warning);
-                CustomMaster.MostrarModal();
-            }
-        }
+				CustomMaster.Modal = new SweetAlert("Alerta", excepcion.Message, true, this.RutaRedireccionAlerta, SweetAlert.TipoMensaje.warning);
+				CustomMaster.MostrarModal();
+			}
+		}
 
-        /// <summary>
-        /// Genera el javascript para mostrar el mensaje de notificación
-        /// </summary>
-        public void MostrarNotificacion(SweetAlert notificacion)
-        {
-            try
-            {
-                if (notificacion != null)
-                {
-                    ScriptManager sm = ScriptManager.GetCurrent(this.Page);
+		/// <summary>
+		/// Genera el javascript para mostrar el mensaje de notificación
+		/// </summary>
+		public void MostrarNotificacion(SweetAlert notificacion)
+		{
+			try
+			{
+				if (notificacion != null)
+				{
+					ScriptManager sm = ScriptManager.GetCurrent(this.Page);
 
-                    string scriptKey = "NotifyMessageScript";
+					string scriptKey = "NotifyMessageScript";
 
-                    if (sm != null && !sm.IsInAsyncPostBack)
-                    {
-                        if (!Page.ClientScript.IsClientScriptBlockRegistered(this.Page.GetType(), scriptKey))
-                        {
-                            StringBuilder script = notificacion.ObtenerScript();
+					if (sm != null && !sm.IsInAsyncPostBack)
+					{
+						if (!Page.ClientScript.IsClientScriptBlockRegistered(this.Page.GetType(), scriptKey))
+						{
+							StringBuilder script = notificacion.ObtenerScript();
 
-                            Page.ClientScript.RegisterClientScriptBlock(this.Page.GetType(), scriptKey, script.ToString(), true);
-                        }
-                    }
-                }
-            }
-            catch (Exception excepcion)
-            {
-                throw excepcion;
-            }
-        }
+							Page.ClientScript.RegisterClientScriptBlock(this.Page.GetType(), scriptKey, script.ToString(), true);
+						}
+					}
+				}
+			}
+			catch (Exception excepcion)
+			{
+				throw excepcion;
+			}
+		}
 
-    }
+	}
 }

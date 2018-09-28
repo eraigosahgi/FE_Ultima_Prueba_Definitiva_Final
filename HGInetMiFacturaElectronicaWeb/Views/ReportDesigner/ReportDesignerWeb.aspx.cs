@@ -27,13 +27,20 @@ using System.Xml.Serialization;
 
 namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 {
-	public partial class ReportDesignerWeb : System.Web.UI.Page
+	public partial class ReportDesignerWeb : PaginaContenido
 	{
+		protected void Page_Init(object sender, EventArgs e)
+		{
+			this.RutaRedireccionAlerta = "../Pages/Inicio.aspx";
+			this.CodigoOpcion = OpcionesPermisos.GestionReportes;
+			this.ProcesoPagina = OperacionesBD.IntEditar;
+		}
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			try
 			{
-				Sesion.ValidarSesion();
+				base.Page_Load(sender, e);
+				//Sesion.ValidarSesion();
 
 				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
@@ -94,7 +101,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 					{
 						string mensaje = string.Format("El formato Número {0} ha sido actualizado correctamente.", respuesta.IntCodigoFormato);
 
-						ASPxReportDesignerWeb.JSProperties["cpTextoBtnNotificacion"] = "Aceptar";
+						ASPxReportDesignerWeb.JSProperties["cpTextoBtnNotificacion"] = "Salir";
 						ASPxReportDesignerWeb.JSProperties["cpMensajeNotificacion"] = mensaje;
 						ASPxReportDesignerWeb.JSProperties["cpTituloNotificacion"] = "¡ Proceso éxitoso !";
 					}

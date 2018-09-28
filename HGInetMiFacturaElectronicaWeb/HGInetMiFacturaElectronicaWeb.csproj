@@ -2750,7 +2750,6 @@
     <Content Include="Views\Pages\ModalSerialEmpresa.aspx" />
     <Content Include="Views\Pages\ModalConsultaEmpresas.aspx" />
     <Content Include="Views\Pages\ProcesarInteroperabilidad.aspx" />
-    <Content Include="Views\ReportDesigner\ReportDesigner.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
     <Content Include="Views\ReportDesigner\XmlReporteBase.xml">
       <SubType>Designer</SubType>
@@ -2847,6 +2846,13 @@
     </Compile>
     <Compile Include="Views\Login\RestablecerClave.aspx.designer.cs">
       <DependentUpon>RestablecerClave.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Masters\MasterEncabezado.Master.cs">
+      <DependentUpon>MasterEncabezado.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Masters\MasterEncabezado.Master.designer.cs">
+      <DependentUpon>MasterEncabezado.Master</DependentUpon>
     </Compile>
     <Compile Include="Views\Masters\MasterPrincipal.Master.cs">
       <DependentUpon>MasterPrincipal.Master</DependentUpon>
@@ -3023,12 +3029,6 @@
     <Compile Include="Views\Pages\ProcesarInteroperabilidad.aspx.designer.cs">
       <DependentUpon>ProcesarInteroperabilidad.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\ReportDesigner\ReportDesigner.aspx.cs">
-      <DependentUpon>ReportDesigner.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ReportDesigner\ReportDesigner.aspx.designer.cs">
-      <DependentUpon>ReportDesigner.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\ReportDesigner\ReportDesignerWeb.aspx.cs">
       <DependentUpon>ReportDesignerWeb.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3073,6 +3073,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Views\Masters\MasterPrincipal.Master" />
+    <Content Include="Views\Masters\MasterEncabezado.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -3126,7 +3127,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Constantes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\OpcionesPermisos.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OpcionesPermisos.Designer.cs</LastGenOutput>

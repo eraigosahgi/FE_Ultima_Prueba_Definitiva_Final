@@ -1,5 +1,4 @@
-﻿DevExpress.localization.locale('es-ES');
-
+﻿
 
 var ModalAsignarFormatoApp = angular.module('ModalAsignarFormatoApp', []);
 
@@ -127,6 +126,12 @@ function reportDesigner_EndCallback(s, e) {
 					window.location.href = '/Views/Pages/GestionReportes.aspx';
 				}
 			},
+			{
+				text: "Continuar Edición",
+				onClick: function (e) {
+					myDialog.hide();
+				}
+			},
 			]
 		});
 		myDialog.show().done(function (dialogResult) {
@@ -135,6 +140,8 @@ function reportDesigner_EndCallback(s, e) {
 
 	}
 }
+
+
 
 //Función del botón salir del diseñador
 function ExitDesignerfunction(s, e) {

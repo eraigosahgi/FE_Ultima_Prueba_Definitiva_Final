@@ -201,6 +201,7 @@
     <EmbeddedResource Include="NotasDebito\Formato1Detalles.resx">
       <DependentUpon>Formato1Detalles.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\MensajesGenerales.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MensajesGenerales.Designer.cs</LastGenOutput>
@@ -208,7 +209,6 @@
     <EmbeddedResource Include="NotasCredito\Formato1.resx">
       <DependentUpon>Formato1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

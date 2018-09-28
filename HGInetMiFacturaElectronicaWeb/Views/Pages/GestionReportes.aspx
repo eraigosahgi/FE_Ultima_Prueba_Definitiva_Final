@@ -44,19 +44,15 @@
 								<img src="../../Scripts/Images/FormatoPDF.png" class="img-responsive" />
 							</div>
 							<div style="margin-top: 10%">
-								<span class="no-margin text-size-large text-semibold">Código: </span>
-								<span class="no-margin text-size-large">{{datos.CodigoFormato}}</span><br />
-								<span class="no-margin text-size-large text-semibold">Empresa: </span>
-								<span class="no-margin text-size-large">{{datos.NitEmpresa}}</span><br />
-								<span class="no-margin text-size-large text-semibold">Fecha Creación: </span>
-								<span class="no-margin text-size-large">{{datos.FechaRegistro}}</span>
+								<label class="no-margin text-size-large text-semibold">Código: </label>
+								<label class="no-margin text-size-large">{{datos.CodigoFormato}}</label><br />
+								<label class="no-margin text-size-large text-semibold">Empresa: </label>
+								<label class="no-margin text-size-large">{{datos.NitEmpresa}}</label><br />
+								<label class="no-margin text-size-large text-semibold">Fecha Creación: </label>
+								<label class="no-margin text-size-large">{{datos.FechaRegistro}}</label>
 							</div>
 							<div class="text-right" style="margin-top: 10%">
 								<ul class="icons-list">
-									<li>
-										<button class="icon-user BtnStyleNone" type="reset" style="background-color: transparent; border-color: transparent;">
-										</button>
-									</li>
 									<li>
 										<a class="icon-pencil4 BtnStyleNone" data-toggle="tooltip" title="Editar Formato" data-ng-click="BtnEditar(datos.CodigoFormato,datos.NitEmpresa)" data-ng-hide="{{datos.Generico}}"></a>
 									</li>

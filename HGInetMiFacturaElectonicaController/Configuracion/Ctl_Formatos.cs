@@ -314,9 +314,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				if (datos_empresa.IntAdministrador)
 				{
-					listado_formatos = (from formato in context.TblFormatos
-										where formato.IntTipo == tipo_formato
-										select formato).ToList();
+					return listado_formatos = (from formato in context.TblFormatos
+											   where formato.IntTipo == tipo_formato
+											   select formato).ToList();
 				}
 				else if (datos_empresa.IntIntegrador)
 				{
@@ -339,6 +339,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 										select formato).ToList();
 				}
 
+				listado_formatos.AddRange((from formato in context.TblFormatos
+										   where formato.IntGenerico == true
+											&& formato.IntTipo == tipo_formato
+										   select formato).ToList());
 
 				return listado_formatos;
 			}

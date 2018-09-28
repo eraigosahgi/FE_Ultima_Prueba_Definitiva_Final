@@ -143,6 +143,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.7", "v2018.7", "{816D
 		Documentacion\Liberaciones\v2018.7\20180925 - CrearTblProveedores.txt = Documentacion\Liberaciones\v2018.7\20180925 - CrearTblProveedores.txt
 		Documentacion\Liberaciones\v2018.7\20180925 - RelacionesTblDocumentosTblProveedores.txt = Documentacion\Liberaciones\v2018.7\20180925 - RelacionesTblDocumentosTblProveedores.txt
 		Documentacion\Liberaciones\v2018.7\20180925 - UpdateStrProveedorEmisor.txt = Documentacion\Liberaciones\v2018.7\20180925 - UpdateStrProveedorEmisor.txt
+		Documentacion\Liberaciones\v2018.7\20180928 - IntIdEstadoPago.txt = Documentacion\Liberaciones\v2018.7\20180928 - IntIdEstadoPago.txt
 	EndProjectSection
 EndProject
 Global
