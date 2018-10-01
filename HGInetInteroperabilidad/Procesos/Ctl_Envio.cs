@@ -21,12 +21,16 @@ namespace HGInetInteroperabilidad.Procesos
 {
     public class Ctl_Envio
     {
-        public static bool Procesar()
+        /// <summary>
+        ///  Envia documentos a proveedores via Interoperabilidad
+        ///  Documentos con estatus por enviar y Acuses pendientes por notificar
+        /// </summary>
+        /// <param name="Doc">Lista de Documentos para enviar a proveedor(Interoperabilidad)</param>
+        /// <returns></returns>
+        public static bool Procesar(List<TblDocumentos> Doc)//(TblDocumentos Doc)
         {
             ///Obtener todos los documentos de todos los proveedores
             ///
-
-
 
             Ctl_Documento Controlador = new Ctl_Documento();
 
@@ -34,10 +38,10 @@ namespace HGInetInteroperabilidad.Procesos
 
             //Consulto lista de proveedores con documentos pendientes para envio
 
-            List<TblDocumentos> Doc = new List<TblDocumentos>();
+            ///List<TblDocumentos> Doc = new List<TblDocumentos>();
 
             //Consulto lista de documentos
-            Doc = Controlador.ObtenerDocumentosProveedores("*");
+           // Doc = Controlador.ObtenerDocumentosProveedores("*");
 
             //Agrupo por Proveedor
             List<TblDocumentos> ListadeProveedores = Doc
@@ -55,6 +59,10 @@ namespace HGInetInteroperabilidad.Procesos
                 string ProveedorEmisor = ProveedorDoc.StrProveedorEmisor;
 
                 Usuario usuario = new Usuario();
+
+
+
+                //var jj = Encriptar.Encriptar_SHA256("123");
 
                 usuario.username = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
                 usuario.password = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
@@ -126,7 +134,7 @@ namespace HGInetInteroperabilidad.Procesos
                     //valido que tipo de archivo debo enviar 1. (xml-ubl) y pdf 2. Acuse (xml-ubl)
                     if (Documento.IntIdEstado == ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode())
                     {
-                        archive.CreateEntryFromFile(RutaArchivos + "\\" + Path.GetFileName(Documento.StrUrlAcuseUbl), Path.GetFileName(Documento.StrUrlAcuseUbl));
+                        archive.CreateEntryFromFile(string.Format(@"{0}\\{1}", RutaArchivos,Path.GetFileName(Documento.StrUrlAcuseUbl)), Path.GetFileName(Documento.StrUrlAcuseUbl));
 
                         Documentos RegDocumentoAcuse = new Documentos();
                         //Archivo pdf                                       
@@ -148,9 +156,9 @@ namespace HGInetInteroperabilidad.Procesos
                     else
                     {
 
-                        archive.CreateEntryFromFile(RutaArchivos + "\\" + Path.GetFileName(Documento.StrUrlArchivoUbl), Path.GetFileName(Documento.StrUrlArchivoUbl));
+                        archive.CreateEntryFromFile(string.Format(@"{0}\\{1}", RutaArchivos , Path.GetFileName(Documento.StrUrlArchivoUbl)), Path.GetFileName(Documento.StrUrlArchivoUbl));
 
-                        archive.CreateEntryFromFile(RutaArchivos + "\\" + Path.GetFileName(Documento.StrUrlArchivoPdf), Path.GetFileName(Documento.StrUrlArchivoPdf));
+                        archive.CreateEntryFromFile(string.Format(@"{0}\\{1}", RutaArchivos , Path.GetFileName(Documento.StrUrlArchivoPdf)), Path.GetFileName(Documento.StrUrlArchivoPdf));
 
                         Documentos RegDocumentoXml = new Documentos();
                         //Archivo xml
