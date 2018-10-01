@@ -178,6 +178,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a FacturaElectronica\\.
+        /// </summary>
+        public static string RutaHGInetFacturaElectronica {
+            get {
+                return ResourceManager.GetString("RutaHGInetFacturaElectronica", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a interoperabilidad\\operacion\\envio\\.
         /// </summary>
         public static string RutaInteroperabilidadEnvio {

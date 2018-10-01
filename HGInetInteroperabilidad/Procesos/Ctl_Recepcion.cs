@@ -29,7 +29,7 @@ namespace HGInetInteroperabilidad.Procesos
 
             RegistroListaDocRespuesta datos_respuesta = new RegistroListaDocRespuesta();
 
-            if (datos == null)
+            if (datos.documentos == null)
             {
                 datos_respuesta.timeStamp = Fecha.GetFecha();
                 datos_respuesta.trackingIds = null;
@@ -241,6 +241,12 @@ namespace HGInetInteroperabilidad.Procesos
 
                     documento_obj = NotaDebitoXML.Convertir(conversion);
                 }
+                else if (tipo_documento == DocumentType.AcuseDeRecibo)
+                {
+                    serializacion = new XmlSerializer(typeof(ApplicationResponseType));
+
+                    ApplicationResponseType conversion = (ApplicationResponseType)serializacion.Deserialize(xml_reader);
+                }
 
                 // cerrar la lectura del archivo xml
                 xml_reader.Close();
@@ -310,7 +316,7 @@ namespace HGInetInteroperabilidad.Procesos
         {
             try
             {
-                //PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 // url pública
                 string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", facturador_emisor.StrIdSeguridad.ToString());
@@ -381,9 +387,11 @@ namespace HGInetInteroperabilidad.Procesos
             try
             {
 
+                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
                 // carpeta del facturador emisor
-                string carpeta = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), facturador_emisor.StrIdSeguridad.ToString());
-                carpeta = string.Format(@"{0}{1}", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+                string carpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaHGInetFacturaElectronica, facturador_emisor.StrIdSeguridad);
+                carpeta = string.Format(@"{0}\{1}", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
                 // valida la existencia de la carpeta
                 carpeta = Directorio.CrearDirectorio(carpeta);
@@ -393,11 +401,6 @@ namespace HGInetInteroperabilidad.Procesos
 
                 // ruta del xml
                 string ruta = string.Format(@"{0}\{1}", carpeta, archivo);
-
-
-                // elimina el archivo xml si existe
-                //if (Archivo.ValidarExistencia(ruta))
-                //Archivo.Borrar(ruta);
 
                 //Copia el archivo de la ruta de origen a la ruta destino
                 Archivo.CopiarArchivo(ruta_archivo, ruta);

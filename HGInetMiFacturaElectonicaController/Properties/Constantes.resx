@@ -166,6 +166,10 @@
     <value>http://habilitacion.mifacturaenlinea.com.co</value>
     <comment>Ruta de eacceso a la plataforma web.</comment>
   </data>
+  <data name="RutaHGInetFacturaElectronica" xml:space="preserve">
+    <value>FacturaElectronica\\</value>
+    <comment>Ruta fisica para guardar los documentos generados de Factura Electronica</comment>
+  </data>
   <data name="RutaInteroperabilidadEnvio" xml:space="preserve">
     <value>interoperabilidad\\operacion\\envio\\</value>
     <comment>Ruta fisica para el proceso de envio de los documentos a interoperabilidad</comment>

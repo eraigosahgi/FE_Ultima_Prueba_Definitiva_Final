@@ -98,9 +98,7 @@ namespace WebApi.Jwt.Controllers
             //Aqui envio los datos al controlador de proceso
             string Proveedor = usernameClaim.Value;
 
-
-            RegistroListaDocRespuesta respuesta = Ctl_Recepcion.Procesar(registroRespuesta, @"E:\DmsFacturaElectronica\interoperabilidad\publico\7164132d-6dc1-4b58-82a9-3386e58d91e8", Proveedor);
-
+            RegistroListaDocRespuesta respuesta = Ctl_Descomprimir.Procesar(registroRespuesta, Proveedor);
 
             //Aqui recibo la respuesta y la envio
 

@@ -681,14 +681,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
             doc_acuse.DatosObligado = Ctl_Empresa.Convertir(facturador);
 
             //Convierte el objeto en archivo XML-UBL
-            FacturaE_Documento resultado = AcuseReciboXML.CrearDocumento(doc_acuse, proveedor_emisor, proveedor_emisor, TipoDocumento.AcuseRecibo);
+            FacturaE_Documento resultado = AcuseReciboXML.CrearDocumento(doc_acuse, proveedor_emisor, proveedor_emisor, Enumeracion.GetEnumObjectByValue<TipoDocumento>(doc.IntDocTipo));
             resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
             resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
             resultado.IdSeguridadPeticion = new Guid(doc_acuse.IdAcuse);
             resultado.DocumentoTipo = TipoDocumento.AcuseRecibo;
 
             string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), resultado.IdSeguridadTercero.ToString());
-            carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+            carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
 
             // nombre del xml
             string archivo_xml = string.Format(@"{0}.xml", resultado.NombreXml);
@@ -712,7 +712,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
             // url pública del xml
             string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, resultado.IdSeguridadTercero.ToString());
-            resultado.RutaArchivosProceso = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, resultado.NombreXml);
+            resultado.RutaArchivosProceso = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, resultado.NombreXml);
 
             return resultado;
         }

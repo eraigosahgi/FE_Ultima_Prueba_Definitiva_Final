@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="Configuracion\Ctl_ConfiguracionInter.cs" />
     <Compile Include="Configuracion\Ctl_ConfiguracionProveedores.cs" />
+    <Compile Include="Configuracion\Ctl_Descomprimir.cs" />
     <Compile Include="Configuracion\Ctl_int_Consulta.cs" />
     <Compile Include="Configuracion\ProcesarEnvioDoc.cs" />
     <Compile Include="Objetos\AcuseRespuesta.cs" />
