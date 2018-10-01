@@ -1,0 +1,6 @@
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (136,13,'Interoperabilidad',1,1, NEWID(), 'icon-split', null, 0);
+
+
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (1361,136,'Procesar',1,1, NEWID(), 'icon-sort-time-asc', 'ProcesarInteroperabilidad.aspx', 0);

@@ -1900,11 +1900,13 @@
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
+    <Content Include="Scripts\Pages\ModalConsultaProveedores.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
     <Content Include="Scripts\Pages\ModalConsultaEmpresas.js" />
     <Content Include="Scripts\Pages\PlanesTransacciones.js" />
+    <Content Include="Scripts\Pages\ProcesarInteroperabilidad.js" />
     <Content Include="Scripts\Pages\ReportDesignerWeb.js" />
     <Content Include="Scripts\Pages\Usuarios.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
@@ -2740,6 +2742,7 @@
     <Content Include="Views\Pages\GestionReportes.aspx" />
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
+    <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
@@ -2773,6 +2776,7 @@
     <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
     <Compile Include="Controllers\Services\FormatosController.cs" />
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
+    <Compile Include="Controllers\Services\InteroperabilidadController.cs" />
     <Compile Include="Controllers\Services\PagosController.cs" />
     <Compile Include="Properties\Constantes.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -2959,6 +2963,13 @@
     </Compile>
     <Compile Include="Views\Pages\ModalPagos.aspx.designer.cs">
       <DependentUpon>ModalPagos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ModalConsultaProveedores.aspx.cs">
+      <DependentUpon>ModalConsultaProveedores.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ModalConsultaProveedores.aspx.designer.cs">
+      <DependentUpon>ModalConsultaProveedores.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ProcesarDocumentos.aspx.cs">
       <DependentUpon>ProcesarDocumentos.aspx</DependentUpon>
@@ -3156,7 +3167,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61433/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

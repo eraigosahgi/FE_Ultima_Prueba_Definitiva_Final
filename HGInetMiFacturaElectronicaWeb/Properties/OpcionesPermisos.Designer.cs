@@ -187,6 +187,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1361.
+        /// </summary>
+        internal static string ProcesarInteroperabilidad {
+            get {
+                return ResourceManager.GetString("ProcesarInteroperabilidad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1331.
         /// </summary>
         internal static string Usuarios {

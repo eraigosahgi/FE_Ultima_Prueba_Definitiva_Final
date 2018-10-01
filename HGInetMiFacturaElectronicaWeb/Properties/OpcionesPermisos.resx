@@ -159,6 +159,9 @@
   <data name="ProcesarDocumentos" xml:space="preserve">
     <value>1341</value>
   </data>
+  <data name="ProcesarInteroperabilidad" xml:space="preserve">
+    <value>1361</value>
+  </data>
   <data name="Usuarios" xml:space="preserve">
     <value>1331</value>
   </data>

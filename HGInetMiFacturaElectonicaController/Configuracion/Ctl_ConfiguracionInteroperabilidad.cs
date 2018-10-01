@@ -48,6 +48,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 		/// <summary>
+		/// Obtiene la lista de proveedores
+		/// </summary>
+		/// <param name="identificacion"></param>
+		/// <returns></returns>
+		public List<TblConfiguracionInteroperabilidad> ObtenerProveedores(string identificacion)
+		{
+			var datos = (from item in context.TblConfiguracionInteroperabilidad
+						 where item.StrIdentificacion.Equals(identificacion) || identificacion.Equals("*")
+						 select item).ToList();
+
+			return datos;
+		}
+
+		/// <summary>
 		/// Valida Autenticacion del Proveedor Tecnológico
 		/// </summary>
 		/// <param name="usuario">usuario</param>
@@ -55,10 +69,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns>datos de configuración si es encontrado o null si no</returns>
 		public TblConfiguracionInteroperabilidad Validar(string usuario, string clave)
 		{
-            // se encripta la clave en SHA256 para comparación con la base de datos
-            //string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
-            string clave_sha256 = clave;
-            TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
+			// se encripta la clave en SHA256 para comparación con la base de datos
+			//string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
+			string clave_sha256 = clave;
+			TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
 													   where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
 													   select item).FirstOrDefault();
 
@@ -67,32 +81,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 
-        
-
         /// <summary>
-        /// Actualiza el token de nuestro de hgi en un proveedor especifico
+        /// Obtiene una lista de documentos pendientes para enviar
+        /// Esto debe ir en el controlador de documentos.interoperabilidad
         /// </summary>
-        /// <param name="IdentificacionProveedor">Nit del proveedor</param>
-        /// <param name="Token">Token generado por el proveedor externo</param>
-        /// <param name="FechaToken">Fecha de expiracion del Token</param>
         /// <returns></returns>
-        public bool GuardarToken(string IdentificacionProveedor,string Token,DateTime FechaToken)
+		public List<TblDocumentos> ObtenerDocumentosProveedores(string IdentificacionProveedor)
         {
-            TblConfiguracionInteroperabilidad Proveedor = (from prov in context.TblConfiguracionInteroperabilidad
-                                                           where prov.StrIdentificacion.Equals(IdentificacionProveedor)
-                                                           select prov).FirstOrDefault();
-            if (Proveedor != null)
-            {
-                Proveedor.StrHgiToken = Token;
-                Proveedor.DatHgiFechaToken = FechaToken;
-                Actualizar_Proveedor(Proveedor);
-            }
-            else
-            {
-                return false;
-            }
+            int DocPendiente = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+            int AcusePendiente = ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();            
 
-            return true;
+            List<TblDocumentos> Doc = (from doc in context.TblDocumentos
+                                       where (doc.IntIdEstado == DocPendiente || doc.IntIdEstado == AcusePendiente)                                       
+                                       select doc).ToList();
+
+
+            return Doc;
         }
 
 
@@ -102,13 +106,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <param name="usuario">información del Usuario</param>
         /// <returns>información del usuario</returns>
 
-        public TblConfiguracionInteroperabilidad Actualizar_Proveedor(TblConfiguracionInteroperabilidad Proveedor)
+        public bool GuardarToken(string Token)
         {
-            Proveedor = this.Edit(Proveedor);
-
-            return Proveedor;
-
+            return true;
         }
+
 
 
     }

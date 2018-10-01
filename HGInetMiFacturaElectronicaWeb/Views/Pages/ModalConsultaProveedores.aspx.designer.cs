@@ -10,6 +10,6 @@
 namespace HGInetMiFacturaElectronicaWeb.Views.Pages {
     
     
-    public partial class ProcesarInteroperabilidad {
+    public partial class ModalConsultaProveedores {
     }
 }
