@@ -7,7 +7,7 @@
       <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="72" DisplayType="true">
         <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="20.75" PointY="8.125" />
         <EntityTypeShape EntityType="Modelo.TblPlanes" Width="1.5" PointX="3.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="2" PointX="10.125" PointY="13.375" />
+        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="2" PointX="8" PointY="12.125" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
         <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="16.375" PointY="13.25" />
         <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="18.5" PointY="12.5" />
@@ -31,15 +31,15 @@
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" />
         <EntityTypeShape EntityType="Modelo.TblFormatos" Width="2.125" PointX="2.75" PointY="4.5" />
         <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
-        <EntityTypeShape EntityType="Modelo.TblConfiguracionInteroperabilidad" Width="2" PointX="21.5" PointY="1" />
         <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="2.375" PointX="14.25" PointY="0.5" />
-        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" />
-        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasFacturador" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblPlanesTransacciones" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblDocumentos" />
+        <EntityTypeShape EntityType="Modelo.TblConfiguracionInteroperabilidad" Width="2.125" PointX="21.125" PointY="0.75" />
+        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" />
+        <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
