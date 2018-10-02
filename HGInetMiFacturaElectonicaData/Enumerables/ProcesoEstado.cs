@@ -53,7 +53,7 @@ namespace HGInetMiFacturaElectonicaData
         [AmbientValue("publico")]
         PendienteEnvioProveedorDoc = 11,
 
-        [Description("Envío Exisoto Proveedor")]
+        [Description("Envío Exitoso Proveedor")]
         [AmbientValue("publico")]
         EnvioExitosoProveedor = 12,
 
