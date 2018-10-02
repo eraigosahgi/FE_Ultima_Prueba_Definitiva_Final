@@ -587,7 +587,24 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
-		#endregion
+        /// <summary>
+        /// Obtiene un documento por id se seguridad.
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <returns></returns>
+        public TblDocumentos DocumentoPorIdSeguridad(System.Guid id_seguridad)
+        {
+
+                var respuesta = (from datos in context.TblDocumentos
+                                 where datos.StrIdSeguridad.Equals(id_seguridad)
+                                 select datos
+                                 ).FirstOrDefault();
+
+                return respuesta;
+           
+        }
+
+        #endregion
 
 
 		#region Actualizar

@@ -69,7 +69,7 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         [Description("Documento encolado para procesamiento")]
         PendienteProcesamiento = 201,
 
-        [Description("Documento no se encontrado en el archivo ZIP ")]
+        [Description("Documento no encontrado en el archivo ZIP ")]
         DocumentoNoEncontrado = 404,
 
         [Description("El cliente destinatario de la factura electrónica no tiene convenio con el receptor ")]
