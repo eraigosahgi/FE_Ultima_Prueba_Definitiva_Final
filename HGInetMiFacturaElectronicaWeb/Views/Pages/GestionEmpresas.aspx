@@ -95,7 +95,7 @@
                                     </div>
 
                                     <div class="col-md-12 text-left" style="z-index: 8; margin: 10px; ">
-                                        <label style=" margin-top: 16px;" >Observacaciones:</label>
+                                        <label style=" margin-top: 16px;" >Observaciones:</label>
                                         <div id="txtobservaciones"></div>
                                     </div>
 
