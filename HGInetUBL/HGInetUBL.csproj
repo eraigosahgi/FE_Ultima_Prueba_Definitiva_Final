@@ -735,6 +735,7 @@
     <Content Include="Xades\Xades-Scheme\xades_xmldsig-core-schema.txt" />
     <Compile Include="Xades\XAdESTimeStampType.cs" />
     <Compile Include="XML\AcuseReciboXML.cs" />
+    <Compile Include="XML\AcuseXML.Convertir.cs" />
     <Compile Include="XML\ExtensionHgiSas.cs" />
     <Compile Include="XML\FacturaXml.Convertir.cs" />
     <Compile Include="XML\FacturaXML.cs" />
