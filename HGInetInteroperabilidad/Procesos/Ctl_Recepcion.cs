@@ -372,7 +372,7 @@ namespace HGInetInteroperabilidad.Procesos
                     PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                     // url pública
-                    string url_ppal = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsPublica, Constantes.RutaHGInetFacturaElectronica, facturador_receptor.StrIdSeguridad);
+                    string url_ppal = string.Format(@"{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, facturador_receptor.StrIdSeguridad);
 
                     // url pública del xml
                     string UrlAcuseUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, nombre_archivo);
@@ -544,7 +544,7 @@ namespace HGInetInteroperabilidad.Procesos
 
                 // url pública
                 //string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal("", facturador_emisor.StrIdSeguridad.ToString());
-                string url_ppal = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsPublica, Constantes.RutaHGInetFacturaElectronica, facturador_emisor.StrIdSeguridad);
+                string url_ppal = string.Format("@{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, facturador_emisor.StrIdSeguridad);
 
                 // url pública del xml
                 string UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
@@ -615,7 +615,7 @@ namespace HGInetInteroperabilidad.Procesos
                 PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                 // carpeta del facturador emisor
-                string carpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaHGInetFacturaElectronica, facturador_emisor.StrIdSeguridad);
+                string carpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador_emisor.StrIdSeguridad);
 
                 if (!documento_acuse)
                 {

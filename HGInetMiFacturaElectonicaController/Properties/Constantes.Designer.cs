@@ -88,6 +88,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a FacturaElectronica.
+        /// </summary>
+        public static string CarpetaFacturaElectronica {
+            get {
+                return ResourceManager.GetString("CarpetaFacturaElectronica", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a tic@hgi.com.co.
         /// </summary>
         public static string EmailCopiaOculta {
@@ -174,15 +183,6 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         public static string RutaAccesoPlataforma {
             get {
                 return ResourceManager.GetString("RutaAccesoPlataforma", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a FacturaElectronica\\.
-        /// </summary>
-        public static string RutaHGInetFacturaElectronica {
-            get {
-                return ResourceManager.GetString("RutaHGInetFacturaElectronica", resourceCulture);
             }
         }
         
