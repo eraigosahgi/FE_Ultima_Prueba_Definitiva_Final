@@ -127,7 +127,7 @@ namespace HGInetInteroperabilidad.Procesos
                             item_respuesta = ProcesarAcuse(documento_obj, ruta_archivo_xml, nombre_archivo, facturador_receptor);
                             item_respuesta.nombreDocumento = objeto.nombre;
 
-                            if ((item_respuesta.codigoError == Enumeracion.GetDescription(RespuestaInterOperabilidad.ErrorInternoReceptor)) || (item_respuesta.codigoError == Enumeracion.GetDescription(RespuestaInterOperabilidad.ProcesamientoParcial)))
+                            if ((item_respuesta.codigoError.Equals(RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString())) || ((item_respuesta.codigoError.Equals(RespuestaInterOperabilidad.ProcesamientoParcial.GetHashCode().ToString()))))
                             {
                                 error_proceso = true;
                                 throw new ApplicationException(string.Format("Error al procesar el documento {0}", objeto.nombre));
@@ -351,6 +351,7 @@ namespace HGInetInteroperabilidad.Procesos
                 {
                     item_respuesta.codigoError = RespuestaInterOperabilidad.ProcesamientoParcial.GetHashCode().ToString();
                     item_respuesta.mensaje = string.Format("{0} El documento {1} no se encuentra registrado en nuestra plataforma", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), documento_obj.Documento);
+                    item_respuesta.uuid = documento_obj.IdSeguridad;
                     throw new ApplicationException(string.Format("El documento {0} no existe en la platforma a nombre del Facturador Electrónico {1} con IdSeguridad {2}", documento_obj.Documento, documento_obj.DatosObligado.Identificacion, documento_obj.IdSeguridad));
                 }
                 else
@@ -372,7 +373,7 @@ namespace HGInetInteroperabilidad.Procesos
                     PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                     // url pública
-                    string url_ppal = string.Format(@"{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, facturador_receptor.StrIdSeguridad);
+                    string url_ppal = string.Format(@"{0}/{1}/{2}/", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, facturador_receptor.StrIdSeguridad);
 
                     // url pública del xml
                     string UrlAcuseUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, nombre_archivo);
