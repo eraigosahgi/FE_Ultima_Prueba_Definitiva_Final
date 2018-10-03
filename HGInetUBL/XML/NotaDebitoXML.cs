@@ -172,7 +172,7 @@ namespace HGInetUBL
 				nota_debito.DiscrepancyResponse = DiscrepancyResponse;
 				#endregion
 
-				#region nota_debito.BillingReference //Referencia Documento (orden)
+				#region nota_debito.BillingReference //Referencia Documento (factura)
 
 				//Referencia a un documento afectar
 				nota_debito.BillingReference = new BillingReferenceType[1];
@@ -191,6 +191,21 @@ namespace HGInetUBL
 
 				#endregion
 
+
+				#region nota_debito.OrderReference //Referencia Documento (orden)
+
+				//Referencia un documento de pedido
+				nota_debito.OrderReference = new OrderReferenceType[1];
+
+				OrderReferenceType DocOrderReference = new OrderReferenceType();
+				DocumentReferenceType DocumentOrderReference = new DocumentReferenceType();
+				DocumentOrderReference.ID = new IDType();
+				DocumentOrderReference.ID.Value = documento.PedidoRef.ToString();
+				DocOrderReference.DocumentReference = DocumentOrderReference;
+
+				nota_debito.OrderReference[0] = DocOrderReference;
+
+				#endregion
 				#region nota_debito.AccountingSupplierParty // Información del obligado a facturar
 				nota_debito.AccountingSupplierParty = ObtenerObligado(documento.DatosObligado);
 				#endregion

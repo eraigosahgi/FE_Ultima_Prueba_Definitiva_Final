@@ -39,10 +39,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string DocumentoRef { get; set; }
 
-        /// <summary>
-        /// Cufe identificador unico de la Nota Crédito
-        /// </summary>
-        public string Cufe { get; set; }
+		/// <summary>
+		/// Documento de pedido
+		/// </summary>
+		public string PedidoRef { get; set; }
+
+		/// <summary>
+		/// Cufe identificador unico de la Nota Crédito
+		/// </summary>
+		public string Cufe { get; set; }
 
         /// <summary>
         /// Cufe identificador unico de la Factura afectada

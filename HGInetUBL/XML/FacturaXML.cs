@@ -226,20 +226,20 @@ namespace HGInetUBL
                         Value = new DateTime(documento.Fecha.Date.Year, documento.Fecha.Date.Month, DateTime.DaysInMonth(documento.Fecha.Date.Year, documento.Fecha.Date.Month))
                     }
                 };
-                #endregion
+				#endregion
 
-                #region factura.BillingReference //Referencia Documento (orden)
+				#region factura.OrderReference //Referencia Documento (orden)
 
-                //Referencia un documento
-                factura.BillingReference = new BillingReferenceType[1];
+				//Referencia un documento
+				factura.OrderReference = new OrderReferenceType[1];
 
-                BillingReferenceType DocReference = new BillingReferenceType();
+				OrderReferenceType DocReference = new OrderReferenceType();
                 DocumentReferenceType DocumentReference = new DocumentReferenceType();
                 DocumentReference.ID = new IDType();
                 DocumentReference.ID.Value = documento.DocumentoRef.ToString();
-                DocReference.InvoiceDocumentReference = DocumentReference;
+                DocReference.DocumentReference = DocumentReference;
 
-                factura.BillingReference[0] = DocReference;
+                factura.OrderReference[0] = DocReference;
 
                 #endregion
 

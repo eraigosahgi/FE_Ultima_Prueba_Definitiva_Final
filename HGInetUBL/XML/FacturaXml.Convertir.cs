@@ -76,8 +76,18 @@ namespace HGInetUBL
                     factura_obj.Documento = Convert.ToInt64(factura_ubl.ID.Value);
                 }
                 factura_obj.DocumentoRef = string.Empty;
-                //Valida si tiene documento referencia
-                if (factura_ubl.BillingReference != null)
+
+				//Valida si tiene documento referencia de pedido
+				if (factura_ubl.OrderReference != null)
+				{
+					if (factura_ubl.OrderReference.FirstOrDefault().DocumentReference.ID.Value != null)
+					{
+						factura_obj.DocumentoRef = factura_ubl.OrderReference.FirstOrDefault().DocumentReference.ID.Value;
+					}
+
+				}
+				//Valida si tiene documento referencia de factura
+				else if (factura_ubl.BillingReference != null)
                 {
                     if (factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
                     {
@@ -85,6 +95,7 @@ namespace HGInetUBL
                     }
 
                 }
+
                 factura_obj.Cufe = factura_ubl.UUID.Value;
                 factura_obj.Fecha = factura_ubl.IssueDate.Value;
                 //Valida la fecha de vencimiento 
