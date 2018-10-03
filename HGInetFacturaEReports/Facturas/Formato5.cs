@@ -139,7 +139,7 @@ namespace HGInetFacturaEReports.Facturas
 				}
 
 				//Asigna al SubReporte los detalles de la factura
-				Formato2Detalles reporte = new Formato2Detalles();
+				Formato5Detalles reporte = new Formato5Detalles();
 				reporte.DataSource = detalles_factura;
 
 				subReportDetalles.ReportSource = reporte;
