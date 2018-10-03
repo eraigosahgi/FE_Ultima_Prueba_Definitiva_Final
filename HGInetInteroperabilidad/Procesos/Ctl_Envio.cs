@@ -309,7 +309,7 @@ namespace HGInetInteroperabilidad.Procesos
                                             break;
                                         }
 
-                                        if (string.IsNullOrEmpty(Detalle.nombreDocumento) || string.IsNullOrEmpty(Detalle.uuid))
+                                        if (string.IsNullOrEmpty(Detalle.nombreDocumento) || (Tipo!=1 && string.IsNullOrEmpty(Detalle.uuid)))
                                         {                                           
                                             Resp.Respuesta.mensaje = Detalle.mensaje;                                           
                                         }
