@@ -81,7 +81,7 @@
                         <div class="demo-container">
                             <div id="panelresultado">
                                 <div class="panel-heading" >
-                                    <h6 class="panel-title" >Resultado de documentos procesados : </h6>
+                                    <label id="Lblresultado">Resultado</label>
 
                                 </div>
                                 <hr />

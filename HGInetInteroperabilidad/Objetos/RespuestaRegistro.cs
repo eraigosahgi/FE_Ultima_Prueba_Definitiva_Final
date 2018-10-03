@@ -12,6 +12,7 @@ namespace HGInetInteroperabilidad.Objetos
     /// </summary>
     public class RespuestaRegistro
     {
+        public string MensajeZip { get; set; }
         public TblDocumentos Documento { get; set; }
 
         public RegistroListaDetalleDocRespuesta Respuesta { get; set; }

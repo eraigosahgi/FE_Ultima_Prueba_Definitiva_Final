@@ -44,7 +44,7 @@ namespace WebApi.Jwt.Controllers
             {                
                 AutenticacionRespuesta respuesta = new AutenticacionRespuesta();
 
-                respuesta.jwtToken = JwtManager.GenerateToken(usuario.username, Proveedor.StrIdentificacion, Proveedor.StrRazonSocial);
+                respuesta.jwtToken = JwtManager.GenerateToken("811021438", Proveedor.StrIdentificacion, Proveedor.StrRazonSocial);
                 respuesta.passwordExpiration = Fecha.GetFecha();
 
                 return Ok(respuesta);

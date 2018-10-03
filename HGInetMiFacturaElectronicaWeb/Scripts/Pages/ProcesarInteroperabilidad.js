@@ -172,7 +172,7 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
 
 		$http({ url: '/api/Interoperabilidad/', data: { Documentos: $scope.documentos }, method: 'Post' }).then(function (response) {
 		    try {
-
+		        $('#Lblresultado').html(response.meMensajeZip);
 
 		        $("#gridDocumentosProcesados").dxDataGrid({
 		            dataSource: response.data,

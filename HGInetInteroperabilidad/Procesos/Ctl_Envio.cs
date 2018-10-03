@@ -38,6 +38,8 @@ namespace HGInetInteroperabilidad.Procesos
             // Una vez genere la respuesta del api, debo asignar cada respuesta aqui
             List<RespuestaRegistro> DocumetoRespuesta = new List<RespuestaRegistro>();
 
+            //deserializa el json de la respuesta del proveedor y la convierte a este objeto
+            RegistroListaDocRespuesta Respuesta = new RegistroListaDocRespuesta();
 
             ///Obtener todos los documentos de todos los proveedores
             ///
@@ -267,8 +269,10 @@ namespace HGInetInteroperabilidad.Procesos
                         //Aqui se debe hacer peticion webapi
                         string RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
                         
-                        RegistroListaDocRespuesta Respuesta = JsonConvert.DeserializeObject<RegistroListaDocRespuesta>(RespuestaRegistroApi);
-
+                        Respuesta = JsonConvert.DeserializeObject<RegistroListaDocRespuesta>(RespuestaRegistroApi);
+                        
+                        //Aqui guardo la respuesta del paquete, se debe crear una lista para tener un solo encabezado
+                        ListaResultadoVista[0].MensajeZip = Respuesta.mensajeGlobal;
 
                         if (Respuesta.trackingIds != null)
                         {
@@ -289,7 +293,7 @@ namespace HGInetInteroperabilidad.Procesos
                                             throw new ApplicationException(string.Format("El nombre del archivo de respuesta, no coincide con el nombre del archivo de la petición : Documento: {0}  Mensaje: {1}", Detalle.nombreDocumento, Detalle.mensaje));
 
                                         Resp.Respuesta = Detalle;
-
+                                        Resp.MensajeZip = Respuesta.mensajeGlobal;
 
                                         int Tipo = 0;
                                         var RespuestaDoc = RegistroEnvio.documentos.Where(x => x.nombre.Equals(Detalle.nombreDocumento));
@@ -376,7 +380,12 @@ namespace HGInetInteroperabilidad.Procesos
 
             }
 
-          
+            if (DocumetoRespuesta.Count<1)
+            {
+                RespuestaRegistro RespuestaVacia = new RespuestaRegistro();
+                RespuestaVacia.MensajeZip = Respuesta.mensajeGlobal;
+                DocumetoRespuesta.Add(RespuestaVacia);
+            }
             return  DocumetoRespuesta;
 
 
