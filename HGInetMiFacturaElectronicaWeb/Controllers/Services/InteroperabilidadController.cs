@@ -76,6 +76,53 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		[HttpGet]
+		[Route("Api/ObtenerAcusePendienteRecepcion")]
+		public IHttpActionResult ObtenerAcusePendienteRecepcion(string identificacion_proveedor)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				List<TblDocumentos> docs_pendientes = new List<TblDocumentos>();
+
+				Ctl_Documento clase_documentos = new Ctl_Documento();
+
+				docs_pendientes = clase_documentos.ObtenerAcusePendienteRecepcion(identificacion_proveedor);
+
+				if (docs_pendientes == null)
+				{
+					return NotFound();
+				}
+
+				var datos_retorno = docs_pendientes.Select(d => new
+				{
+					IdFacturador = d.TblEmpresasFacturador.StrIdentificacion,
+					Facturador = d.TblEmpresasFacturador.StrRazonSocial,
+					NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+					d.DatFechaDocumento,
+					d.DatFechaIngreso,
+					d.DatFechaVencDocumento,
+					IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
+					EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+					MotivoRechazo = d.StrAdquirienteMvoRechazo,
+					d.StrAdquirienteMvoRechazo,
+					IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+					NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+					MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
+					d.StrIdSeguridad,
+					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
+				});
+
+				return Ok(datos_retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 		/// <summary>
 		/// Obtiene los formatos
@@ -149,6 +196,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		private string DescripcionTipodDoc(short e)
+		{
+			try
+			{
+				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(e));
+			}
+			catch (Exception excepcion)
+			{
+				return string.Format("Desconocido {0}", e);
+			}
+		}
 
 		/// <summary>
 		/// Recibe lista de Documentos 
@@ -177,28 +235,72 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						ListaDocumentos.Add(doc);
 				}
 
-                List<RespuestaRegistro> Respuesta=  Ctl_Envio.Procesar(ListaDocumentos);
+				List<RespuestaRegistro> Respuesta = Ctl_Envio.Procesar(ListaDocumentos);
 
 
-                var datos = Respuesta.Select(d => new
-                {
-                    MensajeZip= d.MensajeZip,              
-                    Documento=d.Documento.IntNumero,
-                    Mensaje=d.Respuesta.mensaje,
-                    uuid =d.Respuesta.uuid,
-                    codigoError= d.Respuesta.codigoError,
-                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
-                    FechaUltimoProceso = d.Documento.DatFechaActualizaEstado,
-                    EstadoFactura = DescripcionEstadoFactura(d.Documento.IntIdEstado),
-                });
-                    
-               
-                return Ok(datos);
+				var datos = Respuesta.Select(d => new
+				{
+					Documento = d.Documento.IntNumero,
+					Mensaje = d.Respuesta.mensaje,
+					uuid = d.Respuesta.uuid,
+					codigoError = d.Respuesta.codigoError,
+					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
+					FechaUltimoProceso = d.Documento.DatFechaActualizaEstado,
+					EstadoFactura = DescripcionEstadoFactura(d.Documento.IntIdEstado),
+				});
+
+
+				return Ok(datos);
 			}
 			catch (Exception excepcion)
 			{
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+		[HttpPost]
+		[Route("Api/ProcesarAcusesPRecepcion")]
+		public IHttpActionResult ProcesarAcusesPRecepcion(Object objeto)
+		{
+			try
+			{
+				Ctl_Documento clase_doc = new Ctl_Documento();
+
+				var jobjeto = (dynamic)objeto;
+
+				string ListaDoc = jobjeto.Documentos;
+
+				List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
+
+				List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();
+
+				foreach (var item in ListadeDocumentos)
+				{
+					TblDocumentos doc = clase_doc.ObtenerPorIdSeguridad(item.Documentos).First();
+					if (doc != null)
+						ListaDocumentos.Add(doc);
+				}
+
+				List<RespuestaAcuseProceso> respuesta = Ctl_Envio.ProcesarAcuses(ListaDocumentos);
+
+				var datos = respuesta.Select(d => new
+				{
+					NumeroDocumento = d.Numero,
+					IdSeguridad = d.IdSeguridad.ToString(),
+					FechaProceso = d.FechaProceso,
+					DocumentoTipo = DescripcionTipodDoc(d.DocumentoTipo),
+					Mensaje = (d.Error != null) ? d.Error.Mensaje : string.Empty,
+					CodigoError = d.Error.Codigo,
+					Facturador = d.Facturador
+				});
+
+				return Ok(datos);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 	}
 }

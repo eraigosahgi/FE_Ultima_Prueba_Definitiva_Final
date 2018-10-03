@@ -120,6 +120,9 @@
   <data name="ActivacionSerial" xml:space="preserve">
     <value>1333</value>
   </data>
+  <data name="AcusePendienteRecepcion" xml:space="preserve">
+    <value>1362</value>
+  </data>
   <data name="ConsultaAcuseRecibo" xml:space="preserve">
     <value>1312</value>
   </data>

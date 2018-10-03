@@ -49,7 +49,7 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         Pendiente = 0,
 
         [Description("ACCEPTED")]
-        Aprobado = 1,
+        Aceptado = 1,
 
         [Description("REJECTED")]
         Rechazado = 2,

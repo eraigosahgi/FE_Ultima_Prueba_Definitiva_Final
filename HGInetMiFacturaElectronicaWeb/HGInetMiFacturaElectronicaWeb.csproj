@@ -1891,6 +1891,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\Pages\AcusePendienteRecepcion.js" />
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
@@ -2728,6 +2729,7 @@
     <Content Include="Scripts\vectormap-utils\dx.vectormaputils.node.js" />
     <Content Include="Views\Login\Default.aspx" />
     <Content Include="Views\Login\RestablecerClave.aspx" />
+    <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseTacito.aspx" />
@@ -2865,6 +2867,13 @@
     </Compile>
     <Compile Include="Views\Masters\MasterPrincipal.Master.designer.cs">
       <DependentUpon>MasterPrincipal.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\AcusePendienteRecepcion.aspx.cs">
+      <DependentUpon>AcusePendienteRecepcion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\AcusePendienteRecepcion.aspx.designer.cs">
+      <DependentUpon>AcusePendienteRecepcion.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\AcuseRecibo.aspx.cs">
       <DependentUpon>AcuseRecibo.aspx</DependentUpon>
@@ -3167,7 +3176,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61433/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
