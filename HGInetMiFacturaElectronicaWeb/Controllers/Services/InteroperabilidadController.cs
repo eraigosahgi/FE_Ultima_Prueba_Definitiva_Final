@@ -181,7 +181,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
                 var datos = Respuesta.Select(d => new
-                {
+                {                       
                     Documento=d.Documento.IntNumero,
                     Mensaje=d.Respuesta.mensaje,
                     uuid =d.Respuesta.uuid,

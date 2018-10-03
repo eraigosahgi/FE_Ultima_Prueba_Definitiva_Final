@@ -88,6 +88,10 @@ namespace HGInetInteroperabilidad.Procesos
                     //Se debe validar si tengo un tokken activo, antes de solicitar otro
                     string Token = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);                                        
 
+                    if (Token.Contains("404")|| Token.Contains("No autorizado"))
+                    {
+                        throw new ApplicationException( string.Format("No se pudo conectar al proveedor: {0}",Token));
+                    }
                     AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(Token);
                     Token = r.jwtToken;
 
@@ -220,19 +224,11 @@ namespace HGInetInteroperabilidad.Procesos
                                 {
                                     ResultadoMensaje.mensaje = "No se encuentra el archivo Pdf";
                                 }
-                                
-
-                                
-
+                                                               
                             }
-
-                           
+                           //Antes de enviar la peticion, guardo un objeto para luego llenar las respuestas del servidor
                             ResultadoVista.Respuesta = ResultadoMensaje;
                             ListaResultadoVista.Add(ResultadoVista);
-
-
-
-
                         }
                         catch (Exception excepcion)
                         {
@@ -252,13 +248,15 @@ namespace HGInetInteroperabilidad.Procesos
 
                         //Cierro el archivo zip
                         archive.Dispose();
-
-
-                        // Clienteftp.SubirArchivoFTP(ProveedorDoc.StrUrlFtp + NombreArchivoComprimido, ProveedorDoc.StrHgiUsuario, ProveedorDoc.StrClave, RutaProveedor + RutaOrganizar + NombreArchivoComprimido);
+                        
 
                         string ruta_fisica = string.Format(@"{0}\{1}\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrIdSeguridad, "");
 
+
                         Directorio.CrearDirectorio(ruta_fisica);
+
+
+                        //Clienteftp.SubirArchivoFTP(string.Format("{0}{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrClave, string.Format("{0}{1}{2}", RutaProveedor , ruta_fisica , NombreArchivoComprimido));
 
                         Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
 
@@ -267,10 +265,8 @@ namespace HGInetInteroperabilidad.Procesos
                         //Archivo.Borrar(RutaProveedor + RutaOrganizar + NombreArchivoComprimido);
 
                         //Aqui se debe hacer peticion webapi
-
                         string RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
-
-                        //string RespuestaRegistroApi = "{\"timeStamp\":\"2018-10-02T14:49:32.5179038\",\"trackingIds\":[{\"nombreDocumento\":\"face_f0811021438FV003A699D68.xml\",\"uuid\":\"a38031fc-b5e4-4954-93ef-08a25e2ba6fa\",\"codigoError\":\"201\",\"mensaje\":\"Documento encolado para procesamiento en el ZIP 811021438_17120703_b301ace9-690d-4373-bc6f-639739501154.zip\"}],\"mensajeGlobal\":\"Documento 811021438_17120703_b301ace9-690d-4373-bc6f-639739501154.zip El zip se radicó exitosamente\"}";
+                        
                         RegistroListaDocRespuesta Respuesta = JsonConvert.DeserializeObject<RegistroListaDocRespuesta>(RespuestaRegistroApi);
 
 
@@ -279,76 +275,89 @@ namespace HGInetInteroperabilidad.Procesos
 
                             foreach (var Detalle in Respuesta.trackingIds)
                             {
-                                //Aqui se lee la respuesta de cada uno de los documentos
 
-                                if (Detalle.nombreDocumento != null)
+
+                                try
                                 {
-                                    RespuestaRegistro Resp = ListaResultadoVista.Where(x => x.Documento.StrUrlArchivoUbl.Equals(Detalle.nombreDocumento)).FirstOrDefault();
+                                    //Aqui se lee la respuesta de cada uno de los documentos
 
-                                    if (Resp ==null)
-                                        throw new ApplicationException("La nombre del archivo de respuesta, no coincide con el nombre del archivo de la petición");
-
-                                    Resp.Respuesta = Detalle;
-                                   
-
-                                    int Tipo = 0;
-                                    var RespuestaDoc = RegistroEnvio.documentos.Where(x => x.nombre.Equals(Detalle.nombreDocumento));
-
-                                    //RegistroListaDoc RespuestaDoc1 = RegistroEnvio.documentos.Where(x => x.nombre.Equals(Detalle.nombreDocumento));
-                                    foreach (var item in RespuestaDoc)
+                                    if (Detalle.nombreDocumento != null)
                                     {
+                                        RespuestaRegistro Resp = ListaResultadoVista.Where(x => x.Documento.StrUrlArchivoUbl.Equals(Detalle.nombreDocumento)).FirstOrDefault();
 
-                                        if (item.tipo == Enumeracion.GetEnumObjectByValue<DocumentType>(DocumentType.AcuseDeRecibo.GetHashCode()).ToString())
+                                        if (Resp == null)
+                                            throw new ApplicationException(string.Format("El nombre del archivo de respuesta, no coincide con el nombre del archivo de la petición : Documento: {0}  Mensaje: {1}", Detalle.nombreDocumento, Detalle.mensaje));
+
+                                        Resp.Respuesta = Detalle;
+
+
+                                        int Tipo = 0;
+                                        var RespuestaDoc = RegistroEnvio.documentos.Where(x => x.nombre.Equals(Detalle.nombreDocumento));
+                                        
+                                        foreach (var item in RespuestaDoc)
                                         {
-                                            Tipo = 1;
+
+                                            if (item.tipo == Enumeracion.GetEnumObjectByValue<DocumentType>(DocumentType.AcuseDeRecibo.GetHashCode()).ToString())
+                                            {
+                                                Tipo = 1;
+                                            }
+
+                                            break;
                                         }
 
-                                        break;
-                                    }
+                                        if (string.IsNullOrEmpty(Detalle.nombreDocumento) || string.IsNullOrEmpty(Detalle.uuid))
+                                        {                                           
+                                            Resp.Respuesta.mensaje = Detalle.mensaje;                                           
+                                        }
+                                        else
+                                        {
+                                            bool Actualiza = ActualizaRespuesta(Detalle, Tipo);
+                                            if (Actualiza)
+                                            {
+                                                if (Tipo == 1)
+                                                {
+                                                    Resp.Documento.IntIdEstado = (Int16)(ProcesoEstado.Finalizacion.GetHashCode());
+                                                }
+                                                else
+                                                {
+                                                    Resp.Documento.IntIdEstado = (Int16)(ProcesoEstado.EnvioExitosoProveedor.GetHashCode());
+                                                }
+                                            }
+                                        }
 
-                                    if (string.IsNullOrEmpty(Detalle.nombreDocumento)  || string.IsNullOrEmpty(Detalle.uuid))
-                                    {
-                                        //try
-                                        //{
-                                        //    throw new ApplicationException(string.Format("La respuesta no genero ningún uuid o nombre: ", Detalle.nombreDocumento));
-                                        //}
-                                        //catch (Exception excepcion)
-                                        //{
+                                        DocumetoRespuesta.Add(Resp);
 
-                                        //    LogExcepcion.Guardar(excepcion);
-                                            Resp.Respuesta.mensaje = Detalle.mensaje;
-                                        //}
                                     }
                                     else
                                     {
-                                        bool Actualiza = ActualizaRespuesta(Detalle, Tipo);
-                                        if (Actualiza)
-                                        {
-                                            if (Tipo == 1)
-                                            {
-                                                Resp.Documento.IntIdEstado = (Int16)(ProcesoEstado.Finalizacion.GetHashCode());
-                                            }
-                                            else
-                                            {
-                                                Resp.Documento.IntIdEstado = (Int16)(ProcesoEstado.EnvioExitosoProveedor.GetHashCode());
-                                            }
-                                        }
+                                        //Si en algun documento no me llega el nombre, genero un error para guardarlo en el log y continuo
+                                        throw new ApplicationException(string.Format("la respuesta no tiene nombre de archivo : {0}", Detalle.mensaje));
                                     }
-
-                                    DocumetoRespuesta.Add(Resp);
-
-                                }else
-                                {
-                                    ////Llego null la respuesta del objeto de documentos
-                                    ////----------------------------------
-                                    ListaResultadoVista[ListaResultadoVista.Count - 1].Respuesta.mensaje = "El proveedor no genero ningún resultado";
-
-                                   // return ListaResultadoVista;
                                 }
+                                catch (Exception excepcion)
+                                {
+
+                                    LogExcepcion.Guardar(excepcion);
+                                }
+
                             }
                             
                         }
-                        
+                        else
+                        {
+                            //No hay datos en el traking de la respuesta
+                            foreach (var item in ListaResultadoVista)
+                            {
+                                if (string.IsNullOrEmpty(item.Respuesta.mensaje))
+                                {
+                                    item.Respuesta.mensaje = Respuesta.mensajeGlobal;
+                                }
+                            }
+                            
+
+                            return ListaResultadoVista;
+                        }
+
                     }
                     else
                     {
