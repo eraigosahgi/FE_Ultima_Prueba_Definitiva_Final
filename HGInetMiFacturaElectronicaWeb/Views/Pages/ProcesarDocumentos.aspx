@@ -75,40 +75,40 @@
                     <h6 class="panel-title">Datos : 
                         <input type="text" id="lbltotaldocumentos" style="border-style: none; width: 100%; font-size: small;" readonly></input></h6>
                     <div class="col-md-8 ">
-                        
                     </div>
                     <div class="col-md-4 text-right">
                         <div data-dx-button="ButtonOptionsConsultar" style="margin-top: -10%;"></div>
                     </div>
                 </div>
-
-                <div class="panel-body">
-                    <div class="demo-container">
-                        <div id="gridDocumentos"></div>
-                        <div class="col-lg-12 text-right">
-                            <br />
-                            <div data-ng-show="total>0">
-                                <div id="btnProcesar" style="margin-right: 20px;"></div>
-                            </div>
-                        </div>
-                        <div class="demo-container" style="padding-top: 80px;">
-                            <div id="panelresultado">
-                                <div class="panel-heading">
-                                    <h6 class="panel-title">Resultado de documentos procesados : </h6>
-
-                                </div>
-                                <hr />
-                                <div id="gridDocumentosProcesados"></div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
             </div>
         </div>
+
+        <div class="panel-body">
+            <div class="demo-container">
+                <div id="gridDocumentos"></div>
+                <div class="col-lg-12 text-right">
+                    <br />
+                    <div data-ng-show="total>0">
+                        <div id="btnProcesar" style="margin-right: 20px;"></div>
+                    </div>
+                </div>
+                <div class="demo-container" style="padding-top: 80px;">
+                    <div id="panelresultado">
+                        <div class="panel-heading">
+                            <h6 class="panel-title">Resultado de documentos procesados : </h6>
+
+                        </div>
+                        <hr />
+                        <div id="gridDocumentosProcesados"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
 
     </div>
     <!-- /CONTENEDOR PRINCIPAL -->

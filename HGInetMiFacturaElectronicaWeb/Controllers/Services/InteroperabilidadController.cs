@@ -1,4 +1,5 @@
-﻿using HGInetInteroperabilidad.Procesos;
+﻿using HGInetInteroperabilidad.Objetos;
+using HGInetInteroperabilidad.Procesos;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
@@ -176,9 +177,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						ListaDocumentos.Add(doc);
 				}
 
-				Ctl_Envio.Procesar(ListaDocumentos);
+                List<RespuestaRegistro> Respuesta=  Ctl_Envio.Procesar(ListaDocumentos);
 
-				return Ok();
+
+                var datos = Respuesta.Select(d => new
+                {
+                    Documento=d.Documento.IntNumero,
+                    Mensaje=d.Respuesta.mensaje,
+                    uuid =d.Respuesta.uuid,
+                    codigoError= d.Respuesta.codigoError,
+                    tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
+                    FechaUltimoProceso = d.Documento.DatFechaActualizaEstado,
+                    EstadoFactura = DescripcionEstadoFactura(d.Documento.IntIdEstado),
+                });
+                    
+               
+                return Ok(datos);
 			}
 			catch (Exception excepcion)
 			{

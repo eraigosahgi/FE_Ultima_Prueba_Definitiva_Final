@@ -1265,21 +1265,20 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
-
-		/// <summary>
-		/// Obtiene un documento por el nombre del archivo xml
-		/// con el fin de actualizar el estado
-		/// </summary>
-		/// <param name="NombreArchivo"></param>
-		/// <returns></returns>
-		public TblDocumentos Obtenerporxml(string NombreArchivo)
-		{
-			TblDocumentos Doc = (from doc in context.TblDocumentos
-								 where doc.StrUrlArchivoUbl.Contains(NombreArchivo)
-								 select doc).FirstOrDefault();
-			return Doc;
-		}
-
+        /// <summary>
+        /// Obtiene un documento por el nombre del archivo xml
+        /// con el fin de actualizar el estado
+        /// </summary>
+        /// <param name="NombreArchivo"></param>
+        /// <returns></returns>
+        public TblDocumentos Obtenerporxml(string NombreArchivo)
+        {
+            TblDocumentos Doc = (from doc in context.TblDocumentos
+                                       where (doc.StrUrlArchivoUbl.Contains(NombreArchivo) || doc.StrUrlAcuseUbl.Contains(NombreArchivo))
+                                       select doc).FirstOrDefault();
+            return Doc;
+        }
+        
 
 
 

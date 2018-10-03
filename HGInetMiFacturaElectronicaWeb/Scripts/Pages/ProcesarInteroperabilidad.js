@@ -35,7 +35,8 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultar();
+		    consultar();
+		    $('#panelresultado').hide();
 		}
 	};
 
@@ -46,7 +47,7 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
 		$http.get('/api/ObtenerPendientesProceso?identificacion_proveedor=' + identificacion_proveedor[0]).then(function (response) {
 			$("#wait").hide();
 			try {
-				$('#panelresultado').show();
+				//$('#panelresultado').show();
 
 				$("#gridDocumentos").dxDataGrid({
 					dataSource: response.data,
@@ -170,8 +171,134 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
 	function ProcesarDocumentos() {
 
 		$http({ url: '/api/Interoperabilidad/', data: { Documentos: $scope.documentos }, method: 'Post' }).then(function (response) {
-			try {
+		    try {
 
+
+		        $("#gridDocumentosProcesados").dxDataGrid({
+		            dataSource: response.data,
+		            paging: {
+		                pageSize: 20
+		            },
+		            pager: {
+		                showPageSizeSelector: true,
+		                allowedPageSizes: [5, 10, 20],
+		                showInfo: true
+		            }
+
+                , loadPanel: {
+                    enabled: true
+                },
+		            headerFilter: {
+		                visible: true
+		            }
+              , columns: [
+                  /*
+                  {
+                      caption: 'Estado',
+                      dataField: 'Estado',
+                      width: '5%',
+                      cellTemplate: function (container, options) {
+                          $("<div style='text-align:center'>")
+                              .append($("<a taget=_self class='icon-circle2'" + ((options.data.CodigoError != '') ? " style='color:red;' title='Error'" : " style='color:green;' title='Proceso exitoso'") + ">"))
+                              .appendTo(container);
+                      }
+                  },
+                   {
+                       caption: "Fecha Recepción",
+                       dataField: "FechaRecepcion",
+                       dataType: "date",
+                       width: '16%',
+                       format: "yyyy-MM-dd HH:mm"
+
+                   },
+                   */
+                  {
+                      caption: "Fecha Ultimo Proceso",
+                      dataField: "FechaUltimoProceso",
+                      dataType: "date",
+                      width: '16%',
+                      format: "yyyy-MM-dd HH:mm"
+
+                  },
+                  {
+                      caption: "Documento",
+                      dataField: "Documento",
+                      width: '10%',
+
+                  },
+                   {
+                       caption: "Mensaje",
+                       width: '50%',
+                       dataField: "Mensaje"
+                   },
+              {
+                  caption: "UUID",
+                  dataField: "uuid",
+                  hidingPriority: 0
+              }
+              
+              ,
+                    {
+                        caption: "Codigo Proceso",
+                        dataField: "codigoError",
+                        hidingPriority: 1
+                    },
+                    {
+                        caption: "Tipo Documento",
+                        dataField: "tipodoc",
+                        hidingPriority: 2
+                    }
+                    ,
+                    {
+                        caption: "EstadoFactura",
+                        dataField: "EstadoFactura",
+                        hidingPriority: 4
+
+                    }/*,
+                    {
+                        caption: "IdDocumento",
+                        dataField: "IdDocumento",
+                        hidingPriority: 5
+                    },
+                    {
+                        caption: "Identificacion",
+                        dataField: "Identificacion",
+                        hidingPriority: 6
+                    },
+                    {
+                        caption: "IdProceso",
+                        dataField: "IdProceso",
+                        hidingPriority: 7
+                    },
+                   {
+                       caption: "MotivoRechazo",
+                       dataField: "MotivoRechazo",
+                       hidingPriority: 8
+                   },
+                   {
+                       caption: "NumeroResolucion",
+                       dataField: "NumeroResolucion",
+                       hidingPriority: 9
+                   }, {
+                       caption: "Descripcion Proceso",
+                       dataField: "DescripcionProceso",
+                       hidingPriority: 10
+                   },
+                   {
+                       caption: "Tipo de Documento",
+                       dataField: "tipodoc",
+                       hidingPriority: 11
+                   }*/
+
+              ]
+		        }).dxDataGrid("instance");
+
+
+
+
+
+
+			    $('#panelresultado').show();
 				consultar();
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 3000);

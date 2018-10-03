@@ -67,6 +67,7 @@
     <Compile Include="Objetos\AutenticacionRespuesta.cs" />
     <Compile Include="Objetos\RegistroListaDocRespuesta.cs" />
     <Compile Include="Objetos\RegistroDocRespuesta.cs" />
+    <Compile Include="Objetos\RespuestaRegistro.cs" />
     <Compile Include="Objetos\Usuario.cs" />
     <Compile Include="Procesos\Ctl_Envio.cs" />
     <Compile Include="Procesos\Ctl_Recepcion.cs" />
