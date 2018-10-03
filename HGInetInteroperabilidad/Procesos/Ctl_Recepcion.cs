@@ -358,7 +358,7 @@ namespace HGInetInteroperabilidad.Procesos
                     //Proceso para Almacenar el acuse
                     try
                     {
-                        AlmacenarArchivo(ruta_archivo_xml, string.Format("{0}.xml", nombre_archivo), facturador_receptor);
+                        AlmacenarArchivo(ruta_archivo_xml, string.Format("{0}.xml", nombre_archivo), facturador_receptor, true);
                     }
                     catch (Exception excepcion)
                     {
