@@ -127,7 +127,7 @@ namespace HGInetInteroperabilidad.Procesos
                             item_respuesta = ProcesarAcuse(documento_obj, ruta_archivo_xml, nombre_archivo, facturador_receptor);
                             item_respuesta.nombreDocumento = objeto.nombre;
 
-                            if (item_respuesta.codigoError == Enumeracion.GetDescription(RespuestaInterOperabilidad.ErrorInternoReceptor))
+                            if ((item_respuesta.codigoError == Enumeracion.GetDescription(RespuestaInterOperabilidad.ErrorInternoReceptor)) || (item_respuesta.codigoError == Enumeracion.GetDescription(RespuestaInterOperabilidad.ProcesamientoParcial)))
                             {
                                 error_proceso = true;
                                 throw new ApplicationException(string.Format("Error al procesar el documento {0}", objeto.nombre));
