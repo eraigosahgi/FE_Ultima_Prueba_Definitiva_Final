@@ -187,7 +187,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a interoperabilidad\\operacion\\envio\\.
+        ///   Busca una cadena traducida similar a interoperabilidad\operacion\envio\.
         /// </summary>
         public static string RutaInteroperabilidadEnvio {
             get {
@@ -196,7 +196,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a interoperabilidad\\publico\\.
+        ///   Busca una cadena traducida similar a interoperabilidad\publico\.
         /// </summary>
         public static string RutaInteroperabilidadFtp {
             get {

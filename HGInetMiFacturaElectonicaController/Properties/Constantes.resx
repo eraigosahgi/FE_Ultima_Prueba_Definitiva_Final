@@ -171,11 +171,11 @@
     <comment>Ruta de eacceso a la plataforma web.</comment>
   </data>
   <data name="RutaInteroperabilidadEnvio" xml:space="preserve">
-    <value>interoperabilidad\\operacion\\envio\\</value>
+    <value>interoperabilidad\operacion\envio\</value>
     <comment>Ruta fisica para el proceso de envio de los documentos a interoperabilidad</comment>
   </data>
   <data name="RutaInteroperabilidadFtp" xml:space="preserve">
-    <value>interoperabilidad\\publico\\</value>
+    <value>interoperabilidad\publico\</value>
     <comment>Ruta fisica para el ftp interoperabilidad</comment>
   </data>
   <data name="RutaInteroperabilidadRecepcion" xml:space="preserve">

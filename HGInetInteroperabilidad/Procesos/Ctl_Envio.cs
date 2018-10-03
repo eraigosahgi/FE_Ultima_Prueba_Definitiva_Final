@@ -113,8 +113,8 @@ namespace HGInetInteroperabilidad.Procesos
 
 					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-					//Aqui busco la unicacion de la carpeta del proveedor tecnologico, esperar por la ruta real
-					string RutaProveedor = (string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEnvio));
+                    //Aqui busco la unicacion de la carpeta del proveedor tecnologico, esperar por la ruta real
+                    string RutaProveedor = (string.Format("{0}{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEnvio));
 
 					Directorio.CrearDirectorio(RutaProveedor);
 
@@ -262,9 +262,9 @@ namespace HGInetInteroperabilidad.Procesos
 						Directorio.CrearDirectorio(ruta_fisica);
 
 
-						//Clienteftp.SubirArchivoFTP(string.Format("{0}{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrClave, string.Format("{0}{1}{2}", RutaProveedor , ruta_fisica , NombreArchivoComprimido));
+                        Clienteftp.SubirArchivoFTP(string.Format("{0}//{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
 
-						Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
+                        //Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
 
 
 						//Aqui elimino el archivo Zip si todo esta OK
@@ -366,11 +366,15 @@ namespace HGInetInteroperabilidad.Procesos
 							return ListaResultadoVista;
 						}
 
-					}
-					else
-					{
-						return ListaResultadoVista;
-					}
+                    }
+                    else
+                    {
+                        if (string.IsNullOrEmpty(ListaResultadoVista[0].MensajeZip))
+                        {
+                            ListaResultadoVista[0].MensajeZip = ListaResultadoVista[0].Respuesta.mensaje;
+                        }
+                        return ListaResultadoVista;
+                    }
 
 				}
 				catch (Exception excepcion)
@@ -403,11 +407,16 @@ namespace HGInetInteroperabilidad.Procesos
 		public static bool ActualizaRespuesta(RegistroListaDetalleDocRespuesta Detalle, int Tipo)
 		{
 
-			if (Detalle != null)
-			{
-				if (Detalle.nombreDocumento != null && Detalle.uuid != null)
-				{
-					//string Nombre = Detalle.nombreDocumento.Replace(".xml", "");
+           
+            if (Detalle != null)
+            {
+                if (Detalle.nombreDocumento != null )
+                {
+                    if (!Detalle.codigoError.Equals(RespuestaInterOperabilidad.PendienteProcesamiento.GetHashCode().ToString()))
+                    {                        
+                        return false;
+                    }
+                    //string Nombre = Detalle.nombreDocumento.Replace(".xml", "");
 
 					//int Largo = Nombre.Length;
 					//int LargoPrefijo = 0;
@@ -434,22 +443,28 @@ namespace HGInetInteroperabilidad.Procesos
 					TblDocumentos Doc = Documentos.Obtenerporxml(Detalle.nombreDocumento);
 
 
-					//Se debe validar si la respuesta es de un documento o de un acuse
-					//Si el documento con el que me estan respondiento, tiene StrIdInteroperabilidad y status 13, entonces actualizo el acuse
-					//if (Doc.StrIdInteroperabilidad ==  Guid.Parse(Detalle.uuid) && Doc.IntIdEstado == (Int16)ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode())
-					if (Tipo == 1)
-					{
-						//Actualizo Acuse
-						Doc.DatFechaActualizaEstado = Fecha.GetFecha();
-						Doc.IntIdEstado = (Int16)(ProcesoEstado.Finalizacion.GetHashCode());
-					}
-					else
-					{
-						//Aqui actualizo el Estado del documento y el id de interoperabilidad
-						Doc.StrIdInteroperabilidad = new Guid(Detalle.uuid);
-						Doc.IntIdEstado = (Int16)(ProcesoEstado.EnvioExitosoProveedor.GetHashCode());
-						Doc.DatFechaActualizaEstado = Fecha.GetFecha();
-					}
+                    //Se debe validar si la respuesta es de un documento o de un acuse
+                    //Si el documento con el que me estan respondiento, tiene StrIdInteroperabilidad y status 13, entonces actualizo el acuse
+                    //if (Doc.StrIdInteroperabilidad ==  Guid.Parse(Detalle.uuid) && Doc.IntIdEstado == (Int16)ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode())
+                    if (Tipo == 1)
+                    {
+                        //Actualizo Acuse
+                        Doc.DatFechaActualizaEstado = Fecha.GetFecha();
+                        Doc.IntIdEstado = (Int16)(ProcesoEstado.Finalizacion.GetHashCode());
+                    }
+                    else
+                    {
+                        if (Detalle.uuid != null)
+                        {
+                            //Aqui actualizo el Estado del documento y el id de interoperabilidad
+                            Doc.StrIdInteroperabilidad = new Guid(Detalle.uuid);
+                            Doc.IntIdEstado = (Int16)(ProcesoEstado.EnvioExitosoProveedor.GetHashCode());
+                            Doc.DatFechaActualizaEstado = Fecha.GetFecha();
+                        }else
+                        {
+                            return false;
+                        }
+                    }
 
 					Documentos.Actualizar(Doc);
 				}

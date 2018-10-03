@@ -254,12 +254,13 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
                         dataField: "EstadoFactura",
                         hidingPriority: 4
 
-                    }/*,
+                    },
                     {
-                        caption: "IdDocumento",
-                        dataField: "IdDocumento",
+                        caption: "Nombre Archivo",
+                        dataField: "Nombre",
                         hidingPriority: 5
                     },
+                    /*
                     {
                         caption: "Identificacion",
                         dataField: "Identificacion",
