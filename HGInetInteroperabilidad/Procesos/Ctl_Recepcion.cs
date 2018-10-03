@@ -24,6 +24,13 @@ namespace HGInetInteroperabilidad.Procesos
     public class Ctl_Recepcion
     {
 
+        /// <summary>
+        /// Procesa peticion de proveedor emisor
+        /// </summary>
+        /// <param name="datos">Objeto de la Peticion</param>
+        /// <param name="ruta_ftp">Ruta publica de los documentos</param>
+        /// <param name="proveedor_emisor">Identificacion Proveedor Emisor</param>
+        /// <returns></returns>
         public static RegistroListaDocRespuesta Procesar(RegistroListaDoc datos, string ruta_ftp, string proveedor_emisor)
         {
 
@@ -106,6 +113,7 @@ namespace HGInetInteroperabilidad.Procesos
                             item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
                             item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.nombre);
                             error_proceso = true;
+                            throw new ApplicationException(string.Format("Error al convertir xml a objeto el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 
                         }
 
@@ -141,6 +149,7 @@ namespace HGInetInteroperabilidad.Procesos
                                 item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
                                 item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.nombre);
                                 error_proceso = true;
+                                throw new ApplicationException(string.Format("Error al obtener el documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 
                             }
 
@@ -150,6 +159,7 @@ namespace HGInetInteroperabilidad.Procesos
                                 item_respuesta.nombreDocumento = objeto.nombre;
                                 item_respuesta.codigoError = RespuestaInterOperabilidad.ProcesamientoParcial.GetHashCode().ToString();
                                 item_respuesta.mensaje = string.Format("{0} El documento {1} se encuentra registrado con el Tacking ID: {2}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), datos.nombre, documento_bd.StrIdInteroperabilidad);
+                                item_respuesta.uuid = documento_bd.StrIdInteroperabilidad.ToString();
                                 error_proceso = true;
                                 throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}", documento_obj.Documento, documento_obj.Prefijo, documento_obj.DatosObligado.Identificacion));
                             }
@@ -172,6 +182,7 @@ namespace HGInetInteroperabilidad.Procesos
                                 item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
                                 item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.nombre);
                                 error_proceso = true;
+                                throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 
                             }
 
@@ -201,6 +212,7 @@ namespace HGInetInteroperabilidad.Procesos
                                     item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
                                     item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.representacionGraficas);
                                     error_proceso = true;
+                                    throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 
                                 }
                             }
@@ -229,6 +241,7 @@ namespace HGInetInteroperabilidad.Procesos
                                     item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
                                     item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.adjuntos);
                                     error_proceso = true;
+                                    throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 
                                 }
                             }
@@ -246,6 +259,7 @@ namespace HGInetInteroperabilidad.Procesos
                                 item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
                                 item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.nombre);
                                 error_proceso = true;
+                                throw new ApplicationException(string.Format("Error al convertir objeto {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 
                             }
 
@@ -297,7 +311,14 @@ namespace HGInetInteroperabilidad.Procesos
         }
 
 
-
+        /// <summary>
+        /// Procesa el Acuse
+        /// </summary>
+        /// <param name="documento_obj">Objeto Acuse</param>
+        /// <param name="ruta_archivo_xml">Ruta donde esta almacenado el archivo</param>
+        /// <param name="nombre_archivo">Nombre del archivo del Acuse</param>
+        /// <param name="facturador_receptor">Datos del Facturador Receptor</param>
+        /// <returns></returns>
         public static RegistroListaDetalleDocRespuesta ProcesarAcuse(Acuse documento_obj, string ruta_archivo_xml, string nombre_archivo, TblEmpresas facturador_receptor)
         {
 
