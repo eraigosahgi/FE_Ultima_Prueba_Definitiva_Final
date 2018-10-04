@@ -1,4 +1,5 @@
 ﻿using HGInetInteroperabilidad.Objetos;
+using HGInetMiFacturaElectonicaController;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
@@ -375,6 +376,8 @@ namespace HGInetInteroperabilidad.Procesos
                     // url pública
                     string url_ppal = string.Format(@"{0}/{1}/{2}/", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, facturador_receptor.StrIdSeguridad);
 
+                    //string url_email = string.Format(@"{0}/{1}/{2}/", plataforma_datos.RutaDmsPublica, "dms", facturador_receptor.StrIdSeguridad);
+
                     // url pública del xml
                     string UrlAcuseUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, nombre_archivo);
 
@@ -389,6 +392,16 @@ namespace HGInetInteroperabilidad.Procesos
                         documento_bd.StrUrlAcuseUbl = UrlAcuseUbl;
                         documento_bd.IntIdEstado = Convert.ToInt16(ProcesoEstado.RecepcionAcuse.GetHashCode());
                         documento_bd.DatFechaActualizaEstado = Fecha.GetFecha();
+
+                        try
+                        {   // envía el correo del acuse de recibo al facturador electrónico
+                            Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+                            Ctl_Empresa empresa = new Ctl_Empresa();
+                            TblEmpresas adquiriente = empresa.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+                            email.RespuestaAcuse(documento_bd, facturador_receptor, adquiriente, UrlAcuseUbl);
+                            documento_bd.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
+                        }
+                        catch (Exception) { }
 
                         documento_bd = num_doc.Actualizar(documento_bd);
                         item_respuesta.codigoError = RespuestaInterOperabilidad.PendienteProcesamiento.GetHashCode().ToString();
