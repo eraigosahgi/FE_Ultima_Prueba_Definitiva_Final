@@ -39,6 +39,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string DocumentoRef { get; set; }
 
 		/// <summary>
+		/// Documento de pedido
+		/// </summary>
+		public string PedidoRef { get; set; }
+
+		/// <summary>
 		/// Número de Resolución del Documento asignado por la DIAN
 		/// </summary>
 		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]

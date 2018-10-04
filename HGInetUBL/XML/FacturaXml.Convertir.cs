@@ -77,24 +77,26 @@ namespace HGInetUBL
                 }
                 factura_obj.DocumentoRef = string.Empty;
 
-				//Valida si tiene documento referencia de pedido
-				if (factura_ubl.OrderReference != null)
+
+				//Valida si tiene documento referencia de factura
+				if (factura_ubl.BillingReference != null)
 				{
-					if (factura_ubl.OrderReference.FirstOrDefault().DocumentReference.ID.Value != null)
+					if (factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
 					{
-						factura_obj.DocumentoRef = factura_ubl.OrderReference.FirstOrDefault().DocumentReference.ID.Value;
+						factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
 					}
 
 				}
-				//Valida si tiene documento referencia de factura
-				else if (factura_ubl.BillingReference != null)
-                {
-                    if (factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
-                    {
-                        factura_obj.DocumentoRef = factura_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
-                    }
 
-                }
+				//Valida si tiene documento referencia de pedido
+				if (factura_ubl.OrderReference != null)
+				{
+					if (factura_ubl.OrderReference.FirstOrDefault().ID.Value != null)
+					{
+						factura_obj.PedidoRef = factura_ubl.OrderReference.FirstOrDefault().ID.Value;
+					}
+
+				}
 
                 factura_obj.Cufe = factura_ubl.UUID.Value;
                 factura_obj.Fecha = factura_ubl.IssueDate.Value;

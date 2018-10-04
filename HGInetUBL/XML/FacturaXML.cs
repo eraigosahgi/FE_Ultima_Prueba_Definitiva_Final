@@ -228,23 +228,37 @@ namespace HGInetUBL
                 };
 				#endregion
 
-				#region factura.OrderReference //Referencia Documento (orden)
+
+				#region factura.BillingReference //Referencia Documento (factura)
 
 				//Referencia un documento
+				factura.BillingReference = new BillingReferenceType[1];
+
+				BillingReferenceType DocReference = new BillingReferenceType();
+				DocumentReferenceType DocumentReference = new DocumentReferenceType();
+				DocumentReference.ID = new IDType();
+				DocumentReference.ID.Value = documento.DocumentoRef.ToString();
+				DocReference.InvoiceDocumentReference = DocumentReference;
+
+				factura.BillingReference[0] = DocReference;
+
+				#endregion
+
+
+				#region factura.OrderReference //Referencia Documento (orden)
+
+				//Referencia un documento de pedido
 				factura.OrderReference = new OrderReferenceType[1];
 
-				OrderReferenceType DocReference = new OrderReferenceType();
-                DocumentReferenceType DocumentReference = new DocumentReferenceType();
-                DocumentReference.ID = new IDType();
-                DocumentReference.ID.Value = documento.DocumentoRef.ToString();
-                DocReference.DocumentReference = DocumentReference;
+				OrderReferenceType DocOrderReference = new OrderReferenceType();
+				DocOrderReference.ID = new IDType() { Value = documento.PedidoRef.ToString() };
+				factura.OrderReference[0] = DocOrderReference;
 
-                factura.OrderReference[0] = DocReference;
+				#endregion
 
-                #endregion
 
-                #region factura.AccountingSupplierParty - Información del obligado a facturar
-                factura.AccountingSupplierParty = ObtenerObligado(documento.DatosObligado);
+				#region factura.AccountingSupplierParty - Información del obligado a facturar
+				factura.AccountingSupplierParty = ObtenerObligado(documento.DatosObligado);
                 #endregion
 
                 #region factura.AccountingCustomerParty - Información del Adquiriente

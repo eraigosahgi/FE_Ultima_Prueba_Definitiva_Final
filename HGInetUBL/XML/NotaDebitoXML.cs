@@ -198,11 +198,7 @@ namespace HGInetUBL
 				nota_debito.OrderReference = new OrderReferenceType[1];
 
 				OrderReferenceType DocOrderReference = new OrderReferenceType();
-				DocumentReferenceType DocumentOrderReference = new DocumentReferenceType();
-				DocumentOrderReference.ID = new IDType();
-				DocumentOrderReference.ID.Value = documento.PedidoRef.ToString();
-				DocOrderReference.DocumentReference = DocumentOrderReference;
-
+				DocOrderReference.ID = new IDType() { Value = documento.PedidoRef.ToString() };
 				nota_debito.OrderReference[0] = DocOrderReference;
 
 				#endregion

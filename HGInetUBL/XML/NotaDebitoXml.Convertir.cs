@@ -72,6 +72,8 @@ namespace HGInetUBL
 					if (nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference != null && nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID != null && nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
 					{
 						nota_debito_obj.DocumentoRef = nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
+						nota_debito_obj.CufeFactura = nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID.Value;
+						nota_debito_obj.FechaFactura = nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate.Value;
 					}
 				}
 
@@ -79,14 +81,11 @@ namespace HGInetUBL
 				// valida el documento de referencia pedido
 				if (nota_debito_ubl.OrderReference != null)
 				{
-					if (nota_debito_ubl.OrderReference.FirstOrDefault().DocumentReference != null && nota_debito_ubl.OrderReference.FirstOrDefault().DocumentReference.ID != null && nota_debito_ubl.OrderReference.FirstOrDefault().DocumentReference.ID.Value != null)
+					if (nota_debito_ubl.OrderReference.FirstOrDefault().ID != null && nota_debito_ubl.OrderReference.FirstOrDefault().ID.Value != null)
 					{
-						nota_debito_obj.DocumentoRef = nota_debito_ubl.OrderReference.FirstOrDefault().DocumentReference.ID.Value;
+						nota_debito_obj.PedidoRef = nota_debito_ubl.OrderReference.FirstOrDefault().ID.Value;
 					}
 				}
-
-				nota_debito_obj.CufeFactura = nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID.Value;
-				nota_debito_obj.FechaFactura = nota_debito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate.Value;
 
 				if (!interopeabilidad)
 				{

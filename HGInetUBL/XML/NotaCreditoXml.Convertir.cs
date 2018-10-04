@@ -71,22 +71,21 @@ namespace HGInetUBL
 					if (nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference != null && nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID != null && nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
 					{
 						nota_credito_obj.DocumentoRef = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
+						nota_credito_obj.CufeFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID.Value;
+						nota_credito_obj.FechaFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate.Value;
 					}
 				}
-
-
+				
 				nota_credito_obj.PedidoRef = string.Empty;
 				// valida el documento de referencia pedido
 				if (nota_credito_ubl.OrderReference != null)
 				{
-					if (nota_credito_ubl.OrderReference.FirstOrDefault().DocumentReference != null && nota_credito_ubl.OrderReference.FirstOrDefault().DocumentReference.ID != null && nota_credito_ubl.OrderReference.FirstOrDefault().DocumentReference.ID.Value != null)
+					if (nota_credito_ubl.OrderReference.FirstOrDefault().ID != null && nota_credito_ubl.OrderReference.FirstOrDefault().ID.Value != null)
 					{
-						nota_credito_obj.DocumentoRef = nota_credito_ubl.OrderReference.FirstOrDefault().DocumentReference.ID.Value;
+						nota_credito_obj.PedidoRef = nota_credito_ubl.OrderReference.FirstOrDefault().ID.Value;
 					}
 				}
-				
-				nota_credito_obj.CufeFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID.Value;
-				nota_credito_obj.FechaFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate.Value;
+
 
 				if (!interopeabilidad)
 				{
