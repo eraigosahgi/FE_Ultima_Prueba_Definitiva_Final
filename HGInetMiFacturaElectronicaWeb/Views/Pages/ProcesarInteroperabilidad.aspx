@@ -25,6 +25,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-8">
+                            <br />                            
                             <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%;">Proveedor Tecnológico:</label>
                             <div id="txtProveedorTecnologico" style="width: 80%"></div>
                         </div>
@@ -72,15 +73,20 @@
                 <div class="panel-body">
                     <div class="demo-container">
                         <div id="gridDocumentos"></div>
-                        <div class="col-lg-12 text-right" style="z-index:999">
+                        <div class="col-lg-12 text-right" style="z-index: 999">
                             <br />
                             <div data-ng-show="total>0">
                                 <div id="btnProcesar" style="margin-right: 20px;"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <%--Panel de resultado--%>
+                <div class="panel panel-white">
+                    <div class="panel-body">
                         <div class="demo-container">
                             <div id="panelresultado">
-                                <div class="panel-heading" >
+                                <div class="panel-heading">
                                     <label id="Lblresultado">Resultado</label>
 
                                 </div>
@@ -88,9 +94,9 @@
                                 <div id="gridDocumentosProcesados"></div>
                             </div>
                         </div>
-
                     </div>
                 </div>
+
             </div>
         </div>
 

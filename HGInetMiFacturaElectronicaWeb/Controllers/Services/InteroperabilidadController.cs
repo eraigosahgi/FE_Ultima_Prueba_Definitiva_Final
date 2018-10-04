@@ -246,7 +246,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     uuid =d.Respuesta.uuid,
                     codigoError= d.Respuesta.codigoError,
                     //tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
-                    tipodoc = (d.Documento.IntIdEstado == (Int16) ProcesoEstado.Finalizacion.GetHashCode())? TipoDocumento.AcuseRecibo.ToString() :  Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
+                    tipodoc = (d.Documento.IntIdEstado == (Int16) ProcesoEstado.Finalizacion.GetHashCode())? Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(TipoDocumento.AcuseRecibo.GetHashCode())) :  Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
                     FechaUltimoProceso = d.Documento.DatFechaActualizaEstado,
                     EstadoFactura = DescripcionEstadoFactura(d.Documento.IntIdEstado),
                     Nombre = d.Respuesta.nombreDocumento

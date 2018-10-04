@@ -172,7 +172,7 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
 
 		$http({ url: '/api/Interoperabilidad/', data: { Documentos: $scope.documentos }, method: 'Post' }).then(function (response) {
 		    try {
-		        $('#Lblresultado').html(response.meMensajeZip);
+		        $('#Lblresultado').html("Resultado: "+ response.data[0].MensajeZip);
 
 		        $("#gridDocumentosProcesados").dxDataGrid({
 		            dataSource: response.data,
@@ -192,17 +192,21 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
 		                visible: true
 		            }
               , columns: [
-                  /*
+                  
                   {
                       caption: 'Estado',
-                      dataField: 'Estado',
+                      dataField: 'codigoError',
                       width: '5%',
                       cellTemplate: function (container, options) {
+
+                          var prueba = options.data.codigoError;
+
                           $("<div style='text-align:center'>")
-                              .append($("<a taget=_self class='icon-circle2'" + ((options.data.CodigoError != '') ? " style='color:red;' title='Error'" : " style='color:green;' title='Proceso exitoso'") + ">"))
+                              .append($("<a taget=_self class='icon-circle2'" + ((options.data.codigoError != '201') ? " style='color:red;' title='Error'" : " style='color:green;' title='Proceso exitoso'") + ">"))
                               .appendTo(container);
                       }
                   },
+                  /*
                    {
                        caption: "Fecha Recepción",
                        dataField: "FechaRecepcion",
@@ -210,8 +214,8 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
                        width: '16%',
                        format: "yyyy-MM-dd HH:mm"
 
-                   },
-                   */
+                   },*/
+                   
                   {
                       caption: "Fecha Ultimo Proceso",
                       dataField: "FechaUltimoProceso",
@@ -231,65 +235,42 @@ ProcesarInteroperabilidadApp.controller('ProcesarInteroperabilidadController', f
                        width: '50%',
                        dataField: "Mensaje"
                    },
+
+                    {
+                        caption: "Mensaje",                       
+                        dataField: "Mensaje",
+                        hidingPriority: 0
+                    },
               {
                   caption: "UUID",
                   dataField: "uuid",
-                  hidingPriority: 0
+                  hidingPriority: 1
               }
               
               ,
                     {
-                        caption: "Codigo Proceso",
+                        caption: "Codigo",
                         dataField: "codigoError",
-                        hidingPriority: 1
+                        hidingPriority: 2
                     },
                     {
-                        caption: "Tipo Documento",
+                        caption: "Tipo",
                         dataField: "tipodoc",
-                        hidingPriority: 2
+                        hidingPriority: 3
                     }
                     ,
                     {
-                        caption: "EstadoFactura",
+                        caption: "Estado",
                         dataField: "EstadoFactura",
                         hidingPriority: 4
 
                     },
                     {
-                        caption: "Nombre Archivo",
+                        caption: "Nombre",
                         dataField: "Nombre",
                         hidingPriority: 5
-                    },
-                    /*
-                    {
-                        caption: "Identificacion",
-                        dataField: "Identificacion",
-                        hidingPriority: 6
-                    },
-                    {
-                        caption: "IdProceso",
-                        dataField: "IdProceso",
-                        hidingPriority: 7
-                    },
-                   {
-                       caption: "MotivoRechazo",
-                       dataField: "MotivoRechazo",
-                       hidingPriority: 8
-                   },
-                   {
-                       caption: "NumeroResolucion",
-                       dataField: "NumeroResolucion",
-                       hidingPriority: 9
-                   }, {
-                       caption: "Descripcion Proceso",
-                       dataField: "DescripcionProceso",
-                       hidingPriority: 10
-                   },
-                   {
-                       caption: "Tipo de Documento",
-                       dataField: "tipodoc",
-                       hidingPriority: 11
-                   }*/
+                    }
+                   
 
               ]
 		        }).dxDataGrid("instance");
