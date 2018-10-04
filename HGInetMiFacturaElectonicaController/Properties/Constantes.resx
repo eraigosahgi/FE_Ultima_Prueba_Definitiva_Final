@@ -127,7 +127,7 @@
     <value>Facturación Electrónica</value>
   </data>
   <data name="CarpetaFacturaElectronica" xml:space="preserve">
-    <value>FacturaElectronica</value>
+    <value>facturaelectronica</value>
     <comment>Carpeta para guardar los documentos generados de Factura Electronica</comment>
   </data>
   <data name="EmailCopiaOculta" xml:space="preserve">

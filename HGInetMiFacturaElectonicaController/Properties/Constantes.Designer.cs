@@ -88,7 +88,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a FacturaElectronica.
+        ///   Busca una cadena traducida similar a facturaelectronica.
         /// </summary>
         public static string CarpetaFacturaElectronica {
             get {
