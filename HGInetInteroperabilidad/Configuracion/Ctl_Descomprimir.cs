@@ -32,6 +32,7 @@ namespace HGInetInteroperabilidad.Configuracion
                 datos_respuesta.mensajeGlobal = string.Format("No se obtuvo informacion de {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.Zipvacio));
 
             }
+            PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
             //Obtengo el proveedor emisor
             TblConfiguracionInteroperabilidad proveedor = new TblConfiguracionInteroperabilidad();
@@ -52,9 +53,8 @@ namespace HGInetInteroperabilidad.Configuracion
             }
             else
             {
-                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-                string ruta_fisica_zip = string.Format("{0}\\{1}{2}\\{3}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, proveedor.StrIdSeguridad, datos.nombre);
+                string ruta_fisica_zip = string.Format("{0}{1}{2}\\{3}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, proveedor.StrIdSeguridad, datos.nombre);
                 
                 string ruta_archivos = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, proveedor.StrIdSeguridad);
 
@@ -94,8 +94,15 @@ namespace HGInetInteroperabilidad.Configuracion
                         file.Dispose();
                     }
 
+                    
+                    //Archivo.Borrar(@"C:\inetpub\vhosts\mifacturaenlinea.com.co\fileshab.mifacturaenlinea.com.co\interoperabilidad\publico\f791dbce-c640-4f32-99d4-5966a573701f\811021438_123456_86cfbb40-5dde-4908-bbd1-fc2ae7c6e8b6.zip");
+                    //ruta_fisica_zip = string.Format(@"{0}{1}{2}\{3}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp.Replace("\\", @"\"), proveedor.StrIdSeguridad, datos.nombre);
+                    
+
                     //Envia la informacion para procesarla
                     datos_respuesta = Ctl_Recepcion.Procesar(datos, destino, proveedor.StrIdentificacion);
+
+                    
                 }
                 catch (Exception excepcion)
                 {
@@ -103,9 +110,21 @@ namespace HGInetInteroperabilidad.Configuracion
                     datos_respuesta.timeStamp = Fecha.GetFecha();
                     datos_respuesta.trackingIds = null;
                     datos_respuesta.mensajeGlobal = string.Format("Error al descomprimir {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ErrorInternoReceptor));
-                    throw new ApplicationException(string.Format("Error al descomprimir {0} Detalle: {1}", datos.nombre, excepcion.Message));
+                    //throw new ApplicationException(string.Format("Error al descomprimir {0} Detalle: {1}", datos.nombre, excepcion.Message));
                 }
             }
+
+            //Aqui elimino el archivo Zip si todo esta OK
+            try
+            {
+                Archivo.Borrar(string.Format(@"{0}{1}{2}\{3}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, proveedor.StrIdSeguridad, datos.nombre));
+            }
+            catch (Exception excepcion)
+            {
+                LogExcepcion.Guardar(excepcion);
+
+            }
+
             return datos_respuesta;
         }
 
