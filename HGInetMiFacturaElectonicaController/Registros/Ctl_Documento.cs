@@ -247,9 +247,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="estado_recibo">Estados de recibo, Pendiente,Aprobado, etc</param>
 		/// <param name="fecha_inicio">Fecha inicio del documento en la plataforma</param>
 		/// <param name="fecha_fin">Fecha inicio del documento en la plataforma</param>
-		/// <param name="tipo_documento">tipo documento 1: factura - 2: nota débito - 3: nota crédito - -1: todos</param>
+		/// <param name="tipo_filtro_fecha">indica sobre que fechas se aplica la consulta (1: Recepción - 2:Documento)</param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerPorFechasAdquiriente(string identificacion_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin)
+		public List<TblDocumentos> ObtenerPorFechasAdquiriente(string identificacion_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_filtro_fecha)
 		{
 
 
@@ -275,12 +275,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			int ErrorDian = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
 
 			var respuesta = (from datos in context.TblDocumentos
-							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-
-							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
+							 where (datos.StrEmpresaAdquiriente.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
 										&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 										   && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-										   && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento < fecha_fin)
+										   && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 2)
+										   && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 1)
 										   && (estado_dian.Contains(datos.IntIdEstado.ToString()))
 										   && (datos.IntIdEstado != ErrorDian)
 							 orderby datos.IntNumero descending
@@ -300,7 +299,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerPorFechasObligado(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, string Resolucion)
+		public List<TblDocumentos> ObtenerPorFechasObligado(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, string Resolucion, int tipo_filtro_fecha)
 		{
 
 			if (estado_dian == null || estado_dian == "")
@@ -340,21 +339,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
              */
 
 			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
-											  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
-											  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-
-											  where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+											  where (datos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
 											  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
-											  && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-
+											  && (datos.StrEmpresaFacturador.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
 											  && (estado_dian.Contains(datos.IntIdEstado.ToString()))
-
 											  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-
 											  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
-
-
-											  && (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
+												&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 2)
+												&& ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 1)
 											  orderby datos.IntNumero descending
 											  select datos).ToList();
 
@@ -587,24 +579,24 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
-        /// <summary>
-        /// Obtiene un documento por id se seguridad.
-        /// </summary>
-        /// <param name="id_seguridad"></param>
-        /// <returns></returns>
-        public TblDocumentos DocumentoPorIdSeguridad(System.Guid id_seguridad)
-        {
+		/// <summary>
+		/// Obtiene un documento por id se seguridad.
+		/// </summary>
+		/// <param name="id_seguridad"></param>
+		/// <returns></returns>
+		public TblDocumentos DocumentoPorIdSeguridad(System.Guid id_seguridad)
+		{
 
-                var respuesta = (from datos in context.TblDocumentos
-                                 where datos.StrIdSeguridad.Equals(id_seguridad)
-                                 select datos
-                                 ).FirstOrDefault();
+			var respuesta = (from datos in context.TblDocumentos
+							 where datos.StrIdSeguridad.Equals(id_seguridad)
+							 select datos
+							 ).FirstOrDefault();
 
-                return respuesta;
-           
-        }
+			return respuesta;
 
-        #endregion
+		}
+
+		#endregion
 
 
 		#region Actualizar
@@ -1248,7 +1240,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		public List<TblDocumentos> ObtenerAcusePendienteRecepcion(string IdentificacionProveedor)
 		{
 			try
-			{				
+			{
 				int EnvioEmailAcuse = ProcesoEstado.EnvioExitosoProveedor.GetHashCode();
 
 				List<TblDocumentos> documentos = (from documento in context.TblDocumentos
@@ -1265,20 +1257,20 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
-        /// <summary>
-        /// Obtiene un documento por el nombre del archivo xml
-        /// con el fin de actualizar el estado
-        /// </summary>
-        /// <param name="NombreArchivo"></param>
-        /// <returns></returns>
-        public TblDocumentos Obtenerporxml(string NombreArchivo)
-        {
-            TblDocumentos Doc = (from doc in context.TblDocumentos
-                                       where (doc.StrUrlArchivoUbl.Contains(NombreArchivo) || doc.StrUrlAcuseUbl.Contains(NombreArchivo))
-                                       select doc).FirstOrDefault();
-            return Doc;
-        }
-        
+		/// <summary>
+		/// Obtiene un documento por el nombre del archivo xml
+		/// con el fin de actualizar el estado
+		/// </summary>
+		/// <param name="NombreArchivo"></param>
+		/// <returns></returns>
+		public TblDocumentos Obtenerporxml(string NombreArchivo)
+		{
+			TblDocumentos Doc = (from doc in context.TblDocumentos
+								 where (doc.StrUrlArchivoUbl.Contains(NombreArchivo) || doc.StrUrlAcuseUbl.Contains(NombreArchivo))
+								 select doc).FirstOrDefault();
+			return Doc;
+		}
+
 
 
 
