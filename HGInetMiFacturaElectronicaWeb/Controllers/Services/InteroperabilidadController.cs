@@ -260,5 +260,49 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-	}
+        [HttpPost]
+        [Route("Api/ProcesarAcusesPRecepcion")]
+        public IHttpActionResult ProcesarAcusesPRecepcion(Object objeto)
+        {
+            try
+            {
+                Ctl_Documento clase_doc = new Ctl_Documento();
+
+                var jobjeto = (dynamic)objeto;
+
+                string ListaDoc = jobjeto.Documentos;
+
+                List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
+
+                List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();
+
+                foreach (var item in ListadeDocumentos)
+                {
+                    TblDocumentos doc = clase_doc.ObtenerPorIdSeguridad(item.Documentos).First();
+                    if (doc != null)
+                        ListaDocumentos.Add(doc);
+                }
+
+                List<RespuestaAcuseProceso> respuesta = Ctl_Envio.ProcesarAcuses(ListaDocumentos);
+
+                var datos = respuesta.Select(d => new
+                {
+                    NumeroDocumento = d.Numero,
+                    IdSeguridad = d.IdSeguridad.ToString(),
+                    FechaProceso = d.FechaProceso,
+                    DocumentoTipo = DescripcionTipodDoc(d.DocumentoTipo),
+                    Mensaje = (d.Error != null) ? d.Error.Mensaje : string.Empty,
+                    CodigoError = d.Error.Codigo,
+                    Facturador = d.Facturador
+                });
+
+                return Ok(datos);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+    }
 }
