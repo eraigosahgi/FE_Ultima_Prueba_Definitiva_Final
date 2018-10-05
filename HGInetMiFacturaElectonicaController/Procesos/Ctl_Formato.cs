@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaData;
+﻿using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
@@ -28,12 +29,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 if (string.IsNullOrWhiteSpace(archivo))
                     throw new ApplicationException(string.Format("No se encontró información en el archivo. {0}", archivo));
+					
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-                string carpeta_pdf = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), documento.IdSeguridadTercero.ToString());
-                carpeta_pdf = string.Format(@"{0}{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+				// ruta física del xml
+				string carpeta_pdf = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento.IdSeguridadTercero.ToString());
+				carpeta_pdf = string.Format(@"{0}{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
-                // valida la existencia de la carpeta
-                carpeta_pdf = Directorio.CrearDirectorio(carpeta_pdf);
+				// valida la existencia de la carpeta
+				carpeta_pdf = Directorio.CrearDirectorio(carpeta_pdf);
 
                 // ruta del pdf
                 string ruta_pdf = string.Format(@"{0}{1}.pdf", carpeta_pdf, documento.NombreXml);
@@ -72,25 +76,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 if (string.IsNullOrWhiteSpace(archivo.ArchivoPdf))
                     throw new ApplicationException(string.Format("No se encontró información en el archivo. {0}", archivo));
+					
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-                string carpeta_pdf = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), directorio);
-                carpeta_pdf = string.Format(@"{0}{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+				// ruta física del xml
+				string carpeta_pdf = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, directorio);
+				carpeta_pdf = string.Format(@"{0}{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
-                // valida la existencia de la carpeta
-                carpeta_pdf = Directorio.CrearDirectorio(carpeta_pdf);
+				// valida la existencia de la carpeta
+				carpeta_pdf = Directorio.CrearDirectorio(carpeta_pdf);
 
                 // ruta del pdf
                 string ruta_pdf = string.Format(@"{0}{1}.pdf", carpeta_pdf, nombre);
 
                 //convierte el array de byte en archivo pdf
                 File.WriteAllBytes(ruta_pdf, Convert.FromBase64String(archivo.ArchivoPdf));
-
-                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
+				
                 // url pública del pdf
-                string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, directorio);
+				string url_ppal_pdf = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, directorio);
 
-                nombre_pdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre);
+				nombre_pdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre);
 
                 return nombre_pdf;
 

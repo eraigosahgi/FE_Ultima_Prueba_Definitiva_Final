@@ -1,4 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaData;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using System;
@@ -52,12 +54,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 xmlSoapRequest.LoadXml(mensaje);
 
-                // carpeta del xml
-                string ruta_carpeta = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), carpeta_nit);
-                ruta_carpeta = string.Format(@"{0}{1}\\{2}\\", ruta_carpeta, "ws_logs", nombre_servicio_web);
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-                // valida la existencia de la carpeta
-                ruta_carpeta = Directorio.CrearDirectorio(ruta_carpeta);
+				// carpeta del xml
+				string ruta_carpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, carpeta_nit);
+				ruta_carpeta = string.Format(@"{0}{1}\\{2}\\", ruta_carpeta, "ws_logs", nombre_servicio_web);
+
+				// valida la existencia de la carpeta
+				ruta_carpeta = Directorio.CrearDirectorio(ruta_carpeta);
 
                 string nombre_archivo = string.Format("{0}-{1}.xml", Fecha.GetFecha().ToString(Fecha.formato_fecha_hora_archivo), registro);
 

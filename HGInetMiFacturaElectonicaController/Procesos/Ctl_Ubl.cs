@@ -13,6 +13,7 @@ using HGInetUBL.Objetos;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using HGInetMiFacturaElectonicaData.Enumerables;
+using HGInetMiFacturaElectonicaController.Properties;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -228,12 +229,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 }
 
 
-                // carpeta del xml
-                string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), id_obligado);
-                carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+				
+				// ruta física del xml
+				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, id_obligado);
+				carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
 
-                // valida la existencia de la carpeta
-                carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
+				// valida la existencia de la carpeta
+				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
 
                 // ruta del xml
                 string archivo_xml = string.Format(@"{0}.xml", documento.NombreXml);
@@ -252,11 +255,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 documento.RutaArchivosProceso = carpeta_xml;
 
                 // carpeta del zip
-                string carpeta_zip = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), id_obligado);
-                carpeta_zip = string.Format(@"{0}{1}", carpeta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+				string carpeta_zip = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, id_obligado);
+				carpeta_zip = string.Format(@"{0}{1}", carpeta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
-                // directorio para el zip y xml firmado
-                documento.RutaArchivosEnvio = Directorio.CrearDirectorio(carpeta_zip);
+				// directorio para el zip y xml firmado
+				documento.RutaArchivosEnvio = Directorio.CrearDirectorio(carpeta_zip);
 
                 return documento;
             }

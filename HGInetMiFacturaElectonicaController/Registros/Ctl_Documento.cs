@@ -675,10 +675,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="motivo_rechazo">descripcion del acuse</param>
 		/// <returns></returns>
 		public static FacturaE_Documento ConvertirAcuse(TblDocumentos doc, TblEmpresas facturador, TblEmpresas adquiriente, TblEmpresas proveedor_emisor, TblEmpresas proveedor_receptor, short estado, string motivo_rechazo)
-		{
-
-			//Crea el Acuse
-			Acuse doc_acuse = new Acuse();
+        {
+            PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+            
+            //Crea el Acuse
+            Acuse doc_acuse = new Acuse();
 			doc_acuse.IdAcuse = Guid.NewGuid().ToString();
 			doc_acuse.IdSeguridad = doc.StrIdSeguridad.ToString();
 			doc_acuse.Documento = doc.IntNumero;
@@ -696,8 +697,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			resultado.IdSeguridadPeticion = new Guid(doc_acuse.IdAcuse);
 			resultado.DocumentoTipo = TipoDocumento.AcuseRecibo;
 
-			string carpeta_xml = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), resultado.IdSeguridadTercero.ToString());
-			carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
+            // ruta física del xml
+            string carpeta_xml = string.Format("{0}\\{1}\\{2}",plataforma_datos.RutaDmsFisica,Constantes.CarpetaFacturaElectronica, resultado.IdSeguridadTercero.ToString());
+			carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
 
 			// nombre del xml
 			string archivo_xml = string.Format(@"{0}.xml", resultado.NombreXml);
@@ -717,11 +719,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			//resultado = Ctl_Ubl.Almacenar(resultado);
 
-			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
 			// url pública del xml
-			string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, resultado.IdSeguridadTercero.ToString());
-			resultado.RutaArchivosProceso = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, resultado.NombreXml);
+			string url_ppal = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, resultado.IdSeguridadTercero.ToString());
+            resultado.RutaArchivosProceso = string.Format(@"{0}/{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, resultado.NombreXml);
 
 			return resultado;
 		}
