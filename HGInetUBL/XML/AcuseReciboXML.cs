@@ -117,7 +117,7 @@ namespace HGInetUBL
                 FacturaE_Documento xml_acuse = new FacturaE_Documento();
                 xml_acuse.Documento = documento;
                 xml_acuse.NombreXml = nombre_archivo_xml;
-                xml_acuse.DocumentoXml = txt_xml;
+                xml_acuse.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(txt_xml);
 
 
                 return xml_acuse;
