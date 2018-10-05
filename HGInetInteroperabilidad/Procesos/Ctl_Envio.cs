@@ -35,8 +35,6 @@ namespace HGInetInteroperabilidad.Procesos
         public static List<RespuestaRegistro> Procesar(List<TblDocumentos> Doc)//(TblDocumentos Doc)
         {
 
-
-
             //Creo una lista de objetos de respuesta para tenerla como base de consulta
             List<RespuestaRegistro> ListaResultadoVista = new List<RespuestaRegistro>();
 
@@ -66,8 +64,6 @@ namespace HGInetInteroperabilidad.Procesos
                 .Select(g => g.First())
                 .ToList();
 
-
-
             //Se itera lista de proveedores
             foreach (var ProveedorDoc in ListadeProveedores)
             {
@@ -79,29 +75,23 @@ namespace HGInetInteroperabilidad.Procesos
 
                     Usuario usuario = new Usuario();
 
-
-
-                    //var jj = Encriptar.Encriptar_SHA256("123");
-
+                    //var jj = Encriptar.Encriptar_SHA256("Po&on271");
                     usuario.username = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
                     usuario.password = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
 
                     //Serializo el objeto para enviarlo al cliente webapi
                     string jsonUsuario = JsonConvert.SerializeObject(usuario);
 
-
-
                     //Lo primero es validar si tiene tenemos usuario y password activo con el proveedor
                     //Se debe validar si tengo un tokken activo, antes de solicitar otro
                     string Token = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
-                    if (Token.Contains("404") || Token.Contains("No autorizado"))
+                    if (Token.Contains("404") || Token.Contains("No autorizado") || Token.Contains("No es posible conectar con el servidor remoto"))
                     {
                         throw new ApplicationException(string.Format("No se pudo conectar al proveedor: {0}", Token));
                     }
                     AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(Token);
                     Token = r.jwtToken;
-
 
                     //Aqui se crea archio zip por proveedor
                     //Serializar el objeto lista facturas
@@ -112,15 +102,12 @@ namespace HGInetInteroperabilidad.Procesos
                     //Creo instancia de lista de documentos para el envio
                     RegistroListaDoc RegistroEnvio = new RegistroListaDoc();
 
-
                     PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                     //Aqui busco la unicacion de la carpeta del proveedor tecnologico, esperar por la ruta real
                     string RutaProveedor = (string.Format("{0}{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEnvio));
 
                     Directorio.CrearDirectorio(RutaProveedor);
-
-
 
                     Guid idenvio = Guid.NewGuid();
 
@@ -132,7 +119,6 @@ namespace HGInetInteroperabilidad.Procesos
                     RegistroEnvio.uuid = idenvio.ToString();
                     RegistroEnvio.extensiones = ExtensionPaquete;
 
-
                     //Creo el archivo Comprimido
                     ZipArchive archive = ZipFile.Open(RutaProveedor + NombreArchivoComprimido, ZipArchiveMode.Update);
 
@@ -142,15 +128,12 @@ namespace HGInetInteroperabilidad.Procesos
                     //Itero la lista de documentos del proveedor en el que estoy 
                     foreach (TblDocumentos Documento in Doc)
                     {
-
-
                         try
                         {
                             RespuestaRegistro ResultadoVista = new RespuestaRegistro();
                             RegistroListaDetalleDocRespuesta ResultadoMensaje = new RegistroListaDetalleDocRespuesta();
 
                             ResultadoVista.Documento = Documento;
-
 
                             ////este es un ciclo del proveedor para ubicar los documentos por facturador
                             //////////////////////////////////////////////////////////////////////////////
@@ -185,15 +168,12 @@ namespace HGInetInteroperabilidad.Procesos
                                     //Este es el Objeto que se debe ir llenando para retornar una respuesta al usuario
                                     ResultadoVista.Documento.StrUrlArchivoUbl = RegDocumentoAcuse.nombre;
                                     ListaResultadoVista.Add(ResultadoVista);
-
                                 }
                                 else
                                 {
                                     //Aqui debo llenar el objeto de respuesta ya que no lo voy a enviar al proveedor, por falta de archivo
                                     ResultadoMensaje.mensaje = "No se encuentra el archivo Acuse";
                                 }
-
-
                             }
                             else
                             {
@@ -263,8 +243,25 @@ namespace HGInetInteroperabilidad.Procesos
                         //Validar Directorio para 
                         //Directorio.CrearDirectorio(ruta_fisica);
 
+
                         //Subir archivo FTP
-                        Clienteftp.SubirArchivoFTP(string.Format("{0}//{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
+                        bool ArchivoEnviado = false;
+                        try
+                        {
+                             ArchivoEnviado=Clienteftp.SubirArchivoFTP(string.Format("{0}//{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
+
+                        }
+                        catch (Exception excepcion)
+                        {
+
+                            LogExcepcion.Guardar(excepcion);
+                            if (!ArchivoEnviado)
+                            {
+                                throw new ApplicationException(string.Format("Problemas con el FTP : {0}", excepcion));
+                            }
+                        }
+
+                       
 
                         //Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
 
@@ -292,7 +289,6 @@ namespace HGInetInteroperabilidad.Procesos
                             foreach (var Detalle in Respuesta.trackingIds)
                             {
 
-
                                 try
                                 {
                                     //Aqui se lee la respuesta de cada uno de los documentos
@@ -314,8 +310,15 @@ namespace HGInetInteroperabilidad.Procesos
                                         //Si el documento no es del proveedor al que envie el documento, debo enviar correo al adquiriente
                                         if (Detalle.codigoError == RespuestaInterOperabilidad.ClienteNoEncontrado.GetHashCode().ToString())
                                         {
-                                            Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-                                            email.NotificacionDocumento(Resp.Documento, Resp.Documento.TblEmpresasFacturador.StrTelefono);
+                                            try
+                                            {
+                                                Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+                                                email.NotificacionDocumento(Resp.Documento, Resp.Documento.TblEmpresasFacturador.StrTelefono);
+                                            }
+                                            catch (Exception excepcion)
+                                            {
+                                                LogExcepcion.Guardar(excepcion);
+                                            }
                                             
                                         }
                                         else
@@ -392,7 +395,6 @@ namespace HGInetInteroperabilidad.Procesos
                                 }
                             }
 
-
                             //Agrupo Documento
                             ListaResultadoVista = ListaResultadoVista
                                .GroupBy(p => p.Documento.IntNumero)
@@ -418,10 +420,6 @@ namespace HGInetInteroperabilidad.Procesos
 
                     LogExcepcion.Guardar(excepcion);
                 }
-
-
-
-
             }
 
             List<RespuestaRegistro> Datos = new List<RespuestaRegistro>();
@@ -429,13 +427,19 @@ namespace HGInetInteroperabilidad.Procesos
             if (DocumetoRespuesta.Count < 1)
             {
                 RespuestaRegistro RespuestaVacia = new RespuestaRegistro();
-                RespuestaVacia.MensajeZip = Respuesta.mensajeGlobal;
+                TblDocumentos doc = new TblDocumentos();
+                RegistroListaDetalleDocRespuesta resp = new RegistroListaDetalleDocRespuesta();
+                resp.mensaje = "Revisar Log";
+                RespuestaVacia.Documento = doc;
+                RespuestaVacia.Respuesta = resp;
+
+                RespuestaVacia.MensajeZip = (string.IsNullOrEmpty(Respuesta.mensajeGlobal))? "Revisar Log": Respuesta.mensajeGlobal;
                 DocumetoRespuesta.Add(RespuestaVacia);
+                Datos=DocumetoRespuesta;
+                
             }
             else
-            {
-
-                //Agrupo por Proveedor
+            {                
                 Datos = ListaResultadoVista
                    .GroupBy(p => p.Documento.IntNumero)
                    .Select(g => g.First())

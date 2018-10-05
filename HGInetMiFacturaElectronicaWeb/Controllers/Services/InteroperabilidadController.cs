@@ -244,11 +244,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Documento=d.Documento.IntNumero,
                     Mensaje=d.Respuesta.mensaje,
                     uuid =d.Respuesta.uuid,
-                    codigoError= d.Respuesta.codigoError,
-                    //tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
-                    tipodoc = (d.Documento.IntIdEstado == (Int16) ProcesoEstado.Finalizacion.GetHashCode())? Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(TipoDocumento.AcuseRecibo.GetHashCode())) :  Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
+                    codigoError= d.Respuesta.codigoError,                    
+                    tipodoc = (d.Documento.IntIdEstado==0)? "": (d.Documento.IntIdEstado == (Int16) ProcesoEstado.Finalizacion.GetHashCode())? Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(TipoDocumento.AcuseRecibo.GetHashCode())) :  Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.Documento.IntDocTipo)),
                     FechaUltimoProceso = d.Documento.DatFechaActualizaEstado,
-                    EstadoFactura = DescripcionEstadoFactura(d.Documento.IntIdEstado),
+                    EstadoFactura = (d.Documento.IntIdEstado == 0) ? "" :  DescripcionEstadoFactura(d.Documento.IntIdEstado),
                     Nombre = d.Respuesta.nombreDocumento
                 });
                     
