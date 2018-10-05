@@ -283,6 +283,14 @@ namespace HGInetInteroperabilidad.Procesos
                                 throw new ApplicationException(string.Format("Error al guardar el documento {0} Detalle: {1}", objeto.nombre, excepcion.Message));
 
                             }
+
+                            try
+                            {   // envía el correo del documento al Adquiriente(Facturador Receptor)
+                                Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+                                email.NotificacionDocumento(documento_bd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
+                                //documento_bd.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
+                            }
+                            catch (Exception) { }
                         }
 
                         item_respuesta.nombreDocumento = objeto.nombre;
