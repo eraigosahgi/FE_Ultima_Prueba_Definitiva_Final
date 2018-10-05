@@ -256,6 +256,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             if (string.IsNullOrEmpty(documento.DocumentoRef))
                 documento.DocumentoRef = string.Empty;
 
+            //Inicializa la propiedad, no es un campo requerido
+            if (string.IsNullOrEmpty(documento.PedidoRef))
+                documento.PedidoRef = string.Empty;
+
             //setea el campo y lo deja en blanco
             documento.Cufe = string.Empty;
 

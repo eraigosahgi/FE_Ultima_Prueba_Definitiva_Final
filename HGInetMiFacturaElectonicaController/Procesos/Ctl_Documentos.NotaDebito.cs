@@ -235,6 +235,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             if (string.IsNullOrEmpty(documento.DocumentoRef))
                 throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "DocumentoRef", "string"));
 
+            //Inicializa la propiedad, no es un campo requerido
+            if (string.IsNullOrEmpty(documento.PedidoRef))
+                documento.PedidoRef = string.Empty;
+
             //Validar que no este vacia la fecha del documento de referencia
             if (documento.FechaFactura == null)
                 throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
