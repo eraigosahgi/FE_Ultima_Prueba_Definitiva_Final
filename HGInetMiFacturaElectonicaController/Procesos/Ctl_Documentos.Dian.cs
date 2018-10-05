@@ -55,12 +55,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
+			// ruta física del xml
+			string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
+			carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+
+
 			// url pública del xml
-			string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, documento_result.IdSeguridadTercero.ToString());
-			respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+			string url_ppal = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
+			respuesta.UrlXmlUbl = string.Format(@"{0}/{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
 			// url pública del zip
-			string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreZip);
+			string url_ppal_zip = string.Format(@"{0}/{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreZip);
 
 			documentoBd.StrCufe = respuesta.Cufe;
 			documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
@@ -111,7 +116,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// ruta física del xml
 				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
-				carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+				carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
 
 				// valida la existencia de la carpeta
 				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
@@ -120,7 +125,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo, documentoBd.StrPrefijo));
 
 				// ruta del xml
-				string ruta_xml = string.Format(@"{0}{1}", carpeta_xml, archivo_xml);
+				string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
 
 				// elimina el archivo xml si existe
 				if (Archivo.ValidarExistencia(ruta_xml))
@@ -473,7 +478,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					// ruta física del xml
 					string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador.StrIdSeguridad.ToString());
-					carpeta_xml = string.Format(@"{0}{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
+					carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
 
 					// valida la existencia de la carpeta
 					carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);

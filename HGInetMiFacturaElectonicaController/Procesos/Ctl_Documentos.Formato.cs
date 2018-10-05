@@ -1,5 +1,6 @@
 ﻿using HGInetFacturaEReports.ReportDesigner;
 using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
@@ -40,6 +41,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				bool generar_pdf = true;
 
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
 				Formato formato_documento = (Formato)(dynamic)documento_obj.DocumentoFormato;
 				if (formato_documento != null)
 				{
@@ -51,12 +54,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (!string.IsNullOrWhiteSpace(documento_result.NombrePdf))
 						{
-							PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 							// url pública del pdf
-							string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, documento_result.IdSeguridadTercero.ToString());
-
-							respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
+							string url_ppal_pdf = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+							
+							respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
 
 							documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
 
@@ -70,10 +72,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (generar_pdf)
 				{
-					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-					string url_ppal_pdf = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, documento_result.IdSeguridadTercero.ToString());
-					string ruta = string.Format(@"{0}{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+					string url_ppal_pdf = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+					string ruta = string.Format(@"{0}/{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 					Report reporte_pdf = new Report();
 					bool reporte_archivado = true;
 					/*
@@ -157,7 +158,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
 						x.GenerarPdf(reporte_pdf);
 
-						respuesta.UrlPdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+						respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 						documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
 						Ctl_Documento documento_tmp = new Ctl_Documento();
 						documentoBd = documento_tmp.Actualizar(documentoBd);

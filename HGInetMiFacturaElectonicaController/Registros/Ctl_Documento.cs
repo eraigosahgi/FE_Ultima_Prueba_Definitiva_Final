@@ -874,7 +874,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 			//Url publica de la respuesta de la DIAN en xml
-			string url_ppal_respuesta = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, objetoBd.TblEmpresasFacturador.StrIdSeguridad.ToString());
+			string url_ppal_respuesta = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, objetoBd.TblEmpresasFacturador.StrIdSeguridad.ToString());
 
 			string ruta_xml = string.Format(@"{0}{1}/{2}", url_ppal_respuesta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian, archivo_xml);
 

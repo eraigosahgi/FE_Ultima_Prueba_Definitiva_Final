@@ -34,13 +34,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// ruta física del xml
 				string carpeta_pdf = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento.IdSeguridadTercero.ToString());
-				carpeta_pdf = string.Format(@"{0}{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+				carpeta_pdf = string.Format(@"{0}\{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
 				// valida la existencia de la carpeta
 				carpeta_pdf = Directorio.CrearDirectorio(carpeta_pdf);
 
                 // ruta del pdf
-                string ruta_pdf = string.Format(@"{0}{1}.pdf", carpeta_pdf, documento.NombreXml);
+                string ruta_pdf = string.Format(@"{0}\{1}.pdf", carpeta_pdf, documento.NombreXml);
 
                 //convierte el array de byte en archivo pdf
                 File.WriteAllBytes(ruta_pdf, Convert.FromBase64String(archivo));
@@ -81,13 +81,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// ruta física del xml
 				string carpeta_pdf = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, directorio);
-				carpeta_pdf = string.Format(@"{0}{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+				carpeta_pdf = string.Format(@"{0}\{1}", carpeta_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
 				// valida la existencia de la carpeta
 				carpeta_pdf = Directorio.CrearDirectorio(carpeta_pdf);
 
                 // ruta del pdf
-                string ruta_pdf = string.Format(@"{0}{1}.pdf", carpeta_pdf, nombre);
+                string ruta_pdf = string.Format(@"{0}\{1}.pdf", carpeta_pdf, nombre);
 
                 //convierte el array de byte en archivo pdf
                 File.WriteAllBytes(ruta_pdf, Convert.FromBase64String(archivo.ArchivoPdf));

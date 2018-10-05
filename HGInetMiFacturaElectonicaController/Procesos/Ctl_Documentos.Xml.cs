@@ -1,4 +1,5 @@
 ﻿using HGInetFirmaDigital;
+using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
@@ -74,8 +75,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData; 
 
                 // url pública del xml
-                string url_ppal = LibreriaGlobalHGInet.Dms.ObtenerUrlPrincipal(plataforma_datos.RutaPublica, documento_result.IdSeguridadTercero.ToString());
-				respuesta.UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento_result.NombreXml);
+                string url_ppal = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+				respuesta.UrlXmlUbl = string.Format(@"{0}/{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, documento_result.NombreXml);
 
 				//Actualiza Documento en Base de Datos
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
