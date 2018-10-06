@@ -177,8 +177,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Demos
             {
 
                 Usuario u = new Usuario();
-                u.username = "811021438";
-                u.password = "clave";
+                u.username = "ftp.testint1";
+                u.password = "Po&on271";
 
                 string jsonUsuario = JsonConvert.SerializeObject(u);
 
@@ -265,7 +265,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Demos
 
         protected void cmdConsultaruuid_Click(object sender, EventArgs e)
         {
-            txtresconsulta.Text = Ctl_ClienteWebApi.Inter_ConsultarEstado("1425365412",txttoken.Text, "http://localhost:39048/");
+            txtresconsulta.Text = Ctl_ClienteWebApi.Inter_ConsultarEstado("a834801f-fb69-41e9-bdb4-b8aa6e4e2403", txttoken.Text, "http://localhost:39048/");
         }
 
 

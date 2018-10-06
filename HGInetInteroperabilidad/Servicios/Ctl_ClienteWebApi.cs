@@ -69,7 +69,7 @@ namespace HGInetInteroperabilidad.Servicios
 
 			try
 			{
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "/interoperabilidad/api/v1_0/Consultar?UUID");
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "/interoperabilidad/api/v1_0/Consultar?UUID=" + UUID);
 
 				request.Method = "GET";
 				request.ContentType = "application/json; charset=utf-8";

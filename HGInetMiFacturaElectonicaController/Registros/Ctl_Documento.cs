@@ -1257,6 +1257,29 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			return Doc;
 		}
 
+        /// <summary>
+        /// Consulta la historia de un documento de interoperabilidad
+        /// Aceptado, rechazado, pagado, ect
+        /// </summary>
+        /// <param name="uuid">guid de seguridad de inteoperabilidad de un documento</param>
+        /// <param name="IdentificacionProveedor">Proveedor emisor del documento</param>
+        /// <returns></returns>
+        public TblDocumentos ObtenerHistorialDococumento(Guid uuid, string IdentificacionProveedor)
+        {
+            TblDocumentos Datos = (from doc in context.TblDocumentos
+                                   where doc.StrIdInteroperabilidad == uuid
+                                   && doc.StrProveedorEmisor.Equals(IdentificacionProveedor)
+                                   select doc).FirstOrDefault();          
+
+            return Datos;
+        }
+
+
+
+
+
+
+
 		public List<TblDocumentos> ObtenerAcusePendienteRecepcion(string IdentificacionProveedor)
 		{
 			try

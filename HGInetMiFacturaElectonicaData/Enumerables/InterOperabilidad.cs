@@ -95,5 +95,72 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
 
     }
 
+    /// <summary>
+    /// Enumerable para el manejo de las respuestas de la consulta de documento por uuid Global del Documento
+    /// </summary>
+    public enum RespuestaInterOperabilidadUUID
+    {
+        [Description("El documento electrónico existe en el sistema  se procede a dar el estado de procesamiento ")]
+        ConsultaExitosa = 201,
+
+        [Description("El documento electrónico asociado al UUID consultado no existe en el sistema")]
+        Noexiste = 409,
+
+        [Description("El documento electrónico asociado al UUID consultado existe en el sistema pero fue registrado por un proveedor de factura diferente ")]
+        Noexisteparaproveedorcosnsultado = 406,
+
+        [Description("Error interno del receptor del documento electrónico ")]
+        ErrorInterno = 500,        
+
+        [Description("Usuario no autenticado ")]
+        UsuarioNoAutenticado = 400,
+        
+    }
+
+
+    /// <summary>
+    /// Codigos de respuesta del Historial de documento detallado por estado
+    /// </summary>
+    public enum RespuestaUUIDDocumento
+    {
+        [Description("Radicado")]
+        Radicado = 0,
+
+        [Description("Aceptado")]
+        Aceptado = 1,
+
+        [Description("Rechazado")]
+        Rechazado = 2,
+
+        [Description("Tácitamente aceptado")]
+        AprobadoTacito = 3,
+
+        [Description("Pagado")]
+        Pagado = 4
+    }
+
+
+
+
+    /// <summary>
+    /// Codigos de respuesta del Historial de documento detallado por estado
+    /// </summary>
+    public enum RespuestaUUIDMensaje
+    {
+        [Description("Documento radicado en el Operador del receptor")]
+        Pendiente = 0,
+
+        [Description("Documento aceptado por el cliente")]
+        Aceptado = 1,
+
+        [Description("Documento rechazado por el cliente")]
+        Rechazado = 2,
+
+        [Description("Documento Tácitamente aceptado por el cliente")]
+        AprobadoTacito = 3,
+
+        [Description("Documento Pagado por el cliente")]
+        Pagado = 4
+    }
 
 }

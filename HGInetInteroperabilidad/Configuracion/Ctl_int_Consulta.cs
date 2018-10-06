@@ -54,10 +54,7 @@ namespace HGInetInteroperabilidad.Configuracion
 
 
 
-            
-
-
-
+          
             return docRespuesta;
             
         }

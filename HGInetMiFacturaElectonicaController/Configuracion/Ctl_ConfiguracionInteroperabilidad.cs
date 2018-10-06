@@ -71,7 +71,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			// se encripta la clave en SHA256 para comparación con la base de datos
 			string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
-//			string clave_sha256 = clave;
 			TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
 													   where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
 													   select item).FirstOrDefault();

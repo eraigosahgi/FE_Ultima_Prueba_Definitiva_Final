@@ -20,6 +20,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace HGInetInteroperabilidad.Procesos
@@ -104,7 +105,7 @@ namespace HGInetInteroperabilidad.Procesos
 
                     PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-                    //Aqui busco la unicacion de la carpeta del proveedor tecnologico, esperar por la ruta real
+                    //Aqui busco la ubicacion de la carpeta del proveedor tecnologico, esperar por la ruta real
                     string RutaProveedor = (string.Format("{0}{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEnvio));
 
                     Directorio.CrearDirectorio(RutaProveedor);
@@ -136,11 +137,13 @@ namespace HGInetInteroperabilidad.Procesos
                             ResultadoVista.Documento = Documento;
 
                             ////este es un ciclo del proveedor para ubicar los documentos por facturador
-                            //////////////////////////////////////////////////////////////////////////////
+                            //////////////////////////////////////////////////////////////////////////////                            
 
                             ////Guid de seguridad del facturador electronico           
                             string Facturador = Documento.TblEmpresasFacturador.StrIdSeguridad.ToString();
-                            string RutaCarpeta = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), Facturador);
+
+                            //string RutaCarpeta = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), Facturador);
+                            string RutaCarpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Facturador);
                             string RutaArchivos = string.Format(@"{0}{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
                             string RutaArchivosAcuse = string.Format(@"{0}{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
 
@@ -232,7 +235,8 @@ namespace HGInetInteroperabilidad.Procesos
                     if (RegistroEnvio.documentos.Count > 0)
                     {
                         //Serializo el objeto en json para hacer el envio a la webapi
-                        string jsonListaFacturas = JsonConvert.SerializeObject(RegistroEnvio, Formatting.Indented);
+                        //string jsonListaFacturas = JsonConvert.SerializeObject(RegistroEnvio, Formatting.Indented);
+                        string jsonListaFacturas = JsonConvert.SerializeObject(RegistroEnvio);
 
                         //Cierro el archivo zip
                         archive.Dispose();
@@ -260,9 +264,7 @@ namespace HGInetInteroperabilidad.Procesos
                                 throw new ApplicationException(string.Format("Problemas con el FTP : {0}", excepcion));
                             }
                         }
-
-                       
-
+                      
                         //Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
 
                         //Aqui elimino el archivo Zip si todo esta OK
@@ -673,6 +675,43 @@ namespace HGInetInteroperabilidad.Procesos
                 }
             }
             return lista_respuesta;
+        }
+
+
+
+
+        /// <summary>
+        /// Retorna un base64 con el contenido del archivo xml acuse.
+        /// </summary>
+        /// <param name="uuid">Id de seguridad del Documento</param>
+        /// <param name="Identifiacion">Proveedor Emisor</param>
+        /// <returns></returns>
+        public static MensajeGlobal ObtenerAcusebase64(Guid uuid,string Identifiacion)
+        {
+
+            Ctl_Documento Controlador = new Ctl_Documento();
+
+            TblDocumentos Doc = Controlador.ObtenerHistorialDococumento(uuid, Identifiacion);
+
+            PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+            // ruta física del xml
+            string Ruta_Acuse = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Doc.TblEmpresasFacturador.StrIdSeguridad.ToString());
+            Ruta_Acuse = string.Format(@"{0}\{1}\{2}", Ruta_Acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse,Path.GetFileName(Doc.StrUrlAcuseUbl));
+            
+            byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(Ruta_Acuse);
+            string readText = File.ReadAllText(Ruta_Acuse);            
+            var encoding = new UnicodeEncoding();
+            string archivo = Convert.ToBase64String(encoding.GetBytes(readText.ToString()));
+
+            //Se debe enviar esta respuesta
+            MensajeGlobal Respuesta = new MensajeGlobal();
+
+            Respuesta.timeStamp = Fecha.GetFecha();
+            Respuesta.mensajeGlobal = archivo;
+            
+            return Respuesta;
+                               
         }
 
 
