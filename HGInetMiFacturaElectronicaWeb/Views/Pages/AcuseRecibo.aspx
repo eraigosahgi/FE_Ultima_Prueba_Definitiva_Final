@@ -208,6 +208,8 @@
                                 <a href="{{datos.Pdf}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;">Pdf</a>
                                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 <a href="{{datos.Xml}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;">Xml</a>
+								 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                <a href="{{datos.XmlAcuse}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-show="datos.XmlAcuse != null">Xml Acuse</a>
                             </div>
                             <br />
                             <div style="text-align: center;">

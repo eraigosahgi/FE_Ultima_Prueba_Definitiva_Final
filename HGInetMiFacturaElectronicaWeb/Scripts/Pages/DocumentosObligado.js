@@ -310,6 +310,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
                     		var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
 
+                    		var visible_xml_acuse = "style='pointer-events:auto;cursor: not-allowed;'";
+
                     		var visible_acuse = " title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";
 
                     		if (options.data.Pdf)
@@ -327,9 +329,15 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     		else
                     			options.data.RutaAcuse = "#";
 
+                    		if (options.data.XmlAcuse)
+                    			visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
+                    		else
+                    			options.data.XmlAcuse = "#";
+
                     		$("<div>")
                                 .append(
-                                    $("<a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;' target='_blank' class='icon-file-xml' " + visible_xml + ">"),
+                                   $("<a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;margin-right:5%;' target='_blank' class='icon-file-xml' " + visible_xml + ">"),
+								   $("<a target='_blank' class='icon-file-xml' " + visible_xml_acuse + "></a>"),
                                     $("<a class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:5%; font-size:19px'></a>").dxButton({
                                     	onClick: function () {
                                     		$scope.showModal = true;

@@ -74,6 +74,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					NombreFacturador = d.TblEmpresasFacturador.StrRazonSocial,
 					Xml = d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
+					XmlAcuse = d.StrUrlAcuseUbl,
 					d.StrIdSeguridad,
 					RutaPublica = plataforma.RutaPublica,
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
@@ -137,6 +138,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
 					Xml = d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
+					XmlAcuse = d.StrUrlAcuseUbl,
 					d.StrIdSeguridad,
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
@@ -188,6 +190,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
 					Estatus = Pago.VerificarSaldo(id_seguridad),
+					XmlAcuse = d.StrUrlAcuseUbl,
 					pago = d.TblPagosElectronicos.Select(p => new
 					{
 						p.StrIdRegistro,

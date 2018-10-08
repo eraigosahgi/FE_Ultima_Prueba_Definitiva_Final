@@ -181,8 +181,8 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     	width: "auto",
                     	cellTemplate: function (container, options) {
                     		var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
-
                     		var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
+                    		var visible_xml_acuse = "style='pointer-events:auto;cursor: not-allowed;'";
 
                     		if (options.data.Pdf)
                     			visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer'";
@@ -193,8 +193,14 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     			visible_xml = "href='" + options.data.Xml + "' style='pointer-events:auto;cursor: pointer'";
                     		else
                     			options.data.Xml = "#";
+
+                    		if (options.data.XmlAcuse)
+                    			visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
+                    		else
+                    			options.data.XmlAcuse = "#";
+
                     		$("<div>")
-                                .append($("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;"))
+                                .append($("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml_acuse + ">&nbsp;&nbsp;"))
                                 .append($(""))
                                 .appendTo(container);
                     	}
