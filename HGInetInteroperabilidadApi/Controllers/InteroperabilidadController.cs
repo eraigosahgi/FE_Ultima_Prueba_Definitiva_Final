@@ -107,8 +107,8 @@ namespace WebApi.Jwt.Controllers
                 {                    
                     DetalleDocRespuesta Resp = new DetalleDocRespuesta();
                     Resp.nombre = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDDocumento>(doc.IntAdquirienteRecibo));
-                    Resp.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(doc.IntAdquirienteRecibo));                    
-                    Resp.timeStamp = doc.DatAdquirienteFechaRecibo.Value;
+                    Resp.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(doc.IntAdquirienteRecibo));
+                    Resp.timeStamp = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
                     ListaRespuesta.Add(Resp);
 
                     //Mensajes Global
@@ -180,40 +180,69 @@ namespace WebApi.Jwt.Controllers
         public IHttpActionResult cambioContrasena()
         {
 
-            System.Net.Http.Headers.HttpRequestHeaders headers = this.Request.Headers;
-            string NITProveedor = string.Empty;
-            string ContrasenaNueva = string.Empty;
-            string ContrasenaActual = string.Empty;
-
-            //Obtengo el codigo del Proveedor
-            //Si le falta alguno de los parametros, se debe retornar un error
-            if (headers.Contains("NITProveedor"))
+            try
             {
-                NITProveedor = headers.GetValues("NITProveedor").First();
-            }
+                System.Net.Http.Headers.HttpRequestHeaders headers = this.Request.Headers;
+                string NITProveedor = string.Empty;
+                string ContrasenaNueva = string.Empty;
+                string ContrasenaActual = string.Empty;
 
-            if (headers.Contains("ContrasenaNueva"))
+                //Obtengo el codigo del Proveedor
+                //Si le falta alguno de los parametros, se debe retornar un error
+                if (headers.Contains("NITProveedor"))
+                {
+                    NITProveedor = headers.GetValues("NITProveedor").First();
+                }
+
+                if (headers.Contains("ContrasenaNueva"))
+                {
+                    ContrasenaNueva = headers.GetValues("ContrasenaNueva").First();
+                }
+
+                if (headers.Contains("ContrasenaActual"))
+                {
+                    ContrasenaActual = headers.GetValues("ContrasenaActual").First();
+                }
+
+                //Aqui se debe hacer el proceso de cambio de contraseña
+                ///------------------------------------------------------
+
+                //Y luego se debe enviar esta respuesta
+                MensajeGlobal Respuesta = new MensajeGlobal();
+                Respuesta.timeStamp = Fecha.GetFecha();
+
+                Ctl_ConfiguracionInteroperabilidad Controlador = new Ctl_ConfiguracionInteroperabilidad();
+
+
+                TblConfiguracionInteroperabilidad Datos = Controlador.CambiarContraseña(NITProveedor, ContrasenaActual, ContrasenaNueva);
+
+                //201 Contraseña actualizada satisfactoriamente Object
+                //409 Usuario o contraseña inexistentes Object
+                //406 La nueva contraseña no cumple con las políticas mínimas de seguridad Object
+                //500 Error interno del receptor del documento electrónico
+
+                Respuesta.timeStamp = Fecha.GetFecha();
+
+                if (Datos == null)
+                {
+                    Respuesta.mensajeGlobal = "409 Usuario o contraseña inexistentes";
+                    return Ok(Respuesta);
+                }
+
+                Respuesta.mensajeGlobal = "201 Contraseña actualizada satisfactoriamente";
+                //Aqui recibo la respuesta y la envio
+
+                return Ok(Respuesta);
+            }
+            catch (Exception)
             {
-                ContrasenaNueva = headers.GetValues("ContrasenaNueva").First();
+                //En caso de generar un error
+                MensajeGlobal Respuesta = new MensajeGlobal();
+                Respuesta.mensajeGlobal = "500 Error interno del receptor del documento electrónico";
+                Respuesta.timeStamp = Fecha.GetFecha();
+                return Ok(Respuesta);
+
             }
-
-            if (headers.Contains("ContrasenaActual"))
-            {
-                ContrasenaActual = headers.GetValues("ContrasenaActual").First();
-            }
-
-            //Aqui se debe hacer el proceso de cambio de contraseña
-            ///------------------------------------------------------
-
-            //Y luego se debe enviar esta respuesta
-            MensajeGlobal Respuesta = new MensajeGlobal();
-
-            Respuesta.timeStamp = Fecha.GetFecha();
-            Respuesta.mensajeGlobal = "Contraseña actualizada satisfactoriamente";
-
-            //Aqui recibo la respuesta y la envio
-
-            return Ok(Respuesta);
 
         }
 
