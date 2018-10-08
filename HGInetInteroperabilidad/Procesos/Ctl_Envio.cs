@@ -698,11 +698,12 @@ namespace HGInetInteroperabilidad.Procesos
             // ruta física del xml
             string Ruta_Acuse = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Doc.TblEmpresasFacturador.StrIdSeguridad.ToString());
             Ruta_Acuse = string.Format(@"{0}\{1}\{2}", Ruta_Acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse,Path.GetFileName(Doc.StrUrlAcuseUbl));
+
             
-            byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(Ruta_Acuse);
-            string readText = File.ReadAllText(Ruta_Acuse);            
-            var encoding = new UnicodeEncoding();
-            string archivo = Convert.ToBase64String(encoding.GetBytes(readText.ToString()));
+            string readText = File.ReadAllText(Ruta_Acuse);
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(readText);
+            string archivo = System.Convert.ToBase64String(plainTextBytes);
+
 
             //Se debe enviar esta respuesta
             MensajeGlobal Respuesta = new MensajeGlobal();
