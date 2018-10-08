@@ -239,7 +239,7 @@ namespace WebApi.Jwt.Controllers
 
             MensajeGlobal acuse = Ctl_Envio.ObtenerAcusebase64(Guid.Parse(UUID), Proveedor);
 
-            return Ok();
+            return Ok(acuse);
           
         }
 

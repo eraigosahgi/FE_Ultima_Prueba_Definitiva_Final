@@ -143,9 +143,9 @@ namespace HGInetInteroperabilidad.Procesos
                             string Facturador = Documento.TblEmpresasFacturador.StrIdSeguridad.ToString();
 
                             //string RutaCarpeta = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), Facturador);
-                            string RutaCarpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Facturador);
+                            string RutaCarpeta = string.Format("{0}\\{1}\\{2}\\", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Facturador);
                             string RutaArchivos = string.Format(@"{0}{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
-                            string RutaArchivosAcuse = string.Format(@"{0}{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
+                            string RutaArchivosAcuse = string.Format(@"{0}\{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
 
                             //valido que tipo de archivo debo enviar 1. (xml-ubl) y pdf 2. Acuse (xml-ubl)
                             if (Documento.IntIdEstado == ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode())
@@ -593,23 +593,24 @@ namespace HGInetInteroperabilidad.Procesos
                                 if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoUbl))
                                 {
                                     string nombre_archivo = string.Empty;
-                                    nombre_archivo = Path.GetFileName(item.StrUrlArchivoUbl);
+                                    nombre_archivo = Path.GetFileNameWithoutExtension(item.StrUrlArchivoUbl);
 
                                     PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-                                    string ruta_acuse = string.Format(@"{0}\{1}{2}\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.StrIdSeguridad);
+                                    string ruta_acuse = string.Format(@"{0}\{1}{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.StrIdSeguridad);
+									ruta_acuse = string.Format(@"{0}\{1}", ruta_acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
 
-                                    //Valida la existencia de la ruta de almacenamiento, sino existe la crea.
-                                    if (!Directorio.ValidarExistenciaArchivo(ruta_acuse))
+									//Valida la existencia de la ruta de almacenamiento, sino existe la crea.
+									if (!Directorio.ValidarExistenciaArchivo(ruta_acuse))
                                         Directorio.CrearDirectorio(ruta_acuse);
 
-                                    ruta_acuse = string.Format("{0}{1}", ruta_acuse, nombre_archivo);
+                                    ruta_acuse = string.Format("{0}\\{1}.xml", ruta_acuse, nombre_archivo);
                                     //Almacena el archivo en la ruta especificada
                                     doc.Save(ruta_acuse);
 
                                     Ctl_Empresa clase_empresa = new Ctl_Empresa();
                                     TblEmpresas datos_facturador = new TblEmpresas();
 
-                                    datos_facturador = clase_empresa.Obtener(item.StrObligadoIdRegistro);
+                                    datos_facturador = clase_empresa.Obtener(item.TblEmpresasFacturador.StrIdentificacion);
 
                                     //Serializa el objeto
 
@@ -705,13 +706,13 @@ namespace HGInetInteroperabilidad.Procesos
             string archivo = System.Convert.ToBase64String(plainTextBytes);
 
 
-            //Se debe enviar esta respuesta
-            MensajeGlobal Respuesta = new MensajeGlobal();
+			//Se debe enviar esta respuesta
+			MensajeGlobal Respuesta = new MensajeGlobal();
 
             Respuesta.timeStamp = Fecha.GetFecha();
-            Respuesta.mensajeGlobal = archivo;
-            
-            return Respuesta;
+			Respuesta.mensajeGlobal = archivo;
+
+			return Respuesta;
                                
         }
 

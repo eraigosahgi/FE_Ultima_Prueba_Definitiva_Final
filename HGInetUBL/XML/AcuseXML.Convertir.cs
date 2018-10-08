@@ -40,8 +40,11 @@ namespace HGInetUBL
                 obligado.RazonSocial = acuse.ReceiverParty.PartyName[0].Name.Value;
                 doc_acuse.DatosObligado = obligado;
 
-                //doc_acuse.Fecha = Convert.ToDateTime(string.Format("{0}{1}", acuse.IssueDate.Value, acuse.IssueTime.Value));
-                doc_acuse.Fecha = acuse.IssueDate.Value;
+				DateTime fecha_acuse = acuse.IssueDate.Value;
+				var hora_acuse = acuse.IssueTime.Value.Split(':');
+
+				fecha_acuse = fecha_acuse.AddHours(Convert.ToDouble(hora_acuse[0])).AddMinutes(Convert.ToDouble(hora_acuse[1])).AddSeconds(Convert.ToDouble(hora_acuse[2]));
+				doc_acuse.Fecha = Convert.ToDateTime(fecha_acuse);
 
 
 

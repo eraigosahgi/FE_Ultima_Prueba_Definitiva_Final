@@ -343,7 +343,7 @@ namespace HGInetInteroperabilidad.Procesos
                 //valida si el Documento ya existe en Base de Datos para actualizar la informacion
                 try
                 {
-                    documento_bd = num_doc.DocumentoPorIdSeguridad(Guid.Parse(documento_obj.IdSeguridad));
+                    documento_bd = num_doc.ObtenerPorIdInteroperabilidad(Guid.Parse(documento_obj.IdSeguridad));
                 }
                 catch (Exception excepcion)
                 {
@@ -655,7 +655,7 @@ namespace HGInetInteroperabilidad.Procesos
                 string archivo = nombre_archivo;
 
                 // ruta del xml
-                string ruta = string.Format(@"{0}\{1}", carpeta, archivo);
+                string ruta = string.Format(@"{0}{1}", carpeta, archivo);
 
                 //Copia el archivo de la ruta de origen a la ruta destino
                 Archivo.CopiarArchivo(ruta_archivo, ruta);

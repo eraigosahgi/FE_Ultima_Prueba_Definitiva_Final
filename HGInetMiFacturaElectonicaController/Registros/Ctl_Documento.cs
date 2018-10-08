@@ -580,19 +580,28 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 		/// <summary>
-		/// Obtiene un documento por id se seguridad.
+		/// Obtiene un documento por id de interoperabilidad.
 		/// </summary>
 		/// <param name="id_seguridad"></param>
 		/// <returns></returns>
-		public TblDocumentos DocumentoPorIdSeguridad(System.Guid id_seguridad)
+		public TblDocumentos ObtenerPorIdInteroperabilidad(System.Guid id_seguridad)
 		{
 
-			var respuesta = (from datos in context.TblDocumentos
-							 where datos.StrIdSeguridad.Equals(id_seguridad)
-							 select datos
-							 ).FirstOrDefault();
+			try
+			{
+				var respuesta = (from datos in context.TblDocumentos
+								 where datos.StrIdInteroperabilidad == id_seguridad
+								 select datos
+									 ).FirstOrDefault();
+			
 
 			return respuesta;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+
+			}
 
 		}
 
