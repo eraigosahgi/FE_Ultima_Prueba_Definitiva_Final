@@ -275,13 +275,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			int ErrorDian = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
 
 			var respuesta = (from datos in context.TblDocumentos
-							 where (datos.StrEmpresaAdquiriente.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
+							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
 										&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 										   && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-										   && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 2)
-										   && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 1)
 										   && (estado_dian.Contains(datos.IntIdEstado.ToString()))
 										   && (datos.IntIdEstado != ErrorDian)
+										   && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+										   && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
 							 orderby datos.IntNumero descending
 							 select datos).ToList();
 
@@ -345,8 +346,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 											  && (estado_dian.Contains(datos.IntIdEstado.ToString()))
 											  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
 											  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
-												&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 2)
-												&& ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 1)
+											 && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+											 && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
 											  orderby datos.IntNumero descending
 											  select datos).ToList();
 
@@ -593,9 +594,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 where datos.StrIdInteroperabilidad == id_seguridad
 								 select datos
 									 ).FirstOrDefault();
-			
 
-			return respuesta;
+
+				return respuesta;
 			}
 			catch (Exception excepcion)
 			{
@@ -1268,22 +1269,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			return Doc;
 		}
 
-        /// <summary>
-        /// Consulta la historia de un documento de interoperabilidad
-        /// Aceptado, rechazado, pagado, ect
-        /// </summary>
-        /// <param name="uuid">guid de seguridad de inteoperabilidad de un documento</param>
-        /// <param name="IdentificacionProveedor">Proveedor emisor del documento</param>
-        /// <returns></returns>
-        public TblDocumentos ObtenerHistorialDococumento(Guid uuid, string IdentificacionProveedor)
-        {
-            TblDocumentos Datos = (from doc in context.TblDocumentos
-                                   where doc.StrIdInteroperabilidad == uuid
-                                   && doc.StrProveedorEmisor.Equals(IdentificacionProveedor)
-                                   select doc).FirstOrDefault();          
+		/// <summary>
+		/// Consulta la historia de un documento de interoperabilidad
+		/// Aceptado, rechazado, pagado, ect
+		/// </summary>
+		/// <param name="uuid">guid de seguridad de inteoperabilidad de un documento</param>
+		/// <param name="IdentificacionProveedor">Proveedor emisor del documento</param>
+		/// <returns></returns>
+		public TblDocumentos ObtenerHistorialDococumento(Guid uuid, string IdentificacionProveedor)
+		{
+			TblDocumentos Datos = (from doc in context.TblDocumentos
+								   where doc.StrIdInteroperabilidad == uuid
+								   && doc.StrProveedorEmisor.Equals(IdentificacionProveedor)
+								   select doc).FirstOrDefault();
 
-            return Datos;
-        }
+			return Datos;
+		}
 
 
 
