@@ -105,6 +105,11 @@ ProcesarAcusePRecepcionApp.controller('ProcesarAcusePRecepcionController', funct
 						  	dataField: "Facturador",
 						  	cssClass: "col-md-2 "
 						  },
+                           {
+                               caption: "Adquiriente",
+                               dataField: "NombreAdquiriente",
+                               cssClass: "col-md-2 "
+                           },
 						  {
 						  	caption: "Estado",
 						  	dataField: "EstadoFactura",
