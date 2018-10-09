@@ -322,8 +322,10 @@ namespace HGInetInteroperabilidad.Procesos
                                                 DocumentoEmail = ControladorEmail.ObtenerPorIdSeguridad(Resp.Documento.StrIdSeguridad).FirstOrDefault();
 
                                                 email.NotificacionDocumento(DocumentoEmail, Resp.Documento.TblEmpresasFacturador.StrTelefono);
+                                                
+                                                DocumentoEmail.IntIdEstado = (short)ProcesoEstado.EnvioEmailAcuse.GetHashCode();
 
-
+                                                ControladorEmail.Actualizar(DocumentoEmail);
                                             }
                                             catch (Exception excepcion)
                                             {
