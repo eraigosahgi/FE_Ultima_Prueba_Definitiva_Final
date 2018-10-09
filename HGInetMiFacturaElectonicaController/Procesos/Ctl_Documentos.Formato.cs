@@ -85,7 +85,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Obtiene el diseño del formato en la base de datos y realiza el proceso de creación del pdf.
 					//sino hay un formato en base de datos con el formato especificado, toma los formatos existentes en el proyecto
 					Ctl_Formatos clase_formatos = new Ctl_Formatos();
-					TblFormatos datos_formato = clase_formatos.Obtener(formato_documento.Codigo, documentoBd.StrEmpresaFacturador, TipoFormato.FormatoPDF.GetHashCode());
+					TblFormatos datos_formato = clase_formatos.Obtener(formato_documento.Codigo, "900011659", TipoFormato.FormatoPDF.GetHashCode());
 
 					if (datos_formato != null)
 					{
@@ -158,9 +158,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
 						x.GenerarPdf(reporte_pdf);
 
-						respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 					}
 
+					respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 					//Actualiza el registro en la base de datos.
 					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
 					Ctl_Documento documento_tmp = new Ctl_Documento();

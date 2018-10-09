@@ -5,6 +5,7 @@ using System.ComponentModel;
 using DevExpress.XtraReports.UI;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using System.Collections.Generic;
+using System.IO;
 
 namespace HGInetFacturaEReports.ReportDesigner
 {
@@ -36,17 +37,48 @@ namespace HGInetFacturaEReports.ReportDesigner
 					//Recorre las secciones del reporte para obtener los controles y asignarle los valores.
 					foreach (Band reportBand in rep.Bands)
 					{
-						XRLabel control_descripcion = (XRLabel)FindBandControl(reportBand, string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()));
-						if (control_descripcion != null)
+
+						if (item.Ubicacion.ToLowerInvariant().Equals("campo1"))
 						{
-							control_descripcion.Text = item.Descripcion;
+							MemoryStream ms = null;
+
+							try
+							{
+								XRPictureBox control_imagen = (XRPictureBox)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
+
+								if (control_imagen != null)
+								{
+									byte[] bytes = Convert.FromBase64String(item.Valor);
+									using (ms = new MemoryStream(bytes))
+									{
+										Image logo = Image.FromStream(ms);
+										control_imagen.Image = logo;
+										control_imagen.Visible = true;
+									}
+									break;
+								}
+							}
+							catch (Exception excepcion)
+							{
+								if (ms != null)
+									ms.Close();
+							}
+						}
+						else
+						{
+							XRLabel control_descripcion = (XRLabel)FindBandControl(reportBand, string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()));
+							if (control_descripcion != null)
+							{
+								control_descripcion.Text = item.Descripcion;
+							}
+
+							XRLabel control_valor = (XRLabel)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
+							if (control_valor != null)
+							{
+								control_valor.Text = item.Valor;
+							}
 						}
 
-						XRLabel control_valor = (XRLabel)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
-						if (control_valor != null)
-						{
-							control_valor.Text = item.Valor;
-						}
 					}
 				}
 			}
