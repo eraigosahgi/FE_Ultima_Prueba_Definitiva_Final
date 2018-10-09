@@ -24,6 +24,7 @@ using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaController.Properties;
 
 namespace WebApi.Jwt.Controllers
 {
@@ -48,7 +49,8 @@ namespace WebApi.Jwt.Controllers
             {
                 AutenticacionRespuesta respuesta = new AutenticacionRespuesta();
 
-                respuesta.jwtToken = JwtManager.GenerateToken("811021438", Proveedor.StrIdentificacion, Proveedor.StrRazonSocial);
+                //Aqui se utiliza para el Token una constante llamada NitResolucionconPrefijo
+                respuesta.jwtToken = JwtManager.GenerateToken(Constantes.NitResolucionconPrefijo, Proveedor.StrIdentificacion, Proveedor.StrRazonSocial);
                 respuesta.passwordExpiration = Fecha.GetFecha();
 
                 return Ok(respuesta);
@@ -225,11 +227,11 @@ namespace WebApi.Jwt.Controllers
 
                 if (Datos == null)
                 {
-                    Respuesta.mensajeGlobal = "409 Usuario o contraseña inexistentes";
+                    Respuesta.mensajeGlobal = string.Format("{0} . {1}", RespuestaInterCambioClave.Noexiste.GetHashCode(), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.Noexiste.GetHashCode()))); 
                     return Ok(Respuesta);
                 }
 
-                Respuesta.mensajeGlobal = "201 Contraseña actualizada satisfactoriamente";
+                Respuesta.mensajeGlobal = string.Format("{0} . {1}", RespuestaInterCambioClave.CambioExitoso.GetHashCode(), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.CambioExitoso.GetHashCode()))); 
                 //Aqui recibo la respuesta y la envio
 
                 return Ok(Respuesta);
@@ -238,7 +240,7 @@ namespace WebApi.Jwt.Controllers
             {
                 //En caso de generar un error
                 MensajeGlobal Respuesta = new MensajeGlobal();
-                Respuesta.mensajeGlobal = "500 Error interno del receptor del documento electrónico";
+                Respuesta.mensajeGlobal = string.Format("{0} . {1}", RespuestaInterCambioClave.ErrorInterno.GetHashCode(), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.ErrorInterno.GetHashCode())));
                 Respuesta.timeStamp = Fecha.GetFecha();
                 return Ok(Respuesta);
 
