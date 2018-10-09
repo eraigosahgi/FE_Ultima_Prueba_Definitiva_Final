@@ -8,6 +8,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Objetos;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -285,15 +286,18 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 List<RespuestaAcuseProceso> respuesta = Ctl_Envio.ProcesarAcuses(ListaDocumentos);
 
+               // List<RegistroDocRespuesta> respuesta = Ctl_Envio.ProcesarAcuse(ListaDocumentos);
+
                 var datos = respuesta.Select(d => new
                 {
                     NumeroDocumento = d.Numero,
                     IdSeguridad = d.IdSeguridad.ToString(),
                     FechaProceso = d.FechaProceso,
                     DocumentoTipo = DescripcionTipodDoc(d.DocumentoTipo),
-                    Mensaje = (d.Error != null) ? d.Error.Mensaje : string.Empty,
-                    CodigoError = d.Error.Codigo,
-                    Facturador = d.Facturador
+                    Mensaje = d.Mensaje,                    
+                    Facturador = d.Facturador,
+                    Estado = (d.Error==null)?0: (d.Error.Mensaje.Contains("encolado"))?1:0,
+                    MensajeFinal = d.MensajeFinal
                 });
 
                 return Ok(datos);

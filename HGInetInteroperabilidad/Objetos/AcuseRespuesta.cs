@@ -30,5 +30,7 @@ namespace HGInetInteroperabilidad.Objetos
 		public short DocumentoTipo { get; set; }
 		public string Facturador { get; set; }
 		public Error Error { get; set; }
+        public string Mensaje { get; set; }
+        public string MensajeFinal { get; set; }
 	}
 }
