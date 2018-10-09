@@ -44,7 +44,7 @@ namespace HGInetInteroperabilidad.Configuracion
             string destino = string.Empty;
 
             //Obtengo archivos para procesar
-            if (!Directorio.ValidarExistenciaArchivoUrl(string.Format("{0}/{1}", proveedor.StrUrlFtp, datos.nombre)))
+            if (!Archivo.ValidarExistencia(string.Format(@"{0}{1}{2}\{3}", plataforma_datos.RutaDmsFisica,Constantes.RutaInteroperabilidadFtp,proveedor.StrIdSeguridad, datos.nombre)))
             {
                 datos_respuesta.timeStamp = Fecha.GetFecha();
                 datos_respuesta.trackingIds = null;
