@@ -481,10 +481,13 @@ namespace HGInetMiFacturaElectonicaController
 
                         mensaje = mensaje.Replace("{RutaUrl}", ruta_acuse);
                         mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
+						
+						bool IdPago = false;
 
-                        bool IdPago = (documento.TblEmpresasResoluciones.IntComercioId == null) ? false : (documento.TblEmpresasResoluciones.IntComercioId > 0) ? true : false;
+						if (documento.TblEmpresasResoluciones != null)
+							IdPago = (documento.TblEmpresasResoluciones.IntComercioId == null) ? false : (documento.TblEmpresasResoluciones.IntComercioId > 0) ? true : false;
 
-                        if (doc_tipo == TipoDocumento.Factura && IdPago)
+						if (doc_tipo == TipoDocumento.Factura && IdPago)
                         {
 
                             string ruta_pse = ruta_acuse + "&Zpago=true";
