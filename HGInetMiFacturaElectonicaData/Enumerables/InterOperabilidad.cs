@@ -163,4 +163,26 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         Pagado = 4
     }
 
+
+
+
+
+    /// <summary>
+    /// Enumerable para el manejo de las respuestas de cambio de contraseña
+    /// </summary>
+    public enum RespuestaInterCambioClave
+    {                          
+        [Description("Contraseña actualizada satisfactoriamente")]
+        CambioExitoso = 201,
+
+        [Description("Usuario o contraseña inexistentes")]
+        Noexiste = 409,
+
+        [Description("La nueva contraseña no cumple con las políticas mínimas de seguridad")]
+        NivelIncorrecto = 406,
+
+        [Description("Error interno del receptor del documento electrónico ")]
+        ErrorInterno = 500       
+    }
+
 }
