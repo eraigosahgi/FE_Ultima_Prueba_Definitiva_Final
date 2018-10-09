@@ -315,7 +315,15 @@ namespace HGInetInteroperabilidad.Procesos
                                             try
                                             {
                                                 Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-                                                email.NotificacionDocumento(Resp.Documento, Resp.Documento.TblEmpresasFacturador.StrTelefono);
+                                                Ctl_Documento ControladorEmail = new Ctl_Documento();
+
+                                                TblDocumentos DocumentoEmail = new TblDocumentos();
+
+                                                DocumentoEmail = ControladorEmail.ObtenerPorIdSeguridad(Resp.Documento.StrIdSeguridad).FirstOrDefault();
+
+                                                email.NotificacionDocumento(DocumentoEmail, Resp.Documento.TblEmpresasFacturador.StrTelefono);
+
+
                                             }
                                             catch (Exception excepcion)
                                             {
