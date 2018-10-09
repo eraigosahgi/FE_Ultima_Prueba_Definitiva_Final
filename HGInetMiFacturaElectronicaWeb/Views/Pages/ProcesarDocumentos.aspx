@@ -80,34 +80,34 @@
                         <div data-dx-button="ButtonOptionsConsultar" style="margin-top: -10%;"></div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="panel-body">
-            <div class="demo-container">
-                <div id="gridDocumentos"></div>
-                <div class="col-lg-12 text-right">
-                    <br />
-                    <div data-ng-show="total>0">
-                        <div id="btnProcesar" style="margin-right: 20px;"></div>
-                    </div>
-                </div>
-                <div class="demo-container" style="padding-top: 80px;">
-                    <div id="panelresultado">
-                        <div class="panel-heading">
-                            <h6 class="panel-title">Resultado de documentos procesados : </h6>
 
+                <div class="panel-body">
+                    <div class="demo-container">
+                        <div id="gridDocumentos"></div>
+                        <div class="col-lg-12 text-right">
+                            <br />
+                            <div data-ng-show="total>0">
+                                <div id="btnProcesar" style="margin-right: 20px;"></div>
+                            </div>
                         </div>
-                        <hr />
-                        <div id="gridDocumentosProcesados"></div>
+                        <div class="demo-container" style="padding-top: 80px;">
+                            <div id="panelresultado">
+                                <div class="panel-heading">
+                                    <h6 class="panel-title">Resultado de documentos procesados : </h6>
+
+                                </div>
+                                <hr />
+                                <div id="gridDocumentosProcesados"></div>
+                            </div>
+                        </div>
+
                     </div>
+
                 </div>
 
             </div>
-
         </div>
-
-
 
 
     </div>
