@@ -4,11 +4,12 @@ DevExpress.localization.locale(navigator.language);
 var AcuseReciboApp = angular.module('AcuseReciboApp', ['dx']);
 AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboController($scope, $http, $timeout) {
 
-
-
+ 
+    
 
 
 	$(document).ready(function () {
+        
 
 
 		var IdSeguridad = location.search.split('id_seguridad=')[1];
@@ -76,9 +77,10 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 			//ControladorApi: /Api/Documentos/
 			//Datos GET: id_seguridad
 			$http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
-				$scope.RespuestaAcuse = response.data;
-
-				console.log("Estatus del pago: ", response.data[0].Estatus);
+			    $scope.RespuestaAcuse = response.data;
+				
+			    $('#plugin').attr('src', $scope.RespuestaAcuse[0].Pdf);
+				
 				//Si estatus es igual a 2, entonces asigo los valores a las variables para ejecutar la consulta de saldo
 				if (response.data[0].Estatus == 2) {
 					$scope.Idregistro = response.data[0].pago[0].StrIdRegistro

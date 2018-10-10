@@ -235,14 +235,18 @@
 
             </div>
 
-            <!-- Visualización PDF -->
+           <%-- <!-- Visualización PDF -->
             <div class="col-md-6">
-
-                <embed width="100%" height="850px" name="plugin" id="plugin" src="{{datos.Pdf}}" type="application/pdf">
+                <embed width="100%" height="850px" id="plugin"  type="application/pdf"/>                
             </div>
-            <!-- /Visualización PDF -->
+            <!-- /Visualización PDF -->--%>
 
         </div>
+          <!-- Visualización PDF -->
+            <div class="col-md-6">
+                <iframe width="100%" height="850px" id="plugin"  type="application/pdf"> </iframe>                               
+            </div>
+            <!-- /Visualización PDF -->
 
 
     </div>
