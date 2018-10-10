@@ -28,643 +28,648 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
-    /// <summary>
-    /// Controlador para gestionar los documentos
-    /// </summary>
-    public partial class Ctl_Documentos
-    {
+	/// <summary>
+	/// Controlador para gestionar los documentos
+	/// </summary>
+	public partial class Ctl_Documentos
+	{
 
-        /// <summary>
-        /// Realiza el proceso en la plataforma para un documento
-        /// 1. Generar UBL - 2. Firmar - 3. Almacenar XML - 4. Comprimir - 5. Enviar DIAN - 6. Envío Adquiriente
-        /// </summary>
-        /// <param name="id_peticion">id único de identificación de la plataforma</param>
-        /// <param name="documento">datos del documento</param>
-        /// <param name="tipo_doc">tipo de documento a procesar</param>
-        /// <param name="resolucion">resolución del documento</param>
-        /// <param name="empresa">facturador electrónico del documento</param>
-        /// <returns>resultado del proceso</returns>
-        public static DocumentoRespuesta Procesar(Guid id_peticion, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa)
-        {
-            string numero_resolucion = string.Empty;
-            string prefijo = string.Empty;
+		/// <summary>
+		/// Realiza el proceso en la plataforma para un documento
+		/// 1. Generar UBL - 2. Firmar - 3. Almacenar XML - 4. Comprimir - 5. Enviar DIAN - 6. Envío Adquiriente
+		/// </summary>
+		/// <param name="id_peticion">id único de identificación de la plataforma</param>
+		/// <param name="documento">datos del documento</param>
+		/// <param name="tipo_doc">tipo de documento a procesar</param>
+		/// <param name="resolucion">resolución del documento</param>
+		/// <param name="empresa">facturador electrónico del documento</param>
+		/// <returns>resultado del proceso</returns>
+		public static DocumentoRespuesta Procesar(Guid id_peticion, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa)
+		{
+			string numero_resolucion = string.Empty;
+			string prefijo = string.Empty;
 
-            var documento_obj = (dynamic)null;
-            documento_obj = documento;
+			var documento_obj = (dynamic)null;
+			documento_obj = documento;
 
-            if (documento_obj != null)
-            {
+			if (documento_obj != null)
+			{
 
-                DateTime fecha_actual = Fecha.GetFecha();
+				DateTime fecha_actual = Fecha.GetFecha();
 
-                FacturaE_Documento documento_result = new FacturaE_Documento();
+				FacturaE_Documento documento_result = new FacturaE_Documento();
 
-                DocumentoRespuesta respuesta = new DocumentoRespuesta()
-                {
-                    Aceptacion = 0,
-                    CodigoRegistro = documento_obj.CodigoRegistro,
-                    Cufe = "",
-                    DescripcionProceso = "Recepción - Información del documento.",
-                    DocumentoTipo = tipo_doc.GetHashCode(),
-                    Documento = documento_obj.Documento,
-                    Error = null,
-                    FechaRecepcion = fecha_actual,
-                    FechaUltimoProceso = fecha_actual,
-                    IdDocumento = Guid.NewGuid().ToString(),
-                    Identificacion = documento_obj.DatosAdquiriente.Identificacion,
-                    IdProceso = ProcesoEstado.Recepcion.GetHashCode(),
-                    MotivoRechazo = "",
-                    NumeroResolucion = documento_obj.NumeroResolucion,
-                    Prefijo = documento_obj.Prefijo,
-                    ProcesoFinalizado = 0,
-                    UrlPdf = "",
-                    UrlXmlUbl = ""
-                };
+				DocumentoRespuesta respuesta = new DocumentoRespuesta()
+				{
+					Aceptacion = 0,
+					CodigoRegistro = documento_obj.CodigoRegistro,
+					Cufe = "",
+					DescripcionProceso = "Recepción - Información del documento.",
+					DocumentoTipo = tipo_doc.GetHashCode(),
+					Documento = documento_obj.Documento,
+					Error = null,
+					FechaRecepcion = fecha_actual,
+					FechaUltimoProceso = fecha_actual,
+					IdDocumento = Guid.NewGuid().ToString(),
+					Identificacion = documento_obj.DatosAdquiriente.Identificacion,
+					IdProceso = ProcesoEstado.Recepcion.GetHashCode(),
+					MotivoRechazo = "",
+					NumeroResolucion = documento_obj.NumeroResolucion,
+					Prefijo = documento_obj.Prefijo,
+					ProcesoFinalizado = 0,
+					UrlPdf = "",
+					UrlXmlUbl = ""
+				};
 
-                try
-                {
+				try
+				{
 
-                    // valida la información del documento
-                    respuesta = Validar(documento_obj, tipo_doc, resolucion, ref respuesta);
-                    ValidarRespuesta(respuesta);
-
-
-                    if (empresa.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode())
-                    {
-
-                        //Guarda la id de la Peticion con la que se esta haciendo el proceso
-                        documento_result.IdSeguridadPeticion = id_peticion;
-
-                        //Guarda el Id del documento generado por la plataforma
-                        documento_result.IdSeguridadDocumento = Guid.Parse(respuesta.IdDocumento);
-
-                        Ctl_Documento documento_tmp = new Ctl_Documento();
-
-                        //guarda documento en BD
-                        TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, tipo_doc);
-
-                        // genera el xml en ubl
-                        respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
-                        ValidarRespuesta(respuesta);
-
-                        // almacena el xml en ubl
-                        respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
-                        ValidarRespuesta(respuesta);
+					// valida la información del documento
+					respuesta = Validar(documento_obj, tipo_doc, resolucion, ref respuesta);
+					ValidarRespuesta(respuesta);
 
 
-                        Ctl_Empresa empresa_config = new Ctl_Empresa();
+					if (empresa.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode())
+					{
 
-                        TblEmpresas adquirienteBd = null;
+						//Guarda la id de la Peticion con la que se esta haciendo el proceso
+						documento_result.IdSeguridadPeticion = id_peticion;
 
-                        //Validacion de Adquiriente
-                        try
-                        {
+						//Guarda el Id del documento generado por la plataforma
+						documento_result.IdSeguridadDocumento = Guid.Parse(respuesta.IdDocumento);
 
-                            //Obtiene la informacion del Adquiriente que se tiene en BD
-                            adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
-                            try
-                            {
+						Ctl_Documento documento_tmp = new Ctl_Documento();
 
-                                //Si no existe Adquiriente se crea en BD y se crea Usuario
-                                if (adquirienteBd == null)
-                                {
-                                    empresa_config = new Ctl_Empresa();
-                                    //Creacion del Adquiriente
-                                    adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
+						//guarda documento en BD
+						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, tipo_doc);
 
-                                }
-                            }
-                            catch (Exception excepcion)
-                            {
-                                string msg_excepcion = Excepcion.Mensaje(excepcion);
+						// genera el xml en ubl
+						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
 
-                                if (!msg_excepcion.ToLowerInvariant().Contains("insert duplicate key"))
-                                    throw excepcion;
-                                else
-                                    adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
-                            }
-                        }
-                        catch (Exception excepcion)
-                        {
-                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-                            LogExcepcion.Guardar(excepcion);
-                            throw excepcion;
-                        }
-
-                        //Crea el documento en BD
-                        try
-                        {
-
-                            documentoBd = documento_tmp.Crear(documentoBd);
-
-                            documentoBd.TblEmpresasResoluciones = resolucion;
+						// almacena el xml en ubl
+						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
 
 
-                        }
-                        catch (Exception excepcion)
-                        {
-                            respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al guardar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-                            LogExcepcion.Guardar(excepcion);
-                            throw excepcion;
-                        }
+						Ctl_Empresa empresa_config = new Ctl_Empresa();
 
-                        //Asignación de Cufe a documento_obj 
-                        documento_obj.Cufe = documento_result.CUFE;
+						TblEmpresas adquirienteBd = null;
 
-                        // almacena Formato
-                        respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
-                        ValidarRespuesta(respuesta);
+						//Validacion de Adquiriente
+						try
+						{
+
+							//Obtiene la informacion del Adquiriente que se tiene en BD
+							adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+							try
+							{
+
+								//Si no existe Adquiriente se crea en BD y se crea Usuario
+								if (adquirienteBd == null)
+								{
+									empresa_config = new Ctl_Empresa();
+									//Creacion del Adquiriente
+									adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
+
+								}
+							}
+							catch (Exception excepcion)
+							{
+								string msg_excepcion = Excepcion.Mensaje(excepcion);
+
+								if (!msg_excepcion.ToLowerInvariant().Contains("insert duplicate key"))
+									throw excepcion;
+								else
+									adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+							}
+						}
+						catch (Exception excepcion)
+						{
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
+							LogExcepcion.Guardar(excepcion);
+							throw excepcion;
+						}
+
+						//Crea el documento en BD
+						try
+						{
+
+							documentoBd = documento_tmp.Crear(documentoBd);
+
+							documentoBd.TblEmpresasResoluciones = resolucion;
 
 
-                        // firma el xml
-                        respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
-                        ValidarRespuesta(respuesta);
+						}
+						catch (Exception excepcion)
+						{
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al guardar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
+							LogExcepcion.Guardar(excepcion);
+							throw excepcion;
+						}
+
+						//Asignación de Cufe a documento_obj 
+						documento_obj.Cufe = documento_result.CUFE;
+
+						// almacena Formato
+						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
 
 
-                        // comprime el archivo xml firmado                        
-                        respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
-                        ValidarRespuesta(respuesta);
+						// firma el xml
+						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
 
 
-                        // envía el archivo zip con el xml firmado a la DIAN
-                        HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result);
-                        ValidarRespuesta(respuesta);
+						// comprime el archivo xml firmado                        
+						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
 
 
-                        //Valida estado del documento en la Plataforma de la DIAN
-                        respuesta = Consultar(documentoBd, empresa, ref respuesta);
+						// envía el archivo zip con el xml firmado a la DIAN
+						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
 
 
-                        // envía el mail de documentos al adquiriente
-                        if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
-                        {
+						//Valida estado del documento en la Plataforma de la DIAN
+						respuesta = Consultar(documentoBd, empresa, ref respuesta);
 
-							if (documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo) || string.IsNullOrEmpty(documentoBd.StrProveedorReceptor))
+
+						// envía el mail de documentos al adquiriente
+						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
+						{
+
+							if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 							{
 								respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
 								ValidarRespuesta(respuesta);
 							}
 							else
 							{
+								//Se actualiza respuesta	
+								respuesta.DescripcionProceso = "Documento Pendiente Envío Proveedor";
+								respuesta.FechaUltimoProceso = Fecha.GetFecha();
+								respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+
 								//Actualiza Documento en Base de Datos
 								documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();
-								documentoBd.IntIdEstado = (short)ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+								documentoBd.IntIdEstado = (short)respuesta.IdProceso;
 
 								//Actualizo el estado del documento para enviar al proveedor receptor
 								documento_tmp = new Ctl_Documento();
 								documento_tmp.Actualizar(documentoBd);
 							}
-                        }
+						}
 
-                    }
+					}
 
 
-                }
-                catch (Exception excepcion)
-                {
-                    LogExcepcion.Guardar(excepcion);
-                    // no se controla excepción
-                }
+				}
+				catch (Exception excepcion)
+				{
+					LogExcepcion.Guardar(excepcion);
+					// no se controla excepción
+				}
 
-                return respuesta;
-            }
-            throw new ArgumentException("No se recibieron datos para realizar el proceso");
-        }
+				return respuesta;
+			}
+			throw new ArgumentException("No se recibieron datos para realizar el proceso");
+		}
 
-        
 
-        /// <summary>
-        /// Validacion del objeto tercero
-        /// </summary>
-        /// <param name="tercero">Objeto</param>
-        /// <param name="tipo">Tipo de Tercero: Adquiriente - Obligado</param>
-        public static void ValidarTercero(Tercero tercero, string tipo)
-        {
 
-            if (tercero == null)
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Tercero", tipo).Replace("de tipo", "del"));
+		/// <summary>
+		/// Validacion del objeto tercero
+		/// </summary>
+		/// <param name="tercero">Objeto</param>
+		/// <param name="tipo">Tipo de Tercero: Adquiriente - Obligado</param>
+		public static void ValidarTercero(Tercero tercero, string tipo)
+		{
 
-            //valida que la identificacion no contenga caracteres especiales
-            //Regex isnumber = new Regex("[^0-9]");
-            if (!string.IsNullOrEmpty(tercero.Identificacion))
-            {
-                if (!Texto.ValidarExpresion(TipoExpresion.Numero, tercero.Identificacion) && !Texto.ValidarExpresion(TipoExpresion.Alfanumerico, tercero.Identificacion))
-                    throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener caracteres especiales", "Identificacion", tipo));
+			if (tercero == null)
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Tercero", tipo).Replace("de tipo", "del"));
+
+			//valida que la identificacion no contenga caracteres especiales
+			//Regex isnumber = new Regex("[^0-9]");
+			if (!string.IsNullOrEmpty(tercero.Identificacion))
+			{
+				if (!Texto.ValidarExpresion(TipoExpresion.Numero, tercero.Identificacion) && !Texto.ValidarExpresion(TipoExpresion.Alfanumerico, tercero.Identificacion))
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener caracteres especiales", "Identificacion", tipo));
 
 				// valida los ceros al inicio de la identificación
 				if (!Texto.ValidarExpresion(TipoExpresion.NumeroNotStartZero, tercero.Identificacion))
-					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener ceros al inicio", "Identificacion", tipo));	
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener ceros al inicio", "Identificacion", tipo));
 			}
 			else
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Identificacion", tipo).Replace("de tipo", "del"));
-				
-
-            if ((tercero.IdentificacionDv < 0) || (tercero.IdentificacionDv > 9))
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "IdentificacionDv", tipo).Replace("de tipo", "del"));
-
-            if (string.IsNullOrEmpty(tercero.Ciudad))
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Ciudad", tipo).Replace("de tipo", "del"));
-
-            if (string.IsNullOrEmpty(tercero.Departamento))
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Departamento", tipo).Replace("de tipo", "del"));
-
-            if (string.IsNullOrEmpty(tercero.Direccion))
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
-
-            if (string.IsNullOrEmpty(tercero.Telefono))
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
-
-            //Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
-            if (!Texto.ValidarExpresion(TipoExpresion.Email, tercero.Email))
-                throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
-
-            //Regex isweb = new Regex("([\\w-]+\\.)+(/[\\w- ./?%&=]*)?");
-            if (tercero.PaginaWeb == null)
-            {
-                tercero.PaginaWeb = string.Empty;
-            }
-            else if (!Texto.ValidarExpresion(TipoExpresion.PaginaWeb, tercero.PaginaWeb))
-                tercero.PaginaWeb = string.Empty;
-
-            if (string.IsNullOrEmpty(tercero.CodigoPais))
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
-
-            if (!ConfiguracionRegional.ValidarCodigoPais(tercero.CodigoPais))
-                throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "CodigoPais", tercero.CodigoPais, tipo));
-
-            if (string.IsNullOrEmpty(tercero.RazonSocial))
-                throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial", tipo).Replace("de tipo", "del"));
-
-            if ((tercero.TipoPersona < 1) || (tercero.TipoPersona > 2))
-                throw new ArgumentException(string.Format("El parámetro {0} con valor {1} del {2} no esta bien formado", "TipoPersona", tercero.TipoPersona, tipo));
-
-            if (tercero.TipoPersona == 2)
-            {
-                if (string.IsNullOrEmpty(tercero.PrimerApellido))
-                    throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerApellido", tipo).Replace("de tipo", "del"));
-
-                if (string.IsNullOrEmpty(tercero.PrimerNombre))
-                    throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerNombre", tipo).Replace("de tipo", "del"));
-            }
-
-        }
-
-        /// <summary>
-        /// Valida los totales del objeto
-        /// </summary>
-        /// <param name="documento_fac">Documento Factura</param>
-        /// <param name="documento_nc">Documento Nota Credito</param>
-        /// <param name="documento_nd">Documento Nota Debito</param>
-        /// <param name="tipo_doc">Tipo de Documento enviado</param>
-        public static void ValidarTotales(Factura documento_fac, NotaCredito documento_nc, NotaDebito documento_nd, TipoDocumento tipo_doc)
-        {
-
-            var documento = (dynamic)null;
-
-            if (tipo_doc == TipoDocumento.Factura)
-                documento = documento_fac;
-            else if (tipo_doc == TipoDocumento.NotaCredito)
-                documento = documento_nc;
-            else if (tipo_doc == TipoDocumento.NotaDebito)
-                documento = documento_nd;
-
-            if (documento != null)
-            {
-
-                ValidarDetalleDocumento(documento.DocumentoDetalles);
-
-                //Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
-
-                //Valida el Iva 
-                if (documento.ValorIva == 0)
-                {
-                    documento.ValorIva = Convert.ToDecimal(0.00M);
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorIva).Replace(",", ".")))
-                    //if (!isnumber.IsMatch(Convert.ToString(documento.ValorIva).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Iva", documento.ValorIva));
-
-                //Valida el Descuento 
-                if (documento.ValorDescuento == 0)
-                {
-                    documento.ValorDescuento = Convert.ToDecimal(0.00M);
-                }
-
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
-
-                //Valida el Subtotal 
-                if (documento.ValorSubtotal == 0)
-                {
-                    documento.ValorSubtotal = Convert.ToDecimal(0.00M);
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorSubtotal).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", documento.ValorSubtotal));
-
-                //Valida el Impuesto al consumo 
-                if (documento.ValorImpuestoConsumo == 0)
-                {
-                    documento.ValorImpuestoConsumo = Convert.ToDecimal(0.00M);
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorImpuestoConsumo).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Impuesto al Consumo", documento.ValorImpuestoConsumo));
-
-                //Valida la Retencion en la fuente
-                if (documento.ValorReteFuente == 0)
-                {
-                    documento.ValorReteFuente = Convert.ToDecimal(0.00M);
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteFuente).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", documento.ValorReteFuente));
-
-                //Valida el ReteIca 
-                if (documento.ValorReteIca == 0)
-                {
-                    documento.ValorReteIca = Convert.ToDecimal(0.00M);
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIca).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIca", documento.ValorReteIca));
-
-                //Calculo del total con los campos enviados en el objeto
-                if (documento.Total == 0)
-                {
-                    documento.Total = Convert.ToDecimal(0.00M);
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Total).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Total", documento.Total));
-
-                //Validacion del Neto calculado con el que es enviado en el documento
-                if (documento.Neto == 0)
-                {
-                    documento.Neto = Convert.ToDecimal(0.00M);
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Neto).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Valor Neto", documento.Neto));
-
-                //Validacion del ReteIva calculado con el que es enviado en el documento
-                if (documento.ValorReteIva == 0)
-                {
-                    documento.ValorReteIva = Convert.ToDecimal(0.00M);
-                }
-
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIva", documento.ValorReteIva));
-
-            }
-        }
-
-        /// <summary>
-        /// Valida los totales enviados en el detalle
-        /// </summary>
-        /// <param name="documentoDetalle"></param>
-        /// <returns></returns>
-        public static DocumentoDetalle ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
-        {
-
-            DocumentoDetalle retorno = new DocumentoDetalle();
-
-            decimal Iva_total = 0;
-            decimal Desc_total = 0;
-            decimal Subtotal = 0;
-            decimal Impcon = 0;
-            decimal RetIca = 0;
-            decimal ReteFte = 0;
-
-            if (documentoDetalle == null || !documentoDetalle.Any())
-                throw new Exception("El detalle del documento es inválido.");
-
-            foreach (DocumentoDetalle Docdet in documentoDetalle)
-            {
-
-                //Validacion del valor unitario
-                //Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
-
-
-                if (string.IsNullOrEmpty(Docdet.Bodega))
-                    Docdet.Bodega = string.Empty;
-
-                if (Docdet.ValorUnitario == 0)
-                {
-                    Docdet.ValorUnitario = 0.00M;
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
-
-                if (Docdet.DescuentoPorcentaje < 0 || Docdet.DescuentoPorcentaje > 100)
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Porcentaje Descuento", Docdet.DescuentoPorcentaje));
-
-                if (Docdet.DescuentoValor == 0)
-                {
-                    Docdet.DescuentoValor = Convert.ToDecimal(0.00M);
-                }
-
-                //Validacion del valor IVA
-                if (Docdet.IvaValor == 0)
-                {
-                    Docdet.IvaValor = Convert.ToDecimal(0.00M);
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.IvaValor).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Iva", Docdet.IvaValor));
-
-                //Validacion del Valor Subtotal
-                if (Docdet.ValorSubtotal == 0)
-                {
-                    Docdet.ValorSubtotal = Convert.ToDecimal(0.00M);
-                }
-
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", Docdet.ValorSubtotal));
-
-                //Validacion del Valor del Impuesto al Consumo
-                if (Docdet.ValorImpuestoConsumo == 0)
-                {
-                    Docdet.ImpoConsumoPorcentaje = 0.00M;
-                    Docdet.ValorImpuestoConsumo = 0.00M;
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorImpuestoConsumo).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Impuesto al Consumo", Docdet.ValorImpuestoConsumo));
-
-
-                //Validacion del Valor del ReteICA
-                if (Docdet.ReteIcaValor == 0)
-                {
-                    Docdet.ReteIcaValor = 0.00M;
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteIcaValor).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIca", Docdet.ReteIcaValor));
-
-                //Validacion del Valor del ReteFte
-                if (Docdet.ReteFuenteValor == 0)
-                {
-                    Docdet.ReteFuenteValor = 0.00M;
-                }
-                if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
-                    throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", Docdet.ReteFuenteValor));
-
-                Iva_total += Docdet.IvaValor;
-                Desc_total += Docdet.DescuentoValor;
-                Subtotal += Docdet.ValorSubtotal;
-                Impcon += Docdet.ValorImpuestoConsumo;
-                RetIca += Docdet.ReteIcaValor;
-                ReteFte += Docdet.ReteFuenteValor;
-
-            }
-
-            retorno.IvaValor = Iva_total;
-            retorno.DescuentoValor = Desc_total;
-            retorno.ValorSubtotal = Subtotal;
-            retorno.ValorImpuestoConsumo = Impcon;
-            retorno.ReteIcaValor = RetIca;
-            retorno.ReteFuenteValor = ReteFte;
-            return retorno;
-        }
-
-        /// <summary>
-        /// Procesa una lista de documentos tipo Documento Archivo
-        /// </summary>
-        /// <param name="documentos">documentos Documento Archivo</param>
-        /// <returns>objeto tipo Documento Respuesta</returns>
-        public static List<DocumentoRespuesta> Procesar(List<DocumentoArchivo> documentos)
-        {
-
-            if (documentos == null)
-                throw new ApplicationException("No se encontraron datos");
-            if (documentos.FirstOrDefault() == null)
-                throw new ApplicationException("No se encontraron datos en el primer registro");
-
-            Ctl_Empresa Peticion = new Ctl_Empresa();
-
-            //Válida que la key sea correcta.
-            TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().Identificacion);
-
-            if (!facturador_electronico.IntObligado)
-                throw new ApplicationException(string.Format("Licencia inválida para la identificación {0}.", facturador_electronico.StrIdentificacion));
-
-            // genera un id único de la plataforma
-            Guid id_peticion = Guid.NewGuid();
-
-            DateTime fecha_actual = Fecha.GetFecha();
-            List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
-
-            // sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
-            if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
-            {
-
-                //Valida que Resolucion tomar, con Prefijo o sin Prefijo
-                string resolucion_pruebas = string.Empty;
-                string nit_resolucion = string.Empty;
-                string prefijo_pruebas = string.Empty;
-                if (documentos.FirstOrDefault().Prefijo.Equals(string.Empty))
-                {
-                    resolucion_pruebas = Constantes.ResolucionPruebas;
-                    nit_resolucion = Constantes.NitResolucionsinPrefijo;
-
-                }
-                else
-                {
-                    resolucion_pruebas = Constantes.ResolucionPruebas;
-                    nit_resolucion = Constantes.NitResolucionconPrefijo;
-                    prefijo_pruebas = Constantes.PrefijoResolucionPruebas;
-                }
-
-
-
-                Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
-                lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_pruebas));
-
-            }
-            else
-            {
-                // actualiza las resoluciones de los servicios web de la DIAN en la base de datos
-                lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, documentos.FirstOrDefault().Identificacion);
-            }
-
-
-            if (lista_resolucion == null)
-                throw new ApplicationException(string.Format("No se encontraron resoluciones para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
-            else if (!lista_resolucion.Any())
-                throw new ApplicationException(string.Format("No se encontraron resoluciones para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
-
-
-            List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
-
-            foreach (DocumentoArchivo objeto in documentos)
-            {
-
-
-                DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
-
-                try
-                {
-
-                    if (string.IsNullOrEmpty(objeto.NumeroResolucion))
-                        throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
-
-
-                    Ctl_Documento num_doc = new Ctl_Documento();
-
-                    //valida si el Documento ya existe en Base de Datos
-                    TblDocumentos numero_documento = num_doc.Obtener(objeto.Identificacion, objeto.Documento, objeto.Prefijo);
-
-                    if (numero_documento != null)
-                        throw new ApplicationException(string.Format("El documento número {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}", objeto.Documento, objeto.Prefijo, facturador_electronico.StrIdentificacion));
-
-                    TblEmpresasResoluciones resolucion = null;
-
-                    try
-                    {
-                        ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
-
-                        LogExcepcion.Guardar(exTMP);
-
-                        // filtra la resolución del documento
-                        resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(objeto.NumeroResolucion)).FirstOrDefault();
-                    }
-                    catch (Exception excepcion)
-                    {
-                        throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1}", objeto.NumeroResolucion, facturador_electronico.StrIdentificacion));
-                    }
-
-
-                    // procesa el documento
-                    item_respuesta = Procesar(id_peticion, objeto, facturador_electronico, resolucion);
-                }
-                catch (Exception excepcion)
-                {
-
-                    ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
-                    LogExcepcion.Guardar(excepcion);
-                    item_respuesta = new DocumentoRespuesta()
-                    {
-                        Aceptacion = 0,
-                        CodigoRegistro = objeto.CodigoRegistro,
-                        Cufe = "",
-                        DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
-                        DocumentoTipo = objeto.TipoDocumento,
-                        Documento = objeto.Documento,
-                        Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
-                        EstadoDian = null,
-                        FechaRecepcion = fecha_actual,
-                        FechaUltimoProceso = fecha_actual,
-                        IdDocumento = "",
-                        Identificacion = "",
-                        IdProceso = proceso_actual.GetHashCode(),
-                        MotivoRechazo = "",
-                        NumeroResolucion = objeto.NumeroResolucion,
-                        Prefijo = objeto.Prefijo,
-                        ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
-                        UrlPdf = "",
-                        UrlXmlUbl = ""
-                    };
-
-                }
-                respuesta.Add(item_respuesta);
-            }
-
-            return respuesta;
-        }
-
-    }
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Identificacion", tipo).Replace("de tipo", "del"));
+
+
+			if ((tercero.IdentificacionDv < 0) || (tercero.IdentificacionDv > 9))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "IdentificacionDv", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(tercero.Ciudad))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Ciudad", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(tercero.Departamento))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Departamento", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(tercero.Direccion))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(tercero.Telefono))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
+
+			//Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+			if (!Texto.ValidarExpresion(TipoExpresion.Email, tercero.Email))
+				throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+
+			//Regex isweb = new Regex("([\\w-]+\\.)+(/[\\w- ./?%&=]*)?");
+			if (tercero.PaginaWeb == null)
+			{
+				tercero.PaginaWeb = string.Empty;
+			}
+			else if (!Texto.ValidarExpresion(TipoExpresion.PaginaWeb, tercero.PaginaWeb))
+				tercero.PaginaWeb = string.Empty;
+
+			if (string.IsNullOrEmpty(tercero.CodigoPais))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
+
+			if (!ConfiguracionRegional.ValidarCodigoPais(tercero.CodigoPais))
+				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "CodigoPais", tercero.CodigoPais, tipo));
+
+			if (string.IsNullOrEmpty(tercero.RazonSocial))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial", tipo).Replace("de tipo", "del"));
+
+			if ((tercero.TipoPersona < 1) || (tercero.TipoPersona > 2))
+				throw new ArgumentException(string.Format("El parámetro {0} con valor {1} del {2} no esta bien formado", "TipoPersona", tercero.TipoPersona, tipo));
+
+			if (tercero.TipoPersona == 2)
+			{
+				if (string.IsNullOrEmpty(tercero.PrimerApellido))
+					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerApellido", tipo).Replace("de tipo", "del"));
+
+				if (string.IsNullOrEmpty(tercero.PrimerNombre))
+					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerNombre", tipo).Replace("de tipo", "del"));
+			}
+
+		}
+
+		/// <summary>
+		/// Valida los totales del objeto
+		/// </summary>
+		/// <param name="documento_fac">Documento Factura</param>
+		/// <param name="documento_nc">Documento Nota Credito</param>
+		/// <param name="documento_nd">Documento Nota Debito</param>
+		/// <param name="tipo_doc">Tipo de Documento enviado</param>
+		public static void ValidarTotales(Factura documento_fac, NotaCredito documento_nc, NotaDebito documento_nd, TipoDocumento tipo_doc)
+		{
+
+			var documento = (dynamic)null;
+
+			if (tipo_doc == TipoDocumento.Factura)
+				documento = documento_fac;
+			else if (tipo_doc == TipoDocumento.NotaCredito)
+				documento = documento_nc;
+			else if (tipo_doc == TipoDocumento.NotaDebito)
+				documento = documento_nd;
+
+			if (documento != null)
+			{
+
+				ValidarDetalleDocumento(documento.DocumentoDetalles);
+
+				//Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
+
+				//Valida el Iva 
+				if (documento.ValorIva == 0)
+				{
+					documento.ValorIva = Convert.ToDecimal(0.00M);
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorIva).Replace(",", ".")))
+					//if (!isnumber.IsMatch(Convert.ToString(documento.ValorIva).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Iva", documento.ValorIva));
+
+				//Valida el Descuento 
+				if (documento.ValorDescuento == 0)
+				{
+					documento.ValorDescuento = Convert.ToDecimal(0.00M);
+				}
+
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
+
+				//Valida el Subtotal 
+				if (documento.ValorSubtotal == 0)
+				{
+					documento.ValorSubtotal = Convert.ToDecimal(0.00M);
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorSubtotal).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", documento.ValorSubtotal));
+
+				//Valida el Impuesto al consumo 
+				if (documento.ValorImpuestoConsumo == 0)
+				{
+					documento.ValorImpuestoConsumo = Convert.ToDecimal(0.00M);
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorImpuestoConsumo).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Impuesto al Consumo", documento.ValorImpuestoConsumo));
+
+				//Valida la Retencion en la fuente
+				if (documento.ValorReteFuente == 0)
+				{
+					documento.ValorReteFuente = Convert.ToDecimal(0.00M);
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteFuente).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", documento.ValorReteFuente));
+
+				//Valida el ReteIca 
+				if (documento.ValorReteIca == 0)
+				{
+					documento.ValorReteIca = Convert.ToDecimal(0.00M);
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIca).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIca", documento.ValorReteIca));
+
+				//Calculo del total con los campos enviados en el objeto
+				if (documento.Total == 0)
+				{
+					documento.Total = Convert.ToDecimal(0.00M);
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Total).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Total", documento.Total));
+
+				//Validacion del Neto calculado con el que es enviado en el documento
+				if (documento.Neto == 0)
+				{
+					documento.Neto = Convert.ToDecimal(0.00M);
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.Neto).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Valor Neto", documento.Neto));
+
+				//Validacion del ReteIva calculado con el que es enviado en el documento
+				if (documento.ValorReteIva == 0)
+				{
+					documento.ValorReteIva = Convert.ToDecimal(0.00M);
+				}
+
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIva", documento.ValorReteIva));
+
+			}
+		}
+
+		/// <summary>
+		/// Valida los totales enviados en el detalle
+		/// </summary>
+		/// <param name="documentoDetalle"></param>
+		/// <returns></returns>
+		public static DocumentoDetalle ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
+		{
+
+			DocumentoDetalle retorno = new DocumentoDetalle();
+
+			decimal Iva_total = 0;
+			decimal Desc_total = 0;
+			decimal Subtotal = 0;
+			decimal Impcon = 0;
+			decimal RetIca = 0;
+			decimal ReteFte = 0;
+
+			if (documentoDetalle == null || !documentoDetalle.Any())
+				throw new Exception("El detalle del documento es inválido.");
+
+			foreach (DocumentoDetalle Docdet in documentoDetalle)
+			{
+
+				//Validacion del valor unitario
+				//Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
+
+
+				if (string.IsNullOrEmpty(Docdet.Bodega))
+					Docdet.Bodega = string.Empty;
+
+				if (Docdet.ValorUnitario == 0)
+				{
+					Docdet.ValorUnitario = 0.00M;
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
+
+				if (Docdet.DescuentoPorcentaje < 0 || Docdet.DescuentoPorcentaje > 100)
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Porcentaje Descuento", Docdet.DescuentoPorcentaje));
+
+				if (Docdet.DescuentoValor == 0)
+				{
+					Docdet.DescuentoValor = Convert.ToDecimal(0.00M);
+				}
+
+				//Validacion del valor IVA
+				if (Docdet.IvaValor == 0)
+				{
+					Docdet.IvaValor = Convert.ToDecimal(0.00M);
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.IvaValor).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Iva", Docdet.IvaValor));
+
+				//Validacion del Valor Subtotal
+				if (Docdet.ValorSubtotal == 0)
+				{
+					Docdet.ValorSubtotal = Convert.ToDecimal(0.00M);
+				}
+
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", Docdet.ValorSubtotal));
+
+				//Validacion del Valor del Impuesto al Consumo
+				if (Docdet.ValorImpuestoConsumo == 0)
+				{
+					Docdet.ImpoConsumoPorcentaje = 0.00M;
+					Docdet.ValorImpuestoConsumo = 0.00M;
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorImpuestoConsumo).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Impuesto al Consumo", Docdet.ValorImpuestoConsumo));
+
+
+				//Validacion del Valor del ReteICA
+				if (Docdet.ReteIcaValor == 0)
+				{
+					Docdet.ReteIcaValor = 0.00M;
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteIcaValor).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIca", Docdet.ReteIcaValor));
+
+				//Validacion del Valor del ReteFte
+				if (Docdet.ReteFuenteValor == 0)
+				{
+					Docdet.ReteFuenteValor = 0.00M;
+				}
+				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
+					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", Docdet.ReteFuenteValor));
+
+				Iva_total += Docdet.IvaValor;
+				Desc_total += Docdet.DescuentoValor;
+				Subtotal += Docdet.ValorSubtotal;
+				Impcon += Docdet.ValorImpuestoConsumo;
+				RetIca += Docdet.ReteIcaValor;
+				ReteFte += Docdet.ReteFuenteValor;
+
+			}
+
+			retorno.IvaValor = Iva_total;
+			retorno.DescuentoValor = Desc_total;
+			retorno.ValorSubtotal = Subtotal;
+			retorno.ValorImpuestoConsumo = Impcon;
+			retorno.ReteIcaValor = RetIca;
+			retorno.ReteFuenteValor = ReteFte;
+			return retorno;
+		}
+
+		/// <summary>
+		/// Procesa una lista de documentos tipo Documento Archivo
+		/// </summary>
+		/// <param name="documentos">documentos Documento Archivo</param>
+		/// <returns>objeto tipo Documento Respuesta</returns>
+		public static List<DocumentoRespuesta> Procesar(List<DocumentoArchivo> documentos)
+		{
+
+			if (documentos == null)
+				throw new ApplicationException("No se encontraron datos");
+			if (documentos.FirstOrDefault() == null)
+				throw new ApplicationException("No se encontraron datos en el primer registro");
+
+			Ctl_Empresa Peticion = new Ctl_Empresa();
+
+			//Válida que la key sea correcta.
+			TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().Identificacion);
+
+			if (!facturador_electronico.IntObligado)
+				throw new ApplicationException(string.Format("Licencia inválida para la identificación {0}.", facturador_electronico.StrIdentificacion));
+
+			// genera un id único de la plataforma
+			Guid id_peticion = Guid.NewGuid();
+
+			DateTime fecha_actual = Fecha.GetFecha();
+			List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+
+			// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
+			if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+			{
+
+				//Valida que Resolucion tomar, con Prefijo o sin Prefijo
+				string resolucion_pruebas = string.Empty;
+				string nit_resolucion = string.Empty;
+				string prefijo_pruebas = string.Empty;
+				if (documentos.FirstOrDefault().Prefijo.Equals(string.Empty))
+				{
+					resolucion_pruebas = Constantes.ResolucionPruebas;
+					nit_resolucion = Constantes.NitResolucionsinPrefijo;
+
+				}
+				else
+				{
+					resolucion_pruebas = Constantes.ResolucionPruebas;
+					nit_resolucion = Constantes.NitResolucionconPrefijo;
+					prefijo_pruebas = Constantes.PrefijoResolucionPruebas;
+				}
+
+
+
+				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
+				lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_pruebas));
+
+			}
+			else
+			{
+				// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
+				lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, documentos.FirstOrDefault().Identificacion);
+			}
+
+
+			if (lista_resolucion == null)
+				throw new ApplicationException(string.Format("No se encontraron resoluciones para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
+			else if (!lista_resolucion.Any())
+				throw new ApplicationException(string.Format("No se encontraron resoluciones para el Facturador Electrónico {0}", facturador_electronico.StrIdentificacion));
+
+
+			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+
+			foreach (DocumentoArchivo objeto in documentos)
+			{
+
+
+				DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
+
+				try
+				{
+
+					if (string.IsNullOrEmpty(objeto.NumeroResolucion))
+						throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
+
+
+					Ctl_Documento num_doc = new Ctl_Documento();
+
+					//valida si el Documento ya existe en Base de Datos
+					TblDocumentos numero_documento = num_doc.Obtener(objeto.Identificacion, objeto.Documento, objeto.Prefijo);
+
+					if (numero_documento != null)
+						throw new ApplicationException(string.Format("El documento número {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}", objeto.Documento, objeto.Prefijo, facturador_electronico.StrIdentificacion));
+
+					TblEmpresasResoluciones resolucion = null;
+
+					try
+					{
+						ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
+
+						LogExcepcion.Guardar(exTMP);
+
+						// filtra la resolución del documento
+						resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(objeto.NumeroResolucion)).FirstOrDefault();
+					}
+					catch (Exception excepcion)
+					{
+						throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1}", objeto.NumeroResolucion, facturador_electronico.StrIdentificacion));
+					}
+
+
+					// procesa el documento
+					item_respuesta = Procesar(id_peticion, objeto, facturador_electronico, resolucion);
+				}
+				catch (Exception excepcion)
+				{
+
+					ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
+					LogExcepcion.Guardar(excepcion);
+					item_respuesta = new DocumentoRespuesta()
+					{
+						Aceptacion = 0,
+						CodigoRegistro = objeto.CodigoRegistro,
+						Cufe = "",
+						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						DocumentoTipo = objeto.TipoDocumento,
+						Documento = objeto.Documento,
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						EstadoDian = null,
+						FechaRecepcion = fecha_actual,
+						FechaUltimoProceso = fecha_actual,
+						IdDocumento = "",
+						Identificacion = "",
+						IdProceso = proceso_actual.GetHashCode(),
+						MotivoRechazo = "",
+						NumeroResolucion = objeto.NumeroResolucion,
+						Prefijo = objeto.Prefijo,
+						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+						UrlPdf = "",
+						UrlXmlUbl = ""
+					};
+
+				}
+				respuesta.Add(item_respuesta);
+			}
+
+			return respuesta;
+		}
+
+	}
 }
 
 

@@ -260,8 +260,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					// envía el mail de documentos al adquiriente
 					if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 					{
-						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
+						if ((documento.StrProveedorReceptor == null) || documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
+						{
+							respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
+							ValidarRespuesta(respuesta);
+						}
+						else
+						{
+							//Se actualiza respuesta	
+							respuesta.DescripcionProceso = "Documento Pendiente Envío Proveedor";
+							respuesta.FechaUltimoProceso = Fecha.GetFecha();
+							respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+
+							//Actualiza Documento en Base de Datos
+							documento.DatFechaActualizaEstado = Fecha.GetFecha();
+							documento.IntIdEstado = (short)respuesta.IdProceso;
+
+							//Actualizo el estado del documento para enviar al proveedor receptor
+							Ctl_Documento documento_tmp = new Ctl_Documento();
+							documento_tmp.Actualizar(documento);
+						}
 					}
 				}
 
