@@ -76,7 +76,7 @@ ModalAsignarFormatoApp.controller('ModalAsignarFormatoController', function Moda
 	//Campo de observaciones
 	$("#TxtObservaciones").dxTextArea({
 		onValueChanged: function (data) {
-			//Datos_Observaciones = data.value.toUpperCase();
+			observaciones = data.value.toUpperCase();
 		}
 	}).dxValidator({
 		validationRules: [
