@@ -160,7 +160,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 Ctl_Documento num_doc = new Ctl_Documento();
 
                 //valida si el Documento ya existe en Base de Datos
-                TblDocumentos numero_documento = num_doc.Obtener(item.DatosObligado.Identificacion, item.Documento, item.Prefijo);
+                TblDocumentos numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
 
                 if (numero_documento != null)
                     throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
