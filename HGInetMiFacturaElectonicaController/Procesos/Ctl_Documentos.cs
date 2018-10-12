@@ -336,8 +336,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (documento != null)
 			{
 
-				ValidarDetalleDocumento(documento.DocumentoDetalles);
-
 				//Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
 
 				//Valida el Iva 
@@ -415,6 +413,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIva", documento.ValorReteIva));
 
+				//Se valida el detalle del documento
+				ValidarDetalleDocumento(documento.DocumentoDetalles);
+
 			}
 		}
 
@@ -423,105 +424,93 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// </summary>
 		/// <param name="documentoDetalle"></param>
 		/// <returns></returns>
-		public static DocumentoDetalle ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
+		public static void ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
 		{
-
-			DocumentoDetalle retorno = new DocumentoDetalle();
-
-			decimal Iva_total = 0;
-			decimal Desc_total = 0;
-			decimal Subtotal = 0;
-			decimal Impcon = 0;
-			decimal RetIca = 0;
-			decimal ReteFte = 0;
 
 			if (documentoDetalle == null || !documentoDetalle.Any())
 				throw new Exception("El detalle del documento es inválido.");
 
+
 			foreach (DocumentoDetalle Docdet in documentoDetalle)
 			{
-
-				//Validacion del valor unitario
-				//Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
-
-
-				if (string.IsNullOrEmpty(Docdet.Bodega))
-					Docdet.Bodega = string.Empty;
-
-				if (Docdet.ValorUnitario == 0)
+				try
 				{
-					Docdet.ValorUnitario = 0.00M;
+					//Validacion del valor unitario
+					//Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");
+
+					if (Docdet == null)
+						throw new ApplicationException("Se encontro un detalle del documento vacio");
+
+					if (string.IsNullOrEmpty(Docdet.Bodega))
+						Docdet.Bodega = string.Empty;
+
+					if (Docdet.ValorUnitario == 0)
+					{
+						Docdet.ValorUnitario = 0.00M;
+					}
+					if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
+
+					if (Docdet.DescuentoPorcentaje < 0 || Docdet.DescuentoPorcentaje > 100)
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Porcentaje Descuento", Docdet.DescuentoPorcentaje));
+
+					if (Docdet.DescuentoValor == 0)
+					{
+						Docdet.DescuentoValor = Convert.ToDecimal(0.00M);
+					}
+
+					//Validacion del valor IVA
+					if (Docdet.IvaValor == 0)
+					{
+						Docdet.IvaValor = Convert.ToDecimal(0.00M);
+					}
+					if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.IvaValor).Replace(",", ".")))
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Iva", Docdet.IvaValor));
+
+					//Validacion del Valor Subtotal
+					if (Docdet.ValorSubtotal == 0)
+					{
+						Docdet.ValorSubtotal = Convert.ToDecimal(0.00M);
+					}
+
+					if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Subtotal", Docdet.ValorSubtotal));
+
+					//Validacion del Valor del Impuesto al Consumo
+					if (Docdet.ValorImpuestoConsumo == 0)
+					{
+						Docdet.ImpoConsumoPorcentaje = 0.00M;
+						Docdet.ValorImpuestoConsumo = 0.00M;
+					}
+					if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorImpuestoConsumo).Replace(",", ".")))
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Impuesto al Consumo", Docdet.ValorImpuestoConsumo));
+
+
+					//Validacion del Valor del ReteICA
+					if (Docdet.ReteIcaValor == 0)
+					{
+						Docdet.ReteIcaValor = 0.00M;
+					}
+					if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteIcaValor).Replace(",", ".")))
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "ReteIca", Docdet.ReteIcaValor));
+
+					//Validacion del Valor del ReteFte
+					if (Docdet.ReteFuenteValor == 0)
+					{
+						Docdet.ReteFuenteValor = 0.00M;
+					}
+					if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "ReteFuente", Docdet.ReteFuenteValor));
 				}
-				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorUnitario).Replace(",", ".")))
-					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
 
-				if (Docdet.DescuentoPorcentaje < 0 || Docdet.DescuentoPorcentaje > 100)
-					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Porcentaje Descuento", Docdet.DescuentoPorcentaje));
-
-				if (Docdet.DescuentoValor == 0)
+				catch (Exception ex)
 				{
-					Docdet.DescuentoValor = Convert.ToDecimal(0.00M);
+					LogExcepcion.Guardar(ex);
+					throw ex;
 				}
-
-				//Validacion del valor IVA
-				if (Docdet.IvaValor == 0)
-				{
-					Docdet.IvaValor = Convert.ToDecimal(0.00M);
-				}
-				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.IvaValor).Replace(",", ".")))
-					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Iva", Docdet.IvaValor));
-
-				//Validacion del Valor Subtotal
-				if (Docdet.ValorSubtotal == 0)
-				{
-					Docdet.ValorSubtotal = Convert.ToDecimal(0.00M);
-				}
-
-				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorSubtotal).Replace(",", ".")))
-					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", Docdet.ValorSubtotal));
-
-				//Validacion del Valor del Impuesto al Consumo
-				if (Docdet.ValorImpuestoConsumo == 0)
-				{
-					Docdet.ImpoConsumoPorcentaje = 0.00M;
-					Docdet.ValorImpuestoConsumo = 0.00M;
-				}
-				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ValorImpuestoConsumo).Replace(",", ".")))
-					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Impuesto al Consumo", Docdet.ValorImpuestoConsumo));
-
-
-				//Validacion del Valor del ReteICA
-				if (Docdet.ReteIcaValor == 0)
-				{
-					Docdet.ReteIcaValor = 0.00M;
-				}
-				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteIcaValor).Replace(",", ".")))
-					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIca", Docdet.ReteIcaValor));
-
-				//Validacion del Valor del ReteFte
-				if (Docdet.ReteFuenteValor == 0)
-				{
-					Docdet.ReteFuenteValor = 0.00M;
-				}
-				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
-					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", Docdet.ReteFuenteValor));
-
-				Iva_total += Docdet.IvaValor;
-				Desc_total += Docdet.DescuentoValor;
-				Subtotal += Docdet.ValorSubtotal;
-				Impcon += Docdet.ValorImpuestoConsumo;
-				RetIca += Docdet.ReteIcaValor;
-				ReteFte += Docdet.ReteFuenteValor;
-
 			}
 
-			retorno.IvaValor = Iva_total;
-			retorno.DescuentoValor = Desc_total;
-			retorno.ValorSubtotal = Subtotal;
-			retorno.ValorImpuestoConsumo = Impcon;
-			retorno.ReteIcaValor = RetIca;
-			retorno.ReteFuenteValor = ReteFte;
-			return retorno;
+
 		}
 
 		/// <summary>
