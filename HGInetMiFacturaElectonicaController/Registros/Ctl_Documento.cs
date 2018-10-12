@@ -1054,10 +1054,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			List<string> estados = Coleccion.ConvertirLista(estado_recibo);
 
-			var respuesta = (from datos in context.TblDocumentos
+            var respuesta = (from datos in context.TblDocumentos
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (estado_recibo.Contains(datos.IntIdEstado.ToString()))
-							 && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", 15, DateTime.Now)
+							 && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, DateTime.Now)
 
 							 orderby datos.DatFechaIngreso descending
 							 select datos).ToList();
