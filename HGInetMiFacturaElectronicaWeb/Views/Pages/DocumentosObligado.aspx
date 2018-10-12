@@ -37,7 +37,7 @@
 
 								<div class="dx-fieldset">
 
-									<div class="col-md-2" style="margin-top: 1%">
+									<div class="col-md-3" style="margin-top: 1%">
 										<i class="icon-file-text"></i>
 										<label>Filtro Fecha:</label>
 										<div data-dx-select-box="filtros.TipoFiltroFecha"></div>
@@ -57,7 +57,7 @@
 									</div>
 									<div class="col-md-2" style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
-										<label>Doc. Adquiriente:</label>
+										<label>Adquiriente:</label>
 										<div data-dx-autocomplete="filtros.Adquiriente"></div>
 									</div>
 									<div class="col-md-3" style="margin-top: 1%">
@@ -73,16 +73,14 @@
 										<div data-dx-select-box="filtros.EstadoRecibo"></div>
 									</div>
 
-									<div class="col-md-6" style="margin-top: 1%">
+									<div class="col-md-4" style="margin-top: 1%">
 										<i class="icon-file-text"></i>
 										<label>Estado:</label>
 										<div id="filtrosEstadoRecibo"></div>
 									</div>
 
 
-
-
-									<div class="col-md-6" style="margin-top: 1%">
+									<div class="col-md-5" style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
 										<label>Resolución:</label>
 										<div id="filtrosResolucion"></div>
