@@ -81,7 +81,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 				
 			    $('#plugin').attr('src', $scope.RespuestaAcuse[0].Pdf);
 				
-				//Si estatus es igual a 2, entonces asigo los valores a las variables para ejecutar la consulta de saldo
+				//Si estatus es igual a 2, entonces asigno los valores a las variables para ejecutar la consulta de saldo
 				if (response.data[0].Estatus == 2) {
 					$scope.Idregistro = response.data[0].pago[0].StrIdRegistro
 					VerificarEstado();

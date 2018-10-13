@@ -252,8 +252,8 @@ namespace HGInetInteroperabilidad.Procesos
                         bool ArchivoEnviado = false;
                         try
                         {
-                             ArchivoEnviado=Clienteftp.SubirArchivoFTP(string.Format("{0}//{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
-
+                            ArchivoEnviado = Clienteftp.SubirArchivoSftp(ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave,  string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido), NombreArchivoComprimido);
+                            //ArchivoEnviado =Clienteftp.SubirArchivoFTP(string.Format("{0}//{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
                         }
                         catch (Exception excepcion)
                         {
@@ -586,6 +586,22 @@ namespace HGInetInteroperabilidad.Procesos
 
                         bool acuse_respuesta = false;
 
+
+
+                        if (obj_RespuestaEstado.historial==null)
+                        {
+                            item_respuesta = new RespuestaAcuseProceso()
+                            {
+                                Numero = 0,
+                                IdSeguridad = string.Empty,
+                                FechaProceso = Fecha.GetFecha(),
+                                DocumentoTipo = 0,
+                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", obj_RespuestaEstado.mensajeGlobal), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                MensajeFinal = obj_RespuestaEstado.mensajeGlobal
+                            };
+                            lista_respuesta.Add(item_respuesta);
+                        }
+
                         foreach (var historial_estado in obj_RespuestaEstado.historial)
                         {
                             if (historial_estado.nombre.Equals(ResponseCode.Aceptado.ToString()) || historial_estado.nombre.Equals(ResponseCode.Rechazado.ToString()) || historial_estado.nombre.Equals(ResponseCode.AprobadoTacito.ToString())
@@ -650,8 +666,8 @@ namespace HGInetInteroperabilidad.Procesos
                                             foreach (var mensaje in obj_RespuestaEstado.historial)
                                             {
                                                 i = i+1;
-                                                Historia += string.Format("<br/> Estado {0}:- {1}",i, mensaje.mensaje);                                                
-                                                Historia += string.Format("<br/> Fecha :{0}",mensaje.timeStamp);
+                                                Historia += string.Format("<br/> Estado {0}: {1}",i, mensaje.mensaje);                                                
+                                                Historia += string.Format("<br/> Fecha :{0}", mensaje.timeStamp.ToString("yyyy-MM-dd HH:mm"));
                                                 Historia += "<br/>";
                                             }
 
@@ -677,8 +693,8 @@ namespace HGInetInteroperabilidad.Procesos
                                         foreach (var mensaje in obj_RespuestaEstado.historial)
                                         {
                                             i = i + 1;
-                                            Historia += string.Format("<br/> Estado {0}:- {1}", i, mensaje.mensaje);
-                                            Historia += string.Format("<br/> Fecha :{0}", mensaje.timeStamp);
+                                            Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
+                                            Historia += string.Format("<br/> Fecha :{0}", mensaje.timeStamp.ToString("yyyy-MM-dd HH:mm"));
                                             Historia += "<br/>";
                                         }
 
@@ -706,8 +722,8 @@ namespace HGInetInteroperabilidad.Procesos
                             foreach (var mensaje in obj_RespuestaEstado.historial)
                             {
                                 i = i + 1;
-                                Historia += string.Format("<br/> Estado {0}:- {1}", i, mensaje.mensaje);
-                                Historia += string.Format("<br/> Fecha :{0}", mensaje.timeStamp);
+                                Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
+                                Historia += string.Format("<br/> Fecha :{0}", mensaje.timeStamp.ToString("yyyy-MM-dd HH:mm"));
                                 Historia += "<br/>";
                             }
 
@@ -725,8 +741,9 @@ namespace HGInetInteroperabilidad.Procesos
 
                         lista_respuesta.Add(item_respuesta);
                     }
-                    catch (Exception)
+                    catch (Exception excepcion)
                     {
+                        LogExcepcion.Guardar(excepcion);
                     }
                 }
             }
