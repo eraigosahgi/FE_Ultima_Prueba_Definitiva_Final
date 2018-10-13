@@ -168,8 +168,9 @@ namespace HGInetUBL
                                     if (jsonObj != null)
                                     {
                                         documento_formato.Codigo = jsonObj.Codigo;
+										documento_formato.Titulo = jsonObj.Titulo;
 
-                                        if (jsonObj.CamposPredeterminados != null)
+										if (jsonObj.CamposPredeterminados != null)
                                         {
                                             foreach (var obj in jsonObj.CamposPredeterminados)
                                             {

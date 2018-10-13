@@ -279,11 +279,40 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
-
 				TblFormatos formato_resultado = (from formato in context.TblFormatos
 												 where formato.IntCodigoFormato == id_formato
 												 && formato.StrEmpresa.Equals(identificacion_empresa)
 												 && formato.IntTipo == tipo_formato
+												 select formato).FirstOrDefault();
+
+				return formato_resultado;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		/// <summary>
+		/// Obtiene el formato del facturador o de la empresa de dependecia. 
+		/// </summary>
+		/// <param name="id_formato"></param>
+		/// <param name="identificacion_empresa"></param>
+		/// <param name="tipo_formato"></param>
+		/// <returns></returns>
+		public TblFormatos ObtenerFormato(int id_formato, string identificacion_empresa, int tipo_formato)
+		{
+			try
+			{
+				string empresa_dependencia = string.Empty;
+
+				Ctl_Empresa clase_empresa = new Ctl_Empresa();
+				empresa_dependencia = clase_empresa.Obtener(identificacion_empresa).StrEmpresaAsociada;
+
+				TblFormatos formato_resultado = (from formato in context.TblFormatos
+												 where formato.IntCodigoFormato == id_formato
+												 && formato.IntTipo == tipo_formato
+												 && (formato.StrEmpresa.Equals(identificacion_empresa) || formato.StrEmpresa.Equals(empresa_dependencia))
 												 select formato).FirstOrDefault();
 
 				return formato_resultado;

@@ -27,5 +27,9 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string ArchivoPdf { get; set; }
 
+		/// <summary>
+		/// Título del formato (ejemplo: Factura de Venta)
+		/// </summary>
+		public string Titulo { get; set; }
 	}
 }

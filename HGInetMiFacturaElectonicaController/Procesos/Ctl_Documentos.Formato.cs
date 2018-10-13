@@ -85,7 +85,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Obtiene el diseño del formato en la base de datos y realiza el proceso de creación del pdf.
 					//sino hay un formato en base de datos con el formato especificado, toma los formatos existentes en el proyecto
 					Ctl_Formatos clase_formatos = new Ctl_Formatos();
-					TblFormatos datos_formato = clase_formatos.Obtener(formato_documento.Codigo, documentoBd.StrEmpresaFacturador, TipoFormato.FormatoPDF.GetHashCode());
+					TblFormatos datos_formato = clase_formatos.ObtenerFormato(formato_documento.Codigo, documentoBd.StrEmpresaFacturador, TipoFormato.FormatoPDF.GetHashCode());
 
 					if (datos_formato != null)
 					{

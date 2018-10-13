@@ -30,6 +30,7 @@ namespace HGInetFacturaEReports.ReportDesigner
 				rep.DataSource = datos_documento;
 
 				List<FormatoCampo> campos = datos_documento.DocumentoFormato.CamposPredeterminados;
+				bool lleno_titulo = false;
 
 				//Recorre los campos adicionales del objeto
 				foreach (FormatoCampo item in campos)
@@ -37,16 +38,24 @@ namespace HGInetFacturaEReports.ReportDesigner
 					//Recorre las secciones del reporte para obtener los controles y asignarle los valores.
 					foreach (Band reportBand in rep.Bands)
 					{
-
-						if (item.Ubicacion.ToLowerInvariant().Equals("campo1"))
+						XRLabel control_titulo = (XRLabel)FindBandControl(reportBand, "LblTituloReporte");
+						if (control_titulo != null && !lleno_titulo)
 						{
-							MemoryStream ms = null;
+							lleno_titulo = true;
+							string titulo_formato = string.Empty;
+							titulo_formato = datos_documento.DocumentoFormato.Titulo;
 
-							try
+							control_titulo.Text = titulo_formato;
+						}
+
+						try
+						{
+							//Obtiene los controles de tipo picture y carga las imagenes 
+							XRPictureBox control_imagen = (XRPictureBox)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
+							if (control_imagen != null)
 							{
-								XRPictureBox control_imagen = (XRPictureBox)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
-
-								if (control_imagen != null)
+								MemoryStream ms = null;
+								try
 								{
 									byte[] bytes = Convert.FromBase64String(item.Valor);
 									using (ms = new MemoryStream(bytes))
@@ -57,28 +66,30 @@ namespace HGInetFacturaEReports.ReportDesigner
 									}
 									break;
 								}
-							}
-							catch (Exception excepcion)
-							{
-								if (ms != null)
-									ms.Close();
+								catch (Exception excepcion)
+								{
+									if (ms != null)
+										ms.Close();
+								}
 							}
 						}
-						else
+						catch (Exception)
 						{
-							XRLabel control_descripcion = (XRLabel)FindBandControl(reportBand, string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()));
-							if (control_descripcion != null)
-							{
-								control_descripcion.Text = item.Descripcion;
-							}
-
-							XRLabel control_valor = (XRLabel)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
-							if (control_valor != null)
-							{
-								control_valor.Text = item.Valor;
-							}
 						}
 
+						//Obtiene los campos de descripciones
+						XRLabel control_descripcion = (XRLabel)FindBandControl(reportBand, string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()));
+						if (control_descripcion != null)
+						{
+							control_descripcion.Text = item.Descripcion;
+						}
+
+						//Obtiene los campos de valores.
+						XRLabel control_valor = (XRLabel)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
+						if (control_valor != null)
+						{
+							control_valor.Text = item.Valor;
+						}
 					}
 				}
 			}
