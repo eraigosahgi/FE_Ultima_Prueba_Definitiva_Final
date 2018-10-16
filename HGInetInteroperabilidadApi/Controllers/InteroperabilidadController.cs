@@ -67,13 +67,15 @@ namespace WebApi.Jwt.Controllers
         /// <returns></returns>
         [JwtAuthentication]                
         [HttpGet]
-        [Route("interoperabilidad/api/v1_0/Consultar")]
-        public IHttpActionResult Consultar(string UUID)
-        {            
+        [Route("interoperabilidad/api/v1_0/Consultar/{uuid}")]
+        public IHttpActionResult Consultar(string uuid)
+        {
+            //[FromUri]string UUID
             var identity = User?.Identity as ClaimsIdentity;
 
             var usernameClaim = identity.FindFirst("username");
 
+            
             //Aqui envio los datos al controlador de proceso
             string Proveedor = usernameClaim.Value;
 
@@ -85,7 +87,7 @@ namespace WebApi.Jwt.Controllers
 
             Ctl_Documento Documentos = new Ctl_Documento();
 
-            doc = Documentos.ObtenerHistorialDococumento(Guid.Parse(UUID), Proveedor);
+            doc = Documentos.ObtenerHistorialDococumento(Guid.Parse(uuid), Proveedor);            
 
             //No existe Documento
             if (doc == null)
@@ -258,8 +260,8 @@ namespace WebApi.Jwt.Controllers
         /// <returns></returns>
         [JwtAuthentication]
         [HttpGet]
-        [Route("interoperabilidad/api/v1_0/application")]
-        public IHttpActionResult application(string UUID)
+        [Route("interoperabilidad/api/v1_0/application/{uuid}")]
+        public IHttpActionResult application(string uuid)
         {
             var identity = User?.Identity as ClaimsIdentity;
 
@@ -268,7 +270,7 @@ namespace WebApi.Jwt.Controllers
             string Proveedor = usernameClaim.Value;
             //Aqui debo generar el proceso que valida el estado del documento
 
-            MensajeGlobal acuse = Ctl_Envio.ObtenerAcusebase64(Guid.Parse(UUID), Proveedor);
+            MensajeGlobal acuse = Ctl_Envio.ObtenerAcusebase64(Guid.Parse(uuid), Proveedor);
 
             return Ok(acuse);
           
