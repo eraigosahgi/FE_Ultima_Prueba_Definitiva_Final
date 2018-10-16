@@ -10,7 +10,7 @@ ProcesarAcusePRecepcionApp.controller('ProcesarAcusePRecepcionController', funct
     $('#panelrespuestas').hide();
 
     var seleccion_empresa;
-
+    $scope.TotalDocumentos = 0;
     $("#btnProcesar").dxButton({
         text: "Enviar Documentos",
         type: "default",
@@ -48,7 +48,8 @@ ProcesarAcusePRecepcionApp.controller('ProcesarAcusePRecepcionController', funct
             $("#wait").hide();
             try {
                 $('#panelresultado').show();
-
+                $scope.TotalDocumentos = response.data.length;
+                console.log("$scope.TotalDocumentos:", $scope.TotalDocumentos);
                 $("#gridResultados").dxDataGrid({
                     dataSource: response.data,
                     paging: {
@@ -133,14 +134,14 @@ ProcesarAcusePRecepcionApp.controller('ProcesarAcusePRecepcionController', funct
                                 }
                                 lista = "[" + lista + "]"
                                 $scope.documentos = lista;
-                                $('#lbltotaldocumentos').val('Documentos a Procesar : ' + data.length);
+                                $('#lbltotaldocumentos').val('Documentos a Procesar : ' + data.length + ' de ' + $scope.TotalDocumentos);
                                 $scope.total = data.length;
 
                             } else {
                                 lista += "{Documentos: '" + data[0].StrIdSeguridad + "'}";
                                 lista = "[" + lista + "]"
                                 $scope.documentos = lista;
-                                $('#lbltotaldocumentos').val('Documento a Procesar : ' + data.length);
+                                $('#lbltotaldocumentos').val('Documento a Procesar : ' + data.length + ' de ' + $scope.TotalDocumentos);
                                 $scope.total = data.length;
 
                             }

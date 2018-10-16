@@ -149,11 +149,19 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
-				var datos_retorno = proveedores.Select(d => new
+
+                Ctl_Documento clase_documentos = new Ctl_Documento();
+
+                
+
+                var datos_retorno = proveedores.Select(d => new
 				{
 					Identificacion = d.StrIdentificacion,
-					RazonSocial = d.StrRazonSocial
-				});
+                    RazonSocial = d.StrRazonSocial,
+                    Dp =clase_documentos.ObtenerDocumentosProveedores(d.StrIdentificacion).Count,
+                    Ap =clase_documentos.ObtenerAcusePendienteRecepcion(d.StrIdentificacion).Count                                        ,
+
+                });
 
 				return Ok(datos_retorno);
 			}

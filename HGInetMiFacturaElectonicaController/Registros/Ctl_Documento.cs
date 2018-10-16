@@ -1286,12 +1286,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			return Datos;
 		}
 
-
-
-
-
-
-
+        /// <summary>
+        /// Obtiene la cantidad de documentos pendidientes de Acuse en un proveedor especifico
+        /// </summary>
+        /// <param name="IdentificacionProveedor">Identificacion del proveedor</param>
+        /// <returns></returns>
 		public List<TblDocumentos> ObtenerAcusePendienteRecepcion(string IdentificacionProveedor)
 		{
 			try
@@ -1301,8 +1300,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				List<TblDocumentos> documentos = (from documento in context.TblDocumentos
 												  where documento.IntIdEstado == EnvioEmailAcuse
 												  && documento.StrIdInteroperabilidad != null
-												  && !documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo)
-												  select documento).ToList();
+                                                  //&& !documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo)
+                                                  && documento.StrProveedorReceptor.Equals(IdentificacionProveedor)
+                                                  select documento).ToList();
 
 				return documentos;
 			}

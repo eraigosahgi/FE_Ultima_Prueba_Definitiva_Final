@@ -24,7 +24,7 @@ ModalProveedorApp.controller('ModalConsultaProveedoresController', function Moda
                {
                	caption: "Identificación",
                	dataField: "Identificacion",
-               	cssClass: "col-md-3",
+               	cssClass: "col-md-2",
                	cellTemplate: function (container, options) {
                		$("<div style='text-align:left'>")
 						.append($("<a taget=_self  data-dismiss='modal' title='Seleccionar Proveedor' onclick=ObtenerProveedor('" + options.data.Identificacion + "')>" + options.data.Identificacion + "</a>"))
@@ -33,7 +33,19 @@ ModalProveedorApp.controller('ModalConsultaProveedoresController', function Moda
                }, {
                	caption: "Razón Social",
                	dataField: "RazonSocial",
-               	cssClass: "col-md-9"
+               	cssClass: "col-md-6"
+               }
+
+               , {
+                   caption: "Doc. Procesar",
+                   dataField: "Dp",
+                   cssClass: "col-md-2"
+               }
+
+               , {
+                   caption: "Acuse Procesar",
+                   dataField: "Ap",
+                   cssClass: "col-md-2"
                }
 
                ],
