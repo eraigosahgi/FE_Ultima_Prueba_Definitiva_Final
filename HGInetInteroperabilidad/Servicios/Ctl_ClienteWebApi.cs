@@ -26,7 +26,7 @@ namespace HGInetInteroperabilidad.Servicios
 			{
 
 				string postData = usuario.ToString();
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "/interoperabilidad/api/v1_0/login");
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/login");
 
 				request.Method = "POST";
 				request.ContentType = "application/json";
@@ -69,7 +69,7 @@ namespace HGInetInteroperabilidad.Servicios
 
 			try
 			{
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "/interoperabilidad/api/v1_0/Consultar?UUID=" + UUID);
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/consultar/" + UUID);
 
 				request.Method = "GET";
 				request.ContentType = "application/json; charset=utf-8";
@@ -95,15 +95,30 @@ namespace HGInetInteroperabilidad.Servicios
 		}
 
 
+        /// <summary>
+        /// Valida la ruta del servicio web
+        /// </summary>
+        /// <param name="rutaUrl">ruta del servicio web remoto</param>
+        /// <returns>ruta del servicio web</returns>
+        public static string ValidarUrl(string rutaUrl)
+        {
+            if (string.IsNullOrEmpty(rutaUrl))
+                throw new Exception("Ruta remota de servicios web no encontrada.");
 
-		/// <summary>
-		/// cambia la contraseña en un proveedor tecnologico especifico
-		/// </summary>
-		/// <param name="NITProveedor"></param>
-		/// <param name="ContrasenaNueva"></param>
-		/// <param name="ContrasenaActual"></param>
-		/// <returns></returns>
-		public static string Inter_CambiarContrasena(string NITProveedor, string ContrasenaNueva, string ContrasenaActual, string Dominio)
+            if (!rutaUrl[rutaUrl.Length - 1].Equals("/"))
+                rutaUrl = string.Format("{0}/", rutaUrl);
+
+            return rutaUrl;
+        }
+
+        /// <summary>
+        /// cambia la contraseña en un proveedor tecnologico especifico
+        /// </summary>
+        /// <param name="NITProveedor"></param>
+        /// <param name="ContrasenaNueva"></param>
+        /// <param name="ContrasenaActual"></param>
+        /// <returns></returns>
+        public static string Inter_CambiarContrasena(string NITProveedor, string ContrasenaNueva, string ContrasenaActual, string Dominio)
 		{
 			//Cambiar Clave
 			try
@@ -164,7 +179,7 @@ namespace HGInetInteroperabilidad.Servicios
 			try
 			{
 
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "/interoperabilidad/api/v1_0/Registrar");
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/registrar");
 
 				request.Method = "POST";
 				request.ContentType = "application/json; charset=utf-8";
@@ -202,7 +217,7 @@ namespace HGInetInteroperabilidad.Servicios
 			//Consultar documentos
 			try
 			{
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "/interoperabilidad/api/v1_0/application?UUID=" + UUID);
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/application/" + UUID);
 
 				request.Method = "GET";
 				request.ContentType = "application/json; charset=utf-8";

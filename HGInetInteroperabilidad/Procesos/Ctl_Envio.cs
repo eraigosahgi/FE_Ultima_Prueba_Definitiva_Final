@@ -77,8 +77,8 @@ namespace HGInetInteroperabilidad.Procesos
                     Usuario usuario = new Usuario();
 
                     //var jj = Encriptar.Encriptar_SHA256("Po&on271");
-                    usuario.username = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
-                    usuario.password = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
+                    usuario.u = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
+                    usuario.p = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
 
                     //Serializo el objeto para enviarlo al cliente webapi
                     string jsonUsuario = JsonConvert.SerializeObject(usuario);
@@ -569,8 +569,8 @@ namespace HGInetInteroperabilidad.Procesos
             {
                 Usuario usuario = new Usuario();
 
-                usuario.username = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
-                usuario.password = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
+                usuario.u = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
+                usuario.p = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
 
                 //Serializo el objeto para enviarlo al cliente webapi
                 string jsonUsuario = JsonConvert.SerializeObject(usuario);
@@ -825,8 +825,8 @@ namespace HGInetInteroperabilidad.Procesos
             {
                 Usuario usuario = new Usuario();
 
-                usuario.username = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
-                usuario.password = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
+                usuario.u = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
+                usuario.p = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
 
                 //Serializo el objeto para enviarlo al cliente webapi
                 string jsonUsuario = JsonConvert.SerializeObject(usuario);

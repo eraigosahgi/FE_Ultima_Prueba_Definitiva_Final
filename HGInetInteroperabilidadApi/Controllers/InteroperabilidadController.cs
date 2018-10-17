@@ -43,7 +43,7 @@ namespace WebApi.Jwt.Controllers
             TblConfiguracionInteroperabilidad Proveedor = new TblConfiguracionInteroperabilidad();
             Ctl_ConfiguracionProveedores conf = new Ctl_ConfiguracionProveedores();                       
 
-            Proveedor = conf.CheckUser(usuario.username, usuario.password);
+            Proveedor = conf.CheckUser(usuario.u, usuario.p);
 
             if (Proveedor != null)
             {

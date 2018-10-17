@@ -8,7 +8,7 @@ namespace HGInetInteroperabilidad.Objetos
 {
     public class Usuario
     {
-        public string username { get; set; }
-        public string password { get; set; }
+        public string u { get; set; }
+        public string p { get; set; }
     }
 }
