@@ -264,11 +264,19 @@ namespace HGInetInteroperabilidad.Procesos
                                 throw new ApplicationException(string.Format("Problemas con el FTP : {0}", excepcion));
                             }
                         }
-                      
-                        //Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
 
-                        //Aqui elimino el archivo Zip si todo esta OK
-                        Archivo.Borrar(string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
+						//Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
+
+						//Aqui elimino el archivo Zip si todo esta OK
+						try
+						{
+							Archivo.Borrar(string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
+						}
+						catch (Exception excepcion)
+                        {
+
+                            LogExcepcion.Guardar(excepcion);
+						}
 
                         //Aqui se debe hacer peticion webapi
                         string RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
@@ -592,12 +600,15 @@ namespace HGInetInteroperabilidad.Procesos
                         {
                             item_respuesta = new RespuestaAcuseProceso()
                             {
-                                Numero = 0,
-                                IdSeguridad = string.Empty,
+                                Numero = item.IntNumero,
+                                IdSeguridad = item.StrIdInteroperabilidad.ToString(),
                                 FechaProceso = Fecha.GetFecha(),
-                                DocumentoTipo = 0,
-                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", obj_RespuestaEstado.mensajeGlobal), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
-                                MensajeFinal = obj_RespuestaEstado.mensajeGlobal
+                                DocumentoTipo = (short)item.IntDocTipo,
+                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} - Respuesta: {1}", obj_RespuestaEstado.mensajeGlobal, RespuestaEstado), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                MensajeFinal = obj_RespuestaEstado.mensajeGlobal,
+								Facturador=item.StrEmpresaFacturador,
+								Mensaje=RespuestaEstado
+
                             };
                             lista_respuesta.Add(item_respuesta);
                         }
@@ -735,7 +746,8 @@ namespace HGInetInteroperabilidad.Procesos
                                 DocumentoTipo = (short)item.IntDocTipo,
                                 Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", string.Format("El acuse no ha sido procesado.")), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
                                 Mensaje = Historia,
-                                MensajeFinal= string.Format("El acuse no ha sido procesado.")
+                                MensajeFinal= string.Format("El acuse no ha sido procesado."),
+								Facturador = item.StrEmpresaFacturador
                             };
                         }
 
