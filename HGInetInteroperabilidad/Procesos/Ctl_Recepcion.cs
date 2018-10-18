@@ -536,7 +536,14 @@ namespace HGInetInteroperabilidad.Procesos
 
 				Ctl_Empresa empresa = new Ctl_Empresa();
 
-				facturador_emisor = empresa.Obtener(documento_obj.DatosObligado.Identificacion);
+				try
+				{
+					facturador_emisor = empresa.Obtener(documento_obj.DatosObligado.Identificacion);
+				}
+				catch (Exception ex)
+				{
+					LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Facturador Emisor {0} ",ex), ex));
+				}
 
 				if (facturador_emisor == null)
 					facturador_emisor = empresa.Crear(documento_obj.DatosObligado, false);
@@ -546,12 +553,26 @@ namespace HGInetInteroperabilidad.Procesos
 
 				Ctl_EmpresaResolucion ctl_resolucion = new Ctl_EmpresaResolucion();
 
-				resolucion = ctl_resolucion.Obtener(documento_obj.DatosObligado.Identificacion, documento_obj.NumeroResolucion, documento_obj.Prefijo);
+				try
+				{
+					resolucion = ctl_resolucion.Obtener(documento_obj.DatosObligado.Identificacion, documento_obj.NumeroResolucion, documento_obj.Prefijo);
+				}
+				catch (Exception ex)
+				{
+					LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Resolución {0}",ex), ex));
+				}
 
 				if (resolucion == null)
 				{
 
-					resolucion = Ctl_EmpresaResolucion.Convertir(documento_obj.DatosObligado.Identificacion, documento_obj.Prefijo, tipo_documento, documento_obj.NumeroResolucion);
+					try
+					{
+						resolucion = Ctl_EmpresaResolucion.Convertir(documento_obj.DatosObligado.Identificacion, documento_obj.Prefijo, tipo_documento, documento_obj.NumeroResolucion);
+					}
+					catch (Exception ex)
+					{
+						LogExcepcion.Guardar(new Exception(string.Format("Error al guardar Resolución {0}",ex), ex));
+					}
 
 					// crea el registro en base de datos
 					resolucion = ctl_resolucion.Crear(resolucion);
@@ -561,6 +582,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
+				LogExcepcion.Guardar(excepcion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -635,6 +657,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
+				LogExcepcion.Guardar(excepcion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -679,6 +702,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
+				LogExcepcion.Guardar(excepcion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
