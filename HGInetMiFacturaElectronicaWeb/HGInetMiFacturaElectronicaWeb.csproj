@@ -1908,6 +1908,7 @@
     <Content Include="Scripts\Pages\ModalConsultaEmpresas.js" />
     <Content Include="Scripts\Pages\PlanesTransacciones.js" />
     <Content Include="Scripts\Pages\ProcesarInteroperabilidad.js" />
+    <Content Include="Scripts\Pages\Proveedores.js" />
     <Content Include="Scripts\Pages\ReportDesignerWeb.js" />
     <Content Include="Scripts\Pages\Usuarios.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
@@ -1916,6 +1917,7 @@
     <Content Include="Scripts\Services\Loading.js" />
     <Content Include="Scripts\Services\MaestrosEnum.js" />
     <Content Include="Scripts\Services\SrvDocumentos.js" />
+    <Content Include="Scripts\Services\SrvProveedor.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
     <Content Include="Views\Demos\Demo.aspx" />
     <Content Include="Views\Demos\DemoInteroperabilidad.aspx" />
@@ -2739,8 +2741,10 @@
     <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
     <Content Include="Views\Pages\ConsultaFacturadorPagos.aspx" />
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
+    <Content Include="Views\Pages\ConsultaProveedores.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
+    <Content Include="Views\Pages\GestionProveedores.aspx" />
     <Content Include="Views\Pages\GestionReportes.aspx" />
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
@@ -2938,6 +2942,13 @@
     <Compile Include="Views\Pages\ConsultaPlanesTransacciones.aspx.designer.cs">
       <DependentUpon>ConsultaPlanesTransacciones.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ConsultaProveedores.aspx.cs">
+      <DependentUpon>ConsultaProveedores.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaProveedores.aspx.designer.cs">
+      <DependentUpon>ConsultaProveedores.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ConsultaUsuarios.aspx.cs">
       <DependentUpon>ConsultaUsuarios.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2951,6 +2962,13 @@
     </Compile>
     <Compile Include="Views\Pages\DocumentosAdmin.aspx.designer.cs">
       <DependentUpon>DocumentosAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\GestionProveedores.aspx.cs">
+      <DependentUpon>GestionProveedores.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\GestionProveedores.aspx.designer.cs">
+      <DependentUpon>GestionProveedores.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\GestionReportes.aspx.cs">
       <DependentUpon>GestionReportes.aspx</DependentUpon>

@@ -61,13 +61,29 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return datos;
 		}
 
-		/// <summary>
-		/// Valida Autenticacion del Proveedor Tecnológico
+
+        /// <summary>
+		/// Obtiene la lista de proveedores
 		/// </summary>
-		/// <param name="usuario">usuario</param>
-		/// <param name="clave">clave sin encripción</param>
-		/// <returns>datos de configuración si es encontrado o null si no</returns>
-		public TblConfiguracionInteroperabilidad Validar(string usuario, string clave)
+		/// <param name="identificacion"></param>
+		/// <returns></returns>
+		public IEnumerable<TblConfiguracionInteroperabilidad> ObtenerProveedores(Guid identificacion)
+        {
+            var datos = (from item in context.TblConfiguracionInteroperabilidad
+                         where item.StrIdSeguridad.Equals(identificacion)
+                         select item).ToList();
+
+            return datos;
+        }
+
+
+        /// <summary>
+        /// Valida Autenticacion del Proveedor Tecnológico
+        /// </summary>
+        /// <param name="usuario">usuario</param>
+        /// <param name="clave">clave sin encripción</param>
+        /// <returns>datos de configuración si es encontrado o null si no</returns>
+        public TblConfiguracionInteroperabilidad Validar(string usuario, string clave)
 		{
 			// se encripta la clave en SHA256 para comparación con la base de datos
 			string clave_sha256 = Encriptar.Encriptar_SHA256(clave);            

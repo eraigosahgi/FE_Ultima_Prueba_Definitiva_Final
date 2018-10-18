@@ -159,7 +159,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Identificacion = d.StrIdentificacion,
                     RazonSocial = d.StrRazonSocial,
                     Dp =clase_documentos.ObtenerDocumentosProveedores(d.StrIdentificacion).Count,
-                    Ap =clase_documentos.ObtenerAcusePendienteRecepcion(d.StrIdentificacion).Count                                        ,
+                    Ap =clase_documentos.ObtenerAcusePendienteRecepcion(d.StrIdentificacion).Count,
+                    BitActivo=d.BitActivo,
+                    DatFechaActualizacion=d.DatFechaActualizacion,
+                    DatFechaExpiracion=d.DatFechaExpiracion,
+                    DatFechaIngreso=d.DatFechaIngreso,
+                    DatHgiFechaToken=d.DatHgiFechaToken,
+                    StrClave=d.StrClave,
+                    StrHgiClave=d.StrHgiClave,
+                    StrHgiUsuario=d.StrHgiUsuario,
+                    StrIdSeguridad=d.StrIdSeguridad,
+                    StrObservaciones=d.StrObservaciones,
+                    StrTelefono=d.StrTelefono,
+                    StrUrlApi=d.StrUrlApi,
+                    StrUrlFtp=d.StrUrlFtp,
+                    StrUsuario=d.StrUsuario,
+                    StrMail=d.StrMail                 
 
                 });
 
@@ -171,12 +186,78 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-		/// <summary>
-		/// Retorna la descripción del estado de la factura.
+
+
+
+        /// <summary>
+		/// Obtiene un proveedor especifico
 		/// </summary>
-		/// <param name="e"></param>
+		/// <param name="identificacion_empresa"></param>
 		/// <returns></returns>
-		private string DescripcionEstadoFactura(short e)
+		[HttpGet]
+        [Route("Api/ObtenerProveedores")]
+        public IHttpActionResult ObtenerProveedores(Guid identificacion)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+                //List<TblConfiguracionInteroperabilidad> proveedores = new List<TblConfiguracionInteroperabilidad>();
+
+                Ctl_ConfiguracionInteroperabilidad clase_inter = new Ctl_ConfiguracionInteroperabilidad();
+
+                var proveedores = clase_inter.ObtenerProveedores(identificacion);
+
+                if (proveedores == null)
+                {
+                    return NotFound();
+                }
+
+
+                Ctl_Documento clase_documentos = new Ctl_Documento();
+
+
+
+                var datos_retorno = proveedores.Select(d => new
+                {
+                    Identificacion = d.StrIdentificacion,
+                    RazonSocial = d.StrRazonSocial,
+                    Dp = clase_documentos.ObtenerDocumentosProveedores(d.StrIdentificacion).Count,
+                    Ap = clase_documentos.ObtenerAcusePendienteRecepcion(d.StrIdentificacion).Count,
+                    BitActivo = d.BitActivo,
+                    DatFechaActualizacion = d.DatFechaActualizacion,
+                    DatFechaExpiracion = d.DatFechaExpiracion,
+                    DatFechaIngreso = d.DatFechaIngreso,
+                    DatHgiFechaToken = d.DatHgiFechaToken,
+                    StrClave = d.StrClave,
+                    StrHgiClave = d.StrHgiClave,
+                    StrHgiUsuario = d.StrHgiUsuario,
+                    StrIdSeguridad = d.StrIdSeguridad,
+                    StrObservaciones = d.StrObservaciones,
+                    StrTelefono = d.StrTelefono,
+                    StrUrlApi = d.StrUrlApi,
+                    StrUrlFtp = d.StrUrlFtp,
+                    StrUsuario = d.StrUsuario,
+                    StrMail = d.StrMail
+
+                });
+
+                return Ok(datos_retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Retorna la descripción del estado de la factura.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private string DescripcionEstadoFactura(short e)
 		{
 			try
 			{

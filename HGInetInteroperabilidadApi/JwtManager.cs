@@ -15,7 +15,7 @@ namespace WebApi.Jwt
         /// </summary>
         private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
-        public static string GenerateToken(string ProveedorEmisor,string ProveedorReceptor,string razonSocial, int expireMinutes = 120)
+        public static string GenerateToken(string ProveedorEmisor,string ProveedorReceptor,string razonSocial, int expireMinutes = 1440)
         {
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
