@@ -65,8 +65,9 @@ namespace HGInetInteroperabilidad.Servicios
 		/// <returns></returns>
 		public static string Inter_ConsultarEstado(string UUID, string Token, string Dominio)
 		{
+			string resp = string.Empty;
 			//Consultar documentos
-
+			HttpWebResponse response = null;
 			try
 			{
 				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/consultar/" + UUID);
@@ -76,8 +77,8 @@ namespace HGInetInteroperabilidad.Servicios
 				request.Accept = "application/json; charset=utf-8";
 				request.Headers.Add("Authorization", "Bearer " + Token);
 
-				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-				string resp = string.Empty;
+				response = request.GetResponse() as HttpWebResponse;
+
 				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
 				{
 					resp = reader.ReadToEnd();
@@ -87,38 +88,54 @@ namespace HGInetInteroperabilidad.Servicios
 
 				return resp;
 			}
-			catch (Exception)
+			catch (WebException ex)
 			{
 
+				HttpWebResponse responseExc = (HttpWebResponse)ex.Response;
+
+				int code = responseExc.StatusCode.GetHashCode();
+
+				HttpStatusCode codeStatus = responseExc.StatusCode;
+
+
+				using (StreamReader reader = new StreamReader(responseExc.GetResponseStream()))
+				{
+					resp = reader.ReadToEnd();
+				}
+
+
+				return resp;
+			}
+			catch (Exception ex)
+			{
 				throw;
 			}
 		}
 
+		/// <summary>
+		/// Valida la ruta del servicio web
+		/// </summary>
+		/// <param name="rutaUrl">ruta del servicio web remoto</param>
+		/// <returns>ruta del servicio web</returns>
+		public static string ValidarUrl(string rutaUrl)
+		{
+			if (string.IsNullOrEmpty(rutaUrl))
+				throw new Exception("Ruta remota de servicios web no encontrada.");
 
-        /// <summary>
-        /// Valida la ruta del servicio web
-        /// </summary>
-        /// <param name="rutaUrl">ruta del servicio web remoto</param>
-        /// <returns>ruta del servicio web</returns>
-        public static string ValidarUrl(string rutaUrl)
-        {
-            if (string.IsNullOrEmpty(rutaUrl))
-                throw new Exception("Ruta remota de servicios web no encontrada.");
+			if (!rutaUrl[rutaUrl.Length - 1].Equals("/"))
+				rutaUrl = string.Format("{0}/", rutaUrl);
 
-            if (!rutaUrl[rutaUrl.Length - 1].Equals("/"))
-                rutaUrl = string.Format("{0}/", rutaUrl);
+			return rutaUrl;
+		}
 
-            return rutaUrl;
-        }
-
-        /// <summary>
-        /// cambia la contraseña en un proveedor tecnologico especifico
-        /// </summary>
-        /// <param name="NITProveedor"></param>
-        /// <param name="ContrasenaNueva"></param>
-        /// <param name="ContrasenaActual"></param>
-        /// <returns></returns>
-        public static string Inter_CambiarContrasena(string NITProveedor, string ContrasenaNueva, string ContrasenaActual, string Dominio)
+		/// <summary>
+		/// cambia la contraseña en un proveedor tecnologico especifico
+		/// </summary>
+		/// <param name="NITProveedor"></param>
+		/// <param name="ContrasenaNueva"></param>
+		/// <param name="ContrasenaActual"></param>
+		/// <returns></returns>
+		public static string Inter_CambiarContrasena(string NITProveedor, string ContrasenaNueva, string ContrasenaActual, string Dominio)
 		{
 			//Cambiar Clave
 			try
