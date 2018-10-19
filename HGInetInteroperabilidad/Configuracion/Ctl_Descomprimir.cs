@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,14 +23,15 @@ namespace HGInetInteroperabilidad.Configuracion
 
         public static RegistroListaDocRespuesta Procesar(RegistroListaDoc datos, string proveedor_emisor)
         {
+            
 
             RegistroListaDocRespuesta datos_respuesta = new RegistroListaDocRespuesta();
 
             if (datos == null)
             {
-                datos_respuesta.timeStamp = Fecha.GetFecha();
+                datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
                 datos_respuesta.trackingIds = null;
-                datos_respuesta.mensajeGlobal = string.Format("No se obtuvo informacion de {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.Zipvacio));
+                datos_respuesta.mensajeGlobal = string.Format("{2}|No se obtuvo informacion de {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.Zipvacio), RespuestaInterOperabilidad.Zipvacio.GetHashCode());
 
             }
             PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -46,9 +48,9 @@ namespace HGInetInteroperabilidad.Configuracion
             //Obtengo archivos para procesar
             if (!Archivo.ValidarExistencia(string.Format(@"{0}{1}{2}\{3}", plataforma_datos.RutaDmsFisica,Constantes.RutaInteroperabilidadFtp,proveedor.StrIdSeguridad, datos.nombre)))
             {
-                datos_respuesta.timeStamp = Fecha.GetFecha();
+                datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
                 datos_respuesta.trackingIds = null;
-                datos_respuesta.mensajeGlobal = string.Format("No se obtuvo informacion de {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.Zipvacio));
+                datos_respuesta.mensajeGlobal = string.Format("{2}|No se obtuvo informacion de {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.Zipvacio), RespuestaInterOperabilidad.Zipvacio.GetHashCode());
 
             }
             else
@@ -68,7 +70,7 @@ namespace HGInetInteroperabilidad.Configuracion
                     {
                         if (file.Entries.Count > 100)
                         {
-                            datos_respuesta.timeStamp = Fecha.GetFecha();
+                            datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
                             datos_respuesta.trackingIds = null;
                             datos_respuesta.mensajeGlobal = string.Format("No se obtuvo informacion de {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ZipSuperaMaximo));
 
@@ -101,15 +103,14 @@ namespace HGInetInteroperabilidad.Configuracion
 
                     //Envia la informacion para procesarla
                     datos_respuesta = Ctl_Recepcion.Procesar(datos, destino, proveedor.StrIdentificacion);
-
                     
                 }
                 catch (Exception excepcion)
                 {
                     LogExcepcion.Guardar(excepcion);
-                    datos_respuesta.timeStamp = Fecha.GetFecha();
+                    datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
                     datos_respuesta.trackingIds = null;
-                    datos_respuesta.mensajeGlobal = string.Format("Error al descomprimir {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ErrorInternoReceptor));
+                    datos_respuesta.mensajeGlobal = string.Format("{2}|Error al descomprimir {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ErrorInternoReceptor), RespuestaInterOperabilidad.ErrorInternoReceptor);
                     //throw new ApplicationException(string.Format("Error al descomprimir {0} Detalle: {1}", datos.nombre, excepcion.Message));
                 }
             }

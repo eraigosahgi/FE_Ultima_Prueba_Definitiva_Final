@@ -22,14 +22,14 @@ namespace HGInetInteroperabilidad.Objetos
     {
         public List<DetalleDocRespuesta> historial { get; set; }
         public string mensajeGlobal { get; set; }
-        public DateTime timeStamp { get; set; }
+        public string timeStamp { get; set; }
     }
 
     /// Objeto que contiene el detalle de la respuesta de la consulta de un documento en especifico por UUID        
     public class DetalleDocRespuesta
     {
         public string nombre { get; set; }
-        public DateTime timeStamp { get; set; }
+        public string timeStamp { get; set; }
         public string mensaje { get; set; }
     }
 }

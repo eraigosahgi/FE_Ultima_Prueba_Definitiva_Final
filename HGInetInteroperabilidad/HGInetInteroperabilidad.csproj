@@ -74,6 +74,7 @@
     <Compile Include="Procesos\Ctl_Recepcion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\Ctl_ClienteWebApi.cs" />
+    <Compile Include="Servicios\Split.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaController\HGInetMiFacturaElectonicaController.csproj">

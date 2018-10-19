@@ -1924,7 +1924,6 @@
     <Content Include="Scripts\Services\SrvProveedor.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
     <Content Include="Views\Demos\Demo.aspx" />
-    <Content Include="Views\Demos\DemoInteroperabilidad.aspx" />
     <Content Include="Views\Demos\Demos.aspx" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
@@ -2830,13 +2829,6 @@
     <Compile Include="Views\Demos\Demo.aspx.designer.cs">
       <DependentUpon>Demo.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Demos\DemoInteroperabilidad.aspx.cs">
-      <DependentUpon>DemoInteroperabilidad.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Demos\DemoInteroperabilidad.aspx.designer.cs">
-      <DependentUpon>DemoInteroperabilidad.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Demos\Demos.aspx.cs">
       <DependentUpon>Demos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3198,7 +3190,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61428/</IISUrl>
+          <IISUrl>http://localhost:61433/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

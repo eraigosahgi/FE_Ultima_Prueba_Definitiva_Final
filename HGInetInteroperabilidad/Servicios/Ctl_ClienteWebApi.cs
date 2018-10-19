@@ -20,7 +20,7 @@ namespace HGInetInteroperabilidad.Servicios
 		/// <param name="usuario">Usuario suministrado por el proveedor tecnologico con su respectiva clave. todo en formato json</param>
 		/// <param name="Dominio">Dominio del proveedor</param>
 		/// <returns></returns>
-		public static string Inter_login(string usuario, string Dominio)
+		public static HttpWebResponse Inter_login(string usuario, string Dominio)
 		{
 			try
 			{
@@ -42,20 +42,22 @@ namespace HGInetInteroperabilidad.Servicios
 					requestStream.Write(bytes, 0, bytes.Length);
 				}
 				string resp = string.Empty;
-				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-				{
-					resp = reader.ReadToEnd();
-				}
-				return resp;
-			}
+				
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
-			catch (Exception Exception)
-			{
+                return response;
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse responseExc = (HttpWebResponse)ex.Response;
 
-				return Exception.Message;
-			}
-		}
+                return responseExc;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
 		/// <summary>
 		/// Obtiene el estado de un documento enviado  a otro proveedor tecnologico
@@ -63,11 +65,11 @@ namespace HGInetInteroperabilidad.Servicios
 		/// <param name="UUID">traking id o UUID de seguridad suministrado por el proveedor tecnologico receptor</param>
 		/// <param name="Token">Token de seguridad emitido por el proveedor tecnologico receptor</param>
 		/// <returns></returns>
-		public static string Inter_ConsultarEstado(string UUID, string Token, string Dominio)
+		public static HttpWebResponse Inter_ConsultarEstado(string UUID, string Token, string Dominio)
 		{
-			string resp = string.Empty;
+			
 			//Consultar documentos
-			HttpWebResponse response = null;
+			
 			try
 			{
 				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/consultar/" + UUID);
@@ -77,35 +79,16 @@ namespace HGInetInteroperabilidad.Servicios
 				request.Accept = "application/json; charset=utf-8";
 				request.Headers.Add("Authorization", "Bearer " + Token);
 
-				response = request.GetResponse() as HttpWebResponse;
-
-				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-				{
-					resp = reader.ReadToEnd();
-				}
-
-
-
-				return resp;
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                
+                return response;				
 			}
 			catch (WebException ex)
 			{
-
 				HttpWebResponse responseExc = (HttpWebResponse)ex.Response;
-
-				int code = responseExc.StatusCode.GetHashCode();
-
-				HttpStatusCode codeStatus = responseExc.StatusCode;
-
-
-				using (StreamReader reader = new StreamReader(responseExc.GetResponseStream()))
-				{
-					resp = reader.ReadToEnd();
-				}
-
-
-				return resp;
-			}
+               
+                return responseExc;
+            }
 			catch (Exception ex)
 			{
 				throw;
@@ -135,7 +118,7 @@ namespace HGInetInteroperabilidad.Servicios
 		/// <param name="ContrasenaNueva"></param>
 		/// <param name="ContrasenaActual"></param>
 		/// <returns></returns>
-		public static string Inter_CambiarContrasena(string NITProveedor, string ContrasenaNueva, string ContrasenaActual, string Dominio)
+		public static HttpWebResponse Inter_CambiarContrasena(string NITProveedor, string ContrasenaNueva, string ContrasenaActual, string Dominio)
 		{
 			//Cambiar Clave
 			try
@@ -164,21 +147,21 @@ namespace HGInetInteroperabilidad.Servicios
 				}
 
 				string resp = string.Empty;
-				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-				{
-					resp = reader.ReadToEnd();
-				}
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
+                return response;
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse responseExc = (HttpWebResponse)ex.Response;
 
-				return resp;
-			}
-			catch (Exception)
-			{
-
-				throw;
-			}
-		}
+                return responseExc;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
 
 
@@ -191,11 +174,10 @@ namespace HGInetInteroperabilidad.Servicios
 		/// <param name="Token">Token emitido en la autenticación con el proveedor tecnologico</param>
 		/// <param name="Dominio">Dominio del proveedor tecnologico al que se desea enviar los documentos</param>
 		/// <returns></returns>
-		public static string Inter_Registrar(string ListaDocumentos, string Token, string Dominio)
+		public static HttpWebResponse Inter_Registrar(string ListaDocumentos, string Token, string Dominio)
 		{
 			try
 			{
-
 				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/registrar");
 
 				request.Method = "POST";
@@ -214,22 +196,24 @@ namespace HGInetInteroperabilidad.Servicios
 					requestStream.Write(bytes, 0, bytes.Length);
 				}
 				string resp = string.Empty;
-				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-				{
-					resp = reader.ReadToEnd();
-				}
 
-				return resp;
-			}
-			catch (Exception exception)
-			{
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
-				return exception.Message;
-			}
-		}
+                return response;
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse responseExc = (HttpWebResponse)ex.Response;
 
-		public static string Inter_ConsultaAcuse(string UUID, string Token, string Dominio)
+                return responseExc;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+		public static HttpWebResponse Inter_ConsultaAcuse(string UUID, string Token, string Dominio)
 		{
 			//Consultar documentos
 			try
@@ -241,21 +225,21 @@ namespace HGInetInteroperabilidad.Servicios
 				request.Accept = "application/json; charset=utf-8";
 				request.Headers.Add("Authorization", "Bearer " + Token);
 
-				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-				string resp = string.Empty;
-				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-				{
-					resp = reader.ReadToEnd();
-				}
+				HttpWebResponse response = request.GetResponse() as HttpWebResponse;                
 
-				return resp;
-			}
-			catch (Exception)
-			{
+                return response;
+            }
+            catch (WebException ex)
+            {
+                HttpWebResponse responseExc = (HttpWebResponse)ex.Response;
 
-				throw;
-			}
-		}
+                return responseExc;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
 
 		#endregion

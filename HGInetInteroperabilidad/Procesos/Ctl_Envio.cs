@@ -18,8 +18,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -27,6 +29,7 @@ namespace HGInetInteroperabilidad.Procesos
 {
     public class Ctl_Envio
     {
+
         /// <summary>
         ///  Envia documentos a proveedores via Interoperabilidad
         ///  Documentos con estatus por enviar y Acuses pendientes por notificar
@@ -35,6 +38,7 @@ namespace HGInetInteroperabilidad.Procesos
         /// <returns></returns>
         public static List<RespuestaRegistro> Procesar(List<TblDocumentos> Doc)//(TblDocumentos Doc)
         {
+            string errorGenerico = string.Empty;
 
             //Creo una lista de objetos de respuesta para tenerla como base de consulta
             List<RespuestaRegistro> ListaResultadoVista = new List<RespuestaRegistro>();
@@ -85,13 +89,24 @@ namespace HGInetInteroperabilidad.Procesos
 
                     //Lo primero es validar si tiene tenemos usuario y password activo con el proveedor
                     //Se debe validar si tengo un tokken activo, antes de solicitar otro
-                    string Token = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                    HttpWebResponse RToken = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
-                    if (Token.Contains("404") || Token.Contains("No autorizado") || Token.Contains("No es posible conectar con el servidor remoto"))
+                    int code = RToken.StatusCode.GetHashCode();
+
+                    string resp;
+                    using (StreamReader reader = new StreamReader(RToken.GetResponseStream()))
                     {
-                        throw new ApplicationException(string.Format("No se pudo conectar al proveedor: {0}", Token));
+                        resp = reader.ReadToEnd();
                     }
-                    AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(Token);
+
+                    if (code != RespuestaInterLogin.Exitoso.GetHashCode())
+                    {
+                        throw new ApplicationException(Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterLogin>(code)));
+                    }
+
+                    string Token = string.Empty;
+
+                    AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(resp);
                     Token = r.jwtToken;
 
                     //Aqui se crea archio zip por proveedor
@@ -223,7 +238,7 @@ namespace HGInetInteroperabilidad.Procesos
                         }
                         catch (Exception excepcion)
                         {
-
+                            errorGenerico = excepcion.Message.ToString();
                             LogExcepcion.Guardar(excepcion);
                         }
 
@@ -252,12 +267,12 @@ namespace HGInetInteroperabilidad.Procesos
                         bool ArchivoEnviado = false;
                         try
                         {
-                            ArchivoEnviado = Clienteftp.SubirArchivoSftp(ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave,  string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido), NombreArchivoComprimido);
+                            ArchivoEnviado = Clienteftp.SubirArchivoSftp(ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido), NombreArchivoComprimido);
                             //ArchivoEnviado =Clienteftp.SubirArchivoFTP(string.Format("{0}//{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
                         }
                         catch (Exception excepcion)
                         {
-
+                            errorGenerico = excepcion.Message.ToString();
                             LogExcepcion.Guardar(excepcion);
                             if (!ArchivoEnviado)
                             {
@@ -265,30 +280,64 @@ namespace HGInetInteroperabilidad.Procesos
                             }
                         }
 
-						//Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
+                        //Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
 
-						//Aqui elimino el archivo Zip si todo esta OK
-						try
-						{
-							Archivo.Borrar(string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
-						}
-						catch (Exception excepcion)
+                        //Aqui elimino el archivo Zip si todo esta OK
+                        try
                         {
-
+                            Archivo.Borrar(string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
+                        }
+                        catch (Exception excepcion)
+                        {
+                            errorGenerico = excepcion.Message.ToString();
                             LogExcepcion.Guardar(excepcion);
-						}
+                        }
 
                         //Aqui se debe hacer peticion webapi
-                        string RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                        HttpWebResponse RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
 
-                        if (RespuestaRegistroApi.Contains("Error en el servidor remoto:"))
+                        code = RespuestaRegistroApi.StatusCode.GetHashCode();
+                        string respuesta;
+                        using (StreamReader reader = new StreamReader(RespuestaRegistroApi.GetResponseStream()))
                         {
-                            throw new ApplicationException(string.Format("No se pudo conectar al proveedor: {0}", RespuestaRegistroApi));
+                            respuesta = reader.ReadToEnd();
+                        }
+
+                        //Recibo la respuesta y la convierto a Objeto
+                        Respuesta = JsonConvert.DeserializeObject<RegistroListaDocRespuesta>(respuesta);
+
+                        //Creo esta lista para retornaren caso en que uno de los codigos de respuesta sea uno de los adecuados
+                        RegistroListaDetalleDocRespuesta RespListaCodigo = new RegistroListaDetalleDocRespuesta();
+                        RespuestaRegistro RespCodigo = new RespuestaRegistro();
+
+                        switch (code)
+                        {                                                           
+                            case 401://Error de autenticacion
+                                
+                            case 406://No tiene convenio
+                                
+                            case 500://Error interno
+
+                            case 415:
+
+                            case 414://Contine mas de 100                                                                
+                                {
+                                    TblDocumentos doc = new TblDocumentos();
+                                    RespListaCodigo.mensaje = Respuesta.mensajeGlobal;
+                                    RespCodigo.Respuesta = RespListaCodigo;
+                                    RespCodigo.Documento = doc;
+                                    RespCodigo.MensajeZip = Respuesta.mensajeGlobal;
+                                    DocumetoRespuesta.Add(RespCodigo);
+                                    return DocumetoRespuesta;
+                                }                                                            
                         }
 
 
-                        Respuesta = JsonConvert.DeserializeObject<RegistroListaDocRespuesta>(RespuestaRegistroApi);
+
+
+
+                        
 
                         //Aqui guardo la respuesta del paquete, se debe crear una lista para tener un solo encabezado
                         ListaResultadoVista[0].MensajeZip = Respuesta.mensajeGlobal;
@@ -330,16 +379,17 @@ namespace HGInetInteroperabilidad.Procesos
                                                 DocumentoEmail = ControladorEmail.ObtenerPorIdSeguridad(Resp.Documento.StrIdSeguridad).FirstOrDefault();
 
                                                 email.NotificacionDocumento(DocumentoEmail, Resp.Documento.TblEmpresasFacturador.StrTelefono);
-                                                
+
                                                 DocumentoEmail.IntIdEstado = (short)ProcesoEstado.EnvioEmailAcuse.GetHashCode();
 
                                                 ControladorEmail.Actualizar(DocumentoEmail);
                                             }
                                             catch (Exception excepcion)
                                             {
+                                                errorGenerico = excepcion.Message.ToString();
                                                 LogExcepcion.Guardar(excepcion);
                                             }
-                                            
+
                                         }
                                         else
                                         {
@@ -362,19 +412,7 @@ namespace HGInetInteroperabilidad.Procesos
                                             else
                                             {
                                                 //Aqui actualizo
-                                                TblDocumentos Actualiza = ActualizaRespuesta(Detalle, Tipo);
-                                                //Luego de actualizar, para no ir nuevamente a la base de datos, coloco en pantalla el estatus con el que deje el documento
-                                                //if (Actualiza)
-                                                //{
-                                                //    if (Tipo == 1)
-                                                //    {
-                                                //        Resp.Documento.IntIdEstado = (Int16)(ProcesoEstado.Finalizacion.GetHashCode());
-                                                //    }
-                                                //    else
-                                                //    {
-                                                //        Resp.Documento.IntIdEstado = (Int16)(ProcesoEstado.EnvioExitosoProveedor.GetHashCode());
-                                                //    }
-                                                //}
+                                                TblDocumentos Actualiza = ActualizaRespuesta(Detalle, Tipo);                                              
                                                 if (Actualiza != null)
                                                 {
                                                     Resp.Documento.IntIdEstado = Actualiza.IntIdEstado;
@@ -397,7 +435,7 @@ namespace HGInetInteroperabilidad.Procesos
                                 }
                                 catch (Exception excepcion)
                                 {
-
+                                    errorGenerico = excepcion.Message.ToString();
                                     LogExcepcion.Guardar(excepcion);
                                 }
 
@@ -437,7 +475,7 @@ namespace HGInetInteroperabilidad.Procesos
                 }
                 catch (Exception excepcion)
                 {
-
+                    errorGenerico = excepcion.Message.ToString();
                     LogExcepcion.Guardar(excepcion);
                 }
             }
@@ -449,17 +487,17 @@ namespace HGInetInteroperabilidad.Procesos
                 RespuestaRegistro RespuestaVacia = new RespuestaRegistro();
                 TblDocumentos doc = new TblDocumentos();
                 RegistroListaDetalleDocRespuesta resp = new RegistroListaDetalleDocRespuesta();
-                resp.mensaje = "Revisar Log";
+                resp.mensaje = string.Format("{0} Revisar Log", errorGenerico);
                 RespuestaVacia.Documento = doc;
                 RespuestaVacia.Respuesta = resp;
 
-                RespuestaVacia.MensajeZip = (string.IsNullOrEmpty(Respuesta.mensajeGlobal))? "Revisar Log": Respuesta.mensajeGlobal;
+                RespuestaVacia.MensajeZip = (string.IsNullOrEmpty(Respuesta.mensajeGlobal)) ? string.Format("{0} Revisar Log", errorGenerico) : Respuesta.mensajeGlobal;
                 DocumetoRespuesta.Add(RespuestaVacia);
-                Datos=DocumetoRespuesta;
-                
+                Datos = DocumetoRespuesta;
+
             }
             else
-            {                
+            {
                 Datos = ListaResultadoVista
                    .GroupBy(p => p.Documento.IntNumero)
                    .Select(g => g.First())
@@ -486,27 +524,7 @@ namespace HGInetInteroperabilidad.Procesos
                     if (!Detalle.codigoError.Equals(RespuestaInterOperabilidad.PendienteProcesamiento.GetHashCode().ToString()))
                     {
                         return null;
-                    }
-                    //string Nombre = Detalle.nombreDocumento.Replace(".xml", "");
-
-                    //int Largo = Nombre.Length;
-                    //int LargoPrefijo = 0;
-                    //string Prefijo = string.Empty;
-
-                    //string Nit = Nombre.Substring(6, 10);
-
-                    //if (Largo > 26)
-                    //{
-                    //    LargoPrefijo = Largo - 26;
-                    //    Prefijo = Nombre.Substring(16, LargoPrefijo);
-                    //}
-
-
-                    //int NitFacturador = Convert.ToInt32(Nit);
-                    //string DocumentoHexadecimal = Nombre.Substring(16 + LargoPrefijo, 10);
-
-
-                    //int NumeroDocumento = int.Parse(DocumentoHexadecimal, System.Globalization.NumberStyles.HexNumber);
+                    }                 
 
                     Ctl_Documento Documentos = new Ctl_Documento();
 
@@ -548,10 +566,6 @@ namespace HGInetInteroperabilidad.Procesos
         public static List<RespuestaAcuseProceso> ProcesarAcuses(List<TblDocumentos> Doc)
         {
 
-
-            
-
-
             Ctl_Documento Controlador = new Ctl_Documento();
 
             List<TblConfiguracionInteroperabilidad> ListaProveedores = new List<TblConfiguracionInteroperabilidad>();
@@ -577,26 +591,66 @@ namespace HGInetInteroperabilidad.Procesos
 
                 //Lo primero es validar si tiene tenemos usuario y password activo con el proveedor
                 //Se debe validar si tengo un tokken activo, antes de solicitar otro
-                string Token = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                HttpWebResponse RToken = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
-                AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(Token);
-                Token = r.jwtToken;
+                int code = RToken.StatusCode.GetHashCode();
+
+                string resp;
+                using (StreamReader reader = new StreamReader(RToken.GetResponseStream()))
+                {
+                    resp = reader.ReadToEnd();
+                }
+
 
                 RespuestaAcuseProceso item_respuesta = new RespuestaAcuseProceso();
+
+                if (code != RespuestaInterLogin.Exitoso.GetHashCode())
+                {
+                    item_respuesta = new RespuestaAcuseProceso()
+                    {
+                        Numero = 0,
+                        IdSeguridad = "",
+                        FechaProceso = Fecha.GetFecha(),
+                        DocumentoTipo = 1,
+                        Error = new LibreriaGlobalHGInet.Error.Error(resp, LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                        MensajeFinal = resp,
+                        Facturador = "",
+                        Mensaje = resp
+
+                    };
+                    lista_respuesta.Add(item_respuesta);
+                    break;
+                }
+
+
+                string Token;
+
+                AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(resp);
+                Token = r.jwtToken;
+                DateTime Fechaexp = Convert.ToDateTime(r.passwordExpiration);
+
 
                 foreach (TblDocumentos item in Doc)
                 {
                     try
                     {
-                        string RespuestaEstado = Ctl_ClienteWebApi.Inter_ConsultarEstado(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                        HttpWebResponse RespuestaEstado = Ctl_ClienteWebApi.Inter_ConsultarEstado(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
-                        RegistroDocRespuesta obj_RespuestaEstado = JsonConvert.DeserializeObject<RegistroDocRespuesta>(RespuestaEstado);
+                        code = RespuestaEstado.StatusCode.GetHashCode();
+
+                        using (StreamReader reader = new StreamReader(RespuestaEstado.GetResponseStream()))
+                        {
+                            resp = reader.ReadToEnd();
+                        }
+
+
+                        RegistroDocRespuesta obj_RespuestaEstado = JsonConvert.DeserializeObject<RegistroDocRespuesta>(resp);
 
                         bool acuse_respuesta = false;
 
 
 
-                        if (obj_RespuestaEstado.historial==null)
+                        if (code != RespuestaInterOperabilidadUUID.ConsultaExitosa.GetHashCode())
                         {
                             item_respuesta = new RespuestaAcuseProceso()
                             {
@@ -606,12 +660,15 @@ namespace HGInetInteroperabilidad.Procesos
                                 DocumentoTipo = (short)item.IntDocTipo,
                                 Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} - Respuesta: {1}", obj_RespuestaEstado.mensajeGlobal, RespuestaEstado), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
                                 MensajeFinal = obj_RespuestaEstado.mensajeGlobal,
-								Facturador=item.StrEmpresaFacturador,
-								Mensaje=RespuestaEstado
+                                Facturador = item.StrEmpresaFacturador,
+                                Mensaje = obj_RespuestaEstado.mensajeGlobal
 
                             };
                             lista_respuesta.Add(item_respuesta);
+                            break;
                         }
+
+
 
                         foreach (var historial_estado in obj_RespuestaEstado.historial)
                         {
@@ -620,246 +677,26 @@ namespace HGInetInteroperabilidad.Procesos
                             {
                                 acuse_respuesta = true;
 
-                                string RespuestaAcuse = Ctl_ClienteWebApi.Inter_ConsultaAcuse(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                                HttpWebResponse RespuestaAcuse = Ctl_ClienteWebApi.Inter_ConsultaAcuse(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
-                                AcuseRespuesta obj_RespuestaAcuse = JsonConvert.DeserializeObject<AcuseRespuesta>(RespuestaAcuse);
 
-                                //Convierte el mensajeGlobal a Xml
-                                byte[] bytes = Convert.FromBase64String(obj_RespuestaAcuse.mensajeGlobal);
-                                string data = Encoding.UTF8.GetString(bytes);
-                                System.Xml.XmlReader xml_reader = System.Xml.XmlReader.Create(new StringReader(data));
-                                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                                doc.Load(xml_reader);
+                                code = RespuestaEstado.StatusCode.GetHashCode();
 
-                                //Obtiene el nombre del archivo.
-                                if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoUbl))
+                                using (StreamReader reader = new StreamReader(RespuestaEstado.GetResponseStream()))
                                 {
-                                    string nombre_archivo = string.Empty;
-                                    nombre_archivo = Path.GetFileNameWithoutExtension(item.StrUrlArchivoUbl);
-
-                                    PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-                                    string ruta_acuse = string.Format(@"{0}\{1}{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.StrIdSeguridad);
-									ruta_acuse = string.Format(@"{0}\{1}", ruta_acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
-
-									//Valida la existencia de la ruta de almacenamiento, sino existe la crea.
-									if (!Directorio.ValidarExistenciaArchivo(ruta_acuse))
-                                        Directorio.CrearDirectorio(ruta_acuse);
-
-                                    ruta_acuse = string.Format("{0}\\{1}.xml", ruta_acuse, nombre_archivo);
-                                    //Almacena el archivo en la ruta especificada
-                                    doc.Save(ruta_acuse);
-
-                                    Ctl_Empresa clase_empresa = new Ctl_Empresa();
-                                    TblEmpresas datos_facturador = new TblEmpresas();
-
-                                    datos_facturador = clase_empresa.Obtener(item.TblEmpresasFacturador.StrIdentificacion);
-
-                                    //Serializa el objeto
-
-                                    System.Xml.XmlReader xml_reader_serializacion = System.Xml.XmlReader.Create(new StringReader(data));
-                                    XmlSerializer serializacion = null;
-                                    ApplicationResponseType obj_acuse_serializado = new ApplicationResponseType();
-                                    serializacion = new XmlSerializer(typeof(ApplicationResponseType));
-                                    obj_acuse_serializado = (ApplicationResponseType)serializacion.Deserialize(xml_reader_serializacion);
-
-                                    //convierte la serialización a objeto Acuse
-                                    Acuse objeto_acuse = AcuseXML.Convertir(obj_acuse_serializado);
-
-                                    try
-                                    {
-                                        if (objeto_acuse != null)
-                                        {
-                                            RegistroListaDetalleDocRespuesta respuesta = Ctl_Recepcion.ProcesarAcuse(objeto_acuse, ruta_acuse, nombre_archivo, datos_facturador);
-
-
-                                            string Historia = "";
-                                            int i = 0;
-                                            foreach (var mensaje in obj_RespuestaEstado.historial)
-                                            {
-                                                i = i+1;
-                                                Historia += string.Format("<br/> Estado {0}: {1}",i, mensaje.mensaje);                                                
-                                                Historia += string.Format("<br/> Fecha :{0}", mensaje.timeStamp.ToString("yyyy-MM-dd HH:mm"));
-                                                Historia += "<br/>";
-                                            }
-
-                                            item_respuesta = new RespuestaAcuseProceso()
-                                            {
-                                                Numero = item.IntNumero,
-                                                IdSeguridad = item.StrIdSeguridad.ToString(),
-                                                FechaProceso = Fecha.GetFecha(),
-                                                DocumentoTipo = (short)item.IntDocTipo,
-                                                Facturador = item.StrEmpresaFacturador,
-                                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Proceso Exitoso {0} ", respuesta.mensaje), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
-                                                Mensaje = Historia,
-                                                MensajeFinal= string.Format("Proceso Exitoso {0} ", respuesta.mensaje)
-                                            };
-                                        }
-                                    }
-                                    catch (Exception excepcion)
-                                    {
-
-
-                                        string Historia = "";
-                                        int i = 0;
-                                        foreach (var mensaje in obj_RespuestaEstado.historial)
-                                        {
-                                            i = i + 1;
-                                            Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
-                                            Historia += string.Format("<br/> Fecha :{0}", mensaje.timeStamp.ToString("yyyy-MM-dd HH:mm"));
-                                            Historia += "<br/>";
-                                        }
-
-
-                                        item_respuesta = new RespuestaAcuseProceso()
-                                        {
-                                            Numero = item.IntNumero,
-                                            IdSeguridad = item.StrIdSeguridad.ToString(),
-                                            FechaProceso = Fecha.GetFecha(),
-                                            DocumentoTipo = (short)item.IntDocTipo,
-                                            Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
-                                            Mensaje = Historia,
-                                            MensajeFinal = string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message)
-                                        };
-                                    }
+                                    resp = reader.ReadToEnd();
                                 }
-                                break;
-                            }
-                        }
-
-                        if (!acuse_respuesta)
-                        {
-                            string Historia = "";
-                            int i = 0;
-                            foreach (var mensaje in obj_RespuestaEstado.historial)
-                            {
-                                i = i + 1;
-                                Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
-                                Historia += string.Format("<br/> Fecha :{0}", mensaje.timeStamp.ToString("yyyy-MM-dd HH:mm"));
-                                Historia += "<br/>";
-                            }
-
-                            item_respuesta = new RespuestaAcuseProceso()
-                            {
-                                Numero = item.IntNumero,
-                                IdSeguridad = item.StrIdSeguridad.ToString(),
-                                FechaProceso = Fecha.GetFecha(),
-                                DocumentoTipo = (short)item.IntDocTipo,
-                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", string.Format("El acuse no ha sido procesado.")), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
-                                Mensaje = Historia,
-                                MensajeFinal= string.Format("El acuse no ha sido procesado."),
-								Facturador = item.StrEmpresaFacturador
-                            };
-                        }
-
-                        lista_respuesta.Add(item_respuesta);
-                    }
-                    catch (Exception excepcion)
-                    {
-                        LogExcepcion.Guardar(excepcion);
-                    }
-                }
-            }
-            return lista_respuesta;
-        }
 
 
 
 
-        /// <summary>
-        /// Retorna un base64 con el contenido del archivo xml acuse.
-        /// </summary>
-        /// <param name="uuid">Id de seguridad del Documento</param>
-        /// <param name="Identifiacion">Proveedor Emisor</param>
-        /// <returns></returns>
-        public static MensajeGlobal ObtenerAcusebase64(Guid uuid,string Identifiacion)
-        {
+                                if (code != RespuestaInterOperabilidadUUID.ConsultaExitosa.GetHashCode())
+                                {
 
-            Ctl_Documento Controlador = new Ctl_Documento();
-
-            TblDocumentos Doc = Controlador.ObtenerHistorialDococumento(uuid, Identifiacion);
-
-            PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-            // ruta física del xml
-            string Ruta_Acuse = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Doc.TblEmpresasFacturador.StrIdSeguridad.ToString());
-            Ruta_Acuse = string.Format(@"{0}\{1}\{2}", Ruta_Acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse,Path.GetFileName(Doc.StrUrlAcuseUbl));
-
-            
-            string readText = File.ReadAllText(Ruta_Acuse);
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(readText);
-            string archivo = System.Convert.ToBase64String(plainTextBytes);
+                                }
 
 
-			//Se debe enviar esta respuesta
-			MensajeGlobal Respuesta = new MensajeGlobal();
-
-            Respuesta.timeStamp = Fecha.GetFecha();
-			Respuesta.mensajeGlobal = archivo;
-
-			return Respuesta;
-                               
-        }
-
-
-        public static List<RegistroDocRespuesta> ProcesarAcuse(List<TblDocumentos> Doc)
-        {
-
-
-            List<RegistroDocRespuesta> ListaRespuesta = new List<RegistroDocRespuesta>();
-
-
-            Ctl_Documento Controlador = new Ctl_Documento();
-
-            List<TblConfiguracionInteroperabilidad> ListaProveedores = new List<TblConfiguracionInteroperabilidad>();
-
-            List<RespuestaAcuseProceso> lista_respuesta = new List<RespuestaAcuseProceso>();
-
-            //Agrupo por Proveedor
-            List<TblDocumentos> ListadeProveedores = Doc
-                .GroupBy(p => p.StrProveedorReceptor)
-                .Select(g => g.First())
-                .ToList();
-
-            //Se itera lista de proveedores
-            foreach (var ProveedorDoc in ListadeProveedores)
-            {
-                Usuario usuario = new Usuario();
-
-                usuario.u = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
-                usuario.p = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
-
-                //Serializo el objeto para enviarlo al cliente webapi
-                string jsonUsuario = JsonConvert.SerializeObject(usuario);
-
-                //Lo primero es validar si tiene tenemos usuario y password activo con el proveedor
-                //Se debe validar si tengo un tokken activo, antes de solicitar otro
-                string Token = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
-
-                AutenticacionRespuesta r = JsonConvert.DeserializeObject<AutenticacionRespuesta>(Token);
-                Token = r.jwtToken;
-
-                RespuestaAcuseProceso item_respuesta = new RespuestaAcuseProceso();
-
-                foreach (TblDocumentos item in Doc)
-                {
-                    try
-                    {
-                        string RespuestaEstado = Ctl_ClienteWebApi.Inter_ConsultarEstado(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
-
-                        RegistroDocRespuesta obj_RespuestaEstado = JsonConvert.DeserializeObject<RegistroDocRespuesta>(RespuestaEstado);
-
-                        bool acuse_respuesta = false;
-
-                        foreach (var historial_estado in obj_RespuestaEstado.historial)
-                        {
-                            if (historial_estado.nombre.Equals(ResponseCode.Aceptado.ToString()) || historial_estado.nombre.Equals(ResponseCode.Rechazado.ToString()) || historial_estado.nombre.Equals(ResponseCode.AprobadoTacito.ToString())
-                                || historial_estado.nombre.Equals(ResponseCode.Pagado.ToString()))
-                            {
-                                acuse_respuesta = true;
-
-                                string RespuestaAcuse = Ctl_ClienteWebApi.Inter_ConsultaAcuse(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
-
-                                AcuseRespuesta obj_RespuestaAcuse = JsonConvert.DeserializeObject<AcuseRespuesta>(RespuestaAcuse);
+                                AcuseRespuesta obj_RespuestaAcuse = JsonConvert.DeserializeObject<AcuseRespuesta>(resp);
 
                                 //Convierte el mensajeGlobal a Xml
                                 byte[] bytes = Convert.FromBase64String(obj_RespuestaAcuse.mensajeGlobal);
@@ -908,18 +745,54 @@ namespace HGInetInteroperabilidad.Procesos
                                         {
                                             RegistroListaDetalleDocRespuesta respuesta = Ctl_Recepcion.ProcesarAcuse(objeto_acuse, ruta_acuse, nombre_archivo, datos_facturador);
 
-                                            ListaRespuesta.Add(obj_RespuestaEstado);
+
+                                            string Historia = "";
+                                            int i = 0;
+                                            foreach (var mensaje in obj_RespuestaEstado.historial)
+                                            {
+                                                i = i + 1;
+                                                Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
+                                                Historia += string.Format("<br/> Fecha :{0}", Convert.ToDateTime(mensaje.timeStamp).ToString("yyyy-MM-dd HH:mm"));
+                                                Historia += "<br/>";
+                                            }
+
+                                            item_respuesta = new RespuestaAcuseProceso()
+                                            {
+                                                Numero = item.IntNumero,
+                                                IdSeguridad = item.StrIdSeguridad.ToString(),
+                                                FechaProceso = Fecha.GetFecha(),
+                                                DocumentoTipo = (short)item.IntDocTipo,
+                                                Facturador = item.StrEmpresaFacturador,
+                                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Proceso Exitoso {0} ", respuesta.mensaje), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                                Mensaje = Historia,
+                                                MensajeFinal = string.Format("Proceso Exitoso {0} ", respuesta.mensaje)
+                                            };
                                         }
                                     }
                                     catch (Exception excepcion)
                                     {
+
+
+                                        string Historia = "";
+                                        int i = 0;
+                                        foreach (var mensaje in obj_RespuestaEstado.historial)
+                                        {
+                                            i = i + 1;
+                                            Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
+                                            Historia += string.Format("<br/> Fecha :{0}", Convert.ToDateTime(mensaje.timeStamp).ToString("yyyy-MM-dd HH:mm"));
+                                            Historia += "<br/>";
+                                        }
+
+
                                         item_respuesta = new RespuestaAcuseProceso()
                                         {
                                             Numero = item.IntNumero,
                                             IdSeguridad = item.StrIdSeguridad.ToString(),
                                             FechaProceso = Fecha.GetFecha(),
                                             DocumentoTipo = (short)item.IntDocTipo,
-                                            Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException)
+                                            Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+                                            Mensaje = Historia,
+                                            MensajeFinal = string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message)
                                         };
                                     }
                                 }
@@ -929,26 +802,76 @@ namespace HGInetInteroperabilidad.Procesos
 
                         if (!acuse_respuesta)
                         {
+                            string Historia = "";
+                            int i = 0;
+                            foreach (var mensaje in obj_RespuestaEstado.historial)
+                            {
+                                i = i + 1;
+                                Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
+                                Historia += string.Format("<br/> Fecha :{0}", Convert.ToDateTime(mensaje.timeStamp).ToString("yyyy-MM-dd HH:mm"));
+                                Historia += "<br/>";
+                            }
+
                             item_respuesta = new RespuestaAcuseProceso()
                             {
                                 Numero = item.IntNumero,
                                 IdSeguridad = item.StrIdSeguridad.ToString(),
                                 FechaProceso = Fecha.GetFecha(),
                                 DocumentoTipo = (short)item.IntDocTipo,
-                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", string.Format("El acuse no ha sido procesado.")), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null)
+                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", string.Format("El acuse no ha sido procesado.")), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                Mensaje = Historia,
+                                MensajeFinal = string.Format("El acuse no ha sido procesado."),
+                                Facturador = item.StrEmpresaFacturador
                             };
                         }
 
                         lista_respuesta.Add(item_respuesta);
                     }
-                    catch (Exception)
+                    catch (Exception excepcion)
                     {
+                        LogExcepcion.Guardar(excepcion);
                     }
                 }
             }
-            return ListaRespuesta;
+            return lista_respuesta;
         }
 
 
+
+
+        /// <summary>
+        /// Retorna un base64 con el contenido del archivo xml acuse.
+        /// </summary>
+        /// <param name="uuid">Id de seguridad del Documento</param>
+        /// <param name="Identifiacion">Proveedor Emisor</param>
+        /// <returns></returns>
+        public static MensajeGlobal ObtenerAcusebase64(Guid uuid, string Identifiacion)
+        {
+
+            Ctl_Documento Controlador = new Ctl_Documento();
+
+            TblDocumentos Doc = Controlador.ObtenerHistorialDococumento(uuid, Identifiacion);
+
+            PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+            // ruta física del xml
+            string Ruta_Acuse = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Doc.TblEmpresasFacturador.StrIdSeguridad.ToString());
+            Ruta_Acuse = string.Format(@"{0}\{1}\{2}", Ruta_Acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, Path.GetFileName(Doc.StrUrlAcuseUbl));
+
+
+            string readText = File.ReadAllText(Ruta_Acuse);
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(readText);
+            string archivo = System.Convert.ToBase64String(plainTextBytes);
+
+
+            //Se debe enviar esta respuesta
+            MensajeGlobal Respuesta = new MensajeGlobal();
+
+            Respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+            Respuesta.mensajeGlobal = archivo;
+
+            return Respuesta;
+
+        }     
     }
 }

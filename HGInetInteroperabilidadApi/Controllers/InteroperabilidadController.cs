@@ -25,6 +25,8 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaController.Properties;
+using Org.BouncyCastle.Asn1.Ocsp;
+using HGInetInteroperabilidad.Servicios;
 
 namespace WebApi.Jwt.Controllers
 {
@@ -38,25 +40,39 @@ namespace WebApi.Jwt.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("interoperabilidad/api/v1_0/login")]
-        public IHttpActionResult login(Usuario usuario)
+        public HttpResponseMessage login(Usuario usuario)
         {
-            TblConfiguracionInteroperabilidad Proveedor = new TblConfiguracionInteroperabilidad();
-            Ctl_ConfiguracionProveedores conf = new Ctl_ConfiguracionProveedores();                       
 
-            Proveedor = conf.CheckUser(usuario.u, usuario.p);
 
-            if (Proveedor != null)
-            {
-                AutenticacionRespuesta respuesta = new AutenticacionRespuesta();
+            AutenticacionRespuesta respuesta = new AutenticacionRespuesta();
+            try
+            {   
+                //Hora de expiracion, 24 depues de generar dicho token
+                respuesta.passwordExpiration = DateTime.UtcNow.AddHours(24).ToString("o");
 
-                //Aqui se utiliza para el Token una constante llamada NitResolucionconPrefijo
-                respuesta.jwtToken = JwtManager.GenerateToken(Constantes.NitResolucionconPrefijo, Proveedor.StrIdentificacion, Proveedor.StrRazonSocial);
-                respuesta.passwordExpiration = Fecha.GetFecha();
+                TblConfiguracionInteroperabilidad Proveedor = new TblConfiguracionInteroperabilidad();
+                Ctl_ConfiguracionProveedores conf = new Ctl_ConfiguracionProveedores();
 
-                return Ok(respuesta);
+                Proveedor = conf.CheckUser(usuario.u, usuario.p);
+
+                if (Proveedor != null)
+                {
+                    //Aqui se utiliza para el Token una constante llamada NitResolucionconPrefijo
+                    respuesta.jwtToken = JwtManager.GenerateToken(Constantes.NitResolucionconPrefijo, Proveedor.StrIdentificacion, Proveedor.StrRazonSocial);
+
+                    //200
+                    return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+                }
+
+                //401                                
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterLogin>(RespuestaInterLogin.claveinvalida.GetHashCode())));
             }
+            catch (Exception)
+            {
+                //500
 
-            throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterLogin>(RespuestaInterLogin.ErrorInterno.GetHashCode())));
+            }
         }
 
         /// <summary>
@@ -65,80 +81,112 @@ namespace WebApi.Jwt.Controllers
         /// </summary>
         /// <param name="UUID">id de seguridad del documento</param>
         /// <returns></returns>
-        [JwtAuthentication]                
+        [JwtAuthentication]
         [HttpGet]
         [Route("interoperabilidad/api/v1_0/Consultar/{uuid}")]
-        public IHttpActionResult Consultar(string uuid)
+        public HttpResponseMessage Consultar(string uuid)
         {
-            //[FromUri]string UUID
-            var identity = User?.Identity as ClaimsIdentity;
 
-            var usernameClaim = identity.FindFirst("username");
 
-            
-            //Aqui envio los datos al controlador de proceso
-            string Proveedor = usernameClaim.Value;
-
-            List<DetalleDocRespuesta> ListaRespuesta = new List<DetalleDocRespuesta>();
-
-            RegistroDocRespuesta docRespuesta = new RegistroDocRespuesta();
-
-            TblDocumentos doc = new TblDocumentos();
-
-            Ctl_Documento Documentos = new Ctl_Documento();
-
-            doc = Documentos.ObtenerHistorialDococumento(Guid.Parse(uuid), Proveedor);            
-
-            //No existe Documento
-            if (doc == null)
-            {                
-                docRespuesta.mensajeGlobal = string.Format("{0} . {1}", RespuestaInterOperabilidadUUID.Noexiste.GetHashCode(), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue< RespuestaInterOperabilidadUUID> (RespuestaInterOperabilidadUUID.Noexiste.GetHashCode()))); 
-            }
-            else
+            try
             {
-                //Documento Radicado                
-                DetalleDocRespuesta Resp_Radicado = new DetalleDocRespuesta();
-                Resp_Radicado.nombre = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDDocumento>(RespuestaUUIDDocumento.Radicado.GetHashCode()));                
-                Resp_Radicado.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Radicado.GetHashCode()));
-                Resp_Radicado.timeStamp = doc.DatFechaIngreso;
-                ListaRespuesta.Add(Resp_Radicado);
+                //[FromUri]string UUID
+                var identity = User?.Identity as ClaimsIdentity;
 
-                //Mensajes Global
-                docRespuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Radicado.GetHashCode()));
-             
-                //Documento Aprovado o Rechazado
-                if (doc.IntAdquirienteRecibo > 0)
-                {                    
-                    DetalleDocRespuesta Resp = new DetalleDocRespuesta();
-                    Resp.nombre = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDDocumento>(doc.IntAdquirienteRecibo));
-                    Resp.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(doc.IntAdquirienteRecibo));
-                    Resp.timeStamp = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
-                    ListaRespuesta.Add(Resp);
+                var usernameClaim = identity.FindFirst("username");
 
-                    //Mensajes Global
-                    docRespuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(doc.IntAdquirienteRecibo));
-                }
 
-                //Documento pagado
-                if (doc.IntIdEstadoPago == 1)
+                //Aqui envio los datos al controlador de proceso
+                string Proveedor = usernameClaim.Value;
+
+                List<DetalleDocRespuesta> ListaRespuesta = new List<DetalleDocRespuesta>();
+
+                RegistroDocRespuesta docRespuesta = new RegistroDocRespuesta();
+
+                TblDocumentos doc = new TblDocumentos();
+
+                Ctl_Documento Documentos = new Ctl_Documento();
+
+                doc = Documentos.ObtenerHistorialDococumento(Guid.Parse(uuid));
+
+                //No existe Documento
+                if (doc == null)
                 {
-                    //Documento Aprovado o Rechazado                    
-                    DetalleDocRespuesta Resp_pagado = new DetalleDocRespuesta();
-                    Resp_pagado.nombre = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDDocumento>(RespuestaUUIDDocumento.Pagado.GetHashCode()));                    
-                    Resp_pagado.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Pagado.GetHashCode()));                    
-                    Resp_pagado.timeStamp = doc.DatFechaActualizaEstado;                    
-                    ListaRespuesta.Add(Resp_pagado);
+                    docRespuesta.timeStamp = DateTime.UtcNow.ToString("o");
+                    docRespuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterOperabilidadUUID>(RespuestaInterOperabilidadUUID.Noexiste.GetHashCode()));
 
-                    //Mensajes Global
-                    docRespuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Pagado.GetHashCode()));
+                    return Request.CreateResponse(HttpStatusCode.Conflict, docRespuesta);
+
+                }
+                else
+                {
+
+                    if (doc.StrProveedorEmisor != Proveedor)
+                    {
+                        //406
+                        docRespuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+                        docRespuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterOperabilidadUUID>(RespuestaInterOperabilidadUUID.Noexisteparaproveedorcosnsultado.GetHashCode()));
+                        return Request.CreateResponse(HttpStatusCode.NotAcceptable, docRespuesta);
+                    }
+                    else
+                    {
+                        //Documento Radicado                
+                        DetalleDocRespuesta Resp_Radicado = new DetalleDocRespuesta();
+                        Resp_Radicado.nombre = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDDocumento>(RespuestaUUIDDocumento.Radicado.GetHashCode()));
+                        Resp_Radicado.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Radicado.GetHashCode()));
+                        Resp_Radicado.timeStamp = Fecha.FechaUtc(doc.DatFechaIngreso);
+                        ListaRespuesta.Add(Resp_Radicado);
+                        
+                        //Documento Entregado                
+                        DetalleDocRespuesta Resp_Entregado = new DetalleDocRespuesta();
+                        Resp_Entregado.nombre = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDDocumento>(RespuestaUUIDDocumento.Entregado.GetHashCode()));
+                        Resp_Entregado.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Entregado.GetHashCode()));
+                        Resp_Entregado.timeStamp = Fecha.FechaUtc(doc.DatFechaIngreso);
+                        ListaRespuesta.Add(Resp_Entregado);
+
+                        //Mensajes Global
+                        docRespuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Entregado.GetHashCode()));
+
+                        //Documento Aprovado o Rechazado
+                        if (doc.IntAdquirienteRecibo > 0)
+                        {
+                            DetalleDocRespuesta Resp = new DetalleDocRespuesta();
+                            Resp.nombre = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDDocumento>(doc.IntAdquirienteRecibo));
+                            Resp.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(doc.IntAdquirienteRecibo));
+                            Resp.timeStamp = Fecha.FechaUtc(Convert.ToDateTime(doc.DatAdquirienteFechaRecibo));
+                            ListaRespuesta.Add(Resp);
+
+                            //Mensajes Global
+                            docRespuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(doc.IntAdquirienteRecibo));
+                        }
+
+                        //Documento pagado
+                        if (doc.IntIdEstadoPago == 1)
+                        {
+                            //Documento Aprovado o Rechazado                    
+                            DetalleDocRespuesta Resp_pagado = new DetalleDocRespuesta();
+                            Resp_pagado.nombre = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDDocumento>(RespuestaUUIDDocumento.Pagado.GetHashCode()));
+                            Resp_pagado.mensaje = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Pagado.GetHashCode()));
+                            Resp_pagado.timeStamp = Fecha.FechaUtc(doc.DatFechaActualizaEstado);
+                            ListaRespuesta.Add(Resp_pagado);
+
+                            //Mensajes Global
+                            docRespuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaUUIDMensaje>(RespuestaUUIDDocumento.Pagado.GetHashCode()));
+                        }
+
+                        //Encabezado de la respuesta                             
+                        docRespuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+                        docRespuesta.historial = ListaRespuesta;
+                    }
                 }
 
-                //Encabezado de la respuesta                             
-                docRespuesta.timeStamp = Fecha.GetFecha();
-                docRespuesta.historial = ListaRespuesta;
+                return Request.CreateResponse(HttpStatusCode.Created, docRespuesta);
+                //return Ok(docRespuesta);
             }
-
-            return Ok(docRespuesta);
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterOperabilidadUUID>(RespuestaInterOperabilidadUUID.ErrorInterno.GetHashCode())));
+            }
 
         }
 
@@ -153,20 +201,60 @@ namespace WebApi.Jwt.Controllers
         [JwtAuthentication]
         [HttpPost]
         [Route("interoperabilidad/api/v1_0/Registrar")]
-        public IHttpActionResult Registrar(RegistroListaDoc registroRespuesta)
+        public HttpResponseMessage Registrar(RegistroListaDoc registroRespuesta)
         {
+            try
+            {
 
-            var identity = User?.Identity as ClaimsIdentity;
-            var usernameClaim = identity.FindFirst("username");
+                var identity = User?.Identity as ClaimsIdentity;
+                var usernameClaim = identity.FindFirst("username");
 
-            //Aqui envio los datos al controlador de proceso
-            string Proveedor = usernameClaim.Value;
+                //Aqui envio los datos al controlador de proceso
+                string Proveedor = usernameClaim.Value;
 
-            RegistroListaDocRespuesta respuesta = Ctl_Descomprimir.Procesar(registroRespuesta, Proveedor);
+                RegistroListaDocRespuesta respuesta = Ctl_Descomprimir.Procesar(registroRespuesta, Proveedor);
 
-            //Aqui recibo la respuesta y la envio
+                //Ubico el codigo de respuesta del proceso de documentos
+                int codigo = Split.Codigo(respuesta.mensajeGlobal);
 
-            return Ok(respuesta);
+                //Asigo el codigo de respuesta al encabezado
+                respuesta.mensajeGlobal = Split.Mensaje(respuesta.mensajeGlobal);
+
+
+                switch (codigo)
+                {
+                    case 200:
+                        return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+                        
+                    case 201:
+                        return Request.CreateResponse(HttpStatusCode.Created, respuesta);
+
+                    case 406:
+                        return Request.CreateResponse(HttpStatusCode.NotAcceptable, respuesta);
+
+                    case 412:
+                        return Request.CreateResponse(HttpStatusCode.PreconditionFailed, respuesta);
+
+                    case 414:
+                        return Request.CreateResponse(HttpStatusCode.RequestUriTooLong, respuesta);
+
+                    case 415:
+                        return Request.CreateResponse(HttpStatusCode.UnsupportedMediaType, respuesta);
+
+                    case 409:
+                        return Request.CreateResponse(HttpStatusCode.Conflict, respuesta);
+
+                    default:                    
+                        return Request.CreateResponse(HttpStatusCode.InternalServerError, respuesta);
+                        
+                }
+                
+            }
+            catch (Exception)
+            {
+                //Aqui se debe retornar error 500
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ""); 
+            }
 
         }
 
@@ -181,15 +269,18 @@ namespace WebApi.Jwt.Controllers
         [AllowAnonymous]
         [HttpPut]
         [Route("interoperabilidad/api/v1_0/cambioContrasena")]
-        public IHttpActionResult cambioContrasena()
+        public HttpResponseMessage cambioContrasena()
         {
-
+            MensajeGlobal Respuesta = new MensajeGlobal();
             try
             {
                 System.Net.Http.Headers.HttpRequestHeaders headers = this.Request.Headers;
                 string NITProveedor = string.Empty;
                 string ContrasenaNueva = string.Empty;
                 string ContrasenaActual = string.Empty;
+
+
+                Respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
 
                 //Obtengo el codigo del Proveedor
                 //Si le falta alguno de los parametros, se debe retornar un error
@@ -212,39 +303,34 @@ namespace WebApi.Jwt.Controllers
                 ///------------------------------------------------------
 
                 //Y luego se debe enviar esta respuesta
-                MensajeGlobal Respuesta = new MensajeGlobal();
-                Respuesta.timeStamp = Fecha.GetFecha();
 
                 Ctl_ConfiguracionInteroperabilidad Controlador = new Ctl_ConfiguracionInteroperabilidad();
 
+                if (ContrasenaNueva.Length < 5)
+                {
+                    //406
+                    Respuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.NivelIncorrecto.GetHashCode()));
+                    return Request.CreateResponse(HttpStatusCode.NotAcceptable, Respuesta);
+                }
 
                 TblConfiguracionInteroperabilidad Datos = Controlador.CambiarContraseña(NITProveedor, ContrasenaActual, ContrasenaNueva);
 
-                //201 Contraseña actualizada satisfactoriamente Object
-                //409 Usuario o contraseña inexistentes Object
-                //406 La nueva contraseña no cumple con las políticas mínimas de seguridad Object
-                //500 Error interno del receptor del documento electrónico
-
-                Respuesta.timeStamp = Fecha.GetFecha();
-
                 if (Datos == null)
                 {
-                    Respuesta.mensajeGlobal = string.Format("{0} . {1}", RespuestaInterCambioClave.Noexiste.GetHashCode(), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.Noexiste.GetHashCode()))); 
-                    return Ok(Respuesta);
+                    //409
+                    Respuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.Noexiste.GetHashCode()));
+                    return Request.CreateResponse(HttpStatusCode.Conflict, Respuesta);
                 }
 
-                Respuesta.mensajeGlobal = string.Format("{0} . {1}", RespuestaInterCambioClave.CambioExitoso.GetHashCode(), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.CambioExitoso.GetHashCode()))); 
-                //Aqui recibo la respuesta y la envio
-
-                return Ok(Respuesta);
+                //201
+                Respuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.CambioExitoso.GetHashCode()));
+                return Request.CreateResponse(HttpStatusCode.Created, Respuesta);
             }
             catch (Exception)
             {
-                //En caso de generar un error
-                MensajeGlobal Respuesta = new MensajeGlobal();
-                Respuesta.mensajeGlobal = string.Format("{0} . {1}", RespuestaInterCambioClave.ErrorInterno.GetHashCode(), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.ErrorInterno.GetHashCode())));
-                Respuesta.timeStamp = Fecha.GetFecha();
-                return Ok(Respuesta);
+                //En caso de generar un error                
+                Respuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.ErrorInterno.GetHashCode()));
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, Respuesta);
 
             }
 
@@ -261,19 +347,52 @@ namespace WebApi.Jwt.Controllers
         [JwtAuthentication]
         [HttpGet]
         [Route("interoperabilidad/api/v1_0/application/{uuid}")]
-        public IHttpActionResult application(string uuid)
+        public HttpResponseMessage application(string uuid)
         {
-            var identity = User?.Identity as ClaimsIdentity;
+            try
+            {
+                var identity = User?.Identity as ClaimsIdentity;
 
-            var usernameClaim = identity.FindFirst("username");
+                var usernameClaim = identity.FindFirst("username");
 
-            string Proveedor = usernameClaim.Value;
-            //Aqui debo generar el proceso que valida el estado del documento
+                string Proveedor = usernameClaim.Value;
+                //Aqui debo generar el proceso que valida el estado del documento
 
-            MensajeGlobal acuse = Ctl_Envio.ObtenerAcusebase64(Guid.Parse(uuid), Proveedor);
+                Ctl_Documento Controlador = new Ctl_Documento();
+                TblDocumentos datos = Controlador.ObtenerPorIdInteroperabilidad(Guid.Parse(uuid));
+                if (datos == null)
+                {
+                    //409
+                    //Se debe enviar esta respuesta
+                    MensajeGlobal Respuesta = new MensajeGlobal();
+                    Respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+                    Respuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterOperabilidadUUID>(RespuestaInterAcuse.Noexiste.GetHashCode()));
+                    return Request.CreateResponse(HttpStatusCode.Conflict, Respuesta);
+                }
 
-            return Ok(acuse);
-          
+                if (datos.StrProveedorEmisor != Proveedor)
+                {
+                    //406
+                    MensajeGlobal Respuesta = new MensajeGlobal();
+                    Respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+                    Respuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterOperabilidadUUID>(RespuestaInterAcuse.ExisiteParaOtro.GetHashCode()));
+                    return Request.CreateResponse(HttpStatusCode.NotAcceptable, Respuesta);
+                }
+
+                //201
+                MensajeGlobal acuse = Ctl_Envio.ObtenerAcusebase64(Guid.Parse(uuid), Proveedor);
+
+                return Request.CreateResponse(HttpStatusCode.Created, acuse);
+            }
+            catch (Exception ex)
+            {
+                //500
+                MensajeGlobal Respuesta = new MensajeGlobal();
+                Respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+                Respuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterOperabilidadUUID>(RespuestaInterOperabilidadUUID.ErrorInterno.GetHashCode()));
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, Respuesta);
+            }
+
         }
 
 

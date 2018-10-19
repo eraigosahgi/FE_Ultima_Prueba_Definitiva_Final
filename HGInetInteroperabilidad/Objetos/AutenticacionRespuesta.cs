@@ -12,6 +12,6 @@ namespace HGInetInteroperabilidad.Objetos
     public class AutenticacionRespuesta
     {
         public string jwtToken { get; set; }
-        public DateTime passwordExpiration { get; set; }
+        public string passwordExpiration { get; set; }
     }
 }

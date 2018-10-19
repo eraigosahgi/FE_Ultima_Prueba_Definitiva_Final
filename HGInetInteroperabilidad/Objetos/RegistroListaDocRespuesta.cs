@@ -13,7 +13,7 @@ namespace HGInetInteroperabilidad.Objetos
     /// </summary>        
     public class RegistroListaDocRespuesta
     {
-        public DateTime timeStamp { get; set; }
+        public string timeStamp { get; set; }
         public List<RegistroListaDetalleDocRespuesta> trackingIds { get; set; }
         public string mensajeGlobal { get; set; }
     }

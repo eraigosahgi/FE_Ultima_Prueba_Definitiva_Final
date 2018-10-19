@@ -136,7 +136,10 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         AprobadoTacito = 3,
 
         [Description("Pagado")]
-        Pagado = 4
+        Pagado = 4,
+
+            [Description("Entregado")]
+            Entregado = 5
     }
 
 
@@ -147,25 +150,40 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
     /// </summary>
     public enum RespuestaUUIDMensaje
     {
-        [Description("Documento radicado en el Operador del receptor")]
+        [Description("Documento electrónico radicado en el Operador receptor")]
         Pendiente = 0,
 
-        [Description("Documento aceptado por el cliente")]
+        [Description("Documento electrónico aceptado por el cliente")]
         Aceptado = 1,
 
-        [Description("Documento rechazado por el cliente")]
+        [Description("Documento electrónico rechazado por el cliente")]
         Rechazado = 2,
 
-        [Description("Documento Tácitamente aceptado por el cliente")]
+        [Description("Documento electrónico Tácitamente aceptado por el cliente")]
         AprobadoTacito = 3,
 
-        [Description("Documento Pagado por el cliente")]
-        Pagado = 4
+        [Description("Documento electrónico pagado por el cliente")]
+        Pagado = 4,
+
+        [Description("Documento electrónico entregado al cliente")]
+        Error = 5
+
     }
 
+    /// <summary>
+    /// Enumerable para el manejo de las respuestas del Login
+    /// </summary>
+    public enum RespuestaInterLogin
+    {
+        [Description("El documento electrónico se radicó exitosamente")]
+        Exitoso = 200,
 
+        [Description("Usuario y/o contraseña inválida ")]
+        claveinvalida = 401,        
 
-
+        [Description("Error interno del receptor del documento electrónico ")]
+        ErrorInterno = 500
+    }
 
     /// <summary>
     /// Enumerable para el manejo de las respuestas de cambio de contraseña
@@ -185,4 +203,23 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         ErrorInterno = 500       
     }
 
+
+
+    /// <summary>
+    /// Enumerable para el manejo de las respuestas de cambio de contraseña
+    /// </summary>
+    public enum RespuestaInterAcuse
+    {
+        [Description("El documento electrónico existe en el sistema  se procede a retornar el application response ")]
+        AcuseExitoso = 201,
+
+        [Description("El documento electrónico asociado al UUID consultado no existe en el sistema")]
+        Noexiste = 409,
+
+        [Description("El documento electrónico asociado al UUID consultado existe en el sistema pero fue registrado por un proveedor de factura diferente ")]
+        ExisiteParaOtro = 406,
+
+        [Description("Error interno del receptor del documento electrónico")]
+        ErrorInterno = 500
+    }
 }

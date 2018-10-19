@@ -17,6 +17,6 @@ namespace HGInetInteroperabilidad.Objetos
     public class MensajeGlobal
     {
         public string mensajeGlobal { get; set; }
-        public DateTime timeStamp { get; set; }
+        public string timeStamp { get; set; }
     }
 }

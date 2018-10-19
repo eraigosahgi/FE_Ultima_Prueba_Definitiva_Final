@@ -26,6 +26,7 @@ namespace WebApi.Jwt.Filters
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
+                response.StatusCode = HttpStatusCode.BadRequest;
                 // Only add one challenge per authentication scheme.
                 if (response.Headers.WwwAuthenticate.All(h => h.Scheme != Challenge.Scheme))
                 {

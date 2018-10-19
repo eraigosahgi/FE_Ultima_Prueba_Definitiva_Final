@@ -41,9 +41,9 @@ namespace HGInetInteroperabilidad.Procesos
 
 			if (datos.documentos == null)
 			{
-				datos_respuesta.timeStamp = Fecha.GetFecha();
-				datos_respuesta.trackingIds = null;
-				datos_respuesta.mensajeGlobal = string.Format("Documento {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.Zipvacio));
+				datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+                datos_respuesta.trackingIds = null;
+				datos_respuesta.mensajeGlobal = string.Format("{2}|Documento {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.Zipvacio), RespuestaInterOperabilidad.Zipvacio.GetHashCode());
 				//throw new ApplicationException("No se encontraron datos");
 			}
 			else
@@ -312,12 +312,12 @@ namespace HGInetInteroperabilidad.Procesos
 					respuesta.Add(item_respuesta);
 
 				}
-				datos_respuesta.timeStamp = Fecha.GetFecha();
-				datos_respuesta.trackingIds = respuesta;
+				datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+                datos_respuesta.trackingIds = respuesta;
 				if (!error_proceso)
-					datos_respuesta.mensajeGlobal = string.Format("Documento {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ZipRadicado));
+					datos_respuesta.mensajeGlobal = string.Format("{2}|Documento {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ZipRadicado), RespuestaInterOperabilidad.ZipRadicado.GetHashCode());
 				else
-					datos_respuesta.mensajeGlobal = string.Format("Documento {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ProcesamientoParcial));
+					datos_respuesta.mensajeGlobal = string.Format("{2}|Documento {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ProcesamientoParcial), RespuestaInterOperabilidad.ProcesamientoParcial.GetHashCode());
 			}
 
 			//Aqui elimino el archivo que se descomprimio

@@ -331,7 +331,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 var datos = Respuesta.Select(d => new
                 {
                     MensajeZip= d.MensajeZip,              
-                    Documento=d.Documento.IntNumero,
+                    Documento=(d.Documento.IntNumero==null)? "": d.Documento.IntNumero.ToString(),
                     Mensaje=d.Respuesta.mensaje,
                     uuid =d.Respuesta.uuid,
                     codigoError= d.Respuesta.codigoError,                    

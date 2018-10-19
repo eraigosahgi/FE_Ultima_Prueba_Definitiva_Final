@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Documentacion\Librerias\Firma\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="HGInetEmailServicios">
       <HintPath>..\Documentacion\Librerias\Email\HGInetEmailServicios.dll</HintPath>
     </Reference>
@@ -317,7 +321,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56296</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:39034/</IISUrl>
+          <IISUrl>http://localhost:39033/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
