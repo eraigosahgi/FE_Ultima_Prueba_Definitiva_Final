@@ -490,13 +490,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo_xml);
 
 					// mueve el archivo xml recibido
-					string archivo_xml_recibido = string.Format(@"{0}\recepcion_ws\{1}.xml", documento_result.RutaArchivosProceso, documento_result.NombreXml);
+					string archivo_xml_recibido = string.Format(@"{0}recepcion_ws\{1}.xml", documento_result.RutaArchivosProceso, documento_result.NombreXml);
 					if (Archivo.CopiarArchivo(ruta_xml, archivo_xml_recibido))
 					{
 						Archivo.Borrar(ruta_xml);
 
-						// almacena el archivo xml
-						string ruta_save = Xml.Guardar(documento_result.DocumentoXml, carpeta_xml, nombre_archivo_xml);
+						// almacena el archivo xml firmado
+						string carpeta_xml_firmado = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador.StrIdSeguridad.ToString());
+						carpeta_xml_firmado = string.Format(@"{0}\{1}", carpeta_xml_firmado, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+						string ruta_save = Xml.Guardar(documento_result.DocumentoXml, carpeta_xml_firmado, nombre_archivo_xml);
 					}
 				}
 				catch (Exception excepcion)
