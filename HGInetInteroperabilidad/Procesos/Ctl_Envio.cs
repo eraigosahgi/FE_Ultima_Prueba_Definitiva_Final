@@ -682,17 +682,31 @@ namespace HGInetInteroperabilidad.Procesos
 
                                 code = RespuestaEstado.StatusCode.GetHashCode();
 
-                                using (StreamReader reader = new StreamReader(RespuestaEstado.GetResponseStream()))
+                                using (StreamReader reader = new StreamReader(RespuestaAcuse.GetResponseStream()))
                                 {
                                     resp = reader.ReadToEnd();
                                 }
 
 
 
-
-                                if (code != RespuestaInterOperabilidadUUID.ConsultaExitosa.GetHashCode())
+                                
+                                if (code != RespuestaInterAcuse.AcuseExitoso.GetHashCode())
                                 {
+                                    item_respuesta = new RespuestaAcuseProceso()
+                                    {
+                                        Numero = item.IntNumero,
+                                        IdSeguridad = item.StrIdSeguridad.ToString(),
+                                        FechaProceso = Fecha.GetFecha(),
+                                        DocumentoTipo = (short)item.IntDocTipo,
+                                        Facturador = item.StrEmpresaFacturador,
+                                        Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Codigo de Respuesta {0} Error al Procesar {1} ", code, resp), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                        Mensaje = resp,
+                                        MensajeFinal = string.Format("Proceso Exitoso {0} ", resp)
 
+                                          
+                                };
+                                    lista_respuesta.Add(item_respuesta);
+                                    throw new ApplicationException(string.Format("Codigo de Error {0}", code));
                                 }
 
 
