@@ -81,6 +81,9 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private string NumeroResolucionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PedidoRefField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int PlazoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -372,6 +375,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((object.ReferenceEquals(this.NumeroResolucionField, value) != true)) {
                     this.NumeroResolucionField = value;
                     this.RaisePropertyChanged("NumeroResolucion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string PedidoRef {
+            get {
+                return this.PedidoRefField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PedidoRefField, value) != true)) {
+                    this.PedidoRefField = value;
+                    this.RaisePropertyChanged("PedidoRef");
                 }
             }
         }
@@ -892,6 +908,9 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int CodigoField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TituloField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -937,6 +956,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((this.CodigoField.Equals(value) != true)) {
                     this.CodigoField = value;
                     this.RaisePropertyChanged("Codigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Titulo {
+            get {
+                return this.TituloField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TituloField, value) != true)) {
+                    this.TituloField = value;
+                    this.RaisePropertyChanged("Titulo");
                 }
             }
         }

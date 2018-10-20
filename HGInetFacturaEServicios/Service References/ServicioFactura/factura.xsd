@@ -29,6 +29,7 @@
       <xs:element minOccurs="0" name="Nota" nillable="true" type="xs:string" />
       <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Notas" nillable="true" type="q1:ArrayOfstring" />
       <xs:element minOccurs="0" name="NumeroResolucion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PedidoRef" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Plazo" type="xs:int" />
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="TerminoPago" type="xs:int" />
@@ -119,6 +120,7 @@
       <xs:element minOccurs="0" name="ArchivoPdf" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CamposPredeterminados" nillable="true" type="tns:ArrayOfFormatoCampo" />
       <xs:element minOccurs="0" name="Codigo" type="xs:int" />
+      <xs:element minOccurs="0" name="Titulo" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Formato" nillable="true" type="tns:Formato" />
