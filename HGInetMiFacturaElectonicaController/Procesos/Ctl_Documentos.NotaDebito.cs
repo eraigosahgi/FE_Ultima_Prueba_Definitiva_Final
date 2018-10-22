@@ -282,7 +282,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             //Valida totales del objeto
             ValidarTotales(null, null, documento, TipoDocumento.NotaDebito);
 
-            return documento;
+			//Valida que envien el titulo del documento y si es vacio lo llena
+			if (string.IsNullOrEmpty(documento.DocumentoFormato.Titulo) || documento.DocumentoFormato.Titulo == null)
+				documento.DocumentoFormato.Titulo = Enumeracion.GetDescription(TipoDocumento.NotaCredito).ToUpper();
+
+			return documento;
         }
 
 

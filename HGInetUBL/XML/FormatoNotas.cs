@@ -42,7 +42,8 @@ namespace HGInetUBL
 			var datos_json = datos.Select(d => new
 			{
 				Codigo = d.Codigo,
-				CamposPredeterminados = d.CamposPredeterminados
+				CamposPredeterminados = d.CamposPredeterminados,
+				Titulo = d.Titulo
 			});
 
 			// convierte el objeto en json
