@@ -881,7 +881,7 @@ namespace HGInetInteroperabilidad.Procesos
             //Se debe enviar esta respuesta
             MensajeGlobal Respuesta = new MensajeGlobal();
 
-            Respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
+            Respuesta.timeStamp = Fecha.FechaUtc(Convert.ToDateTime(Doc.DatAdquirienteFechaRecibo));
             Respuesta.mensajeGlobal = archivo;
 
             return Respuesta;
