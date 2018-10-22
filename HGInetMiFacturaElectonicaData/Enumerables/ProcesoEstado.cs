@@ -29,7 +29,7 @@ namespace HGInetMiFacturaElectonicaData
         [AmbientValue("privado")]
         FirmaXml = 5,
 
-        [Description("Compresión XML")]
+        [Description("Pendiente Envio Dian")]
         [AmbientValue("privado")]
         CompresionXml = 6,
 

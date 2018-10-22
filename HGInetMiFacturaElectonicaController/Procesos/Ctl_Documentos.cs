@@ -98,6 +98,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//Guarda el Id del documento generado por la plataforma
 						documento_result.IdSeguridadDocumento = Guid.Parse(respuesta.IdDocumento);
 
+						//Valida que el Proveedor Receptor enviado exista en Bd
+						if (documento_obj.IdentificacionProveedor != null)
+						{
+
+							if (!documento_obj.IdentificacionProveedor.Equals(Constantes.NitResolucionsinPrefijo))
+							{
+								TblConfiguracionInteroperabilidad proveedor_receptor = new TblConfiguracionInteroperabilidad();
+
+								Ctl_ConfiguracionInteroperabilidad proveedor = new Ctl_ConfiguracionInteroperabilidad();
+
+								proveedor_receptor = proveedor.Obtener(documento_obj.IdentificacionProveedor);
+
+								//si no existe asigna a HGI como Proveedor Receptor
+								if (proveedor_receptor == null)
+								{
+									documento_obj.IdentificacionProveedor = Constantes.NitResolucionsinPrefijo;
+								}
+							}
+						}
+
 						Ctl_Documento documento_tmp = new Ctl_Documento();
 
 						//guarda documento en BD
