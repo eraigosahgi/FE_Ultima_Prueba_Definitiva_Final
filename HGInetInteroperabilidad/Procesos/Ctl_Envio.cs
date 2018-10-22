@@ -312,11 +312,11 @@ namespace HGInetInteroperabilidad.Procesos
                         RespuestaRegistro RespCodigo = new RespuestaRegistro();
 
                         switch (code)
-                        {                                                           
+                        {
                             case 401://Error de autenticacion
-                                
+
                             case 406://No tiene convenio
-                                
+
                             case 500://Error interno
 
                             case 415:
@@ -330,14 +330,14 @@ namespace HGInetInteroperabilidad.Procesos
                                     RespCodigo.MensajeZip = Respuesta.mensajeGlobal;
                                     DocumetoRespuesta.Add(RespCodigo);
                                     return DocumetoRespuesta;
-                                }                                                            
+                                }
                         }
 
 
 
 
 
-                        
+
 
                         //Aqui guardo la respuesta del paquete, se debe crear una lista para tener un solo encabezado
                         ListaResultadoVista[0].MensajeZip = Respuesta.mensajeGlobal;
@@ -412,7 +412,7 @@ namespace HGInetInteroperabilidad.Procesos
                                             else
                                             {
                                                 //Aqui actualizo
-                                                TblDocumentos Actualiza = ActualizaRespuesta(Detalle, Tipo);                                              
+                                                TblDocumentos Actualiza = ActualizaRespuesta(Detalle, Tipo);
                                                 if (Actualiza != null)
                                                 {
                                                     Resp.Documento.IntIdEstado = Actualiza.IntIdEstado;
@@ -524,7 +524,7 @@ namespace HGInetInteroperabilidad.Procesos
                     if (!Detalle.codigoError.Equals(RespuestaInterOperabilidad.PendienteProcesamiento.GetHashCode().ToString()))
                     {
                         return null;
-                    }                 
+                    }
 
                     Ctl_Documento Documentos = new Ctl_Documento();
 
@@ -665,99 +665,125 @@ namespace HGInetInteroperabilidad.Procesos
 
                             };
                             lista_respuesta.Add(item_respuesta);
-                            break;
+
                         }
-
-
-
-                        foreach (var historial_estado in obj_RespuestaEstado.historial)
+                        else
                         {
-                            if (historial_estado.nombre.Equals(ResponseCode.Aceptado.ToString()) || historial_estado.nombre.Equals(ResponseCode.Rechazado.ToString()) || historial_estado.nombre.Equals(ResponseCode.AprobadoTacito.ToString())
-                                || historial_estado.nombre.Equals(ResponseCode.Pagado.ToString()))
+                            foreach (var historial_estado in obj_RespuestaEstado.historial)
                             {
-                                acuse_respuesta = true;
-
-                                HttpWebResponse RespuestaAcuse = Ctl_ClienteWebApi.Inter_ConsultaAcuse(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
-
-
-                                code = RespuestaEstado.StatusCode.GetHashCode();
-
-                                using (StreamReader reader = new StreamReader(RespuestaAcuse.GetResponseStream()))
+                                if (historial_estado.nombre.Equals(ResponseCode.Aceptado.ToString()) || historial_estado.nombre.Equals(ResponseCode.Rechazado.ToString()) || historial_estado.nombre.Equals(ResponseCode.AprobadoTacito.ToString())
+                                    || historial_estado.nombre.Equals(ResponseCode.Pagado.ToString()))
                                 {
-                                    resp = reader.ReadToEnd();
-                                }
+                                    acuse_respuesta = true;
+
+                                    HttpWebResponse RespuestaAcuse = Ctl_ClienteWebApi.Inter_ConsultaAcuse(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
 
 
+                                    code = RespuestaEstado.StatusCode.GetHashCode();
 
-                                
-                                if (code != RespuestaInterAcuse.AcuseExitoso.GetHashCode())
-                                {
-                                    item_respuesta = new RespuestaAcuseProceso()
+                                    using (StreamReader reader = new StreamReader(RespuestaAcuse.GetResponseStream()))
                                     {
-                                        Numero = item.IntNumero,
-                                        IdSeguridad = item.StrIdSeguridad.ToString(),
-                                        FechaProceso = Fecha.GetFecha(),
-                                        DocumentoTipo = (short)item.IntDocTipo,
-                                        Facturador = item.StrEmpresaFacturador,
-                                        Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Codigo de Respuesta {0} Error al Procesar {1} ", code, resp), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
-                                        Mensaje = resp,
-                                        MensajeFinal = string.Format("Proceso Exitoso {0} ", resp)
-
-                                          
-                                };
-                                    lista_respuesta.Add(item_respuesta);
-                                    throw new ApplicationException(string.Format("Codigo de Error {0}", code));
-                                }
+                                        resp = reader.ReadToEnd();
+                                    }
 
 
-                                AcuseRespuesta obj_RespuestaAcuse = JsonConvert.DeserializeObject<AcuseRespuesta>(resp);
 
-                                //Convierte el mensajeGlobal a Xml
-                                byte[] bytes = Convert.FromBase64String(obj_RespuestaAcuse.mensajeGlobal);
-                                string data = Encoding.UTF8.GetString(bytes);
-                                System.Xml.XmlReader xml_reader = System.Xml.XmlReader.Create(new StringReader(data));
-                                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                                doc.Load(xml_reader);
 
-                                //Obtiene el nombre del archivo.
-                                if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoUbl))
-                                {
-                                    string nombre_archivo = string.Empty;
-                                    nombre_archivo = Path.GetFileNameWithoutExtension(item.StrUrlArchivoUbl);
-
-                                    PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-                                    string ruta_acuse = string.Format(@"{0}\{1}{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.StrIdSeguridad);
-                                    ruta_acuse = string.Format(@"{0}\{1}", ruta_acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
-
-                                    //Valida la existencia de la ruta de almacenamiento, sino existe la crea.
-                                    if (!Directorio.ValidarExistenciaArchivo(ruta_acuse))
-                                        Directorio.CrearDirectorio(ruta_acuse);
-
-                                    ruta_acuse = string.Format("{0}\\{1}.xml", ruta_acuse, nombre_archivo);
-                                    //Almacena el archivo en la ruta especificada
-                                    doc.Save(ruta_acuse);
-
-                                    Ctl_Empresa clase_empresa = new Ctl_Empresa();
-                                    TblEmpresas datos_facturador = new TblEmpresas();
-
-                                    datos_facturador = clase_empresa.Obtener(item.TblEmpresasFacturador.StrIdentificacion);
-
-                                    //Serializa el objeto
-
-                                    System.Xml.XmlReader xml_reader_serializacion = System.Xml.XmlReader.Create(new StringReader(data));
-                                    XmlSerializer serializacion = null;
-                                    ApplicationResponseType obj_acuse_serializado = new ApplicationResponseType();
-                                    serializacion = new XmlSerializer(typeof(ApplicationResponseType));
-                                    obj_acuse_serializado = (ApplicationResponseType)serializacion.Deserialize(xml_reader_serializacion);
-
-                                    //convierte la serialización a objeto Acuse
-                                    Acuse objeto_acuse = AcuseXML.Convertir(obj_acuse_serializado);
-
-                                    try
+                                    if (code != RespuestaInterAcuse.AcuseExitoso.GetHashCode())
                                     {
-                                        if (objeto_acuse != null)
+                                        item_respuesta = new RespuestaAcuseProceso()
                                         {
-                                            RegistroListaDetalleDocRespuesta respuesta = Ctl_Recepcion.ProcesarAcuse(objeto_acuse, ruta_acuse, nombre_archivo, datos_facturador);
+                                            Numero = item.IntNumero,
+                                            IdSeguridad = item.StrIdSeguridad.ToString(),
+                                            FechaProceso = Fecha.GetFecha(),
+                                            DocumentoTipo = (short)item.IntDocTipo,
+                                            Facturador = item.StrEmpresaFacturador,
+                                            Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Codigo de Respuesta {0} Error al Procesar {1} ", code, resp), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                            Mensaje = resp,
+                                            MensajeFinal = string.Format("Proceso Exitoso {0} ", resp)
+
+
+                                        };
+                                        lista_respuesta.Add(item_respuesta);
+                                        throw new ApplicationException(string.Format("Codigo de Error {0}", code));
+                                    }
+
+
+                                    AcuseRespuesta obj_RespuestaAcuse = JsonConvert.DeserializeObject<AcuseRespuesta>(resp);
+
+                                    //Convierte el mensajeGlobal a Xml
+                                    byte[] bytes = Convert.FromBase64String(obj_RespuestaAcuse.mensajeGlobal);
+                                    string data = Encoding.UTF8.GetString(bytes);
+                                    System.Xml.XmlReader xml_reader = System.Xml.XmlReader.Create(new StringReader(data));
+                                    System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                                    doc.Load(xml_reader);
+
+                                    //Obtiene el nombre del archivo.
+                                    if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoUbl))
+                                    {
+                                        string nombre_archivo = string.Empty;
+                                        nombre_archivo = Path.GetFileNameWithoutExtension(item.StrUrlArchivoUbl);
+
+                                        PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+                                        string ruta_acuse = string.Format(@"{0}\{1}{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.StrIdSeguridad);
+                                        ruta_acuse = string.Format(@"{0}\{1}", ruta_acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
+
+                                        //Valida la existencia de la ruta de almacenamiento, sino existe la crea.
+                                        if (!Directorio.ValidarExistenciaArchivo(ruta_acuse))
+                                            Directorio.CrearDirectorio(ruta_acuse);
+
+                                        ruta_acuse = string.Format("{0}\\{1}.xml", ruta_acuse, nombre_archivo);
+                                        //Almacena el archivo en la ruta especificada
+                                        doc.Save(ruta_acuse);
+
+                                        Ctl_Empresa clase_empresa = new Ctl_Empresa();
+                                        TblEmpresas datos_facturador = new TblEmpresas();
+
+                                        datos_facturador = clase_empresa.Obtener(item.TblEmpresasFacturador.StrIdentificacion);
+
+                                        //Serializa el objeto
+
+                                        System.Xml.XmlReader xml_reader_serializacion = System.Xml.XmlReader.Create(new StringReader(data));
+                                        XmlSerializer serializacion = null;
+                                        ApplicationResponseType obj_acuse_serializado = new ApplicationResponseType();
+                                        serializacion = new XmlSerializer(typeof(ApplicationResponseType));
+                                        obj_acuse_serializado = (ApplicationResponseType)serializacion.Deserialize(xml_reader_serializacion);
+
+                                        //convierte la serialización a objeto Acuse
+                                        Acuse objeto_acuse = AcuseXML.Convertir(obj_acuse_serializado);
+
+                                        try
+                                        {
+                                            if (objeto_acuse != null)
+                                            {
+                                                RegistroListaDetalleDocRespuesta respuesta = Ctl_Recepcion.ProcesarAcuse(objeto_acuse, ruta_acuse, nombre_archivo, datos_facturador);
+
+
+                                                string Historia = "";
+                                                int i = 0;
+                                                foreach (var mensaje in obj_RespuestaEstado.historial)
+                                                {
+                                                    i = i + 1;
+                                                    Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
+                                                    Historia += string.Format("<br/> Fecha :{0}", Convert.ToDateTime(mensaje.timeStamp).ToString("yyyy-MM-dd HH:mm"));
+                                                    Historia += "<br/>";
+                                                }
+
+                                                item_respuesta = new RespuestaAcuseProceso()
+                                                {
+                                                    Numero = item.IntNumero,
+                                                    IdSeguridad = item.StrIdSeguridad.ToString(),
+                                                    FechaProceso = Fecha.GetFecha(),
+                                                    DocumentoTipo = (short)item.IntDocTipo,
+                                                    Facturador = item.StrEmpresaFacturador,
+                                                    Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Proceso Exitoso {0} ", respuesta.mensaje), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                                    Mensaje = Historia,
+                                                    MensajeFinal = string.Format("Proceso Exitoso {0} ", respuesta.mensaje)
+                                                };
+                                            }
+                                        }
+                                        catch (Exception excepcion)
+                                        {
 
 
                                             string Historia = "";
@@ -770,76 +796,50 @@ namespace HGInetInteroperabilidad.Procesos
                                                 Historia += "<br/>";
                                             }
 
+
                                             item_respuesta = new RespuestaAcuseProceso()
                                             {
                                                 Numero = item.IntNumero,
                                                 IdSeguridad = item.StrIdSeguridad.ToString(),
                                                 FechaProceso = Fecha.GetFecha(),
                                                 DocumentoTipo = (short)item.IntDocTipo,
-                                                Facturador = item.StrEmpresaFacturador,
-                                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Proceso Exitoso {0} ", respuesta.mensaje), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
                                                 Mensaje = Historia,
-                                                MensajeFinal = string.Format("Proceso Exitoso {0} ", respuesta.mensaje)
+                                                MensajeFinal = string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message)
                                             };
                                         }
                                     }
-                                    catch (Exception excepcion)
-                                    {
-
-
-                                        string Historia = "";
-                                        int i = 0;
-                                        foreach (var mensaje in obj_RespuestaEstado.historial)
-                                        {
-                                            i = i + 1;
-                                            Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
-                                            Historia += string.Format("<br/> Fecha :{0}", Convert.ToDateTime(mensaje.timeStamp).ToString("yyyy-MM-dd HH:mm"));
-                                            Historia += "<br/>";
-                                        }
-
-
-                                        item_respuesta = new RespuestaAcuseProceso()
-                                        {
-                                            Numero = item.IntNumero,
-                                            IdSeguridad = item.StrIdSeguridad.ToString(),
-                                            FechaProceso = Fecha.GetFecha(),
-                                            DocumentoTipo = (short)item.IntDocTipo,
-                                            Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
-                                            Mensaje = Historia,
-                                            MensajeFinal = string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", excepcion.Message)
-                                        };
-                                    }
+                                    break;
                                 }
-                                break;
-                            }
-                        }
-
-                        if (!acuse_respuesta)
-                        {
-                            string Historia = "";
-                            int i = 0;
-                            foreach (var mensaje in obj_RespuestaEstado.historial)
-                            {
-                                i = i + 1;
-                                Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
-                                Historia += string.Format("<br/> Fecha :{0}", Convert.ToDateTime(mensaje.timeStamp).ToString("yyyy-MM-dd HH:mm"));
-                                Historia += "<br/>";
                             }
 
-                            item_respuesta = new RespuestaAcuseProceso()
+                            if (!acuse_respuesta)
                             {
-                                Numero = item.IntNumero,
-                                IdSeguridad = item.StrIdSeguridad.ToString(),
-                                FechaProceso = Fecha.GetFecha(),
-                                DocumentoTipo = (short)item.IntDocTipo,
-                                Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", string.Format("El acuse no ha sido procesado.")), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
-                                Mensaje = Historia,
-                                MensajeFinal = string.Format("El acuse no ha sido procesado."),
-                                Facturador = item.StrEmpresaFacturador
-                            };
-                        }
+                                string Historia = "";
+                                int i = 0;
+                                foreach (var mensaje in obj_RespuestaEstado.historial)
+                                {
+                                    i = i + 1;
+                                    Historia += string.Format("<br/> Estado {0}: {1}", i, mensaje.mensaje);
+                                    Historia += string.Format("<br/> Fecha :{0}", Convert.ToDateTime(mensaje.timeStamp).ToString("yyyy-MM-dd HH:mm"));
+                                    Historia += "<br/>";
+                                }
 
-                        lista_respuesta.Add(item_respuesta);
+                                item_respuesta = new RespuestaAcuseProceso()
+                                {
+                                    Numero = item.IntNumero,
+                                    IdSeguridad = item.StrIdSeguridad.ToString(),
+                                    FechaProceso = Fecha.GetFecha(),
+                                    DocumentoTipo = (short)item.IntDocTipo,
+                                    Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el acuse de recibo. Detalle: {0} ", string.Format("El acuse no ha sido procesado.")), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, null),
+                                    Mensaje = Historia,
+                                    MensajeFinal = string.Format("El acuse no ha sido procesado."),
+                                    Facturador = item.StrEmpresaFacturador
+                                };
+                            }
+
+                            lista_respuesta.Add(item_respuesta);
+                        }
                     }
                     catch (Exception excepcion)
                     {
@@ -886,6 +886,6 @@ namespace HGInetInteroperabilidad.Procesos
 
             return Respuesta;
 
-        }     
+        }
     }
 }
