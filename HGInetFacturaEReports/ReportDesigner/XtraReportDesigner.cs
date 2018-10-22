@@ -21,7 +21,8 @@ namespace HGInetFacturaEReports.ReportDesigner
 
 			XtraReport rep = (XtraReport)sender;
 
-			Factura datos_documento = (Factura)rep.DataSource;
+			dynamic datos_documento = (dynamic)null;
+			datos_documento = rep.DataSource;
 
 
 			if (datos_documento != null)
