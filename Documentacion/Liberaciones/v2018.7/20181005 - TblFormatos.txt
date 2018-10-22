@@ -9,7 +9,8 @@ CREATE TABLE [dbo].[TblFormatos](
 	[IntEstado] [bit] NOT NULL,
 	[IntGenerico] [bit] NOT NULL,
 	[Formato] [varbinary](max) NOT NULL,
-	[StrObservaciones] [varchar](200) NULL,
+	[StrObservaciones] [varchar](200) NULL,	
+	[IntDocTipo] [int] NULL,
  CONSTRAINT [PK_TblFormatos] PRIMARY KEY CLUSTERED 
 (
 	[StrEmpresa] ASC,

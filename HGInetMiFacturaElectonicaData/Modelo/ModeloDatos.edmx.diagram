@@ -29,8 +29,6 @@
         <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.875" PointX="10.125" PointY="2.625" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" />
-        <EntityTypeShape EntityType="Modelo.TblFormatos" Width="2.125" PointX="2.75" PointY="4.5" />
-        <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
         <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="2.375" PointX="14.25" PointY="0.5" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasFacturador" />
@@ -40,6 +38,8 @@
         <EntityTypeShape EntityType="Modelo.TblConfiguracionInteroperabilidad" Width="2.125" PointX="21.125" PointY="0.75" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" />
+        <EntityTypeShape EntityType="Modelo.TblFormatos" Width="1.875" PointX="2.625" PointY="5.375" />
+        <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
