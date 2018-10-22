@@ -125,13 +125,7 @@ function reportDesigner_EndCallback(s, e) {
 				onClick: function (e) {
 					window.location.href = '/Views/Pages/GestionReportes.aspx';
 				}
-			},
-			{
-				text: "Continuar Edición",
-				onClick: function (e) {
-					myDialog.hide();
-				}
-			},
+			}
 			]
 		});
 		myDialog.show().done(function (dialogResult) {
