@@ -47,6 +47,11 @@
 											</div>
 
 											<div class="col-md-12">
+												<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Tipo Documento:<strom style="color: red;">*</label>
+												<div id="SelectTipoDoc"></div>
+											</div>
+
+											<div class="col-md-12">
 												<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observaciones:</label>
 												<div id="TxtObservaciones"></div>
 											</div>

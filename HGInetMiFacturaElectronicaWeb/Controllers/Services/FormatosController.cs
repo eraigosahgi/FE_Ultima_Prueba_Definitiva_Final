@@ -50,7 +50,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FechaRegistro = d.DatFechaRegistro.ToString(Fecha.formato_fecha_hginet),
 					Titulo = (d.IntGenerico) ? "Prediseñado" : "Personalizado",
 					Estado = d.IntEstado,
-					NitEmpresa = d.StrEmpresa
+					TipoDoc = d.IntDocTipo,
+					NitEmpresa = d.StrEmpresa,
+					RazonSocial = d.TblEmpresas.StrRazonSocial
 				});
 
 				return Ok(datos_retorno);
@@ -87,7 +89,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpPost]
 		[Route("Api/AlmacenarFormatoPdf")]
-		public IHttpActionResult AlmacenarFormatoPdf(string identificacion_empresa, int estado, int categoria, string observaciones, int formato_base, string empresa_base)
+		public IHttpActionResult AlmacenarFormatoPdf(string identificacion_empresa, int estado, int categoria, string observaciones, int formato_base, string empresa_base, int tipo_documento)
 		{
 			try
 			{
@@ -110,6 +112,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					TblFormatos datos_base = clase_formatos.Obtener(formato_base, empresa_base, TipoFormato.FormatoPDF.GetHashCode());
 					datos_formatos.Formato = datos_base.Formato;
 				}
+				datos_formatos.IntDocTipo = tipo_documento;
 				datos_formatos.StrEmpresa = identificacion_empresa;
 				datos_formatos.IntEstado = Convert.ToBoolean(estado);
 				datos_formatos.IntGenerico = Convert.ToBoolean(categoria);

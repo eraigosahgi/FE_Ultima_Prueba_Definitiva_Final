@@ -11,7 +11,9 @@ using HGInetMiFacturaElectronicaWeb.Properties;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using HGInetMiFacturaElectronicaWeb.Seguridad.Plugins;
 using HGInetUBL;
+using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,8 +42,6 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 			try
 			{
 				base.Page_Load(sender, e);
-				//Sesion.ValidarSesion();
-
 				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
 				XtraReportDesigner report = new XtraReportDesigner();
@@ -51,6 +51,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 				{
 					int codigo_formato = Convert.ToInt32(Request.QueryString["ID"]);
 					string cod_empresa = Request.QueryString["Nit"].ToString();
+
+					TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(Convert.ToInt32(Request.QueryString["TipoDoc"]));
+					SerializeReport.TipoDocumento = tipo_doc;
 
 					TblFormatos datos_formato = clase_formatos.Obtener(codigo_formato, cod_empresa, TipoFormato.FormatoPDF.GetHashCode());
 
@@ -69,6 +72,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 
 				report.Extensions[SerializationService.Guid] = SerializeReport.Name;
 				report.DataSource = SerializeReport.GenerarColumnas();
+				report.DataMember = SerializeReport.DataMember;
 				ASPxReportDesignerWeb.OpenReport(report);
 
 			}

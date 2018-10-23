@@ -7,7 +7,8 @@ ModalAsignarFormatoApp.controller('ModalAsignarFormatoController', function Moda
 	var seleccion_empresa = "",
 	seleccion_estado = ""
 	seleccion_categoria = "",
-	observaciones = "";
+	observaciones = "",
+	tipo_documento = "";
 
 	$http.get('/api/Empresas?Facturador=true').then(function (response) {
 		$("#wait").hide();
@@ -73,6 +74,21 @@ ModalAsignarFormatoApp.controller('ModalAsignarFormatoController', function Moda
 		}]
 	});
 
+	//TipoDocumento
+	$("#SelectTipoDoc").dxSelectBox({
+		placeholder: "Seleccione el Tipo de Documento",
+		displayExpr: "Texto",
+		dataSource: TiposDocumento,
+		onValueChanged: function (data) {
+			tipo_documento = data.value.ID;
+		}
+	}).dxValidator({
+		validationRules: [{
+			type: "required",
+			message: "Debe seleccionar el Tipo de Documento"
+		}]
+	});
+
 	//Campo de observaciones
 	$("#TxtObservaciones").dxTextArea({
 		onValueChanged: function (data) {
@@ -104,13 +120,12 @@ ModalAsignarFormatoApp.controller('ModalAsignarFormatoController', function Moda
 		var empresa_base = $scope.EmpresaFormato;
 
 		//AlmacenarFormatoPdf(string identificacion_empresa, bool estado, bool categoria, string observaciones, int formato_base, string empresa_base)
-		$http.post('/api/AlmacenarFormatoPdf?identificacion_empresa=' + seleccion_empresa + '&estado=' + seleccion_estado + '&categoria=' + seleccion_categoria + '&observaciones=' + observaciones + '&formato_base=' + formato_base + '&empresa_base=' + empresa_base).then(function (response) {
+		$http.post('/api/AlmacenarFormatoPdf?identificacion_empresa=' + seleccion_empresa + '&estado=' + seleccion_estado + '&categoria=' + seleccion_categoria + '&observaciones=' + observaciones + '&formato_base=' + formato_base + '&empresa_base=' + empresa_base + '&tipo_documento=' + tipo_documento).then(function (response) {
 			$("#wait").hide();
 			try {
-				console.log(response.data.IntCodigoFormato);
+				console.log(response.data.IntDocTipo);
 				DevExpress.ui.notify({ message: "El formato ha sido asignado correctamente. Código Identificador:" + response.data.IntCodigoFormato, position: { my: "center top", at: "center top" } }, "success", 1500);
-
-				window.location.href = '/Views/ReportDesigner/ReportDesignerWeb.aspx?ID=' + response.data.IntCodigoFormato + '&Nit=' + response.data.StrEmpresa;
+				window.location.href = '/Views/ReportDesigner/ReportDesignerWeb.aspx?ID=' + response.data.IntCodigoFormato + '&Nit=' + response.data.StrEmpresa + '&TipoDoc=' + response.data.IntDocTipo;
 
 
 			} catch (err) {
@@ -134,3 +149,11 @@ var CategoriasFormato = [
 { ID: "0", Texto: 'PERSONALIZADO' },
 { ID: "1", Texto: 'PREDISEÑADO' }
 ];
+
+var TiposDocumento =
+    [
+        { ID: "0", Texto: 'Todos' },
+        { ID: "1", Texto: 'Factura' },
+        { ID: "2", Texto: 'Nota Débito' },
+        { ID: "3", Texto: 'Nota Crédito' }
+    ];

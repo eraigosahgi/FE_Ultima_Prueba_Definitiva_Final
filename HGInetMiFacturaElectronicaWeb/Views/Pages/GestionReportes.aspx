@@ -40,14 +40,15 @@
 
 						<div class="panel-body">
 
-							<div style="margin-bottom: 1%">
-								<img src="../../Scripts/Images/FormatoPDF.png" class="img-responsive" />
+							<div style="margin-bottom: 1%;">
+								<img src="../../Scripts/Images/FormatoPDF.png" class="img-responsive" style="width: 60%; display: block; margin-left: auto; margin-right: auto;" />
 							</div>
 							<div style="margin-top: 10%">
 								<label class="no-margin text-size-large text-semibold">Código: </label>
 								<label class="no-margin text-size-large">{{datos.CodigoFormato}}</label><br />
 								<label class="no-margin text-size-large text-semibold">Empresa: </label>
 								<label class="no-margin text-size-large">{{datos.NitEmpresa}}</label><br />
+								<label class="no-margin text-size-small">{{datos.RazonSocial}}</label><br />
 								<label class="no-margin text-size-large text-semibold">Fecha Creación: </label>
 								<label class="no-margin text-size-large">{{datos.FechaRegistro}}</label>
 							</div>
@@ -60,7 +61,7 @@
 										<a class="icon-file-plus2 BtnStyleNone" title="Asignar Formato" data-ng-click="AbrirModal(datos.CodigoFormato, datos.NitEmpresa)"></a>
 									</li>
 									<li>
-										<button id="BtnEstado{{datos.ClavePrimaria}}" class="icon-lock5 BtnStyleNone" data-ng-class="{'icon-unlocked2': datos.Estado}" title="Modificar Estado" data-ng-click="BtnCambioEstado(datos.Estado,datos.NitEmpresa,datos.CodigoFormato)"></button>
+										<button style="margin-top: -10px; margin-left: -7px" id="BtnEstado{{datos.ClavePrimaria}}" class="icon-lock5 BtnStyleNone" data-ng-class="{'icon-unlocked2': datos.Estado}" title="Modificar Estado" data-ng-click="BtnCambioEstado(datos.Estado,datos.NitEmpresa,datos.CodigoFormato)"></button>
 									</li>
 
 								</ul>

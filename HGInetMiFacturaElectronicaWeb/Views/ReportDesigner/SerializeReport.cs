@@ -6,12 +6,15 @@ using DevExpress.XtraReports.Native;
 using System.Data;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using System.Reflection;
+using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetMiFacturaElectronicaWeb
 {
 	public class SerializeReport : IDataSerializer
 	{
 		public const string Name = "MyDataSerializer";
+		public static TipoDocumento TipoDocumento { get; set; }
+		public static string DataMember { get; set; }
 
 		public bool CanDeserialize(string value, string typeName, object extensionProvider)
 		{
@@ -43,20 +46,71 @@ namespace HGInetMiFacturaElectronicaWeb
 			var ds = new DataSet();
 			ds.DataSetName = "DataSetReporte";
 
-			//DATOS TABLA FACTURA
-			DataTable Factura = new DataTable("Factura");
-			Factura.TableName = "Factura";
-			foreach (PropertyInfo info in typeof(Factura).GetProperties())
-			{
-				if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1"))
-				{
-					Factura.Columns.Add(info.Name.ToString());
-				}
-			}
-			//Agrega la tabla principal al dataset
-			ds.Tables.Add(Factura);
+			DataTable DtPrincipal = new DataTable();
+			DataColumn principal = new DataColumn();
 
-			DataColumn principal = ds.Tables["Factura"].Columns["Documento"];
+			switch (TipoDocumento)
+			{
+				case TipoDocumento.NotaDebito:
+					//DATOS TABLA NOTADEBITO
+					DtPrincipal = new DataTable("NotaDebito");
+					DtPrincipal.TableName = "NotaDebito";
+					foreach (PropertyInfo info in typeof(NotaDebito).GetProperties())
+					{
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1"))
+						{
+							DtPrincipal.Columns.Add(info.Name.ToString());
+						}
+					}
+					//Agrega la tabla principal al dataset
+					ds.Tables.Add(DtPrincipal);
+
+					principal = ds.Tables["NotaDebito"].Columns["Documento"];
+
+					DataMember = "NotaDebito";
+					break;
+
+				case TipoDocumento.NotaCredito:
+					//DATOS TABLA NOTACREDITO
+					DtPrincipal = new DataTable("NotaCredito");
+					DtPrincipal.TableName = "NotaCredito";
+					foreach (PropertyInfo info in typeof(NotaCredito).GetProperties())
+					{
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1"))
+						{
+							DtPrincipal.Columns.Add(info.Name.ToString());
+						}
+					}
+					//Agrega la tabla principal al dataset
+					ds.Tables.Add(DtPrincipal);
+
+					principal = ds.Tables["NotaCredito"].Columns["Documento"];
+					DataMember = "NotaCredito";
+					break;
+
+				default:
+					//DATOS TABLA FACTURA
+					DtPrincipal = new DataTable("Factura");
+					DtPrincipal.TableName = "Factura";
+					foreach (PropertyInfo info in typeof(Factura).GetProperties())
+					{
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1"))
+						{
+							DtPrincipal.Columns.Add(info.Name.ToString());
+						}
+					}
+					//Agrega la tabla principal al dataset
+					ds.Tables.Add(DtPrincipal);
+
+					principal = ds.Tables["Factura"].Columns["Documento"];
+
+					DataMember = "Factura";
+					break;
+			}
+
+
+
+
 
 			//DATOS TABLA DATOS DEL ADQUIRIENTE
 			DataTable DatosAdquiriente = new DataTable("DatosAdquiriente");
