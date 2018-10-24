@@ -13,6 +13,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace HGInetInteroperabilidad.Procesos
 			if (datos.documentos == null)
 			{
 				datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
-                datos_respuesta.trackingIds = null;
+				datos_respuesta.trackingIds = null;
 				datos_respuesta.mensajeGlobal = string.Format("{2}|Documento {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.Zipvacio), RespuestaInterOperabilidad.Zipvacio.GetHashCode());
 				//throw new ApplicationException("No se encontraron datos");
 			}
@@ -187,33 +188,50 @@ namespace HGInetInteroperabilidad.Procesos
 
 							}
 
+							string url_ppal_pdf = null;
+
 							//se valida que exista el archivo pdf y almacena en carpeta del Facturador emisor
 							if (objeto.representacionGraficas)
 							{
 								string ruta_archivo_pdf = string.Format(@"{0}\{1}.pdf", ruta_ftp, nombre_archivo);
 
-								if (!Archivo.ValidarExistencia(ruta_archivo_pdf))
-								{
-									item_respuesta.nombreDocumento = string.Format("{0}.pdf", objeto.nombre);
-									item_respuesta.codigoError = RespuestaInterOperabilidad.DocumentoNoEncontrado.GetHashCode().ToString();
-									item_respuesta.mensaje = string.Format("{0} en el ZIP {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), datos.nombre);
-									error_proceso = true;
-									throw new ApplicationException(string.Format("No se encontro el archivo {0}", ruta_archivo_pdf));
-								}
+								string ruta_url_pdf = string.Format(@"{0}\{1}.pdf.url", ruta_ftp, nombre_archivo);
 
-								try
+								if (!Archivo.ValidarExistencia(ruta_url_pdf))
 								{
-									AlmacenarArchivo(ruta_archivo_pdf, string.Format("{0}.pdf", nombre_archivo), facturador_emisor);
-								}
-								catch (Exception excepcion)
-								{
+									if (!Archivo.ValidarExistencia(ruta_archivo_pdf))
+									{
+										item_respuesta.nombreDocumento = string.Format("{0}.pdf", objeto.nombre);
+										item_respuesta.codigoError = RespuestaInterOperabilidad.DocumentoNoEncontrado.GetHashCode().ToString();
+										item_respuesta.mensaje = string.Format("{0} en el ZIP {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), datos.nombre);
+										error_proceso = true;
+										throw new ApplicationException(string.Format("No se encontro el archivo {0}", ruta_archivo_pdf));
+									}
 
-									LogExcepcion.Guardar(excepcion);
-									item_respuesta.nombreDocumento = objeto.nombre;
-									item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
-									item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.representacionGraficas);
-									error_proceso = true;
-									throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+									try
+									{
+										AlmacenarArchivo(ruta_archivo_pdf, string.Format("{0}.pdf", nombre_archivo), facturador_emisor);
+									}
+									catch (Exception excepcion)
+									{
+
+										LogExcepcion.Guardar(excepcion);
+										item_respuesta.nombreDocumento = objeto.nombre;
+										item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
+										item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.representacionGraficas);
+										error_proceso = true;
+										throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+
+									}
+								}
+								else
+								{
+									//Lee el archivo enviado
+									StreamReader ruta_publica_pdf = new StreamReader(ruta_url_pdf);
+
+									url_ppal_pdf = ruta_publica_pdf.ReadLine();
+
+									ruta_publica_pdf.Close();
 
 								}
 							}
@@ -230,27 +248,34 @@ namespace HGInetInteroperabilidad.Procesos
 									error_proceso = true;
 									throw new ApplicationException(string.Format("No se encontro el archivo {0}", ruta_archivo_zip));
 								}
-								try
-								{
-									AlmacenarArchivo(ruta_archivo_zip, string.Format("{0}.zip", nombre_archivo), facturador_emisor);
-								}
-								catch (Exception excepcion)
-								{
 
-									LogExcepcion.Guardar(excepcion);
-									item_respuesta.nombreDocumento = objeto.nombre;
-									item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
-									item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.adjuntos);
-									error_proceso = true;
-									throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+								FileInfo adjunto = new FileInfo(ruta_archivo_zip);
 
+								//Valida que el archivo no supere el peso de 2MB
+								if (adjunto.Length < 2097152)
+								{
+									try
+									{
+										AlmacenarArchivo(ruta_archivo_zip, string.Format("{0}.zip", nombre_archivo), facturador_emisor, false, true);
+									}
+									catch (Exception excepcion)
+									{
+
+										LogExcepcion.Guardar(excepcion);
+										item_respuesta.nombreDocumento = objeto.nombre;
+										item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
+										item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.adjuntos);
+										error_proceso = true;
+										throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+
+									}
 								}
 							}
 
 							//Convierto el Objeto a Tbl
 							try
 							{
-								documento_bd = Convertir(documento_obj, tipo_doc, facturador_emisor, nombre_archivo, proveedor_emisor);
+								documento_bd = Convertir(documento_obj, tipo_doc, facturador_emisor, nombre_archivo, proveedor_emisor, url_ppal_pdf);
 							}
 							catch (Exception excepcion)
 							{
@@ -313,7 +338,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 				}
 				datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
-                datos_respuesta.trackingIds = respuesta;
+				datos_respuesta.trackingIds = respuesta;
 				if (!error_proceso)
 					datos_respuesta.mensajeGlobal = string.Format("{2}|Documento {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ZipRadicado), RespuestaInterOperabilidad.ZipRadicado.GetHashCode());
 				else
@@ -542,7 +567,7 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 				catch (Exception ex)
 				{
-					LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Facturador Emisor {0} ",ex), ex));
+					LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Facturador Emisor {0} ", ex), ex));
 				}
 
 				if (facturador_emisor == null)
@@ -559,7 +584,7 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 				catch (Exception ex)
 				{
-					LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Resolución {0}",ex), ex));
+					LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Resolución {0}", ex), ex));
 				}
 
 				if (resolucion == null)
@@ -571,7 +596,7 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					catch (Exception ex)
 					{
-						LogExcepcion.Guardar(new Exception(string.Format("Error al guardar Resolución {0}",ex), ex));
+						LogExcepcion.Guardar(new Exception(string.Format("Error al guardar Resolución {0}", ex), ex));
 					}
 
 					// crea el registro en base de datos
@@ -593,7 +618,7 @@ namespace HGInetInteroperabilidad.Procesos
 		/// <param name="documento">Objeto de Servicio</param>
 		/// <param name="tipo_doc">Tipo del Documento</param>
 		/// <returns>Objeto de BD</returns>
-		public static TblDocumentos Convertir(object documento, DocumentType tipo_doc, TblEmpresas facturador_emisor, string nombre_archivo, string proveedor_emisor)
+		public static TblDocumentos Convertir(object documento, DocumentType tipo_doc, TblEmpresas facturador_emisor, string nombre_archivo, string proveedor_emisor, string url_ppal_pdf = null)
 		{
 			try
 			{
@@ -612,7 +637,8 @@ namespace HGInetInteroperabilidad.Procesos
 				string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
 
 				// url pública del pdf
-				string url_ppal_pdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
+				if (string.IsNullOrEmpty(url_ppal_pdf))
+					url_ppal_pdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
 
 				//Generacion del tracking
 				Guid tracking = Guid.NewGuid();
@@ -667,7 +693,7 @@ namespace HGInetInteroperabilidad.Procesos
 		/// </summary>
 		/// <param name="documento">datos del documento</param>
 		/// <returns>datos del documento</returns>
-		public static void AlmacenarArchivo(string ruta_archivo, string nombre_archivo, TblEmpresas facturador_emisor, bool documento_acuse = false)
+		public static void AlmacenarArchivo(string ruta_archivo, string nombre_archivo, TblEmpresas facturador_emisor, bool documento_acuse = false, bool adjuntos = false)
 		{
 			try
 			{
@@ -683,7 +709,14 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 				else
 				{
-					carpeta = string.Format(@"{0}\{1}", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+					if (!adjuntos)
+					{
+						carpeta = string.Format(@"{0}\{1}", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+					}
+					else
+					{
+						carpeta = string.Format(@"{0}\{1}", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAdjuntos);
+					}
 				}
 
 				// valida la existencia de la carpeta
