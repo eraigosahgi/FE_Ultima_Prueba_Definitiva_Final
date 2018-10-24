@@ -365,7 +365,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var lista = documento.DocumentosAcuseTacito(List_id_seguridad);
 
-				var datos = documento.GenerarAcuseTacito(lista);
+				List<TblDocumentos> datos = new List<TblDocumentos>();
+
+				foreach (var item in lista)
+				{
+
+					datos = documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+				}
 
 				return Ok();
 			}

@@ -1230,24 +1230,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 		#endregion
 
-		#region Generar Acuse Tacito
-		public bool GenerarAcuseTacito(List<TblDocumentos> lista)
-		{
-			//Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
-			foreach (TblDocumentos item in lista)
-			{
-				item.IntAdquirienteRecibo = 3;
-				item.StrAdquirienteMvoRechazo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(3));
-				item.DatAdquirienteFechaRecibo = Fecha.GetFecha();
-				item.IntIdEstado = 99;
-				item.DatFechaActualizaEstado = Fecha.GetFecha();
-				this.Edit(item);
-			}
-
-			return true;
-		}
-		#endregion
-
 
 		#region Interoperabilidad
 		/// <summary>
