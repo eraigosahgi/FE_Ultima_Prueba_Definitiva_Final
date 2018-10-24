@@ -25,8 +25,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
             }
             catch (Exception ex)
             {
-
-                lblResultado.Text = string.Format("El proceso genero un error: {0}",ex.Message);
+                lblResultado.Text = "El proceso genero un error" ;
             }
 
 
