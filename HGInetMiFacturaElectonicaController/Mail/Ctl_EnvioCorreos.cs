@@ -706,7 +706,10 @@ namespace HGInetMiFacturaElectonicaController
                             case 2:
                                 estado_respuesta = "Rechazada";
                                 break;
-                        }
+							case 3:
+								estado_respuesta = "Aprobado Tácito";
+								break;
+						}
 
                         if (documento.IntAdquirienteRecibo == 1 && !string.IsNullOrWhiteSpace(documento.StrAdquirienteMvoRechazo))
                             mensaje = mensaje.Replace("{MotivoRechazo}", "Observaciones: " + documento.StrAdquirienteMvoRechazo);
