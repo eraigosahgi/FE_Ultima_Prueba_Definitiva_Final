@@ -22,10 +22,13 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
                 lblResultado.Text = string.Format("Numero de Documentos a procesar: {0} ", datos.Count().ToString());
 
                 List<DocumentoRespuesta> datosProcesar = HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.Procesar(datos);
+
+                lblResultado.Text = "Proceso Finalizado";
+
             }
             catch (Exception ex)
             {
-                lblResultado.Text = "El proceso genero un error" ;
+                lblResultado.Text = string.Format("El proceso genero un error {0}", ex.Message);
             }
 
 
