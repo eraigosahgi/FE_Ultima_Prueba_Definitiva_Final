@@ -1,6 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
+using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
@@ -89,8 +90,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			string clave_sha256 = Encriptar.Encriptar_SHA256(clave);            
             TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
 													   where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
+                                                       && item.BitActivo==true
 													   select item).FirstOrDefault();
-
 			return datos;
 		}
 
@@ -153,6 +154,55 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             return datos;
         }
+
+
+
+
+        public TblConfiguracionInteroperabilidad GuardarProveedor(string StrIdentificacion, string StrIdSeguridad, string StrRazonSocial, string StrMail, string StrTelefono, string StrObservaciones, string StrUsuario, string StrClave, string StrHgiUsuario, string StrHgiClave, string StrUrlApi, string StrUrlFtp, bool BitActivo)
+        {
+
+            //TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
+            //                                           where item.StrIdentificacion.Equals(StrIdentificacion)
+            //                                           select item).FirstOrDefault();
+
+            //if (datos != null)
+            //{
+            //   return null;
+            //}else
+            //{
+                TblConfiguracionInteroperabilidad Proveedor = new TblConfiguracionInteroperabilidad();
+
+                Proveedor.StrIdentificacion = StrIdentificacion;
+                Proveedor.StrIdSeguridad = Guid.Parse(StrIdSeguridad);
+                Proveedor.StrRazonSocial = StrRazonSocial;
+                Proveedor.StrMail = StrMail;
+                Proveedor.StrTelefono = StrTelefono;
+                Proveedor.StrObservaciones = StrObservaciones;
+                //string StrUsuario, string StrClave, string StrHgiUsuario, string StrHgiClave, string StrUrlApi, string StrUrlFtp, bool BitActivo
+                Proveedor.StrUsuario = StrUsuario;
+                Proveedor.StrClave = StrClave;
+                Proveedor.StrHgiUsuario = StrUsuario;
+                Proveedor.StrHgiClave = StrClave;
+                Proveedor.StrUrlApi = StrUrlApi;
+                Proveedor.StrUrlFtp = StrUrlFtp;
+                Proveedor.BitActivo = BitActivo;
+
+                Proveedor.DatFechaActualizacion = DateTime.Now;
+
+                Proveedor.DatFechaExpiracion = Fecha.GetFecha().AddYears(1); 
+                Proveedor.DatFechaIngreso = Fecha.GetFecha();
+                Proveedor.DatHgiFechaToken = Fecha.GetFecha().AddDays(1);
+                Proveedor.DatHgiFechaExpiracion = Fecha.GetFecha().AddYears(1);
+
+                Proveedor = this.Add(Proveedor);
+
+                return Proveedor;
+            //}
+
+                       
+        }
+
+
 
 
 
