@@ -18,6 +18,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public TblDocumentos()
         {
             this.TblPagosElectronicos = new HashSet<TblPagosElectronicos>();
+            this.TblGestionAnexos = new HashSet<TblGestionAnexos>();
         }
     
         public System.Guid StrIdSeguridad { get; set; }
@@ -57,5 +58,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblGestionAnexos> TblGestionAnexos { get; set; }
     }
 }

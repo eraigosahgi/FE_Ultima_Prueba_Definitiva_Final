@@ -5,26 +5,26 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="72" DisplayType="true">
-        <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="20.75" PointY="8.125" />
+        <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="5.625" PointY="11.75" />
         <EntityTypeShape EntityType="Modelo.TblPlanes" Width="1.5" PointX="3.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="2" PointX="8" PointY="12.125" />
+        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="2" PointX="9.5" PointY="10.625" IsExpanded="true" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
-        <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="16.375" PointY="13.25" />
-        <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="18.5" PointY="12.5" />
+        <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="16.125" PointY="14.25" />
+        <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="13" PointY="14.75" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblOpciones" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblOpciones" ManuallyRouted="false" >
         </AssociationConnector>
-        <EntityTypeShape EntityType="Modelo.TblPerfiles" Width="1.5" PointX="14" PointY="13.125" />
+        <EntityTypeShape EntityType="Modelo.TblPerfiles" Width="1.5" PointX="18.75" PointY="14.625" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblPerfiles" />
         <EntityTypeShape EntityType="Modelo.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Modelo.TblEmpresasPasarela" Width="1.5" PointX="9" PointY="8.125" />
+        <EntityTypeShape EntityType="Modelo.TblEmpresasPasarela" Width="1.5" PointX="10.25" PointY="8" />
         <EntityTypeShape EntityType="Modelo.TblEmpresas" Width="1.875" PointX="6.5" PointY="1.5" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblUsuarios_TblEmpresas" />
-        <EntityTypeShape EntityType="Modelo.TblPlanesTransacciones" Width="1.5" PointX="13.875" PointY="8.875" />
+        <EntityTypeShape EntityType="Modelo.TblPlanesTransacciones" Width="1.5" PointX="13.875" PointY="9" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
-        <EntityTypeShape EntityType="Modelo.TblPagosElectronicos" Width="1.875" PointX="18.25" PointY="2.875" />
+        <EntityTypeShape EntityType="Modelo.TblPagosElectronicos" Width="1.875" PointX="17.875" PointY="7.75" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
         <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.875" PointX="10.125" PointY="2.625" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasResoluciones" />
@@ -35,11 +35,13 @@
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblPlanesTransacciones" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblDocumentos" />
-        <EntityTypeShape EntityType="Modelo.TblConfiguracionInteroperabilidad" Width="2.125" PointX="21.125" PointY="0.75" />
+        <EntityTypeShape EntityType="Modelo.TblConfiguracionInteroperabilidad" Width="2.125" PointX="18.375" PointY="0.5" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" />
         <EntityTypeShape EntityType="Modelo.TblFormatos" Width="1.875" PointX="2.625" PointY="5.375" />
         <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
+        <EntityTypeShape EntityType="Modelo.TblGestionAnexos" Width="1.5" PointX="21.25" PointY="4.75" />
+        <AssociationConnector Association="Modelo.FK_TblGestionAnexos_TblDocumentos" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
