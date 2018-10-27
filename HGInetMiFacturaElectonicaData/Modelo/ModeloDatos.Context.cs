@@ -40,6 +40,5 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual DbSet<TblDocumentos> TblDocumentos { get; set; }
         public virtual DbSet<TblConfiguracionInteroperabilidad> TblConfiguracionInteroperabilidad { get; set; }
         public virtual DbSet<TblFormatos> TblFormatos { get; set; }
-        public virtual DbSet<TblGestionAnexos> TblGestionAnexos { get; set; }
     }
 }

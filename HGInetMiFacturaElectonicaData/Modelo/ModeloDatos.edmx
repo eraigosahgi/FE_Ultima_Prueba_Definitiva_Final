@@ -148,19 +148,6 @@
           <Property Name="StrObservaciones" Type="varchar" MaxLength="200" />
           <Property Name="IntDocTipo" Type="int" />
         </EntityType>
-        <EntityType Name="TblGestionAnexos">
-          <Key>
-            <PropertyRef Name="StrIdArchivo" />
-            <PropertyRef Name="StrIdSeguridadDoc" />
-          </Key>
-          <Property Name="StrIdArchivo" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="StrIdSeguridadDoc" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="StrNombreArchivo" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="StrUrlArchivo" Type="varchar" MaxLength="300" Nullable="false" />
-          <Property Name="IntProceso" Type="smallint" Nullable="false" />
-          <Property Name="IntPesoArchivo" Type="int" Nullable="false" />
-          <Property Name="StrObservaciones" Type="text" />
-        </EntityType>
         <EntityType Name="TblOpciones">
           <Key>
             <PropertyRef Name="IntId" />
@@ -408,18 +395,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_TblGestionAnexos_TblDocumentos">
-          <End Role="TblDocumentos" Type="Self.TblDocumentos" Multiplicity="1" />
-          <End Role="TblGestionAnexos" Type="Self.TblGestionAnexos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblDocumentos">
-              <PropertyRef Name="StrIdSeguridad" />
-            </Principal>
-            <Dependent Role="TblGestionAnexos">
-              <PropertyRef Name="StrIdSeguridadDoc" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TblOpcionesPerfil_TblOpciones">
           <End Role="TblOpciones" Type="Self.TblOpciones" Multiplicity="1" />
           <End Role="TblOpcionesPerfil" Type="Self.TblOpcionesPerfil" Multiplicity="*" />
@@ -552,7 +527,6 @@
           <EntitySet Name="TblEmpresasPasarela" EntityType="Self.TblEmpresasPasarela" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresasResoluciones" EntityType="Self.TblEmpresasResoluciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblFormatos" EntityType="Self.TblFormatos" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="TblGestionAnexos" EntityType="Self.TblGestionAnexos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpciones" EntityType="Self.TblOpciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpcionesPerfil" EntityType="Self.TblOpcionesPerfil" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpcionesUsuario" EntityType="Self.TblOpcionesUsuario" Schema="dbo" store:Type="Tables" />
@@ -596,10 +570,6 @@
           <AssociationSet Name="FK_TblFormatos_TblEmpresas" Association="Self.FK_TblFormatos_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblFormatos" EntitySet="TblFormatos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TblGestionAnexos_TblDocumentos" Association="Self.FK_TblGestionAnexos_TblDocumentos">
-            <End Role="TblDocumentos" EntitySet="TblDocumentos" />
-            <End Role="TblGestionAnexos" EntitySet="TblGestionAnexos" />
           </AssociationSet>
           <AssociationSet Name="FK_TblOpcionesPerfil_TblOpciones" Association="Self.FK_TblOpcionesPerfil_TblOpciones">
             <End Role="TblOpciones" EntitySet="TblOpciones" />
@@ -737,11 +707,6 @@
           <AssociationSet Name="FK_TblFormatos_TblEmpresas" Association="Modelo.FK_TblFormatos_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblFormatos" EntitySet="TblFormatos" />
-          </AssociationSet>
-          <EntitySet Name="TblGestionAnexos" EntityType="Modelo.TblGestionAnexos" />
-          <AssociationSet Name="FK_TblGestionAnexos_TblDocumentos" Association="Modelo.FK_TblGestionAnexos_TblDocumentos">
-            <End Role="TblDocumentos" EntitySet="TblDocumentos" />
-            <End Role="TblGestionAnexos" EntitySet="TblGestionAnexos" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
@@ -1151,7 +1116,6 @@
           <NavigationProperty Name="TblPagosElectronicos" Relationship="Modelo.FK_TblPagosElectronicos_TblDocumentos" FromRole="TblDocumentos" ToRole="TblPagosElectronicos" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadEmisor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadReceptor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
-          <NavigationProperty Name="TblGestionAnexos" Relationship="Modelo.FK_TblGestionAnexos_TblDocumentos" FromRole="TblDocumentos" ToRole="TblGestionAnexos" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1294,32 +1258,6 @@
             </Principal>
             <Dependent Role="TblFormatos">
               <PropertyRef Name="StrEmpresa" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="TblGestionAnexos">
-          <Key>
-            <PropertyRef Name="StrIdArchivo" />
-            <PropertyRef Name="StrIdSeguridadDoc" />
-          </Key>
-          <Property Name="StrIdArchivo" Type="Guid" Nullable="false" />
-          <Property Name="StrIdSeguridadDoc" Type="Guid" Nullable="false" />
-          <Property Name="StrNombreArchivo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrUrlArchivo" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="IntProceso" Type="Int16" Nullable="false" />
-          <Property Name="IntPesoArchivo" Type="Int32" Nullable="false" />
-          <Property Name="StrObservaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblGestionAnexos_TblDocumentos" FromRole="TblGestionAnexos" ToRole="TblDocumentos" />
-        </EntityType>
-        <Association Name="FK_TblGestionAnexos_TblDocumentos">
-          <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="1" />
-          <End Type="Modelo.TblGestionAnexos" Role="TblGestionAnexos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblDocumentos">
-              <PropertyRef Name="StrIdSeguridad" />
-            </Principal>
-            <Dependent Role="TblGestionAnexos">
-              <PropertyRef Name="StrIdSeguridadDoc" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1609,19 +1547,6 @@
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
                 <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
                 <ScalarProperty Name="IntCodigoFormato" ColumnName="IntCodigoFormato" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TblGestionAnexos">
-            <EntityTypeMapping TypeName="Modelo.TblGestionAnexos">
-              <MappingFragment StoreEntitySet="TblGestionAnexos">
-                <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
-                <ScalarProperty Name="IntPesoArchivo" ColumnName="IntPesoArchivo" />
-                <ScalarProperty Name="IntProceso" ColumnName="IntProceso" />
-                <ScalarProperty Name="StrUrlArchivo" ColumnName="StrUrlArchivo" />
-                <ScalarProperty Name="StrNombreArchivo" ColumnName="StrNombreArchivo" />
-                <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
-                <ScalarProperty Name="StrIdArchivo" ColumnName="StrIdArchivo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

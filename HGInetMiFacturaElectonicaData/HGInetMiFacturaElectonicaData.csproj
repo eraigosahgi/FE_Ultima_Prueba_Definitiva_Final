@@ -143,9 +143,6 @@
     <Compile Include="Modelo\TblFormatos.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
-    <Compile Include="Modelo\TblGestionAnexos.cs">
-      <DependentUpon>ModeloDatos.tt</DependentUpon>
-    </Compile>
     <Compile Include="Modelo\TblOpciones.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
