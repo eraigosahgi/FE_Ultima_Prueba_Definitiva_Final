@@ -131,6 +131,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
 
+						//Asignación de Cufe a documento_obj 
+						documento_obj.Cufe = documento_result.CUFE;
+
+						// almacena Formato
+						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+
+						// almacena Anexos enviados
+						if (documento_obj.ArchivoAnexos != null)
+						{
+							respuesta = GuardarAnexo(documento_obj.ArchivoAnexos, documentoBd, ref respuesta, ref documento_result);
+							ValidarRespuesta(respuesta);
+						}
+
 
 						Ctl_Empresa empresa_config = new Ctl_Empresa();
 
@@ -187,14 +201,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							LogExcepcion.Guardar(excepcion);
 							throw excepcion;
 						}
-
-						//Asignación de Cufe a documento_obj 
-						documento_obj.Cufe = documento_result.CUFE;
-
-						// almacena Formato
-						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
-
 
 						// firma el xml
 						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);

@@ -191,6 +191,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Número de identificación del proveedor tecnológico 
 		/// </summary>
 		public string IdentificacionProveedor { get; set; }
+
+		/// <summary>
+		/// Archivos anexos
+		/// </summary>
+		public Anexo ArchivoAnexos { get; set; }
+
 		#endregion
 	}
 }

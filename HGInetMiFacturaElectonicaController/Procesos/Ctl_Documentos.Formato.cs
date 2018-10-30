@@ -61,9 +61,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
 
 							documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
-
-							Ctl_Documento documento_tmp = new Ctl_Documento();
-							documentoBd = documento_tmp.Actualizar(documentoBd);
 						}
 
 						generar_pdf = false;
@@ -161,10 +158,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+					
 					//Actualiza el registro en la base de datos.
-					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
-					Ctl_Documento documento_tmp = new Ctl_Documento();
-					documentoBd = documento_tmp.Actualizar(documentoBd);
+					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;					
 				}
 
 

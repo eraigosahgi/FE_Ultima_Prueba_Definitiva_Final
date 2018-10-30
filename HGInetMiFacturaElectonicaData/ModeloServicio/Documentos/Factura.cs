@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetMiFacturaElectonicaData.ModeloServicio.General;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -201,6 +202,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Número de identificación del proveedor tecnológico 
 		/// </summary>
 		public string IdentificacionProveedor { get; set; }
+
+		/// <summary>
+		/// Archivos anexos del documento
+		/// </summary>
+		public Anexo ArchivoAnexos { get; set; }
+		
 
 		#endregion
 

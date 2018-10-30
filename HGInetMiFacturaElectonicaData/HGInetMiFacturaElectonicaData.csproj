@@ -94,6 +94,7 @@
     <Compile Include="ModeloServicio\Documentos\Factura.cs" />
     <Compile Include="ModeloServicio\Documentos\NotaCredito.cs" />
     <Compile Include="ModeloServicio\Documentos\NotaDebito.cs" />
+    <Compile Include="ModeloServicio\General\Anexo.cs" />
     <Compile Include="ModeloServicio\General\DestinatarioEmail.cs" />
     <Compile Include="ModeloServicio\General\ExtensionDian.cs" />
     <Compile Include="ModeloServicio\General\Formato.cs" />

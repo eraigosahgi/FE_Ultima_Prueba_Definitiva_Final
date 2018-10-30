@@ -1,0 +1,99 @@
+﻿using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
+using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
+using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Objetos;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HGInetMiFacturaElectonicaController.Procesos
+{
+	public partial class Ctl_Documentos
+	{
+
+		/// <summary>
+		/// Guarda el formato PDF del documento
+		/// </summary>
+		/// <param name="documento_obj">información del documento</param>
+		/// <param name="documentoBd">información del documento en base de datos</param>
+		/// <param name="respuesta">datos de respuesta del documento</param>
+		/// <param name="documento_result">información del proceso interno del documento</param>
+		/// <returns>información adicional de respuesta del documento</returns>
+		public static DocumentoRespuesta GuardarAnexo(Anexo anexo, TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+		{
+
+			try
+			{
+				if (anexo != null)
+				{
+
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					// ruta física de los adjuntos
+					string carpeta_adjuntos = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+					carpeta_adjuntos = string.Format(@"{0}\{1}", carpeta_adjuntos, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos);
+
+					// valida la existencia de la carpeta
+					carpeta_adjuntos = Directorio.CrearDirectorio(carpeta_adjuntos);
+
+					// ruta del archivo
+					string ruta_adjuntos = string.Format("{0}{1}.zip", carpeta_adjuntos, documento_result.NombreXml);
+
+					// url pública del Anexo
+					string url_ppal_anexo = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+
+
+					if (!string.IsNullOrEmpty(anexo.Archivo))
+					{
+
+						//convierte el array de byte en archivo
+						File.WriteAllBytes(ruta_adjuntos, Convert.FromBase64String(anexo.Archivo));
+
+						if (!Archivo.ValidarExistencia(ruta_adjuntos))
+							throw new ApplicationException(string.Format("No se encontro el archivo {0}", ruta_adjuntos));
+
+						FileInfo adjunto = new FileInfo(ruta_adjuntos);
+
+						//Valida que el archivo no supere el peso de 2MB
+						if (adjunto.Length > Convert.ToInt32(Constantes.TamanoAnexo))
+						{
+							Archivo.Borrar(ruta_adjuntos);
+							throw new ApplicationException("El tamaño del archivo zip supera el maximo permitido");
+
+						}
+
+						respuesta.UrlAnexo = string.Format(@"{0}/{1}/{2}.zip", url_ppal_anexo, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos, documento_result.NombreXml);
+						documentoBd.IntPesoAnexo = Convert.ToInt32(adjunto.Length);
+
+					}
+					else if (!string.IsNullOrEmpty(anexo.Url))
+					{
+						respuesta.UrlAnexo = anexo.Url;
+					}
+
+					documentoBd.StrUrlAnexo = respuesta.UrlAnexo;
+					documentoBd.StrObservacionAnexo = anexo.Anotacion;
+
+					//Ctl_Documento documento_tmp = new Ctl_Documento();
+					//documentoBd = documento_tmp.Actualizar(documentoBd);
+				}
+
+			}
+			catch (Exception excepcion)
+			{
+				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del archivo Anexo. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+			}
+
+			return respuesta;
+
+		}
+
+	}
+}

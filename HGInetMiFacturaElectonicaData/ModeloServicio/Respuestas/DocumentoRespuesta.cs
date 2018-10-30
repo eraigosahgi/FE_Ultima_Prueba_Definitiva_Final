@@ -87,9 +87,14 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
 		public string UrlPdf { get; set; }
 
-        /// <summary>
-        /// Fecha del último proceso del documento realizado por la Plataforma
-        /// </summary>
+		/// <summary>
+		/// Ruta http de los archivos anexos relacionado con el documento.
+		/// </summary>
+		public string UrlAnexo { get; set; }
+
+		/// <summary>
+		/// Fecha del último proceso del documento realizado por la Plataforma
+		/// </summary>
 		public DateTime FechaUltimoProceso { get; set; }
 
         /// <summary>
