@@ -17,7 +17,7 @@ var myInterceptor = function ($q) {
             if (rejection.data.ExceptionMessage == "No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.") {
                 sesionexpiro();
             }
-            return $q.reject(rejection.data.ExceptionMessage);
+            return $q.reject(rejection);
         }
     }
 }

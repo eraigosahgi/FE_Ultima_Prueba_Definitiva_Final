@@ -115,6 +115,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 240.
+        /// </summary>
+        public static string HorasAcuseTacitoInteroperabilidad {
+            get {
+                return ResourceManager.GetString("HorasAcuseTacitoInteroperabilidad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 811021438.
         /// </summary>
         public static string NitResolucionconPrefijo {

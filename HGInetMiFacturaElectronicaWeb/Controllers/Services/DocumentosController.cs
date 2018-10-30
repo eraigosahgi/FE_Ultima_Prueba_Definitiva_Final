@@ -301,7 +301,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Sesion.ValidarSesion();
 
-				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				//PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<TblDocumentos> datos = ctl_documento.ObtenerAcuseTacito(codigo_facturador, numero_documento, codigo_adquiriente);
 

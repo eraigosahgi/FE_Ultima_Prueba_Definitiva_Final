@@ -23,26 +23,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
             try
             {    
-
                 var jobjeto = (dynamic)ListaPagos;
 
                 string ListaDoc = jobjeto.ListaPagos;                
 
-                List<ObjetoConsultaPago> ConfigPago = new JavaScriptSerializer().Deserialize<List<ObjetoConsultaPago>>(ListaDoc);
-               
-               
-                
-
+                List<ObjetoConsultaPago> ConfigPago = new JavaScriptSerializer().Deserialize<List<ObjetoConsultaPago>>(ListaDoc);                                         
                 foreach (var item in ConfigPago)
                 {
                     //
 
                 }
-
-                
-
-                              
-
                 return Ok();
             }
             catch (Exception excepcion)
@@ -50,8 +40,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
-
-
         }
 
 

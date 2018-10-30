@@ -138,6 +138,10 @@
     <value>notificaciones@mifacturaenlinea.com.co</value>
     <comment>email del remitente</comment>
   </data>
+  <data name="HorasAcuseTacitoInteroperabilidad" xml:space="preserve">
+    <value>240</value>
+    <comment>Son 10 dias de acuse tacito entre proveedores tecnologicos</comment>
+  </data>
   <data name="NitResolucionconPrefijo" xml:space="preserve">
     <value>811021438</value>
     <comment>Nit de pruebas para Resolucion con Prefijo</comment>

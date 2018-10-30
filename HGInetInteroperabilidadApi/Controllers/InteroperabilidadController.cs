@@ -83,7 +83,7 @@ namespace WebApi.Jwt.Controllers
         /// <returns></returns>
         [JwtAuthentication]
         [HttpGet]
-        [Route("interoperabilidad/api/v1_0/Consultar/{uuid}")]
+        [Route("interoperabilidad/api/v1_0/consultar/{uuid}")]
         public HttpResponseMessage Consultar(string uuid)
         {
 
@@ -200,7 +200,7 @@ namespace WebApi.Jwt.Controllers
         /// <returns></returns>
         [JwtAuthentication]
         [HttpPost]
-        [Route("interoperabilidad/api/v1_0/Registrar")]
+        [Route("interoperabilidad/api/v1_0/registrar")]
         public HttpResponseMessage Registrar(RegistroListaDoc registroRespuesta)
         {
             try

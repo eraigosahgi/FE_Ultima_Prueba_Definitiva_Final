@@ -324,7 +324,7 @@ namespace HGInetInteroperabilidad.Procesos
                             case 414://Contine mas de 100                                                                
                                 {
                                     TblDocumentos doc = new TblDocumentos();
-                                    RespListaCodigo.mensaje = Respuesta.mensajeGlobal;
+                                    RespListaCodigo.mensaje = string.Format("error {0} Mensaje {1}",code, Respuesta.mensajeGlobal);
                                     RespCodigo.Respuesta = RespListaCodigo;
                                     RespCodigo.Documento = doc;
                                     RespCodigo.MensajeZip = Respuesta.mensajeGlobal;

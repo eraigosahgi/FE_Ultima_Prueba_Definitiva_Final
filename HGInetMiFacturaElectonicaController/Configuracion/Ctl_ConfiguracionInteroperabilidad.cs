@@ -11,56 +11,56 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
-	public class Ctl_ConfiguracionInteroperabilidad : BaseObject<TblConfiguracionInteroperabilidad>
-	{
-		#region Constructores 
-		public Ctl_ConfiguracionInteroperabilidad() : base(new ModeloAutenticacion()) { }
-		public Ctl_ConfiguracionInteroperabilidad(ModeloAutenticacion autenticacion) : base(autenticacion) { }
-		public Ctl_ConfiguracionInteroperabilidad(string servidor, string basedatos, string usuario, string clave) : base(servidor, basedatos, usuario, clave) { }
-		#endregion
+    public class Ctl_ConfiguracionInteroperabilidad : BaseObject<TblConfiguracionInteroperabilidad>
+    {
+        #region Constructores 
+        public Ctl_ConfiguracionInteroperabilidad() : base(new ModeloAutenticacion()) { }
+        public Ctl_ConfiguracionInteroperabilidad(ModeloAutenticacion autenticacion) : base(autenticacion) { }
+        public Ctl_ConfiguracionInteroperabilidad(string servidor, string basedatos, string usuario, string clave) : base(servidor, basedatos, usuario, clave) { }
+        #endregion
 
-		/// <summary>
-		/// Obtiene la configuración con la identificacion del proveedor tecnológico
-		/// </summary>
-		/// <param name="identificacion">Identificacion del proveedor tecnológico</param>
-		/// <returns>configuración</returns>
-		public TblConfiguracionInteroperabilidad Obtener(string identificacion)
-		{
+        /// <summary>
+        /// Obtiene la configuración con la identificacion del proveedor tecnológico
+        /// </summary>
+        /// <param name="identificacion">Identificacion del proveedor tecnológico</param>
+        /// <returns>configuración</returns>
+        public TblConfiguracionInteroperabilidad Obtener(string identificacion)
+        {
 
-			var datos = (from item in context.TblConfiguracionInteroperabilidad
-						 where item.StrIdentificacion.Equals(identificacion)
-						 select item).FirstOrDefault();
+            var datos = (from item in context.TblConfiguracionInteroperabilidad
+                         where item.StrIdentificacion.Equals(identificacion)
+                         select item).FirstOrDefault();
 
-			return datos;
-		}
+            return datos;
+        }
 
-		/// <summary>
-		/// Obtiene la configuración con el id de seguridad del proveedor tecnológico
-		/// </summary>
-		/// <param name="identificacion">Identificacion del proveedor tecnológico</param>
-		/// <returns>configuración</returns>
-		public TblConfiguracionInteroperabilidad Obtener(Guid id_seguridad)
-		{
-			var datos = (from item in context.TblConfiguracionInteroperabilidad
-						 where item.StrIdSeguridad.Equals(id_seguridad)
-						 select item).FirstOrDefault();
+        /// <summary>
+        /// Obtiene la configuración con el id de seguridad del proveedor tecnológico
+        /// </summary>
+        /// <param name="identificacion">Identificacion del proveedor tecnológico</param>
+        /// <returns>configuración</returns>
+        public TblConfiguracionInteroperabilidad Obtener(Guid id_seguridad)
+        {
+            var datos = (from item in context.TblConfiguracionInteroperabilidad
+                         where item.StrIdSeguridad.Equals(id_seguridad)
+                         select item).FirstOrDefault();
 
-			return datos;
-		}
+            return datos;
+        }
 
-		/// <summary>
-		/// Obtiene la lista de proveedores
-		/// </summary>
-		/// <param name="identificacion"></param>
-		/// <returns></returns>
-		public List<TblConfiguracionInteroperabilidad> ObtenerProveedores(string identificacion)
-		{
-			var datos = (from item in context.TblConfiguracionInteroperabilidad
-						 where item.StrIdentificacion.Equals(identificacion) || identificacion.Equals("*")
-						 select item).ToList();
+        /// <summary>
+        /// Obtiene la lista de proveedores
+        /// </summary>
+        /// <param name="identificacion"></param>
+        /// <returns></returns>
+        public List<TblConfiguracionInteroperabilidad> ObtenerProveedores(string identificacion)
+        {
+            var datos = (from item in context.TblConfiguracionInteroperabilidad
+                         where item.StrIdentificacion.Equals(identificacion) || identificacion.Equals("*")
+                         select item).ToList();
 
-			return datos;
-		}
+            return datos;
+        }
 
 
         /// <summary>
@@ -85,15 +85,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <param name="clave">clave sin encripción</param>
         /// <returns>datos de configuración si es encontrado o null si no</returns>
         public TblConfiguracionInteroperabilidad Validar(string usuario, string clave)
-		{
-			// se encripta la clave en SHA256 para comparación con la base de datos
-			string clave_sha256 = Encriptar.Encriptar_SHA256(clave);            
+        {
+            // se encripta la clave en SHA256 para comparación con la base de datos
+            string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
             TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
-													   where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
-                                                       && item.BitActivo==true
-													   select item).FirstOrDefault();
-			return datos;
-		}
+                                                       where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
+                                                       && item.BitActivo == true
+                                                       select item).FirstOrDefault();
+            return datos;
+        }
 
 
 
@@ -105,10 +105,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		public List<TblDocumentos> ObtenerDocumentosProveedores(string IdentificacionProveedor)
         {
             int DocPendiente = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
-            int AcusePendiente = ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();            
+            int AcusePendiente = ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();
 
             List<TblDocumentos> Doc = (from doc in context.TblDocumentos
-                                       where (doc.IntIdEstado == DocPendiente || doc.IntIdEstado == AcusePendiente)                                       
+                                       where (doc.IntIdEstado == DocPendiente || doc.IntIdEstado == AcusePendiente)
                                        select doc).ToList();
 
 
@@ -135,10 +135,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="usuario">usuario</param>
 		/// <param name="clave">clave sin encripción</param>
 		/// <returns>datos de configuración si es encontrado o null si no</returns>
-		public TblConfiguracionInteroperabilidad CambiarContraseña(string usuario, string clave,string NuevaClave)
+		public TblConfiguracionInteroperabilidad CambiarContraseña(string usuario, string clave, string NuevaClave)
         {
             // se encripta la clave en SHA256 para comparación con la base de datos
-            string clave_sha256 = Encriptar.Encriptar_SHA256(clave);            
+            string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
             TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
                                                        where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
                                                        select item).FirstOrDefault();
@@ -154,58 +154,72 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
             return datos;
         }
-
-
-
-
-        public TblConfiguracionInteroperabilidad GuardarProveedor(string StrIdentificacion, string StrIdSeguridad, string StrRazonSocial, string StrMail, string StrTelefono, string StrObservaciones, string StrUsuario, string StrClave, string StrHgiUsuario, string StrHgiClave, string StrUrlApi, string StrUrlFtp, bool BitActivo)
+        /// <summary>
+        /// Guarda un Proveedor tecnologio enviandole una lista de parametros
+        /// </summary>
+        /// <param name="StrIdentificacion"></param>
+        /// <param name="StrIdSeguridad"></param>
+        /// <param name="StrRazonSocial"></param>
+        /// <param name="StrMail"></param>
+        /// <param name="StrTelefono"></param>
+        /// <param name="StrObservaciones"></param>
+        /// <param name="StrUsuario"></param>
+        /// <param name="StrClave"></param>
+        /// <param name="StrHgiUsuario"></param>
+        /// <param name="StrHgiClave"></param>
+        /// <param name="StrUrlApi"></param>
+        /// <param name="StrUrlFtp"></param>
+        /// <param name="BitActivo"></param>
+        /// <param name="FechaExpProveedor"></param>
+        /// <param name="FechaExpHgi"></param>
+        /// <returns></returns>
+        public TblConfiguracionInteroperabilidad GuardarProveedor(string StrIdentificacion, string StrIdSeguridad, string StrRazonSocial, string StrMail, string StrTelefono, string StrObservaciones, string StrUsuario, string StrClave, string StrHgiUsuario, string StrHgiClave, string StrUrlApi, string StrUrlFtp, bool BitActivo, DateTime FechaExpProveedor, DateTime FechaExpHgi)
         {
 
-            //TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
-            //                                           where item.StrIdentificacion.Equals(StrIdentificacion)
-            //                                           select item).FirstOrDefault();
-
-            //if (datos != null)
-            //{
-            //   return null;
-            //}else
-            //{
+            try
+            {
                 TblConfiguracionInteroperabilidad Proveedor = new TblConfiguracionInteroperabilidad();
 
                 Proveedor.StrIdentificacion = StrIdentificacion;
-                Proveedor.StrIdSeguridad = Guid.Parse(StrIdSeguridad);
+                Proveedor.StrIdSeguridad = Guid.NewGuid();
                 Proveedor.StrRazonSocial = StrRazonSocial;
                 Proveedor.StrMail = StrMail;
                 Proveedor.StrTelefono = StrTelefono;
-                Proveedor.StrObservaciones = StrObservaciones;
-                //string StrUsuario, string StrClave, string StrHgiUsuario, string StrHgiClave, string StrUrlApi, string StrUrlFtp, bool BitActivo
+                Proveedor.StrObservaciones = (string.IsNullOrEmpty(StrObservaciones))? string.Empty: StrObservaciones;
                 Proveedor.StrUsuario = StrUsuario;
-                Proveedor.StrClave = StrClave;
+                Proveedor.StrClave = Encriptar.Encriptar_SHA256(StrClave);
                 Proveedor.StrHgiUsuario = StrUsuario;
                 Proveedor.StrHgiClave = StrClave;
-                Proveedor.StrUrlApi = StrUrlApi;
+                Proveedor.StrUrlApi = Directorio.ValidarUrl(StrUrlApi);
                 Proveedor.StrUrlFtp = StrUrlFtp;
                 Proveedor.BitActivo = BitActivo;
-
-                Proveedor.DatFechaActualizacion = DateTime.Now;
-
-                Proveedor.DatFechaExpiracion = Fecha.GetFecha().AddYears(1); 
+                Proveedor.DatFechaActualizacion = Fecha.GetFecha();
+                Proveedor.DatFechaExpiracion = FechaExpProveedor;
                 Proveedor.DatFechaIngreso = Fecha.GetFecha();
                 Proveedor.DatHgiFechaToken = Fecha.GetFecha().AddDays(1);
-                Proveedor.DatHgiFechaExpiracion = Fecha.GetFecha().AddYears(1);
+                Proveedor.DatHgiFechaExpiracion = FechaExpHgi;
 
                 Proveedor = this.Add(Proveedor);
-
                 return Proveedor;
-            //}
+            }
+            catch (Exception)
+            {
 
-                       
+                throw;
+            }
+        }  
+        
+        
+        /// <summary>
+        /// Edita un proveedor
+        /// </summary>
+        /// <param name="Proveedor">Objeto tblConfiguracion de interoperabilidad</param>
+        /// <returns></returns>
+        public TblConfiguracionInteroperabilidad Editar(TblConfiguracionInteroperabilidad Proveedor)
+        {
+            Proveedor = this.Edit(Proveedor);
+
+            return Proveedor;
         }
-
-
-
-
-
-
     }
 }

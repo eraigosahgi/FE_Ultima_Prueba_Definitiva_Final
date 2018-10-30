@@ -26,7 +26,7 @@ namespace HGInetInteroperabilidad.Servicios
 			{
 
 				string postData = usuario.ToString();
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/login");
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(ValidarUrl(Dominio) + "interoperabilidad/api/v1_0/login");
 
 				request.Method = "POST";
 				request.ContentType = "application/json";
@@ -72,7 +72,7 @@ namespace HGInetInteroperabilidad.Servicios
 			
 			try
 			{
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/consultar/" + UUID);
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(ValidarUrl(Dominio) + "interoperabilidad/api/v1_0/consultar/" + UUID);
 
 				request.Method = "GET";
 				request.ContentType = "application/json; charset=utf-8";
@@ -124,7 +124,7 @@ namespace HGInetInteroperabilidad.Servicios
 			try
 			{
 
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/cambioContrasena");
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(ValidarUrl(Dominio) + "interoperabilidad/api/v1_0/cambioContrasena");
 
 				request.Method = "PUT";
 				request.ContentType = "application/json; charset=utf-8";
@@ -178,7 +178,7 @@ namespace HGInetInteroperabilidad.Servicios
 		{
 			try
 			{
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/registrar");
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(ValidarUrl(Dominio) + "interoperabilidad/api/v1_0/registrar");
 
 				request.Method = "POST";
 				request.ContentType = "application/json; charset=utf-8";
@@ -218,7 +218,7 @@ namespace HGInetInteroperabilidad.Servicios
 			//Consultar documentos
 			try
 			{
-				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Dominio + "interoperabilidad/api/v1_0/application/" + UUID);
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(ValidarUrl(Dominio) + "interoperabilidad/api/v1_0/application/" + UUID);
 
 				request.Method = "GET";
 				request.ContentType = "application/json; charset=utf-8";

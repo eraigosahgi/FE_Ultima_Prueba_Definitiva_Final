@@ -17,13 +17,48 @@ var AppSrvProveedor = angular.module('AppSrvProveedor', ['dx'])
         });
     }
 
-    //Obtiene un proveedor en especifico
-    this.ObtenerProveedores = function (identificacion) {
+    //Obtiene un proveedor en especifico    
+    this.ObtenerProveedoresId = function (identificacion) {
         return $http.get('/api/ObtenerProveedores?identificacion=' + identificacion).then(function (response) {
             return response.data;
         }, function (response) {
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
             return $q.reject(response.data);
         });
+    }    
+   
+    //Obtiene un proveedor en especifico    
+    this.GuardarProveedor = function (datos) {        
+
+        return $http.post('/api/GuardarProveedor?' + datos).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });       
     }
+
+
+    //Valida la api de un proveedor
+    this.Validarapi = function (u,p,api) {
+        return $http.get('/api/Validarapi?u=' + u + '&p=' + p + '&api=' + api).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);
+            return $q.reject(response.data);
+        });
+    }
+
+    //Valida la api de un proveedor
+    this.Validarsftp = function (u, p, sftp) {
+        return $http.get('/api/Validarsftp?u=' + u + '&p=' + p + '&sftp=' + sftp).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);
+            return $q.reject(response.data);
+        });
+    }
+
+    
+
 });

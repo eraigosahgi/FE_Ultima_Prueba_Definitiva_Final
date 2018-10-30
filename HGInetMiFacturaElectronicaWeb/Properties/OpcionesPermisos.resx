@@ -144,6 +144,9 @@
   <data name="ConsultaPagosFacturador" xml:space="preserve">
     <value>1313</value>
   </data>
+  <data name="ConsultaProveedores" xml:space="preserve">
+    <value>1363</value>
+  </data>
   <data name="DocumetosAdmin" xml:space="preserve">
     <value>1343</value>
   </data>
