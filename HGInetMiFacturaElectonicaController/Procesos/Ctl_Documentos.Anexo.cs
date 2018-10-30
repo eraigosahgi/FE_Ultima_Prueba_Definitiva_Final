@@ -54,7 +54,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 
 						//convierte el array de byte en archivo
-						File.WriteAllBytes(ruta_adjuntos, Convert.FromBase64String(anexo.Archivo));
+						try
+						{
+							File.WriteAllBytes(ruta_adjuntos, Convert.FromBase64String(anexo.Archivo));
+						}
+						catch (Exception e)
+						{
+
+							if (e.Message.Contains("Longitud no válida"))
+								throw new ApplicationException("El tamaño del archivo zip supera el maximo permitido");
+
+						}
 
 						if (!Archivo.ValidarExistencia(ruta_adjuntos))
 							throw new ApplicationException(string.Format("No se encontro el archivo {0}", ruta_adjuntos));
