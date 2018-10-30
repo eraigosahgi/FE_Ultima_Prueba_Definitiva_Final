@@ -218,4 +218,8 @@
     <value>573163494083,573136469239,573104935257,573053954360</value>
     <comment>Números de celulares para auditoría por SMS</comment>
   </data>
+  <data name="TamanoAnexo" xml:space="preserve">
+    <value>2097152</value>
+    <comment>Tamaño máximo de archivo permitido en los Anexos</comment>
+  </data>
 </root>

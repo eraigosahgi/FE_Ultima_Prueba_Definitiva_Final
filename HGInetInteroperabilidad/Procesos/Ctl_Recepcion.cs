@@ -252,7 +252,7 @@ namespace HGInetInteroperabilidad.Procesos
 								FileInfo adjunto = new FileInfo(ruta_archivo_zip);
 
 								//Valida que el archivo no supere el peso de 2MB
-								if (adjunto.Length < 2097152)
+								if (adjunto.Length < Convert.ToInt32(Constantes.TamanoAnexo))
 								{
 									try
 									{
@@ -634,7 +634,7 @@ namespace HGInetInteroperabilidad.Procesos
 				string UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
 
 				// url pública del zip
-				string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
+				string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos, nombre_archivo);
 
 				// url pública del pdf
 				if (string.IsNullOrEmpty(url_ppal_pdf))
@@ -675,7 +675,7 @@ namespace HGInetInteroperabilidad.Procesos
 				tbl_documento.StrIdInteroperabilidad = tracking;
 				tbl_documento.StrUrlArchivoUbl = UrlXmlUbl;
 				tbl_documento.StrUrlArchivoPdf = url_ppal_pdf;
-				tbl_documento.StrUrlArchivoZip = url_ppal_zip;
+				tbl_documento.StrUrlAnexo = url_ppal_zip;
 				tbl_documento.StrProveedorReceptor = Constantes.NitResolucionsinPrefijo;
 				tbl_documento.StrProveedorEmisor = proveedor_emisor;
 
@@ -715,7 +715,7 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					else
 					{
-						carpeta = string.Format(@"{0}\{1}", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAdjuntos);
+						carpeta = string.Format(@"{0}\{1}", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos);
 					}
 				}
 

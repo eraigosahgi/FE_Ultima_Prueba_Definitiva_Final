@@ -293,5 +293,14 @@ namespace HGInetMiFacturaElectonicaController.Properties {
                 return ResourceManager.GetString("SmsCelulares", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 2097152.
+        /// </summary>
+        public static string TamanoAnexo {
+            get {
+                return ResourceManager.GetString("TamanoAnexo", resourceCulture);
+            }
+        }
     }
 }
