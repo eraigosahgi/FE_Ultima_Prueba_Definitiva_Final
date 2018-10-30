@@ -369,9 +369,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
         }
 
-
-
-
         [HttpGet]
         [Route("api/Validarsftp")]
         public IHttpActionResult Validarsftp(string u, string p, string sftp)

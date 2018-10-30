@@ -121,7 +121,7 @@ namespace HGInetInteroperabilidad.Procesos
                     PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
                     //Aqui busco la ubicacion de la carpeta del proveedor tecnologico, esperar por la ruta real
-                    string RutaProveedor = (string.Format("{0}{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEnvio));
+                    string RutaProveedor = (string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEnvio));
 
                     Directorio.CrearDirectorio(RutaProveedor);
 
@@ -267,8 +267,7 @@ namespace HGInetInteroperabilidad.Procesos
                         bool ArchivoEnviado = false;
                         try
                         {
-                            ArchivoEnviado = Clienteftp.SubirArchivoSftp(ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido), NombreArchivoComprimido);
-                            //ArchivoEnviado =Clienteftp.SubirArchivoFTP(string.Format("{0}//{1}", ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, NombreArchivoComprimido), ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido));
+                            ArchivoEnviado = Clienteftp.SubirArchivoSftp(ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido), NombreArchivoComprimido);                        
                         }
                         catch (Exception excepcion)
                         {
@@ -279,9 +278,7 @@ namespace HGInetInteroperabilidad.Procesos
                                 throw new ApplicationException(string.Format("Problemas con el FTP : {0}", excepcion));
                             }
                         }
-
-                        //Archivo.CopiarArchivo(string.Format("{0}\\{1}", RutaProveedor, NombreArchivoComprimido), string.Format("{0}\\{1}", ruta_fisica, NombreArchivoComprimido));
-
+                        
                         //Aqui elimino el archivo Zip si todo esta OK
                         try
                         {
@@ -295,7 +292,6 @@ namespace HGInetInteroperabilidad.Procesos
 
                         //Aqui se debe hacer peticion webapi
                         HttpWebResponse RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
-
 
                         code = RespuestaRegistroApi.StatusCode.GetHashCode();
                         string respuesta;
@@ -314,58 +310,39 @@ namespace HGInetInteroperabilidad.Procesos
                         switch (code)
                         {
                             case 401://Error de autenticacion
-
                             case 406://No tiene convenio
-
                             case 500://Error interno
-
                             case 415:
-
                             case 414://Contine mas de 100                                                                
                                 {
                                     TblDocumentos doc = new TblDocumentos();
                                     RespListaCodigo.mensaje = string.Format("error {0} Mensaje {1}",code, Respuesta.mensajeGlobal);
                                     RespCodigo.Respuesta = RespListaCodigo;
                                     RespCodigo.Documento = doc;
-                                    RespCodigo.MensajeZip = Respuesta.mensajeGlobal;
+                                    RespCodigo.MensajeZip = string.Format("{0},  Objeto respuesta:{1} ",Respuesta.mensajeGlobal, respuesta);
                                     DocumetoRespuesta.Add(RespCodigo);
                                     return DocumetoRespuesta;
                                 }
                         }
-
-
-
-
-
-
-
                         //Aqui guardo la respuesta del paquete, se debe crear una lista para tener un solo encabezado
                         ListaResultadoVista[0].MensajeZip = Respuesta.mensajeGlobal;
-
                         if (Respuesta.trackingIds != null)
                         {
-
                             foreach (var Detalle in Respuesta.trackingIds)
                             {
-
                                 try
                                 {
                                     //Aqui se lee la respuesta de cada uno de los documentos
-
                                     if (Detalle.nombreDocumento != null)
                                     {
                                         RespuestaRegistro Resp = ListaResultadoVista.Where(x => x.Documento.StrUrlArchivoUbl.Equals(Detalle.nombreDocumento)).FirstOrDefault();
-
                                         if (Resp == null)
                                             throw new ApplicationException(string.Format("El nombre del archivo de respuesta, no coincide con el nombre del archivo de la petición : Documento: {0}  Mensaje: {1}", Detalle.nombreDocumento, Detalle.mensaje));
 
                                         Resp.Respuesta = Detalle;
                                         Resp.MensajeZip = Respuesta.mensajeGlobal;
-
                                         int Tipo = 0;
                                         var RespuestaDoc = RegistroEnvio.documentos.Where(x => x.nombre.Equals(Detalle.nombreDocumento));
-
-
                                         //Si el documento no es del proveedor al que envie el documento, debo enviar correo al adquiriente
                                         if (Detalle.codigoError == RespuestaInterOperabilidad.ClienteNoEncontrado.GetHashCode().ToString())
                                         {
@@ -389,19 +366,16 @@ namespace HGInetInteroperabilidad.Procesos
                                                 errorGenerico = excepcion.Message.ToString();
                                                 LogExcepcion.Guardar(excepcion);
                                             }
-
                                         }
                                         else
                                         {
                                             //Busco el tipo de documento  ----Documento o Acuse
                                             foreach (var item in RespuestaDoc)
                                             {
-
                                                 if (item.tipo == Enumeracion.GetEnumObjectByValue<DocumentType>(DocumentType.AcuseDeRecibo.GetHashCode()).ToString())
                                                 {
                                                     Tipo = 1;
                                                 }
-
                                                 break;
                                             }
                                             //Luego Valido si en la respuesta no viene codigo o nombre.  aunque si es acuse, puede venir null el uuid
@@ -417,15 +391,9 @@ namespace HGInetInteroperabilidad.Procesos
                                                 {
                                                     Resp.Documento.IntIdEstado = Actualiza.IntIdEstado;
                                                 }
-
                                             }
-
-
-
                                         }
-
                                         DocumetoRespuesta.Add(Resp);
-
                                     }
                                     else
                                     {
@@ -438,9 +406,7 @@ namespace HGInetInteroperabilidad.Procesos
                                     errorGenerico = excepcion.Message.ToString();
                                     LogExcepcion.Guardar(excepcion);
                                 }
-
                             }
-
                         }
                         else
                         {
@@ -452,7 +418,6 @@ namespace HGInetInteroperabilidad.Procesos
                                     item.Respuesta.mensaje = Respuesta.mensajeGlobal;
                                 }
                             }
-
                             //Agrupo Documento
                             ListaResultadoVista = ListaResultadoVista
                                .GroupBy(p => p.Documento.IntNumero)
@@ -494,7 +459,6 @@ namespace HGInetInteroperabilidad.Procesos
                 RespuestaVacia.MensajeZip = (string.IsNullOrEmpty(Respuesta.mensajeGlobal)) ? string.Format("{0} Revisar Log", errorGenerico) : Respuesta.mensajeGlobal;
                 DocumetoRespuesta.Add(RespuestaVacia);
                 Datos = DocumetoRespuesta;
-
             }
             else
             {
@@ -504,8 +468,6 @@ namespace HGInetInteroperabilidad.Procesos
                    .ToList();
             }
             return Datos;
-
-
         }
 
         /// <summary>
@@ -515,7 +477,6 @@ namespace HGInetInteroperabilidad.Procesos
         /// <returns></returns>
         public static TblDocumentos ActualizaRespuesta(RegistroListaDetalleDocRespuesta Detalle, int Tipo)
         {
-
             TblDocumentos Doc = new TblDocumentos();
             if (Detalle != null)
             {
@@ -525,13 +486,9 @@ namespace HGInetInteroperabilidad.Procesos
                     {
                         return null;
                     }
-
                     Ctl_Documento Documentos = new Ctl_Documento();
-
                     //TblDocumentos Doc=  Documentos.Obtener(NitFacturador.ToString(), NumeroDocumento, Prefijo);
                     Doc = Documentos.Obtenerporxml(Detalle.nombreDocumento);
-
-
                     //Se debe validar si la respuesta es de un documento o de un acuse
                     //Si el documento con el que me estan respondiento, tiene StrIdInteroperabilidad y status 13, entonces actualizo el acuse
                     //if (Doc.StrIdInteroperabilidad ==  Guid.Parse(Detalle.uuid) && Doc.IntIdEstado == (Int16)ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode())
@@ -555,11 +512,9 @@ namespace HGInetInteroperabilidad.Procesos
                             return null;
                         }
                     }
-
                     Documentos.Actualizar(Doc);
                 }
             }
-
             return Doc;
         }
 
@@ -600,8 +555,6 @@ namespace HGInetInteroperabilidad.Procesos
                 {
                     resp = reader.ReadToEnd();
                 }
-
-
                 RespuestaAcuseProceso item_respuesta = new RespuestaAcuseProceso();
 
                 if (code != RespuestaInterLogin.Exitoso.GetHashCode())
@@ -677,18 +630,11 @@ namespace HGInetInteroperabilidad.Procesos
                                     acuse_respuesta = true;
 
                                     HttpWebResponse RespuestaAcuse = Ctl_ClienteWebApi.Inter_ConsultaAcuse(item.StrIdInteroperabilidad.ToString(), Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
-
-
                                     code = RespuestaEstado.StatusCode.GetHashCode();
-
                                     using (StreamReader reader = new StreamReader(RespuestaAcuse.GetResponseStream()))
                                     {
                                         resp = reader.ReadToEnd();
                                     }
-
-
-
-
                                     if (code != RespuestaInterAcuse.AcuseExitoso.GetHashCode())
                                     {
                                         item_respuesta = new RespuestaAcuseProceso()
@@ -707,10 +653,7 @@ namespace HGInetInteroperabilidad.Procesos
                                         lista_respuesta.Add(item_respuesta);
                                         throw new ApplicationException(string.Format("Codigo de Error {0}", code));
                                     }
-
-
                                     AcuseRespuesta obj_RespuestaAcuse = JsonConvert.DeserializeObject<AcuseRespuesta>(resp);
-
                                     //Convierte el mensajeGlobal a Xml
                                     byte[] bytes = Convert.FromBase64String(obj_RespuestaAcuse.mensajeGlobal);
                                     string data = Encoding.UTF8.GetString(bytes);
@@ -757,8 +700,6 @@ namespace HGInetInteroperabilidad.Procesos
                                             if (objeto_acuse != null)
                                             {
                                                 RegistroListaDetalleDocRespuesta respuesta = Ctl_Recepcion.ProcesarAcuse(objeto_acuse, ruta_acuse, nombre_archivo, datos_facturador);
-
-
                                                 string Historia = "";
                                                 int i = 0;
                                                 foreach (var mensaje in obj_RespuestaEstado.historial)
@@ -784,8 +725,6 @@ namespace HGInetInteroperabilidad.Procesos
                                         }
                                         catch (Exception excepcion)
                                         {
-
-
                                             string Historia = "";
                                             int i = 0;
                                             foreach (var mensaje in obj_RespuestaEstado.historial)
@@ -795,8 +734,6 @@ namespace HGInetInteroperabilidad.Procesos
                                                 Historia += string.Format("<br/> Fecha :{0}", Convert.ToDateTime(mensaje.timeStamp).ToString("yyyy-MM-dd HH:mm"));
                                                 Historia += "<br/>";
                                             }
-
-
                                             item_respuesta = new RespuestaAcuseProceso()
                                             {
                                                 Numero = item.IntNumero,
@@ -850,9 +787,6 @@ namespace HGInetInteroperabilidad.Procesos
             return lista_respuesta;
         }
 
-
-
-
         /// <summary>
         /// Retorna un base64 con el contenido del archivo xml acuse.
         /// </summary>
@@ -872,11 +806,9 @@ namespace HGInetInteroperabilidad.Procesos
             string Ruta_Acuse = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Doc.TblEmpresasFacturador.StrIdSeguridad.ToString());
             Ruta_Acuse = string.Format(@"{0}\{1}\{2}", Ruta_Acuse, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, Path.GetFileName(Doc.StrUrlAcuseUbl));
 
-
             string readText = File.ReadAllText(Ruta_Acuse);
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(readText);
             string archivo = System.Convert.ToBase64String(plainTextBytes);
-
 
             //Se debe enviar esta respuesta
             MensajeGlobal Respuesta = new MensajeGlobal();
