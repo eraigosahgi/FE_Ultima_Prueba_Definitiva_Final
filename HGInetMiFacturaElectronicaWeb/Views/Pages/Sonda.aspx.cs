@@ -1,9 +1,12 @@
 ﻿using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using LibreriaGlobalHGInet.WebApi;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -16,6 +19,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
         {
             try
             {
+
                 Ctl_Documento ctl_documento = new Ctl_Documento();
                 List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar();
 
@@ -23,7 +27,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 
                 List<DocumentoRespuesta> datosProcesar = HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.Procesar(datos);
 
-                lblResultado.Text =  string.Format("Proceso Finalizado, Total documentos {0}",datos.Count().ToString());
+                lblResultado.Text = string.Format("Proceso Finalizado, Total documentos {0}", datos.Count().ToString());
 
             }
             catch (Exception ex)
