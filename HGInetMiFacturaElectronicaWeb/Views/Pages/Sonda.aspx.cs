@@ -23,7 +23,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 
                 List<DocumentoRespuesta> datosProcesar = HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.Procesar(datos);
 
-                lblResultado.Text = "Proceso Finalizado";
+                lblResultado.Text =  string.Format("Proceso Finalizado, Total documentos {0}",datos.Count().ToString());
 
             }
             catch (Exception ex)
