@@ -2,6 +2,7 @@
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,16 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 
                 foreach (var item in datos)
                 {
-                    datos = ctl_documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+
+                    try
+                    {
+                        var documento = ctl_documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+                    }
+                    catch (Exception excepcion)
+                    {
+
+                        LogExcepcion.Guardar(excepcion);
+                    }
                 }
 
                 lblResultado.Text = string.Format("Documentos procesados: {0} ", datos.Count().ToString());
