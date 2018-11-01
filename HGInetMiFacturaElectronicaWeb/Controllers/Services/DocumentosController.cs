@@ -187,7 +187,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
-					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
+					RespuestaVisible = (d.IntAdquirienteRecibo != 0) ? true : false,
 					CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
@@ -371,8 +371,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				foreach (var item in lista)
 				{
+					try
+					{
+						documento = new Ctl_Documento();
+						datos = documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
 
-					datos = documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+					}
+					catch (Exception ex)
+					{
+						LogExcepcion.Guardar(ex);
+					}
 				}
 
 				return Ok();

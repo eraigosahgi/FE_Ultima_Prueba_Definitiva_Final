@@ -28,7 +28,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 
                     try
                     {
-                        var documento = ctl_documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+						ctl_documento = new Ctl_Documento();
+						var documento = ctl_documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
                     }
                     catch (Exception excepcion)
                     {

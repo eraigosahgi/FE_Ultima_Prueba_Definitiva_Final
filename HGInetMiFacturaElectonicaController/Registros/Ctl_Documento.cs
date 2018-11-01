@@ -450,21 +450,24 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 codigo_adquiriente = "*";
 
             int HATP = Convert.ToInt32(Constantes.HorasAcuseTacitoInteroperabilidad.ToString());
-            
-            DateTime FechaActual = Fecha.GetFecha();        
+
+			int estado_error = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
+
+
+			DateTime FechaActual = Fecha.GetFecha();        
 
             List<TblDocumentos> documentos = (from datos in context.TblDocumentos
                                               join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
                                               join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-                                              where datos.IntAdquirienteRecibo.Equals(0)
+                                              where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado != estado_error
                                               && (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
                                               && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual) 
                                               && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
                                               //********************************************************
                                               || ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo &&  (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
                                               && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh",-HATP, FechaActual) )
-                                              && datos.IntAdquirienteRecibo.Equals(0)
-                                              )                                             
+                                              && datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado != estado_error
+											  )                                             
                                               orderby datos.IntNumero descending
                                               select datos).ToList();                                             
             return documentos;
