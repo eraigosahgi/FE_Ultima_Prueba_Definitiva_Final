@@ -1216,8 +1216,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
             int AcusePendiente = ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();
 
             List<TblDocumentos> Doc = (from doc in context.TblDocumentos
-                                       where (doc.IntIdEstado == DocPendiente || doc.IntIdEstado == AcusePendiente)
-                                       && doc.StrProveedorReceptor.Equals(IdentificacionProveedor) || IdentificacionProveedor.Equals("*")
+                                       where (doc.IntIdEstado == DocPendiente && doc.StrProveedorReceptor.Equals(IdentificacionProveedor)) ||( doc.IntIdEstado == AcusePendiente && doc.StrProveedorEmisor.Equals(IdentificacionProveedor))
+                                        || IdentificacionProveedor.Equals("*")
                                        select doc).ToList();
 
 
