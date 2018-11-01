@@ -83,7 +83,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FacturaCenlada = d.IntIdEstado,
 					PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales == null) ? 0 : (d.TblEmpresasResoluciones?.IntPermiteParciales == true) ? 1 : 0,
 					Telefono = d.TblEmpresasFacturador.StrTelefono,
-					Email = d.TblEmpresasFacturador.StrMail
+					Email = d.TblEmpresasFacturador.StrMail,
+					zip = d.StrUrlAnexo
 				});
 
 				return Ok(retorno);
