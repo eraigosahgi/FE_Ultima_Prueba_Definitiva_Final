@@ -143,8 +143,10 @@ namespace HGInetUBL
 				if (nota_credito_ubl.AccountingCustomerParty.Party.Person != null)
 				{
 					adquiriente.PrimerNombre = nota_credito_ubl.AccountingCustomerParty.Party.Person.FirstName.Value;
-					adquiriente.SegundoNombre = nota_credito_ubl.AccountingCustomerParty.Party.Person.MiddleName.Value;
-					adquiriente.PrimerApellido = nota_credito_ubl.AccountingCustomerParty.Party.Person.FamilyName.Value;
+					if (nota_credito_ubl.AccountingCustomerParty.Party.Person.MiddleName != null)
+						adquiriente.SegundoNombre = nota_credito_ubl.AccountingCustomerParty.Party.Person.MiddleName.Value;
+					if (nota_credito_ubl.AccountingCustomerParty.Party.Person.FamilyName != null)
+						adquiriente.PrimerApellido = nota_credito_ubl.AccountingCustomerParty.Party.Person.FamilyName.Value;
 					adquiriente.RazonSocial = string.Format("{0} {1} {2}", adquiriente.PrimerApellido, adquiriente.PrimerNombre, adquiriente.SegundoNombre);
 				}
 				else
@@ -174,8 +176,10 @@ namespace HGInetUBL
 				if (nota_credito_ubl.AccountingSupplierParty.Party.Person != null)
 				{
 					obligado.PrimerNombre = nota_credito_ubl.AccountingSupplierParty.Party.Person.FirstName.Value;
-					obligado.SegundoNombre = nota_credito_ubl.AccountingSupplierParty.Party.Person.MiddleName.Value;
-					obligado.PrimerApellido = nota_credito_ubl.AccountingSupplierParty.Party.Person.FamilyName.Value;
+					if (nota_credito_ubl.AccountingSupplierParty.Party.Person.MiddleName != null)
+						obligado.SegundoNombre = nota_credito_ubl.AccountingSupplierParty.Party.Person.MiddleName.Value;
+					if (nota_credito_ubl.AccountingSupplierParty.Party.Person.FamilyName != null)
+						obligado.PrimerApellido = nota_credito_ubl.AccountingSupplierParty.Party.Person.FamilyName.Value;
 					obligado.RazonSocial = string.Format("{0} {1} {2}", obligado.PrimerApellido, obligado.PrimerNombre, obligado.SegundoNombre);
 				}
 				else
