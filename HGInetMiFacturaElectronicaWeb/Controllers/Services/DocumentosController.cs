@@ -143,7 +143,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
-                    zip = d.StrUrlArchivoZip
+                    zip = d.StrUrlAnexo
 				});
 
 				return Ok(retorno);
