@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HGInetUBL
@@ -29,29 +30,43 @@ namespace HGInetUBL
 				//Valida el prefijo de la nota credito y captura el numero del documento
 				nota_debito_obj.Prefijo = string.Empty;
 
-				if (nota_debito_ubl.CustomizationID == null)
+				//Valida el prefijo de la nota credito y captura el numero del documento
+				if (interopeabilidad)
 				{
-					nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
+					Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
+
+					nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+
+					nota_debito_obj.Prefijo = nota_debito_ubl.ID.Value.Substring(0, nota_debito_ubl.ID.Value.Length - nota_debito_obj.Documento.ToString().Length);
 				}
 				else
 				{
-					if (nota_debito_ubl.CustomizationID.Value != null)
+
+					if (nota_debito_ubl.CustomizationID == null)
 					{
-						nota_debito_obj.Prefijo = nota_debito_ubl.CustomizationID.Value;
-						string documento = nota_debito_ubl.ID.Value;
-						if (documento.Substring(0, nota_debito_obj.Prefijo.Length).Equals(nota_debito_obj.Prefijo))
-						{
-							nota_debito_obj.Documento = Convert.ToInt64(documento.Substring(nota_debito_obj.Prefijo.Length));
-						}
+						nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
 					}
 					else
 					{
-						nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
+						if (nota_debito_ubl.CustomizationID.Value != null)
+						{
+							nota_debito_obj.Prefijo = nota_debito_ubl.CustomizationID.Value;
+							string documento = nota_debito_ubl.ID.Value;
+							if (documento.Substring(0, nota_debito_obj.Prefijo.Length).Equals(nota_debito_obj.Prefijo))
+							{
+								nota_debito_obj.Documento = Convert.ToInt64(documento.Substring(nota_debito_obj.Prefijo.Length));
+							}
+						}
+						else
+						{
+							nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
+						}
 					}
 				}
 
 				//Capturo la informacion del encabezado del documento
-				nota_debito_obj.Cufe = nota_debito_ubl.UUID.Value;
+				if (nota_debito_ubl.UUID != null)
+					nota_debito_obj.Cufe = nota_debito_ubl.UUID.Value;
 				nota_debito_obj.Fecha = nota_debito_ubl.IssueDate.Value;
 				nota_debito_obj.Moneda = nota_debito_ubl.DocumentCurrencyCode.Value;
 
@@ -158,8 +173,11 @@ namespace HGInetUBL
 				adquiriente.Ciudad = nota_debito_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.CityName.Value;
 				adquiriente.Departamento = nota_debito_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.Department.Value;
 				adquiriente.CodigoPais = nota_debito_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
-				adquiriente.Telefono = nota_debito_ubl.AccountingCustomerParty.Party.Contact.Telephone.Value;
-				adquiriente.Email = nota_debito_ubl.AccountingCustomerParty.Party.Contact.ElectronicMail.Value;
+				if (nota_debito_ubl.AccountingCustomerParty.Party.Contact != null)
+				{
+					adquiriente.Telefono = nota_debito_ubl.AccountingCustomerParty.Party.Contact.Telephone.Value;
+					adquiriente.Email = nota_debito_ubl.AccountingCustomerParty.Party.Contact.ElectronicMail.Value;
+				}
 				//Valida si tiene pagina web
 				if (nota_debito_ubl.AccountingCustomerParty.Party.WebsiteURI.Value != null)
 					adquiriente.PaginaWeb = nota_debito_ubl.AccountingCustomerParty.Party.WebsiteURI.Value;
@@ -190,8 +208,11 @@ namespace HGInetUBL
 				obligado.Ciudad = nota_debito_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.CityName.Value;
 				obligado.Departamento = nota_debito_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.Department.Value;
 				obligado.CodigoPais = nota_debito_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
-				obligado.Telefono = nota_debito_ubl.AccountingSupplierParty.Party.Contact.Telephone.Value;
-				obligado.Email = nota_debito_ubl.AccountingSupplierParty.Party.Contact.ElectronicMail.Value;
+				if (nota_debito_ubl.AccountingSupplierParty.Party.Contact != null)
+				{
+					obligado.Telefono = nota_debito_ubl.AccountingSupplierParty.Party.Contact.Telephone.Value;
+					obligado.Email = nota_debito_ubl.AccountingSupplierParty.Party.Contact.ElectronicMail.Value;
+				}
 				//Valida si tiene pagina web
 				if (nota_debito_ubl.AccountingSupplierParty.Party.WebsiteURI.Value != null)
 					obligado.PaginaWeb = nota_debito_ubl.AccountingSupplierParty.Party.WebsiteURI.Value;
@@ -276,7 +297,8 @@ namespace HGInetUBL
 
 				#region Totales
 				nota_debito_obj.ValorSubtotal = nota_debito_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
-				nota_debito_obj.ValorDescuento = nota_debito_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
+				if (nota_debito_ubl.LegalMonetaryTotal.AllowanceTotalAmount != null)
+					nota_debito_obj.ValorDescuento = nota_debito_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
 				nota_debito_obj.Valor = nota_debito_obj.ValorSubtotal + nota_debito_obj.ValorDescuento;
 				nota_debito_obj.ValorIva = nota_debito_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value;
 				nota_debito_obj.Total = nota_debito_ubl.LegalMonetaryTotal.PayableAmount.Value;
