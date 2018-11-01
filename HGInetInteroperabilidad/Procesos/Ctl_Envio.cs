@@ -177,12 +177,12 @@ namespace HGInetInteroperabilidad.Procesos
                                     RegDocumentoAcuse.nombre = Path.GetFileName(Documento.StrUrlAcuseUbl);
 
 
-                                    // Archivo PDF
-                                    var ArchivoUbl = string.Format(@"{0}\\{1}", RutaArchivosAcuse, Path.GetFileName(Documento.StrUrlAcuseUbl));
+                                    //// Archivo PDF
+                                    //var ArchivoUbl = string.Format(@"{0}\\{1}", RutaArchivosAcuse, Path.GetFileName(Documento.StrUrlAcuseUbl));
 
-                                    string archivo = Encriptar.Archivo_Sha256(string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlAcuseUbl)));
+                                    //string archivo = Encriptar.Archivo_Sha256(string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlAcuseUbl)));
 
-                                    RegDocumentoAcuse.sha256 = archivo.ToLower();
+                                    RegDocumentoAcuse.sha256 = "";
                                     RegDocumentoAcuse.tipo = Enumeracion.GetEnumObjectByValue<DocumentType>(DocumentType.AcuseDeRecibo.GetHashCode()).ToString();
                                     RegDocumentoAcuse.notaDeEntrega = "";
                                     RegDocumentoAcuse.adjuntos = false;
@@ -212,12 +212,12 @@ namespace HGInetInteroperabilidad.Procesos
                                     //Archivo xml
                                     RegDocumentoXml.nombre = Path.GetFileName(Documento.StrUrlArchivoUbl);
 
-                                    // ruta física del xml
-                                    var ArchivoUbl = string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlArchivoUbl));
+                                    //// ruta física del xml
+                                    //var ArchivoUbl = string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlArchivoUbl));
 
-                                    string archivo = Encriptar.Archivo_Sha256(string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlArchivoUbl)));
+                                    //string archivo = Encriptar.Archivo_Sha256(string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlArchivoUbl)));
                                     
-                                    RegDocumentoXml.sha256 = archivo.ToLower() ;
+                                    RegDocumentoXml.sha256 = "" ;
                                     RegDocumentoXml.tipo = Enumeracion.GetEnumObjectByValue<DocumentType>(Documento.IntDocTipo).ToString();
                                     RegDocumentoXml.notaDeEntrega = "";
                                     RegDocumentoXml.adjuntos = false;
@@ -709,7 +709,7 @@ namespace HGInetInteroperabilidad.Procesos
 
                                         //convierte la serialización a objeto Acuse
                                         Acuse objeto_acuse = AcuseXML.Convertir(obj_acuse_serializado);
-
+                                        
                                         try
                                         {
                                             if (objeto_acuse != null)
