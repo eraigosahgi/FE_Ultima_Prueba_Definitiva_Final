@@ -602,6 +602,11 @@ namespace HGInetInteroperabilidad.Procesos
 					// crea el registro en base de datos
 					resolucion = ctl_resolucion.Crear(resolucion);
 				}
+				if (tipo_documento != TipoDocumento.Factura.GetHashCode() || tipo_documento != TipoDocumento.AcuseRecibo.GetHashCode())
+				{
+					documento_obj.NumeroResolucion = resolucion.StrNumResolucion;
+
+				}
 
 				return facturador_emisor;
 			}
