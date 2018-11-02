@@ -141,11 +141,14 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                 }, onSelectionChanged: function (selectedEstado) {
                     var lista = '';
                     var data = selectedEstado.selectedRowsData;
+
+                    var regex = /(\d+)/g;
+
                     if (data.length > 0) {
                         if (data.length > 1) {
                             for (var i = 0; i < data.length; i++) {
                                 lista += (lista) ? ',' : '';
-                                lista += "{Documentos: '" + data[i].NumeroDocumento + "'}";
+                                lista += "{Documentos: '" + data[i].NumeroDocumento.match(regex) + "'}";
                             }
                             lista = "[" + lista + "]"
                             $scope.documentos = lista;
@@ -157,7 +160,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
 
                         } else {
-                            lista += "{Documentos: '" + data[0].NumeroDocumento + "'}";
+                            lista += "{Documentos: '" + data[0].NumeroDocumento.match(regex) + "'}";
                             lista = "[" + lista + "]"
                             $scope.documentos = lista;
                             $('#lbltotaldocumentos').val('Documento : ' + data.length);
