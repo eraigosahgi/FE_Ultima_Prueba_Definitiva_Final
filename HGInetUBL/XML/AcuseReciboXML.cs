@@ -87,7 +87,7 @@ namespace HGInetUBL
                 DocumentResponseType DocumentResponse = new DocumentResponseType();
                 ResponseType response = new ResponseType();
                 response.ReferenceID = new ReferenceIDType();
-                response.ReferenceID.Value = documento.Documento.ToString();
+                response.ReferenceID.Value = string.Format("{0}{1}", documento.Prefijo,documento.Documento.ToString());
                 response.ResponseCode = new ResponseCodeType();
                 response.ResponseCode.Value = documento.CodigoRespuesta;
                 DescriptionType[] Description = new DescriptionType[1];
@@ -101,8 +101,8 @@ namespace HGInetUBL
 
                 DocumentReferenceType DocumentReference = new DocumentReferenceType();
                 DocumentReference.ID = new IDType();
-                DocumentReference.ID.Value = documento.Documento.ToString();
-                DocumentReference.UUID = new UUIDType();
+                DocumentReference.ID.Value = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
+				DocumentReference.UUID = new UUIDType();
                 DocumentReference.UUID.Value = documento.IdSeguridad.ToString();
                 DocumentReference.DocumentType = new DocumentTypeType();
                 DocumentReference.DocumentType.Value = documento.TipoDocumento;
