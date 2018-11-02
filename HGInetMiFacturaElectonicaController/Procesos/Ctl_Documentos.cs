@@ -111,10 +111,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								proveedor_receptor = proveedor.Obtener(documento_obj.IdentificacionProveedor);
 
 								//si no existe asigna a HGI como Proveedor Receptor
-								//if (proveedor_receptor == null)
-								//{
-								//	documento_obj.IdentificacionProveedor = Constantes.NitResolucionsinPrefijo;
-								//}
+								if (proveedor_receptor == null)
+								{
+									documento_obj.IdentificacionProveedor = null;
+								}
 							}
 						}
 
