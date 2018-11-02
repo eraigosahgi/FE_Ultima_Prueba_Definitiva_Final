@@ -311,8 +311,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
 					RazonSocial = d.TblEmpresasAdquiriente.StrRazonSocial,
-					NumeroDocumento =  d.IntNumero,
-                    DocConPrefijo = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+					NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    DocSinPrefijo =  d.IntNumero,
                     Fecha = d.DatFechaDocumento,
 					FechaIngreso = d.DatFechaIngreso,
 					Estado = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
@@ -353,22 +353,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				string ListaDoc = jobjeto.Documentos;
 
-				List<DocumentosTacito> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosTacito>>(ListaDoc);
+				List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
 
 				List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();
+				
+                List<System.Guid> List_id_seguridad = new List<Guid>();
 
-				List<long> List_id_seguridad = new List<long>();
-
-				foreach (var item in ListadeDocumentos)
+                foreach (var item in ListadeDocumentos)
 				{
 					List_id_seguridad.Add(item.Documentos);
 				}
 
 				Ctl_Documento documento = new Ctl_Documento();
+				
+                var lista = documento.ProcesarDocumentos(List_id_seguridad);
 
-				var lista = documento.DocumentosAcuseTacito(List_id_seguridad);
-
-				List<TblDocumentos> datos = new List<TblDocumentos>();
+                List<TblDocumentos> datos = new List<TblDocumentos>();
 
 				foreach (var item in lista)
 				{
