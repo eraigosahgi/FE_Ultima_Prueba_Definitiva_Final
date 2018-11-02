@@ -583,6 +583,9 @@ namespace HGInetInteroperabilidad.Procesos
 
 				try
 				{
+
+					if (tipo_documento != TipoDocumento.Factura.GetHashCode() || tipo_documento != TipoDocumento.AcuseRecibo.GetHashCode())
+						documento_obj.NumeroResolucion = "*";
 					resolucion = ctl_resolucion.Obtener(documento_obj.DatosObligado.Identificacion, documento_obj.NumeroResolucion, documento_obj.Prefijo);
 				}
 				catch (Exception ex)
@@ -603,6 +606,7 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 
 					// crea el registro en base de datos
+					ctl_resolucion = new Ctl_EmpresaResolucion();
 					resolucion = ctl_resolucion.Crear(resolucion);
 				}
 				if (tipo_documento != TipoDocumento.Factura.GetHashCode() || tipo_documento != TipoDocumento.AcuseRecibo.GetHashCode())
