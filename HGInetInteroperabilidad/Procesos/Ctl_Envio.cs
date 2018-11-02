@@ -77,21 +77,29 @@ namespace HGInetInteroperabilidad.Procesos
 
                 try
                 {
+                    Ctl_ConfiguracionInteroperabilidad ControladorPro = new Ctl_ConfiguracionInteroperabilidad();
+                    
+                    TblConfiguracionInteroperabilidad Prov_Envio = ControladorPro.Obtener((ProveedorDoc.StrProveedorEmisor!= Constantes.NitResolucionsinPrefijo)? ProveedorDoc.StrProveedorEmisor: ProveedorDoc.StrProveedorReceptor);
+
                     //Aqui estoy seleccionado el proveedor Emisor que debe ser HGI
-                    string ProveedorEmisor = ProveedorDoc.StrProveedorEmisor;
+                    string Proveedor_Receptor = (ProveedorDoc.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo) ? ProveedorDoc.StrProveedorEmisor : ProveedorDoc.StrProveedorReceptor;
 
                     Usuario usuario = new Usuario();
 
                     //var jj = Encriptar.Encriptar_SHA256("Po&on271");
-                    usuario.u = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
-                    usuario.p = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
+                    //usuario.u = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario;
+                    //usuario.p = ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave;
+                    
+                    usuario.u = Prov_Envio.StrHgiUsuario;
+                    usuario.p = Prov_Envio.StrHgiClave;
 
                     //Serializo el objeto para enviarlo al cliente webapi
                     string jsonUsuario = JsonConvert.SerializeObject(usuario);
 
                     //Lo primero es validar si tiene tenemos usuario y password activo con el proveedor
                     //Se debe validar si tengo un tokken activo, antes de solicitar otro
-                    HttpWebResponse RToken = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                    //HttpWebResponse RToken = Ctl_ClienteWebApi.Inter_login(jsonUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                    HttpWebResponse RToken = Ctl_ClienteWebApi.Inter_login(jsonUsuario, Prov_Envio.StrUrlApi);
 
                     int code = RToken.StatusCode.GetHashCode();
 
@@ -130,8 +138,8 @@ namespace HGInetInteroperabilidad.Procesos
                     Guid idenvio = Guid.NewGuid();
 
                     //Nombre del archivo
-                    string NombreArchivoComprimido = ProveedorEmisor + "_" + ProveedorDoc.StrProveedorReceptor + "_" + idenvio + ".zip";
-
+                    string NombreArchivoComprimido = string.Format("{0}_{1}_{2}.zip", Constantes.NitResolucionsinPrefijo   , Proveedor_Receptor, idenvio , ".zip");
+                    
                     //Identifico el archivo que voy a enviar al proveedor
                     RegistroEnvio.nombre = NombreArchivoComprimido;
                     RegistroEnvio.uuid = idenvio.ToString();
@@ -157,10 +165,12 @@ namespace HGInetInteroperabilidad.Procesos
                             //////////////////////////////////////////////////////////////////////////////                            
 
                             ////Guid de seguridad del facturador electronico           
-                            string Facturador = Documento.TblEmpresasFacturador.StrIdSeguridad.ToString();
+                            //string Facturador = Documento.TblEmpresasFacturador.StrIdSeguridad.ToString();
+
+                            string Guid_ProveedorReceptor = Prov_Envio.StrIdSeguridad.ToString();
 
                             //string RutaCarpeta = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), Facturador);
-                            string RutaCarpeta = string.Format("{0}\\{1}\\{2}\\", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Facturador);
+                            string RutaCarpeta = string.Format("{0}\\{1}\\{2}\\", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Guid_ProveedorReceptor);
                             string RutaArchivos = string.Format(@"{0}{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
                             string RutaArchivosAcuse = string.Format(@"{0}\{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
 
@@ -176,10 +186,8 @@ namespace HGInetInteroperabilidad.Procesos
                                     //Archivo pdf                                       
                                     RegDocumentoAcuse.nombre = Path.GetFileName(Documento.StrUrlAcuseUbl);
 
-
                                     //// Archivo PDF
                                     //var ArchivoUbl = string.Format(@"{0}\\{1}", RutaArchivosAcuse, Path.GetFileName(Documento.StrUrlAcuseUbl));
-
                                     //string archivo = Encriptar.Archivo_Sha256(string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlAcuseUbl)));
 
                                     RegDocumentoAcuse.sha256 = "";
@@ -214,9 +222,7 @@ namespace HGInetInteroperabilidad.Procesos
 
                                     //// ruta física del xml
                                     //var ArchivoUbl = string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlArchivoUbl));
-
-                                    //string archivo = Encriptar.Archivo_Sha256(string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlArchivoUbl)));
-                                    
+                                    //string archivo = Encriptar.Archivo_Sha256(string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlArchivoUbl)));                                    
                                     RegDocumentoXml.sha256 = "" ;
                                     RegDocumentoXml.tipo = Enumeracion.GetEnumObjectByValue<DocumentType>(Documento.IntDocTipo).ToString();
                                     RegDocumentoXml.notaDeEntrega = "";
@@ -271,18 +277,17 @@ namespace HGInetInteroperabilidad.Procesos
                         //Cierro el archivo zip
                         archive.Dispose();
 
-
-                        string ruta_fisica = string.Format(@"{0}\{1}\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrIdSeguridad, "");
+                        //string ruta_fisica = string.Format(@"{0}\{1}\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrIdSeguridad, "");
+                        string ruta_fisica = string.Format(@"{0}\{1}\{2}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp, Prov_Envio.StrIdSeguridad, "");
 
                         //Validar Directorio para 
                         //Directorio.CrearDirectorio(ruta_fisica);
-
-
                         //Subir archivo FTP
                         bool ArchivoEnviado = false;
                         try
                         {
-                            ArchivoEnviado = Clienteftp.SubirArchivoSftp(ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido), NombreArchivoComprimido);                        
+                            //ArchivoEnviado = Clienteftp.SubirArchivoSftp(ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlFtp, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiUsuario, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido), NombreArchivoComprimido);                        
+                            ArchivoEnviado = Clienteftp.SubirArchivoSftp(Prov_Envio.StrUrlFtp, Prov_Envio.StrHgiUsuario, Prov_Envio.StrHgiClave, string.Format("{0}{1}", RutaProveedor, NombreArchivoComprimido), NombreArchivoComprimido);                        
                         }
                         catch (Exception excepcion)
                         {
@@ -306,7 +311,8 @@ namespace HGInetInteroperabilidad.Procesos
                         }
 
                         //Aqui se debe hacer peticion webapi
-                        HttpWebResponse RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                        //HttpWebResponse RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
+                        HttpWebResponse RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, Prov_Envio.StrUrlApi);
 
                         code = RespuestaRegistroApi.StatusCode.GetHashCode();
                         string respuesta;
@@ -363,6 +369,7 @@ namespace HGInetInteroperabilidad.Procesos
                                         {
                                             try
                                             {
+                                                //Codigo para enviar correo al adquiriente y continuar con el proceso sin interoerabilidad
                                                 Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
                                                 Ctl_Documento ControladorEmail = new Ctl_Documento();
 
