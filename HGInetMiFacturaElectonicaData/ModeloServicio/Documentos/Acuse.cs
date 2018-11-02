@@ -28,10 +28,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public long Documento { get; set; }
 
-        /// <summary>
-        /// Código de documento de acuerdo a los valores definidos en Guia de Interoperabilidad en la ​Tabla No. 5.2.1: Códigos de respuesta - Capítulo No. 5.2. 
-        /// </summary>
-        public string TipoDocumento { get; set; }
+		/// <summary>
+		/// Prefijo del Documento
+		/// </summary>
+		public string Prefijo { get; set; }
+
+		/// <summary>
+		/// Código de documento de acuerdo a los valores definidos en Guia de Interoperabilidad en la ​Tabla No. 5.2.1: Códigos de respuesta - Capítulo No. 5.2. 
+		/// </summary>
+		public string TipoDocumento { get; set; }
 
         /// <summary>
         /// Fecha completa del Acuse de Recibo
