@@ -1304,6 +1304,45 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
         #endregion
 
+
+        #region Procesar Acuses
+
+        public async Task sonda()
+        {
+            try
+            {
+                var Tarea1 = SondaAcuseTacito();
+                await Task.WhenAny(Tarea1);
+            }
+            catch (Exception excepcion)
+            {
+                LogExcepcion.Guardar(excepcion);
+            }         
+        }
+
+        public async Task SondaAcuseTacito()
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                List<TblDocumentos> datos = ObtenerAcuseTacito("*", "*", "*");
+                foreach (var item in datos)
+                {
+                    try
+                    {
+                       var documento = ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+                    }
+                    catch (Exception excepcion)
+                    {
+                        LogExcepcion.Guardar(excepcion);
+                    }
+                }
+
+                return true;
+            });
+        }
+
+        #endregion
+
     }
 
 }
