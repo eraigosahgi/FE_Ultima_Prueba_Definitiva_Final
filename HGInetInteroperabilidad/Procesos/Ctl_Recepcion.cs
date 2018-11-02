@@ -573,6 +573,10 @@ namespace HGInetInteroperabilidad.Procesos
 				if (facturador_emisor == null)
 				{
 					empresa = new Ctl_Empresa();
+
+					if (string.IsNullOrWhiteSpace(documento_obj.DatosObligado.Email))
+						documento_obj.DatosObligado.Email = string.Empty;
+
 					facturador_emisor = empresa.Crear(documento_obj.DatosObligado, false);
 				}
 
@@ -584,9 +588,13 @@ namespace HGInetInteroperabilidad.Procesos
 				try
 				{
 
+					string num_resolucion = string.Empty;
 					if (tipo_documento != TipoDocumento.Factura.GetHashCode() || tipo_documento != TipoDocumento.AcuseRecibo.GetHashCode())
-						documento_obj.NumeroResolucion = "*";
-					resolucion = ctl_resolucion.Obtener(documento_obj.DatosObligado.Identificacion, documento_obj.NumeroResolucion, documento_obj.Prefijo);
+					{
+						if (documento_obj.NumeroResolucion == null)
+							num_resolucion = "*";
+					}
+					resolucion = ctl_resolucion.Obtener(documento_obj.DatosObligado.Identificacion, num_resolucion, documento_obj.Prefijo);
 				}
 				catch (Exception ex)
 				{
