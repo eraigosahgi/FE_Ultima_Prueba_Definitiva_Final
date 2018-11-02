@@ -311,8 +311,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
 					RazonSocial = d.TblEmpresasAdquiriente.StrRazonSocial,
-					NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
-					Fecha = d.DatFechaDocumento,
+					NumeroDocumento =  d.IntNumero,
+                    DocConPrefijo = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+                    Fecha = d.DatFechaDocumento,
 					FechaIngreso = d.DatFechaIngreso,
 					Estado = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
