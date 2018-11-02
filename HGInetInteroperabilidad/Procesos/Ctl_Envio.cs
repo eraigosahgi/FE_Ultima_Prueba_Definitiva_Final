@@ -161,13 +161,13 @@ namespace HGInetInteroperabilidad.Procesos
 
                             ResultadoVista.Documento = Documento;
 
-                            ////este es un ciclo del proveedor para ubicar los documentos por facturador
-                            //////////////////////////////////////////////////////////////////////////////                            
+							////este es un ciclo del proveedor para ubicar los documentos por facturador
+							//////////////////////////////////////////////////////////////////////////////                            
 
-                            ////Guid de seguridad del facturador electronico           
-                            //string Facturador = Documento.TblEmpresasFacturador.StrIdSeguridad.ToString();
+							////Guid de seguridad del facturador electronico           
+							//string Facturador = Documento.TblEmpresasFacturador.StrIdSeguridad.ToString();
 
-                            string Guid_ProveedorReceptor = Prov_Envio.StrIdSeguridad.ToString();
+							string Guid_ProveedorReceptor = Documento.TblEmpresasFacturador.StrIdSeguridad.ToString();  //Prov_Envio.StrIdSeguridad.ToString();
 
                             //string RutaCarpeta = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), Facturador);
                             string RutaCarpeta = string.Format("{0}\\{1}\\{2}\\", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Guid_ProveedorReceptor);
@@ -251,6 +251,8 @@ namespace HGInetInteroperabilidad.Procesos
                                 {
                                     ResultadoMensaje.mensaje = "No se encuentra el archivo Pdf";
                                 }
+
+
 
                             }
                             //Antes de enviar la peticion, guardo un objeto para luego llenar las respuestas del servidor

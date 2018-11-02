@@ -571,7 +571,10 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 
 				if (facturador_emisor == null)
+				{
+					empresa = new Ctl_Empresa();
 					facturador_emisor = empresa.Crear(documento_obj.DatosObligado, false);
+				}
 
 				//Se crea Resolucion
 				TblEmpresasResoluciones resolucion = new TblEmpresasResoluciones();
