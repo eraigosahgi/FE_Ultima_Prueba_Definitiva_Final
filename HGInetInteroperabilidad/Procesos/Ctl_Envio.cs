@@ -213,6 +213,7 @@ namespace HGInetInteroperabilidad.Procesos
                                 }
                             }
                             else
+
                             {
                                 if (Archivo.ValidarExistencia(string.Format(@"{0}\\{1}", RutaArchivos, Path.GetFileName(Documento.StrUrlArchivoUbl))))
                                 {
@@ -223,7 +224,7 @@ namespace HGInetInteroperabilidad.Procesos
                                     if (!string.IsNullOrEmpty(anexo))
                                     {
                                         TieneAnexos = true;
-                                        archive.CreateEntryFromFile(anexo, string.Format("{0}.{1}", Path.GetFileName(Documento.StrUrlAnexo), "zip"));
+                                        archive.CreateEntryFromFile(anexo, Path.GetFileName(Documento.StrUrlAnexo));
                                     }
 
                                     Documentos RegDocumentoXml = new Documentos();
