@@ -589,10 +589,14 @@ namespace HGInetInteroperabilidad.Procesos
 				{
 
 					string num_resolucion = string.Empty;
-					if (tipo_documento != TipoDocumento.Factura.GetHashCode() || tipo_documento != TipoDocumento.AcuseRecibo.GetHashCode())
+					if (tipo_documento != TipoDocumento.Factura.GetHashCode())
 					{
 						if (documento_obj.NumeroResolucion == null)
 							num_resolucion = "*";
+					}
+					else
+					{
+						num_resolucion = documento_obj.NumeroResolucion;
 					}
 					resolucion = ctl_resolucion.Obtener(documento_obj.DatosObligado.Identificacion, num_resolucion, documento_obj.Prefijo);
 				}
@@ -617,7 +621,7 @@ namespace HGInetInteroperabilidad.Procesos
 					ctl_resolucion = new Ctl_EmpresaResolucion();
 					resolucion = ctl_resolucion.Crear(resolucion);
 				}
-				if (tipo_documento != TipoDocumento.Factura.GetHashCode() || tipo_documento != TipoDocumento.AcuseRecibo.GetHashCode())
+				if (tipo_documento != TipoDocumento.Factura.GetHashCode())
 				{
 					documento_obj.NumeroResolucion = resolucion.StrNumResolucion;
 
