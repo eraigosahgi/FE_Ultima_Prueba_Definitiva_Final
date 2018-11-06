@@ -105,5 +105,59 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 		}
 
+
+
+
+        public static string RutaAnexos(TblDocumentos Documento)
+        {
+            try
+            {
+                string Ruta = "";
+                PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;                
+                //Aqui busco la ubicacion de la carpeta del proveedor tecnologico, esperar por la ruta real
+                string RutaProveedor = (string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEnvio));
+               
+                string Guid_ProveedorReceptor = Documento.TblEmpresasFacturador.StrIdSeguridad.ToString();  //Prov_Envio.StrIdSeguridad.ToString();
+
+                //string RutaCarpeta = LibreriaGlobalHGInet.Dms.ObtenerCarpetaPrincipal(Directorio.ObtenerDirectorioRaiz(), Facturador);
+                string RutaCarpeta = string.Format("{0}\\{1}\\{2}\\", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, Guid_ProveedorReceptor);
+                //string RutaArchivos = string.Format(@"{0}{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+                //string RutaArchivosAcuse = string.Format(@"{0}\{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
+                string RutaAnexos = string.Format(@"{0}{1}", RutaCarpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos);
+
+                //Valido si el documento posee un archivo anexo (Fisico)
+                if (Documento.IntPesoAnexo > 0 && !string.IsNullOrEmpty(Documento.StrUrlAnexo))
+                {
+                    Ruta= string.Format(@"{0}\\{1}", RutaAnexos, Path.GetFileName(Documento.StrUrlAnexo));                    
+                }
+                //Valido si el documento posee una ruta como archivo anexo 
+                if (Documento.IntPesoAnexo == null && !string.IsNullOrEmpty(Documento.StrUrlAnexo))
+                {
+                    //Creo el archivo Comprimido
+                    ZipArchive archivoAnexo = ZipFile.Open(string.Format("{0}\\{1}", RutaAnexos, Path.GetFileName(Documento.StrUrlAnexo)), ZipArchiveMode.Update);
+                    
+                    System.IO.File.WriteAllText(string.Format(@"{0}\\{1}.url", RutaAnexos, Path.GetFileName(Documento.StrUrlAnexo)), Documento.StrUrlAnexo);
+
+                    archivoAnexo.CreateEntryFromFile(string.Format(@"{0}\\{1}.url", RutaAnexos, Path.GetFileName(Documento.StrUrlAnexo)),string.Format("{0}.url", Path.GetFileName(Documento.StrUrlAnexo)));
+
+                    //Cierro el archivo zip
+                    archivoAnexo.Dispose();
+
+                    Ruta = string.Format("{0}\\{1}", RutaAnexos, Path.GetFileName(Documento.StrUrlAnexo));
+                }
+
+                return Ruta;
+            //                archive.CreateEntryFromFile(string.Format("{0}{1}.{2}", RutaProveedor, Path.GetFileName(Documento.StrUrlAnexo), ".zip"), string.Format("{0}.{1}", Path.GetFileName(Documento.StrUrlAnexo), "zip"));
+
+
+            }
+            catch (Exception excepcion)
+            {
+                LogExcepcion.Guardar(excepcion);
+                return "";
+            }
+            
+        }
+
 	}
 }
