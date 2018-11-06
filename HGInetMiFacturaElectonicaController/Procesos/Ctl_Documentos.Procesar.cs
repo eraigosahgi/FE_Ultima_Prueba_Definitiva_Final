@@ -245,6 +245,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
 					}
+					else
+					{
+						respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
+					}
 				}
 
 
