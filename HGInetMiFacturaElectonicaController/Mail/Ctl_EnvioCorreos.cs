@@ -759,7 +759,7 @@ namespace HGInetMiFacturaElectonicaController
 							mensaje = mensaje.Replace("{MotivoRechazo}", " ");
 
 						mensaje = mensaje.Replace("{TipoDocumento}", titulo_factura);
-						mensaje = mensaje.Replace("{NumeroDocumento}", documento.IntNumero.ToString());
+						mensaje = mensaje.Replace("{NumeroDocumento}", string.Format("{0}{1}", documento.StrPrefijo, documento.IntNumero.ToString()));
 						mensaje = mensaje.Replace("{Estadorespuesta}", estado_respuesta);
 						mensaje = mensaje.Replace("{FechaDocumento}", documento.DatAdquirienteFechaRecibo.Value.ToString(Fecha.formato_fecha_hora));
 
