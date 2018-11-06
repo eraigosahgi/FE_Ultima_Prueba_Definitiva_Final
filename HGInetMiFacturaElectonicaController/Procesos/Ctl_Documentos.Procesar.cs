@@ -188,7 +188,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// facturador electrónico del documento
 				TblEmpresas empresa = documento.TblEmpresasFacturador;
-				
+
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				// ruta física del xml
@@ -198,7 +198,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// carpeta del zip
 				string carpeta_zip = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
 				carpeta_zip = string.Format(@"{0}\{1}", carpeta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
-				
+
 				// información del procesamiento del archivo
 				FacturaE_Documento documento_result = new FacturaE_Documento()
 				{
@@ -237,8 +237,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// envía el archivo zip con el xml firmado a la DIAN
 				if (respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
 				{
-					HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
-					ValidarRespuesta(respuesta);
+					respuesta = Consultar(documento, empresa, ref respuesta);
+
+					//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
+					if (respuesta.EstadoDian.CodigoRespuesta == null)
+					{
+						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+					}
 				}
 
 
@@ -246,7 +252,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode())
 				{
 					respuesta = Consultar(documento, empresa, ref respuesta);
-					
+
 					//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
 					if (respuesta.EstadoDian.CodigoRespuesta == null)
 					{

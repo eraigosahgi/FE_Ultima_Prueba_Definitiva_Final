@@ -81,11 +81,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			return acuse;
 		}
-
-		public static void ConsultarDian()
-		{
-
-		}
+		
 
 		/// <summary>
 		/// Consulta estado de documentos en la DIAN
