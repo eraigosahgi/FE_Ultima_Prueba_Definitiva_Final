@@ -500,6 +500,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						}
 
+						mensaje = mensaje.Replace("{PSE}", "");
 						mensaje = mensaje.Replace("{PSETexto}", "");
 						mensaje = mensaje.Replace("{ContenidoPagoPSE}", "");
 
