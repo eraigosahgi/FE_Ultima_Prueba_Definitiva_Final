@@ -75,11 +75,11 @@ namespace HGInetUBL
                 #endregion
 
                 #region acuse.SenderParty - Información del receptor del documento electrónico
-                acuse.SenderParty = ObtenerAdquiriente(documento.DatosAdquiriente, proveedor_emisor);
+                acuse.SenderParty = ObtenerAdquiriente(documento.DatosAdquiriente, proveedor_receptor);
                 #endregion
 
                 #region acuse.ReceiverParty - Información del emisor del documento electrónico
-                acuse.ReceiverParty = ObtenerObligado(documento.DatosObligado, proveedor_receptor);
+                acuse.ReceiverParty = ObtenerObligado(documento.DatosObligado, proveedor_emisor);
                 #endregion
 
                 #region Document response -  Document reference 
