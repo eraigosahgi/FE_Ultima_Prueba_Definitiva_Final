@@ -613,7 +613,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
 
                 //obtiene los datos del proveedor del facturador
-                TblEmpresas proveedor_emisor = ctl_empresa.Obtener(Constantes.NitResolucionsinPrefijo);
+                TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor);
 
                 // obtiene los datos del adquiriente
                 TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
@@ -679,6 +679,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
             doc_acuse.IdAcuse = Guid.NewGuid().ToString();
             doc_acuse.IdSeguridad = doc.StrIdSeguridad.ToString();
             doc_acuse.Documento = doc.IntNumero;
+			doc_acuse.Prefijo = doc.StrPrefijo;
             doc_acuse.MvoRespuesta = motivo_rechazo;
             doc_acuse.Fecha = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
             doc_acuse.CodigoRespuesta = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.ResponseCode>(estado));
@@ -687,7 +688,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
             doc_acuse.DatosObligado = Ctl_Empresa.Convertir(facturador);
 
             //Convierte el objeto en archivo XML-UBL
-            FacturaE_Documento resultado = AcuseReciboXML.CrearDocumento(doc_acuse, proveedor_emisor, proveedor_emisor, Enumeracion.GetEnumObjectByValue<TipoDocumento>(doc.IntDocTipo));
+            FacturaE_Documento resultado = AcuseReciboXML.CrearDocumento(doc_acuse, proveedor_receptor, proveedor_emisor, Enumeracion.GetEnumObjectByValue<TipoDocumento>(doc.IntDocTipo));
             resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
             resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
             resultado.IdSeguridadPeticion = new Guid(doc_acuse.IdAcuse);
@@ -1067,7 +1068,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
 
                 //obtiene los datos del proveedor del facturador
-                TblEmpresas proveedor_emisor = ctl_empresa.Obtener(Constantes.NitResolucionsinPrefijo);
+                TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor);
 
                 // obtiene los datos del adquiriente
                 TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
