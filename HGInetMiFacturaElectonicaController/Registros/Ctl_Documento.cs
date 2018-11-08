@@ -449,7 +449,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
             if (string.IsNullOrWhiteSpace(codigo_adquiriente))
                 codigo_adquiriente = "*";
 
-            int HATP = Convert.ToInt32(Constantes.HorasAcuseTacitoInteroperabilidad.ToString());
+			int HATP = Convert.ToInt32(Constantes.HorasAcuseTacitoInteroperabilidad.ToString());
 
 			int estado_error = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
 
@@ -463,12 +463,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
                                               && (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
                                               && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual) 
                                               && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
-                                              //********************************************************
-                                              || ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo &&  (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
-                                              && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh",-HATP, FechaActual) )
-                                              && datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado != estado_error
-											  )                                             
-                                              orderby datos.IntNumero descending
+											  //********************************************************
+											  || ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo &&  (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
+											  && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh",-HATP, FechaActual) )
+											  && datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado != estado_error
+											  )
+											  orderby datos.IntNumero descending
                                               select datos).ToList();                                             
             return documentos;
         }
@@ -612,11 +612,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 // obtiene los datos del facturador electrónico
                 TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
 
-                //obtiene los datos del proveedor del facturador
-                TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor);
+				//obtiene los datos del proveedor del facturador
+				ctl_empresa = new Ctl_Empresa();
+				TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor);
 
-                // obtiene los datos del adquiriente
-                TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
+				// obtiene los datos del adquiriente
+				ctl_empresa = new Ctl_Empresa();
+				TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
 
                 FacturaE_Documento resultado = new FacturaE_Documento();
 
@@ -636,8 +638,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 }
                 else
                 {
-                    //obtiene los datos del proveedor del adquirirente
-                    TblEmpresas proveedor_receptor = ctl_empresa.Obtener(doc.StrProveedorReceptor);
+					//obtiene los datos del proveedor del adquirirente
+					ctl_empresa = new Ctl_Empresa();
+					TblEmpresas proveedor_receptor = ctl_empresa.Obtener(doc.StrProveedorReceptor);
                     //Crea el XML del Acuse
                     resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_receptor, estado, motivo_rechazo);
                     doc.IntIdEstado = (short)ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();
@@ -645,7 +648,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
                 doc.DatFechaActualizaEstado = Fecha.GetFecha();
                 doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
-                doc = Actualizar(doc);
+				Ctl_Documento actualizar_doc = new Ctl_Documento();
+                doc = actualizar_doc.Actualizar(doc);
 
                 doc.TblEmpresasFacturador = facturador;
                 doc.TblEmpresasAdquiriente = adquiriente;
