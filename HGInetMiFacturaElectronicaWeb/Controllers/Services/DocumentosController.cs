@@ -78,6 +78,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.StrIdSeguridad,
 					RutaPublica = plataforma.RutaPublica,
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+					RutaServDian = d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian),
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId != null) ? (d.IntIdEstado != 90) ? 1 : 0 : 0,
 					FacturaCenlada = d.IntIdEstado,
@@ -142,9 +143,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					XmlAcuse = d.StrUrlAcuseUbl,
 					d.StrIdSeguridad,
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+					RutaServDian = d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian),
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
-                    zip = d.StrUrlAnexo
+					zip = d.StrUrlAnexo
 				});
 
 				return Ok(retorno);
@@ -312,8 +314,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
 					RazonSocial = d.TblEmpresasAdquiriente.StrRazonSocial,
 					NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
-                    DocSinPrefijo =  d.IntNumero,
-                    Fecha = d.DatFechaDocumento,
+					DocSinPrefijo =  d.IntNumero,
+					Fecha = d.DatFechaDocumento,
 					FechaIngreso = d.DatFechaIngreso,
 					Estado = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
@@ -356,19 +358,19 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
 
 				List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();
-				
-                List<System.Guid> List_id_seguridad = new List<Guid>();
 
-                foreach (var item in ListadeDocumentos)
+				List<System.Guid> List_id_seguridad = new List<Guid>();
+
+				foreach (var item in ListadeDocumentos)
 				{
 					List_id_seguridad.Add(item.Documentos);
 				}
 
 				Ctl_Documento documento = new Ctl_Documento();
-				
-                var lista = documento.ProcesarDocumentos(List_id_seguridad);
 
-                List<TblDocumentos> datos = new List<TblDocumentos>();
+				var lista = documento.ProcesarDocumentos(List_id_seguridad);
+
+				List<TblDocumentos> datos = new List<TblDocumentos>();
 
 				foreach (var item in lista)
 				{

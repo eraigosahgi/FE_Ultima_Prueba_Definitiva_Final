@@ -428,6 +428,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     enabled: true,
                     template: function (container, options) {                        
                         
+                    	console.log("variable Servicio", opt.data.RutaServDian);
                         var visible_zip = "";
 
                         var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
@@ -437,6 +438,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         var visible_xml_acuse = "style='pointer-events:auto;cursor: not-allowed;'";
 
                         var visible_acuse = "   title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";
+
+                        var visible_Servicio_DIAN = "style='pointer-events:auto;cursor: not-allowed;'";
 
                         if (options.data.Pdf)
                             visible_pdf = "href='" + options.data.Pdf + "' title='ver PDF' style='pointer-events:auto;cursor: pointer;'";
