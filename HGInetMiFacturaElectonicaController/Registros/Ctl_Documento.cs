@@ -1335,9 +1335,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
             await Task.Factory.StartNew(() =>
             {
                 Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar();
-
+                //Se obtienen todos los documentos para procesar, pero se excluyen los que estan pendientes por enviar a la DIAN(Se hacen manuales por el momento)
+                List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar().Where(d=> d.IntIdEstado!= ProcesoEstado.CompresionXml.GetHashCode()).ToList();                
                 List<DocumentoRespuesta> datosProcesar = Procesos.Ctl_Documentos.Procesar(datos);
+
             });
         }
         #endregion
