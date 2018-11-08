@@ -1300,14 +1300,49 @@ namespace HGInetMiFacturaElectonicaController.Registros
             return Doc;
         }
 
-
-
-
         #endregion
 
 
-        #region Procesar Acuses
+        #region Sonda Procesar Documentos
 
+        /// <summary>
+        /// Sonda para procesar documentos
+        /// </summary>
+        /// <returns></returns>
+        public async Task SondaProcesarDocumentos()
+        {
+            try
+            {
+                var Tarea = TareaProcesarDocumentos();
+                await Task.WhenAny(Tarea);
+            }
+            catch (Exception excepcion)
+            {
+                LogExcepcion.Guardar(excepcion);
+            }
+        }
+
+        /// <summary>
+        /// Tarea para procesar Documentos
+        /// </summary>
+        /// <returns></returns>
+        public async Task TareaProcesarDocumentos()
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar();
+
+                List<DocumentoRespuesta> datosProcesar = Procesos.Ctl_Documentos.Procesar(datos);
+            });
+        }
+        #endregion
+
+        #region Procesar Acuses
+        /// <summary>
+        /// Sonda para acuse tacito, no recibe parametros
+        /// </summary>
+        /// <returns></returns>
         public async Task sonda()
         {
             try
@@ -1320,7 +1355,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
                 LogExcepcion.Guardar(excepcion);
             }         
         }
-
+        /// <summary>
+        /// Sonda de acuse tacito
+        /// </summary>
+        /// <returns></returns>
         public async Task SondaAcuseTacito()
         {
             await Task.Factory.StartNew(() =>

@@ -19,16 +19,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
         {
             try
             {
-
-                Ctl_Documento ctl_documento = new Ctl_Documento();
-                List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar();
-
-                lblResultado.Text = string.Format("Numero de Documentos a procesar: {0} ", datos.Count().ToString());
-
-                List<DocumentoRespuesta> datosProcesar = HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.Procesar(datos);
-
-                lblResultado.Text = string.Format("Proceso Finalizado, Total documentos {0}", datos.Count().ToString());
-
+                Procesar();
             }
             catch (Exception ex)
             {
@@ -36,6 +27,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
             }
 
 
+        }
+
+
+        public void Procesar()
+        {
+            Ctl_Documento ctl_documento = new Ctl_Documento();
+
+            var Tarea1 = ctl_documento.SondaProcesarDocumentos();
+            lblResultado.Text = string.Format("Termino");
         }
     }
 }
