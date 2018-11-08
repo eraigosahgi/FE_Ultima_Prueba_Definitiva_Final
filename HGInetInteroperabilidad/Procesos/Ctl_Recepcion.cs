@@ -106,6 +106,7 @@ namespace HGInetInteroperabilidad.Procesos
 							tipo_doc = (DocumentType)Enumeracion.ParseToEnum<DocumentType>(objeto.tipo);
 
 							documento_obj = ObtenerDocumento(ruta_archivo_xml, tipo_doc);
+
 						}
 						catch (Exception excepcion)
 						{
@@ -117,6 +118,16 @@ namespace HGInetInteroperabilidad.Procesos
 							error_proceso = true;
 							throw new ApplicationException(string.Format("Error al convertir xml a objeto el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 
+						}
+
+						//Valida que el nit de la peticion sea el mismo que el nit del adquiriente en el ubl
+						if (documento_obj.DatosAdquiriente.Identificacion != objeto.identificacionDestinatario)
+						{
+							item_respuesta.nombreDocumento = objeto.nombre;
+							item_respuesta.codigoError = RespuestaInterOperabilidad.ClienteNoEncontrado.GetHashCode().ToString();
+							item_respuesta.mensaje = string.Format("{0} en el ZIP {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), datos.nombre);
+							error_proceso = true;
+							throw new ApplicationException(string.Format("El adquiriente {0} del archivo {1} no coincide con el destinatario {2} de la peticion ", documento_obj.DatosAdquiriente.Identificacion, objeto.nombre, objeto.identificacionDestinatario));
 						}
 
 						Ctl_Documento num_doc = new Ctl_Documento();
@@ -657,13 +668,21 @@ namespace HGInetInteroperabilidad.Procesos
 				// url pública del xml
 				string UrlXmlUbl = string.Format(@"{0}{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
 
-				// url pública del zip
+				// url pública del zip de Anexos
 				string url_ppal_zip = string.Format(@"{0}{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos, nombre_archivo);
+
+				//Valida que si exista el archivo en la ruta
+				if (!Directorio.ValidarExistenciaArchivoUrl(url_ppal_zip))
+					url_ppal_zip = null;
 
 				// url pública del pdf
 				if (string.IsNullOrEmpty(url_ppal_pdf))
+				{
 					url_ppal_pdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
-
+					//Valida que si exista el archivo en la ruta
+					if (!Directorio.ValidarExistenciaArchivoUrl(url_ppal_pdf))
+						url_ppal_pdf = null;
+				}
 				//Generacion del tracking
 				Guid tracking = Guid.NewGuid();
 
