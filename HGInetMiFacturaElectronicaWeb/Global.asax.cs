@@ -88,7 +88,7 @@ namespace HGInetMiFacturaElectronicaWeb
 
 			try
 			{
-				if (servicio.Contains("wcf"))
+				if (servicio.Contains("wfc"))
 				{
 					//Proceso tomado de https://blogs.msdn.microsoft.com/rodneyviana/2014/02/06/logging-incoming-requests-and-responses-in-an-asp-net-or-wcf-application-in-compatibility-mode/
 					// Crea un guid por cada peticion
