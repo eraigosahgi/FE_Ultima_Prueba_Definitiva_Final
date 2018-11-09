@@ -634,8 +634,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						{
 							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 							email.RespuestaAcuse(doc, facturador, adquiriente, resultado.RutaArchivosProceso);
-							doc.IntIdEstado = (short)ProcesoEstado.Finalizacion.GetHashCode();
 						}
+						doc.IntIdEstado = (short)ProcesoEstado.Finalizacion.GetHashCode();
 					}
 					catch (Exception) { }
 
