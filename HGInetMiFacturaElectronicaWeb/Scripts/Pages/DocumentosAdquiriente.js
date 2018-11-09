@@ -704,8 +704,26 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
             }
         })
+
+       
+        //Validar Estado de ventanas emergentes
+
+        var Vpago = window.open("", "Pagos", "width=10,height=10");
+        if (Vpago == null || Vpago == undefined) {
+            $("#button").dxButton({ visible: false });
+            DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
+        } else {
+            $("#button").dxButton({
+                text: "Pagar",
+                type: "success",
+                useSubmitBehavior: true
+            });
+            Vpago.close();
+        }        
+      
     }
 
+    
     $scope.buttonProcesar = {
         text: 'Pagar',
         type: "success",
@@ -713,7 +731,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
             DevExpress.ui.notify("Aun no ha terminado el proceso actual", 'error', 3000);
         }
     };
-
+    
 
     $scope.buttonVerificar = {
         text: 'Verificar',
@@ -761,12 +779,9 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         e.preventDefault();
     });
 
-    $("#button").dxButton({
-        text: "Pagar",
-        type: "success",
-        useSubmitBehavior: true
-    });
-
+    
+    
+    
 
     function EsperayValida() {
         ///Se va a ejecutar automaticamente la sonda de consulta mientras el pago este pendiente
