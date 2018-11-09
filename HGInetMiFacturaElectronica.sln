@@ -36,6 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ManualTecnico", "ManualTecn
 		Documentacion\ManualTecnico\v20185-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20185-ManualTecnicoServiciosFacturacionElectronica.pdf
 		Documentacion\ManualTecnico\v20185Rev2-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20185Rev2-ManualTecnicoServiciosFacturacionElectronica.pdf
 		Documentacion\ManualTecnico\v20186-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20186-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\v20187Rev1-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20187Rev1-ManualTecnicoServiciosFacturacionElectronica.pdf
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFacturaETestConsola", "HGInetFacturaETestConsola\HGInetFacturaETestConsola.csproj", "{101B7B4C-B4CF-42E9-8370-30B2C3147346}"
