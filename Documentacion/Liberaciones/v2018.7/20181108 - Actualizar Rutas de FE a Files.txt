@@ -1,0 +1,52 @@
+
+--Actualiza 
+--http://app.mifacturaenlinea.com.co/dms/
+--http://files.mifacturaenlinea.com.co/
+select  
+replace(StrUrlArchivoUbl,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/')  
+,replace(StrUrlArchivoPdf,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') 
+,replace(StrUrlArchivoZip,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') 
+,replace(StrUrlAcuseUbl,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') 
+,replace(StrUrlAnexo,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') 
+
+from TblDocumentos
+
+--Reemplaza http por https
+select  
+replace(StrUrlArchivoUbl,'http://','https://'),  
+replace(StrUrlArchivoPdf,'http://','https://') ,
+replace(StrUrlArchivoZip,'http://','https://') ,
+replace(StrUrlAcuseUbl,'http://','https://') ,
+replace(StrUrlAnexo,'http://','https://') 
+from TblDocumentos
+
+
+
+
+
+/*
+--Reemplaza "app.mifacturaenlinea.com.co/dms/" por "files.mifacturaenlinea.com.co/facturaelectronica/"
+update TblDocumentos set
+ StrUrlArchivoUbl = replace(StrUrlArchivoUbl,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') ,
+ StrUrlArchivoPdf = replace(StrUrlArchivoPdf,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') ,
+ StrUrlArchivoZip = replace(StrUrlArchivoZip,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') ,
+ StrUrlAcuseUbl = replace(StrUrlAcuseUbl,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') ,
+ StrUrlAnexo =replace(StrUrlAnexo,'app.mifacturaenlinea.com.co/dms/','files.mifacturaenlinea.com.co/facturaelectronica/') 
+
+
+
+
+--Reemplaza "http://" por "https://"
+update TblDocumentos set
+ StrUrlArchivoUbl = replace(StrUrlArchivoUbl,'http://','https://') ,
+ StrUrlArchivoPdf = replace(StrUrlArchivoPdf,'http://','https://') ,
+ StrUrlArchivoZip = replace(StrUrlArchivoZip,'http://','https://') ,
+ StrUrlAcuseUbl = replace(StrUrlAcuseUbl,'http://','https://') ,
+ StrUrlAnexo =replace(StrUrlAnexo,'http://','https://') 
+
+
+
+
+ */
+
+
