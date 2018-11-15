@@ -1,7 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
-using LibreriaGlobalHGInet.WebApi;
 using System;
 using System.Collections.Generic;
 using System.IO;

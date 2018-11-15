@@ -201,34 +201,14 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 				}
 			};
 
-			$timeout(function callAtTimeout() {
-
-				var ruta_servicio = $('#Hdf_RutaSrvPagos').val();
-
-				$http.get(ruta_servicio + '?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
-					//Esto retorna un objeto  de la plataforma intermedia que sirve para actualizar el pago local
-					var ObjeRespuestaPI = response.data;
-					//////////////////////////////////////////////////////////////////////
-					$http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
-
+			$timeout(function callAtTimeout() {				
+					$http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
 						$scope.EnProceso = false;
-						consultar();
-						/*
-                        $timeout(function callAtTimeout() {
-                            VerificarEstado();
-                        }, 60000);
-                        */
+						consultar();						
 					}), function (response) {
-
 						$scope.EnProceso = false;
 						Mensaje(response.data.ExceptionMessage, "error");
-					};
-
-				}), function (response) {
-
-					$scope.EnProceso = false;
-					Mensaje(response.data.ExceptionMessage, "error");
-				}
+					};				
 			}, 9000);
 
 		}

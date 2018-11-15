@@ -107,10 +107,27 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
         text: 'Consultar',
         type: 'default',
         onClick: function (e) {
-            consultar();
+            consultar2();
         }
     };
 
+
+    function consultar2() {
+        $('#Total').text("");
+        if (fecha_inicio == "")
+            fecha_inicio = now.toISOString();
+
+        if (fecha_fin == "")
+            fecha_fin = now.toISOString();
+        
+        $('#wait').show();
+        $http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
+            $('#wait').hide();
+            $("#gridDocumentos").dxDataGrid({
+                dataSource: response.data
+            });
+        });
+    }
 
 
 
@@ -440,8 +457,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     //Este es el new Guid con el que se guarda el documento
     //Se utiliza aqui solo si se va a verificar el estado de un pago
     $scope.Idregistro = "";
-    $scope.PermitePagosParciales = false;
-
+    $scope.PermitePagosParciales = false;    
     $rootScope.ConsultarPago = function (IdSeguridad, Monto, PagosParciales) {
         $("#PanelPago").show();
         $("#MontoPago").dxNumberBox({ readOnly: (PagosParciales == "1") ? false : true });
@@ -456,8 +472,10 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         ///Este es el monto total de la factura
         $scope.montoFactura = Monto;
 
-        ///Id de seguridad del Documento
-        $scope.IdSeguridad = IdSeguridad;
+        ///Id de seguridad del Documento        
+        $scope.$apply(function () {
+            $scope.IdSeguridad = IdSeguridad;
+        });
 
         ///Monto total cancelado hasta la fecha
         $scope.TotalPago = 0;
@@ -707,7 +725,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
        
         //Validar Estado de ventanas emergentes
-
+     
         var Vpago = window.open("", "Pagos", "width=10,height=10");
         if (Vpago == null || Vpago == undefined) {
             $("#button").dxButton({ visible: false });
@@ -719,8 +737,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                 useSubmitBehavior: true
             });
             Vpago.close();
-        }        
-      
+        }             
     }
 
     
@@ -742,40 +759,45 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
     }
 
 
-    $("#form").on("submit", function (e) {
+    $("#form").on("submit", function (e) {        
+        
+        var idseg = $scope.IdSeguridad;
+        var valor_pago = $scope.valoraPagar;        
+        if (idseg != null && idseg != undefined) {
+            $scope.EnProceso = true;
+            $("#button").dxButton({ visible: false });
 
-        $("#button").dxButton({ visible: false });
-        $scope.EnProceso = true;
-        $http.get('/api/Documentos?strIdSeguridad=' + $scope.IdSeguridad + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + $scope.valoraPagar).then(function (response) {
+            $http.get('/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + valor_pago).then(function (response) {
 
-            //Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
-            $scope.NumVerificacion = 1;
+                //Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
+                $scope.NumVerificacion = 1;
 
-            //Ruta servicio
-            var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
+                //Ruta servicio
+                var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
 
-            $scope.Idregistro = response.data.IdRegistro;
+                $scope.Idregistro = response.data.IdRegistro;
 
-            window.open(RutaServicio + response.data.Ruta, "_blank");
+                window.open(RutaServicio + response.data.Ruta, "_blank");
 
-            $timeout(function callAtTimeout() {
-                VerificarEstado();
-            }, 60000);
+                $timeout(function callAtTimeout() {
+                    VerificarEstado();
+                }, 60000);
 
-        }, function (error) {
+            }, function (error) {
 
-            if (error != undefined) {
-                DevExpress.ui.notify(error, 'error', 3000);
-                $("#button").dxButton({ visible: true });
-                $scope.EnProceso = false;
-            }
+                if (error != undefined) {
+                    DevExpress.ui.notify(error, 'error', 3000);
+                    $("#button").dxButton({ visible: true });
+                    $scope.EnProceso = false;
+                }
 
-            $scope.$apply(function () {
-                $scope.EnProceso = false;
-            });
+                $scope.$apply(function () {
+                    $scope.EnProceso = false;
+                });
 
 
-        });
+            });            
+        }
         e.preventDefault();
     });
 
@@ -797,11 +819,12 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
         var RutaServicio = $('#Hdf_RutaSrvPagos').val();
 
-        $http.get(RutaServicio + '?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+       // $http.get(RutaServicio + '?IdSeguridadPago=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
             //Esto retorna un objeto  de la plataforma intermedia que sirve para actualizar el pago local
-            var ObjeRespuestaPI = response.data;
+         //   var ObjeRespuestaPI = response.data;
             //////////////////////////////////////////////////////////////////////
-            $http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
+            //$http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + '&StrIdSeguridadRegistro=' + $scope.Idregistro + '&Pago=' + ObjeRespuestaPI + "'").then(function (response) {
+        $http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + '&StrIdSeguridadRegistro=' + $scope.Idregistro ).then(function (response) {
                 $('#wait').hide();
 
                 //Incremento la variable consulta para llegar a un maximo de tres consultar al servicio de zona virtual
@@ -818,12 +841,13 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                 $scope.EnProceso = false;
                 Mensaje(response.data.ExceptionMessage, "error");
             };
-
+        /*
         }), function (response) {
 
             $scope.EnProceso = false;
             Mensaje(response.data.ExceptionMessage, "error");
         }
+        */
 
     }
 

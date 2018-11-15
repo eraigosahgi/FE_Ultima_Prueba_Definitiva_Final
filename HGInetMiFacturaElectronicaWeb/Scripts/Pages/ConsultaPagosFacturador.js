@@ -249,18 +249,16 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 			objeto.datos = datos;
 
 			if (objeto.datos.length > 0) {
-				var RutaServicio = $('#Hdf_RutaSrvPagos').val();
+				//var RutaServicio = $('#Hdf_RutaSrvPagos').val();
 
 				objeto.datos.forEach(function (valor, indice, array) {
 					//Conuslto el estado del documento en PI
-					SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
+					//SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
 						//Actualizado datos de plataforma intermedia, en la plataforma de FE
-						SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro, data1).then(function (data2) {
+						SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data2) {
 							consultar();
 						});
-
-
-					});
+					//});
 
 				});
 			}
@@ -641,18 +639,18 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 			objeto.datos = datos;
 
 			if (objeto.datos.length > 0) {
-				var RutaServicio = $('#Hdf_RutaSrvPagos').val();
+				//var RutaServicio = $('#Hdf_RutaSrvPagos').val();
 
 				objeto.datos.forEach(function (valor, indice, array) {
 					//Conuslto el estado del documento en PI
-					SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
+					//SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
 						//Actualizado datos de plataforma intermedia, en la plataforma de FE
-						SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro, data1).then(function (data2) {
+						SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data2) {
 							consultar();
 						});
 
 
-					});
+					//});
 
 				});
 			}

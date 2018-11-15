@@ -306,13 +306,13 @@ namespace WebApi.Jwt.Controllers
 
                 Ctl_ConfiguracionInteroperabilidad Controlador = new Ctl_ConfiguracionInteroperabilidad();
 
-                if (ContrasenaNueva.Length < 5)
+                if (!Ctl_Funciones.ContrasenaValida(ContrasenaActual, ContrasenaNueva))
                 {
                     //406
                     Respuesta.mensajeGlobal = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<RespuestaInterCambioClave>(RespuestaInterCambioClave.NivelIncorrecto.GetHashCode()));
                     return Request.CreateResponse(HttpStatusCode.NotAcceptable, Respuesta);
                 }
-
+                
                 TblConfiguracionInteroperabilidad Datos = Controlador.CambiarContraseña(NITProveedor, ContrasenaActual, ContrasenaNueva);
 
                 if (Datos == null)

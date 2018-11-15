@@ -3,9 +3,6 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
-using HGInetZonaPagos;
-using HGInetZonaPagos.Clases;
-using HGInetZonaPagos.Objetos;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Properties;
@@ -24,6 +21,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System.Globalization;
 using HGInetMiFacturaElectonicaData.Enumerables;
+using LibreriaGlobalHGInet.ObjetosComunes.PagosEnLinea;
 
 namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 {
@@ -125,56 +123,46 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
         /// <summary>
         /// Actualiza los datos del pago según la respuesta
-        /// </summary>
-        /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
-        /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
-        /// <param name="datos_pago">datos de la verificación del pago.</param>
+        /// </summary>        
+        /// <param name="datos_pago">Objeto de pago de la plataforma intermedia</param>
         /// <returns></returns>
-        public TblPagosElectronicos ActualizarPago(Guid StrIdSeguridadDoc, Guid StrIdSeguridadRegistro, VerificaPago datos_pago)
+        public TblPagosElectronicos ActualizarPago(TblPasarelaPagosPI datos_pago)
         {
             try
             {
                 TblPagosElectronicos datos_registro = new TblPagosElectronicos();
 
-                datos_registro = Obtener(StrIdSeguridadDoc, StrIdSeguridadRegistro);
+                datos_registro = Obtener(datos_pago.StrIdSeguridadDoc, datos_pago.StrIdSeguridadRegistro);
 
                 if (datos_registro == null)
-                    throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el pago", datos_pago.detalle_pago.FirstOrDefault().id_pago));
+                    throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el pago", datos_pago.StrIdSeguridad));
 
                 if (datos_pago != null)
-                {
-                    //valida si el objeto contiene detalles.
-                    if (datos_pago.detalle_pago.Count > 0)
+                {                    
+                    if (datos_pago.IntPagoEstado != 888)
                     {
-                        if (datos_pago.detalle_pago.FirstOrDefault().estado_pago != 888)
-                        {
-                            datos_registro.StrCodigoBanco = datos_pago.detalle_pago.FirstOrDefault().codigo_banco.ToString();
-                            datos_registro.StrCodigoFranquicia = datos_pago.detalle_pago.FirstOrDefault().franquicia_codigo;
-                            datos_registro.IntClicloTransaccion = datos_pago.detalle_pago.FirstOrDefault().ciclo_transaccion;
-                            datos_registro.IntCodigoServicio = datos_pago.detalle_pago.FirstOrDefault().codigo_servicio;
-                            datos_registro.IntEstadoPago = datos_pago.detalle_pago.FirstOrDefault().estado_pago;
-                            datos_registro.IntFormaPago = datos_pago.detalle_pago.FirstOrDefault().forma_pago_codigo;
-                            datos_registro.StrTicketID = datos_pago.detalle_pago.FirstOrDefault().ticketID;
-                            datos_registro.StrTransaccionCUS = datos_pago.detalle_pago.FirstOrDefault().codigo_transaccion;
-                            datos_registro.StrIdSeguridadPago = datos_pago.detalle_pago.FirstOrDefault().id_pago;
-                        }
-                        else
-                        {
-                            datos_registro.IntEstadoPago = datos_pago.detalle_pago.FirstOrDefault().estado_pago;
-                            datos_registro.StrIdSeguridadPago = datos_pago.detalle_pago.FirstOrDefault().id_pago;
-                        }
+                        datos_registro.StrCodigoBanco = datos_pago.StrPagoCodBanco;
+                        datos_registro.StrCodigoFranquicia = datos_pago.StrPagoCodFranquicia;
+                        datos_registro.IntClicloTransaccion = datos_pago.IntPagoClicloTransaccion;
+                        datos_registro.IntCodigoServicio = Convert.ToInt32(datos_pago.StrCodigoServicio);
+                        datos_registro.IntEstadoPago = datos_pago.IntPagoEstado;
+                        datos_registro.IntFormaPago = datos_pago.IntPagoFormaPago;
+                        datos_registro.StrTicketID = datos_pago.StrPagoTicketID;
+                        datos_registro.StrTransaccionCUS = datos_pago.StrPagoTransaccionCUS;
+                        datos_registro.StrIdSeguridadPago = datos_pago.StrIdSeguridadPago;
+                        datos_registro.StrIdPlataforma = datos_pago.StrIdPlataforma;
                     }
                     else
                     {
-                        datos_registro.IntEstadoPago = 0;
-                    }
+                        datos_registro.IntEstadoPago = datos_pago.IntPagoEstado;
+                        datos_registro.StrIdSeguridadPago = datos_pago.StrIdSeguridadPago;
+                        datos_registro.StrIdPlataforma = datos_pago.StrIdPlataforma;
+                    }                  
 
-                    if (datos_pago.estado_verificacion)
+                    if (datos_pago.DatFechaVerificacion != null)
                         datos_registro.DatFechaVerificacion = Fecha.GetFecha();
 
-                    datos_registro.StrMensaje = datos_pago.mensaje;
-
-
+                    datos_registro.StrMensaje = datos_pago.StrMensajeVerificacion;
                     datos_registro = Actualizar(datos_registro);
                 }
                 return datos_registro;
@@ -304,9 +292,6 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             }
         }
 
-
-
-
         /// <summary>
         /// Retorna uno de los siguientes valores: 
         /// 1 si el documento esta totalmente pagado
@@ -368,14 +353,6 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             }
         }
 
-
-
-
-
-
-
-
-
         /// <summary>
         /// Obtiene la lista de pagos del Facturador
         /// </summary>
@@ -404,12 +381,14 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             if (string.IsNullOrWhiteSpace(estado_recibo))
                 estado_recibo = "*";
 
-            List<string> LstResolucion= new List<string>();
+            List<string> LstResolucion = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(Resolucion)){
+            if (string.IsNullOrWhiteSpace(Resolucion))
+            {
                 Resolucion = "*";
             }
-            else {
+            else
+            {
                 LstResolucion = Coleccion.ConvertirLista(Resolucion);
             }
 
@@ -464,11 +443,11 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
             var documentos = (from Pagos in context.TblPagosElectronicos
                               where Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_adquiriente)
-                               && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
+                              && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
                               && ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)
 
                               //&& Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_facturador) || codigo_facturador.Equals("*")
-                             // && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
+                              // && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
                               //&& (Pagos.TblDocumentos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
                               && (Pagos.IntEstadoPago == cod_estado_recibo || estado_recibo.Equals("*"))
                               && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))
@@ -479,10 +458,6 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             return documentos;
 
         }
-
-
-
-
 
         /// <summary>
         /// obtiene los pagos por estado de verificación (consulta por DatFechaVerificacion, si esta null no se encuentra verificado). ¿FECHAS?
@@ -513,271 +488,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
             }
         }
 
-        #endregion
-
-        #region GestionPagos
-        /*
-        /// <summary>
-        /// Realiza el registro del pago en la plataforma electrónica.
-        /// Consulta el documento por id de seguridad para la construcción del objeto de envío de los datos del pago.
-        /// Retorna la url con el id virtual para la redirección a la página de inicio del proceso de pago.
-        /// Si el pago es de un documento los datos de la pasarela son tomados desde el comercio asociado en la resolución del mismo, de lo contrario lso datos serán obtenidos del web.config
-        /// </summary>
-        /// <param name="id_seguridad">Id de seguridad del documento o plan transaccional</param>
-        /// <param name="tipo_pago">indica si el pago es para un documento o una compra de planes (0: Documento - 1: Plan).</param>
-        /// <param name="registrar_pago">indica si se registra el pago en base de datos.</param>
-        /// <param name="valor_pago">valor a pagar.</param>
-        /// <returns></returns>
-        public string ReportePagoElectronico(System.Guid id_seguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0)
-        {
-            try
-            {
-                //Ruta retornada por el servicio, redirecciona a la  página de inicio del pago (Selección de tipo persona, forma pago y banco).
-                string ruta_inicio = string.Empty;
-                //Datos de la pasarela electrónica.
-                int comercio_id = 0;
-                string comercio_clave = string.Empty;
-                string comercio_ruta = string.Empty;
-                string codigo_servicio = string.Empty;
-                string identificacion_empresa = string.Empty;
-
-                //Objetos para reportar el pago
-                Cliente datos_cliente = new Cliente();
-                Pago datos_pago = new Pago();
-
-
-                datos_pago.id_pago = Texto.DatosAleatorios(9, 2);
-
-                //Valida si el pago es de un documento o una compra de planes.
-                if (tipo_pago == 0)
-                {
-                    Ctl_Documento clase_documento = new Ctl_Documento();
-                    TblDocumentos datos_documento = clase_documento.ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
-
-                    identificacion_empresa = datos_documento.StrEmpresaAdquiriente;
-
-                    //valisa que el documento no sea null.
-                    if (datos_documento != null)
-                    {
-                        //consulta la resolución para obtener el comercio que tiene asociado.
-                        Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
-                        TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
-
-                        //Valida que la resolución no sea null.
-                        if (datos_resolucion != null)
-                        {
-                            if (datos_resolucion.IntComercioId.Value <= 0)
-                                throw new ApplicationException(string.Format("La Resuloción N.{0} para el Facturador {1}, no tiene configurado un comercio.", datos_documento.StrNumResolucion, datos_documento.StrEmpresaFacturador));
-
-                            //Obtiene los datos de la pasarela.
-                            Ctl_EmpresasPasarela clase_pasarela = new Ctl_EmpresasPasarela();
-                            TblEmpresasPasarela datos_pasarela = clase_pasarela.Obtener(datos_documento.StrEmpresaFacturador, datos_resolucion.IntComercioId.Value);
-
-                            if (datos_pasarela != null)
-                            {
-                                //Datos de la pasarela electrónica.
-                                comercio_id = datos_pasarela.IntComercioId;
-                                comercio_clave = datos_pasarela.StrComercioClave;
-                                comercio_ruta = datos_pasarela.StrComercioIdRuta;
-                                codigo_servicio = datos_pasarela.StrCodigoServicio;
-                            }
-                        }
-                        else
-                            throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el número de Resolución", datos_documento.StrNumResolucion));
-
-                        datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
-
-                        if (valor_pago <= 0)
-                            valor_pago = Convert.ToDouble(datos_documento.IntVlrTotal);
-                        else
-                        {
-                            if (valor_pago > Convert.ToDouble(datos_documento.IntVlrTotal))
-                                throw new ApplicationException("El valor a pagar no puede ser superior al valor total del documento.");
-                        }
-                    }
-                    else
-                    {
-                        PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
-
-                        //Datos de la pasarela electrónica.
-                        comercio_id = Convert.ToInt32(pasarela.IdComercio);
-                        comercio_clave = pasarela.ClaveComercio;
-                        comercio_ruta = pasarela.RutaComercio;
-                        codigo_servicio = pasarela.CodigoServicio;
-
-                        //Obtiene el plan de transacciones.
-                        Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
-                        TblPlanesTransacciones datos_plan = clase_planes.ObtenerIdSeguridad(id_seguridad);
-
-                        identificacion_empresa = datos_plan.StrEmpresaFacturador;
-
-                        if (datos_plan == null)
-                            throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el Plan", id_seguridad));
-
-                        datos_pago.descripcion_pago = string.Format("{0}", datos_plan.StrObservaciones);
-
-                        if (valor_pago <= 0)
-                            valor_pago = Convert.ToDouble(datos_plan.IntValor);
-                        else
-                        {
-                            if (valor_pago > Convert.ToDouble(datos_plan.IntValor))
-                                throw new ApplicationException("El valor a pagar no puede ser superior al valor total de la compra.");
-                        }
-                    }
-
-
-                    datos_pago.total_con_iva = valor_pago;
-                    datos_pago.valor_iva = 0;
-                    datos_pago.codigo_servicio_principal = codigo_servicio;
-                    datos_pago.info_opcional1 = "opciona1";
-                    datos_pago.info_opcional2 = "opcional2";
-                    datos_pago.info_opcional3 = "opcional3";
-                    datos_pago.lista_codigos_servicio_multicredito = null;
-                    datos_pago.lista_nit_codigos_servicio_multicredito = null;
-                    datos_pago.lista_valores_con_iva = null;
-                    datos_pago.lista_valores_iva = null;
-                    datos_pago.total_codigos_servicio = 0;
-
-
-                    //Obtiene los datos del cliente.
-                    Ctl_Empresa clase_empresa = new Ctl_Empresa();
-                    TblEmpresas datos_empresa = clase_empresa.Obtener(identificacion_empresa);
-
-                    if (datos_empresa == null)
-                        throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "la empresa", datos_empresa.StrIdentificacion));
-
-                    datos_cliente.tipo_id = datos_empresa.StrTipoIdentificacion.ToString();
-                    datos_cliente.id_cliente = datos_empresa.StrIdentificacion;
-                    datos_cliente.nombre = datos_empresa.StrRazonSocial;
-                    datos_cliente.telefono = datos_empresa.StrTelefono;
-                    datos_cliente.email = datos_empresa.StrMail;
-
-
-                    ProcesoPago clase_proceso_pago = new ProcesoPago(comercio_id, comercio_clave, comercio_ruta);
-
-                    //Reporta el pago en la plataforma de pagos electrónicos.
-                    ruta_inicio = clase_proceso_pago.ReportarPago(datos_cliente, datos_pago, true);
-
-                    //Valida que la ruta no sea null.
-                    if (registrar_pago && !string.IsNullOrWhiteSpace(ruta_inicio))
-                    {
-                        string id_plataforma = string.Empty;
-                        //obtiene los valores enviados por get de la url
-                        Uri uri = new Uri(ruta_inicio);
-                        var queryString = HttpUtility.ParseQueryString(uri.Query);
-                        Regex isnumber = new Regex("[^0-9]");
-                        foreach (var key in queryString.Keys)
-                        {
-                            if (key.Equals("identificador"))
-                            {
-                                id_plataforma = queryString[(string)key];
-                                //valida que el id de la plataforma sean solo numeros.
-                                if (!string.IsNullOrWhiteSpace(id_plataforma))
-                                {
-                                    if (isnumber.IsMatch(id_plataforma))
-                                        throw new ApplicationException(id_plataforma);
-                                }
-                                else throw new ApplicationException(string.Format("Identificador de pago inválido."));
-                            }
-                        }
-                        TblPagosElectronicos pago = CrearPago(datos_pago.id_pago, id_plataforma, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago));
-                    }
-                }
-                else
-                    throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el documento", id_seguridad));
-
-                return ruta_inicio;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
-
-        /*
-        /// <summary>
-        /// Realiza el proceso de verificar y actualizar el pago.
-        /// </summary>
-        /// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
-        /// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
-        /// <param name="identificacion_obligado">identificación del obligado.</param>
-        /// <param name="numero_resolucion">número de la resolución con la cual se generó el documento</param>
-        /// <param name="tipo_pago">indica si el pago es para un documento o una compra de planes (0: Documento - 1: Plan).</param>
-        /// <returns>TblPagosElectronicos</returns>
-        public TblPagosElectronicos VerificarPago(string id_seguridad_pago, string id_plataforma, string identificacion_obligado, string numero_resolucion, int tipo_pago)
-        {
-            try
-            {
-                //Datos de la pasarela electrónica.
-                int comercio_id = 0;
-                string comercio_clave = string.Empty;
-
-                TblPagosElectronicos datos_pago = Obtener(id_seguridad_pago, id_plataforma);
-
-                //Valida si el pago es de un documento
-                if (tipo_pago == 0 && datos_pago.StrIdSeguridadDoc != null)
-                {
-                    Ctl_Documento clase_documento = new Ctl_Documento();
-                    TblDocumentos datos_documento = clase_documento.ObtenerPorIdSeguridad(datos_pago.StrIdSeguridadDoc.Value).FirstOrDefault();
-
-                    //valida que el documento no sea null.
-                    if (datos_documento != null)
-                    {
-                        //consulta la resolución para obtener el comercio que tiene asociado.
-                        Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
-                        TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
-
-                        //Valida que la resolución no sea null.
-                        if (datos_resolucion != null)
-                        {
-                            if (datos_resolucion.IntComercioId.Value <= 0)
-                                throw new ApplicationException(string.Format("La Resuloción N.{0} para el Facturador {1}, no tiene configurado un comercio.", datos_documento.StrNumResolucion, datos_documento.StrEmpresaFacturador));
-
-                            //Obtiene los datos de la pasarela.
-                            Ctl_EmpresasPasarela clase_pasarela = new Ctl_EmpresasPasarela();
-                            TblEmpresasPasarela datos_pasarela = clase_pasarela.Obtener(datos_documento.StrEmpresaFacturador, datos_resolucion.IntComercioId.Value);
-
-                            if (datos_pasarela != null)
-                            {
-                                //Datos de la pasarela electrónica.
-                                comercio_id = datos_pasarela.IntComercioId;
-                                comercio_clave = datos_pasarela.StrComercioClave;
-                            }
-                        }
-                        else
-                            throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el número de Resolución", datos_documento.StrNumResolucion));
-                    }
-                }
-                else
-                    throw new ApplicationException("El tipo de pago no corresponde con el id de seguridad del registro de pago.");
-
-                //Valida si el pago es un plan.
-                if (tipo_pago == 1 && datos_pago.StrIdSeguridadPlanes != null)
-                {
-                    comercio_id = 2651;
-                    comercio_clave = "2651HGI";
-                }
-                else throw new ApplicationException("El tipo de pago no corresponde con el id de seguridad del registro de pago.");
-
-                //Realiza el proceso de verificación del pago en la plataforma electrónica
-                VerificarPago clase_verificar_pago = new VerificarPago(comercio_id, comercio_clave);
-                VerificaPago datos_pago_plataforma = clase_verificar_pago.Verificar(id_seguridad_pago);
-
-                TblPagosElectronicos datos_retorno = ActualizarPago(id_seguridad_pago, id_plataforma, datos_pago_plataforma);
-
-                return datos_retorno;
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
-        */
-        #endregion
+        #endregion      
 
         #region Plataforma intermedia
-
-
 
         /// <summary>
         /// Realiza el registro del pago en la plataforma electrónica.
@@ -859,17 +572,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                         //Luego Resto, el total del documento menos la suma de pagos
                         Monto_Pendiente = datos_documento.IntVlrTotal - Monto_Pendiente;
-
                     }
-
-
-                    //Enviar Informacion facturador
-                    //ObjPago.StrIdentificacionFacturador= datos_documento.TblEmpresasFacturador.StrIdentificacion;
-                    //ObjPago.StrRazonSocialFacturador = datos_documento.TblEmpresasFacturador.StrRazonSocial;
-                    //ObjPago.StrTelefonoFacturador = datos_documento.TblEmpresasFacturador.StrTelefono;
-                    //ObjPago.StrMailFacturador = datos_documento.TblEmpresasFacturador.StrMail;
-                    //ObjPago.StrImagenFacturador = datos_documento.TblEmpresasFacturador.StrImagenEmpresa;
-
 
                     //Id del erp que envia el pago
                     ObjPago.StrIdDocumento = datos_documento.StrObligadoIdRegistro;
@@ -954,25 +657,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                         }
                     }
 
-
-
-
                     ObjPago.IntValor = decimal.Parse(valor_pago.ToString());
                     ObjPago.IntValorIva = 0;
-                    /*
-                    datos_pago.codigo_servicio_principal = codigo_servicio;
-                   
-                    datos_pago.info_opcional1 = "opciona1";
-                    datos_pago.info_opcional2 = "opcional2";
-                    datos_pago.info_opcional3 = "opcional3";
-
-
-                    datos_pago.lista_codigos_servicio_multicredito = null;
-                    datos_pago.lista_nit_codigos_servicio_multicredito = null;
-                    datos_pago.lista_valores_con_iva = null;
-                    datos_pago.lista_valores_iva = null;
-                    datos_pago.total_codigos_servicio = 0;
-                    */
 
                     //Obtiene los datos del cliente.
                     Ctl_Empresa clase_empresa = new Ctl_Empresa();
@@ -992,10 +678,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                     ObjPago.StrClienteEmail = datos_empresa.StrMail;
 
-                    //Encriptar datos de seguridad secundaria
-                    //ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.IntComercioId);
-
-
+                    //Encriptar datos de seguridad secundaria                    
                     ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-" + ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ObjPago.IntComercioId + "-" + ObjPago.IntValor.ToString("0.##"));
 
                     //Registro el Pago Local                    
@@ -1033,58 +716,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 
 
-        /// <summary>
-        /// Objeto Tpado de Pago de plataforma intermedia
-        /// </summary>
-        public class TblPasarelaPagosPI
-        {
-            public string StrIdSeguridad { get; set; }
-            public System.Guid StrIdSeguridadRegistro { get; set; }
-            public System.DateTime DatFechaRegistro { get; set; }
-            public string StrComercioData { get; set; }
-            public int IntComercioId { get; set; }
-            public string StrComercioIdRuta { get; set; }
-            public string StrCodigoServicio { get; set; }
-            public string StrComercioClave { get; set; }
-            public string StrPagoIdPlataforma { get; set; }
-            public string StrIdDocumento { get; set; }
-            public int IntPagoEstado { get; set; }
-            public decimal IntValor { get; set; }
-            public decimal IntValorIva { get; set; }
-            public string StrDescripcionPago { get; set; }
-            public string StrCampo1 { get; set; }
-            public string StrCampo2 { get; set; }
-            public string StrCampo3 { get; set; }
-            public string StrClienteTipoId { get; set; }
-            public string StrClienteIdentificacion { get; set; }
-            public string StrClienteNombre { get; set; }
-            public string StrClienteEmail { get; set; }
-            public string StrClienteTelefono { get; set; }
-            public string StrPagoTicketID { get; set; }
-            public string StrPagoTransaccionCUS { get; set; }
-            public int IntPagoClicloTransaccion { get; set; }
-            public string StrPagoCodBanco { get; set; }
-            public int IntPagoCodServicio { get; set; }
-            public int IntPagoFormaPago { get; set; }
-            public string StrPagoCodFranquicia { get; set; }
-            public System.DateTime DatFechaVerificacion { get; set; }
-            public string StrMensajeVerificacion { get; set; }
-            public int IntIdAplicativo { get; set; }
-            public string StrRutaProcedencia { get; set; }
-            public string StrRutaDestino { get; set; }
-            public string StrRutaSync { get; set; }
-            public string StrAuthToken { get; set; }
-            public string StrAuthIdEmpresa { get; set; }
-            public int IntAuthCompania { get; set; }
-            public int IntAuthEmpresa { get; set; }
-            public bool IntSincronizacion { get; set; }
-            public System.DateTime DatFechaSync { get; set; }
-            public string StrIdSeguridadPago { get; set; }
-            public string StrIdPlataforma { get; set; }
-            public System.Guid StrIdSeguridadDoc { get; set; }
-        }
+        
         #endregion
-
-
     }
 }

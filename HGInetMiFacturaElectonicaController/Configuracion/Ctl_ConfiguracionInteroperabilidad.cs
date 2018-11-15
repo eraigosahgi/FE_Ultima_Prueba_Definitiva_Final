@@ -87,7 +87,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public TblConfiguracionInteroperabilidad Validar(string usuario, string clave)
         {
             // se encripta la clave en SHA256 para comparación con la base de datos
-            string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
+            string clave_sha256 = clave;// Encriptar.Encriptar_SHA256(clave);
             TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
                                                        where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
                                                        && item.BitActivo == true
@@ -135,12 +135,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="usuario">usuario</param>
 		/// <param name="clave">clave sin encripción</param>
 		/// <returns>datos de configuración si es encontrado o null si no</returns>
-		public TblConfiguracionInteroperabilidad CambiarContraseña(string usuario, string clave, string NuevaClave)
+		public TblConfiguracionInteroperabilidad CambiarContraseña(string nit, string clave, string NuevaClave)
         {
             // se encripta la clave en SHA256 para comparación con la base de datos
-            string clave_sha256 = Encriptar.Encriptar_SHA256(clave);
+            string clave_sha256 = clave;// Encriptar.Encriptar_SHA256(clave);
             TblConfiguracionInteroperabilidad datos = (from item in context.TblConfiguracionInteroperabilidad
-                                                       where item.StrUsuario.Equals(usuario) && item.StrClave.Equals(clave_sha256)
+                                                       where item.StrIdentificacion.Equals(nit) && item.StrClave.Equals(clave_sha256)
                                                        select item).FirstOrDefault();
 
             if (datos == null)
@@ -148,7 +148,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 return null;
             }
 
-            datos.StrClave = Encriptar.Encriptar_SHA256(NuevaClave);
+            datos.StrClave = NuevaClave;// Encriptar.Encriptar_SHA256(NuevaClave);
 
             datos = this.Edit(datos);
 
@@ -187,7 +187,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 Proveedor.StrTelefono = StrTelefono;
                 Proveedor.StrObservaciones = (string.IsNullOrEmpty(StrObservaciones))? string.Empty: StrObservaciones;
                 Proveedor.StrUsuario = StrUsuario;
-                Proveedor.StrClave = Encriptar.Encriptar_SHA256(StrClave);
+                Proveedor.StrClave = StrClave;// Encriptar.Encriptar_SHA256(StrClave);
                 Proveedor.StrHgiUsuario = StrUsuario;
                 Proveedor.StrHgiClave = StrClave;
                 Proveedor.StrUrlApi = Directorio.ValidarUrl(StrUrlApi);

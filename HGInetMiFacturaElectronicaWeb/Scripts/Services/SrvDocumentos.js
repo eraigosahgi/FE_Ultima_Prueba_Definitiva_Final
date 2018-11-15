@@ -95,7 +95,7 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
     this.ActualizaEstatusPagoInterno = function (IdSeguridad, Idregistro, ObjeRespuestaPI) {
         //var ObjeRespuestaPI = response.data;
         //////////////////////////////////////////////////////////////////////
-        return $http.get('/Api/ActualizarEstado?IdSeguridad=' + IdSeguridad + "&StrIdSeguridadRegistro=" + Idregistro + '&Pago=' + ObjeRespuestaPI).then(function (response) {
+        return $http.get('/Api/ActualizarEstado?IdSeguridad=' + IdSeguridad + "&StrIdSeguridadRegistro=" + Idregistro).then(function (response) {
             return response.data;
         }, function (response) {
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
@@ -103,6 +103,16 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
         });
     }
 
+    this.ConsultarEmailUbl = function (IdSeguridad) {
+        //var ObjeRespuestaPI = response.data;
+        //////////////////////////////////////////////////////////////////////
+        return $http.get('/Api/ConsultarEmailUbl?IdSeguridad=' + IdSeguridad ).then(function (response) {
+            return response.data;
+        }, function (response) {
+            DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            return $q.reject(response.data);
+        });
+    }
 
     
 });

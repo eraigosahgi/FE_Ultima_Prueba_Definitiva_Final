@@ -282,7 +282,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                         Proveedor.StrUsuario = StrUsuario;
                         if (StrClave != Proveedor.StrClave)
                         {
-                            Proveedor.StrClave = Encriptar.Encriptar_SHA256(StrClave);
+                            Proveedor.StrClave = StrClave;// Encriptar.Encriptar_SHA256(StrClave);
                         }                       
                         Proveedor.BitActivo = BitActivo;
                         Proveedor.DatFechaActualizacion = Fecha.GetFecha();

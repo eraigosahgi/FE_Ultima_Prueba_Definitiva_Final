@@ -3,15 +3,15 @@
 var path = window.location.pathname;
 var ruta = window.location.href;
 ruta = ruta.replace(path, "/");
-document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
+document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></script>');
 
+document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></script>');
 
 var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [];
-var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum']);
-DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum) {
-
+var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento']);
+DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {  
 	var now = new Date();
 	var Estado;
 	var ResolucionesPrefijo;
@@ -235,9 +235,36 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultar();
+			consultar2();
 		}
 	};
+
+
+	function consultar2() {
+	    $('#Total').text("");
+	    if (fecha_inicio == "")
+	        fecha_inicio = now.toISOString();
+
+	    if (fecha_fin == "")
+	        fecha_fin = now.toISOString();
+
+	    if (resolucion == "")
+	        resolucion = "*";
+
+	    //Obtiene los datos del web api
+	    //ControladorApi: /Api/Documentos/
+	    //Datos GET: codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin
+	    $('#wait').show();
+	    $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&resolucion=' + resolucion + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
+	        $('#wait').hide();
+	        $("#gridDocumentos").dxDataGrid({
+	            dataSource: response.data
+	        });
+	    });
+	}
+
+
+
 
 	function consultar() {
 		$('#Total').text("");
@@ -261,6 +288,11 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 				keyExpr: "NumeroDocumento",
 				paging: {
 					pageSize: 20
+				}
+				, stateStoring: {
+		        enabled: true,
+		        type: "localStorage",
+		        storageKey: "storage"
 				},
 				pager: {
 					showPageSizeSelector: true,
@@ -344,7 +376,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                     		$scope.showModal = true;
                                     		email_destino = options.data.MailAdquiriente;
                                     		id_seguridad = options.data.StrIdSeguridad;
-                                    		$('input:text[name=EmailDestino]').val(email_destino);
+                                    		$('input:text[name=EmailDestino]').val("");
+                                    		SrvDocumento.ConsultarEmailUbl(options.data.StrIdSeguridad).then(function (data) {
+                                    		    $('input:text[name=EmailDestino]').val(data);
+                                    		});
                                     	}
                                     }).removeClass("dx-button dx-button-normal dx-widget")
 
