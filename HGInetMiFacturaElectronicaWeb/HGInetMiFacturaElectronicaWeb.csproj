@@ -2732,7 +2732,6 @@
     <Content Include="Scripts\vectormap-utils\dx.vectormaputils.debug.js" />
     <Content Include="Scripts\vectormap-utils\dx.vectormaputils.js" />
     <Content Include="Scripts\vectormap-utils\dx.vectormaputils.node.js" />
-    <Content Include="Views\Demos\WebForm1.aspx" />
     <Content Include="Views\Login\Default.aspx" />
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
@@ -2842,13 +2841,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Demos\WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Demos\WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Login\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
