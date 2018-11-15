@@ -643,6 +643,21 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 
             }
 
+            //-------------------------
+            var Vpago = window.open("", "Pagos", "width=10,height=10");            
+            if (Vpago == null || Vpago == undefined) {
+                $("#button").dxButton({ visible: false });
+                DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
+            } else {
+                $("#button").dxButton({
+                    text: "Pagar",
+                    type: "success",
+                    useSubmitBehavior: true
+                });
+                Vpago.close();
+            }
+            //-------------------------
+
         }), function errorCallback(response) {
             Mensaje(response.data.ExceptionMessage, "error");
         };
@@ -721,23 +736,7 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
                 }
 
             }
-        })
-
-       
-        //Validar Estado de ventanas emergentes
-     
-        var Vpago = window.open("", "Pagos", "width=10,height=10");
-        if (Vpago == null || Vpago == undefined) {
-            $("#button").dxButton({ visible: false });
-            DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
-        } else {
-            $("#button").dxButton({
-                text: "Pagar",
-                type: "success",
-                useSubmitBehavior: true
-            });
-            Vpago.close();
-        }             
+        })              
     }
 
     
@@ -766,19 +765,13 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
         if (idseg != null && idseg != undefined) {
             $scope.EnProceso = true;
             $("#button").dxButton({ visible: false });
-
             $http.get('/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + valor_pago).then(function (response) {
-
                 //Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
                 $scope.NumVerificacion = 1;
-
                 //Ruta servicio
                 var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
-
                 $scope.Idregistro = response.data.IdRegistro;
-
-                window.open(RutaServicio + response.data.Ruta, "_blank");
-
+                var Vpago = window.open(RutaServicio + response.data.Ruta, "_blank");                
                 $timeout(function callAtTimeout() {
                     VerificarEstado();
                 }, 60000);
