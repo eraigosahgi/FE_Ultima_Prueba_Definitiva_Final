@@ -2773,6 +2773,7 @@
     <Content Include="wcf\factura.svc" />
     <Content Include="wcf\notacredito.svc" />
     <Content Include="wcf\notadebito.svc" />
+    <Content Include="wcf\reenviodocumento.svc" />
     <Content Include="wcf\resolucion.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -3102,11 +3103,15 @@
     <Compile Include="wcf\interfaces\Inotacredito.cs" />
     <Compile Include="wcf\interfaces\Ifactura.cs" />
     <Compile Include="wcf\interfaces\Iresolucion.cs" />
+    <Compile Include="wcf\interfaces\Ireenviodocumento.cs" />
     <Compile Include="wcf\notacredito.svc.cs">
       <DependentUpon>notacredito.svc</DependentUpon>
     </Compile>
     <Compile Include="wcf\notadebito.svc.cs">
       <DependentUpon>notadebito.svc</DependentUpon>
+    </Compile>
+    <Compile Include="wcf\reenviodocumento.svc.cs">
+      <DependentUpon>reenviodocumento.svc</DependentUpon>
     </Compile>
     <Compile Include="wcf\resolucion.svc.cs">
       <DependentUpon>resolucion.svc</DependentUpon>
@@ -3198,7 +3203,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61433/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
