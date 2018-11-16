@@ -199,19 +199,24 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                      type: "localStorage",
                      storageKey: "storage"
                  }
-                , allowColumnResizing: true
+                 , allowColumnResizing: true
+                , allowColumnReordering: true
+                , columnChooser: {
+                    enabled: true,
+                    mode: "select"
+                }
                 , columns: [
                      {
                          caption: "Fecha Recepción",
                          dataField: "DatFechaIngreso",
                          dataType: "date",
                          format: "yyyy-MM-dd HH:mm",
-                         
 
-                     },                                 
+
+                     },
                      {
                          caption: "Documento",
-                         dataField: "NumeroDocumento",                         
+                         dataField: "NumeroDocumento",
                          headerFilter: {
                              allowSearch: false
                          }
@@ -220,24 +225,24 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
                     {
                         caption: "IdSeguridad",
-                        dataField: "IdSeguridad",                        
+                        dataField: "IdSeguridad",
                         headerFilter: {
                             allowSearch: false
                         }
 
                     },
                      {
-                         caption: "Tipo Documento",                         
+                         caption: "Tipo Documento",
                          dataField: "tipodoc"
                      },
                       {
                           caption: "Facturador",
                           dataField: "Facturador",
-                          
+
                       },
                       {
                           caption: "Estado",
-                          dataField: "EstadoFactura",                          
+                          dataField: "EstadoFactura",
                           headerFilter: {
                               allowSearch: true,
                               caption: "Busqueda"
@@ -349,7 +354,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
         });
     }
 
-   
+
 
     function ProcesarDocumentos() {
         if ($scope.total > 0) {
@@ -379,7 +384,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                        width: '5%',
                        cellTemplate: function (container, options) {
                            $("<div style='text-align:center'>")
-                               .append($("<a taget=_self class='icon-circle2'" + ((options.data.CodigoError != '') ? " style='color:red;' title='Error'" : " style='color:green;' title='Proceso exitoso'") + ">"))
+                               .append($("<a taget=_self class='icon-circle2'" + ((options.data.CodigoError != '') ? " style='color:red;' title='Error'" : (options.data.IdProceso == '7') ? " style='color:gray;' title='Mentiene Estado'" : " style='color:green;' title='Proceso exitoso'") + ">"))
                                .appendTo(container);
                        }
                    },
@@ -403,7 +408,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                    {
                        caption: "Documento",
                        dataField: "Documento",
-                       width: '10%',                       
+                       width: '10%',
 
                    },
                     {
@@ -425,7 +430,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                          caption: "Cufe",
                          dataField: "Cufe",
                          hidingPriority: 2
-                     },                     
+                     },
                      {
                          caption: "EstadoDian",
                          dataField: "EstadoDian",
