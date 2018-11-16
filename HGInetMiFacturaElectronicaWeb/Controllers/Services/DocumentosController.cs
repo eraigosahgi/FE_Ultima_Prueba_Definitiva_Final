@@ -529,7 +529,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Cufe = d.Cufe,
 					DescripcionProceso = (d.Error != null) ? d.Error.Mensaje : d.DescripcionProceso,
 					DocumentoTipo = d.DocumentoTipo,
-					Documento = d.Documento,
+					Documento = string.Format("{0}{1}", (d.Prefijo != null) ? d.Prefijo:string.Empty, d.Documento),
 					EstadoDianCodigoRespuesta = (d.EstadoDian != null) ? d.EstadoDian.CodigoRespuesta : "",
 					EstadoDianDescripcion = (d.EstadoDian != null) ? d.EstadoDian.Descripcion : "",
 					EstadoDianEstadoDocumento = (d.EstadoDian != null) ? d.EstadoDian.EstadoDocumento : 0,
