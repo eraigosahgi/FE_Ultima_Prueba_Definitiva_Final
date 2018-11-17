@@ -247,11 +247,11 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     allowColumnDragging: true,
                     visible: true
                 }
-                ,stateStoring: {
+                /*,stateStoring: {
                     enabled: true,
                     type: "localStorage",
                     storageKey: "storage"
-                }
+                }*/
                 ,columns: [
                     {
                         caption: "Archivos",

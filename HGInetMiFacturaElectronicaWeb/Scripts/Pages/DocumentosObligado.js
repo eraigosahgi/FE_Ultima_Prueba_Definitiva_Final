@@ -289,12 +289,12 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 				paging: {
 					pageSize: 20
 				}
-				, stateStoring: {
+				/*, stateStoring: {
 		        enabled: true,
 		        type: "localStorage",
 		        storageKey: "storage"
-				},
-				pager: {
+				}*/
+				,pager: {
 					showPageSizeSelector: true,
 					allowedPageSizes: [5, 10, 20],
 					showInfo: true

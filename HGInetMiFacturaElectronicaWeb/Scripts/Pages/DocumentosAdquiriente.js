@@ -151,11 +151,11 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 paging: {
                     pageSize: 20
                 },
-                stateStoring: {
+               /* stateStoring: {
                     enabled: true,
                     type: "localStorage",
                     storageKey: "storage"
-                },
+                },*/
                 pager: {
                     showPageSizeSelector: true,
                     allowedPageSizes: [5, 10, 20],

@@ -143,11 +143,12 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
             },
                 headerFilter: {
                     visible: true
-                }, stateStoring: {
+                }
+                /*, stateStoring: {
                     enabled: true,
                     type: "localStorage",
                     storageKey: "storage"
-                }
+                }*/
             , allowColumnResizing: true
             , allowColumnReordering: true
             , columnChooser: {
