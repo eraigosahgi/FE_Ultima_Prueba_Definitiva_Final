@@ -275,7 +275,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Xml = d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,                                                           
                     zip = d.StrUrlAnexo,
-                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : ""
+                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+                    XmlAcuse = d.StrUrlAcuseUbl
                 });
 
 				return Ok(retorno);
@@ -331,7 +332,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Xml = d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,
                     zip = d.StrUrlAnexo,
-                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : ""
+                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+                    XmlAcuse = d.StrUrlAcuseUbl
                 });
 
 				return Ok(retorno);
@@ -596,7 +598,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Xml = d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,
                     zip = d.StrUrlAnexo,
-                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : ""
+                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+                    XmlAcuse = d.StrUrlAcuseUbl
                 });
 
 				return Ok(retorno);
@@ -710,7 +713,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
                     zip = d.StrUrlAnexo,
-                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : ""
+                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+                    XmlAcuse = d.StrUrlAcuseUbl
                 });
 
 				return Ok(retorno);
@@ -772,7 +776,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
                     zip = d.StrUrlAnexo,
-                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : ""
+                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+                    XmlAcuse = d.StrUrlAcuseUbl
                 });
 
 				return Ok(retorno);
