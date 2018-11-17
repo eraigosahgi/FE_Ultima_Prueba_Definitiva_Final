@@ -155,7 +155,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         {
             try
             {
-                respuesta.DescripcionProceso = "Compresión del archivo XML firmado con la información en estandar UBL.";
+                respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.CompresionXml);
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
                 respuesta.IdProceso = ProcesoEstado.CompresionXml.GetHashCode();
 

@@ -240,12 +240,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta = Consultar(documento, empresa, ref respuesta);
 
 					//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-					if (respuesta.EstadoDian.CodigoRespuesta == null)
+					if (respuesta.EstadoDian.CodigoRespuesta == null || respuesta.EstadoDian.CodigoRespuesta == "7200000")
 					{
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
 					}
-					else
+					else if (respuesta.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Pendiente.GetHashCode())
 					{
 						respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
 					}
@@ -258,14 +258,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta = Consultar(documento, empresa, ref respuesta);
 
 					//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-					if (respuesta.EstadoDian.CodigoRespuesta == null)
+					/*if (respuesta.EstadoDian.CodigoRespuesta == null)
 					{
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
 
 						//Valida de nuevo el estado del documento si fue enviado y hay respuesta de la DIAN
 						respuesta = Consultar(documento, empresa, ref respuesta);
-					}
+					}*/
 
 					// envía el mail de documentos al adquiriente
 					if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())

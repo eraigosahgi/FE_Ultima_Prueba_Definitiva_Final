@@ -38,7 +38,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			HGInetDIANServicios.DianFactura.AcuseRecibo acuse = new HGInetDIANServicios.DianFactura.AcuseRecibo();
 			try
 			{
-				respuesta.DescripcionProceso = "Envío del archivo ZIP con el XML firmado a la DIAN.";
+				respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
 				respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
 

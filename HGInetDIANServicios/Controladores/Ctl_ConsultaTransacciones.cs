@@ -69,10 +69,10 @@ namespace HGInetDIANServicios
 				}
 				finally
 				{
-                    if (behavior.Inspector.XmlResponse == null)
-                        throw new ApplicationException("No hay respuesta del servicio de la DIAN consultando estado del documento");
+					if (behavior.Inspector.XmlResponse == null)
+						throw new ApplicationException("No hay respuesta del servicio de la DIAN consultando estado del documento");
 
-                    string carpeta = Path.GetDirectoryName(ruta_log) + @"\";
+					string carpeta = Path.GetDirectoryName(ruta_log) + @"\";
 
 					string archivo = Path.GetFileNameWithoutExtension(ruta_log) + ".xml";
 
@@ -107,10 +107,10 @@ namespace HGInetDIANServicios
 			XmlDocument xmlDocument = new XmlDocument();
 			xmlDocument.LoadXml(soapResponse);
 
-			var soapBody = xmlDocument.GetElementsByTagName("ns3:ConsultaResultadoValidacionDocumentosRespuesta")[0];            
+			var soapBody = xmlDocument.GetElementsByTagName("ns3:ConsultaResultadoValidacionDocumentosRespuesta")[0];
 
-            // objeto de respuesta principal
-            DianResultadoTransacciones.DocumentosRecibidos acuse = new DianResultadoTransacciones.DocumentosRecibidos();
+			// objeto de respuesta principal
+			DianResultadoTransacciones.DocumentosRecibidos acuse = new DianResultadoTransacciones.DocumentosRecibidos();
 
 
 			foreach (XmlNode item in soapBody)
@@ -158,31 +158,31 @@ namespace HGInetDIANServicios
 									detalle.DatosBasicosDocumento.NumeroDocumento = item3.InnerText;
 							}
 
-                            detalle.DatosBasicosDocumento.DescripcionEstado = detalle.DatosBasicosDocumento.DescripcionEstado + " " + ObtenerErroresRespuesta(xmlDocument);
-                            detalles.Add(detalle);
+							detalle.DatosBasicosDocumento.DescripcionEstado = detalle.DatosBasicosDocumento.DescripcionEstado + " " + ObtenerErroresRespuesta(xmlDocument);
+							detalles.Add(detalle);
 						}
 
 					}
-                   
 
-                    acuse.DocumentoRecibido = detalles.ToArray();
+
+					acuse.DocumentoRecibido = detalles.ToArray();
 
 				}
 			}
 
-            return acuse;
+			return acuse;
 
 		}
 
-        /// <summary>
-        /// Retorna un string con la lista de errores del XML de respuesta de la Dian
-        /// </summary>
-        /// <param name="XmlDocument"></param>
-        /// <returns></returns>
-        public static string ObtenerErroresRespuesta(XmlDocument xmlDocument) {
+		/// <summary>
+		/// Retorna un string con la lista de errores del XML de respuesta de la Dian
+		/// </summary>
+		/// <param name="XmlDocument"></param>
+		/// <returns></returns>
+		public static string ObtenerErroresRespuesta(XmlDocument xmlDocument) {
 
-            string DetalleIncorrecto = "";            
-            var receivedJS = xmlDocument.GetElementsByTagName("ns3:VerificacionFuncional")[0];
+			string DetalleIncorrecto = "";
+			var receivedJS = xmlDocument.GetElementsByTagName("ns3:VerificacionFuncional")[0];
 
 			if (receivedJS != null)
 			{
@@ -209,16 +209,16 @@ namespace HGInetDIANServicios
 				}
 			}
 
-            return DetalleIncorrecto;            
-        }
+			return DetalleIncorrecto;
+		}
 
 
-        /// <summary>
-        /// Valida la respuesta de la consulta de transacciones
-        /// </summary>
-        /// <param name="documento">respuesta del servicio web</param>
-        /// <returns>validación propia de HGI</returns>
-        public static ConsultaDocumento ValidarTransaccion(DianResultadoTransacciones.DocumentosRecibidos documento)
+		/// <summary>
+		/// Valida la respuesta de la consulta de transacciones
+		/// </summary>
+		/// <param name="documento">respuesta del servicio web</param>
+		/// <returns>validación propia de HGI</returns>
+		public static ConsultaDocumento ValidarTransaccion(DianResultadoTransacciones.DocumentosRecibidos documento)
 		{
 
 			ConsultaDocumento resultado = new ConsultaDocumento();
@@ -235,6 +235,9 @@ namespace HGInetDIANServicios
 
 			switch (resultado.ConsultaEstado)
 			{
+
+				case 100: resultado.ConsultaEstadoDescripcion = "Error al procesar la solicitud WS entrante"; break;
+
 				case 200: resultado.ConsultaEstadoDescripcion = "Transacción Exitosa"; break;
 
 				case 300: resultado.ConsultaEstadoDescripcion = "Excepción en el Sistema"; break;
@@ -250,7 +253,8 @@ namespace HGInetDIANServicios
 			if (documento.DocumentoRecibido != null)
 			{
 				/*Descripción del estado del documento
-                    7200001 = RECIBIDA
+					7200000 = NO HAY RESPUESTA DE LA DIAN    
+					7200001 = RECIBIDA
                     7200002 = EXITOSA
                     7200003 = EN PROCESO DE VALIDACIÓN
                     7200004 = FALLIDA (Documento no cumple 1 o más validaciones de DIAN)
@@ -288,9 +292,15 @@ namespace HGInetDIANServicios
 
 					default:
 						resultado.EstadoDianDescripcion = "No existe documentación del estado.";
-						resultado.Estado = EstadoDocumentoDian.Rechazado;
+						resultado.Estado = EstadoDocumentoDian.Pendiente;
 						break;
 				}
+			}
+			else
+			{
+				resultado.CodigoEstadoDian = "7200000";
+				resultado.EstadoDianDescripcion = documento.DescripcionTransaccion;
+				resultado.Estado = EstadoDocumentoDian.Pendiente;
 			}
 
 			return resultado;
