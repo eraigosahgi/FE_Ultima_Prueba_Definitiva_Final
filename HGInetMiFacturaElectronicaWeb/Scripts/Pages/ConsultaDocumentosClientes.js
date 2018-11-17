@@ -10,7 +10,7 @@ document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services
 var TipoConsulta;
 var email_destino = "";
 var id_seguridad = "";
-var items_recibo = [{ "ID": 1, "Descripcion": "Codígo Plataforma" }, { "ID": 2, "Descripcion": "Documento" }];
+var items_recibo = [{ "ID": 1, "Descripcion": "Código Plataforma" }, { "ID": 2, "Descripcion": "Documento" }];
 var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'ModalEmpresasApp', 'AppSrvDocumento', 'AppMaestrosEnum']);
 DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvDocumento, SrvMaestrosEnum) {
 
@@ -232,7 +232,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                             $scope.showModal = true;
                                             email_destino = options.data.MailAdquiriente;
                                             id_seguridad = options.data.StrIdSeguridad;
-                                            $('input:text[name=EmailDestino]').val(email_destino);
+                                            $('input:text[name=EmailDestino]').val("");
+                                            SrvDocumento.ConsultarEmailUbl(options.data.StrIdSeguridad).then(function (data) {
+                                                $('input:text[name=EmailDestino]').val(data);
+                                            });
                                         }
                                     }).removeClass("dx-button dx-button-normal dx-widget")
 

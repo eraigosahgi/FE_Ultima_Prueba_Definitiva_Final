@@ -37,8 +37,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
                 var retorno = datos.Select(d => new
                 {
-                    ID =1,
-                    Descripcion = d.StrNumResolucion
+                    ID =1,                    
+                    Descripcion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntTipoDoc)) + "-" + ((d.StrPrefijo == null) ? "S / PREFIJO" : (!d.StrPrefijo.Equals("")) ? d.StrPrefijo : "S/PREFIJO") + ((d.IntTipoDoc == 1) ? "-" + d.StrNumResolucion : "")
                 });
 
                 return Ok(retorno);

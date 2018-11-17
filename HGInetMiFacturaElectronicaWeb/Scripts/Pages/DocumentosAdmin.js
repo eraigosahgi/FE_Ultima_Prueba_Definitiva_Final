@@ -258,7 +258,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         cssClass: "col-md-1",
 
                         cellTemplate: function (container, options) {
-                            /*
+                            
                             var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
 
                             var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
@@ -288,7 +288,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                                             $scope.showModal = true;
                                             email_destino = options.data.MailAdquiriente;
                                             id_seguridad = options.data.StrIdSeguridad;
-                                            $('input:text[name=EmailDestino]').val(email_destino);
+                                            $('input:text[name=EmailDestino]').val("");
+                                            SrvDocumento.ConsultarEmailUbl(options.data.StrIdSeguridad).then(function (data) {
+                                                $('input:text[name=EmailDestino]').val(data);
+                                            });
                                         }
                                     }).removeClass("dx-button dx-button-normal dx-widget")
 
@@ -297,7 +300,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                             )
                                 .append($("<a target='_blank' class='icon-file-eye2' " + visible_acuse + "></a>"))
                                 .appendTo(container);
-                                */
+                                
                         }
                     },
                     {
