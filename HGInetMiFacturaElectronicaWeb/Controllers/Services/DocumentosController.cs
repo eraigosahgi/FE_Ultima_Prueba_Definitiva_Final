@@ -1111,7 +1111,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Ctl_Documento Controlador = new Ctl_Documento();
                 TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(IdSeguridad).FirstOrDefault();
                 var objeto = (dynamic)null;
-                objeto = Ctl_Documento.ConvertirServicio(datos);
+                objeto = Ctl_Documento.ConvertirServicio(datos,true);
                 string correo = objeto.DatosFactura.DatosAdquiriente.Email;
                 return Request.CreateResponse(HttpStatusCode.OK, correo);
             }

@@ -791,7 +791,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="objetoBd"></param>
 		/// <param name="tipo_doc"></param>
 		/// <returns></returns>
-		public static object ConvertirServicio(TblDocumentos objetoBd)
+		public static object ConvertirServicio(TblDocumentos objetoBd, bool reenvio = false)
 		{
 			//Asigna a un objeto dinamico el objeto enviado por el usuario
 			var documento_obj = (dynamic)null;
@@ -871,42 +871,46 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			documento_obj.UrlPdf = objetoBd.StrUrlArchivoPdf;
 			documento_obj.UrlXmlUbl = objetoBd.StrUrlArchivoUbl;
 			documento_obj.FechaUltimoProceso = objetoBd.DatFechaActualizaEstado;
-
-			//Obtiene la carpeta donde quedo la consulta de la DIAN
-			TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(objetoBd.IntDocTipo);
-
-			// Nombre del archivo Xml 
-			string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(objetoBd.IntNumero.ToString(), objetoBd.StrEmpresaFacturador, doc_tipo, objetoBd.StrPrefijo));
-
-			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-			//Url publica de la respuesta de la DIAN en xml
-			string url_ppal_respuesta = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, objetoBd.TblEmpresasFacturador.StrIdSeguridad.ToString());
-
-			string ruta_xml = string.Format(@"{0}{1}/{2}", url_ppal_respuesta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian, archivo_xml);
-
-			//Obtiene el archivo en la ruta Http
-			ArchivoUrl archivo_consulta = Archivo.Obtener(ruta_xml);
-
-			//Valida que el archivo si existe de lo contrario vuelve a consultar el documento en la DIAN.
-			if (archivo_consulta == null)
+			
+			if (!reenvio)
 			{
+				//Obtiene la carpeta donde quedo la consulta de la DIAN
+				TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(objetoBd.IntDocTipo);
 
-				DocumentoRespuesta consulta_dian = new DocumentoRespuesta();
+				// Nombre del archivo Xml 
+				string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(objetoBd.IntNumero.ToString(), objetoBd.StrEmpresaFacturador, doc_tipo, objetoBd.StrPrefijo));
 
-				consulta_dian = Ctl_Documentos.Consultar(objetoBd, objetoBd.TblEmpresasFacturador, ref consulta_dian);
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-				ruta_xml = consulta_dian.EstadoDian.UrlXmlRespuesta;
+				//Url publica de la respuesta de la DIAN en xml
+				string url_ppal_respuesta = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, objetoBd.TblEmpresasFacturador.StrIdSeguridad.ToString());
 
+				string ruta_xml = string.Format(@"{0}{1}/{2}", url_ppal_respuesta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian, archivo_xml);
+
+				//Obtiene el archivo en la ruta Http
+				ArchivoUrl archivo_consulta = Archivo.Obtener(ruta_xml);
+
+				//Valida que el archivo si existe de lo contrario vuelve a consultar el documento en la DIAN.
+
+				if (archivo_consulta == null)
+				{
+
+					DocumentoRespuesta consulta_dian = new DocumentoRespuesta();
+
+					consulta_dian = Ctl_Documentos.Consultar(objetoBd, objetoBd.TblEmpresasFacturador, ref consulta_dian);
+
+					ruta_xml = consulta_dian.EstadoDian.UrlXmlRespuesta;
+
+				}
+
+				//asigna la ruta que tiene el archivo donde se guardo la consulta que se hizo a la DIAN
+				documento_obj.EstadoDian = new RespuestaDian();
+				documento_obj.EstadoDian.UrlXmlRespuesta = ruta_xml;
+
+				//Construye la url publica para el acuse de recibo del documento
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				documento_obj.UrlAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", objetoBd.StrIdSeguridad.ToString()));
 			}
-
-			//asigna la ruta que tiene el archivo donde se guardo la consulta que se hizo a la DIAN
-			documento_obj.EstadoDian = new RespuestaDian();
-			documento_obj.EstadoDian.UrlXmlRespuesta = ruta_xml;
-
-			//Construye la url publica para el acuse de recibo del documento
-			PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-			documento_obj.UrlAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", objetoBd.StrIdSeguridad.ToString()));
 
 			return documento_obj;
 		}
