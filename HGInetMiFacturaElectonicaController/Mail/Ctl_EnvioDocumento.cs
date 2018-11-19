@@ -47,7 +47,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						NotificacionCorreo item_respuesta = new NotificacionCorreo()
 						{
-							CodigoRegistroDoc = item.RadicadoDocumento,
+							IdSeguridad = item.RadicadoDocumento,
 							Email = item.Email
 						};
 						try
