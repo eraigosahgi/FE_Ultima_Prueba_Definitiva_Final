@@ -10,9 +10,9 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 	{
 
 		/// <summary>
-		/// Id único de Registro del Obligado a Facturar ó Id del radicado
+		/// Id seguridad del documento registrado en la plataforma
 		/// </summary>
-		public string CodigoRegistroDoc { get; set; }
+		public string IdSeguridad { get; set; }
 
 		/// <summary>
 		/// Correo donde se va enviar el documento
