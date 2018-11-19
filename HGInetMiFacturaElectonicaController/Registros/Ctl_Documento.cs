@@ -941,73 +941,20 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				obj_documento.IdDocumento = respuesta.StrIdSeguridad.ToString();
 				obj_documento.Identificacion = respuesta.TblEmpresasAdquiriente.StrIdentificacion;
 				obj_documento.IdProceso = respuesta.IntIdEstado;
+				obj_documento.DescripcionProceso = Enumeracion.GetDescription(Enumeracion.ParseToEnum<ProcesoEstado>(Convert.ToInt32(respuesta.IntIdEstado)));
 				obj_documento.MotivoRechazo = respuesta.StrAdquirienteMvoRechazo;
 				obj_documento.NumeroResolucion = respuesta.TblEmpresasResoluciones.StrNumResolucion;
 				obj_documento.Prefijo = respuesta.TblEmpresasResoluciones.StrPrefijo;
-				obj_documento.ProcesoFinalizado = 0;
+				if (respuesta.IntIdEstado == ProcesoEstado.Finalizacion.GetHashCode() || respuesta.IntIdEstado == ProcesoEstado.FinalizacionErrorDian.GetHashCode())
+				{
+					obj_documento.ProcesoFinalizado = 1;
+				}
+				else
+				{
+					obj_documento.ProcesoFinalizado = 0;
+				}
 				obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf;
 				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
-
-
-				// obj_documento.DescripcionProceso
-
-				switch (respuesta.IntIdEstado)
-				{
-					case 1:
-						obj_documento.DescripcionProceso = "Recepción - Información del documento.";
-						break;
-
-					case 2:
-						obj_documento.DescripcionProceso = "Valida la información del documento.";
-						break;
-
-					case 3:
-						obj_documento.DescripcionProceso = "Genera información en estandar UBL.";
-						break;
-
-					case 4:
-						obj_documento.DescripcionProceso = "Almacena el archivo XML con la información en estandar UBL.";
-						break;
-
-					case 5:
-						obj_documento.DescripcionProceso = "Firma el archivo XML con la información en estandar UBL.";
-						break;
-
-					case 6:
-						obj_documento.DescripcionProceso = "Compresión del archivo XML firmado con la información en estandar UBL.";
-						break;
-
-					case 7:
-						obj_documento.DescripcionProceso = "Envío del archivo ZIP con el XML firmado a la DIAN.";
-						break;
-
-					case 8:
-						obj_documento.DescripcionProceso = "Envío correo adquiriente";
-						break;
-
-					case 9:
-						obj_documento.DescripcionProceso = "Recepción acuse de recibo del Adquiriente";
-						break;
-
-					case 10:
-						obj_documento.DescripcionProceso = "Envío correo acuse de recibo al facturador";
-						break;
-
-
-					case 90:
-						obj_documento.DescripcionProceso = "Finalizado con inconsistencias.";
-						obj_documento.ProcesoFinalizado = 1;
-						break;
-
-					case 99:
-						obj_documento.DescripcionProceso = "Termina proceso";
-						obj_documento.ProcesoFinalizado = 1;
-						break;
-
-					default:
-						obj_documento.DescripcionProceso = "Proceso desconocido";
-						break;
-				}
 
 				if (respuesta.IntIdEstado == 1)
 					obj_documento.DescripcionProceso = "Recepción - Información del documento.";
