@@ -22,9 +22,9 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 
 		/// <summary>
-		/// Método Web para recibir los documentos de tipo Factura
+		/// Método Web para recibir los documentos del facturador electrónico que se va enviar a otro correo
 		/// </summary>
-		/// <param name="documentos">colección de documentos de tipo Factura</param>
+		/// <param name="documentos">colección de documentos</param>
 		/// <returns>resultado de la operación</returns>
 		public List<NotificacionCorreo> Recepcion(List<EnvioDocumento> documentos)
 		{
