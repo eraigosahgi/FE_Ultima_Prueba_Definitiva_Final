@@ -451,7 +451,7 @@ namespace HGInetUBL
 			try
 			{
 				if (nota_debito == null)
-					throw new Exception("La Nota Crédito es inválida.");
+					throw new Exception("La Nota Débito es inválida.");
 
 				if (namespaces_xml == null)
 					throw new Exception("Los Namespaces son inválidos.");
@@ -1739,7 +1739,7 @@ namespace HGInetUBL
 			try
 			{
 				//string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(nota_dedito.ID.Value, identificacion, TipoDocumento.NotaDebito);
-				string nombre_archivo_zip = NombramientoArchivo.ObtenerZip(nota_dedito.ID.Value, identificacion, TipoDocumento.NotaDebito);
+				string nombre_archivo_zip = NombramientoArchivo.ObtenerZip(nota_dedito.ID.Value, identificacion, TipoDocumento.NotaDebito,"");
 				string ruta = @"C:\Users\dmonsalve\Downloads\xml\";
 
 				//Xml.GuardarObjeto(nota_dedito, ruta, nombre_archivo_xml, namespaces_xml);

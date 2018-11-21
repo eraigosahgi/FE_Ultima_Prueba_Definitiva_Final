@@ -254,8 +254,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 			// Valida los estados de visibilidad pública para el adquiriente
-			var estado_dian = "";
-			estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico"));
+			//var estado_dian = "";
+			//estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico"));
 
 			fecha_inicio = fecha_inicio.Date;
 			//            fecha_fin = fecha_fin.Date.AddDays(1);
@@ -279,7 +279,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
 										&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 										   && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-										   && (estado_dian.Contains(datos.IntIdEstado.ToString()))
+										   && (datos.IntIdEstado > 7 && datos.IntIdEstado < 99 && datos.IntIdEstado != 90)
 										   && (datos.IntIdEstado != ErrorDian)
 										   && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
 										   && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
