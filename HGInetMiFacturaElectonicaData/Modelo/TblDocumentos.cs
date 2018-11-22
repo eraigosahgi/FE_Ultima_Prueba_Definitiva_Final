@@ -51,6 +51,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrUrlAnexo { get; set; }
         public string StrObservacionAnexo { get; set; }
         public Nullable<int> IntPesoAnexo { get; set; }
+        public int IdCategoriaEstado { get; set; }
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }

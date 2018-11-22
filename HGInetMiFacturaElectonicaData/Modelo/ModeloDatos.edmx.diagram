@@ -32,7 +32,7 @@
         <EntityTypeShape EntityType="Modelo.TblConfiguracionInteroperabilidad" Width="2.125" PointX="18.375" PointY="0.5" />
         <EntityTypeShape EntityType="Modelo.TblFormatos" Width="1.875" PointX="2.625" PointY="5.375" />
         <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
-        <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="2" PointX="15" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="2.375" PointX="14" PointY="0.5" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" />

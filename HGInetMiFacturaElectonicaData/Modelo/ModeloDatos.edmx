@@ -74,6 +74,7 @@
           <Property Name="StrUrlAnexo" Type="varchar" MaxLength="300" />
           <Property Name="StrObservacionAnexo" Type="varchar(max)" />
           <Property Name="IntPesoAnexo" Type="int" />
+          <Property Name="IdCategoriaEstado" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -360,6 +361,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
+          <End Role="TblEmpresas" Type="Self.TblEmpresas" Multiplicity="1" />
+          <End Role="TblEmpresasResoluciones" Type="Self.TblEmpresasResoluciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresas">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblEmpresasResoluciones">
+              <PropertyRef Name="StrEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TblEmpresasResoluciones_TblEmpresasPasarela">
           <End Role="TblEmpresasPasarela" Type="Self.TblEmpresasPasarela" Multiplicity="0..1" />
           <End Role="TblEmpresasResoluciones" Type="Self.TblEmpresasResoluciones" Multiplicity="*" />
@@ -371,18 +384,6 @@
             <Dependent Role="TblEmpresasResoluciones">
               <PropertyRef Name="StrEmpresa" />
               <PropertyRef Name="IntComercioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TblEmpresasResoluciones_TblEmpresasResoluciones">
-          <End Role="TblEmpresas" Type="Self.TblEmpresas" Multiplicity="1" />
-          <End Role="TblEmpresasResoluciones" Type="Self.TblEmpresasResoluciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblEmpresas">
-              <PropertyRef Name="StrIdentificacion" />
-            </Principal>
-            <Dependent Role="TblEmpresasResoluciones">
-              <PropertyRef Name="StrEmpresa" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -562,12 +563,12 @@
             <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
           </AssociationSet>
-          <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresasPasarela" Association="Self.FK_TblEmpresasResoluciones_TblEmpresasPasarela">
-            <End Role="TblEmpresasPasarela" EntitySet="TblEmpresasPasarela" />
+          <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresas" Association="Self.FK_TblEmpresasResoluciones_TblEmpresas">
+            <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
           </AssociationSet>
-          <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresasResoluciones" Association="Self.FK_TblEmpresasResoluciones_TblEmpresasResoluciones">
-            <End Role="TblEmpresas" EntitySet="TblEmpresas" />
+          <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresasPasarela" Association="Self.FK_TblEmpresasResoluciones_TblEmpresasPasarela">
+            <End Role="TblEmpresasPasarela" EntitySet="TblEmpresasPasarela" />
             <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
           </AssociationSet>
           <AssociationSet Name="FK_TblFormatos_TblEmpresas" Association="Self.FK_TblFormatos_TblEmpresas">
@@ -1171,6 +1172,7 @@
           <Property Name="StrUrlAnexo" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="StrObservacionAnexo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="IntPesoAnexo" Type="Int32" />
+          <Property Name="IdCategoriaEstado" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadEmisor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadReceptor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
@@ -1525,6 +1527,7 @@
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
+                <ScalarProperty Name="IdCategoriaEstado" ColumnName="IdCategoriaEstado" />
                 <ScalarProperty Name="IntPesoAnexo" ColumnName="IntPesoAnexo" />
                 <ScalarProperty Name="StrObservacionAnexo" ColumnName="StrObservacionAnexo" />
                 <ScalarProperty Name="StrUrlAnexo" ColumnName="StrUrlAnexo" />
