@@ -7,12 +7,13 @@ using System.Xml;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet;
+using System.IO;
 
 namespace HGInetDIANServicios
 {
 	public class Ctl_Resolucion
 	{
-		public static DianResolucion.ResolucionesFacturacion Obtener(Guid id_peticion, string identificador_software, string clave, string identificacion_empresa, string identificacion_proveedor, DateTime fecha, bool prueba = false)
+		public static DianResolucion.ResolucionesFacturacion Obtener(Guid id_peticion, string identificador_software, string clave, string identificacion_empresa, string identificacion_proveedor, DateTime fecha, string archivo_log, bool prueba = false)
 		{
 			try
 			{
@@ -58,13 +59,11 @@ namespace HGInetDIANServicios
 				{
                     if (behavior.Inspector.XmlResponse == null)
                         throw new ApplicationException("No hay respuesta del servicio de la DIAN consultando resoluciones");
+						
+					string carpeta = Path.GetDirectoryName(archivo_log) + @"\";
 
-                    string carpeta = string.Format(@"{0}_LogFacturaE\", Dms.ObtenerCarpetaPrincipal("", identificacion_empresa));
-                    
-                    carpeta = Directorio.CrearDirectorio(carpeta);
-
-					string archivo = id_peticion.ToString() + ".xml";
-
+					string archivo = Path.GetFileNameWithoutExtension(archivo_log) + ".xml";
+					
 					// almacena el mensaje de respuesta del servicio web
 					archivo = Xml.GuardarXml(behavior.Inspector.XmlResponse, carpeta, archivo);
 
