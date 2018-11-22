@@ -7,66 +7,81 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaData
 {
-    public enum ProcesoEstado
-    {
-        [Description("Recepción")]
-        [AmbientValue("privado")]
-        Recepcion = 1,
+	public enum ProcesoEstado
+	{
+		[Description("Recepción")]
+		[AmbientValue("privado")]
+		[Category("0")]
+		Recepcion = 1,
 
-        [Description("Validación Documento")]
-        [AmbientValue("privado")]
-        Validacion = 2,
+		[Description("Validación Documento")]
+		[AmbientValue("privado")]
+		[Category("0")]
+		Validacion = 2,
 
-        [Description("Generación UBL")]
-        [AmbientValue("privado")]
-        UBL = 3,
+		[Description("Generación UBL")]
+		[AmbientValue("privado")]
+		[Category("0")]
+		UBL = 3,
 
         [Description("Almacenamiento XML")]
         [AmbientValue("privado")]
-        AlmacenaXML = 4,
+		[Category("100")]
+		AlmacenaXML = 4,
 
         [Description("Firma XML")]
         [AmbientValue("privado")]
-        FirmaXml = 5,
+		[Category("100")]
+		FirmaXml = 5,
 
         [Description("Pendiente Envio Dian")]
         [AmbientValue("privado")]
-        CompresionXml = 6,
+		[Category("100")]
+		CompresionXml = 6,
 
         [Description("Envío Dian")]
         [AmbientValue("privado")]
-        EnvioZip = 7,
+		[Category("200")]
+		EnvioZip = 7,
 
         [Description("Envío E-mail Adquiriente")]
         [AmbientValue("publico")]
-        EnvioEmailAcuse = 8,
+		[Category("300")]
+		EnvioEmailAcuse = 8,
 
         [Description("Recepción Acuse")]
         [AmbientValue("publico")]
-        RecepcionAcuse = 9,
+		[Category("300")]
+		RecepcionAcuse = 9,
 
         [Description("Envío E-mail Acuse")]
         [AmbientValue("publico")]
-        EnvioRespuestaAcuse = 10,
+		[Category("300")]
+		EnvioRespuestaAcuse = 10,
 
         [Description("Documento Pendiente Envío Proveedor")]
         [AmbientValue("publico")]
-        PendienteEnvioProveedorDoc = 11,
+		[Category("300")]
+		PendienteEnvioProveedorDoc = 11,
 
         [Description("Envío Exitoso Proveedor")]
         [AmbientValue("publico")]
-        EnvioExitosoProveedor = 12,
+		[Category("300")]
+		EnvioExitosoProveedor = 12,
 
         [Description("Acuse Pendiente Envío Proveedor")]
         [AmbientValue("publico")]
-        PendienteEnvioProveedorAcuse = 13,
+		[Category("300")]
+		PendienteEnvioProveedorAcuse = 13,
 
         [Description("Error Dian, Finaliza Proceso")]
         [AmbientValue("publico")]
-        FinalizacionErrorDian = 90,
+		[Category("400")]
+		FinalizacionErrorDian = 90,
 
         [Description("Fin Proceso Exitoso")]
         [AmbientValue("publico")]
-        Finalizacion = 99
+		[Category("300")]
+		Finalizacion = 99
     }
 }

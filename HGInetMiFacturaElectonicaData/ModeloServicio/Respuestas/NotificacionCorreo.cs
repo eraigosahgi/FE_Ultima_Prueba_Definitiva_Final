@@ -20,7 +20,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string Email { get; set; }
 
 		/// <summary>
-		/// Indica el estado del Envio(1 - Exitoso, 2 - Fallido).
+		/// Indica el estado del Envio(1 - Exitoso, 0 - Fallido).
 		/// </summary>
 		public int IdEstado{ get; set; }
 
