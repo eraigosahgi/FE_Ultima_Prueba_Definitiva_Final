@@ -55,13 +55,13 @@
                                         <div id="FechaFinal"></div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <%--<div class="col-md-4">
                                         <i class="icon-file-text"></i>
                                         <label>Estado Recibo:</label>
                                         <div data-dx-select-box="filtros.EstadoRecibo"></div>
-                                    </div>
+                                    </div>--%>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-8">
                                         <i class="icon-files-empty"></i>
                                         <label>Número Documento:</label>
                                         <div data-dx-autocomplete="filtros.NumeroDocumento"></div>

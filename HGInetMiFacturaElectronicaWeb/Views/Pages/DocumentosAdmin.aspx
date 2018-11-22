@@ -57,14 +57,14 @@
                                                      
                                    
 
-                                    <div class="col-md-4" style="margin-top:1%">
+                                    <div class="col-md-5" style="margin-top:1%">
                                         <i class="icon-file-text"></i>
                                         <label>Estado:</label>
                                         <div id="filtrosEstadoRecibo"></div>
                                     </div>
                                    
 
-                                    <div class="col-md-4" style="margin-top:1%">
+                                    <div class="col-md-3" style="margin-top:1%">
                                         <i class="icon-files-empty"></i>
                                         <label>Código Adquiriente:</label>
                                         <div data-dx-autocomplete="filtros.Adquiriente"></div>

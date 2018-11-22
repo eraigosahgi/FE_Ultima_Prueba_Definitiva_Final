@@ -381,7 +381,8 @@ var items_recibo =
     [
     { ID: "*", Texto: 'Obtener Todos' },
     { ID: "1", Texto: 'Aprobado' },
-    { ID: "2", Texto: 'Rechazado' }
+    { ID: "2", Texto: 'Rechazado' },
+    { ID: "3", Texto: 'Aprobado Tácito' }
     ];
 
 

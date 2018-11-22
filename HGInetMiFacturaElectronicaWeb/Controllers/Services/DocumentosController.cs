@@ -68,8 +68,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					DatFechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
 					d.DatFechaVencDocumento,
 					IntVlrTotal = (d.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode()) ? -d.IntVlrTotal : d.IntVlrTotal,
-					EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
-					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+                    //EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+                    EstadoFactura = string.Format("{0} - {1}", DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado), DescripcionEstadoFactura(d.IntIdEstado)),
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
 					d.StrAdquirienteMvoRechazo,
 					IdentificacionFacturador = d.TblEmpresasFacturador.StrIdentificacion,
@@ -128,12 +129,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var retorno = datos.Select(d => new
 				{
-					NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
-					//NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+					NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),					
 					d.DatFechaDocumento,
 					d.DatFechaVencDocumento,
 					IntVlrTotal = (d.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode()) ? -d.IntVlrTotal : d.IntVlrTotal,
-					EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+					EstadoFactura = string.Format("{0} - {1}",DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado),DescripcionEstadoFactura(d.IntIdEstado)),
 					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
 					d.StrAdquirienteMvoRechazo,
@@ -148,7 +148,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian):"",
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
-					zip = d.StrUrlAnexo
+					zip = d.StrUrlAnexo,
+                    permiteenvio=((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode())?true:false
 				});
 
 				return Ok(retorno);
@@ -472,12 +473,29 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-		/// <summary>
-		/// Retorna la descripción del estado del acuse.
+        /// <summary>
+		/// Retorna la descripción del estado de la factura.
 		/// </summary>
 		/// <param name="e"></param>
 		/// <returns></returns>
-		private string DescripcionEstadoAcuse(short e)
+		private string DescripcionCategoriaFactura(short e)
+        {
+            try
+            {
+                return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CategoriaEstado>(e));
+            }
+            catch (Exception excepcion)
+            {
+                return string.Format("Desconocido {0}", e);
+            }
+        }
+
+        /// <summary>
+        /// Retorna la descripción del estado del acuse.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private string DescripcionEstadoAcuse(short e)
 		{
 			try
 			{
@@ -700,8 +718,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.DatFechaDocumento,
 					d.DatFechaVencDocumento,
 					IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
-					EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
-					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+					EstadoFactura = string.Format("{0} - {1}", DescripcionEstadoFactura(d.IntIdEstado), DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado)),
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
 					d.StrAdquirienteMvoRechazo,
 					IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
@@ -714,7 +732,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
                     zip = d.StrUrlAnexo,
                     RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
-                    XmlAcuse = d.StrUrlAcuseUbl
+                    XmlAcuse = d.StrUrlAcuseUbl,
+                    permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false
                 });
 
 				return Ok(retorno);
@@ -763,7 +782,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.DatFechaDocumento,
 					d.DatFechaVencDocumento,
 					IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
-					EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+					EstadoFactura = string.Format("{0} - {1}",DescripcionEstadoFactura(d.IntIdEstado),DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado)),
 					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
 					d.StrAdquirienteMvoRechazo,
@@ -777,7 +796,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
                     zip = d.StrUrlAnexo,
                     RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
-                    XmlAcuse = d.StrUrlAcuseUbl
+                    XmlAcuse = d.StrUrlAcuseUbl,
+                    permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false
                 });
 
 				return Ok(retorno);

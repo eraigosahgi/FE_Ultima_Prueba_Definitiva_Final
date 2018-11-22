@@ -20,7 +20,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
            fecha_fin = "",
            tipo_filtro_fecha = 2;
 
-    SrvMaestrosEnum.ObtenerEnum(1).then(function (data) {
+    SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {
         Estado = data;
         cargarFiltros();
     });
@@ -75,8 +75,9 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                             tipo_filtro_fecha = 1;
                         }
                     }
-                },
-                EstadoRecibo: {
+                }
+                /*
+                ,EstadoRecibo: {
                     searchEnabled: true,
                     //Carga la data del control
                     dataSource: new DevExpress.data.ArrayStore({
@@ -89,8 +90,9 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     onValueChanged: function (data) {
                         estado_recibo = data.value.ID;
                     }
-                },
-                NumeroDocumento: {
+                }
+                */
+                ,NumeroDocumento: {
                     placeholder: "Ingrese Número Documento",
                     onValueChanged: function (data) {
                         numero_documento = data.value;
