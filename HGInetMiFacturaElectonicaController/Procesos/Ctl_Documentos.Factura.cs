@@ -151,6 +151,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         private static DocumentoRespuesta Procesar(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
         {
             DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
+
+			//Si el documento enviado ya existe retorna la informacion que se tiene almacenada
+			bool doc_existe = false;
+
             try
             {
                 if (string.IsNullOrEmpty(item.NumeroResolucion))
@@ -162,9 +166,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 //valida si el Documento ya existe en Base de Datos
                 TblDocumentos numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
 
-                if (numero_documento != null)
-                    throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya existe para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
-
+				if (numero_documento != null)
+				{
+					item_respuesta = Ctl_Documento.Convertir(numero_documento);
+					doc_existe = true;
+					throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya existe para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
+				}
                 TblEmpresasResoluciones resolucion = null;
 
                 try
@@ -197,28 +204,35 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
                 LogExcepcion.Guardar(excepcion);
-                item_respuesta = new DocumentoRespuesta()
-                {
-                    Aceptacion = 0,
-                    CodigoRegistro = item.CodigoRegistro,
-                    Cufe = "",
-                    DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
-                    DocumentoTipo = TipoDocumento.Factura.GetHashCode(),
-                    Documento = item.Documento,
-                    Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
-                    EstadoDian = null,
-                    FechaRecepcion = fecha_actual,
-                    FechaUltimoProceso = fecha_actual,
-                    IdDocumento = "",
-                    Identificacion = "",
-                    IdProceso = proceso_actual.GetHashCode(),
-                    MotivoRechazo = "",
-                    NumeroResolucion = item.NumeroResolucion,
-                    Prefijo = item.Prefijo,
-                    ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
-                    UrlPdf = "",
-                    UrlXmlUbl = ""
-                };
+				if (!doc_existe)
+				{
+					item_respuesta = new DocumentoRespuesta()
+					{
+						Aceptacion = 0,
+						CodigoRegistro = item.CodigoRegistro,
+						Cufe = "",
+						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						DocumentoTipo = TipoDocumento.Factura.GetHashCode(),
+						Documento = item.Documento,
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						EstadoDian = null,
+						FechaRecepcion = fecha_actual,
+						FechaUltimoProceso = fecha_actual,
+						IdDocumento = "",
+						Identificacion = "",
+						IdProceso = proceso_actual.GetHashCode(),
+						MotivoRechazo = "",
+						NumeroResolucion = item.NumeroResolucion,
+						Prefijo = item.Prefijo,
+						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+						UrlPdf = "",
+						UrlXmlUbl = ""
+					};
+				}
+				else
+				{
+					item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				}
 
             }
             if (item_respuesta.Error == null)

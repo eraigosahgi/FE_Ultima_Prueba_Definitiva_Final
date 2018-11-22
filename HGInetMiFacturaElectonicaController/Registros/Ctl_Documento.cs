@@ -976,6 +976,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf;
 				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
+				obj_documento.IdCategoriaEstado = respuesta.IdCategoriaEstado;
+				obj_documento.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.ParseToEnum<CategoriaEstado>(respuesta.IdCategoriaEstado));
 
 				if (respuesta.IntIdEstado == 1)
 					obj_documento.DescripcionProceso = "Recepción - Información del documento.";
