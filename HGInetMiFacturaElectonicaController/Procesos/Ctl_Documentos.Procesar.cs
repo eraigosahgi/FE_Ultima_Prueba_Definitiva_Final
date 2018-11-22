@@ -289,6 +289,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//Actualizo el estado del documento para enviar al proveedor receptor
 							Ctl_Documento documento_tmp = new Ctl_Documento();
 							documento_tmp.Actualizar(documento);
+
+							//Actualiza la categoria con el nuevo estado
+							respuesta.IdCategoriaEstado = documento.IdCategoriaEstado;
+							respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
 						}
 					}
 				}

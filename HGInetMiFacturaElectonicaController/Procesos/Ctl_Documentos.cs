@@ -233,7 +233,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							else
 							{
 								//Se actualiza respuesta	
-								respuesta.DescripcionProceso = "Documento Pendiente Envío Proveedor";
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PendienteEnvioProveedorDoc);
 								respuesta.FechaUltimoProceso = Fecha.GetFecha();
 								respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
 
@@ -244,6 +244,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Actualizo el estado del documento para enviar al proveedor receptor
 								documento_tmp = new Ctl_Documento();
 								documento_tmp.Actualizar(documentoBd);
+
+								//Actualiza la categoria con el nuevo estado
+								respuesta.IdCategoriaEstado = documentoBd.IdCategoriaEstado;
+								respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 							}
 						}
 

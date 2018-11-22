@@ -53,11 +53,49 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		public TblDocumentos Actualizar(TblDocumentos documento)
 		{
+
+			Ctl_Documento categoria_doc = new Ctl_Documento();
+			documento.IdCategoriaEstado = categoria_doc.ObtenerCategoria(documento.IntIdEstado);
 			documento = this.Edit(documento);
 
 			return documento;
 
 		}
+
+
+		/// <summary>
+		/// Obtiene la Categoria segun el estado en que este el documento
+		/// </summary>
+		/// <param name="estado">codigo del estado del documento</param>
+		/// <returns></returns>
+		public int ObtenerCategoria(int estado)
+		{
+
+			int categoria = 0;
+
+			switch (estado)
+			{
+				case 4: case 5: case 6:
+					categoria = CategoriaEstado.Recibido.GetHashCode();
+					break;
+				case 7:
+					categoria = CategoriaEstado.EnvioDian.GetHashCode();
+					break;
+				case 8: case 9: case 10: case 11: case 12: case 13: case 99:
+					categoria = CategoriaEstado.ValidadoDian.GetHashCode();
+					break;
+				case 90:
+					categoria = CategoriaEstado.FallidoDian.GetHashCode();
+					break;
+				default:
+					categoria = CategoriaEstado.NoRecibido.GetHashCode();
+					break;
+			}
+
+			return categoria;
+		}
+
+
 
 
 		#region Obtener
@@ -871,7 +909,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			documento_obj.UrlPdf = objetoBd.StrUrlArchivoPdf;
 			documento_obj.UrlXmlUbl = objetoBd.StrUrlArchivoUbl;
 			documento_obj.FechaUltimoProceso = objetoBd.DatFechaActualizaEstado;
-			
+
 			if (!reenvio)
 			{
 				//Obtiene la carpeta donde quedo la consulta de la DIAN

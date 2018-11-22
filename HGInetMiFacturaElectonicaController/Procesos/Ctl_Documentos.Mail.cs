@@ -38,7 +38,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
 
                 //Actualiza la respuesta
-                respuesta.DescripcionProceso = "Envío correo adquiriente.";
+                respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
                 respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
 
@@ -48,6 +48,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
                 Ctl_Documento documento_tmp = new Ctl_Documento();
                 documento_tmp.Actualizar(documentoBd);
+				
+				//Actualiza la categoria con el nuevo estado
+				respuesta.IdCategoriaEstado = documentoBd.IdCategoriaEstado;
+				respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
             }
             catch (Exception excepcion)
             {

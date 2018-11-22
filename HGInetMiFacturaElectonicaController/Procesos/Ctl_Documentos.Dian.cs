@@ -38,11 +38,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			HGInetDIANServicios.DianFactura.AcuseRecibo acuse = new HGInetDIANServicios.DianFactura.AcuseRecibo();
 			try
 			{
+
+				acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
+
 				respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
 				respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
-
-				acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
 			}
 			catch (Exception excepcion)
 			{
@@ -76,12 +77,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			Ctl_Documento documento_tmp = new Ctl_Documento();
 			documento_tmp.Actualizar(documentoBd);
 
+			//Actualiza la categoria con el nuevo estado
+			respuesta.IdCategoriaEstado = documentoBd.IdCategoriaEstado;
+			respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+
 			//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
 			System.Threading.Thread.Sleep(5000);
 
 			return acuse;
 		}
-		
+
 
 		/// <summary>
 		/// Consulta estado de documentos en la DIAN
@@ -174,7 +179,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (resultado_doc.Estado == EstadoDocumentoDian.Rechazado)
 				{
 					fecha_actual = Fecha.GetFecha();
-					respuesta.DescripcionProceso = "Termina proceso.";
+					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.FinalizacionErrorDian);
 					respuesta.FechaUltimoProceso = fecha_actual;
 					respuesta.IdProceso = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
 					respuesta.ProcesoFinalizado = 1;
@@ -190,6 +195,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
 					documento_tmp.Actualizar(documentoBd);
+
+					//Actualiza la categoria con el nuevo estado
+					respuesta.IdCategoriaEstado = documentoBd.IdCategoriaEstado;
+					respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 
 				}
 				return respuesta;

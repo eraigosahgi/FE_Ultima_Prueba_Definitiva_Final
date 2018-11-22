@@ -158,9 +158,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
-					
+					respuesta.IdCategoriaEstado = CategoriaEstado.Recibido.GetHashCode();
+					respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(CategoriaEstado.Recibido);
+
 					//Actualiza el registro en la base de datos.
-					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;					
+					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
+					documentoBd.IdCategoriaEstado = CategoriaEstado.Recibido.GetHashCode();					
 				}
 
 
