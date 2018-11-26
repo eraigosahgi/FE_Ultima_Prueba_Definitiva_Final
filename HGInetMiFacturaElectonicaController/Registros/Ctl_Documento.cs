@@ -474,21 +474,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			int estado_error = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
 
+            int Enviomail = ProcesoEstado.EnvioZip.GetHashCode();
 
-			DateTime FechaActual = Fecha.GetFecha();
+
+            DateTime FechaActual = Fecha.GetFecha();
 
 			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
 											  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
 											  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-											  where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado != estado_error
+											  where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado<estado_error
 											  && (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
 											  && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
 											  && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
 											  //********************************************************
 											  || ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
 											  && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
-											  && datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado != estado_error
-											  )
+											  && datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error)
+
 											  orderby datos.IntNumero descending
 											  select datos).ToList();
 			return documentos;
