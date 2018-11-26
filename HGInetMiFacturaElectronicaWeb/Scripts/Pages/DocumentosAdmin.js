@@ -196,7 +196,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 cod_facturador = empresa[0];                
                 $("#txtempresaasociada").dxTextBox({ value: cod_facturador });
             },
-            onKeyPress: function (data) {
+            onKeyDown: function (data) {                
                 if (data.event.key == 'F4')
                     $('#modal_Buscar_empresa').modal('show');
             }            
