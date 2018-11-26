@@ -141,8 +141,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						// almacena Anexos enviados
 						if (documento_obj.ArchivoAnexos != null)
 						{
-							respuesta = GuardarAnexo(documento_obj.ArchivoAnexos, documentoBd, ref respuesta, ref documento_result);
-							ValidarRespuesta(respuesta);
+							if (empresa.IntManejaAnexos)
+							{
+								respuesta = GuardarAnexo(documento_obj.ArchivoAnexos, documentoBd, ref respuesta, ref documento_result);
+								ValidarRespuesta(respuesta);
+							}
+							else
+							{
+								respuesta.IdCategoriaEstado = CategoriaEstado.NoRecibido.GetHashCode();
+								respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(CategoriaEstado.NoRecibido);
+								respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Validacion);
+								respuesta.IdDocumento = null;
+								respuesta.UrlPdf = null;
+								respuesta.UrlXmlUbl = null;
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("El Facturador {0} no se ecnuentra habilitado para el procesamiento de anexos", documentoBd.StrEmpresaFacturador), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+								ValidarRespuesta(respuesta);
+							}
 						}
 
 

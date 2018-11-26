@@ -129,7 +129,7 @@ namespace HGInetUBL
 				{
 					//Terminos de pago de la Factura
 					TermsType.ID = new IDType();
-					TermsType.ID.Value = documento.Documento.ToString();
+					TermsType.ID.Value = string.Format("{0}{1}",documento.Prefijo,documento.Documento.ToString());
 					NoteType[] Note_Terms = new NoteType[1];
 					NoteType Note_term = new NoteType();
 					Note_term.Value = string.Format("Pago a {0} dias", documento.Plazo);

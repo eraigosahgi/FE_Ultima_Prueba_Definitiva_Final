@@ -81,6 +81,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
     Datos_Observaciones = "",
     Datos_empresa_Asociada = "",
     Datos_Integrador = false,
+	Datos_Anexo = false,
     Datos_Numero_usuarios = 1,
     Datos_Dias_Acuse = 10;
 
@@ -217,6 +218,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                     }
                 }
             ]
+        });
+
+
+        $("#Anexo").dxCheckBox({
+        	name: "Anexo",
+        	value: false,
+        	onValueChanged: function (data) {
+        		Datos_Anexo = data.value;
+        	}
         });
 
         $("#txtUsuarios").dxNumberBox({
@@ -418,6 +428,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Datos_Integrador = response.data[0].IntIntegrador;
                 Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
                 Datos_Dias_Acuse = response.data[0].IntAcuseTacito;
+                Datos_Anexo = response.data[0].IntAnexo;
 
                 $("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
                 $("#NumeroIdentificacion").dxTextBox({ readOnly: true });
@@ -448,6 +459,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                     $("#Facturador").dxCheckBox({ value: 1 });
                     $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
                 }
+
+                if (Datos_Anexo == 1)
+                	$("#Anexo").dxCheckBox({ value: true });
 
 
             } catch (err) {
@@ -494,7 +508,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             StrObservaciones: Datos_Observaciones,
             IntIntegrador: Datos_Integrador,
             IntNumUsuarios: Datos_Numero_usuarios,
-            IntAcuseTacito: Datos_Dias_Acuse
+            IntAcuseTacito: Datos_Dias_Acuse,
+			IntAnexo: Datos_Anexo
         });
 
         $("#wait").show();

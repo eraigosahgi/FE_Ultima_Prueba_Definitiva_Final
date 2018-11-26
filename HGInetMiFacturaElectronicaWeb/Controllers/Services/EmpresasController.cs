@@ -212,6 +212,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 StrObservaciones = d.StrObservaciones,
                 IntIntegrador = d.IntIntegrador,
                 IntNumUsuarios = d.IntNumUsuarios,
+				IntAnexo = d.IntManejaAnexos,
                 IntAcuseTacito = d.IntAcuseTacito
             });
 
@@ -225,7 +226,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="codigo_usuario"></param>        
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
@@ -245,6 +246,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Empresa.IntIntegrador = IntIntegrador;
                 Empresa.IntNumUsuarios = IntNumUsuarios;
                 Empresa.IntAcuseTacito = IntAcuseTacito;
+				Empresa.IntManejaAnexos = IntAnexo;
 
                 if (tipo == 1)//Nuevo
                 {
