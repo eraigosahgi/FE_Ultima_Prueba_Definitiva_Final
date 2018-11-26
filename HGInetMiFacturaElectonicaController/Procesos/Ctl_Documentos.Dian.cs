@@ -78,8 +78,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			documento_tmp.Actualizar(documentoBd);
 
 			//Actualiza la categoria con el nuevo estado
-			respuesta.IdCategoriaEstado = documentoBd.IdCategoriaEstado;
-			respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+			respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+			respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 
 			//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
 			System.Threading.Thread.Sleep(5000);
@@ -197,8 +197,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento_tmp.Actualizar(documentoBd);
 
 					//Actualiza la categoria con el nuevo estado
-					respuesta.IdCategoriaEstado = documentoBd.IdCategoriaEstado;
-					respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+					respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 
 				}
 				return respuesta;

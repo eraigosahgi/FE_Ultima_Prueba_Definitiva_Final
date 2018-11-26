@@ -65,6 +65,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					CodigoRegistro = documento_obj.CodigoRegistro,
 					Cufe = "",
 					DescripcionProceso = "Recepción - Información del documento.",
+					DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido),
 					DocumentoTipo = tipo_doc.GetHashCode(),
 					Documento = documento_obj.Documento,
 					Error = null,
@@ -148,8 +149,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							else
 							{
-								respuesta.IdCategoriaEstado = CategoriaEstado.NoRecibido.GetHashCode();
-								respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(CategoriaEstado.NoRecibido);
+								respuesta.IdEstado = CategoriaEstado.NoRecibido.GetHashCode();
+								respuesta.DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido);
 								respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
 								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Validacion);
 								respuesta.IdDocumento = null;
@@ -261,8 +262,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								documento_tmp.Actualizar(documentoBd);
 
 								//Actualiza la categoria con el nuevo estado
-								respuesta.IdCategoriaEstado = documentoBd.IdCategoriaEstado;
-								respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+								respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 							}
 						}
 

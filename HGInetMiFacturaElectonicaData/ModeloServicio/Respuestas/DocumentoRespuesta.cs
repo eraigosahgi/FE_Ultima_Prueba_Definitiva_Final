@@ -115,12 +115,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// <summary>
 		/// Indica el id de la categoria actual del documento en la Plataforma.
 		/// </summary>
-		public int IdCategoriaEstado { get; set; }
+		public int IdEstado { get; set; }
 
 		/// <summary>
 		/// Descripción de la categoria actual del documento en la Plataforma.
 		/// </summary>
-		public string DescripcionIdCategoria { get; set; }
+		public string DescripcionEstado { get; set; }
 
 
 	}

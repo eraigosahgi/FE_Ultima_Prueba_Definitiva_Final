@@ -291,8 +291,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documento_tmp.Actualizar(documento);
 
 							//Actualiza la categoria con el nuevo estado
-							respuesta.IdCategoriaEstado = documento.IdCategoriaEstado;
-							respuesta.DescripcionIdCategoria = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
+							respuesta.IdEstado = documento.IdCategoriaEstado;
+							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
 						}
 					}
 				}
