@@ -510,13 +510,26 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento)
+		public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento,int tipo_fecha)
 		{
 
-			if (estado_dian == null || estado_dian == "")
-				estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico")) + "," + Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));
+            List<string> LstEstado = null;
+            if (estado_dian == null || estado_dian == "")
+            {
+                estado_dian = "*";
+                LstEstado = Coleccion.ConvertirLista(estado_dian);
+            }
+            else
+            {
+                LstEstado = Coleccion.ConvertirLista(estado_dian);
+            }
 
-			fecha_inicio = fecha_inicio.Date;
+            if (string.IsNullOrEmpty(codigo_facturador))
+                codigo_facturador = "*";
+            //        if (estado_dian == null || estado_dian == "")
+            //estado_dian = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "publico")) + "," + Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));
+
+            fecha_inicio = fecha_inicio.Date;
 
 			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
@@ -535,17 +548,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				estado_recibo = "*";
 
 
-
 			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
 											  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
 											  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
 											  where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
 											&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 											&& (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-											&& (estado_dian.Contains(datos.IntIdEstado.ToString()))
-											&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-											&& (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
-											&& (datos.IntDocTipo.Equals(TipoDocumento) || TipoDocumento == 0)
+                                             //&& (estado_dian.Contains(datos.IntIdEstado.ToString()))
+                                            && (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
+                                            && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+
+                                             //-------------
+                                             //&& (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
+                                             && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_fecha ==1)
+                                             && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_fecha == 2)
+                                            //-----------
+                                            && (datos.IntDocTipo.Equals(TipoDocumento) || TipoDocumento == 0)
 											  orderby datos.IntNumero descending
 											  select datos).ToList();
 

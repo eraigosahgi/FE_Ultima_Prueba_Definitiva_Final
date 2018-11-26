@@ -30,6 +30,12 @@
 
                                 <div class="dx-fieldset">
 
+                                    <div class="col-md-3" style="margin-top: 1%">
+										<i class="icon-file-text"></i>
+										<label>Filtro Fecha:</label>
+										<div data-dx-select-box="filtros.TipoFiltroFecha"></div>
+									</div>
+
                                     <div class="col-md-2" style="margin-top:1%">
                                         <i class=" icon-calendar"></i>
                                         <label>Fecha Inicial:</label>
@@ -44,7 +50,7 @@
                                     </div>
 
 
-                                    <div class="col-md-4" style="margin-top:1%">
+                                    <div class="col-md-2" style="margin-top:1%">
                                         <i class="icon-file-text"></i>
                                         <label>Estado Acuse:</label>
                                         <div data-dx-select-box="filtros.EstadoRecibo"></div>
@@ -57,15 +63,21 @@
                                                      
                                    
 
-                                    <div class="col-md-5" style="margin-top:1%">
+                                    <div class="col-md-3" style="margin-top:1%">
                                         <i class="icon-file-text"></i>
                                         <label>Estado:</label>
                                         <div id="filtrosEstadoRecibo"></div>
                                     </div>
                                    
+                                    <div class="col-md-3" style="margin-top:1%">
+                                        <i class="icon-user-tie"></i>
+                                        <label>Código Facturador:</label>
+                                        <div id="txtempresaasociada"></div>
+                                        <%--<div data-dx-autocomplete="filtros.Facturador"></div>--%>
+                                    </div>
 
                                     <div class="col-md-3" style="margin-top:1%">
-                                        <i class="icon-files-empty"></i>
+                                        <i class="icon-user-tie"></i>
                                         <label>Código Adquiriente:</label>
                                         <div data-dx-autocomplete="filtros.Adquiriente"></div>
                                     </div>
@@ -116,7 +128,7 @@
                 </div>
             </div>
             <!-- /DATOS -->
-
+            <div data-ng-include="'ModalConsultaEmpresas.aspx'"></div>
         </div>
         <!-- /CONTENEDOR PRINCIPAL -->
 

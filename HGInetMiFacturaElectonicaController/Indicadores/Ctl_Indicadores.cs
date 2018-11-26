@@ -78,6 +78,68 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
         }
 
         /// <summary>
+        /// Obtiene los porcentajes de documentos por estado.
+        /// </summary>
+        /// <param name="identificacion_empresa"></param>
+        /// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
+        /// <returns></returns>
+        public List<PorcentajesResumen> DocumentosPorEstadoCategoria(string identificacion_empresa, int tipo_empresa)
+        {
+            try
+            {
+                List<PorcentajesResumen> documentos_estado = (from documento in context.TblDocumentos
+                                                              where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
+                                                              orderby documento.IntIdEstado ascending
+                                                              group documento by new { documento.IntIdEstado } into documento_estado
+                                                              select new PorcentajesResumen
+                                                              {
+                                                                  Cantidad = documento_estado.Count(),
+                                                                  Estado = documento_estado.FirstOrDefault().IntIdEstado,
+                                                              }).ToList().ToList();
+
+                decimal cantidad_total = documentos_estado.Sum(x => x.Cantidad);
+
+                decimal sumatoria_cantidades = 0;
+
+                string descripcion_tipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Perfiles>(tipo_empresa));
+
+                foreach (PorcentajesResumen item in documentos_estado)
+                {
+                    switch (item.Estado)
+                    {
+                        case 90: item.Color = "#FF2D00"; break;
+                        case 99: item.Color = "#62C415"; break;
+                        default: item.Color = "#717171"; break;
+                    }
+
+                    sumatoria_cantidades += item.Cantidad;
+
+                    item.Titulo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(item.Estado));
+                    item.IdControl = string.Format("DocumentosEstado{0}{1}", item.Titulo, descripcion_tipo).Replace(" ", "").Replace("í", "i").Replace("ó", "o").Replace(",", "");
+                    item.Observaciones = string.Format("{0} Documentos", item.Cantidad);
+                    item.Porcentaje = Math.Round(((item.Cantidad / cantidad_total) * 100), 1);
+                }
+
+                //Construye el resumen de documentos recibidos por la plataforma.
+                PorcentajesResumen resumen_inicio = new PorcentajesResumen();
+                resumen_inicio.Cantidad = cantidad_total;
+                resumen_inicio.Estado = 0;
+                resumen_inicio.IdControl = string.Format("DocumentosEstadoRecibidos{0}", descripcion_tipo);
+                resumen_inicio.Observaciones = string.Format("{0} Documentos", cantidad_total);
+                resumen_inicio.Porcentaje = 100;
+                resumen_inicio.Titulo = "Recibidos";
+                resumen_inicio.Color = "#EEE713";
+                documentos_estado.Add(resumen_inicio);
+
+                return documentos_estado.OrderBy(x => x.Estado).ToList();
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        /// <summary>
         /// Obtiene el indicador de las respuestas de acuse de los documentos.
         /// </summary>
         /// <param name="identificacion_empresa">Número de identificación de la empresa para el filtro de búsqueda.</param>

@@ -758,7 +758,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
 		[HttpGet]
-		public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento)
+		public IHttpActionResult Get(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento,int tipo_fecha)
 		{
 			try
 			{
@@ -767,7 +767,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				List<TblDocumentos> datos = ctl_documento.ObtenerAdmin(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento);
+				List<TblDocumentos> datos = ctl_documento.ObtenerAdmin(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento, tipo_fecha);
 
 				if (datos == null)
 				{
@@ -782,8 +782,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.DatFechaDocumento,
 					d.DatFechaVencDocumento,
 					IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
-					EstadoFactura = string.Format("{0} - {1}",DescripcionEstadoFactura(d.IntIdEstado),DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado)),
-					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+					EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+                    EstadoCategoria = DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado),
+                    EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
 					d.StrAdquirienteMvoRechazo,
 					IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
