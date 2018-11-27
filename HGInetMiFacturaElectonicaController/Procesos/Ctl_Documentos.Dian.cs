@@ -52,8 +52,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				return null;
 			}
 
-			respuesta.Cufe = documento_result.CUFE;
-
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 			// ruta física del xml

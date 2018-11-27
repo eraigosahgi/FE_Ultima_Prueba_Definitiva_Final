@@ -134,6 +134,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						//Asignación de Cufe a documento_obj 
 						documento_obj.Cufe = documento_result.CUFE;
+						
+						//Asignacion del CUFE a la respuesta
+						respuesta.Cufe = documento_result.CUFE;
 
 						// almacena Formato
 						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
