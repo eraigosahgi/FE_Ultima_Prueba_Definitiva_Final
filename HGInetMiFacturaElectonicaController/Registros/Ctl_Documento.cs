@@ -995,7 +995,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					obj_documento.ProcesoFinalizado = 0;
 				}
 				obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf;
-				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
+				if (respuesta.IntIdEstado > ProcesoEstado.EnvioZip.GetHashCode())
+				{
+					obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
+				}
+				else
+				{
+					obj_documento.UrlXmlUbl = string.Empty;
+				}
 				obj_documento.IdEstado = respuesta.IdCategoriaEstado;
 				obj_documento.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.ParseToEnum<CategoriaEstado>(respuesta.IdCategoriaEstado));
 
