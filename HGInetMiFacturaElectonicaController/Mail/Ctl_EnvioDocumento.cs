@@ -59,7 +59,7 @@ namespace HGInetMiFacturaElectonicaController
 							Ctl_Documento ctl_documento = new Ctl_Documento();
 							List<TblDocumentos> list_tbldocumento = ctl_documento.ObtenerPorIdSeguridad(new Guid(item.RadicadoDocumento));
 
-							if (list_tbldocumento == null)
+							if (list_tbldocumento == null || !list_tbldocumento.Any())
 								throw new ApplicationException(string.Format("No se encontró información con el radicado {0}", item.RadicadoDocumento));
 
 							if (!Texto.ValidarExpresion(TipoExpresion.Email, item.Email))
