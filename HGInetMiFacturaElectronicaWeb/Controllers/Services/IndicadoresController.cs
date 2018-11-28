@@ -95,7 +95,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 List<PorcentajesResumen> datos_estados = new List<PorcentajesResumen>();
                 Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
-                datos_estados = clase_indicadores.DocumentosPorEstado(identificacion_empresa, tipo_empresa);
+                datos_estados = clase_indicadores.DocumentosPorEstado(identificacion_empresa, tipo_empresa);                
 
                 if (datos_estados == null)
                 {
@@ -109,6 +109,40 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 throw new ApplicationException(excepcion.Message, excepcion.InnerException);
             }
         }
+
+        /// <summary>
+        /// Obtiene los porcentajes de documentos por estado.
+        /// </summary>
+        /// <param name="identificacion_empresa"></param>
+        /// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Api/ReporteDocumentosPorEstadoCategoria")]
+        public IHttpActionResult ReporteDocumentosPorEstadoCategoria(string identificacion_empresa, int tipo_empresa)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<PorcentajesResumen> datos_estados = new List<PorcentajesResumen>();
+                Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
+
+                datos_estados = clase_indicadores.DocumentosPorEstadoCategoria(identificacion_empresa, tipo_empresa);
+
+                if (datos_estados == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(datos_estados);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        
 
         /// <summary>
         /// Obtiene el indicador de documentos por tipo mensual durante los ultimos doce meses

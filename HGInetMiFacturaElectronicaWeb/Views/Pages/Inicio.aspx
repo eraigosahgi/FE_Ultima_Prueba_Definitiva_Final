@@ -35,11 +35,24 @@
 
                     <div class="row">
 
+                        <!-- REPORTE ESTADOS DOCUMENTO CATEGORIA -->
+                        <div class="col-md-12" id="Panel13519" data-ng-if="Panel13519" data-ng-init="Panel13519=false">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>
+                                    <div data-ng-repeat="c in ReporteDocumentosEstadoCategoriaAdmin">
+                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
+                                        <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoCategoriaAdmin()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- REPORTE ESTADOS DOCUMENTO -->
                         <div class="col-md-12" id="Panel13511" data-ng-if="Panel13511" data-ng-init="Panel13511=false">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>
+                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Proceso</h4>
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoAdmin">
                                         <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoAdmin()"></div>
@@ -145,14 +158,31 @@
                 <!-- /TAB ADMINISTRADOR -->
 
                 <!-- TAB FACTURADOR -->
-                <div data-ng-class="{'tab-pane active':!IndicadoresAdmin}"  id="TabFacturador">                    
+                <%--<div data-ng-class="{'tab-pane active':!IndicadoresAdmin}"  id="TabFacturador">                    --%>
+                    <div class="tab-pane"  id="TabFacturador">                    
                     <div class="row">
 
-                        <!-- REPORTE ESTADOS DOCUMENTO -->
-                        <div class="col-md-12" id="Panel13521" data-ng-if="Panel13521" data-ng-init="Panel13521=false">
+
+
+                        <!-- REPORTE ESTADOS DOCUMENTO CATEGORIA -->
+                        <div class="col-md-12" id="Panel13527" data-ng-if="Panel13527" data-ng-init="Panel13527=false">
                             <div class="panel">
                                 <div class="panel-body">
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>
+                                    <div data-ng-repeat="c in ReporteDocumentosEstadoCategoriaFacturador">
+                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
+                                        <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoCategoriaFacturador()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                       <%-- <!-- REPORTE ESTADOS DOCUMENTO -->
+                        <div class="col-md-12" id="Panel13521" data-ng-if="Panel13521" data-ng-init="Panel13521=false">
+                            <div class="panel">
+                                <div class="panel-body">
+                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Proceso</h4>
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoFacturador">
                                         <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoFacturador()"></div>
@@ -160,7 +190,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- /REPORTE ESTADOS DOCUMENTO -->
+                        <!-- /REPORTE ESTADOS DOCUMENTO -->--%>
 
                         <!-- REPORTE SALDOS TRANSACCIONALES -->
                         <div class="col-md-12" id="Panel13522" data-ng-if="Panel13522" data-ng-init="Panel13522=false">
@@ -267,7 +297,8 @@
                 <!-- /TAB FACTURADOR -->
 
                 <!-- TAB ADQUIRIENTE -->
-                <div data-ng-class="{'tab-pane active':!IndicadoresAdmin && !IndicadoresFacturador }"  id="TabAdquiriente">
+                <%--<div data-ng-class="{'tab-pane active':!IndicadoresAdmin && !IndicadoresFacturador }"  id="TabAdquiriente">--%>
+                    <div class="tab-pane"  id="TabAdquiriente">
                                         
                     <div class="row">
 

@@ -3,11 +3,7 @@
 var IndicadoresApp = angular.module('IndicadoresApp', ['dx']);
 IndicadoresApp.controller('IndicadoresController', function IndicadoresController($scope, $sce, $http, $location) {
 
-
-
-    $scope.validarActivo = function (tipo) {        
-        $('#TabFacturador').addClass("tab-pane");
-    }
+    
 
 
 
@@ -97,6 +93,24 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                 $('#wait').hide();
                 DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
             });
+
+            //REPORTE DOCUMENTOS POR ESTADO ADMINISTRADOR
+            $http.get('/Api/ReporteDocumentosPorEstadoCategoria?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1').then(function (response) {
+                $("#wait").hide();
+                try {
+                    if (response.data.length == 0)
+                        $scope.Panel13519 = false;
+                    else {
+                        $scope.ReporteDocumentosEstadoCategoriaAdmin = response.data;
+                    }
+                } catch (err) {
+                    DevExpress.ui.notify(err.message, 'error', 3000);
+                }
+            }, function errorCallback(response) {
+                $('#wait').hide();
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            });
+            
 
             //REPORTE ACUSE MENSUAL ADMINISTRADOR
             $http.get('/Api/ReporteEstadosAcuse?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1' + '&mensual=' + true).then(function (response) {
@@ -501,6 +515,27 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
             /*************************************************************************** FACTURADOR ***************************************************************************/
 
+
+
+            //REPORTE DOCUMENTOS POR ESTADO FACTURADOR
+            $http.get('/Api/ReporteDocumentosPorEstadoCategoria?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2').then(function (response) {
+                $("#wait").hide();
+                try {
+                    if (response.data.length == 0)
+                        $scope.Panel13527 = false;
+                    else {
+                        $scope.ReporteDocumentosEstadoCategoriaFacturador = response.data;                        
+                    }
+                } catch (err) {
+                    DevExpress.ui.notify(err.message, 'error', 3000);
+                }
+            }, function errorCallback(response) {
+                $('#wait').hide();
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            });
+
+
+            /*
             //REPORTE DOCUMENTOS POR ESTADO FACTURADOR
             $http.get('/Api/ReporteDocumentosPorEstado?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2').then(function (response) {
                 $("#wait").hide();
@@ -517,7 +552,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                 $('#wait').hide();
                 DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
             });
-
+            */
             //REPORTE ACUSE MENSUAL FACTURADOR
             $http.get('/Api/ReporteEstadosAcuse?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2' + '&mensual=' + true).then(function (response) {
                 $("#wait").hide();
@@ -806,6 +841,15 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 
     /*************************************************************************** CARGA PORCENTAJES ADMINISTRADOR ***************************************************************************/
+
+    $scope.CargarDocumentosEstadoCategoriaAdmin = function () {
+        var Indicador = $scope.ReporteDocumentosEstadoCategoriaAdmin
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
+        }
+    }
+
+
     $scope.CargarDocumentosEstadoAdmin = function () {
         var Indicador = $scope.ReporteDocumentosEstadoAdmin
         for (var i = 0; i < Indicador.length; i++) {
@@ -836,13 +880,21 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
     /*************************************************************************** CARGA PORCENTAJES FACTURADOR ***************************************************************************/
 
+    $scope.CargarDocumentosEstadoCategoriaFacturador = function () {
+        var Indicador = $scope.ReporteDocumentosEstadoCategoriaFacturador
+        for (var i = 0; i < Indicador.length; i++) {
+            PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)            
+        }              
+    }
+
+    /*
     $scope.CargarDocumentosEstadoFacturador = function () {
         var Indicador = $scope.ReporteDocumentosEstadoFacturador
         for (var i = 0; i < Indicador.length; i++) {
             PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
         }
     }
-
+    */
     $scope.CargarAcuseMensualFacturador = function () {
         var Indicador = $scope.ReporteAcuseMensualFacturador
         for (var i = 0; i < Indicador.length; i++) {
@@ -881,6 +933,8 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
     }
 
 
+
+    
 });
 
 
