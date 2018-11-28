@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="xmXCELjIFLDik8BWgBTbpYa2N24=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="ryVVI387Wp2Q2LqZBrAR/ri8IDU=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="soap4">
       <properties>
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="soap4" contract="ServicioResolucion.ServicioResolucion" bindingType="basicHttpBinding" address="http://192.168.0.251:8887/wcf/resolucion.svc" bindingConfiguration="soap4">
+    <endpoint name="soap4" contract="ServicioResolucion.ServicioResolucion" bindingType="basicHttpBinding" address="http://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc" bindingConfiguration="soap4">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://192.168.0.251:8887/wcf/resolucion.svc</serializedValue>
+          <serializedValue>http://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

@@ -33,10 +33,13 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         private string CufeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DescripcionProcesoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int DocumentoField;
+        private long DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int DocumentoTipoField;
@@ -57,6 +60,9 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         private string IdDocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int IdProcesoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -73,6 +79,9 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int ProcesoFinalizadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlAnexoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UrlPdfField;
@@ -130,6 +139,19 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionEstado {
+            get {
+                return this.DescripcionEstadoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionEstadoField, value) != true)) {
+                    this.DescripcionEstadoField = value;
+                    this.RaisePropertyChanged("DescripcionEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string DescripcionProceso {
             get {
                 return this.DescripcionProcesoField;
@@ -143,7 +165,7 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Documento {
+        public long Documento {
             get {
                 return this.DocumentoField;
             }
@@ -234,6 +256,19 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdEstado {
+            get {
+                return this.IdEstadoField;
+            }
+            set {
+                if ((this.IdEstadoField.Equals(value) != true)) {
+                    this.IdEstadoField = value;
+                    this.RaisePropertyChanged("IdEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public int IdProceso {
             get {
                 return this.IdProcesoField;
@@ -307,6 +342,19 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
                 if ((this.ProcesoFinalizadoField.Equals(value) != true)) {
                     this.ProcesoFinalizadoField = value;
                     this.RaisePropertyChanged("ProcesoFinalizado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlAnexo {
+            get {
+                return this.UrlAnexoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlAnexoField, value) != true)) {
+                    this.UrlAnexoField = value;
+                    this.RaisePropertyChanged("UrlAnexo");
                 }
             }
         }

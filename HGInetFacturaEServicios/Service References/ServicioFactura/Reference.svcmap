@@ -20,17 +20,17 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:61428/wcf/factura.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="factura.xsd" MetadataType="Schema" ID="1f254796-108a-4188-8281-d6dcc2a81ffd" SourceId="1" SourceUrl="http://localhost:61428/wcf/factura.svc?xsd=xsd2" />
-    <MetadataFile FileName="factura.disco" MetadataType="Disco" ID="5981a90b-3930-4559-8c0c-25f26e80ee0c" SourceId="1" SourceUrl="http://localhost:61428/wcf/factura.svc?disco" />
-    <MetadataFile FileName="factura1.xsd" MetadataType="Schema" ID="da4181de-cc94-4805-808d-dac0ece686aa" SourceId="1" SourceUrl="http://localhost:61428/wcf/factura.svc?xsd=xsd0" />
-    <MetadataFile FileName="factura2.xsd" MetadataType="Schema" ID="96877e7a-369f-41de-998e-0055e47c3311" SourceId="1" SourceUrl="http://localhost:61428/wcf/factura.svc?xsd=xsd3" />
-    <MetadataFile FileName="factura3.xsd" MetadataType="Schema" ID="d2c43081-ca65-4f87-bb15-eec508e3c64b" SourceId="1" SourceUrl="http://localhost:61428/wcf/factura.svc?xsd=xsd4" />
-    <MetadataFile FileName="factura.wsdl" MetadataType="Wsdl" ID="93e6d0a3-d3a5-4e0e-af79-09d3ec7c5429" SourceId="1" SourceUrl="http://localhost:61428/wcf/factura.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="factura1.wsdl" MetadataType="Wsdl" ID="cb75b56d-ac19-4f1d-a012-48b3e1167159" SourceId="1" SourceUrl="http://localhost:61428/wcf/factura.svc?wsdl" />
-    <MetadataFile FileName="factura4.xsd" MetadataType="Schema" ID="2fc3d81f-2450-4857-902e-0fa31cc0e61a" SourceId="1" SourceUrl="http://localhost:61428/wcf/factura.svc?xsd=xsd1" />
+    <MetadataFile FileName="factura2.wsdl" MetadataType="Wsdl" ID="a719ab7a-f4ae-49eb-bca0-9685d1eca4ce" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="factura1.disco" MetadataType="Disco" ID="cd2e673d-f1ef-45b3-a35a-10961ba8c6f1" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?disco" />
+    <MetadataFile FileName="factura21.wsdl" MetadataType="Wsdl" ID="922111d9-89e7-4b66-8ec2-e8b6ebd801c4" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?wsdl" />
+    <MetadataFile FileName="factura5.xsd" MetadataType="Schema" ID="2f835634-3088-4ab9-a035-956218e0134d" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd4" />
+    <MetadataFile FileName="factura51.xsd" MetadataType="Schema" ID="69e62a8e-da9b-4b71-8cc3-5cd4d7758a0b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd3" />
+    <MetadataFile FileName="factura52.xsd" MetadataType="Schema" ID="2aa2f8a9-f721-408d-927f-52b9142af83e" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd2" />
+    <MetadataFile FileName="factura53.xsd" MetadataType="Schema" ID="dc40df31-acf6-4b06-a69e-f98f0da25e10" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd1" />
+    <MetadataFile FileName="factura54.xsd" MetadataType="Schema" ID="0fd7bd23-75c9-4b5d-b65a-c39e2fede086" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

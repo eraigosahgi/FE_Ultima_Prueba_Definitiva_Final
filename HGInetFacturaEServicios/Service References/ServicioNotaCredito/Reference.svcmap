@@ -20,17 +20,17 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:61428/wcf/notacredito.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="notacredito.xsd" MetadataType="Schema" ID="7ca824af-6f2d-4f42-b23f-92300a660df2" SourceId="1" SourceUrl="http://localhost:61428/wcf/notacredito.svc?xsd=xsd4" />
-    <MetadataFile FileName="notacredito.wsdl" MetadataType="Wsdl" ID="2644c79c-fb33-4799-961b-bd3206abe6f7" SourceId="1" SourceUrl="http://localhost:61428/wcf/notacredito.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="notacredito.disco" MetadataType="Disco" ID="28594b09-b38b-48b8-b9fa-2085a62e7fe8" SourceId="1" SourceUrl="http://localhost:61428/wcf/notacredito.svc?disco" />
-    <MetadataFile FileName="notacredito1.xsd" MetadataType="Schema" ID="14b931d3-a64b-472d-9e85-0228b576ab50" SourceId="1" SourceUrl="http://localhost:61428/wcf/notacredito.svc?xsd=xsd1" />
-    <MetadataFile FileName="notacredito1.wsdl" MetadataType="Wsdl" ID="ae3df075-b8f3-4007-a2a7-59037b526dd0" SourceId="1" SourceUrl="http://localhost:61428/wcf/notacredito.svc?wsdl" />
-    <MetadataFile FileName="notacredito2.xsd" MetadataType="Schema" ID="00f29296-43d8-4961-84df-a47688020cd4" SourceId="1" SourceUrl="http://localhost:61428/wcf/notacredito.svc?xsd=xsd0" />
-    <MetadataFile FileName="notacredito3.xsd" MetadataType="Schema" ID="daa5da54-c259-4eb9-9288-189a3f9c1b67" SourceId="1" SourceUrl="http://localhost:61428/wcf/notacredito.svc?xsd=xsd3" />
-    <MetadataFile FileName="notacredito4.xsd" MetadataType="Schema" ID="f6872d2b-03ef-4ed3-b272-0880f4f35a96" SourceId="1" SourceUrl="http://localhost:61428/wcf/notacredito.svc?xsd=xsd2" />
+    <MetadataFile FileName="notacredito1.disco" MetadataType="Disco" ID="996577cc-948d-41fb-af05-508c5c2e137b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?disco" />
+    <MetadataFile FileName="notacredito2.wsdl" MetadataType="Wsdl" ID="bfa34474-4723-43a5-bd8b-ad63d43385e5" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?wsdl" />
+    <MetadataFile FileName="notacredito5.xsd" MetadataType="Schema" ID="af7ce7a8-545d-44fc-9028-e8d1ceca3a58" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd4" />
+    <MetadataFile FileName="notacredito51.xsd" MetadataType="Schema" ID="26436b26-1e84-446a-8ff1-7cec99b15fa2" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd3" />
+    <MetadataFile FileName="notacredito21.wsdl" MetadataType="Wsdl" ID="1f18f4aa-cc14-4588-9abd-f35f8e2f2bbd" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="notacredito52.xsd" MetadataType="Schema" ID="7b5523b4-6e21-4cb8-ba96-612069de707a" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd0" />
+    <MetadataFile FileName="notacredito53.xsd" MetadataType="Schema" ID="4664b9e7-ad1c-45d8-9bad-aa594015d7c8" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd1" />
+    <MetadataFile FileName="notacredito54.xsd" MetadataType="Schema" ID="13390381-6c0c-4e8c-a464-a85bf588ccf4" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd2" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
