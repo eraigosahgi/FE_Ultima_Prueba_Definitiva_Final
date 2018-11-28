@@ -280,7 +280,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                         else
                             visible_acuse = "#";
 
-                        if (options.data.XmlAcuse != "#")
+                        if (options.data.XmlAcuse != null)
                             visible_xml_acuse = "href='" + options.data.XmlAcuse + "' class='icon-file-xml' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
                         else
                             visible_xml_acuse = "#";

@@ -616,7 +616,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Xml = d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,
                     zip = d.StrUrlAnexo,
-                    RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+                    RutaServDian = (d.IntIdEstado<7)?"": (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
                     XmlAcuse = d.StrUrlAcuseUbl
                 });
 
