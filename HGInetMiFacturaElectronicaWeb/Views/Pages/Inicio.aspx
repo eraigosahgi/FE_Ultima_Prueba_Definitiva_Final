@@ -19,11 +19,11 @@
         <div class="panel-body">
 
             <!-- MENÚ TABS -->
-            <ul class="nav nav-tabs">                 
-                <li id="LiTabAdministrador" data-ng-show="IndicadoresAdmin" ><a id="LinkTabAdministrador" data-ng-if="LinkTabAdministrador" data-ng-init="LinkTabAdministrador=true" href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
-                <li id="LiTabFacturador" data-ng-class="{'active':!IndicadoresAdmin}" data-ng-show="IndicadoresFacturador" ><a id="LinkTabFacturador" data-ng-if="LinkTabFacturador" data-ng-init="LinkTabFacturador=true" href="#TabFacturador" data-toggle="tab">Facturador</a></li>
+            <ul class="nav nav-tabs">
+                <li id="LiTabAdministrador" data-ng-show="IndicadoresAdmin"><a id="LinkTabAdministrador" data-ng-if="LinkTabAdministrador" data-ng-init="LinkTabAdministrador=true" href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
+                <li id="LiTabFacturador" data-ng-class="{'active':!IndicadoresAdmin}" data-ng-show="IndicadoresFacturador"><a id="LinkTabFacturador" data-ng-if="LinkTabFacturador" data-ng-init="LinkTabFacturador=true" href="#TabFacturador" data-toggle="tab">Facturador</a></li>
                 <%--<li id="LiTabAdquiriente" data-ng-class="{'active':!IndicadoresAdmin && !IndicadoresFacturador }" data-ng-show="IndicadoresAdquiriente"><a id="LinkTabAdquiriente" data-ng-if="LinkTabAdquiriente" data-ng-init="LinkTabAdquiriente=true" href="#TabAdquiriente" data-toggle="tab">Adquiriente</a></li>--%>
-                <li id="LiTabAdquiriente" data-ng-class="{'active':!IndicadoresAdmin && !IndicadoresFacturador }" data-ng-show="IndicadoresAdquiriente"><a id="LinkTabAdquiriente"  href="#TabAdquiriente" data-toggle="tab" data-ng-click="validarActivo(3);" >Adquiriente</a></li>
+                <li id="LiTabAdquiriente" data-ng-class="{'active':!IndicadoresAdmin && !IndicadoresFacturador }" data-ng-show="IndicadoresAdquiriente"><a id="LinkTabAdquiriente" href="#TabAdquiriente" data-toggle="tab" data-ng-click="validarActivo(3);">Adquiriente</a></li>
             </ul>
             <!--  /MENÚ TABS -->
 
@@ -39,10 +39,15 @@
                         <div class="col-md-12" id="Panel13519" data-ng-if="Panel13519" data-ng-init="Panel13519=false">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>
+                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>                                    
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoCategoriaAdmin">
-                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
+                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}">
+                                        </div>
+                                        <div class=" col-md-2 text-center" data-ng-show="c.Estado==-1">
+                                            <i class="icon-arrow-right8 mr-3 icon-2x" style="margin-top: 20%"></i>
+                                        </div>
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoCategoriaAdmin()"></div>
+
                                     </div>
                                 </div>
                             </div>
@@ -52,9 +57,9 @@
                         <div class="col-md-12" id="Panel13511" data-ng-if="Panel13511" data-ng-init="Panel13511=false">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Proceso</h4>
+                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 40px">Documentos por Proceso</h4>
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoAdmin">
-                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
+                                        <div class="content-group-sm svg-center position-relative col-md-3 text-center" id="{{c.IdControl}}"></div>
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoAdmin()"></div>
                                     </div>
                                 </div>
@@ -159,7 +164,7 @@
 
                 <!-- TAB FACTURADOR -->
                 <%--<div data-ng-class="{'tab-pane active':!IndicadoresAdmin}"  id="TabFacturador">                    --%>
-                    <div class="tab-pane"  id="TabFacturador">                    
+                <div class="tab-pane" id="TabFacturador">
                     <div class="row">
 
 
@@ -171,6 +176,11 @@
                                     <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoCategoriaFacturador">
                                         <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
+
+                                        <div class=" col-md-2 text-center" data-ng-show="c.Estado==-1">
+                                            <i class="icon-arrow-right8 mr-3 icon-2x" style="margin-top: 20%"></i>
+                                        </div>
+
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoCategoriaFacturador()"></div>
                                     </div>
                                 </div>
@@ -178,7 +188,7 @@
                         </div>
 
 
-                       <%-- <!-- REPORTE ESTADOS DOCUMENTO -->
+                        <%-- <!-- REPORTE ESTADOS DOCUMENTO -->
                         <div class="col-md-12" id="Panel13521" data-ng-if="Panel13521" data-ng-init="Panel13521=false">
                             <div class="panel">
                                 <div class="panel-body">
@@ -298,8 +308,8 @@
 
                 <!-- TAB ADQUIRIENTE -->
                 <%--<div data-ng-class="{'tab-pane active':!IndicadoresAdmin && !IndicadoresFacturador }"  id="TabAdquiriente">--%>
-                    <div class="tab-pane"  id="TabAdquiriente">
-                                        
+                <div class="tab-pane" id="TabAdquiriente">
+
                     <div class="row">
 
                         <!-- REPORTE ESTADO ACUSE ACUMULADO-->
@@ -350,7 +360,7 @@
             </div>
             <!-- /CONTENIDOS TABS -->
             <div>
-                <img src="../../Scripts/Images/ImgIndex.PNG"  class="img-responsive" data-ng-hide="IndicadoresFacturador || IndicadoresAdquiriente || IndicadoresAdmin " />
+                <img src="../../Scripts/Images/ImgIndex.PNG" class="img-responsive" data-ng-hide="IndicadoresFacturador || IndicadoresAdquiriente || IndicadoresAdmin " />
             </div>
         </div>
         <!-- /CONTENIDO PANEL-->

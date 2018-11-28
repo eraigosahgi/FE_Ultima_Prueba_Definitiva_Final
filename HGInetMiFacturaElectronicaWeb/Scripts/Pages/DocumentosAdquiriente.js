@@ -18,7 +18,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
-           tipo_filtro_fecha = 2;
+           tipo_filtro_fecha = 1;
 
     SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {
         Estado = data;
@@ -66,7 +66,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         key: "ID"
                     }),
                     displayExpr: "Texto",
-                    value: TiposFiltroFecha[1],
+                    value: TiposFiltroFecha[0],
 
                     onValueChanged: function (data) {
                         if (data.value != null) {

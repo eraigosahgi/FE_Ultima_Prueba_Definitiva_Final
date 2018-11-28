@@ -22,7 +22,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
-		   tipo_filtro_fecha = 2,
+		   tipo_filtro_fecha = 1,
            codigo_adquiriente = "";
     resolucion = "";
 
@@ -188,7 +188,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         key: "ID"
                     }),
                     displayExpr: "Texto",
-                    value: TiposFiltroFecha[1],
+                    value: TiposFiltroFecha[0],
 
                     onValueChanged: function (data) {
                         if (data.value != null) {
@@ -454,7 +454,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           dataField: "EstadoFactura",
                       },
                       {
-                          caption: "Estado Acuse",
+                          caption: "Acuse",
                           cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoAcuse",
                       },

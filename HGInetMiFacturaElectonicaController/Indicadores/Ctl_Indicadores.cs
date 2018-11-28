@@ -107,8 +107,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
                 {
                     switch (item.Estado)
                     {
-                        case 400: item.Color = "#FF2D00"; break;
-                        //case 99: item.Color = "#62C415"; break;
+                        case 400: item.Color = "#FF2D00"; break;                        
                         case 300:item.Color = "#62C415"; break;
                         default: item.Color = "#717171"; break;
                     }
@@ -124,7 +123,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
                 //Construye el resumen de documentos recibidos por la plataforma.
                 PorcentajesResumen resumen_inicio = new PorcentajesResumen();
                 resumen_inicio.Cantidad = cantidad_total;
-                resumen_inicio.Estado = 0;
+                resumen_inicio.Estado = -1;
                 resumen_inicio.IdControl = string.Format("DocumentosEstadoRecibidos{0}", descripcion_tipo);
                 resumen_inicio.Observaciones = string.Format("{0} Documentos", cantidad_total);
                 resumen_inicio.Porcentaje = 100;

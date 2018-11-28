@@ -838,12 +838,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
         };
     }
 
-
+    
 
     /*************************************************************************** CARGA PORCENTAJES ADMINISTRADOR ***************************************************************************/
 
     $scope.CargarDocumentosEstadoCategoriaAdmin = function () {
         var Indicador = $scope.ReporteDocumentosEstadoCategoriaAdmin
+       // <label id="totaldocestado">Total Documentos</label>
+        //$('#totaldocestado').text("Total Documentos: " + Indicador[0].Cantidad);
         for (var i = 0; i < Indicador.length; i++) {
             PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
         }
