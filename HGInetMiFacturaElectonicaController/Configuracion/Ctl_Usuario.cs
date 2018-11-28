@@ -475,7 +475,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         #endregion
 
         #region Validar documento y usuario para restablecer
-        public bool ValidarExistenciaRestablecer(string codigo_empresa, string codigo_usuario)
+        public string ValidarExistenciaRestablecer(string codigo_empresa, string codigo_usuario)
         {
             try
             {
@@ -504,7 +504,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 Email.RestablecerClave(Empresas, usuarioRestablecer);
 
-                return true;
+                return usuarioRestablecer.StrMail;
             }
             catch (Exception excepcion)
             {

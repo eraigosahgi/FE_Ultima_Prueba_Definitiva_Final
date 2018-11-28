@@ -214,12 +214,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             {
                 Ctl_Usuario ctl_usuario = new Ctl_Usuario();
 
-                bool datos = ctl_usuario.ValidarExistenciaRestablecer(codigo_empresa, codigo_usuario);
-
-                if (!datos)
-                {
-                    return NotFound();
-                }
+                string datos = ctl_usuario.ValidarExistenciaRestablecer(codigo_empresa, codigo_usuario);                
 
                 return Ok(datos);
             }

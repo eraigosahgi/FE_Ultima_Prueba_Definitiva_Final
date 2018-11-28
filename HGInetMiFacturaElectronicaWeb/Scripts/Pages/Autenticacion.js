@@ -195,18 +195,22 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
         //Datos PUT: codigo_empresa - codigo_usuario
         $('#wait').show();
         $http.post('/Api/Usuario?' + data).then(function (response) {
-        $('#wait').hide();
+            $('#wait').hide();            
             //var respuesta = response.data;
             
-            swal({
-                title: 'Solicitud Éxitosa',
-                text: 'Se ha enviado un e-mail para el restablecimiento de contraseña',
-                type: 'success',
-                confirmButtonColor: '#66BB6A',
-                confirmButtonText: 'Aceptar',
-                animation: 'pop',
-                html: true,
-            });            
+            try {
+                swal({
+                    title: 'Solicitud Éxitosa',
+                    text: 'Se ha enviado un e-mail a la siguiente dirección: "' + response.data + '" para el restablecimiento de contraseña',
+                    type: 'success',
+                    confirmButtonColor: '#66BB6A',
+                    confirmButtonText: 'Aceptar',
+                    animation: 'pop',
+                    html: true,
+                });
+            } catch (e) {
+
+            }
 
             $('input:text[name=TextBoxDocIdentificacion]').val("");
             $('input:text[name=TextBoxUsuario]').val("");

@@ -2,12 +2,13 @@
 
 var IndicadoresApp = angular.module('IndicadoresApp', ['dx']);
 IndicadoresApp.controller('IndicadoresController', function IndicadoresController($scope, $sce, $http, $location) {
-
-    
-
+        
 
 
-
+    setTimeout(Circulo, 3000);
+    function Circulo() {
+        $(".d3-progress-background").attr("d", "M0,38A38,38 0 1,1 0,-38A38,38 0 1,1 0,38M0,36A36,36 0 1,0 0,-36A36,36 0 1,0 0,36Z");
+    }
 
     //Opciones Adicionales de las gráficas.
     var chartOptions = {
@@ -89,6 +90,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                 } catch (err) {
                     DevExpress.ui.notify(err.message, 'error', 3000);
                 }
+                
             }, function errorCallback(response) {
                 $('#wait').hide();
                 DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
@@ -483,6 +485,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                 } catch (err) {
                     DevExpress.ui.notify(err.message, 'error', 3000);
                 }
+                
             }, function errorCallback(response) {
                 $('#wait').hide();
                 DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
@@ -839,7 +842,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
     }
 
     
-
+    //d="M0,38A38,38 0 1,1 0,-38A38,38 0 1,1 0,38M0,36A36,36 0 1,0 0,-36A36,36 0 1,0 0,36Z"
     /*************************************************************************** CARGA PORCENTAJES ADMINISTRADOR ***************************************************************************/
 
     $scope.CargarDocumentosEstadoCategoriaAdmin = function () {
@@ -933,7 +936,8 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
             PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
         }
     }
-
+    //Colocar el arco claro en todos los circulos de indicadores
+    
 
 
     
