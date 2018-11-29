@@ -5,7 +5,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
         
 
 
-    setTimeout(Circulo, 3000);
+    setTimeout(Circulo, 4000);
     function Circulo() {
         $(".d3-progress-background").attr("d", "M0,38A38,38 0 1,1 0,-38A38,38 0 1,1 0,38M0,36A36,36 0 1,0 0,-36A36,36 0 1,0 0,36Z");
     }
@@ -79,6 +79,23 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
             /*************************************************************************** ADMINISTRADOR ***************************************************************************/
 
             //REPORTE DOCUMENTOS POR ESTADO ADMINISTRADOR
+            $http.get('/Api/ReporteDocumentosPorEstadoCategoria?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1').then(function (response) {
+                $("#wait").hide();
+                try {
+                    if (response.data.length == 0)
+                        $scope.Panel13519 = false;
+                    else {
+                        $scope.ReporteDocumentosEstadoCategoriaAdmin = response.data;
+                    }
+                } catch (err) {
+                    DevExpress.ui.notify(err.message, 'error', 3000);
+                }
+            }, function errorCallback(response) {
+                $('#wait').hide();
+                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+            });
+
+            //REPORTE DOCUMENTOS POR ESTADO ADMINISTRADOR
             $http.get('/Api/ReporteDocumentosPorEstado?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1').then(function (response) {
                 $("#wait").hide();
                 try {
@@ -96,22 +113,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                 DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
             });
 
-            //REPORTE DOCUMENTOS POR ESTADO ADMINISTRADOR
-            $http.get('/Api/ReporteDocumentosPorEstadoCategoria?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1').then(function (response) {
-                $("#wait").hide();
-                try {
-                    if (response.data.length == 0)
-                        $scope.Panel13519 = false;
-                    else {
-                        $scope.ReporteDocumentosEstadoCategoriaAdmin = response.data;
-                    }
-                } catch (err) {
-                    DevExpress.ui.notify(err.message, 'error', 3000);
-                }
-            }, function errorCallback(response) {
-                $('#wait').hide();
-                DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-            });
+            
             
 
             //REPORTE ACUSE MENSUAL ADMINISTRADOR
@@ -223,6 +225,11 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
                 $('#wait').hide();
                 DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
             });
+
+
+
+           
+
 
             //REPORTE VENTAS ANUALES ADMINISTRADOR
             $http.get('/Api/ReporteVentasAnuales').then(function (response) {
@@ -844,11 +851,9 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
     
     //d="M0,38A38,38 0 1,1 0,-38A38,38 0 1,1 0,38M0,36A36,36 0 1,0 0,-36A36,36 0 1,0 0,36Z"
     /*************************************************************************** CARGA PORCENTAJES ADMINISTRADOR ***************************************************************************/
-
-    $scope.CargarDocumentosEstadoCategoriaAdmin = function () {
-        var Indicador = $scope.ReporteDocumentosEstadoCategoriaAdmin
-       // <label id="totaldocestado">Total Documentos</label>
-        //$('#totaldocestado').text("Total Documentos: " + Indicador[0].Cantidad);
+    
+    $scope.CargarDocumentosEstadoCategoriaAdmin = function () {        
+        var Indicador = $scope.ReporteDocumentosEstadoCategoriaAdmin                      
         for (var i = 0; i < Indicador.length; i++) {
             PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
         }
@@ -856,6 +861,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 
     $scope.CargarDocumentosEstadoAdmin = function () {
+
         var Indicador = $scope.ReporteDocumentosEstadoAdmin
         for (var i = 0; i < Indicador.length; i++) {
             PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)

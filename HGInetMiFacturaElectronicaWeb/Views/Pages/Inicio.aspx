@@ -13,7 +13,7 @@
     </style>
 
     <!-- CONTENEDOR PRINCIPAL -->
-    <div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController" data-ng-cloak="">
+    <div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController" >
 
         <!-- CONTENIDO PANEL-->
         <div class="panel-body">
@@ -36,17 +36,16 @@
                     <div class="row">
 
                         <!-- REPORTE ESTADOS DOCUMENTO CATEGORIA -->
-                        <div class="col-md-12" id="Panel13519" data-ng-if="Panel13519" data-ng-init="Panel13519=false">
+                        <div class="col-md-12" id="Panel13519" data-ng-if="Panel13519"  data-ng-init="Panel13519=false">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>                                                                        
+                                    <h4 class="text-bold"  style="margin-top: -10px; margin-bottom: 20px" >Documentos por Estado</h4>                                                                        
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoCategoriaAdmin">
-                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}">
-                                            <g transform="translate(38,38)"><path class="" d="M0,38A38,38 0 1,1 0,-38A38,38 0 1,1 0,38M0,36A36,36 0 1,0 0,-36A36,36 0 1,0 0,36Z" style="fill: rgb(238, 238, 238);"></path></g>                                       
+                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center"  id="{{c.IdControl}}">                                            
                                         </div>
                                         
-                                        <div class=" col-md-2 text-center" data-ng-show="c.Estado==-1">
-                                            <i class="icon-arrow-right8 mr-3 icon-2x" style="margin-top: 20%"></i>
+                                        <div class=" col-md-2 text-center" style="margin-top:3%" data-ng-show="c.Estado==-1">
+                                            <i class="icon-arrow-right8 mr-3 icon-2x" ></i>
                                         </div>
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoCategoriaAdmin()"></div>
 
@@ -179,8 +178,8 @@
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoCategoriaFacturador">
                                         <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
 
-                                        <div class=" col-md-2 text-center" data-ng-show="c.Estado==-1">
-                                            <i class="icon-arrow-right8 mr-3 icon-2x" style="margin-top: 20%"></i>
+                                        <div class=" col-md-2 text-center" style="margin-top: 3%" data-ng-show="c.Estado==-1">
+                                            <i class="icon-arrow-right8 mr-3 icon-2x" ></i>
                                         </div>
 
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoCategoriaFacturador()"></div>

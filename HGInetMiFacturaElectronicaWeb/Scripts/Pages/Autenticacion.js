@@ -1,6 +1,5 @@
 ﻿
 
-
 var AutenticacionApp = angular.module('AutenticacionApp', ['dx']);
 AutenticacionApp.controller('AutenticacionController', function AutenticacionController($scope, $http, $location) {
 
@@ -110,9 +109,6 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
 });
 
-
-
-
 //Controlador para Restablecer Contraseña
 //ControladorApi: /Api/Usuario/
 //Datos PUT: codigo_empresa - codigo_usuario 
@@ -215,9 +211,7 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
             $('input:text[name=TextBoxDocIdentificacion]').val("");
             $('input:text[name=TextBoxUsuario]').val("");
             $("#modal_restablecer_clave").removeClass("modal fade in").addClass("modal fade");
-
             $('.modal-backdrop').remove();
-
 
         }, function errorCallback(response) {
             $('#wait').hide();
@@ -225,7 +219,6 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
         });
         e.preventDefault();
     };
-
 });
 
 $(function () {

@@ -124,7 +124,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
                 PorcentajesResumen resumen_inicio = new PorcentajesResumen();
                 resumen_inicio.Cantidad = cantidad_total;
                 resumen_inicio.Estado = -1;
-                resumen_inicio.IdControl = string.Format("DocumentosEstadoRecibidos{0}", descripcion_tipo);
+                resumen_inicio.IdControl = string.Format("DocumentosEstadoCatRecibidos{0}", descripcion_tipo);
                 resumen_inicio.Observaciones = string.Format("{0} Documentos", cantidad_total);
                 resumen_inicio.Porcentaje = 100;
                 resumen_inicio.Titulo = "Total";
