@@ -39,14 +39,11 @@
                         <div class="col-md-12" id="Panel13519" data-ng-if="Panel13519"  data-ng-init="Panel13519=false">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold"  style="margin-top: -10px; margin-bottom: 20px" >Documentos por Estado</h4>                                                                        
+                                    <h4 class="text-bold"  style="margin-top: -10px; margin-bottom: 20px" id="totaldocestado">Documentos por Estado</h4>                                                                        
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoCategoriaAdmin">
-                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center"  id="{{c.IdControl}}">                                            
+                                        <div class="content-group-sm svg-center position-relative col-xs-12 col-md-6 col-lg-3 text-center" data-ng-show="c.Estado!=-1"  id="{{c.IdControl}}">                                            
                                         </div>
-                                        
-                                        <div class=" col-md-2 text-center" style="margin-top:3%" data-ng-show="c.Estado==-1">
-                                            <i class="icon-arrow-right8 mr-3 icon-2x" ></i>
-                                        </div>
+                                                                                
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoCategoriaAdmin()"></div>
 
                                     </div>
@@ -58,9 +55,9 @@
                         <div class="col-md-12" id="Panel13511" data-ng-if="Panel13511" data-ng-init="Panel13511=false">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 40px">Documentos por Proceso</h4>
+                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 40px" id="totaldocproceso" >Documentos por Proceso</h4>
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoAdmin">
-                                        <div class="content-group-sm svg-center position-relative col-md-3 text-center" id="{{c.IdControl}}"></div>
+                                        <div class="content-group-sm svg-center position-relative col-md-3 text-center" data-ng-show="c.Estado!=0"  id="{{c.IdControl}}"></div>
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoAdmin()"></div>
                                     </div>
                                 </div>
@@ -174,14 +171,9 @@
                         <div class="col-md-12" id="Panel13527" data-ng-if="Panel13527" data-ng-init="Panel13527=false">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Documentos por Estado</h4>
+                                    <h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px" id="totaldocestadoFacturador">Documentos por Estado</h4>
                                     <div data-ng-repeat="c in ReporteDocumentosEstadoCategoriaFacturador">
-                                        <div class="content-group-sm svg-center position-relative col-md-2 text-center" id="{{c.IdControl}}"></div>
-
-                                        <div class=" col-md-2 text-center" style="margin-top: 3%" data-ng-show="c.Estado==-1">
-                                            <i class="icon-arrow-right8 mr-3 icon-2x" ></i>
-                                        </div>
-
+                                        <div class="content-group-sm svg-center position-relative col-xs-12 col-md-6 col-lg-3 text-center" data-ng-show="c.Estado!=-1" id="{{c.IdControl}}"></div>                                        
                                         <div data-ng-if="$last" data-ng-init="CargarDocumentosEstadoCategoriaFacturador()"></div>
                                     </div>
                                 </div>

@@ -853,7 +853,8 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
     /*************************************************************************** CARGA PORCENTAJES ADMINISTRADOR ***************************************************************************/
     
     $scope.CargarDocumentosEstadoCategoriaAdmin = function () {        
-        var Indicador = $scope.ReporteDocumentosEstadoCategoriaAdmin                      
+        var Indicador = $scope.ReporteDocumentosEstadoCategoriaAdmin        
+        $('#totaldocestado').text("Documentos por Estado: " + Indicador[0].Cantidad);
         for (var i = 0; i < Indicador.length; i++) {
             PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
         }
@@ -862,7 +863,8 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
     $scope.CargarDocumentosEstadoAdmin = function () {
 
-        var Indicador = $scope.ReporteDocumentosEstadoAdmin
+        var Indicador = $scope.ReporteDocumentosEstadoAdmin        
+        $('#totaldocproceso').text("Documentos por Estado: " + Indicador[0].Cantidad);
         for (var i = 0; i < Indicador.length; i++) {
             PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
         }
@@ -892,7 +894,8 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
     /*************************************************************************** CARGA PORCENTAJES FACTURADOR ***************************************************************************/
 
     $scope.CargarDocumentosEstadoCategoriaFacturador = function () {
-        var Indicador = $scope.ReporteDocumentosEstadoCategoriaFacturador
+        var Indicador = $scope.ReporteDocumentosEstadoCategoriaFacturador        
+        $('#totaldocestadoFacturador').text("Documentos por Estado: " + Indicador[0].Cantidad);
         for (var i = 0; i < Indicador.length; i++) {
             PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)            
         }              
