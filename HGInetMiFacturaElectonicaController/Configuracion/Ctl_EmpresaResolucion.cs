@@ -20,15 +20,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public Ctl_EmpresaResolucion(ModeloAutenticacion autenticacion) : base(autenticacion) { }
 
         public Ctl_EmpresaResolucion(string servidor, string basedatos, string usuario, string clave) : base(servidor, basedatos, usuario, clave) { }
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// Obtiene la resolución de una empresa
-        /// </summary>
-        /// <param name="documento_empresa">documento de la empresa</param>
-        /// <param name="numero_resolucion">número de resolución</param>
-        /// <returns>datos de la resolución</returns>
-        public TblEmpresasResoluciones Obtener(string documento_empresa, string numero_resolucion, string prefijo)
+		/// <summary>
+		/// Obtiene la resolución de una empresa
+		/// </summary>
+		/// <param name="documento_empresa">documento de la empresa</param>
+		/// <param name="numero_resolucion">número de resolución</param>
+		/// <returns>datos de la resolución</returns>
+		public TblEmpresasResoluciones Obtener(string documento_empresa, string numero_resolucion, string prefijo)
         {
 
             var datos = (from item in context.TblEmpresasResoluciones
@@ -41,13 +41,26 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
         }
 
-        /// <summary>
-        /// Obtiene todas las resoluciónes de una empresa
-        /// </summary>
-        /// <param name="documento_empresa">documento de la empresa</param>
-        /// <param name="numero_resolucion">número de resolución</param>
-        /// <returns>lista de resoluciones</returns>
-        public List<TblEmpresasResoluciones> ObtenerResoluciones(string documento_empresa, string numero_resolucion)
+		/// <summary>
+		/// Obtiene todas las resoluciones
+		/// </summary>
+		/// <returns></returns>
+		public List<TblEmpresasResoluciones> ObtenerTodas()
+		{
+			List<TblEmpresasResoluciones> datos = (from item in context.TblEmpresasResoluciones
+												   select item).ToList();
+
+			return datos;
+		}
+
+
+		/// <summary>
+		/// Obtiene todas las resoluciónes de una empresa
+		/// </summary>
+		/// <param name="documento_empresa">documento de la empresa</param>
+		/// <param name="numero_resolucion">número de resolución</param>
+		/// <returns>lista de resoluciones</returns>
+		public List<TblEmpresasResoluciones> ObtenerResoluciones(string documento_empresa, string numero_resolucion)
         {
 
             List<TblEmpresasResoluciones> datos = (from item in context.TblEmpresasResoluciones

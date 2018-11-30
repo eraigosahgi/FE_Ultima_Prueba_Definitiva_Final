@@ -6,6 +6,7 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +58,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// ruta física del xml
 			string carpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, obligado.StrIdSeguridad.ToString());
 			string archivo_log = string.Format(@"{0}\{1}\{2}.xml", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaEResoluciones, id_peticion);
-			
+
 			// obtiene los datos de prueba del proveedor tecnológico de la DIAN
 			DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
 
@@ -80,5 +81,55 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 		}
 
+		#region Sonda Obtener Resoluciones
+
+		/// <summary>
+		/// Sonda para obtener resoluciones
+		/// </summary>
+		/// <returns></returns>
+		public async Task SondaObtenerResoluciones()
+		{
+			try
+			{
+				var Tarea = TareaProcesarResoluciones();
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+		}
+
+		/// <summary>
+		/// Tarea para procesar resoluciones
+		/// </summary>
+		/// <returns></returns>
+		public async Task TareaProcesarResoluciones()
+		{
+			await Task.Factory.StartNew(() =>
+			{
+
+				Ctl_EmpresaResolucion ctl_facturador = new Ctl_EmpresaResolucion();
+				var facturador = ctl_facturador.ObtenerTodas().GroupBy(d => d.StrEmpresa).Select(g => g.First()).ToList();
+
+
+				foreach (var item in facturador)
+				{
+					try
+					{
+						Ctl_Resoluciones.Obtener(item.StrEmpresa);
+					}
+					catch (Exception excepcion)
+					{
+						LogExcepcion.Guardar(excepcion);
+
+					}
+				}
+
+			});
+
+		}
+
+		#endregion
 	}
 }
