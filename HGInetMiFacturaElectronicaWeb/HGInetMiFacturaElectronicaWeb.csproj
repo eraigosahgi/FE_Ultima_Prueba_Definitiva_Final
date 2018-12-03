@@ -2764,6 +2764,7 @@
     <Content Include="Views\Pages\ProcesarInteroperabilidad.aspx" />
     <Content Include="Views\Pages\Sonda.aspx" />
     <Content Include="Views\Pages\SondaAcuseTacito.aspx" />
+    <Content Include="Views\Pages\SondaResoluciones.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
     <Content Include="Views\ReportDesigner\XmlReporteBase.xml">
       <SubType>Designer</SubType>
@@ -3079,6 +3080,13 @@
     </Compile>
     <Compile Include="Views\Pages\SondaAcuseTacito.aspx.designer.cs">
       <DependentUpon>SondaAcuseTacito.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\SondaResoluciones.aspx.cs">
+      <DependentUpon>SondaResoluciones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaResoluciones.aspx.designer.cs">
+      <DependentUpon>SondaResoluciones.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\ReportDesigner\ReportDesignerWeb.aspx.cs">
       <DependentUpon>ReportDesignerWeb.aspx</DependentUpon>
