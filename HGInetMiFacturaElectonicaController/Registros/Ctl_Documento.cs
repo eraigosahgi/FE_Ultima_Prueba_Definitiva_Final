@@ -803,7 +803,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
 				}
-				tbl_documento.DatFechaDocumento = documento_obj.Fecha;
+				tbl_documento.DatFechaDocumento = Convert.ToDateTime(documento_obj.Fecha.ToString(Fecha.formato_fecha_hginet));
 				tbl_documento.StrObligadoIdRegistro = documento_obj.CodigoRegistro;
 				tbl_documento.StrNumResolucion = resolucion.StrNumResolucion;
 				tbl_documento.StrEmpresaFacturador = empresa.StrIdentificacion;
