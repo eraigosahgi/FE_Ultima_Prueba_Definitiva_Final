@@ -31,44 +31,46 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		{
 			List<DocumentoRespuesta> documentos_respuestas = new List<DocumentoRespuesta>();
 
-			foreach (TblDocumentos documento in documentos)
+			//Proceso de Paralelismo
+			Parallel.ForEach<TblDocumentos>(documentos, item =>
 			{
+
 				DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
 
 				// obtiene el proceso actual del documento
-				ProcesoEstado proceso_actual = Enumeracion.ParseToEnum<ProcesoEstado>((int)documento.IntIdEstado);
+				ProcesoEstado proceso_actual = Enumeracion.ParseToEnum<ProcesoEstado>((int)item.IntIdEstado);
 
 				try
 				{   // procesa el documento
-					item_respuesta = Procesar(documento);
+					item_respuesta = Procesar(item);
 				}
 				catch (Exception excepcion)
 				{
 					item_respuesta = new DocumentoRespuesta()
 					{
-						Aceptacion = documento.IntAdquirienteRecibo,
-						CodigoRegistro = documento.StrObligadoIdRegistro,
-						Cufe = documento.StrCufe,
+						Aceptacion = item.IntAdquirienteRecibo,
+						CodigoRegistro = item.StrObligadoIdRegistro,
+						Cufe = item.StrCufe,
 						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
-						DocumentoTipo = documento.IntDocTipo,
-						Documento = documento.IntNumero,
+						DocumentoTipo = item.IntDocTipo,
+						Documento = item.IntNumero,
 						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
-						FechaRecepcion = documento.DatFechaIngreso,
-						FechaUltimoProceso = documento.DatFechaActualizaEstado,
-						IdDocumento = documento.StrIdSeguridad.ToString(),
-						Identificacion = documento.StrEmpresaFacturador,
+						FechaRecepcion = item.DatFechaIngreso,
+						FechaUltimoProceso = item.DatFechaActualizaEstado,
+						IdDocumento = item.StrIdSeguridad.ToString(),
+						Identificacion = item.StrEmpresaFacturador,
 						IdProceso = proceso_actual.GetHashCode(),
-						MotivoRechazo = documento.StrAdquirienteMvoRechazo,
-						NumeroResolucion = documento.StrNumResolucion,
-						Prefijo = documento.StrPrefijo,
+						MotivoRechazo = item.StrAdquirienteMvoRechazo,
+						NumeroResolucion = item.StrNumResolucion,
+						Prefijo = item.StrPrefijo,
 						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
-						UrlPdf = documento.StrUrlArchivoPdf,
-						UrlXmlUbl = documento.StrUrlArchivoUbl
+						UrlPdf = item.StrUrlArchivoPdf,
+						UrlXmlUbl = item.StrUrlArchivoUbl
 					};
 				}
 
 				documentos_respuestas.Add(item_respuesta);
-			}
+			});
 
 			return documentos_respuestas;
 		}
