@@ -8,6 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <title>HGInet Factura Electrónica</title>
 
     <!-- Global stylesheets -->
@@ -136,6 +140,12 @@
                                 <span>{{datos.IdSeguridad}}</span>
                             </div>
 
+                            <div style="margin-bottom: 0%">
+                                <label class="text-bold">Estado: </label>
+                                <span>{{datos.EstadoFactura}}</span>
+                            </div>
+                            
+
                         </div>
 
 
@@ -165,7 +175,7 @@
                         <!--data-ng-if="DetalleAcuse"-->
                         <div>
                             <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
-                            <div id="PanelOpcionesAdquiriente" style="margin-top: -25px" data-ng-show="{{datos.CamposVisibles}}" class="dx-fieldset">
+                            <div id="PanelOpcionesAdquiriente" style="margin-top: -25px" data-ng-show="{{datos.CamposVisibles && datos.EstadoCat ==300}}" class="dx-fieldset">
 
                                 <form data-ng-submit="onFormSubmit($event)">
 
@@ -199,23 +209,26 @@
 
                             <h4 class="panel-title text-bold text-center">Archivos</h4>
 
+                            <div style="margin-top: 1%; text-align: center;">
+
+                                <a href="{{datos.Pdf}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; ">Pdf</a>
+                                
+                                <a href="{{datos.Xml}}" target="_blank" data-ng-show="{{datos.EstadoCat ==300}}" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important;  font-size: 14px; ">Xml</a>
+								 
+                                <a href="{{datos.XmlAcuse}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; " data-ng-show="datos.XmlAcuse != null">Xml Acuse</a>
+                                
+                                <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important" href="../Login/Default.aspx" style="font-size: 14px; text-align: center;">Autenticar</a>
+                            </div>
+                            <br />
+                            
+
                             <div style="margin-top: 1%; text-align: justify;">
                                 Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
                             </div>
-
-                            <div style="margin-top: 1%; text-align: center;">
-
-                                <a href="{{datos.Pdf}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;">Pdf</a>
-                                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                <a href="{{datos.Xml}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;">Xml</a>
-								 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                <a href="{{datos.XmlAcuse}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-show="datos.XmlAcuse != null">Xml Acuse</a>
-                            </div>
-                            <br />
                             <div style="text-align: center;">
 
                                 <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true && datos.Estatus ==3">Pagar</a>
-                                <a id="btnautenticar" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important" href="../Login/Default.aspx" style="font-size: 14px; text-align: center;">Autenticar</a>
+                                
                                 <div id="pnl_Verificar_Pago" data-ng-if="EnProceso">
                                     <hr />
                                     <div class="col-md-12">Verificando estado del pago</div>
