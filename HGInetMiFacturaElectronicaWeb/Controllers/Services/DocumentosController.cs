@@ -198,7 +198,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
 					Estatus = Pago.VerificarSaldo(id_seguridad),
 					XmlAcuse = d.StrUrlAcuseUbl,
-					pago = d.TblPagosElectronicos.Select(p => new
+                    EstadoCat = d.IdCategoriaEstado,
+                    EstadoFactura = DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado),
+                    pago = d.TblPagosElectronicos.Select(p => new
 					{
 						p.StrIdRegistro,
 						p.IntEstadoPago
