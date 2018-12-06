@@ -1,4 +1,4 @@
-﻿using HGInetEmailServicios.ServicioEnvio;
+﻿
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Properties;
@@ -10,8 +10,9 @@ using HGInetMiFacturaElectonicaData.ModeloServicio.General;
 using HGInetUBL;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.HgiNet.Controladores;
 using LibreriaGlobalHGInet.Objetos;
-using LibreriaGlobalHGInet.Properties;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -159,11 +160,10 @@ namespace HGInetMiFacturaElectonicaController
 
 					List<MensajeContenido> mensajes = new List<MensajeContenido>();
 					mensajes.Add(contenido);
+                    
+                    Ctl_CloudMensajeria.Enviar(string.Format("{0}/api/Enviar",plataforma.RutaHginetMail), plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);                    
 
-
-					HGInetEmailServicios.Ctl_Envio.Enviar(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);
-
-				}
+                }
 
 			}
 			catch (Exception excepcion)
@@ -446,9 +446,10 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
 						mensaje = mensaje.Replace("{DigitovFacturador}", empresa_obligado.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMail);
+                        mensaje = mensaje.Replace("{CodigoCUFE}", documento.StrCufe);
 
 
-						if (!string.IsNullOrWhiteSpace(telefono))
+                        if (!string.IsNullOrWhiteSpace(telefono))
 							mensaje = mensaje.Replace("{TelefonoFacturador}", telefono);
 						else
 							mensaje = mensaje.Replace("{TelefonoFacturador}", "");
