@@ -131,6 +131,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public int OcultarItem { get; set; }
 
+		/// <summary>
+		/// Codigo EAN del producto y/o servicio
+		/// </summary>
+		public string ProductoCodigoEAN { get; set; }
+
 
 		#endregion
 

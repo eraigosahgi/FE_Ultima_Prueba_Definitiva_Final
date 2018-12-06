@@ -296,7 +296,7 @@ namespace HGInetUBL
 						}
 						else if (factura_ubl.InvoiceLine[i].Item.StandardItemIdentification != null)
 						{
-							detalle.ProductoCodigo = factura_ubl.InvoiceLine[i].Item.StandardItemIdentification.ID.Value;
+							detalle.ProductoCodigoEAN = factura_ubl.InvoiceLine[i].Item.StandardItemIdentification.ID.Value;
 						}
 						detalle.ProductoNombre = factura_ubl.InvoiceLine[i].Item.Description[0].Value;
 						if (factura_ubl.InvoiceLine[i].Item.AdditionalInformation != null)

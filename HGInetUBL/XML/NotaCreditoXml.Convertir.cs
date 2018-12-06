@@ -230,7 +230,10 @@ namespace HGInetUBL
 
 						DocumentoDetalle detalle = new DocumentoDetalle();
 						detalle.Codigo = Convert.ToInt16(nota_credito_ubl.CreditNoteLine[i].ID.Value);
-						detalle.ProductoCodigo = nota_credito_ubl.CreditNoteLine[i].Item.CatalogueItemIdentification.ID.Value;
+						if (nota_credito_ubl.CreditNoteLine[i].Item.CatalogueItemIdentification != null)
+							detalle.ProductoCodigo = nota_credito_ubl.CreditNoteLine[i].Item.CatalogueItemIdentification.ID.Value;
+						if (nota_credito_ubl.CreditNoteLine[i].Item.StandardItemIdentification != null)
+							detalle.ProductoCodigoEAN = nota_credito_ubl.CreditNoteLine[i].Item.StandardItemIdentification.ID.Value;
 						detalle.ProductoNombre = nota_credito_ubl.CreditNoteLine[i].Item.Description[0].Value;
 						if (nota_credito_ubl.CreditNoteLine[i].Item.AdditionalInformation != null)
 						{

@@ -1098,7 +1098,7 @@ namespace HGInetUBL
 					// <cac:StandardItemIdentification>
 					ItemIdentificationType StandardItemIdentification = new ItemIdentificationType();
 					IDType IDItemStandard = new IDType();
-					IDItemStandard.Value = DocDet.ProductoCodigo;
+					IDItemStandard.Value = DocDet.ProductoCodigoEAN;
 					StandardItemIdentification.ID = IDItemStandard;
 					Item.StandardItemIdentification = StandardItemIdentification;
 					#endregion
