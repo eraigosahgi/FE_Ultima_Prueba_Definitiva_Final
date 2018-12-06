@@ -106,7 +106,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*");
 
-					if (lista_resolucion == null)
+					if (lista_resolucion == null || lista_resolucion.Count < 1)
 					{
 						// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
 						lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, facturador_electronico);
