@@ -161,7 +161,7 @@ namespace HGInetMiFacturaElectonicaController
 					List<MensajeContenido> mensajes = new List<MensajeContenido>();
 					mensajes.Add(contenido);
                     
-                    Ctl_CloudMensajeria.Enviar(string.Format("{0}/api/Enviar",plataforma.RutaHginetMail), plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);                    
+                    Ctl_CloudMensajeria.Enviar(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);                    
 
                 }
 
