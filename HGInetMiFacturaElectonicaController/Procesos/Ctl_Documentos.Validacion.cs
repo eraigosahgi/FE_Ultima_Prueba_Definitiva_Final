@@ -55,6 +55,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		public static void ValidarRespuesta(DocumentoRespuesta respuesta)
 		{
 			if (respuesta.Error != null)
+			{
 				if (!string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
 				{
 					if (respuesta.IdProceso > ProcesoEstado.UBL.GetHashCode() && respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
@@ -63,6 +64,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					throw new ApplicationException(respuesta.Error.Mensaje);
 				}
+			}
 		}
 	}
 }

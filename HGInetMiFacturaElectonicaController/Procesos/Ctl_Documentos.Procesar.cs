@@ -259,28 +259,40 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					respuesta = Consultar(documento, empresa, ref respuesta);
 
-					//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-					/*if (respuesta.EstadoDian.CodigoRespuesta == null)
-					{
-						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
-
-						//Valida de nuevo el estado del documento si fue enviado y hay respuesta de la DIAN
-						respuesta = Consultar(documento, empresa, ref respuesta);
-					}*/
-
 					// envía el mail de documentos al adquiriente
 					if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 					{
 						if ((documento.StrProveedorReceptor == null) || documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 						{
-							respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
-							ValidarRespuesta(respuesta);
+							if (documento.IntEnvioMail == null || documento.IntEnvioMail == false)
+							{
+								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
+								ValidarRespuesta(respuesta);
+							}
+							else
+							{
+								//Actualiza la respuesta
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
+								respuesta.FechaUltimoProceso = Fecha.GetFecha();
+								respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
+
+								//Actualiza Documento en Base de Datos
+								documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+								documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+								Ctl_Documento documento_tmp = new Ctl_Documento();
+								documento_tmp.Actualizar(documento);
+
+								//Actualiza la categoria con el nuevo estado
+								respuesta.IdEstado = documento.IdCategoriaEstado;
+								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
+							}
+
 						}
 						else
 						{
 							//Se actualiza respuesta	
-							respuesta.DescripcionProceso = "Documento Pendiente Envío Proveedor";
+							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PendienteEnvioProveedorDoc);
 							respuesta.FechaUltimoProceso = Fecha.GetFecha();
 							respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
 
@@ -296,6 +308,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.IdEstado = documento.IdCategoriaEstado;
 							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
 						}
+					}
+					else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && documento.IntEnvioMail == null || documento.IntEnvioMail == false)
+					{
+						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
+						ValidarRespuesta(respuesta);
+
 					}
 				}
 

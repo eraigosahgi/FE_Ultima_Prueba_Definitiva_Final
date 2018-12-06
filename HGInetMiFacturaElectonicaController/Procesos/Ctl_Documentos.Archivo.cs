@@ -66,10 +66,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					serializacion = new XmlSerializer(typeof(InvoiceType));
 
 					conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
-					
+
 					// agrega los campos de la Dian correspondientes al Proveedor Tecnológico
 					//conversion = (InvoiceType)AgregarCamposDian(conversion, TipoDocumento.Factura, facturador);
-					
+
 
 					documento_obj = FacturaXML.Convertir(conversion);
 
@@ -271,16 +271,34 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					// firma el xml
 					respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
+					if (documentoBd.IntEnvioMail == true && facturador.IntEnvioMailRecepcion == true)
+					{
+						respuesta = Envio(documento_obj, documentoBd, facturador, ref respuesta, ref documento_result, true);
+						documento_tmp = new Ctl_Documento();
+						documentoBd = documento_tmp.Actualizar(documentoBd);
+					}
 					ValidarRespuesta(respuesta);
 
 
 					// comprime el archivo xml firmado                        
 					respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
+					if (documentoBd.IntEnvioMail == true && facturador.IntEnvioMailRecepcion == true)
+					{
+						respuesta = Envio(documento_obj, documentoBd, facturador, ref respuesta, ref documento_result, true);
+						documento_tmp = new Ctl_Documento();
+						documentoBd = documento_tmp.Actualizar(documentoBd);
+					}
 					ValidarRespuesta(respuesta);
 
 
 					// envía el archivo zip con el xml firmado a la DIAN
 					HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, facturador, ref respuesta, ref documento_result);
+					if (documentoBd.IntEnvioMail == true && facturador.IntEnvioMailRecepcion == true)
+					{
+						respuesta = Envio(documento_obj, documentoBd, facturador, ref respuesta, ref documento_result, true);
+						documento_tmp = new Ctl_Documento();
+						documentoBd = documento_tmp.Actualizar(documentoBd);
+					}
 					ValidarRespuesta(respuesta);
 
 
@@ -291,8 +309,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					// envía el mail de documentos al adquiriente
 					if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 					{
-						respuesta = Envio(documento_obj, documentoBd, facturador, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
+						if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
+						{
+							respuesta = Envio(documento_obj, documentoBd, facturador, ref respuesta, ref documento_result);
+							ValidarRespuesta(respuesta);
+						}
+						else
+						{
+							//Se actualiza respuesta	
+							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PendienteEnvioProveedorDoc);
+							respuesta.FechaUltimoProceso = Fecha.GetFecha();
+							respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+
+							//Actualiza Documento en Base de Datos
+							documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();
+							documentoBd.IntIdEstado = (short)respuesta.IdProceso;
+
+							//Actualizo el estado del documento para enviar al proveedor receptor
+							documento_tmp = new Ctl_Documento();
+							documento_tmp.Actualizar(documentoBd);
+
+							//Actualiza la categoria con el nuevo estado
+							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+						}
 					}
 
 				}

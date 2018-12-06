@@ -134,7 +134,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						//Asignación de Cufe a documento_obj 
 						documento_obj.Cufe = documento_result.CUFE;
-						
+
 						//Asignacion del CUFE a la respuesta
 						respuesta.Cufe = documento_result.CUFE;
 
@@ -223,16 +223,37 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// firma el xml
 						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
+
+						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
+						{
+							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
+							documento_tmp = new Ctl_Documento();
+							documentoBd = documento_tmp.Actualizar(documentoBd);
+						}
 						ValidarRespuesta(respuesta);
 
 
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
+
+						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
+						{
+							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
+							documento_tmp = new Ctl_Documento();
+							documentoBd = documento_tmp.Actualizar(documentoBd);
+						}
 						ValidarRespuesta(respuesta);
 
 
 						// envía el archivo zip con el xml firmado a la DIAN
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result);
+
+						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
+						{
+							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
+							documento_tmp = new Ctl_Documento();
+							documentoBd = documento_tmp.Actualizar(documentoBd);
+						}
 						ValidarRespuesta(respuesta);
 
 

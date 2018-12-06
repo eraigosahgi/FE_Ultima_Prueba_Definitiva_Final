@@ -140,6 +140,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el firmado del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 				LogExcepcion.Guardar(excepcion);
+				documentoBd.IntEnvioMail = true;
 			}
             return respuesta;
         }
@@ -172,6 +173,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             {
                 respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la compresión del documento UBL en XML firmado. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 				LogExcepcion.Guardar(excepcion);
+				documentoBd.IntEnvioMail = true;
 			}
             return respuesta;
         }

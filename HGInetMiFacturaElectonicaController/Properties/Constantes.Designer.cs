@@ -268,6 +268,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_documento_basica.html.
+        /// </summary>
+        public static string RutaPlantillaHtmlDocumentosBasica {
+            get {
+                return ResourceManager.GetString("RutaPlantillaHtmlDocumentosBasica", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_recarga_transacciones.html.
         /// </summary>
         public static string RutaPlantillaRecarga {
