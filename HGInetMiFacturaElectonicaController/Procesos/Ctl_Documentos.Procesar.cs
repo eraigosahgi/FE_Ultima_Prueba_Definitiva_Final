@@ -312,6 +312,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && documento.IntEnvioMail == null || documento.IntEnvioMail == false)
 					{
 						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
+						Ctl_Documento documento_tmp = new Ctl_Documento();
+						documento.IntEnvioMail = true;
+						documento_tmp.Actualizar(documento);
 						ValidarRespuesta(respuesta);
 
 					}
