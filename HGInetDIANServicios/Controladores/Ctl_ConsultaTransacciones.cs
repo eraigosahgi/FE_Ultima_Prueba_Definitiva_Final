@@ -104,6 +104,10 @@ namespace HGInetDIANServicios
 		/// <returns>objeto del servicio</returns>
 		private static DianResultadoTransacciones.DocumentosRecibidos Convertir(string soapResponse)
 		{
+
+			//Bandera para detener proceso cuando sean varias respuesta y encuentre la respuesta exitosa
+			bool encontro_resp = false;
+
 			XmlDocument xmlDocument = new XmlDocument();
 			xmlDocument.LoadXml(soapResponse);
 
@@ -124,7 +128,7 @@ namespace HGInetDIANServicios
 				else if (item.LocalName.Equals("DescripcionTransaccion"))
 					acuse.DescripcionTransaccion = item.InnerText;
 
-				else if (item.LocalName.Equals("DocumentoRecibido"))
+				else if (item.LocalName.Equals("DocumentoRecibido") && !encontro_resp)
 				{
 					var received = xmlDocument.GetElementsByTagName("ns3:DocumentoRecibido")[0];
 
@@ -132,33 +136,47 @@ namespace HGInetDIANServicios
 
 					foreach (XmlNode item2 in received)
 					{
-						if (item2.LocalName.Equals("DatosBasicosDocumento"))
+						if (item2.LocalName.Equals("DatosBasicosDocumento") && !encontro_resp)
 						{
 							DianResultadoTransacciones.DocumentoRecibido detalle = new DianResultadoTransacciones.DocumentoRecibido();
 
 							detalle.DatosBasicosDocumento = new DianResultadoTransacciones.DatosBasicosDocumento();
 
-							var seguimiento = xmlDocument.GetElementsByTagName("ns3:DatosBasicosDocumento")[0];
+							var seguimiento = xmlDocument.GetElementsByTagName("ns3:DatosBasicosDocumento");
 
 							foreach (XmlNode item3 in seguimiento)
 							{
-								if (item3.LocalName.Equals("CUFE"))
-									detalle.DatosBasicosDocumento.CUFE = item3.InnerText;
-								else if (item3.LocalName.Equals("DescripcionEstado"))
-									detalle.DatosBasicosDocumento.DescripcionEstado = item3.InnerText;
-								else if (item3.LocalName.Equals("Emisor"))
-									detalle.DatosBasicosDocumento.Emisor = item3.InnerText;
-								else if (item3.LocalName.Equals("EstadoDocumento"))
-									detalle.DatosBasicosDocumento.EstadoDocumento = item3.InnerText;
-								else if (item3.LocalName.Equals("FechaHoraEmision"))
-									detalle.DatosBasicosDocumento.FechaHoraEmision = item3.InnerText;
-								else if (item3.LocalName.Equals("FechaHoraRecepcion"))
-									detalle.DatosBasicosDocumento.FechaHoraRecepcion = System.DateTime.ParseExact(item.InnerText, Fecha.ObtenerFormato(item.InnerText), System.Globalization.CultureInfo.InvariantCulture);
-								else if (item3.LocalName.Equals("NumeroDocumento"))
-									detalle.DatosBasicosDocumento.NumeroDocumento = item3.InnerText;
+
+								if (!encontro_resp)
+								{
+									//se recorre todas las respuestas
+									foreach (XmlNode item_child in item3.ChildNodes)
+									{
+										if (item_child.LocalName.Equals("Emisor"))
+											detalle.DatosBasicosDocumento.Emisor = item_child.InnerText;
+										else if (item_child.LocalName.Equals("FechaHoraEmision"))
+											detalle.DatosBasicosDocumento.FechaHoraEmision = item_child.InnerText;
+										else if (item_child.LocalName.Equals("EstadoDocumento"))
+										{
+											detalle.DatosBasicosDocumento.EstadoDocumento = item_child.InnerText;
+											if (detalle.DatosBasicosDocumento.EstadoDocumento == RespuestaDocumentoDian.Exitosa.GetHashCode().ToString())
+												encontro_resp = true;
+										}
+										else if (item_child.LocalName.Equals("DescripcionEstado"))
+											detalle.DatosBasicosDocumento.DescripcionEstado = item_child.InnerText;
+										else if (item_child.LocalName.Equals("NumeroDocumento"))
+											detalle.DatosBasicosDocumento.NumeroDocumento = item_child.InnerText;
+										else if (item_child.LocalName.Equals("CUFE"))
+											detalle.DatosBasicosDocumento.CUFE = item_child.InnerText;
+										else if (item_child.LocalName.Equals("FechaHoraRecepcion"))
+											detalle.DatosBasicosDocumento.FechaHoraRecepcion = System.DateTime.ParseExact(item.InnerText, Fecha.ObtenerFormato(item.InnerText), System.Globalization.CultureInfo.InvariantCulture);
+									}
+								}
+
 							}
 
-							detalle.DatosBasicosDocumento.DescripcionEstado = detalle.DatosBasicosDocumento.DescripcionEstado + " " + ObtenerErroresRespuesta(xmlDocument);
+							if (detalle.DatosBasicosDocumento.EstadoDocumento != RespuestaDocumentoDian.Exitosa.GetHashCode().ToString())
+								detalle.DatosBasicosDocumento.DescripcionEstado = detalle.DatosBasicosDocumento.DescripcionEstado + " " + ObtenerErroresRespuesta(xmlDocument);
 							detalles.Add(detalle);
 						}
 
@@ -179,7 +197,8 @@ namespace HGInetDIANServicios
 		/// </summary>
 		/// <param name="XmlDocument"></param>
 		/// <returns></returns>
-		public static string ObtenerErroresRespuesta(XmlDocument xmlDocument) {
+		public static string ObtenerErroresRespuesta(XmlDocument xmlDocument)
+		{
 
 			string DetalleIncorrecto = "";
 			var receivedJS = xmlDocument.GetElementsByTagName("ns3:VerificacionFuncional")[0];
@@ -281,7 +300,7 @@ namespace HGInetDIANServicios
 						break;
 
 					case "7200004":
-						resultado.EstadoDianDescripcion =  documento.DocumentoRecibido[0].DatosBasicosDocumento.DescripcionEstado;
+						resultado.EstadoDianDescripcion = documento.DocumentoRecibido[0].DatosBasicosDocumento.DescripcionEstado;
 						resultado.Estado = EstadoDocumentoDian.Rechazado;
 						break;
 
