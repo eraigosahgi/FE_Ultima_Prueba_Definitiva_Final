@@ -7,7 +7,8 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
     dato_usuario = "",
     dato_contrasena = "";
 
-
+    var nit = location.search.split('nit=')[1];
+   
     $scope.formOptions = {
 
         readOnly: false,
@@ -16,7 +17,15 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
         validationGroup: "DatosAutenticacion",
         onInitialized: function (e) {
             formInstance = e.component;
+        
         },
+        onContentReady: function(e){
+            if (nit != null && nit != undefined) {            
+                $('input:text[name=Identificacion]').val(nit);
+                dato_identificacion = nit;
+            }
+        }
+        ,
         //Fomulario Autenticación
         items: [{
             itemType: "group",
@@ -24,11 +33,12 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
                 {
                     dataField: "Identificacion",
                     editorType: "dxTextBox",
+                    visible: (nit != null && nit != undefined) ? false : true,
                     label: {
                         text: "Identificación"
                     },
-                    validationRules: [{
-                        type: "required",
+                    validationRules: [{                        
+                        type: (nit != null && nit != undefined) ? "null":"required",
                         message: "El documento de identificación es requerido."
                     }, {
                         //Valida que el campo solo contenga números
@@ -69,6 +79,8 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
     };
 
+   
+
     //Opciones de botón -  valida el formulario
     $scope.buttonOptions = {
         text: "INGRESAR",
@@ -80,7 +92,10 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
     //Evento del botón.
     $scope.onFormSubmit = function (e) {
 
-        dato_identificacion = $('input:text[name=Identificacion]').val();
+        if (nit == null || nit == undefined) {
+            dato_identificacion = $('input:text[name=Identificacion]').val();
+        }
+        
         dato_usuario = $('input:text[name=Usuario]').val();
         dato_contrasena = $('input:password[name=Clave]').val();
 
@@ -89,17 +104,17 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
         //Datos GET: codigo_empresa - codigo_usuario - clave
         $('#wait').show();
         $http.get('/Api/Usuario?codigo_empresa=' + dato_identificacion + '&codigo_usuario=' + dato_usuario + '&clave=' + dato_contrasena).then(function (response) {
-        $('#wait').hide();        
+            $('#wait').hide();
             var respuesta = response.data;
 
             if (respuesta.length != 0) {
                 window.location.assign("../Pages/Inicio.aspx?ID=" + response.data[0].Token);
-            }            
+            }
             else {
-                
+
                 DevExpress.ui.notify("Datos de autenticación inválidos.", 'error', 3000);
             }
-           
+
         }, function errorCallback(response) {
             $('#wait').hide();
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
@@ -191,9 +206,9 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
         //Datos PUT: codigo_empresa - codigo_usuario
         $('#wait').show();
         $http.post('/Api/Usuario?' + data).then(function (response) {
-            $('#wait').hide();            
+            $('#wait').hide();
             //var respuesta = response.data;
-            
+
             try {
                 swal({
                     title: 'Solicitud Éxitosa',
