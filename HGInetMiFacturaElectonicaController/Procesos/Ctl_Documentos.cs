@@ -290,6 +290,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 							}
 						}
+						else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && empresa.IntEnvioMailRecepcion == true)
+						{
+							documento_tmp = new Ctl_Documento();
+							documentoBd.IntEnvioMail = true;
+							documento_tmp.Actualizar(documentoBd);
+							ValidarRespuesta(respuesta);
+						}
 
 					}
 
