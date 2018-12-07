@@ -304,7 +304,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                       //},
 
                         {
-                            dataField: "",
+                            dataField: "EstadoFactura",
                             caption: "Estado",
                             cssClass: "hidden-xs col-md-1",
                             cellTemplate: function (container, options) {

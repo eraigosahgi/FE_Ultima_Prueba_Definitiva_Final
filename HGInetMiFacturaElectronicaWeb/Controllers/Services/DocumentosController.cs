@@ -149,8 +149,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
 					zip = d.StrUrlAnexo,
-                    permiteenvio=((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode())?true:false
-				});
+                    permiteenvio=((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode())?true:false,
+                    Estado = d.IdCategoriaEstado
+                });
 
 				return Ok(retorno);
 			}
@@ -288,7 +289,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,                                                           
                     zip = d.StrUrlAnexo,
                     RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
-                    XmlAcuse = d.StrUrlAcuseUbl
+                    XmlAcuse = d.StrUrlAcuseUbl,
+                    EstadoCat = d.IdCategoriaEstado
                 });
 
 				return Ok(retorno);
@@ -628,7 +630,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Pdf = d.StrUrlArchivoPdf,
                     zip = d.StrUrlAnexo,
                     RutaServDian = (d.IntIdEstado<7)?"": (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
-                    XmlAcuse = d.StrUrlAcuseUbl
+                    XmlAcuse = d.StrUrlAcuseUbl,
+                    Estado = d.IdCategoriaEstado
                 });
 
 				return Ok(retorno);
@@ -809,7 +812,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     zip = d.StrUrlAnexo,
                     RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
                     XmlAcuse = d.StrUrlAcuseUbl,
-                    permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false
+                    permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
+                    Estado = d.IdCategoriaEstado
                 });
 
 				return Ok(retorno);

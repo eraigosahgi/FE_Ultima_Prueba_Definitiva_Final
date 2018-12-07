@@ -248,6 +248,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                               caption: "Busqueda"
                           }
                       }
+
                 ],
                 //**************************************************************
                 masterDetail: {
