@@ -319,12 +319,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
 										&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
-										   && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-										   //&& (datos.IntIdEstado > 7 && datos.IntIdEstado < 99 && datos.IntIdEstado != 90)
-                                          // && (datos.IdCategoriaEstado== Categoria)
-										   //&& (datos.IntIdEstado != ErrorDian)
-										   && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
-										   && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
+										&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))										   
+                                        && (datos.TblEmpresasFacturador.IntEnvioMailRecepcion==true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))                                                                                										   
+                                        && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+										&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
 							 orderby datos.IntNumero descending
 							 select datos).ToList();
 
