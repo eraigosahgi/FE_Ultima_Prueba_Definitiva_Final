@@ -246,7 +246,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 
                             $("<div>")
                                 .append(
-                                   $("<a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml + ">"))
+                                   $("<a taget=_self class='icon-circle2'" + ((options.data.Estado == '400') ? " style='color:red;' title='Fallido DIAN'" : (options.data.Estado == '300') ? " style='color:green;' title='Validado DIAN'" : (options.data.Estado == '200') ? " style='color:yellow;' title='Envío DIAN'" : " style='color:gray;' title='No recibido'") + "><a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml + ">"))
                                 .append($(""))
                                 .appendTo(container);
                         }
