@@ -31,6 +31,48 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		{
 			List<DocumentoRespuesta> documentos_respuestas = new List<DocumentoRespuesta>();
 
+			foreach (TblDocumentos documento in documentos)
+			{
+				DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
+
+				// obtiene el proceso actual del documento
+				ProcesoEstado proceso_actual = Enumeracion.ParseToEnum<ProcesoEstado>((int)documento.IntIdEstado);
+
+				try
+				{   // procesa el documento
+					item_respuesta = Procesar(documento);
+				}
+				catch (Exception excepcion)
+				{
+					item_respuesta = new DocumentoRespuesta()
+					{
+						Aceptacion = documento.IntAdquirienteRecibo,
+						CodigoRegistro = documento.StrObligadoIdRegistro,
+						Cufe = documento.StrCufe,
+						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						DocumentoTipo = documento.IntDocTipo,
+						Documento = documento.IntNumero,
+						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						FechaRecepcion = documento.DatFechaIngreso,
+						FechaUltimoProceso = documento.DatFechaActualizaEstado,
+						IdDocumento = documento.StrIdSeguridad.ToString(),
+						Identificacion = documento.StrEmpresaFacturador,
+						IdProceso = proceso_actual.GetHashCode(),
+						MotivoRechazo = documento.StrAdquirienteMvoRechazo,
+						NumeroResolucion = documento.StrNumResolucion,
+						Prefijo = documento.StrPrefijo,
+						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+						UrlPdf = documento.StrUrlArchivoPdf,
+						UrlXmlUbl = documento.StrUrlArchivoUbl
+					};
+				}
+
+				documentos_respuestas.Add(item_respuesta);
+			}
+
+			return documentos_respuestas;
+
+			/*
 			//Proceso de Paralelismo
 			Parallel.ForEach<TblDocumentos>(documentos, item =>
 			{
@@ -70,9 +112,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				documentos_respuestas.Add(item_respuesta);
-			});
+			});*/
 
-			return documentos_respuestas;
 		}
 
 		/// <summary>
