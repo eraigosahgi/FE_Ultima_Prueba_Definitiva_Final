@@ -733,7 +733,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						string ruta_acuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", documento.StrIdSeguridad.ToString()));
 
-						mensaje = mensaje.Replace("{RutaUrl}", plataforma.RutaPublica);
+						mensaje = mensaje.Replace("{RutaUrl}",string.Format("{0}/Views/Login/Default.aspx?nit={1}", plataforma.RutaPublica, empresa_adquiriente.StrIdentificacion));
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
 						bool IdPago = false;
