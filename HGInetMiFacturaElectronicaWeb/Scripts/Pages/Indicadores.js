@@ -862,7 +862,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 
     $scope.CargarDocumentosEstadoAdmin = function () {
-
         var Indicador = $scope.ReporteDocumentosEstadoAdmin        
         $('#totaldocproceso').text("Documentos por Estado: " + Indicador[0].Cantidad);
         for (var i = 0; i < Indicador.length; i++) {

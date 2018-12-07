@@ -88,8 +88,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales == null) ? 0 : (d.TblEmpresasResoluciones?.IntPermiteParciales == true) ? 1 : 0,
 					Telefono = d.TblEmpresasFacturador.StrTelefono,
 					Email = d.TblEmpresasFacturador.StrMail,
-					zip = d.StrUrlAnexo
-				});
+					zip = d.StrUrlAnexo,
+                    Estado = d.IdCategoriaEstado,
+                    permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false
+                });
 
 				return Ok(retorno);
 			}

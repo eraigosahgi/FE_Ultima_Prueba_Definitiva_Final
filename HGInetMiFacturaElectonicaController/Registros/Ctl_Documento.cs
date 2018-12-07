@@ -321,7 +321,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 										   && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
 										   //&& (datos.IntIdEstado > 7 && datos.IntIdEstado < 99 && datos.IntIdEstado != 90)
-                                           && (datos.IdCategoriaEstado== Categoria)
+                                          // && (datos.IdCategoriaEstado== Categoria)
 										   //&& (datos.IntIdEstado != ErrorDian)
 										   && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
 										   && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
