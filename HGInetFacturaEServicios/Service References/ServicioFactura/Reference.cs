@@ -1196,6 +1196,9 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private string ProductoCodigoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ProductoCodigoEANField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ProductoDescripcionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1364,6 +1367,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((object.ReferenceEquals(this.ProductoCodigoField, value) != true)) {
                     this.ProductoCodigoField = value;
                     this.RaisePropertyChanged("ProductoCodigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProductoCodigoEAN {
+            get {
+                return this.ProductoCodigoEANField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProductoCodigoEANField, value) != true)) {
+                    this.ProductoCodigoEANField = value;
+                    this.RaisePropertyChanged("ProductoCodigoEAN");
                 }
             }
         }

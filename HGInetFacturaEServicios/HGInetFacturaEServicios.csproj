@@ -138,21 +138,21 @@
     <None Include="Service References\ServicioDocumento\HGInetFacturaEServicios.ServicioDocumento.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioFactura\factura2.wsdl" />
-    <None Include="Service References\ServicioFactura\factura21.wsdl" />
-    <None Include="Service References\ServicioFactura\factura5.xsd">
+    <None Include="Service References\ServicioFactura\factura.wsdl" />
+    <None Include="Service References\ServicioFactura\factura.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura51.xsd">
+    <None Include="Service References\ServicioFactura\factura1.wsdl" />
+    <None Include="Service References\ServicioFactura\factura1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura52.xsd">
+    <None Include="Service References\ServicioFactura\factura2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura53.xsd">
+    <None Include="Service References\ServicioFactura\factura3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura54.xsd">
+    <None Include="Service References\ServicioFactura\factura4.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioFactura\HGInetFacturaEServicios.ServicioFactura.ObtenerPorFechasAdquirienteResponse.datasource">
@@ -179,21 +179,21 @@
     <None Include="Service References\ServicioNotaCredito\HGInetFacturaEServicios.ServicioNotaCredito.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito2.wsdl" />
-    <None Include="Service References\ServicioNotaCredito\notacredito21.wsdl" />
-    <None Include="Service References\ServicioNotaCredito\notacredito5.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito.wsdl" />
+    <None Include="Service References\ServicioNotaCredito\notacredito.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito51.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito1.wsdl" />
+    <None Include="Service References\ServicioNotaCredito\notacredito1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito52.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito53.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaCredito\notacredito54.xsd">
+    <None Include="Service References\ServicioNotaCredito\notacredito4.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.ObtenerPorFechasAdquirienteResponse.datasource">
@@ -208,21 +208,21 @@
     <None Include="Service References\ServicioNotaDebito\HGInetFacturaEServicios.ServicioNotaDebito.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito2.wsdl" />
-    <None Include="Service References\ServicioNotaDebito\notadebito21.wsdl" />
-    <None Include="Service References\ServicioNotaDebito\notadebito5.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito.wsdl" />
+    <None Include="Service References\ServicioNotaDebito\notadebito.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito51.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito1.wsdl" />
+    <None Include="Service References\ServicioNotaDebito\notadebito1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito52.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito53.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNotaDebito\notadebito54.xsd">
+    <None Include="Service References\ServicioNotaDebito\notadebito4.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioReenvioDocumento\HGInetFacturaEServicios.ServicioReenvioDocumento.RecepcionResponse.datasource">
@@ -360,15 +360,6 @@
     <None Include="Service References\ServicioDocumento\documentos1.disco" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioFactura\factura1.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioNotaCredito\notacredito1.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioNotaDebito\notadebito1.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioResolucion\resolucion1.disco" />
   </ItemGroup>
   <ItemGroup>
@@ -385,6 +376,15 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\factura.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaCredito\notacredito.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaDebito\notadebito.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

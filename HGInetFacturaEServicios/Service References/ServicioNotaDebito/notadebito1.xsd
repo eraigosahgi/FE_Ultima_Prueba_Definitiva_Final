@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
-  <xs:complexType name="ArrayOfNotaCredito">
+  <xs:import schemaLocation="http://localhost:61428/wcf/notadebito.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost:61428/wcf/notadebito.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:complexType name="ArrayOfNotaDebito">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="NotaCredito" nillable="true" type="tns:NotaCredito" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="NotaDebito" nillable="true" type="tns:NotaDebito" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfNotaCredito" nillable="true" type="tns:ArrayOfNotaCredito" />
-  <xs:complexType name="NotaCredito">
+  <xs:element name="ArrayOfNotaDebito" nillable="true" type="tns:ArrayOfNotaDebito" />
+  <xs:complexType name="NotaDebito">
     <xs:sequence>
       <xs:element minOccurs="0" name="ArchivoAnexos" nillable="true" type="tns:Anexo" />
       <xs:element minOccurs="0" name="CodigoRegistro" nillable="true" type="xs:string" />
@@ -44,7 +44,7 @@
       <xs:element minOccurs="0" name="VersionAplicativo" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="NotaCredito" nillable="true" type="tns:NotaCredito" />
+  <xs:element name="NotaDebito" nillable="true" type="tns:NotaDebito" />
   <xs:complexType name="Anexo">
     <xs:sequence>
       <xs:element minOccurs="0" name="Anotacion" nillable="true" type="xs:string" />
@@ -94,6 +94,7 @@
       <xs:element minOccurs="0" name="IvaValor" type="xs:decimal" />
       <xs:element minOccurs="0" name="OcultarItem" type="xs:int" />
       <xs:element minOccurs="0" name="ProductoCodigo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProductoCodigoEAN" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoGratis" type="xs:boolean" />
       <xs:element minOccurs="0" name="ProductoNombre" nillable="true" type="xs:string" />
@@ -174,17 +175,17 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="RespuestaDian" nillable="true" type="tns:RespuestaDian" />
-  <xs:complexType name="ArrayOfNotaCreditoConsulta">
+  <xs:complexType name="ArrayOfNotaDebitoConsulta">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="NotaCreditoConsulta" nillable="true" type="tns:NotaCreditoConsulta" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="NotaDebitoConsulta" nillable="true" type="tns:NotaDebitoConsulta" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfNotaCreditoConsulta" nillable="true" type="tns:ArrayOfNotaCreditoConsulta" />
-  <xs:complexType name="NotaCreditoConsulta">
+  <xs:element name="ArrayOfNotaDebitoConsulta" nillable="true" type="tns:ArrayOfNotaDebitoConsulta" />
+  <xs:complexType name="NotaDebitoConsulta">
     <xs:sequence>
       <xs:element minOccurs="0" name="Aceptacion" type="xs:int" />
       <xs:element minOccurs="0" name="CodigoRegistro" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="DatosNotaCredito" nillable="true" type="tns:NotaCredito" />
+      <xs:element minOccurs="0" name="DatosNotaDebito" nillable="true" type="tns:NotaDebito" />
       <xs:element minOccurs="0" name="DescripcionProceso" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Documento" type="xs:long" />
       <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q3:Error" />
@@ -200,5 +201,5 @@
       <xs:element minOccurs="0" name="UrlXmlUbl" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="NotaCreditoConsulta" nillable="true" type="tns:NotaCreditoConsulta" />
+  <xs:element name="NotaDebitoConsulta" nillable="true" type="tns:NotaDebitoConsulta" />
 </xs:schema>

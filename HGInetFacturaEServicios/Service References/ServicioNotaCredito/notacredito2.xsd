@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="HGInetFacturaElectronica.ServiciosWcf" elementFormDefault="qualified" targetNamespace="HGInetFacturaElectronica.ServiciosWcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:import schemaLocation="http://localhost:61428/wcf/notacredito.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" />
+  <xs:import schemaLocation="http://localhost:61428/wcf/notacredito.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
   <xs:element name="Test">
     <xs:complexType>
       <xs:sequence />
@@ -17,7 +17,7 @@
   <xs:element name="Recepcion">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="documentos" nillable="true" type="q1:ArrayOfNotaDebito" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="documentos" nillable="true" type="q1:ArrayOfNotaCredito" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -42,7 +42,7 @@
   <xs:element name="ObtenerPorFechasAdquirienteResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="ObtenerPorFechasAdquirienteResult" nillable="true" type="q4:ArrayOfNotaDebitoConsulta" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="ObtenerPorFechasAdquirienteResult" nillable="true" type="q4:ArrayOfNotaCreditoConsulta" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -58,7 +58,7 @@
   <xs:element name="ObtenerPorIdSeguridadAdquirienteResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="ObtenerPorIdSeguridadAdquirienteResult" nillable="true" type="q5:ArrayOfNotaDebitoConsulta" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="ObtenerPorIdSeguridadAdquirienteResult" nillable="true" type="q5:ArrayOfNotaCreditoConsulta" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
