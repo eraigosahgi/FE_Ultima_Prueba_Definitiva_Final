@@ -1,10 +1,13 @@
-﻿using HGInetEmailServicios.ServicioEnvio;
-using HGInetMiFacturaElectonicaController.Properties;
+﻿using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.HgiNet.Controladores;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Respuesta;
+using LibreriaGlobalHGInet.Peticiones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +33,8 @@ namespace HGInetMiFacturaElectonicaController
                 mensajes_sms.Add(sms);
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-                List<MensajeEnvioSms> respuesta = HGInetEmailServicios.Ctl_Envio.EnviarSms(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes_sms);
+                                
+                List<MensajeEnvioSms> respuesta = Ctl_CloudMensajeria.EnviarSms(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes_sms);
 
             }
             catch (Exception excepcion)
