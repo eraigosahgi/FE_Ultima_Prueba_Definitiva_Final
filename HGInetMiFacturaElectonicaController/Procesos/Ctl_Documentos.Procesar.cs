@@ -123,6 +123,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns>datos de resultado para el documento</returns>
 		public static DocumentoRespuesta Procesar(TblDocumentos documento)
 		{
+
+			// representación de datos en objeto
+			var documento_obj = (dynamic)null;
+
+			// facturador electrónico del documento
+			TblEmpresas empresa = new TblEmpresas();
+
+			// información del procesamiento del archivo
+			FacturaE_Documento documento_result = new FacturaE_Documento();
+
 			// valida que la empresa se encuentre como facturador electrónico
 			if (documento.TblEmpresasFacturador.IntHabilitacion == 0)
 				throw new ArgumentException(string.Format("No se encuentra habilitado como Facturador Electrónico - {0} {1}", documento.StrEmpresaFacturador, documento.TblEmpresasFacturador.StrRazonSocial));
@@ -168,8 +178,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			try
 			{
 
-				// representación de datos en objeto
-				var documento_obj = (dynamic)null;
 
 				// lee el archivo XML en UBL desde la ruta pública
 				//XmlTextReader xml_reader = new XmlTextReader(documento.StrUrlArchivoUbl);
@@ -230,7 +238,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				TblEmpresasResoluciones resolucion = documento.TblEmpresasResoluciones;
 
 				// facturador electrónico del documento
-				TblEmpresas empresa = documento.TblEmpresasFacturador;
+				empresa = documento.TblEmpresasFacturador;
 
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
@@ -243,7 +251,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				carpeta_zip = string.Format(@"{0}\{1}", carpeta_zip, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
 				// información del procesamiento del archivo
-				FacturaE_Documento documento_result = new FacturaE_Documento()
+				documento_result = new FacturaE_Documento()
 				{
 					IdSeguridadPeticion = Guid.NewGuid(),
 					IdSeguridadDocumento = documento.StrIdSeguridad,
@@ -350,7 +358,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
 						}
 					}
-					else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && documento.IntEnvioMail == null || documento.IntEnvioMail == false)
+					else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && (documento.IntEnvioMail == null || documento.IntEnvioMail == false))
 					{
 						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
 						Ctl_Documento documento_tmp = new Ctl_Documento();
@@ -385,7 +393,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException);
+				//valida si el documento ya fue enviado
+				if((documento.IntEnvioMail == null || documento.IntEnvioMail == false) && empresa.IntEnvioMailRecepcion == true)
+				{
+					respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
+					Ctl_Documento documento_tmp = new Ctl_Documento();
+					documento.IntEnvioMail = true;
+					documento_tmp.Actualizar(documento);
 
+				}
 				LogExcepcion.Guardar(excepcion);
 				// no se controla excepción
 			}
