@@ -63,12 +63,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var retorno = datos.Select(d => new
 				{
-					NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
-					//NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+					NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),					
 					DatFechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
 					d.DatFechaVencDocumento,
-					IntVlrTotal = (d.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode()) ? -d.IntVlrTotal : d.IntVlrTotal,
-                    //EstadoFactura = DescripcionEstadoFactura(d.IntIdEstado),
+					IntVlrTotal = (d.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode()) ? -d.IntVlrTotal : d.IntVlrTotal,                    
                     EstadoFactura = DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado),
                     EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,

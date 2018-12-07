@@ -246,7 +246,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 
                             $("<div>")
                                 .append(
-                                   $("<a taget=_self class='icon-circle2'" + ((options.data.Estado == '400') ? " style='color:red;' title='Fallido DIAN'" : (options.data.Estado == '300') ? " style='color:green;' title='Validado DIAN'" : (options.data.Estado == '200') ? " style='color:yellow;' title='Envío DIAN'" : " style='color:gray;' title='No recibido'") + "><a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml + ">"))
+                                   $("<a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml + ">"))
                                 .append($(""))
                                 .appendTo(container);
                         }
@@ -297,11 +297,24 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                           cssClass: "hidden-xs col-md-1",
                           dataField: "NombreFacturador"
                       },
-                      {
-                          caption: "Estado",
-                          cssClass: "hidden-xs col-md-1",
-                          dataField: "EstadoFactura",
-                      },
+                      //{
+                      //    caption: "Estado",
+                      //    cssClass: "hidden-xs col-md-1",
+                      //    dataField: "EstadoFactura",
+                      //},
+
+                        {
+                            dataField: "",
+                            caption: "Estado",
+                            cssClass: "hidden-xs col-md-1",
+                            cellTemplate: function (container, options) {
+                                                                                                 
+                                $("<div>")
+                                    .append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='Pending' style='background-color: #777; padding: 2px 6px 1px 6px;font-size: 10px; letter-spacing: 0.1px; vertical-align: baseline;'  title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
+                                    .appendTo(container);
+                            }
+                        },
+
                        {
                            caption: "Tipo Documento",
                            cssClass: "hidden-xs col-md-1",
@@ -325,7 +338,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 
                               var Mostrar_Acuse;
                               if (options.data.Estado == 300 ) 
-                                  Mostrar_Acuse = "<a target='_blank' href='" + options.data.RutaAcuse + "'>Acuse</a>";
+                                  Mostrar_Acuse = "<a target='_blank'  href='" + options.data.RutaAcuse + "'>Acuse</a>";
                                else 
                                   Mostrar_Acuse = "";
                               
