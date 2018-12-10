@@ -460,7 +460,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                            cellTemplate: function (container, options) {
 
                                $("<div>")
-                                   .append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='Pending' style='background-color: #777; padding: 2px 6px 1px 6px;font-size: 10px; letter-spacing: 0.1px; vertical-align: baseline;'  title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
+                                   //badge-default gris con letras blancas
+                                   //badge-primary azul con letras blancas
+                                   //badge-warning Naranja fuerte con letras blancas
+                                   .append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
                                    .appendTo(container);
                            }
                        },

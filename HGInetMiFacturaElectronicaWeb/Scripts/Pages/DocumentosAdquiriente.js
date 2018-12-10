@@ -182,33 +182,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         caption: "  Lista de Archivos",
                         cssClass: "col-md-1 col-xs-2",
                         width: "auto",
-                        cellTemplate: function (container, options) {
-                            //var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
-                            //var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
-                            //var visible_xml_acuse = "style='pointer-events:auto;cursor: not-allowed;'";
-
-                            //if (options.data.Pdf)
-                            //    visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer'";
-                            //else
-                            //    options.data.Pdf = "#";
-
-                            //if (options.data.Xml)
-                            //    visible_xml = "href='" + options.data.Xml + "' style='pointer-events:auto;cursor: pointer'";
-                            //else
-                            //    options.data.Xml = "#";
-
-                            //if (options.data.XmlAcuse)
-                            //    visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
-                            //else
-                            //    options.data.XmlAcuse = "#";
-
-
-
-
-
-
-                            //$("<div>")
-                            //    .append($("<a target='_blank' class='icon-file-pdf'  " + visible_pdf + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml + ">&nbsp;&nbsp;<a target='_blank' class='icon-file-xml' " + visible_xml_acuse + ">&nbsp;&nbsp;"))
+                        cellTemplate: function (container, options) {                            
                             var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
 
                             var visible_xml = " style='pointer-events:auto;cursor: not-allowed;'";
@@ -296,12 +270,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                           caption: "Nombre Facturador",
                           cssClass: "hidden-xs col-md-1",
                           dataField: "NombreFacturador"
-                      },
-                      //{
-                      //    caption: "Estado",
-                      //    cssClass: "hidden-xs col-md-1",
-                      //    dataField: "EstadoFactura",
-                      //},
+                      },                      
 
                         {
                             dataField: "EstadoFactura",
@@ -310,7 +279,8 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                             cellTemplate: function (container, options) {
                                                                                                  
                                 $("<div>")
-                                    .append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='Pending' style='background-color: #777; padding: 2px 6px 1px 6px;font-size: 10px; letter-spacing: 0.1px; vertical-align: baseline;'  title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
+                                    //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='Pending' style='background-color: #777; padding: 2px 6px 1px 6px;font-size: 10px; letter-spacing: 0.1px; vertical-align: baseline;'  title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
+                                    .append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
                                     .appendTo(container);
                             }
                         },

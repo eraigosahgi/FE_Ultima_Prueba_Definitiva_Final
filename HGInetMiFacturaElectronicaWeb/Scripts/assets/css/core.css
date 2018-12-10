@@ -5439,6 +5439,16 @@ ul.dropdown-menu .dropdown-content-heading:first-child {
   border-width: 2px;
   padding: 1px 5px 0 5px;
 }
+
+.badge-envioDian {
+  background-color: #E8BE0C;
+  border-color: #E8BE0C;
+ 
+}
+
+
+
+
 .badge-flat[href]:hover,
 .badge-flat[href]:focus {
   background-color: transparent;
