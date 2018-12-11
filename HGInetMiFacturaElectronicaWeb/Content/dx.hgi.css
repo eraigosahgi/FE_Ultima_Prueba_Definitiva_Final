@@ -89,3 +89,26 @@ li {
 #pswd_info {
   display: none;
 }
+
+/*Estados DIAN*/
+.badge-ValidadoDIAN {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+
+}
+.badge-RecibidoPlataforma {
+  background-color: dimgray;
+  border-color: dimgrey;
+
+}
+/*00BCD4*/
+.badge-FallidoDIAN {
+  background-color: #F44336;
+  border-color: #F44336;
+
+}
+.badge-envioDian {
+  background-color: #E8BE0C;
+  border-color: #E8BE0C;
+  
+}

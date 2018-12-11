@@ -416,14 +416,17 @@ function consultar() {
                   },
                 
                    {
-                       dataField: "EstadoFactura",
+                       dataField: "EstadoCategoria",
                        caption: "Estado",
                        cssClass: "hidden-xs col-md-1",
                        cellTemplate: function (container, options) {
 
                            $("<div>")
-                               //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='Pending' style='background-color: #777; padding: 2px 6px 1px 6px;font-size: 10px; letter-spacing: 0.1px; vertical-align: baseline;'  title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
-                               .append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
+                           
+                               .append($(ColocarEstado(options.data.Estado, options.data.EstadoCategoria)))
+                                //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='" + options.data.EstadoCategoria + "'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='" + options.data.EstadoCategoria + "'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='" + options.data.EstadoCategoria + "'" : " class='badge badge-info'  title='" + options.data.EstadoCategoria + "'") + " style='font-size:5px; top:-10px; padding: 5px 5px 5px 5px;!important border-radius: 0px !important;'  >E</span> <label  title='" + options.data.EstadoCategoria + "'>" + options.data.EstadoCategoria + "</label>"))
+                             //  .append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoCategoria + "</span>"))
+                               //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='" + options.data.EstadoCategoria + "'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='" + options.data.EstadoCategoria + "'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='" + options.data.EstadoCategoria + "'" : " class='badge badge-info'  title='" + options.data.EstadoCategoria + "'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoCategoria + "</span>"))                               
                                .appendTo(container);
                        }
                    },
@@ -670,3 +673,5 @@ var TiposFiltroFecha =
     { ID: "1", Texto: 'Fecha Recepción' },
     { ID: "2", Texto: 'Fecha Documento' }
     ];
+
+
