@@ -11,6 +11,8 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 	$(document).ready(function () {
         
 
+	   
+
 
 		var IdSeguridad = location.search.split('id_seguridad=')[1];
 		//Almacena el parametro Zpago para ver si debe enviarlo a la pantalla de pago
@@ -26,25 +28,37 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 		$scope.EnProceso = false;
 
 		$scope.habilitar = function () {
-
-			//$http.get('/api/Documentos?strIdSeguridad=' + IdSeguridad + '&pago=true').then(function (response) {
+		    
+			//-------------------------------------------------------------------
 			var id = IdSeguridad.split('&')[0];
 			$http.get('/api/ConsultaSaldoDocumento?StrIdSeguridadDoc=' + id).then(function (response) {
-				if (response.data != "PagoPendiente" && response.data != "DocumentoCancelado" && response.data != "ErrorDian") {
+				if (response.data != "PagoPendiente" && response.data != "DocumentoCancelado" && response.data != "ErrorDian") {		   
 
-					$http.get('/api/Documentos?strIdSeguridad=' + id + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + response.data).then(function (response) {
+				   				                
+				    var Vpago1 = window.open("", "Pagos", "width=10,height=10");
+				    if (Vpago1 == null || Vpago1 == undefined) {
+				        DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
 
-						var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
+				    } else {				        
+				        //--------------------------
+				        $http.get('/api/Documentos?strIdSeguridad=' + id + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + response.data).then(function (response) {
 
-						window.open(RutaServicio + response.data.Ruta, "_blank");
+				            var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
 
-						//Si lo envia a la pantalla de pago, cierra la pantalla actual
-						//if (Zpago)
-						// window.close();
-					}, function (error) {
-						DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
-						$scope.DetalleAcuse = false;
-					});
+				            window.open(RutaServicio + response.data.Ruta, "_blank");
+				            $('#cmdpago').hide();
+				            VerificarEstado();
+				            //Si lo envia a la pantalla de pago, cierra la pantalla actual
+				            //if (Zpago)
+				            // window.close();
+				        }, function (error) {
+				            DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
+				            $scope.DetalleAcuse = false;
+				        });
+
+				        //-------------------------
+				    }
+
 				} else {
 					if (response.data == "PagoPendiente") {
 						DevExpress.ui.notify("No puede hacer pagos mientras tenga pagos pendientes", 'error', 7000);
@@ -64,12 +78,11 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 				DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
 
 			});
+            //----------------------------------------------------------------
+
 		};
 
-		if (Zpago == 'true') {
-			//Si parametro Zpago = true entonces lo envia a la pantalla de pago
-			$scope.habilitar();
-		}
+		
 
 		consultar();
 		function consultar() {
@@ -79,7 +92,7 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 			$http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
 			    $scope.RespuestaAcuse = response.data;
 				
-			    $('#plugin').attr('src', $scope.RespuestaAcuse[0].Pdf);
+			    $('#plugin').attr('src', $scope.RespuestaAcuse[0].Pdf);			   
 				
 				//Si estatus es igual a 2, entonces asigno los valores a las variables para ejecutar la consulta de saldo
 				if (response.data[0].Estatus == 2) {
@@ -213,9 +226,30 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 
 		}
 
+		if (Zpago == 'true') {
+		    //Si parametro Zpago = true entonces lo envia a la pantalla de pago
+		    //-------------------------
+		    var Vpago = window.open("", "Pagos", "width=10,height=10");
+		    if (Vpago == null || Vpago == undefined) {
+		        // $("#button").dxButton({ visible: false });
+		        DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
+		        
+
+		        $timeout(function callAtTimeout() {
+		            $('#cmdpago').hide();
+		        }, 1000);
+		    } else {
+		        $scope.habilitar();		       
+		    }		    
+
+		}
+
+		
 
 	});
 
+
+	
 
 });
 

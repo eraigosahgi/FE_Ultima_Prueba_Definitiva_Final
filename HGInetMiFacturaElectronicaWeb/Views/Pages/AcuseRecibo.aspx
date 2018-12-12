@@ -226,9 +226,9 @@
                                 Para visualizar los archivo en el navegador presione clic o si desea descargarlos presione clic derecho sobre el link y seleccione la opción Guardar como.
                             </div>
                             <div style="text-align: center;">
-
+                                <div id="cmdpago">
                                 <a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true && datos.Estatus ==3">Pagar</a>
-                                
+                                </div>
                                 <div id="pnl_Verificar_Pago" data-ng-if="EnProceso">
                                     <hr />
                                     <div class="col-md-12">Verificando estado del pago</div>
