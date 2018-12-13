@@ -15,6 +15,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
         onClick: ProcesarDocumentos
     });
 
+    var tipo_filtro = true;
 
     //Numero de documentos a Procesar
     $scope.total = 0;
@@ -161,6 +162,29 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
         });
     }
 
+    //Define los campos y las opciones
+    $scope.filtros =
+        {
+            TipoFiltro: {
+                //Carga la data del control
+                dataSource: new DevExpress.data.ArrayStore({
+                    data: TiposFiltro,
+                    key: "ID"
+                }),
+                displayExpr: "Texto",
+                value: TiposFiltro[0],
+
+                onValueChanged: function (data) {
+                    if (data.value != null) {
+                        tipo_filtro = data.value.ID;
+                    } else {
+                        tipo_filtro = 1;
+                    }
+                    console.log(tipo_filtro);
+                }
+            }
+        }
+
 
 
     //Consultar DOcumentos
@@ -174,6 +198,9 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
 
         SrvDocumento.ObtenerDocumentos().then(function (data) {
+
+            $('#lbltotal').val('Total Documentos : ' + data.length);
+
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data,
                 paging: {
@@ -360,7 +387,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
     function ProcesarDocumentos() {
         if ($scope.total > 0) {
 
-            SrvDocumento.ProcesarDocumentos($scope.documentos).then(function (data) {
+            SrvDocumento.ProcesarDocumentos($scope.documentos, tipo_filtro).then(function (data) {
                 $("#gridDocumentosProcesados").dxDataGrid({
                     dataSource: data,
                     paging: {
@@ -485,3 +512,8 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
 });
 
+var TiposFiltro =
+    [
+    { ID: "true", Texto: 'SI' },
+    { ID: "false", Texto: 'NO' }
+    ];

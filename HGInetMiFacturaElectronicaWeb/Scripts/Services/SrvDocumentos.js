@@ -15,8 +15,8 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
         });
     }
     //Procesa los documentos
-    this.ProcesarDocumentos = function (documentos) {
-        return $http({url: '/api/Documentos/',data: { Documentos: documentos },method: 'Post'}).then(function (response) {
+    this.ProcesarDocumentos = function (documentos,Consultar) {
+        return $http({ url: '/api/Documentos/', data: { Documentos: documentos, Consultar_Documento: Consultar }, method: 'Post' }).then(function (response) {
             return response.data;
         }, function (response) {
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);

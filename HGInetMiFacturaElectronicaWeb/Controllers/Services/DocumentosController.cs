@@ -520,14 +520,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-		#region Procesar Documentos
+        #region Procesar Documentos
 
-		/// <summary>
-		/// Recibe lista de Documentos 
-		/// </summary>
-		/// <param name="objeto"></param>
-		/// <returns></returns>
-		[HttpPost]
+        /// <summary>
+        /// Recibe lista de Documentos 
+        /// </summary>
+        /// <param name="objeto">Lista de documentos a procesar</param>
+        /// <param name="Consultar_Documento">Indica si debe consultar el documentos en la dian, antes de enviarlo</param>
+        /// <returns></returns>
+        [HttpPost]
 		public IHttpActionResult Post(Object objeto)
 		{
 			try
@@ -537,8 +538,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				var jobjeto = (dynamic)objeto;
 
 				string ListaDoc = jobjeto.Documentos;
+                bool Consultar_Documento = Convert.ToBoolean(jobjeto.Consultar_Documento);
 
-				List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
+                List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
 
 				List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();
 
@@ -553,7 +555,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var lista = documento.ProcesarDocumentos(List_id_seguridad);
 
-				List<DocumentoRespuesta> datos = Ctl_Documentos.Procesar(lista);
+				List<DocumentoRespuesta> datos = Ctl_Documentos.Procesar(lista, Consultar_Documento);
 
 				var retorno = datos.Select(d => new
 				{
