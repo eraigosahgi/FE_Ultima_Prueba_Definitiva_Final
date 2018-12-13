@@ -27,7 +27,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// </summary>
 		/// <param name="documentos">datos de los documentos en base de datos</param>
 		/// <returns>datos de resultado para los documentos</returns>
-		public static List<DocumentoRespuesta> Procesar(List<TblDocumentos> documentos)
+		public static List<DocumentoRespuesta> Procesar(List<TblDocumentos> documentos, bool consulta_documento = true)
 		{
 			List<DocumentoRespuesta> documentos_respuestas = new List<DocumentoRespuesta>();
 
@@ -40,7 +40,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				try
 				{   // procesa el documento
-					item_respuesta = Procesar(documento);
+					item_respuesta = Procesar(documento, consulta_documento);
 				}
 				catch (Exception excepcion)
 				{
@@ -116,12 +116,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 		}
 
-		/// <summary>
-		/// Continúa el procesamiento de un documento registrado en la base de datos de acuerdo con el estado actual del mismo
-		/// </summary>
-		/// <param name="documento">datos del documento en base de datos</param>
-		/// <returns>datos de resultado para el documento</returns>
-		public static DocumentoRespuesta Procesar(TblDocumentos documento)
+        /// <summary>
+        /// Continúa el procesamiento de un documento registrado en la base de datos de acuerdo con el estado actual del mismo
+        /// </summary>
+        /// <param name="documento">datos del documento en base de datos</param>
+        /// <param name="consulta_documento">indica si antes de enviar el documento a la DIAN se debe consultar</param>
+        /// <returns>datos de resultado para el documento</returns>
+        public static DocumentoRespuesta Procesar(TblDocumentos documento, bool consulta_documento)
 		{
 
 			// representación de datos en objeto
@@ -288,18 +289,27 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// envía el archivo zip con el xml firmado a la DIAN
 				if (respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
 				{
-					respuesta = Consultar(documento, empresa, ref respuesta);
+                    //valida si debe consultar el estado del documento en la DIAN
+                    if (consulta_documento)
+                    {
+                        respuesta = Consultar(documento, empresa, ref respuesta);
 
-					//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-					if (respuesta.EstadoDian.CodigoRespuesta == null || respuesta.EstadoDian.CodigoRespuesta == "7200000")
-					{
-						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
-					}
-					else if (respuesta.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Pendiente.GetHashCode())
-					{
-						respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
-					}
+                        //Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
+                        if (respuesta.EstadoDian.CodigoRespuesta == null || respuesta.EstadoDian.CodigoRespuesta == "7200000")
+                        {
+                            HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+                            ValidarRespuesta(respuesta);
+                        }
+                        else if (respuesta.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Pendiente.GetHashCode())
+                        {
+                            respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
+                        }
+                    }
+                    else
+                    {
+                        HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+                        ValidarRespuesta(respuesta);
+                    }
 				}
 
 

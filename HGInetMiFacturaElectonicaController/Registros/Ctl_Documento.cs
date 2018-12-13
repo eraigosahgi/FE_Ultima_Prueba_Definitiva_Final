@@ -1048,17 +1048,39 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			return respuesta;
 		}
-		#endregion
+        /// <summary>
+        /// Documentos a Procesar por la sonda
+        /// </summary>
+        /// <param name="ListaEstados"></param>
+        /// <returns></returns>
+        public List<TblDocumentos> ObtenerDocumentosaProcesar(string ListaEstados)
+        {            
 
-		#region Reenviar Acuse
-		/// <summary>
-		/// Actualiza la respuesta del acuse de recibo.
-		/// </summary>
-		/// <param name="id_seguridad"></param>
-		/// <param name="estado"></param>
-		/// <param name="motivo_rechazo"></param>
-		/// <returns></returns>
-		public bool ReenviarRespuestaAcuse(System.Guid id_seguridad, string mail)
+            List<string> estados = Coleccion.ConvertirLista(ListaEstados);
+
+            DateTime FechaActual = Fecha.GetFecha();
+
+            var respuesta = (from datos in context.TblDocumentos
+                             join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+                             where (estados.Contains(datos.IntIdEstado.ToString()))
+                             && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual)
+
+                             orderby datos.DatFechaIngreso descending
+                             select datos).ToList();
+
+            return respuesta;
+        }
+        #endregion
+
+        #region Reenviar Acuse
+        /// <summary>
+        /// Actualiza la respuesta del acuse de recibo.
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <param name="estado"></param>
+        /// <param name="motivo_rechazo"></param>
+        /// <returns></returns>
+        public bool ReenviarRespuestaAcuse(System.Guid id_seguridad, string mail)
 		{
 			try
 			{
@@ -1316,11 +1338,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Sonda para procesar documentos
 		/// </summary>
 		/// <returns></returns>
-		public async Task SondaProcesarDocumentos()
+		public async Task SondaProcesarDocumentos(string ListaEstados,bool Consultar=true)
 		{
 			try
 			{
-				var Tarea = TareaProcesarDocumentos();
+				var Tarea = TareaProcesarDocumentos(ListaEstados, Consultar);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -1333,16 +1355,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Tarea para procesar Documentos
 		/// </summary>
 		/// <returns></returns>
-		public async Task TareaProcesarDocumentos()
+		public async Task TareaProcesarDocumentos(string ListaEstados,bool Consultar = true)
 		{
 			await Task.Factory.StartNew(() =>
 			{
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				//Se obtienen todos los documentos para procesar, pero se excluyen los que estan pendientes por enviar a la DIAN(Se hacen manuales por el momento)
-				List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar().Where(d => d.IntIdEstado != ProcesoEstado.CompresionXml.GetHashCode()).ToList();
-				List<DocumentoRespuesta> datosProcesar = Procesos.Ctl_Documentos.Procesar(datos);
+                //Se obtienen todos los documentos para procesar, pero se excluyen los que estan pendientes por enviar a la DIAN(Se hacen manuales por el momento)
+                //List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar().Where(d => d.IntIdEstado != ProcesoEstado.CompresionXml.GetHashCode()).ToList();
+                List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar(ListaEstados);
+                List<DocumentoRespuesta> datosProcesar = Procesos.Ctl_Documentos.Procesar(datos, Consultar);
 
-			});
+            });
 		}
 		#endregion
 

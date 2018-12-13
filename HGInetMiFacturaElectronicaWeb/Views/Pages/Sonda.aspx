@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Zonda de Proceso</title>
+    <title>Sonda de Proceso</title>
     
 </head>
 <body>

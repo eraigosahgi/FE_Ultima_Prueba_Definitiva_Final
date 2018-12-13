@@ -18,7 +18,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
         {
             try
             {
-                Procesar();
+
+                string ListaEstados = Request.QueryString["Estados"];
+                string Consultar = Request.QueryString["Consultar"];
+
+                Procesar(ListaEstados,Convert.ToBoolean(Consultar));
             }
             catch (Exception ex)
             {
@@ -29,11 +33,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
         }
 
 
-        public void Procesar()
+        public void Procesar(string ListaEstados,bool Consultar=true)
         {
             Ctl_Documento ctl_documento = new Ctl_Documento();
 
-            var Tarea1 = ctl_documento.SondaProcesarDocumentos();
+            var Tarea1 = ctl_documento.SondaProcesarDocumentos(ListaEstados, Consultar);
             lblResultado.Text = string.Format("Termino");
         }
     }
