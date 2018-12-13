@@ -18,7 +18,7 @@
             <div class="panel panel-white">
                 <div class="panel-heading">
                     <h6 class="panel-title" id="divtotal">Datos : 
-                        <input type="text" id="lbltotal" style="border-style: none; width: 100%;" readonly></input>
+                        <input type="text" id="lbltotal" style="border-style: none; width: 100%; font-size: small;" readonly></input>
                         <input type="text" id="lbltotaldocumentos" style="border-style: none; width: 100%; font-size: small;" readonly></input></h6>
 
 
@@ -53,15 +53,16 @@
                         <div class="col-lg-12 text-right">
                             <br />
                             <div data-ng-show="total>0">
-                                <div class="col-md-4 text-right">
+                                <div class="col-md-7 text-right">
                                     <i class="icon-file-text"></i>
                                     <label style="margin-top: -10%;">Consulta DIAN:</label>
                                 </div>
-                                <div class="col-md-4 text-right">
+                                <div class="col-md-2 text-right">
                                     <div data-dx-select-box="filtros.TipoFiltro"></div>
                                 </div>
-
-                                <div id="btnProcesar" style="margin-right: 20px;"></div>
+                                <div class="col-md-3 text-right">
+                                    <div id="btnProcesar" style="margin-right: 20px;"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="demo-container" style="padding-top: 80px;">
