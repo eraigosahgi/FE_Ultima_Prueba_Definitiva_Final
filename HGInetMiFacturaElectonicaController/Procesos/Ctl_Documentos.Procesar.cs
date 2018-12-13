@@ -294,9 +294,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     {
                         respuesta = Consultar(documento, empresa, ref respuesta);
 
-                        //Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-                        if (respuesta.EstadoDian.CodigoRespuesta == null || respuesta.EstadoDian.CodigoRespuesta == "7200000")
-                        {
+						//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
+						if (respuesta.EstadoDian.CodigoRespuesta == ValidacionRespuestaDian.NoRecibido.ToString())
+						{
                             HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
                             ValidarRespuesta(respuesta);
                         }

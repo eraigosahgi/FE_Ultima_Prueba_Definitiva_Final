@@ -52,6 +52,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			var documento_obj = (dynamic)null;
 			documento_obj = documento;
 
+			//Si fecha trae hora la setea a las 12:00
+			documento_obj.Fecha = documento_obj.Fecha.Date;
+
 			if (documento_obj != null)
 			{
 

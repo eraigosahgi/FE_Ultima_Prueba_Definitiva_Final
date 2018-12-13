@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HGInetDIANServicios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,9 @@ namespace HGInetDIANServicios
     public class ConsultaDocumento
     {
         /// <summary>
-        /// Valida si el documento se encuentra correctamente (true) en la DIAN
+        /// Indica el estado del documento en la DIAN 
         /// </summary>
-        public bool DocumentoCorrecto { get; set; }
+        public ValidacionRespuestaDian RecepcionDocumento { get; set; }
 
         public int ConsultaEstado { get; set; }
 

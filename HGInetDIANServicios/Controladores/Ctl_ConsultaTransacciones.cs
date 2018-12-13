@@ -241,7 +241,7 @@ namespace HGInetDIANServicios
 		{
 
 			ConsultaDocumento resultado = new ConsultaDocumento();
-			resultado.DocumentoCorrecto = false;
+			resultado.RecepcionDocumento = ValidacionRespuestaDian.Pendiente;
 			resultado.Mensaje = "";
 
 			/*Descripción de la transacción
@@ -255,17 +255,17 @@ namespace HGInetDIANServicios
 			switch (resultado.ConsultaEstado)
 			{
 
-				case 100: resultado.ConsultaEstadoDescripcion = "Error al procesar la solicitud WS entrante"; break;
+				case 100: resultado.ConsultaEstadoDescripcion = "Error al procesar la solicitud WS entrante"; resultado.RecepcionDocumento = ValidacionRespuestaDian.Pendiente; break;
 
-				case 200: resultado.ConsultaEstadoDescripcion = "Transacción Exitosa"; break;
+				case 200: resultado.ConsultaEstadoDescripcion = "Transacción Exitosa"; resultado.RecepcionDocumento = ValidacionRespuestaDian.Recibido; break;
 
-				case 300: resultado.ConsultaEstadoDescripcion = "Excepción en el Sistema"; break;
+				case 300: resultado.ConsultaEstadoDescripcion = "Excepción en el Sistema"; resultado.RecepcionDocumento = ValidacionRespuestaDian.Pendiente; break;
 
-				case 310: resultado.ConsultaEstadoDescripcion = "Parámetros enviados con error"; break;
+				case 310: resultado.ConsultaEstadoDescripcion = "Parámetros enviados con error"; resultado.RecepcionDocumento = ValidacionRespuestaDian.Recibido; break;
 
-				case 320: resultado.ConsultaEstadoDescripcion = "No existe información"; break;
+				case 320: resultado.ConsultaEstadoDescripcion = "No existe información"; resultado.RecepcionDocumento = ValidacionRespuestaDian.NoRecibido; break;
 
-				default: resultado.ConsultaEstadoDescripcion = "No existe documentación del estado."; break;
+				default: resultado.ConsultaEstadoDescripcion = "No existe documentación del estado."; resultado.RecepcionDocumento = ValidacionRespuestaDian.Recibido; break;
 			}
 
 
@@ -291,7 +291,6 @@ namespace HGInetDIANServicios
 					case "7200002":
 						resultado.EstadoDianDescripcion = "EXITOSA";
 						resultado.Estado = EstadoDocumentoDian.Aceptado;
-						resultado.DocumentoCorrecto = true;
 						break;
 
 					case "7200003":
@@ -317,9 +316,8 @@ namespace HGInetDIANServicios
 			}
 			else
 			{
-				resultado.CodigoEstadoDian = "7200000";
+				resultado.CodigoEstadoDian = resultado.RecepcionDocumento.ToString();
 				resultado.EstadoDianDescripcion = documento.DescripcionTransaccion;
-				resultado.Estado = EstadoDocumentoDian.Pendiente;
 			}
 
 			return resultado;
