@@ -156,6 +156,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
 
         SrvDocumento.ObtenerDocumentos().then(function (data) {
+            $('#lbltotal').val('Total Documentos : ' + data.length);
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data
             });
@@ -268,7 +269,7 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
 
                       },
                       {
-                          caption: "Estado",
+                          caption: "Proceso",
                           dataField: "EstadoFactura",
                           headerFilter: {
                               allowSearch: true,
