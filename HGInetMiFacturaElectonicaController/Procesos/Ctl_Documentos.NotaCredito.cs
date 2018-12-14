@@ -286,7 +286,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//Valida que el codigo del formato que envia este disponible.
 			if (string.IsNullOrEmpty(documento.DocumentoFormato.ArchivoPdf))
 			{
-				if (documento.DocumentoFormato.Codigo < 1 || documento.DocumentoFormato.Codigo > 4)
+				if (documento.DocumentoFormato.Codigo < 1 || documento.DocumentoFormato.Codigo > 5)
 					throw new ApplicationException(string.Format("El formato {0} no se encuentra disponible en la plataforma.", documento.DocumentoFormato.Codigo));
 			}
 
