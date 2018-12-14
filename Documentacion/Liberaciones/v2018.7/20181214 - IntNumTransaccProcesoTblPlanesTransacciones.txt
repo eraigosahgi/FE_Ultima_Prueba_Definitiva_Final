@@ -1,0 +1,7 @@
+/*
+En relación al caso #458054
+*/
+
+ALTER TABLE TblPlanesTransacciones ADD
+	IntNumTransaccProceso int NULL
+GO
