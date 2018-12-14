@@ -248,7 +248,6 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                          headerFilter: {
                              allowSearch: false
                          }
-
                      },
 
                     {

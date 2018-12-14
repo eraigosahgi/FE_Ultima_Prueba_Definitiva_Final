@@ -173,11 +173,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
         });
 
 
-
-
-
-
-
         //Define los campos y las opciones
         $scope.filtros =
             {
@@ -447,23 +442,14 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           caption: "Nombre Adquiriente",
                           cssClass: "hidden-xs col-md-1",
                           dataField: "NombreAdquiriente"
-                      },
-                      //{
-                      //    caption: "Estado",
-                      //    cssClass: "hidden-xs col-md-1",
-                      //    dataField: "EstadoFactura",
-                      //},
+                      },                      
                        {
                            dataField: "EstadoFactura",
                            caption: "Estado",
                            cssClass: "hidden-xs col-md-1",
                            cellTemplate: function (container, options) {
 
-                               $("<div>")
-                                   //badge-default gris con letras blancas
-                                   //badge-primary azul con letras blancas
-                                   //badge-warning Naranja fuerte con letras blancas
-                                   //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
+                               $("<div>")                                   
                                    .append($(ColocarEstado(options.data.Estado, options.data.EstadoFactura)))
                                    .appendTo(container);
                            }
@@ -591,7 +577,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
 DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController($scope, $http, $location) {
 
-    //Formulario.
     $scope.formOptionsEmailEnvio = {
 
         readOnly: false,
@@ -633,9 +618,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
     //Botón Enviar email
     $scope.buttonEnviarEmail = {
         text: "ENVIAR",
-        type: "success",
-        //useSubmitBehavior: true,
-        //validationGroup: "DatosEmail",
+        type: "success",        
 
         onClick: function (e) {
 
