@@ -33,7 +33,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrEmpresaUsuario { get; set; }
         public string StrUsuario { get; set; }
         public Nullable<System.DateTime> DatFechaVencimiento { get; set; }
-        public Nullable<int> IntNumTransaccProceso { get; set; }
+        public int IntNumTransaccProceso { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }

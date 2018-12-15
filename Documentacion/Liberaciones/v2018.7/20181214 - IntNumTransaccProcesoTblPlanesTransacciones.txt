@@ -3,5 +3,5 @@ En relación al caso #458054
 */
 
 ALTER TABLE TblPlanesTransacciones ADD
-	IntNumTransaccProceso int NULL
+	IntNumTransaccProceso int NOT NULL default(0)
 GO
