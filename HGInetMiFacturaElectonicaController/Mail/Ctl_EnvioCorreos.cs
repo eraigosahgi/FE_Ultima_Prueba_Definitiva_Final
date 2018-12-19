@@ -1078,9 +1078,9 @@ namespace HGInetMiFacturaElectonicaController
 				Ctl_Empresa empresa = new Ctl_Empresa();
 				TblEmpresas facturador = empresa.Obtener(identificacion);
 
-				//if (string.IsNullOrEmpty(facturador.StrSerial))
-				//    throw new ApplicationException("No se encontró información del serial");
-
+                //if (string.IsNullOrEmpty(facturador.StrSerial))
+                //    throw new ApplicationException("No se encontró información del serial");
+                
 				if (!string.IsNullOrWhiteSpace(fileName))
 				{
 					FileInfo file = new FileInfo(fileName);
@@ -1096,7 +1096,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
 						mensaje = mensaje.Replace("{Tipo}", (plan.IntTipoProceso == 1) ? "Cortesía" : (plan.IntTipoProceso == 2) ? "Compra" : "Post-Pago");
-						mensaje = mensaje.Replace("{Estado}", (plan.BitProcesada) ? "Habilitada" : "Inhabilitada");
+						mensaje = mensaje.Replace("{Estado}", (plan.IntEstado == 0) ? "Habilitado" : (plan.IntEstado == 1) ? "Inhabilitado" : "Consumido");
 						mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
 						mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString("N0"));
 						mensaje = mensaje.Replace("{Observaciones}", (plan.StrObservaciones != null) ? plan.StrObservaciones : "Ninguna");
