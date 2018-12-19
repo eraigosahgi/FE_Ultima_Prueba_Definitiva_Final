@@ -53,7 +53,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     id = d.StrIdSeguridad,
                     Fecha = d.DatFecha,
                     EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
-                    Estado = (d.BitProcesada) ? "Habilitado" : "Inhabilitado",
+                    Estado = (d.IntEstado==0) ? "Habilitado": (d.IntEstado == 1) ? "Inhabilitado" : "Consumido",
                     Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
                     Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
                     Tipoproceso = (d.IntTipoProceso == 1) ? "CORTESíA" : (d.IntTipoProceso == 2) ? "COMPRA" : "POST-PAGO"
@@ -100,7 +100,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
                     Tipo = d.IntTipoProceso,
                     Observaciones = d.StrObservaciones,
-                    Estado = d.BitProcesada
+                    Estado = d.IntEstado
 
                 });
 
@@ -127,7 +127,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="StrEmpresaFacturador"></param>
         /// <param name="Tipo"></param>
         /// <returns></returns>
-        public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]bool BitProcesada, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador)
+        public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 ObjPlanTransacciones.IntNumTransaccCompra = IntNumTransaccCompra;
                 ObjPlanTransacciones.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
                 ObjPlanTransacciones.IntValor = IntValor;
-                ObjPlanTransacciones.BitProcesada = BitProcesada;
+                ObjPlanTransacciones.IntEstado = Estado;
                 ObjPlanTransacciones.StrObservaciones = StrObservaciones;
                 ObjPlanTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
 
@@ -170,7 +170,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="StrEmpresaFacturador"></param>
         /// <param name="Tipo"></param>
         /// <returns></returns>
-        public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]bool BitProcesada, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]System.Guid StrIdSeguridad)
+        public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]System.Guid StrIdSeguridad)
         {
             try
             {
@@ -185,7 +185,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 ObjPTransacciones.IntNumTransaccCompra = IntNumTransaccCompra;
                 ObjPTransacciones.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
                 ObjPTransacciones.IntValor = IntValor;
-                ObjPTransacciones.BitProcesada = BitProcesada;
+                ObjPTransacciones.IntEstado = Estado;
                 ObjPTransacciones.StrObservaciones = StrObservaciones;
                 ObjPTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
                 ObjPTransacciones.StrIdSeguridad = StrIdSeguridad;
