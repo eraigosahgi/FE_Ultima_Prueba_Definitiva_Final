@@ -260,12 +260,12 @@
           <Property Name="IntNumTransaccCompra" Type="int" Nullable="false" />
           <Property Name="IntNumTransaccProcesadas" Type="int" Nullable="false" />
           <Property Name="IntValor" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="BitProcesada" Type="bit" Nullable="false" />
           <Property Name="StrObservaciones" Type="varchar" MaxLength="200" />
           <Property Name="StrEmpresaUsuario" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrUsuario" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="DatFechaVencimiento" Type="datetime" />
           <Property Name="IntNumTransaccProceso" Type="int" Nullable="false" />
+          <Property Name="IntEstado" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblUsuarios">
           <Key>
@@ -1216,12 +1216,12 @@
           <Property Name="IntNumTransaccCompra" Type="Int32" Nullable="false" />
           <Property Name="IntNumTransaccProcesadas" Type="Int32" Nullable="false" />
           <Property Name="IntValor" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="BitProcesada" Type="Boolean" Nullable="false" />
           <Property Name="StrObservaciones" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="StrEmpresaUsuario" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrUsuario" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="DatFechaVencimiento" Type="DateTime" Precision="3" />
           <Property Name="IntNumTransaccProceso" Type="Int32" Nullable="false" />
+          <Property Name="IntEstado" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblPlanesTransacciones" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblPlanesTransacciones" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblPagosElectronicos" Relationship="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" FromRole="TblPlanesTransacciones" ToRole="TblPagosElectronicos" />
@@ -1558,12 +1558,12 @@
           <EntitySetMapping Name="TblPlanesTransacciones">
             <EntityTypeMapping TypeName="Modelo.TblPlanesTransacciones">
               <MappingFragment StoreEntitySet="TblPlanesTransacciones">
+                <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
                 <ScalarProperty Name="IntNumTransaccProceso" ColumnName="IntNumTransaccProceso" />
                 <ScalarProperty Name="DatFechaVencimiento" ColumnName="DatFechaVencimiento" />
                 <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
                 <ScalarProperty Name="StrEmpresaUsuario" ColumnName="StrEmpresaUsuario" />
                 <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
-                <ScalarProperty Name="BitProcesada" ColumnName="BitProcesada" />
                 <ScalarProperty Name="IntValor" ColumnName="IntValor" />
                 <ScalarProperty Name="IntNumTransaccProcesadas" ColumnName="IntNumTransaccProcesadas" />
                 <ScalarProperty Name="IntNumTransaccCompra" ColumnName="IntNumTransaccCompra" />

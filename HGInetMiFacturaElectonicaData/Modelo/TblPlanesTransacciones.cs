@@ -28,12 +28,12 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public int IntNumTransaccCompra { get; set; }
         public int IntNumTransaccProcesadas { get; set; }
         public decimal IntValor { get; set; }
-        public bool BitProcesada { get; set; }
         public string StrObservaciones { get; set; }
         public string StrEmpresaUsuario { get; set; }
         public string StrUsuario { get; set; }
         public Nullable<System.DateTime> DatFechaVencimiento { get; set; }
         public int IntNumTransaccProceso { get; set; }
+        public int IntEstado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
