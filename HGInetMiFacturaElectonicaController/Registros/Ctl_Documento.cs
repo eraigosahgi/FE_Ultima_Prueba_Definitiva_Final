@@ -31,9 +31,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		#region Constructores 
 
 		public Ctl_Documento() : base(new ModeloAutenticacion()) { }
-		public Ctl_Documento(ModeloAutenticacion autenticacion) : base(autenticacion) { }
 
-		public Ctl_Documento(string servidor, string basedatos, string usuario, string clave) : base(servidor, basedatos, usuario, clave) { }
 		#endregion
 
 		/// <summary>

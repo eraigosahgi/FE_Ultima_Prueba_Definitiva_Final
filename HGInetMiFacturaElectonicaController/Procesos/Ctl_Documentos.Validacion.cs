@@ -1,4 +1,6 @@
-﻿using HGInetMiFacturaElectonicaData;
+﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
@@ -54,6 +56,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="respuesta">información de respuesta</param>
 		public static void ValidarRespuesta(DocumentoRespuesta respuesta)
 		{
+			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+
 			if (respuesta.Error != null)
 			{
 				if (!string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
@@ -62,9 +66,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						respuesta.UrlXmlUbl = null;
 					}
+
+					try
+					{
+						clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(respuesta.IdProceso), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(respuesta.IdEstado), TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, respuesta.Error.Mensaje, string.Format("{0}", respuesta.Error.Codigo));
+					}
+					catch (Exception) { throw; }
+
 					throw new ApplicationException(respuesta.Error.Mensaje);
 				}
 			}
+
+			try
+			{
+				clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(respuesta.IdProceso), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(respuesta.IdEstado), TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, string.Empty, string.Empty);
+			}
+			catch (Exception) { throw; }
 		}
 	}
 }

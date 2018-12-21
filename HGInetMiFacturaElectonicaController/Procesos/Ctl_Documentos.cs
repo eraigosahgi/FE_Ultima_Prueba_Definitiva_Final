@@ -25,6 +25,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
 using HGInetMiFacturaElectonicaData.Enumerables;
+using HGInetMiFacturaElectonicaController.Auditorias;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -46,6 +47,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns>resultado del proceso</returns>
 		public static DocumentoRespuesta Procesar(Guid id_peticion, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa)
 		{
+			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+
 			string numero_resolucion = string.Empty;
 			string prefijo = string.Empty;
 
@@ -82,7 +85,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Prefijo = documento_obj.Prefijo,
 					ProcesoFinalizado = 0,
 					UrlPdf = "",
-					UrlXmlUbl = ""
+					UrlXmlUbl = "",
+					IdPeticion = id_peticion,
+					IdentificacionObligado = documento_obj.DatosObligado.Identificacion
 				};
 
 				try
@@ -215,6 +220,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 							documentoBd.TblEmpresasResoluciones = resolucion;
 
+							//Realiza el registro del log.
+							clase_auditoria.Crear(documentoBd.StrIdSeguridad, id_peticion, documentoBd.StrEmpresaFacturador, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documentoBd.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado), TipoRegistro.Creacion, Procedencia.Plataforma, string.Empty, string.Empty, string.Empty);
 
 						}
 						catch (Exception excepcion)

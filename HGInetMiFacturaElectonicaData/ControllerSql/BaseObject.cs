@@ -11,10 +11,10 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 
 	public abstract partial class BaseObject<T> : IBaseObject<T> where T : class
 	{
-        /// <summary>
-        /// Cierre de conexión de ejecución de comandos
-        /// </summary>
-        private int cmd_time_out = 90;
+		/// <summary>
+		/// Cierre de conexión de ejecución de comandos
+		/// </summary>
+		private int cmd_time_out = 90;
 
 		/// <summary>
 		/// Modelo de datos
@@ -25,16 +25,19 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 		/// Autenticación de base de datos
 		/// </summary>
 		protected virtual ModeloAutenticacion autenticacion { get; set; }
-		
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		public BaseObject()
 		{
 			DataBaseServer server_bd = HgiConfiguracion.GetConfiguration().DataBaseServer;
-			
+
+			int motor = 0;
+			int.TryParse(server_bd.Motor, out motor);
+
 			if (this.context == null)
-				setBaseObject(server_bd.Servidor, server_bd.BaseDatos, server_bd.Usuario, server_bd.Clave);
+				setBaseObject(server_bd.Servidor, server_bd.BaseDatos, server_bd.Usuario, server_bd.Clave, motor);
 		}
 
 		/// <summary>
@@ -50,8 +53,8 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 
 			if (this.context == null)
 			{
-				this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave);
-                this.context.Database.CommandTimeout = this.cmd_time_out;
+				this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave, autenticacion.Motor);
+				this.context.Database.CommandTimeout = this.cmd_time_out;
 
 			}
 		}
@@ -63,7 +66,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 		/// <param name="basedatos">nombre de la base de datos</param>
 		/// <param name="usuario">usuario de acceso a la base de datos</param>
 		/// <param name="clave">clave de acceso a la base de datos</param>
-		public BaseObject(string servidor, string basedatos, string usuario, string clave)
+		public BaseObject(string servidor, string basedatos, string usuario, string clave, int motor = 0)
 		{
 			if (string.IsNullOrEmpty(servidor))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "servidor", "String"));
@@ -74,11 +77,11 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 			else if (string.IsNullOrEmpty(clave))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "clave", "String"));
 
-			this.autenticacion = new ModeloAutenticacion(servidor, basedatos, usuario, clave);
+			this.autenticacion = new ModeloAutenticacion(servidor, basedatos, usuario, clave, autenticacion.Motor);
 
 			if (this.context == null)
 			{
-				this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave);
+				this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave, autenticacion.Motor);
 				this.context.Database.CommandTimeout = this.cmd_time_out;
 			}
 		}
@@ -90,7 +93,7 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 		/// <param name="basedatos">nombre de la base de datos</param>
 		/// <param name="usuario">usuario de acceso a la base de datos</param>
 		/// <param name="clave">clave de acceso a la base de datos</param>
-		public void setBaseObject(string servidor, string basedatos, string usuario, string clave)
+		public void setBaseObject(string servidor, string basedatos, string usuario, string clave, int motor)
 		{
 			if (string.IsNullOrEmpty(servidor))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "servidor", "String"));
@@ -101,9 +104,9 @@ namespace HGInetMiFacturaElectonicaData.ControllerSql
 			else if (string.IsNullOrEmpty(clave))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "clave", "String"));
 
-			this.autenticacion = new ModeloAutenticacion(servidor, basedatos, usuario, clave);
+			this.autenticacion = new ModeloAutenticacion(servidor, basedatos, usuario, clave, motor);
 
-			this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave);
+			this.context = new ModeloConexion(autenticacion.Servidor, autenticacion.Basedatos, autenticacion.Usuario, autenticacion.Clave, autenticacion.Motor);
 			this.context.Database.CommandTimeout = this.cmd_time_out;
 
 		}

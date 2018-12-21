@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaData
 {
-	
-	public class DataBaseServer : ConfigurationElement
+
+	public class DataBaseAuditoria : ConfigurationElement
 	{
 
 		[ConfigurationProperty("Servidor", DefaultValue = "", IsKey = true, IsRequired = true)]
@@ -39,13 +39,6 @@ namespace HGInetMiFacturaElectonicaData
 			set { this["Clave"] = value; }
 		}
 
-		[ConfigurationProperty("InfoSeguridadPersiste", DefaultValue = (bool)true, IsRequired = true)]
-		public bool InfoSeguridadPersiste
-		{
-			get { return (bool)this["InfoSeguridadPersiste"]; }
-			set { this["InfoSeguridadPersiste"] = value; }
-		}
-
 		[ConfigurationProperty("Motor", DefaultValue = "", IsKey = true, IsRequired = true)]
 		public string Motor
 		{
@@ -53,14 +46,10 @@ namespace HGInetMiFacturaElectonicaData
 			set { this["Motor"] = value; }
 		}
 
-		public DataBaseServer()
+
+		public DataBaseAuditoria()
 		{
-
-
-			//var _Config = ConfigurationManager.GetSection("HgiNet/dataBaseServer");
-
-
-
+			//var _Config = ConfigurationManager.GetSection("HgiNet/DbAuditoria");
 		}
 
 

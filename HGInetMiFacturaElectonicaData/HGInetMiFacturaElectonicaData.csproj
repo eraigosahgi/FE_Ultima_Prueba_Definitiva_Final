@@ -44,10 +44,26 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MongoDB.Bson, Version=2.7.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.7.2\lib\net45\MongoDB.Bson.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.7.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.2.7.2\lib\net45\MongoDB.Driver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.7.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.Core.2.7.2\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Entity" />
@@ -78,6 +94,7 @@
     <Compile Include="ControllerSql\Repositorio.Validar.cs" />
     <Compile Include="Enumerables\Accion.cs" />
     <Compile Include="Enumerables\AdquirienteRecibo.cs" />
+    <Compile Include="Enumerables\Auditorias.cs" />
     <Compile Include="Enumerables\CategoriaEstado.cs" />
     <Compile Include="Enumerables\EstadoEmail.cs" />
     <Compile Include="Enumerables\EstadoPago.cs" />
@@ -89,6 +106,8 @@
     <Compile Include="Enumerables\TipoCompra.cs" />
     <Compile Include="Enumerables\TipoFormato.cs" />
     <Compile Include="Enumerables\TipoOpciones.cs" />
+    <Compile Include="ModeloAuditoria\Objetos\TblGenerica.cs" />
+    <Compile Include="ModeloAuditoria\Objetos\TblAuditDocumentos.cs" />
     <Compile Include="ModeloServicio\Documentos\Acuse.cs" />
     <Compile Include="ModeloServicio\Documentos\Cuota.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoArchivo.cs" />
@@ -110,6 +129,7 @@
     <Compile Include="ModeloServicio\Respuestas\NotificacionCorreo.cs" />
     <Compile Include="ModeloServicio\Respuestas\Resolucion.cs" />
     <Compile Include="ModeloServicio\Respuestas\RespuestaDian.cs" />
+    <Compile Include="ModeloAuditoria\IDatabase.cs" />
     <Compile Include="Modelo\ModeloAutenticacion.cs" />
     <Compile Include="Modelo\ModeloConexion.cs" />
     <Compile Include="Modelo\ModeloDatos.Context.cs">
@@ -127,6 +147,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ModeloDatos.edmx</DependentUpon>
     </Compile>
+    <Compile Include="ModeloAuditoria\MongoDBContext.cs" />
     <Compile Include="Modelo\sysdiagrams.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
@@ -174,6 +195,7 @@
     </Compile>
     <Compile Include="Parametros\CertificadoDigital.cs" />
     <Compile Include="Parametros\DataBaseServer.cs" />
+    <Compile Include="Parametros\DataBaseAuditoria.cs" />
     <Compile Include="Parametros\DianProveedor.cs" />
     <Compile Include="Parametros\DianProveedorTest.cs" />
     <Compile Include="Parametros\HgiConfiguracion.cs" />

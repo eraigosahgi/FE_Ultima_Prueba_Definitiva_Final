@@ -33,6 +33,20 @@ namespace HGInetMiFacturaElectonicaData
 			//set { this["DataBaseServer"] = value; }
 		}
 
+
+		[ConfigurationProperty("dataBaseAuditoria")]
+		public DataBaseAuditoria DbAuditoria
+		{
+			get
+			{
+				DataBaseAuditoria bd_tmp = this["dataBaseAuditoria"] as DataBaseAuditoria;
+
+				return bd_tmp;
+			}
+			//set { this["dataBaseAuditoria"] = value; }
+		}
+
+
 		[ConfigurationProperty("mailServer")]
 		public MailServer MailServer
 		{
