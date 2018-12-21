@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaData;
+﻿using HGInetEmailServicios.ServicioEnvio;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
@@ -82,6 +83,61 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 				datos = Crear(datos);
 
 				return datos;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		/// <summary>
+		/// construye el objeto para el registro de auditoria de un documento.
+		/// </summary>
+		/// <param name="id_seguridad_doc">id se seguridad del documento.</param>
+		/// <param name="id_peticion">id de la petición.</param>
+		/// <param name="facturador">Identificación del obligado a facturar</param>
+		/// <param name="proceso">Proceso del documento.</param>
+		/// <param name="estado">Estado actual del documento.</param>
+		/// <param name="tipo_registro">Tipo del registro de auditoría</param>
+		/// <param name="procesado_por">Procedencia de la petición del log</param>
+		/// <param name="realizado_por">usuario que ejecuta el proceso.</param>
+		/// <param name="mensaje">mensaje.</param>
+		/// <param name="resultado_proceso">Código Dian, Id Mailjet...entre otros</param>
+		/// <param name="respuestas_email">Lista de la respuesta de envios de correos</param>
+		/// <returns></returns>
+		public List<TblAuditDocumentos> Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, CategoriaEstado estado, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso, List<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta.MensajeEnvio> respuestas_email)
+		{
+			try
+			{
+				List<TblAuditDocumentos> respuesta_auditoria = new List<TblAuditDocumentos>();
+
+				TblAuditDocumentos datos = new HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos.TblAuditDocumentos()
+				{
+					StrIdSeguridad = id_seguridad_doc.ToString(),
+					StrIdPeticion = id_peticion.ToString(),
+					DatFecha = Fecha.GetFecha(),
+					StrObligado = facturador,
+					IntIdEstado = estado.GetHashCode(),
+					IntIdProceso = estado.GetHashCode(),
+					IntTipoRegistro = tipo_registro.GetHashCode(),
+					IntIdProcesadoPor = procesado_por.GetHashCode(),
+					StrRealizadoPor = realizado_por,
+					StrMensaje = mensaje,
+					StrResultadoProceso = resultado_proceso
+				};
+
+				foreach (var item in respuestas_email)
+				{
+					foreach (var data in item.Data)
+					{
+						datos.StrResultadoProceso = data.MessageID.ToString();
+						datos.StrMensaje = data.Email;
+						datos = Crear(datos);
+					}
+				}
+
+
+				return respuesta_auditoria;
 			}
 			catch (Exception excepcion)
 			{

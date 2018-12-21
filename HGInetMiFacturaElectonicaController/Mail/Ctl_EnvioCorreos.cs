@@ -1,4 +1,5 @@
 ﻿
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Properties;
@@ -13,6 +14,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,10 +43,12 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="ruta_plantilla_html"></param>
 		/// <param name="tag_mensaje"></param>
 		/// <param name="rutas_adjuntos"></param>
-		private void EnviarEmail(string id_seguridad, bool uno_a_uno, string mensaje, string asunto, bool contenido_html, DestinatarioEmail correo_remitente, List<DestinatarioEmail> correos_destino, List<DestinatarioEmail> correos_copia = null, List<DestinatarioEmail> correos_copia_oculta = null, string ruta_plantilla_html = "", string tag_mensaje = "", List<Adjunto> rutas_adjuntos = null)
+		private List<MensajeEnvio> EnviarEmail(string id_seguridad, bool uno_a_uno, string mensaje, string asunto, bool contenido_html, DestinatarioEmail correo_remitente, List<DestinatarioEmail> correos_destino, List<DestinatarioEmail> correos_copia = null, List<DestinatarioEmail> correos_copia_oculta = null, string ruta_plantilla_html = "", string tag_mensaje = "", List<Adjunto> rutas_adjuntos = null)
 		{
 			try
 			{
+				List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
+
 				if (correo_remitente == null)
 					throw new ApplicationException("No se encontró información del Remitente");
 				else if (string.IsNullOrWhiteSpace(correo_remitente.Email))
@@ -160,10 +164,11 @@ namespace HGInetMiFacturaElectonicaController
 
 					List<MensajeContenido> mensajes = new List<MensajeContenido>();
 					mensajes.Add(contenido);
-                    
-                    Ctl_CloudMensajeria.Enviar(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);                    
 
-                }
+					respuesta_email = Ctl_CloudMensajeria.Enviar(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes);
+				}
+
+				return respuesta_email;
 
 			}
 			catch (Exception excepcion)
@@ -360,6 +365,8 @@ namespace HGInetMiFacturaElectonicaController
 		/// <returns></returns>
 		public bool NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "")
 		{
+			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
 
 			try
 			{
@@ -446,10 +453,10 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
 						mensaje = mensaje.Replace("{DigitovFacturador}", empresa_obligado.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMail);
-                        mensaje = mensaje.Replace("{CodigoCUFE}", documento.StrCufe);
+						mensaje = mensaje.Replace("{CodigoCUFE}", documento.StrCufe);
 
 
-                        if (!string.IsNullOrWhiteSpace(telefono))
+						if (!string.IsNullOrWhiteSpace(telefono))
 							mensaje = mensaje.Replace("{TelefonoFacturador}", telefono);
 						else
 							mensaje = mensaje.Replace("{TelefonoFacturador}", "");
@@ -574,7 +581,7 @@ namespace HGInetMiFacturaElectonicaController
 										archivos.Add(adjunto);
 									}
 								}
-								
+
 							}
 							else
 							{
@@ -591,7 +598,7 @@ namespace HGInetMiFacturaElectonicaController
 						}
 
 						// envía el correo electrónico
-						EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
+						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 
 
 					}
@@ -600,8 +607,20 @@ namespace HGInetMiFacturaElectonicaController
 			}
 			catch (Exception excepcion)
 			{
+				try
+				{
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, string.Format("NotificacionDocumento - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException));
+				}
+				catch (Exception) { throw; }
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
+
+			try
+			{
+				clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, "NotificacionDocumento", string.Empty, respuesta_email);
+			}
+			catch (Exception) { throw; }
 		}
 
 		/// <summary>
@@ -613,6 +632,8 @@ namespace HGInetMiFacturaElectonicaController
 		/// <returns></returns>
 		public bool NotificacionBasica(TblDocumentos documento, string telefono, string nuevo_email = "")
 		{
+			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
 
 			try
 			{
@@ -733,7 +754,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						string ruta_acuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", documento.StrIdSeguridad.ToString()));
 
-						mensaje = mensaje.Replace("{RutaUrl}",string.Format("{0}/Views/Login/Default.aspx?nit={1}", plataforma.RutaPublica, empresa_adquiriente.StrIdentificacion));
+						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}/Views/Login/Default.aspx?nit={1}", plataforma.RutaPublica, empresa_adquiriente.StrIdentificacion));
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
 						bool IdPago = false;
@@ -818,7 +839,7 @@ namespace HGInetMiFacturaElectonicaController
 						}
 
 						// envía el correo electrónico
-						EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
+						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 
 
 					}
@@ -827,8 +848,20 @@ namespace HGInetMiFacturaElectonicaController
 			}
 			catch (Exception excepcion)
 			{
+				try
+				{
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, string.Format("NotificacionBasica - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException));
+				}
+				catch (Exception) { throw; }
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
+
+			try
+			{
+				clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, "NotificacionBasica", string.Empty, respuesta_email);
+			}
+			catch (Exception) { throw; }
 		}
 
 		/// <summary>
@@ -901,6 +934,9 @@ namespace HGInetMiFacturaElectonicaController
 		/// <returns></returns>
 		public bool RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente, string ruta_archivo, string mail = "")
 		{
+			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
+
 			try
 			{
 				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaAcuse);
@@ -1010,7 +1046,7 @@ namespace HGInetMiFacturaElectonicaController
 						}
 
 						// envía el correo electrónico
-						EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
+						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 
 					}
 				}
@@ -1019,9 +1055,20 @@ namespace HGInetMiFacturaElectonicaController
 			}
 			catch (Exception excepcion)
 			{
+				try
+				{
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, string.Format("RespuestaAcuse - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException));
+				}
+				catch (Exception) { throw; }
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
+			try
+			{
+				clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, "RespuestaAcuse", string.Empty, respuesta_email);
+			}
+			catch (Exception) { throw; }
 
 		}
 
@@ -1078,9 +1125,9 @@ namespace HGInetMiFacturaElectonicaController
 				Ctl_Empresa empresa = new Ctl_Empresa();
 				TblEmpresas facturador = empresa.Obtener(identificacion);
 
-                //if (string.IsNullOrEmpty(facturador.StrSerial))
-                //    throw new ApplicationException("No se encontró información del serial");
-                
+				//if (string.IsNullOrEmpty(facturador.StrSerial))
+				//    throw new ApplicationException("No se encontró información del serial");
+
 				if (!string.IsNullOrWhiteSpace(fileName))
 				{
 					FileInfo file = new FileInfo(fileName);
