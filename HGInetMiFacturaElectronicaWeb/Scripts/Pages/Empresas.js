@@ -82,6 +82,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
     Datos_empresa_Asociada = "",
     Datos_Integrador = false,
 	Datos_Anexo = false,
+	Datos_EmailRecepcion = false,
     Datos_Numero_usuarios = 1,
     Datos_Dias_Acuse = 10;
 
@@ -226,6 +227,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         	value: false,
         	onValueChanged: function (data) {
         		Datos_Anexo = data.value;
+        	}
+        });
+
+        $("#EmailRecepcion").dxCheckBox({
+        	name: "EmailRecepcion",
+        	onValueChanged: function (data) {
+        		Datos_EmailRecepcion = data.value;
         	}
         });
 
@@ -429,6 +437,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
                 Datos_Dias_Acuse = response.data[0].IntAcuseTacito;
                 Datos_Anexo = response.data[0].IntAnexo;
+                Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
 
                 $("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
                 $("#NumeroIdentificacion").dxTextBox({ readOnly: true });
@@ -462,6 +471,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
                 if (Datos_Anexo == 1)
                 	$("#Anexo").dxCheckBox({ value: true });
+
+                if (Datos_EmailRecepcion == 1)
+                	$("#EmailRecepcion").dxCheckBox({ value: true });
 
 
             } catch (err) {
@@ -509,7 +521,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             IntIntegrador: Datos_Integrador,
             IntNumUsuarios: Datos_Numero_usuarios,
             IntAcuseTacito: Datos_Dias_Acuse,
-			IntAnexo: Datos_Anexo
+            IntAnexo: Datos_Anexo,
+            IntEmailRecepcion: Datos_EmailRecepcion
         });
 
         $("#wait").show();

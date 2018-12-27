@@ -297,6 +297,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (documento.Documento < resolucion.IntRangoInicial || documento.Documento > resolucion.IntRangoFinal)
 				throw new ApplicationException(string.Format("El número del documento {0} no es válido según la resolución", documento.Documento));
 
+			//Valida que la fecha este en los terminos
+			if (documento.Fecha.Date > resolucion.DatFechaVigenciaHasta || documento.Fecha.Date < resolucion.DatFechaVigenciaDesde)
+				throw new ApplicationException(string.Format("El documento {0} no cumple con los términos de la Resolución.", documento.Documento));
+
 			if (!resolucion.StrPrefijo.Equals(documento.Prefijo))
 				throw new ApplicationException(string.Format("El prefijo '{0}' no es válido según Resolución", documento.Prefijo));
 

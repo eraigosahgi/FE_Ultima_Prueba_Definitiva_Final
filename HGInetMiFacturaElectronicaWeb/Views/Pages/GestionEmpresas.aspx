@@ -79,19 +79,24 @@
 
 										</div>
 
-										<div class="col-md-3 col-xs-6 " style="z-index: 9; margin-left: 0px">
+										<div class="col-md-2 col-xs-6 " style="z-index: 9; margin-left: 0px">
 											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nº Horas acuse:</label>
 											<div id="txtDiasAcuse"></div>
 
 										</div>
 
-										<div class="col-md-3 col-xs-6 " style="z-index: 9;">
+										<div class="col-md-2 col-xs-6 " style="z-index: 9;">
 											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Maneja Anexo:</label>
 											<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
 												<div id="Anexo"></div>
 											</div>
-
 										</div>
+
+										<div class="col-md-2 col-xs-6 " style="z-index: 9;">
+											<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Email Recepcion:</label>
+											<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
+												<div id="EmailRecepcion"></div>
+											</div>
 
 
 

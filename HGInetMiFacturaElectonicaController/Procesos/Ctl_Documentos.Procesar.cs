@@ -323,7 +323,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						if ((documento.StrProveedorReceptor == null) || documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 						{
-							if (documento.IntEnvioMail == null || documento.IntEnvioMail == false)
+							if ((documento.IntEnvioMail == null || documento.IntEnvioMail == true) && empresa.IntEnvioMailRecepcion == false)
 							{
 								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
 								ValidarRespuesta(respuesta);
@@ -368,7 +368,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
 						}
 					}
-					else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && (documento.IntEnvioMail == null || documento.IntEnvioMail == false))
+					else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && (documento.IntEnvioMail == null || documento.IntEnvioMail == false) && empresa.IntEnvioMailRecepcion == true)
 					{
 						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
 						Ctl_Documento documento_tmp = new Ctl_Documento();

@@ -75,6 +75,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			else
 			{
+
+				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
+
+				//obtiene las Resoluciones del facturador y las actualiza para que no permita la recepcion de documento
+				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.ObtenerResoluciones(obligado.StrIdentificacion, "*");
+
+				foreach (TblEmpresasResoluciones item in resoluciones_bd)
+				{
+					item.DatFechaVigenciaHasta = fecha_actual.AddDays(-2);
+					item.StrObservaciones = string.Format("{0} - Respuesta DIAN: {1} - {2}", fecha_actual, resoluciones_dian.CodigoOperacion, resoluciones_dian.DescripcionOperacion);
+
+					empresa_resolucion = new Ctl_EmpresaResolucion();
+					empresa_resolucion.Edit(item);
+				}
+
 				throw new ApplicationException(string.Format("Error al obtener las resoluciones del facturador electrónico {0}. Respuesta DIAN: {1} - {2}", obligado.StrIdentificacion, resoluciones_dian.CodigoOperacion, resoluciones_dian.DescripcionOperacion));
 
 			}
