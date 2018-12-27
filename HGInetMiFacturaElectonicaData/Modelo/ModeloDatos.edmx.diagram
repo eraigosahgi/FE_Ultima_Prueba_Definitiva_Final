@@ -4,11 +4,9 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="72" DisplayType="true">
+      <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="106" DisplayType="true">
         <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="5.625" PointY="11.75" />
         <EntityTypeShape EntityType="Modelo.TblPlanes" Width="1.5" PointX="3.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="2" PointX="9.5" PointY="10.625" IsExpanded="true" />
-        <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
         <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="16.125" PointY="14.25" />
         <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="13" PointY="14.75" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblOpciones" />
@@ -34,11 +32,13 @@
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblEmpresas" />
-        <AssociationConnector Association="Modelo.FK_TblUsuarios_TblEmpresas" />
         <EntityTypeShape EntityType="Modelo.TblPlanesTransacciones" Width="2.25" PointX="12.875" PointY="9.875" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblPlanesTransacciones" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
+        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="2.125" PointX="9.625" PointY="11" />
+        <AssociationConnector Association="Modelo.FK_TblUsuarios_TblEmpresas" />
+        <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
         </Diagram>
     </edmx:Diagrams>
