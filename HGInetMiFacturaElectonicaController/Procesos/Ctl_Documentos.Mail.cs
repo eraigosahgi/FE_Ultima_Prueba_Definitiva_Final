@@ -33,35 +33,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Envia correo al adquiriente que tiene el objeto
+				email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
+
+				//Valida si el proceso es completo para actualizar estados y bd
 				if (!notificacion_basica)
 				{
+				respuesta.DescripcionProceso = string.Format("{0} - En estado EXITOSA", respuesta.DescripcionProceso);
 
-					respuesta.DescripcionProceso = string.Format("{0} - En estado EXITOSA", respuesta.DescripcionProceso);
+				//Actualiza la respuesta
+				respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
+				respuesta.FechaUltimoProceso = Fecha.GetFecha();
+				respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
 
-					email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
+				//Actualiza Documento en Base de Datos
+				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+				documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+				documentoBd.IntEnvioMail = true;
 
-					//Actualiza la respuesta
-					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
-					respuesta.FechaUltimoProceso = Fecha.GetFecha();
-					respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
+				Ctl_Documento documento_tmp = new Ctl_Documento();
+				documento_tmp.Actualizar(documentoBd);
 
-					//Actualiza Documento en Base de Datos
-					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-					documentoBd.IntEnvioMail = true;
+				//Actualiza la categoria con el nuevo estado
+				respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+				respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 
-					Ctl_Documento documento_tmp = new Ctl_Documento();
-					documento_tmp.Actualizar(documentoBd);
-
-					//Actualiza la categoria con el nuevo estado
-					respuesta.IdEstado = documentoBd.IdCategoriaEstado;
-					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
-
-
-				}
-				else
-				{
-					email.NotificacionBasica(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
 				}
 
 			}
