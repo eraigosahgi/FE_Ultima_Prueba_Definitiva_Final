@@ -175,7 +175,7 @@
                         <!--data-ng-if="DetalleAcuse"-->
                         <div>
                             <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
-                            <div id="PanelOpcionesAdquiriente" style="margin-top: -25px" data-ng-show="{{datos.CamposVisibles && datos.EstadoCat ==300}}" class="dx-fieldset">
+                            <div id="PanelOpcionesAdquiriente" style="margin-top: -25px" data-ng-show="{{datos.CamposVisibles && datos.EstadoCat =!400}}" class="dx-fieldset">
 
                                 <form data-ng-submit="onFormSubmit($event)">
 
