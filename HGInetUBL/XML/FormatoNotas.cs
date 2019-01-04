@@ -49,6 +49,10 @@ namespace HGInetUBL
 			// convierte el objeto en json
 			string formato_json = JsonConvert.SerializeObject(datos_json.FirstOrDefault(), typeof(Formato), config);
 
+			//Si envian alguno de estos saltos de lineas, se reemplazan por el que toma el diseñador del formato
+			//el campo donde se va mostrar debe tener habilitada la propiedad Multilinea
+			formato_json = formato_json.Replace("<\br>","\r\n").Replace("\\n", "\r\n");
+
 			// agrega los campos del formato del documento en la 2da posición
 			notas_documento.Add(formato_json);
 

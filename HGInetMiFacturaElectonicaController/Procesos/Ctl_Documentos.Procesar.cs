@@ -142,7 +142,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			ProcesoEstado proceso_actual = Enumeracion.ParseToEnum<ProcesoEstado>((int)documento.IntIdEstado);
 
 			// valida que el proceso del documento cuente con el XML en UBL físicamente
-			if (proceso_actual.GetHashCode() <= ProcesoEstado.AlmacenaXML.GetHashCode())
+			if (proceso_actual.GetHashCode() < ProcesoEstado.AlmacenaXML.GetHashCode())
 				throw new ArgumentException(string.Format("No se puede procesar el documento {0} en estado {1} del Facturador Electrónico - {2} {3}", documento.StrIdSeguridad, Enumeracion.GetDescription(proceso_actual), documento.StrEmpresaFacturador, documento.TblEmpresasFacturador.StrRazonSocial));
 
 			// obtiene el tipo de documento
@@ -273,14 +273,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				documento_result.NombreZip = NombramientoArchivo.ObtenerZip(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, tipo_documento, documento_obj.Prefijo);
 
 				// firma el xml (valida si no ha realizado el envío a la DIAN vuelve a firmar)
-				if (respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
+				if (respuesta.IdProceso < ProcesoEstado.FirmaXml.GetHashCode())
 				{
 					respuesta = UblFirmar(documento, ref respuesta, ref documento_result);
 					ValidarRespuesta(respuesta);
 				}
 
-				// comprime el archivo xml firmado
-				if (respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
+				//// comprime el archivo xml firmado
+				if (respuesta.IdProceso < ProcesoEstado.CompresionXml.GetHashCode())
 				{
 					respuesta = UblComprimir(documento, ref respuesta, ref documento_result);
 					ValidarRespuesta(respuesta);
@@ -289,34 +289,51 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// envía el archivo zip con el xml firmado a la DIAN
 				if (respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
 				{
-                    //valida si debe consultar el estado del documento en la DIAN
-                    if (consulta_documento)
-                    {
-                        respuesta = Consultar(documento, empresa, ref respuesta);
+					//valida si debe consultar el estado del documento en la DIAN
+					if (consulta_documento)
+					{
+						respuesta = Consultar(documento, empresa, ref respuesta);
 
 						//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
 						if (respuesta.EstadoDian.CodigoRespuesta == ValidacionRespuestaDian.NoRecibido.ToString())
 						{
-                            HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
-                            ValidarRespuesta(respuesta);
-                        }
-                        else if (respuesta.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Pendiente.GetHashCode())
-                        {
-                            respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
-                        }
-                    }
-                    else
-                    {
-                        HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
-                        ValidarRespuesta(respuesta);
-                    }
+							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+							ValidarRespuesta(respuesta);
+						}
+						else if (respuesta.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Pendiente.GetHashCode())
+						{
+							respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
+							//Actualiza la respuesta
+							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
+							respuesta.FechaUltimoProceso = Fecha.GetFecha();
+
+							//Actualiza Documento en Base de Datos
+							documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+							documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+							Ctl_Documento documento_tmp = new Ctl_Documento();
+							documento_tmp.Actualizar(documento);
+
+							//Actualiza la categoria con el nuevo estado
+							respuesta.IdEstado = documento.IdCategoriaEstado;
+							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
+						}
+					}
+					else
+					{
+						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
+					}
 				}
 
 
 				//Valida estado del documento en la Plataforma de la DIAN
 				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode())
 				{
-					respuesta = Consultar(documento, empresa, ref respuesta);
+					if (respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
+					{
+						respuesta = Consultar(documento, empresa, ref respuesta);
+					}
 
 					// envía el mail de documentos al adquiriente
 					if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
