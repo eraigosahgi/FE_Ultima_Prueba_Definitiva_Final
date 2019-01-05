@@ -182,6 +182,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                 Datos_Obligado = data.value;
                 ValidarSeleccionPerfil();
                 validarHabilitacion();
+                console.log(Datos_Obligado);
+                if (Datos_Obligado === true) {
+                	$("#txtEmail").dxTextBox({ value: "" });
+                }
 
             }
         }).dxValidator({
@@ -304,18 +308,21 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
                     $('#idHabilitacion').show();
                     $("#Habilitacion").dxRadioGroup({ visible: true });
                     $("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
+                    $("#divEmailFacturador").show();
                     break;
                 case "Adquiriente":
                     $('#idHabilitacion').hide();
                     $("#Habilitacion").dxRadioGroup({ visible: false });
                     $("#Habilitacion").dxRadioGroup({ value: "0" });
                     Datos_Habilitacion = "0";
+                    $("#divEmailFacturador").hide();
                     break;
                 case "":
                     $('#idHabilitacion').hide();
                     $("#Habilitacion").dxRadioGroup({ visible: false });
                     $("#Habilitacion").dxRadioGroup({ value: "" });
                     Datos_Habilitacion = "0";
+                    $("#divEmailFacturador").hide();
             }
 
 

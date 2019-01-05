@@ -41,7 +41,7 @@
 											<div id="txtRasonSocial"></div>
 										</div>
 
-										<div class="col-md-6 col-xs-12" style="z-index: 9;">
+										<div id="divEmailFacturador" class="col-md-6 col-xs-12" style="z-index: 9;">
 											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email:<strom style="color: red;">*</label>
 											<div id="txtEmail"></div>
 										</div>
