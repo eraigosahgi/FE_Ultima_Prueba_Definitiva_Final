@@ -7,6 +7,7 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -330,7 +331,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Sesion.ValidarSesion();
 
                 Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
-                bool Enviarmail = Email.EnviaSerial(Identificacion, Mail);
+				List<MensajeEnvio> Enviarmail = Email.EnviaSerial(Identificacion, Mail);
 
                 return Ok();
             }

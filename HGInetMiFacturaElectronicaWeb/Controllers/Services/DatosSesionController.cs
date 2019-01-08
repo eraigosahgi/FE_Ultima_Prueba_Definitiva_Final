@@ -40,6 +40,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Serial = d.StrSerial,
                     TipoIdentificacion = d.StrTipoIdentificacion,
                     Admin = d.IntAdministrador
+					
                 });
 
                 return Ok(retorno);
@@ -79,7 +80,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Mail = d.StrMail,
                     Nombres = d.StrNombres,
                     Telefono = d.StrTelefono,
-                    Usuario = d.StrUsuario
+                    Usuario = d.StrUsuario					
                 });
 
                 return Ok(retorno);

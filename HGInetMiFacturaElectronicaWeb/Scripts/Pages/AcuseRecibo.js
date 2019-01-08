@@ -4,16 +4,9 @@ DevExpress.localization.locale(navigator.language);
 var AcuseReciboApp = angular.module('AcuseReciboApp', ['dx']);
 AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboController($scope, $http, $timeout) {
 
- 
-    
-
 
 	$(document).ready(function () {
-        
-
-	   
-
-
+        	
 		var IdSeguridad = location.search.split('id_seguridad=')[1];
 		//Almacena el parametro Zpago para ver si debe enviarlo a la pantalla de pago
 		var Zpago = location.search.split('Zpago=')[1];
@@ -83,13 +76,13 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 		};
 
 		
-
-		consultar();
+		
+		
 		function consultar() {
 			//Obtiene los datos del web api
 			//ControladorApi: /Api/Documentos/
 			//Datos GET: id_seguridad
-			$http.get('/api/Documentos?id_seguridad=' + IdSeguridad).then(function (response) {
+			$http.get('/api/ConsultarAcuse?id_seguridad=' + IdSeguridad +'&usuario=' +$scope.Usuario).then(function (response) {
 			    $scope.RespuestaAcuse = response.data;
 				
 			    $('#plugin').attr('src', $scope.RespuestaAcuse[0].Pdf);			   
@@ -176,7 +169,8 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 			var data = $.param({
 				id_seguridad: id,
 				estado: estado,
-				motivo_rechazo: motivo_rechazo
+				motivo_rechazo: motivo_rechazo,
+				usuario:$scope.Usuario
 			});
 
 
@@ -192,11 +186,17 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 			});
 		}
 
+		$scope.Usuario = "";
 		$('#btnautenticar').show();
-		$http.get('/api/DatosSesion/').then(function (response) {
-			$('#btnautenticar').hide();
+		$http.get('/api/SesionDatosUsuario/').then(function (response) {
+			$scope.Usuario = response.data[0].IdSeguridad;
+			consultar();
+			$('#btnautenticar').hide();			
+					
 		}, function errorCallback(response) {
-			$('#btnautenticar').show();
+			$scope.Usuario = "";
+			consultar();
+			$('#btnautenticar').show();			
 		});
 
 

@@ -6,6 +6,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		public static DocumentoRespuesta MailDocumentos(object documento, TblDocumentos documentoBd, TblEmpresas obligado, bool adquiriente_nuevo, TblEmpresas adquiriente, TblUsuarios adquiriente_usuario, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result, bool notificacion_basica = false)
 		{
 			Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-
+			DocumentoRespuesta respuesta_email = new DocumentoRespuesta();
 			try
 			{
 				var documento_obj = (dynamic)null;
@@ -33,30 +34,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Envia correo al adquiriente que tiene el objeto
-				email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email);
+				List<MensajeEnvio> mensajes= email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email,respuesta.IdPeticion.ToString());
 
 				//Valida si el proceso es completo para actualizar estados y bd
 				if (!notificacion_basica)
 				{
-				respuesta.DescripcionProceso = string.Format("{0} - En estado EXITOSA", respuesta.DescripcionProceso);
+					respuesta.DescripcionProceso = string.Format("{0} - En estado EXITOSA", respuesta.DescripcionProceso);
 
-				//Actualiza la respuesta
-				respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
-				respuesta.FechaUltimoProceso = Fecha.GetFecha();
-				respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
+					//Actualiza la respuesta
+					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
+					respuesta.FechaUltimoProceso = Fecha.GetFecha();
+					respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
 
-				//Actualiza Documento en Base de Datos
-				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-				documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-				documentoBd.IntEnvioMail = true;
+					//Actualiza Documento en Base de Datos
+					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+					documentoBd.IntEnvioMail = true;
 
-				Ctl_Documento documento_tmp = new Ctl_Documento();
-				documento_tmp.Actualizar(documentoBd);
+					Ctl_Documento documento_tmp = new Ctl_Documento();
+					documento_tmp.Actualizar(documentoBd);
 
-				//Actualiza la categoria con el nuevo estado
-				respuesta.IdEstado = documentoBd.IdCategoriaEstado;
-				respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
-
+					//Actualiza la categoria con el nuevo estado
+					respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+					ValidarRespuesta(respuesta, Newtonsoft.Json.JsonConvert.SerializeObject(mensajes[0].Data));
 				}
 
 			}
@@ -80,7 +81,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns></returns>
 		public static DocumentoRespuesta Envio(object documento, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result, bool notificacion_basica = false)
 		{
-
 			try
 			{
 				TblUsuarios usuarioBd = null;
@@ -121,7 +121,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// envía el mail de documentos y de creación de adquiriente
 				respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result, notificacion_basica);
-				ValidarRespuesta(respuesta);
+				//ValidarRespuesta(respuesta);
 
 			}
 			catch (Exception excepcion)

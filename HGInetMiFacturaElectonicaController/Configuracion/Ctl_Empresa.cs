@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LibreriaGlobalHGInet.HgiNet;
-
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -138,7 +138,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 //Envia correo de bienvenida al usuario creado
                 Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
 
-                bool Enviarmail = Email.Bienvenida(empresa, UsuarioBd);
+				//Objeto de respuesta
+				List<MensajeEnvio> Enviarmail = Email.Bienvenida(empresa, UsuarioBd);
 
                 return empresa;
             }
@@ -259,7 +260,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
                 Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
 
-                bool Enviarmail = Email.EnviaSerial(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMail);
+				List<MensajeEnvio> Enviarmail = Email.EnviaSerial(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMail);
 
                 return EmpresaActualiza;
             }

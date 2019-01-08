@@ -1,5 +1,6 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
+var Usuariosession = "";
 var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx', 'AppMaestrosEnum']);
 AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, $http, $location, SrvMaestrosEnum) {
 
@@ -13,8 +14,9 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                estado_acuse = "";
     Filtro_fecha = 2;
 
-    SrvMaestrosEnum.ObtenerSesion().then(function (data) {
-        codigo_facturador = data[0].Identificacion;
+    SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {    	
+    	codigo_facturador = data[0].IdentificacionEmpresa;
+    	Usuariosession = data[0].IdSeguridad;
         consultar();
     });
 
@@ -347,7 +349,7 @@ AcuseConsultaApp.controller('EnvioEmailController', function AcuseConsultaApp($s
                     throw new DOMException("El e-mail de destino es obligatorio.");
                 }
                 $('#wait').show();
-                $http.post('/api/Documentos?id_seguridad=' + id_seguridad + '&mail=' + email_destino).then(function (responseEnvio) {
+                $http.post('/api/Documentos?id_seguridad=' + id_seguridad + '&mail=' + email_destino + '&Usuario=' + Usuariosession).then(function (responseEnvio) {
                     $('#wait').hide();
 
                     swal({

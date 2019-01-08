@@ -168,7 +168,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				Prefijo = documento_obj.Prefijo,
 				ProcesoFinalizado = 0,
 				UrlPdf = "",
-				UrlXmlUbl = ""
+				UrlXmlUbl = "",
+				IdPeticion = id_peticion,
+				IdentificacionObligado = documento_obj.DatosObligado.Identificacion
+				
 			};
 
 			FacturaE_Documento documento_result = new FacturaE_Documento();

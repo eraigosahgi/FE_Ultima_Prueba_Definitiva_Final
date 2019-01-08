@@ -34,6 +34,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns>información adicional de respuesta del documento</returns>
 		public static DocumentoRespuesta GuardarFormato(object documento, TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
 		{
+			respuesta.DescripcionProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(ProcesoEstado.PDFGeneracion.GetHashCode()));
+			respuesta.FechaUltimoProceso = Fecha.GetFecha();
+			respuesta.IdProceso = ProcesoEstado.PDFGeneracion.GetHashCode();
+			respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
+			
 			try
 			{
 				var documento_obj = (dynamic)null;
@@ -43,6 +48,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
+
+				// valida formato en base 64 del objeto
 				Formato formato_documento = (Formato)(dynamic)documento_obj.DocumentoFormato;
 				if (formato_documento != null)
 				{

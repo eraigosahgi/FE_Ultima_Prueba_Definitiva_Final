@@ -950,6 +950,7 @@ function IncluirItem(e, opcion, codigo) {
         }
 
     }
+    console.log(OpcionesUsuario);
 }
 /****** Fin IncluirItem ******/
 

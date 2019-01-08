@@ -7,268 +7,283 @@ var nivel_segu = 0;
 var DemoApp = angular.module('RestablecerClaveApp', ['dx']);
 DemoApp.controller('RestablecerClaveController', function DemoController($scope, $http) {
 
-    var id_seguridad = location.search.split('id_seguridad=')[1];
+	var id_seguridad = location.search.split('id_seguridad=')[1];
 
-    //Valido si el link viene con el id de seguridad para no mostrar el panel de los datos
-    if (id_seguridad != undefined) {
-        $http.get('/api/Usuario?id_seguridad=' + id_seguridad).then(function (response) {
+	//Valido si el link viene con el id de seguridad para no mostrar el panel de los datos
+	if (id_seguridad != undefined) {
+		$http.get('/api/Usuario?id_seguridad=' + id_seguridad).then(function (response) {
 
-            $scope.RespuestaIdSeguridad = response.data;
+			$scope.RespuestaIdSeguridad = response.data;
 
-        }, function errorCallback(response) {
-            Mensaje(response.data.ExceptionMessage, "error", 13000);
-            $("#divcontenido").hide();
-        });
-    } else {
-        $("#divcontenido").hide();
-    }
+		}, function errorCallback(response) {
+			Mensaje(response.data.ExceptionMessage, "error", 13000);
+			$("#divcontenido").hide();
+			swal({
+				title: "Link Expiró",
+				text: "El acceso ha vencido, por lo cual debe realizar nuevamente el proceso de restablecimiento de contraseña.",
 
-    var clave = "";
-    var formInstance;
+				icon: "warning",
+				buttons: true,
+				buttons: ["Cancelar", true]
+			})
+		  .then((willDelete) => {
+		  	if (willDelete) {
+		  		window.location.assign("../Login/Default.aspx?restablecer=true");
+		  	} else {
+		  		window.location.assign("../Login/Default.aspx");
+		  	}
+		  });
+		});
+	} else {
+		$("#divcontenido").hide();
+	}
 
-    var formData = {
-        "Password": ""
-    };
+	var clave = "";
+	var formInstance;
 
-    $scope.formOptions = {
-        formData: formData,
-        readOnly: false,
-        showColonAfterLabel: true,
-        showValidationSummary: true,
-        validationGroup: "DatosContraseña",
-        onInitialized: function (e) {
-            formInstance = e.component;
-        },
-        items: [{
-            itemType: "group",
-            items: [{
-                label: {
-                    text: "Contraseña"
-                },
-                dataField: "Password",
-                editorOptions: {
-                    mode: "password"
+	var formData = {
+		"Password": ""
+	};
+
+	$scope.formOptions = {
+		formData: formData,
+		readOnly: false,
+		showColonAfterLabel: true,
+		showValidationSummary: true,
+		validationGroup: "DatosContraseña",
+		onInitialized: function (e) {
+			formInstance = e.component;
+		},
+		items: [{
+			itemType: "group",
+			items: [{
+				label: {
+					text: "Contraseña"
+				},
+				dataField: "Password",
+				editorOptions: {
+					mode: "password"
                     , onKeyUp: function (data) {
-                        console.log("Data", clave = $('input:password[name=Password]').val());
+                    	console.log("Data", clave = $('input:password[name=Password]').val());
                     }
-                },
-                validationRules: [{
-                    type: "required",
-                    message: "La Contraseña es requerida "
-                },
+				},
+				validationRules: [{
+					type: "required",
+					message: "La Contraseña es requerida "
+				},
                  {
-                     type: 'custom', validationCallback: function (options) {
-                         if (nivel_segu<=40) {
-                             options.rule.message = "La contraseña debe tener al menos 60% de Seguridad";
-                             return false;
-                         } else { return true; }
-                     }
+                 	type: 'custom', validationCallback: function (options) {
+                 		if (nivel_segu <= 40) {
+                 			options.rule.message = "La contraseña debe tener al menos 60% de Seguridad";
+                 			return false;
+                 		} else { return true; }
+                 	}
                  }
-                ]
-            }, {
-                label: {
-                    text: "Confirmar Contraseña"
-                },
-                editorType: "dxTextBox",
-                editorOptions: {
-                    mode: "password"
-                },
-                validationRules: [{
-                    type: "required",
-                    message: "Confirmacion de la Contraseña es requerida"
-                }, {
-                    type: "compare",
-                    message: "La Contraseña y la Confirmaciòn no coinciden",
-                    comparisonTarget: function () {
-                        return formInstance.option("formData").Password;
-                    }
-                }]
-            }]
-        }]
-    };
+				]
+			}, {
+				label: {
+					text: "Confirmar Contraseña"
+				},
+				editorType: "dxTextBox",
+				editorOptions: {
+					mode: "password"
+				},
+				validationRules: [{
+					type: "required",
+					message: "Confirmacion de la Contraseña es requerida"
+				}, {
+					type: "compare",
+					message: "La Contraseña y la Confirmaciòn no coinciden",
+					comparisonTarget: function () {
+						return formInstance.option("formData").Password;
+					}
+				}]
+			}]
+		}]
+	};
 
-    $scope.buttonAceptar = {
-        text: "Aceptar",
-        type: "success",
-        useSubmitBehavior: true,
-        validationGroup: "DatosContraseña"
-    };
+	$scope.buttonAceptar = {
+		text: "Aceptar",
+		type: "success",
+		useSubmitBehavior: true,
+		validationGroup: "DatosContraseña"
+	};
 
-    $scope.onFormSubmit = function (e) {
-        var id_seguridad = location.search.split('id_seguridad=')[1];
-        //Asigno valor de la clave a la variable 
-        clave = $('input:password[name=Password]').val();
+	$scope.onFormSubmit = function (e) {
+		var id_seguridad = location.search.split('id_seguridad=')[1];
+		//Asigno valor de la clave a la variable 
+		clave = $('input:password[name=Password]').val();
 
-        //aqui doy valor a los parametros que van al webapi
-        var data = $.param({
-            id_seguridad: id_seguridad,
-            clave: clave
-        });
-        //Aqui Valido si el id de seguridad viene en el get para cancelar la operacion en caso de que no venga
-        if (id_seguridad == undefined) {
-            Mensaje("Link Incorrecto", "error");
-        } else {
-        $http.post('/api/Usuario?' + data).then(function (response) {
-                              
-            $scope.RespuestaIdSeguridad = response.data;
+		//aqui doy valor a los parametros que van al webapi
+		var data = $.param({
+			id_seguridad: id_seguridad,
+			clave: clave
+		});
+		//Aqui Valido si el id de seguridad viene en el get para cancelar la operacion en caso de que no venga
+		if (id_seguridad == undefined) {
+			Mensaje("Link Incorrecto", "error");
+		} else {
+			$http.post('/api/Usuario?' + data).then(function (response) {
 
-
-            //Aqui debe ir el                 
-            $("#divcontenido").hide();
-
-            swal({
-                title: 'Solicitud Éxitosa',
-                text: 'Su contraseña ha sido restablecida exitosamente.',
-                type: 'success',
-                confirmButtonColor: '#66BB6A',
-                confirmButtonText: 'Aceptar',
-                animation: 'pop',
-                html: true,
-            }).then((value) => {
-                window.location.assign("../Login/Default.aspx");
-            });
-
-        }, function errorCallback(response) {
-            Mensaje(response.data.ExceptionMessage, "error");
-        });
-    }
-
-    e.preventDefault();
-};
+				$scope.RespuestaIdSeguridad = response.data;
 
 
-function Mensaje(strmensaje, tipo, tiempo) {
-    if (tiempo == undefined) { tiempo = 3000 }
-    DevExpress.ui.notify({
-        message: strmensaje,
-        position: {
-            my: "center top",
-            at: "center top"
-        }
-    }, tipo, tiempo);
-}
+				//Aqui debe ir el                 
+				$("#divcontenido").hide();
+
+				swal({
+					title: 'Solicitud Éxitosa',
+					text: 'Su contraseña ha sido restablecida exitosamente.',
+					type: 'success',
+					confirmButtonColor: '#66BB6A',
+					confirmButtonText: 'Aceptar',
+					animation: 'pop',
+					html: true,
+				}).then((value) => {
+					window.location.assign("../Login/Default.aspx");
+				});
+
+			}, function errorCallback(response) {
+				Mensaje(response.data.ExceptionMessage, "error");
+			});
+		}
+
+		e.preventDefault();
+	};
+
+
+	function Mensaje(strmensaje, tipo, tiempo) {
+		if (tiempo == undefined) { tiempo = 3000 }
+		DevExpress.ui.notify({
+			message: strmensaje,
+			position: {
+				my: "center top",
+				at: "center top"
+			}
+		}, tipo, tiempo);
+	}
 
 
 
-///////////////////////////////////////////////////////////////////////
-$(document).ready(function () {
-    var longitud = false,
-      minuscula = false,
-      numero = false,
-      mayuscula = false;
-        
-    $('input:password[name=Password]').keyup(function () {
-        nivel_segu = 0;
-        var pswd = $(this).val();
-        if (pswd.length < 8) {
-            $('#length').removeClass('valid').addClass('invalid');
-            longitud = false;
-        } else {
-            $('#length').removeClass('invalid').addClass('valid');
-            longitud = true;
-            nivel_segu += 20;
-        }
+	///////////////////////////////////////////////////////////////////////
+	$(document).ready(function () {
+		var longitud = false,
+		  minuscula = false,
+		  numero = false,
+		  mayuscula = false;
 
-        //validate letter
-        if (pswd.match(/[a-z]/)) {
-            $('#letter').removeClass('invalid').addClass('valid');
-            minuscula = true;
-            nivel_segu += 20;
-        } else {
-            $('#letter').removeClass('valid').addClass('invalid');
-            minuscula = false;
-        }
+		$('input:password[name=Password]').keyup(function () {
+			nivel_segu = 0;
+			var pswd = $(this).val();
+			if (pswd.length < 8) {
+				$('#length').removeClass('valid').addClass('invalid');
+				longitud = false;
+			} else {
+				$('#length').removeClass('invalid').addClass('valid');
+				longitud = true;
+				nivel_segu += 20;
+			}
 
-        //validate capital letter
-        if (pswd.match(/[A-Z]/)) {
-            $('#capital').removeClass('invalid').addClass('valid');
-            mayuscula = true;
-            nivel_segu += 20;
-        } else {
-            $('#capital').removeClass('valid').addClass('invalid');
-            mayuscula = false;
-        }
+			//validate letter
+			if (pswd.match(/[a-z]/)) {
+				$('#letter').removeClass('invalid').addClass('valid');
+				minuscula = true;
+				nivel_segu += 20;
+			} else {
+				$('#letter').removeClass('valid').addClass('invalid');
+				minuscula = false;
+			}
 
-        //Simbolo
-        if (pswd.match(/[-/*-+.?¿!%$&]/)) {
-            $('#simbolo').removeClass('invalid').addClass('valid');
-            mayuscula = true;
-            nivel_segu += 20;
-        } else {
-            $('#simbolo').removeClass('valid').addClass('invalid');
-            mayuscula = false;
-        }
+			//validate capital letter
+			if (pswd.match(/[A-Z]/)) {
+				$('#capital').removeClass('invalid').addClass('valid');
+				mayuscula = true;
+				nivel_segu += 20;
+			} else {
+				$('#capital').removeClass('valid').addClass('invalid');
+				mayuscula = false;
+			}
 
-        //validate number
-        if (pswd.match(/\d/)) {
-            $('#number').removeClass('invalid').addClass('valid');
-            numero = true;
-            nivel_segu += 20;
-        } else {
-            $('#number').removeClass('valid').addClass('invalid');
-            numero = false;
-        }
+			//Simbolo
+			if (pswd.match(/[-/*-+.?¿!%$&]/)) {
+				$('#simbolo').removeClass('invalid').addClass('valid');
+				mayuscula = true;
+				nivel_segu += 20;
+			} else {
+				$('#simbolo').removeClass('valid').addClass('invalid');
+				mayuscula = false;
+			}
 
-        nivel(nivel_segu);
-    }).focus(function () {
-        $('#pswd_info').show();
-    }).blur(function () {
-        $('#pswd_info').hide();
-    });
-      
-        
-    $("#registro").submit(function (event) {        
-        if (longitud && minuscula && numero && mayuscula) {
-            alert("password correcto");
-            $("#registro").submit();
-        
-        } else {
-            alert("Password invalido.");
-            event.preventDefault();
-        }
-        
-    });
-        
-    function nivel(nivel) {
-        var color='#FE2E2E';            
-        if (nivel <= 100) {
-            color = '#5cb85c';
-        }
-        if (nivel <= 80) {
-            color = '#D0FA58';
-        }
-            
-        if (nivel <= 60) {
-            color = '#F7FE2E';
-        }
+			//validate number
+			if (pswd.match(/\d/)) {
+				$('#number').removeClass('invalid').addClass('valid');
+				numero = true;
+				nivel_segu += 20;
+			} else {
+				$('#number').removeClass('valid').addClass('invalid');
+				numero = false;
+			}
 
-        if (nivel <= 40) {
-            color = '#F78181';
-        }
+			nivel(nivel_segu);
+		}).focus(function () {
+			$('#pswd_info').show();
+		}).blur(function () {
+			$('#pswd_info').hide();
+		});
 
-        if (nivel <= 20) {
-            color = '#FE2E2E';
-        }
-           
 
-        $("#progressBarStatus").dxProgressBar({ value: nivel });
+		$("#registro").submit(function (event) {
+			if (longitud && minuscula && numero && mayuscula) {
+				alert("password correcto");
+				$("#registro").submit();
 
-        $('div.dx-progressbar-range').css('background-color', color);                        
-        $('div.dx-progressbar-range').css('border', '1px solid  ' + color);
-    }
-});
-///////////////////////////////////////////////////////////////////////
-$(function () {
-    var progressBarStatus = $("#progressBarStatus").dxProgressBar({
-        min: 0,
-        max: 100,
-        width: "100%",
-        statusFormat: function (value) {
-            return value * 100 + "%";
-        }
-    }).dxProgressBar("instance");       
-});
-///////////////////////////////////////////////////////////////////////
+			} else {
+				alert("Password invalido.");
+				event.preventDefault();
+			}
+
+		});
+
+		function nivel(nivel) {
+			var color = '#FE2E2E';
+			if (nivel <= 100) {
+				color = '#5cb85c';
+			}
+			if (nivel <= 80) {
+				color = '#D0FA58';
+			}
+
+			if (nivel <= 60) {
+				color = '#F7FE2E';
+			}
+
+			if (nivel <= 40) {
+				color = '#F78181';
+			}
+
+			if (nivel <= 20) {
+				color = '#FE2E2E';
+			}
+
+
+			$("#progressBarStatus").dxProgressBar({ value: nivel });
+
+			$('div.dx-progressbar-range').css('background-color', color);
+			$('div.dx-progressbar-range').css('border', '1px solid  ' + color);
+		}
+	});
+	///////////////////////////////////////////////////////////////////////
+	$(function () {
+		var progressBarStatus = $("#progressBarStatus").dxProgressBar({
+			min: 0,
+			max: 100,
+			width: "100%",
+			statusFormat: function (value) {
+				return value * 100 + "%";
+			}
+		}).dxProgressBar("instance");
+	});
+	///////////////////////////////////////////////////////////////////////
 
 });
 

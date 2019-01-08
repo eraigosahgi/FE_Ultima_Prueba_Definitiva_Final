@@ -7,6 +7,7 @@ document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services
 
 
 var Estado;
+var UsuarioSession = "";
 var DocAdquirienteApp = angular.module('DocAdquirienteApp', ['dx', 'AppMaestrosEnum']);
 //Controlador para la consulta de documentos Adquiriente
 DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquirienteController($scope, $rootScope, $http, $location, SrvMaestrosEnum) {
@@ -25,13 +26,13 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 		cargarFiltros();
 	});
 
-	$http.get('/api/DatosSesion/').then(function (response) {
-		codigo_adquiente = response.data[0].Identificacion;
 
-		consultar();
-	}), function errorCallback(response) {
-		Mensaje(response.data.ExceptionMessage, "error");
-	};
+    SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
+    	codigo_adquiente = data[0].IdentificacionEmpresa;
+    	UsuarioSession = data[0].IdSeguridad;
+    	consultar();
+    });
+  
 
 	function cargarFiltros() {
 		$("#FechaInicial").dxDateBox({
@@ -196,22 +197,22 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     		if (options.data.Pdf)
                     			visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer;'";
                     		else
-                    			options.data.Pdf = "#";
+                    			visible_pdf = "#";
 
                     		if (options.data.Xml)
                     			visible_xml = "href='" + options.data.Xml + "' class='icon-file-xml' style='pointer-events:auto;cursor: pointer;'";
                     		else
-                    			options.data.Xml = "#";
+                    			visible_xml = "#";
 
                     		if (options.data.EstadoAcuse != 'Pendiente')
                     			visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
                     		else
-                    			options.data.RutaAcuse = "#";
+                    			visible_acuse = "#";
 
                     		if (options.data.XmlAcuse)
                     			visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
                     		else
-                    			options.data.XmlAcuse = "#";
+                    			visible_xml_acuse = "#";
 
 
 
@@ -275,9 +276,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                         	cssClass: "hidden-xs col-md-1",
                         	cellTemplate: function (container, options) {
 
-                        		$("<div>")
-                                    //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='Pending' style='background-color: #777; padding: 2px 6px 1px 6px;font-size: 10px; letter-spacing: 0.1px; vertical-align: baseline;'  title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
-                                    //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoFactura + "</span>"))
+                        		$("<div>")                                    
                                     .append($(ColocarEstado(options.data.Estado, options.data.EstadoFactura)))
                                     .appendTo(container);
                         	}
@@ -777,23 +776,23 @@ DocAdquirienteApp.controller('ModalPagosController', function ModalPagosControll
 	}
 
 
-	$("#form").on("submit", function (e) {
-
-		var idseg = $scope.IdSeguridad;
-		var valor_pago = $scope.valoraPagar;
-		if (idseg != null && idseg != undefined) {
-			$scope.EnProceso = true;
-			$("#button").dxButton({ visible: false });
-			$http.get('/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + valor_pago).then(function (response) {
-				//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
-				$scope.NumVerificacion = 1;
-				//Ruta servicio
-				var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
-				$scope.Idregistro = response.data.IdRegistro;
-				var Vpago = window.open(RutaServicio + response.data.Ruta, "_blank");
-				$timeout(function callAtTimeout() {
-					VerificarEstado();
-				}, 60000);
+    $("#form").on("submit", function (e) {        
+        
+        var idseg = $scope.IdSeguridad;
+        var valor_pago = $scope.valoraPagar;        
+        if (idseg != null && idseg != undefined) {
+            $scope.EnProceso = true;
+            $("#button").dxButton({ visible: false });
+            $http.get('/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + valor_pago + '&usuario=' + UsuarioSession).then(function (response) {
+                //Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
+                $scope.NumVerificacion = 1;
+                //Ruta servicio
+                var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
+                $scope.Idregistro = response.data.IdRegistro;
+                var Vpago = window.open(RutaServicio + response.data.Ruta, "_blank");                
+                $timeout(function callAtTimeout() {
+                    VerificarEstado();
+                }, 60000);
 
 			}, function (error) {
 

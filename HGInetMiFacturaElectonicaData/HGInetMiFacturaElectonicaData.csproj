@@ -98,6 +98,7 @@
     <Compile Include="Enumerables\CategoriaEstado.cs" />
     <Compile Include="Enumerables\EstadoEmail.cs" />
     <Compile Include="Enumerables\EstadoPago.cs" />
+    <Compile Include="Enumerables\EstadoPlan.cs" />
     <Compile Include="Enumerables\Habilitacion.cs" />
     <Compile Include="Enumerables\InterOperabilidad.cs" />
     <Compile Include="Enumerables\OperacionesBD.cs" />

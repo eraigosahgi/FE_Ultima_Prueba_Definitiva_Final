@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaController.Properties;
@@ -12,6 +13,7 @@ using HGInetMiFacturaElectronicaWeb.Seguridad.Plugins;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.ObjetosComunes.PagosEnLinea;
 using LibreriaGlobalHGInet.Peticiones;
 using Newtonsoft.Json;
@@ -160,13 +162,51 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+        /// <summary>
+        /// Retorna los documentos del plan solicitado
+        /// </summary>
+        /// <param name="IdPlan"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/DocumentosPlanes")]
+        public IHttpActionResult DocumentosPlanes(Guid IdPlan)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
 
-		/// <summary>
-		/// Obtiene el documento por ID de seguridad.
-		/// </summary>
-		/// <param name="id_seguridad"></param>
-		/// <returns></returns>
-		[HttpGet]
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorPlan(IdPlan);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+                    d.DatFechaDocumento,
+                    Cod_Facturador=d.StrEmpresaFacturador,
+                    NombreFacturador = d.TblEmpresasFacturador.StrRazonSocial
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene el documento por ID de seguridad.
+        /// </summary>
+        /// <param name="id_seguridad"></param>
+        /// <returns></returns>
+        [HttpGet]
 		public IHttpActionResult Get(System.Guid id_seguridad)
 		{
 			try
@@ -219,8 +259,88 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		/// <summary>
+		/// Obtiene el documento por ID de seguridad en la vista de acuse de recibo
+		/// </summary>
+		/// <param name="id_seguridad">Id de seguridad del documento</param>
+		/// <param name="usuario">Usuario activo en la session</param>
+		/// <returns></returns>
+		[HttpGet]
+		[Route("api/ConsultarAcuse")]
+		public IHttpActionResult ConsultarAcuse(System.Guid id_seguridad,string usuario)
+		{
+			try
+			{
 
-		public IHttpActionResult Get(System.Guid id_seguridad, string email)
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+				List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
+
+				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+				if (datos == null)
+				{
+					return NotFound();
+				}
+
+				var retorno = datos.Select(d => new
+				{
+					NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+					IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+					NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+					Cufe = d.StrCufe,
+					IdSeguridad = d.StrIdSeguridad,
+					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+					MotivoRechazo = d.StrAdquirienteMvoRechazo,
+					FechaRespuesta = d.DatAdquirienteFechaRecibo,
+					Xml = d.StrUrlArchivoUbl,
+					d.StrUrlArchivoUbl,
+					Pdf = d.StrUrlArchivoPdf,
+					RespuestaVisible = (d.IntAdquirienteRecibo != 0) ? true : false,
+					CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
+					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
+					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
+					Estatus = Pago.VerificarSaldo(id_seguridad),
+					XmlAcuse = d.StrUrlAcuseUbl,
+					EstadoCat = d.IdCategoriaEstado,
+					EstadoFactura = DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado),
+					obligado = d.StrEmpresaFacturador,
+					prefijo = d.StrPrefijo,
+					documento = d.IntNumero,
+					pago = d.TblPagosElectronicos.Select(p => new
+					{
+						p.StrIdRegistro,
+						p.IntEstadoPago
+					}
+					
+					//Se coloca este codigo adicional, para validar si el documento tiene un pago pendiente, y si es asi, este debe retornar un segundo objeto
+					//con el codigo unico de pago en la plataforma de FE, para poder hacer la consulta desde acuse y validar en la plataforma intermedia el estado del documento
+					).Where(x => x.IntEstadoPago.Equals(EstadoPago.Pendiente.GetHashCode()) || x.IntEstadoPago.Equals(EstadoPago.Pendiente2.GetHashCode()))
+				});
+
+				//Si el documento ya tiene acuse de recibo, no guarda en auditoria que el documento esta visto
+				if (datos[0].IntAdquirienteRecibo==0)
+				{
+
+					try
+					{
+						Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+						var doc = datos.FirstOrDefault();
+						clase_auditoria.Crear(doc.StrIdSeguridad, Guid.Empty, doc.StrEmpresaFacturador, ProcesoEstado.AcuseVisto, TipoRegistro.Actualizacion, Procedencia.Usuario, (!string.IsNullOrEmpty(usuario) ? usuario : string.Empty), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(ProcesoEstado.AcuseVisto.GetHashCode())), string.Empty, doc.StrPrefijo, Convert.ToString(doc.IntNumero));
+					}
+					catch (Exception)
+					{ } 
+				}
+				
+
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		public IHttpActionResult Get(System.Guid id_seguridad, string email,string Usuario)
 		{
 			try
 			{
@@ -235,7 +355,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 				Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
-				bool respuesta = false;
+				//bool respuesta = false;
+				List<MensajeEnvio> respuesta=null;
 
 				//Valida el estado del documento para saber que tipo de notificacion enviar
 				if (datos.FirstOrDefault().IdCategoriaEstado < CategoriaEstado.ValidadoDian.GetHashCode())
@@ -244,7 +365,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 				else
 				{
-					respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email);
+					respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email,"",Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario))? Usuario:"");
 				}
 				return Ok(respuesta);
 			}
@@ -433,12 +554,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="motivo_rechazo"></param>
 		/// <returns></returns>
 		[HttpPost]
-		public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri]short estado, [FromUri]string motivo_rechazo)
+		public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri]short estado, [FromUri]string motivo_rechazo,[FromUri]string usuario)
 		{
 			try
 			{
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo);
+				List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
 
 				if (datos == null)
 				{
@@ -669,12 +790,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="mail"></param>        
 		/// <returns></returns>
 		[HttpPost]
-		public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri] string mail)
+		public IHttpActionResult Post([FromUri]System.Guid id_seguridad, [FromUri] string mail,[FromUri]string Usuario)
 		{
 			try
 			{
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				bool email = ctl_documento.ReenviarRespuestaAcuse(id_seguridad, mail);
+				bool email = ctl_documento.ReenviarRespuestaAcuse(id_seguridad, mail, Usuario);
 
 				if (email)
 				{
@@ -833,14 +954,18 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <summary>
 		/// Obtiene link para el pago de factura
 		/// </summary>
-		/// <param name="strIdSeguridad"></param>        
+		/// <param name="strIdSeguridad">Id de seguridad del documento</param>
+		/// <param name="tipo_pago">Tipo de pago, por defecto esta en 0</param>
+		/// <param name="registrar_pago">Indica si debe registrar el pago en base de datos</param>
+		/// <param name="valor_pago">Valor del pago</param>
+		/// <param name="usuario">Usuario que guarda el pago</param>
 		/// <returns></returns>
 
-		public IHttpActionResult Get(System.Guid strIdSeguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0)
+		public IHttpActionResult Get(System.Guid strIdSeguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0,string usuario= "")
 		{
 			Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-			var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago);
+			var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago, usuario);
 			return Ok(datos);
 
 		}

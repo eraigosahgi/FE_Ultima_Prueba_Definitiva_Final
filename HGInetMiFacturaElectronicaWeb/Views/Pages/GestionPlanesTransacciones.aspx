@@ -8,10 +8,10 @@
     <script src="../../Scripts/Pages/PlanesTransacciones.js"></script>
     <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
 
-    <div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController">
+    <div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController" data-ng-init="consumido=false" ng-cloak >
 
 
-        <div class="col-md-12">
+        <div class="col-md-12" data-ng-init="PanelNotificacion=true">
             <div class="panel panel-white">
                 <div class="panel-heading">
                     <h6 class="panel-title">Gestión de Planes Transaccionales</h6>
@@ -58,22 +58,37 @@
 
                                     <div class="col-md-6 col-xs-12" style="margin-top: 16px; z-index: 9;">
                                         <div class="dx-field-label" style="font-size: 14px;">Estado:<strom style="color: red;">*</strom></div>
-                                        <div class="dx-field-value">
+
+                                        <div class="dx-field-value" data-ng-hide="consumido">
                                             <div id="EstadoPlan" style="margin-left: -4%;"></div>
                                         </div>
+
+                                        <div class="dx-field-value" data-ng-show="consumido">
+                                            <label style="margin-top: 9px; margin-bottom: 1%; font-size: 14px; color: grey;"><B>Procesado</B></label>
+                                        </div>
+
                                     </div>
 
-                                    <div class="col-md-12" style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index: 0;">
-                                        <label style="margin: 0px; margin-top: 16px; margin-bottom: 1%; font-size: 14px;">Observaciones:</label>
+                                    <div class="col-md-6 text-right" data-ng-show="PanelNotificacion">
+                                            <label style="margin-top: 50px; ">Enviar notificación de recarga:</label>
+                                            <div id="Email"></div>
+                                        </div>
+
+                                    <div class="col-md-12" style="margin-top: -10px; z-index: 0;">
+
+                                        <label style="margin: 0px; margin-top: 16px; font-size: 14px;">Observaciones: </label>
+                                        
+
+
                                         <div id="txtObservaciones"></div>
                                     </div>
-
                                 </div>
+
+
 
                                 <div class="dx-fieldset">
                                     <div id="summary"></div>
                                 </div>
-
                             </div>
 
                             <div class="col-lg-12 text-right">

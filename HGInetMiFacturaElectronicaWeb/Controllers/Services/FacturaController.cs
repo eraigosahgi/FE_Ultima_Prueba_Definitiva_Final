@@ -225,8 +225,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 documento_obj.Documento = id;
                 documento_obj.Fecha = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha();
 
-                // procesa el documento
-                DocumentoRespuesta resultado = Ctl_Documentos.Procesar(id_peticion, documento_obj, TipoDocumento.Factura, null, null);
+				// procesa el documento
+				DocumentoRespuesta resultado = null; // Ctl_Documentos.Procesar(id_peticion, documento_obj, TipoDocumento.Factura, null, null);
 
 
                 return resultado;

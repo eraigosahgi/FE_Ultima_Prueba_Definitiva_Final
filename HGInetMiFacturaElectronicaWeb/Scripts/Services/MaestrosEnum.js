@@ -32,7 +32,16 @@ var AppMaestrosEnum = angular.module('AppMaestrosEnum', ['dx'])
                 DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
                 return $q.reject(response.data);
             });
-        }       
+        }
+		//Obtiene los datos de la sesion activa
+        this.ObtenerSesionUsuario = function () {
+        	return $http.get('/api/SesionDatosUsuario/').then(function (response) {
+        		return response.data;
+        	}, function (response) {
+        		DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+        		return $q.reject(response.data);
+        	});
+        }
 });
 
 

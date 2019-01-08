@@ -56,5 +56,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos
 		[BsonElement("StrResultadoProceso")]
 		public string StrResultadoProceso { get; set; }
 
+		[BsonElement("StrPrefijo")]
+		public string StrPrefijo { get; set; }
+
+		[BsonElement("StrNumero")]
+		public string StrNumero { get; set; }
+
 	}
 }

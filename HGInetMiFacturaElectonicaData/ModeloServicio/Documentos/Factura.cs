@@ -207,7 +207,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Archivos anexos del documento
 		/// </summary>
 		public Anexo ArchivoAnexos { get; set; }
-		
+		/// <summary>
+        /// Id de seguridad del plan de donde se va a descontar el presente documento
+        /// </summary>
+        public Guid IdPlan { get; set; }
 
 		#endregion
 

@@ -9,6 +9,15 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
     var nit = location.search.split('nit=')[1];
    
+
+    var restabler = location.search.split('restablecer')[1];
+    if (restabler) {
+    	$('#modal_restablecer_clave').removeAttr('style');
+    	$('#modal_restablecer_clave').attr("style", "display:block; padding-right: 17px;");
+    	$('#modal_restablecer_clave').addClass("modal fade in");
+    	$('#panelfondo').addClass("modal-backdrop fade in");
+    }
+
     $scope.formOptions = {
 
         readOnly: false,
@@ -178,9 +187,16 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 
     //Opciones de botón -  valida el formulario
     $scope.buttonCerrarRestablecer = {
-        text: "CERRAR"
+    	text: "CERRAR",
+    	onClick: function (e) {
+    		$scope.cerrarmodal();
+    	}
     };
 
+    $scope.cerrarmodal = function () {
+    	$('#modal_restablecer_clave').removeAttr('style');
+    	$('#panelfondo').removeClass("modal-backdrop fade in");
+    }
 
     //Opciones de botón -  valida el formulario
     $scope.buttonRestablecer = {

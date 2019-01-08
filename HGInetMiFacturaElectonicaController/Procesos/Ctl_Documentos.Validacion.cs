@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
@@ -32,6 +33,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				respuesta.DescripcionProceso = "Valida la información del documento.";
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
 				respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
+				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
 
 				if (tipo_doc == TipoDocumento.Factura)
 					documento_obj = Validar((Factura)documento_obj, resolucion);
@@ -54,7 +56,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// Valida si la respuesta generó error 
 		/// </summary>
 		/// <param name="respuesta">información de respuesta</param>
-		public static void ValidarRespuesta(DocumentoRespuesta respuesta)
+		public static void ValidarRespuesta(DocumentoRespuesta respuesta,string resultadoproceso="")
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 
@@ -69,9 +71,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					try
 					{
-						clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(respuesta.IdProceso), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(respuesta.IdEstado), TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, respuesta.Error.Mensaje, string.Format("{0}", respuesta.Error.Codigo));
+						clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(respuesta.IdProceso),TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, string.Format("{0}", respuesta.Error.Codigo), respuesta.Error.Mensaje, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
 					}
-					catch (Exception) { throw; }
+					catch (Exception) { }
 
 					throw new ApplicationException(respuesta.Error.Mensaje);
 				}
@@ -79,9 +81,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
-				clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(respuesta.IdProceso), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(respuesta.IdEstado), TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, string.Empty, string.Empty);
+				clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(respuesta.IdProceso),  TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, respuesta.DescripcionProceso, resultadoproceso, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
 			}
-			catch (Exception) { throw; }
+			catch (Exception) { }
 		}
 	}
 }

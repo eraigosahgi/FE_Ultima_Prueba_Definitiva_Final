@@ -1,4 +1,5 @@
 ﻿using HGInetDIANServicios;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -41,6 +42,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				try
 				{   // procesa el documento
 					item_respuesta = Procesar(documento, consulta_documento);
+                    //Se hace validación para restar el documento de las transacciones procesadas de ese plan
+                    if (item_respuesta.IdProceso== ProcesoEstado.FinalizacionErrorDian.GetHashCode())
+                    {
+                        Ctl_PlanesTransacciones Controller = new Ctl_PlanesTransacciones();
+                        Controller.DescontarDocumentosFallidos(item_respuesta.IdPlan, 1);
+                    }
+
 				}
 				catch (Exception excepcion)
 				{
@@ -161,14 +169,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				FechaRecepcion = documento.DatFechaIngreso,
 				FechaUltimoProceso = documento.DatFechaActualizaEstado,
 				IdDocumento = documento.StrIdSeguridad.ToString(),
-				Identificacion = documento.StrEmpresaFacturador,
+				Identificacion = documento.StrEmpresaAdquiriente,
 				IdProceso = proceso_actual.GetHashCode(),
 				MotivoRechazo = documento.StrAdquirienteMvoRechazo,
 				NumeroResolucion = documento.StrNumResolucion,
 				Prefijo = documento.StrPrefijo,
 				ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
 				UrlPdf = documento.StrUrlArchivoPdf,
-				UrlXmlUbl = documento.StrUrlArchivoUbl
+				UrlXmlUbl = documento.StrUrlArchivoUbl,
+                IdPlan = Guid.Parse(documento.StrIdPlanTransaccion.ToString()),
+				IdentificacionObligado = documento.StrEmpresaFacturador
 			};
 
 			if (respuesta.ProcesoFinalizado == 1)
@@ -276,14 +286,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (respuesta.IdProceso < ProcesoEstado.FirmaXml.GetHashCode())
 				{
 					respuesta = UblFirmar(documento, ref respuesta, ref documento_result);
-					ValidarRespuesta(respuesta);
+					ValidarRespuesta(respuesta,respuesta.UrlXmlUbl);
 				}
 
 				//// comprime el archivo xml firmado
 				if (respuesta.IdProceso < ProcesoEstado.CompresionXml.GetHashCode())
 				{
 					respuesta = UblComprimir(documento, ref respuesta, ref documento_result);
-					ValidarRespuesta(respuesta);
+					ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 				}
 
 				// envía el archivo zip con el xml firmado a la DIAN
@@ -343,7 +353,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if ((documento.IntEnvioMail == null || documento.IntEnvioMail == true) && empresa.IntEnvioMailRecepcion == false)
 							{
 								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
-								ValidarRespuesta(respuesta);
+								//ValidarRespuesta(respuesta);
 							}
 							else
 							{
@@ -362,6 +372,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Actualiza la categoria con el nuevo estado
 								respuesta.IdEstado = documento.IdCategoriaEstado;
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
+								ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
 							}
 
 						}
@@ -383,6 +394,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//Actualiza la categoria con el nuevo estado
 							respuesta.IdEstado = documento.IdCategoriaEstado;
 							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
+							ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
 						}
 					}
 					else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && (documento.IntEnvioMail == null || documento.IntEnvioMail == false) && empresa.IntEnvioMailRecepcion == true)
@@ -391,7 +403,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Ctl_Documento documento_tmp = new Ctl_Documento();
 						documento.IntEnvioMail = true;
 						documento_tmp.Actualizar(documento);
-						ValidarRespuesta(respuesta);
+						//ValidarRespuesta(respuesta);
 
 					}
 				}
@@ -401,7 +413,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 
 					Ctl_Documento ctl_documento = new Ctl_Documento();
-					bool email = ctl_documento.ReenviarRespuestaAcuse(documento.StrIdSeguridad, documento.TblEmpresasFacturador.StrMail);
+					bool email = ctl_documento.ReenviarRespuestaAcuse(documento.StrIdSeguridad, documento.TblEmpresasFacturador.StrMail,"");
 
 					if (email)
 					{

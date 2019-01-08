@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Configuracion;
+﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -37,6 +39,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (!facturador_electronico.IntObligado)
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
+
+
+				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
+				Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
+				List<ObjPlanEnProceso> ListaPlanes = new List<ObjPlanEnProceso>();
+				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(documentos[0].DatosObligado.Identificacion, documentos.Count());
+
+				if (ListaPlanes == null)
+					throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
 
 				// genera un id único de la plataforma
 				Guid id_peticion = Guid.NewGuid();
@@ -123,14 +134,38 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
+
+				int i = 0;
+				//Planes y transacciones
+				foreach (var item in documentos)
+				{
+					if (item != null)
+					{
+						if (ListaPlanes[i].reservado >= ListaPlanes[i].enProceso)
+						{
+							i = i + 1;
+						}
+						item.IdPlan = Guid.Parse(ListaPlanes[i].plan.ToString());
+						ListaPlanes[i].reservado = ListaPlanes[i].reservado + 1;
+					}
+				}
+				//Planes y transacciones
 				Parallel.ForEach<Factura>(documentos, item =>
 				{
 					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 					respuesta.Add(item_respuesta);
 				});
+				////Planes y transacciones
+				foreach (ObjPlanEnProceso plan in ListaPlanes)
+				{
+					plan.procesado = respuesta.Where(x => x.IdPlan == plan.plan).Where(x => x.DescuentaSaldo == true).Count();
 
+					Planestransacciones.ConciliarPlanProceso(plan);
+				}
+				////Planes y transacciones
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
+				//Valida la plataforma para envio de sms
 				if (plataforma_datos.EnvioSms)
 				{
 					Ctl_Sms.EnviarSms(respuesta, id_peticion, facturador_electronico, documentos);
@@ -157,16 +192,54 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns>resultado del proceso</returns>
 		private static DocumentoRespuesta Procesar(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
 		{
-			DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
+			DocumentoRespuesta item_respuesta = new DocumentoRespuesta() { DescuentaSaldo = false };
+
+			Ctl_DocumentosAudit _auditoria = new Ctl_DocumentosAudit();
 
 			//Si el documento enviado ya existe retorna la informacion que se tiene almacenada
 			bool doc_existe = false;
+
+			//radicado del documento
+			Guid id_radicado = Guid.NewGuid();
+
+			string prefijo = item.Prefijo;
+			string numero = item.Documento.ToString();
+
+			ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
+			string proceso_txt = Enumeracion.GetDescription(proceso_actual);
+			CategoriaEstado estado = Enumeracion.GetEnumObjectByValue<CategoriaEstado>(Ctl_Documento.ObtenerCategoria(proceso_actual.GetHashCode()));
+
+			string mensaje = string.Empty;
+
+			// valida que el documento no sea nulo
+			if (item == null)
+			{
+				mensaje = "Se encontró un documento inválido (sin datos).";
+
+				item_respuesta = new DocumentoRespuesta()
+				{
+					Aceptacion = 0,
+					DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+					DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido),
+					DocumentoTipo = TipoDocumento.Factura.GetHashCode(),
+					Documento = 0,
+					Error = new LibreriaGlobalHGInet.Error.Error(mensaje, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION),
+					EstadoDian = null,
+					FechaRecepcion = fecha_actual,
+					FechaUltimoProceso = fecha_actual,
+					IdProceso = proceso_actual.GetHashCode(),
+					ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+					IdEstado = estado.GetHashCode(),
+					IdPeticion = id_peticion,
+					DescuentaSaldo = false
+				};
+				return item_respuesta;
+			}
 
 			try
 			{
 				if (string.IsNullOrEmpty(item.NumeroResolucion))
 					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
-
 
 				Ctl_Documento num_doc = new Ctl_Documento();
 
@@ -175,42 +248,61 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (numero_documento != null)
 				{
-					item_respuesta = Ctl_Documento.Convertir(numero_documento);
-					doc_existe = true;
-					throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya existe para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
-				}
-				TblEmpresasResoluciones resolucion = null;
+					mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
 
+					item_respuesta = Ctl_Documento.Convertir(numero_documento);
+					item_respuesta.IdPeticion = id_peticion;
+					id_radicado = Guid.Parse(item_respuesta.IdDocumento);
+					doc_existe = true;
+
+					throw new ApplicationException(mensaje);
+				}
+
+				TblEmpresasResoluciones resolucion = null;
 				try
 				{
-					ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
-
-					LogExcepcion.Guardar(exTMP);
-
 					// filtra la resolución del documento
 					resolucion = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion)
 																			&& _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
 																			&& _resolucion_doc.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
-
 				}
 				catch (Exception excepcion)
 				{
-					throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1}", item.NumeroResolucion, facturador_electronico.StrIdentificacion));
+					mensaje = string.Format("No se encontró la resolución '{0}' para el Facturador Electrónico '{1}'", item.NumeroResolucion, facturador_electronico.StrIdentificacion);
+
+					throw new ApplicationException(mensaje);
 				}
 
 				if (resolucion == null)
-					throw new ApplicationException(string.Format("No se encontró la resolución {0} para el Facturador Electrónico {1} con prefijo '{2}'", item.NumeroResolucion, facturador_electronico.StrIdentificacion, item.Prefijo));
+				{
+					throw new ApplicationException(string.Format("No se encontró la resolución '{0}' para el Facturador Electrónico '{1}' con prefijo '{2}'", item.NumeroResolucion, facturador_electronico.StrIdentificacion, item.Prefijo));
+				}
 
 
+				try
+				{
+					mensaje = Enumeracion.GetDescription(estado);
+					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
+				}
+				catch (Exception) { }
 
 				// realiza el proceso de envío a la DIAN del documento
-				item_respuesta = Procesar(id_peticion, item, TipoDocumento.Factura, resolucion, facturador_electronico);
+				item_respuesta = Procesar(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion, facturador_electronico);
+
 			}
 			catch (Exception excepcion)
 			{
+				mensaje = string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message);
 
-				ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
 				LogExcepcion.Guardar(excepcion);
+
+				try
+				{
+					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
+				}
+				catch (Exception) { }
+
+
 				if (!doc_existe)
 				{
 					item_respuesta = new DocumentoRespuesta()
@@ -222,7 +314,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido),
 						DocumentoTipo = TipoDocumento.Factura.GetHashCode(),
 						Documento = item.Documento,
-						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
+						Error = new LibreriaGlobalHGInet.Error.Error(mensaje, LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
 						EstadoDian = null,
 						FechaRecepcion = fecha_actual,
 						FechaUltimoProceso = fecha_actual,
@@ -234,7 +326,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Prefijo = item.Prefijo,
 						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
 						UrlPdf = "",
-						UrlXmlUbl = ""
+						UrlXmlUbl = "",
+						IdEstado = estado.GetHashCode(),
+						IdPeticion = id_peticion,
+						IdentificacionObligado = (item.DatosObligado != null) ? item.DatosObligado.Identificacion : "",
+						DescuentaSaldo = false
 					};
 				}
 				else

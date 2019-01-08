@@ -35,9 +35,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 respuesta.DescripcionProceso = "Genera información en estandar UBL.";
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
                 respuesta.IdProceso = ProcesoEstado.UBL.GetHashCode();
-				
-                //Genera Ubl
-                if (tipo_doc == TipoDocumento.Factura)
+				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
+
+				//Genera Ubl
+				if (tipo_doc == TipoDocumento.Factura)
                     documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (Factura)documento_obj, tipo_doc, empresa, resolucion);
                 else if (tipo_doc == TipoDocumento.NotaCredito)
                     documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaCredito)documento_obj, tipo_doc, empresa, resolucion);
@@ -68,9 +69,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 respuesta.DescripcionProceso = "Almacena el archivo XML con la información en estandar UBL.";
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
                 respuesta.IdProceso = ProcesoEstado.AlmacenaXML.GetHashCode();
+				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
 
-                // almacena el xml
-                documento_result = Ctl_Ubl.Almacenar(documento_result);
+				// almacena el xml
+				documento_result = Ctl_Ubl.Almacenar(documento_result);
 
                 PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData; 
 
@@ -80,8 +82,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//Actualiza Documento en Base de Datos
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-                documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-
+                documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso); 
+				documentoBd.IdCategoriaEstado = respuesta.IdEstado;
 				documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
 				documentoBd.StrEmpresaAdquiriente = respuesta.Identificacion;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
@@ -112,9 +114,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 respuesta.DescripcionProceso = "Firma el archivo XML con la información en estandar UBL.";
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
                 respuesta.IdProceso = ProcesoEstado.FirmaXml.GetHashCode();
+				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
 
-                // obtiene la información de configuración del certificado digital
-                CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
+				// obtiene la información de configuración del certificado digital
+				CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
 
                 // obtiene la empresa certificadora
                 EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
@@ -132,8 +135,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
                 documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
                 documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+				documentoBd.IdCategoriaEstado = respuesta.IdEstado;
 
-                Ctl_Documento documento_tmp = new Ctl_Documento();
+				Ctl_Documento documento_tmp = new Ctl_Documento();
                 documentoBd = documento_tmp.Actualizar(documentoBd);
             }
             catch (Exception excepcion)
@@ -159,12 +163,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.CompresionXml);
                 respuesta.FechaUltimoProceso = Fecha.GetFecha();
                 respuesta.IdProceso = ProcesoEstado.CompresionXml.GetHashCode();
+				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
 
-                documento_result.NombreZip = Ctl_Compresion.Comprimir(documento_result);
+				documento_result.NombreZip = Ctl_Compresion.Comprimir(documento_result);
 
                 //Actualiza Documento en Base de Datos
                 documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
                 documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+				documentoBd.IdCategoriaEstado = respuesta.IdEstado;
 
                 Ctl_Documento documento_tmp = new Ctl_Documento();
                 documento_tmp.Actualizar(documentoBd);

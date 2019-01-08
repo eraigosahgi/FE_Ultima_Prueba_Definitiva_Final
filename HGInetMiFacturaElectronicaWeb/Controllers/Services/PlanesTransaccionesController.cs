@@ -1,6 +1,9 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
+using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,10 +56,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     id = d.StrIdSeguridad,
                     Fecha = d.DatFecha,
                     EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
-                    Estado = (d.IntEstado==0) ? "Habilitado": (d.IntEstado == 1) ? "Inhabilitado" : "Consumido",
+                    Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
                     Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
                     Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
-                    Tipoproceso = (d.IntTipoProceso == 1) ? "CORTESíA" : (d.IntTipoProceso == 2) ? "COMPRA" : "POST-PAGO"
+                    Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
+                    CodigoEstado = d.IntEstado
                 });
 
                 return Ok(retorno);
@@ -67,6 +71,189 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             }
         }
 
+
+
+        #region Vista Facturador
+        [HttpGet]
+        [Route("api/ConsultarPlanesFacturador")]
+        public IHttpActionResult ConsultarPlanesFacturador(string Identificacion, string TipoPlan, string Estado, int TipoFecha, DateTime FechaInicio, DateTime FechaFin)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+                datosSesion.Add(Sesion.DatosEmpresa);
+
+                TblEmpresas datosempresa = datosSesion.FirstOrDefault();                
+
+                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+                var datos = ctl_PlanesTransacciones.Obtener(Identificacion, TipoPlan, Estado, TipoFecha, FechaInicio, FechaFin);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
+                    Usuario = d.StrUsuario,
+                    Valor = d.IntValor,
+                    TCompra = d.IntNumTransaccCompra,
+                    TProcesadas = d.IntNumTransaccProcesadas,
+                    id = d.StrIdSeguridad,
+                    Fecha = d.DatFecha,
+                    EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
+                    Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
+                    Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
+                    Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
+                    Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
+                    CodigoEstado = d.IntEstado
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("api/ConsultarPlanesAdministrador")]
+        public IHttpActionResult ConsultarPlanesAdministrador(string Identificacion, string TipoPlan, string Estado, int TipoFecha, DateTime FechaInicio, DateTime FechaFin)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+                datosSesion.Add(Sesion.DatosEmpresa);
+
+                TblEmpresas datosempresa = datosSesion.FirstOrDefault();
+
+                if (datosempresa.IntAdministrador)
+                {
+                    if (string.IsNullOrEmpty(Identificacion) || datosempresa.StrIdentificacion.Equals(Identificacion))
+                    {
+                        Identificacion = "*";
+                    }
+                }
+
+                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+                var datos = ctl_PlanesTransacciones.ObtenerPlanesAmin(Identificacion, TipoPlan, Estado, TipoFecha, FechaInicio, FechaFin);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
+                    Usuario = d.StrUsuario,
+                    Valor = d.IntValor,
+                    TCompra = d.IntNumTransaccCompra,
+                    TProcesadas = d.IntNumTransaccProcesadas,
+                    id = d.StrIdSeguridad,
+                    Fecha = d.DatFecha,
+                    EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
+                    Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
+                    Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
+                    Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
+                    Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
+                    CodigoEstado = d.IntEstado
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/ConsultarFacturadorBolsa")]
+        public IHttpActionResult ConsultarFacturadorBolsa(string Identificacion)
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+                datosSesion.Add(Sesion.DatosEmpresa);
+
+
+
+                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+                var datos = ctl_PlanesTransacciones.FacturadoresBolsa(Sesion.DatosEmpresa.StrIdentificacion);
+
+                if (datos == null)
+                {
+                    return NotFound();
+                }
+
+                var retorno = datos.Select(d => new
+                {
+                    ID = d.StrIdentificacion,
+                    Texto = d.StrRazonSocial
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/ConsultarBolsaAdmin")]
+        public IHttpActionResult ConsultarBolsaAdmin()
+        {
+            try
+            {
+                Sesion.ValidarSesion();
+
+                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+                datosSesion.Add(Sesion.DatosEmpresa);
+
+                if (Sesion.DatosEmpresa.IntAdministrador)
+                {
+                    Ctl_Empresa Controlador = new Ctl_Empresa();
+                    var datos = Controlador.ObtenerFacturadores();
+
+                    if (datos == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var retorno = datos.Select(d => new
+                    {
+                        ID = d.StrIdentificacion,
+                        Texto = d.StrRazonSocial
+                    });
+
+                    return Ok(retorno);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception excepcion)
+            {
+                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+            }
+        }
+        #endregion
         /// <summary>
         /// Obtiene el plan por Id de Seguridad
         /// </summary>       
@@ -127,7 +314,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         /// <param name="StrEmpresaFacturador"></param>
         /// <param name="Tipo"></param>
         /// <returns></returns>
-        public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador)
+        public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email)
         {
             try
             {
@@ -146,7 +333,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 ObjPlanTransacciones.StrObservaciones = StrObservaciones;
                 ObjPlanTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
 
-                clase_planes.Crear(ObjPlanTransacciones);
+                clase_planes.Crear(ObjPlanTransacciones, Envia_email);
 
                 return Ok();
             }

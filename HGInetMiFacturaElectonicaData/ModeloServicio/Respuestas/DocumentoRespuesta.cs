@@ -121,15 +121,23 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Descripción de la categoria actual del documento en la Plataforma.
 		/// </summary>
 		public string DescripcionEstado { get; set; }
-
-		/// <summary>
+        /// <summary>
+        /// Indica si descuenta del saldo del plan en caso de que si lo reciba la plataforma
+        /// </summary>
+        public bool DescuentaSaldo { get; set; }
+        /// <summary>
+        /// Id de seguridad del plan de donde se va a descontar el presente documento
+        /// </summary>
+        public Guid IdPlan { get; set; }
+		
+        /// <summary>
 		/// Número de identificación del obligado.
 		/// </summary>
 		public string IdentificacionObligado { get; set; }
 
-		/// <summary>
-		/// id único de identificación de la plataforma
-		/// </summary>
-		public Guid IdPeticion { get; set; }
-	}
+        /// <summary>
+        /// id único de identificación de la plataforma
+        /// </summary>
+        public Guid IdPeticion { get; set; }
+    }
 }

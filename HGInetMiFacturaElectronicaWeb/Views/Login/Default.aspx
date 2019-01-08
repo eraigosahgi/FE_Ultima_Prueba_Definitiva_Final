@@ -149,7 +149,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div id="EncabezadoModal" class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">×</button>
+                                    <button type="button" class="close" data-dismiss="modal" data-ng-click="cerrarmodal();">×</button>
                                     <h5 style="margin-bottom: 10px;" class="modal-title">Restablecer Contraseña</h5>
                                 </div>
 
@@ -183,6 +183,7 @@
             </div>
         </div>
     </div>
+	<div id="panelfondo"></div>
     <%--/ Modal Restablecer Contraseña--%>
 </body>
 </html>

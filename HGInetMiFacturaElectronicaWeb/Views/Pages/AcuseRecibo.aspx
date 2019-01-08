@@ -175,7 +175,8 @@
                         <!--data-ng-if="DetalleAcuse"-->
                         <div>
                             <!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
-                            <div id="PanelOpcionesAdquiriente" style="margin-top: -25px" data-ng-show="{{datos.CamposVisibles && datos.EstadoCat =!400}}" class="dx-fieldset">
+                            <div id="PanelOpcionesAdquiriente" style="margin-top: -25px" data-ng-show="{{datos.CamposVisibles && datos.EstadoCat !=400}}" class="dx-fieldset">
+
 
                                 <form data-ng-submit="onFormSubmit($event)">
 
@@ -213,7 +214,7 @@
 
                                 <a href="{{datos.Pdf}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; ">Pdf</a>
                                 
-                                <a href="{{datos.Xml}}" target="_blank" data-ng-show="{{datos.EstadoCat ==300}}" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important;  font-size: 14px; ">Xml</a>
+                                <a href="{{datos.Xml}}" target="_blank" data-ng-show="{{datos.EstadoCat !=400}}" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important;  font-size: 14px; ">Xml</a>
 								 
                                 <a href="{{datos.XmlAcuse}}" target="_blank" class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; " data-ng-show="datos.XmlAcuse != null">Xml Acuse</a>
                                 

@@ -13,7 +13,7 @@ document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Pages/Mo
 var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [];
-
+var UsuarioSession = "";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'ModalEmpresasApp']);
@@ -33,9 +33,15 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             tipo_filtro_fecha = 1,
            Datos_Tipo = "0";
 
-    $http.get('/api/DatosSesion/').then(function (response) {
-        codigo_facturador = response.data[0].Identificacion;
-        consultar();
+    //$http.get('/api/DatosSesion/').then(function (response) {
+    //	codigo_facturador = response.data[0].Identificacion;
+    //	UsuarioSession = data[0].IdSeguridad;
+        
+    //});
+    SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
+    	codigo_facturador = data[0].IdentificacionEmpresa;
+    	UsuarioSession = data[0].IdSeguridad;
+    	consultar();
     });
 
     SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {
@@ -174,18 +180,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                         onValueChanged: function (data) {
                             codigo_adquiriente = data.value;
                         }
-                    },
-                    //Facturador: {
-                    //    placeholder: "Ingrese Identificación del Facturador",
-                    //    showClearButton: true,
-                    //    onValueChanged: function (data) {
-                    //        cod_facturador = data.value;                            
-                    //    },
-                    //    onKeyPress: function (data) {
-                    //        if(data.event.key=='F4')
-                    //            $('#modal_Buscar_empresa').modal('show');
-                    //    }
-                    //}
+                    },                  
             }
 
         $("#txtempresaasociada").dxTextBox({
@@ -420,10 +415,7 @@ function consultar() {
 
                            $("<div>")
                            
-                               .append($(ColocarEstado(options.data.Estado, options.data.EstadoCategoria)))
-                                //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='" + options.data.EstadoCategoria + "'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='" + options.data.EstadoCategoria + "'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='" + options.data.EstadoCategoria + "'" : " class='badge badge-info'  title='" + options.data.EstadoCategoria + "'") + " style='font-size:5px; top:-10px; padding: 5px 5px 5px 5px;!important border-radius: 0px !important;'  >E</span> <label  title='" + options.data.EstadoCategoria + "'>" + options.data.EstadoCategoria + "</label>"))
-                             //  .append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='Fallido DIAN'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='Validado DIAN'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='Envío DIAN'" : " class='badge badge-info'  title='Recibido Plataforma'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoCategoria + "</span>"))
-                               //.append($("<span " + ((options.data.Estado == '400') ? " class='badge badge-danger'  title='" + options.data.EstadoCategoria + "'" : (options.data.Estado == '300') ? " class='badge badge-success'  title='" + options.data.EstadoCategoria + "'" : (options.data.Estado == '200') ? " class='badge badge-envioDian'   title='" + options.data.EstadoCategoria + "'" : " class='badge badge-info'  title='" + options.data.EstadoCategoria + "'") + " style ='border-radius: 0px !important;'  >" + options.data.EstadoCategoria + "</span>"))                               
+                               .append($(ColocarEstado(options.data.Estado, options.data.EstadoCategoria)))                               
                                .appendTo(container);
                        }
                    },
@@ -610,7 +602,7 @@ DocObligadoApp.controller('EnvioEmailController', function EnvioEmailController(
                     throw new DOMException("El e-mail de destino es obligatorio.");
                 }
                 $('#wait').show();
-                $http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino).then(function (responseEnvio) {
+                $http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino + '&Usuario=' + UsuarioSession).then(function (responseEnvio) {
                     $('#wait').hide();
                     var respuesta = responseEnvio.data;
 

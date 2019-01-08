@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using HGInetMiFacturaElectonicaController;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
@@ -191,7 +192,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 }
 
                 Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
-                bool respuesta = clase_email.Bienvenida(datos_empresa, datos_usuario);
+				List<MensajeEnvio> respuesta = clase_email.Bienvenida(datos_empresa, datos_usuario);
 
                 return Ok(respuesta);
             }

@@ -1,5 +1,6 @@
 ﻿using HGInetDIANServicios;
 using HGInetDIANServicios.DianFactura;
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaController.ServiciosDian;
@@ -82,6 +83,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
 			System.Threading.Thread.Sleep(5000);
+
+			//Auditoria
+
+			try
+			{			
+				Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+				clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.CompresionXml, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, "Compresión Archivo Zip", url_ppal_zip, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
+			}
+			catch (Exception e) { }
 
 			return acuse;
 		}
@@ -171,6 +181,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				respuesta.EstadoDian.EstadoDocumento = resultado_doc.Estado.GetHashCode();
 				respuesta.EstadoDian.FechaConsulta = fecha_actual;
 				respuesta.EstadoDian.UrlXmlRespuesta = string.Format(@"{0}/{1}/{2}", url_ppal_respuesta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, archivo_xml);
+
+
+				//Auditoria
+
+				try
+				{
+					string respuestadian= Newtonsoft.Json.JsonConvert.SerializeObject(respuesta.EstadoDian);
+					Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+					clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.ConsultaDian, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, Enumeracion.GetDescription(ProcesoEstado.ConsultaDian), respuestadian, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
+				}
+				catch (Exception e) { }
 
 
 				string detalle_dian = string.Empty;

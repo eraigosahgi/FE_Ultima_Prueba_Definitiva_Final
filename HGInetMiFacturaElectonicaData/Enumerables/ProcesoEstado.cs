@@ -75,14 +75,34 @@ namespace HGInetMiFacturaElectonicaData
 		PendienteEnvioProveedorAcuse = 13,
 
 		[Description("Consulta DIAN")]
-		[AmbientValue("publico")]
+		[AmbientValue("privado")]
 		[Category("200")]
 		ConsultaDian = 14,
 
 		[Description("Pago Documento")]
-		[AmbientValue("publico")]
+		[AmbientValue("privado")]
 		[Category("300")]
 		PagoDocumento = 15,
+
+		[Description("Acuse Visto")]
+		[AmbientValue("privado")]
+		[Category("300")]
+		AcuseVisto = 16,
+
+		[Description("Almacenamiento Formato PDF")]
+		[AmbientValue("privado")]
+		[Category("100")]
+		PDFAlmacenamiento = 20,
+
+		[Description("Generación Formato PDF")]
+		[AmbientValue("privado")]
+		[Category("100")]
+		PDFGeneracion = 22,
+		
+		[Description("Almacenamiento Anexo ZIP")]
+		[AmbientValue("privado")]
+		[Category("100")]
+		AnexoAlmacenamiento = 24,
 
 		[Description("Error Dian, Finaliza Proceso")]
 		[AmbientValue("publico")]

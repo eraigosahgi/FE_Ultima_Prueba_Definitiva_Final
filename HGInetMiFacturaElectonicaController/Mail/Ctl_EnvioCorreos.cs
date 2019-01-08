@@ -9,6 +9,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectonicaData.ModeloServicio.General;
 using HGInetUBL;
+using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
@@ -183,11 +184,15 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="empresa">Datos del Obligado o el Adquiriente</param>
 		/// <param name="datos_usuario">datos del usuario</param>
 		/// <returns></returns>
-		public bool Bienvenida(TblEmpresas empresa, TblUsuarios usuario, string nuevo_email = "")
+		public List<MensajeEnvio> Bienvenida(TblEmpresas empresa, TblUsuarios usuario, string nuevo_email = "")
 		{
 
 			try
 			{
+
+				//Objeto de respuesta
+				List<MensajeEnvio> Mensaje = new List<MensajeEnvio>();
+
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				string fileName = string.Empty;
@@ -259,10 +264,11 @@ namespace HGInetMiFacturaElectonicaController
 
 						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-						clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+						Mensaje = clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+
 					}
 				}
-				return true;
+				return Mensaje;
 
 			}
 			catch (Exception ex)
@@ -279,12 +285,12 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="identificacion">Nit del Facturador</param>
 		/// <param name="mail">email al que se va enviar el correo</param>
 		/// <returns></returns>
-		public bool EnviaSerial(string identificacion, string mail)
+		public List<MensajeEnvio> EnviaSerial(string identificacion, string mail)
 		{
 			try
 			{
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-
+				List<MensajeEnvio> respuestamail = new List<MensajeEnvio>();
 
 				if (string.IsNullOrEmpty(identificacion))
 					throw new ApplicationException("No se encontró información de la empresa.");
@@ -342,13 +348,13 @@ namespace HGInetMiFacturaElectonicaController
 
 						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-						clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+						respuestamail = clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
 					}
 				}
 
 
 
-				return true;
+				return respuestamail;
 			}
 			catch (Exception ex)
 			{
@@ -363,7 +369,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="telefono"></param>
 		/// <param name="nuevo_email">indica el e-mail del destinatario (si es igual a null, se envía a el email de la empresa del adquiriente)</param>
 		/// <returns></returns>
-		public bool NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "")
+		public List<MensajeEnvio> NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "", string id_peticion = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "",ProcesoEstado estado = ProcesoEstado.EnvioEmailAcuse)
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
@@ -394,23 +400,39 @@ namespace HGInetMiFacturaElectonicaController
 				remitente.Nombre = empresa_obligado.StrRazonSocial;
 				remitente.Email = empresa_obligado.StrMail;
 
-
 				// obtiene los datos del adquiriente
 				Ctl_Empresa adquiriente = new Ctl_Empresa();
 				TblEmpresas empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaAdquiriente);
+
+				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 
 				// recibe el email el adquiriente
 				DestinatarioEmail destinatario = new DestinatarioEmail();
 				destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
 
 				if (string.IsNullOrWhiteSpace(nuevo_email))
-					destinatario.Email = empresa_adquiriente.StrMail;
+				{		destinatario.Email = empresa_adquiriente.StrMail;
+					correos_destino.Add(destinatario);
+				}
 				else
-					destinatario.Email = nuevo_email;
-
-				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
-				correos_destino.Add(destinatario);
-
+				{
+					if (nuevo_email.Contains(";"))
+					{
+						foreach (var item_mail in Coleccion.ConvertirLista(nuevo_email, ';'))
+						{
+							// recibe el email el adquiriente
+							destinatario = new DestinatarioEmail();
+							destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
+							destinatario.Email = item_mail;
+							correos_destino.Add(destinatario);
+						}
+					}
+					else
+					{
+						destinatario.Email = nuevo_email;
+						correos_destino.Add(destinatario);
+					}
+				}
 
 				// envía correo electrónico con copia de auditoría
 				List<DestinatarioEmail> correos_copia_oculta = null;
@@ -596,31 +618,31 @@ namespace HGInetMiFacturaElectonicaController
 							mensaje = mensaje.Replace("{ObservacionAnexos}", "");
 							mensaje = mensaje.Replace("{UrlAnexos}", "");
 						}
-
 						// envía el correo electrónico
 						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
-
-
 					}
 				}
-				return true;
+				try
+				{
+					Guid peticion = (string.IsNullOrEmpty(id_peticion) ? Guid.Empty : Guid.Parse(id_peticion));
+					string mensaje = (string.IsNullOrEmpty(id_peticion) ? "Reenvio de Documento" : "Notificación Documento");
+					clase_auditoria.Crear(documento.StrIdSeguridad, peticion, empresa_obligado.StrIdentificacion, estado,  TipoRegistro.Proceso, procedencia, usuario, mensaje, string.Empty, respuesta_email, documento.StrPrefijo, Convert.ToString(documento.IntNumero));
+				}
+				catch (Exception) { throw; }
+				return respuesta_email;
 			}
 			catch (Exception excepcion)
 			{
 				try
 				{
-					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, string.Format("NotificacionDocumento - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException));
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, estado, TipoRegistro.Proceso, procedencia, usuario, string.Format("NotificacionDocumento - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero));
 				}
 				catch (Exception) { throw; }
 
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
-			try
-			{
-				clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, "NotificacionDocumento", string.Empty, respuesta_email);
-			}
-			catch (Exception) { throw; }
+
 		}
 
 		/// <summary>
@@ -630,7 +652,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="telefono"></param>
 		/// <param name="nuevo_email">indica el e-mail del destinatario (si es igual a null, se envía a el email de la empresa del adquiriente)</param>
 		/// <returns></returns>
-		public bool NotificacionBasica(TblDocumentos documento, string telefono, string nuevo_email = "")
+		public List<MensajeEnvio> NotificacionBasica(TblDocumentos documento, string telefono, string nuevo_email = "", string id_peticion = "")
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
@@ -837,31 +859,36 @@ namespace HGInetMiFacturaElectonicaController
 							mensaje = mensaje.Replace("{ObservacionAnexos}", "");
 							mensaje = mensaje.Replace("{UrlAnexos}", "");
 						}
-
 						// envía el correo electrónico
 						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 
-
 					}
 				}
-				return true;
+
+				try
+				{
+					Guid peticion = (string.IsNullOrEmpty(id_peticion) ? Guid.Empty : Guid.Parse(id_peticion));
+					string mensaje = (string.IsNullOrEmpty(id_peticion) ? "Reenvio de Documento" : "Notificación Documento");
+					clase_auditoria.Crear(documento.StrIdSeguridad, peticion, empresa_obligado.StrIdentificacion, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, mensaje, string.Empty, respuesta_email, documento.StrPrefijo, Convert.ToString(documento.IntNumero));
+					//clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, "NotificacionBasica", string.Empty, respuesta_email, documento.StrPrefijo, Convert.ToString(documento.IntNumero));
+				}
+				catch (Exception) { throw; }
+
+				return respuesta_email;
+
 			}
 			catch (Exception excepcion)
 			{
 				try
 				{
-					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, string.Format("NotificacionBasica - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException));
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado),TipoRegistro.Proceso, Procedencia.Mail, string.Empty, string.Format("NotificacionBasica - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero));
 				}
 				catch (Exception) { throw; }
 
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
-			try
-			{
-				clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, "NotificacionBasica", string.Empty, respuesta_email);
-			}
-			catch (Exception) { throw; }
+
 		}
 
 		/// <summary>
@@ -932,7 +959,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// </summary>
 		/// <param name="documento">Datos del documento</param>
 		/// <returns></returns>
-		public bool RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente, string ruta_archivo, string mail = "")
+		public List<MensajeEnvio> RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente, string ruta_archivo, string mail = "", Procedencia procedencia= Procedencia.Plataforma,string usuario="")
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
@@ -948,21 +975,52 @@ namespace HGInetMiFacturaElectonicaController
 				remitente.Nombre = adquiriente.StrRazonSocial;
 				remitente.Email = adquiriente.StrMail;
 
-				// recibe el email el Facturador Electrónico
+				//// recibe el email el Facturador Electrónico
+				//DestinatarioEmail destinatario = new DestinatarioEmail();
+				//if (mail == "")
+				//{
+				//	destinatario.Nombre = facturador.StrRazonSocial;
+				//	destinatario.Email = facturador.StrMail;
+				//}
+				//else
+				//{
+				//	destinatario.Nombre = mail;
+				//	destinatario.Email = mail;
+				//}
+
+
+				//correos_destino.Add(destinatario);
+
+				// recibe el email el adquiriente
+				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 				DestinatarioEmail destinatario = new DestinatarioEmail();
-				if (mail == "")
+				destinatario.Nombre = facturador.StrRazonSocial;
+
+				if (string.IsNullOrWhiteSpace(mail))
 				{
-					destinatario.Nombre = facturador.StrRazonSocial;
 					destinatario.Email = facturador.StrMail;
+					correos_destino.Add(destinatario);
 				}
 				else
 				{
-					destinatario.Nombre = mail;
-					destinatario.Email = mail;
+					if (mail.Contains(";"))
+					{
+						foreach (var item_mail in Coleccion.ConvertirLista(mail, ';'))
+						{
+							// recibe el email el adquiriente
+							destinatario = new DestinatarioEmail();
+							destinatario.Nombre = facturador.StrRazonSocial;
+							destinatario.Email = item_mail;
+							correos_destino.Add(destinatario);
+						}
+					}
+					else
+					{
+						destinatario.Email = mail;
+						correos_destino.Add(destinatario);
+					}
 				}
 
-				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
-				correos_destino.Add(destinatario);
 
 				// plantilla Html
 				if (!string.IsNullOrWhiteSpace(ruta_plantilla_html))
@@ -1044,20 +1102,27 @@ namespace HGInetMiFacturaElectonicaController
 							adjunto.Nombre = nombre_xml;
 							archivos.Add(adjunto);
 						}
-
+						
 						// envía el correo electrónico
 						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 
+						try
+						{
+							Guid peticion = Guid.Empty ;
+							string strmensaje = asunto;
+							clase_auditoria.Crear(documento.StrIdSeguridad, peticion, facturador.StrIdentificacion, ProcesoEstado.EnvioRespuestaAcuse, TipoRegistro.Proceso, procedencia, usuario, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(ProcesoEstado.EnvioRespuestaAcuse.GetHashCode())), string.Empty, respuesta_email, documento.StrPrefijo, Convert.ToString(documento.IntNumero));							
+						}
+						catch (Exception) { throw; }
 					}
 				}
 
-				return true;
+				return respuesta_email;
 			}
 			catch (Exception excepcion)
 			{
 				try
 				{
-					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, string.Format("RespuestaAcuse - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException));
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado),  TipoRegistro.Proceso, Procedencia.Mail, string.Empty, string.Format("RespuestaAcuse - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero));
 				}
 				catch (Exception) { throw; }
 
@@ -1066,7 +1131,7 @@ namespace HGInetMiFacturaElectonicaController
 
 			try
 			{
-				clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, "RespuestaAcuse", string.Empty, respuesta_email);
+				clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documento.IntIdEstado), TipoRegistro.Proceso, Procedencia.Mail, string.Empty, "RespuestaAcuse", string.Empty, respuesta_email, documento.StrPrefijo, Convert.ToString(documento.IntNumero));
 			}
 			catch (Exception) { throw; }
 
@@ -1108,12 +1173,12 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="identificacion">Nit del Facturador</param>
 		/// <param name="mail">email al que se va enviar el correo</param>
 		/// <returns></returns>
-		public bool EnviaNotificacionRecarga(string identificacion, string mail, TblPlanesTransacciones plan)
+		public List<MensajeEnvio> EnviaNotificacionRecarga(string identificacion, string mail, TblPlanesTransacciones plan)
 		{
 			try
 			{
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-
+				List<MensajeEnvio> RespuestaMail = new List<MensajeEnvio>();
 
 				if (string.IsNullOrEmpty(identificacion))
 					throw new ApplicationException("No se encontró información de la empresa.");
@@ -1142,8 +1207,8 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
-						mensaje = mensaje.Replace("{Tipo}", (plan.IntTipoProceso == 1) ? "Cortesía" : (plan.IntTipoProceso == 2) ? "Compra" : "Post-Pago");
-						mensaje = mensaje.Replace("{Estado}", (plan.IntEstado == 0) ? "Habilitado" : (plan.IntEstado == 1) ? "Inhabilitado" : "Consumido");
+						mensaje = mensaje.Replace("{Tipo}", (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(plan.IntTipoProceso))));
+						mensaje = mensaje.Replace("{Estado}", (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(plan.IntEstado))));
 						mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
 						mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString("N0"));
 						mensaje = mensaje.Replace("{Observaciones}", (plan.StrObservaciones != null) ? plan.StrObservaciones : "Ninguna");
@@ -1175,14 +1240,12 @@ namespace HGInetMiFacturaElectonicaController
 
 						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-						clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+						RespuestaMail = clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
 
 					}
 				}
 
-
-
-				return true;
+				return RespuestaMail;
 			}
 			catch (Exception ex)
 			{

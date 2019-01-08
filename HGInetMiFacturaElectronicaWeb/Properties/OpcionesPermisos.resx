@@ -147,11 +147,17 @@
   <data name="ConsultaProveedores" xml:space="preserve">
     <value>1363</value>
   </data>
+  <data name="ConsultarPlanesAdmin" xml:space="preserve">
+    <value>1345</value>
+  </data>
   <data name="DocumetosAdmin" xml:space="preserve">
     <value>1343</value>
   </data>
   <data name="Empresas" xml:space="preserve">
     <value>1332</value>
+  </data>
+  <data name="EstadoPlanes" xml:space="preserve">
+    <value>1314</value>
   </data>
   <data name="FacturacionElectronicaPrincipal" xml:space="preserve">
     <value>13</value>

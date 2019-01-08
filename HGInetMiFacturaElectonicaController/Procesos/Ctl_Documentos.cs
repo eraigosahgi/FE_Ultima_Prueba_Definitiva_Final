@@ -45,7 +45,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="resolucion">resolución del documento</param>
 		/// <param name="empresa">facturador electrónico del documento</param>
 		/// <returns>resultado del proceso</returns>
-		public static DocumentoRespuesta Procesar(Guid id_peticion, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa)
+		public static DocumentoRespuesta Procesar(Guid id_peticion, Guid id_radicado, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa)
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 
@@ -77,7 +77,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Error = null,
 					FechaRecepcion = fecha_actual,
 					FechaUltimoProceso = fecha_actual,
-					IdDocumento = Guid.NewGuid().ToString(),
+					IdDocumento = id_radicado.ToString(),
 					Identificacion = documento_obj.DatosAdquiriente.Identificacion,
 					IdProceso = ProcesoEstado.Recepcion.GetHashCode(),
 					MotivoRechazo = "",
@@ -129,16 +129,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						Ctl_Documento documento_tmp = new Ctl_Documento();
 
-						//guarda documento en BD
+						//convierte documento para BD
 						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, tipo_doc);
+                        documentoBd.StrIdPlanTransaccion = documento_obj.IdPlan;
 
-						// genera el xml en ubl
-						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
+                        // genera el xml en ubl
+                        respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta,respuesta.UrlXmlUbl);
 
 						// almacena el xml en ubl
 						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
+						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 						//Asignación de Cufe a documento_obj 
 						documento_obj.Cufe = documento_result.CUFE;
@@ -148,7 +149,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// almacena Formato
 						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
+						ValidarRespuesta(respuesta,respuesta.UrlPdf);
 
 						// almacena Anexos enviados
 						if (documento_obj.ArchivoAnexos != null)
@@ -156,7 +157,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (empresa.IntManejaAnexos)
 							{
 								respuesta = GuardarAnexo(documento_obj.ArchivoAnexos, documentoBd, ref respuesta, ref documento_result);
-								ValidarRespuesta(respuesta);
+								ValidarRespuesta(respuesta, respuesta.UrlAnexo);
 							}
 							else
 							{
@@ -167,7 +168,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								respuesta.IdDocumento = null;
 								respuesta.UrlPdf = null;
 								respuesta.UrlXmlUbl = null;
-								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("El Facturador {0} no se ecnuentra habilitado para el procesamiento de anexos", documentoBd.StrEmpresaFacturador), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("El Facturador Electrónico {0} no se encuentra habilitado para el procesamiento de anexos", documentoBd.StrEmpresaFacturador), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 								ValidarRespuesta(respuesta);
 							}
 						}
@@ -214,15 +215,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						//Crea el documento en BD
 						try
-						{
-
-							documentoBd = documento_tmp.Crear(documentoBd);
-
+						{                          
+                            documentoBd = documento_tmp.Crear(documentoBd);
 							documentoBd.TblEmpresasResoluciones = resolucion;
-
-							//Realiza el registro del log.
-							clase_auditoria.Crear(documentoBd.StrIdSeguridad, id_peticion, documentoBd.StrEmpresaFacturador, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documentoBd.IntIdEstado), Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado), TipoRegistro.Creacion, Procedencia.Plataforma, string.Empty, string.Empty, string.Empty);
-
+							respuesta.DescuentaSaldo = true;
+							respuesta.IdPlan = documentoBd.StrIdPlanTransaccion.Value;
 						}
 						catch (Exception excepcion)
 						{
@@ -233,27 +230,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// firma el xml
 						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
-
-						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
-						{
-							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
-							documento_tmp = new Ctl_Documento();
-							documentoBd = documento_tmp.Actualizar(documentoBd);
-						}
-						ValidarRespuesta(respuesta);
-
-
+						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
+						
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta);
 
 						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
 						{
 							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
 							documento_tmp = new Ctl_Documento();
 							documentoBd = documento_tmp.Actualizar(documentoBd);
+							//ValidarRespuesta(respuesta);
 						}
-						ValidarRespuesta(respuesta);
-
 
 						// envía el archivo zip con el xml firmado a la DIAN
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result);
@@ -264,12 +253,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documento_tmp = new Ctl_Documento();
 							documentoBd = documento_tmp.Actualizar(documentoBd);
 						}
-						ValidarRespuesta(respuesta);
+						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 
 
 						//Valida estado del documento en la Plataforma de la DIAN
-						respuesta = Consultar(documentoBd, empresa, ref respuesta);
-
+						respuesta = Consultar(documentoBd, empresa, ref respuesta);						
 
 						// envía el mail de documentos al adquiriente
 						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
@@ -278,7 +266,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 							{
 								respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
-								ValidarRespuesta(respuesta);
+								//ValidarRespuesta(respuesta);
 							}
 							else
 							{
@@ -306,7 +294,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documento_tmp = new Ctl_Documento();
 							documentoBd.IntEnvioMail = true;
 							documento_tmp.Actualizar(documentoBd);
-							ValidarRespuesta(respuesta);
+							//ValidarRespuesta(respuesta);
 						}
 
 					}

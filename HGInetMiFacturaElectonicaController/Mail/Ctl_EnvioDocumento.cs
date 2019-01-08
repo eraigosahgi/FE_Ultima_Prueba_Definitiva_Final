@@ -7,6 +7,7 @@ using LibreriaGlobalHGInet.Enumerables;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
@@ -66,9 +67,10 @@ namespace HGInetMiFacturaElectonicaController
 								throw new ArgumentException(string.Format("El Email {0} no esta bien formado", item.Email));
 
 							Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
-							bool envio = clase_email.NotificacionDocumento(list_tbldocumento.FirstOrDefault(), list_tbldocumento.FirstOrDefault().TblEmpresasFacturador.StrTelefono, item.Email);
+							List<MensajeEnvio> envio = clase_email.NotificacionDocumento(list_tbldocumento.FirstOrDefault(), list_tbldocumento.FirstOrDefault().TblEmpresasFacturador.StrTelefono, item.Email);
 
-							if (envio == true)
+							//if (envio == true)
+							if (envio != null)
 							{
 								item_respuesta.IdEstado = EstadoEmail.Exitoso.GetHashCode();
 								item_respuesta.Mensaje = Enumeracion.GetDescription(EstadoEmail.Exitoso);
