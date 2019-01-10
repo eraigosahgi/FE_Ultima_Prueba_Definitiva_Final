@@ -1,11 +1,11 @@
 ﻿DevExpress.localization.locale('es-ES');
 
-var path = window.location.pathname;
-var ruta = window.location.href;
-ruta = ruta.replace(path, "/");
-document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
+//var path = window.location.pathname;
+//var ruta = window.location.href;
+//ruta = ruta.replace(path, "/");
+//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
 
-document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
+//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
 
 var TipoConsulta;
 var email_destino = "";

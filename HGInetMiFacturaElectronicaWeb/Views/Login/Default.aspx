@@ -69,7 +69,7 @@
         }
     </style>
 
-    <script src="../../Scripts/Pages/Autenticacion.js"></script>
+    <script src="../../Scripts/Pages/Autenticacion.js?vjs201910"></script>
 
 </head>
 <body class="login-container" style="background-color: #eeeded">

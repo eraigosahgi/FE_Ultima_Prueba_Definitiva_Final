@@ -79,10 +79,6 @@
     </style>
 </head>
 <body>
-    <!--Link de Js con logica de WebApi-->
-    <!--<script src="../../Scripts/Pages/ModalPagos.js"></script>-->
-
-
     <!--Pagos-->
     <div data-ng-controller="ModalPagosController">
         <div id="modal_Pagos_Electronicos" class="modal fade" style="top: 20%; display: none; z-index: 999999;">
@@ -98,7 +94,7 @@
                             <!-- JS Modal Pagos-->
 
                             <!-- CONTENEDOR PRINCIPAL -->
-                            <div data-ng-app="ModalpagosApp" data-ng-controller="ModalPagosController" data-ng-init="Stop=true" data-ng-init="SinpagosPendiente=true">
+                            <div data-ng-app="ModalpagosApp" data-ng-controller="ModalPagosController" data-ng-init="Stop=true" data-data-ng-init="SinpagosPendiente=true">
                                 <form id="form" action="your-action">
 
                                     <div class="col-md-12">

@@ -1,9 +1,9 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-var path = window.location.pathname;
-var ruta = window.location.href;
-ruta = ruta.replace(path, "/");
-document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
+//var path = window.location.pathname;
+//var ruta = window.location.href;
+//ruta = ruta.replace(path, "/");
+//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
 
 angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento'])
 

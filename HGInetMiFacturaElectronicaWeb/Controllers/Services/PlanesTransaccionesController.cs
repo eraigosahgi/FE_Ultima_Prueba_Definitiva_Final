@@ -13,379 +13,389 @@ using System.Web.Http;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
-    public class PlanesTransaccionesController : ApiController
-    {
+	public class PlanesTransaccionesController : ApiController
+	{
 
-        /// <summary>
-        /// Obtiene la lista 
-        /// </summary>        
-        /// <returns></returns>
-        [HttpGet]
-        public IHttpActionResult Get([FromUri]string Identificacion)
-        {
-            try
-            {
-                Sesion.ValidarSesion();
+		/// <summary>
+		/// Obtiene la lista 
+		/// </summary>        
+		/// <returns></returns>
+		[HttpGet]
+		public IHttpActionResult Get([FromUri]string Identificacion)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
 
-                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+				List<TblEmpresas> datosSesion = new List<TblEmpresas>();
 
-                datosSesion.Add(Sesion.DatosEmpresa);
+				datosSesion.Add(Sesion.DatosEmpresa);
 
-                TblEmpresas datosempresa = datosSesion.FirstOrDefault();
+				TblEmpresas datosempresa = datosSesion.FirstOrDefault();
 
-                if (datosempresa.IntAdministrador)
-                {
-                    Identificacion = "*";
-                }
+				if (datosempresa.IntAdministrador)
+				{
+					Identificacion = "*";
+				}
 
-                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-                var datos = ctl_PlanesTransacciones.Obtener(Identificacion);
+				Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+				var datos = ctl_PlanesTransacciones.Obtener(Identificacion);
 
-                if (datos == null)
-                {
-                    return NotFound();
-                }
+				if (datos == null)
+				{
+					return NotFound();
+				}
 
-                var retorno = datos.Select(d => new
-                {
-                    Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
-                    Usuario = d.StrUsuario,
-                    Valor = d.IntValor,
-                    TCompra = d.IntNumTransaccCompra,
-                    TProcesadas = d.IntNumTransaccProcesadas,
-                    id = d.StrIdSeguridad,
-                    Fecha = d.DatFecha,
-                    EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
-                    Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
-                    Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
-                    Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
-                    Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
-                    CodigoEstado = d.IntEstado
-                });
+				var retorno = datos.Select(d => new
+				{
+					Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
+					Usuario = d.StrUsuario,
+					Valor = d.IntValor,
+					TCompra = d.IntNumTransaccCompra,
+					TProcesadas = d.IntNumTransaccProcesadas,
+					id = d.StrIdSeguridad,
+					Fecha = d.DatFecha,
+					EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
+					Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
+					Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
+					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
+					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
+					CodigoEstado = d.IntEstado
+				});
 
-                return Ok(retorno);
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
-
-
-
-        #region Vista Facturador
-        [HttpGet]
-        [Route("api/ConsultarPlanesFacturador")]
-        public IHttpActionResult ConsultarPlanesFacturador(string Identificacion, string TipoPlan, string Estado, int TipoFecha, DateTime FechaInicio, DateTime FechaFin)
-        {
-            try
-            {
-                Sesion.ValidarSesion();
-
-                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
-
-                datosSesion.Add(Sesion.DatosEmpresa);
-
-                TblEmpresas datosempresa = datosSesion.FirstOrDefault();                
-
-                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-                var datos = ctl_PlanesTransacciones.Obtener(Identificacion, TipoPlan, Estado, TipoFecha, FechaInicio, FechaFin);
-
-                if (datos == null)
-                {
-                    return NotFound();
-                }
-
-                var retorno = datos.Select(d => new
-                {
-                    Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
-                    Usuario = d.StrUsuario,
-                    Valor = d.IntValor,
-                    TCompra = d.IntNumTransaccCompra,
-                    TProcesadas = d.IntNumTransaccProcesadas,
-                    id = d.StrIdSeguridad,
-                    Fecha = d.DatFecha,
-                    EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
-                    Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
-                    Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
-                    Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
-                    Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
-                    CodigoEstado = d.IntEstado
-                });
-
-                return Ok(retorno);
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
-
-
-        [HttpGet]
-        [Route("api/ConsultarPlanesAdministrador")]
-        public IHttpActionResult ConsultarPlanesAdministrador(string Identificacion, string TipoPlan, string Estado, int TipoFecha, DateTime FechaInicio, DateTime FechaFin)
-        {
-            try
-            {
-                Sesion.ValidarSesion();
-
-                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
-
-                datosSesion.Add(Sesion.DatosEmpresa);
-
-                TblEmpresas datosempresa = datosSesion.FirstOrDefault();
-
-                if (datosempresa.IntAdministrador)
-                {
-                    if (string.IsNullOrEmpty(Identificacion) || datosempresa.StrIdentificacion.Equals(Identificacion))
-                    {
-                        Identificacion = "*";
-                    }
-                }
-
-                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-                var datos = ctl_PlanesTransacciones.ObtenerPlanesAmin(Identificacion, TipoPlan, Estado, TipoFecha, FechaInicio, FechaFin);
-
-                if (datos == null)
-                {
-                    return NotFound();
-                }
-
-                var retorno = datos.Select(d => new
-                {
-                    Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
-                    Usuario = d.StrUsuario,
-                    Valor = d.IntValor,
-                    TCompra = d.IntNumTransaccCompra,
-                    TProcesadas = d.IntNumTransaccProcesadas,
-                    id = d.StrIdSeguridad,
-                    Fecha = d.DatFecha,
-                    EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
-                    Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
-                    Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
-                    Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
-                    Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
-                    CodigoEstado = d.IntEstado
-                });
-
-                return Ok(retorno);
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
-
-        [HttpGet]
-        [Route("api/ConsultarFacturadorBolsa")]
-        public IHttpActionResult ConsultarFacturadorBolsa(string Identificacion)
-        {
-            try
-            {
-                Sesion.ValidarSesion();
-
-                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
-
-                datosSesion.Add(Sesion.DatosEmpresa);
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 
 
-                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-                var datos = ctl_PlanesTransacciones.FacturadoresBolsa(Sesion.DatosEmpresa.StrIdentificacion);
+		#region Vista Facturador
+		[HttpGet]
+		[Route("api/ConsultarPlanesFacturador")]
+		public IHttpActionResult ConsultarPlanesFacturador(string Identificacion, string TipoPlan, string Estado, int TipoFecha, DateTime FechaInicio, DateTime FechaFin)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
 
-                if (datos == null)
-                {
-                    return NotFound();
-                }
+				List<TblEmpresas> datosSesion = new List<TblEmpresas>();
 
-                var retorno = datos.Select(d => new
-                {
-                    ID = d.StrIdentificacion,
-                    Texto = d.StrRazonSocial
-                });
+				datosSesion.Add(Sesion.DatosEmpresa);
 
-                return Ok(retorno);
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				TblEmpresas datosempresa = datosSesion.FirstOrDefault();
 
-        [HttpGet]
-        [Route("api/ConsultarBolsaAdmin")]
-        public IHttpActionResult ConsultarBolsaAdmin()
-        {
-            try
-            {
-                Sesion.ValidarSesion();
+				Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+				var datos = ctl_PlanesTransacciones.Obtener(Identificacion, TipoPlan, Estado, TipoFecha, FechaInicio, FechaFin);
 
-                List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+				if (datos == null)
+				{
+					return NotFound();
+				}
 
-                datosSesion.Add(Sesion.DatosEmpresa);
+				var retorno = datos.Select(d => new
+				{
+					Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
+					Usuario = d.StrUsuario,
+					Valor = d.IntValor,
+					TCompra = d.IntNumTransaccCompra,
+					TProcesadas = d.IntNumTransaccProcesadas,
+					id = d.StrIdSeguridad,
+					Fecha = d.DatFecha,
+					EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
+					Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
+					Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
+					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
+					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
+					CodigoEstado = d.IntEstado
+				});
 
-                if (Sesion.DatosEmpresa.IntAdministrador)
-                {
-                    Ctl_Empresa Controlador = new Ctl_Empresa();
-                    var datos = Controlador.ObtenerFacturadores();
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-                    if (datos == null)
-                    {
-                        return NotFound();
-                    }
 
-                    var retorno = datos.Select(d => new
-                    {
-                        ID = d.StrIdentificacion,
-                        Texto = d.StrRazonSocial
-                    });
+		[HttpGet]
+		[Route("api/ConsultarPlanesAdministrador")]
+		public IHttpActionResult ConsultarPlanesAdministrador(string Identificacion, string TipoPlan, string Estado, int TipoFecha, DateTime FechaInicio, DateTime FechaFin)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
 
-                    return Ok(retorno);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
-        #endregion
-        /// <summary>
-        /// Obtiene el plan por Id de Seguridad
-        /// </summary>       
-        /// <param name="IdSeguridad"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public IHttpActionResult Get(System.Guid IdSeguridad)
-        {
-            try
-            {
-                Sesion.ValidarSesion();
+				List<TblEmpresas> datosSesion = new List<TblEmpresas>();
 
-                Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-                List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.Obtener(IdSeguridad);
+				datosSesion.Add(Sesion.DatosEmpresa);
 
-                if (datos == null)
-                {
-                    return NotFound();
-                }
+				TblEmpresas datosempresa = datosSesion.FirstOrDefault();
 
-                var retorno = datos.Select(d => new
-                {
-                    Empresa = d.StrEmpresaUsuario,
-                    Usuario = d.StrUsuario,
-                    Valor = d.IntValor,
-                    TCompra = d.IntNumTransaccCompra,
-                    TProcesadas = d.IntNumTransaccProcesadas,
-                    id = d.StrIdSeguridad,
-                    Fecha = d.DatFecha,
-                    CodigoEmpresaFacturador = d.TblEmpresas.StrIdentificacion,
-                    EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
-                    Tipo = d.IntTipoProceso,
-                    Observaciones = d.StrObservaciones,
-                    Estado = d.IntEstado
+				if (datosempresa.IntAdministrador)
+				{
+					if (string.IsNullOrEmpty(Identificacion) || datosempresa.StrIdentificacion.Equals(Identificacion))
+					{
+						Identificacion = "*";
+					}
+				}
 
-                });
+				Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+				var datos = ctl_PlanesTransacciones.ObtenerPlanesAmin(Identificacion, TipoPlan, Estado, TipoFecha, FechaInicio, FechaFin);
 
-                return Ok(retorno);
+				if (datos == null)
+				{
+					return NotFound();
+				}
 
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				var retorno = datos.Select(d => new
+				{
+					Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
+					Usuario = d.StrUsuario,
+					Valor = d.IntValor,
+					TCompra = d.IntNumTransaccCompra,
+					TProcesadas = d.IntNumTransaccProcesadas,
+					id = d.StrIdSeguridad,
+					Fecha = d.DatFecha,
+					EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
+					Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(d.IntEstado)),
+					Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
+					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
+					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
+					CodigoEstado = d.IntEstado
+				});
 
-        /// <summary>
-        /// Crea una transaccion ya existente en plan de transaccion
-        /// </summary>
-        /// <param name="IntTipoProceso"></param>
-        /// <param name="StrEmpresa Sesion"></param>
-        /// <param name="StrUsuario Sesion"></param>
-        /// <param name="IntNumTransaccCompra"></param>
-        /// <param name="IntNumTransaccProcesadas"></param>
-        /// <param name="IntValor"></param>
-        /// <param name="BitProcesada"></param>
-        /// <param name="StrObservaciones"></param>
-        /// <param name="StrEmpresaFacturador"></param>
-        /// <param name="Tipo"></param>
-        /// <returns></returns>
-        public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email)
-        {
-            try
-            {
-                Sesion.ValidarSesion();
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-                Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
+		[HttpGet]
+		[Route("api/ConsultarFacturadorBolsa")]
+		public IHttpActionResult ConsultarFacturadorBolsa(string Identificacion)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
 
-                TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
-                ObjPlanTransacciones.IntTipoProceso = IntTipoProceso;
-                ObjPlanTransacciones.StrEmpresaUsuario = StrEmpresa;
-                ObjPlanTransacciones.StrUsuario = StrUsuario;
-                ObjPlanTransacciones.IntNumTransaccCompra = IntNumTransaccCompra;
-                ObjPlanTransacciones.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
-                ObjPlanTransacciones.IntValor = IntValor;
-                ObjPlanTransacciones.IntEstado = Estado;
-                ObjPlanTransacciones.StrObservaciones = StrObservaciones;
-                ObjPlanTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
+				List<TblEmpresas> datosSesion = new List<TblEmpresas>();
 
-                clase_planes.Crear(ObjPlanTransacciones, Envia_email);
+				datosSesion.Add(Sesion.DatosEmpresa);
 
-                return Ok();
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
 
-        /// <summary>
-        /// Crea una transaccion ya existente en plan de transaccion
-        /// </summary>
-        /// <param name="IntTipoProceso"></param>
-        /// <param name="StrEmpresa Sesion"></param>
-        /// <param name="StrUsuario Sesion"></param>
-        /// <param name="IntNumTransaccCompra"></param>
-        /// <param name="IntNumTransaccProcesadas"></param>
-        /// <param name="IntValor"></param>
-        /// <param name="BitProcesada"></param>
-        /// <param name="StrObservaciones"></param>
-        /// <param name="StrEmpresaFacturador"></param>
-        /// <param name="Tipo"></param>
-        /// <returns></returns>
-        public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]System.Guid StrIdSeguridad)
-        {
-            try
-            {
-                Sesion.ValidarSesion();
 
-                Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
+				Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+				var datos = ctl_PlanesTransacciones.FacturadoresBolsa(Sesion.DatosEmpresa.StrIdentificacion);
 
-                TblPlanesTransacciones ObjPTransacciones = new TblPlanesTransacciones();
-                ObjPTransacciones.IntTipoProceso = IntTipoProceso;
-                ObjPTransacciones.StrEmpresaUsuario = StrEmpresa;
-                ObjPTransacciones.StrUsuario = StrUsuario;
-                ObjPTransacciones.IntNumTransaccCompra = IntNumTransaccCompra;
-                ObjPTransacciones.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
-                ObjPTransacciones.IntValor = IntValor;
-                ObjPTransacciones.IntEstado = Estado;
-                ObjPTransacciones.StrObservaciones = StrObservaciones;
-                ObjPTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
-                ObjPTransacciones.StrIdSeguridad = StrIdSeguridad;
+				if (datos == null)
+				{
+					return NotFound();
+				}
 
-                clase_planes.Editar(ObjPTransacciones);
+				var retorno = datos.Select(d => new
+				{
+					ID = d.StrIdentificacion,
+					Texto = d.StrRazonSocial
+				});
 
-                return Ok();
-            }
-            catch (Exception excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-            }
-        }
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
-    }
+		[HttpGet]
+		[Route("api/ConsultarBolsaAdmin")]
+		public IHttpActionResult ConsultarBolsaAdmin()
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+				datosSesion.Add(Sesion.DatosEmpresa);
+
+				if (Sesion.DatosEmpresa.IntAdministrador)
+				{
+					Ctl_Empresa Controlador = new Ctl_Empresa();
+					var datos = Controlador.ObtenerFacturadores();
+
+					if (datos == null)
+					{
+						return NotFound();
+					}
+
+					var retorno = datos.Select(d => new
+					{
+						ID = d.StrIdentificacion,
+						Texto = d.StrRazonSocial
+					});
+
+					return Ok(retorno);
+				}
+				else
+				{
+					return NotFound();
+				}
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+		#endregion
+		/// <summary>
+		/// Obtiene el plan por Id de Seguridad
+		/// </summary>       
+		/// <param name="IdSeguridad"></param>
+		/// <returns></returns>
+		[HttpGet]
+		public IHttpActionResult Get(System.Guid IdSeguridad)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+				List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.Obtener(IdSeguridad);
+
+				if (datos == null)
+				{
+					return NotFound();
+				}
+
+				var retorno = datos.Select(d => new
+				{
+					Empresa = d.StrEmpresaUsuario,
+					Usuario = d.StrUsuario,
+					Valor = d.IntValor,
+					TCompra = d.IntNumTransaccCompra,
+					TProcesadas = d.IntNumTransaccProcesadas,
+					id = d.StrIdSeguridad,
+					Fecha = d.DatFecha,
+					CodigoEmpresaFacturador = d.TblEmpresas.StrIdentificacion,
+					EmpresaFacturador = d.TblEmpresas.StrRazonSocial,
+					Tipo = d.IntTipoProceso,
+					Observaciones = d.StrObservaciones,
+					Estado = d.IntEstado,
+					FechaVence = d.DatFechaVencimiento
+
+				});
+
+				return Ok(retorno);
+
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		/// <summary>
+		/// Crea una transaccion ya existente en plan de transaccion
+		/// </summary>
+		/// <param name="IntTipoProceso"></param>
+		/// <param name="StrEmpresa Sesion"></param>
+		/// <param name="StrUsuario Sesion"></param>
+		/// <param name="IntNumTransaccCompra"></param>
+		/// <param name="IntNumTransaccProcesadas"></param>
+		/// <param name="IntValor"></param>
+		/// <param name="BitProcesada"></param>
+		/// <param name="StrObservaciones"></param>
+		/// <param name="StrEmpresaFacturador"></param>
+		/// <param name="Tipo"></param>
+		/// <returns></returns>
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
+
+				TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
+				ObjPlanTransacciones.IntTipoProceso = IntTipoProceso;
+				ObjPlanTransacciones.StrEmpresaUsuario = StrEmpresa;
+				ObjPlanTransacciones.StrUsuario = StrUsuario;
+				ObjPlanTransacciones.IntNumTransaccCompra = IntNumTransaccCompra;
+				ObjPlanTransacciones.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
+				ObjPlanTransacciones.IntValor = IntValor;
+				ObjPlanTransacciones.IntEstado = Estado;
+				ObjPlanTransacciones.StrObservaciones = StrObservaciones;
+				ObjPlanTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
+
+				if (Vence)
+				{
+					ObjPlanTransacciones.DatFechaVencimiento = FechaVence;
+				}
+
+				clase_planes.Crear(ObjPlanTransacciones, Envia_email);
+
+				return Ok();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		/// <summary>
+		/// Crea una transaccion ya existente en plan de transaccion
+		/// </summary>
+		/// <param name="IntTipoProceso"></param>
+		/// <param name="StrEmpresa Sesion"></param>
+		/// <param name="StrUsuario Sesion"></param>
+		/// <param name="IntNumTransaccCompra"></param>
+		/// <param name="IntNumTransaccProcesadas"></param>
+		/// <param name="IntValor"></param>
+		/// <param name="BitProcesada"></param>
+		/// <param name="StrObservaciones"></param>
+		/// <param name="StrEmpresaFacturador"></param>
+		/// <param name="Tipo"></param>
+		/// <returns></returns>
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri]System.Guid StrIdSeguridad,[FromUri]bool Editar)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
+
+				TblPlanesTransacciones ObjPTransacciones = new TblPlanesTransacciones();
+				ObjPTransacciones.IntTipoProceso = IntTipoProceso;
+				ObjPTransacciones.StrEmpresaUsuario = StrEmpresa;
+				ObjPTransacciones.StrUsuario = StrUsuario;
+				ObjPTransacciones.IntNumTransaccCompra = IntNumTransaccCompra;
+				ObjPTransacciones.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
+				ObjPTransacciones.IntValor = IntValor;
+				ObjPTransacciones.IntEstado = Estado;
+				ObjPTransacciones.StrObservaciones = StrObservaciones;
+				ObjPTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
+				ObjPTransacciones.StrIdSeguridad = StrIdSeguridad;
+				if (Vence)
+				{
+					ObjPTransacciones.DatFechaVencimiento = FechaVence;
+				}
+
+				clase_planes.Editar(ObjPTransacciones);
+
+				return Ok();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+	}
 }

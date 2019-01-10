@@ -3,11 +3,15 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
      <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/DocumentosAdmin.js"></script>        
-    <div ng-app="DocObligadoApp">
+	 
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201910"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201910"></script>	
+    <script src="../../Scripts/Pages/DocumentosAdmin.js?vjs201910"></script>        
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201910"></script>
+    <div data-ng-app="DocObligadoApp">
 
         <!-- CONTENEDOR PRINCIPAL -->
-        <div ng-controller="DocObligadoController">
+        <div data-ng-controller="DocObligadoController">
 
             <!-- FILTROS DE BÚSQUEDA -->
 

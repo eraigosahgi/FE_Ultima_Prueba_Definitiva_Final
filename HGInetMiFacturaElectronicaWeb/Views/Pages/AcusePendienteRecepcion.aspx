@@ -3,8 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-	<script src="../../Scripts/Pages/AcusePendienteRecepcion.js"></script>
-	<script src="../../Scripts/Pages/ModalConsultaProveedores.js"></script>
+
+	<script src="../../Scripts/Pages/AcusePendienteRecepcion.js?vjs201910"></script>
+	<script src="../../Scripts/Pages/ModalConsultaProveedores.js?vjs201910"></script>
+
 	<div data-ng-app="ProcesarAcusePRecepcionApp" data-ng-controller="ProcesarAcusePRecepcionController">
 
 		<!-- FILTROS DE BÚSQUEDA -->

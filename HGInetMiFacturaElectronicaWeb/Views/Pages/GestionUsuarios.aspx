@@ -3,8 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-    <script src="../../Scripts/Pages/Usuarios.js"></script>
-    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js"></script>
+
+    <script src="../../Scripts/Pages/Usuarios.js?vjs201910"></script>
+    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201910"></script>
+
     <div data-ng-app="ConsultaUsuarioApp" data-ng-controller="GestionUsuarioController">
         <div class="col-md-12">
             <div class="panel panel-white">

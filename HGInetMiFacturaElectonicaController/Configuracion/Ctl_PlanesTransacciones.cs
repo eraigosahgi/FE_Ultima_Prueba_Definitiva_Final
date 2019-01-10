@@ -24,7 +24,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblPlanesTransacciones Crear(TblPlanesTransacciones datos_plan, bool Envia_email = true)
 		{
-			datos_plan.DatFecha = Fecha.GetFecha();
+			datos_plan.DatFecha = Fecha.GetFecha();			
 			datos_plan.StrIdSeguridad = Guid.NewGuid();
 
 			datos_plan = this.Add(datos_plan);
@@ -62,6 +62,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.IntEstado = datos_plan.IntEstado;
 			Ptransaccion.StrObservaciones = datos_plan.StrObservaciones;
 			Ptransaccion.StrEmpresaFacturador = datos_plan.StrEmpresaFacturador;
+			Ptransaccion.DatFechaVencimiento = datos_plan.DatFechaVencimiento;
 
 			Ptransaccion = this.Edit(Ptransaccion);
 
@@ -302,7 +303,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones
 													   where ListaFacturadores.Contains(t.StrEmpresaFacturador)
-														&& t.IntEstado == Estado && t.DatFechaVencimiento >= Fecha_Actual
+														&& t.IntEstado == Estado && (t.DatFechaVencimiento >= Fecha_Actual || t.DatFechaVencimiento==null)
 														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0)  || (t.IntTipoProceso == Plan_PostPago))
 													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFechaVencimiento }).ToList();
 

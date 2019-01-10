@@ -1,10 +1,10 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
 
-var path = window.location.pathname;
-var ruta = window.location.href;
-ruta = ruta.replace(path, "/");
-document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></script>');
+//var path = window.location.pathname;
+//var ruta = window.location.href;
+//ruta = ruta.replace(path, "/");
+//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></script>');
 
 var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento']);
 AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, SrvMaestrosEnum, SrvDocumento) {

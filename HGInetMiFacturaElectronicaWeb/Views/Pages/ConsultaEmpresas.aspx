@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
     <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/Empresas.js"></script>
+    <script src="../../Scripts/Pages/Empresas.js?vjs201910"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div data-ng-app="EmpresasApp" data-ng-controller="ConsultaEmpresasController" data-ng-init="Admin=false">

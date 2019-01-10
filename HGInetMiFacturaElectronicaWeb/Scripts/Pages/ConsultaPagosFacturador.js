@@ -1,12 +1,12 @@
 ﻿DevExpress.localization.locale('es-ES');
 
-var path = window.location.pathname;
-var ruta = window.location.href;
-ruta = ruta.replace(path, "/");
-//imprimir MaestrosEnum.js para tener acceso a sus funciones
-document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
-//imprimir SrvDocumentos.js para tener acceso a sus funciones
-document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
+//var path = window.location.pathname;
+//var ruta = window.location.href;
+//ruta = ruta.replace(path, "/");
+////imprimir MaestrosEnum.js para tener acceso a sus funciones
+//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
+////imprimir SrvDocumentos.js para tener acceso a sus funciones
+//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
 
 
 var email_destino = "";
@@ -236,8 +236,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 		$('#wait').show();
 		$http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
-		    $('#wait').hide();
-		    console.log("Se validaron los documentos con estado pendiente");
+		    $('#wait').hide();		    
 			datos = [];
 			//Recorro la data para ver la cantidad de documentos pendientes por procesar
 			response.data.forEach(function (valor, indice, array) {

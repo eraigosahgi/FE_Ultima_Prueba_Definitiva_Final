@@ -4,11 +4,11 @@ var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 
 
-var path = window.location.pathname;
-var ruta = window.location.href;
-ruta = ruta.replace(path, "/");
+//var path = window.location.pathname;
+//var ruta = window.location.href;
+//ruta = ruta.replace(path, "/");
 
-document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/FiltroGenerico.js"></script>');
+//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/FiltroGenerico.js"></script>');
 
 var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
 GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesController($scope, $http, $location, SrvFiltro) {

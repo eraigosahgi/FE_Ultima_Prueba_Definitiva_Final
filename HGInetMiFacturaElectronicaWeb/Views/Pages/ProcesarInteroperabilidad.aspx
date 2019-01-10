@@ -4,8 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-    <script src="../../Scripts/Pages/ProcesarInteroperabilidad.js"></script>
-    <script src="../../Scripts/Pages/ModalConsultaProveedores.js"></script>
+    <script src="../../Scripts/Pages/ProcesarInteroperabilidad.js?vjs201910"></script>
+    <script src="../../Scripts/Pages/ModalConsultaProveedores.js?vjs201910"></script>
 
     <div data-ng-app="ProcesarInteroperabilidadApp" data-ng-controller="ProcesarInteroperabilidadController">
 
@@ -42,32 +42,7 @@
             </div>
         </div>
 
-        <!--/FILTROS DE BÚSQUEDA -->
-
-        <!-- DATOS -->
-        <%--<div class="col-md-12" id="panelresultado">
-			<div class="panel panel-white">
-				<div class="panel-heading">
-					<h6 class="panel-title">Datos</h6>
-					<input type="text" id="lbltotaldocumentos" style="border-style: none; width: 100%; font-size: small;" readonly></input>
-				</div>
-
-				<div class="panel-body">
-					<div class="demo-container">
-						<div id="gridDocumentos"></div>
-						<div class="col-lg-12 text-right">
-							<br />
-							<div data-ng-show="total>0">
-								<div id="btnProcesar" style="margin-right: 20px;"></div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-
-			</div>
-		</div>--%>
+        <!--/FILTROS DE BÚSQUEDA -->      
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-body">

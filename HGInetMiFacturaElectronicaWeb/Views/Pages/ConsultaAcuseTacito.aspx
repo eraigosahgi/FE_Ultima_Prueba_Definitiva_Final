@@ -5,9 +5,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
     <!-- JS DocumentosAdquiriente-->
 
-    <script src="../../Scripts/Services/MaestrosEnum.js"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201910"></script>
 
-    <script src="../../Scripts/Pages/ConsultaAcuseTacito.js"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201910"></script>
+
+    <script src="../../Scripts/Pages/ConsultaAcuseTacito.js?vjs201910"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div data-ng-app="AcuseConsultaApp" data-ng-controller="AcuseConsultaController"  data-ng-init="total=0">
