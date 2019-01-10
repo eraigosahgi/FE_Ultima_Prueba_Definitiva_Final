@@ -2740,6 +2740,7 @@
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConfigurarPlanes.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseTacito.aspx" />
     <Content Include="Views\Pages\ConsultaAdquirientePagos.aspx" />
@@ -2890,6 +2891,13 @@
     </Compile>
     <Compile Include="Views\Pages\AcuseRecibo.aspx.designer.cs">
       <DependentUpon>AcuseRecibo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConfigurarPlanes.aspx.cs">
+      <DependentUpon>ConfigurarPlanes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConfigurarPlanes.aspx.designer.cs">
+      <DependentUpon>ConfigurarPlanes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.cs">
       <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
@@ -3231,7 +3239,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61433/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

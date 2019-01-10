@@ -1,9 +1,11 @@
-﻿using HGInetMiFacturaElectonicaData;
+﻿using HGInetMiFacturaElectonicaController.Registros;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
 using System.Data.Linq.SqlClient;
@@ -465,5 +467,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			public int procesado { get; set; }
 		}
 		#endregion
+
+
 	}
 }

@@ -1,14 +1,17 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
@@ -395,7 +398,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
-		}
+		}		
 
 	}
 }

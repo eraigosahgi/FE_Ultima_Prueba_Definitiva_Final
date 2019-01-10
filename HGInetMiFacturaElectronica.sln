@@ -161,6 +161,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.7", "v2018.7", "{816D
 		Documentacion\Liberaciones\v2018.7\20181219-DropBitProcesadaTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2018.7\20181219-DropBitProcesadaTblPlanesTransacciones.txt
 		Documentacion\Liberaciones\v2018.7\20181219-IntEstadoTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2018.7\20181219-IntEstadoTblPlanesTransacciones.txt
 		Documentacion\Liberaciones\v2018.7\20181227-StrClave TblUsuarios.txt = Documentacion\Liberaciones\v2018.7\20181227-StrClave TblUsuarios.txt
+		20190110-Inserta Nuevas opciones de Menu para planes.txt = 20190110-Inserta Nuevas opciones de Menu para planes.txt
 	EndProjectSection
 EndProject
 Global

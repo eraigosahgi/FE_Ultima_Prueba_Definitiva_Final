@@ -25,6 +25,7 @@ using System.Xml.Serialization;
 using System.Data.Entity.SqlServer;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaController.Auditorias;
+using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -1371,7 +1372,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		#endregion
 
-
 		#region Sonda Procesar Documentos
 
 		/// <summary>
@@ -1453,6 +1453,86 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		#endregion
 
+		#region Planes Null
+		public List<TblDocumentos> ObtenerDocumentosaPlanesNull()
+		{						
+			var respuesta = (from datos in context.TblDocumentos							 
+							 where (datos.StrIdPlanTransaccion==null)
+							 orderby datos.StrEmpresaFacturador
+							 select datos).ToList();
+
+			return respuesta;
+		}
+		#endregion
+
+
+		
+		#region ConfigurarPlanes
+
+		/// <summary>
+		/// Configura los planes en los documentos null
+		/// </summary>
+		/// <returns></returns>
+		public async Task ConfigurarPlanesDocumentos()
+		{
+			try
+			{
+				var Tarea = TareaConfigurarPlanesDocumentos();
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+		}
+
+		/// <summary>
+		/// Tarea para Asignar el codigo del plan a los documentos que esten con plan null
+		/// Se debe tener en cuenta que solo le coloca el condigo de algun plan que el facturador tenga activo y con saldo para descontar
+		/// </summary>
+		/// <returns></returns>
+		public async Task TareaConfigurarPlanesDocumentos()
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				try
+				{
+					Ctl_Documento ctl_documento = new Ctl_Documento();
+					//Obtengo la lista de documentos con codigo de plan null
+					List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaPlanesNull();
+					List<ObjPlanEnProceso> obj_plan = new List<ObjPlanEnProceso>();
+					Ctl_PlanesTransacciones controladorplanes = new Ctl_PlanesTransacciones();
+
+					foreach (var item in datos)
+					{
+						try
+						{
+							controladorplanes = new Ctl_PlanesTransacciones();
+							obj_plan = new List<ObjPlanEnProceso>();
+							//Obtengo el plan con el que voy a descontar el saldo
+							obj_plan = controladorplanes.ObtenerPlanesActivos(item.StrEmpresaFacturador, 1);
+							if (obj_plan != null)
+							{
+								item.StrIdPlanTransaccion = obj_plan[0].plan;
+								obj_plan[0].procesado = 1;
+								this.Edit(item);
+								controladorplanes.ConciliarPlanProceso(obj_plan[0]);
+							}
+						}
+						catch (Exception excepcion)
+						{
+							LogExcepcion.Guardar(excepcion);
+						}
+					}
+				}
+				catch (Exception excepcion)
+				{
+					LogExcepcion.Guardar(excepcion);
+				}
+
+			});
+		}
+		#endregion
 	}
 
 }
