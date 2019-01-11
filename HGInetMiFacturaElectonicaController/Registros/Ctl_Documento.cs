@@ -1454,10 +1454,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		#endregion
 
 		#region Planes Null
-		public List<TblDocumentos> ObtenerDocumentosaPlanesNull()
-		{						
+		public List<TblDocumentos> ObtenerDocumentosaPlanesNull(string Facturadores)
+		{
+		
+			List<string> ListFacturadores = Coleccion.ConvertirLista(Facturadores);
+
+			DateTime FechaActual = Fecha.GetFecha();			
+
 			var respuesta = (from datos in context.TblDocumentos							 
 							 where (datos.StrIdPlanTransaccion==null)
+							 && (ListFacturadores.Contains(datos.StrEmpresaFacturador) || Facturadores.Equals("*"))
 							 orderby datos.StrEmpresaFacturador
 							 select datos).ToList();
 
@@ -1473,11 +1479,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Configura los planes en los documentos null
 		/// </summary>
 		/// <returns></returns>
-		public async Task ConfigurarPlanesDocumentos()
+		public async Task ConfigurarPlanesDocumentos(string Facturadores)
 		{
 			try
 			{
-				var Tarea = TareaConfigurarPlanesDocumentos();
+				var Tarea = TareaConfigurarPlanesDocumentos(Facturadores);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -1491,7 +1497,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Se debe tener en cuenta que solo le coloca el condigo de algun plan que el facturador tenga activo y con saldo para descontar
 		/// </summary>
 		/// <returns></returns>
-		public async Task TareaConfigurarPlanesDocumentos()
+		public async Task TareaConfigurarPlanesDocumentos(string Facturadores)
 		{
 			await Task.Factory.StartNew(() =>
 			{
@@ -1499,7 +1505,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					Ctl_Documento ctl_documento = new Ctl_Documento();
 					//Obtengo la lista de documentos con codigo de plan null
-					List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaPlanesNull();
+					List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaPlanesNull(Facturadores);
 					List<ObjPlanEnProceso> obj_plan = new List<ObjPlanEnProceso>();
 					Ctl_PlanesTransacciones controladorplanes = new Ctl_PlanesTransacciones();
 

@@ -13,9 +13,22 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			Ctl_Documento controlador = new Ctl_Documento();
+			try
+			{
+				string Facturadores = Request.QueryString["Facturadores"];
 
-			var Tarea1 = controlador.ConfigurarPlanesDocumentos();
+				if (string.IsNullOrEmpty(Facturadores))
+					throw new ApplicationException("Debe inidicar el parametro Facturadores=(Facturador1,Facturador2) o sustituir la lista por un Facturadores=* ");
+
+				Ctl_Documento controlador = new Ctl_Documento();
+
+				var Tarea1 = controlador.ConfigurarPlanesDocumentos(Facturadores);
+				lblResultado.Text="Documentos en proceso....";
+			}
+			catch (Exception ex)
+			{
+				lblResultado.Text = ex.Message;
+			}
 
 		}
 	}

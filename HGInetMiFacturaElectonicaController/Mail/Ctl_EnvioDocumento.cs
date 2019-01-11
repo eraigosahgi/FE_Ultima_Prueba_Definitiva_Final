@@ -51,6 +51,20 @@ namespace HGInetMiFacturaElectonicaController
 							IdSeguridad = item.RadicadoDocumento,
 							Email = item.Email
 						};
+
+						//Valida si el objeto viene si correo
+						if (string.IsNullOrEmpty(item.Email))
+						{
+							Ctl_Documento Controlador = new Ctl_Documento();
+							//Obtiene el documento desde el radicado
+							TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(Guid.Parse(item.RadicadoDocumento)).FirstOrDefault();
+							var objeto = (dynamic)null;
+							//Luego obtiene el objeto ubl
+							objeto = Ctl_Documento.ConvertirServicio(datos, true);
+							//Asigno el email del ubl a la notificación del correo
+							item_respuesta.Email = objeto.DatosFactura.DatosAdquiriente.Email;
+						}
+
 						try
 						{
 
