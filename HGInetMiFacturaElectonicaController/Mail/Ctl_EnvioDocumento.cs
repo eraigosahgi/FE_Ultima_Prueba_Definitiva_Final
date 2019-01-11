@@ -58,6 +58,10 @@ namespace HGInetMiFacturaElectonicaController
 							Ctl_Documento Controlador = new Ctl_Documento();
 							//Obtiene el documento desde el radicado
 							TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(Guid.Parse(item.RadicadoDocumento)).FirstOrDefault();
+							if (datos == null)
+							{
+								throw new ApplicationException(string .Format("No se encontraro documento con el id de seguridad: {0}", item.RadicadoDocumento));
+							}
 							var objeto = (dynamic)null;
 							//Luego obtiene el objeto ubl
 							objeto = Ctl_Documento.ConvertirServicio(datos, true);
