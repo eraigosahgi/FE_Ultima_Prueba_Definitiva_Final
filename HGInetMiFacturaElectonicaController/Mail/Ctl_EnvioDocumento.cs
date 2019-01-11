@@ -67,6 +67,7 @@ namespace HGInetMiFacturaElectonicaController
 							objeto = Ctl_Documento.ConvertirServicio(datos, true);
 							//Asigno el email del ubl a la notificación del correo
 							item_respuesta.Email = objeto.DatosFactura.DatosAdquiriente.Email;
+							item.Email  = objeto.DatosFactura.DatosAdquiriente.Email;
 						}
 
 						try
