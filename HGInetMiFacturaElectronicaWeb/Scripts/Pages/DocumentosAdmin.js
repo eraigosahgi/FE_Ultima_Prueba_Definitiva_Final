@@ -33,11 +33,6 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             tipo_filtro_fecha = 1,
            Datos_Tipo = "0";
 
-	//$http.get('/api/DatosSesion/').then(function (response) {
-	//	codigo_facturador = response.data[0].Identificacion;
-	//	UsuarioSession = data[0].IdSeguridad;
-
-	//});
 	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
 		codigo_facturador = data[0].IdentificacionEmpresa;
 		UsuarioSession = data[0].IdSeguridad;
@@ -294,12 +289,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 				groupPanel: {
 					allowColumnDragging: true,
 					visible: true
-				}
-				/*,stateStoring: {
-					enabled: true,
-					type: "localStorage",
-					storageKey: "storage"
-				}*/
+				}				
 				, columns: [
 					{
 						caption: "Archivos",

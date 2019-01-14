@@ -98,7 +98,11 @@ angular.module("appsrvusuario", [])
                        {
                            caption: "Serial",
                            dataField: "Serial"
+                       },{
+                       	caption: "Datakey",
+                       	dataField: "datakey"
                        },
+					   
                        {
                            caption: "Resolución",
                            dataField: "Resolucion"

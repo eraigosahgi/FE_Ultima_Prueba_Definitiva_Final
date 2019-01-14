@@ -63,7 +63,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
 					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
-					CodigoEstado = d.IntEstado
+					CodigoEstado = d.IntEstado,
+					Facturador = d.StrEmpresaFacturador
 				});
 
 				return Ok(retorno);
@@ -169,7 +170,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
 					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
-					CodigoEstado = d.IntEstado
+					CodigoEstado = d.IntEstado,
+					Facturador = d.StrEmpresaFacturador
 				});
 
 				return Ok(retorno);

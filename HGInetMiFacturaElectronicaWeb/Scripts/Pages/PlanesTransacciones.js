@@ -493,6 +493,14 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 						allowedPageSizes: [5, 10, 20],
 						showInfo: true
 					},
+					columnChooser: {
+						enabled: true,
+						mode: "select",
+						title: "Selector de Columnas"
+					},
+					focusedRowEnabled: true
+					, hoverStateEnabled: true,
+
 					groupPanel: {
 						allowColumnDragging: true,
 						visible: true
@@ -545,7 +553,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                       , allowColumnResizing: true
                  , columns: [
                      {
-                     	cssClass: "col-md-1 col-xs-1",
+
                      	width: 50,
                      	cellTemplate: function (container, options) {
                      		$("<div style='text-align:center'>")
@@ -554,59 +562,65 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                      	}
                      },
                      {
-                     	cssClass: "col-md-2 col-xs-4",
+                     	
                      	caption: "Fecha",
                      	dataField: "Fecha",
                      	dataType: "date",
                      	format: "yyyy-MM-dd HH:mm"
                      },
+
+                 {
+                 	caption: "Doc. Facturador",
+                 	dataField: "Facturador"
+                 },
+					 ,
                       {
-                      	cssClass: "col-md-2 col-xs-3",
+
                       	caption: "Empresa Compra",
                       	dataField: "EmpresaFacturador"
                       },
                      {
-                     	cssClass: "col-md-1 col-xs-1",
+
                      	caption: "Transacciones",
                      	dataField: "TCompra"
                      },
                       {
-                      	cssClass: "col-md-1 col-xs-1",
+
                       	caption: "Valor",
                       	dataField: "Valor"
                       },
                      {
-                     	cssClass: "col-md-1 col-xs-2",
+
                      	caption: "Procesadas",
                      	dataField: "TProcesadas"
                      }
                      ,
                      {
-                     	cssClass: "col-md-1 col-xs-2",
+
                      	caption: "Saldo",
                      	dataField: "Saldo"
                      }
                       , {
-                      	cssClass: "col-md-2 hidden-xs",
+
                       	caption: "Empresa",
                       	dataField: "Empresa",
-
+                      	visible: false
                       },
                      {
-                     	cssClass: "col-md-2 hidden-xs",
+
                      	caption: "Usuario",
                      	dataField: "Usuario"
                      }
                      ,
                      {
-                     	cssClass: "col-md-2",
+
                      	caption: "Tipo",
                      	dataField: "Tipoproceso"
                      }
 
                      ,
                       {
-                      	cssClass: "col-md-1 col-xs-1",
+
                       	caption: 'Estado',
                       	dataField: 'Estado',
                       	cellTemplate: function (container, options) {

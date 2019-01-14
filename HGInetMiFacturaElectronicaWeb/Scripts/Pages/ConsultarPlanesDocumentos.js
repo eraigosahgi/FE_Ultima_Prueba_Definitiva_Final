@@ -7,7 +7,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
     var now = new Date();
 
     var date = new Date();
-    date.setMonth(date.getMonth() - 6);
+    date.setMonth(date.getMonth() - 12);
 
     var fecha_inicio = date.toISOString();
 
@@ -286,9 +286,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                                                 dataField: "DatFechaDocumento",
                                                 dataType: "date",
                                                 format: "yyyy-MM-dd"
-
                                             },
-
                                             {
                                                 caption: "Documento",
                                                 dataField: "NumeroDocumento",
@@ -297,12 +295,10 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                                             {
                                                 caption: "Facturador",
                                                 dataField: "Cod_Facturador",
-
                                             },
                                             {
                                                 caption: "Nombre Facturador",
                                                 dataField: "NombreFacturador",
-
                                             },
 
 

@@ -4,9 +4,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201910"></script>
-	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs201910"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201910"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201911"></script>
+	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs201911"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201911"></script>
 
 	<div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController" data-ng-init="consumido=false" ng-cloak>
 

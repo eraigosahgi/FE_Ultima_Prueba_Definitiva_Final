@@ -7,6 +7,7 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
 using System.Collections.Generic;
@@ -165,6 +166,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 RazonSocial = d.StrRazonSocial,
                 Email = d.StrMail,
                 Serial = d.StrSerial,
+				datakey= Encriptar.Encriptar_SHA1(string.Format("{0}{1}",d.StrSerial, d.StrIdentificacion)),
                 Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
                 Habilitacion = d.IntHabilitacion,
                 IdSeguridad = d.StrIdSeguridad,
@@ -215,20 +217,35 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 IntNumUsuarios = d.IntNumUsuarios,
 				IntAnexo = d.IntManejaAnexos,
 				IntEmailRecepcion = d.IntEnvioMailRecepcion,
-				IntAcuseTacito = d.IntAcuseTacito
-            });
+				IntAcuseTacito = d.IntAcuseTacito,
+				StrEmpresaDescuenta = d.StrEmpresaDescuento
+			});
 
             return Ok(retorno);
         }
 
-        /// <summary>
-        /// Crear una nueva Empresa
-        /// </summary>
-        /// <param name="codigo_empresa"></param>
-        /// <param name="codigo_usuario"></param>        
-        /// <returns></returns>
-        [HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+		/// <summary>
+		/// Crea o Modifica una empresa una  Empresa
+		/// </summary>
+		/// <param name="TipoIdentificacion">Tipo de Identificación de la empresa</param>
+		/// <param name="Identificacion">Identificación de la empresa</param>
+		/// <param name="RazonSocial">Razon Social</param>
+		/// <param name="Email">Email</param>
+		/// <param name="Intadquiriente">Si es adquiriente</param>
+		/// <param name="IntObligado">Si es facturador</param>
+		/// <param name="IntHabilitacion">Si esta habilitado</param>
+		/// <param name="StrEmpresaAsociada">Si tiene una empresa asociada</param>
+		/// <param name="StrObservaciones">Observaciones</param>
+		/// <param name="IntIntegrador">Si es integrador</param>
+		/// <param name="IntNumUsuarios">Numero de usuarios permitidos</param>
+		/// <param name="IntAcuseTacito">Numero de horas para el acuse tacito</param>
+		/// <param name="IntAnexo">Si permite anexos</param>
+		/// <param name="IntEmailRecepcion"></param>
+		/// <param name="StrEmpresaDescuento">Empresa para el descuento de los planes</param>
+		/// <param name="tipo">1.- Nuevo -- 2.- Editar</param>
+		/// <returns></returns>
+		[HttpPost]
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
@@ -250,6 +267,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Empresa.IntAcuseTacito = IntAcuseTacito;
 				Empresa.IntManejaAnexos = IntAnexo;
 				Empresa.IntEnvioMailRecepcion = IntEmailRecepcion;
+				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(StrEmpresaDescuento) ? Identificacion : StrEmpresaDescuento);
 
 				if (tipo == 1)//Nuevo
                 {

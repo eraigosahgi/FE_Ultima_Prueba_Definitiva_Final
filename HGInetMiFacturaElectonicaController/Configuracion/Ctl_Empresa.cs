@@ -161,22 +161,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             {
 
                 if (empresa == null)
-                    throw new ApplicationException("La empresa es incorrecta!, Error");
-
-                //if (String.IsNullOrEmpty(empresa.StrTipoIdentificacion))
-                //    throw new ApplicationException("Debe ingresar el Tipo de Identificación");
-
-                //if (String.IsNullOrEmpty(empresa.StrIdentificacion))
-                //    throw new ApplicationException("Debe ingresar el Numero de Identificación");
-
-                //if (String.IsNullOrEmpty(empresa.StrRazonSocial))
-                //    throw new ApplicationException("Debe ingresar La Razón Social");
-
-                //if (String.IsNullOrEmpty(empresa.StrMail))
-                //    throw new ApplicationException("Debe ingresar el Email");
-
-                //if (empresa.IntAdquiriente == false && empresa.IntObligado == false)
-                //    throw new ApplicationException("Debe Indicar el Perfil");
+                    throw new ApplicationException("La empresa es incorrecta!, Error");               
 
                 TblEmpresas EmpresaActualiza = (from item in context.TblEmpresas
                                                 where item.StrIdentificacion.Equals(empresa.StrIdentificacion)
@@ -198,6 +183,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 EmpresaActualiza.IntAcuseTacito = empresa.IntAcuseTacito;
 				EmpresaActualiza.IntManejaAnexos = empresa.IntManejaAnexos;
 				EmpresaActualiza.IntEnvioMailRecepcion = empresa.IntEnvioMailRecepcion;
+				EmpresaActualiza.StrEmpresaDescuento = empresa.StrEmpresaDescuento;
 
 				empresa.DatFechaActualizacion = Fecha.GetFecha();
 

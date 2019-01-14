@@ -10,9 +10,9 @@
 
 
 	<!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201910"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201910"></script>
-	<script src="../../Scripts/Pages/DocumentosObligado.js?vjs201910"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201911"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201911"></script>
+	<script src="../../Scripts/Pages/DocumentosObligado.js?vjs201911"></script>
 	<div data-ng-app="DocObligadoApp">
 
 		<!-- CONTENEDOR PRINCIPAL -->

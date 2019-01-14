@@ -209,10 +209,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		public IEnumerable<string> FacturadoresPlan(string Stridentificacion)
 		{
 			var ListaFacturadores = (from lista in context.TblEmpresas
-									 where lista.StrEmpresaAsociada.Equals(
+									 where lista.StrEmpresaDescuento.Equals(
 										 (from datos in context.TblEmpresas
 										  where datos.StrIdentificacion.Equals(Stridentificacion)
-										  select datos.StrEmpresaAsociada).FirstOrDefault())
+										  select datos.StrEmpresaDescuento).FirstOrDefault())
 									 select lista.StrIdentificacion).ToList();
 
 			return ListaFacturadores;
@@ -296,11 +296,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			DateTime Fecha_Actual = Fecha.GetFecha();
 
 			var ListaFacturadores = (from lista in context.TblEmpresas
-									 where lista.StrEmpresaAsociada.Equals(
+									 where (lista.StrEmpresaDescuento.Equals(
 										 (from datos in context.TblEmpresas
 										  where datos.StrIdentificacion.Equals(identificacion)
-										  select datos.StrEmpresaAsociada).FirstOrDefault())
+										  && datos.StrEmpresaDescuento != null
+										  select datos.StrEmpresaDescuento).FirstOrDefault())
+										  )
 									 select lista.StrIdentificacion).ToList();
+
+			//var ListaFacturadores = (from lista in context.TblEmpresas
+			//						 where lista.StrEmpresaAsociada.Equals(
+			//							 (from datos in context.TblEmpresas
+			//							  where datos.StrIdentificacion.Equals(identificacion)
+			//							  select datos.StrEmpresaAsociada).FirstOrDefault())
+			//						 select lista.StrIdentificacion).ToList();
 
 
 			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones

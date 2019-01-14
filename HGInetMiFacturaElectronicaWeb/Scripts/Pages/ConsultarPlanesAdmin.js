@@ -14,7 +14,7 @@ var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', '
 GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesController($scope, $http, $location, SrvFiltro) {
 	var now = new Date();
 	var date = new Date();
-	date.setMonth(date.getMonth() - 6);
+	date.setMonth(date.getMonth() - 12);
 
 	var fecha_inicio = date.toISOString();
 
@@ -26,7 +26,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 	var estado = "";
 
-	SrvFiltro.ObtenerFiltro('Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto').then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Facturador','Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto',false).then(function (Datos) {
 		$scope.Facturador = Datos;
 	});
 
@@ -336,7 +336,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 						var fieldData = options.value,
                             fieldHtml = "";
 						try {
-							if (options.columnIndex == 4) {//Columna de valor Total
+							if (options.columnIndex == 5) {//Columna de valor Total
 								if (fieldData) {
 									var inicial = fNumber.go(fieldData);
 									options.cellElement.html(inicial);
@@ -363,8 +363,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                     }
                       , allowColumnResizing: true
                  , columns: [
-                     {
-                     	cssClass: "col-md-1 col-xs-1",
+                     {                     	
                      	width: 50,
                      	cellTemplate: function (container, options) {
                      		$("<div style='text-align:center'>")
@@ -373,61 +372,61 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                      	}
                      },
                      {
-                     	cssClass: "col-md-2 col-xs-4",
+                     	
                      	caption: "Fecha",
                      	dataField: "Fecha",
                      	dataType: "date",
                      	format: "yyyy-MM-dd HH:mm"
                      },
-                      {
-                      	cssClass: "col-md-2 col-xs-3",
+					
+                 {					
+                 	caption: "Doc. Facturador",
+                 	dataField: "Facturador"
+                 },
+
+                      {                      	
                       	caption: "Empresa Compra",
                       	dataField: "EmpresaFacturador"
                       },
 
-                      {
-                      	cssClass: "col-md-1 col-xs-1",
+                      {                      	
                       	caption: "Valor",
                       	dataField: "Valor"
                       },
-					   {
-					   	cssClass: "col-md-1 col-xs-1",
+					   {					   
 					   	caption: "Transacciones",
 					   	dataField: "TCompra"
 					   }
                       ,
-                     {
-                     	cssClass: "col-md-1 col-xs-2",
+                     {                     	
                      	caption: "Procesadas",
                      	dataField: "TProcesadas"
                      }
                      ,
-                     {
-                     	cssClass: "col-md-1 col-xs-2",
+                     {                     
                      	caption: "Saldo",
                      	dataField: "Saldo"
                      },
-                 {
-                 	cssClass: "col-md-2 hidden-xs",
+                 {                 	
                  	caption: "Empresa",
                  	dataField: "Empresa",
 
                  },
                      {
-                     	cssClass: "col-md-2 hidden-xs",
+                  
                      	caption: "Usuario",
                      	dataField: "Usuario"
                      }
                      ,
                      {
-                     	cssClass: "col-md-2",
+                  
                      	caption: "Tipo",
                      	dataField: "Tipoproceso"
                      }
 
                      ,
                       {
-                      	cssClass: "col-md-1 col-xs-1",
+                  
                       	caption: 'Estado',
                       	dataField: 'Estado',
                       	cellTemplate: function (container, options) {
