@@ -2894,6 +2894,13 @@
     <Compile Include="Views\Pages\AcuseRecibo.aspx.designer.cs">
       <DependentUpon>AcuseRecibo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\AuditoriaDocumento.aspx.cs">
+      <DependentUpon>AuditoriaDocumento.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\AuditoriaDocumento.aspx.designer.cs">
+      <DependentUpon>AuditoriaDocumento.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.cs">
       <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3234,7 +3241,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61433/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
