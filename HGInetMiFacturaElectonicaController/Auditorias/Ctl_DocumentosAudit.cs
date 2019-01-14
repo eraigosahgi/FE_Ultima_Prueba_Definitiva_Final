@@ -62,7 +62,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="mensaje">mensaje.</param>
 		/// <param name="resultado_proceso">Código Dian, Id Mailjet...entre otros</param>
 		/// <returns></returns>
-		public TblAuditDocumentos Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso,string prefijo,string numero)
+		public TblAuditDocumentos Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso, string prefijo, string numero)
 		{
 			try
 			{
@@ -129,13 +129,13 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 						datos.IntIdProceso = proceso.GetHashCode();
 						datos.IntTipoRegistro = tipo_registro.GetHashCode();
 						datos.IntIdProcesadoPor = procesado_por.GetHashCode();
-						datos.StrRealizadoPor = realizado_por;						
+						datos.StrRealizadoPor = realizado_por;
 						datos.StrResultadoProceso = resultado_proceso;
 						datos.StrPrefijo = prefijo;
 						datos.StrNumero = numero;
-						datos.StrResultadoProceso = Newtonsoft.Json.JsonConvert.SerializeObject(data); 
+						datos.StrResultadoProceso = Newtonsoft.Json.JsonConvert.SerializeObject(data);
 						datos.StrMensaje = string.Format("{0} : {1}", mensaje, data.Email);
-						datos = Crear(datos);						
+						datos = Crear(datos);
 					}
 				}
 
@@ -176,7 +176,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		{
 			try
 			{
-				List<TblAuditDocumentos> registros_audit = this.GetFilter(x => (x.StrIdSeguridad.Equals(id_seguridad_doc) || id_seguridad_doc.Equals("*")) && x.StrObligado.Equals(identificacion_obligado));
+				List<TblAuditDocumentos> registros_audit = this.GetFilter(x => (x.StrIdSeguridad.Equals(id_seguridad_doc) || id_seguridad_doc.Equals("*")) && (x.StrObligado.Equals(identificacion_obligado) || identificacion_obligado.Equals("*")));
 
 				return registros_audit;
 			}

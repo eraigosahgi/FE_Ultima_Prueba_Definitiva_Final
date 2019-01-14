@@ -2741,6 +2741,7 @@
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConfigurarPlanes.aspx" />
+    <Content Include="Views\Pages\AuditoriaDocumento.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseTacito.aspx" />
     <Content Include="Views\Pages\ConsultaAdquirientePagos.aspx" />
@@ -2792,6 +2793,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Services\AuditoriasController.cs" />
     <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
     <Compile Include="Controllers\Services\FormatosController.cs" />
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
@@ -2891,13 +2893,6 @@
     </Compile>
     <Compile Include="Views\Pages\AcuseRecibo.aspx.designer.cs">
       <DependentUpon>AcuseRecibo.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\ConfigurarPlanes.aspx.cs">
-      <DependentUpon>ConfigurarPlanes.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Pages\ConfigurarPlanes.aspx.designer.cs">
-      <DependentUpon>ConfigurarPlanes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.cs">
       <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>

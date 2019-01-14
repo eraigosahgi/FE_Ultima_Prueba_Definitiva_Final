@@ -48,6 +48,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public Nullable<short> IntAcuseTacito { get; set; }
         public bool IntManejaAnexos { get; set; }
         public bool IntEnvioMailRecepcion { get; set; }
+        public string StrEmpresaDescuento { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
