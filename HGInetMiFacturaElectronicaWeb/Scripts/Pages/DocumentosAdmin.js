@@ -647,8 +647,6 @@ DocObligadoApp.controller('ModalAuditDocumentoController', function ModalAuditDo
 
 		$http.get('/api/AuditoriaDocumento?id_seguridad_doc=' + IdSeguridad).then(function (response) {
 
-			console.log(response.data);
-
 			$scope.IdSeguridad = response.data[0].StrIdSeguridad;
 			$scope.NumeroDocumento = response.data[0].StrNumero;
 			$scope.Obligado = response.data[0].StrObligado;
@@ -687,7 +685,18 @@ DocObligadoApp.controller('ModalAuditDocumentoController', function ModalAuditDo
 				masterDetail: {
 					enabled: true,
 					template: function (container, options) {
-						container.append($('<h4 class="form-control">RESPUESTA:</h4><p style="width:10%"> ' + options.data.StrResultadoProceso + '</p><br/><h4 class="form-control">MENSAJE:</h4><p style="width:10%"> ' + options.data.StrMensaje + '</p>'));
+
+						container.append($('<h4 class="form-control">MENSAJE:</h4><p style="width:10%"> ' + options.data.StrMensaje + '</p><br/><h4 class="form-control">RESPUESTA:</h4><span><p style="width:10%"> ' + options.data.StrResultadoProceso + '</p></span>'));
+
+						if (options.data.StrResultadoProceso) {
+							$http.get('/api/DetallesRespuesta?id_proceso=' + options.data.IntIdProceso + '&respuesta=' + options.data.StrResultadoProceso).then(function (response) {
+
+								console.log(response.data);
+								container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4><pre id="json"></pre>'));
+
+								document.getElementById("json").innerHTML = JSON.stringify(response.data, undefined, 2);
+							});
+						}
 					}
 				},
 				filterRow: {
