@@ -95,14 +95,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					obj_peticion.serial = plataforma_datos.LicenciaHGInetMail;
 					obj_peticion.id_mensaje = (long)datos_retorno.MessageID;
 
-					//MensajeResumen datos_retorno = new MensajeResumen();
-
 					ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", plataforma_datos.RutaHginetMail), TipoContenido.Applicationjson.GetHashCode(), "");
 					try
 					{
 						datos_retorno = cliente.POST(obj_peticion);
-						//dynamic json_respuesta = JsonConvert.SerializeObject(datos_respuesta);
-						//datos_retorno = JsonConvert.DeserializeObject(json_respuesta);
 					}
 					catch (Exception ex)
 					{
@@ -110,34 +106,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					}
 				}
 
-				/*
-				dynamic propiedad = new ExpandoObject();
-				List<dynamic> lista_retorno = new List<dynamic>();
-
-				foreach (JProperty key in datos_retorno)
-				{
-					if (key.Parent.Count > 1)
-					{
-						List<dynamic> lista_datos = new List<dynamic>();
-
-						foreach (var item in key)
-						{
-							propiedad.Nombre = key.Name;
-							propiedad.Valor = key.Value;
-
-							lista_datos.Add(propiedad);
-						}
-					}
-					else
-					{
-						propiedad.Nombre = key.Name;
-						propiedad.Valor = key.Value;
-
-						lista_retorno.Add(propiedad);
-					}
-
-				}
-				*/
 
 
 				return Ok(datos_retorno);

@@ -289,7 +289,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 				groupPanel: {
 					allowColumnDragging: true,
 					visible: true
-				}				
+				}
 				, columns: [
 					{
 						caption: "Archivos",
@@ -691,7 +691,6 @@ DocObligadoApp.controller('ModalAuditDocumentoController', function ModalAuditDo
 						if (options.data.StrResultadoProceso) {
 							$http.get('/api/DetallesRespuesta?id_proceso=' + options.data.IntIdProceso + '&respuesta=' + options.data.StrResultadoProceso).then(function (response) {
 
-								console.log(response.data);
 								container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4><pre id="json"></pre>'));
 
 								document.getElementById("json").innerHTML = JSON.stringify(response.data, undefined, 2);
