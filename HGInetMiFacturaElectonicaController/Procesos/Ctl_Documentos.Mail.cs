@@ -57,7 +57,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Actualiza la categoria con el nuevo estado
 					respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
-					ValidarRespuesta(respuesta, Newtonsoft.Json.JsonConvert.SerializeObject(mensajes[0].Data));
+					ValidarRespuesta(respuesta,"", mensajes);
 				}
 
 			}

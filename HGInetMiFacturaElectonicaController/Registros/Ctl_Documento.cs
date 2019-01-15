@@ -412,6 +412,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
 											  where (datos.StrIdPlanTransaccion == IdPlan)
+											  orderby datos.DatFechaIngreso
 											  select datos).ToList();
 
 			return documentos;
@@ -1464,7 +1465,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			var respuesta = (from datos in context.TblDocumentos							 
 							 where (datos.StrIdPlanTransaccion==null)
 							 && (ListFacturadores.Contains(datos.StrEmpresaFacturador) || Facturadores.Equals("*"))
-							 orderby datos.StrEmpresaFacturador
+							 orderby datos.StrEmpresaFacturador,datos.DatFechaIngreso
 							 select datos).ToList();
 
 			return respuesta;

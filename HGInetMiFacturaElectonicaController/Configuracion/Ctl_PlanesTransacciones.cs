@@ -296,12 +296,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			DateTime Fecha_Actual = Fecha.GetFecha();
 
 			var ListaFacturadores = (from lista in context.TblEmpresas
-									 where (lista.StrEmpresaDescuento.Equals(
+									 where lista.StrEmpresaDescuento.Equals(
 										 (from datos in context.TblEmpresas
-										  where datos.StrIdentificacion.Equals(identificacion)
-										  && datos.StrEmpresaDescuento != null
+										  where datos.StrIdentificacion.Equals(identificacion)										  
 										  select datos.StrEmpresaDescuento).FirstOrDefault())
-										  )
 									 select lista.StrIdentificacion).ToList();
 
 			//var ListaFacturadores = (from lista in context.TblEmpresas
@@ -313,7 +311,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones
-													   where ListaFacturadores.Contains(t.StrEmpresaFacturador)
+													   where ListaFacturadores.Contains(t.StrEmpresaFacturador) 
 														&& t.IntEstado == Estado && (t.DatFechaVencimiento >= Fecha_Actual || t.DatFechaVencimiento==null)
 														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0)  || (t.IntTipoProceso == Plan_PostPago))
 													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFechaVencimiento }).ToList();

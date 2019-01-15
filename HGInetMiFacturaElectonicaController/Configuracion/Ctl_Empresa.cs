@@ -194,7 +194,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Ctl_Usuario clase_usuario = new Ctl_Usuario();
 				TblUsuarios usuario_principal = clase_usuario.ObtenerUsuarios(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrIdentificacion).FirstOrDefault();
 				//Valida los permisos del usuario y los actualiza
-				clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, usuario_principal);
+				if (usuario_principal != null)
+				{
+					clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, usuario_principal);
+				}else {
+				//	throw new ApplicationException("La empresa no tiene usuario generico");
+				}
 
 				return EmpresaActualiza;
 			}
