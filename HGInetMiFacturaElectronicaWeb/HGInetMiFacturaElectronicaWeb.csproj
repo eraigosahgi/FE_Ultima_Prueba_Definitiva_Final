@@ -2901,6 +2901,13 @@
     <Compile Include="Views\Pages\AuditoriaDocumento.aspx.designer.cs">
       <DependentUpon>AuditoriaDocumento.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ConfigurarPlanes.aspx.cs">
+      <DependentUpon>ConfigurarPlanes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConfigurarPlanes.aspx.designer.cs">
+      <DependentUpon>ConfigurarPlanes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ConsultaAcuseRecibo.aspx.cs">
       <DependentUpon>ConsultaAcuseRecibo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
