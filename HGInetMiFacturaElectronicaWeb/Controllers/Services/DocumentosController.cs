@@ -188,7 +188,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 var retorno = datos.Select(d => new
                 {
                     NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
-                    d.DatFechaDocumento,
+                    d.DatFechaIngreso,
                     Cod_Facturador=d.StrEmpresaFacturador,
                     NombreFacturador = d.TblEmpresasFacturador.StrRazonSocial
                 });

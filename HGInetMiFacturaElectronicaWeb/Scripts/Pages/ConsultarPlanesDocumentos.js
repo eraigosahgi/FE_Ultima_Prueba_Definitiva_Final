@@ -282,10 +282,10 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
                                         , columns: [
                                             {
-                                                caption: "Fecha Documento",
-                                                dataField: "DatFechaDocumento",
+                                                caption: "Fecha",
+                                                dataField: "DatFechaIngreso",
                                                 dataType: "date",
-                                                format: "yyyy-MM-dd"
+                                                format: "yyyy-MM-dd  HH:mm"
                                             },
                                             {
                                                 caption: "Documento",
