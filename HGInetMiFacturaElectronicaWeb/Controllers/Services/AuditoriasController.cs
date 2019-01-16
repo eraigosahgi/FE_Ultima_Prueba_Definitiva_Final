@@ -1,6 +1,8 @@
 ﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
+using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
@@ -54,6 +56,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					IntIdProcesadoPor = d.IntIdProcesadoPor,
 					StrDesProcesadoPor = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Procedencia>(d.IntIdProcesadoPor)),
 					StrRealizadoPor = d.StrRealizadoPor,
+					StrDesRealizadoPor = (!string.IsNullOrWhiteSpace(d.StrRealizadoPor)) ? NombreUsuario(new Guid(d.StrRealizadoPor)) : string.Empty,
 					StrMensaje = d.StrMensaje,
 					StrResultadoProceso = d.StrResultadoProceso,
 					StrPrefijo = d.StrPrefijo,
@@ -68,6 +71,32 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		/// <summary>
+		/// Retorna el nombre completo del usuario.
+		/// </summary>
+		/// <param name="id_seguridad"></param>
+		/// <returns></returns>
+		private string NombreUsuario(Guid id_seguridad)
+		{
+			try
+			{
+				if (id_seguridad == null)
+					return string.Empty;
+
+				Ctl_Usuario clase_usuario = new Ctl_Usuario();
+				TblUsuarios datos_usuario = clase_usuario.ObtenerIdSeguridad(id_seguridad);
+
+				if (datos_usuario != null)
+					return string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
+
+				return string.Empty;
+
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 
 		[HttpGet]
