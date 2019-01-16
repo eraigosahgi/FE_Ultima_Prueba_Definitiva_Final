@@ -308,7 +308,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (respuesta.EstadoDian.CodigoRespuesta == ValidacionRespuestaDian.NoRecibido.ToString())
 						{
 							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
-							ValidarRespuesta(respuesta);
+							ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 						}
 						else if (respuesta.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Pendiente.GetHashCode())
 						{
@@ -332,7 +332,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 					{
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
+						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 					}
 				}
 
@@ -372,7 +372,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Actualiza la categoria con el nuevo estado
 								respuesta.IdEstado = documento.IdCategoriaEstado;
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
-								ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
+								ValidarRespuesta(respuesta, respuesta.DescripcionEstado,null,false);
 							}
 
 						}

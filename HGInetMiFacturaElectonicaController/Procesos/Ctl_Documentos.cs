@@ -169,7 +169,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								respuesta.UrlPdf = null;
 								respuesta.UrlXmlUbl = null;
 								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("El Facturador Electrónico {0} no se encuentra habilitado para el procesamiento de anexos", documentoBd.StrEmpresaFacturador), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
-								ValidarRespuesta(respuesta);
+								ValidarRespuesta(respuesta, "El Facturador Electrónico no se encuentra habilitado para el procesamiento de anexos");
 							}
 						}
 

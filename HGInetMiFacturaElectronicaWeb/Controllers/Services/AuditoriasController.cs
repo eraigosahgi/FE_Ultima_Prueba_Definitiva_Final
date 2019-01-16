@@ -44,7 +44,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					StrIdSeguridad = d.StrIdSeguridad,
 					StrIdPeticion = d.StrIdPeticion,
-					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss"),
+					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
 					StrObligado = d.StrObligado,
 					IntIdEstado = d.IntIdEstado,
 					StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(d.IntIdEstado)),

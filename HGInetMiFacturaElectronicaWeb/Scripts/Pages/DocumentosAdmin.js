@@ -653,6 +653,8 @@ DocObligadoApp.controller('ModalAuditDocumentoController', function ModalAuditDo
 
 			$("#gridAuditDocumento").dxDataGrid({
 				dataSource: response.data,
+				 allowColumnResizing: true,
+				allowColumnReordering: true,
 				paging: {
 					pageSize: 10
 				},
