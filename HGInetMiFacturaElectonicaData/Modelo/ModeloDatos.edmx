@@ -104,6 +104,8 @@
           <Property Name="IntManejaAnexos" Type="bit" Nullable="false" />
           <Property Name="IntEnvioMailRecepcion" Type="bit" Nullable="false" />
           <Property Name="StrEmpresaDescuento" Type="varchar" MaxLength="50" />
+          <Property Name="IntIdEstado" Type="smallint" Nullable="false" />
+          <Property Name="IntCobroPostPago" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasPasarela">
           <Key>
@@ -1008,7 +1010,7 @@
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblDocumentos" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblDocumentos" ToRole="TblEmpresas" />
-        </EntityType>
+          </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Type="Modelo.TblConfiguracionInteroperabilidad" Role="TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
           <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="*" />
@@ -1187,6 +1189,8 @@
           <Property Name="IntManejaAnexos" Type="Boolean" Nullable="false" />
           <Property Name="IntEnvioMailRecepcion" Type="Boolean" Nullable="false" />
           <Property Name="StrEmpresaDescuento" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntIdEstado" Type="Int16" Nullable="false" />
+          <Property Name="IntCobroPostPago" Type="Int16" Nullable="false" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblDocumentos1" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresasResoluciones" />
@@ -1551,6 +1555,8 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntCobroPostPago" ColumnName="IntCobroPostPago" />
+                <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
                 <ScalarProperty Name="StrEmpresaDescuento" ColumnName="StrEmpresaDescuento" />
                 <ScalarProperty Name="IntEnvioMailRecepcion" ColumnName="IntEnvioMailRecepcion" />
                 <ScalarProperty Name="IntManejaAnexos" ColumnName="IntManejaAnexos" />

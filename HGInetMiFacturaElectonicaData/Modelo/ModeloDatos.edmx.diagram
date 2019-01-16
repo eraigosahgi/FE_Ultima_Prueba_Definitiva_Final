@@ -17,7 +17,7 @@
         <EntityTypeShape EntityType="Modelo.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="Modelo.TblEmpresasPasarela" Width="1.5" PointX="10.25" PointY="8" />
         <EntityTypeShape EntityType="Modelo.TblPagosElectronicos" Width="1.875" PointX="17.875" PointY="7.75" />
-        <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.875" PointX="10.125" PointY="2.625" />
+        <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.875" PointX="10.125" PointY="2.625" IsExpanded="true" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" />
         <EntityTypeShape EntityType="Modelo.TblConfiguracionInteroperabilidad" Width="2.125" PointX="18.375" PointY="0.5" />
         <EntityTypeShape EntityType="Modelo.TblFormatos" Width="1.875" PointX="2.625" PointY="5.375" />
@@ -32,7 +32,7 @@
         <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="2.125" PointX="9.625" PointY="11" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
-        <EntityTypeShape EntityType="Modelo.TblEmpresas" Width="2.125" PointX="6.5" PointY="0.75" />
+        <EntityTypeShape EntityType="Modelo.TblEmpresas" Width="2" PointX="6.625" PointY="0.5" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasFacturador" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" />
