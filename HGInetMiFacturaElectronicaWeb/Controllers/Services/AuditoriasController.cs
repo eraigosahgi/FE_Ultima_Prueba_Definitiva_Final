@@ -136,7 +136,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 
-
 				return Ok(datos_retorno);
 			}
 			catch (Exception excepcion)

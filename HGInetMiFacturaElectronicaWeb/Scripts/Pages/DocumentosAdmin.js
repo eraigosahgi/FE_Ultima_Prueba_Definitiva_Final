@@ -653,7 +653,7 @@ DocObligadoApp.controller('ModalAuditDocumentoController', function ModalAuditDo
 
 			$("#gridAuditDocumento").dxDataGrid({
 				dataSource: response.data,
-				 allowColumnResizing: true,
+				allowColumnResizing: true,
 				allowColumnReordering: true,
 				paging: {
 					pageSize: 10
@@ -696,9 +696,53 @@ DocObligadoApp.controller('ModalAuditDocumentoController', function ModalAuditDo
 						if (options.data.StrResultadoProceso) {
 							$http.get('/api/DetallesRespuesta?id_proceso=' + options.data.IntIdProceso + '&respuesta=' + options.data.StrResultadoProceso).then(function (response) {
 
-								container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4><pre id="json"></pre>'));
+								//container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4><div id="json"></pre>'));
+								//document.getElementById("json").innerHTML = JSON.stringify(response.data, undefined, 2);
+								
 
-								document.getElementById("json").innerHTML = JSON.stringify(response.data, undefined, 2);
+								var data = { "a": 1, "b": 3, "ds": 4 };
+
+								// Create a new table
+								var table = document.createElement("table");
+
+								// Add the table header
+								var tr = document.createElement('tr');
+								var leftRow = document.createElement('td');
+								leftRow.innerHTML = "Name";
+								tr.appendChild(leftRow);
+								var rightRow = document.createElement('td');
+								rightRow.innerHTML = "Value";
+								tr.appendChild(rightRow);
+								table.appendChild(tr);
+
+								// Add the table rows
+								for (var name in data) {
+									var value = data[name];
+									var tr = document.createElement('tr');
+									var leftRow = document.createElement('td');
+									leftRow.innerHTML = name;
+									tr.appendChild(leftRow);
+									var rightRow = document.createElement('td');
+									rightRow.innerHTML = value;
+									tr.appendChild(rightRow);
+									table.appendChild(tr);
+								}
+
+								// Add the created table to the HTML page
+								document.body.appendChild(table);
+
+								/*try {
+									var res = response.data.substring(0, 1);
+								} catch (e) {
+									container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4>'));
+
+									var contador = 0;
+									for (var prop in response.data) {
+										contador++;
+										if (contador > 1)
+											container.append($('<label>' + prop + ':</label><label>' + response.data[prop] + '</label></br>'));
+									}
+								}*/
 							});
 						}
 					}
@@ -711,8 +755,9 @@ DocObligadoApp.controller('ModalAuditDocumentoController', function ModalAuditDo
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 			return $q.reject(response.data);
 		});
-
 	}
+
+
 
 });
 
