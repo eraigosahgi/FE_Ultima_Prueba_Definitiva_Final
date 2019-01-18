@@ -5,6 +5,26 @@ function ColocarEstado(Estado, Descripcion) {
     return "<span " + ((Estado == '400') ? " class='badge badge-FallidoDIAN'  title='" + Descripcion + "'" : (Estado == '300') ? " class='badge badge-ValidadoDIAN'  title='" + Descripcion + "'" : (Estado == '200') ? " class='badge badge-envioDian'   title='" + Descripcion + "'" : " class='badge badge-RecibidoPlataforma'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >"+Descripcion+"</span>"
 }
 
+//Retorna el código html del diseño del tipo de evento de respuestas de  mailject
+function ControlTipoEventoMail(TipoEvento) {
+	return "<span " +
+	  ((TipoEvento == 'Enviado') ? " class='badge bg-grey-300' title='" + TipoEvento + "'"
+	: (TipoEvento == 'Entregado') ? " class='badge bg-grey-600'  title='" + TipoEvento + "'"
+	: (TipoEvento == 'Abierto') ? " class='badge bg-green-300'  title='" + TipoEvento + "'"
+	: (TipoEvento == 'Presionó') ? " class='badge bg-green-700'  title='" + TipoEvento + "'"
+	: (TipoEvento == 'Bloqueado') ? " class='badge bg-slate-800'  title='" + TipoEvento + "'"
+	: (TipoEvento == 'spam') ? " class='badge bg-danger'  title='" + TipoEvento + "'"
+	: " class='badge badge bg-primary'  title='" + TipoEvento + "'")
+	+ " style='border-radius: 0px !important;'>"
+	+ "<i " +
+	 ((TipoEvento == 'Enviado') ? " class='icon-upload4'"
+	 : (TipoEvento == 'Entregado') ? " class='icon-checkmark4'"
+	: (TipoEvento == 'Abierto') ? " class='icon-mail-read'"
+	: (TipoEvento == 'Presionó') ? " class='icon-cursor2'"
+	: (TipoEvento == 'Bloqueado') ? " class='icon-blocked'"
+	: (TipoEvento == 'spam') ? " class='icon-warning'"
+	: " class='icon-minus-circle2'") + "></i>&nbsp;&nbsp;" + TipoEvento + "</span>"
+}
 
 //Controla el formato de numeros Ejemplo: $ 1.222.333,90
 var fNumber = {

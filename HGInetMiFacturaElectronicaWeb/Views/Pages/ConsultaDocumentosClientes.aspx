@@ -142,6 +142,8 @@
             </div>
         </div>
 
+		<div data-ng-include="'AuditoriaDocumento.aspx'"></div>
+
     </div>
 
 </asp:Content>

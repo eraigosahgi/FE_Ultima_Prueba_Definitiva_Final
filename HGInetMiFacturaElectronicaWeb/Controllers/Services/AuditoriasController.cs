@@ -101,41 +101,31 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/DetallesRespuesta")]
-		public IHttpActionResult DetallesRespuesta(int id_proceso, string respuesta)
+		public IHttpActionResult DetallesRespuesta(string respuesta)
 		{
 			try
 			{
-
 				//Valida los datos de la sesión.
 				Sesion.ValidarSesion();
-
-				if (!respuesta.Substring(0, 1).Equals("{"))
-					return Ok(respuesta);
-
+				respuesta = respuesta.Replace("[", "").Replace("]", "");
 				dynamic datos_retorno = JsonConvert.DeserializeObject(respuesta);
 
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-				if (id_proceso == ProcesoEstado.EnvioEmailAcuse.GetHashCode() || id_proceso == ProcesoEstado.EnvioRespuestaAcuse.GetHashCode())
+				MensajeResumenGlobal obj_peticion = new MensajeResumenGlobal();
+				obj_peticion.identificacion = plataforma_datos.IdentificacionHGInetMail;
+				obj_peticion.serial = plataforma_datos.LicenciaHGInetMail;
+				obj_peticion.id_mensaje = (long)datos_retorno.MessageID;
+
+				ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", plataforma_datos.RutaHginetMail), TipoContenido.Applicationjson.GetHashCode(), "");
+				try
 				{
-					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-					MensajeResumenGlobal obj_peticion = new MensajeResumenGlobal();
-					obj_peticion.identificacion = plataforma_datos.IdentificacionHGInetMail;
-					obj_peticion.serial = plataforma_datos.LicenciaHGInetMail;
-					obj_peticion.id_mensaje = (long)datos_retorno.MessageID;
-
-					ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", plataforma_datos.RutaHginetMail), TipoContenido.Applicationjson.GetHashCode(), "");
-					try
-					{
-						datos_retorno = cliente.POST(obj_peticion);
-					}
-					catch (Exception ex)
-					{
-						var cod = cliente.CodHttp;
-					}
+					datos_retorno = cliente.POST(obj_peticion);
 				}
-
-
+				catch (Exception ex)
+				{
+					var cod = cliente.CodHttp;
+				}
 				return Ok(datos_retorno);
 			}
 			catch (Exception excepcion)
