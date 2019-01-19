@@ -105,6 +105,16 @@ namespace HGInetDIANServicios
 		private static DianResultadoTransacciones.DocumentosRecibidos Convertir(string soapResponse)
 		{
 
+			// objeto de respuesta principal
+			DianResultadoTransacciones.DocumentosRecibidos acuse = new DianResultadoTransacciones.DocumentosRecibidos();
+
+			DianResultadoTransacciones.DocumentoRecibido detalle = new DianResultadoTransacciones.DocumentoRecibido();
+
+			detalle.DatosBasicosDocumento = new DianResultadoTransacciones.DatosBasicosDocumento();
+
+			List<DianResultadoTransacciones.DocumentoRecibido> detalles = new List<DianResultadoTransacciones.DocumentoRecibido>();
+
+
 			//Bandera para detener proceso cuando sean varias respuesta y encuentre la respuesta exitosa
 			bool encontro_resp = false;
 
@@ -113,79 +123,80 @@ namespace HGInetDIANServicios
 
 			var soapBody = xmlDocument.GetElementsByTagName("ns3:ConsultaResultadoValidacionDocumentosRespuesta")[0];
 
-			// objeto de respuesta principal
-			DianResultadoTransacciones.DocumentosRecibidos acuse = new DianResultadoTransacciones.DocumentosRecibidos();
+			//Valida que en la respuesta no este un Proceso de Validacion
+			bool validacion = soapResponse.Contains("EstadoDocumento>" + RespuestaDocumentoDian.Proceso.GetHashCode() + "</");
 
-
-			foreach (XmlNode item in soapBody)
+			if (validacion == false)
 			{
-				if (item.LocalName.Equals("CodigoTransaccion"))
-					acuse.CodigoTransaccion = Convert.ToInt32(item.InnerText);
-
-				else if (item.LocalName.Equals("FechaTransaccion"))
-					acuse.FechaTransaccion = System.DateTime.ParseExact(item.InnerText, Fecha.ObtenerFormato(item.InnerText), System.Globalization.CultureInfo.InvariantCulture);
-
-				else if (item.LocalName.Equals("DescripcionTransaccion"))
-					acuse.DescripcionTransaccion = item.InnerText;
-
-				else if (item.LocalName.Equals("DocumentoRecibido") && !encontro_resp)
+				foreach (XmlNode item in soapBody)
 				{
-					var received = xmlDocument.GetElementsByTagName("ns3:DocumentoRecibido")[0];
+					if (item.LocalName.Equals("CodigoTransaccion"))
+						acuse.CodigoTransaccion = Convert.ToInt32(item.InnerText);
 
-					List<DianResultadoTransacciones.DocumentoRecibido> detalles = new List<DianResultadoTransacciones.DocumentoRecibido>();
+					else if (item.LocalName.Equals("FechaTransaccion"))
+						acuse.FechaTransaccion = System.DateTime.ParseExact(item.InnerText, Fecha.ObtenerFormato(item.InnerText), System.Globalization.CultureInfo.InvariantCulture);
 
-					foreach (XmlNode item2 in received)
+					else if (item.LocalName.Equals("DescripcionTransaccion"))
+						acuse.DescripcionTransaccion = item.InnerText;
+
+					else if (item.LocalName.Equals("DocumentoRecibido") && !encontro_resp)
 					{
-						if (item2.LocalName.Equals("DatosBasicosDocumento") && !encontro_resp)
+						var received = xmlDocument.GetElementsByTagName("ns3:DocumentoRecibido")[0];
+
+						foreach (XmlNode item2 in received)
 						{
-							DianResultadoTransacciones.DocumentoRecibido detalle = new DianResultadoTransacciones.DocumentoRecibido();
-
-							detalle.DatosBasicosDocumento = new DianResultadoTransacciones.DatosBasicosDocumento();
-
-							var seguimiento = xmlDocument.GetElementsByTagName("ns3:DatosBasicosDocumento");
-
-							foreach (XmlNode item3 in seguimiento)
+							if (item2.LocalName.Equals("DatosBasicosDocumento") && !encontro_resp)
 							{
+								var seguimiento = xmlDocument.GetElementsByTagName("ns3:DatosBasicosDocumento");
 
-								if (!encontro_resp)
+								foreach (XmlNode item3 in seguimiento)
 								{
-									//se recorre todas las respuestas
-									foreach (XmlNode item_child in item3.ChildNodes)
+
+									if (!encontro_resp)
 									{
-										if (item_child.LocalName.Equals("Emisor"))
-											detalle.DatosBasicosDocumento.Emisor = item_child.InnerText;
-										else if (item_child.LocalName.Equals("FechaHoraEmision"))
-											detalle.DatosBasicosDocumento.FechaHoraEmision = item_child.InnerText;
-										else if (item_child.LocalName.Equals("EstadoDocumento"))
+										//se recorre todas las respuestas
+										foreach (XmlNode item_child in item3.ChildNodes)
 										{
-											detalle.DatosBasicosDocumento.EstadoDocumento = item_child.InnerText;
-											if (detalle.DatosBasicosDocumento.EstadoDocumento == RespuestaDocumentoDian.Exitosa.GetHashCode().ToString())
-												encontro_resp = true;
+											if (item_child.LocalName.Equals("Emisor"))
+												detalle.DatosBasicosDocumento.Emisor = item_child.InnerText;
+											else if (item_child.LocalName.Equals("FechaHoraEmision"))
+												detalle.DatosBasicosDocumento.FechaHoraEmision = item_child.InnerText;
+											else if (item_child.LocalName.Equals("EstadoDocumento"))
+											{
+												detalle.DatosBasicosDocumento.EstadoDocumento = item_child.InnerText;
+												if (detalle.DatosBasicosDocumento.EstadoDocumento == RespuestaDocumentoDian.Exitosa.GetHashCode().ToString())
+													encontro_resp = true;
+											}
+											else if (item_child.LocalName.Equals("DescripcionEstado"))
+												detalle.DatosBasicosDocumento.DescripcionEstado = item_child.InnerText;
+											else if (item_child.LocalName.Equals("NumeroDocumento"))
+												detalle.DatosBasicosDocumento.NumeroDocumento = item_child.InnerText;
+											else if (item_child.LocalName.Equals("CUFE"))
+												detalle.DatosBasicosDocumento.CUFE = item_child.InnerText;
+											else if (item_child.LocalName.Equals("FechaHoraRecepcion"))
+												detalle.DatosBasicosDocumento.FechaHoraRecepcion = System.DateTime.ParseExact(item.InnerText, Fecha.ObtenerFormato(item.InnerText), System.Globalization.CultureInfo.InvariantCulture);
 										}
-										else if (item_child.LocalName.Equals("DescripcionEstado"))
-											detalle.DatosBasicosDocumento.DescripcionEstado = item_child.InnerText;
-										else if (item_child.LocalName.Equals("NumeroDocumento"))
-											detalle.DatosBasicosDocumento.NumeroDocumento = item_child.InnerText;
-										else if (item_child.LocalName.Equals("CUFE"))
-											detalle.DatosBasicosDocumento.CUFE = item_child.InnerText;
-										else if (item_child.LocalName.Equals("FechaHoraRecepcion"))
-											detalle.DatosBasicosDocumento.FechaHoraRecepcion = System.DateTime.ParseExact(item.InnerText, Fecha.ObtenerFormato(item.InnerText), System.Globalization.CultureInfo.InvariantCulture);
 									}
+
 								}
 
+								if (detalle.DatosBasicosDocumento.EstadoDocumento != RespuestaDocumentoDian.Exitosa.GetHashCode().ToString())
+									detalle.DatosBasicosDocumento.DescripcionEstado = detalle.DatosBasicosDocumento.DescripcionEstado + " " + ObtenerErroresRespuesta(xmlDocument);
+								detalles.Add(detalle);
 							}
-
-							if (detalle.DatosBasicosDocumento.EstadoDocumento != RespuestaDocumentoDian.Exitosa.GetHashCode().ToString())
-								detalle.DatosBasicosDocumento.DescripcionEstado = detalle.DatosBasicosDocumento.DescripcionEstado + " " + ObtenerErroresRespuesta(xmlDocument);
-							detalles.Add(detalle);
 						}
 
+						acuse.DocumentoRecibido = detalles.ToArray();
 					}
-
-
-					acuse.DocumentoRecibido = detalles.ToArray();
-
 				}
+			}
+			else
+			{
+				detalle.DatosBasicosDocumento.EstadoDocumento = RespuestaDocumentoDian.Proceso.GetHashCode().ToString();
+				detalle.DatosBasicosDocumento.DescripcionEstado = Enumeracion.GetDescription(RespuestaDocumentoDian.Proceso);
+				detalles.Add(detalle);
+				acuse.DocumentoRecibido = detalles.ToArray();
+
 			}
 
 			return acuse;
