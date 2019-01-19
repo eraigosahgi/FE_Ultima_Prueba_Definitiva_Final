@@ -286,6 +286,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Valor = d.IntValor,
 					TCompra = d.IntNumTransaccCompra,
 					TProcesadas = d.IntNumTransaccProcesadas,
+					TDisponibles = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
 					id = d.StrIdSeguridad,
 					Fecha = d.DatFecha,
 					CodigoEmpresaFacturador = d.TblEmpresas.StrIdentificacion,

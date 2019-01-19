@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Registros;
+﻿using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Enumerables;
@@ -475,6 +476,112 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 		#endregion
 
+
+
+
+		#region Sonda Automatica de PostPago
+		/// <summary>
+		/// Sonda para procesar documentos
+		/// </summary>
+		/// <returns></returns>
+		public async Task SondaCrearPlanesPostpago(string EmpresaCrea, string UsuarioCrea, bool Notifica)
+		{
+			try
+			{
+				var Tarea = TareaCrearPlanesPostapago( EmpresaCrea,  UsuarioCrea, Notifica);
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+		}
+
+		/// <summary>
+		/// Tarea asincrona para crear planes post pago automaticamente cada mes
+		/// </summary>
+		/// <returns></returns>
+		public async Task TareaCrearPlanesPostapago(string EmpresaCrea,string UsuarioCrea,bool Notifica)
+		{
+			try
+			{
+				await Task.Factory.StartNew(() =>
+					{
+						List<TblEmpresas> listaempresas = new List<TblEmpresas>();
+						Ctl_Empresa controlador = new Ctl_Empresa();
+						listaempresas = controlador.ObtenerEmpPostPago();
+						TblPlanesTransacciones plan = new TblPlanesTransacciones();
+						foreach (var item in listaempresas)
+						{							
+							if (CerrarplanesPostpago(item.StrIdentificacion))
+							{								
+								plan = new TblPlanesTransacciones();								
+								DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month + 1, 1);
+								DateTime FechaVenc = Fecha1.AddDays(-1);
+								plan.DatFecha = Fecha.GetFecha();
+								plan.DatFechaVencimiento = FechaVenc;
+								plan.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+								plan.IntTipoProceso = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
+								plan.StrEmpresaFacturador = item.StrIdentificacion;
+								plan.StrIdSeguridad = Guid.NewGuid();
+								plan.StrEmpresaUsuario = EmpresaCrea;
+								plan.StrUsuario = UsuarioCrea;
+								string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
+								string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hora);
+								plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
+								Crear(plan, Notifica); 
+							}
+						}
+					});
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+		}
+		/// <summary>
+		/// Cierra los planes postpago de un facturador en especifico
+		/// </summary>
+		/// <param name="Facturador">Documento del Facturador</param>
+		public bool CerrarplanesPostpago(string Facturador) {
+			bool CrearPlan = true;
+			try
+			{
+				List<TblPlanesTransacciones> planes = new List<TblPlanesTransacciones>();
+				byte postapago = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
+				byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());
+				planes = (from datos in context.TblPlanesTransacciones
+						  where datos.StrEmpresaFacturador.Equals(Facturador)
+						  && datos.IntEstado == habilitado
+						  && datos.IntTipoProceso == postapago
+						  select datos).ToList();
+				
+				foreach (var item in planes)
+				{
+					// Si tiene un plan activo el mismo año y mismo mes, no crea nuevo plan
+					if (item.DatFecha.Year == Fecha.GetFecha().Year && item.DatFecha.Month == Fecha.GetFecha().Month)
+					{
+						CrearPlan = false;
+					}
+					else
+					{
+						// Cierra plan que no sea del presente año y mes
+						string fecha_vencimiento = (item.DatFechaVencimiento.HasValue) ? item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hora) : "";
+						string fecha_creacion = item.DatFecha.ToString(Fecha.formato_fecha_hora);
+						item.IntEstado = EstadoPlan.Inhabilitado.GetHashCode();
+						item.StrObservaciones = string.Format("{0}{1}{2}{3}", item.StrObservaciones, Environment.NewLine, Environment.NewLine, string.Format(Constantes.CierreAutomaticoPostPago, fecha_creacion, item.IntNumTransaccProcesadas, fecha_vencimiento));
+						this.Edit(item);						
+					}				
+				}
+				return CrearPlan;
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+				return true;
+			}
+		}
+		#endregion
 
 	}
 }

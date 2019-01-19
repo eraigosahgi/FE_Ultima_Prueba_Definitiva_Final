@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using LibreriaGlobalHGInet.HgiNet;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.Formato;
+using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -185,6 +186,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				EmpresaActualiza.IntManejaAnexos = empresa.IntManejaAnexos;
 				EmpresaActualiza.IntEnvioMailRecepcion = empresa.IntEnvioMailRecepcion;
 				EmpresaActualiza.StrEmpresaDescuento = empresa.StrEmpresaDescuento;
+				EmpresaActualiza.IntIdEstado = empresa.IntIdEstado;
+				EmpresaActualiza.IntCobroPostPago = empresa.IntCobroPostPago;
 
 				empresa.DatFechaActualizacion = Fecha.GetFecha();
 
@@ -429,7 +432,26 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		}
 
+		#region Lista empresas para crear plan post pago
+		/// <summary>
+		/// Retorna la lista de empresas que estan activas y requieren plan postpago mensual
+		/// </summary>
+		/// <returns></returns>
+		public List<TblEmpresas> ObtenerEmpPostPago()
+		{
+			//Estado empresa     -- 1 Activa
+			//IntObligado = true -- Es Facturador
+			//IntCobroPostPago   -- 1 Tiene plan post pago automatico
+			List<TblEmpresas> ListaEmpresas = (from empresas in context.TblEmpresas
+								 where empresas.IntIdEstado== 1
+								 && empresas.IntCobroPostPago == 1
+								 && empresas.IntObligado ==true
+								 select empresas).ToList();			
 
+			return ListaEmpresas;
+		}
+
+		#endregion
 
 	}
 }

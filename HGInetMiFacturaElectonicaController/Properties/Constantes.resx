@@ -130,6 +130,10 @@
     <value>facturaelectronica</value>
     <comment>Carpeta para guardar los documentos generados de Factura Electronica</comment>
   </data>
+  <data name="CierreAutomaticoPostPago" xml:space="preserve">
+    <value>PLAN CERRADO AUT. EL {0}, CON UNA CANT. DE DOC. DE {1} POR VENCIMIENTO EL {2}</value>
+    <comment>Descripción para las observaciones de la Cierre automatico del plan postpago</comment>
+  </data>
   <data name="EmailCopiaOculta" xml:space="preserve">
     <value>tic@hgi.com.co</value>
     <comment>email para copias ocultas (auditorías)</comment>
@@ -165,6 +169,10 @@
   <data name="PrefijoResolucionPruebas" xml:space="preserve">
     <value>PRUE</value>
     <comment>Prefijo de la Resolucion de Pruebas</comment>
+  </data>
+  <data name="RecargaAutomaticaPostPago" xml:space="preserve">
+    <value>PLAN CREADO AUT. EL {0} CON FECHA DE VENCIMIENTO EL {1}</value>
+    <comment>Descripción para las observaciones de la recarga del plan postpago</comment>
   </data>
   <data name="ResolucionPruebas" xml:space="preserve">
     <value>9000000033394696</value>

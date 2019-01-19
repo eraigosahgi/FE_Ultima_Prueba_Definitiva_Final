@@ -863,7 +863,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 	$scope.CargarDocumentosEstadoAdmin = function () {
 		var Indicador = $scope.ReporteDocumentosEstadoAdmin
-		$('#totaldocproceso').text("Documentos por Estado: " + Indicador[0].Cantidad);
+		$('#totaldocproceso').text("Documentos por Proceso: " + Indicador[0].Cantidad);
 		for (var i = 0; i < Indicador.length; i++) {
 			PorcentajeGrafico('#' + Indicador[i].IdControl, 38, 4, Indicador[i].Color, Indicador[i].Porcentaje, "icon-file-download2", Indicador[i].Color, Indicador[i].Titulo, Indicador[i].Observaciones)
 		}

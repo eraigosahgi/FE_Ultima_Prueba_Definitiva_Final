@@ -22,14 +22,16 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
            fecha_inicio = "",
            fecha_fin = "",
            Habilitacion = "",
+		   Datos_estado = "",
+		   Datos_postpago = "",
            codigo_adquiriente = "";
 
-	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto',true).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true).then(function (Datos) {
 		$scope.EmpresaAsociada = Datos;
 	});
 
 
-	SrvFiltro.ObtenerFiltro('Empresa Descuenta Planes', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto',true).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Descuenta Planes', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true).then(function (Datos) {
 		$scope.EmpresaDescuenta = Datos;
 	});
 
@@ -173,20 +175,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
             	}]
             });
 
-		//$("#txtempresaasociada").dxTextBox({
-		//    readOnly: true,
-		//    value: codigo_facturador,
-		//    name: txtempresaasociada,
-		//    onValueChanged: function (data) {
-
-		//        Datos_empresa_Asociada = data.value;
-		//    },
-		//    onFocusIn: function (data) {
-		//        if ($scope.Admin)
-		//            $('#modal_Buscar_empresa').modal('show');
-		//    }
-		//});
-
 		$("#Facturador").dxCheckBox({
 			name: "PerfilFacturador",
 			text: "Facturador Electrónico",
@@ -270,7 +258,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
 
-
 		$("#txtDiasAcuse").dxNumberBox({
 			value: Datos_Dias_Acuse,
 			onValueChanged: function (data) {
@@ -295,7 +282,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$scope.Admin = false;
 					//$("#txtempresaasociada").dxTextBox({ value: Datos_Idententificacion });
 					//$('#txt_filtro_EmpresaAsociada').val(Datos_Idententificacion);
-					Set_EmpresaAsociada(Datos_Idententificacion);					
+					Set_EmpresaAsociada(Datos_Idententificacion);
 					Bloquear_EmpresaAsociada();
 				} else {
 					//Si No es verdadero, entonces primero pregunto si no es empresa Administradora ya
@@ -303,11 +290,32 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					if ($scope.AdminIntegrador) {
 						$scope.Admin = true;
 						Desbloquear_EmpresaAsociada();
-					} 
+					}
 				}
 			}
-		})
+		});
 
+
+		$("#cboestado").dxSelectBox({
+			placeholder: "Estado",
+			displayExpr: "Texto",
+			dataSource: TiposEstado,
+			onValueChanged: function (data) {
+				Datos_estado = data.value.ID;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "required",
+				message: "Debe seleccionar el Estado"
+			}]
+		});
+
+		$("#postpagoaut").dxCheckBox({
+			name: "postpagoaut",
+			onValueChanged: function (data) {
+				Datos_postpago = (data.value == true) ? 1 : 0;
+			}
+		});
 
 		function validarHabilitacion() {
 			var caso = "";
@@ -462,7 +470,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
 				Datos_Dias_Acuse = response.data[0].IntAcuseTacito;
 				Datos_Anexo = response.data[0].IntAnexo;
-				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;				
+				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
+				Datos_estado = response.data[0].Estado;
+				Datos_postpago = response.data[0].Postpago;
+
 
 				$("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
 				$("#NumeroIdentificacion").dxTextBox({ readOnly: true });
@@ -472,7 +483,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 				$("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
 				$("#TipoIndentificacion").dxSelectBox({ readOnly: true });
-				
+
 				Set_EmpresaAsociada((Datos_empresa_Asociada) ? Datos_empresa_Asociada : '');
 
 				Set_EmpresaDescuenta((response.data[0].StrEmpresaDescuenta) ? response.data[0].StrEmpresaDescuenta : Datos_Idententificacion)
@@ -502,6 +513,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 				if (Datos_EmailRecepcion == 1)
 					$("#EmailRecepcion").dxCheckBox({ value: true });
+
+				$("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
+
+				if (Datos_postpago == 1)
+					$("#postpagoaut").dxCheckBox({ value: true });
 
 
 			} catch (err) {
@@ -565,7 +581,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntAcuseTacito: Datos_Dias_Acuse,
 				IntAnexo: Datos_Anexo,
 				IntEmailRecepcion: Datos_EmailRecepcion,
-				StrEmpresaDescuento: txt_hgi_EmpresaDescuenta
+				StrEmpresaDescuento: txt_hgi_EmpresaDescuenta,
+				intestado: Datos_estado,
+				intpostpago: Datos_postpago
 			});
 
 			$("#wait").show();
@@ -615,7 +633,22 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
                      , loadPanel: {
                      	enabled: true
                      }
-                          , allowColumnResizing: true
+                          , onCellPrepared: function (options) {
+                          	var fieldData = options.value,
+								fieldHtml = "";
+                          	try {
+                          		if (options.data.Estado == 1) {
+                          			estado = " style='color:green; cursor:default;' title='Activo'";
+                          		} else {
+                          			estado = " style='color:red; cursor:default;' title='Inactivo'";
+                          		}
+
+                          	} catch (err) {
+
+                          	}
+
+                          }, allowColumnResizing: true
+
                    , columns: [
                        {
                        	cssClass: "col-md-1 col-xs-2",
@@ -631,7 +664,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
                        	dataField: "Identificacion"
                        },
                        {
-                       	caption: "Razón Social",
+                       	caption: "Razón social",
                        	dataField: "RazonSocial"
                        },
                        {
@@ -644,7 +677,52 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
                        },
                        {
                        	dataField: "Perfil"
-                       }
+                       },
+					   {
+					   	cssClass: "col-md-1 col-xs-1",
+					   	caption: 'Estado',
+					   	dataField: 'Estado',
+					   	cellTemplate: function (container, options) {
+					   		$("<div style='text-align:center; cursor:default;'>")
+								.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
+								.appendTo(container);
+					   	}
+					   },
+					   {
+					   	caption: "Asociado",
+					   	dataField: "Asociado",
+					   	hidingPriority: 0
+					   },
+					   {
+					   	caption: "Empresa descuento",
+					   	dataField: "EmpresaDescuento",
+					   	hidingPriority: 1
+					   },
+
+					   {
+					   	caption: "Post-Pago automatico",
+					   	dataField: "Postpago",
+					   	hidingPriority: 2
+					   },
+					   {
+					   	caption: "Nº Usuarios activos",
+					   	dataField: "Nusuaurios",
+					   	hidingPriority:  3
+					   },
+					   {
+					   	caption: "Nº Horas para acuse tacito",
+					   	dataField: "HorasAcuse",
+					   	hidingPriority:  4
+					   },
+					   {
+					   	caption: "Notificación en recepción",
+					   	dataField: "NotificacionMail",
+					   	hidingPriority:  5
+					   }
+
+
+
+
                        //,
                        //{
                        //    dataField: "Habilitacion"
@@ -692,3 +770,12 @@ var TiposIdentificacion =
         { ID: "41", Texto: 'Pasaporte' },
         { ID: "42", Texto: 'Documento de identificación extranjero' }
     ];
+
+
+var TiposEstado =
+[
+{ ID: "1", Texto: 'ACTIVO' },
+{
+	ID: "2", Texto: 'INACTIVO'
+}
+];

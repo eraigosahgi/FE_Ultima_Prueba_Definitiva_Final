@@ -105,15 +105,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 return NotFound();
             }
 
-            var retorno = datos.Select(d => new
-            {
-                Identificacion = d.StrIdentificacion,
-                RazonSocial = d.StrRazonSocial,
-                Email = d.StrMail,
-                Serial = d.StrSerial,
-                Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
-                Habilitacion = d.IntHabilitacion,
-                IdSeguridad = d.StrIdSeguridad
+			var retorno = datos.Select(d => new
+			{
+				Identificacion = d.StrIdentificacion,
+				RazonSocial = d.StrRazonSocial,
+				Email = d.StrMail,
+				Serial = d.StrSerial,
+				Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
+				Habilitacion = d.IntHabilitacion,
+				IdSeguridad = d.StrIdSeguridad,
+				Asociado = d.StrEmpresaAsociada,
+				EmpresaDescuento = d.StrEmpresaDescuento,
+				Estado = d.IntIdEstado,
+				Postpago = (d.IntCobroPostPago == 1) ? "SI":"NO",
+				Nusuaurios = d.IntNumUsuarios,
+				HorasAcuse = (d.IntAcuseTacito>0)? d.IntAcuseTacito.ToString() : "NO",
+				NotificacionMail = (d.IntEnvioMailRecepcion)?"SI":"NO"
             });
 
             return Ok(retorno);
@@ -218,7 +225,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				IntAnexo = d.IntManejaAnexos,
 				IntEmailRecepcion = d.IntEnvioMailRecepcion,
 				IntAcuseTacito = d.IntAcuseTacito,
-				StrEmpresaDescuenta = d.StrEmpresaDescuento
+				StrEmpresaDescuenta = d.StrEmpresaDescuento,
+				Estado = d.IntIdEstado,
+				Postpago = d.IntCobroPostPago
 			});
 
             return Ok(retorno);
@@ -245,7 +254,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="tipo">1.- Nuevo -- 2.- Editar</param>
 		/// <returns></returns>
 		[HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento,[FromUri]short intestado, [FromUri]short intpostpago, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
@@ -267,6 +276,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Empresa.IntAcuseTacito = IntAcuseTacito;
 				Empresa.IntManejaAnexos = IntAnexo;
 				Empresa.IntEnvioMailRecepcion = IntEmailRecepcion;
+				Empresa.IntIdEstado = intestado;
+				Empresa.IntCobroPostPago = intpostpago;
 				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(StrEmpresaDescuento) ? Identificacion : StrEmpresaDescuento);
 
 				if (tipo == 1)//Nuevo

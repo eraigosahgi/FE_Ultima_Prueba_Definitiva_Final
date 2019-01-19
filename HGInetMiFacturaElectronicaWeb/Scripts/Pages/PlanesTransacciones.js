@@ -2,10 +2,10 @@
 var opc_pagina = "1334";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum']);
+var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum', 'AppSrvPlanes']);
 
 //Controlador para la gestion planes transaccionales
-GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum) {
+GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum, SrvPlanes) {
 
 	var TiposProceso = [];
 	var now = new Date();
@@ -47,7 +47,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					//Valida si el id_seguridad contiene datos
 					if (StrIdSeguridad) {
 						respuesta = response.data[0].Editar;
-						$scope.PanelNotificacion = false;
+						$scope.PanelNotificacion = false;						
 					} else {
 						respuesta = response.data[0].Agregar
 						$scope.PanelNotificacion = true;
@@ -171,7 +171,9 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				datos_empresa_asociada = data.value;
 			},
 			onFocusIn: function (data) {
-				$('#modal_Buscar_empresa').modal('show');
+				if (!StrIdSeguridad) {
+					$('#modal_Buscar_empresa').modal('show');
+				}
 			}
 		}).dxValidator({
 			validationRules: [{
@@ -480,7 +482,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 	function CargarConsulta() {
 		$("#wait").show();
 		$http.get('/api/PlanesTransacciones?Identificacion=' + codigo_facturador).then(function (response) {
-			$("#wait").hide();
+			$("#wait").hide();			
 			try {
 				$("#grid").dxDataGrid({
 					dataSource: response.data,
@@ -493,11 +495,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 						allowedPageSizes: [5, 10, 20],
 						showInfo: true
 					},
-					columnChooser: {
-						enabled: true,
-						mode: "select",
-						title: "Selector de Columnas"
-					},
+					
 					focusedRowEnabled: true
 					, hoverStateEnabled: true,
 
@@ -519,13 +517,13 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 						var fieldData = options.value,
                             fieldHtml = "";
 						try {
-							if (options.columnIndex == 5) {//Columna de valor Total
+							if (options.columnIndex == 6) {//Columna de valor Total
 								if (fieldData) {
 									var inicial = fNumber.go(fieldData);
 									options.cellElement.html(inicial);
 								}
 							}
-							if (options.columnIndex == 4 || options.columnIndex == 7) {
+							if (options.columnIndex == 5 || options.columnIndex == 7 || options.columnIndex == 8) {
 								if (fieldData) {
 									var inicial = FormatoNumber.go(fieldData);
 									options.cellElement.html(inicial);
@@ -553,16 +551,14 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                       , allowColumnResizing: true
                  , columns: [
                      {
-
                      	width: 50,
                      	cellTemplate: function (container, options) {
                      		$("<div style='text-align:center'>")
-								.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionPlanesTransacciones.aspx?IdSeguridad=" + options.data.id + "'>"))
+								.append($("<a target='_blank' class='icon-file-eye' onClick=ConsultarDetalle('" + options.data.id + "')  ><a taget=_self style='margin-left:20%;' class='icon-pencil3' title='Editar' href='GestionPlanesTransacciones.aspx?IdSeguridad=" + options.data.id + "'>"))
 								.appendTo(container);
                      	}
                      },
-                     {
-                     	
+                     {                     	
                      	caption: "Fecha",
                      	dataField: "Fecha",
                      	dataType: "date",
@@ -664,6 +660,78 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
 		});
+
+
+		ConsultarDetalle = function (IdSeguridad) {
+			$('#modal_detalle_plan').modal('show');
+			$("#wait").show();
+			$http.get('/api/PlanesTransacciones?IdSeguridad=' + IdSeguridad).then(function (response) {
+				$("#wait").hide();				
+				$scope.Empresa = response.data[0].Empresa;
+				$scope.Usuario = response.data[0].Usuario;
+				$scope.Valor = response.data[0].Valor;
+				$scope.TCompra = response.data[0].TCompra;
+				$scope.TProcesadas = response.data[0].TProcesadas;
+				$scope.TDisponibles = response.data[0].TDisponibles;
+				$scope.id = response.data[0].id;
+				$scope.Fecha = response.data[0].Fecha;
+				$scope.CodigoEmpresaFacturador = response.data[0].CodigoEmpresaFacturador;
+				$scope.EmpresaFacturador = response.data[0].EmpresaFacturador;
+				$scope.Tipo = response.data[0].Tipo;
+				$scope.Observaciones = response.data[0].Observaciones;
+				$scope.Estado = response.data[0].Estado;
+				$scope.FechaVence = response.data[0].FechaVence;
+
+				///////////////////////////////////////////////////////////////////////				
+					$("#progressBarStatus").dxProgressBar({
+						min: 0,
+						max: 100,
+						width: "100%",
+						statusFormat: function (value) {
+							return value * 100 + "%";
+						}
+					});
+					
+					if ($scope.Tipo == 3) {
+						nivel(100, $scope.Tipo);
+					} else {
+						var porcentaje = ($scope.TProcesadas.toString().replace(',', '.') / $scope.TCompra.toString().replace(',', '.')) * 100;
+						nivel(porcentaje, $scope.Tipo);
+					}
+				///////////////////////////////////////////////////////////////////////
+
+			}, function errorCallback(response) {
+				$('#wait').hide();
+				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
+			});
+		}
+
+
+
+		function nivel(nivel, tipo) {
+			if (tipo == 3) {
+				nivel = 100;
+				color = '#5cb85c'; //Verde
+			}else{
+				var color = '#FE2E2E';
+				if (nivel >= 71 && nivel <= 90) {
+					color = '#F7FE2E';
+				}
+
+				if (nivel > 90) {
+					color = '#FE2E2E';
+				}
+
+				if (nivel <= 70) {
+					color = '#5cb85c';
+				}
+			}
+
+			$("#progressBarStatus").dxProgressBar({ value: nivel });
+			$('div.dx-progressbar-range').css('background-color', color);
+			$('div.dx-progressbar-range').css('border', '1px solid  ' + color);
+			
+		}
 	}
 });
 

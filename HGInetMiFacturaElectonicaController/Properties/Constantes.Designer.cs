@@ -97,6 +97,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a PLAN CERRADO AUT. EL {0}, CON UNA CANT. DE DOC. DE {1} POR VENCIMIENTO EL {2}.
+        /// </summary>
+        public static string CierreAutomaticoPostPago {
+            get {
+                return ResourceManager.GetString("CierreAutomaticoPostPago", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a tic@hgi.com.co.
         /// </summary>
         public static string EmailCopiaOculta {
@@ -174,6 +183,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         public static string PrefijoResolucionPruebas {
             get {
                 return ResourceManager.GetString("PrefijoResolucionPruebas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a PLAN CREADO AUT. EL {0} CON FECHA DE VENCIMIENTO EL {1}.
+        /// </summary>
+        public static string RecargaAutomaticaPostPago {
+            get {
+                return ResourceManager.GetString("RecargaAutomaticaPostPago", resourceCulture);
             }
         }
         

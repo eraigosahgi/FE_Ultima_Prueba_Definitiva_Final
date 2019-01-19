@@ -1925,6 +1925,7 @@
     <Content Include="Scripts\Services\Loading.js" />
     <Content Include="Scripts\Services\MaestrosEnum.js" />
     <Content Include="Scripts\Services\SrvDocumentos.js" />
+    <Content Include="Scripts\Services\SrvPlanes.js" />
     <Content Include="Scripts\Services\SrvProveedor.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
     <Content Include="Views\Demos\Demo.aspx" />
@@ -2772,6 +2773,7 @@
     <Content Include="Views\Pages\ProcesarInteroperabilidad.aspx" />
     <Content Include="Views\Pages\Sonda.aspx" />
     <Content Include="Views\Pages\SondaAcuseTacito.aspx" />
+    <Content Include="Views\Pages\SondaCrearPlanes.aspx" />
     <Content Include="Views\Pages\SondaResoluciones.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
     <Content Include="Views\ReportDesigner\XmlReporteBase.xml">
@@ -3118,6 +3120,13 @@
     <Compile Include="Views\Pages\SondaAcuseTacito.aspx.designer.cs">
       <DependentUpon>SondaAcuseTacito.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\SondaCrearPlanes.aspx.cs">
+      <DependentUpon>SondaCrearPlanes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaCrearPlanes.aspx.designer.cs">
+      <DependentUpon>SondaCrearPlanes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\SondaResoluciones.aspx.cs">
       <DependentUpon>SondaResoluciones.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3248,7 +3257,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61433/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
