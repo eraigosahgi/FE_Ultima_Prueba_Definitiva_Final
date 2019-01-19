@@ -4,8 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
     <!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201911"></script>
-    <script src="../../Scripts/Pages/Empresas.js?vjs201911"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
+    <script src="../../Scripts/Pages/Empresas.js?vjs201912"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div data-ng-app="EmpresasApp" data-ng-controller="ConsultaEmpresasController" data-ng-init="Admin=false">

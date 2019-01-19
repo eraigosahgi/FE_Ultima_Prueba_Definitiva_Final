@@ -4,9 +4,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201911"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
     <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/ConsultaAcuse.js?vjs201911"></script>
+    <script src="../../Scripts/Pages/ConsultaAcuse.js?vjs201912"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div data-ng-app="AcuseConsultaApp" data-ng-controller="AcuseConsultaController">

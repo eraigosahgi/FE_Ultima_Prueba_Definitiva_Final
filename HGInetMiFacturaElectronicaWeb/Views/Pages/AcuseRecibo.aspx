@@ -87,7 +87,7 @@
 
 
     <!-- JS AcuseRecibo -->
-    <script src="../../Scripts/Pages/AcuseRecibo.js?vjs201911"></script>
+    <script src="../../Scripts/Pages/AcuseRecibo.js?vjs201912"></script>
 
 
 </head>
