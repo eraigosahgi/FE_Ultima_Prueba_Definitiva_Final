@@ -338,7 +338,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
 							 orderby datos.IntNumero descending
 							 select datos).ToList();
-
+			
 			return respuesta;
 		}
 

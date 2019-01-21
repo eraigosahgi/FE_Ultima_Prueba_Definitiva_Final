@@ -1,11 +1,13 @@
 ﻿using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Licenciamiento;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.Peticiones;
@@ -30,7 +32,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 				//Valida los datos de la sesión.
-				Sesion.ValidarSesion();
+				//Sesion.ValidarSesion();
 
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
 
@@ -41,6 +43,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					return NotFound();
 				}
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				//Obtiene los datos del documento en la base de datos.
+				TblDocumentos datos_doc = ctl_documento.ObtenerPorIdSeguridad(new Guid(id_seguridad_doc)).FirstOrDefault();
 
 				var datos_retorno = datos_audit.Select(d => new
 				{
@@ -61,6 +68,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					StrResultadoProceso = d.StrResultadoProceso,
 					StrPrefijo = d.StrPrefijo,
 					StrNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.StrNumero),
+					//Asigna las rutas de los archivos a las propiedades de retorno, estas se obtiene de la consulta del documento a la bd.
+					RutaXml = (datos_doc != null) ? datos_doc.StrUrlArchivoUbl : string.Empty,
+					RutaPdf = (datos_doc != null) ? datos_doc.StrUrlArchivoPdf : string.Empty,
+					RutaXmlAcuse = (datos_doc != null) ? datos_doc.StrUrlAcuseUbl : string.Empty,
+					TipoDocumento = (datos_doc != null) ? Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc.IntDocTipo)) : "Documento",
 				}).ToList();
 
 				return Ok(datos_retorno);
@@ -106,7 +118,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 				//Valida los datos de la sesión.
-				Sesion.ValidarSesion();
+				//Sesion.ValidarSesion();
 				respuesta = respuesta.Replace("[", "").Replace("]", "");
 				dynamic datos_retorno = JsonConvert.DeserializeObject(respuesta);
 

@@ -162,6 +162,10 @@
     <value>/Views/Pages/AcuseRecibo.aspx?id_seguridad={id_seguridad}</value>
     <comment>Ruta de redirección página de acuse recibo (adquiriente factura)</comment>
   </data>
+  <data name="PaginaConsultaAuditoriaDoc" xml:space="preserve">
+    <value>/Views/Pages/ConsultaAuditoriaDocumento.aspx?id_seguridad={id_seguridad_doc}</value>
+    <comment>Página para la consulta de la auditoría de un documento</comment>
+  </data>
   <data name="PaginaRestablecerClave" xml:space="preserve">
     <value>/Views/Login/RestablecerClave.aspx?id_seguridad={id_seguridad}</value>
     <comment>Ruta de redireccion página restablecer contraseña</comment>

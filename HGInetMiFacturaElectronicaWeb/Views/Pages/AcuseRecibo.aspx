@@ -242,7 +242,7 @@
 
                     </div>
                     <div class="footer text-muted" style="font-size: 14px; text-align: center;">
-                        Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Facturación Electrónica</a>
+                        Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Factura Electrónica</a>
                     </div>
 
                 </div>

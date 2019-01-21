@@ -10,6 +10,6 @@
 namespace HGInetMiFacturaElectronicaWeb.Views.Pages {
     
     
-    public partial class AuditoriaDocumento {
+    public partial class ConsultaAuditoriaDocumento {
     }
 }

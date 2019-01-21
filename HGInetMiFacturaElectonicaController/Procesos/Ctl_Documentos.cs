@@ -65,6 +65,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				FacturaE_Documento documento_result = new FacturaE_Documento();
 
+				var datos_plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
 				DocumentoRespuesta respuesta = new DocumentoRespuesta()
 				{
 					Aceptacion = 0,
@@ -87,7 +89,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					UrlPdf = "",
 					UrlXmlUbl = "",
 					IdPeticion = id_peticion,
-					IdentificacionObligado = documento_obj.DatosObligado.Identificacion
+					IdentificacionObligado = documento_obj.DatosObligado.Identificacion,
+					UrlAuditoria = string.Format("{0}{1}", datos_plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", id_radicado.ToString())),
 				};
 
 				try
@@ -131,11 +134,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						//convierte documento para BD
 						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, tipo_doc);
-                        documentoBd.StrIdPlanTransaccion = documento_obj.IdPlan;
+						documentoBd.StrIdPlanTransaccion = documento_obj.IdPlan;
 
-                        // genera el xml en ubl
-                        respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta,respuesta.UrlXmlUbl);
+						// genera el xml en ubl
+						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 						// almacena el xml en ubl
 						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
@@ -149,7 +152,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// almacena Formato
 						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta,respuesta.UrlPdf);
+						ValidarRespuesta(respuesta, respuesta.UrlPdf);
 
 						// almacena Anexos enviados
 						if (documento_obj.ArchivoAnexos != null)
@@ -215,8 +218,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						//Crea el documento en BD
 						try
-						{                          
-                            documentoBd = documento_tmp.Crear(documentoBd);
+						{
+							documentoBd = documento_tmp.Crear(documentoBd);
 							documentoBd.TblEmpresasResoluciones = resolucion;
 							respuesta.DescuentaSaldo = true;
 							respuesta.IdPlan = documentoBd.StrIdPlanTransaccion.Value;
@@ -231,7 +234,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						// firma el xml
 						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
-						
+
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta);
@@ -257,7 +260,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 						//Valida estado del documento en la Plataforma de la DIAN
-						respuesta = Consultar(documentoBd, empresa, ref respuesta);						
+						respuesta = Consultar(documentoBd, empresa, ref respuesta);
 
 						// envía el mail de documentos al adquiriente
 						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
@@ -288,7 +291,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 							}
 						}
-						else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && empresa.IntEnvioMailRecepcion == true)
+						else if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && empresa.IntEnvioMailRecepcion == true)
 						{
 							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
 							documento_tmp = new Ctl_Documento();

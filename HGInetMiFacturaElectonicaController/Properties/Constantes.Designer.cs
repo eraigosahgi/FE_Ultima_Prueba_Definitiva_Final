@@ -169,6 +169,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a /Views/Pages/ConsultaAuditoriaDocumento.aspx?id_seguridad={id_seguridad_doc}.
+        /// </summary>
+        public static string PaginaConsultaAuditoriaDoc {
+            get {
+                return ResourceManager.GetString("PaginaConsultaAuditoriaDoc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a /Views/Login/RestablecerClave.aspx?id_seguridad={id_seguridad}.
         /// </summary>
         public static string PaginaRestablecerClave {
