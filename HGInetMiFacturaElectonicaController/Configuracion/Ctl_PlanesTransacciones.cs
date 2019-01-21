@@ -527,7 +527,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								plan.StrEmpresaUsuario = EmpresaCrea;
 								plan.StrUsuario = UsuarioCrea;
 								string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
-								string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hora);
+								string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
 								plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
 								Crear(plan, Notifica); 
 							}
@@ -566,9 +566,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					else
 					{
 						// Cierra plan que no sea del presente año y mes
-						string fecha_vencimiento = (item.DatFechaVencimiento.HasValue) ? item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hora) : "";
+						string fecha_vencimiento = (item.DatFechaVencimiento.HasValue) ? item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet) : "";
 						string fecha_creacion = item.DatFecha.ToString(Fecha.formato_fecha_hora);
-						item.IntEstado = EstadoPlan.Inhabilitado.GetHashCode();
+						item.IntEstado = EstadoPlan.Procesado.GetHashCode();
 						item.StrObservaciones = string.Format("{0}{1}{2}{3}", item.StrObservaciones, Environment.NewLine, Environment.NewLine, string.Format(Constantes.CierreAutomaticoPostPago, fecha_creacion, item.IntNumTransaccProcesadas, fecha_vencimiento));
 						this.Edit(item);						
 					}				
