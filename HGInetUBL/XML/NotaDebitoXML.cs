@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using LibreriaGlobalHGInet.Objetos;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.HgiNet.Controladores;
 using Newtonsoft.Json;
 using HGInetUBL.Objetos;
 using HGInetUBL.Recursos;
@@ -429,7 +430,7 @@ namespace HGInetUBL
 					+ cufe_factura
 				;
 
-				string cufe_encriptado = Encriptar.Encriptar_SHA1(cufe);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaDebito(clave_tecnica, cufe_factura, string.Empty, NumCr, fecha, NitOFE, TipAdq, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false); //Encriptar.Encriptar_SHA1(cufe);
 				return cufe_encriptado;
 				#endregion
 			}

@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.HgiNet.Controladores;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using Newtonsoft.Json;
 
@@ -129,7 +130,7 @@ namespace HGInetUBL
 				{
 					//Terminos de pago de la Factura
 					TermsType.ID = new IDType();
-					TermsType.ID.Value = string.Format("{0}{1}",documento.Prefijo,documento.Documento.ToString());
+					TermsType.ID.Value = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
 					NoteType[] Note_Terms = new NoteType[1];
 					NoteType Note_term = new NoteType();
 					Note_term.Value = string.Format("Pago a {0} dias", documento.Plazo);
@@ -492,7 +493,7 @@ namespace HGInetUBL
 					+ clave_tecnica
 				;
 
-				string cufe_encriptado = Encriptar.Encriptar_SHA1(cufe);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeFactura(clave_tecnica, string.Empty, NumFac, fecha, NitOFE, TipAdq, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);
 				return cufe_encriptado;
 				#endregion
 			}
