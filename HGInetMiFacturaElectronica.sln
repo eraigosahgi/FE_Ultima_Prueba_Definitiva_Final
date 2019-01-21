@@ -171,6 +171,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1", "v2019.1", "{FF16
 		Documentacion\Liberaciones\v2019.1\20190117-AlterStrObservacionesTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2019.1\20190117-AlterStrObservacionesTblPlanesTransacciones.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "selects", "selects", "{A3A0A8E3-3480-47A6-B494-FA61C23A0979}"
+	ProjectSection(SolutionItems) = preProject
+		Consulta de Estado de Planes.txt = Consulta de Estado de Planes.txt
+		Planes Adquiridos y Saldos.txt = Planes Adquiridos y Saldos.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -316,5 +322,6 @@ Global
 		{E0F33763-DA85-46D9-9491-B799C4CAC3B0} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 		{816DBCC8-33A5-4D4D-87B8-EB3D5BC4494F} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{FF1660BC-E1CE-4614-8840-4EC6909431E0} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{A3A0A8E3-3480-47A6-B494-FA61C23A0979} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 	EndGlobalSection
 EndGlobal

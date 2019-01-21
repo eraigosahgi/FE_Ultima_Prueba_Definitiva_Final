@@ -2,10 +2,10 @@
 var opc_pagina = "1334";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum', 'AppSrvPlanes']);
+var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum']);
 
 //Controlador para la gestion planes transaccionales
-GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum, SrvPlanes) {
+GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum) {
 
 	var TiposProceso = [];
 	var now = new Date();

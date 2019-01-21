@@ -352,9 +352,9 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                          cssClass: "col-md-1 col-xs-1",
                          width: 50,
                          cellTemplate: function (container, options) {
-                             $("<div style='text-align:center'>")
-                                 //.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionPlanesTransacciones.aspx?IdSeguridad=" + options.data.id + "'>"))
-                                 .appendTo(container);
+                         	$("<div style='text-align:center'>")
+								.append($("<a target='_blank' class='icon-file-eye' onClick=ConsultarDetalle('" + options.data.id + "')  >"))
+								.appendTo(container);
                          }
                      },
                      {
@@ -456,6 +456,78 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
             $('#wait').hide();
             DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
         });
+    }
+
+
+    ConsultarDetalle = function (IdSeguridad) {
+    	$('#modal_detalle_plan').modal('show');
+    	$("#wait").show();
+    	$http.get('/api/PlanesTransacciones?IdSeguridad=' + IdSeguridad).then(function (response) {
+    		$("#wait").hide();
+    		$scope.Empresa = response.data[0].Empresa;
+    		$scope.Usuario = response.data[0].Usuario;
+    		$scope.Valor = response.data[0].Valor;
+    		$scope.TCompra = response.data[0].TCompra;
+    		$scope.TProcesadas = response.data[0].TProcesadas;
+    		$scope.TDisponibles = response.data[0].TDisponibles;
+    		$scope.id = response.data[0].id;
+    		$scope.Fecha = response.data[0].Fecha;
+    		$scope.CodigoEmpresaFacturador = response.data[0].CodigoEmpresaFacturador;
+    		$scope.EmpresaFacturador = response.data[0].EmpresaFacturador;
+    		$scope.Tipo = response.data[0].Tipo;
+    		$scope.Observaciones = response.data[0].Observaciones;
+    		$scope.Estado = response.data[0].Estado;
+    		$scope.FechaVence = response.data[0].FechaVence;
+
+    		///////////////////////////////////////////////////////////////////////				
+    		$("#progressBarStatus").dxProgressBar({
+    			min: 0,
+    			max: 100,
+    			width: "100%",
+    			statusFormat: function (value) {
+    				return value * 100 + "%";
+    			}
+    		});
+
+    		if ($scope.Tipo == 3) {
+    			nivel(100, $scope.Tipo);
+    		} else {
+    			var porcentaje = ($scope.TProcesadas.toString().replace(',', '.') / $scope.TCompra.toString().replace(',', '.')) * 100;
+    			nivel(porcentaje, $scope.Tipo);
+    		}
+    		///////////////////////////////////////////////////////////////////////
+
+    	}, function errorCallback(response) {
+    		$('#wait').hide();
+    		DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
+    	});
+    }
+
+
+
+    function nivel(nivel, tipo) {
+    	if (tipo == 3) {
+    		nivel = 100;
+    		color = '#5cb85c'; //Verde
+    	} else {
+    		var color = '#FE2E2E';
+    		if (nivel >= 71 && nivel <= 90) {
+    			color = '#F7FE2E';
+    		}
+
+    		if (nivel > 90) {
+    			color = '#FE2E2E';
+    		}
+
+    		if (nivel <= 70) {
+    			color = '#5cb85c';
+    		}
+    	}
+
+    	$("#progressBarStatus").dxProgressBar({ value: nivel });
+    	$('div.dx-progressbar-range').css('background-color', color);
+    	$('div.dx-progressbar-range').css('border', '1px solid  ' + color);
+
     }
 
 });

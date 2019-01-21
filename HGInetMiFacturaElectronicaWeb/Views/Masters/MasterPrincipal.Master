@@ -85,8 +85,8 @@
 
 	<!-- JS Localización -->
 	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
-	<script src="../../Scripts/config.js?vjs201911"></script>
-	<script src="../../Scripts/Services/Loading.js?vjs201911"></script>
+	<script src="../../Scripts/config.js?vjs201912"></script>
+	<script src="../../Scripts/Services/Loading.js?vjs201912"></script>
 
 	<style>
 		.swal-button {

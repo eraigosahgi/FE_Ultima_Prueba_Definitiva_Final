@@ -1,0 +1,9 @@
+
+	-- Consulta para validar cantidad de documentos adquiridos por facturador y cantidad de documentos disponibles.
+	-- Sin importar la cantidad de planes que tenga el facturador, aqui vamos a ver la cantidad de documentos adquiridos.
+	SELECT a.StrEmpresaFacturador Documento, (select e.StrRazonSocial from TblEmpresas e where e.StrIdentificacion = a.StrEmpresaFacturador )  Facturador, SUM(a.IntNumTransaccCompra) Adquiridos, (SUM(a.IntNumTransaccProcesadas)+SUM(a.IntNumTransaccProceso)) Procesados,(SUM(a.IntNumTransaccCompra)- (SUM(a.IntNumTransaccProcesadas)+SUM(a.IntNumTransaccProceso)))Disponibles 
+	,(select CASE  WHEN count(pp.StrEmpresaFacturador)>0 THEN 'PLAN POST-PAGO ACTIVO'  ELSE ''      
+	END   from TblPlanesTransacciones pp where  pp.StrEmpresaFacturador = a.StrEmpresaFacturador and pp.IntTipoProceso =3 and pp.IntEstado =0)PLANPOSTPAGO
+	FROM TblPlanesTransacciones a 
+	GROUP BY a.StrEmpresaFacturador 
+	ORDER BY a.StrEmpresaFacturador 
