@@ -20,7 +20,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
            fecha_fin = "",
            Datos_Email = true,
 		   Datos_Vence = true,
-		   Datos_FechaVence="",
+		   Datos_FechaVence = "",
            codigo_adquiriente = "";
 
 	$scope.Vence = true;
@@ -36,7 +36,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			// $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
 		};
 
-		
+
 		$http.get('/api/Usuario/').then(function (response) {
 			//Obtiene el código del permiso.
 			$http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
@@ -47,7 +47,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					//Valida si el id_seguridad contiene datos
 					if (StrIdSeguridad) {
 						respuesta = response.data[0].Editar;
-						$scope.PanelNotificacion = false;						
+						$scope.PanelNotificacion = false;
 					} else {
 						respuesta = response.data[0].Agregar
 						$scope.PanelNotificacion = true;
@@ -314,18 +314,18 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 	FVence.setFullYear(FVence.getFullYear() + 1);
 	Datos_FechaVence = FVence.toISOString();
 
-	
+
 	$("#FechaVence").dxDateBox({
 		value: FVence,
 		width: '100%',
 		displayFormat: "yyyy-MM-dd",
 		onValueChanged: function (data) {
-			Datos_FechaVence = new Date(data.value).toISOString();	
+			Datos_FechaVence = new Date(data.value).toISOString();
 		}
 
 	});
 
-	
+
 
 
 	$("#Email").dxCheckBox({
@@ -363,11 +363,11 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			StrObservaciones: Datos_obsrvaciones,
 			StrEmpresaFacturador: empresa[0],
 			Envia_email: Datos_Email,
-			Vence : Datos_Vence,
+			Vence: Datos_Vence,
 			FechaVence: Datos_FechaVence
 		});
 
-		var IdActualizar = (StrIdSeguridad) ? '&' + $.param({ StrIdSeguridad: StrIdSeguridad, Editar:true  }): '';
+		var IdActualizar = (StrIdSeguridad) ? '&' + $.param({ StrIdSeguridad: StrIdSeguridad, Editar: true }) : '';
 
 		$("#wait").show();
 		$http.post('/api/PlanesTransacciones?' + data + IdActualizar).then(function (response) {
@@ -435,7 +435,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					$("#Vence").dxCheckBox({ value: true });
 					$("#FechaVence").dxDateBox({ value: response.data[0].FechaVence });
 				}
-				
+
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 7000);
 			}
@@ -446,8 +446,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 	}
 
 
-	
-	
+
+
 
 	$(document).ready(function () {
 		$("#FechaVence").dxDateBox({ min: now });
@@ -482,7 +482,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 	function CargarConsulta() {
 		$("#wait").show();
 		$http.get('/api/PlanesTransacciones?Identificacion=' + codigo_facturador).then(function (response) {
-			$("#wait").hide();			
+			$("#wait").hide();
 			try {
 				$("#grid").dxDataGrid({
 					dataSource: response.data,
@@ -495,7 +495,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 						allowedPageSizes: [5, 10, 20],
 						showInfo: true
 					},
-					
+
 					focusedRowEnabled: true
 					, hoverStateEnabled: true,
 
@@ -558,7 +558,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 								.appendTo(container);
                      	}
                      },
-                     {                     	
+                     {
                      	caption: "Fecha",
                      	dataField: "Fecha",
                      	dataType: "date",
@@ -595,7 +595,19 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
                      	caption: "Saldo",
                      	dataField: "Saldo"
-                     }
+                     },
+
+                 {
+                 	dataField: "porcentaje",
+                 	caption: "Porcentaje %",
+                 	dataType: "number",
+                 	format: "percent",
+                 	alignment: "right",
+                 	allowGrouping: false,
+                 	cellTemplate: discountCellTemplate,
+                 	cssClass: "bullet"
+                 }
+
                       , {
 
                       	caption: "Empresa",
@@ -605,7 +617,8 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                      {
 
                      	caption: "Usuario",
-                     	dataField: "Usuario"
+                     	dataField: "Usuario",
+                     	visible: false
                      }
                      ,
                      {
@@ -666,7 +679,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			$('#modal_detalle_plan').modal('show');
 			$("#wait").show();
 			$http.get('/api/PlanesTransacciones?IdSeguridad=' + IdSeguridad).then(function (response) {
-				$("#wait").hide();				
+				$("#wait").hide();
 				$scope.Empresa = response.data[0].Empresa;
 				$scope.Usuario = response.data[0].Usuario;
 				$scope.Valor = response.data[0].Valor;
@@ -683,21 +696,21 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 				$scope.FechaVence = response.data[0].FechaVence;
 
 				///////////////////////////////////////////////////////////////////////				
-					$("#progressBarStatus").dxProgressBar({
-						min: 0,
-						max: 100,
-						width: "100%",
-						statusFormat: function (value) {
-							return value * 100 + "%";
-						}
-					});
-					
-					if ($scope.Tipo == 3) {
-						nivel(100, $scope.Tipo);
-					} else {
-						var porcentaje = ($scope.TProcesadas.toString().replace(',', '.') / $scope.TCompra.toString().replace(',', '.')) * 100;
-						nivel(porcentaje, $scope.Tipo);
+				$("#progressBarStatus").dxProgressBar({
+					min: 0,
+					max: 100,
+					width: "100%",
+					statusFormat: function (value) {
+						return value * 100 + "%";
 					}
+				});
+
+				if ($scope.Tipo == 3) {
+					nivel(100, $scope.Tipo);
+				} else {
+					var porcentaje = ($scope.TProcesadas.toString().replace(',', '.') / $scope.TCompra.toString().replace(',', '.')) * 100;
+					nivel(porcentaje, $scope.Tipo);
+				}
 				///////////////////////////////////////////////////////////////////////
 
 			}, function errorCallback(response) {
@@ -708,31 +721,76 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 
 
-		function nivel(nivel, tipo) {
-			if (tipo == 3) {
-				nivel = 100;
-				color = '#5cb85c'; //Verde
-			}else{
-				var color = '#FE2E2E';
-				if (nivel >= 71 && nivel <= 90) {
-					color = '#F7FE2E';
-				}
+		
+	}
 
-				if (nivel > 90) {
-					color = '#FE2E2E';
-				}
-
-				if (nivel <= 70) {
-					color = '#5cb85c';
-				}
+	function nivel(nivel, tipo) {
+		if (tipo == 3) {
+			nivel = 100;
+			color = '#5cb85c'; //Verde
+		} else {
+			var color = '#FE2E2E';
+			if (nivel >= 71 && nivel <= 90) {
+				color = '#E8BE0C';
 			}
 
-			$("#progressBarStatus").dxProgressBar({ value: nivel });
-			$('div.dx-progressbar-range').css('background-color', color);
-			$('div.dx-progressbar-range').css('border', '1px solid  ' + color);
-			
+			if (nivel > 90) {
+				color = '#FE2E2E';
+			}
+
+			if (nivel <= 70) {
+				color = '#5cb85c';
+			}
 		}
+
+		$("#progressBarStatus").dxProgressBar({ value: nivel });
+		$('div.dx-progressbar-range').css('background-color', color);
+		$('div.dx-progressbar-range').css('border', '1px solid  ' + color);
+
+		return color;
 	}
+
+
+
+
+	var discountCellTemplate = function (container, options) {
+				
+		var porcentaje = (options.data.TProcesadas>0)?(options.data.TProcesadas / options.data.TCompra) * 100:100;
+		var color = nivel(porcentaje, options.data.CodCompra);
+		$("<div/>").dxBullet({
+			onIncidentOccurred: null,
+			size: {
+				width: 60,
+				height: 35
+			},
+			margin: {
+				top: 5,
+				bottom: 0,
+				left: 5
+			},
+			showTarget: false,
+			showZeroLevel: true,
+			value: porcentaje,
+			startScaleValue: 0,
+			endScaleValue: 100,
+			color: color,
+			tooltip: {
+				enabled: true,
+				font: {
+					size: 18
+				},
+				paddingTopBottom: 2,
+				customizeTooltip: function () {
+					return { text: porcentaje +'%' };
+				},
+				zIndex: 5
+			}
+		}).appendTo(container);
+	};
+
+	var collapsed = false;
+
+
 });
 
 //Esta funcion es para ir a la pagina de consulta

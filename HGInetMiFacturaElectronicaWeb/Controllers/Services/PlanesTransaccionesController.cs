@@ -64,7 +64,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
 					CodigoEstado = d.IntEstado,
-					Facturador = d.StrEmpresaFacturador
+					Facturador = d.StrEmpresaFacturador,
+					CodCompra = d.IntTipoProceso
+					
 				});
 
 				return Ok(retorno);
@@ -114,7 +116,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Observaciones = (d.StrObservaciones != null) ? d.StrObservaciones : "",
 					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
-					CodigoEstado = d.IntEstado
+					CodigoEstado = d.IntEstado,
+					CodCompra = d.IntTipoProceso
 				});
 
 				return Ok(retorno);
@@ -171,7 +174,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
 					CodigoEstado = d.IntEstado,
-					Facturador = d.StrEmpresaFacturador
+					Facturador = d.StrEmpresaFacturador,
+					CodCompra = d.IntTipoProceso
 				});
 
 				return Ok(retorno);
@@ -369,7 +373,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="StrEmpresaFacturador"></param>
 		/// <param name="Tipo"></param>
 		/// <returns></returns>
-		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri]System.Guid StrIdSeguridad,[FromUri]bool Editar)
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri]System.Guid StrIdSeguridad, [FromUri]bool Editar)
 		{
 			try
 			{
@@ -401,7 +405,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
-		}		
+		}
 
 	}
 }

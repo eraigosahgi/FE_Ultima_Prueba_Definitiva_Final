@@ -407,6 +407,17 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                      	caption: "Saldo",
                      	dataField: "Saldo"
                      },
+					 
+                 {
+                 	dataField: "porcentaje",
+                 	caption: "Porcentaje %",
+                 	dataType: "number",
+                 	format: "percent",
+                 	alignment: "right",
+                 	allowGrouping: false,
+                 	cellTemplate: discountCellTemplate,
+                 	cssClass: "bullet"
+                 },
                  {                 	
                  	caption: "Empresa",
                  	dataField: "Empresa",
@@ -526,7 +537,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 		} else {
 			var color = '#FE2E2E';
 			if (nivel >= 71 && nivel <= 90) {
-				color = '#F7FE2E';
+				color = '#E8BE0C';
 			}
 
 			if (nivel > 90) {
@@ -541,8 +552,45 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 		$("#progressBarStatus").dxProgressBar({ value: nivel });
 		$('div.dx-progressbar-range').css('background-color', color);
 		$('div.dx-progressbar-range').css('border', '1px solid  ' + color);
-
+		return color;
 	}
+
+	var discountCellTemplate = function (container, options) {
+
+		var porcentaje = (options.data.TProcesadas > 0) ? (options.data.TProcesadas / options.data.TCompra) * 100 : 100;
+		var color = nivel(porcentaje, options.data.CodCompra);
+		$("<div/>").dxBullet({
+			onIncidentOccurred: null,
+			size: {
+				width: 60,
+				height: 35
+			},
+			margin: {
+				top: 5,
+				bottom: 0,
+				left: 5
+			},
+			showTarget: false,
+			showZeroLevel: true,
+			value: porcentaje,
+			startScaleValue: 0,
+			endScaleValue: 100,
+			color: color,
+			tooltip: {
+				enabled: true,
+				font: {
+					size: 18
+				},
+				paddingTopBottom: 2,
+				customizeTooltip: function () {
+					return { text: porcentaje + '%' };
+				},
+				zIndex: 5
+			}
+		}).appendTo(container);
+	};
+
+	var collapsed = false;
 
 });
 

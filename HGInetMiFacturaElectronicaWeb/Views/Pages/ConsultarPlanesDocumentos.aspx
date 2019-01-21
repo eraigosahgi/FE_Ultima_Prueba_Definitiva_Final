@@ -256,11 +256,7 @@
 																			<tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Fecha de Vencimiento:</td>
                                                                                 <td style="background-color: #ffffff; vertical-align: top">{{FechaVence | date : "yyyy-MM-dd"}}</td>
-                                                                            </tr>
-																			<tr>
-                                                                                <td style="background-color: #efefef; vertical-align: top">Observaciones:</td>
-                                                                                <td style="background-color: #ffffff; vertical-align: top">{{Observaciones}}</td>
-                                                                            </tr>                                                                            
+                                                                            </tr>																			                                                                       
 
 																			
 
