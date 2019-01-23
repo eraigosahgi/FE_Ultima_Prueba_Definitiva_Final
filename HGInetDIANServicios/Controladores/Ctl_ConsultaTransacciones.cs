@@ -296,7 +296,7 @@ namespace HGInetDIANServicios
 				{
 					case "7200001":
 						resultado.EstadoDianDescripcion = "RECIBIDA";
-						resultado.Estado = EstadoDocumentoDian.Pendiente;
+						resultado.Estado = EstadoDocumentoDian.Aceptado;
 						break;
 
 					case "7200002":
@@ -306,7 +306,7 @@ namespace HGInetDIANServicios
 
 					case "7200003":
 						resultado.EstadoDianDescripcion = "EN PROCESO DE VALIDACIÓN";
-						resultado.Estado = EstadoDocumentoDian.Pendiente;
+						resultado.Estado = EstadoDocumentoDian.Aceptado;
 						break;
 
 					case "7200004":
