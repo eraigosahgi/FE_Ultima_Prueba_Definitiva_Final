@@ -359,15 +359,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				//bool respuesta = false;
 				List<MensajeEnvio> respuesta = null;
 
-				//Valida el estado del documento para saber que tipo de notificacion enviar
-				if (datos.FirstOrDefault().IdCategoriaEstado < CategoriaEstado.ValidadoDian.GetHashCode())
-				{
-					respuesta = clase_email.NotificacionBasica(datos.FirstOrDefault(), "", email);
-				}
-				else
-				{
+				////Valida el estado del documento para saber que tipo de notificacion enviar
+				//if (datos.FirstOrDefault().IdCategoriaEstado < CategoriaEstado.ValidadoDian.GetHashCode())
+				//{
+				//	respuesta = clase_email.NotificacionBasica(datos.FirstOrDefault(), "", email);
+				//}
+				//else
+				//{
 					respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "");
-				}
+				//}
 				return Ok(respuesta);
 			}
 			catch (Exception excepcion)
