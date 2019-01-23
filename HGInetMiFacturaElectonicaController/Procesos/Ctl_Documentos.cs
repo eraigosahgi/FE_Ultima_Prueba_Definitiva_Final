@@ -359,8 +359,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
 
 			//Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
-			if (!Texto.ValidarExpresion(TipoExpresion.Email, tercero.Email))
-				throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+
+			if (tercero.Email.Contains(";"))
+			{
+				foreach (var item_mail in Coleccion.ConvertirLista(tercero.Email, ';'))
+				{
+					if (!Texto.ValidarExpresion(TipoExpresion.Email, item_mail))
+						throw new ArgumentException(string.Format("El Email {0} no esta bien formado", item_mail));
+				}
+			}
+			else
+			{
+				if (!Texto.ValidarExpresion(TipoExpresion.Email, tercero.Email))
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+			}
 
 			//Regex isweb = new Regex("([\\w-]+\\.)+(/[\\w- ./?%&=]*)?");
 			if (tercero.PaginaWeb == null)
