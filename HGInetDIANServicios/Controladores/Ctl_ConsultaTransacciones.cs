@@ -123,10 +123,12 @@ namespace HGInetDIANServicios
 
 			var soapBody = xmlDocument.GetElementsByTagName("ns3:ConsultaResultadoValidacionDocumentosRespuesta")[0];
 
-			//Valida que en la respuesta no este un Proceso de Validacion
+			//Valida que en la respuesta no este un Proceso de Validacion o de recibida
 			bool validacion = soapResponse.Contains("EstadoDocumento>" + RespuestaDocumentoDian.Proceso.GetHashCode() + "</");
 
-			if (validacion == false)
+			bool recibida = soapResponse.Contains("EstadoDocumento>" + RespuestaDocumentoDian.Recibida.GetHashCode() + "</");
+
+			if (validacion == false && recibida == false )
 			{
 				foreach (XmlNode item in soapBody)
 				{
