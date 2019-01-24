@@ -18,7 +18,11 @@ namespace HGInetDIANServicios
 		Aceptado = 2,
 
 		[Description("Rechazado")]
-		Rechazado = 3
+		Rechazado = 3,
+
+		[Description("Recibido")]
+		Recibido = 4
+
 
 
 	}
