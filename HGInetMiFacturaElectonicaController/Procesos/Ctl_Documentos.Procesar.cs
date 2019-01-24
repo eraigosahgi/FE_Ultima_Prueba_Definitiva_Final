@@ -397,7 +397,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
 						}
 					}
-					else if(respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() && (documento.IntEnvioMail == null || documento.IntEnvioMail == false) && empresa.IntEnvioMailRecepcion == true)
+					else if((respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode()) && (documento.IntEnvioMail == null || documento.IntEnvioMail == false) && empresa.IntEnvioMailRecepcion == true)
 					{
 						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
 						Ctl_Documento documento_tmp = new Ctl_Documento();
