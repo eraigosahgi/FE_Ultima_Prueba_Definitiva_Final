@@ -26,7 +26,10 @@ function ControlTipoEventoMail(TipoEvento) {
 	: " class='icon-minus-circle2'") + "></i>&nbsp;&nbsp;" + TipoEvento + "</span>"
 }
 
+//Retorna el código html del diseño de los estados de los pagos electrónicos.
 function ControlEstadoPago(EstadoPago, Descripcion) {
+	if (!Descripcion)
+		Descripcion = "No Definido.";
 	return "<span " +
 	  ((EstadoPago == '0') ? " class='badge bg-danger' title='" + Descripcion + "'"
 	: (EstadoPago == '1') ? " class='badge bg-success'  title='" + Descripcion + "'"

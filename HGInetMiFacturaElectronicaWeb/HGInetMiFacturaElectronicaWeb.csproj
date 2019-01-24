@@ -2762,6 +2762,7 @@
     <Content Include="Views\Pages\GestionProveedores.aspx" />
     <Content Include="Views\Pages\GestionReportes.aspx" />
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
+    <Content Include="Views\Pages\ModalDetallePago.aspx" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
@@ -3031,6 +3032,13 @@
     </Compile>
     <Compile Include="Views\Pages\ModalAsignarFormato.aspx.designer.cs">
       <DependentUpon>ModalAsignarFormato.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ModalDetallePago.aspx.cs">
+      <DependentUpon>ModalDetallePago.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ModalDetallePago.aspx.designer.cs">
+      <DependentUpon>ModalDetallePago.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ModalPagos.aspx.cs">
       <DependentUpon>ModalPagos.aspx</DependentUpon>

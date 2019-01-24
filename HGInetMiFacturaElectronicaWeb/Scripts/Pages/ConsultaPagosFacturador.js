@@ -13,7 +13,7 @@ var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [];
 var PagosFacturadorApp = angular.module('PagosFacturadorApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento']);
-PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
+PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope) {
 
 	var now = new Date();
 	var Estado;
@@ -205,7 +205,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-		    validarEstado();
+			validarEstado();
 			consultar();
 		}
 	};
@@ -236,7 +236,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 		$('#wait').show();
 		$http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
-		    $('#wait').hide();		    
+			$('#wait').hide();
 			datos = [];
 			//Recorro la data para ver la cantidad de documentos pendientes por procesar
 			response.data.forEach(function (valor, indice, array) {
@@ -253,10 +253,10 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 				objeto.datos.forEach(function (valor, indice, array) {
 					//Conuslto el estado del documento en PI
 					//SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
-						//Actualizado datos de plataforma intermedia, en la plataforma de FE
-						SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data2) {
-							consultar();
-						});
+					//Actualizado datos de plataforma intermedia, en la plataforma de FE
+					SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data2) {
+						consultar();
+					});
 					//});
 
 				});
@@ -314,7 +314,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 				paging: {
 					pageSize: 20
 				},
-                /*,stateStoring: {
+				/*,stateStoring: {
 					enabled: true,
 					type: "localStorage",
 					storageKey: "storage"
@@ -357,28 +357,25 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 					allowColumnDragging: true,
 					visible: true
 				}
-        , columns: [
-             {
-             	cssClass: "col-md-1 col-xs-1",
-             	caption: 'Estado',
-             	dataField: 'EstadoFactura',
-             	cellTemplate: function (container, options) {
-             		var clase = "";
-             		if (options.data.EstadoFactura == 'Aprobado')
-             			clase = " style='color:green; cursor:default;' title='Aprobado'";
-             		else if (options.data.EstadoFactura == 'Rechazado')
-             			clase = " style='color:red; cursor:default;' title='Rechazado'";
-             		else
-             			clase = " style='color:gray; cursor:default;' title='Pendiente'";
-
-             		$("<div style='text-align:center; cursor:default;'>")
-						.append($("<a taget=_self class='icon-circle2'" + clase + ">"))
+        , columns: [{
+        	caption: 'Detalles',
+        	cssClass: "col-md-1 col-xs-1",
+        	cellTemplate: function (container, options) {
+        		$("<div style='text-align:center;'><a style='margin-left:5%;' class='icon-file-eye' onClick=ConsultarDetallesPago('" + options.data.StrIdRegistro + "','" + options.data.StrIdSeguridadDoc + "') title='Ver Detalles Pago'></a></div>")
 						.appendTo(container);
-             	}
-             }, {
-             	caption: "Adquiriente",
-             	dataField: "StrEmpresaAdquiriente"
-             },
+
+        	}
+        }, {
+        	cssClass: "col-md-1 col-xs-1",
+        	caption: 'Estado',
+        	dataField: 'EstadoFactura',
+        	cellTemplate: function (container, options) {
+        		$("<div>").append($(ControlEstadoPago(options.data.CodEstado, options.data.EstadoFactura))).appendTo(container);
+        	}
+        }, {
+        	caption: "Adquiriente",
+        	dataField: "StrEmpresaAdquiriente"
+        },
 
               {
               	caption: "Nombre Adquiriente",
@@ -465,10 +462,17 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 	}
 
 
+
+	ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
+		$rootScope.consultarDetallesPagoE(IdRegistroPago, IdSeguridadDoc);
+	};
+
+
+
 });
 
 
-PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
+PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope) {
 
 	var now = new Date();
 	var Estado;
@@ -643,10 +647,10 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 				objeto.datos.forEach(function (valor, indice, array) {
 					//Conuslto el estado del documento en PI
 					//SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
-						//Actualizado datos de plataforma intermedia, en la plataforma de FE
-						SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data2) {
-							consultar();
-						});
+					//Actualizado datos de plataforma intermedia, en la plataforma de FE
+					SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data2) {
+						consultar();
+					});
 
 
 					//});
@@ -739,26 +743,22 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 					allowColumnDragging: true,
 					visible: true
 				}
-        , columns: [
-             {
-             	cssClass: "col-md-1 col-xs-1",
-             	caption: 'Estado',
-             	dataField: 'EstadoFactura',
-             	cellTemplate: function (container, options) {
-             		var clase = "";
-             		//Personalización  columna estado del pago
-             		if (options.data.EstadoFactura == 'Aprobado')
-             			clase = " style='color:green; cursor:default;' title='Aprobado'";
-             		else if (options.data.EstadoFactura == 'Rechazado')
-             			clase = " style='color:red; cursor:default;' title='Rechazado'";
-             		else
-             			clase = " style='color:gray; cursor:default;' title='Pendiente'";
-
-             		$("<div style='text-align:center; cursor:default;'>")
-						.append($("<a taget=_self class='icon-circle2'" + clase + ">"))
+        , columns: [{
+        	caption: 'Detalles',
+        	cssClass: "col-md-1 col-xs-1",
+        	cellTemplate: function (container, options) {
+        		$("<div style='text-align:center;'><a style='margin-left:5%;' class='icon-file-eye' onClick=ConsultarDetallesPago('" + options.data.StrIdRegistro + "','" + options.data.StrIdSeguridadDoc + "') title='Ver Detalles Pago'></a></div>")
 						.appendTo(container);
-             	}
-             },
+
+        	}
+        }, {
+        	cssClass: "col-md-1 col-xs-1",
+        	caption: 'Estado',
+        	dataField: 'EstadoFactura',
+        	cellTemplate: function (container, options) {
+        		$("<div>").append($(ControlEstadoPago(options.data.CodEstado, options.data.EstadoFactura))).appendTo(container);
+        	}
+        },
              {
              	caption: "Facturador",
              	dataField: "StrEmpresaAdquiriente"
@@ -848,6 +848,63 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 	}
 
+	ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
+		$rootScope.consultarDetallesPagoE(IdRegistroPago, IdSeguridadDoc);
+	};
+
+});
+
+
+PagosFacturadorApp.controller('ModalDetallesPagoController', function ModalDetallesPagoController($scope, $http, $location, $rootScope) {
+
+	$rootScope.consultarDetallesPagoE = function (IdRegistroPago, IdSeguridadDoc) {
+
+		$http.get('/api/ObtenerPagoE?id_seguridad_doc=' + IdSeguridadDoc + '&id_Seguridad_Registro=' + IdRegistroPago).then(function (response) {
+			$("#wait").hide();
+
+			if (!response.data[0]) {
+				var myDialog = DevExpress.ui.dialog.custom({
+					message: "No se encontraron detalles para el pago solicitado."
+				});
+				myDialog.show();
+			}
+			else {
+				$('#modal_detalles_pago').modal('show');
+
+				$scope.DatFechaEmisionDoc = response.data[0].DatFechaEmisionDoc;
+				$scope.DatFechaVenceDoc = response.data[0].DatFechaVenceDoc;
+				$scope.StrIdSeguridadDoc = response.data[0].StrIdSeguridadDoc;
+				$scope.StrNumerDoc = response.data[0].StrNumerDoc;
+				$scope.StrClienteIdentificacion = response.data[0].StrClienteIdentificacion;
+				$scope.StrClienteNombre = response.data[0].StrClienteNombre;
+
+				$scope.DatFechaRegistro = response.data[0].DatFechaRegistro;
+				$scope.StrIdPlataforma = response.data[0].StrIdPlataforma;
+				$scope.StrIdSeguridadRegistro = response.data[0].StrIdSeguridadRegistro;
+				$scope.IntValor = response.data[0].IntValor;
+
+				$scope.StrPagoDesBanco = response.data[0].StrPagoDesBanco;
+				$scope.StrPagoDesFormaPago = response.data[0].StrPagoDesFormaPago;
+
+				if (response.data[0].StrPagoCodFranquicia) {
+					$scope.FranquiciaFormaPago = true;
+					$scope.StrPagoCodFranquicia = response.data[0].StrPagoCodFranquicia;
+				} else
+					$scope.FranquiciaFormaPago = false;
+
+				$scope.DatFechaVerificacion = response.data[0].DatFechaVerificacion;
+				//$scope.StrMensajeVerificacion = response.data[0].StrMensajeVerificacion;
+
+				document.getElementById("RespuestaPago").innerHTML = ControlEstadoPago(response.data[0].IntPagoEstado, response.data[0].StrMensajeVerificacion);
+
+			}
+
+		}, function errorCallback(response) {
+			$('#wait').hide();
+			DevExpress.ui.notify(response, 'error', 6000);
+		});
+
+	}
 
 });
 

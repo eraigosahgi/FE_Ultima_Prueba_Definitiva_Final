@@ -74,7 +74,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 
                         //Ruta de servicio para generar el pago en la plataforma intermedia (Pagos electronicos)
                         PasarelaPagos Ruta_Pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
-                        Hdf_RutaPagos.Value = Ruta_Pago.RutaPlataforma.ToString();
+                        Hdf_RutaPagos.Value = Ruta_Pago.RutaPaginaPago.ToString();
 
                         //Ruta de consulta de estado de pago en la plataforma intermedia(Pagos electronicos)
                         PasarelaPagos Ruta_servicio_pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;

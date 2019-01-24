@@ -38,6 +38,13 @@ namespace HGInetMiFacturaElectonicaData
 			set { this["CodigoServicio"] = value; }
 		}
 
+		[ConfigurationProperty("RutaPaginaPago", DefaultValue = "", IsKey = true, IsRequired = true)]
+		public string RutaPaginaPago
+		{
+			get { return (string)this["RutaPaginaPago"]; }
+			set { this["RutaPaginaPago"] = value; }
+		}
+
 		[ConfigurationProperty("RutaPlataforma", DefaultValue = "", IsKey = true, IsRequired = true)]
 		public string RutaPlataforma
 		{
@@ -45,7 +52,7 @@ namespace HGInetMiFacturaElectonicaData
 			set { this["RutaPlataforma"] = value; }
 		}
 
-        [ConfigurationProperty("RutaServicio",DefaultValue ="",IsKey =true,IsRequired =true)]
+		[ConfigurationProperty("RutaServicio",DefaultValue ="",IsKey =true,IsRequired =true)]
         public string RutaServicio
         {
             get { return (string)this["RutaServicio"]; }
