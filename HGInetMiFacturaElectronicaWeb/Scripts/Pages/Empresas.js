@@ -23,7 +23,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
            fecha_fin = "",
            Habilitacion = "",
 		   Datos_estado = "",
-		   Datos_postpago = "",
+		   Datos_postpago = 0,
            codigo_adquiriente = "";
 
 	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true).then(function (Datos) {
