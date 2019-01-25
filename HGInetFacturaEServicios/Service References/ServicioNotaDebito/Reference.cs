@@ -66,6 +66,9 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         private System.DateTime FechaFacturaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid IdPlanField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string IdentificacionProveedorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -307,6 +310,19 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
                 if ((this.FechaFacturaField.Equals(value) != true)) {
                     this.FechaFacturaField = value;
                     this.RaisePropertyChanged("FechaFactura");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid IdPlan {
+            get {
+                return this.IdPlanField;
+            }
+            set {
+                if ((this.IdPlanField.Equals(value) != true)) {
+                    this.IdPlanField = value;
+                    this.RaisePropertyChanged("IdPlan");
                 }
             }
         }
@@ -1531,6 +1547,9 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         private string DescripcionProcesoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool DescuentaSaldoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private long DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1555,10 +1574,19 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         private int IdEstadoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid IdPeticionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid IdPlanField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int IdProcesoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string IdentificacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionObligadoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MotivoRechazoField;
@@ -1574,6 +1602,9 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UrlAnexoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlAuditoriaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UrlPdfField;
@@ -1652,6 +1683,19 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.DescripcionProcesoField, value) != true)) {
                     this.DescripcionProcesoField = value;
                     this.RaisePropertyChanged("DescripcionProceso");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool DescuentaSaldo {
+            get {
+                return this.DescuentaSaldoField;
+            }
+            set {
+                if ((this.DescuentaSaldoField.Equals(value) != true)) {
+                    this.DescuentaSaldoField = value;
+                    this.RaisePropertyChanged("DescuentaSaldo");
                 }
             }
         }
@@ -1761,6 +1805,32 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid IdPeticion {
+            get {
+                return this.IdPeticionField;
+            }
+            set {
+                if ((this.IdPeticionField.Equals(value) != true)) {
+                    this.IdPeticionField = value;
+                    this.RaisePropertyChanged("IdPeticion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid IdPlan {
+            get {
+                return this.IdPlanField;
+            }
+            set {
+                if ((this.IdPlanField.Equals(value) != true)) {
+                    this.IdPlanField = value;
+                    this.RaisePropertyChanged("IdPlan");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public int IdProceso {
             get {
                 return this.IdProcesoField;
@@ -1782,6 +1852,19 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.IdentificacionField, value) != true)) {
                     this.IdentificacionField = value;
                     this.RaisePropertyChanged("Identificacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionObligado {
+            get {
+                return this.IdentificacionObligadoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionObligadoField, value) != true)) {
+                    this.IdentificacionObligadoField = value;
+                    this.RaisePropertyChanged("IdentificacionObligado");
                 }
             }
         }
@@ -1847,6 +1930,19 @@ namespace HGInetFacturaEServicios.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.UrlAnexoField, value) != true)) {
                     this.UrlAnexoField = value;
                     this.RaisePropertyChanged("UrlAnexo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlAuditoria {
+            get {
+                return this.UrlAuditoriaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlAuditoriaField, value) != true)) {
+                    this.UrlAuditoriaField = value;
+                    this.RaisePropertyChanged("UrlAuditoria");
                 }
             }
         }
