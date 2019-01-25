@@ -338,7 +338,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
 							 orderby datos.IntNumero descending
 							 select datos).ToList();
-			
+
 			return respuesta;
 		}
 
@@ -382,13 +382,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				codigo_adquiriente = "*";
 
 			if (string.IsNullOrWhiteSpace(estado_recibo))
-				estado_recibo = "*";			
+				estado_recibo = "*";
 
 			List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
 
 			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
 											  where (datos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
-											  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))											  
+											  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 											  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
 											  && (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
 											  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
@@ -661,7 +661,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="estado"></param>
 		/// <param name="motivo_rechazo"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ActualizarRespuestaAcuse(System.Guid id_seguridad, short estado, string motivo_rechazo, string usuario= "")
+		public List<TblDocumentos> ActualizarRespuestaAcuse(System.Guid id_seguridad, short estado, string motivo_rechazo, string usuario = "")
 		{
 			try
 			{
@@ -702,7 +702,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (estado != AdquirienteRecibo.AprobadoTacito.GetHashCode())
 						{
 							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-							email.RespuestaAcuse(doc, facturador, adquiriente, resultado.RutaArchivosProceso,"",Procedencia.Usuario, usuario);
+							email.RespuestaAcuse(doc, facturador, adquiriente, resultado.RutaArchivosProceso, "", Procedencia.Usuario, usuario);
 						}
 						doc.IntIdEstado = (short)ProcesoEstado.Finalizacion.GetHashCode();
 					}
@@ -1035,14 +1035,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					obj_documento.ProcesoFinalizado = 0;
 				}
 				obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf;
-				if (respuesta.IntIdEstado > ProcesoEstado.EnvioZip.GetHashCode())
-				{
-					obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
-				}
-				else
-				{
-					obj_documento.UrlXmlUbl = string.Empty;
-				}
+				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
+				obj_documento.UrlAnexo = respuesta.StrUrlAnexo;
 				obj_documento.IdEstado = respuesta.IdCategoriaEstado;
 				obj_documento.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.ParseToEnum<CategoriaEstado>(respuesta.IdCategoriaEstado));
 
@@ -1122,7 +1116,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="estado"></param>
 		/// <param name="motivo_rechazo"></param>
 		/// <returns></returns>
-		public bool ReenviarRespuestaAcuse(System.Guid id_seguridad, string mail,string Usuario)
+		public bool ReenviarRespuestaAcuse(System.Guid id_seguridad, string mail, string Usuario)
 		{
 			try
 			{
@@ -1174,7 +1168,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				try
 				{   // envía el correo del acuse de recibo al facturador electrónico
 					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-					email.RespuestaAcuse(doc, facturador, adquiriente, ruta_acuse, mail,Procedencia.Usuario,Usuario);
+					email.RespuestaAcuse(doc, facturador, adquiriente, ruta_acuse, mail, Procedencia.Usuario, Usuario);
 
 				}
 				catch (Exception) { }
@@ -1457,15 +1451,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		#region Planes Null
 		public List<TblDocumentos> ObtenerDocumentosaPlanesNull(string Facturadores)
 		{
-		
+
 			List<string> ListFacturadores = Coleccion.ConvertirLista(Facturadores);
 
-			DateTime FechaActual = Fecha.GetFecha();			
+			DateTime FechaActual = Fecha.GetFecha();
 
-			var respuesta = (from datos in context.TblDocumentos							 
-							 where (datos.StrIdPlanTransaccion==null)
+			var respuesta = (from datos in context.TblDocumentos
+							 where (datos.StrIdPlanTransaccion == null)
 							 && (ListFacturadores.Contains(datos.StrEmpresaFacturador) || Facturadores.Equals("*"))
-							 orderby datos.StrEmpresaFacturador,datos.DatFechaIngreso
+							 orderby datos.StrEmpresaFacturador, datos.DatFechaIngreso
 							 select datos).ToList();
 
 			return respuesta;
@@ -1473,7 +1467,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		#endregion
 
 
-		
+
 		#region ConfigurarPlanes
 
 		/// <summary>
