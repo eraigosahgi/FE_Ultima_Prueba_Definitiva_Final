@@ -117,18 +117,18 @@
     <None Include="Service References\ServicioAcuseRecibo\HGInetFacturaEServicios.ServicioAcuseRecibo.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos2.wsdl" />
-    <None Include="Service References\ServicioDocumento\documentos21.wsdl" />
-    <None Include="Service References\ServicioDocumento\documentos4.xsd">
+    <None Include="Service References\ServicioDocumento\documentos.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos41.xsd">
+    <None Include="Service References\ServicioDocumento\documentos1.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos42.xsd">
+    <None Include="Service References\ServicioDocumento\documentos2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos43.xsd">
+    <None Include="Service References\ServicioDocumento\documentos3.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioDocumento\HGInetFacturaEServicios.ServicioDocumento.ConsultaPorCodigoRegistroResponse.datasource">
@@ -365,9 +365,6 @@
     <None Include="Service References\ServicioAcuseRecibo\acuserecibo1.disco" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioDocumento\documentos1.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioResolucion\resolucion1.disco" />
   </ItemGroup>
   <ItemGroup>
@@ -396,6 +393,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioNotaDebito\notadebito1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioDocumento\documentos.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
