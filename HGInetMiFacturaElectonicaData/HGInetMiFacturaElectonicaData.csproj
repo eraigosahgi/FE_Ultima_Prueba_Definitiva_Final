@@ -152,6 +152,9 @@
     <Compile Include="Modelo\sysdiagrams.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblAlertas.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblConfiguracionInteroperabilidad.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>

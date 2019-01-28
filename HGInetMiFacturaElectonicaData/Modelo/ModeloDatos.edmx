@@ -15,6 +15,17 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <EntityType Name="TblAlertas">
+          <Key>
+            <PropertyRef Name="IntIdAlerta" />
+          </Key>
+          <Property Name="IntIdAlerta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StrDescripcion" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="IntValor" Type="int" Nullable="false" />
+          <Property Name="IntInterno" Type="bit" Nullable="false" />
+          <Property Name="IntCliente" Type="bit" Nullable="false" />
+          <Property Name="StrInternoMails" Type="varchar" MaxLength="150" />
+        </EntityType>
         <EntityType Name="TblConfiguracionInteroperabilidad">
           <Key>
             <PropertyRef Name="StrIdentificacion" />
@@ -532,6 +543,7 @@
         </Association>
         <EntityContainer Name="ModeloStoreContainer">
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblAlertas" EntityType="Self.TblAlertas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblConfiguracionInteroperabilidad" EntityType="Self.TblConfiguracionInteroperabilidad" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblDocumentos" EntityType="Self.TblDocumentos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresas" EntityType="Self.TblEmpresas" Schema="dbo" store:Type="Tables" />
@@ -719,6 +731,7 @@
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
             <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
           </AssociationSet>
+          <EntitySet Name="TblAlertas" EntityType="Modelo.TblAlertas" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1283,6 +1296,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblAlertas">
+          <Key>
+            <PropertyRef Name="IntIdAlerta" />
+          </Key>
+          <Property Name="IntIdAlerta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StrDescripcion" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="IntValor" Type="Int32" Nullable="false" />
+          <Property Name="IntInterno" Type="Boolean" Nullable="false" />
+          <Property Name="IntCliente" Type="Boolean" Nullable="false" />
+          <Property Name="StrInternoMails" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1580,6 +1604,18 @@
                 <ScalarProperty Name="IntTipoProceso" ColumnName="IntTipoProceso" />
                 <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblAlertas">
+            <EntityTypeMapping TypeName="Modelo.TblAlertas">
+              <MappingFragment StoreEntitySet="TblAlertas">
+                <ScalarProperty Name="StrInternoMails" ColumnName="StrInternoMails" />
+                <ScalarProperty Name="IntCliente" ColumnName="IntCliente" />
+                <ScalarProperty Name="IntInterno" ColumnName="IntInterno" />
+                <ScalarProperty Name="IntValor" ColumnName="IntValor" />
+                <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
+                <ScalarProperty Name="IntIdAlerta" ColumnName="IntIdAlerta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

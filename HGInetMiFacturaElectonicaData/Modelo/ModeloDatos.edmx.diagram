@@ -40,6 +40,7 @@
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
+        <EntityTypeShape EntityType="Modelo.TblAlertas" Width="1.5" PointX="0.75" PointY="3.125" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
