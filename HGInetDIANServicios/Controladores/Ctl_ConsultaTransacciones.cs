@@ -85,6 +85,9 @@ namespace HGInetDIANServicios
 					// convierte la respuesta a string
 					string xml_doc = Xml.Convertir(behavior.Inspector.XmlResponse);
 
+					if (xml_doc.Contains("<SOAP-ENV:Fault>"))
+						throw new ApplicationException("No hay respuesta del servicio de la DIAN consultando estado del documento");
+
 					// convierte el xml al objeto resultado de la ejecución del servicio web
 					acuse = Convertir(xml_doc);
 				}
@@ -194,8 +197,16 @@ namespace HGInetDIANServicios
 			}
 			else
 			{
-				detalle.DatosBasicosDocumento.EstadoDocumento = RespuestaDocumentoDian.Proceso.GetHashCode().ToString();
-				detalle.DatosBasicosDocumento.DescripcionEstado = Enumeracion.GetDescription(RespuestaDocumentoDian.Proceso);
+				if (validacion == true)
+				{
+					detalle.DatosBasicosDocumento.EstadoDocumento = RespuestaDocumentoDian.Proceso.GetHashCode().ToString();
+					detalle.DatosBasicosDocumento.DescripcionEstado = Enumeracion.GetDescription(RespuestaDocumentoDian.Proceso);
+				}
+				else
+				{
+					detalle.DatosBasicosDocumento.EstadoDocumento = RespuestaDocumentoDian.Recibida.GetHashCode().ToString();
+					detalle.DatosBasicosDocumento.DescripcionEstado = Enumeracion.GetDescription(RespuestaDocumentoDian.Recibida);
+				}
 				detalles.Add(detalle);
 				acuse.DocumentoRecibido = detalles.ToArray();
 
