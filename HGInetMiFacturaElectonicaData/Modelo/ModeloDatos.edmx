@@ -24,7 +24,7 @@
           <Property Name="IntValor" Type="int" Nullable="false" />
           <Property Name="IntInterno" Type="bit" Nullable="false" />
           <Property Name="IntCliente" Type="bit" Nullable="false" />
-          <Property Name="StrInternoMails" Type="varchar" MaxLength="150" />
+          <Property Name="StrInternoMails" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="TblConfiguracionInteroperabilidad">
           <Key>
@@ -1305,7 +1305,7 @@
           <Property Name="IntValor" Type="Int32" Nullable="false" />
           <Property Name="IntInterno" Type="Boolean" Nullable="false" />
           <Property Name="IntCliente" Type="Boolean" Nullable="false" />
-          <Property Name="StrInternoMails" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="StrInternoMails" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
