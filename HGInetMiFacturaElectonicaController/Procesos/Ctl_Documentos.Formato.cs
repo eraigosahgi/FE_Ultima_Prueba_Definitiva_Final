@@ -38,7 +38,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			respuesta.FechaUltimoProceso = Fecha.GetFecha();
 			respuesta.IdProceso = ProcesoEstado.PDFGeneracion.GetHashCode();
 			respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
-			
+
 			try
 			{
 				var documento_obj = (dynamic)null;
@@ -103,57 +103,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
 						x.GenerarPdfDev(rep, documentoBd.StrEmpresaFacturador);
 					}
-					else
-					{
-						switch (formato_documento.Codigo)
-						{
-							case 1:
-								switch (documento_result.DocumentoTipo)
-								{
-									case TipoDocumento.Factura:
-										reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
-										break;
-									case TipoDocumento.NotaDebito:
-										reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
-										break;
-									case TipoDocumento.NotaCredito:
-										reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
-										break;
-								}
-								break;
-							case 2:
-								reporte_pdf = new HGInetFacturaEReports.Facturas.Formato2();
-								reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
-								break;
-							case 3:
-								reporte_pdf = new HGInetFacturaEReports.Facturas.Formato3();
-								reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
-								break;
-							case 4:
-								reporte_pdf = new HGInetFacturaEReports.Facturas.Formato4();
-								reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
-								break;
-							case 5:
-								reporte_pdf = new HGInetFacturaEReports.Facturas.Formato5();
-								reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
-								break;
-
-							default:
-								switch (documento_result.DocumentoTipo)
-								{
-									case TipoDocumento.Factura:
-										reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
-										break;
-									case TipoDocumento.NotaDebito:
-										reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
-										break;
-									case TipoDocumento.NotaCredito:
-										reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
-										break;
-								}
-								break;
-						}
-					}
 
 					if (reporte_archivado)
 					{
@@ -170,7 +119,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					//Actualiza el registro en la base de datos.
 					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
-					documentoBd.IdCategoriaEstado = CategoriaEstado.Recibido.GetHashCode();					
+					documentoBd.IdCategoriaEstado = CategoriaEstado.Recibido.GetHashCode();
 				}
 
 
