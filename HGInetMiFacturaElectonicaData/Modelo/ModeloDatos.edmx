@@ -25,6 +25,7 @@
           <Property Name="IntInterno" Type="bit" Nullable="false" />
           <Property Name="IntCliente" Type="bit" Nullable="false" />
           <Property Name="StrInternoMails" Type="varchar(max)" />
+          <Property Name="IntTipo" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblConfiguracionInteroperabilidad">
           <Key>
@@ -1306,6 +1307,7 @@
           <Property Name="IntInterno" Type="Boolean" Nullable="false" />
           <Property Name="IntCliente" Type="Boolean" Nullable="false" />
           <Property Name="StrInternoMails" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IntTipo" Type="Int32" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1610,6 +1612,7 @@
           <EntitySetMapping Name="TblAlertas">
             <EntityTypeMapping TypeName="Modelo.TblAlertas">
               <MappingFragment StoreEntitySet="TblAlertas">
+                <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
                 <ScalarProperty Name="StrInternoMails" ColumnName="StrInternoMails" />
                 <ScalarProperty Name="IntCliente" ColumnName="IntCliente" />
                 <ScalarProperty Name="IntInterno" ColumnName="IntInterno" />

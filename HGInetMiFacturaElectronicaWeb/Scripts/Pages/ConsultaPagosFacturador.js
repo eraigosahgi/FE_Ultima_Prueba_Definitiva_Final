@@ -847,7 +847,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
 	//var ruta_redireccion = "http://localhost:50121/Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
 
-	var ruta_redireccion = $('#Hdf_RutaPlataformaServicios').val() + "Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;;
+	var ruta_redireccion = $('#Hdf_RutaPlataformaServicios').val() + "Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
 
 	console.log(ruta_redireccion);
 
