@@ -13,7 +13,7 @@ var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [];
 var PagosFacturadorApp = angular.module('PagosFacturadorApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento']);
-PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope) {
+PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
 
 	var now = new Date();
 	var Estado;
@@ -461,18 +461,10 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 	}
 
-
-
-	ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
-		$rootScope.consultarDetallesPagoE(IdRegistroPago, IdSeguridadDoc);
-	};
-
-
-
 });
 
 
-PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope) {
+PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
 
 	var now = new Date();
 	var Estado;
@@ -848,66 +840,20 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 	}
 
-	ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
-		$rootScope.consultarDetallesPagoE(IdRegistroPago, IdSeguridadDoc);
-	};
 
 });
 
 
-PagosFacturadorApp.controller('ModalDetallesPagoController', function ModalDetallesPagoController($scope, $http, $location, $rootScope) {
+ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
+	//var ruta_redireccion = "http://localhost:50121/Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
 
-	$rootScope.consultarDetallesPagoE = function (IdRegistroPago, IdSeguridadDoc) {
+	var ruta_redireccion = $('#Hdf_RutaPlataformaServicios').val() + "Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;;
 
-		$http.get('/api/ObtenerPagoE?id_seguridad_doc=' + IdSeguridadDoc + '&id_Seguridad_Registro=' + IdRegistroPago).then(function (response) {
-			$("#wait").hide();
+	console.log(ruta_redireccion);
 
-			if (!response.data[0]) {
-				var myDialog = DevExpress.ui.dialog.custom({
-					message: "No se encontraron detalles para el pago solicitado."
-				});
-				myDialog.show();
-			}
-			else {
-				$('#modal_detalles_pago').modal('show');
-
-				$scope.DatFechaEmisionDoc = response.data[0].DatFechaEmisionDoc;
-				$scope.DatFechaVenceDoc = response.data[0].DatFechaVenceDoc;
-				$scope.StrIdSeguridadDoc = response.data[0].StrIdSeguridadDoc;
-				$scope.StrNumerDoc = response.data[0].StrNumerDoc;
-				$scope.StrClienteIdentificacion = response.data[0].StrClienteIdentificacion;
-				$scope.StrClienteNombre = response.data[0].StrClienteNombre;
-
-				$scope.DatFechaRegistro = response.data[0].DatFechaRegistro;
-				$scope.StrIdPlataforma = response.data[0].StrIdPlataforma;
-				$scope.StrIdSeguridadRegistro = response.data[0].StrIdSeguridadRegistro;
-				$scope.IntValor = response.data[0].IntValor;
-
-				$scope.StrPagoDesBanco = response.data[0].StrPagoDesBanco;
-				$scope.StrPagoDesFormaPago = response.data[0].StrPagoDesFormaPago;
-
-				if (response.data[0].StrPagoCodFranquicia) {
-					$scope.FranquiciaFormaPago = true;
-					$scope.StrPagoCodFranquicia = response.data[0].StrPagoCodFranquicia;
-				} else
-					$scope.FranquiciaFormaPago = false;
-
-				$scope.DatFechaVerificacion = response.data[0].DatFechaVerificacion;
-				//$scope.StrMensajeVerificacion = response.data[0].StrMensajeVerificacion;
-
-				document.getElementById("RespuestaPago").innerHTML = ControlEstadoPago(response.data[0].IntPagoEstado, response.data[0].StrMensajeVerificacion);
-
-			}
-
-		}, function errorCallback(response) {
-			$('#wait').hide();
-			DevExpress.ui.notify(response, 'error', 6000);
-		});
-
-	}
-
-});
-
+	$("#modal_detalles_pago").modal('show');
+	$("#ContenidoDetallesPago").html('<object data="' + ruta_redireccion + '" style="width: 100%; height: 600px" />');
+};
 
 var items_Fecha =
     [

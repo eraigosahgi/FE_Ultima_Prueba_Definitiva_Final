@@ -130,7 +130,22 @@
 		</div>
 		<!-- /CONTENEDOR PRINCIPAL -->
 
-		<div data-ng-include="'ModalDetallePago.aspx'"></div>
+		<div id="modal_detalles_pago" class="modal fade" style="display: none;">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div id="EncabezadoModal" class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h5 style="margin-bottom: 10px;" class="modal-title">Detalles Pago Electrónico</h5>
+					</div>
+					<div class="modal-body">
+
+						<div id="ContenidoDetallesPago">
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 	</div>

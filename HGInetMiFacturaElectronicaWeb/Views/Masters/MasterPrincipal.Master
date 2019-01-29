@@ -156,6 +156,7 @@
 		<!--Ruta de servicios de plataforma de pago-->
 		<input type="hidden" id="Hdf_RutaPagos" runat="server" />
 		<input type="hidden" id="Hdf_RutaSrvPagos" runat="server" />
+		<input type="hidden" id="Hdf_RutaPlataformaServicios" runat="server" />
 
 		<!-- Barra de Navegación Principal -->
 		<div class="navbar navbar-inverse bg-slate-800">

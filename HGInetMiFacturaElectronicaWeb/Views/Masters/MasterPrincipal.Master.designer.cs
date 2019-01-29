@@ -58,6 +58,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hdf_RutaSrvPagos;
         
         /// <summary>
+        /// Control Hdf_RutaPlataformaServicios.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hdf_RutaPlataformaServicios;
+        
+        /// <summary>
         /// Control Label_version_actualizacion.
         /// </summary>
         /// <remarks>
