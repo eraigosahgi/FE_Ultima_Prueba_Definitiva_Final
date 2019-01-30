@@ -79,7 +79,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				case 4:
 				case 5:
 				case 6:
-				case 22:
+				case 20:
 					categoria = CategoriaEstado.Recibido.GetHashCode();
 					break;
 				case 7:
@@ -1007,6 +1007,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (respuesta == null)
 					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "respuesta", "TblDocumentos"));
 
+				//Construye la url publica para la Auditoria de recibo del documento
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
 				DocumentoRespuesta obj_documento = new DocumentoRespuesta();
 
 				obj_documento.Aceptacion = respuesta.IntAdquirienteRecibo;
@@ -1037,6 +1040,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf;
 				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
 				obj_documento.UrlAnexo = respuesta.StrUrlAnexo;
+				obj_documento.UrlAuditoria = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", respuesta.StrIdSeguridad.ToString()));
 				obj_documento.IdEstado = respuesta.IdCategoriaEstado;
 				obj_documento.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.ParseToEnum<CategoriaEstado>(respuesta.IdCategoriaEstado));
 

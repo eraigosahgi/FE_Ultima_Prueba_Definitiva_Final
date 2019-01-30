@@ -334,19 +334,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Moneda))
 				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
 
-			//valida el Formato enviado
-			if (documento.DocumentoFormato.Codigo == -1 || documento.DocumentoFormato.Codigo == 0)
-			{
-				if (string.IsNullOrEmpty(documento.DocumentoFormato.ArchivoPdf))
-					throw new ArgumentException(string.Format("No se encontró Formato PDF del documento {0} ", documento.Documento));
-			}
-			else
-			{
-				//Valida que el codigo del formato que envia este disponible.
-				if (documento.DocumentoFormato.Codigo > 5)
-					throw new ApplicationException(string.Format("El formato {0} no se encuentra disponible en la plataforma.", documento.DocumentoFormato.Codigo));
-			}
-
 			//Valida que no este vacio y este bien formado 
 			ValidarTercero(documento.DatosObligado, "Obligado");
 

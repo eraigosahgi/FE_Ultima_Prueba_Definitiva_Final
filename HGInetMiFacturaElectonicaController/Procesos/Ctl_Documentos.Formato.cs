@@ -43,44 +43,42 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				var documento_obj = (dynamic)null;
 				documento_obj = documento;
-
-				bool generar_pdf = true;
+				respuesta.UrlPdf = string.Empty;
 
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 
 				// valida formato en base 64 del objeto
 				Formato formato_documento = (Formato)(dynamic)documento_obj.DocumentoFormato;
-				if (formato_documento != null)
+				//valido si el formato es enviado del ERP
+				if (formato_documento.Codigo == -1 || formato_documento.Codigo == 0)
 				{
 					if (!string.IsNullOrEmpty(formato_documento.ArchivoPdf))
 					{
 						// almacena archivo en base64
 						documento_result.NombrePdf = Ctl_Formato.GuardarArchivo(formato_documento.ArchivoPdf, documento_result);
-						respuesta.UrlPdf = string.Empty;
 
 						if (!string.IsNullOrWhiteSpace(documento_result.NombrePdf))
 						{
-
 							// url pública del pdf
 							string url_ppal_pdf = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
-
 							respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombrePdf);
 
-							documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
 						}
 
-						generar_pdf = false;
+					}
+					else
+					{
+						throw new ArgumentException(string.Format("No se encontró Formato PDF del documento {0} ", documento_obj.Documento));
 					}
 				}
-
-				if (generar_pdf)
+				else
 				{
 
 					string url_ppal_pdf = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
 					string ruta = string.Format(@"{0}/{1}/", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 					Report reporte_pdf = new Report();
-					bool reporte_archivado = true;
+
 					/*
                      Para la contrucción de formatos se debe tener en cuenta el envío del parametro TipoDocumento de caracter obligatorio
                      para el reporte pdf, ya que este valor es implementado para la carga de información desde cada formato.
@@ -93,7 +91,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					if (datos_formato != null)
 					{
-						reporte_archivado = false;
 						XtraReportDesigner rep = new XtraReportDesigner();
 
 						MemoryStream datos = new MemoryStream(datos_formato.Formato);
@@ -103,26 +100,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
 						x.GenerarPdfDev(rep, documentoBd.StrEmpresaFacturador);
 					}
-
-					if (reporte_archivado)
+					else
 					{
-						//Asigna los datos al reporte y genera el pdf
-						reporte_pdf.DataSource = documento;
-						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
-						x.GenerarPdf(reporte_pdf);
-
+						throw new ApplicationException(string.Format("El formato N.{0} no se encuentra disponible para el facturador {1}.", formato_documento.Codigo, documentoBd.StrEmpresaFacturador));
 					}
 
 					respuesta.UrlPdf = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
-					respuesta.IdEstado = CategoriaEstado.Recibido.GetHashCode();
-					respuesta.DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.Recibido);
 
-					//Actualiza el registro en la base de datos.
-					documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
-					documentoBd.IdCategoriaEstado = CategoriaEstado.Recibido.GetHashCode();
 				}
 
+				respuesta.DescripcionProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(ProcesoEstado.PDFAlmacenamiento.GetHashCode()));
+				respuesta.FechaUltimoProceso = Fecha.GetFecha();
+				respuesta.IdProceso = ProcesoEstado.PDFAlmacenamiento.GetHashCode();
+				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
 
+				//Actualiza el registro en la base de datos.
+				documentoBd.StrUrlArchivoPdf = respuesta.UrlPdf;
+				documentoBd.IdCategoriaEstado = CategoriaEstado.Recibido.GetHashCode();
 
 			}
 			catch (Exception excepcion)
