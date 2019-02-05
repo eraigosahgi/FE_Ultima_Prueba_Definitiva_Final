@@ -116,7 +116,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (String.IsNullOrEmpty(empresa.StrRazonSocial))
 					throw new ApplicationException("Debe ingresar La Razón Social");
 
-				if (String.IsNullOrEmpty(empresa.StrMail))
+				if (String.IsNullOrEmpty(empresa.StrMailAdmin))
 					throw new ApplicationException("Debe ingresar el Email");
 
 				if (empresa.IntAdquiriente == false && empresa.IntObligado == false)
@@ -173,7 +173,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					throw new ApplicationException("La empresa que desea Actualizar no Existe");
 
 				EmpresaActualiza.StrRazonSocial = empresa.StrRazonSocial;
-				EmpresaActualiza.StrMail = empresa.StrMail;
+				EmpresaActualiza.StrMailAdmin = empresa.StrMailAdmin;
 				EmpresaActualiza.IntAdquiriente = empresa.IntAdquiriente;
 				EmpresaActualiza.IntHabilitacion = empresa.IntHabilitacion;
 				EmpresaActualiza.IntObligado = empresa.IntObligado;
@@ -255,7 +255,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
 
-				List<MensajeEnvio> Enviarmail = Email.EnviaSerial(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMail);
+				List<MensajeEnvio> Enviarmail = Email.EnviaSerial(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMailAdmin);
 
 				return EmpresaActualiza;
 			}
@@ -314,13 +314,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				foreach (var item_mail in Coleccion.ConvertirLista(empresa.Email, ';'))
 				{
 					// recibe el email el adquiriente
-					tbl_empresa.StrMail = item_mail;
+					tbl_empresa.StrMailAdmin = item_mail;
 					break;
 				}
 			}
 			else
 			{
-				tbl_empresa.StrMail = empresa.Email;
+				tbl_empresa.StrMailAdmin = empresa.Email;
 			}
 
 			tbl_empresa.StrTipoIdentificacion = empresa.TipoIdentificacion.ToString();
@@ -358,7 +358,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			empresa_obj.IdentificacionDv = empresa.IntIdentificacionDv;
 			empresa_obj.TipoIdentificacion = Convert.ToInt16(empresa.StrTipoIdentificacion);
 			empresa_obj.RazonSocial = empresa.StrRazonSocial;
-			empresa_obj.Email = empresa.StrMail;
+			empresa_obj.Email = empresa.StrMailAdmin;
 			empresa_obj.Telefono = empresa.StrTelefono;
 
 			return empresa_obj;

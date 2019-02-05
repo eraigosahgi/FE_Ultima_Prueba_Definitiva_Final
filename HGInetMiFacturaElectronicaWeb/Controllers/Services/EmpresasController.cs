@@ -47,7 +47,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             {
                 Identificacion = d.StrIdentificacion,
                 RazonSocial = d.StrRazonSocial,
-                Email = d.StrMail,
+                Email = d.StrMailAdmin,
                 Serial = d.StrSerial,
                 Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
                 Habilitacion = d.IntHabilitacion,
@@ -109,7 +109,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Identificacion = d.StrIdentificacion,
 				RazonSocial = d.StrRazonSocial,
-				Email = d.StrMail,
+				Email = d.StrMailAdmin,
 				Serial = d.StrSerial,
 				Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
 				Habilitacion = d.IntHabilitacion,
@@ -171,7 +171,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             {
                 Identificacion = d.StrIdentificacion,
                 RazonSocial = d.StrRazonSocial,
-                Email = d.StrMail,
+                Email = d.StrMailAdmin,
                 Serial = d.StrSerial,
 				datakey= Encriptar.Encriptar_SHA1(string.Format("{0}{1}",d.StrSerial, d.StrIdentificacion)),
                 Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
@@ -209,7 +209,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 TipoIdentificacion = d.StrTipoIdentificacion,
                 Identificacion = d.StrIdentificacion,
                 RazonSocial = d.StrRazonSocial,
-                Email = d.StrMail,
+                Email = d.StrMailAdmin,
                 Serial = d.StrSerial,
                 Perfil = d.IntAdquiriente,
                 Habilitacion = d.IntHabilitacion,
@@ -265,7 +265,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Empresa.StrTipoIdentificacion = TipoIdentificacion;
                 Empresa.StrIdentificacion = Identificacion;
                 Empresa.StrRazonSocial = RazonSocial;
-                Empresa.StrMail = Email;
+                Empresa.StrMailAdmin = Email;
                 Empresa.IntAdquiriente = Intadquiriente;
                 Empresa.IntHabilitacion = IntHabilitacion;
                 Empresa.IntObligado = IntObligado;

@@ -40,7 +40,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 
-				email.EnviaNotificacionRecarga(facturador.StrIdentificacion, facturador.StrMail, datos_plan);
+				email.EnviaNotificacionRecarga(facturador.StrIdentificacion, facturador.StrMailAdmin, datos_plan);
 			}
 			return datos_plan;
 		}

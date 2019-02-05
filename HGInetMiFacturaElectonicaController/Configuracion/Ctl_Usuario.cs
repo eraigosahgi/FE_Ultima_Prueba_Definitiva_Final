@@ -47,7 +47,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			tbl_usuario.StrClave = Encriptar.Encriptar_SHA512(empresa.StrIdentificacion);
 			tbl_usuario.StrNombres = empresa.StrRazonSocial;
 			tbl_usuario.StrApellidos = "";
-			tbl_usuario.StrMail = empresa.StrMail;
+			tbl_usuario.StrMail = empresa.StrMailAdmin;
 			tbl_usuario.DatFechaIngreso = Fecha.GetFecha();
 			tbl_usuario.DatFechaActualizacion = Fecha.GetFecha();
 			tbl_usuario.DatFechaCambioClave = Fecha.GetFecha();

@@ -698,7 +698,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
                     ObjPago.StrClienteTelefono = datos_empresa.StrTelefono;
 
-                    ObjPago.StrClienteEmail = datos_empresa.StrMail;
+                    ObjPago.StrClienteEmail = datos_empresa.StrMailAdmin;
 
                     //Encriptar datos de seguridad secundaria                    
                     ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-" + ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ObjPago.IntComercioId + "-" + ObjPago.IntValor.ToString("0.##"));

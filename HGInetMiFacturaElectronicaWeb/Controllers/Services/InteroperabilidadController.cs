@@ -65,7 +65,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     d.StrAdquirienteMvoRechazo,
                     IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
                     NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
-                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
+                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMailAdmin,
                     Xml = d.StrUrlArchivoUbl,
                     Pdf = d.StrUrlArchivoPdf,
                     d.StrIdSeguridad,
@@ -115,7 +115,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     d.StrAdquirienteMvoRechazo,
                     IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
                     NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
-                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMail,
+                    MailAdquiriente = d.TblEmpresasAdquiriente.StrMailAdmin,
                     d.StrIdSeguridad,
                     tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo))
                 });

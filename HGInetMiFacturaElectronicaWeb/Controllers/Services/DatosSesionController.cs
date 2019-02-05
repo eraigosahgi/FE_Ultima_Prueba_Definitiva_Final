@@ -34,7 +34,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                     Obligado = d.IntObligado,
                     Identificacion = d.StrIdentificacion,
                     IdSeguridad = d.StrIdSeguridad,
-                    Mail = d.StrMail,
+                    Mail = d.StrMailAdmin,
                     Observaciones = d.StrObservaciones,
                     RazonSocial = d.StrRazonSocial,
                     Serial = d.StrSerial,

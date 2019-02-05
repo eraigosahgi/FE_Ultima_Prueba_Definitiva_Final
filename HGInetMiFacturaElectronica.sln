@@ -171,6 +171,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1", "v2019.1", "{FF16
 		Documentacion\Liberaciones\v2019.1\20190116-IntIdEstadoIntCobroPostPagoTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190116-IntIdEstadoIntCobroPostPagoTblEmpresas.txt
 		Documentacion\Liberaciones\v2019.1\20190117-AlterStrObservacionesTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2019.1\20190117-AlterStrObservacionesTblPlanesTransacciones.txt
 		Documentacion\Liberaciones\v2019.1\20190128-TblAlertas.txt = Documentacion\Liberaciones\v2019.1\20190128-TblAlertas.txt
+		Documentacion\Liberaciones\v2019.1\20190205-CamposMailTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190205-CamposMailTblEmpresas.txt
 		Documentacion\Liberaciones\v2019.1\20190205-Opcion1346AlertasyNotificaciones.txt = Documentacion\Liberaciones\v2019.1\20190205-Opcion1346AlertasyNotificaciones.txt
 		Documentacion\Liberaciones\v2019.1\20190205-UpdateOpcion13.txt = Documentacion\Liberaciones\v2019.1\20190205-UpdateOpcion13.txt
 	EndProjectSection

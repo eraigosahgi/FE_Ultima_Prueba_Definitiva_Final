@@ -22,15 +22,15 @@ namespace HGInetMiFacturaElectonicaData.Modelo
             this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
             this.TblFormatos = new HashSet<TblFormatos>();
             this.TblOpcionesUsuario = new HashSet<TblOpcionesUsuario>();
-            this.TblUsuarios = new HashSet<TblUsuarios>();
             this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
+            this.TblUsuarios = new HashSet<TblUsuarios>();
         }
     
         public string StrIdentificacion { get; set; }
         public short IntIdentificacionDv { get; set; }
         public string StrTipoIdentificacion { get; set; }
         public string StrRazonSocial { get; set; }
-        public string StrMail { get; set; }
+        public string StrMailAdmin { get; set; }
         public System.DateTime DatFechaIngreso { get; set; }
         public string StrObservaciones { get; set; }
         public string StrSerial { get; set; }
@@ -51,6 +51,10 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrEmpresaDescuento { get; set; }
         public short IntIdEstado { get; set; }
         public short IntCobroPostPago { get; set; }
+        public string StrMailEnvio { get; set; }
+        public string StrMailRecepcion { get; set; }
+        public string StrMailAcuse { get; set; }
+        public string StrMailPagos { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }
@@ -63,8 +67,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblOpcionesUsuario> TblOpcionesUsuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblUsuarios> TblUsuarios { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblUsuarios> TblUsuarios { get; set; }
     }
 }

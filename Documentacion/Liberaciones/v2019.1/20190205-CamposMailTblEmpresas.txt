@@ -1,0 +1,30 @@
+/*StrMailEnvio*/
+ALTER TABLE TblEmpresas ADD
+	StrMailEnvio varchar(200) NOT NULL default('')
+GO
+
+/*StrMailRecepcion*/
+ALTER TABLE TblEmpresas ADD
+	StrMailRecepcion varchar(200)  NOT NULL default('')
+GO
+
+/*StrMailAcuse*/
+ALTER TABLE TblEmpresas ADD
+	StrMailAcuse varchar(200)  NOT NULL default('')
+GO
+
+/*StrMailPagos*/
+ALTER TABLE TblEmpresas ADD
+	StrMailPagos varchar(200)  NOT NULL default('')
+GO
+
+/*renombrado SrtMailAdmin*/
+sp_rename 'TblEmpresas.StrMail', 'StrMailAdmin', 'COLUMN';
+
+/*Asignación de valores del campo SrtMailAdmin en los nuevos campos de Mail*/
+UPDATE TblEmpresas 
+SET
+StrMailEnvio = StrMailAdmin, 
+StrMailRecepcion = StrMailAdmin,
+StrMailAcuse = StrMailAdmin,
+StrMailPagos = StrMailAdmin;

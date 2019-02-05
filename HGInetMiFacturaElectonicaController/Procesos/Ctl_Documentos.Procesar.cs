@@ -413,7 +413,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 
 					Ctl_Documento ctl_documento = new Ctl_Documento();
-					bool email = ctl_documento.ReenviarRespuestaAcuse(documento.StrIdSeguridad, documento.TblEmpresasFacturador.StrMail,"");
+					bool email = ctl_documento.ReenviarRespuestaAcuse(documento.StrIdSeguridad, documento.TblEmpresasFacturador.StrMailAdmin, "");
 
 					if (email)
 					{
