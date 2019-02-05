@@ -1,0 +1,1 @@
+update TblOpciones set StrDescripcion = 'Factura Electrónica' where IntId = 13

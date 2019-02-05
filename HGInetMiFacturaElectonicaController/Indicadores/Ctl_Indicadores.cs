@@ -21,12 +21,13 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// <param name="identificacion_empresa"></param>
 		/// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
 		/// <returns></returns>
-		public List<PorcentajesResumen> DocumentosPorEstado(string identificacion_empresa, int tipo_empresa)
+		public List<PorcentajesResumen> DocumentosPorEstado(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
 				List<PorcentajesResumen> documentos_estado = (from documento in context.TblDocumentos
 															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
+															  && (documento.DatFechaDocumento >= fecha_inicio.Date && documento.DatFechaDocumento <= fecha_fin.Date)
 															  orderby documento.IntIdEstado ascending
 															  group documento by new { documento.IntIdEstado } into documento_estado
 															  select new PorcentajesResumen
@@ -83,12 +84,13 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// <param name="identificacion_empresa"></param>
 		/// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
 		/// <returns></returns>
-		public List<PorcentajesResumen> DocumentosPorEstadoCategoria(string identificacion_empresa, int tipo_empresa)
+		public List<PorcentajesResumen> DocumentosPorEstadoCategoria(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
 				List<PorcentajesResumen> documentos_estado = (from documento in context.TblDocumentos
 															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
+															   && (documento.DatFechaDocumento >= fecha_inicio.Date && documento.DatFechaDocumento <= fecha_fin.Date)
 															  orderby documento.IdCategoriaEstado ascending
 															  group documento by new { documento.IdCategoriaEstado } into documento_estado
 															  select new PorcentajesResumen
@@ -146,7 +148,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
 		/// <param name="mensual">True: Reporte por mes actual - False: Reporte Acumulado</param>
 		/// <returns></returns>
-		public List<PorcentajesResumen> ReporteEstadosAcuse(string identificacion_empresa, int tipo_empresa, bool mensual)
+		public List<PorcentajesResumen> ReporteEstadosAcuse(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
@@ -156,7 +158,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 
 				List<PorcentajesResumen> documentos_acuse = (from documento in context.TblDocumentos
 															 where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
-															  && ((mensual) ? (documento.DatFechaDocumento.Month == mes_actual && documento.DatFechaDocumento.Year == anyo_actual) : documento.DatFechaDocumento != null)
+															 && (documento.DatFechaDocumento >= fecha_inicio.Date && documento.DatFechaDocumento <= fecha_fin.Date)
 															 orderby documento.IntAdquirienteRecibo ascending
 															 group documento by new { documento.IntAdquirienteRecibo } into documento_estado
 															 select new PorcentajesResumen
@@ -168,12 +170,6 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 				decimal cantidad_total = documentos_acuse.Sum(x => x.Cantidad);
 
 				string descripcion_tipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Perfiles>(tipo_empresa));
-				string rango_consulta = string.Empty;
-
-				if (mensual)
-					rango_consulta = "Mensual";
-				else
-					rango_consulta = "Acumulado";
 
 				foreach (PorcentajesResumen item in documentos_acuse)
 				{
@@ -182,10 +178,11 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						case 0: item.Color = "#717171"; break;
 						case 1: item.Color = "#62C415"; break;
 						case 2: item.Color = "#FF2D00"; break;
+						case 3: item.Color = "#96f495"; break;
 					}
 
 					item.Titulo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(item.Estado));
-					item.IdControl = string.Format("Acuse{0}{1}{2}", item.Titulo, descripcion_tipo, rango_consulta);
+					item.IdControl = string.Format("Acuse{0}{1}", item.Titulo.Replace(" ", "").Replace("á", "a"), descripcion_tipo);
 					item.Observaciones = string.Format("{0} Documentos", item.Cantidad);
 					item.Porcentaje = Math.Round(((item.Cantidad / cantidad_total) * 100), 1);
 				}
@@ -204,12 +201,13 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// <param name="identificacion_empresa">Número de identificación de la empresa para el filtro de búsqueda.</param>
 		/// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
 		/// <returns></returns>
-		public List<PorcentajesResumen> DocumentosPorTipo(string identificacion_empresa, int tipo_empresa)
+		public List<PorcentajesResumen> DocumentosPorTipo(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
 				List<PorcentajesResumen> documentos_tipo = (from documento in context.TblDocumentos
 															where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
+															 && (documento.DatFechaDocumento >= fecha_inicio.Date && documento.DatFechaDocumento <= fecha_fin.Date)
 															orderby documento.IntDocTipo ascending
 															group documento by new { documento.IntDocTipo } into documento_tipo
 															select new PorcentajesResumen
@@ -245,25 +243,23 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// <param name="identificacion_empresa">Número de identificación de la empresa para el filtro de búsqueda.</param>
 		/// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
 		/// <returns></returns>
-		public List<ValoresTipoDocumento> DocumentosPorTipoAnual(string identificacion_empresa, int tipo_empresa)
+		public List<ValoresTipoDocumento> DocumentosPorTipoAnual(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
-				DateTime fecha_inicio = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(-11);
-				DateTime fecha_final = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(1);
+				//DateTime fecha_inicio = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(-11);
+				//DateTime fecha_final = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(1);
 
 				List<ValoresTipoDocumento> documentos_tipo = (from documento in context.TblDocumentos
 															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
-															  && (documento.DatFechaIngreso >= fecha_inicio && documento.DatFechaIngreso <= fecha_final)
+															  && (documento.DatFechaIngreso >= fecha_inicio && documento.DatFechaIngreso <= fecha_fin)
 															  orderby documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month, documento.IntDocTipo ascending
 															  group documento by new { documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month } into documento_tipo
 															  select new ValoresTipoDocumento
 															  {
 																  Anyo = documento_tipo.FirstOrDefault().DatFechaIngreso.Year,
 																  Mes = documento_tipo.FirstOrDefault().DatFechaIngreso.Month,
-																  CantidadFacturas = (documento_tipo.Where(x => x.IntDocTipo == 1).Count() > 0) ? documento_tipo.Where(x => x.IntDocTipo == 1).Count() : 0,
-																  CantidadNotasDebito = (documento_tipo.Where(x => x.IntDocTipo == 2).Count() > 0) ? documento_tipo.Where(x => x.IntDocTipo == 2).Count() : 0,
-																  CantidadNotasCredito = (documento_tipo.Where(x => x.IntDocTipo == 3).Count() > 0) ? documento_tipo.Where(x => x.IntDocTipo == 3).Count() : 0,
+																  CantidadDocumentos = documento_tipo.Count(),
 																  ValorFacturas = (documento_tipo.Where(x => x.IntDocTipo == 1).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 1).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
 																  ValorNotasDebito = (documento_tipo.Where(x => x.IntDocTipo == 2).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 2).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
 																  ValorNotasCredito = (documento_tipo.Where(x => x.IntDocTipo == 3).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 3).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
@@ -290,7 +286,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// </summary>
 		/// <param name="identificacion_empresa"></param>
 		/// <returns></returns>
-		public List<ResumenPlanes> ResumenPlanesAdquiridos(string identificacion_empresa)
+		public List<ResumenPlanes> ResumenPlanesAdquiridos(string identificacion_empresa, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
@@ -299,6 +295,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 
 				List<ResumenPlanes> planes_adquiridos = (from plan in context.TblPlanesTransacciones
 														 where plan.StrEmpresaFacturador.Equals(identificacion_empresa)
+														  && (plan.DatFecha >= fecha_inicio && plan.DatFecha <= fecha_fin)
 														 orderby plan.DatFecha descending
 														 group plan by new { plan.StrEmpresaFacturador } into planes
 														 select new ResumenPlanes
@@ -322,15 +319,12 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// Obtiene el indicador de ventas durante los últimos doce meses.
 		/// </summary>
 		/// <returns></returns>
-		public List<VentasMensuales> VentasAnuales()
+		public List<VentasMensuales> Ventas(DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
-				DateTime fecha_actual = Fecha.GetFecha();
-				DateTime inicio = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(-11);
-
 				List<VentasMensuales> resumen_ventas = (from venta in context.TblPlanesTransacciones
-														where (venta.DatFecha >= inicio && venta.DatFecha <= fecha_actual)
+														where (venta.DatFecha >= fecha_inicio && venta.DatFecha <= fecha_fin)
 														orderby venta.DatFecha.Year, venta.DatFecha.Month, venta.IntTipoProceso ascending
 														group venta by new { venta.DatFecha.Year, venta.DatFecha.Month } into datos_ventas
 														select new VentasMensuales
@@ -360,31 +354,41 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// <summary>
 		/// Obtiene el top 10 de los compradores.
 		/// </summary>
+		/// <param name="cantidad_top">Indica la cantidad de registros a retornas, 0 si se desean retornar todos </param>
 		/// <returns></returns>
-		public List<TopCompradores> TopCompradores()
+		public ResumenCompradores TopCompradores(int cantidad_top, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
 				List<TopCompradores> resumen_compradores = (from comprador in context.TblPlanesTransacciones
 															where comprador.IntTipoProceso != 1
+															&& (comprador.DatFecha >= fecha_inicio.Date && comprador.DatFecha <= fecha_fin.Date)
 															group comprador by new { comprador.StrEmpresaFacturador } into datos_compradores
 															select new TopCompradores
 															{
 																Identificacion = datos_compradores.FirstOrDefault().StrEmpresaFacturador,
-																CantidadTransacciones = (decimal)datos_compradores.Select(d => d.IntNumTransaccCompra).Sum(),
-																ValorCompras = (decimal)datos_compradores.Select(d => d.IntValor).Sum(),
+																CantidadTransacciones = datos_compradores.Select(d => d.IntNumTransaccCompra).Sum(),
+																ValorCompras = datos_compradores.Select(d => d.IntValor).Sum(),
+																RazonSocial = datos_compradores.FirstOrDefault().TblEmpresas.StrRazonSocial
 															}).ToList().OrderByDescending(x => x.ValorCompras).Take(10).ToList();
 
-				int i = 1;
+				ResumenCompradores datos_retorno = new ResumenCompradores();
 
-				foreach (var item in resumen_compradores)
+				//Calcula el valor total de documentos.
+				datos_retorno.Total = resumen_compradores.Sum(x => x.ValorCompras);
+
+				if (cantidad_top > 0)
 				{
-					i++;
-					item.Posicion = i;
-					item.RazonSocial = RazonSocialEmpresa(item.Identificacion);
+					//Realiza el take y calcula el total del top.
+					datos_retorno.Detalles = resumen_compradores.Take(cantidad_top).ToList();
+					datos_retorno.TotalTop = datos_retorno.Detalles.Sum(x => x.ValorCompras);
 				}
+				else
+					datos_retorno.Detalles = resumen_compradores;
 
-				return resumen_compradores;
+				datos_retorno.TotalOtros = datos_retorno.Total - datos_retorno.TotalTop;
+
+				return datos_retorno;
 			}
 			catch (Exception excepcion)
 			{
@@ -395,31 +399,45 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// <summary>
 		/// Obtiene el top 10 de las empresas con mayor movimiento transaccional.
 		/// </summary>
+		/// <param name="cantidad_top">Indica la cantidad de registros a retornas, 0 si se desean retornar todos </param>
 		/// <returns></returns>
-		public List<TopTransaccional> TopTransaccional()
+		public ResumenTopTransaccional TopTransaccional(int cantidad_top, DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
 
-				DateTime fecha_inicio = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(-1);
-				DateTime fecha_final = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(1);
-
 				int mes_actual = Fecha.GetFecha().Month;
 				int mes_anterior = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(-1).Month;
 
-				List<TopTransaccional> datos_respuesta = (from movimiento in context.TblDocumentos
-														  join empresa in context.TblEmpresas on movimiento.StrEmpresaFacturador equals empresa.StrIdentificacion
-														  where (movimiento.DatFechaIngreso >= fecha_inicio && movimiento.DatFechaIngreso < fecha_final)
-														  group new { empresa, movimiento } by new { movimiento.StrEmpresaFacturador } into datos_movimiento
-														  select new TopTransaccional
-														  {
-															  Identificacion = datos_movimiento.FirstOrDefault().movimiento.StrEmpresaFacturador,
-															  RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
-															  CantidadMesActual = (datos_movimiento.Where(d => d.movimiento.DatFechaIngreso.Month == mes_actual).Count() > 0) ? datos_movimiento.Where(d => d.movimiento.DatFechaIngreso.Month == mes_actual).Count() : 0,
-															  CantidadMesAnterior = (datos_movimiento.Where(d => d.movimiento.DatFechaIngreso.Month == mes_anterior).Count() > 0) ? datos_movimiento.Where(d => d.movimiento.DatFechaIngreso.Month == mes_anterior).Count() : 0
-														  }).ToList();
+				List<TopTransaccional> resumen_transaccional = (from movimiento in context.TblDocumentos
+																join empresa in context.TblEmpresas on movimiento.StrEmpresaFacturador equals empresa.StrIdentificacion
+																where (movimiento.DatFechaIngreso >= fecha_inicio.Date && movimiento.DatFechaIngreso <= fecha_fin.Date)
+																group new { empresa, movimiento } by new { movimiento.StrEmpresaFacturador } into datos_movimiento
+																select new TopTransaccional
+																{
+																	Identificacion = datos_movimiento.FirstOrDefault().movimiento.StrEmpresaFacturador,
+																	RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
+																	ValorTotalDocumentos = datos_movimiento.Sum(x => x.movimiento.IntVlrTotal),
+																	TotalDocumentos = datos_movimiento.Count()
+																}).OrderByDescending(d => d.ValorTotalDocumentos).ToList();
 
-				return datos_respuesta.OrderByDescending(d => d.CantidadMesActual).ToList();
+				ResumenTopTransaccional datos_retorno = new ResumenTopTransaccional();
+
+				//Calcula el valor total de documentos.
+				datos_retorno.Total = resumen_transaccional.Sum(x => x.ValorTotalDocumentos);
+
+				if (cantidad_top > 0)
+				{
+					//Realiza el take y calcula el total del top.
+					datos_retorno.Detalles = resumen_transaccional.Take(cantidad_top).ToList();
+					datos_retorno.TotalTop = datos_retorno.Detalles.Sum(x => x.ValorTotalDocumentos);
+				}
+				else
+					datos_retorno.Detalles = resumen_transaccional;
+
+				datos_retorno.TotalOtros = datos_retorno.Total - datos_retorno.TotalTop;
+
+				return datos_retorno;
 			}
 			catch (Exception excepcion)
 			{
