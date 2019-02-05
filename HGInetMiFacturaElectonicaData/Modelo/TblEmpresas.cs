@@ -17,8 +17,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblEmpresas()
         {
-            this.TblDocumentos = new HashSet<TblDocumentos>();
-            this.TblDocumentos1 = new HashSet<TblDocumentos>();
+            this.TblEmpresasAdquiriente = new HashSet<TblDocumentos>();
+            this.TblEmpresasFacturador = new HashSet<TblDocumentos>();
             this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
             this.TblFormatos = new HashSet<TblFormatos>();
             this.TblOpcionesUsuario = new HashSet<TblOpcionesUsuario>();
@@ -53,9 +53,9 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntCobroPostPago { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
+        public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblDocumentos1 { get; set; }
+        public virtual ICollection<TblDocumentos> TblEmpresasFacturador { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -17,8 +17,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblConfiguracionInteroperabilidad()
         {
-            this.TblDocumentos = new HashSet<TblDocumentos>();
-            this.TblDocumentos1 = new HashSet<TblDocumentos>();
+            this.TblConfiguracionInteroperabilidadEmisor = new HashSet<TblDocumentos>();
+            this.TblConfiguracionInteroperabilidadReceptor = new HashSet<TblDocumentos>();
         }
     
         public string StrIdentificacion { get; set; }
@@ -42,8 +42,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool BitActivo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
+        public virtual ICollection<TblDocumentos> TblConfiguracionInteroperabilidadEmisor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblDocumentos1 { get; set; }
+        public virtual ICollection<TblDocumentos> TblConfiguracionInteroperabilidadReceptor { get; set; }
     }
 }
