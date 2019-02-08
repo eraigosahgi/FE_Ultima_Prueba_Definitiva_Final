@@ -2787,6 +2787,7 @@
     <Content Include="Views\Pages\ProcesarInteroperabilidad.aspx" />
     <Content Include="Views\Pages\Sonda.aspx" />
     <Content Include="Views\Pages\SondaAcuseTacito.aspx" />
+    <Content Include="Views\Pages\SondaCampoSubtotal.aspx" />
     <Content Include="Views\Pages\SondaCrearPlanes.aspx" />
     <Content Include="Views\Pages\SondadeNotificaciones.aspx" />
     <Content Include="Views\Pages\SondaResoluciones.aspx" />
@@ -3170,6 +3171,13 @@
     </Compile>
     <Compile Include="Views\Pages\SondaAcuseTacito.aspx.designer.cs">
       <DependentUpon>SondaAcuseTacito.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\SondaCampoSubtotal.aspx.cs">
+      <DependentUpon>SondaCampoSubtotal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaCampoSubtotal.aspx.designer.cs">
+      <DependentUpon>SondaCampoSubtotal.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\SondaCrearPlanes.aspx.cs">
       <DependentUpon>SondaCrearPlanes.aspx</DependentUpon>

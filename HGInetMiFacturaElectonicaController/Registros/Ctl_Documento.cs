@@ -1415,6 +1415,61 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 		#endregion
 
+		/// <summary>
+		/// Sonda para obtener el subtotal de los documentos y actualizarlo en la BD
+		/// </summary>
+		/// <returns></returns>
+		public async Task SondaCampoSubtotal()
+		{
+			try
+			{
+				var Tarea = TareaCampoSubtotal();
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+
+		}
+
+		public async Task TareaCampoSubtotal()
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				
+				DateTime fecha_inicio = new DateTime(2017, 12, 31);
+				DateTime fecha_fin = Fecha.GetFecha();
+
+				List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*",fecha_inicio,fecha_fin,0,2);
+
+				foreach (var item in datos)
+				{
+					var objeto = (dynamic)null;
+					objeto = Ctl_Documento.ConvertirServicio(item, true);
+					if (item.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+					{
+						item.IntValorSubtotal = objeto.DatosFactura.ValorSubtotal;
+					}
+
+					if (item.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+					{
+						item.IntValorSubtotal = objeto.DatosNotaCredito.ValorSubtotal;
+					}
+
+					if (item.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+					{
+						item.IntValorSubtotal = objeto.DatosNotaDebito.ValorSubtotal;
+					}
+					Ctl_Documento ctl_documento = new Ctl_Documento();
+					ctl_documento.Actualizar(item);
+
+				}
+
+			});
+		}
+
+
 		#region Procesar Acuses
 		/// <summary>
 		/// Sonda para acuse tacito, no recibe parametros
