@@ -855,6 +855,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.StrVersion = documento_obj.VersionAplicativo;
 				tbl_documento.StrProveedorEmisor = Constantes.NitResolucionsinPrefijo;
 				tbl_documento.StrProveedorReceptor = documento_obj.IdentificacionProveedor;
+				tbl_documento.IntValorSubtotal = documento_obj.ValorSubtotal;
 
 				return tbl_documento;
 			}
