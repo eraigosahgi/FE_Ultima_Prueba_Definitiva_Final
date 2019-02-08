@@ -79,6 +79,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1346.
+        /// </summary>
+        internal static string AlertasYNotificaciones {
+            get {
+                return ResourceManager.GetString("AlertasYNotificaciones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1312.
         /// </summary>
         internal static string ConsultaAcuseRecibo {

@@ -26,7 +26,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 	var estado = "";
 
-	SrvFiltro.ObtenerFiltro('Facturador','Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto',false).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', false).then(function (Datos) {
 		$scope.Facturador = Datos;
 	});
 
@@ -330,7 +330,14 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 							//*************************************************************************************
 						}
 					},
+					onContentReady: function (e) {
+						response.data.forEach(function (valor, indice, array) {
+							var porcentaje = (valor.CodCompra != 3) ? ((valor.TProcesadas / valor.TCompra) * 100) : 100;
+							var color = nivelPlanes(porcentaje, valor.CodCompra);
 
+							$('.hgi_' + valor.id).dxBullet(CrearGrafico(porcentaje, 'Consumo Actual ', ' %', color));
+						});
+					},
 					//Formatos personalizados a las columnas en este caso para el monto
 					onCellPrepared: function (options) {
 						var fieldData = options.value,
@@ -342,6 +349,15 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 									options.cellElement.html(inicial);
 								}
 							}
+
+
+							if (options.columnIndex == 9) {//Columna de valor Total
+								if (fieldData) {
+									
+									options.cellElement.html(20);
+								}
+							}
+							//var porcentaje = (valor.CodCompra != 3) ? ((valor.TProcesadas / valor.TCompra) * 100) : 100;
 
 							if (options.data.CodigoEstado == 0) {
 								estado = " style='color:green; cursor:default;' title='Habilitado'";
@@ -363,7 +379,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                     }
                       , allowColumnResizing: true
                  , columns: [
-                     {                     	
+                     {
                      	width: 50,
                      	cellTemplate: function (container, options) {
                      		$("<div style='text-align:center'>")
@@ -371,73 +387,74 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 								.appendTo(container);
                      	}
                      },
+					 
                      {
-                     	
+
                      	caption: "Fecha",
                      	dataField: "Fecha",
                      	dataType: "date",
                      	format: "yyyy-MM-dd HH:mm"
                      },
-					
-                 {					
+
+                 {
                  	caption: "Doc. Facturador",
                  	dataField: "Facturador"
                  },
 
-                      {                      	
+                      {
                       	caption: "Empresa Compra",
                       	dataField: "EmpresaFacturador"
                       },
 
-                      {                      	
+                      {
                       	caption: "Valor",
                       	dataField: "Valor"
                       },
-					   {					   
+					   {
 					   	caption: "Transacciones",
 					   	dataField: "TCompra"
 					   }
                       ,
-                     {                     	
+                     {
                      	caption: "Procesadas",
                      	dataField: "TProcesadas"
                      }
                      ,
-                     {                     
+                     {
                      	caption: "Saldo",
                      	dataField: "Saldo"
                      },
-					 
+
+                {
+					caption:"Porcentaje %",
+                	width: 100,
+                	cellTemplate: function (container, options) {
+
+                		$("<div style='text-align:center'>")
+							.append($("<div class='bullet hgi_" + options.data.id + "'></div>"))
+							.appendTo(container);
+                	}
+                },
                  {
-                 	dataField: "porcentaje",
-                 	caption: "Porcentaje %",
-                 	dataType: "number",
-                 	format: "percent",
-                 	alignment: "right",
-                 	allowGrouping: false,
-                 	cellTemplate: discountCellTemplate,
-                 	cssClass: "bullet"
-                 },
-                 {                 	
                  	caption: "Empresa",
                  	dataField: "Empresa",
 
                  },
                      {
-                  
+
                      	caption: "Usuario",
                      	dataField: "Usuario"
                      }
                      ,
                      {
-                  
+
                      	caption: "Tipo",
                      	dataField: "Tipoproceso"
                      }
 
                      ,
                       {
-                  
+
                       	caption: 'Estado',
                       	dataField: 'Estado',
                       	cellTemplate: function (container, options) {
@@ -503,25 +520,20 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			$scope.Observaciones = response.data[0].Observaciones;
 			$scope.Estado = response.data[0].Estado;
 			$scope.FechaVence = response.data[0].FechaVence;
-
-			///////////////////////////////////////////////////////////////////////				
-			$("#progressBarStatus").dxProgressBar({
-				min: 0,
-				max: 100,
-				width: "100%",
-				statusFormat: function (value) {
-					return value * 100 + "%";
-				}
-			});
-
+			
 			if ($scope.Tipo == 3) {
-				nivel(100, $scope.Tipo);
+				nivelPlanes(100, $scope.Tipo);
+				$('.Hgi_plan').dxBullet(CrearGrafico(100, 'Consumo Actual ', ' %', nivelPlanes(porcentaje, $scope.Tipo)));
+				$('#hgi_porcentaje_plan').html("100%");
 			} else {
 				var porcentaje = ($scope.TProcesadas.toString().replace(',', '.') / $scope.TCompra.toString().replace(',', '.')) * 100;
-				nivel(porcentaje, $scope.Tipo);
+				nivelPlanes(porcentaje, $scope.Tipo);
+				$('.Hgi_plan').dxBullet(CrearGrafico(porcentaje, 'Consumo Actual ', ' %', nivelPlanes(porcentaje, $scope.Tipo)));
+				$('#hgi_porcentaje_plan').html(Number(porcentaje).toFixed(2) + "%");
 			}
-			///////////////////////////////////////////////////////////////////////
 
+			///////////////////////////////////////////////////////////////////////
+			
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
@@ -530,68 +542,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 
 
-	function nivel(nivel, tipo) {
-		if (tipo == 3) {
-			nivel = 100;
-			color = '#5cb85c'; //Verde
-		} else {
-			var color = '#FE2E2E';
-			if (nivel >= 71 && nivel <= 90) {
-				color = '#E8BE0C';
-			}
-
-			if (nivel > 90) {
-				color = '#FE2E2E';
-			}
-
-			if (nivel <= 70) {
-				color = '#5cb85c';
-			}
-		}
-
-		$("#progressBarStatus").dxProgressBar({ value: nivel });
-		$('div.dx-progressbar-range').css('background-color', color);
-		$('div.dx-progressbar-range').css('border', '1px solid  ' + color);
-		return color;
-	}
-
-	var discountCellTemplate = function (container, options) {
-
-		var porcentaje = (options.data.TProcesadas > 0) ? (options.data.TProcesadas / options.data.TCompra) * 100 : 100;
-		var color = nivel(porcentaje, options.data.CodCompra);
-		$("<div/>").dxBullet({
-			onIncidentOccurred: null,
-			size: {
-				width: 60,
-				height: 35
-			},
-			margin: {
-				top: 5,
-				bottom: 0,
-				left: 5
-			},
-			showTarget: false,
-			showZeroLevel: true,
-			value: porcentaje,
-			startScaleValue: 0,
-			endScaleValue: 100,
-			color: color,
-			tooltip: {
-				enabled: true,
-				font: {
-					size: 18
-				},
-				paddingTopBottom: 2,
-				customizeTooltip: function () {
-					return { text: porcentaje + '%' };
-				},
-				zIndex: 5
-			}
-		}).appendTo(container);
-	};
-
-	var collapsed = false;
-
+	
 });
 
 
@@ -619,7 +570,7 @@ var TiposFiltroFecha =
 
 var Lista_Tipo_plan =
     [
-    { ID: "1", Texto: 'Cortesía' },
+    { ID: "1", Texto: 'Recarga Interna' },
     { ID: "2", Texto: 'Compra' },
     { ID: "3", Texto: 'Post-Pago' }
     ];
@@ -630,3 +581,24 @@ var Lista_Estado_plan =
     { ID: "1", Texto: 'Inhabilitado' },
     { ID: "2", Texto: 'Procesado' }
     ];
+
+
+	
+
+
+function CrearGrafico(porcentaje,titulo,titulo2,color) {
+	//Configuración de la barra de porcentaje
+	var BarraPorcentaje = {
+		startScaleValue: 0,
+		endScaleValue: 100,
+		tooltip: {
+			customizeTooltip: function (arg) {
+				return {
+					text: titulo + Number(arg.target).toFixed(2) + titulo2
+				};
+			}
+		}
+	};
+
+	return datos = $.extend({ value: 100, target: porcentaje, color: color }, BarraPorcentaje);
+}

@@ -10,7 +10,7 @@ namespace HGInetMiFacturaElectonicaData
     public enum TipoCompra
     {
 
-        [Description("Cortesía")]
+        [Description("Recarga Interna")]
         Cortesia = 1,
 
         [Description("Compra")]

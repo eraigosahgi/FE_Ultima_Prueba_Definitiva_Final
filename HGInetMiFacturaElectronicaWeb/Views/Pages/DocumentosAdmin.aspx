@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 	<!-- JS DocumentosAdquiriente-->
-
+	<script src="../../Scripts/Services/FiltroGenerico.js"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
 	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/DocumentosAdmin.js?vjs201912"></script>
@@ -67,8 +67,6 @@
 										<div data-dx-autocomplete="filtros.NumeroDocumento"></div>
 									</div>
 
-
-
 									<div class="col-md-3" style="margin-top: 1%">
 										<i class="icon-file-text"></i>
 										<label>Estado:</label>
@@ -76,10 +74,7 @@
 									</div>
 
 									<div class="col-md-3" style="margin-top: 1%">
-										<i class="icon-user-tie"></i>
-										<label>Código Facturador:</label>
-										<div id="txtempresaasociada"></div>
-										<%--<div data-dx-autocomplete="filtros.Facturador"></div>--%>
+										<div data-hgi-filtro="Facturador"></div>
 									</div>
 
 									<div class="col-md-3" style="margin-top: 1%">
@@ -93,21 +88,14 @@
 										<label>Tìpo:</label>
 										<div id="TipoDocumento"></div>
 									</div>
-
 								</div>
-
 							</div>
-
-
 						</div>
 						<div class="col-lg-12 text-right">
 							<br />
 							<br />
-							<div dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
+							<div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
 						</div>
-
-
-
 					</div>
 
 				</div>
@@ -138,10 +126,7 @@
 
 		</div>
 		<!-- /CONTENEDOR PRINCIPAL -->
-
-
-
-		<div id="modal_enviar_email" class="modal fade" style="display: none; margin-top: 15%;" modal="showModal" ng-controller="EnvioEmailController">
+		<div id="modal_enviar_email" class="modal fade" style="display: none; margin-top: 15%;" modal="showModal" data-ng-controller="EnvioEmailController">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div id="EncabezadoModal" class="modal-header">
@@ -153,23 +138,18 @@
 						<h6>El siguiente E-mail corresponde al destinatario de este mensaje.
 						</h6>
 
-						<div id="formEmailEnvio" dx-form="formOptionsEmailEnvio">
+						<div id="formEmailEnvio" data-dx-form="formOptionsEmailEnvio">
 						</div>
 
 					</div>
 					<div id="divsombra" class="modal-footer">
-						<div dx-button="buttonCerrarModal" data-dismiss="modal"></div>
-						<div dx-button="buttonEnviarEmail"></div>
+						<div data-dx-button="buttonCerrarModal" data-dismiss="modal"></div>
+						<div data-dx-button="buttonEnviarEmail"></div>
 					</div>
 
 				</div>
 			</div>
 		</div>
-
-
 		<div data-ng-include="'AuditoriaDocumento.aspx'"></div>
-
 	</div>
-
-
 </asp:Content>

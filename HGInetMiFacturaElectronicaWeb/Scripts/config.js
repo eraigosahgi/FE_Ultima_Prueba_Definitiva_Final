@@ -243,3 +243,60 @@ function ValidarSesion() {
 }
 
 
+var EnumHabilitacion =
+[
+{ ID: "0", Texto: 'Valida Objeto' },
+{ ID: "1", Texto: 'Pruebas' },
+{ ID: "99", Texto: 'Producción' }
+];
+
+//Busca en un array la descipcion, pasandole como parametros el array y el id 
+function BuscarDescripcion(miArray, ID) {
+	for (var i = 0; i < miArray.length; i += 1) {
+		if (ID == miArray[i].ID) {
+			return miArray[i].Texto;
+		}
+	}
+}
+
+
+function CrearGrafico(porcentaje, titulo, titulo2, color) {
+	//Configuración de la barra de porcentaje
+	var BarraPorcentaje = {
+		startScaleValue: 0,
+		endScaleValue: 100,
+		tooltip: {
+			customizeTooltip: function (arg) {
+				return {
+					text: titulo + Number(arg.target).toFixed(2) + titulo2
+				};
+			}
+		}
+	};
+
+	return datos = $.extend({ value: 100, target: porcentaje, color: color }, BarraPorcentaje);
+}
+
+
+function nivelPlanes(nivel, tipo) {
+	if (tipo == 3) {
+		nivel = 100;
+		color = '#5cb85c'; //Verde
+	} else {
+		var color = '#FE2E2E';
+		if (nivel >= 71 && nivel <= 90) {
+			color = '#E8BE0C';
+		}
+
+		if (nivel > 90) {
+			color = '#FE2E2E';
+		}
+
+		if (nivel <= 70) {
+			color = '#5cb85c';
+		}
+	}
+	return color;
+}
+
+

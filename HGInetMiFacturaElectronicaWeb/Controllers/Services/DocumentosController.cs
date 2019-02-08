@@ -355,19 +355,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
-				Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
-				//bool respuesta = false;
+				Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();				
 				List<MensajeEnvio> respuesta = null;
-
-				////Valida el estado del documento para saber que tipo de notificacion enviar
-				//if (datos.FirstOrDefault().IdCategoriaEstado < CategoriaEstado.ValidadoDian.GetHashCode())
-				//{
-				//	respuesta = clase_email.NotificacionBasica(datos.FirstOrDefault(), "", email);
-				//}
-				//else
-				//{
-					respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "");
-				//}
+				
+				respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "");
+				
 				return Ok(respuesta);
 			}
 			catch (Exception excepcion)

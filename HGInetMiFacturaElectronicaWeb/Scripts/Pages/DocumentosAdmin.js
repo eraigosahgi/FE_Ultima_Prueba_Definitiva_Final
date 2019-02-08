@@ -1,23 +1,12 @@
 ﻿DevExpress.localization.locale('es-ES');
-
-//var path = window.location.pathname;
-//var ruta = window.location.href;
-//ruta = ruta.replace(path, "/");
-//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></script>');
-
-//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></script>');
-
-//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Pages/ModalConsultaEmpresas.js"></script>');
-
-
 var email_destino = "";
 var id_seguridad = "*";
 var items_recibo = [];
 var UsuarioSession = "";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'ModalEmpresasApp']);
-DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope) {
+var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'ModalEmpresasApp','AppSrvFiltro']);
+DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope, SrvFiltro) {
 
 	var now = new Date();
 	var Estado;
@@ -30,7 +19,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            fecha_fin = "",
            codigo_adquiriente = "",
            cod_facturador = "*",
-            tipo_filtro_fecha = 1,
+            tipo_filtro_fecha = 1,			
            Datos_Tipo = "0";
 
 	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
@@ -47,6 +36,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 		});
 	});
 
+
+	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {		
+		$scope.Facturador = Datos;
+	});
 
 	function cargarFiltros() {
 		$("#FechaInicial").dxDateBox({
@@ -177,20 +170,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             		}
             	},
             }
-
-		$("#txtempresaasociada").dxTextBox({
-			placeholder: "Ingrese Identificación del Facturador",
-			title: 'Prueba',
-			onValueChanged: function (data) {
-				empresa = data.value.split(' -- ');
-				cod_facturador = empresa[0];
-				$("#txtempresaasociada").dxTextBox({ value: cod_facturador });
-			},
-			onKeyDown: function (data) {
-				if (data.event.key == 'F4')
-					$('#modal_Buscar_empresa').modal('show');
-			}
-		});
+		
 
 		$("#FechaFinal").dxDateBox({ min: now });
 		$("#FechaInicial").dxDateBox({ max: now });
@@ -225,8 +205,8 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
-
-		SrvDocumento.ObtenerDocumentosAdmin(cod_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
+		var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: data
 			});
@@ -244,8 +224,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
+		
 
-		SrvDocumento.ObtenerDocumentosAdmin(cod_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
+		var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: data,
 				keyExpr: "NumeroDocumento",

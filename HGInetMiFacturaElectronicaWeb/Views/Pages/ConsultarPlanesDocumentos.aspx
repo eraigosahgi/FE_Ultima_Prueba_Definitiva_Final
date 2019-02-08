@@ -211,7 +211,7 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Tipo de Plan:</td>
-                                                                                <td style="background-color: #ffffff; vertical-align: top">{{Tipo == 1 ? "Cortesía" : Tipo == 2 ? "Compra" : Tipo == 3 ? "Post-Pago":""}}</td>
+                                                                                <td style="background-color: #ffffff; vertical-align: top">{{Tipo == 1 ? "Recarga Interna" : Tipo == 2 ? "Compra" : Tipo == 3 ? "Post-Pago":""}}</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Nit:</td>
@@ -239,7 +239,7 @@
                                                                             </tr>
 																			<tr>																				
 																					<td style="background-color: #efefef; vertical-align: top">Porcentaje:</td>
-																					<td style="background-color: #ffffff; vertical-align: top"><div id="progressBarStatus"></div></td>																																									
+																					<td><div class="bullet Hgi_plan"></div><label id="hgi_porcentaje_plan" style="font-size:12px; margin:0px; padding:0px;">70%</label></td>																					
 																			</tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Estado:</td>

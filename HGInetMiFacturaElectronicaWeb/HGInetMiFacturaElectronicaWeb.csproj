@@ -173,6 +173,9 @@
     <Content Include="emails\plantilla_documento2.html" />
     <Content Include="emails\plantilla_documento_acuse.html" />
     <Content Include="emails\plantilla_documento_basica.html" />
+    <Content Include="emails\plantilla_notificacion_alerta.html" />
+    <Content Include="emails\plantilla_notificacion_alerta_hgi.html" />
+    <Content Include="emails\plantilla_notificacion_sinsaldo.html" />
     <Content Include="emails\plantilla_recarga_transacciones.html" />
     <Content Include="emails\plantilla_envio_serial.html" />
     <Content Include="emails\plantilla_restablecer_clave.html" />
@@ -1904,6 +1907,7 @@
     <Content Include="Scripts\Pages\ConsultaAcuseTacito.js" />
     <Content Include="Scripts\Pages\ConsultaAuditoriaDocumento.js" />
     <Content Include="Scripts\Pages\ConsultaDocumentosClientes.js" />
+    <Content Include="Scripts\Pages\ConsultaNotificaciones.js" />
     <Content Include="Scripts\Pages\ConsultaPagosFacturador.js" />
     <Content Include="Scripts\Pages\ConsultarPlanesAdmin.js" />
     <Content Include="Scripts\Pages\ConsultarPlanesDocumentos.js" />
@@ -1911,6 +1915,7 @@
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
     <Content Include="Scripts\Pages\ModalConsultaProveedores.js" />
+    <Content Include="Scripts\Pages\ModalDetalleEmpresa.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
@@ -1926,7 +1931,9 @@
     <Content Include="Scripts\Services\FiltroGenerico.js" />
     <Content Include="Scripts\Services\Loading.js" />
     <Content Include="Scripts\Services\MaestrosEnum.js" />
+    <Content Include="Scripts\Services\SrvAlertas.js" />
     <Content Include="Scripts\Services\SrvDocumentos.js" />
+    <Content Include="Scripts\Services\SrvEmpresa.js" />
     <Content Include="Scripts\Services\SrvPlanes.js" />
     <Content Include="Scripts\Services\SrvProveedor.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
@@ -2753,6 +2760,7 @@
     <Content Include="Views\Pages\ConsultaEmpresasSerial.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresas.aspx" />
     <Content Include="Views\Pages\ConsultaFacturadorPagos.aspx" />
+    <Content Include="Views\Pages\ConsultaNotificaciones.aspx" />
     <Content Include="Views\Pages\ConsultaPlanesTransacciones.aspx" />
     <Content Include="Views\Pages\ConsultaProveedores.aspx" />
     <Content Include="Views\Pages\ConsultarPlanesAdmin.aspx" />
@@ -2762,6 +2770,7 @@
     <Content Include="Views\Pages\GestionProveedores.aspx" />
     <Content Include="Views\Pages\GestionReportes.aspx" />
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
+    <Content Include="Views\Pages\ModalDetalleEmpresa.aspx" />
     <Content Include="Views\Pages\ModalDetallePago.aspx" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
@@ -2778,6 +2787,7 @@
     <Content Include="Views\Pages\Sonda.aspx" />
     <Content Include="Views\Pages\SondaAcuseTacito.aspx" />
     <Content Include="Views\Pages\SondaCrearPlanes.aspx" />
+    <Content Include="Views\Pages\SondadeNotificaciones.aspx" />
     <Content Include="Views\Pages\SondaResoluciones.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
     <Content Include="Views\ReportDesigner\XmlReporteBase.xml">
@@ -2799,6 +2809,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Services\AlertasController.cs" />
     <Compile Include="Controllers\Services\AuditoriasController.cs" />
     <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
     <Compile Include="Controllers\Services\FormatosController.cs" />
@@ -2970,6 +2981,13 @@
     <Compile Include="Views\Pages\ConsultaFacturadorPagos.aspx.designer.cs">
       <DependentUpon>ConsultaFacturadorPagos.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ConsultaNotificaciones.aspx.cs">
+      <DependentUpon>ConsultaNotificaciones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaNotificaciones.aspx.designer.cs">
+      <DependentUpon>ConsultaNotificaciones.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ConsultaPlanesTransacciones.aspx.cs">
       <DependentUpon>ConsultaPlanesTransacciones.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3032,6 +3050,13 @@
     </Compile>
     <Compile Include="Views\Pages\ModalAsignarFormato.aspx.designer.cs">
       <DependentUpon>ModalAsignarFormato.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ModalDetalleEmpresa.aspx.cs">
+      <DependentUpon>ModalDetalleEmpresa.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ModalDetalleEmpresa.aspx.designer.cs">
+      <DependentUpon>ModalDetalleEmpresa.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ModalDetallePago.aspx.cs">
       <DependentUpon>ModalDetallePago.aspx</DependentUpon>
@@ -3144,6 +3169,13 @@
     </Compile>
     <Compile Include="Views\Pages\SondaCrearPlanes.aspx.designer.cs">
       <DependentUpon>SondaCrearPlanes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\SondadeNotificaciones.aspx.cs">
+      <DependentUpon>SondadeNotificaciones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondadeNotificaciones.aspx.designer.cs">
+      <DependentUpon>SondadeNotificaciones.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\SondaResoluciones.aspx.cs">
       <DependentUpon>SondaResoluciones.aspx</DependentUpon>
@@ -3275,7 +3307,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61443/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

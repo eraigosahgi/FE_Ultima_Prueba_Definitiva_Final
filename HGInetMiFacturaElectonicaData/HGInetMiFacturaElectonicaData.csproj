@@ -104,11 +104,13 @@
     <Compile Include="Enumerables\OperacionesBD.cs" />
     <Compile Include="Enumerables\Perfiles.cs" />
     <Compile Include="Enumerables\ProcesoEstado.cs" />
+    <Compile Include="Enumerables\TipoAlerta.cs" />
     <Compile Include="Enumerables\TipoCompra.cs" />
     <Compile Include="Enumerables\TipoFormato.cs" />
     <Compile Include="Enumerables\TipoOpciones.cs" />
     <Compile Include="ModeloAuditoria\Objetos\TblGenerica.cs" />
     <Compile Include="ModeloAuditoria\Objetos\TblAuditDocumentos.cs" />
+    <Compile Include="ModeloAuditoria\Objetos\TblHistAlertas.cs" />
     <Compile Include="ModeloServicio\Documentos\Acuse.cs" />
     <Compile Include="ModeloServicio\Documentos\Cuota.cs" />
     <Compile Include="ModeloServicio\Documentos\DocumentoArchivo.cs" />

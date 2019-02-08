@@ -97,7 +97,9 @@
     <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Auditorias\Ctl_AlertasHistAudit.cs" />
     <Compile Include="Auditorias\Ctl_DocumentosAudit.cs" />
+    <Compile Include="Configuracion\Ctl_Alertas.cs" />
     <Compile Include="Configuracion\Ctl_ConfiguracionInteroperabilidad.cs" />
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
     <Compile Include="Configuracion\Ctl_Formatos.cs" />

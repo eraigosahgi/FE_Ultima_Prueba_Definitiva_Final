@@ -146,7 +146,7 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Tipo de Plan:</td>
-                                                                                <td style="background-color: #ffffff; vertical-align: top">{{Tipo == 1 ? "Cortesía" : Tipo == 2 ? "Compra" : Tipo == 3 ? "Post-Pago":""}}</td>
+                                                                                <td style="background-color: #ffffff; vertical-align: top">{{Tipo == 1 ? "Recarga Interna" : Tipo == 2 ? "Compra" : Tipo == 3 ? "Post-Pago":""}}</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Nit:</td>

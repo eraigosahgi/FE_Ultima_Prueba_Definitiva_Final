@@ -18,11 +18,13 @@ using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_Alertas;
 
 namespace HGInetMiFacturaElectonicaController
 {
@@ -398,7 +400,7 @@ namespace HGInetMiFacturaElectonicaController
 				// envía como email de respuesta facturador electrónico
 				DestinatarioEmail remitente = new DestinatarioEmail();
 				remitente.Nombre = empresa_obligado.StrRazonSocial;
-				remitente.Email = empresa_obligado.StrMailAdmin;
+				remitente.Email = empresa_obligado.StrMailEnvio;
 
 				// obtiene los datos del adquiriente
 				Ctl_Empresa adquiriente = new Ctl_Empresa();
@@ -412,7 +414,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				if (string.IsNullOrWhiteSpace(nuevo_email))
 				{
-					destinatario.Email = empresa_adquiriente.StrMailAdmin;
+					destinatario.Email = empresa_adquiriente.StrMailRecepcion;
 					correos_destino.Add(destinatario);
 				}
 				else
@@ -475,7 +477,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NombreFacturador}", empresa_obligado.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
 						mensaje = mensaje.Replace("{DigitovFacturador}", empresa_obligado.IntIdentificacionDv.ToString());
-						mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMailAdmin);
+						mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMailEnvio);
 						mensaje = mensaje.Replace("{CodigoCUFE}", documento.StrCufe);
 
 
@@ -493,7 +495,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NombreTercero}", empresa_adquiriente.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitTercero}", empresa_adquiriente.StrIdentificacion);
 						mensaje = mensaje.Replace("{Digitov}", empresa_adquiriente.IntIdentificacionDv.ToString());
-						mensaje = mensaje.Replace("{CorreoTercero}", empresa_adquiriente.StrMailAdmin);
+						mensaje = mensaje.Replace("{CorreoTercero}", empresa_adquiriente.StrMailRecepcion);
 						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
 
 
@@ -974,7 +976,7 @@ namespace HGInetMiFacturaElectonicaController
 				// envía como email de respuesta el Adquiriente
 				DestinatarioEmail remitente = new DestinatarioEmail();
 				remitente.Nombre = adquiriente.StrRazonSocial;
-				remitente.Email = adquiriente.StrMailAdmin;
+				remitente.Email = adquiriente.StrMailEnvio;
 
 				//// recibe el email el Facturador Electrónico
 				//DestinatarioEmail destinatario = new DestinatarioEmail();
@@ -999,7 +1001,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				if (string.IsNullOrWhiteSpace(mail))
 				{
-					destinatario.Email = facturador.StrMailAdmin;
+					destinatario.Email = facturador.StrMailAcuse;
 					correos_destino.Add(destinatario);
 				}
 				else
@@ -1039,7 +1041,7 @@ namespace HGInetMiFacturaElectonicaController
 						// Datos del Tercero
 						mensaje = mensaje.Replace("{NombreTercero}", adquiriente.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitTercero}", adquiriente.StrIdentificacion);
-						mensaje = mensaje.Replace("{EmailTercero}", adquiriente.StrMailAdmin);
+						mensaje = mensaje.Replace("{EmailTercero}", adquiriente.StrMailEnvio);
 						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
 
 
@@ -1212,7 +1214,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Estado}", (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(plan.IntEstado))));
 						mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
 						mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString("N0"));
-						mensaje = mensaje.Replace("{Observaciones}", (plan.StrObservaciones != null) ? plan.StrObservaciones : "Ninguna");
+						//mensaje = mensaje.Replace("{Observaciones}", (plan.StrObservaciones != null) ? plan.StrObservaciones : "Ninguna");
 
 						string asunto = "NOTIFICACIÓN DE RECARGA DE TRANSACCIONES";
 
@@ -1252,7 +1254,321 @@ namespace HGInetMiFacturaElectonicaController
 			{
 				throw new ApplicationException(ex.Message);
 			}
+		}
+
+
+
+
+		/// <summary>
+		/// Envia Correo Electronico con información sobre alguna alerta, puede ser al facturador, un usuario de algún facturador o a personal de HGI
+		/// </summary>
+		/// <param name="identificacion">Nit del Facturador</param>
+		/// <param name="mail">email al que se va enviar el correo</param>
+		/// <returns></returns>
+		public List<MensajeEnvio> EnviaNotificacionAlerta(string identificacion, string mail, double adquiridos, double procesados, double disponibles, double Porcentaje)
+		{
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				List<MensajeEnvio> RespuestaMail = new List<MensajeEnvio>();
+
+				if (string.IsNullOrEmpty(identificacion))
+					throw new ApplicationException("No se encontró información de la empresa.");
+
+
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaPlanPorcentaje);
+
+				// obtiene los datos del Facturador
+				Ctl_Empresa empresa = new Ctl_Empresa();
+				TblEmpresas facturador = empresa.Obtener(identificacion);
+
+				//if (string.IsNullOrEmpty(facturador.StrSerial))
+				//    throw new ApplicationException("No se encontró información del serial");
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{
+						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
+
+						mensaje = mensaje.Replace("{NombreTercero}", facturador.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitTercero}", facturador.StrIdentificacion);
+						mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());
+						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
+
+						mensaje = mensaje.Replace("{adquiridos}", adquiridos.ToString());
+						mensaje = mensaje.Replace("{procesados}", procesados.ToString());
+						mensaje = mensaje.Replace("{disponibles}", disponibles.ToString());
+						mensaje = mensaje.Replace("{Porcentaje}", string.Format("{0}%", Porcentaje.ToString()));
+
+
+						string asunto = "ALERTA DE CONSUMO";
+
+						DestinatarioEmail remitente = new DestinatarioEmail();
+						remitente.Email = Constantes.EmailRemitente;
+						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						DestinatarioEmail destinatario = new DestinatarioEmail();
+						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+						if (mail.Contains(";"))
+						{
+							foreach (var item_mail in Coleccion.ConvertirLista(mail, ';'))
+							{
+								// recibe el email el adquiriente
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = facturador.StrRazonSocial;
+								destinatario.Email = item_mail;
+								correos_destino.Add(destinatario);
+							}
+						}
+						else
+						{
+							destinatario.Nombre = facturador.StrRazonSocial;
+							destinatario.Email = mail;
+						}
+
+
+
+
+						correos_destino.Add(destinatario);
+
+
+						// envía correo electrónico con copia de auditoría
+						List<DestinatarioEmail> correos_copia_oculta = null;
+						if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+						{
+							correos_copia_oculta = new List<DestinatarioEmail>();
+
+							DestinatarioEmail copia_oculta = new DestinatarioEmail();
+							copia_oculta.Nombre = "Auditoría";
+							copia_oculta.Email = Constantes.EmailCopiaOculta;
+							correos_copia_oculta.Add(copia_oculta);
+						}
+
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						RespuestaMail = clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+
+					}
+				}
+
+				return RespuestaMail;
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException(ex.Message);
+			}
 
 		}
+
+
+
+		/// <summary>
+		/// Envia Correo Electronico Indicando que no dispone de saldo
+		/// </summary>
+		/// <param name="identificacion">Nit del Facturador</param>
+		/// <param name="mail">email al que se va enviar el correo</param>
+		/// <returns></returns>
+		public List<MensajeEnvio> EnviaNotificacionSinSaldo(string identificacion, string mail)
+		{
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				List<MensajeEnvio> RespuestaMail = new List<MensajeEnvio>();
+
+				if (string.IsNullOrEmpty(identificacion))
+					throw new ApplicationException("No se encontró información de la empresa.");
+
+
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaplantillaSinSaldo);
+
+				// obtiene los datos del Facturador
+				Ctl_Empresa empresa = new Ctl_Empresa();
+				TblEmpresas facturador = empresa.Obtener(identificacion);
+
+				//if (string.IsNullOrEmpty(facturador.StrSerial))
+				//    throw new ApplicationException("No se encontró información del serial");
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{						
+
+						mensaje = mensaje.Replace("{NombreTercero}", facturador.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitTercero}", facturador.StrIdentificacion);
+						mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());						
+
+						string asunto = "NO DISPONE DE SALDO EN NUESTRA PLAFAFORMA DE FACTURA ELECTRÓNICA";
+
+						DestinatarioEmail remitente = new DestinatarioEmail();
+						remitente.Email = Constantes.EmailRemitente;
+						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						DestinatarioEmail destinatario = new DestinatarioEmail();
+						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+						if (mail.Contains(";"))
+						{
+							foreach (var item_mail in Coleccion.ConvertirLista(mail, ';'))
+							{
+								// recibe el email el adquiriente
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = facturador.StrRazonSocial;
+								destinatario.Email = item_mail;
+								correos_destino.Add(destinatario);
+							}
+						}
+						else
+						{
+							destinatario.Nombre = facturador.StrRazonSocial;
+							destinatario.Email = mail;
+						}
+
+
+
+
+						correos_destino.Add(destinatario);
+
+
+						// envía correo electrónico con copia de auditoría
+						List<DestinatarioEmail> correos_copia_oculta = null;
+						if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+						{
+							correos_copia_oculta = new List<DestinatarioEmail>();
+
+							DestinatarioEmail copia_oculta = new DestinatarioEmail();
+							copia_oculta.Nombre = "Auditoría";
+							copia_oculta.Email = Constantes.EmailCopiaOculta;
+							correos_copia_oculta.Add(copia_oculta);
+						}
+
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						RespuestaMail = clase_email.EnviarEmail(facturador.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+
+					}
+				}
+
+				return RespuestaMail;
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException(ex.Message);
+			}
+
+		}
+
+
+
+		/// <summary>
+		/// Envia Correo Electronico con información sobre alguna alerta, puede ser al facturador, un usuario de algún facturador o a personal de HGI
+		/// </summary>
+		/// <param name="identificacion">Nit del Facturador</param>
+		/// <param name="mail">email al que se va enviar el correo</param>
+		/// <returns></returns>
+		public List<MensajeEnvio> EnviaNotificacionAlertaPorvencer(string mail, List<NotificacionAlertaporVencer> ListNotificacion)
+		{
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				List<MensajeEnvio> RespuestaMail = new List<MensajeEnvio>();
+
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaPlanporVencer);
+
+
+				string asunto = "ALERTA; DE PLANES CERCA DE VENCER";
+
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{
+											
+						//Aqui se hacer un foreach para llenar la tabla HTML con los facturadores y planes que se van a notificar al personal de HGI
+						//string encabezado = @"<table class='TablaVence' role='presentation' cellpadding='0' cellspacing='0' style='vertical-align:middle;' width='100%' border='0'><tr><th> Documento </th><th> Facturador </th><th> Adquiridas </th><th> Procesadas </th><th> Disponible </th><th>Fecha de Vencimiento</th></tr>";
+																								 																	    
+						string detalle = string.Empty;
+
+						foreach (var item in ListNotificacion)
+						{
+							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td>{7}</td></tr>", detalle, item.Documento,item.Facturador,item.adquiridas,item.procesados,item.disponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.tipo)),item.Fecha);
+						}
+											   						
+						mensaje = mensaje.Replace("{TablaHtml}", detalle);						
+
+						DestinatarioEmail remitente = new DestinatarioEmail();
+						remitente.Email = Constantes.EmailRemitente;
+						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						DestinatarioEmail destinatario = new DestinatarioEmail();
+						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+						if (mail.Contains(";"))
+						{
+							foreach (var item_mail in Coleccion.ConvertirLista(mail, ';'))
+							{
+								// recibe el email el adquiriente
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = "ADMINISTRACIÓN";
+								destinatario.Email = item_mail;
+								correos_destino.Add(destinatario);
+							}
+						}
+						else
+						{
+							destinatario.Nombre = "ADMINISTRACIÓN";
+							destinatario.Email = mail;
+						}
+
+
+
+
+						correos_destino.Add(destinatario);
+
+
+						// envía correo electrónico con copia de auditoría
+						List<DestinatarioEmail> correos_copia_oculta = null;
+						if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+						{
+							correos_copia_oculta = new List<DestinatarioEmail>();
+
+							DestinatarioEmail copia_oculta = new DestinatarioEmail();
+							copia_oculta.Nombre = "Auditoría";
+							copia_oculta.Email = Constantes.EmailCopiaOculta;
+							correos_copia_oculta.Add(copia_oculta);
+						}
+
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						RespuestaMail = clase_email.EnviarEmail("ADMINISTRACIÓN", false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+
+					}
+				}
+
+				return RespuestaMail;
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException(ex.Message);
+			}
+
+		}
+
+
+
+
+		/*
+		 
+		*/
 	}
 }

@@ -189,6 +189,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				EmpresaActualiza.IntIdEstado = empresa.IntIdEstado;
 				EmpresaActualiza.IntCobroPostPago = empresa.IntCobroPostPago;
 
+				EmpresaActualiza.StrMailRecepcion = empresa.StrMailRecepcion;
+				EmpresaActualiza.StrMailEnvio = empresa.StrMailEnvio;
+				EmpresaActualiza.StrMailAcuse = empresa.StrMailAcuse;
+				EmpresaActualiza.StrMailPagos = empresa.StrMailPagos;
+
 				empresa.DatFechaActualizacion = Fecha.GetFecha();
 
 				Actualizar(EmpresaActualiza);
@@ -338,6 +343,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			tbl_empresa.StrTelefono = empresa.Telefono;
 			tbl_empresa.StrEmpresaAsociada = empresa.Identificacion;
 			tbl_empresa.StrEmpresaDescuento = empresa.Identificacion;
+
+			tbl_empresa.StrMailAcuse = tbl_empresa.StrMailAdmin;
+			tbl_empresa.StrMailEnvio = tbl_empresa.StrMailAdmin;
+			tbl_empresa.StrMailRecepcion = tbl_empresa.StrMailAdmin;
+			tbl_empresa.StrMailPagos = tbl_empresa.StrMailAdmin;
+
 
 			return tbl_empresa;
 		}

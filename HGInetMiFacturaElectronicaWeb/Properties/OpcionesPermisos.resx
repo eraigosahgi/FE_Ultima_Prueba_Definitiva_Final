@@ -123,6 +123,9 @@
   <data name="AcusePendienteRecepcion" xml:space="preserve">
     <value>1362</value>
   </data>
+  <data name="AlertasYNotificaciones" xml:space="preserve">
+    <value>1346</value>
+  </data>
   <data name="ConsultaAcuseRecibo" xml:space="preserve">
     <value>1312</value>
   </data>

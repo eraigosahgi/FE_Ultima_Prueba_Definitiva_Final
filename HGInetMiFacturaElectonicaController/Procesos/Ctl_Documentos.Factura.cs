@@ -30,6 +30,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns>Objeto tipo respuesta</returns>
 		public static List<DocumentoRespuesta> Procesar(List<Factura> documentos)
 		{
+
+			Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
+			List<ObjPlanEnProceso> ListaPlanes = new List<ObjPlanEnProceso>();
+			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+
 			try
 			{
 				Ctl_Empresa Peticion = new Ctl_Empresa();
@@ -41,13 +46,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
 
 
-				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
-				Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
-				List<ObjPlanEnProceso> ListaPlanes = new List<ObjPlanEnProceso>();
-				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(documentos[0].DatosObligado.Identificacion, documentos.Count());
-
-				if (ListaPlanes == null)
-					throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
+				
 
 				// genera un id único de la plataforma
 				Guid id_peticion = Guid.NewGuid();
@@ -131,8 +130,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else if (!lista_resolucion.Any())
 					throw new ApplicationException(string.Format("No se encontraron las resoluciones para el Facturador Electrónico '{0}'", facturador_electronico.StrIdentificacion));
 
+				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
+				
+				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(documentos[0].DatosObligado.Identificacion, documentos.Count());
 
-				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+				if (ListaPlanes == null)
+					throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
+
+				
 
 
 				int i = 0;
@@ -175,8 +180,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			catch (Exception ex)
 			{
+				try
+				{
+					foreach (ObjPlanEnProceso plan in ListaPlanes)
+					{
+						plan.procesado = respuesta.Where(x => x.IdPlan == plan.plan).Where(x => x.DescuentaSaldo == true).Count();
+
+						Planestransacciones.ConciliarPlanProceso(plan);
+					}
+				}
+				catch (Exception)
+				{ }
+				////Planes y transacciones
 				LogExcepcion.Guardar(ex);
 				throw new ApplicationException(ex.Message);
+								
 			}
 		}
 

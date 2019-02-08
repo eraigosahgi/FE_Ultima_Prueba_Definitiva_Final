@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Properties;
+﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
@@ -30,11 +31,26 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			datos_plan.DatFecha = Fecha.GetFecha();			
 			datos_plan.StrIdSeguridad = Guid.NewGuid();
 
-			datos_plan = this.Add(datos_plan);
+			datos_plan = this.Add(datos_plan);		
 
 			Ctl_Empresa empresa = new Ctl_Empresa();
 
 			TblEmpresas facturador = empresa.Obtener(datos_plan.StrEmpresaFacturador);
+
+			///Se hace ejecución de reinicio de alertas de porcentaje.
+			///Basicamente se cambia de estatus dicha alerta en mongodb para que el proceso de consumo pueda ir nuevamente a consultar si ya se notifico.
+			///No se coloca en el editar ya que este no permite editar cantidad de documentos.
+			try
+			{
+				if (datos_plan.IntEstado == EstadoPlan.Habilitado.GetHashCode())
+				{
+					Ctl_AlertasHistAudit _AlertasHist = new Ctl_AlertasHistAudit();
+					_AlertasHist.ReiniciarAlertaPorcentaje(facturador.StrIdSeguridad); 
+				}
+			}
+			catch (Exception)
+			{
+			}
 
 			if (Envia_email)
 			{
@@ -55,9 +71,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblPlanesTransacciones Editar(TblPlanesTransacciones datos_plan)
 		{
+		
 			TblPlanesTransacciones Ptransaccion = (from t in context.TblPlanesTransacciones
 												   where t.StrIdSeguridad.Equals(datos_plan.StrIdSeguridad)
 												   select t).FirstOrDefault();
+			int estadoplanactual = Ptransaccion.IntEstado;
 
 			Ptransaccion.IntTipoProceso = datos_plan.IntTipoProceso;
 			Ptransaccion.IntNumTransaccCompra = datos_plan.IntNumTransaccCompra;
@@ -68,6 +86,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.DatFechaVencimiento = datos_plan.DatFechaVencimiento;
 
 			Ptransaccion = this.Edit(Ptransaccion);
+
+			try
+			{
+				if (estadoplanactual != EstadoPlan.Habilitado.GetHashCode() && Ptransaccion.IntEstado == EstadoPlan.Habilitado.GetHashCode())
+				{
+					Ctl_AlertasHistAudit _AlertasHist = new Ctl_AlertasHistAudit();
+					_AlertasHist.ReiniciarAlertaPorcentaje(Ptransaccion.TblEmpresas.StrIdSeguridad);
+				}
+			}
+			catch (Exception)
+			{
+			}
+
 
 			return Ptransaccion;
 		}
@@ -432,6 +463,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			
 
 			PlanesTransacciones = this.Edit(PlanesTransacciones);
+			///Validación de alertas y notificaciones
+			try
+			{
+				Ctl_Alertas controlador = new Ctl_Alertas();
+				controlador.alertaPorcentajePlan(PlanesTransacciones.StrEmpresaFacturador);
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
 
 			return PlanesTransacciones;
 		}

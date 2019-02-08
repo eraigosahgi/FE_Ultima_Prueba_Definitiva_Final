@@ -2,9 +2,9 @@
 var opc_pagina = "1332";
 var TiposHabilitacion = [];
 
-var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
+//var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var EmpresasApp = angular.module('EmpresasApp', ['ModalEmpresasApp', 'dx', 'AppSrvFiltro']);
+var EmpresasApp = angular.module('EmpresasApp', [ 'dx', 'AppSrvFiltro']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
 EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location, SrvFiltro) {
 
@@ -24,6 +24,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
            Habilitacion = "",
 		   Datos_estado = "",
 		   Datos_postpago = 0,
+		   Datos_Email_Recepcion = "",
+			Datos_Email_Acuse = "",
+			Datos_Email_Envio = "",
+			Datos_Email_Pagos = "",
            codigo_adquiriente = "";
 
 	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true).then(function (Datos) {
@@ -160,20 +164,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			onValueChanged: function (data) {
 				Datos_Email = data.value;
 			}
-		})
-            .dxValidator({
-            	validationRules: [{
-            		type: "stringLength",
-            		max: 200,
-            		message: "El Email no puede ser mayor a 200 caracteres"
-            	}, {
-            		type: "required",
-            		message: "Debe introducir el Email"
-            	}, {
-            		type: "email",
-            		message: "El campo Email no tiene el formato correcto"
-            	}]
-            });
+		}).dxValidator({
+			validationRules: [{
+				type: "stringLength",
+				max: 200,
+				message: "El Email no puede ser mayor a 200 caracteres"
+			}, {
+				type: "required",
+				message: "Debe introducir el Email"
+			}, {
+				type: "email",
+				message: "El campo Email no tiene el formato correcto"
+			}]
+		});
 
 		$("#Facturador").dxCheckBox({
 			name: "PerfilFacturador",
@@ -182,8 +185,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			onValueChanged: function (data) {
 				Datos_Obligado = data.value;
 				ValidarSeleccionPerfil();
-				validarHabilitacion();
-				console.log(Datos_Obligado);
+				validarHabilitacion();				
 				if (Datos_Obligado === true) {
 					$("#txtEmail").dxTextBox({ value: "" });
 				}
@@ -317,6 +319,250 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			}
 		});
 
+
+
+		$("#txtMailEnvio").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_Email_Envio = data.value;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "stringLength",
+				max: 200,
+				message: "El Email de envío no puede ser mayor a 200 caracteres"
+			}, {
+				type: "required",
+				message: "Debe introducir el Email de envío"
+			}, {
+				type: "email",
+				message: "El campo Email de envío no tiene el formato correcto"
+			}]
+		});
+
+		$("#txtMailRecepcion").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_Email_Recepcion = data.value;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "stringLength",
+				max: 200,
+				message: "El Email de Recepción no puede ser mayor a 200 caracteres"
+			}, {
+				type: "required",
+				message: "Debe introducir el Email de Recepción"
+			}, {
+				type: "email",
+				message: "El campo Email de Recepción no tiene el formato correcto"
+			}]
+		});
+
+
+
+		$("#txtMailAcuse").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_Email_Acuse = data.value;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "stringLength",
+				max: 200,
+				message: "El Email de Acuse no puede ser mayor a 200 caracteres"
+			}, {
+				type: "required",
+				message: "Debe introducir el Email de Acuse"
+			}, {
+				type: "email",
+				message: "El campo Email de Acuse no tiene el formato correcto"
+			}]
+		});
+
+		$("#txtMailPagos").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_Email_Pagos = data.value;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "stringLength",
+				max: 200,
+				message: "El Email de Pagos no puede ser mayor a 200 caracteres"
+			}, {
+				type: "required",
+				message: "Debe introducir el Email de Pagos"
+			}, {
+				type: "email",
+				message: "El campo Email de Pagos no tiene el formato correcto"
+			}]
+		});
+
+		/////////////////////////////////////Tooltip
+		$("#ttEmail").dxTooltip({
+			target: "#txtEmail",
+			showEvent: "mouseenter",
+			hideEvent: "mouseleave",
+			position: "top",
+			animation: {
+				show: {
+					type: "slide",
+					from: {
+						top: -100,
+						opacity: 0
+					},
+					to: {
+						opacity: 1,
+						top: 0
+					}
+				},
+				hide: {
+					type: "pop",
+					from: {
+						scale: 1,
+						opacity: 1
+					},
+					to: {
+						opacity: 0,
+						scale: 0.1
+					}
+				}
+			},
+			contentTemplate: function (data) {
+				data.html("<br/><b>Email Administrativo</b><br/>Se enviarán las notificaciones <br/> propias de la plataforma como registro, recargas, saldos, boletines, etc.");
+			}
+		});
+		$("#ttMailEnvio").dxTooltip({
+			target: "#txtMailEnvio",
+			showEvent: "mouseenter",
+			hideEvent: "mouseleave",
+			position: "top",
+			animation: {
+				show: {
+					type: "slide",
+					from: {
+						top: -100,
+						opacity: 0
+					},
+					to: {
+						opacity: 1,
+						top: 0
+					}
+				},
+				hide: {
+					type: "pop",
+					from: {
+						scale: 1,
+						opacity: 1
+					},
+					to: {
+						opacity: 0,
+						scale: 0.1
+					}
+				}
+			},
+			contentTemplate: function (data) {
+				data.html("<br/><b>Email Envío Documentos</b><br/>Se enviarán las notificaciones <br/>Se utilizará para el envío de los correos electrónicos a los Adquirientes.");
+			}
+		});
+		$("#ttMailRecepcion").dxTooltip({
+			target: "#txtMailRecepcion",
+			showEvent: "mouseenter",
+			hideEvent: "mouseleave",
+			position: "top",
+			animation: {
+				show: {
+					type: "slide",
+					from: {
+						top: -100,
+						opacity: 0
+					},
+					to: {
+						opacity: 1,
+						top: 0
+					}
+				},
+				hide: {
+					type: "pop",
+					from: {
+						scale: 1,
+						opacity: 1
+					},
+					to: {
+						opacity: 0,
+						scale: 0.1
+					}
+				}
+			},
+			contentTemplate: function (data) {
+				data.html("<br/><b>Email Recepción Documentos</b><br/>Se utilizará para la recepción de correos electrónicos como Adquirientes.");
+			}
+		});
+		$("#ttMailAcuse").dxTooltip({
+			target: "#txtMailAcuse",
+			showEvent: "mouseenter",
+			hideEvent: "mouseleave",
+			position: "top",
+			animation: {
+				show: {
+					type: "slide",
+					from: {
+						top: -100,
+						opacity: 0
+					},
+					to: {
+						opacity: 1,
+						top: 0
+					}
+				},
+				hide: {
+					type: "pop",
+					from: {
+						scale: 1,
+						opacity: 1
+					},
+					to: {
+						opacity: 0,
+						scale: 0.1
+					}
+				}
+			},
+			contentTemplate: function (data) {
+				data.html("<br/><b>Email Recepción Acuse de Recibo</b><br/>Se enviarán las respuestas realizadas por los Adquirientes al realizar el acuse de recibo.");
+			}
+		});
+		$("#ttMailPagos").dxTooltip({
+			target: "#txtMailPagos",
+			showEvent: "mouseenter",
+			hideEvent: "mouseleave",
+			position: "top",
+			animation: {
+				show: {
+					type: "slide",
+					from: {
+						top: -100,
+						opacity: 0
+					},
+					to: {
+						opacity: 1,
+						top: 0
+					}
+				},
+				hide: {
+					type: "pop",
+					from: {
+						scale: 1,
+						opacity: 1
+					},
+					to: {
+						opacity: 0,
+						scale: 0.1
+					}
+				}
+			},
+			contentTemplate: function (data) {
+				data.html("<br/><b>Email Pagos Electrónicos</b><br/>Se enviarán las notificaciones al recibir un pago electrónico por la Plataforma de Servicios.");
+			}
+		});
+		/////////////////////////////////////Tooltip
+
 		function validarHabilitacion() {
 			var caso = "";
 
@@ -387,7 +633,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
 
-		$http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {
+		$http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {			
 			TiposHabilitacion = response.data;
 			$("#Habilitacion").dxRadioGroup({
 				searchEnabled: true,
@@ -451,61 +697,58 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 	function consultar() {
 		Datos_Tipo = "2";
-		$("#wait").show();
+		//SrvEmpresas.ObtenerEmpresa(id_seguridad).then(function (response) {
 		$http.get('/api/Empresas?IdSeguridad=' + id_seguridad).then(function (response) {
-			$("#wait").hide();
 			try {
 
-				Datos_Tipoidentificacion = response.data[0].TipoIdentificacion;
-				Datos_Idententificacion = response.data[0].Identificacion;
-				Datos_Razon_Social = response.data[0].RazonSocial;
-				Datos_Email = response.data[0].Email;
-				Datos_Adquiriente = (response.data[0].Intadquiriente) ? 1 : 0;
-				Datos_Obligado = (response.data[0].intObligado) ? 1 : 0;
-				Datos_Habilitacion = response.data[0].Habilitacion;
-				Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
-				Datos_Observaciones = response.data[0].StrObservaciones;
-				Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
-				Datos_Integrador = response.data[0].IntIntegrador;
-				Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
-				Datos_Dias_Acuse = response.data[0].IntAcuseTacito;
-				Datos_Anexo = response.data[0].IntAnexo;
-				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
-				Datos_estado = response.data[0].Estado;
-				Datos_postpago = response.data[0].Postpago;
-
+				Datos_Tipoidentificacion = response[0].TipoIdentificacion;
+				Datos_Idententificacion = response[0].Identificacion;
+				Datos_Razon_Social = response[0].RazonSocial;
+				Datos_Email = response[0].Email;
+				Datos_Adquiriente = (response[0].Intadquiriente) ? 1 : 0;
+				Datos_Obligado = (response[0].intObligado) ? 1 : 0;
+				Datos_Habilitacion = response[0].Habilitacion;
+				Datos_IdentificacionDv = response[0].IntIdentificacionDv;
+				Datos_Observaciones = response[0].StrObservaciones;
+				Datos_empresa_Asociada = response[0].StrEmpresaAsociada;
+				Datos_Integrador = response[0].IntIntegrador;
+				Datos_Numero_usuarios = response[0].IntNumUsuarios;
+				Datos_Dias_Acuse = response[0].IntAcuseTacito;
+				Datos_Anexo = response[0].IntAnexo;
+				Datos_EmailRecepcion = response[0].IntEmailRecepcion;
+				Datos_estado = response[0].Estado;
+				Datos_postpago = response[0].Postpago;
+				Datos_Email_Envio = response[0].StrMailEnvio;
+				Datos_Email_Recepcion = response[0].StrMailRecepcion;
+				Datos_Email_Acuse = response[0].StrMailAcuse;
+				Datos_Email_Pagos = response[0].StrMailPagos;
 
 				$("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
 				$("#NumeroIdentificacion").dxTextBox({ readOnly: true });
-
 				$("#txtRasonSocial").dxTextBox({ value: Datos_Razon_Social });
 				$("#txtEmail").dxTextBox({ value: Datos_Email });
-
+				$("#txtMailEnvio").dxTextBox({ value: Datos_Email_Envio });
+				$("#txtMailRecepcion").dxTextBox({ value: Datos_Email_Recepcion });
+				$("#txtMailAcuse").dxTextBox({ value: Datos_Email_Acuse });
+				$("#txtMailPagos").dxTextBox({ value: Datos_Email_Pagos });
 				$("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
 				$("#TipoIndentificacion").dxSelectBox({ readOnly: true });
-
 				Set_EmpresaAsociada((Datos_empresa_Asociada) ? Datos_empresa_Asociada : '');
-
-				Set_EmpresaDescuenta((response.data[0].StrEmpresaDescuenta) ? response.data[0].StrEmpresaDescuenta : Datos_Idententificacion)
-
+				Set_EmpresaDescuenta((response[0].StrEmpresaDescuenta) ? response[0].StrEmpresaDescuenta : Datos_Idententificacion)
 				if (Datos_Observaciones != null) {
 					$("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
 				}
-
 				if (Datos_Adquiriente == 1) {
 					$("#Adquiriente").dxCheckBox({ value: 1 });
 				}
-
 				if (Datos_Integrador == 1)
 					$("#Integradora").dxCheckBox({ value: true });
 
 				$("#txtUsuarios").dxNumberBox({ value: Datos_Numero_usuarios });
-
 				$("#txtDiasAcuse").dxNumberBox({ value: Datos_Dias_Acuse });
-
 				if (Datos_Obligado == 1) {
 					$("#Facturador").dxCheckBox({ value: 1 });
-					$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
+					$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response[0].Habilitacion)] });
 				}
 
 				if (Datos_Anexo == 1)
@@ -523,9 +766,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			} catch (err) {
 				DevExpress.ui.notify(err.message + ' Validar Estado Producción', 'error', 7000);
 			}
-		}, function errorCallback(response) {
-			$('#wait').hide();
-			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
 		});
 	}
 
@@ -583,12 +823,16 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntEmailRecepcion: Datos_EmailRecepcion,
 				StrEmpresaDescuento: txt_hgi_EmpresaDescuenta,
 				intestado: Datos_estado,
-				intpostpago: Datos_postpago
+				intpostpago: Datos_postpago,
+				StrMailEnvio: Datos_Email_Envio,
+				StrMailRecepcion: Datos_Email_Recepcion,
+				StrMailAcuse: Datos_Email_Acuse,
+				StrMailPagos: Datos_Email_Pagos
 			});
 
-			$("#wait").show();
-			$http.post('/api/Empresas?' + data).then(function (response) {
-				$("#wait").hide();
+
+			SrvEmpresas.GuardarEmpresa(data).then(function (response) {
+				//$http.post('/api/Empresas?' + data).then(function (response) {
 				try {
 					//Aqui se debe colocar los pasos a seguir
 					DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
@@ -598,9 +842,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				} catch (err) {
 					DevExpress.ui.notify(err.message, 'error', 3000);
 				}
-			}, function errorCallback(response) {
-				$('#wait').hide();
-				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 			});
 		}
 	}
@@ -665,7 +906,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
                        },
                        {
                        	caption: "Razón social",
-                       	dataField: "RazonSocial"
+                       	dataField: "RazonSocial",                       
                        },
                        {
                        	caption: "Email",
@@ -707,18 +948,42 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 					   {
 					   	caption: "Nº Usuarios activos",
 					   	dataField: "Nusuaurios",
-					   	hidingPriority:  3
+					   	hidingPriority: 3
 					   },
 					   {
 					   	caption: "Nº Horas para acuse tacito",
 					   	dataField: "HorasAcuse",
-					   	hidingPriority:  4
+					   	hidingPriority: 4
 					   },
 					   {
 					   	caption: "Notificación en recepción",
 					   	dataField: "NotificacionMail",
-					   	hidingPriority:  5
-					   }
+					   	hidingPriority: 5
+					   },
+					    {
+					    	caption: "Correo de Recepción de Documentos",
+					    	dataField: "StrMailRecepcion",
+					    	hidingPriority: 6
+					    }
+						,
+					    {
+					    	caption: "Correo de Recepción de Acuse",
+					    	dataField: "StrMailAcuse",
+					    	hidingPriority: 7
+					    }
+						,
+					    {
+					    	caption: "Correo para Envios",
+					    	dataField: "StrMailEnvio",
+					    	hidingPriority: 8
+					    }
+						,
+					    {
+					    	caption: "Correo de Recepción de Pagos",
+					    	dataField: "StrMailPagos",
+					    	hidingPriority: 9
+					    }
+
 
 
 
@@ -732,11 +997,12 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 					visible: true
 				}
 			});
-
+			
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
+
 
 	}, function errorCallback(response) {
 		$('#wait').hide();
@@ -775,7 +1041,5 @@ var TiposIdentificacion =
 var TiposEstado =
 [
 { ID: "1", Texto: 'ACTIVO' },
-{
-	ID: "2", Texto: 'INACTIVO'
-}
+{ ID: "2", Texto: 'INACTIVO' }
 ];

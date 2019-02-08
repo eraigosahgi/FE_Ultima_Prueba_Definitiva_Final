@@ -1,7 +1,7 @@
 ﻿//Documentación
 //****************************************************************************************
 //**Asignar un Valor:									Set_Nombre del campo(Valor)     **
-//**Para bluqear el campo :								Bloquear_Nombre del campo       **
+//**Para bloquear el campo :								Bloquear_Nombre del campo   **
 //**para Obtener el valor del campo:					txt_hgi_Nombre del campo        **
 //**Para borrar los datos del control y la variable:	Limpiar_Nombre del campo        **
 //**Para Desbloquear el campo y permitir busqueda:      Desbloquear_Nombre del campo    **

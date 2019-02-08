@@ -120,8 +120,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Postpago = (d.IntCobroPostPago == 1) ? "SI":"NO",
 				Nusuaurios = d.IntNumUsuarios,
 				HorasAcuse = (d.IntAcuseTacito>0)? d.IntAcuseTacito.ToString() : "NO",
-				NotificacionMail = (d.IntEnvioMailRecepcion)?"SI":"NO"
-            });
+				NotificacionMail = (d.IntEnvioMailRecepcion)?"SI":"NO",
+				d.StrMailEnvio,
+				d.StrMailPagos,
+				d.StrMailRecepcion,
+				d.StrMailAcuse
+			});
 
             return Ok(retorno);
         }
@@ -227,7 +231,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				IntAcuseTacito = d.IntAcuseTacito,
 				StrEmpresaDescuenta = d.StrEmpresaDescuento,
 				Estado = d.IntIdEstado,
-				Postpago = d.IntCobroPostPago
+				Postpago = d.IntCobroPostPago,
+				d.StrMailEnvio,
+				d.StrMailPagos,
+				d.StrMailRecepcion,
+				d.StrMailAcuse,
+				Admin=d.IntAdministrador
 			});
 
             return Ok(retorno);
@@ -254,7 +263,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="tipo">1.- Nuevo -- 2.- Editar</param>
 		/// <returns></returns>
 		[HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento,[FromUri]short intestado, [FromUri]short intpostpago, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento,[FromUri]short intestado, [FromUri]short intpostpago,[FromUri]string StrMailEnvio, [FromUri]string StrMailRecepcion, [FromUri]string StrMailAcuse, [FromUri]string StrMailPagos, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
@@ -278,6 +287,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntEnvioMailRecepcion = IntEmailRecepcion;
 				Empresa.IntIdEstado = intestado;
 				Empresa.IntCobroPostPago = intpostpago;
+				Empresa.StrMailAcuse = StrMailAcuse;
+				Empresa.StrMailEnvio = StrMailEnvio;
+				Empresa.StrMailRecepcion =StrMailRecepcion;
+				Empresa.StrMailPagos = StrMailPagos;
+
 				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(StrEmpresaDescuento) ? Identificacion : StrEmpresaDescuento);
 
 				if (tipo == 1)//Nuevo

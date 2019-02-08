@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
+using LibreriaGlobalHGInet.Funciones;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -25,6 +26,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
 		public IMongoDatabase db;
 
 		public DbSet<TblAuditDocumentos> TblAuditDocumentos { set; get; }
+
+		public DbSet<TblHistAlertas> TblHistAlertas { set; get; }
 
 		/// <summary>
 		/// Establece la conexión con el modelo de datos, realiza la asignación de la base de datos y establece el nombre de la colección a gestionar.
@@ -100,6 +103,25 @@ namespace HGInetMiFacturaElectonicaData.Modelo
 			return Collection.Find(expression).ToList();
 		}
 
+
+		/// <summary>
+		/// Obtiene la colección de datos desde la base de datos, teniendo en cuenta filtros de búsqueda.
+		/// </summary>
+		/// <param name="expression">La expresión debe ser de tipo Lambda</param>
+		/// <returns></returns>
+		public List<T> Obtener(Expression<Func<T, bool>> expression)
+		{
+			try
+			{
+				return Collection.Find(expression).ToList();
+			}
+			catch (Exception ex)
+			{
+
+				return null;
+			}
+		}
+
 		/// <summary>
 		/// Realiza la inserción de una colección de datos en la base de datos.
 		/// </summary>
@@ -118,6 +140,18 @@ namespace HGInetMiFacturaElectonicaData.Modelo
 		{
 			return Collection.InsertOneAsync(item);
 		}
+
+
+		
+
+		////Expression<Func<T, bool>> expression
+		//var collection = db.GetCollection<TblHistAlertas>("TblHistAlertas");
+
+		//var filter = Builders<TblHistAlertas>.Filter.Eq("IntIdEstado", 1);
+		//var update = Builders<TblHistAlertas>.Update.Set("IntTipo", 10);
+
+		//await collection.UpdateOneAsync(filter, update);
+
 	}
 
 }

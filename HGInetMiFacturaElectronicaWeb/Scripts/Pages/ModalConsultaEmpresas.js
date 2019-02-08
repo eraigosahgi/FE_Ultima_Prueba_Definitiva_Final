@@ -34,14 +34,18 @@ ModalEmpresasApp.controller('ModalConsultaEmpresasController', function ModalCon
                    ,
                    {
                        caption: "Razón Social",
-                       dataField: "RazonSocial",
-                       cssClass: "col-md-9"
-                   }
+                       dataField: "RazonSocial",					   
+                       cssClass: "col-md-9"                   	  
+                   }, 
 
                ],
+               
+				
+               
             filterRow: {
-                visible: true
+            	visible: true,            	
             }
+            
         });   
     });
 });

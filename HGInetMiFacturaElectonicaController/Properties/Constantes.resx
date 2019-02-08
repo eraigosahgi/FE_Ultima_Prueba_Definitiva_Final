@@ -222,6 +222,14 @@
     <value>emails\\plantilla_documento_basica.html</value>
     <comment>Ruta de la plantilla Html de envío de documentos en formato basica solo envia PDF</comment>
   </data>
+  <data name="RutaPlantillaPlanPorcentaje" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_alerta.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de plan con porcentaje especifico de cosumo</comment>
+  </data>
+  <data name="RutaPlantillaPlanporVencer" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_alerta_hgi.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de plan por vencer</comment>
+  </data>
   <data name="RutaPlantillaRecarga" xml:space="preserve">
     <value>emails\\plantilla_recarga_transacciones.html</value>
     <comment>Ruta de la plantilla Html de envió de recarga de transacciones</comment>
@@ -229,6 +237,10 @@
   <data name="RutaPlantillaRestablecer" xml:space="preserve">
     <value>emails\\plantilla_restablecer_clave.html</value>
     <comment>Ruta de la plantilla Html de envío restablecer contraseña</comment>
+  </data>
+  <data name="RutaplantillaSinSaldo" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_sinsaldo.html</value>
+    <comment>Ruta de plantilla Html de notificación de facturador sin saldo</comment>
   </data>
   <data name="SmsCelulares" xml:space="preserve">
     <value>573163494083,573136469239,573104935257,573053954360</value>

@@ -74,6 +74,8 @@
             margin: 30px auto;
         }
     </style>
+
+
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/ConsultarPlanesAdmin.js?vjs201912"></script>
@@ -217,7 +219,7 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Tipo de Plan:</td>
-                                                                                <td style="background-color: #ffffff; vertical-align: top">{{Tipo == 1 ? "Cortesía" : Tipo == 2 ? "Compra" : Tipo == 3 ? "Post-Pago":""}}</td>
+                                                                                <td style="background-color: #ffffff; vertical-align: top">{{Tipo == 1 ? "Recarga Interna" : Tipo == 2 ? "Compra" : Tipo == 3 ? "Post-Pago":""}}</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Nit:</td>
@@ -245,8 +247,8 @@
                                                                             </tr>
 																			<tr>																				
 																					<td style="background-color: #efefef; vertical-align: top">Porcentaje:</td>
-																					<td style="background-color: #ffffff; vertical-align: top"><div id="progressBarStatus"></div></td>																																									
-																			</tr>
+																					<td><div class="bullet Hgi_plan"></div><label id="hgi_porcentaje_plan" style="font-size:12px; margin:0px; padding:0px;">70%</label></td>																					
+																			</tr>																			
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Estado:</td>
                                                                                 <td style="background-color: #ffffff; vertical-align: top"><span    data-ng-class="{'badge bg-danger':Estado == 1 , 'badge bg-success-400':Estado == 0,'badge bg-grey-400':Estado==2}"  style="font-size: 11px !important; font-weight: bold; border-radius: 0px !important;">{{Estado == 0 ? "Habilitado" : Estado == 1 ? "Inhabilitado" : Estado == 2 ? "Procesado":""}}</span></td>
