@@ -1,9 +1,11 @@
 ﻿using HGInetEmailServicios.ServicioEnvio;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
+using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
@@ -194,12 +196,60 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="identificacion_obligado">Número de identificación del obligado.</param>
 		/// <param name="fecha_inicio">Fecha inicial del rango de búsqueda</param>
 		/// <param name="fecha_fin">Fecha final del rango de búsqueda</param>
+		/// <param name="estado">Estado por el cual paso el documento en plataforma</param>
+		/// <param name="proceso">Proceso por el cual paso el documento en plataforma</param>
+		/// <param name="numero_documento">Busqueda por un Numero de documento especifico</param>
+		/// <param name="procedencia">Indica la procedencia de la Auditoria: 1 - Plataforma, 2 - Usuario, 3 - Sonda, 4 - DIAN, 5 - Mail, 6 - Sms</param>
+		/// <param name="tipo_registro">Indica que tipo de registro se hizo: 1 - Proceso, 2 - Creacion, 3 - Actualizacion</param>
 		/// <returns></returns>
-		public List<TblAuditDocumentos> Obtener(string id_seguridad_doc, string identificacion_obligado, DateTime fecha_inicio, DateTime fecha_fin)
+		public List<TblAuditDocumentos> Obtener(string numero_documento, string identificacion_obligado, DateTime fecha_inicio, DateTime fecha_fin, string estado, string proceso, string tipo_registro, string procedencia)
 		{
 			try
 			{
-				List<TblAuditDocumentos> registros_audit = this.GetFilter(x => x.StrIdSeguridad.Equals(id_seguridad_doc) && x.StrObligado.Equals(identificacion_obligado) && (x.DatFecha >= fecha_inicio.Date && x.DatFecha <= fecha_fin.Date));
+
+				fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+				if (string.IsNullOrEmpty(numero_documento))
+					numero_documento = "*";
+
+				if (string.IsNullOrEmpty(identificacion_obligado))
+					identificacion_obligado = "*";
+
+				List<int> ListIntEstado = new List<int>();
+				if (string.IsNullOrEmpty(estado))
+					estado = "*";
+
+				else if (estado != "*")
+					ListIntEstado = Coleccion.ConvertirStringInt(estado);
+
+				List<int> ListProceso = new List<int>();
+				if (string.IsNullOrEmpty(proceso))
+					proceso = "*";
+				else if (proceso != "*")
+					ListProceso = Coleccion.ConvertirStringInt(proceso);
+
+				List<int> ListProcedencia = new List<int>();
+				if (string.IsNullOrEmpty(procedencia))
+					procedencia = "*";
+				else if (procedencia != "*")
+					ListProcedencia = Coleccion.ConvertirStringInt(procedencia);
+
+				List<int> ListTipoReg = new List<int>();
+				if (string.IsNullOrEmpty(tipo_registro))
+					tipo_registro = "*";
+				else if(tipo_registro != "*")
+					ListTipoReg = Coleccion.ConvertirStringInt(tipo_registro);
+				
+
+
+				List<TblAuditDocumentos> registros_audit = this.GetFilter(x => (x.StrNumero.Equals(numero_documento) || numero_documento.Equals("*"))
+															&& (x.StrObligado.Equals(identificacion_obligado) || identificacion_obligado.Equals("*"))
+															&& (x.DatFecha >= fecha_inicio.Date && x.DatFecha <= fecha_fin)
+															&& (ListIntEstado.Contains(x.IntIdEstado) || estado.Equals("*"))
+															&& (ListProceso.Contains(x.IntIdProceso) || proceso.Equals("*"))
+															&& (ListTipoReg.Contains(x.IntTipoRegistro) || tipo_registro.Equals("*"))
+															&& (ListProcedencia.Contains(x.IntIdProcesadoPor) || procedencia.Equals("*"))
+															);
 
 				return registros_audit;
 			}

@@ -90,7 +90,23 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                             datos.Add(datos_enum);                            
                         }
                         break;
-                }
+					case 7:
+						//Obttiene la lista de items del enumerable TipoRegistro de la Auditoria
+						foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.TipoRegistro)))
+						{
+							string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.TipoRegistro>((int)value)))).Split(',');
+							datos.Add(datos_enum);
+						}
+						break;
+					case 8:
+						//Obttiene la lista de items del enumerable Procedencia de la Auditoria
+						foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.Procedencia)))
+						{
+							string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Procedencia>((int)value)))).Split(',');
+							datos.Add(datos_enum);
+						}
+						break;
+				}
                 return (datos);
             }
             catch (Exception excepcion)

@@ -132,6 +132,9 @@
   <data name="ConsultaAcuseTacito" xml:space="preserve">
     <value>1344</value>
   </data>
+  <data name="ConsultaAuditoriaAdmin" xml:space="preserve">
+    <value>1347</value>
+  </data>
   <data name="ConsultaDocumentoCliente" xml:space="preserve">
     <value>1342</value>
   </data>

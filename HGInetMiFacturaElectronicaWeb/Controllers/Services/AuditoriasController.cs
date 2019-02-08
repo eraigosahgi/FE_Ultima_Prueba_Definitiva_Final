@@ -146,6 +146,56 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		[HttpGet]
+		[Route("Api/ConsultaAuditoria")]
+		public IHttpActionResult ConsultaAuditoria(DateTime fecha_inicio, DateTime fecha_fin, string identificacion_obligado, string estado, string proceso, string tipo_registro, string procedencia, string numero_documento)
+		{
+			try
+			{
+
+				//Valida los datos de la sesión.
+				//Sesion.ValidarSesion();
+
+				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
+
+				//Realiza la consulta de los datos en la base de datos.
+				List<TblAuditDocumentos> datos_audit = clase_audit_doc.Obtener(numero_documento, identificacion_obligado, fecha_inicio, fecha_fin,estado,proceso,tipo_registro,procedencia).OrderByDescending(x => x.DatFecha).ToList();
+
+				if (datos_audit.Count == 0)
+				{
+					return Ok();
+				}
+
+
+				var datos_retorno = datos_audit.Select(d => new
+				{
+					StrIdSeguridad = ((d.StrIdSeguridad != null)) ? d.StrIdSeguridad : "" ,
+					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
+					StrObligado = (string.IsNullOrEmpty(d.StrObligado) ? null : d.StrObligado),
+					IntIdEstado = d.IntIdEstado,
+					StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(d.IntIdEstado)),
+					IntIdProceso = d.IntIdProceso,
+					StrDesProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(d.IntIdProceso)),
+					IntTipoRegistro = d.IntTipoRegistro,
+					StrDescTipoReg = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoRegistro>(d.IntTipoRegistro)),
+					IntIdProcesadoPor = d.IntIdProcesadoPor,
+					StrMensaje = d.StrMensaje,
+					StrResultadoProceso = d.StrResultadoProceso,
+					StrDescProcePor = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Procedencia>(d.IntIdProcesadoPor)),
+					StrDesProcesadoPor = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Procedencia>(d.IntIdProcesadoPor)),
+					StrRealizadoPor = (!string.IsNullOrWhiteSpace(d.StrRealizadoPor)) ? NombreUsuario(new Guid(d.StrRealizadoPor)) : string.Empty,
+					StrNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.StrNumero),
+
+				}).ToList();
+
+				return Ok(datos_retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+
+		}
 
 	}
 }

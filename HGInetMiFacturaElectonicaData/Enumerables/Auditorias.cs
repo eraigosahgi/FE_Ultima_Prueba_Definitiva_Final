@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HGInetMiFacturaElectonicaData.Enumerables
+namespace HGInetMiFacturaElectonicaData
 {
 	/// <summary>
 	/// Indica el tipo de tarea ejecutada

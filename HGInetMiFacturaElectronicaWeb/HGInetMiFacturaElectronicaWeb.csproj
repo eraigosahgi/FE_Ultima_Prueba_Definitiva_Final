@@ -1905,6 +1905,7 @@
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\ConsultaAcuseTacito.js" />
+    <Content Include="Scripts\Pages\ConsultaAuditoriaAdmin.js" />
     <Content Include="Scripts\Pages\ConsultaAuditoriaDocumento.js" />
     <Content Include="Scripts\Pages\ConsultaDocumentosClientes.js" />
     <Content Include="Scripts\Pages\ConsultaNotificaciones.js" />
@@ -1931,7 +1932,6 @@
     <Content Include="Scripts\Services\FiltroGenerico.js" />
     <Content Include="Scripts\Services\Loading.js" />
     <Content Include="Scripts\Services\MaestrosEnum.js" />
-    <Content Include="Scripts\Services\SrvAlertas.js" />
     <Content Include="Scripts\Services\SrvDocumentos.js" />
     <Content Include="Scripts\Services\SrvEmpresa.js" />
     <Content Include="Scripts\Services\SrvPlanes.js" />
@@ -2755,6 +2755,7 @@
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseTacito.aspx" />
     <Content Include="Views\Pages\ConsultaAdquirientePagos.aspx" />
+    <Content Include="Views\Pages\ConsultaAuditoriaAdmin.aspx" />
     <Content Include="Views\Pages\ConsultaAuditoriaDocumento.aspx" />
     <Content Include="Views\Pages\ConsultaDocumentosClientes.aspx" />
     <Content Include="Views\Pages\ConsultaEmpresasSerial.aspx" />
@@ -2945,6 +2946,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConsultaAdquirientePagos.aspx.designer.cs">
       <DependentUpon>ConsultaAdquirientePagos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaAuditoriaAdmin.aspx.cs">
+      <DependentUpon>ConsultaAuditoriaAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaAuditoriaAdmin.aspx.designer.cs">
+      <DependentUpon>ConsultaAuditoriaAdmin.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaAuditoriaDocumento.aspx.cs">
       <DependentUpon>ConsultaAuditoriaDocumento.aspx</DependentUpon>
@@ -3307,7 +3315,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61443/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
