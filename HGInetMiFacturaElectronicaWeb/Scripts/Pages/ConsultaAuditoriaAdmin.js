@@ -6,8 +6,8 @@ var UsuarioSession = "";
 var Procedencia = [];
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var AudAdminApp = angular.module('AudAdminApp', ['dx', 'AppMaestrosEnum', 'AppSrvAuditoria', 'ModalEmpresasApp']);
-AudAdminApp.controller('AudAdminController', function AudAdminController($scope, $http, $location, SrvMaestrosEnum, SrvAuditoria, $rootScope) {
+var AudAdminApp = angular.module('AudAdminApp', ['dx', 'AppMaestrosEnum', 'AppSrvAuditoria', 'ModalEmpresasApp', 'AppSrvFiltro']);
+AudAdminApp.controller('AudAdminController', function AudAdminController($scope, $http, $location, SrvMaestrosEnum, SrvAuditoria, $rootScope, SrvFiltro) {
 
 	var now = new Date();
 	var Estado;
@@ -23,6 +23,10 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
            fecha_fin = "",
            cod_facturador = "*",
             tipo_filtro_fecha = 1;
+
+	SrvFiltro.ObtenerFiltro('Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', false).then(function (Datos) {
+		$scope.Facturador = Datos;
+	});
 
 	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
 		codigo_facturador = data[0].IdentificacionEmpresa;
@@ -222,19 +226,6 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 
             }
 
-		$("#txtempresaasociada").dxTextBox({
-			placeholder: "Ingrese Identificación del Facturador",
-			title: 'Prueba',
-			onValueChanged: function (data) {
-				empresa = data.value.split(' -- ');
-				cod_facturador = empresa[0];
-				$("#txtempresaasociada").dxTextBox({ value: cod_facturador });
-			},
-			onKeyDown: function (data) {
-				if (data.event.key == 'F4')
-					$('#modal_Buscar_empresa').modal('show');
-			}
-		});
 
 		$("#FechaFinal").dxDateBox({ min: now });
 		$("#FechaInicial").dxDateBox({ max: now });
@@ -255,7 +246,7 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
-
+		var cod_facturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? codigo_facturador : txt_hgi_Facturador;
 		SrvAuditoria.ConsultaAuditoria(fecha_inicio, fecha_fin, cod_facturador, numero_documento, estado_dian, proceso_doc, tipo_registro, procedencia_proceso).then(function (response) {
 
 			console.log(response);

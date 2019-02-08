@@ -7,6 +7,7 @@ using LibreriaGlobalHGInet.Enumerables;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.Properties;
 using System;
@@ -65,9 +66,26 @@ namespace HGInetMiFacturaElectonicaController
 							var objeto = (dynamic)null;
 							//Luego obtiene el objeto ubl
 							objeto = Ctl_Documento.ConvertirServicio(datos, true);
+
 							//Asigno el email del ubl a la notificación del correo
-							item_respuesta.Email = objeto.DatosFactura.DatosAdquiriente.Email;
-							item.Email  = objeto.DatosFactura.DatosAdquiriente.Email;
+							if (datos.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+							{
+								item_respuesta.Email = objeto.DatosFactura.DatosAdquiriente.Email;
+								item.Email = objeto.DatosFactura.DatosAdquiriente.Email;
+							}
+
+							if (datos.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+							{
+								item_respuesta.Email = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+								item.Email = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+							}
+
+							if (datos.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+							{
+								item_respuesta.Email = objeto.DatosNotaDebito.DatosAdquiriente.Email;
+								item.Email = objeto.DatosNotaDebito.DatosAdquiriente.Email;
+							}
+						
 						}
 
 						try

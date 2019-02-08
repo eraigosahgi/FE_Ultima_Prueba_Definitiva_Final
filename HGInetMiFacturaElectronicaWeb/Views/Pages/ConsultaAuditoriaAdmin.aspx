@@ -1,9 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Masters/MasterPrincipal.Master" AutoEventWireup="true" CodeBehind="ConsultaAuditoriaAdmin.aspx.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Pages.ConsultaAuditoriaAdmin" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-<!-- JS DocumentosAdquiriente-->
+	<!-- JS DocumentosAdquiriente-->
 
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
 	<script src="../../Scripts/Services/SrvAuditoria.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/ConsultaAuditoriaAdmin.js?vjs201912"></script>
@@ -65,7 +67,7 @@
 										<label>Proceso:</label>
 										<div id="filtrosProceso"></div>
 									</div>
-									
+
 									<div class="col-md-3" style="margin-top: 1%">
 										<i class="icon-file-text"></i>
 										<label>Estado:</label>
@@ -73,10 +75,7 @@
 									</div>
 
 									<div class="col-md-3" style="margin-top: 1%">
-										<i class="icon-user-tie"></i>
-										<label>Código Facturador:</label>
-										<div id="txtempresaasociada"></div>
-										<%--<div data-dx-autocomplete="filtros.Facturador"></div>--%>
+										<div data-hgi-filtro="Facturador"></div>
 									</div>
 
 									<div class="col-md-3" style="margin-top: 1%">
