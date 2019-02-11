@@ -701,27 +701,27 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		$http.get('/api/Empresas?IdSeguridad=' + id_seguridad).then(function (response) {
 			try {
 
-				Datos_Tipoidentificacion = response[0].TipoIdentificacion;
-				Datos_Idententificacion = response[0].Identificacion;
-				Datos_Razon_Social = response[0].RazonSocial;
-				Datos_Email = response[0].Email;
-				Datos_Adquiriente = (response[0].Intadquiriente) ? 1 : 0;
-				Datos_Obligado = (response[0].intObligado) ? 1 : 0;
-				Datos_Habilitacion = response[0].Habilitacion;
-				Datos_IdentificacionDv = response[0].IntIdentificacionDv;
-				Datos_Observaciones = response[0].StrObservaciones;
-				Datos_empresa_Asociada = response[0].StrEmpresaAsociada;
-				Datos_Integrador = response[0].IntIntegrador;
-				Datos_Numero_usuarios = response[0].IntNumUsuarios;
-				Datos_Dias_Acuse = response[0].IntAcuseTacito;
-				Datos_Anexo = response[0].IntAnexo;
-				Datos_EmailRecepcion = response[0].IntEmailRecepcion;
-				Datos_estado = response[0].Estado;
-				Datos_postpago = response[0].Postpago;
-				Datos_Email_Envio = response[0].StrMailEnvio;
-				Datos_Email_Recepcion = response[0].StrMailRecepcion;
-				Datos_Email_Acuse = response[0].StrMailAcuse;
-				Datos_Email_Pagos = response[0].StrMailPagos;
+				Datos_Tipoidentificacion = response.data[0].TipoIdentificacion;
+				Datos_Idententificacion = response.data[0].Identificacion;
+				Datos_Razon_Social = response.data[0].RazonSocial;
+				Datos_Email = response.data[0].Email;
+				Datos_Adquiriente = (response.data[0].Intadquiriente) ? 1 : 0;
+				Datos_Obligado = (response.data[0].intObligado) ? 1 : 0;
+				Datos_Habilitacion = response.data[0].Habilitacion;
+				Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
+				Datos_Observaciones = response.data[0].StrObservaciones;
+				Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
+				Datos_Integrador = response.data[0].IntIntegrador;
+				Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
+				Datos_Dias_Acuse = response.data[0].IntAcuseTacito;
+				Datos_Anexo = response.data[0].IntAnexo;
+				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
+				Datos_estado = response.data[0].Estado;
+				Datos_postpago = response.data[0].Postpago;
+				Datos_Email_Envio = response.data[0].StrMailEnvio;
+				Datos_Email_Recepcion = response.data[0].StrMailRecepcion;
+				Datos_Email_Acuse = response.data[0].StrMailAcuse;
+				Datos_Email_Pagos = response.data[0].StrMailPagos;
 
 				$("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
 				$("#NumeroIdentificacion").dxTextBox({ readOnly: true });
@@ -734,7 +734,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				$("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
 				$("#TipoIndentificacion").dxSelectBox({ readOnly: true });
 				Set_EmpresaAsociada((Datos_empresa_Asociada) ? Datos_empresa_Asociada : '');
-				Set_EmpresaDescuenta((response[0].StrEmpresaDescuenta) ? response[0].StrEmpresaDescuenta : Datos_Idententificacion)
+				Set_EmpresaDescuenta((response.data[0].StrEmpresaDescuenta) ? response.data[0].StrEmpresaDescuenta : Datos_Idententificacion)
 				if (Datos_Observaciones != null) {
 					$("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
 				}
@@ -748,7 +748,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				$("#txtDiasAcuse").dxNumberBox({ value: Datos_Dias_Acuse });
 				if (Datos_Obligado == 1) {
 					$("#Facturador").dxCheckBox({ value: 1 });
-					$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response[0].Habilitacion)] });
+					$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
 				}
 
 				if (Datos_Anexo == 1)
