@@ -80,48 +80,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			return documentos_respuestas;
 
-			/*
-			//Proceso de Paralelismo
-			Parallel.ForEach<TblDocumentos>(documentos, item =>
-			{
-
-				DocumentoRespuesta item_respuesta = new DocumentoRespuesta();
-
-				// obtiene el proceso actual del documento
-				ProcesoEstado proceso_actual = Enumeracion.ParseToEnum<ProcesoEstado>((int)item.IntIdEstado);
-
-				try
-				{   // procesa el documento
-					item_respuesta = Procesar(item);
-				}
-				catch (Exception excepcion)
-				{
-					item_respuesta = new DocumentoRespuesta()
-					{
-						Aceptacion = item.IntAdquirienteRecibo,
-						CodigoRegistro = item.StrObligadoIdRegistro,
-						Cufe = item.StrCufe,
-						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
-						DocumentoTipo = item.IntDocTipo,
-						Documento = item.IntNumero,
-						Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
-						FechaRecepcion = item.DatFechaIngreso,
-						FechaUltimoProceso = item.DatFechaActualizaEstado,
-						IdDocumento = item.StrIdSeguridad.ToString(),
-						Identificacion = item.StrEmpresaFacturador,
-						IdProceso = proceso_actual.GetHashCode(),
-						MotivoRechazo = item.StrAdquirienteMvoRechazo,
-						NumeroResolucion = item.StrNumResolucion,
-						Prefijo = item.StrPrefijo,
-						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
-						UrlPdf = item.StrUrlArchivoPdf,
-						UrlXmlUbl = item.StrUrlArchivoUbl
-					};
-				}
-
-				documentos_respuestas.Add(item_respuesta);
-			});*/
-
 		}
 
         /// <summary>
@@ -350,7 +308,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						if ((documento.StrProveedorReceptor == null) || documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 						{
-							if ((documento.IntEnvioMail == null || documento.IntEnvioMail == true) && empresa.IntEnvioMailRecepcion == false)
+							if (documento.IntEnvioMail == null || documento.IntEnvioMail == false) 
 							{
 								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
 								//ValidarRespuesta(respuesta);
@@ -397,7 +355,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
 						}
 					}
-					else if((respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode()) && (documento.IntEnvioMail == null || documento.IntEnvioMail == false) && empresa.IntEnvioMailRecepcion == true)
+					else if((respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode()) && (documento.IntEnvioMail == null || documento.IntEnvioMail == false))
 					{
 						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
 						Ctl_Documento documento_tmp = new Ctl_Documento();

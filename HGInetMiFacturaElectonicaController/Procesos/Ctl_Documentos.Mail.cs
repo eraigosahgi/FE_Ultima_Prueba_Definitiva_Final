@@ -59,6 +59,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 					ValidarRespuesta(respuesta,"", mensajes,false);
 				}
+				else
+				{
+					//Actualiza la respuesta
+					respuesta.FechaUltimoProceso = Fecha.GetFecha();
+
+					//Actualiza Documento en Base de Datos
+					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+				}
+
 
 			}
 			catch (Exception excepcion)

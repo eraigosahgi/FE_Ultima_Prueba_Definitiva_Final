@@ -856,6 +856,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.StrProveedorEmisor = Constantes.NitResolucionsinPrefijo;
 				tbl_documento.StrProveedorReceptor = documento_obj.IdentificacionProveedor;
 				tbl_documento.IntValorSubtotal = documento_obj.ValorSubtotal;
+				tbl_documento.IntValorNeto = documento_obj.Neto;
 
 				return tbl_documento;
 			}
@@ -951,6 +952,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			documento_obj.UrlPdf = objetoBd.StrUrlArchivoPdf;
 			documento_obj.UrlXmlUbl = objetoBd.StrUrlArchivoUbl;
 			documento_obj.FechaUltimoProceso = objetoBd.DatFechaActualizaEstado;
+			documento_obj.Neto = objetoBd.IntValorNeto;
 
 			if (!reenvio)
 			{
