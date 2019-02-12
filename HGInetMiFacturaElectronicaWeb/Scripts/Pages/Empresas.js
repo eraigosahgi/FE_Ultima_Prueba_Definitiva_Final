@@ -457,7 +457,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 			},
 			contentTemplate: function (data) {
-				data.html("<br/><b>Email Envío Documentos</b><br/>Se enviarán las notificaciones <br/>Se utilizará para el envío de los correos electrónicos a los Adquirientes.");
+				data.html("<br/><b>Email Envío Documentos</b><br/> Se utilizará para el envío de los correos electrónicos a los Adquirientes.");
 			}
 		});
 		$("#ttMailRecepcion").dxTooltip({
@@ -490,7 +490,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 			},
 			contentTemplate: function (data) {
-				data.html("<br/><b>Email Recepción Documentos</b><br/>Se utilizará para la recepción de correos electrónicos como Adquirientes.");
+				data.html("<br/><b>Email Recepción Documentos</b><br/>Se utilizará para la recepción de correos electrónicos como Adquiriente.");
 			}
 		});
 		$("#ttMailAcuse").dxTooltip({
