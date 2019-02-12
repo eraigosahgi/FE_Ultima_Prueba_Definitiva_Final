@@ -2,10 +2,10 @@
 var opc_pagina = "1334";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum']);
+var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
 
 //Controlador para la gestion planes transaccionales
-GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum) {
+GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
 
 	var TiposProceso = [];
 	var now = new Date();
@@ -25,18 +25,18 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 	$scope.Vence = true;
 
+
+	SrvFiltro.ObtenerFiltro('Empresa', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', true).then(function (Datos) {
+		$scope.Facturador = Datos;
+	});
+
+
 	$http.get('/api/DatosSesion/').then(function (response) {
 		codigo_facturador = response.data[0].Identificacion;
 		var tipo = response.data[0].Admin;
 		if (tipo) {
-			$scope.Admin = true;
-		} else {
-			// $("#button").hide();
-			// $('#SelecionarEmpresa').hide();
-			// $("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
-		};
-
-
+			$scope.Admin = true;		
+		};		
 		$http.get('/api/Usuario/').then(function (response) {
 			//Obtiene el código del permiso.
 			$http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
@@ -162,25 +162,25 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 		}
 
-		//Campo de selección de empresa.
-		$("#txtempresaasociada").dxTextBox({
-			readOnly: true,
-			value: codigo_empresa,
-			name: txtempresaasociada,
-			onValueChanged: function (data) {
-				datos_empresa_asociada = data.value;
-			},
-			onFocusIn: function (data) {
-				if (!StrIdSeguridad) {
-					$('#modal_Buscar_empresa').modal('show');
-				}
-			}
-		}).dxValidator({
-			validationRules: [{
-				type: "required",
-				message: "Debe seleccionar una empresa."
-			}]
-		});
+		////Campo de selección de empresa.
+		//$("#txtempresaasociada").dxTextBox({
+		//	readOnly: true,
+		//	value: codigo_empresa,
+		//	name: txtempresaasociada,
+		//	onValueChanged: function (data) {
+		//		datos_empresa_asociada = data.value;
+		//	},
+		//	onFocusIn: function (data) {
+		//		if (!StrIdSeguridad) {
+		//			$('#modal_Buscar_empresa').modal('show');
+		//		}
+		//	}
+		//}).dxValidator({
+		//	validationRules: [{
+		//		type: "required",
+		//		message: "Debe seleccionar una empresa."
+		//	}]
+		//});
 
 		//Campo cantidad de transacciones del plan
 		$("#CantidadTransacciones").dxNumberBox({
@@ -346,7 +346,12 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 	};
 
 	function GuardarPlan() {
-		var empresa = datos_empresa_asociada.split(' -- ');
+		if (txt_hgi_Facturador != null && txt_hgi_Facturador != "") {
+			empresa = txt_hgi_Facturador;
+		} else {
+			DevExpress.ui.notify("Debe seleccionar el Facturador", 'error', 3000);
+			return false;
+		}
 
 		if (Datos_T_compra == "") { Datos_T_compra = "0" }
 
@@ -361,7 +366,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			IntValor: Datos_valor_plan,
 			Estado: Datos_E_Plan,
 			StrObservaciones: Datos_obsrvaciones,
-			StrEmpresaFacturador: empresa[0],
+			StrEmpresaFacturador: empresa,
 			Envia_email: Datos_Email,
 			Vence: Datos_Vence,
 			FechaVence: Datos_FechaVence
@@ -408,8 +413,9 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					$("#TipoProceso").dxRadioGroup({ value: TiposProceso[BuscarID(TiposProceso, Datos_TiposProceso)] });
 				}
 
-				$("#txtempresaasociada").dxTextBox({ value: codigo_empresa + ' -- ' + Datos_Nombre_facturador });
-
+				//$("#txtempresaasociada").dxTextBox({ value: codigo_empresa + ' -- ' + Datos_Nombre_facturador });
+				Set_Facturador(codigo_empresa + ' -- ' + Datos_Nombre_facturador);
+				Bloquear_Facturador();
 				$("#CantidadTransacciones").dxNumberBox({ value: Datos_T_compra });
 
 				$("#ValorPlan").dxNumberBox({ value: Datos_valor_plan });
@@ -479,6 +485,11 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
 		});
 	}
+
+	SrvFiltro.ObtenerFiltro('Empresa', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {
+		$scope.Facturador = Datos;
+	});
+
 	function CargarConsulta() {
 		$("#wait").show();
 		$http.get('/api/PlanesTransacciones?Identificacion=' + codigo_facturador).then(function (response) {

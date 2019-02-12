@@ -46,12 +46,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		var tipo = response.data[0].Admin;
 		if (tipo) {
 			$scope.Admin = true;
-
-
-		} else {
+		} else {			
 			$scope.Admin = false;
-			$('#SelecionarEmpresa').hide();
-			$("#txtempresaasociada").dxTextBox({ value: codigo_facturador + ' -- ' + response.data[0].RazonSocial });
+			Bloquear_EmpresaDescuenta();
+			Bloquear_EmpresaAsociada();
 		};
 		$scope.AdminIntegrador = $scope.Admin;
 

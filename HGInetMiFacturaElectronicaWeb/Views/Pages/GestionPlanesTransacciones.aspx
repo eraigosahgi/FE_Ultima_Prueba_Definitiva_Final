@@ -4,6 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201912"></script>
@@ -34,18 +35,9 @@
 										</div>
 									</div>
 
-									<div class="col-md-6 col-xs-12" style="z-index: 9;">
-										<label style="margin-top: 16px; font-size: 14px;">Empresa:<strom style="color: red;">*</strom></label>
-										<div id="txtempresaasociada"></div>
-									</div>
-
-
-									<!--<div class="col-md-2 col-xs-2">
-                                        <label style=" margin-top: 16px;"></label>
-                                        <a data-toggle="modal" data-target="#modal_Buscar_empresa" data-popup="tooltip" title="Consulta Empresa" style="color: #166dba; margin-top: 16px;">
-                                            <h6 id="SelecionarEmpresa">Seleccionar Empresa</h6>
-                                        </a>
-                                    </div>-->
+									<div class="col-md-6 col-xs-12" style="margin-top: 16px">
+										<div data-hgi-filtro="Facturador"></div>
+									</div>									
 
 									<div class="col-md-6 col-xs-12" style="z-index: 9;" id="divCantTransacciones">
 										<label style="margin-top: 16px;">Cantidad Transacciones:<strom style="color: red;">*</strom></label>
@@ -119,11 +111,7 @@
 
 				</div>
 			</div>
-		</div>
-		<!--<div data-ng-if="Admin">-->
-		<div>
-			<div data-ng-include="'ModalConsultaEmpresas.aspx'"></div>
-		</div>
+		</div>				
 	</div>
 
 </asp:Content>
