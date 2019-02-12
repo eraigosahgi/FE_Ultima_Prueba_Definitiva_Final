@@ -140,18 +140,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
 		{
 			return Collection.InsertOneAsync(item);
 		}
-
-
 		
-
-		////Expression<Func<T, bool>> expression
-		//var collection = db.GetCollection<TblHistAlertas>("TblHistAlertas");
-
-		//var filter = Builders<TblHistAlertas>.Filter.Eq("IntIdEstado", 1);
-		//var update = Builders<TblHistAlertas>.Update.Set("IntTipo", 10);
-
-		//await collection.UpdateOneAsync(filter, update);
-
 	}
 
 }

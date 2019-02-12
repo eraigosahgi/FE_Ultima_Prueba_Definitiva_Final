@@ -8,7 +8,7 @@
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/Empresas.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201912"></script>
-	
+
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController">
 		<div class="col-md-12">
 			<div class="panel panel-white">
@@ -85,18 +85,18 @@
 									</div>
 
 									<div class="col-md-12">
-										<div class="col-md-6" style="margin-top: 1%; ">
+										<div class="col-md-6" style="margin-top: 1%;">
 											<div data-hgi-filtro="EmpresaAsociada"></div>
 										</div>
 
-										<div class="col-md-6" style="margin-top: 1%; ">
+										<div class="col-md-6" style="margin-top: 1%;">
 											<div data-hgi-filtro="EmpresaDescuenta"></div>
 										</div>
 
 										<div id="divEmailFacturador" class="col-md-6 col-xs-12" style="z-index: 9;">
 											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email Administrativo:<strom style="color: red;">*</label>
 											<div id="txtEmail"></div>
-											<div id="ttEmail" style="width:200px"></div>
+											<div id="ttEmail" style="width: 200px"></div>
 										</div>
 										<div class="col-md-6 col-xs-12" style="z-index: 9;">
 											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email Envío Documentos:<strom style="color: red;">*</strom></label>
@@ -147,12 +147,12 @@
 											<div id="txtobservaciones"></div>
 										</div>
 
-										<div class="dx-fieldset">
-											<div id="summary"></div>
-										</div>
+
 
 									</div>
-
+									<div class="dx-fieldset">
+										<div id="summary"></div>
+									</div>
 									<div class="col-lg-12 text-right" style="z-index: 0;">
 										<br />
 										<br />
@@ -166,7 +166,7 @@
 
 				</div>
 			</div>
-		</div>	
+		</div>
 	</div>
 
 </asp:Content>

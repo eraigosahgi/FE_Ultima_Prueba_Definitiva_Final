@@ -431,6 +431,38 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             public string Texto { get; set; }
 
         }
-    }
+
+
+		#region Filtros
+		/// <summary>
+		/// Obtiene la lista de Habilitacion según el ambiente 
+		/// </summary>        
+		/// <returns></returns>
+		[HttpGet]
+		[Route("api/ObtenerAdquirientes")]
+		public IHttpActionResult ObtenerAdquirientes(string Facturador)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_Empresa controlador = new Ctl_Empresa();
+				var lista = controlador.ObtenerAdquirientes(Facturador);
+
+
+				return Ok(lista);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		#endregion
+
+
+
+	}
 
 }

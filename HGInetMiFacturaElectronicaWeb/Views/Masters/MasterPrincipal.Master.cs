@@ -82,6 +82,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 
 						Hdf_RutaPlataformaServicios.Value = Ruta_servicio_pago.RutaPlataforma.ToString();
 
+						Hdf_Facturador.Value = datos_empresa.StrIdentificacion;
+
 
 					}
 				}

@@ -4,12 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-
-	<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.js"></script>-->
-
-
 	<!-- JS DocumentosAdquiriente-->
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
 	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/DocumentosObligado.js?vjs201912"></script>
@@ -57,14 +53,12 @@
 										<label>Fecha Final:</label>
 										<div id="FechaFinal"></div>
 									</div>
+									<div class="col-md-3" style="margin-top: 1%">
+										<div data-hgi-filtro="Adquiriente"></div>
+									</div>
 									<div class="col-md-2" style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
-										<label>Adquiriente:</label>
-										<div data-dx-autocomplete="filtros.Adquiriente"></div>
-									</div>
-									<div class="col-md-3" style="margin-top: 1%">
-										<i class="icon-files-empty"></i>
-										<label>Número Documento:</label>
+										<label>Nº Documento:</label>
 										<div data-dx-autocomplete="filtros.NumeroDocumento"></div>
 									</div>
 

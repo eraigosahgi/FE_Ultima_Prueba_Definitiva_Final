@@ -65,8 +65,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
 					CodigoEstado = d.IntEstado,
 					Facturador = d.StrEmpresaFacturador,
-					CodCompra = d.IntTipoProceso
-					
+					CodCompra = d.IntTipoProceso,
+					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0
 				});
 
 				return Ok(retorno);
@@ -117,7 +117,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Saldo = d.IntNumTransaccCompra - d.IntNumTransaccProcesadas,
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
 					CodigoEstado = d.IntEstado,
-					CodCompra = d.IntTipoProceso
+					CodCompra = d.IntTipoProceso,
+					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0
 				});
 
 				return Ok(retorno);
@@ -175,8 +176,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
 					CodigoEstado = d.IntEstado,
 					Facturador = d.StrEmpresaFacturador,
-					CodCompra = d.IntTipoProceso
-				});
+					CodCompra = d.IntTipoProceso,
+					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100):0
+			});
 
 				return Ok(retorno);
 			}

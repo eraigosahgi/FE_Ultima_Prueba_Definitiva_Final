@@ -1,8 +1,8 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
 var Usuariosession = "";
-var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx', 'AppMaestrosEnum']);
-AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, $http, $location, SrvMaestrosEnum) {
+var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
+AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
 
     var now = new Date();
 
@@ -20,6 +20,9 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         consultar();
     });
 
+    SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
+    	$scope.Adquiriente = Datos;
+    });
 
     $("#FechaInicial").dxDateBox({
         value: now,
@@ -79,12 +82,6 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                    onValueChanged: function (data) {
                        numero_documento = data.value;
                    }
-               },
-               Adquiriente: {
-                   placeholder: "Identificación del Adquiriente",
-                   onValueChanged: function (data) {
-                       codigo_adquiriente = data.value;
-                   }
                }
            }
 
@@ -109,6 +106,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
             fecha_fin = now.toISOString();
         
         $('#wait').show();
+        var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
         $http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
             $('#wait').hide();
             $("#gridDocumentos").dxDataGrid({

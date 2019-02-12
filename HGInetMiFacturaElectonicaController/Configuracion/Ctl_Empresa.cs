@@ -464,5 +464,24 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
+		#region Filtros
+		
+		public object ObtenerAdquirientes(string identificacion)
+		{
+
+			var datos = (from item in context.TblDocumentos
+						where item.TblEmpresasAdquiriente.IntAdquiriente==true
+						group item by new { item.StrEmpresaAdquiriente } into Adquirientes
+						select new {
+							ID=Adquirientes.FirstOrDefault().StrEmpresaAdquiriente,
+							Texto=Adquirientes.FirstOrDefault().TblEmpresasAdquiriente.StrRazonSocial,
+							Fact=Adquirientes.FirstOrDefault().TblEmpresasFacturador.StrIdentificacion														
+						 }).Where(x=>x.Fact.Equals(identificacion)).OrderBy(x=>x.Texto).ToList();
+										
+			return datos;
+		}
+
+		#endregion
+
 	}
 }

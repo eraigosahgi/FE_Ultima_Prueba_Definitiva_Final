@@ -1,13 +1,7 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
-
-//var path = window.location.pathname;
-//var ruta = window.location.href;
-//ruta = ruta.replace(path, "/");
-//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></script>');
-
-var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento']);
-AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, SrvMaestrosEnum, SrvDocumento) {
+var AcuseConsultaApp = angular.module('AcuseConsultaApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'AppSrvFiltro']);
+AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaController($scope, SrvMaestrosEnum, SrvDocumento,SrvFiltro) {
 
     $scope.total = 0;
     $('#lbltotaldocumentos').val("");
@@ -27,25 +21,22 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         consultar();
     });
 
+    SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {
+    	$scope.Facturador = Datos;
+    });
+
+    SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
+    	$scope.Adquiriente = Datos;
+    });
+
+
     $scope.filtros =
            {
 
-               Facturador: {
-                   placeholder: "Ingrese Identificación del Facturador",
-                   onValueChanged: function (data) {
-                       codigo_Facturador_consulta = data.value;
-                   }
-               },
                NumeroDocumento: {
                    placeholder: "Ingrese Número Documento",
                    onValueChanged: function (data) {
                        numero_documento = data.value;
-                   }
-               },
-               Adquiriente: {
-                   placeholder: "Ingrese Identificación del Adquiriente",
-                   onValueChanged: function (data) {
-                       codigo_adquiriente = data.value;
                    }
                }
            }
@@ -55,24 +46,10 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         text: 'Consultar',
         type: 'default',
         onClick: function (e) {
-            consultar2();
+            consultar();
         }
     };
-
-    function consultar2() {
-        if (fecha_inicio == "")
-            fecha_inicio = now.toISOString();
-
-        if (fecha_fin == "")
-            fecha_fin = now.toISOString();
-
-        SrvDocumento.ObtenerDocumentosTacito(codigo_Facturador_consulta, codigo_adquiriente, numero_documento).then(function (data) {     
-            $("#gridDocumentos").dxDataGrid({
-                dataSource: data
-            });
-        });
-    }
-
+    
 
     function consultar() {
         if (fecha_inicio == "")
@@ -80,7 +57,8 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
         if (fecha_fin == "")
             fecha_fin = now.toISOString();
-
+        var codigo_Facturador_consulta = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+        var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
         SrvDocumento.ObtenerDocumentosTacito(codigo_Facturador_consulta, codigo_adquiriente, numero_documento).then(function (data) {            
             $("#gridDocumentos").dxDataGrid({
                 dataSource: data,

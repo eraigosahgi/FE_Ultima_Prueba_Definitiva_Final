@@ -391,7 +391,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				message: "Debe introducir el Email de Pagos"
 			}, {
 				type: "email",
-				message: "El campo Email de Pagos no tiene el formato correcto"
+				message: "El campo Email de Pagos no tiene el formato correcto."
 			}]
 		});
 
@@ -794,7 +794,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		return true;
 	}
 
-	function guardarEmpresa() {
+	function guardarEmpresa() {		
 		if (ValidarAsociadaDescuenta()) {
 			var empresa = null;
 			var Asociada = "";
@@ -831,8 +831,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			});
 
 
-			SrvEmpresas.GuardarEmpresa(data).then(function (response) {
-				//$http.post('/api/Empresas?' + data).then(function (response) {
+			//SrvEmpresas.GuardarEmpresa(data).then(function (response) {
+				$http.post('/api/Empresas?' + data).then(function (response) {
 				try {
 					//Aqui se debe colocar los pasos a seguir
 					DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
@@ -1009,6 +1009,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 		DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 	});
 
+	
 });
 
 //Esta funcion es para ir a la pagina de consulta

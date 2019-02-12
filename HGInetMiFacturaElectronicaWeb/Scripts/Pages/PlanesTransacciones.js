@@ -510,13 +510,13 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 							container.append($('<div> <h4 class="form-control">OBSERVACIONES:</h4> <p > ' + currentEmployeeData + '</p> </div>'));
 						}
 					},
-					onContentReady: function (e) {
-						response.data.forEach(function (valor, indice, array) {
-							var porcentaje = (valor.CodCompra != 3) ? ((valor.TProcesadas / valor.TCompra) * 100) : 100;
-							var color = nivelPlanes(porcentaje, valor.CodCompra);
-							$('.hgi_' + valor.id).dxBullet(CrearGrafico(porcentaje, 'Consumo Actual ', ' %', color));
-						});
-					},
+					//onContentReady: function (e) {
+					//	response.data.forEach(function (valor, indice, array) {
+					//		var porcentaje = (valor.CodCompra != 3) ? ((valor.TProcesadas / valor.TCompra) * 100) : 100;
+					//		var color = nivelPlanes(porcentaje, valor.CodCompra);
+					//		$('.hgi_' + valor.id).dxBullet(CrearGrafico(porcentaje, 'Consumo Actual ', ' %', color));
+					//	});
+					//},
 
 					//Formatos personalizados a las columnas en este caso para el monto
 					onCellPrepared: function (options) {
@@ -601,21 +601,33 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
                      	caption: "Saldo",
                      	dataField: "Saldo"
-                     }, {
-                     	caption: "Porcentaje %",
-                     	width: 100,
-                     	cellTemplate: function (container, options) {
+                     }
+					 //, {
+                     //	caption: "Porcentaje %",
+                     //	width: 100,
+                     //	cellTemplate: function (container, options) {
 
-                     		$("<div style='text-align:center'>")
-								.append($("<div class='bullet hgi_" + options.data.id + "'></div>"))
-								.appendTo(container);
-                     	}
-                     }, {
+                     //		$("<div style='text-align:center'>")
+					 //   		.append($("<div class='bullet hgi_" + options.data.id + "'></div>"))
+					 //   		.appendTo(container);
+                     //	}
 
-                     	caption: "Empresa",
-                     	dataField: "Empresa",
-                     	visible: false
-                     },
+					 //}
+
+                 ,{
+                 	dataField: "Porcentaje",
+                 	caption: "Porcentaje %",                 	
+                 	alignment: "right",
+                 	width: 100,
+                 	cellTemplate: CrearGraficoBarra,
+                 	cssClass: "bullet"
+                 },
+					 , {
+
+					 	caption: "Empresa",
+					 	dataField: "Empresa",
+					 	visible: false
+					 },
                      {
 
                      	caption: "Usuario",

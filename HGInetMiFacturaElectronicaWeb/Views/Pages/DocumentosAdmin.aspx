@@ -77,11 +77,15 @@
 										<div data-hgi-filtro="Facturador"></div>
 									</div>
 
-									<div class="col-md-3" style="margin-top: 1%">
+									<%--<div class="col-md-3" style="margin-top: 1%">
 										<i class="icon-user-tie"></i>
 										<label>Código Adquiriente:</label>
 										<div data-dx-autocomplete="filtros.Adquiriente"></div>
+									</div>--%>
+									<div class="col-md-3" style="margin-top: 1%">
+										<div data-hgi-filtro="Adquiriente"></div>
 									</div>
+
 
 									<div class="col-md-3" style="margin-top: 1%">
 										<i class="icon-file-text"></i>

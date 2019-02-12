@@ -454,7 +454,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
                               && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
                               && ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)
 
-                              //&& Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_facturador) || codigo_facturador.Equals("*")
+                              && Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_facturador) || codigo_facturador.Equals("*")
                               // && (Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin)
                               //&& (Pagos.TblDocumentos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
                               && (Pagos.IntEstadoPago == cod_estado_recibo || estado_recibo.Equals("*"))

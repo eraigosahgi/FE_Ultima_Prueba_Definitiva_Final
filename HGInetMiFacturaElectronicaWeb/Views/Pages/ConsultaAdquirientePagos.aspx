@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 	<!-- JS DocumentosAdquiriente-->
-
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
 	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201912"></script>
 	<script src="../../Scripts/Pages/ConsultaPagosFacturador.js?vjs201912"></script>
@@ -68,9 +68,7 @@
 									</div>
 
 									<div class="col-md-3" style="margin-top: 1%">
-										<i class="icon-files-empty"></i>
-										<label>Código Facturador:</label>
-										<div data-dx-autocomplete="filtros.Adquiriente"></div>
+										<div data-hgi-filtro="Facturador"></div>
 									</div>
 
 									<div class="col-md-6 text-right" style="margin-top: 1%">

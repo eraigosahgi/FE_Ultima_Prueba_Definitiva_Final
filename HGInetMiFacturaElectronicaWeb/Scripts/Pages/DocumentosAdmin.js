@@ -5,7 +5,7 @@ var items_recibo = [];
 var UsuarioSession = "";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'ModalEmpresasApp','AppSrvFiltro']);
+var DocObligadoApp = angular.module('DocObligadoApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'ModalEmpresasApp', 'AppSrvFiltro']);
 DocObligadoApp.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope, SrvFiltro) {
 
 	var now = new Date();
@@ -16,11 +16,12 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
            estado_dian = "",
            estado_recibo = "",
            fecha_inicio = "",
-           fecha_fin = "",
-           codigo_adquiriente = "",
+           fecha_fin = "",           
            cod_facturador = "*",
-            tipo_filtro_fecha = 1,			
+            tipo_filtro_fecha = 1,
            Datos_Tipo = "0";
+
+	
 
 	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
 		codigo_facturador = data[0].IdentificacionEmpresa;
@@ -37,8 +38,12 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 	});
 
 
-	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {		
+	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {
 		$scope.Facturador = Datos;
+	});
+	
+	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
+		$scope.Adquiriente = Datos;
 	});
 
 	function cargarFiltros() {
@@ -161,16 +166,9 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             		onValueChanged: function (data) {
             			numero_documento = data.value;
             		}
-            	},
-            	Adquiriente: {
-            		placeholder: "Ingrese Identificación del Adquiriente",
-            		showClearButton: true,
-            		onValueChanged: function (data) {
-            			codigo_adquiriente = data.value;
-            		}
-            	},
+            	}
             }
-		
+
 
 		$("#FechaFinal").dxDateBox({ min: now });
 		$("#FechaInicial").dxDateBox({ max: now });
@@ -206,6 +204,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
 		var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
 		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: data
@@ -224,9 +223,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
-		
+
 
 		var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
 		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: data,

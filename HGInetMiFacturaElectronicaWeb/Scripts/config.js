@@ -300,3 +300,45 @@ function nivelPlanes(nivel, tipo) {
 }
 
 
+var CrearGraficoBarra = function (container, options) {
+	
+	var color = nivelPlanes(options.data.Porcentaje, options.data.CodCompra);
+	$("<div/>").dxBullet({
+		onIncidentOccurred: null,
+		size: {
+			width: 80,
+			height: 35
+		},
+		margin: {
+			top: 5,
+			bottom: 0,
+			left: 5
+		},
+		showTarget: true,
+		target: options.data.Porcentaje,
+		color: color,
+		value: 100,
+		startScaleValue: 0,
+		endScaleValue: 100,
+		tooltip: {
+			enabled: true,
+			font: {
+				size: 18
+			},
+			paddingTopBottom: 2,
+			customizeTooltip: function () {
+				
+				if (options.text.indexOf(".") > -1) {
+					return { text: "Consumo Actual " + Number(options.text).toFixed(2) + "%" };
+				}else{
+					return { text: "Consumo Actual " + options.text + "%" };
+				
+				}
+			},
+			zIndex: 5
+		}
+	}).appendTo(container);
+};
+
+var collapsed = false;
+

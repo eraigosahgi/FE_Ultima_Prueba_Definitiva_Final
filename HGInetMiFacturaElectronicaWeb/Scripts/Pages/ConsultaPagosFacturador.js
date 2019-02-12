@@ -1,19 +1,10 @@
 ﻿DevExpress.localization.locale('es-ES');
 
-//var path = window.location.pathname;
-//var ruta = window.location.href;
-//ruta = ruta.replace(path, "/");
-////imprimir MaestrosEnum.js para tener acceso a sus funciones
-//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/MaestrosEnum.js"></scr' + 'ipt>');
-////imprimir SrvDocumentos.js para tener acceso a sus funciones
-//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/SrvDocumentos.js"></scr' + 'ipt>');
-
-
 var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [];
-var PagosFacturadorApp = angular.module('PagosFacturadorApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento']);
-PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
+var PagosFacturadorApp = angular.module('PagosFacturadorApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'AppSrvFiltro']);
+PagosFacturadorApp.controller('PagosFacturadorController', function PagosFacturadorController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, SrvFiltro) {
 
 	var now = new Date();
 	var Estado;
@@ -62,7 +53,9 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 	});
 
-
+	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
+		$scope.Adquiriente = Datos;
+	});
 
 	function cargarFiltros() {
 		$("#FechaInicial").dxDateBox({
@@ -186,12 +179,6 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
             		onValueChanged: function (data) {
             			numero_documento = data.value;
             		}
-            	},
-            	Adquiriente: {
-            		placeholder: "Ingrese Identificación del Adquiriente",
-            		onValueChanged: function (data) {
-            			codigo_adquiriente = data.value;
-            		}
             	}
             }
 
@@ -235,6 +222,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 
 		$('#wait').show();
+		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
 		$http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			datos = [];
@@ -285,6 +273,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 		//Obtiene los datos del web api        
 		$('#wait').show();
+		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
 		$http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
 			$('#wait').hide();
 
@@ -464,7 +453,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 });
 
 
-PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento) {
+PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquirienteController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, SrvFiltro) {
 
 	var now = new Date();
 	var Estado;
@@ -502,7 +491,9 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 	});
 
 
-
+	 SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {
+    	$scope.Facturador = Datos;
+    });
 
 	function cargarFiltros() {
 		$("#FechaInicial").dxDateBox({
@@ -621,7 +612,8 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 
 		$('#wait').show();
-		$http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
+		var codigo_Facturador_consulta = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+		$http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_Facturador_consulta + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			datos = [];
 			//Recorro la data para ver la cantidad de documentos pendientes por procesar
@@ -666,7 +658,8 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 		//Obtiene los datos del web api        
 		$('#wait').show();
-		$http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
+		var codigo_Facturador_consulta = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+		$http.get('/api/ObtenerPagosAdquiriente?codigo_facturador=' + codigo_Facturador_consulta + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_facturador + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
 			$('#wait').hide();
 
 

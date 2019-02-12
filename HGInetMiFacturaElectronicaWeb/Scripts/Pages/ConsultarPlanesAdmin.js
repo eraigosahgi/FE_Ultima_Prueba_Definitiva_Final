@@ -3,13 +3,6 @@ var opc_pagina = "1314";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 
-
-//var path = window.location.pathname;
-//var ruta = window.location.href;
-//ruta = ruta.replace(path, "/");
-
-//document.write('<script type="text/javascript" src="' + ruta + 'Scripts/Services/FiltroGenerico.js"></script>');
-
 var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
 GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesController($scope, $http, $location, SrvFiltro) {
 	var now = new Date();
@@ -44,7 +37,9 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 	});
 
 
-
+	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
+		$scope.Adquiriente = Datos;
+	});
 
 
 	function CargarSession() {
@@ -329,15 +324,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 							//*************************************************************************************
 						}
-					},
-					onContentReady: function (e) {
-						response.data.forEach(function (valor, indice, array) {
-							var porcentaje = (valor.CodCompra != 3) ? ((valor.TProcesadas / valor.TCompra) * 100) : 100;
-							var color = nivelPlanes(porcentaje, valor.CodCompra);
-
-							$('.hgi_' + valor.id).dxBullet(CrearGrafico(porcentaje, 'Consumo Actual ', ' %', color));
-						});
-					},
+					},					
 					//Formatos personalizados a las columnas en este caso para el monto
 					onCellPrepared: function (options) {
 						var fieldData = options.value,
@@ -349,16 +336,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 									options.cellElement.html(inicial);
 								}
 							}
-
-
-							if (options.columnIndex == 9) {//Columna de valor Total
-								if (fieldData) {
-									
-									options.cellElement.html(20);
-								}
-							}
-							//var porcentaje = (valor.CodCompra != 3) ? ((valor.TProcesadas / valor.TCompra) * 100) : 100;
-
+														
 							if (options.data.CodigoEstado == 0) {
 								estado = " style='color:green; cursor:default;' title='Habilitado'";
 							}
@@ -387,7 +365,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 								.appendTo(container);
                      	}
                      },
-					 
+
                      {
 
                      	caption: "Fecha",
@@ -424,17 +402,16 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                      	caption: "Saldo",
                      	dataField: "Saldo"
                      },
-
-                {
-					caption:"Porcentaje %",
-                	width: 100,
-                	cellTemplate: function (container, options) {
-
-                		$("<div style='text-align:center'>")
-							.append($("<div class='bullet hgi_" + options.data.id + "'></div>"))
-							.appendTo(container);
-                	}
-                },
+             
+				 {
+ 					dataField: "Porcentaje",
+ 					caption: "Porcentaje %",
+ 	
+ 					alignment: "right",
+ 					width: 100,
+ 					cellTemplate: CrearGraficoBarra,
+ 					cssClass: "bullet"
+				 },
                  {
                  	caption: "Empresa",
                  	dataField: "Empresa",
@@ -520,7 +497,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			$scope.Observaciones = response.data[0].Observaciones;
 			$scope.Estado = response.data[0].Estado;
 			$scope.FechaVence = response.data[0].FechaVence;
-			
+
 			if ($scope.Tipo == 3) {
 				nivelPlanes(100, $scope.Tipo);
 				$('.Hgi_plan').dxBullet(CrearGrafico(100, 'Consumo Actual ', ' %', nivelPlanes(porcentaje, $scope.Tipo)));
@@ -533,7 +510,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			}
 
 			///////////////////////////////////////////////////////////////////////
-			
+
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
@@ -542,7 +519,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 
 
-	
+
 });
 
 
@@ -582,23 +559,3 @@ var Lista_Estado_plan =
     { ID: "2", Texto: 'Procesado' }
     ];
 
-
-	
-
-
-function CrearGrafico(porcentaje,titulo,titulo2,color) {
-	//Configuración de la barra de porcentaje
-	var BarraPorcentaje = {
-		startScaleValue: 0,
-		endScaleValue: 100,
-		tooltip: {
-			customizeTooltip: function (arg) {
-				return {
-					text: titulo + Number(arg.target).toFixed(2) + titulo2
-				};
-			}
-		}
-	};
-
-	return datos = $.extend({ value: 100, target: porcentaje, color: color }, BarraPorcentaje);
-}

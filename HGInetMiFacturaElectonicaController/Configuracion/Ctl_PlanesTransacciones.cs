@@ -139,7 +139,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			List<TblPlanesTransacciones> datos_plan = new List<TblPlanesTransacciones>();
 
-			var ListaFacturadores = FacturadoresPlan(Identificacion);
+			var ListaFacturadores = FacturadoresAsociadosPlan(Identificacion);
 
 			List<byte> LstTipoPlan = new List<byte>();
 			if (string.IsNullOrEmpty(TipoPlan))
@@ -245,6 +245,24 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 										 (from datos in context.TblEmpresas
 										  where datos.StrIdentificacion.Equals(Stridentificacion)
 										  select datos.StrEmpresaDescuento).FirstOrDefault())
+									 select lista.StrIdentificacion).ToList();
+
+			return ListaFacturadores;
+		}
+
+
+		/// <summary>
+		/// Retorna una lista de facturadores (string) con la relación de los asociados
+		/// </summary>
+		/// <param name="Stridentificacion">Facturador que consulta</param>
+		/// <returns></returns>
+		public IEnumerable<string> FacturadoresAsociadosPlan(string Stridentificacion)
+		{
+			var ListaFacturadores = (from lista in context.TblEmpresas
+									 where lista.StrEmpresaAsociada.Equals(
+										 (from datos in context.TblEmpresas
+										  where datos.StrIdentificacion.Equals(Stridentificacion)
+										  select datos.StrEmpresaAsociada).FirstOrDefault())
 									 select lista.StrIdentificacion).ToList();
 
 			return ListaFacturadores;
