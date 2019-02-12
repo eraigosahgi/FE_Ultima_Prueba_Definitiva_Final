@@ -13,6 +13,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages {
     public partial class AcuseRecibo {
         
         /// <summary>
+        /// Control Hdf_RutaPlataformaServicios.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Hdf_RutaPlataformaServicios;
+        
+        /// <summary>
         /// Control PanelInformacion.
         /// </summary>
         /// <remarks>
@@ -65,5 +74,14 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Div1;
+        
+        /// <summary>
+        /// Control PanelInfoRecaudador.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PanelInfoRecaudador;
     }
 }

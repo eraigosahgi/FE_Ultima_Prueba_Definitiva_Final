@@ -284,7 +284,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var retorno = datos.Select(d => new
 				{
-					NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+					NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
 					IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
 					NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
 					Cufe = d.StrCufe,
@@ -306,6 +306,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					obligado = d.StrEmpresaFacturador,
 					prefijo = d.StrPrefijo,
 					documento = d.IntNumero,
+					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
+					ValorDoc = d.IntVlrTotal,
+					PermiteParciales = d.TblEmpresasResoluciones.IntPermiteParciales,
 					pago = d.TblPagosElectronicos.Select(p => new
 					{
 						p.StrIdRegistro,
@@ -355,11 +358,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
-				Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();				
+				Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 				List<MensajeEnvio> respuesta = null;
-				
+
 				respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "");
-				
+
 				return Ok(respuesta);
 			}
 			catch (Exception excepcion)
@@ -997,7 +1000,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Telefono = d.TblEmpresasFacturador.StrTelefono,
 					Mail = d.TblEmpresasFacturador.StrMailAdmin,
 					DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
-					IntNumero = d.IntNumero,
+					IntNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
 					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
 
 					//Detalle del pago
@@ -1009,7 +1012,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						StrIdSeguridadPago = p.StrIdSeguridadPago,
 						IdRegistro = p.StrIdRegistro,
 						Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(p.IntEstadoPago)),
-					})
+					}).OrderByDescending(x => x.FechaRegistro)
 
 				});
 
@@ -1271,18 +1274,19 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				objeto = Ctl_Documento.ConvertirServicio(datos, true);
 				string correo = string.Empty;
 
-				if (datos.IntDocTipo== TipoDocumento.Factura.GetHashCode()){
-					correo = objeto.DatosFactura.DatosAdquiriente.Email;					
+				if (datos.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+				{
+					correo = objeto.DatosFactura.DatosAdquiriente.Email;
 				}
 
 				if (datos.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
 				{
-					correo = objeto.DatosNotaCredito.DatosAdquiriente.Email;					
+					correo = objeto.DatosNotaCredito.DatosAdquiriente.Email;
 				}
 
 				if (datos.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
 				{
-					correo = objeto.DatosNotaDebito.DatosAdquiriente.Email;					
+					correo = objeto.DatosNotaDebito.DatosAdquiriente.Email;
 				}
 
 

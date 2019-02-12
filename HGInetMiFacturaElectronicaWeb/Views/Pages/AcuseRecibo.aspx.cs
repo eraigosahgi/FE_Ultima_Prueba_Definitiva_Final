@@ -20,6 +20,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
             PasarelaPagos Ruta_servicio_pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
             Hdf_RutaSrvPagos.Value = Ruta_servicio_pago.RutaServicio.ToString();
 
-        }
+			Hdf_RutaPlataformaServicios.Value = Ruta_servicio_pago.RutaPlataforma.ToString();
+		}
     }
 }

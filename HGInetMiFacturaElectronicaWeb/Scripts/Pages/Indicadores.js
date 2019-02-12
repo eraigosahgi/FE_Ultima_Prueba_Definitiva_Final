@@ -33,6 +33,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 		text: "Consultar",
 		type: "default",
 		onClick: function () {
+			$('#LiTabAdministrador').addClass('active');
+			$('#TabAdministrador').addClass('active');
+
+			$('#LiTabFacturador').removeClass('active');
+			$('#TabFacturador').removeClass('active');
+
+			$('#TabAdquiriente').removeClass('active');
+			$('#LiTabAdquiriente').removeClass('active');
 			CargarIndicadores();
 		}
 	});
@@ -255,7 +263,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 			usuario_autenticado = response.data[0].Usuario;
 
 			$http.get('/api/DatosSesion/').then(function (response) {
-
 				if (response.data[0].Administrador)
 					PerfilAdministrador();
 
