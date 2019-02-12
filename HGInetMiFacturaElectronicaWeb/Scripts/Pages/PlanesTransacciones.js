@@ -1,8 +1,7 @@
 ﻿DevExpress.localization.locale(navigator.language);
 var opc_pagina = "1334";
-var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
+var GestionPlanesApp = angular.module('GestionPlanesApp', ['dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
 
 //Controlador para la gestion planes transaccionales
 GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
@@ -35,8 +34,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		codigo_facturador = response.data[0].Identificacion;
 		var tipo = response.data[0].Admin;
 		if (tipo) {
-			$scope.Admin = true;		
-		};		
+			$scope.Admin = true;
+		};
 		$http.get('/api/Usuario/').then(function (response) {
 			//Obtiene el código del permiso.
 			$http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&identificacion_empresa=' + codigo_facturador + '&codigo_opcion=' + opc_pagina).then(function (response) {
@@ -347,7 +346,14 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 	function GuardarPlan() {
 		if (txt_hgi_Facturador != null && txt_hgi_Facturador != "") {
-			empresa = txt_hgi_Facturador;
+
+			try {
+				var empresaFactura = txt_hgi_Facturador.split(' -- ');
+				empresa = empresaFactura[0];
+			} catch (e) {
+				empresa = txt_hgi_Facturador;
+			}
+
 		} else {
 			DevExpress.ui.notify("Debe seleccionar el Facturador", 'error', 3000);
 			return false;
@@ -461,7 +467,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 });
 
-GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesController($scope, $http, $location) {
+GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesController($scope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
 	var now = new Date();
 
 	var codigo_facturador = "",
@@ -625,9 +631,9 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 					 //}
 
-                 ,{
+                 , {
                  	dataField: "Porcentaje",
-                 	caption: "Porcentaje %",                 	
+                 	caption: "Porcentaje %",
                  	alignment: "right",
                  	width: 100,
                  	cellTemplate: CrearGraficoBarra,
@@ -720,22 +726,18 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 				$scope.Estado = response.data[0].Estado;
 				$scope.FechaVence = response.data[0].FechaVence;
 
-				///////////////////////////////////////////////////////////////////////				
-				$("#progressBarStatus").dxProgressBar({
-					min: 0,
-					max: 100,
-					width: "100%",
-					statusFormat: function (value) {
-						return Number(value * 100).toFixed(2) + "%";
-					}
-				});
 
 				if ($scope.Tipo == 3) {
-					nivel(100, $scope.Tipo);
+					nivelPlanes(100, $scope.Tipo);
+					$('.Hgi_plan').dxBullet(CrearGrafico(100, 'Consumo Actual ', ' %', nivelPlanes(porcentaje, $scope.Tipo)));
+					$('#hgi_porcentaje_plan').html("100%");
 				} else {
 					var porcentaje = ($scope.TProcesadas.toString().replace(',', '.') / $scope.TCompra.toString().replace(',', '.')) * 100;
-					nivel(porcentaje, $scope.Tipo);
+					nivelPlanes(porcentaje, $scope.Tipo);
+					$('.Hgi_plan').dxBullet(CrearGrafico(porcentaje, 'Consumo Actual ', ' %', nivelPlanes(porcentaje, $scope.Tipo)));
+					$('#hgi_porcentaje_plan').html(Number(porcentaje).toFixed(2) + "%");
 				}
+
 				///////////////////////////////////////////////////////////////////////
 
 			}, function errorCallback(response) {

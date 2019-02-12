@@ -37,7 +37,8 @@
 
 									<div class="col-md-6 col-xs-12" style="margin-top: 16px">
 										<div data-hgi-filtro="Facturador"></div>
-									</div>									
+									</div>
+									
 
 									<div class="col-md-6 col-xs-12" style="z-index: 9;" id="divCantTransacciones">
 										<label style="margin-top: 16px;">Cantidad Transacciones:<strom style="color: red;">*</strom></label>
@@ -111,7 +112,8 @@
 
 				</div>
 			</div>
-		</div>				
+		</div>
+		
 	</div>
 
 </asp:Content>

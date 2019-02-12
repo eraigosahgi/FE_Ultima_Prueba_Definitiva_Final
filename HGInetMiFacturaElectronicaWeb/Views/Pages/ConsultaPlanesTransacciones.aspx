@@ -3,10 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
 	<script src="../../Scripts/Services/SrvPlanes.js?vjs201912"></script>
     <script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
-    <script src="../../Scripts/Pages/PlanesTransacciones.js?vjs2019121"></script>
+    <script src="../../Scripts/Pages/PlanesTransacciones.js?vjs201912"></script>
 	
 	<style type="text/css">
         #outlook a {
@@ -174,7 +174,7 @@
                                                                             </tr>
 																			<tr>																				
 																					<td style="background-color: #efefef; vertical-align: top">Porcentaje:</td>
-																					<td style="background-color: #ffffff; vertical-align: top"><div id="progressBarStatus"></div></td>																																									
+																					<td><div class="bullet Hgi_plan"></div><label id="hgi_porcentaje_plan" style="font-size:12px; margin:0px; padding:0px;">70%</label></td>																					
 																			</tr>
                                                                             <tr>
                                                                                 <td style="background-color: #efefef; vertical-align: top">Estado:</td>
