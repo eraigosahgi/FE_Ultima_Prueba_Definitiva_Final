@@ -409,7 +409,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							hideEvent: "mouseleave",
 							position: "right",
 							contentTemplate: function (data) {
-								data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado. </br> Para el calculo Total, no se tienen en cuenta los filtros aplicados a la búsqueda.</label>");
+								data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado, al igual que para el calculo total.</label>");
 							}
 						});
 
@@ -551,7 +551,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 								hideEvent: "mouseleave",
 								position: "right",
 								contentTemplate: function (data) {
-									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado. </br> Para el calculo Total, no se tienen en cuenta los filtros aplicados a la búsqueda.</label>");
+									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado, al igual que para el calculo total.</label>");
 								}
 							});
 
