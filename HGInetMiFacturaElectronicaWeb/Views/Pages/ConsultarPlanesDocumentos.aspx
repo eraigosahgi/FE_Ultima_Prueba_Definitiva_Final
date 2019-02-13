@@ -74,8 +74,8 @@
         }
     </style>
 
-    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
-    <script src="../../Scripts/Pages/ConsultarPlanesDocumentos.js?vjs201912"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201913"></script>
+    <script src="../../Scripts/Pages/ConsultarPlanesDocumentos.js?vjs201913"></script>
 
     <div data-ng-app="GestionPlanesApp" data-ng-controller="ConsultaPlanesController">
 

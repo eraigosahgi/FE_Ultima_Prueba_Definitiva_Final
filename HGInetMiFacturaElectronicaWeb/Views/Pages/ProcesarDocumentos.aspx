@@ -4,11 +4,11 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 	<!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201912"></script>
-	<script src="../../Scripts/Services/SrvUsuario.js?vjs201912"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
-	<script src="../../Scripts/Pages/ProcesarDocumentos.js?vjs201912"></script>
-	<script src="../../Scripts/Services/Loading.js?vjs201912"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201913"></script>
+	<script src="../../Scripts/Services/SrvUsuario.js?vjs201913"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201913"></script>
+	<script src="../../Scripts/Pages/ProcesarDocumentos.js?vjs201913"></script>
+	<script src="../../Scripts/Services/Loading.js?vjs201913"></script>
 
 
 	<!-- CONTENEDOR PRINCIPAL -->

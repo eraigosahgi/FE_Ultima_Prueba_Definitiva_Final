@@ -5,9 +5,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<script src="../../Scripts/Services/SrvEmpresa.js"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs201912"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201912"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201913"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs201913"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201913"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController">
 		<div class="col-md-12">

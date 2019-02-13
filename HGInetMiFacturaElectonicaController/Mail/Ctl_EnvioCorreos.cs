@@ -1500,7 +1500,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="identificacion">Nit del Facturador</param>
 		/// <param name="mail">email al que se va enviar el correo</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> EnviaNotificacionSinSaldo(string identificacion, string mail)
+		public List<MensajeEnvio> EnviaNotificacionSinSaldo(string identificacion, string mail,int tipo)//1 cliente, 2 HGI
 		{
 			try
 			{
@@ -1509,9 +1509,14 @@ namespace HGInetMiFacturaElectonicaController
 
 				if (string.IsNullOrEmpty(identificacion))
 					throw new ApplicationException("No se encontró información de la empresa.");
+				string fileName = string.Empty;
 
-
-				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaplantillaSinSaldo);
+				if (tipo == 1)
+				{
+					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaplantillaSinSaldo);
+				}else {
+					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaplantillaSinSaldoHGI);
+				}
 
 				// obtiene los datos del Facturador
 				Ctl_Empresa empresa = new Ctl_Empresa();
@@ -1527,13 +1532,20 @@ namespace HGInetMiFacturaElectonicaController
 					string mensaje = file.OpenText().ReadToEnd();
 
 					if (file != null)
-					{						
+					{
+
+						// Datos del Tercero
+						if (facturador.StrTipoIdentificacion.Equals("31"))
+							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
+						else
+							mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
+
 
 						mensaje = mensaje.Replace("{NombreTercero}", facturador.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitTercero}", facturador.StrIdentificacion);
-						mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());						
+						mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());
 
-						string asunto = "NO DISPONE DE SALDO EN NUESTRA PLAFAFORMA DE FACTURA ELECTRÓNICA";
+						string asunto = "SALDO AGOTADO";
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
 						remitente.Email = Constantes.EmailRemitente;

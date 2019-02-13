@@ -250,6 +250,10 @@
     <value>emails\\plantilla_notificacion_sinsaldo.html</value>
     <comment>Ruta de plantilla Html de notificación de facturador sin saldo</comment>
   </data>
+  <data name="RutaplantillaSinSaldoHGI" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_sinsaldo_hgi.html</value>
+    <comment>Ruta de plantilla Html de notificación de facturador sin saldo hgi</comment>
+  </data>
   <data name="SmsCelulares" xml:space="preserve">
     <value>573163494083,573136469239,573104935257,573053954360</value>
     <comment>Números de celulares para auditoría por SMS</comment>

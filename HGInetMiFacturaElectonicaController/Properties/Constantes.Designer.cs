@@ -367,6 +367,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_sinsaldo_hgi.html.
+        /// </summary>
+        public static string RutaplantillaSinSaldoHGI {
+            get {
+                return ResourceManager.GetString("RutaplantillaSinSaldoHGI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 573163494083,573136469239,573104935257,573053954360.
         /// </summary>
         public static string SmsCelulares {

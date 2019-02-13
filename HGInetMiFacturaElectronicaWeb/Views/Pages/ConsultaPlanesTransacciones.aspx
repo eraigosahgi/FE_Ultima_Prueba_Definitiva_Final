@@ -3,10 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201912"></script>
-	<script src="../../Scripts/Services/SrvPlanes.js?vjs201912"></script>
-    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201912"></script>
-    <script src="../../Scripts/Pages/PlanesTransacciones.js?vjs201912"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201913"></script>
+	<script src="../../Scripts/Services/SrvPlanes.js?vjs201913"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201913"></script>
+    <script src="../../Scripts/Pages/PlanesTransacciones.js?vjs201913"></script>
 	
 	<style type="text/css">
         #outlook a {

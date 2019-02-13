@@ -164,13 +164,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						if (Alertas.IntCliente == true)
 						{
 							//2: enviar email de notificación al correo del facturador								
-							email.EnviaNotificacionSinSaldo(Facturador_Alerta.StrIdentificacion, Facturador_Alerta.Email);
+							email.EnviaNotificacionSinSaldo(Facturador_Alerta.StrIdentificacion, Facturador_Alerta.Email,1);
 							//Guardar en el historico de notificaciones							
 						}
 						if (Alertas.IntInterno == true)
 						{
 							//1: enviar email de notificación al correo configurado por Administración								
-							email.EnviaNotificacionSinSaldo(Facturador_Alerta.StrIdentificacion, Alertas.StrInternoMails);
+							email.EnviaNotificacionSinSaldo(Facturador_Alerta.StrIdentificacion, Alertas.StrInternoMails,2);
 							//Guardar en el historico de notificaciones								
 						}
 						_AlertasHist = new Ctl_AlertasHistAudit();

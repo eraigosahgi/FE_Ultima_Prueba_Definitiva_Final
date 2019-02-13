@@ -6,7 +6,7 @@
 
 
     <!-- JS DocumentosAdquiriente-->
-    <script src="../../Scripts/Pages/Usuarios.js?vjs201912"></script>
+    <script src="../../Scripts/Pages/Usuarios.js?vjs201913"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div data-ng-app="ConsultaUsuarioApp" data-ng-controller="ConsultaUsuarioController">
