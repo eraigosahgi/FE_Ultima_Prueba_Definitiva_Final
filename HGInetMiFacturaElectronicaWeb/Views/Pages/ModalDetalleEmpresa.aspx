@@ -170,10 +170,10 @@
 																							</tr>
 
 																							<tr>
-																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Integrador ?:</td>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Integrador:</td>
 																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{Integrador}}</td>
 
-																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Email Recepcion ?:</td>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Email Recepcion:</td>
 																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{IntEmailRecepcion}}</td>
 																							</tr>
 																							<tr>
@@ -201,10 +201,10 @@
 																								<td colspan="5" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaDescuenta}}</td>
 																							</tr>
 																							<tr>
-																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Post-Pago Aut.?:</td>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Post-Pago Aut.:</td>
 																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{PostPago}}</td>
 
-																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Maneja Anexos ?:</td>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Maneja Anexos:</td>
 																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{Anexo}}</td>
 																							</tr>
 
