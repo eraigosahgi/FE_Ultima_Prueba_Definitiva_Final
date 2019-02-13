@@ -1936,6 +1936,8 @@
     <Content Include="Scripts\Services\FiltroGenerico.js" />
     <Content Include="Scripts\Services\Loading.js" />
     <Content Include="Scripts\Services\MaestrosEnum.js" />
+    <Content Include="Scripts\Services\SrvAlertas.js" />
+    <Content Include="Scripts\Services\SrvAuditoria.js" />
     <Content Include="Scripts\Services\SrvDocumentos.js" />
     <Content Include="Scripts\Services\SrvEmpresa.js" />
     <Content Include="Scripts\Services\SrvPlanes.js" />
