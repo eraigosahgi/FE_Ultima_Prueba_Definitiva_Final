@@ -3288,10 +3288,6 @@
       <Project>{E571F23F-B598-4DB1-893B-D94EC0354775}</Project>
       <Name>HGInetUBL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HGInetZonaPagos\HGInetZonaPagos.csproj">
-      <Project>{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}</Project>
-      <Name>HGInetZonaPagos</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
       <Project>{A966A394-F6CC-482F-87A4-56EC1AF05E5E}</Project>
       <Name>LibreriaGlobalHGInet</Name>
@@ -3326,7 +3322,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61443/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

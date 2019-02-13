@@ -116,8 +116,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F69
 		Documentacion\Liberaciones\v2018.6\20180911-Opcion1344 Acuse Tacito.txt = Documentacion\Liberaciones\v2018.6\20180911-Opcion1344 Acuse Tacito.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetZonaPagos", "HGInetZonaPagos\HGInetZonaPagos.csproj", "{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UBL", "UBL", "{ABC6BEBB-CCE9-4BEB-92A9-AD83FFC3D3BD}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\UBL\Generador de Clases C#.txt = Documentacion\UBL\Generador de Clases C#.txt
@@ -285,14 +283,6 @@ Global
 		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Release|x86.ActiveCfg = Release|Any CPU
 		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Release|x86.Build.0 = Release|Any CPU
-		{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}.Debug|x86.Build.0 = Debug|Any CPU
-		{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}.Release|x86.ActiveCfg = Release|Any CPU
-		{A8136C0B-C54E-4ECF-B547-4E1371B3A6B9}.Release|x86.Build.0 = Release|Any CPU
 		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Debug|x86.ActiveCfg = Debug|Any CPU
