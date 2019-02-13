@@ -132,14 +132,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
 				
-				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(documentos[0].DatosObligado.Identificacion, documentos.Count());
+				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count());
 
 				if (ListaPlanes == null)
 					throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
 
 				
-
-
 				int i = 0;
 				//Planes y transacciones
 				foreach (var item in documentos)

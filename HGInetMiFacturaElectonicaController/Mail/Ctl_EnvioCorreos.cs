@@ -1295,6 +1295,17 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
 
+						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
+
 						// Datos del Tercero
 						if (facturador.StrTipoIdentificacion.Equals("31"))
 							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
@@ -1407,6 +1418,17 @@ namespace HGInetMiFacturaElectonicaController
 					if (file != null)
 					{
 						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
+						
+						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
 
 						// Datos del Tercero
 						if (facturador.StrTipoIdentificacion.Equals("31"))
@@ -1534,6 +1556,17 @@ namespace HGInetMiFacturaElectonicaController
 					if (file != null)
 					{
 
+						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
+
 						// Datos del Tercero
 						if (facturador.StrTipoIdentificacion.Equals("31"))
 							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
@@ -1641,6 +1674,16 @@ namespace HGInetMiFacturaElectonicaController
 					if (file != null)
 					{
 						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
+						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
 
 						// Datos del Tercero
 						if (facturador.StrTipoIdentificacion.Equals("31"))
@@ -1657,7 +1700,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						foreach (var item in ListNotificacion)
 						{
-							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td>{7}</td></tr>", detalle, item.Documento,item.Facturador,item.adquiridas,item.procesados,item.disponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.tipo)),item.Fecha);
+							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr>", detalle, item.Documento,item.Facturador,item.disponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.tipo)),item.Fecha);
 						}
 											   						
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);						
@@ -1736,7 +1779,12 @@ namespace HGInetMiFacturaElectonicaController
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaPlanporVencerHGI);
 
 
-				string asunto = "ALERTA; DE PLANES CERCA DE VENCER";				
+				string asunto = "ALERTA; DE PLANES CERCA DE VENCER";
+
+				// obtiene los datos del Facturador
+				Ctl_Empresa empresa = new Ctl_Empresa();
+				TblEmpresas facturador = empresa.Obtener(ListNotificacion.FirstOrDefault().Documento);
+
 
 				if (!string.IsNullOrWhiteSpace(fileName))
 				{
@@ -1747,13 +1795,22 @@ namespace HGInetMiFacturaElectonicaController
 					if (file != null)
 					{
 						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
-					
+						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
 
 						string detalle = string.Empty;
 
 						foreach (var item in ListNotificacion)
 						{
-							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td>{7}</td></tr>", detalle, item.Documento, item.Facturador, item.adquiridas, item.procesados, item.disponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.tipo)), item.Fecha);
+							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr>", detalle, item.Documento, item.Facturador,  item.disponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.tipo)), item.Fecha);
 						}
 
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);
