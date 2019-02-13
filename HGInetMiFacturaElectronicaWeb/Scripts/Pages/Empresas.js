@@ -91,6 +91,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         Datos_Adquiriente = "",
         Datos_Obligado = "",
         Datos_Habilitacion = "",
+		Datos_telefono="",
     Datos_IdentificacionDv = "",
     Datos_Tipo = "1",
     Datos_Observaciones = "",
@@ -141,6 +142,27 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         		message: "El numero de Identificación debe ser numérico"
         	}]
         });
+
+
+		$("#txttelefono").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_telefono = data.value;				
+			}
+		})
+        .dxValidator({
+        	validationRules: [
+			//{
+        	//	type: "required",
+        	//	message: "Debe Indicar el teléfono"
+			//},
+			 {
+        		type: "stringLength",
+        		max: 50,        		
+        		message: "El teléfono no puede ser mayor a 50 caracteres"
+        	}]
+        });
+
+
 
 		$("#txtRasonSocial").dxTextBox({
 			onValueChanged: function (data) {
@@ -720,6 +742,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Email_Recepcion = response.data[0].StrMailRecepcion;
 				Datos_Email_Acuse = response.data[0].StrMailAcuse;
 				Datos_Email_Pagos = response.data[0].StrMailPagos;
+				Datos_telefono = response.data[0].telefono;
 
 				$("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
 				$("#NumeroIdentificacion").dxTextBox({ readOnly: true });
@@ -731,6 +754,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				$("#txtMailPagos").dxTextBox({ value: Datos_Email_Pagos });
 				$("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
 				$("#TipoIndentificacion").dxSelectBox({ readOnly: true });
+
+				$("#txttelefono").dxTextBox({ value: Datos_telefono });
+
 				Set_EmpresaAsociada((Datos_empresa_Asociada) ? Datos_empresa_Asociada : '');
 				Set_EmpresaDescuenta((response.data[0].StrEmpresaDescuenta) ? response.data[0].StrEmpresaDescuenta : Datos_Idententificacion)
 				if (Datos_Observaciones != null) {
@@ -825,7 +851,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				StrMailEnvio: Datos_Email_Envio,
 				StrMailRecepcion: Datos_Email_Recepcion,
 				StrMailAcuse: Datos_Email_Acuse,
-				StrMailPagos: Datos_Email_Pagos
+				StrMailPagos: Datos_Email_Pagos,
+				telefono: Datos_telefono
 			});
 
 

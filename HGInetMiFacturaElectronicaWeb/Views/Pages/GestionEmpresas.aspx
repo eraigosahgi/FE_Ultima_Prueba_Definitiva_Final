@@ -116,10 +116,15 @@
 											<div id="ttMailAcuse"></div>
 										</div>
 
-										<div class="col-md-6 col-xs-12" style="z-index: 9;">
-											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email Pagos Electrónicos:<strom style="color: red;">*</label>
+										<div class="col-md-3 col-xs-12" style="z-index: 9;">
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email Pagos Electrónicos:<strom style="color: red;">*</strom></label>
 											<div id="txtMailPagos"></div>
 											<div id="ttMailPagos"></div>
+										</div>
+
+										<div class="col-md-3 col-xs-12" style="z-index: 9;">
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Teléfono:</label>
+											<div id="txttelefono"></div>
 										</div>
 
 										<div class="col-md-2 col-xs-4  text-left" style="z-index: 9;">
@@ -140,6 +145,8 @@
 											</div>
 										</div>
 
+
+										
 
 
 										<div class="col-md-12 text-left" style="z-index: 8;">

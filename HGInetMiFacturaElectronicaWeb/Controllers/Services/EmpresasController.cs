@@ -236,7 +236,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				d.StrMailPagos,
 				d.StrMailRecepcion,
 				d.StrMailAcuse,
-				Admin=d.IntAdministrador
+				Admin=d.IntAdministrador,
+				telefono = d.StrTelefono
 			});
 
             return Ok(retorno);
@@ -263,7 +264,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="tipo">1.- Nuevo -- 2.- Editar</param>
 		/// <returns></returns>
 		[HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento,[FromUri]short intestado, [FromUri]short intpostpago,[FromUri]string StrMailEnvio, [FromUri]string StrMailRecepcion, [FromUri]string StrMailAcuse, [FromUri]string StrMailPagos, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento,[FromUri]short intestado, [FromUri]short intpostpago,[FromUri]string StrMailEnvio, [FromUri]string StrMailRecepcion, [FromUri]string StrMailAcuse, [FromUri]string StrMailPagos, [FromUri]string telefono, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
@@ -291,6 +292,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.StrMailEnvio = StrMailEnvio;
 				Empresa.StrMailRecepcion =StrMailRecepcion;
 				Empresa.StrMailPagos = StrMailPagos;
+				Empresa.StrTelefono = telefono;
 
 				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(StrEmpresaDescuento) ? Identificacion : StrEmpresaDescuento);
 

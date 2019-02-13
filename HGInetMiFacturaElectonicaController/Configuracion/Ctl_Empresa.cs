@@ -194,6 +194,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				EmpresaActualiza.StrMailAcuse = empresa.StrMailAcuse;
 				EmpresaActualiza.StrMailPagos = empresa.StrMailPagos;
 
+				EmpresaActualiza.StrTelefono = empresa.StrTelefono;
+
 				empresa.DatFechaActualizacion = Fecha.GetFecha();
 
 				Actualizar(EmpresaActualiza);
