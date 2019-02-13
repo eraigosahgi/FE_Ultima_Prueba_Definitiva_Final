@@ -14,8 +14,7 @@
 		});
 	}
 
-	this.ReprocesarAlerta = function (Facturador,idAlerta) {
-		console.log("idAlerta",idAlerta);
+	this.ReprocesarAlerta = function (Facturador,idAlerta) {		
 		return $http.get('/api/ReprocesarAlerta?Facturador=' + Facturador + '&idAlerta=' + idAlerta).then(function (response) {
 			return response.data;
 		}, function (response) {

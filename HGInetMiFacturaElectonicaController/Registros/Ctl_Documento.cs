@@ -952,7 +952,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			documento_obj.UrlPdf = objetoBd.StrUrlArchivoPdf;
 			documento_obj.UrlXmlUbl = objetoBd.StrUrlArchivoUbl;
 			documento_obj.FechaUltimoProceso = objetoBd.DatFechaActualizaEstado;
-			documento_obj.Neto = objetoBd.IntValorNeto;
+			//documento_obj.Neto = objetoBd.IntValorNeto;
 
 			if (!reenvio)
 			{
