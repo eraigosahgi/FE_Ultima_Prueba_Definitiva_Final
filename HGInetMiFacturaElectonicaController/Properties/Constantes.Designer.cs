@@ -304,7 +304,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_alerta.html.
+        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_consumo_facturador.html.
         /// </summary>
         public static string RutaPlantillaPlanPorcentaje {
             get {
@@ -313,11 +313,29 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_alerta_hgi.html.
+        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_consumo_hgi.html.
+        /// </summary>
+        public static string RutaPlantillaPlanPorcentajehgi {
+            get {
+                return ResourceManager.GetString("RutaPlantillaPlanPorcentajehgi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_planes_vence.html.
         /// </summary>
         public static string RutaPlantillaPlanporVencer {
             get {
                 return ResourceManager.GetString("RutaPlantillaPlanporVencer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_planes_vence_hgi.html.
+        /// </summary>
+        public static string RutaPlantillaPlanporVencerHGI {
+            get {
+                return ResourceManager.GetString("RutaPlantillaPlanporVencerHGI", resourceCulture);
             }
         }
         

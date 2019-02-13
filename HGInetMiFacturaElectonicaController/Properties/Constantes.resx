@@ -223,12 +223,20 @@
     <comment>Ruta de la plantilla Html de envío de documentos en formato basica solo envia PDF</comment>
   </data>
   <data name="RutaPlantillaPlanPorcentaje" xml:space="preserve">
-    <value>emails\\plantilla_notificacion_alerta.html</value>
+    <value>emails\\plantilla_notificacion_consumo_facturador.html</value>
     <comment>Ruta de la plantilla Html de envío notificación de plan con porcentaje especifico de cosumo</comment>
   </data>
+  <data name="RutaPlantillaPlanPorcentajehgi" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_consumo_hgi.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de plan con porcentaje especifico de cosumo para hgi</comment>
+  </data>
   <data name="RutaPlantillaPlanporVencer" xml:space="preserve">
-    <value>emails\\plantilla_notificacion_alerta_hgi.html</value>
+    <value>emails\\plantilla_notificacion_planes_vence.html</value>
     <comment>Ruta de la plantilla Html de envío notificación de plan por vencer</comment>
+  </data>
+  <data name="RutaPlantillaPlanporVencerHGI" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_planes_vence_hgi.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de plan por vencer HGI</comment>
   </data>
   <data name="RutaPlantillaRecarga" xml:space="preserve">
     <value>emails\\plantilla_recarga_transacciones.html</value>

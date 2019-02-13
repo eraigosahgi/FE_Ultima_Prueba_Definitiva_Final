@@ -174,7 +174,10 @@
     <Content Include="emails\plantilla_documento_acuse.html" />
     <Content Include="emails\plantilla_documento_basica.html" />
     <Content Include="emails\plantilla_notificacion_alerta.html" />
-    <Content Include="emails\plantilla_notificacion_alerta_hgi.html" />
+    <Content Include="emails\plantilla_notificacion_planes_vence.html" />
+    <Content Include="emails\plantilla_notificacion_consumo_facturador.html" />
+    <Content Include="emails\plantilla_notificacion_consumo_hgi.html" />
+    <Content Include="emails\plantilla_notificacion_planes_vence_hgi.html" />
     <Content Include="emails\plantilla_notificacion_sinsaldo.html" />
     <Content Include="emails\plantilla_recarga_transacciones.html" />
     <Content Include="emails\plantilla_envio_serial.html" />
@@ -3323,7 +3326,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61428/</IISUrl>
+          <IISUrl>http://localhost:61443/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

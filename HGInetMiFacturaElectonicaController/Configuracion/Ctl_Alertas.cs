@@ -104,7 +104,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							if (alerta.IntInterno == true)
 							{
 								//1: enviar email de notificación al correo configurado por Administración								
-								email.EnviaNotificacionAlerta(Plan.Identificacion, alerta.StrInternoMails, Plan.TCompra, Plan.TProcesadas, Plan.TDisponible, Plan.Porcentaje);
+								email.EnviaNotificacionAlertaConsumoHGI(Plan.Identificacion, alerta.StrInternoMails, Plan.TCompra, Plan.TProcesadas, Plan.TDisponible, Plan.Porcentaje);
 								//Guardar en el historico de notificaciones								
 							}
 							_AlertasHist = new Ctl_AlertasHistAudit();
@@ -116,8 +116,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 				return true;
 			}
-			catch (Exception)
+			catch (Exception excepcion)
 			{
+				LogExcepcion.Guardar(excepcion);
 				return false;
 			}
 		}
@@ -263,7 +264,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 					if (ListaNotificacion.Count > 0)
 					{
-						email.EnviaNotificacionAlertaPorvencer(Alertas.StrInternoMails, ListaNotificacion);
+						email.EnviaNotificacionAlertaPorvencerHGI(Alertas.StrInternoMails, ListaNotificacion);
 					}
 				}
 
