@@ -677,7 +677,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				doc.IntAdquirienteRecibo = estado;
 				doc.StrAdquirienteMvoRechazo = motivo_rechazo;
 				doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
-				doc.IntIdEstado = (short)ProcesoEstado.RecepcionAcuse.GetHashCode();
+				if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode())
+					doc.IntIdEstado = (short)ProcesoEstado.RecepcionAcuse.GetHashCode();
 
 				// obtiene los datos del facturador electrónico
 				TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
@@ -705,7 +706,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 							email.RespuestaAcuse(doc, facturador, adquiriente, resultado.RutaArchivosProceso, "", Procedencia.Usuario, usuario);
 						}
-						doc.IntIdEstado = (short)ProcesoEstado.Finalizacion.GetHashCode();
+						if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode())
+							doc.IntIdEstado = (short)ProcesoEstado.Finalizacion.GetHashCode();
 					}
 					catch (Exception) { }
 
@@ -1440,11 +1442,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			await Task.Factory.StartNew(() =>
 			{
-				
+
 				DateTime fecha_inicio = new DateTime(2017, 12, 31);
 				DateTime fecha_fin = Fecha.GetFecha();
 
-				List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*",fecha_inicio,fecha_fin,0,2);
+				List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_inicio, fecha_fin, 0, 2);
 
 				foreach (var item in datos)
 				{
