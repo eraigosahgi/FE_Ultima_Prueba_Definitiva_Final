@@ -377,7 +377,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						email = ctl_documento.ReenviarRespuestaAcuse(documento.StrIdSeguridad, documento.TblEmpresasFacturador.StrMailAdmin, "");
 					}
-					else
+					else if (documento.IntIdEstado > ProcesoEstado.EnvioZip.GetHashCode())
 					{
 						email = true;
 					}
