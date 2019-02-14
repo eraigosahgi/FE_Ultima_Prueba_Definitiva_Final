@@ -1448,24 +1448,31 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				foreach (var item in datos)
 				{
-					var objeto = (dynamic)null;
-					objeto = Ctl_Documento.ConvertirServicio(item, true);
-					if (item.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+					try
 					{
-						item.IntValorSubtotal = objeto.DatosFactura.ValorSubtotal;
-					}
+						var objeto = (dynamic)null;
+						objeto = Ctl_Documento.ConvertirServicio(item, true);
+						if (item.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+						{
+							item.IntValorSubtotal = objeto.DatosFactura.ValorSubtotal;
+						}
 
-					if (item.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
-					{
-						item.IntValorSubtotal = objeto.DatosNotaCredito.ValorSubtotal;
-					}
+						if (item.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+						{
+							item.IntValorSubtotal = objeto.DatosNotaCredito.ValorSubtotal;
+						}
 
-					if (item.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
-					{
-						item.IntValorSubtotal = objeto.DatosNotaDebito.ValorSubtotal;
+						if (item.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+						{
+							item.IntValorSubtotal = objeto.DatosNotaDebito.ValorSubtotal;
+						}
+						Ctl_Documento ctl_documento = new Ctl_Documento();
+						ctl_documento.Actualizar(item);
 					}
-					Ctl_Documento ctl_documento = new Ctl_Documento();
-					ctl_documento.Actualizar(item);
+					catch (Exception excepcion)
+					{
+						LogExcepcion.Guardar(excepcion);
+					}
 
 				}
 
