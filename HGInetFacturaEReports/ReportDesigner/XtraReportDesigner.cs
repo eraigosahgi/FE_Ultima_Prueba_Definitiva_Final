@@ -82,14 +82,14 @@ namespace HGInetFacturaEReports.ReportDesigner
 						XRLabel control_descripcion = (XRLabel)FindBandControl(reportBand, string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()));
 						if (control_descripcion != null)
 						{
-							control_descripcion.Text = item.Descripcion;
+							control_descripcion.Text = item.Descripcion.Replace("<br />", "\n").Replace("<br/>", "\n").Replace("<br>", "\n").Replace("</br>", "\n").ToUpper(); ;
 						}
 
 						//Obtiene los campos de valores.
 						XRLabel control_valor = (XRLabel)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
 						if (control_valor != null)
 						{
-							control_valor.Text = item.Valor;
+							control_valor.Text = item.Valor.Replace("<br />", "\n").Replace("<br/>", "\n").Replace("<br>", "\n").Replace("</br>", "\n"); ;
 						}
 					}
 				}

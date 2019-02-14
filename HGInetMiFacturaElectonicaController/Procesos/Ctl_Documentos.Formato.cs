@@ -96,7 +96,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						MemoryStream datos = new MemoryStream(datos_formato.Formato);
 						rep.LoadLayoutFromXml(datos);
 
-						rep.DataSource = documento;
+						List<DocumentoDetalle> detalles_formato = new List<DocumentoDetalle>();
+						//Recorre los detalles y agrega los items visibles.
+						foreach (var item in documento_obj.DocumentoDetalles)
+						{
+							if (item.OcultarItem == 0)
+								detalles_formato.Add(item);
+						}
+
+						documento_obj.DocumentoDetalles = detalles_formato;
+
+						rep.DataSource = documento_obj;
 						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
 						x.GenerarPdfDev(rep, documentoBd.StrEmpresaFacturador);
 					}
