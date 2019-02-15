@@ -215,7 +215,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			try
 			{
 				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
-				datos_formato.DatFechaActualización = Fecha.GetFecha();
+				datos_formato.DatFechaActualizacion = Fecha.GetFecha();
 				datos_formato.Formato = byte_formato;
 
 				//Actualiza el registro en base de datos.
@@ -242,7 +242,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			try
 			{
 				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
-				datos_formato.DatFechaActualización = Fecha.GetFecha();
+				datos_formato.DatFechaActualizacion = Fecha.GetFecha();
 
 				bool estado_formato = false;
 
