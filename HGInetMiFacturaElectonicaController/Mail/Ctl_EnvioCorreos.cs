@@ -463,7 +463,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 						{
-							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
 
 							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
 						}
@@ -730,7 +730,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 						{
-							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
 
 							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
 						}
@@ -1204,6 +1204,22 @@ namespace HGInetMiFacturaElectonicaController
 
 					if (file != null)
 					{
+						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
+
+						// Datos del Tercero
+						if (facturador.StrTipoIdentificacion.Equals("31"))
+							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
+						else
+							mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
 
 						mensaje = mensaje.Replace("{NombreTercero}", facturador.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitTercero}", facturador.StrIdentificacion);
@@ -1214,9 +1230,9 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Estado}", (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(plan.IntEstado))));
 						mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
 						mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString("N0"));
-						//mensaje = mensaje.Replace("{Observaciones}", (plan.StrObservaciones != null) ? plan.StrObservaciones : "Ninguna");
+						mensaje = mensaje.Replace("{Vence}", (plan.DatFechaVencimiento != null) ? plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet) : "");
 
-						string asunto = "NOTIFICACIÓN DE RECARGA DE TRANSACCIONES";
+						string asunto = "RECARGA DE SALDO DE DOCUMENTOS ELECTRÓNICOS";
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
 						remitente.Email = Constantes.EmailRemitente;
@@ -1297,7 +1313,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 						{
-							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
 
 							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
 						}
@@ -1404,10 +1420,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				// obtiene los datos del Facturador
 				Ctl_Empresa empresa = new Ctl_Empresa();
-				TblEmpresas facturador = empresa.Obtener(identificacion);
-
-				//if (string.IsNullOrEmpty(facturador.StrSerial))
-				//    throw new ApplicationException("No se encontró información del serial");
+				TblEmpresas facturador = empresa.Obtener(identificacion);				
 
 				if (!string.IsNullOrWhiteSpace(fileName))
 				{
@@ -1421,7 +1434,7 @@ namespace HGInetMiFacturaElectonicaController
 						
 						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 						{
-							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
 
 							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
 						}
@@ -1455,7 +1468,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Porcentaje}", string.Format("{0}%", Porcentaje.ToString()));
 
 
-						string asunto = "ALERTA DE CONSUMO";
+						string asunto = "ALERTA CONSUMO DE DOCUMENTOS ELECTRÓNICOS";
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
 						remitente.Email = Constantes.EmailRemitente;
@@ -1558,7 +1571,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 						{
-							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
 
 							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
 						}
@@ -1578,7 +1591,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NitTercero}", facturador.StrIdentificacion);
 						mensaje = mensaje.Replace("{Digitov}", facturador.IntIdentificacionDv.ToString());
 
-						string asunto = "SALDO AGOTADO";
+						string asunto = "ALERTA CONSUMO DE DOCUMENTOS ELECTRÓNICOS";
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
 						remitente.Email = Constantes.EmailRemitente;
@@ -1655,7 +1668,7 @@ namespace HGInetMiFacturaElectonicaController
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaPlanporVencer);
 
 
-				string asunto = "ALERTA; DE PLANES CERCA DE VENCER";
+				string asunto = "SALDO POR VENCER DE DOCUMENTOS ELECTRÓNICOS";
 
 
 				// obtiene los datos del Facturador
@@ -1676,7 +1689,7 @@ namespace HGInetMiFacturaElectonicaController
 						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
 						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 						{
-							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
 
 							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
 						}
@@ -1779,7 +1792,7 @@ namespace HGInetMiFacturaElectonicaController
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaPlanporVencerHGI);
 
 
-				string asunto = "ALERTA; DE PLANES CERCA DE VENCER";
+				string asunto = "SALDO POR VENCER DE DOCUMENTOS ELECTRÓNICOS";
 
 				// obtiene los datos del Facturador
 				Ctl_Empresa empresa = new Ctl_Empresa();
@@ -1797,7 +1810,7 @@ namespace HGInetMiFacturaElectonicaController
 						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
 						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 						{
-							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este Documento es de prueba y no tiene validez comercial.</b></span></p></div>";
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
 
 							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
 						}
