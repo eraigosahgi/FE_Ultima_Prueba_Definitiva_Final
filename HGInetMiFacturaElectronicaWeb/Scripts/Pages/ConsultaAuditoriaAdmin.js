@@ -93,7 +93,6 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 
 	SrvMaestrosEnum.ObtenerEnum(6).then(function (dataproc) {
 		Proceso = dataproc;
-		console.log("Enum 6", dataproc);
 		var DatosProceso = function () {
 			return new DevExpress.data.CustomStore({
 				loadMode: "raw",
@@ -249,7 +248,6 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 		var cod_facturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? codigo_facturador : txt_hgi_Facturador;
 		SrvAuditoria.ConsultaAuditoria(fecha_inicio, fecha_fin, cod_facturador, numero_documento, estado_dian, proceso_doc, tipo_registro, procedencia_proceso).then(function (response) {
 
-			console.log(response);
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response,
 				paging: {
