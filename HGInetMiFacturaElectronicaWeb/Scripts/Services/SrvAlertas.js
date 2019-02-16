@@ -22,6 +22,28 @@
 			return $q.reject(response.data);
 		});
 	}
+
+
+	this.ObtenerListaAlertas = function () {
+
+		return $http.get('/api/ConsultaListaAlertas').then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			return $q.reject(response.data);
+		});
+	}
+	
+	this.Guardar = function (datos) {
+		return $http({ url: '/api/GuardarAlerta/', data: datos, method: 'Post' }).then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			return $q.reject(response.data);
+		});
+	}
+
+
 	
 });
 

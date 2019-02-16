@@ -1907,6 +1907,7 @@
     <Content Include="Scripts\Pages\AcusePendienteRecepcion.js" />
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
+    <Content Include="Scripts\Pages\Alertas.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\ConsultaAcuseTacito.js" />
     <Content Include="Scripts\Pages\ConsultaAuditoriaAdmin.js" />
@@ -2756,6 +2757,7 @@
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
+    <Content Include="Views\Pages\GestionAlertas.aspx" />
     <Content Include="Views\Pages\ConfigurarPlanes.aspx" />
     <Content Include="Views\Pages\AuditoriaDocumento.aspx" />
     <Content Include="Views\Pages\ConsultaAcuseRecibo.aspx" />
@@ -2925,6 +2927,13 @@
     </Compile>
     <Compile Include="Views\Pages\AuditoriaDocumento.aspx.designer.cs">
       <DependentUpon>AuditoriaDocumento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\GestionAlertas.aspx.cs">
+      <DependentUpon>GestionAlertas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\GestionAlertas.aspx.designer.cs">
+      <DependentUpon>GestionAlertas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConfigurarPlanes.aspx.cs">
       <DependentUpon>ConfigurarPlanes.aspx</DependentUpon>
@@ -3264,7 +3273,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
+    <Folder Include="Scripts\Pages\Configuracion\" />
     <Folder Include="Views\Formatos\" />
+    <Folder Include="Views\Pages\Configuracion\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HGInetFacturaEReports\HGInetFacturaEReports.csproj">

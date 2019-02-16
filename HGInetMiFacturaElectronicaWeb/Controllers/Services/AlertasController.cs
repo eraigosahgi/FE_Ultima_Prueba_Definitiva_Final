@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,29 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+
+		[HttpGet]
+		[Route("Api/ConsultaListaAlertas")]
+		public IHttpActionResult ConsultaListaAlertas()
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_Alertas controlador = new Ctl_Alertas();
+				var datos = controlador.ObtenerListaAlertas();
+				return Ok(datos);
+
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		
+
 		[HttpGet]
 		[Route("Api/ReprocesarAlerta")]
 		public IHttpActionResult ReprocesarAlerta(string Facturador,int idAlerta)
@@ -56,6 +80,26 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 						
 				return Ok();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		[HttpPost]
+		[Route("Api/GuardarAlerta")]
+		public IHttpActionResult GuardarAlerta(TblAlertas alerta)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				//Ctl_Alertas controlador = new Ctl_Alertas();
+				//var datos = controlador.ObtenerListaAlertas();
+				return Ok();
+
 			}
 			catch (Exception excepcion)
 			{

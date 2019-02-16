@@ -37,6 +37,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			TblEmpresas facturador = empresa.Obtener(datos_plan.StrEmpresaFacturador);
 
+			try
+			{
+				if (Envia_email && datos_plan.IntEstado == EstadoPlan.Habilitado.GetHashCode())
+				{
+					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+
+					email.EnviaNotificacionRecarga(facturador.StrIdentificacion, facturador.StrMailAdmin, datos_plan);
+				}
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+
 			///Se hace ejecución de reinicio de alertas de porcentaje.
 			///Basicamente se cambia de estatus dicha alerta en mongodb para que el proceso de consumo pueda ir nuevamente a consultar si ya se notifico.
 			///No se coloca en el editar ya que este no permite editar cantidad de documentos.
@@ -48,16 +62,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					_AlertasHist.ReiniciarAlertaPorcentaje(facturador.StrIdSeguridad); 
 				}
 			}
-			catch (Exception)
+			catch (Exception excepcion)
 			{
+				LogExcepcion.Guardar(excepcion);
 			}
 
-			if (Envia_email)
-			{
-				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-
-				email.EnviaNotificacionRecarga(facturador.StrIdentificacion, facturador.StrMailAdmin, datos_plan);
-			}
 			return datos_plan;
 		}
 

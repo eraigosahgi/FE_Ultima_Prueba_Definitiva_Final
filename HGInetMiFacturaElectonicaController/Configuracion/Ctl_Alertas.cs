@@ -18,6 +18,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 {
 	public class Ctl_Alertas : BaseObject<TblAlertas>
 	{
+
+		#region Basicas
+
+		public List<TblAlertas> ObtenerListaAlertas() {
+
+			return context.TblAlertas.ToList();
+
+		}
+		#endregion
+
+
+
 		#region Validacion de Alto consumo (Porcentaje Plan)
 		/// <summary>
 		/// Notifica al Facturador o personal Hgi, según sea el caso en el que el facturador tenga un % de saldo especifico según configuración o cuando no tiene saldo disponible
