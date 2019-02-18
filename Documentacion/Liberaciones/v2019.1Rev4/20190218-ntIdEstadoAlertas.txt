@@ -1,0 +1,4 @@
+/*InValorSubtotal Caso [468607]*/
+ALTER TABLE TblAlertas ADD
+	IntIdEstado smallint  NOT NULL default(0)
+GO

@@ -26,6 +26,7 @@
           <Property Name="IntCliente" Type="bit" Nullable="false" />
           <Property Name="StrInternoMails" Type="varchar(max)" />
           <Property Name="IntTipo" Type="int" Nullable="false" />
+          <Property Name="IntIdEstado" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblConfiguracionInteroperabilidad">
           <Key>
@@ -170,11 +171,12 @@
           <Property Name="IntTipo" Type="int" Nullable="false" />
           <Property Name="DatFechaRegistro" Type="datetime" Nullable="false" />
           <Property Name="DatFechaActualizacion" Type="datetime" />
-          <Property Name="IntEstado" Type="bit" Nullable="false" />
+          <Property Name="IntEstado" Type="smallint" Nullable="false" />
           <Property Name="IntGenerico" Type="bit" Nullable="false" />
           <Property Name="Formato" Type="varbinary(max)" Nullable="false" />
           <Property Name="StrObservaciones" Type="varchar" MaxLength="200" />
           <Property Name="IntDocTipo" Type="int" />
+          <Property Name="FormatoTmp" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="TblOpciones">
           <Key>
@@ -687,7 +689,6 @@
             <End Role="TblUsuarios" EntitySet="TblUsuarios" />
             <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
           </AssociationSet>
-          <EntitySet Name="TblAlertas" EntityType="Modelo.TblAlertas" />
           <EntitySet Name="TblEmpresas" EntityType="Modelo.TblEmpresas" />
           <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresas" Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
@@ -739,6 +740,7 @@
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblFormatos" EntitySet="TblFormatos" />
           </AssociationSet>
+          <EntitySet Name="TblAlertas" EntityType="Modelo.TblAlertas" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1055,18 +1057,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TblAlertas">
-          <Key>
-            <PropertyRef Name="IntIdAlerta" />
-          </Key>
-          <Property Name="IntIdAlerta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StrDescripcion" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="IntValor" Type="Int32" Nullable="false" />
-          <Property Name="IntInterno" Type="Boolean" Nullable="false" />
-          <Property Name="IntCliente" Type="Boolean" Nullable="false" />
-          <Property Name="StrInternoMails" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="IntTipo" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
             <PropertyRef Name="StrIdentificacion" />
@@ -1308,6 +1298,7 @@
           <Property Name="StrObservaciones" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="IntDocTipo" Type="Int32" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblFormatos_TblEmpresas" FromRole="TblFormatos" ToRole="TblEmpresas" />
+          <Property Name="FormatoTmp" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_TblFormatos_TblEmpresas">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1321,6 +1312,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblAlertas">
+          <Key>
+            <PropertyRef Name="IntIdAlerta" />
+          </Key>
+          <Property Name="IntIdAlerta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StrDescripcion" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="IntValor" Type="Int32" Nullable="false" />
+          <Property Name="IntInterno" Type="Boolean" Nullable="false" />
+          <Property Name="IntCliente" Type="Boolean" Nullable="false" />
+          <Property Name="StrInternoMails" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IntTipo" Type="Int32" Nullable="false" />
+          <Property Name="IntIdEstado" Type="Int16" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1534,19 +1538,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TblAlertas">
-            <EntityTypeMapping TypeName="Modelo.TblAlertas">
-              <MappingFragment StoreEntitySet="TblAlertas">
-                <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
-                <ScalarProperty Name="StrInternoMails" ColumnName="StrInternoMails" />
-                <ScalarProperty Name="IntCliente" ColumnName="IntCliente" />
-                <ScalarProperty Name="IntInterno" ColumnName="IntInterno" />
-                <ScalarProperty Name="IntValor" ColumnName="IntValor" />
-                <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
-                <ScalarProperty Name="IntIdAlerta" ColumnName="IntIdAlerta" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
@@ -1626,6 +1617,7 @@
           <EntitySetMapping Name="TblFormatos">
             <EntityTypeMapping TypeName="Modelo.TblFormatos">
               <MappingFragment StoreEntitySet="TblFormatos">
+                <ScalarProperty Name="FormatoTmp" ColumnName="FormatoTmp" />
                 <ScalarProperty Name="IntDocTipo" ColumnName="IntDocTipo" />
                 <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
                 <ScalarProperty Name="Formato" ColumnName="Formato" />
@@ -1637,6 +1629,20 @@
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
                 <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
                 <ScalarProperty Name="IntCodigoFormato" ColumnName="IntCodigoFormato" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblAlertas">
+            <EntityTypeMapping TypeName="Modelo.TblAlertas">
+              <MappingFragment StoreEntitySet="TblAlertas">
+                <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+                <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+                <ScalarProperty Name="StrInternoMails" ColumnName="StrInternoMails" />
+                <ScalarProperty Name="IntCliente" ColumnName="IntCliente" />
+                <ScalarProperty Name="IntInterno" ColumnName="IntInterno" />
+                <ScalarProperty Name="IntValor" ColumnName="IntValor" />
+                <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
+                <ScalarProperty Name="IntIdAlerta" ColumnName="IntIdAlerta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

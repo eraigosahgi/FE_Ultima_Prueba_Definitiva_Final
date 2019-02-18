@@ -21,5 +21,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntCliente { get; set; }
         public string StrInternoMails { get; set; }
         public int IntTipo { get; set; }
+        public short IntIdEstado { get; set; }
     }
 }
