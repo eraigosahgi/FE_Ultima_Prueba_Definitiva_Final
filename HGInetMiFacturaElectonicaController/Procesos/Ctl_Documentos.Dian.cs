@@ -180,7 +180,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				respuesta.EstadoDian.Descripcion = resultado_doc.EstadoDianDescripcion;
 				respuesta.EstadoDian.EstadoDocumento = resultado_doc.Estado.GetHashCode();
 				respuesta.EstadoDian.FechaConsulta = fecha_actual;
-				respuesta.EstadoDian.UrlXmlRespuesta = string.Format(@"{0}/{1}/{2}", url_ppal_respuesta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, archivo_xml);
+				respuesta.EstadoDian.UrlXmlRespuesta = string.Format(@"{0}/{1}/{2}", url_ppal_respuesta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian, archivo_xml);
 
 
 				//Auditoria
