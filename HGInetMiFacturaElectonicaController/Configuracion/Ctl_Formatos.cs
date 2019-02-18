@@ -244,12 +244,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
 				datos_formato.DatFechaActualizacion = Fecha.GetFecha();
 
-				bool estado_formato = false;
+				short estado_formato = 0;
 
 				if (estado_actual)
-					estado_formato = false;
+					estado_formato = 0;
 				else
-					estado_formato = true;
+					estado_formato = 1;
 
 				datos_formato.IntEstado = estado_formato;
 
@@ -364,7 +364,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					listado_formatos = (from formato in context.TblFormatos
 										where formato.StrEmpresa.Equals(identificacion_empresa)
 										&& formato.IntTipo == tipo_formato
-										&& formato.IntEstado
+										&& formato.IntEstado == 1
 										select formato).ToList();
 				}
 

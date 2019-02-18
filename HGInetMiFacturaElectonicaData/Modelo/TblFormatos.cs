@@ -20,7 +20,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public int IntTipo { get; set; }
         public System.DateTime DatFechaRegistro { get; set; }
         public Nullable<System.DateTime> DatFechaActualizacion { get; set; }
-        public bool IntEstado { get; set; }
+        public short IntEstado { get; set; }
         public bool IntGenerico { get; set; }
         public byte[] Formato { get; set; }
         public string StrObservaciones { get; set; }

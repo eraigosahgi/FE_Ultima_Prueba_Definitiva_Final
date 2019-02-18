@@ -38,9 +38,9 @@
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblPlanesTransacciones" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblDocumentos" />
-        <EntityTypeShape EntityType="Modelo.TblFormatos" Width="1.75" PointX="3.5" PointY="5.875" />
-        <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
         <EntityTypeShape EntityType="Modelo.TblAlertas" Width="1.625" PointX="0.75" PointY="3.875" />
+        <EntityTypeShape EntityType="Modelo.TblFormatos" Width="1.75" PointX="3.75" PointY="6.75" />
+        <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

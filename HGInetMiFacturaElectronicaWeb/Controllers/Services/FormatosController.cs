@@ -114,7 +114,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 				datos_formatos.IntDocTipo = tipo_documento;
 				datos_formatos.StrEmpresa = identificacion_empresa;
-				datos_formatos.IntEstado = Convert.ToBoolean(estado);
+				datos_formatos.IntEstado = Convert.ToInt16(estado);
 				datos_formatos.IntGenerico = Convert.ToBoolean(categoria);
 				datos_formatos.StrObservaciones = observaciones;
 
