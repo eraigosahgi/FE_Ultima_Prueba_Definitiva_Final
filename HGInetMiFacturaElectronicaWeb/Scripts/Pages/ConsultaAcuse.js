@@ -20,7 +20,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         consultar();
     });
 
-    SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
+    SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false,6).then(function (Datos) {
     	$scope.Adquiriente = Datos;
     });
 

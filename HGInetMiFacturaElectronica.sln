@@ -187,6 +187,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1Rev4", "v2019.1Rev4", "{C420E912-5DC2-4F53-9B3A-A882B62C7C58}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\v2019.1Rev4\20190218-ntIdEstadoAlertas.txt = Documentacion\Liberaciones\v2019.1Rev4\20190218-ntIdEstadoAlertas.txt
+		20190219-ActualizaIntEnvioMail.txt = 20190219-ActualizaIntEnvioMail.txt
 	EndProjectSection
 EndProject
 Global

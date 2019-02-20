@@ -193,12 +193,12 @@
 																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrMailAcuse}}</td>
 																							</tr>
 																							<tr>
-																								<td colspan="5" style="background-color: #efefef; vertical-align: top">Empresa Asociada:</td>
-																								<td colspan="5" style="background-color: #efefef; vertical-align: top">Empresa Descuenta Planes:</td>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Empresa Asociada:</td>
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaAsociada}}</td>																								
 																							</tr>
 																							<tr>
-																								<td colspan="5" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaAsociada}}</td>
-																								<td colspan="5" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaDescuenta}}</td>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Empresa Descuenta Planes:</td>																								
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaDescuenta}}</td>																								
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Post-Pago Aut.:</td>
@@ -207,8 +207,6 @@
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Maneja Anexos:</td>
 																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{Anexo}}</td>
 																							</tr>
-
-
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Nº Usuarios:</td>
 																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{IntNumUsuarios}}</td>

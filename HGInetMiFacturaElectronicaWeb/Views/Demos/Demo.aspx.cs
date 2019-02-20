@@ -1,4 +1,8 @@
-﻿using System;
+﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Configuracion;
+using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +15,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Demos
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+			Ctl_Empresa controlador = new Ctl_Empresa();			
+			var lista = controlador.ObtenerAdquirientes("811015602");
 
-        }
+		}
     }
 }

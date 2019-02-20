@@ -3,27 +3,19 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/MaestrosEnum.js"></script>
-	<script src="../../Scripts/Services/SrvAlertas.js"></script>
-	<script src="../../../Scripts/Pages/Alertas.js"></script>
+	<script src="../../Scripts/Services/SrvPermisos.js?vjs201913"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201913"></script>
+	<script src="../../Scripts/Services/SrvAlertas.js?vjs201913"></script>
+	<script src="../../../Scripts/Pages/Alertas.js?vjs201913"></script>
 	
     <div data-ng-app="AlertasApp" data-ng-controller="AlertasController" >
     
         <div class="col-md-12">
             <div class="panel panel-white">
-                <div>
-                    <br />
-                    
-                    <div class="col-md-12">
-                        <div class="col-md-10">
-                            <h6 class="panel-title">Datos</h6>
-                        </div>                        
-                    </div>
-
-                </div>
-
-                <br />
-                <div class="panel-body" style="margin-top: 3%">
+                <div class="panel-heading">
+						<h6 class="panel-title ">Datos</h6>						
+					</div>
+                <div class="panel-body" >
                     <div class="demo-container">
                         <div id="gridAlertas"></div>
                     </div>

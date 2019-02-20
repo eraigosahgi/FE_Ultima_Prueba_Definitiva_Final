@@ -11,6 +11,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
 	public class AlertasController : ApiController
 	{
+
+		/// <summary>
+		/// Notifica al Facturador o personal Hgi, según sea el caso en el que el facturador tenga un % de saldo especifico según configuración o cuando no tiene saldo disponible
+		/// </summary>
+		/// <returns></returns>
 		[HttpGet]
 		[Route("Api/ConsultaNotificacionAlertas")]
 		public IHttpActionResult ConsultaNotificacionAlertas()
@@ -30,7 +35,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-
+		/// <summary>
+		/// Retorna la lista de alertas de la tabla TblAlertas
+		/// </summary>
+		/// <returns></returns>
 		[HttpGet]
 		[Route("Api/ConsultaListaAlertas")]
 		public IHttpActionResult ConsultaListaAlertas()
@@ -62,8 +70,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Sesion.ValidarSesion();
 
-				Ctl_Alertas controlador = new Ctl_Alertas();								
-				switch (idAlerta)
+				Ctl_Alertas controlador = new Ctl_Alertas();
+
+				TblAlertas alerta = controlador.ObtenerAlerta(idAlerta);
+
+				switch (alerta.IntTipo)
 				{
 					case 1://Porcentaje
 						controlador.alertaPorcentajePlan(Facturador);
@@ -96,9 +107,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Sesion.ValidarSesion();
 
-				//Ctl_Alertas controlador = new Ctl_Alertas();
-				//var datos = controlador.ObtenerListaAlertas();
-				return Ok();
+				Ctl_Alertas controlador = new Ctl_Alertas();
+
+				TblAlertas datos = new TblAlertas();
+				if (alerta.IntIdAlerta == 0)
+				{
+					datos =controlador.Insertar(alerta);
+				}else {
+					datos =controlador.Actualizar(alerta);
+				}
+
+				return Ok(datos);
 
 			}
 			catch (Exception excepcion)

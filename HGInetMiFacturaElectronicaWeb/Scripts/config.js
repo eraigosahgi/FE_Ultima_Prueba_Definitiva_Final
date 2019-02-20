@@ -342,3 +342,21 @@ var CrearGraficoBarra = function (container, options) {
 
 var collapsed = false;
 
+
+
+var TipoAlerta =
+    [
+        { "ID": 1, "Name": "Porcentaje." },
+        { "ID": 2, "Name": "Vencimiento de Planes." },
+        { "ID": 3, "Name": "Facturador sin Saldo." },
+        { "ID": 4, "Name": "Pago Alto." },
+        { "ID": 5, "Name": "Recarga Alta." }
+    ];
+
+
+var EstadoAlerta =
+[
+	{ "ID": 0, "Name": "Activa" },
+	{ "ID": 1, "Name": "Inactiva" }
+	
+];

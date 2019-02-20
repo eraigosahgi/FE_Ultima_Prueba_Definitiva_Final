@@ -286,12 +286,12 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 				headerFilter: {
 					visible: true
 				},
-				"export": {
-					enabled: true,
-					fileName: "Documentos",
-					allowExportSelectedData: true
-				}
-                , allowColumnResizing: true
+				//"export": {
+				//	enabled: true,
+				//	fileName: "Documentos",
+				//	allowExportSelectedData: true
+				//},
+                  allowColumnResizing: true
                 , allowColumnReordering: true
                 , columnChooser: {
                 	enabled: true,

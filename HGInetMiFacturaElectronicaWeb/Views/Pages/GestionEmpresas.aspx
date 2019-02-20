@@ -27,13 +27,13 @@
 
 									<div class="col-md-12" style="z-index: 9;">
 										<div class="col-md-6 col-xs-12" style="z-index: 9;">
-											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Tipo de Indentificación:<strom style="color: red;">*</strom></label>
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Tipo de Identificación:<strom style="color: red;">*</strom></label>
 											<div id="TipoIndentificacion"></div>
 										</div>
 
 
 										<div class="col-md-6 col-xs-12" style="z-index: 9;">
-											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Numero de Indentificación:<strom style="color: red;">*</strom></label>
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Numero de Identificación:<strom style="color: red;">*</strom></label>
 											<div id="NumeroIdentificacion"></div>
 										</div>
 									</div>

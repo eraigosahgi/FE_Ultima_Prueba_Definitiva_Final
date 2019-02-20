@@ -30,12 +30,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			Datos_Email_Pagos = "",
            codigo_adquiriente = "";
 
-	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true,6).then(function (Datos) {
 		$scope.EmpresaAsociada = Datos;
 	});
 
 
-	SrvFiltro.ObtenerFiltro('Empresa Descuenta Planes', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Descuenta Planes', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true,9).then(function (Datos) {
 		$scope.EmpresaDescuenta = Datos;
 	});
 
@@ -108,7 +108,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		$("#summary").dxValidationSummary({});
 
 		$("#TipoIndentificacion").dxSelectBox({
-			placeholder: "Seleccione el tipo de Indetificación",
+			placeholder: "Seleccione el tipo de Idetificación",
 			displayExpr: "Texto",
 			dataSource: TiposIdentificacion,
 			onValueChanged: function (data) {
@@ -259,6 +259,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		$("#EmailRecepcion").dxCheckBox({
 			name: "EmailRecepcion",
+			value: true,
+			readOnly:true,
 			onValueChanged: function (data) {
 				Datos_EmailRecepcion = data.value;
 			}
@@ -778,8 +780,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				if (Datos_Anexo == 1)
 					$("#Anexo").dxCheckBox({ value: true });
 
-				if (Datos_EmailRecepcion == 1)
+				if (Datos_EmailRecepcion == 1){
 					$("#EmailRecepcion").dxCheckBox({ value: true });
+				} else {
+					$("#EmailRecepcion").dxCheckBox({ value: false });
+				}
 
 				$("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
 

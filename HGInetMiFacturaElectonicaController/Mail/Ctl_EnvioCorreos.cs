@@ -1340,7 +1340,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Porcentaje}", string.Format("{0}%", Porcentaje.ToString()));
 
 
-						string asunto = "ALERTA DE CONSUMO";
+						string asunto = "ALERTA CONSUMO DE DOCUMENTOS ELECTRÓNICOS";
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
 						remitente.Email = Constantes.EmailRemitente;

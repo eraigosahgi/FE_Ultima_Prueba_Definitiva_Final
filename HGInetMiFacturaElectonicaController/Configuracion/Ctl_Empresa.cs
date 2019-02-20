@@ -485,5 +485,23 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
+
+		/// <summary>
+		/// Retorna la razón social de un obligado o un adquiriente
+		/// </summary>
+		/// <param name="Identificacion">Numero de identificación</param>
+		/// <returns></returns>
+		public string ObtenerRazonSocial(string Identificacion) {
+			try
+			{
+				TblEmpresas empresa = context.TblEmpresas.Where(x => x.StrIdentificacion.Equals(Identificacion)).FirstOrDefault();
+				return string.Format("{0}--{1}",Identificacion, empresa.StrRazonSocial.ToString());
+			}
+			catch (Exception)
+			{
+				return Identificacion;
+			}
+		}
+
 	}
 }

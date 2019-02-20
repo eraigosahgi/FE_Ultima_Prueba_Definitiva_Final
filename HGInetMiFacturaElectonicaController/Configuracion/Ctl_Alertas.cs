@@ -20,12 +20,52 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 	{
 
 		#region Basicas
-
-		public List<TblAlertas> ObtenerListaAlertas() {
+		/// <summary>
+		/// Retorna lista de la tabla alertas
+		/// </summary>
+		/// <returns></returns>
+		public List<TblAlertas> ObtenerListaAlertas()
+		{
 
 			return context.TblAlertas.ToList();
 
 		}
+
+		/// <summary>
+		/// Retorna una alerta especifica
+		/// </summary>
+		/// <param name="IdAlerta">Id Alerta que se esta solicitando</param>
+		/// <returns></returns>
+		public TblAlertas ObtenerAlerta(int IdAlerta)
+		{
+
+			return context.TblAlertas.Where(x => x.IntIdAlerta == IdAlerta).FirstOrDefault();
+
+		}
+
+
+		/// <summary>
+		/// Actualiza la tabla alerta
+		/// </summary>
+		/// <param name="alerta">TblAlerta</param>
+		/// <returns></returns>
+		public TblAlertas Actualizar(TblAlertas alerta)
+		{
+			return Edit(alerta);
+		}
+		/// <summary>
+		/// Agreaga un alrta
+		/// </summary>
+		/// <param name="alerta">TblAlerta</param>
+		/// <returns></returns>
+		public TblAlertas Insertar(TblAlertas alerta)
+		{
+			return Add(alerta);
+		}
+
+
+
+
 		#endregion
 
 
@@ -176,13 +216,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						if (Alertas.IntCliente == true)
 						{
 							//2: enviar email de notificación al correo del facturador								
-							email.EnviaNotificacionSinSaldo(Facturador_Alerta.StrIdentificacion, Facturador_Alerta.Email,1);
+							email.EnviaNotificacionSinSaldo(Facturador_Alerta.StrIdentificacion, Facturador_Alerta.Email, 1);
 							//Guardar en el historico de notificaciones							
 						}
 						if (Alertas.IntInterno == true)
 						{
 							//1: enviar email de notificación al correo configurado por Administración								
-							email.EnviaNotificacionSinSaldo(Facturador_Alerta.StrIdentificacion, Alertas.StrInternoMails,2);
+							email.EnviaNotificacionSinSaldo(Facturador_Alerta.StrIdentificacion, Alertas.StrInternoMails, 2);
 							//Guardar en el historico de notificaciones								
 						}
 						_AlertasHist = new Ctl_AlertasHistAudit();
@@ -292,20 +332,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#region Obtiene la historia de un tipo de alerta
 		/// <summary>
-		/// 
+		/// Retorna lista de alertas de la tblAlertas que esten activas (0)
 		/// </summary>
-		/// <param name="valor"></param>
-		/// <param name="talerta"></param>
+		/// <param name="valor">Valor</param>
+		/// <param name="talerta">Tipo de Alerta</param>
 		/// <returns></returns>
 		public List<TblAlertas> ObtenerAlerta(double valor, Int16 talerta)
 		{
 			if (valor == 0)
 			{
-				return context.TblAlertas.Where(_x => (_x.IntTipo == talerta)).OrderByDescending(x => x.IntValor).ToList();
+				return context.TblAlertas.Where(_x => (_x.IntTipo == talerta) && (_x.IntIdEstado == 0)).OrderByDescending(x => x.IntValor).ToList();
 			}
 			else
 			{
-				return context.TblAlertas.Where(_x => (_x.IntValor <= valor) && (_x.IntTipo == talerta)).OrderByDescending(x => x.IntValor).ToList();
+				return context.TblAlertas.Where(_x => (_x.IntValor <= valor) && (_x.IntTipo == talerta) && (_x.IntIdEstado == 0)).OrderByDescending(x => x.IntValor).ToList();
 			}
 		}
 		#endregion
@@ -327,7 +367,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				int estadoplan = (int)EstadoPlan.Habilitado.GetHashCode();
 				int idalertasinplan = (int)TipoAlerta.SinPlan.GetHashCode();
 				int empresaActiva = 1;
-				
+
 				#region Alto Consumo
 				var Plan = (from planes in context.TblPlanesTransacciones
 							where planes.IntTipoProceso != tipoplan && planes.IntEstado == estadoplan
@@ -335,7 +375,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 							select new
 							{
-								idseguridadEmpresa= saldo_Facturador.FirstOrDefault().TblEmpresas.StrIdSeguridad,
+								idseguridadEmpresa = saldo_Facturador.FirstOrDefault().TblEmpresas.StrIdSeguridad,
 								Identificacion = saldo_Facturador.FirstOrDefault().StrEmpresaFacturador,
 								Facturador = saldo_Facturador.FirstOrDefault().TblEmpresas.StrRazonSocial,
 								StrIdSeguridadFact = saldo_Facturador.FirstOrDefault().TblEmpresas.StrIdSeguridad,
@@ -363,7 +403,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Ctl_AlertasHistAudit _AlertasHist = new Ctl_AlertasHistAudit();
 
 				NotificacionPlanes notificacion = new NotificacionPlanes();
-				
+
 				//Obtenemos la configuración de alertas
 				List<TblAlertas> Alertas = new List<TblAlertas>();
 
@@ -371,26 +411,26 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					//Obtenemos la lista de alertas disponible para este escenario
 					Alertas = ObtenerAlerta(Obligado.Porcentaje, (Int32)TipoAlerta.Porcenjate);
-					
+
 					//alertaSinSaldo(Obligado.Identificacion);
 					//Por cada Facturador se itera lista de Alertas posibles 
 					foreach (TblAlertas alerta in Alertas)
-					{						
+					{
 						notificacion = new NotificacionPlanes();
 						if (Obligado.Porcentaje > alerta.IntValor)
 						{
-							List<TblHistAlertas> HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, alerta.IntIdAlerta);							
-							notificacion.identificacion = (string.IsNullOrEmpty(Obligado.Identificacion))?"":Obligado.Identificacion;							
-							notificacion.facturador = (string.IsNullOrEmpty(Obligado.Facturador))?"": Obligado.Facturador;							
-							notificacion.fechavencimiento = (Obligado.Fechavencimiento==null)?"": Obligado.Fechavencimiento.Value.ToString(Fecha.formato_fecha_hginet);							
-							notificacion.nplanes = Obligado.Planes;							
-							notificacion.tcompra = Obligado.TCompra;							
-							notificacion.tprocesadas = Obligado.TProcesadas;							
-							notificacion.tdisponibles = Obligado.TDisponible;							
-							notificacion.valorindicador = string.Format("{0}%", Obligado.Porcentaje.ToString("F"));							
-							notificacion.alerta = alerta.StrDescripcion;							
-							notificacion.idalerta = alerta.IntIdAlerta;							
-							notificacion.idseguridadEmpresa = Obligado.idseguridadEmpresa;							
+							List<TblHistAlertas> HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, alerta.IntIdAlerta);
+							notificacion.identificacion = (string.IsNullOrEmpty(Obligado.Identificacion)) ? "" : Obligado.Identificacion;
+							notificacion.facturador = (string.IsNullOrEmpty(Obligado.Facturador)) ? "" : Obligado.Facturador;
+							notificacion.fechavencimiento = (Obligado.Fechavencimiento == null) ? "" : Obligado.Fechavencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+							notificacion.nplanes = Obligado.Planes;
+							notificacion.tcompra = Obligado.TCompra;
+							notificacion.tprocesadas = Obligado.TProcesadas;
+							notificacion.tdisponibles = Obligado.TDisponible;
+							notificacion.valorindicador = string.Format("{0}%", Obligado.Porcentaje.ToString("F"));
+							notificacion.alerta = alerta.StrDescripcion;
+							notificacion.idalerta = alerta.IntIdAlerta;
+							notificacion.idseguridadEmpresa = Obligado.idseguridadEmpresa;
 							//Si no se le ha notificado																			
 							if (HistAlerta == null || HistAlerta.Count == 0)
 							{
@@ -504,7 +544,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				#region Sin Saldo o sin Plan
 				var FSinPlan = (from empresa in context.TblEmpresas
-								where empresa.IntObligado == true && empresa.IntIdEstado == empresaActiva								
+								where empresa.IntObligado == true && empresa.IntIdEstado == empresaActiva
 								select new
 								{
 									idseguridadEmpresa = empresa.StrIdSeguridad,
@@ -516,9 +556,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 									documentos = empresa.TblEmpresasFacturador.Count()
 								}).ToList();
 
+				//el Cero es el valor del tipo de este plan,  valor cero (0)
 				Alerta = ObtenerAlerta(0, (Int16)TipoAlerta.SinPlan.GetHashCode()).FirstOrDefault();
 				foreach (var Obligado in FSinPlan)
-				{					
+				{
 					//Valida que no tenga ningun plan activo y que tenga por lo menos un documento en la plataforma ya que asi garantiza que si es un Facturador activo en la plataforma.					
 					if (Obligado.plan < 1 && Obligado.documentos > 0)
 					{

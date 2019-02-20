@@ -24,7 +24,7 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
            cod_facturador = "*",
             tipo_filtro_fecha = 1;
 
-	SrvFiltro.ObtenerFiltro('Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', false).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', false,7).then(function (Datos) {
 		$scope.Facturador = Datos;
 	});
 
@@ -282,7 +282,7 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 					caption: "Fecha",
 					dataField: "DatFecha",
 					dataType: "date",
-					format: "yyyy-MM-dd HH:mm",
+					format: "yyyy-MM-dd HH:mm:ss",
 
 					validationRules: [{
 						type: "required",

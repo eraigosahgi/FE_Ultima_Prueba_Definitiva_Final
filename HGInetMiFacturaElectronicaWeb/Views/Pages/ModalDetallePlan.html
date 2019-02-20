@@ -1,0 +1,186 @@
+﻿<style type="text/css">
+	#outlook a {
+		padding: 0;
+	}
+
+	.ReadMsgBody {
+		width: 100%;
+	}
+
+	.ExternalClass {
+		width: 100%;
+	}
+
+		.ExternalClass * {
+			line-height: 100%;
+		}
+
+	body {
+		margin: 0;
+		padding: 0;
+		-webkit-text-size-adjust: 100%;
+		-ms-text-size-adjust: 100%;
+	}
+
+	table, td {
+		border-collapse: collapse;
+		mso-table-lspace: 0pt;
+		mso-table-rspace: 0pt;
+	}
+
+	img {
+		border: 0;
+		height: auto;
+		line-height: 100%;
+		outline: none;
+		text-decoration: none;
+		-ms-interpolation-mode: bicubic;
+	}
+
+	p {
+		display: block;
+		margin: 10px 0;
+	}
+
+	.tg td {
+		font-family: Arial, Ubuntu;
+		padding: 2px;
+		border-style: solid;
+		border-width: 4px;
+		overflow: hidden;
+		word-break: normal;
+		border-color: #FFFFFF;
+	}
+
+	.tg th {
+		font-family: Arial, Ubuntu;
+		font-size: 14px;
+		font-weight: normal;
+		padding: 10px 5px;
+		border-style: none;
+		border-width: 1px;
+		overflow: hidden;
+		word-break: normal;
+		border-color: Gray;
+	}
+
+	.modal-dialog {
+		width: 60%;
+		margin: 30px auto;
+	}
+</style>
+
+	<div>
+		<div id="modal_detalle_plan" class="modal fade" style="top: 20%; display: none; z-index: 999999;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div id="EncabezadoModal" class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h5 style="margin-bottom: 10px;" class="modal-title">Planes y Transacciones</h5>
+					</div>
+					<div class="modal-body">
+						<div class="col-md-12 ">							
+							<div>
+								<form id="form" action="your-action">
+									<div class="col-md-12">
+										<div class="panel panel-white">
+											<div class="panel-body">
+												<div class="col-md-12">
+													<table class="tg" cellpadding="0" cellspacing="0" style="vertical-align: middle" width="100%" border="0">
+														<tbody>
+														<td style="word-wrap: break-word; font-size: 0px; padding: 0px">
+															<div style="font-size: 14px; font-family: Arial,Ubuntu">
+																<table class="m_5807442735935243114m_-2840829276345264770tg" style="table-layout: fixed; border-color: #ffffff; border-width: 1px; font-size: 14px; font-family: Arial,Ubuntu; width: 98%" align="center">
+																	<tbody>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="8">
+																				<span style="font-weight: bold">Detalle del Plan</span>
+																			</td>
+																		</tr>
+
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Fecha de Creación:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{Fecha | date : "yyyy-MM-dd HH:mm"}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Tipo de Plan:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{Tipo == 1 ? "Recarga Interna" : Tipo == 2 ? "Compra" : Tipo == 3 ? "Post-Pago":""}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Nit:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{CodigoEmpresaFacturador}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Facturador:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5"><span style="font-weight: bold">{{EmpresaFacturador}}</span></td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Nº Transacciones:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{TCompra}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Nº Transacciones Procesadas:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{TProcesadas}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Nº Transacciones Disponibles:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{TDisponibles}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Valor Plan:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{Valor | currency:"$ " }}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Porcentaje:</td>
+																			<td style="vertical-align: top" colspan="4">
+																				<div class="bullet Hgi_plan"></div>
+																			</td>
+																			<td colspan="1">
+																				<label id="hgi_porcentaje_plan" style="font-size: 14px; margin: 0px; padding: 0px;"></label>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Estado:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5"><span data-ng-class="{'badge bg-danger':Estado == 1 , 'badge bg-success-400':Estado == 0,'badge bg-grey-400':Estado==2}" style="font-size: 11px !important; font-weight: bold; border-radius: 0px !important;">{{Estado == 0 ? "Habilitado" : Estado == 1 ? "Inhabilitado" : Estado == 2 ? "Procesado":""}}</span></td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Empresa Creación:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{Empresa}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Usuario Creación:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{Usuario}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Fecha de Vencimiento:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{FechaVence | date : "yyyy-MM-dd"}}</td>
+																		</tr>
+																		<tr>
+																			<td style="background-color: #efefef; vertical-align: top" colspan="3">Observaciones:</td>
+																			<td style="background-color: #ffffff; vertical-align: top" colspan="5">{{Observaciones}}</td>
+																		</tr>
+
+
+
+																	</tbody>
+																</table>
+															</div>
+														</td>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div id="divsombra" class="modal-footer" style="margin-top: 22%">
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>	
+

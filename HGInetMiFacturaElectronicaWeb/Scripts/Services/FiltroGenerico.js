@@ -18,7 +18,8 @@ var AppSrvFiltro = angular.module('AppSrvFiltro', ['dx'])
  //Titulo,Nombre, Icono, Tecla, urlapi, Campo_Codigo, Campo_Descripcion,ValidarVacio
  //
 .service('SrvFiltro', function ($location, $q) {
-	this.ObtenerFiltro = function (Titulo,Nombre, Icono, Tecla, urlapi, Campo_Codigo, Campo_Descripcion,ValidarVacio) {
+	this.ObtenerFiltro = function (Titulo, Nombre, Icono, Tecla, urlapi, Campo_Codigo, Campo_Descripcion, ValidarVacio, indice) {
+	
         //Html de vista modal        
 		var Modal = '<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head runat="server">    <title></title></head><body>   <form><div id="modal_Buscar_' + Nombre + '" class="modal fade" style="display: none; z-index:999999;" ><div class="modal-dialog">    <div class="modal-content"><div id="EncabezadoModal" class="modal-header"><button type="button" class="close" data-dismiss="modal"></button><h5 style="margin-bottom: 10px;" class="modal-title">Busqueda de ' + Nombre + '</h5></div><div class="modal-body"><div class="col-md-12 "> <div ><div class="col-md-12"><div class="panel panel-white"><div><br /><br /><div class="col-md-12">    <div class="col-md-10"><h6 class="panel-title">Lista de ' + Nombre + '</h6>    </div>   </div>    </div>    <br />    <div class="panel-body"><div class="demo-container" name="DivPrueba">    <div id="grid_' + Nombre + '" name="grid_' + Nombre + '"></div></div>    </div></div></div>    </div></div></div><div id="divsombra" class="modal-footer" style="margin-top: 22%"></div>    </div></div></div>    </form></body></html>';
         //Codigo de selección de la opcion dentro del grid
@@ -26,7 +27,7 @@ var AppSrvFiltro = angular.module('AppSrvFiltro', ['dx'])
         //Jquery con webapi        
         var json = "<script>  " + codigo_busqueda + "  $.ajax({url: '" + urlapi + "', success: function(result){ Datos_hgi_" + Nombre + "=result;    $('#grid_" + Nombre + "').dxDataGrid({ dataSource: result, paging: {  pageSize: 10     },  pager: {   showPageSizeSelector: true, allowedPageSizes: [5, 10, 20],showInfo: true}, columns: [{caption: 'Código',dataField: '" + Campo_Codigo + "',cssClass: 'col-md-3',cellTemplate: function (container, options) {$('<div style=\"text-align:left\">').append($('<a taget=_self  data-dismiss=\"modal\" title=\"Seleccionar " + Nombre + "\" onclick=Obtener_hgi_" + Nombre + "(' + options.data." + Campo_Codigo + " + ')>' + options.data." + Campo_Codigo + " + '</a>')).appendTo(container);}},{caption: 'Descripción',dataField: '" + Campo_Descripcion + "',cssClass: 'col-md-9'}],filterRow: {visible: true}});  }});    </script>";
 
-        var FnoLlamaFiltro = "<script>  function Click_Hgi_" + Nombre + "() {  $('#modal_Buscar_" + Nombre + "').modal('show');  } </script>";
+        var FnoLlamaFiltro = "<script>  function Click_Hgi_" + Nombre + "() {  $('#modal_Buscar_" + Nombre + "').modal('show'); setTimeout(function(){	$('.dx-texteditor-input:eq("+indice+")').focus();}, 1000); } </script>";
 		//Crea función para bloquear campo
         var BloquearCampo = "<script> function Bloquear_" + Nombre + "() { $('#txt_filtro_" + Nombre + "').prop('disabled', true);	$('#I_" + Nombre + "').removeClass('icon-search4');	$('#Div_" + Nombre + "').removeClass('dx-texteditor-buttons-container'); } </script>";
 

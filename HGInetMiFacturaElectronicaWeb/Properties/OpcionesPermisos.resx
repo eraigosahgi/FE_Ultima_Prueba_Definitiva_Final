@@ -168,6 +168,9 @@
   <data name="FacturacionElectronicaPrincipal" xml:space="preserve">
     <value>13</value>
   </data>
+  <data name="Gestionalertas" xml:space="preserve">
+    <value>1336</value>
+  </data>
   <data name="GestionReportes" xml:space="preserve">
     <value>1335</value>
   </data>

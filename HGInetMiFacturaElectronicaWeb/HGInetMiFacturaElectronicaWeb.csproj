@@ -1941,6 +1941,7 @@
     <Content Include="Scripts\Services\SrvAuditoria.js" />
     <Content Include="Scripts\Services\SrvDocumentos.js" />
     <Content Include="Scripts\Services\SrvEmpresa.js" />
+    <Content Include="Scripts\Services\SrvPermisos.js" />
     <Content Include="Scripts\Services\SrvPlanes.js" />
     <Content Include="Scripts\Services\SrvProveedor.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
@@ -2781,6 +2782,7 @@
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
     <Content Include="Views\Pages\ModalDetalleEmpresa.aspx" />
     <Content Include="Views\Pages\ModalDetallePago.aspx" />
+    <Content Include="Views\Pages\ModalDetallePlan.html" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
