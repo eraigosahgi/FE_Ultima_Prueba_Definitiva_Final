@@ -244,7 +244,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 					var fieldData = options.value,
 						fieldHtml = "";
 					try {
-						if (options.column.caption == "Valor Total") {
+						if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Valor Neto") {
 							if (fieldData) {
 								var inicial = fNumber.go(fieldData);
 								options.cellElement.html(inicial);
@@ -362,6 +362,16 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 						caption: "Valor Total",
 						visible: false,
 						dataField: "IntVlrTotal"
+					},
+					{
+						caption: "SubTotal",
+						visible: false,
+						dataField: "IntSubTotal"
+					},
+					{
+						caption: "Valor Neto",
+						visible: false,
+						dataField: "IntNeto"
 					},
 					 {
 					 	caption: "Adquiriente",
@@ -496,8 +506,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 							}
 						}
 					}
-				}
-				,
+				},
 				filterRow: {
 					visible: true
 				}

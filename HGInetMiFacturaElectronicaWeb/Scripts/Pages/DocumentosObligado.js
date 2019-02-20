@@ -271,7 +271,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 	var fieldData = options.value,
                         fieldHtml = "";
                 	try {
-                		if (options.column.caption == "Valor Total") {
+                		if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Valor Neto") {
                 			if (fieldData) {
                 				var inicial = fNumber.go(fieldData).replace("$-", "-$");
                 				options.cellElement.html(inicial);
@@ -390,6 +390,16 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     	cssClass: "col-xs-2 col-md-1",
                     	dataField: "IntVlrTotal"
                     },
+					 {
+					 	caption: "SubTotal",
+					 	cssClass: "col-xs-2 col-md-1",
+					 	dataField: "IntSubTotal"
+					 },
+					  {
+					  	caption: "Neto",
+					  	cssClass: "col-xs-2 col-md-1",
+					  	dataField: "IntNeto"
+					  },
                      {
                      	caption: "Adquiriente",
                      	cssClass: "hidden-xs col-md-1",

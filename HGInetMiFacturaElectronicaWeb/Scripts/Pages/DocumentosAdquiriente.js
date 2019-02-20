@@ -152,7 +152,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 	var fieldData = options.value,
                         fieldHtml = "";
                 	try {
-                		if (options.column.caption == "Valor Total") {
+                		if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Valor Neto") {
                 			if (fieldData) {
                 				var inicial = fNumber.go(fieldData).replace("$-", "-$");
                 				options.cellElement.html(inicial);
@@ -256,6 +256,22 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     	width: '12%',
                     	Type: Number,
                     }
+                    ,
+					{
+						caption: "SubTotal",
+						dataField: "IntSubTotal",
+						cssClass: "col-md-1 col-xs-1",
+						width: '12%',
+						Type: Number,
+					}
+                    ,
+					{
+						caption: "Neto",
+						dataField: "IntNeto",
+						cssClass: "col-md-1 col-xs-1",
+						width: '12%',
+						Type: Number,
+					}
                     ,
                      {
                      	caption: "Identificación Facturador",
