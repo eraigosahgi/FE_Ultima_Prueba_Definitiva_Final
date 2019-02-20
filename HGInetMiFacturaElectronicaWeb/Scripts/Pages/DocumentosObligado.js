@@ -41,7 +41,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 		});
 	});
 
-	
+
 
 	function cargarFiltros() {
 
@@ -202,7 +202,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
             		Enabled: true,
             		placeholder: "Seleccione un Item",
             		onValueChanged: function (data) {
-            			estado_recibo = data.value.ID;
+            			estado_recibo = data.value.ID;            			
             		}
             	},
             	NumeroDocumento: {
@@ -239,7 +239,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 			resolucion = "*";
 
 		var Muestradetalle = true;
-		
+
 		$('#wait').show();
 		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
 		$http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&resolucion=' + resolucion + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
@@ -271,7 +271,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 	var fieldData = options.value,
                         fieldHtml = "";
                 	try {
-                		if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Valor Neto") {
+                		if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Neto") {
                 			if (fieldData) {
                 				var inicial = fNumber.go(fieldData).replace("$-", "-$");
                 				options.cellElement.html(inicial);
@@ -285,6 +285,11 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                 },
 				headerFilter: {
 					visible: true
+				},
+				"export": {
+					enabled: true,
+					fileName: "Documentos",
+					allowExportSelectedData: true
 				}
                 , allowColumnResizing: true
                 , allowColumnReordering: true
@@ -498,6 +503,16 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 						summaryType: "sum",
 						displayFormat: " {0} Total ",
 						valueFormat: "currency"
+					}, {
+						column: "IntSubTotal",
+						summaryType: "sum",
+						displayFormat: " {0} Neto ",
+						valueFormat: "currency"
+					}, {
+						column: "IntNeto",
+						summaryType: "sum",
+						displayFormat: " {0} Neto ",
+						valueFormat: "currency"
 					}]
                     , totalItems: [{
                     	name: "Suma",
@@ -507,6 +522,22 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                     	summaryType: "custom"
 
                     },
+					{
+						name: "SumaSubtotal",
+						showInColumn: "IntSubTotal",
+						displayFormat: "{0}",
+						valueFormat: "currency",
+						summaryType: "custom"
+
+					},
+					{
+						name: "SumaNeto",
+						showInColumn: "IntNeto",
+						displayFormat: "{0}",
+						valueFormat: "currency",
+						summaryType: "custom"
+
+					},
                     {
                     	showInColumn: "DatFechaVencDocumento",
                     	displayFormat: "Total : ",
@@ -524,6 +555,29 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 								$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
 							}
 						}
+
+						if (options.name === "SumaSubtotal") {
+							if (options.summaryProcess === "start") {
+								options.totalValue = 0;
+								$('#Total').text("");
+							}
+							if (options.summaryProcess === "calculate") {
+								options.totalValue = options.totalValue + options.value.IntSubTotal;
+								$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+							}
+						}
+
+
+						if (options.name === "SumaNeto") {
+							if (options.summaryProcess === "start") {
+								options.totalValue = 0;
+								$('#Total').text("");
+							}
+							if (options.summaryProcess === "calculate") {
+								options.totalValue = options.totalValue + options.value.IntNeto;
+								$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+							}
+						}
 					}
 				}
                 ,
@@ -532,13 +586,13 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 				}
 
 			});
-
+			
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
 
-
+		
 	}
 
 
@@ -546,10 +600,10 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 		$rootScope.ConsultarAuditDoc(IdSeguridad, IdFacturador, NumeroDocumento);
 	};
 
-	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false,4).then(function (Datos) {
 		$scope.Adquiriente = Datos;
 	});
-	
+
 
 });
 
