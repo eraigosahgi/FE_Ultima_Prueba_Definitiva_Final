@@ -523,7 +523,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 
                     },
 					{
-						name: "SumaSubtotal",
+						name: "SumaSubTotal",
 						showInColumn: "IntSubTotal",
 						displayFormat: "{0}",
 						valueFormat: "currency",
@@ -556,14 +556,14 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 							}
 						}
 
-						if (options.name === "SumaSubtotal") {
+						if (options.name === "SumaSubTotal") {
 							if (options.summaryProcess === "start") {
 								options.totalValue = 0;
-								$('#Total').text("");
+								$('#SubTotal').text("");
 							}
 							if (options.summaryProcess === "calculate") {
 								options.totalValue = options.totalValue + options.value.IntSubTotal;
-								$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+								$('#SubTotal').text("SubTotal: " + fNumber.go(options.totalValue).replace("$-", "-$"));
 							}
 						}
 
@@ -571,11 +571,11 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 						if (options.name === "SumaNeto") {
 							if (options.summaryProcess === "start") {
 								options.totalValue = 0;
-								$('#Total').text("");
+								$('#Neto').text("");
 							}
 							if (options.summaryProcess === "calculate") {
 								options.totalValue = options.totalValue + options.value.IntNeto;
-								$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+								$('#Neto').text("Neto: " + fNumber.go(options.totalValue).replace("$-", "-$"));
 							}
 						}
 					}

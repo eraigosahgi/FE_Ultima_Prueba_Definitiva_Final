@@ -152,7 +152,7 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                 	var fieldData = options.value,
                         fieldHtml = "";
                 	try {
-                		if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Valor Neto") {
+                		if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Neto") {
                 			if (fieldData) {
                 				var inicial = fNumber.go(fieldData).replace("$-", "-$");
                 				options.cellElement.html(inicial);
@@ -422,20 +422,47 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 						summaryType: "sum",
 						displayFormat: " {0} Total ",
 						valueFormat: "currency"
+					}, {
+						column: "IntSubTotal",
+						summaryType: "sum",
+						displayFormat: " {0} Neto ",
+						valueFormat: "currency"
+					}, {
+						column: "IntNeto",
+						summaryType: "sum",
+						displayFormat: " {0} Neto ",
+						valueFormat: "currency"
 					}]
-					, totalItems: [{
-						name: "Suma",
-						showInColumn: "IntVlrTotal",
+                    , totalItems: [{
+                    	name: "Suma",
+                    	showInColumn: "IntVlrTotal",
+                    	displayFormat: "{0}",
+                    	valueFormat: "currency",
+                    	summaryType: "custom"
+
+                    },
+					{
+						name: "SumaSubTotal",
+						showInColumn: "IntSubTotal",
 						displayFormat: "{0}",
 						valueFormat: "currency",
 						summaryType: "custom"
+
 					},
 					{
-						showInColumn: "DatFechaVencDocumento",
-						displayFormat: "Total : ",
-						alignment: "right"
-					}
-					],
+						name: "SumaNeto",
+						showInColumn: "IntNeto",
+						displayFormat: "{0}",
+						valueFormat: "currency",
+						summaryType: "custom"
+
+					},
+                    {
+                    	showInColumn: "DatFechaVencDocumento",
+                    	displayFormat: "Total : ",
+                    	alignment: "right"
+                    }
+                    ],
 					calculateCustomSummary: function (options) {
 						if (options.name === "Suma") {
 							if (options.summaryProcess === "start") {
@@ -445,6 +472,29 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 							if (options.summaryProcess === "calculate") {
 								options.totalValue = options.totalValue + options.value.IntVlrTotal;
 								$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+							}
+						}
+
+						if (options.name === "SumaSubTotal") {
+							if (options.summaryProcess === "start") {
+								options.totalValue = 0;
+								$('#SubTotal').text("");
+							}
+							if (options.summaryProcess === "calculate") {
+								options.totalValue = options.totalValue + options.value.IntSubTotal;
+								$('#SubTotal').text("SubTotal: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+							}
+						}
+
+
+						if (options.name === "SumaNeto") {
+							if (options.summaryProcess === "start") {
+								options.totalValue = 0;
+								$('#Neto').text("");
+							}
+							if (options.summaryProcess === "calculate") {
+								options.totalValue = options.totalValue + options.value.IntNeto;
+								$('#Neto').text("Neto: " + fNumber.go(options.totalValue).replace("$-", "-$"));
 							}
 						}
 					}

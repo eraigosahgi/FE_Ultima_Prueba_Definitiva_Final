@@ -282,7 +282,7 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 					caption: "Fecha",
 					dataField: "DatFecha",
 					dataType: "date",
-					format: "yyyy-MM-dd",
+					format: "yyyy-MM-dd HH:mm",
 
 					validationRules: [{
 						type: "required",
