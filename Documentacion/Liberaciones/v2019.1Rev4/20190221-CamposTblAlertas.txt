@@ -1,0 +1,18 @@
+/*
+[469182]
+*/
+ALTER TABLE TblAlertas ADD
+	IntMail bit  NOT NULL default(0)
+GO
+
+ALTER TABLE TblAlertas ADD
+	IntWeb bit  NOT NULL default(0)
+GO
+
+ALTER TABLE TblAlertas ADD
+	IntSms bit  NOT NULL default(0)
+GO
+
+ALTER TABLE TblAlertas ADD
+	IntUsuario bit  NOT NULL default(0)
+GO

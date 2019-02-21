@@ -127,7 +127,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					break;
 
 					//Rango por mes
-				case "3":
+				case "4":
 					fecha_inicio = new Date(fecha_base.getFullYear(), fecha_base.getMonth(), 1).toISOString();
 					fecha_fin = new Date(fecha_base.getFullYear(), fecha_base.getMonth() + 1, 0).toISOString();
 
@@ -149,8 +149,30 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 					break;
 
+					//Selección de año.
+				case "5":
+					fecha_inicio = new Date(fecha_base.getFullYear(), 0, 1).toISOString();
+					fecha_fin = new Date(fecha_base.getFullYear() + 1, 0, 1).toISOString();
+
+					$("#FiltroFechaInicio").dxDateBox({
+						value: fecha_base,
+						width: '80%',
+						displayFormat: 'Year',
+						maxZoomLevel: 'decade',
+						minZoomLevel: 'century',
+						min: undefined,
+						max: undefined,
+						disabled: false,
+						onValueChanged: function (data) {
+							fecha_inicio = new Date(data.value.getFullYear(), 0, 1).toISOString();
+							fecha_fin = new Date(data.value.getFullYear() + 1, 0, 1).toISOString();
+						}
+					});
+
+					break;
+
 					//Rango inicio-fin
-				case "4":
+				case "6":
 					$("#VerFiltroFin").show();
 
 					fecha_inicio = new Date(fecha_base).toISOString();
@@ -186,29 +208,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							set_date.setDate(set_date.getDate() + 1);
 							fecha_fin = set_date.toISOString();
 							$("#FiltroFechaInicio").dxDateBox({ max: fecha_fin });
-						}
-					});
-
-					break;
-
-
-					//Selección de año.
-				case "5":
-					fecha_inicio = new Date(fecha_base.getFullYear(), 0, 1).toISOString();
-					fecha_fin = new Date(fecha_base.getFullYear() + 1, 0, 1).toISOString();
-
-					$("#FiltroFechaInicio").dxDateBox({
-						value: fecha_base,
-						width: '80%',
-						displayFormat: 'Year',
-						maxZoomLevel: 'decade',
-						minZoomLevel: 'century',
-						min: undefined,
-						max: undefined,
-						disabled: false,
-						onValueChanged: function (data) {
-							fecha_inicio = new Date(data.value.getFullYear(), 0, 1).toISOString();
-							fecha_fin = new Date(data.value.getFullYear() + 1, 0, 1).toISOString();
 						}
 					});
 
@@ -252,7 +251,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 		}
 	}).dxRadioGroup("instance");
 
-	RadioGroup.option("value", TiposFiltro[2].Codigo);
+	RadioGroup.option("value", TiposFiltro[0].Codigo);
 
 	//Realiza la consulta de indicadores según los rangos de fecha
 	function CargarIndicadores() {
@@ -409,7 +408,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							hideEvent: "mouseleave",
 							position: "right",
 							contentTemplate: function (data) {
-								data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado, al igual que para el calculo total.</label>");
+								data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado.</label>");
 							}
 						});
 
@@ -551,7 +550,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 								hideEvent: "mouseleave",
 								position: "right",
 								contentTemplate: function (data) {
-									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado, al igual que para el calculo total.</label>");
+									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado.</label>");
 								}
 							});
 
@@ -1240,16 +1239,21 @@ TiposFiltro = [
  	Codigo: "2",
  	Descripcion: "Fecha"
  },
-{
-	Codigo: "3",
-	Descripcion: "Mes"
-},
+ {
+ 	Codigo: "3",
+ 	Descripcion: "Semana"
+ },
 {
 	Codigo: "4",
-	Descripcion: "Rango"
+	Descripcion: "Mes"
 },
 {
 	Codigo: "5",
 	Descripcion: "Año"
 },
+{
+	Codigo: "6",
+	Descripcion: "Rango"
+}
+
 ];
