@@ -159,7 +159,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
 
 				//Realiza la consulta de los datos en la base de datos.
-				List<TblAuditDocumentos> datos_audit = clase_audit_doc.Obtener(numero_documento, identificacion_obligado, fecha_inicio, fecha_fin,estado,proceso,tipo_registro,procedencia).OrderByDescending(x => x.DatFecha).ToList();
+				List<TblAuditDocumentos> datos_audit = clase_audit_doc.Obtener(numero_documento, identificacion_obligado, fecha_inicio, fecha_fin, estado, proceso, tipo_registro, procedencia).OrderByDescending(x => x.DatFecha).ToList();
 
 				if (datos_audit.Count == 0)
 				{
@@ -169,7 +169,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var datos_retorno = datos_audit.Select(d => new
 				{
-					StrIdSeguridad = ((d.StrIdSeguridad != null)) ? d.StrIdSeguridad : "" ,
+					StrIdSeguridad = ((d.StrIdSeguridad != null)) ? d.StrIdSeguridad : "",
 					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
 					StrObligado = (string.IsNullOrEmpty(d.StrObligado) ? null : d.StrObligado),
 					IntIdEstado = d.IntIdEstado,
@@ -196,6 +196,52 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 
 		}
+
+		/// <summary>
+		/// Obtiene la auditoría de la gestión de formatos.
+		/// </summary>
+		/// <param name="codigo_formato">código del formato</param>
+		/// <param name="identificacion_empresa">identificación de la empresa</param>
+		/// <returns></returns>
+		[HttpGet]
+		[Route("Api/AuditoriaFormatos")]
+		public IHttpActionResult AuditoriaFormatos(int codigo_formato, string identificacion_empresa)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_FormatosAudit clase_audit_doc = new Ctl_FormatosAudit();
+
+				//Realiza la consulta de los datos en la base de datos.
+				List<TblAuditFormatos> datos_audit = clase_audit_doc.Obtener(codigo_formato, identificacion_empresa);
+
+				if (datos_audit.Count == 0)
+				{
+					return Ok();
+				}
+
+				var datos_retorno = datos_audit.Select(d => new
+				{
+					DatFechaProceso = d.DatFechaProceso.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
+					d.IntCodigoFormato,
+					d.IntTipoProceso,
+					StrProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(d.IntTipoProceso)),
+					d.StrEmpresa,
+					d.StrIdSeguridad,
+					d.StrObservaciones,
+					d.StrUsuarioProceso,
+					NombreUsuario = (!string.IsNullOrWhiteSpace(d.StrUsuarioProceso)) ? NombreUsuario(new Guid(d.StrUsuarioProceso)) : string.Empty,
+				}).ToList();
+
+				return Ok(datos_retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 	}
 }

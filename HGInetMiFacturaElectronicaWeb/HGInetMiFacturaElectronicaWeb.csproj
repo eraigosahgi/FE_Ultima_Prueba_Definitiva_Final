@@ -183,6 +183,7 @@
     <Content Include="emails\plantilla_recarga_transacciones.html" />
     <Content Include="emails\plantilla_envio_serial.html" />
     <Content Include="emails\plantilla_restablecer_clave.html" />
+    <Content Include="emails\plantilla_solicitud_aprobacion_formato.html" />
     <Content Include="Scripts\assets\css\bootstrap.css" />
     <Content Include="Scripts\assets\css\bootstrap.min.css" />
     <Content Include="Scripts\assets\css\colors.css" />
@@ -3277,7 +3278,6 @@
     <Folder Include="Models\" />
     <Folder Include="Scripts\Pages\Configuracion\" />
     <Folder Include="Views\Formatos\" />
-    <Folder Include="Views\Pages\Configuracion\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HGInetFacturaEReports\HGInetFacturaEReports.csproj">
@@ -3338,7 +3338,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61443/</IISUrl>
+          <IISUrl>http://localhost:61421/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

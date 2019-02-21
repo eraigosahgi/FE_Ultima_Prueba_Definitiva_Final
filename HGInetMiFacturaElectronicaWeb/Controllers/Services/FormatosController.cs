@@ -1,5 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
@@ -52,7 +53,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Estado = d.IntEstado,
 					TipoDoc = d.IntDocTipo,
 					NitEmpresa = d.StrEmpresa,
-					RazonSocial = d.TblEmpresas.StrRazonSocial
+					RazonSocial = d.TblEmpresas.StrRazonSocial,
+					Administrador = (Sesion.DatosEmpresa.IntAdministrador) ? true : false,
+					EstadoDescripcion = DescripcionEstado(d.IntEstado),
 				});
 
 				return Ok(datos_retorno);
@@ -63,10 +66,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		private string DescripcionEstado(int codigo_enum)
+		{
+			try
+			{
+				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadosFormato>(codigo_enum));
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message);
+			}
+		}
 
 		[HttpPost]
 		[Route("Api/ActualizarEstadoFormato")]
-		public IHttpActionResult ActualizarEstadoFormato(int id_formato, string identificacion_empresa, bool estado_actual)
+		public IHttpActionResult ActualizarEstadoFormato(int id_formato, string identificacion_empresa, int estado_actual, int tipo_proceso, string observaciones)
 		{
 			try
 			{
@@ -76,7 +90,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
-				datos_formatos = clase_formatos.ActualizarEstadoFormato(id_formato, identificacion_empresa, estado_actual, TipoFormato.FormatoPDF.GetHashCode());
+				TiposProceso tipo_proceso_bd = Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso);
+				datos_formatos = clase_formatos.ActualizarEstadoFormato(id_formato, identificacion_empresa, estado_actual, TipoFormato.FormatoPDF.GetHashCode(), Sesion.DatosUsuario.StrIdSeguridad, tipo_proceso_bd, observaciones, Sesion.DatosEmpresa.StrIdentificacion);
 
 				return Ok();
 			}
@@ -118,7 +133,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				datos_formatos.IntGenerico = Convert.ToBoolean(categoria);
 				datos_formatos.StrObservaciones = observaciones;
 
-				TblFormatos datos_retorno = clase_formatos.AlmacenarFormatoPdf(datos_formatos);
+				TblFormatos datos_retorno = clase_formatos.AlmacenarFormatoPdf(datos_formatos, Sesion.DatosUsuario.StrIdSeguridad);
 
 				return Ok(datos_retorno);
 			}

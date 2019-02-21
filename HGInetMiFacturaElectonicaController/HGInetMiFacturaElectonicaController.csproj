@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="Auditorias\Ctl_AlertasHistAudit.cs" />
     <Compile Include="Auditorias\Ctl_DocumentosAudit.cs" />
+    <Compile Include="Auditorias\Ctl_FormatosAudit.cs" />
     <Compile Include="Configuracion\Ctl_Alertas.cs" />
     <Compile Include="Configuracion\Ctl_ConfiguracionInteroperabilidad.cs" />
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />

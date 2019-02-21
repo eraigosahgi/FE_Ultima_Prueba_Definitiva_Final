@@ -123,10 +123,32 @@ ModalAsignarFormatoApp.controller('ModalAsignarFormatoController', function Moda
 		$http.post('/api/AlmacenarFormatoPdf?identificacion_empresa=' + seleccion_empresa + '&estado=' + seleccion_estado + '&categoria=' + seleccion_categoria + '&observaciones=' + observaciones + '&formato_base=' + formato_base + '&empresa_base=' + empresa_base + '&tipo_documento=' + tipo_documento).then(function (response) {
 			$("#wait").hide();
 			try {
-				console.log(response.data.IntDocTipo);
-				DevExpress.ui.notify({ message: "El formato ha sido asignado correctamente. Código Identificador:" + response.data.IntCodigoFormato, position: { my: "center top", at: "center top" } }, "success", 1500);
-				window.location.href = '/Views/ReportDesigner/ReportDesignerWeb.aspx?ID=' + response.data.IntCodigoFormato + '&Nit=' + response.data.StrEmpresa + '&TipoDoc=' + response.data.IntDocTipo;
 
+				$('#modal_asignar_formato').modal('hide');
+
+				//Resetea los campos del formulario.
+				document.getElementById("FormularioFormato").reset();
+
+				//Carga notificación de creación con opción de editar formato.
+				var myDialog = DevExpress.ui.dialog.custom({
+					title: "Proceso Éxitoso",
+					message: "El formato ha sido generado correctamente. <br />Código Identificador:" + response.data.IntCodigoFormato + "<br />Empresa: " + seleccion_empresa,
+					buttons: [{
+						text: "Editar",
+						onClick: function (e) {
+							window.location.href = '/Views/ReportDesigner/ReportDesignerWeb.aspx?ID=' + response.data.IntCodigoFormato + '&Nit=' + response.data.StrEmpresa + '&TipoDoc=' + response.data.IntDocTipo;
+						}
+					},
+					{
+						text: "Aceptar",
+						onClick: function (e) {
+							myDialog.hide();
+							$scope.CargarFormatos();
+						}
+					}]
+				});
+				myDialog.show().done(function (dialogResult) {
+				});
 
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 3000);

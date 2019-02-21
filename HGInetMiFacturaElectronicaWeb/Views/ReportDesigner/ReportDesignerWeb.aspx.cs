@@ -59,7 +59,17 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 
 					if (datos_formato != null)
 					{
-						MemoryStream datos = new MemoryStream(datos_formato.Formato);
+
+
+
+						byte[] datos_formato_tmp = null;
+
+						if (datos_formato.FormatoTmp == null)
+							datos_formato_tmp = datos_formato.Formato;
+						else
+							datos_formato_tmp = datos_formato.FormatoTmp;
+
+						MemoryStream datos = new MemoryStream(datos_formato_tmp);
 						report.LoadLayoutFromXml(datos);
 					}
 				}
@@ -99,7 +109,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 					int codigo_formato = Convert.ToInt32(Request.QueryString["ID"]);
 					string cod_empresa = Request.QueryString["Nit"].ToString();
 
-					TblFormatos respuesta = clase_formatos.ActualizarFormato(codigo_formato, cod_empresa, byte_formato, TipoFormato.FormatoPDF.GetHashCode());
+					TblFormatos respuesta = clase_formatos.ActualizarFormato(codigo_formato, cod_empresa, byte_formato, TipoFormato.FormatoPDF.GetHashCode(), Sesion.DatosUsuario.StrIdSeguridad);
 
 					if (respuesta != null)
 					{

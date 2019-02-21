@@ -1,5 +1,7 @@
-﻿using HGInetMiFacturaElectonicaData;
+﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
@@ -140,7 +142,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return formato;
 		}
 
-		public TblFormatos AlmacenarFormatoPdf(TblFormatos datos_formato)
+		public TblFormatos AlmacenarFormatoPdf(TblFormatos datos_formato, Guid usuario)
 		{
 			try
 			{
@@ -152,6 +154,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				//Crea el registro en base de datos.
 				TblFormatos datos_respueta = Crear(datos_formato);
+
+				//Almacena la auditoría del proceso.
+				Ctl_FormatosAudit clase_auditoria = new Ctl_FormatosAudit();
+				clase_auditoria.Crear(datos_respueta.IntCodigoFormato, datos_respueta.StrEmpresa, datos_respueta.StrIdSeguridad, TiposProceso.Creacion, usuario, datos_respueta.StrObservaciones);
 
 				return datos_respueta;
 			}
@@ -210,16 +216,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="byte_formato"></param>
 		/// <param name="tipo_formato"></param>
 		/// <returns></returns>
-		public TblFormatos ActualizarFormato(int id_formato, string identificacion_empresa, byte[] byte_formato, int tipo_formato)
+		public TblFormatos ActualizarFormato(int id_formato, string identificacion_empresa, byte[] byte_formato, int tipo_formato, Guid usuario)
 		{
 			try
 			{
 				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
 				datos_formato.DatFechaActualizacion = Fecha.GetFecha();
-				datos_formato.Formato = byte_formato;
-
+				datos_formato.FormatoTmp = byte_formato;
+				datos_formato.IntEstado = (short)EstadosFormato.SolicitarAprobacion.GetHashCode();
 				//Actualiza el registro en base de datos.
 				TblFormatos datos_respueta = Actualizar(datos_formato);
+
+				//Almacena la auditoría del proceso.
+				Ctl_FormatosAudit clase_auditoria = new Ctl_FormatosAudit();
+				clase_auditoria.Crear(datos_respueta.IntCodigoFormato, datos_respueta.StrEmpresa, datos_respueta.StrIdSeguridad, TiposProceso.Edicion, usuario, string.Format("Actualización de Diseño. {0}", datos_respueta.StrObservaciones));
 
 				return datos_respueta;
 			}
@@ -230,40 +240,90 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 		/// <summary>
-		/// Actualiza el estado del formato
+		/// Actualiza el estado del formato Activo/Inactivo
 		/// </summary>
 		/// <param name="id_formato"></param>
 		/// <param name="identificacion_empresa"></param>
 		/// <param name="estado_actual"></param>
 		/// <param name="tipo_formato"></param>
 		/// <returns></returns>
-		public TblFormatos ActualizarEstadoFormato(int id_formato, string identificacion_empresa, bool estado_actual, int tipo_formato)
+		public TblFormatos ActualizarEstadoFormato(int id_formato, string identificacion_empresa, int estado_actual, int tipo_formato, Guid usuario, TiposProceso tipo_proceso, string observaciones, string empresa_autenticada)
 		{
 			try
 			{
 				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
 				datos_formato.DatFechaActualizacion = Fecha.GetFecha();
 
-				short estado_formato = 0;
+				string des_proceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso.GetHashCode()));
+				EstadosFormato estado_formato = Enumeracion.GetEnumObjectByValue<EstadosFormato>(estado_actual);
+				switch (tipo_proceso)
+				{
+					//Estado de edición del formato.
+					case TiposProceso.Edicion:
+						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.SolicitarAprobacion.GetHashCode());
+						break;
 
-				if (estado_actual)
-					estado_formato = 0;
-				else
-					estado_formato = 1;
+					//Cambio de estados del formato Activo - Inactivo.
+					case TiposProceso.CambioEstado:
+						//Cambia Activo - Inactivo
 
-				datos_formato.IntEstado = estado_formato;
+						//Valida el estado en el cual se encuentra el formato actualmente.
+						if (estado_formato.GetHashCode() == EstadosFormato.Activo.GetHashCode())
+							datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.Inactivo.GetHashCode());
+
+						else if (estado_formato.GetHashCode() == EstadosFormato.Inactivo.GetHashCode())
+							datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.Activo.GetHashCode());
+
+						break;
+
+					//Estado pendiente de aprobación de un diseño.
+					case TiposProceso.SolicitudAprobacion:
+						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.PendienteAprobacion.GetHashCode());
+						//envió de notificacion
+						Ctl_EnvioCorreos clase_correos = new Ctl_EnvioCorreos();
+						clase_correos.EnviarSolicitudAprobacionFormato(empresa_autenticada, datos_formato, observaciones);
+
+						break;
+
+					//Aprobación del diseño.
+					case TiposProceso.Aprobacion:
+
+						if (estado_formato.GetHashCode() == EstadosFormato.Inactivo.GetHashCode())
+						{
+							datos_formato.FormatoTmp = null;
+							datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.Inactivo.GetHashCode());
+							observaciones = string.Format("Formato Rechazado. {0}", observaciones);
+						}
+						else
+						{
+							datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.PendientePublicacion.GetHashCode());
+						}
+
+						break;
+
+					//Publicación del formato
+					case TiposProceso.Publicacion:
+						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.Activo.GetHashCode());
+						datos_formato.Formato = datos_formato.FormatoTmp;
+						datos_formato.FormatoTmp = null;
+						break;
+
+				}
 
 				//Actualiza el registro en base de datos.
-				TblFormatos datos_respueta = Actualizar(datos_formato);
+				TblFormatos datos_respuesta = Actualizar(datos_formato);
 
-				return datos_respueta;
+				//Almacena la auditoría del proceso.
+				Ctl_FormatosAudit clase_auditoria = new Ctl_FormatosAudit();
+				clase_auditoria.Crear(datos_respuesta.IntCodigoFormato, datos_respuesta.StrEmpresa, datos_respuesta.StrIdSeguridad, tipo_proceso, usuario, string.Format("{0}. {1}", des_proceso, observaciones));
+
+				return datos_respuesta;
 			}
 			catch (Exception excepcion)
 			{
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
-
 
 		#endregion
 
@@ -309,10 +369,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Ctl_Empresa clase_empresa = new Ctl_Empresa();
 				empresa_dependencia = clase_empresa.Obtener(identificacion_empresa).StrEmpresaAsociada;
 
+				int estado_formato = EstadosFormato.Inactivo.GetHashCode();
+
 				TblFormatos formato_resultado = (from formato in context.TblFormatos
 												 where formato.IntCodigoFormato == id_formato
 												 && formato.IntTipo == tipo_formato
 												 && (formato.StrEmpresa.Equals(identificacion_empresa) || formato.StrEmpresa.Equals(empresa_dependencia))
+												 && formato.IntEstado != estado_formato
 												 select formato).FirstOrDefault();
 
 				return formato_resultado;
@@ -361,10 +424,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 				else if (datos_empresa.IntObligado && !datos_empresa.IntIntegrador)
 				{
+					//estados visibles para el obligado
+					List<int> estados_formato = new List<int>(){
+					EstadosFormato.Activo.GetHashCode(),
+					EstadosFormato.SolicitarAprobacion.GetHashCode(),
+					EstadosFormato.PendienteAprobacion.GetHashCode(),
+					EstadosFormato.Aprobado.GetHashCode()
+					};
+
 					listado_formatos = (from formato in context.TblFormatos
 										where formato.StrEmpresa.Equals(identificacion_empresa)
 										&& formato.IntTipo == tipo_formato
-										&& formato.IntEstado == 1
+										&& estados_formato.Contains(formato.IntEstado)
 										select formato).ToList();
 				}
 
