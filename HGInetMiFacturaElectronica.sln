@@ -160,12 +160,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.7", "v2018.7", "{816D
 		Documentacion\Liberaciones\v2018.7\20181219-DropBitProcesadaTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2018.7\20181219-DropBitProcesadaTblPlanesTransacciones.txt
 		Documentacion\Liberaciones\v2018.7\20181219-IntEstadoTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2018.7\20181219-IntEstadoTblPlanesTransacciones.txt
 		Documentacion\Liberaciones\v2018.7\20181227-StrClave TblUsuarios.txt = Documentacion\Liberaciones\v2018.7\20181227-StrClave TblUsuarios.txt
-		20190110-Inserta Nuevas opciones de Menu para planes.txt = 20190110-Inserta Nuevas opciones de Menu para planes.txt
+		Documentacion\Liberaciones\v2018.7\20190110-Inserta Nuevas opciones de Menu para planes.txt = Documentacion\Liberaciones\v2018.7\20190110-Inserta Nuevas opciones de Menu para planes.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1", "v2019.1", "{FF1660BC-E1CE-4614-8840-4EC6909431E0}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\v2019.1\20190111-StrEmpresaDescuentoTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190111-StrEmpresaDescuentoTblEmpresas.txt
+		Documentacion\Liberaciones\v2019.1\20190115-Actualiza StrEmpresaDescuentoTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190115-Actualiza StrEmpresaDescuentoTblEmpresas.txt
 		Documentacion\Liberaciones\v2019.1\20190116-IntIdEstadoIntCobroPostPagoTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190116-IntIdEstadoIntCobroPostPagoTblEmpresas.txt
 		Documentacion\Liberaciones\v2019.1\20190117-AlterStrObservacionesTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2019.1\20190117-AlterStrObservacionesTblPlanesTransacciones.txt
 		Documentacion\Liberaciones\v2019.1\20190128-TblAlertas.txt = Documentacion\Liberaciones\v2019.1\20190128-TblAlertas.txt
@@ -173,7 +174,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1", "v2019.1", "{FF16
 		Documentacion\Liberaciones\v2019.1\20190205-Opcion1346AlertasyNotificaciones.txt = Documentacion\Liberaciones\v2019.1\20190205-Opcion1346AlertasyNotificaciones.txt
 		Documentacion\Liberaciones\v2019.1\20190205-UpdateOpcion13.txt = Documentacion\Liberaciones\v2019.1\20190205-UpdateOpcion13.txt
 		Documentacion\Liberaciones\v2019.1\20190207-IntValorSubtotal.txt = Documentacion\Liberaciones\v2019.1\20190207-IntValorSubtotal.txt
-		20190208-Opcion1347ConsultaAuditoriaAdmin.txt = 20190208-Opcion1347ConsultaAuditoriaAdmin.txt
+		Documentacion\Liberaciones\v2019.1\20190208-Opcion1347ConsultaAuditoriaAdmin.txt = Documentacion\Liberaciones\v2019.1\20190208-Opcion1347ConsultaAuditoriaAdmin.txt
 		Documentacion\Liberaciones\v2019.1\20190211-IntValorNeto.txt = Documentacion\Liberaciones\v2019.1\20190211-IntValorNeto.txt
 		Documentacion\Liberaciones\v2019.1\20190215-TblFormatosDatFechaActualizacion.txt = Documentacion\Liberaciones\v2019.1\20190215-TblFormatosDatFechaActualizacion.txt
 	EndProjectSection
@@ -187,8 +188,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1Rev4", "v2019.1Rev4", "{C420E912-5DC2-4F53-9B3A-A882B62C7C58}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\v2019.1Rev4\20190218-ntIdEstadoAlertas.txt = Documentacion\Liberaciones\v2019.1Rev4\20190218-ntIdEstadoAlertas.txt
-		20190219-ActualizaIntEnvioMail.txt = 20190219-ActualizaIntEnvioMail.txt
+		Documentacion\Liberaciones\v2019.1Rev4\20190219-ActualizaIntEnvioMail.txt = Documentacion\Liberaciones\v2019.1Rev4\20190219-ActualizaIntEnvioMail.txt
 		Documentacion\Liberaciones\v2019.1Rev4\20190221-CamposTblAlertas.txt = Documentacion\Liberaciones\v2019.1Rev4\20190221-CamposTblAlertas.txt
+		Documentacion\Liberaciones\v2019.1Rev4\Consulta de Estado de Planes.txt = Documentacion\Liberaciones\v2019.1Rev4\Consulta de Estado de Planes.txt
 	EndProjectSection
 EndProject
 Global

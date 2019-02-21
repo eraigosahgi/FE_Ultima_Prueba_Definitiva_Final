@@ -1,0 +1,8 @@
+
+--Consulta para validar estado de saldos de planes vs cantidad de documentos procesados
+select	D.StrEmpresaFacturador Facturador, 
+		count(IntNumero) Total,
+		( SELECT (SUM(P.IntNumTransaccProcesadas)+SUM(P.IntNumTransaccProceso)) FROM TblPlanesTransacciones P WHERE P.StrEmpresaFacturador = D.StrEmpresaFacturador) Procesados,
+		(count(D.IntNumero)-( SELECT (SUM(P1.IntNumTransaccProcesadas)+SUM(P1.IntNumTransaccProceso))  FROM TblPlanesTransacciones P1 WHERE P1.StrEmpresaFacturador = D.StrEmpresaFacturador))Diferencia 
+	FROM TblDocumentos D
+	GROUP BY D.StrEmpresaFacturador
