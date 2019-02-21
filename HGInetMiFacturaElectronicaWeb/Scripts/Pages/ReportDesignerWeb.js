@@ -246,7 +246,6 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			validationGroup: "ObservacionesRespuesta",
 			onClick: function (params) {
 				var continua_proceso = params.validationGroup.validate().isValid;
-				console.log(continua_proceso)
 				if (continua_proceso) {
 					ActualizarFormato(codigo, nit, 0, 5, $scope.ObservacionesSolicitud);
 					$('#modal_solicitar_aprobacion').modal('hide');

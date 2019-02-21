@@ -292,7 +292,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						{
 							datos_formato.FormatoTmp = null;
 							datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.Inactivo.GetHashCode());
-							observaciones = string.Format("Formato Rechazado. {0}", observaciones);
+							des_proceso = "Rechazo de formato.";
 						}
 						else
 						{
