@@ -1944,7 +1944,7 @@ namespace HGInetMiFacturaElectonicaController
 						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 						DestinatarioEmail destinatario = new DestinatarioEmail();
 						destinatario.Nombre = "ADMINISTRACIÓN";
-						destinatario.Email = "atamayo@hgi.com.co";
+						destinatario.Email = mail_envio;
 
 
 						correos_destino.Add(destinatario);
