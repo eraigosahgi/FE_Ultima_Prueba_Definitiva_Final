@@ -4,7 +4,7 @@ var TiposHabilitacion = [];
 
 //var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var EmpresasApp = angular.module('EmpresasApp', [ 'dx', 'AppSrvFiltro']);
+var EmpresasApp = angular.module('EmpresasApp', ['dx', 'AppSrvFiltro']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
 EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location, SrvFiltro) {
 
@@ -30,12 +30,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			Datos_Email_Pagos = "",
            codigo_adquiriente = "";
 
-	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true,6).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 6).then(function (Datos) {
 		$scope.EmpresaAsociada = Datos;
 	});
 
 
-	SrvFiltro.ObtenerFiltro('Empresa Descuenta Planes', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true,9).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Descuenta Planes', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 9).then(function (Datos) {
 		$scope.EmpresaDescuenta = Datos;
 	});
 
@@ -46,7 +46,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		var tipo = response.data[0].Admin;
 		if (tipo) {
 			$scope.Admin = true;
-		} else {			
+		} else {
 			$scope.Admin = false;
 			Bloquear_EmpresaDescuenta();
 			Bloquear_EmpresaAsociada();
@@ -91,7 +91,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         Datos_Adquiriente = "",
         Datos_Obligado = "",
         Datos_Habilitacion = "",
-		Datos_telefono="",
+		Datos_telefono = "",
     Datos_IdentificacionDv = "",
     Datos_Tipo = "1",
     Datos_Observaciones = "",
@@ -146,7 +146,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		$("#txttelefono").dxTextBox({
 			onValueChanged: function (data) {
-				Datos_telefono = data.value;				
+				Datos_telefono = data.value;
 			}
 		})
         .dxValidator({
@@ -156,10 +156,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
         	//	message: "Debe Indicar el teléfono"
 			//},
 			 {
-        		type: "stringLength",
-        		max: 50,        		
-        		message: "El teléfono no puede ser mayor a 50 caracteres"
-        	}]
+			 	type: "stringLength",
+			 	max: 50,
+			 	message: "El teléfono no puede ser mayor a 50 caracteres"
+			 }]
         });
 
 
@@ -205,7 +205,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			onValueChanged: function (data) {
 				Datos_Obligado = data.value;
 				ValidarSeleccionPerfil();
-				validarHabilitacion();				
+				validarHabilitacion();
 				if (Datos_Obligado === true) {
 					$("#txtEmail").dxTextBox({ value: "" });
 				}
@@ -260,7 +260,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		$("#EmailRecepcion").dxCheckBox({
 			name: "EmailRecepcion",
 			value: true,
-			readOnly:true,
+			readOnly: true,
 			onValueChanged: function (data) {
 				Datos_EmailRecepcion = data.value;
 			}
@@ -655,7 +655,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
 
-		$http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {			
+		$http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {
 			TiposHabilitacion = response.data;
 			$("#Habilitacion").dxRadioGroup({
 				searchEnabled: true,
@@ -780,7 +780,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				if (Datos_Anexo == 1)
 					$("#Anexo").dxCheckBox({ value: true });
 
-				if (Datos_EmailRecepcion == 1){
+				if (Datos_EmailRecepcion == 1) {
 					$("#EmailRecepcion").dxCheckBox({ value: true });
 				} else {
 					$("#EmailRecepcion").dxCheckBox({ value: false });
@@ -823,7 +823,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		return true;
 	}
 
-	function guardarEmpresa() {		
+	function guardarEmpresa() {
 		if (ValidarAsociadaDescuenta()) {
 			var empresa = null;
 			var Asociada = "";
@@ -862,7 +862,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
 			//SrvEmpresas.GuardarEmpresa(data).then(function (response) {
-				$http.post('/api/Empresas?' + data).then(function (response) {
+			$http.post('/api/Empresas?' + data).then(function (response) {
 				try {
 					//Aqui se debe colocar los pasos a seguir
 					DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
@@ -880,166 +880,184 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 //Controlador para gestionar la consulta de empresas
 EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $location) {
+
+
 	$scope.Admin = false;
-	$("#wait").show();
-	$http.get('/api/DatosSesion/').then(function (response) {
-		codigo_facturador = response.data[0].Identificacion;
-		var tipo = response.data[0].Admin;
-		if (tipo) {
-			$scope.Admin = true;
-		};
-		$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador).then(function (response) {
-			$('#wait').hide();
-			$("#gridEmpresas").dxDataGrid({
-				dataSource: response.data,
+	consultar();
+	function consultar() {
+		$("#wait").show();
+		$http.get('/api/DatosSesion/').then(function (response) {
+			codigo_facturador = response.data[0].Identificacion;
+			var tipo = response.data[0].Admin;
+			if (tipo) {
+				$scope.Admin = true;
+			};
+			$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador).then(function (response) {
+				$('#wait').hide();
+				$("#gridEmpresas").dxDataGrid({
+					dataSource: response.data,
 
-				paging: {
-					pageSize: 20
-				},
-				pager: {
-					showPageSizeSelector: true,
-					allowedPageSizes: [5, 10, 20],
-					showInfo: true
-				}
-                     , loadPanel: {
-                     	enabled: true
-                     }
-                          , onCellPrepared: function (options) {
-                          	var fieldData = options.value,
-								fieldHtml = "";
-                          	try {
-                          		if (options.data.Estado == 1) {
-                          			estado = " style='color:green; cursor:default;' title='Activo'";
-                          		} else {
-                          			estado = " style='color:red; cursor:default;' title='Inactivo'";
-                          		}
+					paging: {
+						pageSize: 20
+					},
+					pager: {
+						showPageSizeSelector: true,
+						allowedPageSizes: [5, 10, 20],
+						showInfo: true
+					}
+						 , loadPanel: {
+						 	enabled: true
+						 }
+							  , onCellPrepared: function (options) {
+							  	var fieldData = options.value,
+									fieldHtml = "";
+							  	try {
+							  		if (options.data.Estado == 1) {
+							  			estado = " style='color:green; cursor:default;' title='Activo'";
+							  		} else {
+							  			estado = " style='color:red; cursor:default;' title='Inactivo'";
+							  		}
 
-                          	} catch (err) {
+							  	} catch (err) {
 
-                          	}
+							  	}
 
-                          }, allowColumnResizing: true
+							  }, allowColumnResizing: true
+					, onToolbarPreparing: function (e) {
+						var dataGrid = e.component;
 
-                   , columns: [
-                       {
-                       	cssClass: "col-md-1 col-xs-2",
-                       	cellTemplate: function (container, options) {
-                       		$("<div style='text-align:center'>")
-								.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
-								.appendTo(container);
-                       	}
-                       },
+						e.toolbarOptions.items.unshift({
 
-                       {
-                       	caption: "Identificacion",
-                       	dataField: "Identificacion"
-                       },
-                       {
-                       	caption: "Razón social",
-                       	dataField: "RazonSocial",                       
-                       },
-                       {
-                       	caption: "Email",
-                       	dataField: "Email"
-                       },
-                       {
-                       	caption: "Serial",
-                       	dataField: "Serial"
-                       },
-                       {
-                       	dataField: "Perfil"
-                       },
-					   {
-					   	cssClass: "col-md-1 col-xs-1",
-					   	caption: 'Estado',
-					   	dataField: 'Estado',
-					   	cellTemplate: function (container, options) {
-					   		$("<div style='text-align:center; cursor:default;'>")
-								.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
-								.appendTo(container);
-					   	}
-					   },
-					   {
-					   	caption: "Asociado",
-					   	dataField: "Asociado",
-					   	hidingPriority: 0
-					   },
-					   {
-					   	caption: "Empresa descuento",
-					   	dataField: "EmpresaDescuento",
-					   	hidingPriority: 1
-					   },
+							location: "after",
+							widget: "dxButton",
+							options: {
+								icon: "refresh",
+								onClick: function () {
+									consultar();
+								}
+							}
+						})
+					}
+					   , columns: [
+						   {
+						   	cssClass: "col-md-1 col-xs-2",
+						   	cellTemplate: function (container, options) {
+						   		$("<div style='text-align:center'>")
+									.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
+									.appendTo(container);
+						   	}
+						   },
 
-					   {
-					   	caption: "Post-Pago automatico",
-					   	dataField: "Postpago",
-					   	hidingPriority: 2
-					   },
-					   {
-					   	caption: "Nº Usuarios activos",
-					   	dataField: "Nusuaurios",
-					   	hidingPriority: 3
-					   },
-					   {
-					   	caption: "Nº Horas para acuse tacito",
-					   	dataField: "HorasAcuse",
-					   	hidingPriority: 4
-					   },
-					   {
-					   	caption: "Notificación en recepción",
-					   	dataField: "NotificacionMail",
-					   	hidingPriority: 5
-					   },
-					    {
-					    	caption: "Correo de Recepción de Documentos",
-					    	dataField: "StrMailRecepcion",
-					    	hidingPriority: 6
-					    }
-						,
-					    {
-					    	caption: "Correo de Recepción de Acuse",
-					    	dataField: "StrMailAcuse",
-					    	hidingPriority: 7
-					    }
-						,
-					    {
-					    	caption: "Correo para Envios",
-					    	dataField: "StrMailEnvio",
-					    	hidingPriority: 8
-					    }
-						,
-					    {
-					    	caption: "Correo de Recepción de Pagos",
-					    	dataField: "StrMailPagos",
-					    	hidingPriority: 9
-					    }
+						   {
+						   	caption: "Identificacion",
+						   	dataField: "Identificacion"
+						   },
+						   {
+						   	caption: "Razón social",
+						   	dataField: "RazonSocial",
+						   },
+						   {
+						   	caption: "Email",
+						   	dataField: "Email"
+						   },
+						   {
+						   	caption: "Serial",
+						   	dataField: "Serial"
+						   },
+						   {
+						   	dataField: "Perfil"
+						   },
+						   {
+						   	cssClass: "col-md-1 col-xs-1",
+						   	caption: 'Estado',
+						   	dataField: 'Estado',
+						   	cellTemplate: function (container, options) {
+						   		$("<div style='text-align:center; cursor:default;'>")
+									.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
+									.appendTo(container);
+						   	}
+						   },
+						   {
+						   	caption: "Asociado",
+						   	dataField: "Asociado",
+						   	hidingPriority: 0
+						   },
+						   {
+						   	caption: "Empresa descuento",
+						   	dataField: "EmpresaDescuento",
+						   	hidingPriority: 1
+						   },
+
+						   {
+						   	caption: "Post-Pago automatico",
+						   	dataField: "Postpago",
+						   	hidingPriority: 2
+						   },
+						   {
+						   	caption: "Nº Usuarios activos",
+						   	dataField: "Nusuaurios",
+						   	hidingPriority: 3
+						   },
+						   {
+						   	caption: "Nº Horas para acuse tacito",
+						   	dataField: "HorasAcuse",
+						   	hidingPriority: 4
+						   },
+						   {
+						   	caption: "Notificación en recepción",
+						   	dataField: "NotificacionMail",
+						   	hidingPriority: 5
+						   },
+							{
+								caption: "Correo de Recepción de Documentos",
+								dataField: "StrMailRecepcion",
+								hidingPriority: 6
+							}
+							,
+							{
+								caption: "Correo de Recepción de Acuse",
+								dataField: "StrMailAcuse",
+								hidingPriority: 7
+							}
+							,
+							{
+								caption: "Correo para Envios",
+								dataField: "StrMailEnvio",
+								hidingPriority: 8
+							}
+							,
+							{
+								caption: "Correo de Recepción de Pagos",
+								dataField: "StrMailPagos",
+								hidingPriority: 9
+							}
 
 
 
 
 
-                       //,
-                       //{
-                       //    dataField: "Habilitacion"
-                       //}                   
-                   ],
-				filterRow: {
-					visible: true
-				}
+						   //,
+						   //{
+						   //    dataField: "Habilitacion"
+						   //}                   
+					   ],
+					filterRow: {
+						visible: true
+					}
+				});
+
+			}, function errorCallback(response) {
+				$('#wait').hide();
+				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 			});
-			
+
+
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
+	}
 
-
-	}, function errorCallback(response) {
-		$('#wait').hide();
-		DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-	});
-
-	
 });
 
 //Esta funcion es para ir a la pagina de consulta

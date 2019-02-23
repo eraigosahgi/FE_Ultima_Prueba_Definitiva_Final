@@ -232,7 +232,21 @@ angular.module('ProcesarDocumentosApp', ['dx', 'AppMaestrosEnum', 'AppSrvDocumen
                 , columnChooser: {
                     enabled: true,
                     mode: "select"
-                }
+                },
+            	onToolbarPreparing: function(e) {
+            	var dataGrid = e.component;
+
+            	e.toolbarOptions.items.unshift({
+				 
+            		location: "after",
+            		widget: "dxButton",
+            		options: {
+            			icon: "refresh",
+            			onClick: function() {
+            				consultar();
+            			}
+            		}
+            	})}
                 , columns: [
                      {
                          caption: "Fecha Recepción",

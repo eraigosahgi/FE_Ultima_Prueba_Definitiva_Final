@@ -3,6 +3,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
+	<script src="../../Scripts/Services/Loading.js?vjs201913"></script>
 	<script src="../../Scripts/Services/SrvPermisos.js?vjs201913"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201913"></script>
 	<script src="../../Scripts/Services/SrvAlertas.js?vjs201913"></script>

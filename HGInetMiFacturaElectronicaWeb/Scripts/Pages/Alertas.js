@@ -2,7 +2,7 @@
 var AlertasApp = angular.module('AlertasApp', ['dx', 'AppSrvAlertas', 'AppMaestrosEnum', 'AppSrvPermisos']);
 var Datos;
 var opc_pagina = "1336";
-AlertasApp.controller('AlertasController', function AlertasController($scope,SrvAlertas, SrvMaestrosEnum, SrvPermisos) {
+AlertasApp.controller('AlertasController', function AlertasController($scope, SrvAlertas, SrvMaestrosEnum, SrvPermisos) {
 
 	//function Crearlapiz() {
 	//	$(".dx-datagrid .dx-link").removeClass("dx-link").addClass("icon-pencil3");
@@ -65,10 +65,10 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 					allowUpdating: $scope.Editar,
 					allowAdding: $scope.Agregar,
 					popup: {
-						title: "Gestión de Alerta",
+						title: "Gestión de Alertas y Notificaciones",
 						showTitle: true,
-						width: "50%",
-						height: "40%",
+						width: "60%",
+						height: "50%",
 						position: {
 							my: "center",
 							at: "center",
@@ -98,8 +98,24 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 
 						consultar();
 					}
-				}
-	,
+				},
+
+				onToolbarPreparing: function (e) {
+					var dataGrid = e.component;
+
+					e.toolbarOptions.items.unshift({
+
+						location: "after",
+						widget: "dxButton",
+						options: {
+							icon: "refresh",
+							onClick: function () {
+								consultar();
+							}
+						}
+					})
+				},
+
 				columns: [
 
 					{
@@ -174,6 +190,12 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 				}
 				,
 				{
+					caption: "Usuario",
+					dataField: "IntUsuario",
+					width: "90px",
+					validationGroup: "ValidacionAlerta",
+				},
+				{
 					dataField: "IntTipo",
 					caption: "Tipo",
 					validationGroup: "ValidacionAlerta",
@@ -204,8 +226,26 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 						message: "Debe Indicar el tipo de Estado"
 					}]
 
+				},
+				
+				{
+					caption: "Notificación Mail",
+					dataField: "IntMail",															
+					validationGroup: validationGroupName,
+					hidingPriority: 0
+				},
+				{
+					caption: "Notificación Web",
+					dataField: "IntWeb",
+					validationGroup: validationGroupName,
+					hidingPriority: 1
+				},
+				{
+					caption: "Notificación Sms",
+					dataField: "IntSms",
+					validationGroup: validationGroupName,
+					hidingPriority: 2
 				}
-
 				]
 			});
 		});
@@ -260,6 +300,56 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 		} catch (e) { }
 
 
+		//*********************************************************
+
+		var IntUsuario = "";
+		if (e.newData.IntUsuario == undefined) {
+			if (e.oldData == undefined) {
+				IntUsuario = "";
+			} else {
+				IntUsuario = e.oldData.IntUsuario;
+			}
+		} else {
+			IntUsuario = e.newData.IntUsuario;
+		}
+
+		var IntMail = "";
+		if (e.newData.IntMail == undefined) {
+			if (e.oldData == undefined) {
+				IntMail = "";
+			} else {
+				IntMail = e.oldData.IntMail;
+			}
+		} else {
+			IntMail = e.newData.IntMail;
+		}
+
+
+		var IntWeb = "";
+		if (e.newData.IntWeb == undefined) {
+			if (e.oldData == undefined) {
+				IntWeb = "";
+			} else {
+				IntWeb = e.oldData.IntWeb;
+			}
+		} else {
+			IntWeb = e.newData.IntWeb;
+		}
+
+		var IntSms = "";
+		if (e.newData.IntSms == undefined) {
+			if (e.oldData == undefined) {
+				IntSms = "";
+			} else {
+				IntSms = e.oldData.IntSms;
+			}
+		} else {
+			IntSms = e.newData.IntSms;
+		}
+
+
+		//*********************************************************
+
 		var data = {
 			IntCliente: Cliente,
 			IntIdAlerta: Alerta,
@@ -268,11 +358,15 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 			IntValor: Valor,
 			StrDescripcion: Descripcion,
 			StrInternoMails: InternoMails,
-			IntIdEstado: IntIdEstado
+			IntIdEstado: IntIdEstado,
+			IntUsuario:IntUsuario,
+			IntMail: IntMail,
+			IntWeb: IntWeb,
+			IntSms: IntSms
 		};
 
 		SrvAlertas.Guardar(data).then(function (data) {
-			console.log(data);
+			DevExpress.ui.notify({ message: "Alerta Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
 		});
 	}
 
@@ -298,8 +392,7 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 		try {
 			var valor = (options.validator._validationGroup.data.IntValor == undefined) ? options.data.IntValor : options.validator._validationGroup.data.IntValor;
 		} catch (e) { }
-
-		console.log(valor);
+		
 		if ((valor == undefined || valor == '') && valor != 0) {
 			DevExpress.ui.notify("Debe indicar el valor.", 'error', 3000);
 			return true;
@@ -323,8 +416,13 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 			var interno = (options.validator._validationGroup.data.IntInterno == undefined) ? options.data.IntInterno : options.validator._validationGroup.data.IntInterno;
 		} catch (e) { }
 
-		if ((interno == false && cliente == false) || (interno == undefined && cliente == undefined)) {
-			DevExpress.ui.notify("Debe indicar si notifica al cliente o interno", 'error', 3000);
+		try {
+			var usuario = (options.validator._validationGroup.data.IntUsuario == undefined) ? options.data.IntUsuario : options.validator._validationGroup.data.IntUsuario;
+		} catch (e) { }
+
+
+		if ((interno == false && cliente == false && usuario == false) || (interno == undefined && cliente == undefined && usuario == undefined)) {
+			DevExpress.ui.notify("Debe indicar a quien notifica esta alerta", 'error', 3000);
 			return true;
 		}
 
@@ -358,10 +456,32 @@ AlertasApp.controller('AlertasController', function AlertasController($scope,Srv
 			return true;
 		}
 
+		//************************************Validación de Medio de notificación de la alerta
+
+		try {
+			var Mail = (options.validator._validationGroup.data.IntMail == undefined) ? options.data.IntMail : options.validator._validationGroup.data.IntMail;
+		} catch (e) { }
+
+		try {
+			var Web = (options.validator._validationGroup.data.IntWeb == undefined) ? options.data.IntWeb : options.validator._validationGroup.data.IntWeb;
+		} catch (e) { }
+
+		try {
+			var Sms = (options.validator._validationGroup.data.IntSms == undefined) ? options.data.IntSms : options.validator._validationGroup.data.IntSms;
+		} catch (e) { }
+
+		if ((Mail == false && Web == false && Sms == false) || (Mail == undefined && Web == undefined && Sms == undefined)) {
+			DevExpress.ui.notify("Debe indicar el medio de notificación (Mail,Web,Sms)", 'error', 3000);
+			return true;
+		}
+		//************************************
+
 
 		return false;
 	}
 
 });
+
+
 
 

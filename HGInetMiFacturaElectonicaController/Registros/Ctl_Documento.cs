@@ -27,6 +27,9 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
+using System.Data.Linq.SqlClient;
+using System.Text.RegularExpressions;
+using System.Data.Entity;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -329,16 +332,34 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
 
 
-			var respuesta = (from datos in context.TblDocumentos
+			List<TblDocumentos> respuesta = new List<TblDocumentos>();
+
+
+			if (numero_documento.Equals("*"))
+			{
+				respuesta = (from datos in context.TblDocumentos
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
-										&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 										&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-										&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
 										&& ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
 										&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
+										&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
 							 orderby datos.IntNumero descending
 							 select datos).ToList();
+			}
+			else
+			{
+				var listaDocumetos = Coleccion.ConvertirStringlong(numero_documento);
+
+				respuesta = (from datos in context.TblDocumentos
+							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente))
+							 && (listaDocumetos.Contains(datos.IntNumero))
+							 && (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
+							 orderby datos.IntNumero descending
+							 select datos).ToList();
+
+			}
 
 			return respuesta;
 		}
@@ -387,17 +408,31 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
 
-			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
-											  where (datos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
-											  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
-											  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-											  && (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
-											  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-											  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
-											  && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
-											  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
-											  orderby datos.IntNumero descending
-											  select datos).ToList();
+			List<TblDocumentos> documentos = new List<TblDocumentos>();
+
+			if (numero_documento.Equals("*"))
+			{
+				documentos = (from datos in context.TblDocumentos
+							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+							  //&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+							  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+							  && (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
+							  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+							  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
+							  && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+							  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
+							  orderby datos.IntNumero descending
+							  select datos).ToList();
+			}
+			else
+			{
+				var listaDocumetos = Coleccion.ConvertirStringlong(numero_documento);
+
+				documentos = (from datos in context.TblDocumentos
+							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador))
+							  && (listaDocumetos.Contains(datos.IntNumero))
+							  select datos).ToList();
+			}
 
 			return documentos;
 		}
@@ -457,21 +492,42 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
 
-			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
-											  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
-											  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-											  where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
-											  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
-											  && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-											  && (datos.IdCategoriaEstado == Categoria)
-											  //&& (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
-											  //&& (estado_dian.Contains(datos.IntIdEstado.ToString()))
-											  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-											  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
-											  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
-											  && ((datos.DatAdquirienteFechaRecibo >= fecha_inicio && datos.DatAdquirienteFechaRecibo <= fecha_fin) || tipo_fecha == 1)
-											  orderby datos.IntNumero descending
-											  select datos).ToList();
+
+			List<TblDocumentos> documentos = new List<TblDocumentos>();
+
+
+			if (numero_documento.Equals("*"))
+			{
+
+				documentos = (from datos in context.TblDocumentos
+							  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+							  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+							  where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+							  //&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+							  && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+							  && (datos.IdCategoriaEstado == Categoria)
+							  //&& (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
+							  //&& (estado_dian.Contains(datos.IntIdEstado.ToString()))
+							  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+							  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
+							  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
+							  && ((datos.DatAdquirienteFechaRecibo >= fecha_inicio && datos.DatAdquirienteFechaRecibo <= fecha_fin) || tipo_fecha == 1)
+							  orderby datos.IntNumero descending
+							  select datos).ToList();
+			}
+			else
+			{
+
+				var listaDocumetos = Coleccion.ConvertirStringlong(numero_documento);
+
+				documentos = (from datos in context.TblDocumentos
+							  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+							  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+							  where obligado.StrIdentificacion.Equals(codigo_facturador)
+							  && (listaDocumetos.Contains(datos.IntNumero))
+							  && (datos.IdCategoriaEstado == Categoria)
+							  select datos).ToList();
+			}
 
 			return documentos;
 		}
@@ -576,25 +632,40 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			if (string.IsNullOrWhiteSpace(estado_recibo))
 				estado_recibo = "*";
 
+			List<TblDocumentos> documentos = new List<TblDocumentos>();
 
-			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
-											  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
-											  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-											  where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
-											&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
-											&& (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-											//&& (estado_dian.Contains(datos.IntIdEstado.ToString()))
-											&& (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
-											&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
 
-											 //-------------
-											 //&& (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
-											 && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 1)
-											 && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_fecha == 2)
-											//-----------
-											&& (datos.IntDocTipo.Equals(TipoDocumento) || TipoDocumento == 0)
-											  orderby datos.IntNumero descending
-											  select datos).ToList();
+			if (numero_documento.Equals("*"))
+			{
+
+				documentos = (from datos in context.TblDocumentos
+							  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+							  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+							  where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+							&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+							&& (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+							//&& (estado_dian.Contains(datos.IntIdEstado.ToString()))
+							&& (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
+							&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+
+							 //-------------
+							 //&& (datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin)
+							 && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 1)
+							 && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_fecha == 2)
+							//-----------
+							&& (datos.IntDocTipo.Equals(TipoDocumento) || TipoDocumento == 0)
+							  orderby datos.IntNumero descending
+							  select datos).ToList();
+			}
+			else
+			{
+				var listaDocumetos = Coleccion.ConvertirStringlong(numero_documento);
+				documentos = (from datos in context.TblDocumentos
+							  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+							  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+							  where listaDocumetos.Contains(datos.IntNumero)
+							  select datos).ToList();
+			}
 
 			return documentos;
 		}

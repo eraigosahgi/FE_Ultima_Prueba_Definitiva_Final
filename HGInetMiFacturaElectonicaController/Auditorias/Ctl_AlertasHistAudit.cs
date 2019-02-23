@@ -47,7 +47,16 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			}
 		}
 
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="IdAlerta"></param>
+		/// <param name="facturador"></param>
+		/// <param name="StrIdentificacion"></param>
+		/// <param name="StrObservaciones"></param>
+		/// <param name="Tipo"></param>
+		/// <param name="StrIdSeguridadPlan"></param>
+		/// <returns></returns>
 		public TblHistAlertas Crear(int IdAlerta, Guid facturador,string StrIdentificacion,string StrObservaciones,int Tipo,Guid StrIdSeguridadPlan)
 		{
 			try
@@ -75,7 +84,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		}
 
 		/// <summary>
-		/// Obtener el historico 
+		/// Obtiene una alerta especifica el cual este activa.
 		/// </summary>
 		/// <param name="StrIdSeguridad">Id de seguridad del facturador</param>
 		/// <param name="IdAlerta">Id de la alerta</param>

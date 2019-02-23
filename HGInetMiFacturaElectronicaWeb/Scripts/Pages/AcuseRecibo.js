@@ -321,13 +321,18 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 			};
 
 			$timeout(function callAtTimeout() {
-				$http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+				if ($scope.Idregistro != undefined) {
+					$http.get('/Api/ActualizarEstado?IdSeguridad=' + $scope.IdSeguridad + "&StrIdSeguridadRegistro=" + $scope.Idregistro).then(function (response) {
+						$scope.EnProceso = false;
+						consultar();
+					}), function (response) {
+						$scope.EnProceso = false;
+						Mensaje(response.data.ExceptionMessage, "error");
+					};
+				} else {
 					$scope.EnProceso = false;
 					consultar();
-				}), function (response) {
-					$scope.EnProceso = false;
-					Mensaje(response.data.ExceptionMessage, "error");
-				};
+				}
 			}, 9000);
 
 		}

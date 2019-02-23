@@ -67,7 +67,20 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
                 groupPanel: {
                     allowColumnDragging: true,
                     visible: true
-                }
+                },
+                onToolbarPreparing: function(e) {
+                	var dataGrid = e.component;
+
+                	e.toolbarOptions.items.unshift({
+				 
+                		location: "after",
+                		widget: "dxButton",
+                		options: {
+                			icon: "refresh",
+                			onClick: function() {
+                				consultar();
+                			}
+                		}})}
             , allowColumnResizing: true,
                 columns: [
                      {

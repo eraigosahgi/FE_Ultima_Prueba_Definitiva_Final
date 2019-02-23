@@ -27,6 +27,20 @@ angular.module("appsrvusuario", [])
                 }
                  , loadPanel: {
                      enabled: true
+                 }, onToolbarPreparing: function (e) {
+                 	var dataGrid = e.component;
+
+                 	e.toolbarOptions.items.unshift({
+
+                 		location: "after",
+                 		widget: "dxButton",
+                 		options: {
+                 			icon: "refresh",
+                 			onClick: function () {
+                 				Scope.consulta();
+                 			}
+                 		}
+                 	})
                  }
                       , allowColumnResizing: true
                    , columns: [

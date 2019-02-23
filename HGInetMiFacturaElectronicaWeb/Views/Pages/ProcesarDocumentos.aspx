@@ -22,23 +22,14 @@
 						<input type="text" id="lbltotaldocumentos" style="border-style: none; width: 100%; font-size: small;" readonly></input></h6>
 
 
-
 					<div class="col md-12">
-
 						<div class="row">
-
-							<div class="dx-fieldset" style="margin-top: -5%;">
-
+							<div class="dx-fieldset" style="margin-top: -4%;">
 								<div class="col-md-8 ">
 								</div>
-
-
-
-
-
 								<div class="col-md-4 text-right">
 
-									<div data-dx-button="ButtonOptionsConsultar" style="margin-top: 5%;"></div>
+									<%--<div data-dx-button="ButtonOptionsConsultar" style="margin-top: 5%;"></div>--%>
 								</div>
 							</div>
 						</div>

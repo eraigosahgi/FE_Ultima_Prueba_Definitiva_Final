@@ -24,7 +24,7 @@
 				</div>
 
 				<br />
-				<div class="panel-body" style="margin-top: 2%">
+				<div class="panel-body" style="margin-top: 0">
 					<div class="demo-container">
 						<div id="gridEmpresas"></div>
 					</div>

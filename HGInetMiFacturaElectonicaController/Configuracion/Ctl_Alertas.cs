@@ -68,8 +68,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
-
-
 		#region Validacion de Alto consumo (Porcentaje Plan)
 		/// <summary>
 		/// Notifica al Facturador o personal Hgi, según sea el caso en el que el facturador tenga un % de saldo especifico según configuración o cuando no tiene saldo disponible
@@ -96,6 +94,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								TProcesadas = saldo_Facturador.Sum(x => x.TblDocumentos.Count()),
 								TCompra = saldo_Facturador.Sum(x => x.IntNumTransaccCompra),
 								Email = saldo_Facturador.FirstOrDefault().TblEmpresas.StrMailAdmin,
+								Fechavencimiento = saldo_Facturador.Min(x => x.DatFechaVencimiento),
+								Facturador = saldo_Facturador.FirstOrDefault().TblEmpresas.StrRazonSocial
 							}).Select(item => new
 							{
 								item.Identificacion,
@@ -105,7 +105,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								item.TCompra,
 								TDisponible = (item.TCompra - item.TProcesadas),
 								Porcentaje = Math.Round(((float)item.TProcesadas / (float)item.TCompra) * 100, 2),
-								item.Email
+								item.Email,
+								item.Fechavencimiento,
+								item.Facturador
 							}).FirstOrDefault();
 
 
@@ -131,6 +133,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					alertaSinSaldo(StrIdFacturador);
 					return true;
 				}
+
+
+				NotificacionPlanes notificacion = new NotificacionPlanes();
 
 				//Por cada Facturador se itera lista de Alertas posibles 
 				foreach (TblAlertas alerta in Alertas)
@@ -159,8 +164,40 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								email.EnviaNotificacionAlertaConsumoHGI(Plan.Identificacion, alerta.StrInternoMails, Plan.TCompra, Plan.TProcesadas, Plan.TDisponible, Plan.Porcentaje);
 								//Guardar en el historico de notificaciones								
 							}
+
+							//Guarda la notificación en el historico
+							notificacion = new NotificacionPlanes();
+							notificacion.identificacion = (string.IsNullOrEmpty(Plan.Identificacion)) ? "" : Plan.Identificacion;
+							notificacion.facturador = Plan.Facturador;
+							//notificacion.fechavencimiento = (Plan.Fechavencimiento == null) ? "" : Plan.Fechavencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+							notificacion.fechavencimiento = Plan.Fechavencimiento;
+							notificacion.nplanes = Plan.Planes;
+							notificacion.tcompra = Plan.TCompra;
+							notificacion.tprocesadas = Plan.TProcesadas;
+							notificacion.tdisponibles = Plan.TDisponible;
+							notificacion.valorindicador = string.Format("{0}%", Plan.Porcentaje.ToString("F"));
+							notificacion.alerta = alerta.StrDescripcion;
+							notificacion.idalerta = alerta.IntIdAlerta;
+							notificacion.notificado = "SI";
+							if (alerta.IntCliente == true && alerta.IntInterno == true)
+							{
+								notificacion.email = string.Format("Interno:{0} Cliente:{1}", alerta.StrInternoMails, Plan.Email);
+							}
+							else
+							{
+								//Evalua el tipo  envio de notificación
+								if (alerta.IntCliente == true)
+								{
+									notificacion.email = string.Format("Cliente:{0}", Plan.Email);
+								}
+								if (alerta.IntInterno == true)
+								{
+									notificacion.email = string.Format("Interno:{0}", alerta.StrInternoMails);
+								}
+							}													
+
 							_AlertasHist = new Ctl_AlertasHistAudit();
-							_AlertasHist.Crear(alerta.IntIdAlerta, Plan.StrIdSeguridadFact, Plan.Identificacion, string.Format("Notificación : {0}  Compra:{1} Procesados:{2} Disponibles:{3}  Porcentaje:{4}", alerta.StrDescripcion, Plan.TCompra, Plan.TProcesadas, Plan.TDisponible, Plan.Porcentaje), (Int32)TipoAlerta.Porcenjate, Guid.Empty);
+							_AlertasHist.Crear(alerta.IntIdAlerta, Plan.StrIdSeguridadFact, Plan.Identificacion, Newtonsoft.Json.JsonConvert.SerializeObject(notificacion), (Int32)TipoAlerta.Porcenjate, Guid.Empty);
 							//break;
 						}
 
@@ -419,10 +456,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						notificacion = new NotificacionPlanes();
 						if (Obligado.Porcentaje > alerta.IntValor)
 						{
-							List<TblHistAlertas> HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, alerta.IntIdAlerta);
+							TblHistAlertas HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, alerta.IntIdAlerta).FirstOrDefault();
 							notificacion.identificacion = (string.IsNullOrEmpty(Obligado.Identificacion)) ? "" : Obligado.Identificacion;
 							notificacion.facturador = (string.IsNullOrEmpty(Obligado.Facturador)) ? "" : Obligado.Facturador;
-							notificacion.fechavencimiento = (Obligado.Fechavencimiento == null) ? "" : Obligado.Fechavencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+							//notificacion.fechavencimiento = (Obligado.Fechavencimiento == null) ? "" : Obligado.Fechavencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+							notificacion.fechavencimiento = Obligado.Fechavencimiento;
 							notificacion.nplanes = Obligado.Planes;
 							notificacion.tcompra = Obligado.TCompra;
 							notificacion.tprocesadas = Obligado.TProcesadas;
@@ -430,15 +468,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							notificacion.valorindicador = string.Format("{0}%", Obligado.Porcentaje.ToString("F"));
 							notificacion.alerta = alerta.StrDescripcion;
 							notificacion.idalerta = alerta.IntIdAlerta;
-							notificacion.idseguridadEmpresa = Obligado.idseguridadEmpresa;
+							notificacion.idseguridadEmpresa = Obligado.idseguridadEmpresa;							
+
 							//Si no se le ha notificado																			
-							if (HistAlerta == null || HistAlerta.Count == 0)
+							if (HistAlerta == null )
 							{
 								notificacion.notificado = "NO";
+								notificacion.observaciones = string.Empty;
+								notificacion.fecha = null;
 							}
 							else
 							{
 								notificacion.notificado = "SI";
+								notificacion.observaciones = HistAlerta.StrObservaciones;
+								notificacion.fecha = HistAlerta.DatFecha;
 							}
 							if (alerta.IntCliente == true && alerta.IntInterno == true)
 							{
@@ -455,8 +498,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								{
 									notificacion.email = string.Format("Interno:{0}", alerta.StrInternoMails);
 								}
-							}
-							LogExcepcion.Guardar(new Exception("Paso 6"));
+							}							
 							Listanotificacion.Add(notificacion);
 							//break;
 						}
@@ -507,7 +549,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						notificacion.tdisponibles = (plan.IntNumTransaccCompra - plan.IntNumTransaccProcesadas);
 						notificacion.valorindicador = string.Format("{0} Días", plan.DiasRestantes.ToString());
 						notificacion.alerta = Alerta.StrDescripcion;
-						notificacion.fechavencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+						//notificacion.fechavencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+						notificacion.fechavencimiento = plan.DatFechaVencimiento;
 						notificacion.idalerta = Alerta.IntIdAlerta;
 						notificacion.idseguridadEmpresa = plan.idseguridadEmpresa;
 						if (Alerta.IntCliente == true && Alerta.IntInterno == true)
@@ -531,10 +574,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						if (HistAlerta == null)
 						{
 							notificacion.notificado = "NO";
+							notificacion.observaciones = string.Empty;
 						}
 						else
 						{
 							notificacion.notificado = "SI";
+							notificacion.observaciones = HistAlerta.StrObservaciones;
 						}
 
 						Listanotificacion.Add(notificacion);
@@ -565,11 +610,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					{
 						notificacion = new NotificacionPlanes();
 
-						List<TblHistAlertas> HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, idalertasinplan);
+						List<TblHistAlertas> HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, Alerta.IntIdAlerta);
 
 						notificacion.identificacion = Obligado.Identificacion;
 						notificacion.facturador = Obligado.Facturador;
-						notificacion.fechavencimiento = "";
+						notificacion.fechavencimiento = null;
 						notificacion.nplanes = Obligado.plan;
 						notificacion.idalerta = Alerta.IntIdAlerta;
 						notificacion.alerta = Alerta.StrDescripcion;
@@ -578,10 +623,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						if (HistAlerta == null || HistAlerta.Count == 0)
 						{
 							notificacion.notificado = "NO";
+							notificacion.observaciones = string.Empty;
 						}
 						else
 						{
 							notificacion.notificado = "SI";
+							notificacion.observaciones = HistAlerta.FirstOrDefault().StrObservaciones;
 						}
 						if (Alerta.IntCliente == true && Alerta.IntInterno == true)
 						{
@@ -622,46 +669,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
-		#region Objetos
-		/// <summary>
-		/// Objeto de Notificación de Alertas por fecha de vencimiento de planes, Facturadores sin planes o porcentaje de planes con alto consumo.
-		/// </summary>
-		public class NotificacionAlertaporVencer
-		{
-			public string Documento { get; set; }
-			public string Facturador { get; set; }
-			public int adquiridas { get; set; }
-			public int procesados { get; set; }
-			public int disponibles { get; set; }
-			public double Porcentaje { get; set; }
-			public string Fecha { get; set; }
-			public int tipo { get; set; }
-			public Guid idseguridadEmpresa { get; set; }
-		}
-
-
-		public class NotificacionPlanes
-		{
-			public DateTime fecha { get; set; }
-			public string fechavencimiento { get; set; }
-			public string identificacion { get; set; }
-			public string facturador { get; set; }
-			public int nplanes { get; set; }
-			public int tcompra { get; set; }
-			public int tprocesadas { get; set; }
-			public int tdisponibles { get; set; }
-			public string valorindicador { get; set; }
-			public string email { get; set; }
-			public string alerta { get; set; }
-			public string notificado { get; set; }
-			public int idalerta { get; set; }
-			public Guid idseguridadEmpresa { get; set; }
-		}
-
-
-
-		#endregion
-
 		#region Sonda
 		public async Task SondaPlanesPorVencer()
 		{
@@ -695,6 +702,48 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				LogExcepcion.Guardar(excepcion);
 			}
 		}
+
+		#endregion
+
+		#region Objetos
+		/// <summary>
+		/// Objeto de Notificación de Alertas por fecha de vencimiento de planes, Facturadores sin planes o porcentaje de planes con alto consumo.
+		/// </summary>
+		public class NotificacionAlertaporVencer
+		{
+			public string Documento { get; set; }
+			public string Facturador { get; set; }
+			public int adquiridas { get; set; }
+			public int procesados { get; set; }
+			public int disponibles { get; set; }
+			public double Porcentaje { get; set; }
+			public string Fecha { get; set; }
+			public int tipo { get; set; }
+			public Guid idseguridadEmpresa { get; set; }
+		}
+
+
+		public class NotificacionPlanes
+		{
+			public  DateTime? fecha { get; set; }
+			public DateTime? fechavencimiento { get; set; }
+			public string identificacion { get; set; }
+			public string facturador { get; set; }
+			public int nplanes { get; set; }
+			public int tcompra { get; set; }
+			public int tprocesadas { get; set; }
+			public int tdisponibles { get; set; }
+			public string valorindicador { get; set; }
+			public string email { get; set; }
+			public string alerta { get; set; }
+			public string notificado { get; set; }
+			public int idalerta { get; set; }
+			public Guid idseguridadEmpresa { get; set; }			
+			public string observaciones { get; set; }
+			
+		}
+
+
 
 		#endregion
 	}
