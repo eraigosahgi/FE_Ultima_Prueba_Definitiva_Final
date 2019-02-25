@@ -193,6 +193,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1Rev4", "v2019.1Rev4"
 		Documentacion\Liberaciones\v2019.1Rev4\Consulta de Estado de Planes.txt = Documentacion\Liberaciones\v2019.1Rev4\Consulta de Estado de Planes.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebConfig - Ambientes", "WebConfig - Ambientes", "{85FACE89-D7D2-47B0-90D3-B90E14AD15EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Produccion", "Produccion", "{8C6D6F98-41CD-44D3-9C2F-9E4FAA99ACC5}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\WebConfig - Ambientes\Produccion\Web.config = Documentacion\WebConfig - Ambientes\Produccion\Web.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Habilitacion", "Habilitacion", "{622730B6-AB41-4894-BDCB-AE0E339C64B6}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\WebConfig - Ambientes\Habilitacion\Web.config = Documentacion\WebConfig - Ambientes\Habilitacion\Web.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -332,5 +344,8 @@ Global
 		{FF1660BC-E1CE-4614-8840-4EC6909431E0} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{A3A0A8E3-3480-47A6-B494-FA61C23A0979} = {2088ABAD-E463-4F38-8668-C410072AC57F}
 		{C420E912-5DC2-4F53-9B3A-A882B62C7C58} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{85FACE89-D7D2-47B0-90D3-B90E14AD15EA} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{8C6D6F98-41CD-44D3-9C2F-9E4FAA99ACC5} = {85FACE89-D7D2-47B0-90D3-B90E14AD15EA}
+		{622730B6-AB41-4894-BDCB-AE0E339C64B6} = {85FACE89-D7D2-47B0-90D3-B90E14AD15EA}
 	EndGlobalSection
 EndGlobal
