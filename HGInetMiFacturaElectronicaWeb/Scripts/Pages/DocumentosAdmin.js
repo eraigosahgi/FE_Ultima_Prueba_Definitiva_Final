@@ -284,6 +284,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 							var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
 
 							var visible_acuse = " title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";
+							console.log(options.data.EstadoAcuse);
 
 							if (options.data.Pdf)
 								visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer;'";
@@ -295,7 +296,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 							else
 								options.data.Xml = "#";
 
-							if (options.data.EstadoAcuse != 'Pendiente')
+							if (options.data.EstadoAcuse == 'Aprobado' || options.data.EstadoAcuse == 'Rechazado' || options.data.EstadoAcuse == 'Aprobado Tácito')
 								visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
 							else
 								visible_acuse = "#";
@@ -446,7 +447,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 						else
 							visible_xml = "#";
 
-						if (options.data.EstadoAcuse != 'Pendiente')
+						if (options.data.EstadoAcuse == 'Aprobado' || options.data.EstadoAcuse == 'Rechazado' || options.data.EstadoAcuse == 'Aprobado Tácito')
 							visible_acuse = "href='" + options.data.RutaAcuse + "' class='icon-file-eye2'  title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
 						else
 							visible_acuse = "#";

@@ -56,20 +56,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-			// ruta física del xml
-			string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
-			carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
-
-
-			// url pública del xml
+			// url pública de los archivos
 			string url_ppal = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
-			respuesta.UrlXmlUbl = string.Format(@"{0}/{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
 			// url pública del zip
 			string url_ppal_zip = string.Format(@"{0}/{1}/{2}.zip", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreZip);
 
 			documentoBd.StrCufe = respuesta.Cufe;
-			documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
 			documentoBd.StrUrlArchivoZip = url_ppal_zip;
 			documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 			documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
@@ -81,17 +74,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 			respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 
-			//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
-			System.Threading.Thread.Sleep(5000);
-
 			//Auditoria
-
 			try
-			{			
+			{
 				Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 				clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.CompresionXml, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, "Compresión Archivo Zip", url_ppal_zip, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
 			}
 			catch (Exception e) { }
+
+			//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
+			System.Threading.Thread.Sleep(5000);
 
 			return acuse;
 		}

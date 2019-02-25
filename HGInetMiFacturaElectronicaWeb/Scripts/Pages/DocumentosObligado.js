@@ -471,7 +471,7 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
 						else
 							visible_xml = "#";
 
-						if (options.data.EstadoAcuse != 'Pendiente')
+						if (options.data.EstadoAcuse == 'Aprobado' || options.data.EstadoAcuse == 'Rechazado' || options.data.EstadoAcuse == 'Aprobado Tácito')
 							visible_acuse = "href='" + options.data.RutaAcuse + "' class='icon-file-eye2'  title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
 						else
 							visible_acuse = "#";

@@ -79,6 +79,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Correo No Entregado Facturación Electronica.
+        /// </summary>
+        public static string AsuntoNotificacionCorreoNoEntregado {
+            get {
+                return ResourceManager.GetString("AsuntoNotificacionCorreoNoEntregado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Facturación Electrónica.
         /// </summary>
         public static string AsuntoNotificacionDocumento {
@@ -273,6 +282,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         public static string RutaPlantillaBienvenidaObligado {
             get {
                 return ResourceManager.GetString("RutaPlantillaBienvenidaObligado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_correo_no_entregado.html.
+        /// </summary>
+        public static string RutaplantillaCorreoNoEntregado {
+            get {
+                return ResourceManager.GetString("RutaplantillaCorreoNoEntregado", resourceCulture);
             }
         }
         

@@ -202,13 +202,13 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                     			visible_xml = "href='" + options.data.Xml + "' class='icon-file-xml' style='pointer-events:auto;cursor: pointer;'";
                     		else
                     			visible_xml = "#";
-
-                    		if (options.data.EstadoAcuse != 'Pendiente')
+                    		
+                    		if (options.data.EstadoAcuse == 'Aprobado' || options.data.EstadoAcuse == 'Rechazado' || options.data.EstadoAcuse == 'Aprobado Tácito')
                     			visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
                     		else
                     			visible_acuse = "#";
-
-                    		if (options.data.XmlAcuse)
+                    		console.log(options.data.XmlAcuse);
+                    		if (options.data.XmlAcuse != null)
                     			visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
                     		else
                     			visible_xml_acuse = "#";
@@ -389,12 +389,12 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
 							else
 								visible_xml = "#";
 
-							if (options.data.EstadoAcuse != 'Pendiente')
+							if (options.data.EstadoAcuse == 'Aprobado' || options.data.EstadoAcuse == 'Rechazado' || options.data.EstadoAcuse == 'Aprobado Tácito')
 								visible_acuse = "href='" + options.data.RutaAcuse + "' class='icon-file-eye2'  title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
 							else
 								visible_acuse = "#";
-
-							if (options.data.XmlAcuse != "#")
+							console.log(options.data.XmlAcuse);
+							if (options.data.XmlAcuse != null)
 								visible_xml_acuse = "href='" + options.data.XmlAcuse + "' class='icon-file-xml' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
 							else
 								visible_xml_acuse = "#";

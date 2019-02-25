@@ -34,7 +34,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Envia correo al adquiriente que tiene el objeto
-				List<MensajeEnvio> mensajes= email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email,respuesta.IdPeticion.ToString());
+				List<MensajeEnvio> mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString());
 
 				//Valida si el proceso es completo para actualizar estados y bd
 				if (!notificacion_basica)
@@ -57,7 +57,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Actualiza la categoria con el nuevo estado
 					respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
-					ValidarRespuesta(respuesta,"", mensajes,false);
+					ValidarRespuesta(respuesta, "", mensajes, false);
 				}
 				else
 				{
@@ -67,6 +67,35 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Actualiza Documento en Base de Datos
 					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 				}
+
+				LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.MensajeResumen datos_retorno = new LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.MensajeResumen();
+
+				//Consulta el Estado del correo enviado
+				try
+				{
+					email = new Ctl_EnvioCorreos();
+
+					datos_retorno = email.ConsultarCorreo((long)mensajes[0].Data[0].MessageID);
+				}
+				catch (Exception ex)
+				{
+					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error consultando el estado del correo Enviado al adquiriente. Detalle: {0} -", ex.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, ex.InnerException);
+				}
+
+				if (AdquirienteRecibo.Enviado.ToString().Equals(datos_retorno.Estado))
+				{
+					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.Enviado.GetHashCode();
+					documentoBd.DatAdquirienteFechaRecibo = datos_retorno.Recibido;
+					respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
+				}
+				else
+				{
+					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
+					documentoBd.DatAdquirienteFechaRecibo = datos_retorno.Recibido;
+					respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
+					List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documentoBd, documento_obj.DatosAdquiriente.Telefono, documento_obj.DatosAdquiriente.Email, datos_retorno.Estado, respuesta.IdPeticion.ToString());
+				}
+
 
 
 			}

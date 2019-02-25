@@ -210,6 +210,10 @@
     <value>emails\\plantilla_bienvenida_facturador.html</value>
     <comment>Ruta de la plantilla Html de envío bienvenida Obligado a facturar</comment>
   </data>
+  <data name="RutaplantillaCorreoNoEntregado" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_correo_no_entregado.html</value>
+    <comment>Ruta de plantilla Html de notificación de facturador del correo no entregado</comment>
+  </data>
   <data name="RutaPlantillaEnviarSerial" xml:space="preserve">
     <value>emails\\plantilla_envio_serial.html</value>
     <comment>Ruta de la plantilla Html de envío serial de activacion al facturador</comment>
@@ -265,5 +269,8 @@
   <data name="TamanoAnexo" xml:space="preserve">
     <value>2097152</value>
     <comment>Tamaño máximo de archivo permitido en los Anexos</comment>
+  </data>
+  <data name="AsuntoNotificacionCorreoNoEntregado" xml:space="preserve">
+    <value>Correo No Entregado Facturación Electronica</value>
   </data>
 </root>

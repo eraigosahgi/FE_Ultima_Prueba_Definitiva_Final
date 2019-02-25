@@ -237,7 +237,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta);
+						ValidarRespuesta(respuesta,"",null,false);
 
 						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
 						{

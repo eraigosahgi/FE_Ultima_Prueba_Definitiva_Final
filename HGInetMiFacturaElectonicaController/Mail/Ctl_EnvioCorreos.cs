@@ -16,6 +16,7 @@ using LibreriaGlobalHGInet.HgiNet.Controladores;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
+using LibreriaGlobalHGInet.Peticiones;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -1963,8 +1964,272 @@ namespace HGInetMiFacturaElectonicaController
 			}
 		}
 
-		/*
-		 
-		*/
+		/// <summary>
+		/// Metodo para consultar el Estado del Envio de correo a Mailjet
+		/// </summary>
+		/// <param name="MessageID">Id del Mensaje retornado por la plataforma de Mailjet</param>
+		/// <returns></returns>
+		public MensajeResumen ConsultarCorreo(long MessageID)
+		{
+			
+				MensajeResumen datos_retorno = new MensajeResumen();
+
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				MensajeResumenGlobal obj_peticion = new MensajeResumenGlobal();
+				obj_peticion.identificacion = plataforma_datos.IdentificacionHGInetMail;
+				obj_peticion.serial = plataforma_datos.LicenciaHGInetMail;
+				obj_peticion.id_mensaje = MessageID;
+
+				ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", plataforma_datos.RutaHginetMail), TipoContenido.Applicationjson.GetHashCode(), "");
+				try
+				{
+					datos_retorno = cliente.POST(obj_peticion);
+				}
+				catch (Exception excepcion)
+				{
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				}
+				return (datos_retorno);
+
+		}
+
+
+
+		/// <summary>
+		/// Notificacion que se envia al Facturador cuando no es efectivo la entrega del correo al adquiriente
+		/// </summary>
+		/// <param name="documento">Informacion del documento</param>
+		/// <param name="telefono">telefono del Adquiriente</param>
+		/// <param name="email_adquiriente">Email al que fue enviado el correo</param>
+		/// <param name="estado_correo">Estado entregado por Mailjet del correo enviado</param>
+		/// <param name="id_peticion">Peticion generada por la Platforma de Factura Electronica</param>
+		/// <param name="procedencia">Indica quien genera la informacion para la Auditoria</param>
+		/// <param name="usuario"></param>
+		/// <param name="estado"></param>
+		/// <returns></returns>
+		public List<MensajeEnvio> NotificacionCorreofacturador(TblDocumentos documento, string telefono, string email_adquiriente, string estado_correo, string id_peticion = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "", ProcesoEstado estado = ProcesoEstado.RecepcionAcuse)
+		{
+			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
+
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaplantillaCorreoNoEntregado);
+
+				string asunto = string.Empty;
+
+				// obtiene los datos del facturador electrónico
+				Ctl_Empresa facturador_electronico = new Ctl_Empresa();
+				TblEmpresas empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
+
+				if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+				{
+					asunto = string.Format("{0} (HABILITACIÓN)", Constantes.AsuntoNotificacionCorreoNoEntregado);
+				}
+				else
+				{
+					asunto = Constantes.AsuntoNotificacionCorreoNoEntregado;
+				}
+
+				// envía como email de respuesta facturador electrónico
+				DestinatarioEmail remitente = new DestinatarioEmail();
+				remitente.Nombre = Constantes.NombreRemitenteEmail;
+				remitente.Email = Constantes.EmailRemitente;
+
+				// obtiene los datos del adquiriente
+				Ctl_Empresa adquiriente = new Ctl_Empresa();
+				TblEmpresas empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaAdquiriente);
+
+				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+
+				// recibe el email el adquiriente
+				DestinatarioEmail destinatario = new DestinatarioEmail();
+				destinatario.Nombre = empresa_obligado.StrRazonSocial;
+				destinatario.Email = empresa_obligado.StrMailAdmin;
+				correos_destino.Add(destinatario);
+
+				// envía correo electrónico con copia de auditoría
+				List<DestinatarioEmail> correos_copia_oculta = null;
+				if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+				{
+					correos_copia_oculta = new List<DestinatarioEmail>();
+
+					DestinatarioEmail copia_oculta = new DestinatarioEmail();
+					copia_oculta.Nombre = "Auditoría";
+					copia_oculta.Email = Constantes.EmailCopiaOculta;
+					correos_copia_oculta.Add(copia_oculta);
+				}
+
+
+				// plantilla Html
+				if (!string.IsNullOrWhiteSpace(ruta_plantilla_html))
+				{
+					FileInfo file = new FileInfo(ruta_plantilla_html);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+
+					if (file != null)
+					{
+
+						if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
+
+						// Datos del Tercero
+						mensaje = mensaje.Replace("{ImagenLogo}", "<img id='ImgLogo' src='" + "" + "' style='border: none; border-radius: 0px; display: block; outline: none; text-decoration: none; width: 100%; height: auto;' width='233' />");
+						mensaje = mensaje.Replace("{NombreAdquiriente}", empresa_adquiriente.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitAdquiriente}", empresa_adquiriente.StrIdentificacion);
+						mensaje = mensaje.Replace("{DigitovAdquiriente}", empresa_adquiriente.IntIdentificacionDv.ToString());
+						mensaje = mensaje.Replace("{EmailAdquiriente}", email_adquiriente);
+						mensaje = mensaje.Replace("{EstadoCorreo}", estado_correo);
+
+
+
+						if (!string.IsNullOrWhiteSpace(telefono))
+							mensaje = mensaje.Replace("{TelefonoAdquiriente}", telefono);
+						else
+							mensaje = mensaje.Replace("{TelefonoAdquiriente}", "");
+
+						// Datos Facturador Electronico
+						if (empresa_obligado.StrTipoIdentificacion.Equals("31"))
+							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
+						else
+							mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
+
+						mensaje = mensaje.Replace("{NombreTercero}", empresa_obligado.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitTercero}", empresa_obligado.StrIdentificacion);
+						mensaje = mensaje.Replace("{Digitov}", empresa_obligado.IntIdentificacionDv.ToString());
+
+
+						//Datos del Documento
+
+						// obtiene el título para el tipo de documento
+						TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(documento.IntDocTipo);
+						string titulo_documento = Enumeracion.GetDescription(doc_tipo);
+
+						mensaje = mensaje.Replace("{TipoDocumento}", titulo_documento);
+						mensaje = mensaje.Replace("{NumeroDocumento}", String.Format("{0}{1}", documento.StrPrefijo, documento.IntNumero.ToString()));
+						mensaje = mensaje.Replace("{FechaDocumento}", documento.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet));
+						mensaje = mensaje.Replace("{TotalDocumento}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
+						mensaje = mensaje.Replace("{CodigoCUFE}", documento.StrCufe);
+						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
+
+						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
+
+						List<Adjunto> archivos = new List<Adjunto>();
+
+						if (string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
+							throw new ApplicationException("No se encontró ruta de archivo pdf");
+
+
+						byte[] bytes_pdf = Archivo.ObtenerWeb(documento.StrUrlArchivoPdf);
+						string ruta_fisica_pdf = Convert.ToBase64String(bytes_pdf);
+						string nombre_pdf = Path.GetFileName(documento.StrUrlArchivoPdf);
+
+
+						if (!string.IsNullOrEmpty(ruta_fisica_pdf))
+						{
+							Adjunto adjunto = new Adjunto();
+							adjunto.ContenidoB64 = ruta_fisica_pdf;
+							adjunto.Nombre = nombre_pdf;
+							archivos.Add(adjunto);
+						}
+
+
+						if (string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
+							throw new ApplicationException("No se encontró ruta de archivo xml");
+
+						byte[] bytes_xml = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl);
+						string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
+						string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
+
+						if (!string.IsNullOrEmpty(ruta_fisica_xml))
+						{
+							Adjunto adjunto = new Adjunto();
+							adjunto.ContenidoB64 = ruta_fisica_xml;
+							adjunto.Nombre = nombre_xml;
+							archivos.Add(adjunto);
+						}
+
+						//Proceso para los anexos
+						if (documento.StrUrlAnexo != null)
+						{
+							if (!string.IsNullOrEmpty(documento.StrUrlAnexo))
+							{
+								mensaje = mensaje.Replace("{Anexos}", "Anexos");
+								mensaje = mensaje.Replace("{ObservacionAnexos}", documento.StrObservacionAnexo);
+								mensaje = mensaje.Replace("{UrlAnexos}", documento.StrUrlAnexo);
+
+								if (documento.IntPesoAnexo > 0)
+								{
+
+									byte[] bytes_anexo = Archivo.ObtenerWeb(documento.StrUrlAnexo);
+									string ruta_fisica_anexo = Convert.ToBase64String(bytes_anexo);
+									string nombre_anexo = Path.GetFileName(documento.StrUrlAnexo);
+
+									if (!string.IsNullOrEmpty(ruta_fisica_anexo))
+									{
+										Adjunto adjunto = new Adjunto();
+										adjunto.ContenidoB64 = ruta_fisica_anexo;
+										adjunto.Nombre = nombre_anexo;
+										archivos.Add(adjunto);
+									}
+								}
+
+							}
+							else
+							{
+								mensaje = mensaje.Replace("{Anexos}", "");
+								mensaje = mensaje.Replace("{ObservacionAnexos}", "");
+								mensaje = mensaje.Replace("{UrlAnexos}", "");
+							}
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{Anexos}", "");
+							mensaje = mensaje.Replace("{ObservacionAnexos}", "");
+							mensaje = mensaje.Replace("{UrlAnexos}", "");
+						}
+						// envía el correo electrónico
+						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
+					}
+				}
+				try
+				{
+					Guid peticion = (string.IsNullOrEmpty(id_peticion) ? Guid.Empty : Guid.Parse(id_peticion));
+					string mensaje = (string.IsNullOrEmpty(id_peticion) ? "Reenvio de Documento" : "Notificación Correo no entregado");
+					clase_auditoria.Crear(documento.StrIdSeguridad, peticion, empresa_obligado.StrIdentificacion, estado, TipoRegistro.Proceso, procedencia, usuario, mensaje, string.Empty, respuesta_email, documento.StrPrefijo, Convert.ToString(documento.IntNumero));
+				}
+				catch (Exception) { throw; }
+				return respuesta_email;
+			}
+			catch (Exception excepcion)
+			{
+				try
+				{
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, estado, TipoRegistro.Proceso, procedencia, usuario, string.Format("NotificacionDocumento - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero));
+				}
+				catch (Exception) { throw; }
+
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+
+
+		}
+
+
+
 	}
+
 }

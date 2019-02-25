@@ -238,8 +238,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
-					RespuestaVisible = (d.IntAdquirienteRecibo != 0) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
+					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
+					CamposVisibles = (d.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode() && d.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode()) ? true : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
 					Estatus = Pago.VerificarSaldo(id_seguridad),
@@ -280,6 +280,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
 
+				//Actualiza el estado del Acuse como leido
+				ctl_documento = new Ctl_Documento();
+				TblDocumentos documento = new TblDocumentos();
+				documento = datos.FirstOrDefault();
+				if ( ((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode())))
+				{
+					if ((documento.IntAdquirienteRecibo != (short)AdquirienteRecibo.Leido.GetHashCode()))
+					{
+						documento.IntAdquirienteRecibo = (short)AdquirienteRecibo.Leido.GetHashCode();
+						documento.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+						ctl_documento.Actualizar(documento);
+					}
+				}
+
+
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 				if (datos == null)
 				{
@@ -299,8 +314,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
-					RespuestaVisible = (d.IntAdquirienteRecibo != 0) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false,
+					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
+					CamposVisibles = (d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Pendiente.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Leido.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Enviado.GetHashCode()) ? true : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
 					Estatus = Pago.VerificarSaldo(id_seguridad),

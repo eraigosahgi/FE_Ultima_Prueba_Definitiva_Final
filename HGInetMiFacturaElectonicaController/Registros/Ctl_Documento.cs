@@ -84,6 +84,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				case 5:
 				case 6:
 				case 20:
+				case 22:
 					categoria = CategoriaEstado.Recibido.GetHashCode();
 					break;
 				case 7:

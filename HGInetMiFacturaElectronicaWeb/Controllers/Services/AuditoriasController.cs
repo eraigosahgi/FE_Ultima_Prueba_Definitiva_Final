@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Auditorias;
+﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -120,24 +121,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				//Valida los datos de la sesión.
 				//Sesion.ValidarSesion();
 				respuesta = respuesta.Replace("[", "").Replace("]", "");
-				dynamic datos_retorno = JsonConvert.DeserializeObject(respuesta);
+				dynamic datos = JsonConvert.DeserializeObject(respuesta);
 
-				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+				MensajeResumen datos_retorno = new MensajeResumen();
 
-				MensajeResumenGlobal obj_peticion = new MensajeResumenGlobal();
-				obj_peticion.identificacion = plataforma_datos.IdentificacionHGInetMail;
-				obj_peticion.serial = plataforma_datos.LicenciaHGInetMail;
-				obj_peticion.id_mensaje = (long)datos_retorno.MessageID;
+				datos_retorno = email.ConsultarCorreo((long)datos.MessageID);
 
-				ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", plataforma_datos.RutaHginetMail), TipoContenido.Applicationjson.GetHashCode(), "");
-				try
-				{
-					datos_retorno = cliente.POST(obj_peticion);
-				}
-				catch (Exception ex)
-				{
-					var cod = cliente.CodHttp;
-				}
+
 				return Ok(datos_retorno);
 			}
 			catch (Exception excepcion)
