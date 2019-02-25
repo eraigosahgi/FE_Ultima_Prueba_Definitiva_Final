@@ -27,7 +27,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
 
 		public DbSet<TblAuditDocumentos> TblAuditDocumentos { set; get; }
 
-		public DbSet<TblHistAlertas> TblHistAlertas { set; get; }
+		public DbSet<TblSeguimientoAlertas> TblSeguimientoAlertas { set; get; }
 
 		/// <summary>
 		/// Establece la conexión con el modelo de datos, realiza la asignación de la base de datos y establece el nombre de la colección a gestionar.

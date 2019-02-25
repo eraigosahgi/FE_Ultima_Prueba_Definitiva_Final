@@ -35,7 +35,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	});
 
 
-	SrvFiltro.ObtenerFiltro('Empresa Descuenta Planes', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 9).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Descuenta', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 9).then(function (Datos) {
 		$scope.EmpresaDescuenta = Datos;
 	});
 

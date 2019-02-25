@@ -10,17 +10,21 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos
 {
-	public class TblHistAlertas: TblGenerica
-	{	
+	public class TblSeguimientoAlertas: TblGenerica
+	{
 
-		[BsonElement("IntIdAlerta")]
-		public int IntIdAlerta { get; set; }
 
 		[BsonElement("DatFecha")]
 		public DateTime DatFecha { get; set; }
 
-		[BsonElement("StrIdSeguridadFact")]
-		public string StrIdSeguridadFact { get; set; }
+		[BsonElement("IntIdTipo")]
+		public int IntIdTipo { get; set; }
+
+		[BsonElement("IntIdAlerta")]
+		public int IntIdAlerta { get; set; }
+
+		[BsonElement("StrIdSeguridadEmpresa")]
+		public string StrIdSeguridadEmpresa { get; set; }
 
 		[BsonElement("StrIdentificacion")]
 		public string StrIdentificacion { get; set; }
@@ -28,11 +32,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos
 		[BsonElement("IntIdEstado")]
 		public int IntIdEstado { get; set; }
 
-		[BsonElement("StrObservaciones")]
-		public string StrObservaciones { get; set; }
+		[BsonElement("StrMensaje")]
+		public string StrMensaje { get; set; }
 
-		[BsonElement("IntTipo")]
-		public int IntTipo { get; set; }
+		[BsonElement("StrResultadoProceso")]
+		public string StrResultadoProceso { get; set; }
 
 		[BsonElement("StrIdSeguridadPlan")]
 		public string StrIdSeguridadPlan { get; set; }

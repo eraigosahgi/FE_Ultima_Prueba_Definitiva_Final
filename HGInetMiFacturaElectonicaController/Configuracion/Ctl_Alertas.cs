@@ -146,7 +146,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					if (Plan.Porcentaje > alerta.IntValor)
 					{
-						List<TblHistAlertas> HistAlerta = _AlertasHist.Obtener(IdentificacionFacturador, alerta.IntIdAlerta);
+						List<TblSeguimientoAlertas> HistAlerta = _AlertasHist.Obtener(IdentificacionFacturador, alerta.IntIdAlerta);
 						//Si no se le ha notificado
 						if (HistAlerta == null || HistAlerta.Count == 0)
 						{
@@ -244,7 +244,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					var Alertas = ObtenerAlerta(100, (Int16)TipoAlerta.SinPlan.GetHashCode()).FirstOrDefault();
 					//Si se cumple la condición de evaluación, entonces se hace una consulta en el historico de alertas
 					//para validar si ya se le envio la notificación y no repetir la misma notificación.
-					List<TblHistAlertas> HistAlerta = _AlertasHist.Obtener(StrIdFacturador, Alertas.IntIdAlerta);
+					List<TblSeguimientoAlertas> HistAlerta = _AlertasHist.Obtener(StrIdFacturador, Alertas.IntIdAlerta);
 					//Si no se le ha notificado
 					if (HistAlerta == null || HistAlerta.Count == 0)
 					{
@@ -311,7 +311,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					foreach (var Plan in Planes)
 					{
 						//para validar si ya se le envio la notificación y no repetir la misma notificación.					
-						TblHistAlertas HistAlerta = _AlertasHist.Obtener(Plan.StrEmpresaFacturador, Alertas.IntIdAlerta, Plan.StrIdSeguridad);
+						TblSeguimientoAlertas HistAlerta = _AlertasHist.Obtener(Plan.StrEmpresaFacturador, Alertas.IntIdAlerta, Plan.StrIdSeguridad);
 						//Si no se le ha notificado
 						if (HistAlerta == null)
 						{
@@ -456,7 +456,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						notificacion = new NotificacionPlanes();
 						if (Obligado.Porcentaje > alerta.IntValor)
 						{
-							TblHistAlertas HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, alerta.IntIdAlerta).FirstOrDefault();
+							TblSeguimientoAlertas HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, alerta.IntIdAlerta).FirstOrDefault();
 							notificacion.identificacion = (string.IsNullOrEmpty(Obligado.Identificacion)) ? "" : Obligado.Identificacion;
 							notificacion.facturador = (string.IsNullOrEmpty(Obligado.Facturador)) ? "" : Obligado.Facturador;
 							//notificacion.fechavencimiento = (Obligado.Fechavencimiento == null) ? "" : Obligado.Fechavencimiento.Value.ToString(Fecha.formato_fecha_hginet);
@@ -480,7 +480,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							else
 							{
 								notificacion.notificado = "SI";
-								notificacion.observaciones = HistAlerta.StrObservaciones;
+								notificacion.observaciones = HistAlerta.StrMensaje;
 								notificacion.fecha = HistAlerta.DatFecha;
 							}
 							if (alerta.IntCliente == true && alerta.IntInterno == true)
@@ -537,7 +537,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					foreach (var plan in Planes)
 					{
 
-						TblHistAlertas HistAlerta = _AlertasHist.Obtener(plan.StrEmpresaFacturador, Alerta.IntIdAlerta, plan.StrIdSeguridad);
+						TblSeguimientoAlertas HistAlerta = _AlertasHist.Obtener(plan.StrEmpresaFacturador, Alerta.IntIdAlerta, plan.StrIdSeguridad);
 
 						notificacion = new NotificacionPlanes();
 
@@ -579,7 +579,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						else
 						{
 							notificacion.notificado = "SI";
-							notificacion.observaciones = HistAlerta.StrObservaciones;
+							notificacion.observaciones = HistAlerta.StrMensaje;
 						}
 
 						Listanotificacion.Add(notificacion);
@@ -610,7 +610,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					{
 						notificacion = new NotificacionPlanes();
 
-						List<TblHistAlertas> HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, Alerta.IntIdAlerta);
+						List<TblSeguimientoAlertas> HistAlerta = _AlertasHist.Obtener(Obligado.Identificacion, Alerta.IntIdAlerta);
 
 						notificacion.identificacion = Obligado.Identificacion;
 						notificacion.facturador = Obligado.Facturador;
@@ -628,7 +628,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						else
 						{
 							notificacion.notificado = "SI";
-							notificacion.observaciones = HistAlerta.FirstOrDefault().StrObservaciones;
+							notificacion.observaciones = HistAlerta.FirstOrDefault().StrMensaje;
 						}
 						if (Alerta.IntCliente == true && Alerta.IntInterno == true)
 						{

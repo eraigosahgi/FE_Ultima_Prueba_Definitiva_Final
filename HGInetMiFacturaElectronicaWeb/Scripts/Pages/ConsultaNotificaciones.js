@@ -8,7 +8,7 @@ ConsultaNotificacionApp.controller('ConsultaNotificacionController', function Co
 	CargarConsulta();
 
 	function CambiarIcono() {
-		$('.dx-datagrid-adaptive-more').addClass("icon-file-eye").removeClass("dx-datagrid-adaptive-more").attr("style", "margin-left:5%; font-size:19px; color: #1E88E5; cursor: pointer;");
+		$('.dx-datagrid-adaptive-more').addClass("icon-file-eye").removeClass("dx-datagrid-adaptive-more").attr("style", "margin-left:5%; font-size:19px; color: #1E88E5; cursor: pointer; title:'Detalle Notificación';");
 	}
 	function CargarConsulta() {
 		SrvAlertas.ObtenerAlertas().then(function (data) {
@@ -51,8 +51,8 @@ ConsultaNotificacionApp.controller('ConsultaNotificacionController', function Co
 			 	alignment: "center",
 			 	width: "6%",
 			 	cellTemplate: function (container, options) {
-			 		var ver = "class='icon-user-tie' title='ver Detalle Empresa' style='margin-left:5%; font-size:19px'";
-			 		$("<div>")
+			 		var ver = "class='icon-user-tie' style='margin-left:5%; font-size:19px'";
+			 		$("<div title='Detalle : " + options.data.facturador + "' >")
 						.append(
 							$("<i " + ver + "></i>").dxButton({
 								onClick: function () {

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace HGInetMiFacturaElectonicaController.Auditorias
 {
 
-	public class Ctl_AlertasHistAudit : MongoDBContext<TblHistAlertas>
+	public class Ctl_AlertasHistAudit : MongoDBContext<TblSeguimientoAlertas>
 	{
 		#region Constructores 
 
@@ -30,7 +30,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// </summary>
 		/// <param name="datos">datos del registro.</param>
 		/// <returns></returns>
-		private TblHistAlertas Crear(TblHistAlertas datos)
+		private TblSeguimientoAlertas Crear(TblSeguimientoAlertas datos)
 		{
 			try
 			{
@@ -57,19 +57,19 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="Tipo"></param>
 		/// <param name="StrIdSeguridadPlan"></param>
 		/// <returns></returns>
-		public TblHistAlertas Crear(int IdAlerta, Guid facturador,string StrIdentificacion,string StrObservaciones,int Tipo,Guid StrIdSeguridadPlan)
+		public TblSeguimientoAlertas Crear(int IdAlerta, Guid facturador,string StrIdentificacion,string StrObservaciones,int Tipo,Guid StrIdSeguridadPlan)
 		{
 			try
 			{
-				TblHistAlertas datos = new HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos.TblHistAlertas()
+				TblSeguimientoAlertas datos = new HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos.TblSeguimientoAlertas()
 				{
 					IntIdAlerta = IdAlerta,
 					DatFecha = Fecha.GetFecha(),
-					StrIdSeguridadFact = facturador.ToString(),					
+					StrIdSeguridadEmpresa = facturador.ToString(),					
 					IntIdEstado = 1,
 					StrIdentificacion = StrIdentificacion,
-					StrObservaciones= StrObservaciones,
-					IntTipo=Tipo,
+					StrMensaje= StrObservaciones,
+					IntIdTipo=Tipo,
 					StrIdSeguridadPlan = StrIdSeguridadPlan.ToString()
 				};
 
@@ -89,11 +89,11 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="StrIdSeguridad">Id de seguridad del facturador</param>
 		/// <param name="IdAlerta">Id de la alerta</param>
 		/// <returns></returns>
-		public List<TblHistAlertas> Obtener(string StrIdentificacion, int IdAlerta) {
+		public List<TblSeguimientoAlertas> Obtener(string StrIdentificacion, int IdAlerta) {
 
 			try
 			{
-				List<TblHistAlertas> AlertaHist = this.Obtener(x => (x.StrIdentificacion.Equals(StrIdentificacion)) && (x.IntIdAlerta == IdAlerta) && (x.IntIdEstado==(Int32)Notificacion.Activa.GetHashCode()));				
+				List<TblSeguimientoAlertas> AlertaHist = this.Obtener(x => (x.StrIdentificacion.Equals(StrIdentificacion)) && (x.IntIdAlerta == IdAlerta) && (x.IntIdEstado==(Int32)Notificacion.Activa.GetHashCode()));				
 
 				return AlertaHist;
 			}
@@ -110,12 +110,12 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="IdAlerta">Id de la alerta</param>
 		/// <param name="StrIdentificacion">StrIdSeguridadPlan</param>
 		/// <returns></returns>
-		public TblHistAlertas Obtener(string StrIdentificacion, int IdAlerta,Guid StrIdSeguridadPlan)
+		public TblSeguimientoAlertas Obtener(string StrIdentificacion, int IdAlerta,Guid StrIdSeguridadPlan)
 		{
 
 			try
 			{
-				TblHistAlertas AlertaHist = this.Obtener(x => (x.StrIdentificacion.Equals(StrIdentificacion)) && (x.IntIdAlerta == IdAlerta) && (x.IntIdEstado == (Int32)Notificacion.Activa.GetHashCode()) && (x.StrIdSeguridadPlan== StrIdSeguridadPlan.ToString())).FirstOrDefault();
+				TblSeguimientoAlertas AlertaHist = this.Obtener(x => (x.StrIdentificacion.Equals(StrIdentificacion)) && (x.IntIdAlerta == IdAlerta) && (x.IntIdEstado == (Int32)Notificacion.Activa.GetHashCode()) && (x.StrIdSeguridadPlan== StrIdSeguridadPlan.ToString())).FirstOrDefault();
 
 				return AlertaHist;
 			}
@@ -132,25 +132,25 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="StrIdSeguridad">Id de seguridad del facturador</param>
 		/// <param name="IdAlerta"></param>
 		/// <returns></returns>
-		public List<TblHistAlertas> ReiniciarAlertaPorcentaje(Guid StrIdSeguridad)
+		public List<TblSeguimientoAlertas> ReiniciarAlertaPorcentaje(Guid StrIdSeguridad)
 		{
 			try
 			{
-				List<TblHistAlertas> AlertaHistorico = new List<TblHistAlertas>();
-				List<TblHistAlertas> AlertaHist = new List<TblHistAlertas>();
+				List<TblSeguimientoAlertas> AlertaHistorico = new List<TblSeguimientoAlertas>();
+				List<TblSeguimientoAlertas> AlertaHist = new List<TblSeguimientoAlertas>();
 				try
 				{
-					AlertaHistorico = this.Obtener(x => (x.StrIdSeguridadFact.Equals(StrIdSeguridad)) && (x.IntIdEstado == (Int32)Notificacion.Activa.GetHashCode()));
+					AlertaHistorico = this.Obtener(x => (x.StrIdSeguridadEmpresa.Equals(StrIdSeguridad)) && (x.IntIdEstado == (Int32)Notificacion.Activa.GetHashCode()));
 					//(x.IntTipo == (Int32)TipoAlerta.SinPlan.GetHashCode())
-					 AlertaHist = AlertaHistorico.Where(x=>(x.IntTipo == (Int32)TipoAlerta.Porcenjate.GetHashCode() || x.IntTipo== (Int32)TipoAlerta.SinPlan.GetHashCode())).ToList();
+					 AlertaHist = AlertaHistorico.Where(x=>(x.IntIdTipo == (Int32)TipoAlerta.Porcenjate.GetHashCode() || x.IntIdTipo== (Int32)TipoAlerta.SinPlan.GetHashCode())).ToList();
 					if (AlertaHist != null)
 					{
-						var collection = db.GetCollection<TblHistAlertas>("TblHistAlertas");
+						var collection = db.GetCollection<TblSeguimientoAlertas>("TblSeguimientoAlertas");
 
 						foreach (var item in AlertaHist)
 						{
-							var filter = Builders<TblHistAlertas>.Filter.Eq("Id", item.Id);
-							var update = Builders<TblHistAlertas>.Update.Set("IntIdEstado", (Int32)Notificacion.Inactiva.GetHashCode());
+							var filter = Builders<TblSeguimientoAlertas>.Filter.Eq("Id", item.Id);
+							var update = Builders<TblSeguimientoAlertas>.Update.Set("IntIdEstado", (Int32)Notificacion.Inactiva.GetHashCode());
 
 							collection.UpdateOneAsync(filter, update);
 						}
