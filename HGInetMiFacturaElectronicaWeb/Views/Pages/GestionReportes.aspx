@@ -72,7 +72,7 @@
 											<li><a data-ng-click="SolicitarAprobacion(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="{'ng-hide': datos.Estado != 2}"><i class="icon-checkmark4"></i>Solicitar aprobación</a></li>
 											<li><a data-ng-click="AprobarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionAprobar(datos.Estado,datos.Administrador)"><i class="icon-file-check2"></i>Aprobar Diseño</a></li>
 											<li><a data-ng-click="PublicarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionPublicar(datos.Estado,datos.Administrador)"><i class="icon-upload7"></i>Publicar Diseño</a></li>
-											<li><a data-ng-click="VerAuditoria(datos.CodigoFormato,datos.NitEmpresa)" data-ng-class="{'ng-hide':!datos.Administrador}"><i class="icon-file-eye"></i>Auditoría</a></li>
+											<li><a data-ng-click="VerAuditoria(datos.CodigoFormato,datos.NitEmpresa)"><i class="icon-file-eye"></i>Auditoría</a></li>
 										</ul>
 									</li>
 								</ul>

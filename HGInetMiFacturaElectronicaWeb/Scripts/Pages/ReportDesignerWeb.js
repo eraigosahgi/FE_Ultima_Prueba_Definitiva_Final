@@ -54,28 +54,32 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 	//Evento para al edición del formato.
 	$scope.BtnEditar = function (CodFormato, NitEmpresa, Estado) {
 
-		if (Estado == 3 || Estado == 4 || Estado == 5) {
-			var myDialog = DevExpress.ui.dialog.custom({
-				title: "¿Desea Editar el Formato?",
-				message: "Si edita el formato, deberá realizar el proceso de solicitud de aprobación nuevamente.",
-				buttons: [{
-					text: "Aceptar",
-					onClick: function (e) {
-						window.location.href = '/Views/ReportDesigner/ReportDesignerWeb.aspx?ID=' + CodFormato + '&Nit=' + NitEmpresa;
-					}
-				},
-				{
-					text: "Cancelar",
-					onClick: function (e) {
-						myDialog.hide();
-					}
-				}]
-			});
-			myDialog.show().done(function (dialogResult) {
-			});
-		}
+		var mensaje_notificacion = "";
+
+		if (Estado == 3 || Estado == 4 || Estado == 5)
+			mensaje_notificacion = "Si edita el formato deberá realizar nuevamente el proceso de solicitud de aprobación.";
 		else
-			window.location.href = '/Views/ReportDesigner/ReportDesignerWeb.aspx?ID=' + CodFormato + '&Nit=' + NitEmpresa;
+			mensaje_notificacion = "Si edita el formato deberá realizar el proceso de solicitud de aprobación.";
+
+		var myDialog = DevExpress.ui.dialog.custom({
+			title: "¿Desea Editar el Formato?",
+			message: mensaje_notificacion,
+			buttons: [{
+				text: "Aceptar",
+				onClick: function (e) {
+					window.location.href = '/Views/ReportDesigner/ReportDesignerWeb.aspx?ID=' + CodFormato + '&Nit=' + NitEmpresa;
+				}
+			},
+			{
+				text: "Cancelar",
+				onClick: function (e) {
+					myDialog.hide();
+				}
+			}]
+		});
+		myDialog.show().done(function (dialogResult) {
+		});
+
 	};
 
 	//Evento para el cambio de estado Activo/Inactivo
@@ -116,7 +120,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 		if (!opc_crear)
 			return "ng-hide"
 		else {
-			if (estado == 0 || estado == 2 || estado == 3 || estado == 4 || estado == 5)
+			if (estado == 0 || estado == 2 || estado == 3 || estado == 4 || estado == 5 || estado == 6)
 				return "ng-hide"
 		}
 	}
@@ -126,7 +130,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 		if (!opc_editar)
 			return "ng-hide"
 		else {
-			if (estado == 2 || estado == 3 || estado == 4 || estado == 5)
+			if (estado == 2 || estado == 3 || estado == 4 || estado == 5 || estado == 6)
 				return "ng-hide"
 		}
 	}
@@ -178,7 +182,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 	$scope.SolicitarAprobacion = function (codigo, nit, estado) {
 		$("#SolicitudAprobacion").show();
 		$("#AprobacionFormato").hide();
-
+		$scope.ObservacionesSolicitud = "";
 		//Campo de observaciones
 		$("#TxtObservacionesSolicitud").dxTextArea({
 			value: "",
@@ -190,7 +194,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			{
 				type: "stringLength",
 				max: 200,
-				message: "El campo Observación no puede ser mayor a 200 caracteres"
+				message: "El campo Observación no puede ser mayor a 500 caracteres"
 			}]
 		});
 
@@ -213,13 +217,12 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 
 		$("#SolicitudAprobacion").hide();
 		$("#AprobacionFormato").show();
-		$scope.ObservacionesSolicitud = "";
-
 
 		$("#TxtObservacionesSolicitud").dxTextBox({
 			value: "",
 			validationGroup: "ObservacionesRespuesta",
 			onValueChanged: function (data) {
+				console.log(data.value);
 				$scope.ObservacionesSolicitud = data.value.toUpperCase();
 			}
 		}).dxValidator({
@@ -227,7 +230,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
                {
                	type: "stringLength",
                	max: 200,
-               	message: "El campo Observación no puede ser mayor a 200 caracteres"
+               	message: "El campo Observación no puede ser mayor a 500 caracteres"
                }, {
                	type: "required",
                	message: "Las observaciones son requeridas."
@@ -246,8 +249,9 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			validationGroup: "ObservacionesRespuesta",
 			onClick: function (params) {
 				var continua_proceso = params.validationGroup.validate().isValid;
+				console.log(continua_proceso);
 				if (continua_proceso) {
-					ActualizarFormato(codigo, nit, 0, 5, $scope.ObservacionesSolicitud);
+					ActualizarFormato(codigo, nit, estado, 6, $scope.ObservacionesSolicitud);
 					$('#modal_solicitar_aprobacion').modal('hide');
 				}
 			}
@@ -257,11 +261,12 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			text: "Aprobar",
 			type: "success",
 			onClick: function (e) {
-				ActualizarFormato(codigo, nit, 1, 5, $scope.ObservacionesSolicitud);
+				ActualizarFormato(codigo, nit, estado, 5, $scope.ObservacionesSolicitud);
 
 				$('#modal_solicitar_aprobacion').modal('hide');
 			}
 		});
+
 
 		$('#modal_solicitar_aprobacion').modal('show');
 	}
@@ -270,11 +275,12 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 	$scope.PublicarFormato = function (codigo, nit, estado) {
 
 		var myDialog = DevExpress.ui.dialog.custom({
-			message: "¿Desea publicar el diseño del formato número " + codigo + "?",
+			title: "Publicación de Formato",
+			message: "¿Desea publicar el diseño del formato número " + codigo + " de la empresa " + nit + "?",
 			buttons: [{
 				text: "Aceptar",
 				onClick: function (e) {
-					ActualizarFormato(codigo, nit, estado, 6, "");
+					ActualizarFormato(codigo, nit, estado, 7, "");
 				}
 			},
 			{
@@ -357,15 +363,19 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 
 				switch (proceso) {
 					case 4:
-						DevExpress.ui.notify({ message: "Solicitud de aprobación para el formato número " + codigo + " de la empresa " + nit + " enviada con éxito.", position: { my: "center top", at: "center top" } }, "success", 1500);
+						DevExpress.ui.notify({ message: "Se ha enviado la solicitud de aprobación para el formato número" + codigo + " de la empresa " + nit + " con éxito.", position: { my: "center top", at: "center top" } }, "success", 1500);
 						break;
 
 					case 5:
-						DevExpress.ui.notify({ message: "Aprobación éxitosa del formato número " + codigo + " de la empresa " + nit, position: { my: "center top", at: "center top" } }, "success", 1500);
+						DevExpress.ui.notify({ message: "El formato número " + codigo + " de la empresa " + nit + " , ha sido aprobado.", position: { my: "center top", at: "center top" } }, "success", 1500);
 						break;
 
 					case 6:
-						DevExpress.ui.notify({ message: "Publicación éxitosa del formato número " + codigo + " de la empresa " + nit, position: { my: "center top", at: "center top" } }, "success", 1500);
+						DevExpress.ui.notify({ message: "El formato número " + codigo + " de la empresa " + nit + " , ha sido rechazado.", position: { my: "center top", at: "center top" } }, "success", 1500);
+						break;
+
+					case 7:
+						DevExpress.ui.notify({ message: "El formato número " + codigo + " de la empresa " + nit + ", ha sido publicado con éxito.", position: { my: "center top", at: "center top" } }, "success", 1500);
 						break;
 				}
 

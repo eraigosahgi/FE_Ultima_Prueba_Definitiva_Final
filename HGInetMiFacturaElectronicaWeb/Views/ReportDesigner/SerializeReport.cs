@@ -7,6 +7,7 @@ using System.Data;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using System.Reflection;
 using LibreriaGlobalHGInet.Objetos;
+using HGInetFacturaEReports.ReportDesigner;
 
 namespace HGInetMiFacturaElectronicaWeb
 {
@@ -48,6 +49,9 @@ namespace HGInetMiFacturaElectronicaWeb
 
 			DataTable DtPrincipal = new DataTable();
 			DataColumn principal = new DataColumn();
+
+			XtraReportDesigner reporte = new XtraReportDesigner();
+			reporte.Name = "DataSet";
 
 			switch (TipoDocumento)
 			{

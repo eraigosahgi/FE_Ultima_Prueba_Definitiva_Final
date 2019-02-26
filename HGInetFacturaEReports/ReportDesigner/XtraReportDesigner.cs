@@ -24,8 +24,18 @@ namespace HGInetFacturaEReports.ReportDesigner
 			dynamic datos_documento = (dynamic)null;
 			datos_documento = rep.DataSource;
 
+			bool continua_proceso = false;
 
-			if (datos_documento != null)
+			try
+			{
+				datos_documento.DataSetName = "Hola";
+			}
+			catch (Exception)
+			{
+				continua_proceso = true;
+			}
+
+			if (datos_documento != null && continua_proceso)
 			{
 				//Asignar los datos al reporte.
 				rep.DataSource = datos_documento;

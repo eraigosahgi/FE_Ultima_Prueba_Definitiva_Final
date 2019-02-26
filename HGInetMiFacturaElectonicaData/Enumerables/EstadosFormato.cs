@@ -46,7 +46,10 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
 		[Description("Aprobación")]
 		Aprobacion = 5,
 
+		[Description("Rechazo")]
+		Rechazo = 6,
+
 		[Description("Publicación")]
-		Publicacion = 6,
+		Publicacion = 7,
 	}
 }

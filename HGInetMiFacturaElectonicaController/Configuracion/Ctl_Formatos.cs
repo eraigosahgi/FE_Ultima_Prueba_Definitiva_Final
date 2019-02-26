@@ -247,7 +247,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="estado_actual"></param>
 		/// <param name="tipo_formato"></param>
 		/// <returns></returns>
-		public TblFormatos ActualizarEstadoFormato(int id_formato, string identificacion_empresa, int estado_actual, int tipo_formato, Guid usuario, TiposProceso tipo_proceso, string observaciones, string empresa_autenticada)
+		public TblFormatos ActualizarEstadoFormato(int id_formato, string identificacion_empresa, int estado_actual, int tipo_formato, TblEmpresas empresa_solicitante, TblUsuarios datos_usuario, TiposProceso tipo_proceso, string observaciones, string empresa_autenticada)
 		{
 			try
 			{
@@ -281,24 +281,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.PendienteAprobacion.GetHashCode());
 						//envió de notificacion
 						Ctl_EnvioCorreos clase_correos = new Ctl_EnvioCorreos();
-						clase_correos.EnviarSolicitudAprobacionFormato(empresa_autenticada, datos_formato, observaciones);
+						clase_correos.EnviarSolicitudAprobacionFormato(empresa_solicitante, datos_usuario, datos_formato, observaciones, tipo_proceso);
 
 						break;
 
 					//Aprobación del diseño.
 					case TiposProceso.Aprobacion:
+						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.PendientePublicacion.GetHashCode());
+						break;
 
-						if (estado_formato.GetHashCode() == EstadosFormato.Inactivo.GetHashCode())
-						{
-							datos_formato.FormatoTmp = null;
-							datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.Inactivo.GetHashCode());
-							des_proceso = "Rechazo de formato.";
-						}
-						else
-						{
-							datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.PendientePublicacion.GetHashCode());
-						}
-
+					//Rechazo del diseño.
+					case TiposProceso.Rechazo:
+						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.SolicitarAprobacion.GetHashCode());
 						break;
 
 					//Publicación del formato
@@ -315,7 +309,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				//Almacena la auditoría del proceso.
 				Ctl_FormatosAudit clase_auditoria = new Ctl_FormatosAudit();
-				clase_auditoria.Crear(datos_respuesta.IntCodigoFormato, datos_respuesta.StrEmpresa, datos_respuesta.StrIdSeguridad, tipo_proceso, usuario, string.Format("{0}. {1}", des_proceso, observaciones));
+				clase_auditoria.Crear(datos_respuesta.IntCodigoFormato, datos_respuesta.StrEmpresa, datos_respuesta.StrIdSeguridad, tipo_proceso, datos_usuario.StrIdSeguridad, string.Format("{0}. {1}", des_proceso, observaciones));
 
 				return datos_respuesta;
 			}
