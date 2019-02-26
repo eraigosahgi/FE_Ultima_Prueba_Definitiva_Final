@@ -447,7 +447,7 @@
 						<!-- /REPORTE ACUMULADO TIPO DOCUMENTO -->
 
 						<!-- REPORTE TIPO DOCUMENTO ANUAL -->
-						<div class="col-md-6 col-lg-6" id="Panel13533" data-ng-if="Panel13533" data-ng-init="Panel13533">
+						<div class="col-md-12 col-lg-12" id="Panel13533" data-ng-if="Panel13533" data-ng-init="Panel13533">
 							<div class="panel panel-default">
 
 								<div class="panel-body">
