@@ -1,0 +1,10 @@
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (13534,1353,'Flujo Transaccional',1,1, '2abe63a5-ce7b-40f4-8e15-5ccba4ade873', 'icon-reading', null, 1);
+
+
+update TblOpciones set StrDescripcion = 'Flujo Transaccional' where IntId = 13524
+
+
+
+
+
