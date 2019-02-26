@@ -1332,7 +1332,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				var fieldData = options.value,
 					fieldHtml = "";
 				try {
-					if (options.columnIndex == 4) {
+					if (options.columnIndex == 3) {
 						if (fieldData) {
 							var inicial = fNumber.go(fieldData);
 							options.cellElement.html(inicial);
@@ -1410,7 +1410,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					}
 				},
 					{
-						showInColumn: "ValorTotalDocumentos",
+						showInColumn: "CantidadAnterior",
 						customizeText: function (data) {
 							return "Total: " + fNumber.go(valor_total);
 						}
