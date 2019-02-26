@@ -1332,12 +1332,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				var fieldData = options.value,
 					fieldHtml = "";
 				try {
-					if (options.columnIndex == 3) {
-						if (fieldData) {
-							var inicial = FormatoNumber.go(fieldData);
-							options.cellElement.html(inicial);
-						}
-					}
 					if (options.columnIndex == 4) {
 						if (fieldData) {
 							var inicial = fNumber.go(fieldData);
@@ -1380,11 +1374,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 		{
 			caption: "Razón Social",
 			dataField: "RazonSocial",
-			cssClass: "col-md-3",
-		},
-		{
-			caption: "Total Documentos",
-			dataField: "TotalDocumentos",
 			cssClass: "col-md-3",
 		},
 		{
