@@ -150,7 +150,7 @@
 										</ul>
 									</div>
 
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Tipos de Documento</h4>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalTiposDocGraficoAdmin">Tipos de Documento</h4>
 
 									<label class="text-muted" style="margin-bottom: 20px">Indica la cantidad de documentos generados en el rango de tiempo seleccionado.</label>
 									<div id="ReporteTipoDocumentoAnualAdmin"></div>
@@ -234,7 +234,7 @@
 											</li>
 										</ul>
 									</div>
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Flujo Transaccional<i class="icon-info22" id="InfoPanel13518" style="margin-left: 2%"></i></h4>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdmin">Flujo Transaccional<i class="icon-info22" id="InfoPanel13518" style="margin-left: 2%"></i></h4>
 									<div id="ToolTipPanel13518"></div>
 									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
 
@@ -373,7 +373,7 @@
 											</li>
 										</ul>
 									</div>
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Tipos de Documento</h4>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalTiposDocGraficoFacturador">Tipos de Documento</h4>
 									<label class="text-muted" style="margin-bottom: 20px">Indica la cantidad de documentos generados en el rango de tiempo seleccionado.</label>
 									<div id="ReporteTipoDocumentoAnualFacturador"></div>
 								</div>
@@ -398,7 +398,7 @@
 											</li>
 										</ul>
 									</div>
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Flujo Transaccional<i class="icon-info22" id="InfoPanel13524" style="margin-left: 2%"></i></h4>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransFacturador">Flujo Transaccional<i class="icon-info22" id="InfoPanel13524" style="margin-left: 2%"></i></h4>
 									<div id="ToolTipPanel13524"></div>
 									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
 
@@ -466,7 +466,7 @@
 											</li>
 										</ul>
 									</div>
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Tipos de Documento</h4>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalTiposDocGraficoAdquiriente">Tipos de Documento</h4>
 									<label class="text-muted" style="margin-bottom: 20px">Indica la cantidad de documentos generados en el rango de tiempo seleccionado.</label>
 									<div id="ReporteTipoDocumentoAnualAdquiriente"></div>
 								</div>
@@ -492,7 +492,7 @@
 										</ul>
 									</div>
 
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Flujo Transaccional<i class="icon-info22" id="InfoPanel13534" style="margin-left: 2%"></i></h4>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdquiriente">Flujo Transaccional<i class="icon-info22" id="InfoPanel13534" style="margin-left: 2%"></i></h4>
 									<div id="ToolTipPanel13534"></div>
 									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
 

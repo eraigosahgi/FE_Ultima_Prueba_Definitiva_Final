@@ -465,6 +465,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 								valor_total += $scope.ReporteTopTransaccionalAdmin[i].ValorTotalDocumentos;
 							}
 
+							var cantidad_doc = 0;
+							for (var i = 0; i < $scope.ReporteTopTransaccionalAdmin.length; i++) {
+								cantidad_doc += $scope.ReporteTopTransaccionalAdmin[i].TotalDocumentos;
+							}
+
+							$('#TotalFlujoTransAdmin').text("Flujo Transaccional: " + cantidad_doc);
+
+
 							$("#CantTopTransaccionalAdmin").dxNumberBox({
 								value: 10,
 								width: '60%',
@@ -684,6 +692,13 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 								valor_total += $scope.ReporteTopTransaccionalFacturador[i].ValorTotalDocumentos;
 							}
 
+							var cantidad_doc = 0;
+							for (var i = 0; i < $scope.ReporteTopTransaccionalFacturador.length; i++) {
+								cantidad_doc += $scope.ReporteTopTransaccionalFacturador[i].TotalDocumentos;
+							}
+
+							$('#TotalFlujoTransFacturador').text("Flujo Transaccional: " + cantidad_doc);
+
 							$("#CantTopTransaccionalFacturador").dxNumberBox({
 								value: 10,
 								width: '60%',
@@ -810,6 +825,13 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							for (var i = 0; i < $scope.ReporteTopTransaccionalAdquiriente.length; i++) {
 								valor_total += $scope.ReporteTopTransaccionalAdquiriente[i].ValorTotalDocumentos;
 							}
+
+							var cantidad_doc = 0;
+							for (var i = 0; i < $scope.ReporteTopTransaccionalAdquiriente.length; i++) {
+								cantidad_doc += $scope.ReporteTopTransaccionalAdquiriente[i].TotalDocumentos;
+							}
+
+							$('#TotalFlujoTransAdquiriente').text("Flujo Transaccional: " + cantidad_doc);
 
 							$("#CantTopTransaccionalAdquiriente").dxNumberBox({
 								value: 10,
@@ -958,7 +980,13 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 	}
 	//Carga la gráfica del panel 13514
 	function CargarTipoDoc13514(response, tipo_grafico) {
-		console.log(response.data);
+
+		var total = 0;
+		for (var i = 0; i < response.data.length; i++) {
+			total += response.data[i].CantidadDocumentos;
+		}
+
+		$('#TotalTiposDocGraficoAdmin').text("Tipos de Documento: " + total);
 
 		$("#ReporteTipoDocumentoAnualAdmin").dxChart({
 			palette: chartOptions.gamaAzul,
@@ -1005,8 +1033,10 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				if (response.data.length == 0)
 					$scope.Panel13516 = false;
 				else {
-					datos_Panel13516 = response;
-					CargarVentas13516(response, tipo_grafico);
+					{
+						datos_Panel13516 = response;
+						CargarVentas13516(response, tipo_grafico);
+					}
 				}
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 3000);
@@ -1091,6 +1121,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 	}
 	//Carga la gráfica del panel 13525
 	function CargarTiposDocs13525(response, tipo_grafico) {
+
+		var total = 0;
+		for (var i = 0; i < response.data.length; i++) {
+			total += response.data[i].CantidadDocumentos;
+		}
+
+		$('#TotalTiposDocGraficoFacturador').text("Tipos de Documento: " + total);
+
 		$("#ReporteTipoDocumentoAnualFacturador").dxChart({
 			palette: chartOptions.gamaAzul,
 			dataSource: response.data,
@@ -1149,6 +1187,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 	}
 	//Carga la gráfica del panel 13533
 	function CargarTiposDocs13533(response, tipo_grafico) {
+
+		var total = 0;
+		for (var i = 0; i < response.data.length; i++) {
+			total += response.data[i].CantidadDocumentos;
+		}
+
+		$('#TotalTiposDocGraficoAdquiriente').text("Tipos de Documento: " + total);
+
 		$("#ReporteTipoDocumentoAnualAdquiriente").dxChart({
 			palette: chartOptions.gamaAzul,
 			dataSource: response.data,
