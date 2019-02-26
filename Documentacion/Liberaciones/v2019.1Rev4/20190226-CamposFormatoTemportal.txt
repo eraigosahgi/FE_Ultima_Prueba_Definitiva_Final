@@ -1,0 +1,7 @@
+ALTER TABLE TblFormatos ADD
+	FormatoTmp varbinary(MAX) NULL 
+GO
+
+ALTER TABLE TblFormatos ALTER COLUMN 
+IntEstado smallint;  
+GO  
