@@ -25,7 +25,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 	$scope.Vence = true;
 
 
-	SrvFiltro.ObtenerFiltro('Empresa', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', true).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', true,1).then(function (Datos) {
 		$scope.Facturador = Datos;
 	});
 
@@ -160,26 +160,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			});
 
 		}
-
-		////Campo de selección de empresa.
-		//$("#txtempresaasociada").dxTextBox({
-		//	readOnly: true,
-		//	value: codigo_empresa,
-		//	name: txtempresaasociada,
-		//	onValueChanged: function (data) {
-		//		datos_empresa_asociada = data.value;
-		//	},
-		//	onFocusIn: function (data) {
-		//		if (!StrIdSeguridad) {
-		//			$('#modal_Buscar_empresa').modal('show');
-		//		}
-		//	}
-		//}).dxValidator({
-		//	validationRules: [{
-		//		type: "required",
-		//		message: "Debe seleccionar una empresa."
-		//	}]
-		//});
 
 		//Campo cantidad de transacciones del plan
 		$("#CantidadTransacciones").dxNumberBox({
@@ -526,14 +506,22 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 							var currentEmployeeData = options.data.Observaciones;
 							container.append($('<div> <h4 class="form-control">OBSERVACIONES:</h4> <p > ' + currentEmployeeData + '</p> </div>'));
 						}
+					}
+					, onToolbarPreparing: function (e) {
+						var dataGrid = e.component;
+
+						e.toolbarOptions.items.unshift({
+
+							location: "after",
+							widget: "dxButton",
+							options: {
+								icon: "refresh",
+								onClick: function () {
+									CargarConsulta();
+								}
+							}
+						})
 					},
-					//onContentReady: function (e) {
-					//	response.data.forEach(function (valor, indice, array) {
-					//		var porcentaje = (valor.CodCompra != 3) ? ((valor.TProcesadas / valor.TCompra) * 100) : 100;
-					//		var color = nivelPlanes(porcentaje, valor.CodCompra);
-					//		$('.hgi_' + valor.id).dxBullet(CrearGrafico(porcentaje, 'Consumo Actual ', ' %', color));
-					//	});
-					//},
 
 					//Formatos personalizados a las columnas en este caso para el monto
 					onCellPrepared: function (options) {
