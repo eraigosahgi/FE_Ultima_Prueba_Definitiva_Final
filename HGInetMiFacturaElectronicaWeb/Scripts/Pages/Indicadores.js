@@ -938,7 +938,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 	//Consulta los datos para el indicador 13514
 	function ConsultarTiposDocumentosAdmin(tipo_grafico) {
-		$http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1' + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+		$http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '1' + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
 			$("#wait").hide();
 			try {
 				if (response.data.length == 0)
@@ -958,6 +958,8 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 	}
 	//Carga la gráfica del panel 13514
 	function CargarTipoDoc13514(response, tipo_grafico) {
+		console.log(response.data);
+
 		$("#ReporteTipoDocumentoAnualAdmin").dxChart({
 			palette: chartOptions.gamaAzul,
 			dataSource: response.data,
@@ -966,12 +968,12 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				format: "largeNumber",
 				customizeTooltip: function (arg) {
 
-					var datos = response.data.filter(x => x.DescripcionMes == arg.argument);
+					var datos = response.data.filter(x => x.DescripcionSerie == arg.argument);
 
 					var mensaje = "";
 
 					if (datos.length > 0) {
-						mensaje = "Mes: " + arg.argument + "<br/>" + "Año: " + datos[0].Anyo + "<br/>" + "Cant.Documentos: " + datos[0].CantidadDocumentos + "<br/>" + "ValorFacturas: " +
+						mensaje = datos[0].DescripcionSerie + "<br/>" + "Cant.Documentos: " + datos[0].CantidadDocumentos + "<br/>" + "ValorFacturas: " +
 						fNumber.go(datos[0].ValorFacturas) + "<br/>" + "ValorNotasCredito: " + fNumber.go(datos[0].ValorNotasCredito) + "<br/>" + "ValorNotasDebito: " + fNumber.go(datos[0].ValorNotasDebito);
 					}
 					return {
@@ -979,17 +981,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					};
 				}
 			},
-			commonSeriesSettings: {
-				ignoreEmptyPoints: true,
-				argumentField: "DescripcionMes",
-				type: tipo_grafico
-			},
-			series: [
-			{
+
+			series: {
+				argumentField: "DescripcionSerie",
 				valueField: "CantidadDocumentos",
-				name: "Cant.Documentos"
-			}
-			],
+				name: "Cant.Documentos",
+				type: tipo_grafico,
+				//color: '#ffaa66'
+			},
 			legend: {
 				verticalAlignment: "bottom",
 				horizontalAlignment: "center"
@@ -1000,7 +999,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 	//Consulta los datos para el indicador 13516
 	function ConsultarVentasAdmin(tipo_grafico) {
-		$http.get('/Api/ReporteVentasAnuales?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+		$http.get('/Api/ReporteVentasAnuales?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
 			$("#wait").hide();
 			try {
 				if (response.data.length == 0)
@@ -1027,18 +1026,18 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				format: "largeNumber",
 				customizeTooltip: function (arg) {
 
-					var datos_reporte = response.data.filter(x => x.DescripcionMes == arg.argument);
+					var datos_reporte = response.data.filter(x => x.DescripcionSerie == arg.argument);
 
 					var mensaje = "";
 
 					if (datos_reporte.length > 0) {
 
 						if (arg.seriesName == "Cortesias")
-							mensaje = "Cortesías" + "<br/>" + "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos_reporte[0].CantidadTransaccionesCortesias;
+							mensaje = "Recarga Interna  " + arg.argument + "<br/>" + "<br/>" + "Cantidad: " + datos_reporte[0].CantidadTransaccionesCortesias;
 						else if (arg.seriesName == "Ventas")
-							mensaje = "Ventas" + "<br/>" + "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos_reporte[0].CantidadTransaccionesVentas + "<br/>" + "Valor: " + fNumber.go(datos_reporte[0].ValorVentas);
+							mensaje = "Ventas " + arg.argument + "<br/>" + "<br/>" + "Cantidad: " + datos_reporte[0].CantidadTransaccionesVentas + "<br/>" + "Valor: " + fNumber.go(datos_reporte[0].ValorVentas);
 						else if (arg.seriesName == "Post-Venta")
-							mensaje = "Post-Venta" + "<br/>" + "Mes: " + arg.argument + "<br/>" + "Cantidad: " + datos_reporte[0].CantidadTransaccionesPostVenta;
+							mensaje = "Post-Venta " + arg.argument + "<br/>" + "<br/>" + "Cantidad: " + datos_reporte[0].CantidadTransaccionesPostVenta;
 					}
 					return {
 						text: mensaje
@@ -1047,10 +1046,11 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 			},
 			commonSeriesSettings: {
 				ignoreEmptyPoints: true,
-				argumentField: "DescripcionMes",
+				argumentField: "DescripcionSerie",
 				type: tipo_grafico
 			},
-			series: [
+			series:
+			[
 			{
 				valueField: "CantidadTransaccionesVentas", name: "Ventas"
 			},
@@ -1071,7 +1071,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 	//Consulta los datos para el indicador 13525
 	function ConsultarTiposDocFacturador(tipo_grafico) {
-		$http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2' + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+		$http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '2' + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
 			$("#wait").hide();
 			try {
 				if (response.data.length == 0)
@@ -1099,12 +1099,12 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				format: "largeNumber",
 				customizeTooltip: function (arg) {
 
-					var datos = response.data.filter(x => x.DescripcionMes == arg.argument);
+					var datos = response.data.filter(x => x.DescripcionSerie == arg.argument);
 
 					var mensaje = "";
 
 					if (datos.length > 0) {
-						mensaje = "Mes: " + arg.argument + "<br/>" + "Año: " + datos[0].Anyo + "<br/>" + "Cant.Documentos: " + datos[0].CantidadDocumentos + "<br/>" + "ValorFacturas: " +
+						mensaje = datos[0].DescripcionSerie + "<br/>" + "Cant.Documentos: " + datos[0].CantidadDocumentos + "<br/>" + "ValorFacturas: " +
 						fNumber.go(datos[0].ValorFacturas) + "<br/>" + "ValorNotasCredito: " + fNumber.go(datos[0].ValorNotasCredito) + "<br/>" + "ValorNotasDebito: " + fNumber.go(datos[0].ValorNotasDebito);
 					}
 					return {
@@ -1112,17 +1112,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					};
 				}
 			},
-			commonSeriesSettings: {
-				ignoreEmptyPoints: true,
-				argumentField: "DescripcionMes",
-				type: tipo_grafico
-			},
-			series: [
-			{
+
+			series: {
+				argumentField: "DescripcionSerie",
 				valueField: "CantidadDocumentos",
-				name: "Cant.Documentos"
-			}
-			],
+				name: "Cant.Documentos",
+				type: tipo_grafico,
+				//color: '#ffaa66'
+			},
 			legend: {
 				verticalAlignment: "bottom",
 				horizontalAlignment: "center"
@@ -1133,7 +1130,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 	//Consulta los datos para el indicador 13533
 	function ConsultarTiposDocAdquiriente(tipo_grafico) {
-		$http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '3' + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+		$http.get('/Api/ReporteDocumentosPorTipoAnual?identificacion_empresa=' + identificacion_empresa_autenticada + '&tipo_empresa=' + '3' + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
 			$("#wait").hide();
 			try {
 				if (response.data.length == 0)
@@ -1160,12 +1157,12 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				format: "largeNumber",
 				customizeTooltip: function (arg) {
 
-					var datos = response.data.filter(x => x.DescripcionMes == arg.argument);
+					var datos = response.data.filter(x => x.DescripcionSerie == arg.argument);
 
 					var mensaje = "";
 
 					if (datos.length > 0) {
-						mensaje = "Mes: " + arg.argument + "<br/>" + "Año: " + datos[0].Anyo + "<br/>" + "Cant.Documentos: " + datos[0].CantidadDocumentos + "<br/>" + "ValorFacturas: " +
+						mensaje = datos[0].DescripcionSerie + "<br/>" + "Cant.Documentos: " + datos[0].CantidadDocumentos + "<br/>" + "ValorFacturas: " +
 						fNumber.go(datos[0].ValorFacturas) + "<br/>" + "ValorNotasCredito: " + fNumber.go(datos[0].ValorNotasCredito) + "<br/>" + "ValorNotasDebito: " + fNumber.go(datos[0].ValorNotasDebito);
 					}
 					return {
@@ -1173,17 +1170,13 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					};
 				}
 			},
-			commonSeriesSettings: {
-				ignoreEmptyPoints: true,
-				argumentField: "DescripcionMes",
-				type: tipo_grafico
-			},
-			series: [
-			{
+			series: {
+				argumentField: "DescripcionSerie",
 				valueField: "CantidadDocumentos",
-				name: "Cant.Documentos"
-			}
-			],
+				name: "Cant.Documentos",
+				type: tipo_grafico,
+				//color: '#ffaa66'
+			},
 			legend: {
 				verticalAlignment: "bottom",
 				horizontalAlignment: "center"

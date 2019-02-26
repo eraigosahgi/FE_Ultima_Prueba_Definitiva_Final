@@ -6,8 +6,11 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.SqlServer;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -243,37 +246,86 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// <param name="identificacion_empresa">Número de identificación de la empresa para el filtro de búsqueda.</param>
 		/// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
 		/// <returns></returns>
-		public List<ValoresTipoDocumento> DocumentosPorTipoAnual(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin)
+		public List<ValoresTipoDocumento> DocumentosPorTipoAnual(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin, TipoFrecuencia tipo_filtro)
 		{
 			try
 			{
-				//DateTime fecha_inicio = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(-11);
-				//DateTime fecha_final = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(1);
+				List<ValoresTipoDocumento> documentos_tipo = new List<ValoresTipoDocumento>();
 
-				List<ValoresTipoDocumento> documentos_tipo = (from documento in context.TblDocumentos
-															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
-															  && (documento.DatFechaIngreso >= fecha_inicio && documento.DatFechaIngreso <= fecha_fin)
-															  orderby documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month, documento.IntDocTipo ascending
-															  group documento by new { documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month } into documento_tipo
-															  select new ValoresTipoDocumento
-															  {
-																  Anyo = documento_tipo.FirstOrDefault().DatFechaIngreso.Year,
-																  Mes = documento_tipo.FirstOrDefault().DatFechaIngreso.Month,
-																  CantidadDocumentos = documento_tipo.Count(),
-																  ValorFacturas = (documento_tipo.Where(x => x.IntDocTipo == 1).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 1).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
-																  ValorNotasDebito = (documento_tipo.Where(x => x.IntDocTipo == 2).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 2).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
-																  ValorNotasCredito = (documento_tipo.Where(x => x.IntDocTipo == 3).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 3).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
-															  }).ToList();
+				if (TipoFrecuencia.Anyo.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Rango.GetHashCode() == tipo_filtro.GetHashCode())
+				{
 
+					documentos_tipo = (from documento in context.TblDocumentos
+									   where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
+									   && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
+									   orderby documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month, documento.IntDocTipo ascending
+									   group documento by new { documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month } into documento_tipo
+									   select new ValoresTipoDocumento
+									   {
+										   FechaCompleta = documento_tipo.FirstOrDefault().DatFechaIngreso,
+										   CantidadDocumentos = documento_tipo.Count(),
+										   ValorFacturas = (documento_tipo.Where(x => x.IntDocTipo == 1).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 1).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+										   ValorNotasDebito = (documento_tipo.Where(x => x.IntDocTipo == 2).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 2).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+										   ValorNotasCredito = (documento_tipo.Where(x => x.IntDocTipo == 3).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 3).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+									   }).OrderBy(x => x.FechaCompleta).ToList();
+				}
+
+				else if (TipoFrecuencia.Mes.GetHashCode() == tipo_filtro.GetHashCode())
+				{
+					documentos_tipo = (from documento in context.TblDocumentos
+									   where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
+									   && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
+									   orderby documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month, documento.IntDocTipo ascending
+									   group documento by new { documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month, documento.DatFechaIngreso.Day } into documento_tipo
+									   select new ValoresTipoDocumento
+									   {
+										   FechaCompleta = documento_tipo.FirstOrDefault().DatFechaIngreso,
+										   CantidadDocumentos = documento_tipo.Count(),
+										   ValorFacturas = (documento_tipo.Where(x => x.IntDocTipo == 1).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 1).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+										   ValorNotasDebito = (documento_tipo.Where(x => x.IntDocTipo == 2).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 2).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+										   ValorNotasCredito = (documento_tipo.Where(x => x.IntDocTipo == 3).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 3).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+									   }).ToList();
+				}
+
+				else if (TipoFrecuencia.Hoy.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Fecha.GetHashCode() == tipo_filtro.GetHashCode())
+				{
+					documentos_tipo = (from documento in context.TblDocumentos
+									   where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
+									   && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
+									   orderby documento.DatFechaIngreso.Year, documento.DatFechaIngreso.Month, documento.IntDocTipo ascending
+									   group documento by new { documento.DatFechaIngreso.Hour } into documento_tipo
+									   select new ValoresTipoDocumento
+									   {
+										   FechaCompleta = documento_tipo.FirstOrDefault().DatFechaIngreso,
+										   CantidadDocumentos = documento_tipo.Count(),
+										   ValorFacturas = (documento_tipo.Where(x => x.IntDocTipo == 1).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 1).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+										   ValorNotasDebito = (documento_tipo.Where(x => x.IntDocTipo == 2).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 2).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+										   ValorNotasCredito = (documento_tipo.Where(x => x.IntDocTipo == 3).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 3).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
+									   }).OrderBy(x => x.FechaCompleta).ToList();
+				}
 
 				List<ValoresTipoDocumento> datos_respuesta = new List<ValoresTipoDocumento>();
 
+				int i = 0;
+
 				foreach (var item in documentos_tipo)
 				{
-					item.DescripcionMes = Fecha.MesLetras(new DateTime(item.Anyo, item.Mes, 1));
+					i++;
+					if (TipoFrecuencia.Mes.GetHashCode() == tipo_filtro.GetHashCode())
+					{
+						item.DescripcionSerie = string.Format("{0} {1}", Fecha.DiaLetras(item.FechaCompleta), item.FechaCompleta.Day);
+					}
+					else if (TipoFrecuencia.Anyo.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Rango.GetHashCode() == tipo_filtro.GetHashCode())
+					{
+						item.DescripcionSerie = string.Format("{0} {1}", Fecha.MesLetras(item.FechaCompleta), item.FechaCompleta.Year);
+					}
+					else if (TipoFrecuencia.Hoy.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Fecha.GetHashCode() == tipo_filtro.GetHashCode())
+					{
+						item.DescripcionSerie = item.FechaCompleta.ToString("hh:00 tt");
+					}
 				}
 
-				return documentos_tipo.OrderBy(x => x.Anyo).ThenBy(x => x.Mes).ToList();
+				return documentos_tipo;
 			}
 			catch (Exception excepcion)
 			{
@@ -295,7 +347,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 
 				List<ResumenPlanes> planes_adquiridos = (from plan in context.TblPlanesTransacciones
 														 where plan.StrEmpresaFacturador.Equals(identificacion_empresa)
-														  && (plan.DatFecha >= fecha_inicio && plan.DatFecha <= fecha_fin)
+														  && (plan.DatFecha >= fecha_inicio.Date && plan.DatFecha <= fecha_fin.Date)
 														 orderby plan.DatFecha descending
 														 group plan by new { plan.StrEmpresaFacturador } into planes
 														 select new ResumenPlanes
@@ -319,31 +371,87 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// Obtiene el indicador de ventas durante los últimos doce meses.
 		/// </summary>
 		/// <returns></returns>
-		public List<VentasMensuales> Ventas(DateTime fecha_inicio, DateTime fecha_fin)
+		public List<VentasMensuales> Ventas(DateTime fecha_inicio, DateTime fecha_fin, TipoFrecuencia tipo_filtro)
 		{
 			try
 			{
-				List<VentasMensuales> resumen_ventas = (from venta in context.TblPlanesTransacciones
-														where (venta.DatFecha >= fecha_inicio && venta.DatFecha <= fecha_fin)
-														orderby venta.DatFecha.Year, venta.DatFecha.Month, venta.IntTipoProceso ascending
-														group venta by new { venta.DatFecha.Year, venta.DatFecha.Month } into datos_ventas
-														select new VentasMensuales
-														{
-															Anyo = datos_ventas.FirstOrDefault().DatFecha.Year,
-															Mes = datos_ventas.FirstOrDefault().DatFecha.Month,
-															TipoProceso = datos_ventas.FirstOrDefault().IntTipoProceso,
-															CantidadTransaccionesCortesias = (datos_ventas.Where(x => x.IntTipoProceso == 1).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 1).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
-															CantidadTransaccionesVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
-															CantidadTransaccionesPostVenta = (datos_ventas.Where(x => x.IntTipoProceso == 3).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 3).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
-															ValorVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => x.IntValor).Sum() : 0
-														}).ToList();
+				List<VentasMensuales> resumen_ventas = new List<VentasMensuales>();
 
-				foreach (VentasMensuales item in resumen_ventas)
+				if (TipoFrecuencia.Anyo.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Rango.GetHashCode() == tipo_filtro.GetHashCode())
 				{
-					item.DescripcionMes = Fecha.MesLetras(new DateTime(item.Anyo, item.Mes, 1));
+
+					resumen_ventas = (from venta in context.TblPlanesTransacciones
+									  where (venta.DatFecha >= fecha_inicio.Date && venta.DatFecha <= fecha_fin.Date)
+									  orderby venta.DatFecha.Year, venta.DatFecha.Month, venta.IntTipoProceso ascending
+									  group venta by new { venta.DatFecha.Year, venta.DatFecha.Month } into datos_ventas
+									  select new VentasMensuales
+									  {
+										  FechaCompleta = datos_ventas.FirstOrDefault().DatFecha,
+										  TipoProceso = datos_ventas.FirstOrDefault().IntTipoProceso,
+										  CantidadTransaccionesCortesias = (datos_ventas.Where(x => x.IntTipoProceso == 1).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 1).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  CantidadTransaccionesVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  CantidadTransaccionesPostVenta = (datos_ventas.Where(x => x.IntTipoProceso == 3).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 3).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  ValorVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => x.IntValor).Sum() : 0
+									  }).OrderBy(x => x.FechaCompleta).ToList();
 				}
 
-				return resumen_ventas.OrderBy(x => x.Anyo).ThenBy(x => x.Mes).ToList();
+				else if (TipoFrecuencia.Mes.GetHashCode() == tipo_filtro.GetHashCode())
+				{
+
+					resumen_ventas = (from venta in context.TblPlanesTransacciones
+									  where (venta.DatFecha >= fecha_inicio.Date && venta.DatFecha <= fecha_fin.Date)
+									  orderby venta.DatFecha.Year, venta.DatFecha.Month, venta.IntTipoProceso ascending
+									  group venta by new { venta.DatFecha.Year, venta.DatFecha.Month, venta.DatFecha.Day } into datos_ventas
+									  select new VentasMensuales
+									  {
+										  FechaCompleta = datos_ventas.FirstOrDefault().DatFecha,
+										  TipoProceso = datos_ventas.FirstOrDefault().IntTipoProceso,
+										  CantidadTransaccionesCortesias = (datos_ventas.Where(x => x.IntTipoProceso == 1).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 1).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  CantidadTransaccionesVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  CantidadTransaccionesPostVenta = (datos_ventas.Where(x => x.IntTipoProceso == 3).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 3).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  ValorVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => x.IntValor).Sum() : 0
+									  }).OrderBy(x => x.FechaCompleta).ToList();
+
+				}
+
+				else if (TipoFrecuencia.Hoy.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Fecha.GetHashCode() == tipo_filtro.GetHashCode())
+				{
+
+					resumen_ventas = (from venta in context.TblPlanesTransacciones
+									  where (venta.DatFecha >= fecha_inicio.Date && venta.DatFecha <= fecha_fin.Date)
+									  orderby venta.DatFecha.Year, venta.DatFecha.Month, venta.IntTipoProceso ascending
+									  group venta by new { venta.DatFecha.Hour } into datos_ventas
+									  select new VentasMensuales
+									  {
+										  FechaCompleta = datos_ventas.FirstOrDefault().DatFecha,
+										  TipoProceso = datos_ventas.FirstOrDefault().IntTipoProceso,
+										  CantidadTransaccionesCortesias = (datos_ventas.Where(x => x.IntTipoProceso == 1).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 1).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  CantidadTransaccionesVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  CantidadTransaccionesPostVenta = (datos_ventas.Where(x => x.IntTipoProceso == 3).Count() > 0) ? (datos_ventas.Where(x => x.IntTipoProceso == 3).Select(x => (decimal)x.IntNumTransaccCompra).Sum()) : 0,
+										  ValorVentas = (datos_ventas.Where(x => x.IntTipoProceso == 2).Count() > 0) ? datos_ventas.Where(x => x.IntTipoProceso == 2).Select(x => x.IntValor).Sum() : 0
+									  }).OrderBy(x => x.FechaCompleta).ToList();
+				}
+
+				int i = 0;
+
+				foreach (var item in resumen_ventas)
+				{
+					i++;
+					if (TipoFrecuencia.Mes.GetHashCode() == tipo_filtro.GetHashCode())
+					{
+						item.DescripcionSerie = string.Format("{0} {1}", Fecha.DiaLetras(item.FechaCompleta), item.FechaCompleta.Day);
+					}
+					else if (TipoFrecuencia.Anyo.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Rango.GetHashCode() == tipo_filtro.GetHashCode())
+					{
+						item.DescripcionSerie = string.Format("{0} {1}", Fecha.MesLetras(item.FechaCompleta), item.FechaCompleta.Year);
+					}
+					else if (TipoFrecuencia.Hoy.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Fecha.GetHashCode() == tipo_filtro.GetHashCode())
+					{
+						item.DescripcionSerie = item.FechaCompleta.ToString("hh:00 tt");
+					}
+				}
+
+				return resumen_ventas;
 			}
 			catch (Exception excepcion)
 			{

@@ -360,7 +360,7 @@
 								<div class="panel-body">
 									<div class="heading-elements panel-nav">
 										<ul class="nav nav-tabs nav-tabs-bottom">
-											<li class="dropdown active">
+											<li class="dropdown">
 												<a class="dropdown-toggle legitRipple btn-default" data-toggle="dropdown" aria-expanded="false">
 													<i class="icon-cog5"></i>
 													<span class="position-right">visualización</span>
@@ -453,7 +453,7 @@
 								<div class="panel-body">
 									<div class="heading-elements panel-nav">
 										<ul class="nav nav-tabs nav-tabs-bottom">
-											<li class="dropdown active">
+											<li class="dropdown">
 												<a class="dropdown-toggle legitRipple btn-default" data-toggle="dropdown" aria-expanded="false">
 													<i class="icon-cog5"></i>
 													<span class="position-right">visualización</span>

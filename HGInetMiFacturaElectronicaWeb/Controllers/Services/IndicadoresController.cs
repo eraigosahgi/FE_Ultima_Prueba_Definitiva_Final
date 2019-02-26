@@ -152,7 +152,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("Api/ReporteDocumentosPorTipoAnual")]
-		public IHttpActionResult ReporteDocumentosPorTipoAnual(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin)
+		public IHttpActionResult ReporteDocumentosPorTipoAnual(string identificacion_empresa, int tipo_empresa, DateTime fecha_inicio, DateTime fecha_fin, int tipo_frecuencia)
 		{
 			try
 			{
@@ -165,7 +165,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				List<ValoresTipoDocumento> datos_tipos = new List<ValoresTipoDocumento>();
 				Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
-				datos_tipos = clase_indicadores.DocumentosPorTipoAnual(identificacion_empresa, tipo_empresa, fecha_inicio, fecha_fin);
+				TipoFrecuencia tipo_frecuencia_enum = Enumeracion.GetEnumObjectByValue<TipoFrecuencia>(tipo_frecuencia);
+				datos_tipos = clase_indicadores.DocumentosPorTipoAnual(identificacion_empresa, tipo_empresa, fecha_inicio, fecha_fin, tipo_frecuencia_enum);
 
 				if (datos_tipos == null)
 				{
@@ -213,7 +214,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/ReporteVentasAnuales")]
-		public IHttpActionResult ReporteVentasAnuales(DateTime fecha_inicio, DateTime fecha_fin)
+		public IHttpActionResult ReporteVentasAnuales(DateTime fecha_inicio, DateTime fecha_fin, int tipo_frecuencia)
 		{
 			try
 			{
@@ -222,7 +223,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				List<VentasMensuales> ventas = new List<VentasMensuales>();
 				Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
-				ventas = clase_indicadores.Ventas(fecha_inicio, fecha_fin);
+				TipoFrecuencia tipo_frecuencia_enum = Enumeracion.GetEnumObjectByValue<TipoFrecuencia>(tipo_frecuencia);
+				ventas = clase_indicadores.Ventas(fecha_inicio, fecha_fin, tipo_frecuencia_enum);
 
 				if (ventas == null)
 				{
