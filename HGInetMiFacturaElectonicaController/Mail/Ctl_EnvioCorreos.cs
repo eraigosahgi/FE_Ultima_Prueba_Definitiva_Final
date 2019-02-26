@@ -1676,7 +1676,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				// obtiene los datos del Facturador
 				Ctl_Empresa empresa = new Ctl_Empresa();
-				TblEmpresas facturador = empresa.Obtener(ListNotificacion.FirstOrDefault().Documento);
+				TblEmpresas facturador = empresa.Obtener(ListNotificacion.FirstOrDefault().identificacion);
 
 				//if (string.IsNullOrEmpty(facturador.StrSerial))
 				//    throw new ApplicationException("No se encontró información del serial");
@@ -1716,7 +1716,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						foreach (var item in ListNotificacion)
 						{
-							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr>", detalle, item.Documento, item.Facturador, item.disponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.tipo)), item.Fecha);
+							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3} Documentos</td><td>{4}</td><td>{5}</td></tr>", detalle, item.identificacion, item.facturador, item.tdisponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.intIdtipo)), item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet));
 						}
 
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);
@@ -1799,7 +1799,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				// obtiene los datos del Facturador
 				Ctl_Empresa empresa = new Ctl_Empresa();
-				TblEmpresas facturador = empresa.Obtener(ListNotificacion.FirstOrDefault().Documento);
+				TblEmpresas facturador = empresa.Obtener(ListNotificacion.FirstOrDefault().identificacion);
 
 
 				if (!string.IsNullOrWhiteSpace(fileName))
@@ -1826,7 +1826,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						foreach (var item in ListNotificacion)
 						{
-							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr>", detalle, item.Documento, item.Facturador, item.disponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.tipo)), item.Fecha);
+							detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3} Documentos</td><td>{4}</td><td>{5}</td></tr>", detalle, item.identificacion, item.facturador, item.tdisponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.intIdtipo)), item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet));
 						}
 
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);

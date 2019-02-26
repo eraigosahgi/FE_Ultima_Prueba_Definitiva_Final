@@ -57,7 +57,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="Tipo"></param>
 		/// <param name="StrIdSeguridadPlan"></param>
 		/// <returns></returns>
-		public TblSeguimientoAlertas Crear(int IdAlerta, Guid facturador,string StrIdentificacion,string StrObservaciones,int Tipo,Guid StrIdSeguridadPlan)
+		public TblSeguimientoAlertas Crear(int IdAlerta, Guid facturador,string StrIdentificacion,string StrResultado,int IdTipo,Guid StrIdSeguridadPlan,string StrMensaje)
 		{
 			try
 			{
@@ -68,9 +68,10 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 					StrIdSeguridadEmpresa = facturador.ToString(),					
 					IntIdEstado = 1,
 					StrIdentificacion = StrIdentificacion,
-					StrMensaje= StrObservaciones,
-					IntIdTipo=Tipo,
-					StrIdSeguridadPlan = StrIdSeguridadPlan.ToString()
+					StrMensaje= StrMensaje,
+					IntIdTipo= IdTipo,
+					StrIdSeguridadPlan = StrIdSeguridadPlan.ToString(),
+					StrResultadoProceso = StrResultado
 				};
 
 				datos = Crear(datos);

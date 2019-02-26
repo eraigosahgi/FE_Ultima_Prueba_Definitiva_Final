@@ -22,8 +22,11 @@ ConsultaNotificacionApp.controller('ConsultaNotificacionController', function Co
 					allowColumnDragging: true,
 					visible: true
 				},
-
-
+				columnChooser: {
+					enabled: true,
+					mode: "select",
+					title: "Selector de Columnas"
+				},
 
 				loadPanel: {
 					enabled: true
@@ -62,27 +65,27 @@ ConsultaNotificacionApp.controller('ConsultaNotificacionController', function Co
 					)
 						.appendTo(container);
 			 	}
-			 },			 
+			 },
 			{
 
-			caption: "Fecha de Notificación",
-			dataField: "fecha",
-			dataType: "date",
-			format: "yyyy-MM-dd HH:mm",
-			width: "12%"
+				caption: "Fecha de Notificación",
+				dataField: "DatFecha",
+				dataType: "date",
+				format: "yyyy-MM-dd HH:mm",
+				width: "12%"
 			},
 
 			 {
 			 	caption: "Doc. Facturador",
 			 	dataField: "identificacion",
-			 	width: "10%"
+			 	width: "12%"
 
 			 },
 
 			 {
 			 	caption: "Facturador",
 			 	dataField: "facturador",
-			 	width: "30%"
+			 	width: "25%"
 			 },
 
 
@@ -97,11 +100,16 @@ ConsultaNotificacionApp.controller('ConsultaNotificacionController', function Co
 				 	width: "25%"
 				 },
 
+				{
+					caption: "Notifica A",
+					dataField: "email",
+					visible: false
 
+				},
 
 			  {
 			  	caption: "Enviar",
-			  	width: "6%",
+			  	width: "4%",
 			  	alignment: "left",
 			  	cellTemplate: function (container, options) {
 			  		var permite_envio = (options.data.notificado == "NO") ? "class='icon-mail-read' style='margin-left:5%; font-size:19px'" : "";
@@ -119,14 +127,6 @@ ConsultaNotificacionApp.controller('ConsultaNotificacionController', function Co
 						.appendTo(container);
 			  	}
 			  },
-			  
-			   //******************************************************************************************************************
-			 //{
-			 //	caption: "Descripción de la Alerta",
-			 //	dataField: "observaciones",
-			 //	hidingPriority: 1
-
-			 //},
 			 {
 
 			 	caption: "",
@@ -134,57 +134,39 @@ ConsultaNotificacionApp.controller('ConsultaNotificacionController', function Co
 			 	alignment: "left",
 			 	hidingPriority: 0,
 			 	cellTemplate: function (container, options) {
-					
-					//Porcentaje
+			 		//Porcentaje
 			 		try {
-			 			var Notificacion = jQuery.parseJSON(options.data.observaciones);			 			
-			 			container.append($("<td aria-selected='false' role='gridcell' aria-colindex='1' colspan='6' style='text-align: center;'><div style='font-size: 16px;' >Detalle de la Notificación:</div> <div class='dx-datagrid dx-gridbase-container dx-datagrid-borders' role='grid' aria-label='Data grid' aria-rowcount='1' aria-colcount='4'><div class='dx-datagrid-headers dx-datagrid-nowrap' role='presentation' style='padding-right: 0px;'><div class='dx-datagrid-content dx-datagrid-scroll-container' role='presentation'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation'><colgroup><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody class=''><tr class='dx-row dx-column-lines dx-header-row' role='row'><td aria-selected='false' role='columnheader' aria-colindex='1' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>Adquiridos</div></td><td aria-selected='false' role='columnheader' aria-colindex='2' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>Procesados</div></td><td aria-selected='false' role='columnheader' aria-colindex='3' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>Disponible</div></td><td aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Valor</div></td><td colspan='5' aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Notificación a:</div></td></tr></tbody></table></div></div><div class='dx-datagrid-rowsview dx-datagrid-nowrap dx-scrollable dx-visibility-change-handler dx-scrollable-both dx-scrollable-simulated dx-scrollable-customizable-scrollbars' role='presentation'><div class='dx-scrollable-wrapper'><div class='dx-scrollable-container'><div class='dx-scrollable-content' style='center: 0px; top: 0px; transform: none;'><div class='dx-datagrid-content'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation' style='table-layout: fixed;'><colgroup style=''><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody><tr class='dx-row dx-data-row dx-column-lines' role='row' aria-rowindex='1' aria-selected='false'><td aria-selected='false' role='gridcell' aria-colindex='1' tabindex='0' style='text-align: center;'> <div> <i style='margin-left:5%;' >" + Notificacion.tcompra + "</i></div> </td><td aria-selected='false' role='gridcell' aria-colindex='2' style='text-align: center;'><div> <i style='margin-left:5%;margin-right:5%;' >" + Notificacion.tprocesadas + "</i></div></td><td aria-selected='false' role='gridcell' aria-colindex='3' style='text-align: center;'><div> <i> " + Notificacion.tdisponibles + "</i></div> </td><td aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><i style='margin-left:5%;' >" + Notificacion.valorindicador + "</i><td colspan='5'><div>" + Notificacion.email + "</div></td></div></td></tr></tbody></table></td>"));
-			 		} catch (e) {}
-			 		
-	
-			  }
-			 },
-			  {
-			  	dataField: "valorindicador",
-			  	caption: "Indicador Actual",
-			  	hidingPriority: 1
-			  },
-			 		//*********************************************************************************************************************
-						 {
-						 	caption: "Nº Planes Actuales",
-						 	dataField: "nplanes",
-						 	hidingPriority: 2
-						 },
-						  //{
-						  //	caption: "",
-						  //	dataField: "tcompra",
-						  //	hidingPriority: 3
-						  //},
 
-						 //{
-						 //	caption: "Procesadas Actualmente",
-						 //	dataField: "tprocesadas",
-						 //	hidingPriority: 4
-						 //}
-						 //,
-						{
-							caption: "Disponibles Actualmente",
-							dataField: "tdisponibles",
-							hidingPriority: 5
-						},
-						{
-							caption: "A quien Notifica",
-							dataField: "email",
-							hidingPriority: 6
-						},
-						{
-							caption: "Fecha de Vencimiento",
-							dataField: "fechavencimiento",
-							dataType: "date",
-							format: "yyyy-MM-dd",
-							width: "10%",
-							hidingPriority: 7
-						},
+			 			///Porcentaje
+			 			if (options.data.intIdtipo == 1) {
+			 				if (options.data.StrResultadoProceso != undefined && options.data.StrResultadoProceso != '') {
+			 					var Notificacion = jQuery.parseJSON(options.data.StrResultadoProceso);
+			 					container.append($("<td aria-selected='false' role='gridcell' aria-colindex='1' colspan='6' style='text-align: center;'><div style='font-size: 16px;' >Detalle de la Notificación:</div> <div class='dx-datagrid dx-gridbase-container dx-datagrid-borders' role='grid' aria-label='Data grid' aria-rowcount='1' aria-colcount='4'><div class='dx-datagrid-headers dx-datagrid-nowrap' role='presentation' style='padding-right: 0px;'><div class='dx-datagrid-content dx-datagrid-scroll-container' role='presentation'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation'><colgroup><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody class=''><tr class='dx-row dx-column-lines dx-header-row' role='row'><td aria-selected='false' role='columnheader' aria-colindex='1' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>Adquiridos</div></td><td aria-selected='false' role='columnheader' aria-colindex='2' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>Procesados</div></td><td aria-selected='false' role='columnheader' aria-colindex='3' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>Disponible</div></td><td aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Valor</div></td><td colspan='5' aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Notifico a:</div></td></tr></tbody></table></div></div><div class='dx-datagrid-rowsview dx-datagrid-nowrap dx-scrollable dx-visibility-change-handler dx-scrollable-both dx-scrollable-simulated dx-scrollable-customizable-scrollbars' role='presentation'><div class='dx-scrollable-wrapper'><div class='dx-scrollable-container'><div class='dx-scrollable-content' style='center: 0px; top: 0px; transform: none;'><div class='dx-datagrid-content'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation' style='table-layout: fixed;'><colgroup style=''><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody><tr class='dx-row dx-data-row dx-column-lines' role='row' aria-rowindex='1' aria-selected='false'><td aria-selected='false' role='gridcell' aria-colindex='1' tabindex='0' style='text-align: center;'> <div> <i style='margin-left:5%;' >" + Notificacion.tcompra + "</i></div> </td><td aria-selected='false' role='gridcell' aria-colindex='2' style='text-align: center;'><div> <i style='margin-left:5%;margin-right:5%;' >" + Notificacion.tprocesadas + "</i></div></td><td aria-selected='false' role='gridcell' aria-colindex='3' style='text-align: center;'><div> <i> " + Notificacion.tdisponibles + "</i></div> </td><td aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><i style='margin-left:5%;' >" + Notificacion.valorindicador + "</i><td colspan='5'><div>" + Notificacion.email + "</div></td></div></td></tr></tbody></table></td>"));
+			 				}
+			 			}
+			 			///Sin saldo
+			 			if (options.data.intIdtipo == 2) {
+			 				if (options.data.StrResultadoProceso != undefined && options.data.StrResultadoProceso != '') {
+			 					var Notificacion = jQuery.parseJSON(options.data.StrResultadoProceso);
+			 					container.append($("<td colspan='5' aria-selected='false' role='gridcell' aria-colindex='1' colspan='6' style='text-align: center;'><div style='font-size: 16px;' >Detalle de la Notificación:</div> <div class='dx-datagrid dx-gridbase-container dx-datagrid-borders' role='grid' aria-label='Data grid' aria-rowcount='1' aria-colcount='4'><div class='dx-datagrid-headers dx-datagrid-nowrap' role='presentation' style='padding-right: 0px;'><div class='dx-datagrid-content dx-datagrid-scroll-container' role='presentation'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation'><colgroup><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody class=''><tr class='dx-row dx-column-lines dx-header-row' role='row'><td colspan='5' aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content' style='text-align:left;'>Notifico a:</div></td></tr></tbody></table></div></div><div class='dx-datagrid-rowsview dx-datagrid-nowrap dx-scrollable dx-visibility-change-handler dx-scrollable-both dx-scrollable-simulated dx-scrollable-customizable-scrollbars' role='presentation'><div class='dx-scrollable-wrapper'><div class='dx-scrollable-container'><div class='dx-scrollable-content' style='center: 0px; top: 0px; transform: none;'><div class='dx-datagrid-content' style='text-align:left;'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation' style='table-layout: fixed;'><colgroup style=''><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody><tr class='dx-row dx-data-row dx-column-lines' role='row' aria-rowindex='1' aria-selected='false'><td colspan='5'><div>" + Notificacion.StrEmail + "</div></td></div></td></tr></tbody></table></td>"));
+			 				}
+			 			}
+			 			///Cera de Vencer
+			 			if (options.data.intIdtipo == 3) {
+			 				if (options.data.StrResultadoProceso != undefined && options.data.StrResultadoProceso != '') {
+			 					var Notificacion = jQuery.parseJSON(options.data.StrResultadoProceso);
+			 					container.append($("<td colspan='5' aria-selected='false' role='gridcell' aria-colindex='1' colspan='6' style='text-align: center;'><div style='font-size: 16px;' >Detalle de la Notificación:</div> <div class='dx-datagrid dx-gridbase-container dx-datagrid-borders' role='grid' aria-label='Data grid' aria-rowcount='1' aria-colcount='4'><div class='dx-datagrid-headers dx-datagrid-nowrap' role='presentation' style='padding-right: 0px;'><div class='dx-datagrid-content dx-datagrid-scroll-container' role='presentation'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation'><colgroup><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody class=''><tr class='dx-row dx-column-lines dx-header-row' role='row'><td colspan='3' aria-selected='false' role='columnheader' aria-colindex='1' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>Id de Seguridad del Plan</div></td><td  aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Fecha de Vencimiento</div></td><td colspan='5' aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Notifico a:</div></td></tr></tbody></table></div></div><div class='dx-datagrid-rowsview dx-datagrid-nowrap dx-scrollable dx-visibility-change-handler dx-scrollable-both dx-scrollable-simulated dx-scrollable-customizable-scrollbars' role='presentation'><div class='dx-scrollable-wrapper'><div class='dx-scrollable-container'><div class='dx-scrollable-content' style='center: 0px; top: 0px; transform: none;'><div class='dx-datagrid-content'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation' style='table-layout: fixed;'><colgroup style=''><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody><tr class='dx-row dx-data-row dx-column-lines' role='row' aria-rowindex='1' aria-selected='false'><td colspan='3' aria-selected='false' role='gridcell' aria-colindex='1' tabindex='0' style='text-align: center;'> <div> <i style='margin-left:5%;' >" + Notificacion.StrIdSeguridadPlan + "</i></div> </td><td  aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><i style='margin-left:5%;' >" + Notificacion.valorindicador + "</i><td colspan='5'><div>" + Notificacion.email + "</div></td></div></td></tr></tbody></table></td>"));
+			 				}
+			 			}
+
+			 		} catch (e) {
+			 			console.log("Error al cargar el detalle de la Notificación: ", options.data.StrResultadoProceso);
+			 		}
+
+
+			 	}
+			 },
+
 			 ]
 			 		, filterRow: {
 			 			visible: true
