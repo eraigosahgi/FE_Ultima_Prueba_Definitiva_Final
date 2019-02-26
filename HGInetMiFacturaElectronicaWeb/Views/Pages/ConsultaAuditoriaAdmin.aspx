@@ -5,11 +5,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 	<!-- JS DocumentosAdquiriente-->
 
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201913"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201913"></script>
-	<script src="../../Scripts/Services/SrvAuditoria.js?vjs201913"></script>
-	<script src="../../Scripts/Pages/ConsultaAuditoriaAdmin.js?vjs201913"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201913"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201914"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201914"></script>
+	<script src="../../Scripts/Services/SrvAuditoria.js?vjs201914"></script>
+	<script src="../../Scripts/Pages/ConsultaAuditoriaAdmin.js?vjs201914"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201914"></script>
 
 	<div data-ng-app="AudAdminApp">
 

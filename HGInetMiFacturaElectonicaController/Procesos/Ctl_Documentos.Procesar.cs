@@ -367,7 +367,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				// envía el mail de acuse de recibo al facturador electrónico
-				if ((documento.IntAdquirienteRecibo > 0) && (documento.IntIdEstado != ProcesoEstado.Finalizacion.GetHashCode()))
+				if ((documento.IntAdquirienteRecibo > AdquirienteRecibo.Pendiente.GetHashCode() && documento.IntAdquirienteRecibo < AdquirienteRecibo.AprobadoTacito.GetHashCode()) && (documento.IntIdEstado != ProcesoEstado.Finalizacion.GetHashCode()))
 				{
 
 					Ctl_Documento ctl_documento = new Ctl_Documento();

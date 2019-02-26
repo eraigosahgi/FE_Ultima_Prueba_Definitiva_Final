@@ -180,8 +180,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				try
 				{
 					string respuestadian= Newtonsoft.Json.JsonConvert.SerializeObject(respuesta.EstadoDian);
+					//valido la respuesta para saber que estado guardar en la Auditoria
+					int estado = 0;
+					if (resultado_doc.Estado == EstadoDocumentoDian.Aceptado)
+					{
+						estado = CategoriaEstado.ValidadoDian.GetHashCode();
+					}
+					else if (resultado_doc.Estado == EstadoDocumentoDian.Rechazado)
+					{
+						estado = CategoriaEstado.FallidoDian.GetHashCode();
+					}
+					else
+					{
+						estado = Ctl_Documento.ObtenerCategoria(documentoBd.IntIdEstado);
+					}
 					Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
-					clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.ConsultaDian, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, Enumeracion.GetDescription(ProcesoEstado.ConsultaDian), respuestadian, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
+					clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.ConsultaDian, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, Enumeracion.GetDescription(ProcesoEstado.ConsultaDian), respuestadian, respuesta.Prefijo, Convert.ToString(respuesta.Documento), estado);
 				}
 				catch (Exception e) { }
 

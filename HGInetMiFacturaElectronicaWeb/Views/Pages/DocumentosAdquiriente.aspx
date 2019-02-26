@@ -5,8 +5,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
     <!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201913"></script>
-    <script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs201913"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201914"></script>
+    <script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs201914"></script>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <div data-ng-app="DocAdquirienteApp">

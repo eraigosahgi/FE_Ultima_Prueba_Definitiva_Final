@@ -237,7 +237,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
-						ValidarRespuesta(respuesta,"",null,false);
+						ValidarRespuesta(respuesta, "", null, false);
 
 						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
 						{
@@ -362,14 +362,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (tercero.Email.Contains(";"))
 			{
+				string tercero_mail = string.Empty;
 				foreach (var item_mail in Coleccion.ConvertirLista(tercero.Email, ';'))
 				{
-					if (!Texto.ValidarExpresion(TipoExpresion.Email, item_mail))
+					if (!Texto.ValidarExpresion(TipoExpresion.Email, item_mail.Trim()))
 						throw new ArgumentException(string.Format("El Email {0} no esta bien formado", item_mail));
+					else
+						tercero_mail = (string.IsNullOrEmpty(tercero_mail) ? item_mail.Trim(): string.Format("{0};{1}",tercero_mail,item_mail.Trim()));
+
 				}
+				tercero.Email = tercero_mail;
 			}
 			else
 			{
+				tercero.Email = tercero.Email.Trim();
 				if (!Texto.ValidarExpresion(TipoExpresion.Email, tercero.Email))
 					throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
 			}

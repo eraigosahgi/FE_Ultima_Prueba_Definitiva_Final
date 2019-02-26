@@ -4,10 +4,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 
-    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201913"></script>
-    <script src="../../Scripts/Services/SrvProveedor.js?vjs201913"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201914"></script>
+    <script src="../../Scripts/Services/SrvProveedor.js?vjs201914"></script>
      <!-- JS Proveedores-->
-    <script src="../../Scripts/Pages/Proveedores.js?vjs201913"></script>
+    <script src="../../Scripts/Pages/Proveedores.js?vjs201914"></script>
 
 
     <!-- CONTENEDOR PRINCIPAL -->

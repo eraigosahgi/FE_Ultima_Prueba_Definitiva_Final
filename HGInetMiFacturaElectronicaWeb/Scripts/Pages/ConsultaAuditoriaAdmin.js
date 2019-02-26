@@ -245,7 +245,7 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
-		var cod_facturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? codigo_facturador : txt_hgi_Facturador;
+		var cod_facturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? "*" : txt_hgi_Facturador;
 		SrvAuditoria.ConsultaAuditoria(fecha_inicio, fecha_fin, cod_facturador, numero_documento, estado_dian, proceso_doc, tipo_registro, procedencia_proceso).then(function (response) {
 
 			$("#gridDocumentos").dxDataGrid({

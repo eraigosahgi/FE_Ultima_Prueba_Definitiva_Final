@@ -91,7 +91,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else
 				{
 					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
-					documentoBd.DatAdquirienteFechaRecibo = datos_retorno.Recibido;
+					documentoBd.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(datos_retorno.Estado)) ? Fecha.GetFecha() : datos_retorno.Recibido;
 					respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
 					List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documentoBd, documento_obj.DatosAdquiriente.Telefono, documento_obj.DatosAdquiriente.Email, datos_retorno.Estado, respuesta.IdPeticion.ToString());
 				}

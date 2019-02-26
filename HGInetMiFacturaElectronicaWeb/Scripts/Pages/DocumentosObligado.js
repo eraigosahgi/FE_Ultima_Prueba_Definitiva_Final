@@ -435,6 +435,12 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                       	caption: "Acuse",
                       	cssClass: "hidden-xs col-md-1",
                       	dataField: "EstadoAcuse",
+                      	cellTemplate: function (container, options) {
+
+                      		$("<div>")
+								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
+								.appendTo(container);
+                      	}
                       },
                       {
                       	caption: "Motivo Rechazo",

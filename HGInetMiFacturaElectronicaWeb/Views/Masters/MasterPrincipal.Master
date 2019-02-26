@@ -86,8 +86,8 @@
 
 	<!-- JS Localización -->
 	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
-	<script src="../../Scripts/config.js?vjs201913"></script>
-	<script src="../../Scripts/Services/Loading.js?vjs201913"></script>
+	<script src="../../Scripts/config.js?vjs201914"></script>
+	<script src="../../Scripts/Services/Loading.js?vjs201914"></script>
 
 	<style>
 		.swal-button {
@@ -105,7 +105,7 @@
 			background-color: white;
 		}
 	</style>
-	<link href="../../Content/dx.hgi.css" rel="stylesheet" />
+	<link href="../../Content/dx.hgi.css?vjs201914" rel="stylesheet" />
 	<script>
 
 		$(document).ready(function () {

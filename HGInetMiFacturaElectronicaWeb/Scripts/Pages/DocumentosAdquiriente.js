@@ -306,6 +306,12 @@ DocAdquirienteApp.controller('DocAdquirienteController', function DocAdquiriente
                       	caption: "Estado Acuse",
                       	cssClass: "hidden-xs col-md-1",
                       	dataField: "EstadoAcuse",
+                      	cellTemplate: function (container, options) {
+
+                      		$("<div>")
+								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
+								.appendTo(container);
+                      	}
                       },
                       {
                       	caption: "Motivo Rechazo",

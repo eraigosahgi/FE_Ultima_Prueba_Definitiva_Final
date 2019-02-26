@@ -92,6 +92,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Email = d.TblEmpresasFacturador.StrMailAdmin,
 					zip = d.StrUrlAnexo,
 					Estado = d.IdCategoriaEstado,
+					d.IntAdquirienteRecibo,
 					permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false
 				});
 
@@ -157,6 +158,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					zip = d.StrUrlAnexo,
 					permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
 					Estado = d.IdCategoriaEstado,
+					d.IntAdquirienteRecibo,
 					d.StrEmpresaFacturador
 				});
 
@@ -322,6 +324,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					XmlAcuse = d.StrUrlAcuseUbl,
 					EstadoCat = d.IdCategoriaEstado,
 					EstadoFactura = DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado),
+					d.IntAdquirienteRecibo,
 					obligado = d.StrEmpresaFacturador,
 					prefijo = d.StrPrefijo,
 					documento = d.IntNumero,
@@ -340,14 +343,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				});
 
 				//Si el documento ya tiene acuse de recibo, no guarda en auditoria que el documento esta visto
-				if (datos[0].IntAdquirienteRecibo == 0)
+				if (((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode())))
 				{
 
 					try
 					{
 						Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
-						var doc = datos.FirstOrDefault();
-						clase_auditoria.Crear(doc.StrIdSeguridad, Guid.Empty, doc.StrEmpresaFacturador, ProcesoEstado.AcuseVisto, TipoRegistro.Actualizacion, Procedencia.Usuario, (!string.IsNullOrEmpty(usuario) ? usuario : string.Empty), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(ProcesoEstado.AcuseVisto.GetHashCode())), string.Empty, doc.StrPrefijo, Convert.ToString(doc.IntNumero));
+						int estado_doc = Ctl_Documento.ObtenerCategoria(documento.IntIdEstado);
+						clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrEmpresaFacturador, ProcesoEstado.AcuseVisto, TipoRegistro.Actualizacion, Procedencia.Usuario, (!string.IsNullOrEmpty(usuario) ? usuario : string.Empty), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(ProcesoEstado.AcuseVisto.GetHashCode())), string.Empty, documento.StrPrefijo, Convert.ToString(documento.IntNumero),estado_doc);
 					}
 					catch (Exception)
 					{ }
@@ -426,6 +429,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					zip = d.StrUrlAnexo,
 					RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					XmlAcuse = d.StrUrlAcuseUbl,
+					d.IntAdquirienteRecibo,
 					EstadoCat = d.IdCategoriaEstado
 				});
 
@@ -888,6 +892,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					XmlAcuse = d.StrUrlAcuseUbl,
 					permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
+					d.IntAdquirienteRecibo,
 					d.StrEmpresaFacturador
 				});
 
@@ -956,6 +961,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					XmlAcuse = d.StrUrlAcuseUbl,
 					permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
+					d.IntAdquirienteRecibo,
 					Estado = d.IdCategoriaEstado
 				});
 

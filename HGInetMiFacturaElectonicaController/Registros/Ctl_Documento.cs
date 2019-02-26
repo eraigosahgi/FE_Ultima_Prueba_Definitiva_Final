@@ -486,12 +486,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			if (string.IsNullOrWhiteSpace(codigo_adquiriente))
 				codigo_adquiriente = "*";
 
+			List<long> lista_estado_visible = new List<long>();
 			if (string.IsNullOrWhiteSpace(estado_recibo))
-				estado_recibo = "*";
+			{
+				lista_estado_visible = Coleccion.ConvertirStringlong(string.Format("{0},{1},{2}", AdquirienteRecibo.Aprobado.GetHashCode(), AdquirienteRecibo.Rechazado.GetHashCode(), AdquirienteRecibo.AprobadoTacito.GetHashCode()));
+			}
 
 			List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
 
-			int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
+			//int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
 
 
 			List<TblDocumentos> documentos = new List<TblDocumentos>();
@@ -506,10 +509,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  where (obligado.StrIdentificacion.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
 							  //&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
 							  && (adquiriente.StrIdentificacion.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
-							  && (datos.IdCategoriaEstado == Categoria)
+							  //&& (datos.IdCategoriaEstado == Categoria)
 							  //&& (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
 							  //&& (estado_dian.Contains(datos.IntIdEstado.ToString()))
-							  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+							  && (datos.IntAdquirienteRecibo == cod_estado_recibo || lista_estado_visible.Contains(datos.IntAdquirienteRecibo))
 							  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
 							  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
 							  && ((datos.DatAdquirienteFechaRecibo >= fecha_inicio && datos.DatAdquirienteFechaRecibo <= fecha_fin) || tipo_fecha == 1)
@@ -526,7 +529,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
 							  where obligado.StrIdentificacion.Equals(codigo_facturador)
 							  && (listaDocumetos.Contains(datos.IntNumero))
-							  && (datos.IdCategoriaEstado == Categoria)
+							  //&& (datos.IdCategoriaEstado == Categoria)
 							  select datos).ToList();
 			}
 
@@ -807,7 +810,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				try
 				{
 					Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
-					clase_auditoria.Crear(doc.StrIdSeguridad, new Guid(), facturador.StrIdentificacion, ProcesoEstado.RecepcionAcuse, TipoRegistro.Proceso, Procedencia.Usuario, usuario, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(ProcesoEstado.RecepcionAcuse.GetHashCode())), doc.IntAdquirienteRecibo.ToString(), doc.StrPrefijo, Convert.ToString(doc.IntNumero));
+					int estado_doc = Ctl_Documento.ObtenerCategoria(doc.IntIdEstado);
+					clase_auditoria.Crear(doc.StrIdSeguridad, new Guid(), facturador.StrIdentificacion, ProcesoEstado.RecepcionAcuse, TipoRegistro.Proceso, Procedencia.Usuario, usuario, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(ProcesoEstado.RecepcionAcuse.GetHashCode())), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(doc.IntAdquirienteRecibo)), doc.StrPrefijo, Convert.ToString(doc.IntNumero), estado_doc);
 				}
 				catch (Exception) { throw; }
 
@@ -1177,7 +1181,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="ListaEstados"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerDocumentosaProcesar(string ListaEstados)
+		public List<TblDocumentos> ObtenerDocumentosaProcesar(string ListaEstados, int dias)
 		{
 
 			List<string> estados = Coleccion.ConvertirLista(ListaEstados);
@@ -1188,6 +1192,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (estados.Contains(datos.IntIdEstado.ToString()))
 							 && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual)
+							 && (datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual) && datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) || dias == 0)
 
 							 orderby datos.DatFechaIngreso descending
 							 select datos).ToList();
@@ -1461,11 +1466,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Sonda para procesar documentos
 		/// </summary>
 		/// <returns></returns>
-		public async Task SondaProcesarDocumentos(string ListaEstados, bool Consultar = true)
+		public async Task SondaProcesarDocumentos(string ListaEstados, int dias, bool Consultar = true)
 		{
 			try
 			{
-				var Tarea = TareaProcesarDocumentos(ListaEstados, Consultar);
+				var Tarea = TareaProcesarDocumentos(ListaEstados, dias, Consultar);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -1478,14 +1483,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Tarea para procesar Documentos
 		/// </summary>
 		/// <returns></returns>
-		public async Task TareaProcesarDocumentos(string ListaEstados, bool Consultar = true)
+		public async Task TareaProcesarDocumentos(string ListaEstados, int dias, bool Consultar = true)
 		{
 			await Task.Factory.StartNew(() =>
 			{
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				//Se obtienen todos los documentos para procesar, pero se excluyen los que estan pendientes por enviar a la DIAN(Se hacen manuales por el momento)
 				//List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar().Where(d => d.IntIdEstado != ProcesoEstado.CompresionXml.GetHashCode()).ToList();
-				List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar(ListaEstados);
+				List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar(ListaEstados, dias);
 				List<DocumentoRespuesta> datosProcesar = Procesos.Ctl_Documentos.Procesar(datos, Consultar);
 
 			});

@@ -64,7 +64,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="mensaje">mensaje.</param>
 		/// <param name="resultado_proceso">Código Dian, Id Mailjet...entre otros</param>
 		/// <returns></returns>
-		public TblAuditDocumentos Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso, string prefijo, string numero)
+		public TblAuditDocumentos Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso, string prefijo, string numero,int estado = 0)
 		{
 			try
 			{
@@ -74,7 +74,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 					StrIdPeticion = id_peticion.ToString(),
 					DatFecha = Fecha.GetFecha(),
 					StrObligado = facturador,
-					IntIdEstado = Ctl_Documento.ObtenerCategoria(proceso.GetHashCode()),
+					IntIdEstado = (estado == 0) ? Ctl_Documento.ObtenerCategoria(proceso.GetHashCode()): estado,
 					IntIdProceso = proceso.GetHashCode(),
 					IntTipoRegistro = tipo_registro.GetHashCode(),
 					IntIdProcesadoPor = procesado_por.GetHashCode(),
@@ -110,7 +110,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="resultado_proceso">Código Dian, Id Mailjet...entre otros</param>
 		/// <param name="respuestas_email">Lista de la respuesta de envios de correos</param>
 		/// <returns></returns>
-		public List<TblAuditDocumentos> Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso, List<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta.MensajeEnvio> respuestas_email, string prefijo, string numero)
+		public List<TblAuditDocumentos> Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso, List<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta.MensajeEnvio> respuestas_email, string prefijo, string numero, int estado = 0)
 		{
 			try
 			{
@@ -127,7 +127,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 						datos.StrIdPeticion = id_peticion.ToString();
 						datos.DatFecha = Fecha.GetFecha();
 						datos.StrObligado = facturador;
-						datos.IntIdEstado = Ctl_Documento.ObtenerCategoria(proceso.GetHashCode());
+						datos.IntIdEstado = (estado == 0) ? Ctl_Documento.ObtenerCategoria(proceso.GetHashCode()) : estado;
 						datos.IntIdProceso = proceso.GetHashCode();
 						datos.IntTipoRegistro = tipo_registro.GetHashCode();
 						datos.IntIdProcesadoPor = procesado_por.GetHashCode();

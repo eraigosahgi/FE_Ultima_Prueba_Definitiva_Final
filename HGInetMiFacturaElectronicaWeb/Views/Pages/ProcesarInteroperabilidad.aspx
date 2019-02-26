@@ -4,8 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-    <script src="../../Scripts/Pages/ProcesarInteroperabilidad.js?vjs201913"></script>
-    <script src="../../Scripts/Pages/ModalConsultaProveedores.js?vjs201913"></script>
+    <script src="../../Scripts/Pages/ProcesarInteroperabilidad.js?vjs201914"></script>
+    <script src="../../Scripts/Pages/ModalConsultaProveedores.js?vjs201914"></script>
 
     <div data-ng-app="ProcesarInteroperabilidadApp" data-ng-controller="ProcesarInteroperabilidadController">
 

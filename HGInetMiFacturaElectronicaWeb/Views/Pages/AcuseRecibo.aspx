@@ -88,8 +88,8 @@
 	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
 
 	<!-- JS AcuseRecibo -->
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201913"></script>
-	<script src="../../Scripts/config.js?vjs201913"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201914"></script>
+	<script src="../../Scripts/config.js?vjs201914"></script>
 	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs201914"></script>
 
 </head>

@@ -216,6 +216,12 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
                        {
                            caption: "Estado Acuse",
                            dataField: "Estado",
+                           cellTemplate: function (container, options) {
+
+                           	$("<div>")
+								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.Estado)))
+								.appendTo(container);
+                           }
                        },
                       {
                           caption: "Motivo Rechazo",

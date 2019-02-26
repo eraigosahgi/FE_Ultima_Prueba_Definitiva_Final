@@ -311,11 +311,23 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           caption: "Estado",
                           cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoFactura",
+                          cellTemplate: function (container, options) {
+
+                          	$("<div>")
+								.append($(ColocarEstado(options.data.Estado, options.data.EstadoFactura)))
+								.appendTo(container);
+                          }
                       },
                       {
                           caption: "Estado Acuse",
                           cssClass: "hidden-xs col-md-1",
                           dataField: "EstadoAcuse",
+                          cellTemplate: function (container, options) {
+
+                          	$("<div>")
+								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
+								.appendTo(container);
+                          }
                       },
                       {
                           caption: "Motivo Rechazo",
