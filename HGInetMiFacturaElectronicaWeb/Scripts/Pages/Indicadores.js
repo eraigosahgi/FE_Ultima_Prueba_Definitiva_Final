@@ -45,15 +45,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 		}
 	});
 
-	$("#FiltroCantidadTop").dxNumberBox({
-		value: cantidad_top,
-		width: '60%',
-		showSpinButtons: true,
-		onValueChanged: function (e) {
-			cantidad_top = e.value;
-		}
-	});
-
 	//Evento para cambio de gráfico del panel 13514
 	$scope.CambiarGrafico13514 = function (tipo_grafico) {
 		CargarTipoDoc13514(datos_Panel13514, tipo_grafico);
@@ -79,7 +70,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 		valueExpr: "Codigo",
 		layout: "horizontal",
 		onValueChanged: function (e) {
-
+			$scope.TipoFrecuencia = e.value;
 			$("#VerFiltroFin").hide();
 			$("#VerFiltroInicio").show();
 
@@ -125,6 +116,42 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					});
 
 					break;
+
+					/*
+					//Semana
+					case "3":
+						fecha_inicio = fecha_base.toISOString();
+	
+						var set_date = new Date(fecha_base);
+						set_date.setDate(set_date.getDate() + 6);
+						fecha_fin = set_date.toISOString();
+	
+						$("#FiltroFechaInicio").dxDateBox({
+							value: fecha_base,
+							width: '80%',
+							displayFormat: "yyyy-MM-dd",
+							maxZoomLevel: 'month',
+							minZoomLevel: 'century',
+							min: fecha_inicio,
+							max: fecha_fin,
+							disabled: false,
+							onValueChanged: function (data) {
+	
+								fecha_inicio = data.value.toISOString();
+	
+								var set_date = new Date(data.value);
+								set_date.setDate(set_date.getDate() + 6);
+								fecha_fin = set_date.toISOString();
+	
+								$("#FiltroFechaInicio").dxDateBox({ min: data.value });
+								$("#FiltroFechaInicio").dxDateBox({ max: fecha_fin });
+	
+								console.log();
+	
+							}
+						});
+						
+						break;*/
 
 					//Rango por mes
 				case "4":
@@ -213,39 +240,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 					break;
 
-					/*case "6":
-						fecha_inicio = fecha_base.toISOString();
-	
-						var set_date = new Date(fecha_base);
-						set_date.setDate(set_date.getDate() + 6);
-						fecha_fin = set_date.toISOString();
-	
-						$("#FiltroFechaInicio").dxDateBox({
-							value: fecha_base,
-							width: '80%',
-							displayFormat: "yyyy-MM-dd",
-							maxZoomLevel: 'month',
-							minZoomLevel: 'century',
-							min: fecha_inicio,
-							max: fecha_fin,
-							disabled: false,
-							onValueChanged: function (data) {
-	
-								fecha_inicio = data.value.toISOString();
-	
-								var set_date = new Date(data.value);
-								set_date.setDate(set_date.getDate() + 6);
-								fecha_fin = set_date.toISOString();
-	
-								$("#FiltroFechaInicio").dxDateBox({ min: data.value });
-								$("#FiltroFechaInicio").dxDateBox({ max: fecha_fin });
-	
-								console.log();
-	
-							}
-						});
-						
-						break;*/
 
 			}
 		}
@@ -359,6 +353,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							$scope.Panel13512 = false;
 						else {
 							$scope.ReporteAcuseMensualAdmin = response.data;
+
+							var total = 0;
+
+							//Suma la cantidad total de registros para el indicador.
+							for (var i = 0; i < $scope.ReporteAcuseMensualAdmin.length; i++) {
+								total += $scope.ReporteAcuseMensualAdmin[i].Cantidad;
+							}
+							$('#TotalAcuseAdmin').text("Acuse de Respuesta: " + total);
 						}
 					} catch (err) {
 						DevExpress.ui.notify(err.message, 'error', 3000);
@@ -376,6 +378,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							$scope.Panel13515 = false;
 						else {
 							$scope.ReporteDocumentosTipoAdmin = response.data;
+
+							var total = 0;
+
+							//Suma la cantidad total de registros para el indicador.
+							for (var i = 0; i < $scope.ReporteDocumentosTipoAdmin.length; i++) {
+								total += $scope.ReporteDocumentosTipoAdmin[i].Cantidad;
+							}
+							$('#TotalTiposDocAdmin').text("Tipos de Documento: " + total);
 						}
 					} catch (err) {
 						DevExpress.ui.notify(err.message, 'error', 3000);
@@ -392,138 +402,42 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				ConsultarVentasAdmin("Bar");
 
 				//REPORTE TOP COMPRADORES ADMINISTRADOR
-				$http.get('/Api/ReporteTopCompradores?cantidad_top=' + cantidad_top + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+				$http.get('/Api/ReporteTopCompradores?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
 					$("#wait").hide();
-					if (response.data.Detalles.length == 0)
+					if (response.data.length == 0)
 						$scope.Panel13517 = false;
 					else {
-
-						$scope.TotalTopCompradores = response.data.TotalTop;
-						$scope.TotalOtrosCompradores = response.data.TotalOtros;
-						$scope.TotalCompradores = response.data.Total;
-
-						$("#ToolTipPanel13517").dxTooltip({
-							target: "#InfoPanel13517",
-							showEvent: "mouseenter",
-							hideEvent: "mouseleave",
-							position: "right",
-							contentTemplate: function (data) {
-								data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado.</label>");
-							}
-						});
-
 						try {
-							$("#ReporteTopCompradores").dxDataGrid({
-								dataSource: response.data.Detalles,
-								paging: {
-									pageSize: 10
+							$scope.ReporteTopCompradores = response.data;
+
+							var valor_total = 0;
+
+							for (var i = 0; i < $scope.ReporteTopCompradores.length; i++) {
+								valor_total += $scope.ReporteTopCompradores[i].ValorCompras;
+							}
+
+							$("#CantTopCompradoresAdmin").dxNumberBox({
+								value: 10,
+								width: '60%',
+								showSpinButtons: true,
+								onValueChanged: function (e) {
+									CararTopCompradores(e.value, $scope.ReporteTopCompradores, valor_total);
 								},
-								pager: {
-									showPageSizeSelector: true,
-									allowedPageSizes: [10, 20, 30],
-									showInfo: true
-								},
-								showRowLines: true,
-								showBorders: true,
-								showColumnLines: false,
-								loadPanel: {
-									enabled: true
-								},
-								scrolling: {
-									mode: "virtual"
-								},
-								sorting: {
-									mode: "none"
-								},
-								onCellPrepared: function (options) {
-									var fieldData = options.value,
-										fieldHtml = "";
-									try {
-										if (options.columnIndex == 2) {
-											if (fieldData) {
-												var inicial = FormatoNumber.go(fieldData);
-												options.cellElement.html(inicial);
-											}
-										}
-										if (options.columnIndex == 3) {
-											if (fieldData) {
-												var inicial = fNumber.go(fieldData);
-												options.cellElement.html(inicial);
-											}
-										}
-									} catch (err) {
-										DevExpress.ui.notify(err.message, 'error', 3000);
-									}
-								},
-								onContentReady: function (e) {
-									e.component.option("loadPanel.enabled", false);
-								}, columns: [
-									/*{
-										caption: "",
-										cellTemplate: function (container, options) {
-			
-											if (options.data.Posicion) {
-			
-												var opacidad = 0;
-												switch (options.data.Posicion) {
-													case 1:
-														opacidad = "1"
-														break;
-													case 2:
-														opacidad = "0.9"
-														break;
-													case 3:
-														opacidad = "0.8"
-														break;
-													case 4:
-														opacidad = "0.7"
-														break;
-													case 5:
-														opacidad = "0.6"
-														break;
-													case 6:
-														opacidad = "0.5"
-														break;
-													case 7:
-														opacidad = "0.4"
-														break;
-													case 8:
-														opacidad = "0.3"
-														break;
-													case 9:
-														opacidad = "0.2"
-														break;
-													case 10:
-														opacidad = "0.1"
-														break;
-												}
-			
-												var color = "style='margin-left:5%; color: rgba(0, 22, 245, " + opacidad + ")'";
-											}
-			
-											$("<div>")
-												.append($("<label class='icon-coin-dollar' " + color + " />"))
-												.appendTo(container);
-										}
-									},*/
-									{
-										caption: "Identificación",
-										dataField: "Identificacion",
-									},
-									{
-										caption: "Razón Social",
-										dataField: "RazonSocial",
-									},
-									{
-										caption: "Cantidad Transacciones",
-										dataField: "CantidadTransacciones",
-									},
-									{
-										caption: "Valor Compras",
-										dataField: "ValorCompras",
-									}
-								]
 							});
+
+							$("#ToolTipPanel13517").dxTooltip({
+								target: "#InfoPanel13517",
+								showEvent: "mouseenter",
+								hideEvent: "mouseleave",
+								position: "right",
+								contentTemplate: function (data) {
+									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado.</label>");
+								}
+							});
+
+							CararTopCompradores(cantidad_top, $scope.ReporteTopCompradores, valor_total);
+
+
 						} catch (err) {
 							DevExpress.ui.notify(err.message, 'error', 3000);
 						}
@@ -533,16 +447,32 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 				});
 
+
 				//REPORTE TOP TRANSACCIONAL ADMINISTRADOR
-				$http.get('/Api/ReporteTopTransaccional?cantidad_top=' + cantidad_top + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin).then(function (response) {
+				$http.get('/Api/ReporteTopTransaccional?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_empresa=1&identificacion_empresa=" + identificacion_empresa_autenticada + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
 					$("#wait").hide();
-					if (response.data.Detalles.length == 0)
+					if (response.data.length == 0)
 						$scope.Panel13518 = false;
 					else {
 						try {
-							$scope.TotalTopMovimiento = response.data.TotalTop;
-							$scope.TotalOtrosMovimiento = response.data.TotalOtros;
-							$scope.TotalMovimiento = response.data.Total;
+							$scope.Panel13518 = true;
+
+							$scope.ReporteTopTransaccionalAdmin = response.data;
+
+							var valor_total = 0;
+
+							for (var i = 0; i < $scope.ReporteTopTransaccionalAdmin.length; i++) {
+								valor_total += $scope.ReporteTopTransaccionalAdmin[i].ValorTotalDocumentos;
+							}
+
+							$("#CantTopTransaccionalAdmin").dxNumberBox({
+								value: 10,
+								width: '60%',
+								showSpinButtons: true,
+								onValueChanged: function (e) {
+									CargarTopTransaccional(e.value, $scope.ReporteTopTransaccionalAdmin, valor_total, "ReporteTopMovimiento");
+								},
+							});
 
 							$("#ToolTipPanel13518").dxTooltip({
 								target: "#InfoPanel13518",
@@ -554,106 +484,9 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 								}
 							});
 
-							$("#ReporteTopMovimiento").dxDataGrid({
-								dataSource: response.data.Detalles,
-								paging: {
-									pageSize: 10
-								},
-								pager: {
-									showPageSizeSelector: true,
-									allowedPageSizes: [10, 20, 30],
-									showInfo: true
-								},
-								showRowLines: true,
-								showBorders: true,
-								showColumnLines: false,
-								customizeColumns: function (columns) {
-									columns[0].width = 70;
-								},
-								loadPanel: {
-									enabled: true
-								},
-								scrolling: {
-									mode: "virtual"
-								},
-								sorting: {
-									mode: "none"
-								},
-								onCellPrepared: function (options) {
-									var fieldData = options.value,
-										fieldHtml = "";
-									try {
-										if (options.columnIndex == 2) {
-											if (fieldData) {
-												var inicial = FormatoNumber.go(fieldData);
-												options.cellElement.html(inicial);
-											}
-										}
-										if (options.columnIndex == 3) {
-											if (fieldData) {
-												var inicial = fNumber.go(fieldData);
-												options.cellElement.html(inicial);
-											}
-										}
-									} catch (err) {
-										DevExpress.ui.notify(err.message, 'error', 3000);
-									}
-								},
-								onContentReady: function (e) {
-									e.component.option("loadPanel.enabled", false);
-								}, columns: [
-									/*{
-										caption: "",
-										cellTemplate: function (container, options) {
-			
-											var indicador = "";
-			
-										//Decreciente
-											if (options.data.CantidadMesActual < options.data.CantidadMesAnterior)
-												indicador = "class='icon-stats-decline' style='margin-left:5%; color:#E70000 '";
-												//Creciente
-											else if (options.data.CantidadMesActual > options.data.CantidadMesAnterior)
-												indicador = "class='icon-stats-growth' style='margin-left:5%; color:#62C415'";
-												//Estable
-											else if (options.data.CantidadMesActual == options.data.CantidadMesAnterior)
-												indicador = "class='icon-sort' style='margin-left:5%; color: #2196f3'";
-												
-											$("<div>")
-												.append($("<label " + indicador + " />"))
-												.appendTo(container);
-										}
-									},*/
-									{
-										caption: "Identificación",
-										dataField: "Identificacion",
-										cssClass: "col-md-3",
-									},
-									{
-										caption: "Razón Social",
-										dataField: "RazonSocial",
-										cssClass: "col-md-3",
-									},
-									{
-										caption: "Total Documentos",
-										dataField: "TotalDocumentos",
-										cssClass: "col-md-3",
-									},
-									{
-										caption: "Valor Documentos",
-										dataField: "ValorTotalDocumentos",
-										cssClass: "col-md-3",
-									}
-									/*{
-										caption: "Mes Anterior",
-										dataField: "CantidadMesAnterior",
-									},
-									{
-										caption: "Mes Actual",
-										dataField: "CantidadMesActual",
-									}*/
+							CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdmin, valor_total, "ReporteTopMovimiento");
 
-								]
-							});
+
 						} catch (err) {
 							DevExpress.ui.notify(err.message, 'error', 3000);
 						}
@@ -734,6 +567,15 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							$scope.Panel13523 = false;
 						else {
 							$scope.ReporteAcuseMensualFacturador = response.data;
+
+							var total = 0;
+
+							//Suma la cantidad total de registros para el indicador.
+							for (var i = 0; i < $scope.ReporteAcuseMensualFacturador.length; i++) {
+								total += $scope.ReporteAcuseMensualFacturador[i].Cantidad;
+							}
+							$('#TotalAcuseFacturador').text("Acuse de Respuesta: " + total);
+
 						}
 					} catch (err) {
 						DevExpress.ui.notify(err.message, 'error', 3000);
@@ -751,6 +593,15 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							$scope.Panel13526 = false;
 						else {
 							$scope.ReporteDocumentosTipoFacturador = response.data;
+
+							var total = 0;
+
+							//Suma la cantidad total de registros para el indicador.
+							for (var i = 0; i < $scope.ReporteDocumentosTipoFacturador.length; i++) {
+								total += $scope.ReporteDocumentosTipoFacturador[i].Cantidad;
+							}
+							$('#TotalTiposDocFacturador').text("Tipos de Documento: " + total);
+
 						}
 					} catch (err) {
 						DevExpress.ui.notify(err.message, 'error', 3000);
@@ -818,6 +669,52 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 				});
 
+				//REPORTE TOP TRANSACCIONAL FACTURADOR
+				$http.get('/Api/ReporteTopTransaccional?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_empresa=2&identificacion_empresa=" + identificacion_empresa_autenticada + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
+					$("#wait").hide();
+					if (response.data.length == 0)
+						$scope.Panel13524 = false;
+					else {
+						try {
+							$scope.ReporteTopTransaccionalFacturador = response.data;
+
+							var valor_total = 0;
+
+							for (var i = 0; i < $scope.ReporteTopTransaccionalFacturador.length; i++) {
+								valor_total += $scope.ReporteTopTransaccionalFacturador[i].ValorTotalDocumentos;
+							}
+
+							$("#CantTopTransaccionalFacturador").dxNumberBox({
+								value: 10,
+								width: '60%',
+								showSpinButtons: true,
+								onValueChanged: function (e) {
+									CargarTopTransaccional(e.value, $scope.ReporteTopTransaccionalFacturador, valor_total, "ReporteTopMovimientoFacturador");
+								},
+							});
+
+							$("#ToolTipPanel13524").dxTooltip({
+								target: "#InfoPanel13524",
+								showEvent: "mouseenter",
+								hideEvent: "mouseleave",
+								position: "right",
+								contentTemplate: function (data) {
+									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado.</label>");
+								}
+							});
+
+							CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalFacturador, valor_total, "ReporteTopMovimientoFacturador");
+
+
+						} catch (err) {
+							DevExpress.ui.notify(err.message, 'error', 3000);
+						}
+					}
+				}, function errorCallback(response) {
+					$('#wait').hide();
+					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+				});
+
 			}), function errorCallback(response) {
 				Mensaje(response.data.ExceptionMessage, "error");
 			};
@@ -851,6 +748,15 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							$scope.Panel13531 = false;
 						else {
 							$scope.ReporteAcuseAcumuladoAdquiriente = response.data;
+
+							var total = 0;
+
+							//Suma la cantidad total de registros para el indicador.
+							for (var i = 0; i < $scope.ReporteAcuseAcumuladoAdquiriente.length; i++) {
+								total += $scope.ReporteAcuseAcumuladoAdquiriente[i].Cantidad;
+							}
+							$('#TotalAcuseAdquiriente').text("Acuse de Respuesta: " + total);
+
 						}
 					} catch (err) {
 						DevExpress.ui.notify(err.message, 'error', 3000);
@@ -871,6 +777,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							$scope.Panel13532 = false;
 						else {
 							$scope.ReporteDocumentosTipoAdquiriente = response.data;
+
+							var total = 0;
+
+							//Suma la cantidad total de registros para el indicador.
+							for (var i = 0; i < $scope.ReporteDocumentosTipoAdquiriente.length; i++) {
+								total += $scope.ReporteDocumentosTipoAdquiriente[i].Cantidad;
+							}
+							$('#TotalTiposDocAdquiriente').text("Tipos de Documento: " + total);
 						}
 
 					} catch (err) {
@@ -881,9 +795,58 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 				});
 
+
+				//REPORTE TOP TRANSACCIONAL ADQUIRIENTE
+				$http.get('/Api/ReporteTopTransaccional?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_empresa=3&identificacion_empresa=" + identificacion_empresa_autenticada + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
+					$("#wait").hide();
+					if (response.data.length == 0)
+						$scope.Panel13534 = false;
+					else {
+						try {
+							$scope.ReporteTopTransaccionalAdquiriente = response.data;
+
+							var valor_total = 0;
+
+							for (var i = 0; i < $scope.ReporteTopTransaccionalAdquiriente.length; i++) {
+								valor_total += $scope.ReporteTopTransaccionalAdquiriente[i].ValorTotalDocumentos;
+							}
+
+							$("#CantTopTransaccionalAdquiriente").dxNumberBox({
+								value: 10,
+								width: '60%',
+								showSpinButtons: true,
+								onValueChanged: function (e) {
+									CargarTopTransaccional(e.value, $scope.ReporteTopTransaccionalAdquiriente, valor_total, "ReporteTopMovimientoAdquiriente");
+								},
+							});
+
+							$("#ToolTipPanel13534").dxTooltip({
+								target: "#InfoPanel13534",
+								showEvent: "mouseenter",
+								hideEvent: "mouseleave",
+								position: "right",
+								contentTemplate: function (data) {
+									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado.</label>");
+								}
+							});
+
+							CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdquiriente, valor_total, "ReporteTopMovimientoAdquiriente");
+
+
+						} catch (err) {
+							DevExpress.ui.notify(err.message, 'error', 3000);
+						}
+					}
+				}, function errorCallback(response) {
+					$('#wait').hide();
+					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+				});
+
 			}), function errorCallback(response) {
 				Mensaje(response.data.ExceptionMessage, "error");
 			};
+
+
 		}
 
 
@@ -981,7 +944,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				if (response.data.length == 0)
 					$scope.Panel13514 = false;
 				else {
-					$scope.Panel13514 = true;
 					datos_Panel13514 = response;
 					CargarTipoDoc13514(response, tipo_grafico);
 				}
@@ -1023,10 +985,10 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				type: tipo_grafico
 			},
 			series: [
-				 {
-				 	valueField: "CantidadDocumentos",
-				 	name: "Cant.Documentos"
-				 }
+			{
+				valueField: "CantidadDocumentos",
+				name: "Cant.Documentos"
+			}
 			],
 			legend: {
 				verticalAlignment: "bottom",
@@ -1044,7 +1006,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				if (response.data.length == 0)
 					$scope.Panel13516 = false;
 				else {
-					$scope.Panel13516 = true;
 					datos_Panel13516 = response;
 					CargarVentas13516(response, tipo_grafico);
 				}
@@ -1090,9 +1051,15 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				type: tipo_grafico
 			},
 			series: [
-				{ valueField: "CantidadTransaccionesVentas", name: "Ventas" },
-				{ valueField: "CantidadTransaccionesCortesias", name: "Cortesias" },
-				{ valueField: "CantidadTransaccionesPostVenta", name: "Post-Venta" }
+			{
+				valueField: "CantidadTransaccionesVentas", name: "Ventas"
+			},
+	{
+		valueField: "CantidadTransaccionesCortesias", name: "Cortesias"
+	},
+	{
+		valueField: "CantidadTransaccionesPostVenta", name: "Post-Venta"
+	}
 			],
 			legend: {
 				verticalAlignment: "bottom",
@@ -1110,7 +1077,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				if (response.data.length == 0)
 					$scope.Panel13525 = false;
 				else {
-					$scope.Panel13525 = true;
 					datos_Panel13525 = response;
 					CargarTiposDocs13525(response, tipo_grafico);
 				}
@@ -1152,10 +1118,10 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				type: tipo_grafico
 			},
 			series: [
-				 {
-				 	valueField: "CantidadDocumentos",
-				 	name: "Cant.Documentos"
-				 }
+			{
+				valueField: "CantidadDocumentos",
+				name: "Cant.Documentos"
+			}
 			],
 			legend: {
 				verticalAlignment: "bottom",
@@ -1173,7 +1139,6 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				if (response.data.length == 0)
 					$scope.Panel13533 = false;
 				else {
-					$scope.Panel13533 = true;
 					datos_Panel13533 = response;
 					CargarTiposDocs13533(response, tipo_grafico);
 				}
@@ -1214,10 +1179,10 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				type: tipo_grafico
 			},
 			series: [
-				 {
-				 	valueField: "CantidadDocumentos",
-				 	name: "Cant.Documentos"
-				 }
+			{
+				valueField: "CantidadDocumentos",
+				name: "Cant.Documentos"
+			}
 			],
 			legend: {
 				verticalAlignment: "bottom",
@@ -1226,23 +1191,221 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 			title: ""
 		});
 	}
+
+	//Carga la grid de datos del top de compradores para el administrador
+	function CararTopCompradores(cantidad_top, data, valor_total) {
+
+		var datos = data.slice(0, cantidad_top);
+
+		$("#ReporteTopCompradores").dxDataGrid({
+			dataSource: datos,
+			allowColumnResizing: true,
+			allowColumnReordering: true,
+			paging: {
+				pageSize: cantidad_top
+			}, loadPanel: {
+				enabled: true
+			},
+			onCellPrepared: function (options) {
+				var fieldData = options.value,
+				fieldHtml = "";
+				try {
+					if (options.columnIndex == 2) {
+						if (fieldData) {
+							var inicial = FormatoNumber.go(fieldData);
+							options.cellElement.html(inicial);
+						}
+					}
+					if (options.columnIndex == 3) {
+						if (fieldData) {
+							var inicial = fNumber.go(fieldData);
+							options.cellElement.html(inicial);
+						}
+					}
+				} catch (err) {
+					DevExpress.ui.notify(err.message, 'error', 3000);
+				}
+			},
+			onContentReady: function (e) {
+				e.component.option("loadPanel.enabled", false);
+			}, columns: [
+
+			{
+				caption: "Identificación",
+				dataField: "Identificacion",
+			},
+				{
+					caption: "Razón Social",
+					dataField: "RazonSocial",
+				},
+	{
+		caption: "Cantidad Transacciones",
+		dataField: "CantidadTransacciones",
+	},
+					{
+						caption: "Valor Compras",
+						dataField: "ValorCompras",
+					}
+			],
+			summary: {
+				totalItems: [{
+					showInColumn: "RazonSocial",
+					column: "ValorCompras",
+					summaryType: "sum",
+					valueFormat: "currency",
+					displayFormat: "Total Top: {0}",
+				},
+						{
+							showInColumn: "CantidadTransacciones",
+							column: "ValorCompras",
+							summaryType: "sum",
+							valueFormat: "currency",
+							customizeText: function (data) {
+								var total_otros = valor_total - data.value;
+								return "Total Otros: " + fNumber.go(total_otros);
+							}
+						},
+							{
+								showInColumn: "ValorCompras",
+								customizeText: function (data) {
+									return "Total: " + fNumber.go(valor_total);
+								}
+							}]
+			}
+		});
+	}
+
+	//Carga la grid de datos del flujo transaccional para el administrador
+	function CargarTopTransaccional(cantidad_top, data, valor_total, nombre_grid) {
+
+		var datos = data.slice(0, cantidad_top);
+
+		$("#" + nombre_grid).dxDataGrid({
+			dataSource: datos,
+			allowColumnResizing: true,
+			allowColumnReordering: true,
+			paging: {
+				pageSize: cantidad_top
+			}, loadPanel: {
+				enabled: true
+			},
+			onCellPrepared: function (options) {
+				var fieldData = options.value,
+					fieldHtml = "";
+				try {
+					if (options.columnIndex == 3) {
+						if (fieldData) {
+							var inicial = FormatoNumber.go(fieldData);
+							options.cellElement.html(inicial);
+						}
+					}
+					if (options.columnIndex == 4) {
+						if (fieldData) {
+							var inicial = fNumber.go(fieldData);
+							options.cellElement.html(inicial);
+						}
+					}
+				} catch (err) {
+					DevExpress.ui.notify(err.message, 'error', 3000);
+				}
+			},
+			onContentReady: function (e) {
+				e.component.option("loadPanel.enabled", false);
+			}, columns: [{
+				caption: "",
+				cssClass: "col-md-1",
+				cellTemplate: function (container, options) {
+
+					var indicador = "";
+
+					//Decreciente
+					if (options.data.CantidadActual < options.data.CantidadAnterior)
+						indicador = "class='icon-stats-decline' style='margin-left:5%; color:#E70000 '";
+						//Creciente
+					else if (options.data.CantidadActual > options.data.CantidadAnterior)
+						indicador = "class='icon-stats-growth' style='margin-left:5%; color:#62C415'";
+						//Estable
+					else if (options.data.CantidadActual == options.data.CantidadAnterior)
+						indicador = "class='icon-sort' style='margin-left:5%; color: #2196f3'";
+
+					$("<div>")
+						.append($("<label " + indicador + " />"))
+						.appendTo(container);
+				}
+			},
+			{
+				caption: "Identificación",
+				dataField: "Identificacion",
+				cssClass: "col-md-3",
+			},
+		{
+			caption: "Razón Social",
+			dataField: "RazonSocial",
+			cssClass: "col-md-3",
+		},
+		{
+			caption: "Total Documentos",
+			dataField: "TotalDocumentos",
+			cssClass: "col-md-3",
+		},
+		{
+			caption: "Valor Documentos",
+			dataField: "ValorTotalDocumentos",
+			cssClass: "col-md-3",
+		}, {
+			caption: "Flujo Anterior",
+			dataField: "CantidadAnterior",
+			cssClass: "col-md-3",
+		},
+		{
+			caption: "Flujo Actual",
+			dataField: "CantidadActual",
+			cssClass: "col-md-3",
+		}
+			],
+			summary: {
+				totalItems: [{
+					showInColumn: "RazonSocial",
+					column: "ValorTotalDocumentos",
+					summaryType: "sum",
+					valueFormat: "currency",
+					displayFormat: "Total Top: {0}",
+				},
+				{
+					showInColumn: "TotalDocumentos",
+					column: "ValorTotalDocumentos",
+					summaryType: "sum",
+					valueFormat: "currency",
+					customizeText: function (data) {
+						var total_otros = valor_total - data.value;
+						return "Total Otros: " + fNumber.go(total_otros);
+					}
+				},
+					{
+						showInColumn: "ValorTotalDocumentos",
+						customizeText: function (data) {
+							return "Total: " + fNumber.go(valor_total);
+						}
+					}]
+			}
+		});
+	}
 });
 
 
 TiposFiltro = [
-
- {
- 	Codigo: "1",
- 	Descripcion: "Hoy"
- },
- {
- 	Codigo: "2",
- 	Descripcion: "Fecha"
- },
- {
- 	Codigo: "3",
- 	Descripcion: "Semana"
- },
+{
+	Codigo: "1",
+	Descripcion: "Hoy"
+},
+{
+	Codigo: "2",
+	Descripcion: "Fecha"
+},
+/*{
+   Codigo: "3",
+   Descripcion: "Semana"
+},*/
 {
 	Codigo: "4",
 	Descripcion: "Mes"

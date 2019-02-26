@@ -15,12 +15,4 @@ namespace HGInetMiFacturaElectonicaController.Indicadores.Objetos
 		public decimal ValorCompras { get; set; }
 	}
 
-	public class ResumenCompradores
-	{
-		public decimal TotalTop { get; set; }
-		public decimal TotalOtros { get; set; }
-		public decimal Total { get; set; }
-		public List<TopCompradores> Detalles { get; set; }
-	}
-
 }

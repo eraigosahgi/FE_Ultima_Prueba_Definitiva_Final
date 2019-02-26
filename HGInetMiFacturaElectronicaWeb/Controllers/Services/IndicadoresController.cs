@@ -1,6 +1,8 @@
 ﻿using HGInetMiFacturaElectonicaController.Indicadores;
 using HGInetMiFacturaElectonicaController.Indicadores.Objetos;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
+using LibreriaGlobalHGInet.Funciones;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,7 +33,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				List<PorcentajesResumen> datos_EstadoAcuseMensual = new List<PorcentajesResumen>();
 				Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
-			datos_EstadoAcuseMensual = clase_indicadores.ReporteEstadosAcuse(identificacion_empresa, tipo_empresa, fecha_inicio, fecha_fin);
+				datos_EstadoAcuseMensual = clase_indicadores.ReporteEstadosAcuse(identificacion_empresa, tipo_empresa, fecha_inicio, fecha_fin);
 
 				if (datos_EstadoAcuseMensual == null)
 				{
@@ -237,7 +239,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/ReporteTopCompradores")]
-		public IHttpActionResult ReporteTopCompradores(int cantidad_top, DateTime fecha_inicio, DateTime fecha_fin)
+		public IHttpActionResult ReporteTopCompradores(DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
@@ -245,7 +247,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
-				ResumenCompradores datos = clase_indicadores.TopCompradores(cantidad_top, fecha_inicio, fecha_fin);
+				List<TopCompradores> datos = clase_indicadores.TopCompradores(fecha_inicio, fecha_fin);
 
 				if (datos == null)
 				{
@@ -262,15 +264,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/ReporteTopTransaccional")]
-		public IHttpActionResult ReporteTopTransaccional(int cantidad_top, DateTime fecha_inicio, DateTime fecha_fin)
+		public IHttpActionResult ReporteTopTransaccional(DateTime fecha_inicio, DateTime fecha_fin, int tipo_empresa, string identificacion_empresa, int tipo_frecuencia)
 		{
 			try
 			{
 				Sesion.ValidarSesion();
-								
+
 				Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
-				ResumenTopTransaccional top_transaccional = clase_indicadores.TopTransaccional(cantidad_top, fecha_inicio, fecha_fin);
+				TipoFrecuencia tipo_frecuencia_enum = Enumeracion.GetEnumObjectByValue<TipoFrecuencia>(tipo_frecuencia);
+				List<TopTransaccional> top_transaccional = clase_indicadores.TopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia_enum);
 
 				if (top_transaccional == null)
 				{

@@ -1,6 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaController.Indicadores.Objetos;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using System;
@@ -27,7 +28,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 			{
 				List<PorcentajesResumen> documentos_estado = (from documento in context.TblDocumentos
 															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
-															  && (documento.DatFechaDocumento >= fecha_inicio.Date && documento.DatFechaDocumento <= fecha_fin.Date)
+															  && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
 															  orderby documento.IntIdEstado ascending
 															  group documento by new { documento.IntIdEstado } into documento_estado
 															  select new PorcentajesResumen
@@ -90,7 +91,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 			{
 				List<PorcentajesResumen> documentos_estado = (from documento in context.TblDocumentos
 															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
-															   && (documento.DatFechaDocumento >= fecha_inicio.Date && documento.DatFechaDocumento <= fecha_fin.Date)
+															   && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
 															  orderby documento.IdCategoriaEstado ascending
 															  group documento by new { documento.IdCategoriaEstado } into documento_estado
 															  select new PorcentajesResumen
@@ -158,7 +159,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 
 				List<PorcentajesResumen> documentos_acuse = (from documento in context.TblDocumentos
 															 where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
-															 && (documento.DatFechaDocumento >= fecha_inicio.Date && documento.DatFechaDocumento <= fecha_fin.Date)
+															 && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
 															 orderby documento.IntAdquirienteRecibo ascending
 															 group documento by new { documento.IntAdquirienteRecibo } into documento_estado
 															 select new PorcentajesResumen
@@ -180,7 +181,6 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						case 2: item.Color = "#FF2D00"; break;
 						case 3: item.Color = "#96f495"; break;
 					}
-
 					item.Titulo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(item.Estado));
 					item.IdControl = string.Format("Acuse{0}{1}", item.Titulo.Replace(" ", "").Replace("á", "a"), descripcion_tipo);
 					item.Observaciones = string.Format("{0} Documentos", item.Cantidad);
@@ -207,7 +207,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 			{
 				List<PorcentajesResumen> documentos_tipo = (from documento in context.TblDocumentos
 															where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
-															 && (documento.DatFechaDocumento >= fecha_inicio.Date && documento.DatFechaDocumento <= fecha_fin.Date)
+															 && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
 															orderby documento.IntDocTipo ascending
 															group documento by new { documento.IntDocTipo } into documento_tipo
 															select new PorcentajesResumen
@@ -356,7 +356,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// </summary>
 		/// <param name="cantidad_top">Indica la cantidad de registros a retornas, 0 si se desean retornar todos </param>
 		/// <returns></returns>
-		public ResumenCompradores TopCompradores(int cantidad_top, DateTime fecha_inicio, DateTime fecha_fin)
+		public List<TopCompradores> TopCompradores(DateTime fecha_inicio, DateTime fecha_fin)
 		{
 			try
 			{
@@ -372,23 +372,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 																RazonSocial = datos_compradores.FirstOrDefault().TblEmpresas.StrRazonSocial
 															}).ToList().OrderByDescending(x => x.ValorCompras).Take(10).ToList();
 
-				ResumenCompradores datos_retorno = new ResumenCompradores();
-
-				//Calcula el valor total de documentos.
-				datos_retorno.Total = resumen_compradores.Sum(x => x.ValorCompras);
-
-				if (cantidad_top > 0)
-				{
-					//Realiza el take y calcula el total del top.
-					datos_retorno.Detalles = resumen_compradores.Take(cantidad_top).ToList();
-					datos_retorno.TotalTop = datos_retorno.Detalles.Sum(x => x.ValorCompras);
-				}
-				else
-					datos_retorno.Detalles = resumen_compradores;
-
-				datos_retorno.TotalOtros = datos_retorno.Total - datos_retorno.TotalTop;
-
-				return datos_retorno;
+				return resumen_compradores;
 			}
 			catch (Exception excepcion)
 			{
@@ -400,8 +384,9 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		/// Obtiene el top 10 de las empresas con mayor movimiento transaccional.
 		/// </summary>
 		/// <param name="cantidad_top">Indica la cantidad de registros a retornas, 0 si se desean retornar todos </param>
+		/// <param name="tipo_empresa">1: Administrador - 2: Facturador - 3: Adquiriente</param>
 		/// <returns></returns>
-		public ResumenTopTransaccional TopTransaccional(int cantidad_top, DateTime fecha_inicio, DateTime fecha_fin)
+		public List<TopTransaccional> OtenerTopTransaccional(DateTime fecha_inicio, DateTime fecha_fin, int tipo_empresa, string identificacion_empresa, TipoFrecuencia tipo_filtro)
 		{
 			try
 			{
@@ -409,35 +394,171 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 				int mes_actual = Fecha.GetFecha().Month;
 				int mes_anterior = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(-1).Month;
 
-				List<TopTransaccional> resumen_transaccional = (from movimiento in context.TblDocumentos
-																join empresa in context.TblEmpresas on movimiento.StrEmpresaFacturador equals empresa.StrIdentificacion
-																where (movimiento.DatFechaIngreso >= fecha_inicio.Date && movimiento.DatFechaIngreso <= fecha_fin.Date)
-																group new { empresa, movimiento } by new { movimiento.StrEmpresaFacturador } into datos_movimiento
-																select new TopTransaccional
-																{
-																	Identificacion = datos_movimiento.FirstOrDefault().movimiento.StrEmpresaFacturador,
-																	RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
-																	ValorTotalDocumentos = datos_movimiento.Sum(x => x.movimiento.IntVlrTotal),
-																	TotalDocumentos = datos_movimiento.Count()
-																}).OrderByDescending(d => d.ValorTotalDocumentos).ToList();
+				List<TopTransaccional> resumen_transaccional = new List<TopTransaccional>();
 
-				ResumenTopTransaccional datos_retorno = new ResumenTopTransaccional();
-
-				//Calcula el valor total de documentos.
-				datos_retorno.Total = resumen_transaccional.Sum(x => x.ValorTotalDocumentos);
-
-				if (cantidad_top > 0)
+				if (tipo_empresa == 2)
 				{
-					//Realiza el take y calcula el total del top.
-					datos_retorno.Detalles = resumen_transaccional.Take(cantidad_top).ToList();
-					datos_retorno.TotalTop = datos_retorno.Detalles.Sum(x => x.ValorTotalDocumentos);
+					resumen_transaccional = (from movimiento in context.TblDocumentos
+											 join empresa in context.TblEmpresas on movimiento.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+											 where (movimiento.DatFechaIngreso >= fecha_inicio.Date && movimiento.DatFechaIngreso <= fecha_fin.Date)
+											 && movimiento.StrEmpresaFacturador.Equals(identificacion_empresa)
+											 group new { empresa, movimiento } by new { movimiento.StrEmpresaAdquiriente } into datos_movimiento
+											 select new TopTransaccional
+											 {
+												 Identificacion = datos_movimiento.FirstOrDefault().movimiento.StrEmpresaAdquiriente,
+												 RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
+												 ValorTotalDocumentos = datos_movimiento.Sum(x => x.movimiento.IntVlrTotal),
+												 TotalDocumentos = datos_movimiento.Count(),
+											 }).OrderByDescending(d => d.TotalDocumentos).ToList();
 				}
 				else
-					datos_retorno.Detalles = resumen_transaccional;
+				{
+					resumen_transaccional = (from movimiento in context.TblDocumentos
+											 join empresa in context.TblEmpresas on movimiento.StrEmpresaFacturador equals empresa.StrIdentificacion
+											 where (movimiento.DatFechaIngreso >= fecha_inicio.Date && movimiento.DatFechaIngreso <= fecha_fin.Date)
+											 && ((tipo_empresa == 3) ? movimiento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : movimiento.StrEmpresaFacturador != null)
+											 group new { empresa, movimiento } by new { movimiento.StrEmpresaFacturador } into datos_movimiento
+											 select new TopTransaccional
+											 {
+												 Identificacion = datos_movimiento.FirstOrDefault().movimiento.StrEmpresaFacturador,
+												 RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
+												 ValorTotalDocumentos = datos_movimiento.Sum(x => x.movimiento.IntVlrTotal),
+												 TotalDocumentos = datos_movimiento.Count()
+											 }).OrderByDescending(d => d.TotalDocumentos).ToList();
+				}
 
-				datos_retorno.TotalOtros = datos_retorno.Total - datos_retorno.TotalTop;
 
-				return datos_retorno;
+
+
+				return resumen_transaccional;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		public List<TopTransaccional> TopTransaccional(DateTime fecha_inicio, DateTime fecha_fin, int tipo_empresa, string identificacion_empresa, TipoFrecuencia tipo_frecuencia)
+		{
+			try
+			{
+				List<TopTransaccional> datos_actual = new List<Objetos.TopTransaccional>();
+				List<TopTransaccional> datos_anterior = new List<Objetos.TopTransaccional>();
+
+				switch (tipo_frecuencia)
+				{
+					case TipoFrecuencia.Hoy:
+						//Obtiene el actual.
+						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						fecha_inicio = fecha_inicio.AddDays(-1);
+						fecha_fin = fecha_fin.AddDays(-1);
+						//obtiene el anterior
+						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						foreach (var item in datos_actual)
+						{
+							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
+
+							item.CantidadActual = item.TotalDocumentos;
+
+							if (top_anterior != null)
+								item.CantidadAnterior = top_anterior.TotalDocumentos;
+						}
+
+						break;
+
+					case TipoFrecuencia.Fecha:
+						//Obtiene el actual.
+						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						fecha_inicio = fecha_inicio.AddDays(-1);
+						fecha_fin = fecha_fin.AddDays(-1);
+						//obtiene el anterior
+						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						foreach (var item in datos_actual)
+						{
+							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
+
+							item.CantidadActual = item.TotalDocumentos;
+
+							if (top_anterior != null)
+								item.CantidadAnterior = top_anterior.TotalDocumentos;
+						}
+						break;
+
+					case TipoFrecuencia.Semana:
+						//NO HABILITADO
+						break;
+
+					case TipoFrecuencia.Mes:
+						//Obtiene el actual.
+						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						fecha_inicio = fecha_inicio.AddMonths(-1);
+						fecha_fin = fecha_fin.AddMonths(-1);
+						//obtiene el anterior
+						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						foreach (var item in datos_actual)
+						{
+							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
+
+							item.CantidadActual = item.TotalDocumentos;
+
+							if (top_anterior != null)
+								item.CantidadAnterior = top_anterior.TotalDocumentos;
+						}
+						break;
+
+					case TipoFrecuencia.Anyo:
+						//Obtiene el actual.
+						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						fecha_inicio = fecha_inicio.AddYears(-1);
+						fecha_fin = fecha_fin.AddYears(-1);
+						//obtiene el anterior
+						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						foreach (var item in datos_actual)
+						{
+							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
+
+							item.CantidadActual = item.TotalDocumentos;
+
+							if (top_anterior != null)
+								item.CantidadAnterior = top_anterior.TotalDocumentos;
+						}
+						break;
+
+					case TipoFrecuencia.Rango:
+						//Obtiene el actual.
+						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+						int dias = (fecha_inicio - fecha_fin).Days;
+
+						fecha_inicio = fecha_inicio.AddDays(dias);
+						fecha_fin = fecha_fin.AddDays(dias);
+						//obtiene el anterior
+						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+
+
+						foreach (var item in datos_actual)
+						{
+							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
+
+							item.CantidadActual = item.TotalDocumentos;
+
+							if (top_anterior != null)
+								item.CantidadAnterior = top_anterior.TotalDocumentos;
+						}
+						break;
+				}
+
+
+
+				return datos_actual;
 			}
 			catch (Exception excepcion)
 			{

@@ -108,6 +108,7 @@
     <Compile Include="Enumerables\TipoAlerta.cs" />
     <Compile Include="Enumerables\TipoCompra.cs" />
     <Compile Include="Enumerables\TipoFormato.cs" />
+    <Compile Include="Enumerables\TipoFrecuencia.cs" />
     <Compile Include="Enumerables\TipoOpciones.cs" />
     <Compile Include="ModeloAuditoria\Objetos\TblAuditFormatos.cs" />
     <Compile Include="ModeloAuditoria\Objetos\TblGenerica.cs" />
