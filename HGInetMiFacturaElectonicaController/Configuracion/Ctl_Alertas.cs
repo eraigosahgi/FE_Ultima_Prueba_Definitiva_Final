@@ -210,7 +210,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			catch (Exception excepcion)
 			{
 				LogExcepcion.Guardar(excepcion);
-				return false;
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
 		#endregion
@@ -405,7 +405,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			catch (Exception excepcion)
 			{
 				LogExcepcion.Guardar(excepcion);
-				return false;
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
 		#endregion
