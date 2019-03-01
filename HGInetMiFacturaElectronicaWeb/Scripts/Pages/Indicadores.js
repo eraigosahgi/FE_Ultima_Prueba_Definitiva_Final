@@ -26,6 +26,8 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 	var datos_Panel13525 = "";
 	var datos_Panel13533 = "";
 
+	var CodCompra = "";
+	var estado = "";
 	CargarIndicadores();
 
 	//Botón de consulta de indicadores
@@ -645,27 +647,94 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 								pager: {
 									showInfo: true
 								},
+								onCellPrepared: function (options) {
+									var fieldData = options.value,
+										fieldHtml = "";
+									try {
+
+										if (options.data.CodCompra != undefined) {
+											CodCompra = GetDescripcionEnum(TipoPlan, options.data.CodCompra);
+										}
+
+										if (options.data.IntEstado == 0) {
+											estado = " style='color:green; cursor:default;' title='Habilitado'";
+										}
+										if (options.data.IntEstado == 1) {
+											estado = " style='color:red; cursor:default;' title='Inhabilitado'";
+										}
+										if (options.data.IntEstado == 2) {
+											estado = " style='color:grey; cursor:default;' title='Procesado'";
+										}
+
+									} catch (err) {
+
+									}
+								},
 								columns: [
 									{
-										caption: "Fecha Compra",
+										caption: "Compra",
 										dataField: "DatFecha",
 										dataType: "date",
 										format: "yyyy-MM-dd",
+										cssClass: "gridHGI"
 									},
 									{
-										caption: "Transacciones Plan",
+										caption: "Plan",
 										dataField: "IntNumTransaccCompra",
+										width: "60px",
 									},
 									{
-										caption: "Transacciones Procesadas",
+										caption: "Procesadas",
 										dataField: "IntNumTransaccProcesadas",
+										width: "60px",
 									},
+									  {
+									  	dataField: "Porcentaje",
+									  	caption: "Consumo %",
+									  	alignment: "center",
+									  	width: 100,
+									  	cellTemplate: CrearGraficoBarra,
+									  	cssClass: "bullet"
+									  },
 									{
-										caption: "Fecha Vencimiento",
+										caption: "Vencimiento",
 										dataField: "DatFechaVencimiento",
 										dataType: "date",
 										format: "yyyy-MM-dd",
-									}
+										cssClass: "gridHGI"
+									},
+									  {
+									  	dataField: "porcentajeFecha",
+									  	caption: "Venc. %",
+									  	alignment: "center",
+									  	width: 100,
+
+									  	cellTemplate: CrearGraficoBarraFecha,
+									  	cssClass: "bullet"
+									  },
+									  {
+
+									  	caption: 'Tipo',
+									  	dataField: 'CodCompra',
+									  	cssClass: "gridHGI",
+									  	alignment: "left",
+									  	cellTemplate: function (container, options) {
+									  		$("<div style='text-align:left'>")
+												.append($("<p> " + CodCompra + "</p>"))
+												.appendTo(container);
+									  	}
+									  },
+									  {
+
+									  	caption: 'Estado',
+									  	dataField: 'Estado',
+									  	width: "40px",
+									  	cellTemplate: function (container, options) {
+									  		$("<div style='text-align:center'>")
+												.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
+												.appendTo(container);
+									  	}
+									  }
 								]
 							});
 						}

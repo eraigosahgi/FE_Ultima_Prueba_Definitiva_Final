@@ -30,12 +30,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			Datos_Email_Pagos = "",
            codigo_adquiriente = "";
 
-	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 6).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 14).then(function (Datos) {
 		$scope.EmpresaAsociada = Datos;
 	});
 
 
-	SrvFiltro.ObtenerFiltro('Empresa Descuenta', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 9).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Empresa Descuenta', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 17).then(function (Datos) {
 		$scope.EmpresaDescuenta = Datos;
 	});
 
@@ -418,171 +418,273 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 
 		/////////////////////////////////////Tooltip
-		$("#ttEmail").dxTooltip({
+		$("#ttEmail").dxPopover({
 			target: "#txtEmail",
-			showEvent: "mouseenter",
-			hideEvent: "mouseleave",
-			position: "top",
-			animation: {
-				show: {
-					type: "slide",
-					from: {
-						top: -100,
-						opacity: 0
-					},
-					to: {
-						opacity: 1,
-						top: 0
-					}
-				},
-				hide: {
-					type: "pop",
-					from: {
-						scale: 1,
-						opacity: 1
-					},
-					to: {
-						opacity: 0,
-						scale: 0.1
-					}
-				}
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
 			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Email Administrativo:",
 			contentTemplate: function (data) {
-				data.html("<br/><b>Email Administrativo</b><br/>Se enviarán las notificaciones <br/> propias de la plataforma como registro, recargas, saldos, boletines, etc.");
+				data.html("<br/>Se enviarán las notificaciones <br/> propias de la plataforma como registro, recargas, saldos, boletines, etc.");
 			}
 		});
-		$("#ttMailEnvio").dxTooltip({
+		$("#ttMailEnvio").dxPopover({
 			target: "#txtMailEnvio",
-			showEvent: "mouseenter",
-			hideEvent: "mouseleave",
-			position: "top",
-			animation: {
-				show: {
-					type: "slide",
-					from: {
-						top: -100,
-						opacity: 0
-					},
-					to: {
-						opacity: 1,
-						top: 0
-					}
-				},
-				hide: {
-					type: "pop",
-					from: {
-						scale: 1,
-						opacity: 1
-					},
-					to: {
-						opacity: 0,
-						scale: 0.1
-					}
-				}
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
 			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Email Envío Documentos:",
 			contentTemplate: function (data) {
-				data.html("<br/><b>Email Envío Documentos</b><br/> Se utilizará para el envío de los correos electrónicos a los Adquirientes.");
+				data.html("<br/>Se utilizará para el envío de los correos electrónicos a los Adquirientes.");
 			}
 		});
-		$("#ttMailRecepcion").dxTooltip({
+		$("#ttMailRecepcion").dxPopover({
 			target: "#txtMailRecepcion",
-			showEvent: "mouseenter",
-			hideEvent: "mouseleave",
-			position: "top",
-			animation: {
-				show: {
-					type: "slide",
-					from: {
-						top: -100,
-						opacity: 0
-					},
-					to: {
-						opacity: 1,
-						top: 0
-					}
-				},
-				hide: {
-					type: "pop",
-					from: {
-						scale: 1,
-						opacity: 1
-					},
-					to: {
-						opacity: 0,
-						scale: 0.1
-					}
-				}
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
 			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Email Recepción Documentos:",
 			contentTemplate: function (data) {
-				data.html("<br/><b>Email Recepción Documentos</b><br/>Se utilizará para la recepción de correos electrónicos como Adquiriente.");
+				data.html("<br/>Se utilizará para la recepción de correos electrónicos como Adquiriente.");
 			}
 		});
-		$("#ttMailAcuse").dxTooltip({
+		$("#ttMailAcuse").dxPopover({
 			target: "#txtMailAcuse",
-			showEvent: "mouseenter",
-			hideEvent: "mouseleave",
-			position: "top",
-			animation: {
-				show: {
-					type: "slide",
-					from: {
-						top: -100,
-						opacity: 0
-					},
-					to: {
-						opacity: 1,
-						top: 0
-					}
-				},
-				hide: {
-					type: "pop",
-					from: {
-						scale: 1,
-						opacity: 1
-					},
-					to: {
-						opacity: 0,
-						scale: 0.1
-					}
-				}
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
 			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Email Recepción Acuse de Recibo:",
 			contentTemplate: function (data) {
-				data.html("<br/><b>Email Recepción Acuse de Recibo</b><br/>Se enviarán las respuestas realizadas por los Adquirientes al realizar el acuse de recibo.");
+				data.html("<br/>Se enviarán las respuestas realizadas por los Adquirientes al realizar el acuse de recibo.");
 			}
 		});
-		$("#ttMailPagos").dxTooltip({
+		$("#ttMailPagos").dxPopover({
 			target: "#txtMailPagos",
-			showEvent: "mouseenter",
-			hideEvent: "mouseleave",
-			position: "top",
-			animation: {
-				show: {
-					type: "slide",
-					from: {
-						top: -100,
-						opacity: 0
-					},
-					to: {
-						opacity: 1,
-						top: 0
-					}
-				},
-				hide: {
-					type: "pop",
-					from: {
-						scale: 1,
-						opacity: 1
-					},
-					to: {
-						opacity: 0,
-						scale: 0.1
-					}
-				}
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
 			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Email de Pagos:",
 			contentTemplate: function (data) {
-				data.html("<br/><b>Email Pagos Electrónicos</b><br/>Se enviarán las notificaciones al recibir un pago electrónico por la Plataforma de Servicios.");
+				data.html("<br/>Se enviarán las notificaciones al recibir un pago electrónico por la Plataforma de Servicios.");
 			}
 		});
+
+
+		$("#tooltip_Integradora").dxPopover({
+			target: "#Integradora",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+		$("#tooltip_Facturador").dxPopover({
+			target: "#Facturador",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+		$("#tooltip_Adquiriente").dxPopover({
+			target: "#Adquiriente",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+		$("#tooltip_cboestado").dxPopover({
+			target: "#cboestado",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+		$("#tooltip_txtobservaciones").dxPopover({
+			target: "#txtobservaciones",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
+		$("#tooltip_Habilitacion").dxPopover({
+			target: "#Habilitacion",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+		$("#tooltip_txtUsuarios").dxPopover({
+			target: "#txtUsuarios",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
+		$("#tooltip_txtDiasAcuse").dxPopover({
+			target: "#txtDiasAcuse",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
+		$("#tooltip_Anexo").dxPopover({
+			target: "#Anexo",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
+		$("#tooltip_EmailRecepcion").dxPopover({
+			target: "#EmailRecepcion",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
+		$("#tooltip_postpagoaut").dxPopover({
+			target: "#postpagoaut",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
+		$("#tooltip_EmpresaAsociada").dxPopover({
+			target: "#EmpresaAsociada",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
+		$("#tooltip_EmpresaDescuenta").dxPopover({
+			target: "#EmpresaDescuenta",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+				hideEvent: "mouseleave",
+				position: "bottom",
+				width: 300,
+				showTitle: true,
+				title: "Detalle:"
+		});
+
+
+		//$("#popover2").dxPopover({
+		//	target: "#link2",
+		//	showEvent: {
+		//		name: "mouseenter",
+		//		delay: 500
+		//	},
+		//	hideEvent: "mouseleave",
+		//	position: "bottom",
+		//	width: 300,
+		//	showTitle: true,
+		//	title: "Details:"
+		//});
+
 		/////////////////////////////////////Tooltip
 
 		function validarHabilitacion() {
@@ -682,6 +784,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
 		$("#txtobservaciones").dxTextArea({
+			height:"200px",
 			onValueChanged: function (data) {
 				Datos_Observaciones = data.value.toUpperCase();
 			}

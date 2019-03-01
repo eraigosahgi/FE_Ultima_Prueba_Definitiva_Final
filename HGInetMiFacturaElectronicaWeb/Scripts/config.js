@@ -344,7 +344,58 @@ var CrearGraficoBarra = function (container, options) {
 	}).appendTo(container);
 };
 
+
+var CrearGraficoBarraFecha = function (container, options) {
+	if (options.data.porcentajeFecha > 0) {
+		var color = nivelPlanes(options.data.porcentajeFecha, options.data.CodCompra);
+		$("<div/>").dxBullet({
+			onIncidentOccurred: null,
+			size: {
+				width: 80,
+				height: 35
+			},
+			margin: {
+				top: 5,
+				bottom: 0,
+				left: 5
+			},
+			showTarget: true,
+			target: options.data.porcentajeFecha,
+			color: color,
+			value: 100,
+			startScaleValue: 0,
+			endScaleValue: 100,
+			tooltip: {
+				enabled: true,
+				font: {
+					size: 18
+				},
+				paddingTopBottom: 2,
+				customizeTooltip: function () {
+
+					if (options.text.indexOf(".") > -1) {
+						return { text: "Consumo Actual " + Number(options.text).toFixed(2) + "%" };
+					} else {
+						return { text: "Consumo Actual " + options.text + "%" };
+
+					}
+				},
+				zIndex: 5
+			}
+		}).appendTo(container);
+	}
+};
+
+
+
+
+
 var collapsed = false;
+
+//*******************************Enumerables
+
+
+
 
 
 
@@ -352,11 +403,8 @@ var TipoAlerta =
     [
         { "ID": 1, "Name": "Porcentaje." },
         { "ID": 2, "Name": "Vencimiento de Planes." },
-        { "ID": 3, "Name": "Facturador sin Saldo." },
-        { "ID": 4, "Name": "Pago Alto." },
-        { "ID": 5, "Name": "Recarga Alta." }
+        { "ID": 3, "Name": "Facturador sin Saldo." }        
     ];
-
 
 var EstadoAlerta =
 [
@@ -364,3 +412,29 @@ var EstadoAlerta =
 	{ "ID": 1, "Name": "Inactiva" }
 	
 ];
+
+var TipoPlan =
+[
+	{ "ID": 1, "Name": "Recarga Interna" },
+	{ "ID": 2, "Name": "Compra" },
+	{ "ID": 3, "Name": "Post-Pago" }
+];
+
+var EstadoPlan =
+[
+	{ "ID": 0, "Name": "Habilitado" },
+	{ "ID": 1, "Name": "Inabilitado" },
+	{ "ID": 2, "Name": "Procesado" }
+];
+
+
+
+//Busca en un array la descipcion, pasandole como parametros el array y el id 
+function GetDescripcionEnum(miArray, ID) {
+	for (var i = 0; i < miArray.length; i += 1) {
+		if (ID == miArray[i].ID) {
+			return miArray[i].Name;
+		}
+	}
+}
+//*******************************Enumerables

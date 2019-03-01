@@ -288,7 +288,7 @@
 									<div class="table-responsive">
 
 
-										<div class="col-md-1"></div>
+
 
 										<div class="col-md-3">
 
@@ -312,8 +312,10 @@
 
 										</div>
 
-										<div class="col-md-7">
-											<h4 class="text-semibold">Planes Adquiridos</h4>
+										<div class="col-md-9">
+											<div class="content-group">
+												<h4 class="text-semibold no-margin">Planes Adquiridos</h4>
+											</div>
 											<div id="ResumenPlanesAdquiridosFacturador"></div>
 										</div>
 
