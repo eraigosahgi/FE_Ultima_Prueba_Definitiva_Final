@@ -1,10 +1,12 @@
-﻿using HGInetMiFacturaElectonicaController.Configuracion;
+﻿using HGInetDIANServicios;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
@@ -22,6 +24,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		{
 			Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 			DocumentoRespuesta respuesta_email = new DocumentoRespuesta();
+			LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.MensajeResumen datos_retorno = new LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.MensajeResumen();
 			try
 			{
 				var documento_obj = (dynamic)null;
@@ -33,8 +36,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					email.Bienvenida(adquiriente, adquiriente_usuario);
 				}
 
+				//Se agrega esto para guardar correctamente el estado en la Auditoria
+				if (respuesta.EstadoDian.EstadoDocumento.Equals(EstadoDocumentoDian.Aceptado.GetHashCode()))
+					documentoBd.IntIdEstado = Convert.ToInt16(ProcesoEstado.EnvioEmailAcuse.GetHashCode());
+
+
 				//Envia correo al adquiriente que tiene el objeto
-				List<MensajeEnvio> mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString());
+				List<MensajeEnvio> mensajes = new List<MensajeEnvio>();
+				try
+				{
+					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString());
+				}
+				catch (Exception excepcion)
+				{
+
+					LogExcepcion.Guardar(excepcion);
+					//Falla el envio de correo por algun motivo de la plataforma de servicios o Mailjet por lo tanto se asigna para notificar al Facturador
+					datos_retorno.Estado = string.Empty;
+				}
+
+				//documento_result.IdMensaje = mensajes[0].Data[0].MessageID;
 
 				//Valida si el proceso es completo para actualizar estados y bd
 				if (!notificacion_basica)
@@ -68,18 +89,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 				}
 
-				LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.MensajeResumen datos_retorno = new LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.MensajeResumen();
+
 
 				//Consulta el Estado del correo enviado
 				try
 				{
 					email = new Ctl_EnvioCorreos();
+					int i = 0;
+					while (datos_retorno.Estado == null || datos_retorno.Estado.Equals("En cola"))
+					{
+						datos_retorno = email.ConsultarCorreo((long)mensajes[0].Data[0].MessageID);
+						if (i == 10)
+							datos_retorno.Estado = string.Empty;
+						i++;
+					}
 
-					datos_retorno = email.ConsultarCorreo((long)mensajes[0].Data[0].MessageID);
+
 				}
 				catch (Exception ex)
 				{
-					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error consultando el estado del correo Enviado al adquiriente. Detalle: {0} -", ex.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, ex.InnerException);
+					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error consultando el estado del correo enviado al adquiriente. Detalle: {0} -", ex.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, ex.InnerException);
 				}
 
 				if (AdquirienteRecibo.Enviado.ToString().Equals(datos_retorno.Estado))
@@ -95,7 +124,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
 					List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documentoBd, documento_obj.DatosAdquiriente.Telefono, documento_obj.DatosAdquiriente.Email, datos_retorno.Estado, respuesta.IdPeticion.ToString());
 				}
-
 
 
 			}

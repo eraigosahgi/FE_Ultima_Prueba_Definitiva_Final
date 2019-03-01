@@ -541,16 +541,6 @@ namespace HGInetMiFacturaElectonicaController
 
 						List<Adjunto> archivos = new List<Adjunto>();
 
-						//Archivos para enviar por smtp
-						/*
-						if (!string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
-							archivos.Add(documento.StrUrlArchivoPdf);
-
-						if (!string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
-							archivos.Add(documento.StrUrlArchivoUbl);
-
-							*/
-
 						if (string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
 							throw new ApplicationException("No se encontró ruta de archivo pdf");
 
@@ -642,7 +632,7 @@ namespace HGInetMiFacturaElectonicaController
 				try
 				{
 					int estado_doc = Ctl_Documento.ObtenerCategoria(documento.IntIdEstado);
-					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, proceso, TipoRegistro.Proceso, procedencia, usuario, string.Format("NotificacionDocumento - {0}", excepcion.Message), string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible el envio del documento, favor validar con el Adquiriente ó hacer el reenvío del documento desde nuestra Playaforma ", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
 				}
 				catch (Exception) { throw; }
 

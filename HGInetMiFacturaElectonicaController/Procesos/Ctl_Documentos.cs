@@ -269,6 +269,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 							{
 								respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
+								documento_tmp = new Ctl_Documento();
+								documentoBd.IntEnvioMail = true;
+								documento_tmp.Actualizar(documentoBd);
 								//ValidarRespuesta(respuesta);
 							}
 							else
@@ -299,7 +302,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documento_tmp.Actualizar(documentoBd);
 							//ValidarRespuesta(respuesta);
 						}
-
+						
 					}
 
 
@@ -368,7 +371,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (!Texto.ValidarExpresion(TipoExpresion.Email, item_mail.Trim()))
 						throw new ArgumentException(string.Format("El Email {0} no esta bien formado", item_mail));
 					else
-						tercero_mail = (string.IsNullOrEmpty(tercero_mail) ? item_mail.Trim(): string.Format("{0};{1}",tercero_mail,item_mail.Trim()));
+						tercero_mail = (string.IsNullOrEmpty(tercero_mail) ? item_mail.Trim() : string.Format("{0};{1}", tercero_mail, item_mail.Trim()));
 
 				}
 				tercero.Email = tercero_mail;
