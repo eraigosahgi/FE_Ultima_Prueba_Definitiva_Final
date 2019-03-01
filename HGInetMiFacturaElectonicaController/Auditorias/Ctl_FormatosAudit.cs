@@ -99,5 +99,27 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		}
 
 
+		/// <summary>
+		/// Obtiene los datos de la auditoría por código de formato, empresa y tipo de proceso
+		/// </summary>
+		/// <param name="codigo_formato"></param>
+		/// <param name="identificacion_empresa"></param>
+		/// <param name="tipo_proceso"></param>
+		/// <returns></returns>
+		public List<TblAuditFormatos> Obtener(int codigo_formato, string identificacion_empresa, int tipo_proceso)
+		{
+			try
+			{
+				List<TblAuditFormatos> registros_audit = this.GetFilter(x => x.IntCodigoFormato == codigo_formato && x.StrEmpresa.Equals(identificacion_empresa) && x.IntTipoProceso == tipo_proceso);
+
+				return registros_audit.OrderByDescending(x => x.DatFechaProceso).ToList();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
 	}
 }

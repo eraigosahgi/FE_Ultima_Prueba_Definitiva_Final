@@ -22,7 +22,16 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
 		PoRecarga = 4,
 
 		[Description("PorPago")]
-		PorPago = 5
+		PorPago = 5,
+
+		[Description("SolicitudAprobacionFormato")]
+		SolicitudAprobacionFormato = 6,
+
+		[Description("AprobacionFormato")]
+		AprobacionFormato = 7,
+
+		[Description("PublicacionFormato")]
+		PublicacionFormato = 8,
 	}
 
 

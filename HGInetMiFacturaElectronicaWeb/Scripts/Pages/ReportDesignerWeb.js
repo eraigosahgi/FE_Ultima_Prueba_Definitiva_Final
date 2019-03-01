@@ -154,10 +154,8 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 	}
 
 	//Carga opción publicar formato.
-	$scope.OpcionPublicar = function (estado, admin) {
+	$scope.OpcionPublicar = function (estado) {
 		if (!opc_gestion)
-			return "ng-hide"
-		else if (!admin)
 			return "ng-hide"
 		else if (estado != 5)
 			return "ng-hide"
@@ -182,6 +180,13 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 	$scope.SolicitarAprobacion = function (codigo, nit, estado) {
 		$("#SolicitudAprobacion").show();
 		$("#AprobacionFormato").hide();
+		$("#EnvioMailPrueba").hide();
+
+		$("#CampoObservaciones").show();
+		$("#CampoMailPrueba").hide();
+
+		$('#LblTituloModal').text("Solicitud Aprobación de Formato");
+
 		$scope.ObservacionesSolicitud = "";
 		//Campo de observaciones
 		$("#TxtObservacionesSolicitud").dxTextArea({
@@ -217,6 +222,11 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 
 		$("#SolicitudAprobacion").hide();
 		$("#AprobacionFormato").show();
+
+		$("#CampoObservaciones").show();
+		$("#CampoMailPrueba").hide();
+
+		$('#LblTituloModal').text("Aprobación de Formato");
 
 		$("#TxtObservacionesSolicitud").dxTextBox({
 			value: "",
@@ -292,6 +302,58 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 		});
 		myDialog.show().done(function (dialogResult) {
 		});
+
+	}
+
+	//Realiza el envío de un email con el formato de prueba.
+	$scope.MailPrueba = function (codigo, nit) {
+
+		$("#SolicitudAprobacion").show();
+		$("#AprobacionFormato").hide();
+
+		$("#CampoObservaciones").hide();
+		$("#CampoMailPrueba").show();
+
+		$('#LblTituloModal').text("Envío Formato de Prueba");
+
+		$("#TxtMailPrueba").dxTextBox({
+			value: "",
+			onValueChanged: function (data) {
+				$scope.TxtMailPrueba = data.value;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "required",
+				message: "Debe introducir el Email"
+			}, {
+				type: "stringLength",
+				max: 200,
+				message: "El email no puede ser mayor a 200 caracteres"
+			}, {
+				type: "email",
+				message: "El email no tiene el formato correcto"
+			}],
+			validationGroup: "FrmMailPruebaFormato",
+		});
+
+		$("#summary").dxValidationSummary({
+			validationGroup: "FrmMailPruebaFormato"
+		});
+
+		$("#BtnSolicitarAprobacion").dxButton({
+			text: "Enviar",
+			type: "default",
+			validationGroup: "FrmMailPruebaFormato",
+			onClick: function (params) {
+				var continua_proceso = params.validationGroup.validate().isValid;
+				if (continua_proceso) {
+					//	ActualizarFormato(codigo, nit, estado, 6, $scope.ObservacionesSolicitud);
+					$('#modal_solicitar_aprobacion').modal('hide');
+				}
+			}
+		});
+
+		$('#modal_solicitar_aprobacion').modal('show');
 
 	}
 

@@ -43,6 +43,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		}
 
+		/// <summary>
+		/// Obtiene las alertas por tipo
+		/// </summary>
+		/// <param name="codigo_tipo"></param>
+		/// <returns></returns>
+		public TblAlertas ObtenerPorTipo(int tipo_alerta)
+		{
+			try
+			{
+				return context.TblAlertas.Where(x => x.IntTipo == tipo_alerta).FirstOrDefault();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 		/// <summary>
 		/// Actualiza la tabla alerta
@@ -247,7 +263,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					//Si se cumple la condición de evaluación, entonces se hace una consulta en el historico de alertas
 					//para validar si ya se le envio la notificación y no repetir la misma notificación.
 					List<TblSeguimientoAlertas> HistAlerta = _AlertasHist.Obtener(StrIdFacturador, Alertas.IntIdAlerta);
-					
+
 					//Si no se le ha notificado
 					if (HistAlerta == null || HistAlerta.Count == 0)
 					{
@@ -669,7 +685,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						notificacion.alerta = Alerta.StrDescripcion;
 						notificacion.idseguridadEmpresa = Obligado.idseguridadEmpresa;
 						notificacion.intIdtipo = Alerta.IntTipo;
-						
+
 						//Si no se le ha notificado																			
 						if (HistAlerta == null || HistAlerta.Count == 0)
 						{

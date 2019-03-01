@@ -1894,19 +1894,16 @@ namespace HGInetMiFacturaElectonicaController
 		}
 
 
-		public List<MensajeEnvio> EnviarSolicitudAprobacionFormato(TblEmpresas empresa_solicita, TblUsuarios usuario_solicita, TblFormatos datos_formato, string observaciones_solicitud, TiposProceso tipo_proceso)
+		public List<MensajeEnvio> EnviarNotificacionProcesosFormato(TblEmpresas empresa_solicita, TblEmpresas datos_empresa_formato, TblFormatos datos_formato, TblUsuarios usuario, string observaciones_solicitud, TiposProceso tipo_proceso, List<DestinatarioEmail> correos_destino)
 		{
 			try
 			{
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaSolicitudAprobacionFormato);
 
-				string asunto = "SOLICITUD APROBACIÓN DE FORMATO";
 				List<MensajeEnvio> Mensaje = new List<MensajeEnvio>();
 
 				//obtiene los datos de la empresa asociada al formato.
 				Ctl_Empresa clase_empresa = new Ctl_Empresa();
-
-				TblEmpresas datos_empresa_formato = clase_empresa.Obtener(datos_formato.StrEmpresa);
 
 				string mail_envio = Constantes.EmailCopiaOculta;
 
@@ -1930,9 +1927,11 @@ namespace HGInetMiFacturaElectonicaController
 							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
 						}
 
-						mensaje = mensaje.Replace("{TituloNotificacion}", "SOLICITUD APROBACIÓN DE FORMATO");
+						string texto_proceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso.GetHashCode()));
 
-						mensaje = mensaje.Replace("{TextoProceso}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso.GetHashCode())));
+						mensaje = mensaje.Replace("{TituloNotificacion}", texto_proceso.ToUpper());
+
+						mensaje = mensaje.Replace("{TextoProceso}", texto_proceso.ToLower());
 						//DATOS DEL FORMATO.
 						mensaje = mensaje.Replace("{CodigoFormato}", datos_formato.IntCodigoFormato.ToString());
 
@@ -1946,7 +1945,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{EmpresaSolicita}", empresa_solicita.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitSolicitante}", empresa_solicita.StrIdentificacion);
 						mensaje = mensaje.Replace("{DigitoDvSolicitante}", empresa_solicita.IntIdentificacionDv.ToString());
-						mensaje = mensaje.Replace("{UsuarioSolicita}", "Ana María");
+						mensaje = mensaje.Replace("{UsuarioSolicita}", string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos));
 						mensaje = mensaje.Replace("{FechaSolicitud}", Fecha.GetFecha().ToString("yyyy-MM-dd HH:mm"));
 
 						//Observaciones Solicitud:&nbsp;&nbsp;
@@ -1959,17 +1958,23 @@ namespace HGInetMiFacturaElectonicaController
 						remitente.Email = Constantes.EmailRemitente;
 						remitente.Nombre = Constantes.NombreRemitenteEmail;
 
-						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
-						DestinatarioEmail destinatario = new DestinatarioEmail();
-						destinatario.Nombre = "ADMINISTRACIÓN";
-						destinatario.Email = "atamayo@hgi.com.co";
 
+						// envía correo electrónico con copia de auditoría
+						List<DestinatarioEmail> correos_copia_oculta = null;
+						if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+						{
+							correos_copia_oculta = new List<DestinatarioEmail>();
 
-						correos_destino.Add(destinatario);
+							DestinatarioEmail copia_oculta = new DestinatarioEmail();
+							copia_oculta.Nombre = "Auditoría";
+							copia_oculta.Email = Constantes.EmailCopiaOculta;
+							correos_copia_oculta.Add(copia_oculta);
+						}
+
 
 						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 
-						Mensaje = clase_email.EnviarEmail(empresa_solicita.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+						Mensaje = clase_email.EnviarEmail(empresa_solicita.StrIdSeguridad.ToString(), false, mensaje, texto_proceso.ToUpper(), true, remitente, correos_destino, null, null, "", "");
 
 					}
 				}

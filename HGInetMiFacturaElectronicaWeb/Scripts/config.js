@@ -305,7 +305,7 @@ function nivelPlanes(nivel, tipo) {
 
 
 var CrearGraficoBarra = function (container, options) {
-	
+
 	var color = nivelPlanes(options.data.Porcentaje, options.data.CodCompra);
 	$("<div/>").dxBullet({
 		onIncidentOccurred: null,
@@ -331,12 +331,12 @@ var CrearGraficoBarra = function (container, options) {
 			},
 			paddingTopBottom: 2,
 			customizeTooltip: function () {
-				
+
 				if (options.text.indexOf(".") > -1) {
 					return { text: "Consumo Actual " + Number(options.text).toFixed(2) + "%" };
-				}else{
+				} else {
 					return { text: "Consumo Actual " + options.text + "%" };
-				
+
 				}
 			},
 			zIndex: 5
@@ -403,14 +403,17 @@ var TipoAlerta =
     [
         { "ID": 1, "Name": "Porcentaje." },
         { "ID": 2, "Name": "Vencimiento de Planes." },
-        { "ID": 3, "Name": "Facturador sin Saldo." }        
+        { "ID": 3, "Name": "Facturador sin Saldo." },
+		{ "ID": 4, "Name": "Solicitud Aprobación de Formato." },
+		{ "ID": 5, "Name": "Aprobación de Formato." },
+		{ "ID": 6, "Name": "Publicación de Formato." }
     ];
 
 var EstadoAlerta =
 [
 	{ "ID": 0, "Name": "Activa" },
 	{ "ID": 1, "Name": "Inactiva" }
-	
+
 ];
 
 var TipoPlan =

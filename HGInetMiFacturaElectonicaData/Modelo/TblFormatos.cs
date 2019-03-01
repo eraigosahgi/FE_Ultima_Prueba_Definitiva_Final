@@ -26,6 +26,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrObservaciones { get; set; }
         public Nullable<int> IntDocTipo { get; set; }
         public byte[] FormatoTmp { get; set; }
+        public Nullable<System.Guid> StrUsuarioActualizacion { get; set; }
     
         public virtual TblEmpresas TblEmpresas { get; set; }
     }

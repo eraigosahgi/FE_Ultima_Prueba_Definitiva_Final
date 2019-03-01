@@ -181,6 +181,7 @@
           <Property Name="StrObservaciones" Type="varchar" MaxLength="200" />
           <Property Name="IntDocTipo" Type="int" />
           <Property Name="FormatoTmp" Type="varbinary(max)" />
+          <Property Name="StrUsuarioActualizacion" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="TblOpciones">
           <Key>
@@ -739,12 +740,12 @@
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
             <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
           </AssociationSet>
+          <EntitySet Name="TblAlertas" EntityType="Modelo.TblAlertas" />
           <EntitySet Name="TblFormatos" EntityType="Modelo.TblFormatos" />
           <AssociationSet Name="FK_TblFormatos_TblEmpresas" Association="Modelo.FK_TblFormatos_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblFormatos" EntitySet="TblFormatos" />
           </AssociationSet>
-          <EntitySet Name="TblAlertas" EntityType="Modelo.TblAlertas" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1101,7 +1102,7 @@
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblFormatos" Relationship="Modelo.FK_TblFormatos_TblEmpresas" FromRole="TblEmpresas" ToRole="TblFormatos" />
-        </EntityType>
+          </EntityType>
         <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
           <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="*" />
@@ -1285,37 +1286,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TblFormatos">
-          <Key>
-            <PropertyRef Name="IntCodigoFormato" />
-            <PropertyRef Name="StrEmpresa" />
-          </Key>
-          <Property Name="IntCodigoFormato" Type="Int32" Nullable="false" />
-          <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
-          <Property Name="IntTipo" Type="Int32" Nullable="false" />
-          <Property Name="DatFechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DatFechaActualizacion" Type="DateTime" Precision="3" />
-          <Property Name="IntEstado" Type="Int16" Nullable="false" />
-          <Property Name="IntGenerico" Type="Boolean" Nullable="false" />
-          <Property Name="Formato" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <Property Name="StrObservaciones" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="IntDocTipo" Type="Int32" />
-          <Property Name="FormatoTmp" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblFormatos_TblEmpresas" FromRole="TblFormatos" ToRole="TblEmpresas" />
-        </EntityType>
-        <Association Name="FK_TblFormatos_TblEmpresas">
-          <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
-          <End Type="Modelo.TblFormatos" Role="TblFormatos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblEmpresas">
-              <PropertyRef Name="StrIdentificacion" />
-            </Principal>
-            <Dependent Role="TblFormatos">
-              <PropertyRef Name="StrEmpresa" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="TblAlertas">
           <Key>
             <PropertyRef Name="IntIdAlerta" />
@@ -1333,6 +1303,38 @@
           <Property Name="IntSms" Type="Boolean" Nullable="false" />
           <Property Name="IntUsuario" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="TblFormatos">
+          <Key>
+            <PropertyRef Name="IntCodigoFormato" />
+            <PropertyRef Name="StrEmpresa" />
+          </Key>
+          <Property Name="IntCodigoFormato" Type="Int32" Nullable="false" />
+          <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <Property Name="IntTipo" Type="Int32" Nullable="false" />
+          <Property Name="DatFechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DatFechaActualizacion" Type="DateTime" Precision="3" />
+          <Property Name="IntEstado" Type="Int16" Nullable="false" />
+          <Property Name="IntGenerico" Type="Boolean" Nullable="false" />
+          <Property Name="Formato" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="StrObservaciones" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IntDocTipo" Type="Int32" />
+          <Property Name="FormatoTmp" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="StrUsuarioActualizacion" Type="Guid" />
+          <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblFormatos_TblEmpresas" FromRole="TblFormatos" ToRole="TblEmpresas" />
+        </EntityType>
+        <Association Name="FK_TblFormatos_TblEmpresas">
+          <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
+          <End Type="Modelo.TblFormatos" Role="TblFormatos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresas">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblFormatos">
+              <PropertyRef Name="StrEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1622,24 +1624,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TblFormatos">
-            <EntityTypeMapping TypeName="Modelo.TblFormatos">
-              <MappingFragment StoreEntitySet="TblFormatos">
-                <ScalarProperty Name="FormatoTmp" ColumnName="FormatoTmp" />
-                <ScalarProperty Name="IntDocTipo" ColumnName="IntDocTipo" />
-                <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
-                <ScalarProperty Name="Formato" ColumnName="Formato" />
-                <ScalarProperty Name="IntGenerico" ColumnName="IntGenerico" />
-                <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
-                <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
-                <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
-                <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
-                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
-                <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
-                <ScalarProperty Name="IntCodigoFormato" ColumnName="IntCodigoFormato" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TblAlertas">
             <EntityTypeMapping TypeName="Modelo.TblAlertas">
               <MappingFragment StoreEntitySet="TblAlertas">
@@ -1655,6 +1639,25 @@
                 <ScalarProperty Name="IntValor" ColumnName="IntValor" />
                 <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
                 <ScalarProperty Name="IntIdAlerta" ColumnName="IntIdAlerta" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblFormatos">
+            <EntityTypeMapping TypeName="Modelo.TblFormatos">
+              <MappingFragment StoreEntitySet="TblFormatos">
+                <ScalarProperty Name="StrUsuarioActualizacion" ColumnName="StrUsuarioActualizacion" />
+                <ScalarProperty Name="FormatoTmp" ColumnName="FormatoTmp" />
+                <ScalarProperty Name="IntDocTipo" ColumnName="IntDocTipo" />
+                <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+                <ScalarProperty Name="Formato" ColumnName="Formato" />
+                <ScalarProperty Name="IntGenerico" ColumnName="IntGenerico" />
+                <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
+                <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+                <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+                <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+                <ScalarProperty Name="IntCodigoFormato" ColumnName="IntCodigoFormato" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

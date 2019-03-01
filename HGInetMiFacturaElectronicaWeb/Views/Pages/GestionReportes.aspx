@@ -62,8 +62,8 @@
 											<span class="caret"></span>
 										</a>
 										<ul class="dropdown-menu dropdown-menu-right" style="background-color: #fcfcfc">
-											<li><a data-ng-click="BtnEditar(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionEditar(datos.Generico)"><i class="icon-pencil4"></i>Editar Formato</a></li>
 											<li><a data-ng-click="AbrirModal(datos.CodigoFormato, datos.NitEmpresa)" data-ng-class="OpcionAsignar(datos.Estado)"><i class="icon-file-plus2"></i>Asignar Formato</a></li>
+											<li><a data-ng-click="BtnEditar(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionEditar(datos.Generico)"><i class="icon-pencil4"></i>Editar Formato</a></li>
 											<li>
 												<a id="BtnEstado{{datos.ClavePrimaria}}" data-ng-click="BtnCambioEstado(datos.Estado,datos.NitEmpresa,datos.CodigoFormato)" data-ng-class="OpcionCambioEstado(datos.Estado)">
 													<i class="icon-lock5" data-ng-class="{'icon-unlocked2': datos.Estado}"></i>Cambiar Estado
@@ -71,7 +71,8 @@
 											</li>
 											<li><a data-ng-click="SolicitarAprobacion(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="{'ng-hide': datos.Estado != 2}"><i class="icon-checkmark4"></i>Solicitar aprobación</a></li>
 											<li><a data-ng-click="AprobarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionAprobar(datos.Estado,datos.Administrador)"><i class="icon-file-check2"></i>Aprobar Diseño</a></li>
-											<li><a data-ng-click="PublicarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionPublicar(datos.Estado,datos.Administrador)"><i class="icon-upload7"></i>Publicar Diseño</a></li>
+											<li><a data-ng-click="PublicarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionPublicar(datos.Estado)"><i class="icon-upload7"></i>Publicar Diseño</a></li>
+											<li><a data-ng-click="MailPrueba(datos.CodigoFormato,datos.NitEmpresa)"><i class="icon-mail-read"></i>Envíar Prueba</a></li>
 											<li><a data-ng-click="VerAuditoria(datos.CodigoFormato,datos.NitEmpresa)"><i class="icon-file-eye"></i>Auditoría</a></li>
 										</ul>
 									</li>
@@ -94,7 +95,7 @@
 				<div class="modal-content">
 					<div id="EncabezadoModal" class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h5 style="margin-bottom: 10px;" class="modal-title">Solicitud de Aprobación</h5>
+						<h5 style="margin-bottom: 10px;" class="modal-title" id="LblTituloModal"></h5>
 					</div>
 
 					<div class="modal-body">
@@ -104,12 +105,18 @@
 								<div class="panel panel-white">
 									<div class="panel-body">
 
-										<div class="col-md-12">
+										<div class="col-md-12" id="CampoObservaciones">
 											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observaciones:</label>
 											<div id="TxtObservacionesSolicitud"></div>
 
-											<div id="summary"></div>
 										</div>
+
+										<div class="col-md-12" id="CampoMailPrueba">
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email:</label>
+											<div id="TxtMailPrueba"></div>
+										</div>
+
+										<div id="summary"></div>
 
 										<div id="SolicitudAprobacion">
 											<div class="col-md-12 text-right">
@@ -119,14 +126,12 @@
 										</div>
 
 										<div id="AprobacionFormato">
-
 											<div class="col-md-12 text-right">
 												<br />
 												<div id="BtnRechazarFormato"></div>
 												<div id="BtnAprobarFormato"></div>
 											</div>
 										</div>
-
 
 									</div>
 								</div>

@@ -34,22 +34,22 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
 		[Description("Creación")]
 		Creacion = 1,
 
-		[Description("Edición")]
+		[Description("Edición de Formato")]
 		Edicion = 2,
 
 		[Description("Cambio de Estado")]
 		CambioEstado = 3,
 
-		[Description("Solicitud de Aprobación")]
+		[Description("Solicitud Aprobación de Formato")]
 		SolicitudAprobacion = 4,
 
-		[Description("Aprobación")]
+		[Description("Aprobación de Formato")]
 		Aprobacion = 5,
 
-		[Description("Rechazo")]
+		[Description("Rechazo de Formato")]
 		Rechazo = 6,
 
-		[Description("Publicación")]
+		[Description("Publicación de Formato")]
 		Publicacion = 7,
 	}
 }

@@ -91,7 +91,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
 				TiposProceso tipo_proceso_bd = Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso);
-				datos_formatos = clase_formatos.ActualizarEstadoFormato(id_formato, identificacion_empresa, estado_actual, TipoFormato.FormatoPDF.GetHashCode(), Sesion.DatosEmpresa, Sesion.DatosUsuario, tipo_proceso_bd, observaciones, Sesion.DatosEmpresa.StrIdentificacion);
+				datos_formatos = clase_formatos.ActualizarEstadoFormato(id_formato, identificacion_empresa, estado_actual, TipoFormato.FormatoPDF.GetHashCode(), Sesion.DatosEmpresa, Sesion.DatosUsuario, tipo_proceso_bd, observaciones);
 
 				return Ok();
 			}

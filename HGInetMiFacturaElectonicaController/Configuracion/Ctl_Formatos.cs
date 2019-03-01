@@ -4,8 +4,11 @@ using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetMiFacturaElectonicaData.ModeloServicio.General;
+using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -197,7 +200,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
-
 		#region Actualizar
 
 
@@ -222,6 +224,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
 				datos_formato.DatFechaActualizacion = Fecha.GetFecha();
+				datos_formato.StrUsuarioActualizacion = usuario;
 				datos_formato.FormatoTmp = byte_formato;
 				datos_formato.IntEstado = (short)EstadosFormato.SolicitarAprobacion.GetHashCode();
 				//Actualiza el registro en base de datos.
@@ -247,12 +250,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="estado_actual"></param>
 		/// <param name="tipo_formato"></param>
 		/// <returns></returns>
-		public TblFormatos ActualizarEstadoFormato(int id_formato, string identificacion_empresa, int estado_actual, int tipo_formato, TblEmpresas empresa_solicitante, TblUsuarios datos_usuario, TiposProceso tipo_proceso, string observaciones, string empresa_autenticada)
+		public TblFormatos ActualizarEstadoFormato(int id_formato, string identificacion_empresa, int estado_actual, int tipo_formato, TblEmpresas empresa_solicitante, TblUsuarios usuario_solicitante, TiposProceso tipo_proceso, string observaciones)
 		{
 			try
 			{
 				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
 				datos_formato.DatFechaActualizacion = Fecha.GetFecha();
+
+				bool notifica = false;
+				TipoAlerta tipo_alerta = TipoAlerta.SolicitudAprobacionFormato;
 
 				string des_proceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso.GetHashCode()));
 				EstadosFormato estado_formato = Enumeracion.GetEnumObjectByValue<EstadosFormato>(estado_actual);
@@ -280,19 +286,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					case TiposProceso.SolicitudAprobacion:
 						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.PendienteAprobacion.GetHashCode());
 						//envió de notificacion
-						Ctl_EnvioCorreos clase_correos = new Ctl_EnvioCorreos();
-						clase_correos.EnviarSolicitudAprobacionFormato(empresa_solicitante, datos_usuario, datos_formato, observaciones, tipo_proceso);
-
+						notifica = true;
+						tipo_alerta = TipoAlerta.SolicitudAprobacionFormato;
 						break;
 
 					//Aprobación del diseño.
 					case TiposProceso.Aprobacion:
 						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.PendientePublicacion.GetHashCode());
+						notifica = true;
+						tipo_alerta = TipoAlerta.AprobacionFormato;
 						break;
 
 					//Rechazo del diseño.
 					case TiposProceso.Rechazo:
 						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.SolicitarAprobacion.GetHashCode());
+						notifica = true;
+						tipo_alerta = TipoAlerta.AprobacionFormato;
 						break;
 
 					//Publicación del formato
@@ -300,16 +309,27 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						datos_formato.IntEstado = Convert.ToInt16(EstadosFormato.Activo.GetHashCode());
 						datos_formato.Formato = datos_formato.FormatoTmp;
 						datos_formato.FormatoTmp = null;
+						notifica = true;
+						tipo_alerta = TipoAlerta.PublicacionFormato;
 						break;
 
 				}
 
-				//Actualiza el registro en base de datos.
-				TblFormatos datos_respuesta = Actualizar(datos_formato);
+
+				if (notifica)
+				{
+					GestionarNotificacion(tipo_alerta, tipo_proceso, datos_formato, empresa_solicitante, usuario_solicitante, observaciones);
+				}
+
 
 				//Almacena la auditoría del proceso.
 				Ctl_FormatosAudit clase_auditoria = new Ctl_FormatosAudit();
-				clase_auditoria.Crear(datos_respuesta.IntCodigoFormato, datos_respuesta.StrEmpresa, datos_respuesta.StrIdSeguridad, tipo_proceso, datos_usuario.StrIdSeguridad, string.Format("{0}. {1}", des_proceso, observaciones));
+				clase_auditoria.Crear(datos_formato.IntCodigoFormato, datos_formato.StrEmpresa, datos_formato.StrIdSeguridad, tipo_proceso, usuario_solicitante.StrIdSeguridad, string.Format("{0}. {1}", des_proceso, observaciones));
+
+				//Actualiza el registro en base de datos.
+				TblFormatos datos_respuesta = Actualizar(datos_formato);
+
+
 
 				return datos_respuesta;
 			}
@@ -448,5 +468,130 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
+
+
+		#region Notificaciones
+
+		public bool GestionarNotificacion(TipoAlerta tipo_alerta, TiposProceso tipo_proceso, TblFormatos datos_formato, TblEmpresas empresa_autenticada, TblUsuarios datos_usuario, string observaciones_solicitud)
+		{
+			try
+			{
+				Ctl_Empresa clase_empresa = new Ctl_Empresa();
+				Ctl_Alertas clase_alertas = new Ctl_Alertas();
+				Ctl_Usuario clase_usuario = new Ctl_Usuario();
+				Ctl_EnvioCorreos clase_correos = new Ctl_EnvioCorreos();
+				List<DestinatarioEmail> lista_difusion = new List<DestinatarioEmail>();
+
+				//List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+				string correos_destino = string.Empty;
+
+				//Obtiene los datos de la alerta configurada para el proceso solicitado.
+				TblAlertas datos_alerta = clase_alertas.ObtenerPorTipo(tipo_alerta.GetHashCode());
+				TblEmpresas datos_empresa_formato = clase_empresa.Obtener(datos_formato.StrEmpresa);
+
+				if (datos_alerta != null)
+				{
+					// empresa solicita, empresa formato, usuario solicita
+					// interno         , cliente        , usuario 
+
+					/*
+					 Interno, mails registrados en alerta.
+					 Cliente, mails empresa edita y titular formato.
+					 usuario, solicitud ->autenticado - otros -> utlimo editor.						 
+					 */
+					DestinatarioEmail destinatario = new DestinatarioEmail();
+
+					if (datos_alerta.IntInterno)
+					{
+						if (!string.IsNullOrWhiteSpace(datos_alerta.StrInternoMails))
+							correos_destino = datos_alerta.StrInternoMails;
+
+						if (datos_alerta.StrInternoMails.Contains(";"))
+						{
+							List<string> mails_internos = Coleccion.ConvertirLista(datos_alerta.StrInternoMails, ';');
+
+							foreach (var item_mail in mails_internos)
+							{
+								//Contruye la lista de destinatarios
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = "ADMINISTRACIÓN";
+								destinatario.Email = item_mail;
+								lista_difusion.Add(destinatario);
+							}
+						}
+						else
+						{
+							destinatario = new DestinatarioEmail();
+							destinatario.Nombre = "ADMINISTRACIÓN";
+							destinatario.Email = datos_alerta.StrInternoMails;
+							lista_difusion.Add(destinatario);
+						}
+
+						correos_destino = datos_alerta.StrInternoMails;
+					}
+
+					if (datos_alerta.IntCliente)
+					{
+						//Obtiene los datos de la empresa asociada al formato.
+
+						destinatario = new DestinatarioEmail();
+						destinatario.Nombre = datos_empresa_formato.StrRazonSocial;
+						destinatario.Email = datos_empresa_formato.StrMailAdmin;
+						lista_difusion.Add(destinatario);
+
+						//valida que la empresa autenticada sea diferente de la asociada al formato.
+						if (!empresa_autenticada.StrIdentificacion.Equals(datos_formato.StrEmpresa))
+						{
+							destinatario = new DestinatarioEmail();
+							destinatario.Nombre = empresa_autenticada.StrRazonSocial;
+							destinatario.Email = empresa_autenticada.StrMailAdmin;
+							lista_difusion.Add(destinatario);
+						}
+					}
+
+					if (datos_alerta.IntUsuario)
+					{
+						if (tipo_proceso.GetHashCode() == TiposProceso.SolicitudAprobacion.GetHashCode())
+						{
+							destinatario = new DestinatarioEmail();
+							destinatario.Nombre = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
+							destinatario.Email = datos_usuario.StrMail;
+							lista_difusion.Add(destinatario);
+						}
+						else
+						{
+							if (datos_formato.StrUsuarioActualizacion != null)
+							{
+								datos_usuario = clase_usuario.ObtenerIdSeguridad(datos_formato.StrUsuarioActualizacion.Value);
+
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
+								destinatario.Email = datos_usuario.StrMail;
+								lista_difusion.Add(destinatario);
+							}
+						}
+					}
+				}
+
+				if (lista_difusion.Count > 0)
+				{
+					List<MensajeEnvio> respuesta_envio = clase_correos.EnviarNotificacionProcesosFormato(empresa_autenticada, datos_empresa_formato, datos_formato, datos_usuario, observaciones_solicitud, tipo_proceso, lista_difusion);
+
+					Ctl_AlertasHistAudit clase_audit_alerta = new Ctl_AlertasHistAudit();
+					string mensaje_audit = string.Format("{0} {1}", observaciones_solicitud, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso.GetHashCode())));
+
+					clase_audit_alerta.Crear(datos_alerta.IntIdAlerta, empresa_autenticada.StrIdSeguridad, empresa_autenticada.StrIdentificacion, Newtonsoft.Json.JsonConvert.SerializeObject(respuesta_envio), datos_alerta.IntTipo, Guid.Empty, mensaje_audit);
+				}
+
+				return true;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		#endregion
 	}
 }
