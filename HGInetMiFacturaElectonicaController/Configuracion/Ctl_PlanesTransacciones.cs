@@ -353,7 +353,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			int Estado = EstadoPlan.Habilitado.GetHashCode();
 			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();
 			DateTime Fecha_Actual = Fecha.GetFecha();
-
+		
 			var ListaFacturadores = (from lista in context.TblEmpresas
 									 where lista.StrEmpresaDescuento.Equals(
 										 (from datos in context.TblEmpresas
@@ -371,7 +371,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones
 													   where ListaFacturadores.Contains(t.StrEmpresaFacturador) 
-														&& t.IntEstado == Estado && (t.DatFechaVencimiento >= Fecha_Actual || t.DatFechaVencimiento==null)
+														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual ) || t.DatFechaVencimiento==null)
 														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0)  || (t.IntTipoProceso == Plan_PostPago))
 													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFechaVencimiento }).ToList();
 
@@ -584,8 +584,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							if (CerrarplanesPostpago(item.StrIdentificacion))
 							{								
 								plan = new TblPlanesTransacciones();								
-								DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month + 1, 1);
+								//Se suma un mes al primer dia del mes
+								DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month + 1, 1);								
+								//Se resta un dia para que nos de el ultimo dia del mes
 								DateTime FechaVenc = Fecha1.AddDays(-1);
+								//Se coloca la ultima hora y minuto del dia para que pueda seguir enviando documentos el ultimo dias del plan.
+								FechaVenc = new DateTime(FechaVenc.Year, FechaVenc.Month, FechaVenc.Day, 23, 59, 00, 000);
 								plan.DatFecha = Fecha.GetFecha();
 								plan.DatFechaVencimiento = FechaVenc;
 								plan.IntEstado = EstadoPlan.Habilitado.GetHashCode();
