@@ -1094,7 +1094,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				DocumentoRespuesta obj_documento = new DocumentoRespuesta();
 
-				obj_documento.Aceptacion = respuesta.IntAdquirienteRecibo;
+				obj_documento.Aceptacion = (respuesta.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode()) ? AdquirienteRecibo.Pendiente.GetHashCode() : respuesta.IntAdquirienteRecibo;
 				obj_documento.CodigoRegistro = respuesta.StrObligadoIdRegistro;
 				obj_documento.Cufe = respuesta.StrCufe;
 				obj_documento.DocumentoTipo = respuesta.IntDocTipo;

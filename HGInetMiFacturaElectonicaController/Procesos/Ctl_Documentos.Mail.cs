@@ -95,15 +95,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				try
 				{
 					email = new Ctl_EnvioCorreos();
-					int i = 0;
-					while (datos_retorno.Estado == null || datos_retorno.Estado.Equals("En cola"))
-					{
-						datos_retorno = email.ConsultarCorreo((long)mensajes[0].Data[0].MessageID);
-						if (i == 10)
-							datos_retorno.Estado = string.Empty;
-						i++;
-					}
-
+					datos_retorno = email.ConsultarCorreo((long)mensajes[0].Data[0].MessageID);
 
 				}
 				catch (Exception ex)
@@ -115,13 +107,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.Enviado.GetHashCode();
 					documentoBd.DatAdquirienteFechaRecibo = datos_retorno.Recibido;
-					respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
+					//respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
 				}
 				else
 				{
 					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
 					documentoBd.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(datos_retorno.Estado)) ? Fecha.GetFecha() : datos_retorno.Recibido;
-					respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
+					//respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
 					List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documentoBd, documento_obj.DatosAdquiriente.Telefono, documento_obj.DatosAdquiriente.Email, datos_retorno.Estado, respuesta.IdPeticion.ToString());
 				}
 
