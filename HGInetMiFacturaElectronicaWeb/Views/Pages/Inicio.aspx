@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Pages/Indicadores.js?vjs201914"></script>
+	<script src="../../Scripts/Pages/Indicadores.js?vjs201901"></script>
 
 	<style>
 		.nav-tabs:before {
@@ -51,9 +51,9 @@
 	<!-- CONTENEDOR PRINCIPAL -->
 	<div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController">
 
+
 		<!-- CONTENIDO PANEL-->
 		<div class="panel-body">
-
 			<!-- MENÚ TABS -->
 			<ul class="nav nav-tabs">
 				<li id="LiTabAdministrador" data-ng-show="IndicadoresAdmin"><a id="LinkTabAdministrador" data-ng-if="LinkTabAdministrador" data-ng-init="LinkTabAdministrador=true" href="#TabAdministrador" data-toggle="tab">Administrador</a></li>
@@ -151,10 +151,10 @@
 									</div>
 
 									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalTiposDocGraficoAdmin">Tipos de Documento</h4>
-
 									<label class="text-muted" style="margin-bottom: 20px">Indica la cantidad de documentos generados en el rango de tiempo seleccionado.</label>
+
 									<div id="ReporteTipoDocumentoAnualAdmin"></div>
-									<div id="GraficoTipoDoc"></div>
+
 								</div>
 							</div>
 						</div>
@@ -195,23 +195,22 @@
 							<div class="panel panel-default">
 
 								<div class="panel-body">
-									<div class="heading-elements panel-nav">
-										<ul class="nav nav-tabs nav-tabs-bottom">
-											<li class="dropdown active">
-												<div class="dx-field">
-													<div class="dx-field-label">Cantidad Top: </div>
-													<div class="dx-field-value">
-														<div id="CantTopCompradoresAdmin"></div>
-													</div>
-												</div>
-											</li>
-										</ul>
+
+									<div class="col-md-12">
+										<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Top Compradores</h4>
+										<label class="text-muted" style="margin-bottom: 20px">Indica las empresas con mayor nivel de compras.</label>
 									</div>
 
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px">Top Compradores<i class="icon-info22" id="InfoPanel13517" style="margin-left: 2%"></i></h4>
-									<div id="ToolTipPanel13517"></div>
-									<label class="text-muted" style="margin-bottom: 20px">Indica las empresas con mayor nivel de compras.</label>
-									<div id="ReporteTopCompradores"></div>
+									<div class="col-md-8" style="margin-bottom: 1%">
+										Cantidad Top: <i class="icon-info22" id="InfoPanelInfoPanel1351713518"></i>
+										<div id="ToolTipPanel13517"></div>
+										<div id="CantTopCompradoresAdmin"></div>
+									</div>
+
+									<div class="col-md-12">
+										<div id="ReporteTopCompradores"></div>
+									</div>
+
 								</div>
 							</div>
 						</div>
@@ -222,23 +221,22 @@
 							<div class="panel panel-default">
 
 								<div class="panel-body">
-									<div class="heading-elements panel-nav">
-										<ul class="nav nav-tabs nav-tabs-bottom">
-											<li class="dropdown active">
-												<div class="dx-field">
-													<div class="dx-field-label">Cantidad Top: </div>
-													<div class="dx-field-value">
-														<div id="CantTopTransaccionalAdmin"></div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdmin">Flujo Transaccional<i class="icon-info22" id="InfoPanel13518" style="margin-left: 2%"></i></h4>
-									<div id="ToolTipPanel13518"></div>
-									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
 
-									<div id="ReporteTopMovimiento"></div>
+									<div class="col-md-12">
+										<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdmin">Flujo Transaccional</h4>
+										<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
+									</div>
+
+									<div class="col-md-4" style="margin-bottom: 1%">
+										Cantidad Top: <i class="icon-info22" id="InfoPanel13518"></i>
+										<div id="ToolTipPanel13518"></div>
+										<div id="CantTopTransaccionalAdmin"></div>
+									</div>
+
+									<div class="col-md-12">
+										<div id="ReporteTopMovimiento"></div>
+									</div>
+
 								</div>
 							</div>
 						</div>
@@ -287,9 +285,6 @@
 									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 20px">Resumen Documentos</h4>
 									<div class="table-responsive">
 
-
-
-
 										<div class="col-md-3">
 
 											<div class="content-group">
@@ -315,8 +310,8 @@
 										<div class="col-md-9">
 											<div class="content-group">
 												<h4 class="text-semibold no-margin">Planes Adquiridos</h4>
+												<div id="ResumenPlanesAdquiridosFacturador"></div>
 											</div>
-											<div id="ResumenPlanesAdquiridosFacturador"></div>
 										</div>
 
 										<div class="col-md-1"></div>
@@ -392,7 +387,10 @@
 										<ul class="nav nav-tabs nav-tabs-bottom">
 											<li class="dropdown active">
 												<div class="dx-field">
-													<div class="dx-field-label">Cantidad Top: </div>
+													<div class="dx-field-label">
+														Cantidad Top: <i class="icon-info22" id="InfoPanel13524" style="margin-left: 2%"></i>
+														<div id="ToolTipPanel13524"></div>
+													</div>
 													<div class="dx-field-value">
 														<div id="CantTopTransaccionalFacturador"></div>
 													</div>
@@ -400,8 +398,7 @@
 											</li>
 										</ul>
 									</div>
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransFacturador">Flujo Transaccional<i class="icon-info22" id="InfoPanel13524" style="margin-left: 2%"></i></h4>
-									<div id="ToolTipPanel13524"></div>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransFacturador">Flujo Transaccional</h4>
 									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
 
 									<div id="ReporteTopMovimientoFacturador"></div>
@@ -449,7 +446,7 @@
 						<!-- /REPORTE ACUMULADO TIPO DOCUMENTO -->
 
 						<!-- REPORTE TIPO DOCUMENTO ANUAL -->
-						<div class="col-md-12 col-lg-12" id="Panel13533" data-ng-if="Panel13533" data-ng-init="Panel13533">
+						<div class="col-md-12 col-lg-12" id="Panel13533" data-ng-if="Panel13533" data-ng-init="Panel13533=false">
 							<div class="panel panel-default">
 
 								<div class="panel-body">
@@ -485,7 +482,10 @@
 										<ul class="nav nav-tabs nav-tabs-bottom">
 											<li class="dropdown active">
 												<div class="dx-field">
-													<div class="dx-field-label">Cantidad Top: </div>
+													<div class="dx-field-label">
+														Cantidad Top: <i class="icon-info22" id="InfoPanel13534" style="margin-left: 2%"></i>
+														<div id="ToolTipPanel13534"></div>
+													</div>
 													<div class="dx-field-value">
 														<div id="CantTopTransaccionalAdquiriente"></div>
 													</div>
@@ -494,8 +494,7 @@
 										</ul>
 									</div>
 
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdquiriente">Flujo Transaccional<i class="icon-info22" id="InfoPanel13534" style="margin-left: 2%"></i></h4>
-									<div id="ToolTipPanel13534"></div>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdquiriente">Flujo Transaccional</h4>
 									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
 
 									<div id="ReporteTopMovimientoAdquiriente"></div>

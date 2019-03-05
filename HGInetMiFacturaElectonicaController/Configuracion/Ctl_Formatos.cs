@@ -1,13 +1,19 @@
-﻿using HGInetMiFacturaElectonicaController.Auditorias;
+﻿using HGInetFacturaEReports.ReportDesigner;
+using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectonicaData.ModeloServicio.General;
+using HGInetUBL;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
 using System.Collections.Generic;
@@ -16,6 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -30,13 +37,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			datos.Cufe = "c1c2885ac587ef5869e12a04bd06ca89dc9a8868";
 			datos.DataKey = "690c8a6436cc20dfe11d159393e5374d1b4fca6c";
 			datos.Documento = 990000909;
-			datos.DocumentoRef = "1002B";
-			datos.Fecha = new DateTime(2018, 07, 31);
-			datos.FechaVence = new DateTime(2018, 07, 31);
+			datos.DocumentoRef = "1002";
+			datos.Fecha = Fecha.GetFecha();
+			datos.FechaVence = Fecha.GetFecha();
 			datos.Moneda = "COP";
 			datos.Neto = 0.00M;
-			datos.NumeroResolucion = "9000000033394696";
-			datos.Prefijo = "PRUE";
+			datos.NumeroResolucion = "9000000045201025";
+			datos.Prefijo = "PRE";
 			datos.Total = 0.00M;
 			datos.Valor = 0.00M;
 			datos.ValorDescuento = 0.00M;
@@ -591,7 +598,90 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 		}
 
+		#endregion
+
+
+		#region Envío mail prueba
+
+		/// <summary>
+		/// Realiza el envío del formato de prueba.
+		/// </summary>
+		/// <param name="empresa_autenticada"></param>
+		/// <param name="id_formato"></param>
+		/// <param name="identificacion_empresa"></param>
+		/// <param name="tipo_formato"></param>
+		/// <param name="email_destino"></param>
+		/// <returns></returns>
+		public bool EnviarFormatoPrueba(TblEmpresas empresa_autenticada, int id_formato, string identificacion_empresa, int tipo_formato, string email_destino)
+		{
+			try
+			{
+				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
+				XtraReportDesigner report = new XtraReportDesigner();
+
+				//Carga el diseño en el control de reporte
+				MemoryStream datos = new MemoryStream(datos_formato.FormatoTmp);
+				report.LoadLayoutFromXml(datos);
+
+				//Obtiene los datos del último documento generado
+				Ctl_Documento clase_documento = new Ctl_Documento();
+				TblDocumentos datos_doc_bd = clase_documento.Obtener(datos_formato.StrEmpresa).OrderByDescending(f => f.DatFechaIngreso).FirstOrDefault();
+				string contenido_xml = Archivo.ObtenerContenido("http://localhost:61421/dms/a18fe701-fbe2-4f09-985e-0cb0305500bf/XmlFacturaE/face_f0811015602C0000000096.xml");
+
+				// valida el contenido del archivo
+				if (string.IsNullOrWhiteSpace(contenido_xml))
+					throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
+
+				// convierte el contenido de texto a xml
+				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+				// convierte el objeto de acuerdo con el tipo de documento
+				XmlSerializer serializacion = null;
+				serializacion = new XmlSerializer(typeof(InvoiceType));
+				InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+				Factura documento_obj = FacturaXML.Convertir(conversion);
+				report.DataSource = documento_obj;
+
+				string nombre_archivo = NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), datos_formato.StrEmpresa, TipoDocumento.Factura, documento_obj.Prefijo);
+
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				// ruta física del pdf.
+				string ruta_archivo = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, datos_formato.TblEmpresas.StrIdSeguridad.ToString(), "FormatosPdf");
+				// valida la existencia de la carpeta
+				ruta_archivo = Directorio.CrearDirectorio(ruta_archivo);
+
+				//Exporta el formato pdf.
+				HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(nombre_archivo, ruta_archivo);
+				x.GenerarPdfDev(report, empresa_autenticada.StrIdentificacion);
+
+				string url_archivo = string.Format("{0}/{1}/{2}/{3}.pdf", plataforma_datos.RutaDmsPublica, datos_formato.TblEmpresas.StrIdSeguridad.ToString(), "FormatosPdf", nombre_archivo);
+				byte[] bytes_pdf = Archivo.ObtenerWeb(url_archivo);
+				string ruta_fisica_pdf = Convert.ToBase64String(bytes_pdf);
+
+				List<Adjunto> adjuntos = new List<Adjunto>();
+
+				if (!string.IsNullOrEmpty(ruta_fisica_pdf))
+				{
+					Adjunto adjunto = new Adjunto();
+					adjunto.ContenidoB64 = ruta_fisica_pdf;
+					adjunto.Nombre = Path.GetFileName(url_archivo);
+					adjuntos.Add(adjunto);
+				}
+
+				Ctl_EnvioCorreos clase_correos = new Ctl_EnvioCorreos();
+
+				List<MensajeEnvio> respuesta_email = clase_correos.EnvioFormatoPrueba(empresa_autenticada, datos_formato, adjuntos, email_destino);
+
+
+				return true;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 		#endregion
+
 	}
 }

@@ -356,21 +356,21 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 															 TransaccionesProcesadas = (planes.Select(x => x.IntNumTransaccProcesadas).Sum() > 0) ? planes.Select(x => x.IntNumTransaccProcesadas).Sum() : 0,
 															 // esta linea obtiene los planes vigentes o sin fechas de vencimientos y calcula las transacciones vigentes sobre el resultado, si la fecha de vencimiento es null, suma un día al día actual y lo toma en cuenta para el calculo.
 															 TransaccionesDisponibles = (planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_actual) > fecha_actual || d.DatFechaVencimiento == null).Count() > 0) ? planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_siguiente) > fecha_actual).Select(d => d.IntNumTransaccCompra).Sum() - planes.Where(d => (d.DatFechaVencimiento.HasValue ? d.DatFechaVencimiento.Value : fecha_siguiente) > fecha_actual).Select(d => d.IntNumTransaccProcesadas).Sum() : 0,
-															 PlanesAdquiridos = planes.Select(x => new 
+															 PlanesAdquiridos = planes.Select(x => new
 															 {
-																x.StrIdSeguridad, 
-																x.DatFecha, 
-																x.DatFechaVencimiento, 
-																x.IntNumTransaccCompra, 
-																x.IntNumTransaccProcesadas,
-																CodCompra=x.IntTipoProceso,																
-																Porcentaje = (x.IntNumTransaccProcesadas==0)?0:Math.Round(((float)x.IntNumTransaccProcesadas / (float)x.IntNumTransaccCompra) * 100, 2),
-																porcentajeFecha =(x.DatFechaVencimiento!=null)? Math.Round((double)Math.Round((double)SqlFunctions.DateDiff("dd", x.DatFecha, fecha_actual)) / (double)Math.Round((double)SqlFunctions.DateDiff("dd", x.DatFecha, x.DatFechaVencimiento))*100,2):0 ,
-																x.IntEstado
+																 x.StrIdSeguridad,
+																 x.DatFecha,
+																 x.DatFechaVencimiento,
+																 x.IntNumTransaccCompra,
+																 x.IntNumTransaccProcesadas,
+																 CodCompra = x.IntTipoProceso,
+																 Porcentaje = (x.IntNumTransaccProcesadas == 0) ? 0 : Math.Round(((float)x.IntNumTransaccProcesadas / (float)x.IntNumTransaccCompra) * 100, 2),
+																 porcentajeFecha = (x.DatFechaVencimiento != null) ? Math.Round((double)Math.Round((double)SqlFunctions.DateDiff("dd", x.DatFecha, fecha_actual)) / (double)Math.Round((double)SqlFunctions.DateDiff("dd", x.DatFecha, x.DatFechaVencimiento)) * 100, 2) : 0,
+																 x.IntEstado
 															 }).OrderByDescending(x => x.DatFecha).Take(5)
 														 }).ToList();
 
-				
+
 				return planes_adquiridos;
 			}
 			catch (Exception excepcion)
@@ -565,16 +565,20 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 				List<TopTransaccional> datos_actual = new List<Objetos.TopTransaccional>();
 				List<TopTransaccional> datos_anterior = new List<Objetos.TopTransaccional>();
 
+				DateTime fecha_inicio_anterior = fecha_inicio;
+				DateTime fecha_fin_anterior = fecha_fin;
+
+
 				switch (tipo_frecuencia)
 				{
 					case TipoFrecuencia.Hoy:
 						//Obtiene el actual.
 						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
-						fecha_inicio = fecha_inicio.AddDays(-1);
-						fecha_fin = fecha_fin.AddDays(-1);
+						fecha_inicio_anterior = fecha_inicio.AddDays(-1);
+						fecha_fin_anterior = fecha_fin.AddDays(-1);
 						//obtiene el anterior
-						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
 						foreach (var item in datos_actual)
 						{
@@ -592,10 +596,10 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						//Obtiene el actual.
 						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
-						fecha_inicio = fecha_inicio.AddDays(-1);
-						fecha_fin = fecha_fin.AddDays(-1);
+						fecha_inicio_anterior = fecha_inicio.AddDays(-1);
+						fecha_fin_anterior = fecha_fin.AddDays(-1);
 						//obtiene el anterior
-						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
 						foreach (var item in datos_actual)
 						{
@@ -616,10 +620,10 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						//Obtiene el actual.
 						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
-						fecha_inicio = fecha_inicio.AddMonths(-1);
-						fecha_fin = fecha_fin.AddMonths(-1);
+						fecha_inicio_anterior = fecha_inicio.AddMonths(-1);
+						fecha_fin_anterior = fecha_fin.AddMonths(-1);
 						//obtiene el anterior
-						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
 						foreach (var item in datos_actual)
 						{
@@ -630,16 +634,17 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 							if (top_anterior != null)
 								item.CantidadAnterior = top_anterior.TotalDocumentos;
 						}
+
 						break;
 
 					case TipoFrecuencia.Anyo:
 						//Obtiene el actual.
 						datos_actual = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
-						fecha_inicio = fecha_inicio.AddYears(-1);
-						fecha_fin = fecha_fin.AddYears(-1);
+						fecha_inicio_anterior = fecha_inicio.AddYears(-1);
+						fecha_fin_anterior = fecha_fin.AddYears(-1);
 						//obtiene el anterior
-						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
 						foreach (var item in datos_actual)
 						{
@@ -658,10 +663,10 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 
 						int dias = (fecha_inicio - fecha_fin).Days;
 
-						fecha_inicio = fecha_inicio.AddDays(dias);
-						fecha_fin = fecha_fin.AddDays(dias);
+						fecha_inicio_anterior = fecha_inicio.AddDays(dias);
+						fecha_fin_anterior = fecha_fin.AddDays(dias);
 						//obtiene el anterior
-						datos_anterior = OtenerTopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia);
+						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
 
 						foreach (var item in datos_actual)
@@ -676,6 +681,27 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						break;
 				}
 
+				if (datos_actual.Count > 0)
+				{
+					TopTransaccional item = datos_actual.FirstOrDefault();
+
+
+					if (TipoFrecuencia.Hoy.GetHashCode() == tipo_frecuencia.GetHashCode() || TipoFrecuencia.Fecha.GetHashCode() == tipo_frecuencia.GetHashCode())
+					{
+						item.DescripcionActual = string.Format("{0} {1}", Fecha.MesLetras(fecha_inicio), fecha_inicio.Day);
+						item.DescripcionAnterior = string.Format("{0} {1}", Fecha.MesLetras(fecha_inicio_anterior), fecha_inicio_anterior.Day);
+					}
+					else if (TipoFrecuencia.Mes.GetHashCode() == tipo_frecuencia.GetHashCode())
+					{
+						item.DescripcionActual = Fecha.MesLetras(fecha_inicio);
+						item.DescripcionAnterior = Fecha.MesLetras(fecha_inicio_anterior);
+					}
+					else if (TipoFrecuencia.Anyo.GetHashCode() == tipo_frecuencia.GetHashCode())
+					{
+						item.DescripcionActual = fecha_inicio.Year.ToString();
+						item.DescripcionAnterior = fecha_inicio_anterior.Year.ToString();
+					}
+				}
 
 
 				return datos_actual;

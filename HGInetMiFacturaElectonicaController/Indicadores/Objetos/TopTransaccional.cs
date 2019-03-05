@@ -10,7 +10,9 @@ namespace HGInetMiFacturaElectonicaController.Indicadores.Objetos
 	{
 		public string Identificacion { get; set; }
 		public decimal CantidadAnterior { get; set; }
+		public string DescripcionAnterior { get; set; }
 		public decimal CantidadActual { get; set; }
+		public string DescripcionActual { get; set; }
 		public string RazonSocial { get; set; }
 		public decimal TotalDocumentos { get; set; }
 		public decimal ValorTotalDocumentos { get; set; }

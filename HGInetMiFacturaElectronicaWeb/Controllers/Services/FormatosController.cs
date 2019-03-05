@@ -143,6 +143,23 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		[HttpGet]
+		[Route("Api/EnviarFormatoPrueba")]
+		public IHttpActionResult EnviarFormatoPrueba(int id_formato, string identificacion_empresa, string email_destino)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
+				clase_formatos.EnviarFormatoPrueba(Sesion.DatosEmpresa, id_formato, identificacion_empresa, TipoFormato.FormatoPDF.GetHashCode(), email_destino);
+
+				return Ok();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 	}
 }

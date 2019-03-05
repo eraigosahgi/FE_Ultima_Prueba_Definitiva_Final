@@ -273,4 +273,8 @@
   <data name="AsuntoNotificacionCorreoNoEntregado" xml:space="preserve">
     <value>Correo No Entregado Facturación Electronica</value>
   </data>
+  <data name="RutaPlantillaPruebaFormato" xml:space="preserve">
+    <value>emails\\plantilla_prueba_formato.html</value>
+    <comment>Ruta de la plantilla HTML de envío de prueba de formato</comment>
+  </data>
 </root>

@@ -358,6 +358,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_prueba_formato.html.
+        /// </summary>
+        public static string RutaPlantillaPruebaFormato {
+            get {
+                return ResourceManager.GetString("RutaPlantillaPruebaFormato", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_recarga_transacciones.html.
         /// </summary>
         public static string RutaPlantillaRecarga {

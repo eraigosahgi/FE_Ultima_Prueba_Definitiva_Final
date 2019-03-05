@@ -347,7 +347,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			onClick: function (params) {
 				var continua_proceso = params.validationGroup.validate().isValid;
 				if (continua_proceso) {
-					//	ActualizarFormato(codigo, nit, estado, 6, $scope.ObservacionesSolicitud);
+					EnviarMail(codigo, nit, $scope.TxtMailPrueba);
 					$('#modal_solicitar_aprobacion').modal('hide');
 				}
 			}
@@ -355,6 +355,22 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 
 		$('#modal_solicitar_aprobacion').modal('show');
 
+	}
+
+	function EnviarMail(codigo, nit, mail) {
+		$http.get('/api/EnviarFormatoPrueba?id_formato=' + codigo + '&identificacion_empresa=' + nit + '&email_destino=' + mail).then(function (response) {
+			$("#wait").hide();
+			try {
+
+				DevExpress.ui.notify({ message: "El mensaje ha sido enviado con éxito.", position: { my: "center top", at: "center top" } }, "success", 1500);
+
+			} catch (err) {
+				DevExpress.ui.notify(err.message, 'error', 3000);
+			}
+		}, function errorCallback(response) {
+			$('#wait').hide();
+			DevExpress.ui.notify(response, 'error', 6000);
+		});
 	}
 
 	//Visualización de la auditoría del formato.

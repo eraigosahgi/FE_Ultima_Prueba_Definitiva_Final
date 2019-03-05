@@ -1883,7 +1883,17 @@ namespace HGInetMiFacturaElectonicaController
 
 		}
 
-
+		/// <summary>
+		/// Realiza el envío del correo electrónico notificando los procesos de los formatos PDF.
+		/// </summary>
+		/// <param name="empresa_solicita"></param>
+		/// <param name="datos_empresa_formato"></param>
+		/// <param name="datos_formato"></param>
+		/// <param name="usuario"></param>
+		/// <param name="observaciones_solicitud"></param>
+		/// <param name="tipo_proceso"></param>
+		/// <param name="correos_destino"></param>
+		/// <returns></returns>
 		public List<MensajeEnvio> EnviarNotificacionProcesosFormato(TblEmpresas empresa_solicita, TblEmpresas datos_empresa_formato, TblFormatos datos_formato, TblUsuarios usuario, string observaciones_solicitud, TiposProceso tipo_proceso, List<DestinatarioEmail> correos_destino)
 		{
 			try
@@ -1891,9 +1901,6 @@ namespace HGInetMiFacturaElectonicaController
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaSolicitudAprobacionFormato);
 
 				List<MensajeEnvio> Mensaje = new List<MensajeEnvio>();
-
-				//obtiene los datos de la empresa asociada al formato.
-				Ctl_Empresa clase_empresa = new Ctl_Empresa();
 
 				string mail_envio = Constantes.EmailCopiaOculta;
 
@@ -2244,6 +2251,83 @@ namespace HGInetMiFacturaElectonicaController
 		}
 
 
+		public List<MensajeEnvio> EnvioFormatoPrueba(TblEmpresas empresa_solicita, TblFormatos datos_formato, List<Adjunto> adjuntos, string mail_destino)
+		{
+			try
+			{
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaPruebaFormato);
+
+				List<MensajeEnvio> respuesta_envio = new List<MensajeEnvio>();
+
+				//obtiene los datos de la empresa asociada al formato.
+				Ctl_Empresa clase_empresa = new Ctl_Empresa();
+				TblEmpresas datos_empresa_formato = clase_empresa.Obtener(datos_formato.StrEmpresa);
+
+				string mail_envio = Constantes.EmailCopiaOculta;
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{
+						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
+						if (empresa_solicita.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+
+						//DATOS DEL FORMATO.
+						mensaje = mensaje.Replace("{CodigoFormato}", datos_formato.IntCodigoFormato.ToString());
+
+						mensaje = mensaje.Replace("{NombreEmpresaFormato}", datos_empresa_formato.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitEmpresaFormato}", datos_empresa_formato.StrIdentificacion);
+						mensaje = mensaje.Replace("{DigitoDvEmpresaFormato}", datos_empresa_formato.IntIdentificacionDv.ToString());
+						mensaje = mensaje.Replace("{FechaCreacion}", datos_formato.DatFechaRegistro.ToString("yyyy-MM-dd"));
+						mensaje = mensaje.Replace("{EstadoFormato}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadosFormato>(datos_formato.IntEstado)));
+
+						// recibe el email el adquiriente
+						DestinatarioEmail remitente = new DestinatarioEmail();
+						remitente.Email = Constantes.EmailRemitente;
+						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						// envía correo electrónico con copia de auditoría
+						List<DestinatarioEmail> correos_copia_oculta = null;
+						if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+						{
+							correos_copia_oculta = new List<DestinatarioEmail>();
+
+							DestinatarioEmail copia_oculta = new DestinatarioEmail();
+							copia_oculta.Nombre = "Auditoría";
+							copia_oculta.Email = Constantes.EmailCopiaOculta;
+							correos_copia_oculta.Add(copia_oculta);
+						}
+
+						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+						DestinatarioEmail destinatario = new DestinatarioEmail();
+						destinatario.Nombre = "ADMINISTRACIÓN";
+						destinatario.Email = mail_destino;
+						correos_destino.Add(destinatario);
+
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+						respuesta_envio = clase_email.EnviarEmail(empresa_solicita.StrIdSeguridad.ToString(), false, mensaje, "NOTIFICACIÓN FORMATO DE PRUEBA", true, remitente, correos_destino, null, null, "", "", adjuntos);
+
+					}
+				}
+
+				return respuesta_envio;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 	}
 

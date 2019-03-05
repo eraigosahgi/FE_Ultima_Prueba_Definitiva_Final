@@ -491,9 +491,9 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 	});
 
 
-	 SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {
-    	$scope.Facturador = Datos;
-    });
+	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {
+		$scope.Facturador = Datos;
+	});
 
 	function cargarFiltros() {
 		$("#FechaInicial").dxDateBox({

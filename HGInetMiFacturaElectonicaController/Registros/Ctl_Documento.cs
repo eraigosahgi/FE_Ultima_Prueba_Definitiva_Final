@@ -725,6 +725,25 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		}
 
+
+		public List<TblDocumentos> Obtener(string identificacion_empresa)
+		{
+			try
+			{
+				var respuesta = (from datos in context.TblDocumentos
+								 where datos.StrEmpresaFacturador.Equals(identificacion_empresa)
+								 select datos
+								 );
+
+				return respuesta.ToList();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
 		#endregion
 
 
