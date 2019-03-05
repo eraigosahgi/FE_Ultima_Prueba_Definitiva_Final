@@ -30,6 +30,9 @@ using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
 using System.Data.Linq.SqlClient;
 using System.Text.RegularExpressions;
 using System.Data.Entity;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -1114,6 +1117,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				DocumentoRespuesta obj_documento = new DocumentoRespuesta();
 
 				obj_documento.Aceptacion = (respuesta.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode()) ? AdquirienteRecibo.Pendiente.GetHashCode() : respuesta.IntAdquirienteRecibo;
+				obj_documento.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(respuesta.IntAdquirienteRecibo));
 				obj_documento.CodigoRegistro = respuesta.StrObligadoIdRegistro;
 				obj_documento.Cufe = respuesta.StrCufe;
 				obj_documento.DocumentoTipo = respuesta.IntDocTipo;
@@ -1708,6 +1712,129 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			});
 		}
 		#endregion
+
+
+		public List<TblDocumentos> ObtenerDocumentosValidarEmail()
+		{
+
+			try
+			{
+				int estado_recibo = Convert.ToInt32(AdquirienteRecibo.Enviado.GetHashCode());
+
+				var respuesta = (from datos in context.TblDocumentos
+								 where datos.IntAdquirienteRecibo == (estado_recibo)
+								 select datos
+								 );
+
+				return respuesta.ToList();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+
+		}
+
+		public async Task SondaDocumentosValidarEmail()
+		{
+			try
+			{
+				var Tarea = TareaDocumentosValidarEmail();
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+
+		}
+
+		public async Task TareaDocumentosValidarEmail()
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
+				List<TblDocumentos> datos = ObtenerDocumentosValidarEmail();
+
+				foreach (TblDocumentos item in datos)
+				{
+					try
+					{
+
+						MensajeValidarEmail respuesta_consulta = new MensajeValidarEmail();
+						Ctl_DocumentosAudit documento_auditoria = new Ctl_DocumentosAudit();
+
+						respuesta_consulta = documento_auditoria.ObtenerResultadoEmail(item.StrIdSeguridad);
+
+						if (respuesta_consulta.EmailEnviado != null)
+						{
+							if (MensajeIdResultado.Entregado.GetHashCode().Equals(respuesta_consulta.IdResultado))
+							{
+								item.IntAdquirienteRecibo = (short)AdquirienteRecibo.Entregado.GetHashCode();
+								item.DatAdquirienteFechaRecibo = respuesta_consulta.Recibido;
+							}
+							else if (MensajeIdResultado.NoEntregado.GetHashCode().Equals(respuesta_consulta.IdResultado))
+							{
+								item.IntAdquirienteRecibo = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
+								item.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
+								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+								List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(item, item.TblEmpresasAdquiriente.StrTelefono, respuesta_consulta.EmailEnviado, respuesta_consulta.Estado, item.StrIdSeguridad.ToString());
+
+							}
+							else
+							{
+								item.IntAdquirienteRecibo = (short)AdquirienteRecibo.Enviado.GetHashCode();
+								item.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
+
+							}
+						}
+						else
+						{
+
+							item.IntAdquirienteRecibo = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
+							item.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
+							respuesta_consulta.Estado = string.Empty;
+							var objeto = (dynamic)null;
+							objeto = Ctl_Documento.ConvertirServicio(item, true);
+							string email_objeto = string.Empty;
+							string telefono_objeto = string.Empty;
+							if (item.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+							{
+								email_objeto = objeto.DatosFactura.DatosAdquiriente.Email;
+								telefono_objeto = objeto.DatosFactura.DatosAdquiriente.Telefono;
+							}
+
+							if (item.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+							{
+								email_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+								telefono_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Telefono;
+							}
+
+							if (item.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+							{
+								email_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Email;
+								telefono_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Telefono;
+							}
+							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(item, telefono_objeto, email_objeto, respuesta_consulta.Estado, item.StrIdSeguridad.ToString());
+
+
+						}
+
+
+						Ctl_Documento ctl_documento = new Ctl_Documento();
+						ctl_documento.Actualizar(item);
+					}
+					catch (Exception excepcion)
+					{
+						LogExcepcion.Guardar(excepcion);
+					}
+
+				}
+
+			});
+		}
+
 	}
 
 }

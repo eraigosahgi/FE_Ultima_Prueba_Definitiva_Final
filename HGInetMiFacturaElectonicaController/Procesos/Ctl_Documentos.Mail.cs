@@ -8,6 +8,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					LogExcepcion.Guardar(excepcion);
 					//Falla el envio de correo por algun motivo de la plataforma de servicios o Mailjet por lo tanto se asigna para notificar al Facturador
-					datos_retorno.Estado = string.Empty;
+					datos_retorno.IdResultado = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
 				}
 
 				//documento_result.IdMensaje = mensajes[0].Data[0].MessageID;
@@ -89,12 +90,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 				}
 
-
-
 				//Consulta el Estado del correo enviado
 				try
 				{
 					email = new Ctl_EnvioCorreos();
+
 					datos_retorno = email.ConsultarCorreo((long)mensajes[0].Data[0].MessageID);
 
 				}
@@ -103,18 +103,28 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error consultando el estado del correo enviado al adquiriente. Detalle: {0} -", ex.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, ex.InnerException);
 				}
 
-				if (AdquirienteRecibo.Enviado.ToString().Equals(datos_retorno.Estado))
+				if (MensajeIdResultado.Entregado.GetHashCode().Equals(datos_retorno.IdResultado))
 				{
-					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.Enviado.GetHashCode();
+					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.Entregado.GetHashCode();
 					documentoBd.DatAdquirienteFechaRecibo = datos_retorno.Recibido;
+					respuesta.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(documentoBd.IntAdquirienteRecibo));
 					//respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
 				}
-				else
+				else if (MensajeIdResultado.NoEntregado.GetHashCode().Equals(datos_retorno.IdResultado))
 				{
 					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
 					documentoBd.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(datos_retorno.Estado)) ? Fecha.GetFecha() : datos_retorno.Recibido;
 					//respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
+					respuesta.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(documentoBd.IntAdquirienteRecibo));
 					List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documentoBd, documento_obj.DatosAdquiriente.Telefono, documento_obj.DatosAdquiriente.Email, datos_retorno.Estado, respuesta.IdPeticion.ToString());
+				}
+				else
+				{
+					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.Enviado.GetHashCode();
+					documentoBd.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(datos_retorno.Estado)) ? Fecha.GetFecha() : datos_retorno.Recibido;
+					//respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
+					respuesta.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(documentoBd.IntAdquirienteRecibo));
+
 				}
 
 

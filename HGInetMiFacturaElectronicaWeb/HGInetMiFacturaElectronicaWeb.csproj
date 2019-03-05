@@ -2804,6 +2804,7 @@
     <Content Include="Views\Pages\SondaCrearPlanes.aspx" />
     <Content Include="Views\Pages\SondadeNotificaciones.aspx" />
     <Content Include="Views\Pages\SondaResoluciones.aspx" />
+    <Content Include="Views\Pages\SondaValidarEmail.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
     <Content Include="Views\ReportDesigner\XmlReporteBase.xml">
       <SubType>Designer</SubType>
@@ -3220,6 +3221,13 @@
     <Compile Include="Views\Pages\SondaResoluciones.aspx.designer.cs">
       <DependentUpon>SondaResoluciones.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\SondaValidarEmail.aspx.cs">
+      <DependentUpon>SondaValidarEmail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaValidarEmail.aspx.designer.cs">
+      <DependentUpon>SondaValidarEmail.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\ReportDesigner\ReportDesignerWeb.aspx.cs">
       <DependentUpon>ReportDesignerWeb.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3340,7 +3348,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

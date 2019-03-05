@@ -317,7 +317,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
 					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Pendiente.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Leido.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Enviado.GetHashCode()) ? true : false,
+					CamposVisibles = (d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Pendiente.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Entregado.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Leido.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Enviado.GetHashCode()) ? true : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
 					Estatus = Pago.VerificarSaldo(id_seguridad),

@@ -68,9 +68,14 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string DescripcionProceso { get; set; }
 
 		/// <summary>
-		/// Indica la aceptación o no del documento. 0: Pendiente, 1: Aceptación, 2: Rechazo
+		/// Indica la aceptación o no del documento. 0: Pendiente, 1: Aceptación, 2: Rechazo, 3: Aprobado Tácito, 4: Entregado, 5: Leído, 6: No Entregado, 7: Enviado
 		/// </summary>
 		public int Aceptacion { get; set; }
+
+		/// <summary>
+		/// Descripción de la aceptación o no del documento. 0: Pendiente, 1: Aceptación, 2: Rechazo, 3: Aprobado Tácito, 4: Entregado, 5: Leído, 6: No Entregado, 7: Enviado
+		/// </summary>
+		public string DescripcionAceptacion { get; set; }
 
 		/// <summary>
 		/// Observaciones del Adquiriente de acuerdo con el rechazo del documento.
