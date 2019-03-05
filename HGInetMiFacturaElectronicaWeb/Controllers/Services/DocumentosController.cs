@@ -385,6 +385,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "");
 
+				if (datos.FirstOrDefault().IntAdquirienteRecibo == (short)AdquirienteRecibo.NoEntregado.GetHashCode())
+				{
+					ctl_documento = new Ctl_Documento();
+					datos.FirstOrDefault().IntAdquirienteRecibo = (short)AdquirienteRecibo.Enviado.GetHashCode();
+					ctl_documento.Actualizar(datos.FirstOrDefault());
+				}
 				return Ok(respuesta);
 			}
 			catch (Exception excepcion)
