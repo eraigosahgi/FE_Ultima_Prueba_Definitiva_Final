@@ -245,7 +245,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 		}
 	}).dxRadioGroup("instance");
 
-	RadioGroup.option("value", TiposFiltro[3].Codigo);
+	RadioGroup.option("value", TiposFiltro[0].Codigo);
 
 
 	//Realiza la consulta de indicadores según los rangos de fecha

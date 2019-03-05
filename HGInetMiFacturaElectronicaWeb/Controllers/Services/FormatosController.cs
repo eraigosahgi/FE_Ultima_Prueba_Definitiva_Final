@@ -152,9 +152,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Sesion.ValidarSesion();
 				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
-				clase_formatos.EnviarFormatoPrueba(Sesion.DatosEmpresa, id_formato, identificacion_empresa, TipoFormato.FormatoPDF.GetHashCode(), email_destino);
+				bool respuesta_envio = clase_formatos.EnviarFormatoPrueba(Sesion.DatosEmpresa, id_formato, identificacion_empresa, TipoFormato.FormatoPDF.GetHashCode(), email_destino);
 
-				return Ok();
+				return Ok(respuesta_envio);
 			}
 			catch (Exception excepcion)
 			{

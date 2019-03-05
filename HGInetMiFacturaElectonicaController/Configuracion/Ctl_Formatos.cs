@@ -629,7 +629,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				MemoryStream datos = new MemoryStream(formato);
 				report.LoadLayoutFromXml(datos);
 
-
 				//Obtiene los datos del último documento generado
 				Ctl_Documento clase_documento = new Ctl_Documento();
 				TblDocumentos datos_doc_bd = clase_documento.Obtener(datos_formato.StrEmpresa).OrderByDescending(f => f.DatFechaIngreso).FirstOrDefault();
