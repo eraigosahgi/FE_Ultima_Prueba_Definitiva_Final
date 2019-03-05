@@ -7,6 +7,9 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -258,6 +261,71 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+
+		#region Sonda de Email
+		/// <summary>
+		/// Retorna la respuesta de email de un documento
+		/// </summary>
+		/// <param name="IdSeguridad">Id de seguridad del documento</param>
+		/// <returns></returns>
+		public MensajeValidarEmail ObtenerResultadoEmail(Guid IdSeguridad)
+		{
+			try
+			{
+				List<TblAuditDocumentos> ListaEmail = this.GetFilter(x => (x.StrIdSeguridad.Equals(IdSeguridad)) && (x.IntIdProceso.Equals(8))).OrderBy(x=> x.DatFecha).ToList();				
+				MensajeResumen datos_retorno = new MensajeResumen();
+
+				MensajeValidarEmail MailPlataforma = new MensajeValidarEmail();
+				MensajeValidarEmail MailReenvio = new MensajeValidarEmail();
+				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+				foreach (TblAuditDocumentos Email in ListaEmail)
+				{
+					try
+						{
+						if (Email.StrResultadoProceso.Contains("MessageID") )
+						{
+							email = new Ctl_EnvioCorreos();
+							Email.StrResultadoProceso = Email.StrResultadoProceso.Replace("[", "").Replace("]", "");
+							dynamic datos = JsonConvert.DeserializeObject(Email.StrResultadoProceso);
+							
+							datos_retorno = email.ConsultarCorreo((long)datos.MessageID);
+							//Si ya tengo una respuesta se la asigno a este 
+							if(MailPlataforma.EmailEnviado == null && datos_retorno.Estado !=null) {							
+								MailPlataforma.EmailEnviado = (string)datos.Email; 
+								MailPlataforma.Estado = datos_retorno.Estado;
+								MailPlataforma.IdResultado = datos_retorno.IdResultado;
+								MailPlataforma.Recibido = datos_retorno.Recibido;
+								if (MailPlataforma.IdResultado == MensajeIdResultado.Entregado.GetHashCode())
+								{
+									return MailPlataforma;
+								}
+							}
+
+							if(datos_retorno.IdResultado== MensajeIdResultado.Entregado.GetHashCode()) {
+								MailReenvio.EmailEnviado = (string)datos.Email;
+								MailReenvio.Estado = datos_retorno.Estado;
+								MailReenvio.IdResultado = datos_retorno.IdResultado;
+								MailReenvio.Recibido = datos_retorno.Recibido;
+								return MailReenvio;
+							}							
+						}
+					}
+					catch (Exception)
+					{}
+				}				
+
+				return MailPlataforma;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		} 
+		#endregion
+
+
+
 
 	}
 }
