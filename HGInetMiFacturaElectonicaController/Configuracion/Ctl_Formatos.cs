@@ -15,6 +15,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
+using LibreriaGlobalHGInet.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -619,14 +620,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				TblFormatos datos_formato = Obtener(id_formato, identificacion_empresa, tipo_formato);
 				XtraReportDesigner report = new XtraReportDesigner();
 
-				//Carga el diseño en el control de reporte
-				MemoryStream datos = new MemoryStream(datos_formato.FormatoTmp);
+				byte[] formato = null;
+				if (datos_formato.FormatoTmp != null)
+					formato = datos_formato.FormatoTmp;
+				else
+					formato = datos_formato.Formato;
+
+				MemoryStream datos = new MemoryStream(formato);
 				report.LoadLayoutFromXml(datos);
+
 
 				//Obtiene los datos del último documento generado
 				Ctl_Documento clase_documento = new Ctl_Documento();
 				TblDocumentos datos_doc_bd = clase_documento.Obtener(datos_formato.StrEmpresa).OrderByDescending(f => f.DatFechaIngreso).FirstOrDefault();
-				string contenido_xml = Archivo.ObtenerContenido("http://localhost:61421/dms/a18fe701-fbe2-4f09-985e-0cb0305500bf/XmlFacturaE/face_f0811015602C0000000096.xml");
+				string contenido_xml = Archivo.ObtenerContenido(datos_doc_bd.StrUrlArchivoUbl);
 
 				// valida el contenido del archivo
 				if (string.IsNullOrWhiteSpace(contenido_xml))
@@ -646,7 +653,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				// ruta física del pdf.
-				string ruta_archivo = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, datos_formato.TblEmpresas.StrIdSeguridad.ToString(), "FormatosPdf");
+				string ruta_archivo = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, datos_formato.TblEmpresas.StrIdSeguridad.ToString(), RecursoDms.CarpetaFormatosPdf);
 				// valida la existencia de la carpeta
 				ruta_archivo = Directorio.CrearDirectorio(ruta_archivo);
 
@@ -654,7 +661,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(nombre_archivo, ruta_archivo);
 				x.GenerarPdfDev(report, empresa_autenticada.StrIdentificacion);
 
-				string url_archivo = string.Format("{0}/{1}/{2}/{3}.pdf", plataforma_datos.RutaDmsPublica, datos_formato.TblEmpresas.StrIdSeguridad.ToString(), "FormatosPdf", nombre_archivo);
+				string url_archivo = string.Format("{0}/{1}/{2}/{3}.pdf", plataforma_datos.RutaDmsPublica, datos_formato.TblEmpresas.StrIdSeguridad.ToString(), RecursoDms.CarpetaFormatosPdf, nombre_archivo);
 				byte[] bytes_pdf = Archivo.ObtenerWeb(url_archivo);
 				string ruta_fisica_pdf = Convert.ToBase64String(bytes_pdf);
 
