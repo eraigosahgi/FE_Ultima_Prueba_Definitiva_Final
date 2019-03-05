@@ -676,23 +676,23 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 										dataField: "DatFecha",
 										dataType: "date",
 										format: "yyyy-MM-dd",
-										cssClass: "gridHGI"
+										width: "90px",										
 									},
 									{
 										caption: "Plan",
 										dataField: "IntNumTransaccCompra",
-										width: "60px",
+										width: "60px",										
 									},
 									{
 										caption: "Procesadas",
 										dataField: "IntNumTransaccProcesadas",
-										width: "60px",
+										width: "60px",										
 									},
 									  {
 									  	dataField: "Porcentaje",
 									  	caption: "Consumo %",
 									  	alignment: "center",
-									  	width: 100,
+									  	width: 100,									  	
 									  	cellTemplate: CrearGraficoBarra,
 									  	cssClass: "bullet"
 									  },
@@ -701,22 +701,20 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 										dataField: "DatFechaVencimiento",
 										dataType: "date",
 										format: "yyyy-MM-dd",
-										cssClass: "gridHGI"
+										width: "90px",										
 									},
 									  {
 									  	dataField: "porcentajeFecha",
 									  	caption: "Venc. %",
 									  	alignment: "center",
 									  	width: 100,
-
 									  	cellTemplate: CrearGraficoBarraFecha,
 									  	cssClass: "bullet"
 									  },
 									  {
 
 									  	caption: 'Tipo',
-									  	dataField: 'CodCompra',
-									  	cssClass: "gridHGI",
+									  	dataField: 'CodCompra',									  	
 									  	alignment: "left",
 									  	cellTemplate: function (container, options) {
 									  		$("<div style='text-align:left'>")
@@ -728,7 +726,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 									  	caption: 'Estado',
 									  	dataField: 'Estado',
-									  	width: "40px",
+									  	width: "40px",									  	
 									  	cellTemplate: function (container, options) {
 									  		$("<div style='text-align:center'>")
 												.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
