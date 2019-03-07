@@ -13,10 +13,25 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 		protected void Page_Load(object sender, EventArgs e)
 		{
 
+			try
+			{
+				Procesar();
+			}
+			catch (Exception ex)
+			{
+				lblResultado.Text = string.Format("El proceso genero un error {0}", ex.Message);
+			}
+		}
+
+		public void Procesar()
+		{
+
 			Ctl_Documento ctl_documento = new Ctl_Documento();
 
 			var Tarea1 = ctl_documento.SondaDocumentosValidarEmail();
 			lblResultado.Text = string.Format("Termino");
 		}
 	}
+
+
 }
