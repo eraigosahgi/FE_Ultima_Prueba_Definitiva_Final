@@ -662,7 +662,6 @@
             <End Role="TblPerfiles" EntitySet="TblPerfiles" />
             <End Role="TblOpcionesPerfil" EntitySet="TblOpcionesPerfil" />
           </AssociationSet>
-          <EntitySet Name="sysdiagrams" EntityType="Modelo.sysdiagrams" />
           <EntitySet Name="TblEmpresasPasarela" EntityType="Modelo.TblEmpresasPasarela" />
           <EntitySet Name="TblPagosElectronicos" EntityType="Modelo.TblPagosElectronicos" />
           <EntitySet Name="TblEmpresasResoluciones" EntityType="Modelo.TblEmpresasResoluciones" />
@@ -851,16 +850,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
         <EntityType Name="TblEmpresasPasarela">
           <Key>
             <PropertyRef Name="StrEmpresa" />
