@@ -37,11 +37,13 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public System.Guid StrIdSeguridad { get; set; }
         public Nullable<System.DateTime> DatFechaCambioClave { get; set; }
         public Nullable<System.Guid> StrIdCambioClave { get; set; }
+        public Nullable<System.Guid> StrToken { get; set; }
+        public Nullable<System.DateTime> DatFechaUltimoIngreso { get; set; }
     
+        public virtual TblEmpresas TblEmpresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblOpcionesUsuario> TblOpcionesUsuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
-        public virtual TblEmpresas TblEmpresas { get; set; }
     }
 }
