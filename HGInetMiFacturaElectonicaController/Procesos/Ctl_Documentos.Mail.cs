@@ -32,14 +32,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				documento_obj = documento;
 
 				//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
-				if (adquiriente_nuevo == true)
+				try
 				{
-					email.Bienvenida(adquiriente, adquiriente_usuario);
+					if (adquiriente_nuevo == true)
+					{
+						email.Bienvenida(adquiriente, adquiriente_usuario);
+					}
+				}
+				catch (Exception excepcion)
+				{
+					LogExcepcion.Guardar(excepcion);
 				}
 
 				//Se agrega esto para guardar correctamente el estado en la Auditoria
-				if (respuesta.EstadoDian.EstadoDocumento.Equals(EstadoDocumentoDian.Aceptado.GetHashCode()))
-					documentoBd.IntIdEstado = Convert.ToInt16(ProcesoEstado.EnvioEmailAcuse.GetHashCode());
+				if (respuesta.EstadoDian != null)
+				{
+					if (respuesta.EstadoDian.EstadoDocumento.Equals(EstadoDocumentoDian.Aceptado.GetHashCode()))
+						documentoBd.IntIdEstado = Convert.ToInt16(ProcesoEstado.EnvioEmailAcuse.GetHashCode());
+				}
 
 
 				//Envia correo al adquiriente que tiene el objeto
