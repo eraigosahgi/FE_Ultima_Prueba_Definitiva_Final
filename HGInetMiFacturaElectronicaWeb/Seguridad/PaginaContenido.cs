@@ -132,7 +132,7 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
 			}
 			catch (Exception excepcion)
 			{
-				if (excepcion.Message.Equals("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente."))
+				if (excepcion.Message.Equals("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.") || excepcion.Message.Equals("Se ha iniciado sesión desde otra ubicación."))
 				{
 					PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 					this.RutaRedireccionAlerta = plataforma.RutaPublica;

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using HGInetMiFacturaElectonicaData.ModeloServicio.General;
+using System.Net;
+using System.Net.Sockets;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -207,6 +209,61 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 
+		/// <summary>
+		/// Genera un nuevo token en la tabla de usuario y actualiza la fecha de ultimo ingreso
+		/// </summary>
+		/// <param name="idseguridad">id de seguridad del usuario</param>		
+		/// <returns></returns>
+		public TblUsuarios ActualizarToken(Guid idseguridad)
+		{
+			TblUsuarios usuario = (from item in context.TblUsuarios
+								   where item.StrIdSeguridad == idseguridad
+								   select item).FirstOrDefault();
+
+			usuario.StrToken = Guid.NewGuid();
+			usuario.DatFechaUltimoIngreso = Fecha.GetFecha();
+
+			TblUsuarios usuarioclave = Actualizar_usuario(usuario);
+
+			return usuario;
+		}
+
+
+
+		/// <summary>
+		/// Valida el token en la tabla de usuario
+		/// </summary>
+		/// <param name="idseguridad">id de seguridad del usuario</param>		
+		/// <returns></returns>
+		public bool ValidarToken(string Empresa, Guid Idseguridad,Guid Token)
+		{
+			try
+			{
+				TblUsuarios usuario = (from item in context.TblUsuarios
+									   where item.StrIdSeguridad == Idseguridad
+									   && item.StrEmpresa.Equals(Empresa)
+									   && item.StrToken == Token
+									   select item).FirstOrDefault();
+
+				if (usuario != null)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+			
+		}
+
+
+
+
 
 		/// <summary>
 		/// Actualiza el usuario en la base ded atos
@@ -351,16 +408,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (respuesta.Count > 0)
 				{
 					///Valida si el usuario esta activo
-					if (respuesta[0].IntIdEstado != 1)
+					if (respuesta.FirstOrDefault().IntIdEstado != 1)
 						throw new ApplicationException("Usuario Inactivo");
-					
+
 					// Actualiza la clave de MD5 a SHA512
-					if (respuesta[0].StrClave.Equals(clave))
-						ActualizarClave(respuesta[0].StrIdSeguridad, claveSha512);
+					if (respuesta.FirstOrDefault().StrClave.Equals(clave))
+					{
+						ActualizarClave(respuesta.FirstOrDefault().StrIdSeguridad, claveSha512);
+					}
+					//Actualiza el token del usuario
+					ActualizarToken(respuesta.FirstOrDefault().StrIdSeguridad);
+
 				}
 				else
 					throw new ApplicationException("Datos de autenticación inválidos.");
-
+				
 				return respuesta.ToList();
 			}
 			catch (Exception excepcion)

@@ -1923,6 +1923,7 @@
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
+    <Content Include="Scripts\Pages\ModalAuditoria.js" />
     <Content Include="Scripts\Pages\ModalConsultaProveedores.js" />
     <Content Include="Scripts\Pages\ModalDetalleEmpresa.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
@@ -3348,7 +3349,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61421/</IISUrl>
+          <IISUrl>http://localhost:61443/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

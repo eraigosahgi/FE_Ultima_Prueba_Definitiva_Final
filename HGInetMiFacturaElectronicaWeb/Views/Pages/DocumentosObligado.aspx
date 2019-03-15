@@ -9,7 +9,8 @@
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201914"></script>
 	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201914"></script>
 	<script src="../../Scripts/Pages/DocumentosObligado.js?vjs201914"></script>
-	<div data-ng-app="DocObligadoApp">
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201914"></script>
+	<div data-ng-app="App">
 
 		<!-- CONTENEDOR PRINCIPAL -->
 		<div data-ng-controller="DocObligadoController">

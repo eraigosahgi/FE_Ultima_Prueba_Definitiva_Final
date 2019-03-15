@@ -6,10 +6,10 @@
 
     <!-- JS DocumentosAdquiriente-->
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201914"></script>
-    <script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs201914"></script>
+    <script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs201914"></script>	
 
     <!-- CONTENEDOR PRINCIPAL -->
-    <div data-ng-app="DocAdquirienteApp">
+    <div data-ng-app="App">
 
 
         <!--        <div data-ng-include="'ModalPagos.aspx'"></div>-->
@@ -105,7 +105,7 @@
             <!--/DATOS -->
         </div>
         <!--Aplicacion de Pagos-->
-        <div data-ng-include="'ModalPagos.aspx'"></div>
+        <div data-ng-include="'ModalPagos.aspx'"></div>		
         <!--Aplicacion de Pagos-->
     </div>
 </asp:Content>

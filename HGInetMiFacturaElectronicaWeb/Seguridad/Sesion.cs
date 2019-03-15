@@ -75,21 +75,43 @@ namespace HGInetMiFacturaElectronicaWeb.Seguridad
         public static void ValidarSesion()
         {
             HttpContext context = HttpContext.Current;
-
-            if (context.Session == null)
+			
+			if (context.Session == null)
                 throw new ApplicationException("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.");
 
 
             if (context.Session["datos_empresa"] == null || context.Session["datos_usuario"] == null)
                 throw new ApplicationException("No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.");
 
-        }
 
-        /// <summary>
-        /// Guarda los datos del usuario en la sesión web
-        /// </summary>
-        /// <returns>datos de autenticacion</returns>
-        public void GuardarSesionWeb(System.Guid id_seguridad)
+			dynamic usuario = context.Session["datos_usuario"];
+
+			Ctl_Usuario controlador = new Ctl_Usuario();
+			if (!controlador.ValidarToken(usuario.StrEmpresa, usuario.StrIdSeguridad, usuario.StrToken ))
+				throw new ApplicationException("Se ha iniciado sesión desde otra ubicación.");
+		}
+
+
+
+
+		/// <summary>
+		/// Limpiar Session
+		/// </summary>
+		public static void LimpiarSesion()
+		{
+			HttpContext context = HttpContext.Current;
+
+			context.Session["datos_empresa"] = null;			
+		}
+
+
+
+
+		/// <summary>
+		/// Guarda los datos del usuario en la sesión web
+		/// </summary>
+		/// <returns>datos de autenticacion</returns>
+		public void GuardarSesionWeb(System.Guid id_seguridad)
         {
             try
             {

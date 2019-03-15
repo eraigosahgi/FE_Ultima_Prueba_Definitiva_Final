@@ -34,7 +34,7 @@ namespace HGInetMiFacturaElectonicaController
 
                 PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
                                 
-                List<MensajeEnvioSms> respuesta = Ctl_CloudMensajeria.EnviarSms(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes_sms);
+                List<MensajeEnvioSms> respuesta = Ctl_CloudMensajeria.EnviarSms(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes_sms, plataforma.IdAplicacionHGInetMail);
 
             }
             catch (Exception excepcion)

@@ -86,7 +86,7 @@
 
 	<!-- JS Localización -->
 	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
-	<script src="../../Scripts/config.js?vjs201914"></script>
+	<script src="../../Scripts/config.js?vjs201915"></script>
 	<script src="../../Scripts/Services/Loading.js?vjs201914"></script>
 
 	<style>
@@ -128,6 +128,24 @@
 
 
 		});
+
+
+		function ErrorSesion() {			
+			swal({
+				title: 'Alerta',
+				text: 'Se ha iniciado sesión desde otra ubicación.',
+				type: 'warning',
+				confirmButtonColor: '#FF7043',
+				confirmButtonText: 'Aceptar',
+				animation: 'pop',
+				html: true,
+				closeOnConfirm: false
+			});
+
+			setTimeout(IrAPaginaPrincipal, 3000);
+		}
+
+
 
 		function inicio() {
 			window.location.assign("/Views/Pages/Inicio.aspx");

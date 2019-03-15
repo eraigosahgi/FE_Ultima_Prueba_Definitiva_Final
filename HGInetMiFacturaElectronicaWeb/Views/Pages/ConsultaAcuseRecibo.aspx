@@ -7,9 +7,10 @@
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201914"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201914"></script>	
 	<script src="../../Scripts/Pages/ConsultaAcuse.js?vjs201914"></script>
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201914"></script>
 
 	<!-- CONTENEDOR PRINCIPAL -->
-	<div data-ng-app="AcuseConsultaApp" data-ng-controller="AcuseConsultaController">
+	<div data-ng-app="App" data-ng-controller="AcuseConsultaController">
 
 		<!-- FILTROS DE BÚSQUEDA -->
 
@@ -129,6 +130,8 @@
 				</div>
 			</div>
 		</div>
+
+		<div data-ng-include="'AuditoriaDocumento.aspx'"></div>
 	</div>
 	<!-- /CONTENEDOR PRINCIPAL -->
 

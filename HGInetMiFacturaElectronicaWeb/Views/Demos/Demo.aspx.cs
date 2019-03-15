@@ -2,6 +2,7 @@
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Demos
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-			Ctl_Empresa controlador = new Ctl_Empresa();			
-			var lista = controlador.ObtenerAdquirientes("811015602");
-
+			Ctl_DocumentosAudit controlador = new Ctl_DocumentosAudit();
+			MensajeValidarEmail objteto = controlador.ObtenerResultadoEmail(Guid.Parse("486E1530-6FBB-471C-8552-E8D9D9C693D3"));
 		}
     }
 }

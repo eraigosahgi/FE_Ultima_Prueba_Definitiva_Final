@@ -7,6 +7,8 @@ using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -32,6 +34,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 					// obtiene los datos de la sesión para mostrarlos
 					if (Sesion.DatosEmpresa != null && Sesion.DatosUsuario != null)
 					{
+											
 						// carga los datos de la empresa en la página master
 						TblEmpresas datos_empresa = Sesion.DatosEmpresa;
 						LblNombreEmpresa.InnerText = datos_empresa.StrRazonSocial;
@@ -90,6 +93,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 			}
 			catch (Exception excepcion)
 			{
+
+				
+
 				//Controla la session enviando la url a la pagina inicial para iniciar nuevamente la session
 				//PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 				//string script = @"<script type='text/javascript'>control_session('" + plataforma.RutaPublica + "');</script>";

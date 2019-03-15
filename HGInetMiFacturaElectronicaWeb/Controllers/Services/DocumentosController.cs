@@ -121,7 +121,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 				Sesion.ValidarSesion();
-
+			
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();

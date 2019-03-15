@@ -17,6 +17,9 @@ var myInterceptor = function ($q) {
             if (rejection.data.ExceptionMessage == "No se encontraron los datos de autenticación en la sesión; ingrese nuevamente.") {
                 sesionexpiro();
             }
+            if (rejection.data.ExceptionMessage == "Se ha iniciado sesión desde otra ubicación.") {
+            	OtraUbicacion();
+            }
             return $q.reject(rejection);
         }
     }

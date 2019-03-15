@@ -9,10 +9,10 @@
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201914"></script>
 	<script src="../../Scripts/Pages/ProcesarDocumentos.js?vjs201914"></script>
 	<script src="../../Scripts/Services/Loading.js?vjs201914"></script>
-
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201914"></script>
 
 	<!-- CONTENEDOR PRINCIPAL -->
-	<div data-ng-app="ProcesarDocumentosApp" data-ng-controller="ProcesarDocumentosController" data-ng-init="total=0">
+	<div data-ng-app="App" data-ng-controller="ProcesarDocumentosController" data-ng-init="total=0">
 		<!-- DATOS -->
 		<div class="col-md-12">
 			<div class="panel panel-white">
@@ -74,8 +74,7 @@
 			</div>
 		</div>
 
-
+		<div data-ng-include="'AuditoriaDocumento.aspx'"></div>
 	</div>
 	<!-- /CONTENEDOR PRINCIPAL -->
-
 </asp:Content>

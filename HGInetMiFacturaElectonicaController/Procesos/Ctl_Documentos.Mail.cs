@@ -60,7 +60,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception excepcion)
 				{
-
 					LogExcepcion.Guardar(excepcion);
 					//Falla el envio de correo por algun motivo de la plataforma de servicios o Mailjet por lo tanto se asigna para notificar al Facturador
 					datos_retorno.IdResultado = (short)AdquirienteRecibo.NoEntregado.GetHashCode();

@@ -67,8 +67,15 @@ namespace HGInetMiFacturaElectonicaData
             set { this["RutaDmsPublica"] = value; }
         }
 
+		[ConfigurationProperty("IdAplicacionHGInetMail", DefaultValue = "", IsKey = true, IsRequired = true)]
+		public string IdAplicacionHGInetMail
+		{
+			get { return (string)this["IdAplicacionHGInetMail"]; }
+			set { this["IdAplicacionHGInetMail"] = value; }
+		}
 
-        public PlataformaData() { }
+
+		public PlataformaData() { }
 
 	}
 }
