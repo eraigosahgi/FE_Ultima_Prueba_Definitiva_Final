@@ -654,23 +654,23 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 										dataField: "DatFecha",
 										dataType: "date",
 										format: "yyyy-MM-dd",
-										width: "90px",										
+										width: "90px",
 									},
 									{
 										caption: "Plan",
 										dataField: "IntNumTransaccCompra",
-										width: "60px",										
+										width: "60px",
 									},
 									{
 										caption: "Procesadas",
 										dataField: "IntNumTransaccProcesadas",
-										width: "60px",										
+										width: "60px",
 									},
 									  {
 									  	dataField: "Porcentaje",
 									  	caption: "Consumo %",
 									  	alignment: "center",
-									  	width: 100,									  	
+									  	width: 100,
 									  	cellTemplate: CrearGraficoBarra,
 									  	cssClass: "bullet"
 									  },
@@ -679,7 +679,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 										dataField: "DatFechaVencimiento",
 										dataType: "date",
 										format: "yyyy-MM-dd",
-										width: "90px",										
+										width: "90px",
 									},
 									  {
 									  	dataField: "porcentajeFecha",
@@ -692,7 +692,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 									  {
 
 									  	caption: 'Tipo',
-									  	dataField: 'CodCompra',									  	
+									  	dataField: 'CodCompra',
 									  	alignment: "left",
 									  	cellTemplate: function (container, options) {
 									  		$("<div style='text-align:left'>")
@@ -704,7 +704,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 									  	caption: 'Estado',
 									  	dataField: 'Estado',
-									  	width: "40px",									  	
+									  	width: "40px",
 									  	cellTemplate: function (container, options) {
 									  		$("<div style='text-align:center'>")
 												.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
@@ -976,9 +976,10 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 		}
 
 		setTimeout(Circulo, 4000);
+
 		setTimeout(function () {
 			$('#wait').hide();
-		}, 4000);
+		}, 6000);
 	};
 
 
@@ -1280,7 +1281,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				try {
 					if (options.columnIndex == 2 || options.columnIndex == 3) {
 						if (fieldData) {
-							var inicial = FormatoNumber.go(fieldData);
+							var inicial = FormatoNumSinDecimales.go(fieldData);
 							options.cellElement.html(inicial);
 						}
 					}
@@ -1377,7 +1378,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					try {
 						if (options.columnIndex == 3 || options.columnIndex == 4 || options.columnIndex == 5) {
 							if (fieldData) {
-								var inicial = FormatoNumber.go(fieldData);
+								var inicial = FormatoNumSinDecimales.go(fieldData);
 								options.cellElement.html(inicial);
 							}
 						}
@@ -1392,8 +1393,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				columns: [{
 					caption: "",
 					dataField: "RazonSocial",
-					cssClass: "col-sm-1 col-md-1",
-					width: 40,
+					width: '6%',
 					cellTemplate: function (container, options) {
 
 						var indicador = "";
@@ -1416,22 +1416,22 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 			{
 				caption: "Identificación",
 				dataField: "Identificacion",
-				width: 160
+				width: '14%',
 			}, {
 				caption: "Razón Social",
 				dataField: "RazonSocial",
 			}, {
 				caption: "Valor Flujo Actual",
 				dataField: "ValorTotalDocumentos",
-				width: 160
+				width: '12%',
 			}, {
 				caption: "Flujo Anterior",
 				dataField: "CantidadAnterior",
-				width: 160
+				width: '12%',
 			}, {
 				caption: "Flujo Actual",
 				dataField: "CantidadActual",
-				width: 160
+				width: '12%',
 			}], summary: {
 				totalItems: [{
 					showInColumn: "ValorTotalDocumentos",

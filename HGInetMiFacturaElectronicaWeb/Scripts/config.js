@@ -91,6 +91,25 @@ var FormatoNumber = {
 	}
 }
 
+//Controla el formato de numeros Ejemplo: 1.222.333
+var FormatoNumSinDecimales = {
+	sepMil: ",", // separador para los miles  
+	formatear: function (num) {
+		num += '';
+		var splitStr = num.split('.');
+		var splitLeft = splitStr[0];
+		var regx = /(\d+)(\d{3})/;
+		while (regx.test(splitLeft)) {
+			splitLeft = splitLeft.replace(regx, '$1' + this.sepMil + '$2');
+		}
+		return splitLeft;
+	},
+	go: function (num) {
+		return this.formatear(num);
+	}
+}
+
+
 //Sirve para fitlar los datos de un Json
 function FiltrarMayorJson(data, condicion) {
 	var nuevoJson = [];
