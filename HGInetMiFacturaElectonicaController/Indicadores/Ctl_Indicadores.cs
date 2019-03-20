@@ -527,7 +527,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 											 {
 												 Identificacion = datos_movimiento.FirstOrDefault().movimiento.StrEmpresaAdquiriente,
 												 RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
-												 ValorTotalDocumentos = datos_movimiento.Sum(x => x.movimiento.IntVlrTotal),
+												 ValorTotalDocumentos = datos_movimiento.Sum(x => (x.movimiento.IntDocTipo == 3) ? -x.movimiento.IntVlrTotal : x.movimiento.IntVlrTotal),
 												 TotalDocumentos = datos_movimiento.Count(),
 											 }).OrderByDescending(d => d.TotalDocumentos).ToList();
 				}
@@ -542,7 +542,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 											 {
 												 Identificacion = datos_movimiento.FirstOrDefault().movimiento.StrEmpresaFacturador,
 												 RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
-												 ValorTotalDocumentos = datos_movimiento.Sum(x => x.movimiento.IntVlrTotal),
+												 ValorTotalDocumentos = datos_movimiento.Sum(x => (x.movimiento.IntDocTipo == 3) ? -x.movimiento.IntVlrTotal : x.movimiento.IntVlrTotal),
 												 TotalDocumentos = datos_movimiento.Count()
 											 }).OrderByDescending(d => d.TotalDocumentos).ToList();
 				}
