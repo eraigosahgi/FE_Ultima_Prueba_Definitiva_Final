@@ -41,14 +41,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				try
 				{   // procesa el documento
-					item_respuesta = Procesar(documento, consulta_documento);
-                    //Se hace validación para restar el documento de las transacciones procesadas de ese plan
-                    if (item_respuesta.IdProceso== ProcesoEstado.FinalizacionErrorDian.GetHashCode())
-                    {
-                        Ctl_PlanesTransacciones Controller = new Ctl_PlanesTransacciones();
-                        Controller.DescontarDocumentosFallidos(item_respuesta.IdPlan, 1);
-                    }
-
+					item_respuesta = Procesar(documento, consulta_documento);                   
 				}
 				catch (Exception excepcion)
 				{
