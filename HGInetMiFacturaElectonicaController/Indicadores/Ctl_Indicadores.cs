@@ -490,7 +490,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 																CantidadTransacciones = datos_compradores.Select(d => d.IntNumTransaccCompra).Sum(),
 																ValorCompras = datos_compradores.Select(d => d.IntValor).Sum(),
 																RazonSocial = datos_compradores.FirstOrDefault().TblEmpresas.StrRazonSocial
-															}).ToList().OrderByDescending(x => x.ValorCompras).Take(10).ToList();
+															}).ToList().OrderByDescending(x => x.ValorCompras).ToList();
 
 				return resumen_compradores;
 			}
