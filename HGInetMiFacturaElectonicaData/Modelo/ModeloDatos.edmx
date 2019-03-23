@@ -85,7 +85,7 @@
           <Property Name="IntEnvioMail" Type="bit" />
           <Property Name="IntValorSubtotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="IntValorNeto" Type="numeric" Precision="17" Scale="2" Nullable="false" />
-          <Property Name="InEstadoEnvio" Type="smallint" />
+          <Property Name="IntEstadoEnvio" Type="smallint" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -1222,7 +1222,7 @@
           <Property Name="IntEnvioMail" Type="Boolean" />
           <Property Name="IntValorSubtotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <Property Name="IntValorNeto" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
-          <Property Name="InEstadoEnvio" Type="Int16" />
+          <Property Name="IntEstadoEnvio" Type="Int16" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadEmisor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadReceptor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
@@ -1257,8 +1257,7 @@
         </Association>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
-          <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="*" >
-          </End>
+          <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="TblEmpresas">
               <PropertyRef Name="StrIdentificacion" />
@@ -1599,7 +1598,7 @@
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
-                <ScalarProperty Name="InEstadoEnvio" ColumnName="InEstadoEnvio" />
+                <ScalarProperty Name="IntEstadoEnvio" ColumnName="IntEstadoEnvio" />
                 <ScalarProperty Name="IntValorNeto" ColumnName="IntValorNeto" />
                 <ScalarProperty Name="IntValorSubtotal" ColumnName="IntValorSubtotal" />
                 <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />

@@ -32,7 +32,7 @@
         <AssociationConnector Association="Modelo.FK_TblUsuarios_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
-        <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="1.75" PointX="14.25" PointY="0.5" />
+        <EntityTypeShape EntityType="Modelo.TblDocumentos" Width="1.75" PointX="14" PointY="0.5" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" />
