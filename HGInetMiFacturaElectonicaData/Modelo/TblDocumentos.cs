@@ -55,7 +55,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public Nullable<bool> IntEnvioMail { get; set; }
         public decimal IntValorSubtotal { get; set; }
         public decimal IntValorNeto { get; set; }
-        public Nullable<short> IntEstadoEnvio { get; set; }
+        public short IntEstadoEnvio { get; set; }
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }
