@@ -246,7 +246,7 @@ function sesionexpiro() {
 function OtraUbicacion() {
 	swal({
 		title: 'Alerta',
-		text: 'Alguien accedió a tu cuenta desde otra ubicación, si no fuiste tu, te recomendamos que cambies tu contraseña',
+		text: 'Se ha iniciado sesión desde otra ubicación.',
 		type: 'warning',
 		confirmButtonColor: '#FF7043',
 		confirmButtonText: 'Aceptar',

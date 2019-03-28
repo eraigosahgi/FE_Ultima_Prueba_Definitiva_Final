@@ -248,14 +248,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			onValueChanged: function (data) {
 				Datos_obsrvaciones = data.value.toUpperCase();
 			}
-		})
-        .dxValidator({
-        	validationRules: [{
-        		type: "stringLength",
-        		max: 200,
-        		message: "El campo Observaciones no puede tener mas de 200 caracteres."
-        	}]
-        });
+		});
+        
 
 		$("#button").dxButton({
 			text: "Guardar",
