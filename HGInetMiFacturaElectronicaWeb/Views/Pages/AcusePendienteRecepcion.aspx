@@ -4,8 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Pages/AcusePendienteRecepcion.js?vjs201914"></script>
-	<script src="../../Scripts/Pages/ModalConsultaProveedores.js?vjs201914"></script>
+	<script src="../../Scripts/Pages/AcusePendienteRecepcion.js?vjs201915></script>
+	<script src="../../Scripts/Pages/ModalConsultaProveedores.js?vjs201915></script>
 
 	<div data-ng-app="ProcesarAcusePRecepcionApp" data-ng-controller="ProcesarAcusePRecepcionController">
 

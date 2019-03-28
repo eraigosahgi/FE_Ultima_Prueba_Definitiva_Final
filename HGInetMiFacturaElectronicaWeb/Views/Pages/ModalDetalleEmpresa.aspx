@@ -6,8 +6,8 @@
 <head runat="server">
 	<title></title>
 
-	<script src="../../Scripts/config.js?vjs201914"></script>
-	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201914"></script>
+	<script src="../../Scripts/config.js?vjs201915></script>
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201915></script>
 
 	<style type="text/css">
 		#outlook a {

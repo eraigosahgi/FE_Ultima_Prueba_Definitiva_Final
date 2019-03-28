@@ -5,10 +5,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
     <!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201914"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201914"></script>
-    <script src="../../Scripts/Pages/ConsultaDocumentosClientes.js?vjs201914"></script>
-    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201914"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201915></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201915></script>
+    <script src="../../Scripts/Pages/ConsultaDocumentosClientes.js?vjs201915></script>
+    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201915></script>
 
     <div data-ng-app="DocObligadoApp">
 
