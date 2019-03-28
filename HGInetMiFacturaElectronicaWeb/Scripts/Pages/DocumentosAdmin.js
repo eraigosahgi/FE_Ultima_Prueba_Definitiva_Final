@@ -16,12 +16,12 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
            estado_dian = "",
            estado_recibo = "",
            fecha_inicio = "",
-           fecha_fin = "",           
+           fecha_fin = "",
            cod_facturador = "*",
             tipo_filtro_fecha = 1,
            Datos_Tipo = "0";
 
-	
+
 
 	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
 		codigo_facturador = data[0].IdentificacionEmpresa;
@@ -38,11 +38,11 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 	});
 
 
-	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false,7).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false, 7).then(function (Datos) {
 		$scope.Facturador = Datos;
 	});
-	
-	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false,10).then(function (Datos) {
+
+	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false, 10).then(function (Datos) {
 		$scope.Adquiriente = Datos;
 	});
 
@@ -283,7 +283,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 							var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
 
-							var visible_acuse = " title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";							
+							var visible_acuse = " title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";
 
 							if (options.data.Pdf)
 								visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer;'";
@@ -423,13 +423,24 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  	caption: "Motivo Rechazo",
 					  	visible: false,
 					  	dataField: "MotivoRechazo",
-					  }
+					  },
+					{
+					caption: "Estado Email",
+					cssClass: "hidden-xs col-md-1",
+					dataField: "EstadoEnvioMail",
+					cellTemplate: function (container, options) {
+
+						$("<div>")
+							.append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio)))
+							.appendTo(container);
+						}
+					}
 				],
 
 				//**************************************************************
 				masterDetail: {
 					enabled: true,
-					template: function (container, options) {						
+					template: function (container, options) {
 						//var visible_zip = "";
 
 						//var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";

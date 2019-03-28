@@ -70,6 +70,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				DocumentoRespuesta respuesta = new DocumentoRespuesta()
 				{
 					Aceptacion = 0,
+					IdEstadoEnvioMail = 0,
 					CodigoRegistro = documento_obj.CodigoRegistro,
 					Cufe = "",
 					DescripcionProceso = "Recepción - Información del documento.",
@@ -269,10 +270,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 							{
 								respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
-								documento_tmp = new Ctl_Documento();
-								documentoBd.IntEnvioMail = true;
-								documento_tmp.Actualizar(documentoBd);
-								//ValidarRespuesta(respuesta);
+								
 							}
 							else
 							{

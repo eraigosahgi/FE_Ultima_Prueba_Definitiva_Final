@@ -24,49 +24,60 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		public static DocumentoRespuesta MailDocumentos(object documento, TblDocumentos documentoBd, TblEmpresas obligado, bool adquiriente_nuevo, TblEmpresas adquiriente, TblUsuarios adquiriente_usuario, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result, bool notificacion_basica = false)
 		{
 			Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-			DocumentoRespuesta respuesta_email = new DocumentoRespuesta();
-			LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.MensajeResumen datos_retorno = new LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.MensajeResumen();
+			var documento_obj = (dynamic)null;
+			documento_obj = documento;
+
+			//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
 			try
 			{
-				var documento_obj = (dynamic)null;
-				documento_obj = documento;
-
-				//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
-				try
+				if (adquiriente_nuevo == true)
 				{
-					if (adquiriente_nuevo == true)
-					{
-						email.Bienvenida(adquiriente, adquiriente_usuario);
-					}
+					email.Bienvenida(adquiriente, adquiriente_usuario);
 				}
-				catch (Exception excepcion)
-				{
-					LogExcepcion.Guardar(excepcion);
-				}
+			}
+			catch (Exception excepcion)
+			{
+				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío de la Bienvenida al Adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				LogExcepcion.Guardar(excepcion);
+			}
 
-				//Se agrega esto para guardar correctamente el estado en la Auditoria
-				if (respuesta.EstadoDian != null)
-				{
-					if (respuesta.EstadoDian.EstadoDocumento.Equals(EstadoDocumentoDian.Aceptado.GetHashCode()))
-						documentoBd.IntIdEstado = Convert.ToInt16(ProcesoEstado.EnvioEmailAcuse.GetHashCode());
-				}
+			//Se agrega esto para guardar correctamente el estado en la Auditoria
+			if (respuesta.EstadoDian != null)
+			{
+				if (respuesta.EstadoDian.EstadoDocumento.Equals(EstadoDocumentoDian.Aceptado.GetHashCode()))
+					documentoBd.IntIdEstado = Convert.ToInt16(ProcesoEstado.EnvioEmailAcuse.GetHashCode());
+			}
 
 
-				//Envia correo al adquiriente que tiene el objeto
-				List<MensajeEnvio> mensajes = new List<MensajeEnvio>();
-				try
-				{
-					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString());
-				}
-				catch (Exception excepcion)
-				{
-					LogExcepcion.Guardar(excepcion);
-					//Falla el envio de correo por algun motivo de la plataforma de servicios o Mailjet por lo tanto se asigna para notificar al Facturador
-					datos_retorno.IdResultado = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
-				}
+			//Envia correo al adquiriente que tiene el objeto
+			List<MensajeEnvio> mensajes = new List<MensajeEnvio>();
 
-				//documento_result.IdMensaje = mensajes[0].Data[0].MessageID;
+			try
+			{
+				mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString());
+				//Actualiza la respuesta del envio del correo
+				respuesta.FechaUltimoProceso = Fecha.GetFecha();
+				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
+				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
+				documentoBd.IntEnvioMail = true;
+				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
+				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+			}
+			catch (Exception excepcion)
+			{
+				//Falla el envio de correo por algun motivo de la plataforma o Mailjet
+				respuesta.FechaUltimoProceso = Fecha.GetFecha();
+				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
+				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
+				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
+				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+				documentoBd.IntEnvioMail = (documentoBd.IntEnvioMail == null) ? documentoBd.IntEnvioMail : false;
+				LogExcepcion.Guardar(excepcion);
+			}
 
+			try
+			{
 				//Valida si el proceso es completo para actualizar estados y bd
 				if (!notificacion_basica)
 				{
@@ -74,13 +85,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					//Actualiza la respuesta
 					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
-					respuesta.FechaUltimoProceso = Fecha.GetFecha();
 					respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
 
 					//Actualiza Documento en Base de Datos
-					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-					documentoBd.IntEnvioMail = true;
 
 					Ctl_Documento documento_tmp = new Ctl_Documento();
 					documento_tmp.Actualizar(documentoBd);
@@ -90,60 +98,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 					ValidarRespuesta(respuesta, "", mensajes, false);
 				}
-				else
-				{
-					//Actualiza la respuesta
-					respuesta.FechaUltimoProceso = Fecha.GetFecha();
-
-					//Actualiza Documento en Base de Datos
-					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-				}
-
-				//Consulta el Estado del correo enviado
-				try
-				{
-					email = new Ctl_EnvioCorreos();
-
-					datos_retorno = email.ConsultarCorreo((long)mensajes[0].Data[0].MessageID);
-
-				}
-				catch (Exception ex)
-				{
-					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error consultando el estado del correo enviado al adquiriente. Detalle: {0} -", ex.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, ex.InnerException);
-				}
-
-				if (MensajeIdResultado.Entregado.GetHashCode().Equals(datos_retorno.IdResultado))
-				{
-					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.Entregado.GetHashCode();
-					documentoBd.DatAdquirienteFechaRecibo = datos_retorno.Recibido;
-					respuesta.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(documentoBd.IntAdquirienteRecibo));
-					//respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
-				}
-				else if (MensajeIdResultado.NoEntregado.GetHashCode().Equals(datos_retorno.IdResultado))
-				{
-					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.NoEntregado.GetHashCode();
-					documentoBd.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(datos_retorno.Estado)) ? Fecha.GetFecha() : datos_retorno.Recibido;
-					//respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
-					respuesta.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(documentoBd.IntAdquirienteRecibo));
-					List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documentoBd, documento_obj.DatosAdquiriente.Telefono, documento_obj.DatosAdquiriente.Email, datos_retorno.Estado, respuesta.IdPeticion.ToString());
-				}
-				else
-				{
-					documentoBd.IntAdquirienteRecibo = (short)AdquirienteRecibo.Enviado.GetHashCode();
-					documentoBd.DatAdquirienteFechaRecibo = (string.IsNullOrEmpty(datos_retorno.Estado)) ? Fecha.GetFecha() : datos_retorno.Recibido;
-					//respuesta.Aceptacion = documentoBd.IntAdquirienteRecibo;
-					respuesta.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(documentoBd.IntAdquirienteRecibo));
-
-				}
-
-
 			}
 			catch (Exception excepcion)
 			{
-				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				//Falla actualizando estados despues del envio del correo
+				if (respuesta.Error == null)
+				{
+					respuesta.FechaUltimoProceso = Fecha.GetFecha();
+					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error actualizando estados despues del Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+					LogExcepcion.Guardar(excepcion);
+					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+				}
 
 			}
+
 			return respuesta;
+
 		}
 
 		/// <summary>

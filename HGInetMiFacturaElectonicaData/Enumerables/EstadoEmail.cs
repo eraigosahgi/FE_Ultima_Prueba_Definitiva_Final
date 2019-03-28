@@ -15,4 +15,26 @@ namespace HGInetMiFacturaElectonicaData
 		[Description("Envío Exitoso")]
 		Exitoso = 1,
 	}
+
+	public enum EstadoEnvio
+	{
+		[Description("Pendiente")]
+		Pendiente = 0,
+
+		[Description("Enviado")]
+		Enviado = 1,
+
+		[Description("Entregado")]
+		Entregado = 2,
+
+		[Description("No Entregado")]
+		NoEntregado = 3,
+
+		[Description("Leído")]
+		Leido = 4,
+
+		[Description("Validar con Adquiriente")]
+		Desconocido = 5,
+
+	}
 }

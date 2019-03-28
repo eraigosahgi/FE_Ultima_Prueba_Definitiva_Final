@@ -68,12 +68,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string DescripcionProceso { get; set; }
 
 		/// <summary>
-		/// Indica la aceptación o no del documento. 0: Pendiente, 1: Aceptación, 2: Rechazo, 3: Aprobado Tácito, 4: Entregado, 5: Leído, 6: No Entregado, 7: Enviado
+		/// Indica la aceptación o no del documento. 0: Pendiente, 1: Aceptación, 2: Rechazo, 3: Aprobado Tácito
 		/// </summary>
 		public int Aceptacion { get; set; }
 
 		/// <summary>
-		/// Descripción de la aceptación o no del documento. 0: Pendiente, 1: Aceptación, 2: Rechazo, 3: Aprobado Tácito, 4: Entregado, 5: Leído, 6: No Entregado, 7: Enviado
+		/// Descripción de la aceptación o no del documento. 0: Pendiente, 1: Aceptación, 2: Rechazo, 3: Aprobado Tácito
 		/// </summary>
 		public string DescripcionAceptacion { get; set; }
 
@@ -81,6 +81,16 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Observaciones del Adquiriente de acuerdo con el rechazo del documento.
 		/// </summary>
 		public string MotivoRechazo { get; set; }
+
+		/// <summary>
+		/// Id del estado del envio del documento. 0: Pendiente, 1: Enviado, 2: Entregado, 3: No Entregado, 4: Leído, 5: Validacion Facturador
+		/// </summary>
+		public int IdEstadoEnvioMail { get; set; }
+
+		/// <summary>
+		/// Descripcion del estado del envio del documento. 0: Pendiente, 1: Enviado, 2: Entregado, 3: No Entregado, 4: Leído, 5: Validacion Facturador
+		/// </summary>
+		public string DescripcionEstadoEnvioMail { get; set; }
 
 		/// <summary>
 		/// Ruta http del archivo XML en estándar UBL relacionado con el documento.

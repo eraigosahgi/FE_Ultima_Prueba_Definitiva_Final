@@ -305,6 +305,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (documento.IntEnvioMail == null || documento.IntEnvioMail == false) 
 							{
 								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
+								Ctl_Documento documento_tmp = new Ctl_Documento();
+								documento_tmp.Actualizar(documento);
 								//ValidarRespuesta(respuesta);
 							}
 							else
@@ -353,7 +355,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
 						Ctl_Documento documento_tmp = new Ctl_Documento();
-						documento.IntEnvioMail = true;
 						documento_tmp.Actualizar(documento);
 						//ValidarRespuesta(respuesta);
 

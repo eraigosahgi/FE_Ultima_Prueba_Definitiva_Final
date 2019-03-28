@@ -158,6 +158,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					zip = d.StrUrlAnexo,
 					permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
 					Estado = d.IdCategoriaEstado,
+					EstadoEnvioMail = DescripcionEstadoEmail((Int16)d.IntEstadoEnvio),
+					MensajeEnvio = DescripcionMensajeEmail((Int16)d.IntMensajeEnvio),
+					EnvioMail = d.IntEstadoEnvio,
 					d.IntAdquirienteRecibo,
 					d.StrEmpresaFacturador
 				});
@@ -385,10 +388,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "");
 
-				if (datos.FirstOrDefault().IntAdquirienteRecibo == (short)AdquirienteRecibo.NoEntregado.GetHashCode())
+				if (datos.FirstOrDefault().IntEstadoEnvio == (short)EstadoEnvio.NoEntregado.GetHashCode() || datos.FirstOrDefault().IntEstadoEnvio == (short)EstadoEnvio.Desconocido.GetHashCode())
 				{
 					ctl_documento = new Ctl_Documento();
-					datos.FirstOrDefault().IntAdquirienteRecibo = (short)AdquirienteRecibo.Enviado.GetHashCode();
+					datos.FirstOrDefault().IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
 					ctl_documento.Actualizar(datos.FirstOrDefault());
 				}
 				return Ok(respuesta);
@@ -659,6 +662,40 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(e));
+			}
+			catch (Exception excepcion)
+			{
+				return string.Format("Desconocido {0}", e);
+			}
+		}
+
+		/// <summary>
+		/// Retorna la descripción del estado del envio del correo.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <returns></returns>
+		private string DescripcionEstadoEmail(short e)
+		{
+			try
+			{
+				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.EstadoEnvio>(e));
+			}
+			catch (Exception excepcion)
+			{
+				return string.Format("Desconocido {0}", e);
+			}
+		}
+
+		/// <summary>
+		/// Retorna la descripción del estado del envio del correo.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <returns></returns>
+		private string DescripcionMensajeEmail(short e)
+		{
+			try
+			{
+				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado>(e));
 			}
 			catch (Exception excepcion)
 			{
@@ -968,7 +1005,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					XmlAcuse = d.StrUrlAcuseUbl,
 					permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
 					d.IntAdquirienteRecibo,
-					Estado = d.IdCategoriaEstado
+					Estado = d.IdCategoriaEstado,
+					EstadoEnvioMail = DescripcionEstadoEmail((Int16)d.IntEstadoEnvio),
+					MensajeEnvio = DescripcionMensajeEmail((Int16)d.IntMensajeEnvio),
+					EnvioMail = d.IntEstadoEnvio
 				});
 
 				return Ok(retorno);

@@ -42,9 +42,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
 
-				respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
-				respuesta.FechaUltimoProceso = Fecha.GetFecha();
-				respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
+				if (acuse.Response.Equals(200))
+				{
+					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
+					respuesta.FechaUltimoProceso = Fecha.GetFecha();
+					respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
+				}
 			}
 			catch (Exception excepcion)
 			{
