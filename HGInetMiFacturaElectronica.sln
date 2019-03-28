@@ -218,6 +218,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1Rev8", "v2019.1Rev8"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\v2019.2\20190307-TblUsuarios.txt = Documentacion\Liberaciones\v2019.2\20190307-TblUsuarios.txt
 		Documentacion\Liberaciones\v2019.1Rev8\20190323-IntEstadoEnvioTblDoc.txt = Documentacion\Liberaciones\v2019.1Rev8\20190323-IntEstadoEnvioTblDoc.txt
+		Documentacion\Liberaciones\v2019.1Rev8\20190328-IntMensajeEnvioTblDoc.txt = Documentacion\Liberaciones\v2019.1Rev8\20190328-IntMensajeEnvioTblDoc.txt
 	EndProjectSection
 EndProject
 Global

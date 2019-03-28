@@ -86,6 +86,7 @@
           <Property Name="IntValorSubtotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="IntValorNeto" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="IntEstadoEnvio" Type="smallint" Nullable="false" />
+          <Property Name="IntMensajeEnvio" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -1223,6 +1224,7 @@
           <Property Name="IntValorSubtotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <Property Name="IntValorNeto" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <Property Name="IntEstadoEnvio" Type="Int16" Nullable="false" />
+          <Property Name="IntMensajeEnvio" Type="Int16" Nullable="false" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadEmisor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadReceptor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
@@ -1598,6 +1600,7 @@
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
+                <ScalarProperty Name="IntMensajeEnvio" ColumnName="IntMensajeEnvio" />
                 <ScalarProperty Name="IntEstadoEnvio" ColumnName="IntEstadoEnvio" />
                 <ScalarProperty Name="IntValorNeto" ColumnName="IntValorNeto" />
                 <ScalarProperty Name="IntValorSubtotal" ColumnName="IntValorSubtotal" />
