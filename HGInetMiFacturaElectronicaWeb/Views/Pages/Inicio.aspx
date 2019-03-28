@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Pages/Indicadores.js?vjs201915></script>
+	<script src="../../Scripts/Pages/Indicadores.js?vjs201915"></script>
 
 	<style>
 		.nav-tabs:before {
