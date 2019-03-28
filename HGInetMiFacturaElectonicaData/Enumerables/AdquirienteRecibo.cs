@@ -26,7 +26,21 @@ namespace HGInetMiFacturaElectonicaData
         [AmbientValue("3")]
         AprobadoTacito = 3,
 
+        [Description("Entregado")]
+        [AmbientValue("4")]
+        Entregado = 4,
 
+        [Description("Leído")]
+        [AmbientValue("5")]
+        Leido = 5,
+
+        [Description("No Entregado")]
+        [AmbientValue("6")]
+        NoEntregado = 6,
+
+        [Description("Enviado")]
+        [AmbientValue("7")]
+        Enviado = 7
 
 
 	}

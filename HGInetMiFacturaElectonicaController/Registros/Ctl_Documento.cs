@@ -1727,7 +1727,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			try
 			{
 				int estado_enviado = Convert.ToInt32(EstadoEnvio.Enviado.GetHashCode());
-				int estado_adquiriente = Convert.ToInt32(AdquirienteRecibo.AprobadoTacito.GetHashCode());
+				int estado_adquiriente = Convert.ToInt32(AdquirienteRecibo.Leido.GetHashCode());
 
 				var respuesta = (from datos in context.TblDocumentos
 								 where datos.IntEstadoEnvio == (estado_enviado) ||

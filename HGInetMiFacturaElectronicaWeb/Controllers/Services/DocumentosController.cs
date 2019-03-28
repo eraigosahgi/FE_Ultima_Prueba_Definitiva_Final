@@ -291,10 +291,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				documento = datos.FirstOrDefault();
 				if ( ((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode())))
 				{
-					if ((documento.IntAdquirienteRecibo != (short)AdquirienteRecibo.Leido.GetHashCode()))
+					if ((documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode()))
 					{
-						documento.IntAdquirienteRecibo = (short)AdquirienteRecibo.Leido.GetHashCode();
-						documento.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+						documento.IntEstadoEnvio = (short)EstadoEnvio.Leido.GetHashCode();
+						documento.IntAdquirienteRecibo = (short) AdquirienteRecibo.Pendiente.GetHashCode();
+						documento.DatFechaActualizaEstado = Fecha.GetFecha();
 						ctl_documento.Actualizar(documento);
 					}
 				}
