@@ -1384,7 +1384,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 											 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 											 where datos.StrEmpresaFacturador.Equals(codigo_facturador)
 											 && (datos.StrIdSeguridad.ToString().Contains(IdSeguridad) || IdSeguridad.Equals("*"))
-											 && (numero_resolucion.Contains(datos.StrNumResolucion.ToString()) || numero_resolucion.Equals("*")) || (numero_resolucion.Contains("S/PREFIJO") && string.IsNullOrEmpty(datos.StrPrefijo))
+											 && (numero_resolucion.Contains(datos.StrNumResolucion.ToString()) || numero_resolucion.Equals("*"))
 											 && (datos.IntNumero == numero_documento || numero_documento == null)
 											 orderby datos.DatFechaIngreso descending
 											 select datos).ToList();
