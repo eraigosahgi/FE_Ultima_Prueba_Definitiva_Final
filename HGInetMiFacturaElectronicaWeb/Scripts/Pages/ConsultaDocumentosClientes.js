@@ -333,7 +333,18 @@ DocObligadoApp.controller('DocObligadoController', function DocObligadoControlle
                           caption: "Motivo Rechazo",
                           cssClass: "hidden-xs col-md-1",
                           dataField: "MotivoRechazo",
-                      }
+                      },
+					  {
+					  	caption: "Estado Email",
+					  	cssClass: "hidden-xs col-md-1",
+					  	dataField: "EstadoEnvioMail",
+					  	cellTemplate: function (container, options) {
+
+					  		$("<div>")
+		                        .append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail)))
+		                        .appendTo(container);
+					  	}
+					  }
                 ],
                 //**************************************************************
                 masterDetail: {

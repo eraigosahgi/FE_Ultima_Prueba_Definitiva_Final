@@ -893,6 +893,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
+				if(string.IsNullOrEmpty(IdSeguridad)) {
+					IdSeguridad = "*";
+				}
+
 				// comparadores de string con Equals...
 				if (codigo_facturador.Equals(""))
 					throw new ApplicationException("Debe Indicar el Facturador");
@@ -937,7 +941,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					XmlAcuse = d.StrUrlAcuseUbl,
 					permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
 					d.IntAdquirienteRecibo,
-					d.StrEmpresaFacturador
+					d.StrEmpresaFacturador,
+					Estado = d.IdCategoriaEstado,
+					EstadoEnvioMail = DescripcionEstadoEmail((Int16)d.IntEstadoEnvio),
+					MensajeEnvio = DescripcionMensajeEmail((Int16)d.IntMensajeEnvio),
+					EnvioMail = d.IntEstadoEnvio,
 				});
 
 				return Ok(retorno);
