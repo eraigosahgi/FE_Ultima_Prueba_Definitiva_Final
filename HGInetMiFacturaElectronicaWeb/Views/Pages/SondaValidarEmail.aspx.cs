@@ -16,12 +16,17 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			try
 			{
 				int Tiempo = 0;
+				int Dias = 0;
+
+				//Se envia sobre cuantos dias segun fecha ingreso del doc se consulta en bd para hacer la validacion del correo
+				if (Request.QueryString["Dias"] != null)
+					Int32.TryParse(Request.QueryString["Dias"], out Dias);
 
 				//Se envia el tiempo de notificacion en Minutos
 				if (Request.QueryString["Tiempo"] != null)
 					Int32.TryParse(Request.QueryString["Tiempo"], out Tiempo);
 
-				Procesar(Tiempo);
+				Procesar(Tiempo,Dias);
 			}
 			catch (Exception ex)
 			{
@@ -29,12 +34,12 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			}
 		}
 
-		public void Procesar(int Tiempo)
+		public void Procesar(int Tiempo, int dias)
 		{
 
 			Ctl_Documento ctl_documento = new Ctl_Documento();
 
-			var Tarea1 = ctl_documento.SondaDocumentosValidarEmail(Tiempo);
+			var Tarea1 = ctl_documento.SondaDocumentosValidarEmail(Tiempo,dias);
 			lblResultado.Text = string.Format("Termino");
 		}
 	}

@@ -1720,23 +1720,39 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <summary>
 		/// Obtiene documentos que deben ser validados la entrega del correo
 		/// </summary>
+		/// <param name="dias">Dias hacia atras que valida los documentos</param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerDocumentosValidarEmail()
+		public List<TblDocumentos> ObtenerDocumentosValidarEmail(int dias)
 		{
 
 			try
 			{
 				int estado_enviado = Convert.ToInt32(EstadoEnvio.Enviado.GetHashCode());
 				int estado_adquiriente = Convert.ToInt32(AdquirienteRecibo.Leido.GetHashCode());
+				DateTime FechaActual = Fecha.GetFecha();
 
-				var respuesta = (from datos in context.TblDocumentos
-								 where datos.IntEstadoEnvio == (estado_enviado) ||
-									   datos.IntAdquirienteRecibo > estado_adquiriente
+
+				if (dias > 0)
+				{
+				var	respuesta = (from datos in context.TblDocumentos
+							where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
+							      (datos.IntEstadoEnvio == (estado_enviado) ||
+							       datos.IntAdquirienteRecibo > estado_adquiriente)
+							select datos
+						);
+				return respuesta.ToList();
+				}
+				else
+				{
+					var respuesta = (from datos in context.TblDocumentos
+							where datos.IntEstadoEnvio == (estado_enviado)
 								 select datos
 						);
+					return respuesta.ToList();
+				}
+				
 
 
-				return respuesta.ToList();
 			}
 			catch (Exception excepcion)
 			{
@@ -1745,11 +1761,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		}
 
-		public async Task SondaDocumentosValidarEmail(int Tiempo)
+		public async Task SondaDocumentosValidarEmail(int Tiempo, int dias)
 		{
 			try
 			{
-				var Tarea = TareaDocumentosValidarEmail(Tiempo);
+				var Tarea = TareaDocumentosValidarEmail(Tiempo, dias);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -1764,12 +1780,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="Tiempo">si estado de Acuse > al parametro en minutos se notifica al Facturador</param>
 		/// <returns></returns>
-		public async Task TareaDocumentosValidarEmail(int Tiempo)
+		public async Task TareaDocumentosValidarEmail(int Tiempo, int dias)
 		{
 			await Task.Factory.StartNew(() =>
 			{
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
-				List<TblDocumentos> datos = ObtenerDocumentosValidarEmail();
+				List<TblDocumentos> datos = ObtenerDocumentosValidarEmail(dias);
 
 				foreach (TblDocumentos item in datos)
 				{
