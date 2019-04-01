@@ -233,6 +233,69 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		/// <summary>
+		/// Obtiene la Auditoria de los Emails asociados a un Documento
+		/// </summary>
+		/// <param name="id_seguridad_doc">Identificador unico del documento en la Plataforma</param>
+		/// <returns></returns>
+		[HttpGet]
+		[Route("Api/AuditoriaMail")]
+		public IHttpActionResult AuditoriaMail(string id_seguridad_doc)
+		{
+			try
+			{
+				//Valida los datos de la sesión.
+				//Sesion.ValidarSesion();
+
+				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
+
+				//Realiza la consulta de los datos en la base de datos.
+				List<TblAuditDocumentos> ListaEmail = clase_audit_doc.ObtenerDocumentoMail(id_seguridad_doc);
+
+				if (ListaEmail == null)
+				{
+					return NotFound();
+				}
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				//Obtiene los datos del documento en la base de datos.
+				TblDocumentos datos_doc = ctl_documento.ObtenerPorIdSeguridad(new Guid(id_seguridad_doc)).FirstOrDefault();
+
+				var datos_retorno = ListaEmail.Select(d => new
+				{
+					StrIdSeguridad = d.StrIdSeguridad,
+					StrIdPeticion = d.StrIdPeticion,
+					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
+					StrObligado = d.StrObligado,
+					IntIdEstado = d.IntIdEstado,
+					StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(d.IntIdEstado)),
+					IntIdProceso = d.IntIdProceso,
+					StrDesProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(d.IntIdProceso)),
+					IntTipoRegistro = d.IntTipoRegistro,
+					IntIdProcesadoPor = d.IntIdProcesadoPor,
+					StrDesProcesadoPor = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Procedencia>(d.IntIdProcesadoPor)),
+					StrRealizadoPor = d.StrRealizadoPor,
+					StrDesRealizadoPor = (!string.IsNullOrWhiteSpace(d.StrRealizadoPor)) ? NombreUsuario(new Guid(d.StrRealizadoPor)) : string.Empty,
+					StrMensaje = d.StrMensaje,
+					StrResultadoProceso = d.StrResultadoProceso,
+					StrPrefijo = d.StrPrefijo,
+					StrNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.StrNumero),
+					//Asigna las rutas de los archivos a las propiedades de retorno, estas se obtiene de la consulta del documento a la bd.
+					RutaXml = (datos_doc != null) ? datos_doc.StrUrlArchivoUbl : string.Empty,
+					RutaPdf = (datos_doc != null) ? datos_doc.StrUrlArchivoPdf : string.Empty,
+					RutaXmlAcuse = (datos_doc != null) ? datos_doc.StrUrlAcuseUbl : string.Empty,
+					TipoDocumento = (datos_doc != null) ? Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc.IntDocTipo)) : "Documento",
+				}).ToList();
+
+				return Ok(datos_retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 	}
 }

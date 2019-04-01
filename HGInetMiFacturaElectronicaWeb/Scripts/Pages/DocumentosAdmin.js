@@ -430,8 +430,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					dataField: "EstadoEnvioMail",
 					cellTemplate: function (container, options) {
 
-						$("<div>")
-							.append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail)))
+						$("<a>")
+							.append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail, options.data.StrIdSeguridad)))
 							.appendTo(container);
 						}
 					}

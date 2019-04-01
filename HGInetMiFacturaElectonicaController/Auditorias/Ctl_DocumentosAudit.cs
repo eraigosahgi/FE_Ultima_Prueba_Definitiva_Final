@@ -321,8 +321,29 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			{
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
-		} 
+		}
+
 		#endregion
+
+		/// <summary>
+		/// Obtiene todos los email asociados a un documento
+		/// </summary>
+		/// <param name="IdSeguridad">identificador unico del documento en la plataforma</param>
+		/// <returns></returns>
+		public List<TblAuditDocumentos> ObtenerDocumentoMail(string IdSeguridad)
+		{
+
+			try
+			{
+				List<TblAuditDocumentos> ListaEmail = this.GetFilter(x => (x.StrIdSeguridad.Equals(IdSeguridad)) && (x.IntIdProceso.Equals(8))).OrderBy(x => x.DatFecha).ToList();
+
+				return ListaEmail;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 
 
