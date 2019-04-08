@@ -38,7 +38,7 @@ var AppSrvFiltro = angular.module('AppSrvFiltro', ['dx'])
         var LimpiarCampo = "<script> function Limpiar_" + Nombre + "() { txt_hgi_" + Nombre + "='';  $('#txt_filtro_" + Nombre + "').val('');  } </script>";
 
 		//Asignar valor
-        var AsignarValorCampo = "<script> function Set_" + Nombre + "(Valor) { txt_hgi_" + Nombre + "=Valor;  $('#txt_filtro_" + Nombre + "').val(Valor);  } </script>";
+        var AsignarValorCampo = "<script> function Set_" + Nombre + "(Valor) { $('#txt_filtro_" + Nombre + "').val(Valor); var SplitControlHgi;  var ValorSplit; SplitControlHgi = Valor.split('--');  ValorSplit = SplitControlHgi[0];         txt_hgi_" + Nombre + "=ValorSplit;                     } </script>";
 
 		//Campo Valido e Invalido
         var ValidarCampo = "<script> function Campo_Invalido_" + Nombre + " () {$('#" + Nombre + "').addClass('dx-invalid'); $('#txt_filtro_" + Nombre + "').attr('placeholder','Debe indicar un valor real'); }; function Campo_Valido_" + Nombre + " () {$('#" + Nombre + "').removeClass('dx-invalid'); $('#txt_filtro_" + Nombre + "').attr('placeholder',''); };  </script>";
