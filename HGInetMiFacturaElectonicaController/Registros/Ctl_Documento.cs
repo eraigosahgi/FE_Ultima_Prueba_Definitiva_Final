@@ -1380,14 +1380,26 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					throw new ApplicationException("El codigo de plataforma debe ser de 8 digitos");
 
 
+			List<string> list_resolucion = Coleccion.ConvertirLista(numero_resolucion, '-');
+			int tipo_doc = Enumeracion.GetValueFromDescription<TipoDocumento>(list_resolucion[0]).GetHashCode();
+			string prefijo = list_resolucion[1];
+			if (numero_resolucion.Contains("S/PREFIJO"))
+				prefijo = string.Empty;
+			string resolucion = "*";
+			if (tipo_doc == TipoDocumento.Factura.GetHashCode())
+				resolucion = list_resolucion[2];
+
 			List<TblDocumentos> respuesta = (from datos in context.TblDocumentos
 											 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 											 where datos.StrEmpresaFacturador.Equals(codigo_facturador)
-											 && (datos.StrIdSeguridad.ToString().Contains(IdSeguridad) || IdSeguridad.Equals("*"))
-											 && (numero_resolucion.Contains(datos.StrNumResolucion.ToString()) || numero_resolucion.Equals("*"))
-											 && (datos.IntNumero == numero_documento || numero_documento == null)
+												   && (datos.StrIdSeguridad.ToString().Contains(IdSeguridad) || IdSeguridad.Equals("*"))
+												   && (datos.StrNumResolucion.Equals(resolucion) || resolucion.Equals("*"))
+												   && (datos.StrPrefijo.Equals(prefijo))
+												   && (datos.IntNumero == numero_documento || numero_documento == null)
+												   && (datos.IntDocTipo == tipo_doc)
 											 orderby datos.DatFechaIngreso descending
 											 select datos).ToList();
+
 			return respuesta;
 		}
 		#endregion
@@ -1734,23 +1746,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				if (dias > 0)
 				{
-				var	respuesta = (from datos in context.TblDocumentos
-							where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
-							      (datos.IntEstadoEnvio == (estado_enviado) ||
-							       datos.IntAdquirienteRecibo > estado_adquiriente)
-							select datos
-						);
-				return respuesta.ToList();
+					var respuesta = (from datos in context.TblDocumentos
+									 where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
+										   (datos.IntEstadoEnvio == (estado_enviado) ||
+											datos.IntAdquirienteRecibo > estado_adquiriente)
+									 select datos
+							);
+					return respuesta.ToList();
 				}
 				else
 				{
 					var respuesta = (from datos in context.TblDocumentos
-							where datos.IntEstadoEnvio == (estado_enviado)
-								 select datos
+									 where datos.IntEstadoEnvio == (estado_enviado)
+									 select datos
 						);
 					return respuesta.ToList();
 				}
-				
+
 
 
 			}
@@ -1848,7 +1860,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								telefono_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Telefono;
 							}
 							//Se hace validacion para hacer el reenvio del documento
-							if ( (item.IntEstadoEnvio == EstadoEnvio.Pendiente.GetHashCode() || item.IntEstadoEnvio == EstadoEnvio.Enviado.GetHashCode()))
+							if ((item.IntEstadoEnvio == EstadoEnvio.Pendiente.GetHashCode() || item.IntEstadoEnvio == EstadoEnvio.Enviado.GetHashCode()))
 							{
 
 								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
@@ -1864,11 +1876,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							if (Fecha.Diferencia(item.DatFechaIngreso, Fecha.GetFecha(), DateInterval.Minute) > Tiempo)
 							{
 								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-								List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(item,telefono_objeto, email_objeto, respuesta_consulta.Estado,item.StrIdSeguridad.ToString());
+								List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(item, telefono_objeto, email_objeto, respuesta_consulta.Estado, item.StrIdSeguridad.ToString());
 								item.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
 								item.DatFechaActualizaEstado = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
 							}
-							
+
 
 						}
 						//Cambio el estado del acuse siempre y cuando sea mayor a 3 el estado de acuse
