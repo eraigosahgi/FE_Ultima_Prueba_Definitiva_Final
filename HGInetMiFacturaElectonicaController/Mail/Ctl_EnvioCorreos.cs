@@ -2067,7 +2067,7 @@ namespace HGInetMiFacturaElectonicaController
 				// recibe el email el adquiriente
 				DestinatarioEmail destinatario = new DestinatarioEmail();
 				destinatario.Nombre = empresa_obligado.StrRazonSocial;
-				destinatario.Email = empresa_obligado.StrMailAdmin;
+				destinatario.Email = empresa_obligado.StrMailAcuse;
 				correos_destino.Add(destinatario);
 
 				// envía correo electrónico con copia de auditoría
