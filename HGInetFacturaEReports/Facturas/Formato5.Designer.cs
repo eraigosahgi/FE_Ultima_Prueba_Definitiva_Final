@@ -153,7 +153,7 @@ namespace HGInetFacturaEReports.Facturas
 			// 
 			// reportFooterSection1
 			// 
-			this.reportFooterSection1.Height = Telerik.Reporting.Drawing.Unit.Cm(5.1105122566223145D);
+			this.reportFooterSection1.Height = Telerik.Reporting.Drawing.Unit.Cm(5.2105112075805664D);
 			this.reportFooterSection1.Items.AddRange(new Telerik.Reporting.ReportItemBase[] {
             this.campo33_v,
             this.htmlTextBox90,
@@ -667,9 +667,9 @@ namespace HGInetFacturaEReports.Facturas
 			// campo36_v
 			// 
 			this.campo36_v.CanGrow = false;
-			this.campo36_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0.0100001972168684D), Telerik.Reporting.Drawing.Unit.Cm(4.4103126525878906D));
+			this.campo36_v.Location = new Telerik.Reporting.Drawing.PointU(Telerik.Reporting.Drawing.Unit.Cm(0D), Telerik.Reporting.Drawing.Unit.Cm(4.4105114936828613D));
 			this.campo36_v.Name = "campo36_v";
-			this.campo36_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(7.69980001449585D), Telerik.Reporting.Drawing.Unit.Cm(0.7001001238822937D));
+			this.campo36_v.Size = new Telerik.Reporting.Drawing.SizeU(Telerik.Reporting.Drawing.Unit.Cm(7.69980001449585D), Telerik.Reporting.Drawing.Unit.Cm(0.7998993992805481D));
 			this.campo36_v.Style.Font.Bold = false;
 			this.campo36_v.Style.Font.Size = Telerik.Reporting.Drawing.Unit.Point(5D);
 			this.campo36_v.Style.Padding.Top = Telerik.Reporting.Drawing.Unit.Point(1D);
@@ -1872,7 +1872,7 @@ namespace HGInetFacturaEReports.Facturas
             this.detail,
             this.reportFooterSection1});
 			this.Name = "Formato5";
-			this.PageSettings.Margins = new Telerik.Reporting.Drawing.MarginsU(Telerik.Reporting.Drawing.Unit.Mm(6D), Telerik.Reporting.Drawing.Unit.Mm(4D), Telerik.Reporting.Drawing.Unit.Mm(4D), Telerik.Reporting.Drawing.Unit.Mm(2D));
+			this.PageSettings.Margins = new Telerik.Reporting.Drawing.MarginsU(Telerik.Reporting.Drawing.Unit.Mm(6D), Telerik.Reporting.Drawing.Unit.Mm(4D), Telerik.Reporting.Drawing.Unit.Mm(6D), Telerik.Reporting.Drawing.Unit.Mm(2D));
 			this.PageSettings.PaperKind = System.Drawing.Printing.PaperKind.A4;
 			reportParameter1.Name = "TipoDocumento";
 			reportParameter1.Text = "TipoDocumento";
