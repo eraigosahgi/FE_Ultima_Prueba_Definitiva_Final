@@ -1,8 +1,8 @@
 ﻿DevExpress.localization.locale(navigator.language);
 
 var Usuariosession = "";
-var App = angular.module('App', ['dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
-App.controller('AcuseConsultaController', function AcuseConsultaController($scope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
+var App = angular.module('App', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'AppSrvFiltro']);
+App.controller('AcuseConsultaController', function AcuseConsultaController($scope, $http, $location, SrvDocumento, SrvMaestrosEnum, SrvFiltro) {
 
     var now = new Date();
 
@@ -185,6 +185,9 @@ App.controller('AcuseConsultaController', function AcuseConsultaController($scop
                                             email_destino = options.data.MailAdquiriente;
                                             id_seguridad = options.data.StrIdSeguridad;
                                             $('input:text[name=EmailDestino]').val(email_destino);
+                                            SrvDocumento.ConsultarEmailUbl(options.data.StrIdSeguridad).then(function (data) {
+	                                            $('input:text[name=EmailDestino]').val(data);
+                                            });
                                         }
                                     }).removeClass("dx-button dx-button-normal dx-widget"))
                                         .append($(""))

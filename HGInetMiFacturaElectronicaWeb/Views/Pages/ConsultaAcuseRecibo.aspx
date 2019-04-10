@@ -5,7 +5,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201915"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201915"></script>	
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201915"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201915"></script>
 	<script src="../../Scripts/Pages/ConsultaAcuse.js?vjs201915"></script>
 	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201915"></script>
 
@@ -111,7 +112,7 @@
 				<div class="modal-content">
 					<div id="EncabezadoModal" class="modal-header">
 						<button type="button" id="btncerrarModal" class="close" data-dismiss="modal">×</button>
-						<h5 style="margin-bottom: 10px" class="modal-title">Envío E-mail Adquiriente</h5>
+						<h5 style="margin-bottom: 10px" class="modal-title">Reenvío de Acuse de Recibo</h5>
 					</div>
 
 					<div class="modal-body text-center">
