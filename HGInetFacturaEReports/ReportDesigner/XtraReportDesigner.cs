@@ -20,15 +20,15 @@ namespace HGInetFacturaEReports.ReportDesigner
 		{
 
 			XtraReport rep = (XtraReport)sender;
-
-			dynamic datos_documento = (dynamic)null;
-			datos_documento = rep.DataSource;
+			
+			dynamic datos_documento = rep.DataSource;
 
 			bool continua_proceso = false;
 
 			try
 			{
-				datos_documento.DataSetName = "Hola";
+				// valida la existencia del DataSource
+				datos_documento.DataSetName = "Validador";
 			}
 			catch (Exception)
 			{
@@ -39,67 +39,78 @@ namespace HGInetFacturaEReports.ReportDesigner
 			{
 				//Asignar los datos al reporte.
 				rep.DataSource = datos_documento;
-
+				
 				List<FormatoCampo> campos = datos_documento.DocumentoFormato.CamposPredeterminados;
 				bool lleno_titulo = false;
 
-				//Recorre los campos adicionales del objeto
-				foreach (FormatoCampo item in campos)
+				if (campos != null)
 				{
-					//Recorre las secciones del reporte para obtener los controles y asignarle los valores.
-					foreach (Band reportBand in rep.Bands)
+					//Recorre los campos adicionales del objeto
+					foreach (FormatoCampo item in campos)
 					{
-						XRLabel control_titulo = (XRLabel)FindBandControl(reportBand, "LblTituloReporte");
-						if (control_titulo != null && !lleno_titulo)
+						//Recorre las secciones del reporte para obtener los controles y asignarle los valores.
+						foreach (Band reportBand in rep.Bands)
 						{
-							lleno_titulo = true;
-							string titulo_formato = string.Empty;
-							titulo_formato = datos_documento.DocumentoFormato.Titulo;
-
-							control_titulo.Text = titulo_formato;
-						}
-
-						try
-						{
-							//Obtiene los controles de tipo picture y carga las imagenes 
-							XRPictureBox control_imagen = (XRPictureBox)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
-							if (control_imagen != null)
+							XRLabel control_titulo = (XRLabel)FindBandControl(reportBand, "LblTituloReporte");
+							if (control_titulo != null && !lleno_titulo)
 							{
-								MemoryStream ms = null;
-								try
+								lleno_titulo = true;
+								string titulo_formato = string.Empty;
+								titulo_formato = datos_documento.DocumentoFormato.Titulo;
+
+								control_titulo.Text = titulo_formato;
+							}
+
+							try
+							{
+								//Obtiene los controles de tipo picture y carga las imagenes 
+								XRPictureBox control_imagen = (XRPictureBox)FindBandControl(reportBand,
+									string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
+								if (control_imagen != null)
 								{
-									byte[] bytes = Convert.FromBase64String(item.Valor);
-									using (ms = new MemoryStream(bytes))
+									MemoryStream ms = null;
+									try
 									{
-										Image logo = Image.FromStream(ms);
-										control_imagen.Image = logo;
-										control_imagen.Visible = true;
+										byte[] bytes = Convert.FromBase64String(item.Valor);
+										using (ms = new MemoryStream(bytes))
+										{
+											Image logo = Image.FromStream(ms);
+											control_imagen.Image = logo;
+											control_imagen.Visible = true;
+										}
+
+										break;
 									}
-									break;
-								}
-								catch (Exception excepcion)
-								{
-									if (ms != null)
-										ms.Close();
+									catch (Exception excepcion)
+									{
+										if (ms != null)
+											ms.Close();
+									}
 								}
 							}
-						}
-						catch (Exception)
-						{
-						}
+							catch (Exception)
+							{
+							}
 
-						//Obtiene los campos de descripciones
-						XRLabel control_descripcion = (XRLabel)FindBandControl(reportBand, string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()));
-						if (control_descripcion != null)
-						{
-							control_descripcion.Text = item.Descripcion.Replace("<br />", "\n").Replace("<br/>", "\n").Replace("<br>", "\n").Replace("</br>", "\n").ToUpper(); ;
-						}
+							//Obtiene los campos de descripciones
+							XRLabel control_descripcion = (XRLabel)FindBandControl(reportBand,
+								string.Format("{0}_d", item.Ubicacion.ToLowerInvariant()));
+							if (control_descripcion != null)
+							{
+								control_descripcion.Text = item.Descripcion.Replace("<br />", "\n")
+									.Replace("<br/>", "\n").Replace("<br>", "\n").Replace("</br>", "\n").ToUpper();
+								;
+							}
 
-						//Obtiene los campos de valores.
-						XRLabel control_valor = (XRLabel)FindBandControl(reportBand, string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
-						if (control_valor != null)
-						{
-							control_valor.Text = item.Valor.Replace("<br />", "\n").Replace("<br/>", "\n").Replace("<br>", "\n").Replace("</br>", "\n"); ;
+							//Obtiene los campos de valores.
+							XRLabel control_valor = (XRLabel)FindBandControl(reportBand,
+								string.Format("{0}_v", item.Ubicacion.ToLowerInvariant()));
+							if (control_valor != null)
+							{
+								control_valor.Text = item.Valor.Replace("<br />", "\n").Replace("<br/>", "\n")
+									.Replace("<br>", "\n").Replace("</br>", "\n");
+								;
+							}
 						}
 					}
 				}
