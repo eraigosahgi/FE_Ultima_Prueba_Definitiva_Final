@@ -152,7 +152,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta.Cufe = documento_result.CUFE;
 
 						// almacena Formato
-						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
+						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result,empresa);
 						ValidarRespuesta(respuesta, respuesta.UrlPdf);
 
 						// almacena Anexos enviados

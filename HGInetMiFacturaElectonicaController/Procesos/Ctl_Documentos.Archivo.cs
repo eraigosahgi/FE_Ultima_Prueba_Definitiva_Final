@@ -268,7 +268,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					// almacena Formato
-					respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result);
+					respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result, facturador);
 					ValidarRespuesta(respuesta);
 
 

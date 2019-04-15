@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using Telerik.Reporting;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
@@ -32,7 +33,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="respuesta">datos de respuesta del documento</param>
 		/// <param name="documento_result">información del proceso interno del documento</param>
 		/// <returns>información adicional de respuesta del documento</returns>
-		public static DocumentoRespuesta GuardarFormato(object documento, TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+		public static DocumentoRespuesta GuardarFormato(object documento, TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result, TblEmpresas facturador)
 		{
 			respuesta.DescripcionProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(ProcesoEstado.PDFGeneracion.GetHashCode()));
 			respuesta.FechaUltimoProceso = Fecha.GetFecha();
@@ -114,7 +115,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
 						x.GenerarPdfDev(rep, documentoBd.StrEmpresaFacturador);
 					}
-					else
+					else if(facturador.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
 					{
 						switch (formato_documento.Codigo)
 						{
@@ -164,6 +165,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								}
 								break;
 						}
+					}
+					else
+					{
+						throw new ArgumentException(string.Format("No se encuentra registrado el codigo del formato {0} del Facturador {1}", formato_documento.Codigo,facturador.StrIdentificacion));
 					}
 
 					if (reporte_archivado)
