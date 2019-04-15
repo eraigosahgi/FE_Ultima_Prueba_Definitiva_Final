@@ -277,7 +277,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 				MensajeResumen datos_retorno = new MensajeResumen();
 
 				MensajeValidarEmail MailPlataforma = new MensajeValidarEmail();
-				MensajeValidarEmail MailReenvio = new MensajeValidarEmail();
+
 				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 				foreach (TblAuditDocumentos Email in ListaEmail)
 				{
@@ -301,14 +301,17 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 									return MailPlataforma;
 								}
 							}
-
-							if(datos_retorno.IdResultado== MensajeIdResultado.Entregado.GetHashCode()) {
-								MailReenvio.EmailEnviado = (string)datos.Email;
-								MailReenvio.Estado = datos_retorno.Estado;
-								MailReenvio.IdResultado = datos_retorno.IdResultado;
-								MailReenvio.Recibido = datos_retorno.Recibido;
-								return MailReenvio;
-							}							
+							else if (datos_retorno.Estado != null)
+							{
+								MailPlataforma.EmailEnviado = (string)datos.Email;
+								MailPlataforma.Estado = datos_retorno.Estado;
+								MailPlataforma.IdResultado = datos_retorno.IdResultado;
+								MailPlataforma.Recibido = datos_retorno.Recibido;
+								if (MailPlataforma.IdResultado == MensajeIdResultado.Entregado.GetHashCode())
+								{
+									return MailPlataforma;
+								}
+							}	
 						}
 					}
 					catch (Exception)
