@@ -34,6 +34,7 @@ using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using static LibreriaGlobalHGInet.Funciones.Fecha;
+using Guid = System.Guid;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -1535,6 +1536,127 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			});
 		}
 		#endregion
+
+		/// <summary>
+		/// Sonda para Generar PDF de documentos
+		/// </summary>
+		/// <param name="ListaDoc">Lista de Idseguridad de los Documentos</param>
+		/// <returns></returns>
+		public async Task SondaGenerarPDF(string ListaDoc)
+		{
+			try
+			{
+				var Tarea = TareaGenerarPDF(ListaDoc);
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+		}
+
+		/// <summary>
+		/// Tarea para generar el PDF de los documentos
+		/// </summary>
+		/// <param name="ListaDoc">Lista de Idseguridad de los Documentos a generar</param>
+		/// <returns></returns>
+		public async Task TareaGenerarPDF(string ListaDoc)
+		{
+			try
+			{
+				await Task.Factory.StartNew(() =>
+					{
+						
+
+						foreach (string Idseg in Coleccion.ConvertirLista(ListaDoc, ','))
+						{
+
+							PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+							TblDocumentos documento = ObtenerPorIdSeguridad(Guid.Parse(Idseg)).FirstOrDefault();
+
+							var documento_obj = (dynamic) null;
+
+							FacturaE_Documento documento_result = new FacturaE_Documento();
+
+							documento_result.IdSeguridadDocumento = Guid.Parse(documento.StrIdSeguridad.ToString());
+							documento_result.IdSeguridadTercero = documento.TblEmpresasFacturador.StrIdSeguridad;
+							documento_result.DocumentoTipo = Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo);
+							documento_result.NombreXml = NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
+							documento_result.NombrePdf = documento_result.NombreXml;
+
+							XmlSerializer serializacion = null;
+
+							// ruta física del xml
+							string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento.TblEmpresasFacturador.StrIdSeguridad);
+							carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+							documento_result.RutaArchivosEnvio = carpeta_xml;
+
+							// ruta del xml
+							string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_xml, documento_result.NombreXml);
+
+							//Se lee un xml de una ruta
+							FileStream xml_reader = new FileStream(ruta_xml,FileMode.Open);
+
+							// convierte el objeto de acuerdo con el tipo de documento
+							if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+							{
+								InvoiceType conversion = new InvoiceType();
+
+								serializacion = new XmlSerializer(typeof(InvoiceType));
+
+								conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+
+								documento_obj = FacturaXML.Convertir(conversion);
+
+							}
+							else if (documento.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+							{
+
+								CreditNoteType conversion = new CreditNoteType();
+
+								serializacion = new XmlSerializer(typeof(CreditNoteType));
+
+								conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+
+								documento_obj = NotaCreditoXML.Convertir(conversion);
+
+							}
+							else if (documento.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+							{
+								DebitNoteType conversion = new DebitNoteType();
+
+								serializacion = new XmlSerializer(typeof(DebitNoteType));
+
+								conversion = (DebitNoteType) serializacion.Deserialize(xml_reader);
+
+								documento_obj = NotaDebitoXML.Convertir(conversion);
+
+							}
+
+							// cerrar la lectura del archivo xml
+							xml_reader.Close();
+
+							// valida la conversión del objeto
+							if (documento_obj == null)
+								throw new ArgumentException("No se recibieron datos para realizar el proceso");
+
+							documento_result.Documento = documento_obj;
+
+							DocumentoRespuesta respuesta = new DocumentoRespuesta();
+							//Genera Formato PDF
+							Ctl_Documentos.GuardarFormato(documento_obj, documento, ref respuesta, ref documento_result, documento.TblEmpresasFacturador);
+
+						}
+
+					});
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+		}
 
 		/// <summary>
 		/// Sonda para obtener el subtotal de los documentos y actualizarlo en la BD
