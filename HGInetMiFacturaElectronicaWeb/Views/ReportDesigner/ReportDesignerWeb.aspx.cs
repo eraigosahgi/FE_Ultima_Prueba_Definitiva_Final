@@ -41,6 +41,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 		{
 			try
 			{
+				SerializeReport clase_serialize = new SerializeReport();
+
 				base.Page_Load(sender, e);
 				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
@@ -53,15 +55,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 					string cod_empresa = Request.QueryString["Nit"].ToString();
 
 					TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(Convert.ToInt32(Request.QueryString["TipoDoc"]));
-					SerializeReport.TipoDocumento = tipo_doc;
+
+					clase_serialize = new SerializeReport(tipo_doc);
+
+					SerializationService.RegisterSerializer(SerializeReport.Name, clase_serialize);
 
 					TblFormatos datos_formato = clase_formatos.Obtener(codigo_formato, cod_empresa, TipoFormato.FormatoPDF.GetHashCode());
 
 					if (datos_formato != null)
 					{
-
-
-
 						byte[] datos_formato_tmp = null;
 
 						if (datos_formato.FormatoTmp == null)
@@ -81,8 +83,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 				}
 
 				report.Extensions[SerializationService.Guid] = SerializeReport.Name;
-				report.DataSource = SerializeReport.GenerarColumnas();
-				report.DataMember = SerializeReport.DataMember;
+				report.DataSource = clase_serialize.GenerarColumnas();
+				report.DataMember = clase_serialize.DataMember;
 				ASPxReportDesignerWeb.OpenReport(report);
 
 			}

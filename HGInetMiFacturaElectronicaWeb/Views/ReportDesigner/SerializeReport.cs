@@ -14,8 +14,17 @@ namespace HGInetMiFacturaElectronicaWeb
 	public class SerializeReport : IDataSerializer
 	{
 		public const string Name = "MyDataSerializer";
-		public static TipoDocumento TipoDocumento { get; set; }
-		public static string DataMember { get; set; }
+		private TipoDocumento TipoDocumento { get; set; }
+		public string DataMember { get; set; }
+
+		public SerializeReport()
+		{
+		}
+
+		public SerializeReport(TipoDocumento tipo_documento)
+		{
+			this.TipoDocumento = tipo_documento;
+		}
 
 		public bool CanDeserialize(string value, string typeName, object extensionProvider)
 		{
@@ -42,7 +51,7 @@ namespace HGInetMiFacturaElectronicaWeb
 			return ds.DataSetName;
 		}
 
-		public static DataSet GenerarColumnas()
+		public DataSet GenerarColumnas()
 		{
 			var ds = new DataSet();
 			ds.DataSetName = "DataSetReporte";
@@ -53,7 +62,7 @@ namespace HGInetMiFacturaElectronicaWeb
 			XtraReportDesigner reporte = new XtraReportDesigner();
 			reporte.Name = "DataSet";
 
-			switch (TipoDocumento)
+			switch (this.TipoDocumento)
 			{
 				case TipoDocumento.NotaDebito:
 					//DATOS TABLA NOTADEBITO
@@ -71,7 +80,7 @@ namespace HGInetMiFacturaElectronicaWeb
 
 					principal = ds.Tables["NotaDebito"].Columns["Documento"];
 
-					DataMember = "NotaDebito";
+					this.DataMember = "NotaDebito";
 					break;
 
 				case TipoDocumento.NotaCredito:
@@ -89,7 +98,7 @@ namespace HGInetMiFacturaElectronicaWeb
 					ds.Tables.Add(DtPrincipal);
 
 					principal = ds.Tables["NotaCredito"].Columns["Documento"];
-					DataMember = "NotaCredito";
+					this.DataMember = "NotaCredito";
 					break;
 
 				default:
@@ -108,7 +117,7 @@ namespace HGInetMiFacturaElectronicaWeb
 
 					principal = ds.Tables["Factura"].Columns["Documento"];
 
-					DataMember = "Factura";
+					this.DataMember = "Factura";
 					break;
 			}
 

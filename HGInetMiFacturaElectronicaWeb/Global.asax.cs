@@ -42,9 +42,7 @@ namespace HGInetMiFacturaElectronicaWeb
 			DevExpress.XtraReports.Web.ReportDesigner.Native.ReportDesignerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Default;
 			ASPxReportDesigner.StaticInitialize();
 
-			DevExpress.Web.ASPxWebControl.CallbackError += new EventHandler(Application_Error);
-
-			SerializationService.RegisterSerializer(SerializeReport.Name, new SerializeReport());
+			DevExpress.Web.ASPxWebControl.CallbackError += new EventHandler(Application_Error);			
 
 			HttpConfiguration configuration = GlobalConfiguration.Configuration;
 
