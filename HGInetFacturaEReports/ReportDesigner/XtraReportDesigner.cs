@@ -71,14 +71,16 @@ namespace HGInetFacturaEReports.ReportDesigner
 									MemoryStream ms = null;
 									try
 									{
-										byte[] bytes = Convert.FromBase64String(item.Valor);
-										using (ms = new MemoryStream(bytes))
+										if (!string.IsNullOrEmpty(item.Valor))
 										{
-											Image logo = Image.FromStream(ms);
-											control_imagen.Image = logo;
-											control_imagen.Visible = true;
+											byte[] bytes = Convert.FromBase64String(item.Valor);
+											using (ms = new MemoryStream(bytes))
+											{
+												Image logo = Image.FromStream(ms);
+												control_imagen.Image = logo;
+												control_imagen.Visible = true;
+											}
 										}
-
 										break;
 									}
 									catch (Exception excepcion)
