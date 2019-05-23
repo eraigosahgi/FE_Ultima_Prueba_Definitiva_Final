@@ -1566,7 +1566,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				await Task.Factory.StartNew(() =>
 					{
-						
+
 
 						foreach (string Idseg in Coleccion.ConvertirLista(ListaDoc, ','))
 						{
@@ -1575,7 +1575,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							TblDocumentos documento = ObtenerPorIdSeguridad(Guid.Parse(Idseg)).FirstOrDefault();
 
-							var documento_obj = (dynamic) null;
+							var documento_obj = (dynamic)null;
 
 							FacturaE_Documento documento_result = new FacturaE_Documento();
 
@@ -1597,7 +1597,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_xml, documento_result.NombreXml);
 
 							//Se lee un xml de una ruta
-							FileStream xml_reader = new FileStream(ruta_xml,FileMode.Open);
+							FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
 
 							// convierte el objeto de acuerdo con el tipo de documento
 							if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
@@ -1629,7 +1629,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								serializacion = new XmlSerializer(typeof(DebitNoteType));
 
-								conversion = (DebitNoteType) serializacion.Deserialize(xml_reader);
+								conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
 
 								documento_obj = NotaDebitoXML.Convertir(conversion);
 
@@ -1986,7 +1986,20 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 
 								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-								List<MensajeEnvio> notificacion = email.NotificacionDocumento(item, telefono_objeto, email_objeto, item.StrIdSeguridad.ToString());
+								List<MensajeEnvio> notificacion = new List<MensajeEnvio>();
+								try
+								{
+									notificacion = email.NotificacionDocumento(item, telefono_objeto, email_objeto, item.StrIdSeguridad.ToString());
+								}
+								catch (Exception)
+								{
+									//Si se presenta un error en el envio se notifica al facturador para que valide
+									item.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
+									item.DatFechaActualizaEstado = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
+									item.IntEnvioMail = false;
+									email.NotificacionCorreofacturador(item, telefono_objeto, email_objeto, respuesta_consulta.Estado, item.StrIdSeguridad.ToString());
+
+								}
 								if ((notificacion != null) && (notificacion.Any()))
 								{
 									item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
