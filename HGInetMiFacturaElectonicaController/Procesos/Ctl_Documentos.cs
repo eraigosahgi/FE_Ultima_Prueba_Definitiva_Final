@@ -364,15 +364,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (tercero.Email.Contains(";"))
 			{
 				string tercero_mail = string.Empty;
-				foreach (var item_mail in Coleccion.ConvertirLista(tercero.Email, ';'))
+				if (Coleccion.ConvertirLista(tercero.Email, ';').Count > 0)
 				{
-					if (!Texto.ValidarExpresion(TipoExpresion.Email, item_mail.Trim()))
-						throw new ArgumentException(string.Format("El Email {0} no esta bien formado", item_mail));
-					else
-						tercero_mail = (string.IsNullOrEmpty(tercero_mail) ? item_mail.Trim() : string.Format("{0};{1}", tercero_mail, item_mail.Trim()));
+					foreach (var item_mail in Coleccion.ConvertirLista(tercero.Email, ';'))
+					{
+						if (!Texto.ValidarExpresion(TipoExpresion.Email, item_mail.Trim()))
+							throw new ArgumentException(string.Format("El Email {0} no esta bien formado", item_mail));
+						else
+							tercero_mail = (string.IsNullOrEmpty(tercero_mail) ? item_mail.Trim() : string.Format("{0};{1}", tercero_mail, item_mail.Trim()));
+					}
 
+					tercero.Email = tercero_mail;
 				}
-				tercero.Email = tercero_mail;
+				else
+				{
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+				}
 			}
 			else
 			{
