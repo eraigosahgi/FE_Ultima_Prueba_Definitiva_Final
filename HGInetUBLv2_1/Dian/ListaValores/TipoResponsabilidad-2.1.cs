@@ -1,0 +1,137 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HGInetUBLv2_1.DianListas
+{
+	public class ListaTipoResponsabilidad
+	{
+		public string ShortName = "TipoResponsabilidad";
+		public string LongName = "Responsabilidades fiscales; Régimen fiscal";
+		public string Version = "1";
+		public string CanonicalUri = "urn:dian:names:especificacion:ubl:listacodigos:gc:TipoResponsabilidad-2.1";
+		public string CanonicalVersionUri = "urn:dian:names:especificacion:ubl:listacodigos:gc:TipoResponsabilidad-2.1";
+		public string LocationUri = "http://dian.gov.co/ubl/os-ubl-2.0/cl/gc/default/TipoResponsabilidad-2.1.gc";
+		public string AgencyName = "DIAN (Dirección de Impuestos y Aduanas Nacionales)";
+		public string AgencyIdentifier = "195";
+
+		public List<ListaItem> Items = new List<ListaItem>()
+		{
+			new ListaItem("O-06", "Ingresos y patrimonio", "Ingresos y patrimonio"),
+			new ListaItem("O-07", "Retención en la fuente a título de renta", "Retención en la fuente a título de renta"),
+			new ListaItem("O-08", "Retención timbre nacional", "Retención timbre nacional"),
+			new ListaItem("O-09", "Retención en la fuente en el impuesto sobre las ventas", "Retención en la fuente en el impuesto sobre las ventas"),
+			new ListaItem("O-11", "Ventas régimen común", "Ventas régimen común"),
+			new ListaItem("O-12", "Ventas régimen simplificado", "Ventas régimen simplificado"),
+			new ListaItem("O-13", "Gran contribuyente", "Gran contribuyente"),
+			new ListaItem("O-14", "Informante de exógena", "Informante de exógena"),
+			new ListaItem("O-15", "Autorretenedor", "Autorretenedor"),
+			new ListaItem("O-16", "Obligación de facturar por ingresos de bienes y/o servicios excluidos", "Obligación de facturar por ingresos de bienes y/o servicios excluidos"),
+			new ListaItem("O-17", "Profesionales de compra y venta de divisas", "Profesionales de compra y venta de divisas"),
+			new ListaItem("O-19", "Productor y/o exportador de bienes exentos", "Productor y/o exportador de bienes exentos"),
+			new ListaItem("O-22", "Obligado a cumplir deberes formales a nombre de terceros", "Obligado a cumplir deberes formales a nombre de terceros"),
+			new ListaItem("O-23", "Agente de retención en el impuesto sobre las ventas", "Agente de retención en el impuesto sobre las ventas"),
+			new ListaItem("O-32", "Impuesto Nacional a la Gasolina y al ACPM", "Impuesto Nacional a la Gasolina y al ACPM"),
+			new ListaItem("O-33", "Impuesto Nacional al consumo", "Impuesto Nacional al consumo"),
+			new ListaItem("O-34", "Régimen simplificado impuesto nacional consumo rest y bares", "Régimen simplificado impuesto nacional consumo rest y bares"),
+			new ListaItem("O-36", "Establecimiento Permanente", "Establecimiento Permanente"),
+			new ListaItem("O-37", "Obligado a Facturar Electrónicamente Modelo 2242", "Obligado a Facturar Electrónicamente Modelo 2242"),
+			new ListaItem("O-38", "Facturación Electrónica Voluntaria Modelo 2242", "Facturación Electrónica Voluntaria Modelo 2242"),
+			new ListaItem("O-39", "Proveedor de Servicios Tecnológicos PST Modelo 2242", "Proveedor de Servicios Tecnológicos PST Modelo 2242"),
+			new ListaItem("O-99", "Otro tipo de obligado", "Otro tipo de obligado"),
+			new ListaItem("R-12-PN", "Factor PN", "Factor PN"),
+			new ListaItem("R-16-PN", "Mandatario PN", "Mandatario PN"),
+			new ListaItem("R-25-PN", "Agente Interventor PN", "Agente Interventor PN"),
+			new ListaItem("R-06-PJ", "Apoderado especial PJ", "Apoderado especial PJ"),
+			new ListaItem("R-07-PJ", "Apoderado general PJ", "Apoderado general PJ"),
+			new ListaItem("R-12-PJ", "Factor PJ", "Factor PJ"),
+			new ListaItem("R-16-PJ", "Mandatario PJ", "Mandatario PJ"),
+			new ListaItem("R-99-PJ", "Otro tipo de responsable PJ", "Otro tipo de responsable PJ"),
+			new ListaItem("A-01", "Agente de carga internacional", "Agente de carga internacional"),
+			new ListaItem("A-02", "Agente marítimo", "Agente marítimo"),
+			new ListaItem("A-03", "Almacén general de depósito", "Almacén general de depósito"),
+			new ListaItem("A-04", "Comercializadora internacional (C.I.)", "Comercializadora internacional (C.I.)"),
+			new ListaItem("A-05", "Comerciante de la zona aduanera especial de Inírida, Puerto Carreño, Cumaribo y Primavera", "Comerciante de la zona aduanera especial de Inírida, Puerto Carreño, Cumaribo y Primavera"),
+			new ListaItem("A-06", "Comerciantes de la zona de régimen aduanero especial de Leticia", "Comerciantes de la zona de régimen aduanero especial de Leticia"),
+			new ListaItem("A-07", "Comerciantes de la zona de régimen aduanero especial de Maicao, Uribia y Manaure", "Comerciantes de la zona de régimen aduanero especial de Maicao, Uribia y Manaure"),
+			new ListaItem("A-08", "Comerciantes de la zona de régimen aduanero especial de Urabá, Tumaco y Guapí", "Comerciantes de la zona de régimen aduanero especial de Urabá, Tumaco y Guapí"),
+			new ListaItem("A-09", "Comerciantes del puerto libre de San Andrés, Providencia y Santa Catalina", "Comerciantes del puerto libre de San Andrés, Providencia y Santa Catalina"),
+			new ListaItem("A-10", "Depósito público de apoyo logístico internacional", "Depósito público de apoyo logístico internacional"),
+			new ListaItem("A-11", "Depósito privado para procesamiento industrial", "Depósito privado para procesamiento industrial"),
+			new ListaItem("A-12", "Depósito privado de transformación o ensamble", "Depósito privado de transformación o ensamble"),
+			new ListaItem("A-13", "Depósito franco", "Depósito franco"),
+			new ListaItem("A-14", "Depósito privado aeronáutico", "Depósito privado aeronáutico"),
+			new ListaItem("A-15", "Depósito privado para distribución internacional", "Depósito privado para distribución internacional"),
+			new ListaItem("A-16", "Depósito privado de provisiones de a bordo para consumo y para llevar", "Depósito privado de provisiones de a bordo para consumo y para llevar"),
+			new ListaItem("A-17", "Depósito privado para envíos urgentes", "Depósito privado para envíos urgentes"),
+			new ListaItem("A-18", "Depósito privado", "Depósito privado"),
+			new ListaItem("A-19", "Depósito público", "Depósito público"),
+			new ListaItem("A-20", "Depósito público para distribución internacional", "Depósito público para distribución internacional"),
+			new ListaItem("A-21", "Exportador de café", "Exportador de café"),
+			new ListaItem("A-22", "Exportador", "Exportador"),
+			new ListaItem("A-23", "Importador", "Importador"),
+			new ListaItem("A-24", "Intermediario de tráfico postal y envíos urgentes", "Intermediario de tráfico postal y envíos urgentes"),
+			new ListaItem("A-25", "Operador de transporte multimodal", "Operador de transporte multimodal"),
+			new ListaItem("A-26", "Sociedad de intermediación aduanera", "Sociedad de intermediación aduanera"),
+			new ListaItem("A-27", "Titular de puertos y muelles de servicio público o privado", "Titular de puertos y muelles de servicio público o privado"),
+			new ListaItem("A-28", "Transportador nfor régimen de importación y/o exportación", "Transportador nfor régimen de importación y/o exportación"),
+			new ListaItem("A-29", "Transportista nacional para operaciones del régimen de tránsito aduanero", "Transportista nacional para operaciones del régimen de tránsito aduanero"),
+			new ListaItem("A-30", "Usuario comercial zona franca", "Usuario comercial zona franca"),
+			new ListaItem("A-32", "Usuario industrial de bienes zona franca", "Usuario industrial de bienes zona franca"),
+			new ListaItem("A-34", "Usuario industrial de servicios zona franca", "Usuario industrial de servicios zona franca"),
+			new ListaItem("A-36", "Usuario operador de zona franca", "Usuario operador de zona franca"),
+			new ListaItem("A-37", "Usuario aduanero permanente", "Usuario aduanero permanente"),
+			new ListaItem("A-38", "Usuario altamente exportador", "Usuario altamente exportador"),
+			new ListaItem("A-39", "Usuario de zonas económicas especiales de exportación", "Usuario de zonas económicas especiales de exportación"),
+			new ListaItem("A-40", "Deposito privado de instalaciones industriales", "Deposito privado de instalaciones industriales"),
+			new ListaItem("A-41", "Beneficiarios de programas especiales de exportación PEX", "Beneficiarios de programas especiales de exportación PEX"),
+			new ListaItem("A-42", "Depósitos privados para mercancías en tránsito San Andrés", "Depósitos privados para mercancías en tránsito San Andrés"),
+			new ListaItem("A-43", "Observadores de las operaciones de importación", "Observadores de las operaciones de importación"),
+			new ListaItem("A-44", "Usuarios sistemas especiales Importación exportación", "Usuarios sistemas especiales Importación exportación"),
+			new ListaItem("A-46", "Transportador nformac régimen de importación y/o exportación", "Transportador nformac régimen de importación y/o exportación"),
+			new ListaItem("A-47", "Transportador terrestre régimen de importación y/o exportación", "Transportador terrestre régimen de importación y/o exportación"),
+			new ListaItem("A-48", "Aeropuerto de servicio publico o privado", "Aeropuerto de servicio publico o privado"),
+			new ListaItem("A-49", "Transportador fluvial régimen de importación", "Transportador fluvial régimen de importación"),
+			new ListaItem("A-50", "Usuario industrial zona franca especial", "Usuario industrial zona franca especial"),
+			new ListaItem("A-53", "Agencias de aduanas 1", "Agencias de aduanas 1"),
+			new ListaItem("A-54", "Usuario Operador Zona Franca Especial", "Usuario Operador Zona Franca Especial"),
+			new ListaItem("A-55", "Agencias de aduanas 2", "Agencias de aduanas 2"),
+			new ListaItem("A-56", "Agencias de aduanas 3", "Agencias de aduanas 3"),
+			new ListaItem("A-57", "Agencias de aduanas 4", "Agencias de aduanas 4"),
+			new ListaItem("A-58", "Transportador aéreo nacional", "Transportador aéreo nacional"),
+			new ListaItem("A-60", "Transportador aéreo, marítimo o fluvial modalidad Cabotaje", "Transportador aéreo, marítimo o fluvial modalidad Cabotaje"),
+			new ListaItem("A-61", "Importador de alimentos de consumo humano y animal", "Importador de alimentos de consumo humano y animal"),
+			new ListaItem("A-62", "Importador Ocasional", "Importador Ocasional"),
+			new ListaItem("A-63", "Importador de maquinaría y sus partes Decreto 2261 de 2012", "Importador de maquinaría y sus partes Decreto 2261 de 2012"),
+			new ListaItem("A-64", "Beneficiario Programa de Fomento Industria Automotriz-PROFIA", "Beneficiario Programa de Fomento Industria Automotriz-PROFIA"),
+			new ListaItem("A-99", "Otro tipo de agente aduanero", "Otro tipo de agente aduanero"),
+			new ListaItem("E-01", "Agencia", "Agencia"),
+			new ListaItem("E-02", "Establecimiento de comercio", "Establecimiento de comercio"),
+			new ListaItem("E-03", "Centro de explotación agrícola", "Centro de explotación agrícola"),
+			new ListaItem("E-04", "Centro de explotación animal", "Centro de explotación animal"),
+			new ListaItem("E-05", "Centro de explotación minera", "Centro de explotación minera"),
+			new ListaItem("E-06", "Centro de explotación de transformación", "Centro de explotación de transformación"),
+			new ListaItem("E-07", "Centro de explotación de servicios", "Centro de explotación de servicios"),
+			new ListaItem("E-08", "Oficina", "Oficina"),
+			new ListaItem("E-09", "Sede", "Sede"),
+			new ListaItem("E-10", "Sucursal", "Sucursal"),
+			new ListaItem("E-11", "Consultorio", "Consultorio"),
+			new ListaItem("E-12", "Administraciones", "Administraciones"),
+			new ListaItem("E-13", "Seccionales", "Seccionales"),
+			new ListaItem("E-14", "Regionales", "Regionales"),
+			new ListaItem("E-15", "Intendencias", "Intendencias"),
+			new ListaItem("E-16", "Local o negocio", "Local o negocio"),
+			new ListaItem("E-17", "Punto de venta", "Punto de venta"),
+			new ListaItem("E-18", "Fábrica", "Fábrica"),
+			new ListaItem("E-19", "Taller", "Taller"),
+			new ListaItem("E-20", "Cantera", "Cantera"),
+			new ListaItem("E-21", "Pozo de Petróleo y Gas", "Pozo de Petróleo y Gas"),
+			new ListaItem("E-22", "Otro lug de tipo de extrac explotación de recursos naturales", "Otro lug de tipo de extrac explotación de recursos naturales"),
+			new ListaItem("E-99", "Otro tipo de establecimiento", "Otro tipo de establecimiento"),
+
+		};
+
+	}
+}
