@@ -200,6 +200,14 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// Id de seguridad del plan de donde se va a descontar el presente documento
         /// </summary>
         public Guid IdPlan { get; set; }
-        #endregion
-    }
+		
+
+		/// <summary>
+		/// Versión de la DIAN (1: 2018 - 2: Validación Previa 2019)
+		/// </summary>
+		public int VersionDian { get; set; }
+
+
+		#endregion
+	}
 }
