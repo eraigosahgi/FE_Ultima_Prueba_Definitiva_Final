@@ -17,6 +17,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblDocumentos()
         {
+            this.IntVersionDian = 1;
             this.TblPagosElectronicos = new HashSet<TblPagosElectronicos>();
         }
     
@@ -57,6 +58,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public decimal IntValorNeto { get; set; }
         public short IntEstadoEnvio { get; set; }
         public short IntMensajeEnvio { get; set; }
+        public short IntVersionDian { get; set; }
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }

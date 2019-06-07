@@ -222,6 +222,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1Rev8", "v2019.1Rev8"
 		Documentacion\Liberaciones\v2019.1Rev8\20190328-IntMensajeEnvioTblDoc.txt = Documentacion\Liberaciones\v2019.1Rev8\20190328-IntMensajeEnvioTblDoc.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.3", "v2019.3", "{E00CBE9E-08E1-4C5F-A6DD-5D610CC93116}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2019.3\20190507-IntVersionDianTblDocumentos.txt = Documentacion\Liberaciones\v2019.3\20190507-IntVersionDianTblDocumentos.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -366,5 +371,6 @@ Global
 		{622730B6-AB41-4894-BDCB-AE0E339C64B6} = {85FACE89-D7D2-47B0-90D3-B90E14AD15EA}
 		{8ED7B04C-27BA-4776-B139-21F0617E9987} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{57EA43DD-0E6A-4E3F-B780-CAC1D4F54181} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{E00CBE9E-08E1-4C5F-A6DD-5D610CC93116} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal
