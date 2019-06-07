@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HGInetMiFacturaElectonicaController.Configuracion;
-using HGInetMiFacturaElectonicaController.ServiciosDian;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
-using HGInetUBL;
-using HGInetUBL.Objetos;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using HGInetMiFacturaElectonicaData.Enumerables;
@@ -70,14 +62,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				PinSoftware = PinSoftware
 			};
 
+			FacturaE_Documento resultado = null;
+
 			// convierte el documento 
-			FacturaE_Documento resultado = FacturaXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
+			switch (documento.VersionDian)
+			{
+				case 1:
+					resultado = HGInetUBL.FacturaXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
+					break;
+
+				case 2:
+					resultado = HGInetUBLv2_1.FacturaXMLv2_1.CrearDocumento(id_documento, documento, extension_documento);
+					break;
+
+				default:
+					resultado = HGInetUBL.FacturaXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
+					break;
+			}
+
 			resultado.DocumentoTipo = tipo_doc;
 			resultado.IdSeguridadDocumento = id_documento;
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
 			// genera el nombre del archivo ZIP
-			resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
+			resultado.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
 
 			return resultado;
 		}
@@ -123,14 +131,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				PinSoftware = PinSoftware
 			};
 
+			FacturaE_Documento resultado = null;
 
 			// convierte el documento 
-			FacturaE_Documento resultado = NotaCreditoXML.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc);
+			switch (documento.VersionDian)
+			{
+				case 1:
+					resultado = HGInetUBL.NotaCreditoXML.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc);
+					break;
+
+				case 2:
+					resultado = HGInetUBLv2_1.NotaCreditoXMLv2_1.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc);
+					break;
+
+				default:
+					resultado = HGInetUBL.NotaCreditoXML.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc);
+					break;
+
+			}
+
 			resultado.DocumentoTipo = tipo_doc;
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
 			// genera el nombre del archivo ZIP
-			resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
+			resultado.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
 
 			return resultado;
 		}
@@ -178,12 +202,29 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 			// convierte el documento 
-			FacturaE_Documento resultado = NotaDebitoXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
+			FacturaE_Documento resultado = null;
+
+			switch (documento.VersionDian)
+			{
+				case 1:
+					resultado = HGInetUBL.NotaDebitoXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
+					break;
+
+				case 2:
+					resultado = HGInetUBLv2_1.NotaDebitoXML2_1.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
+					break;
+
+				default:
+					resultado = HGInetUBL.NotaDebitoXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
+					break;
+
+			}
+			
 			resultado.DocumentoTipo = tipo_doc;
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
 			// genera el nombre del archivo ZIP
-			resultado.NombreZip = NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
+			resultado.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
 
 			return resultado;
 		}

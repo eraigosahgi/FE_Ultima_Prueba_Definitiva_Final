@@ -642,8 +642,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
 				// convierte el objeto de acuerdo con el tipo de documento
 				XmlSerializer serializacion = null;
-				serializacion = new XmlSerializer(typeof(InvoiceType));
-				InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+				serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
+				HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
 				Factura documento_obj = FacturaXML.Convertir(conversion);
 				report.DataSource = documento_obj;
 

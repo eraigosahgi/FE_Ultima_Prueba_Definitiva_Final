@@ -1,29 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HGInetFirmaDigital;
-using HGInetMiFacturaElectonicaController.ServiciosDian;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Properties;
 using LibreriaGlobalHGInet.Formato;
-using System.Text.RegularExpressions;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData;
 using HGInetDIANServicios;
-using HGInetDIANServicios.DianResolucion;
 using HGInetMiFacturaElectonicaController.Properties;
 using LibreriaGlobalHGInet.Enumerables;
-using HGInetUBL;
-using System.Xml.Serialization;
-using System.Xml;
-using System.IO;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaController.Auditorias;
 
@@ -110,6 +100,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						//Guarda el Id del documento generado por la plataforma
 						documento_result.IdSeguridadDocumento = Guid.Parse(respuesta.IdDocumento);
+
+						// Establece la versión de la DIAN
+						documento_result.VersionDian = documento_obj.VersionDian;
 
 						//Valida que el Proveedor Receptor enviado exista en Bd
 						if (documento_obj.IdentificacionProveedor != null)

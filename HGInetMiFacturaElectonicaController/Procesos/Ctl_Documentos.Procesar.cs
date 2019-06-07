@@ -1,21 +1,16 @@
 ﻿using HGInetDIANServicios;
-using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
-using HGInetUBL;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
-using LibreriaGlobalHGInet.Mail;
 using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -160,29 +155,29 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (tipo_documento == TipoDocumento.Factura)
 				{
-					serializacion = new XmlSerializer(typeof(InvoiceType));
+					serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
 
-					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+					HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = FacturaXML.Convertir(conversion);
+					documento_obj = HGInetUBL.FacturaXML.Convertir(conversion);
 					documento.StrCufe = documento_obj.Cufe;
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
-					serializacion = new XmlSerializer(typeof(CreditNoteType));
+					serializacion = new XmlSerializer(typeof(HGInetUBL.CreditNoteType));
 
-					CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+					HGInetUBL.CreditNoteType conversion = (HGInetUBL.CreditNoteType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = NotaCreditoXML.Convertir(conversion);
+					documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion);
 					documento.StrCufe = documento_obj.Cufe;
 				}
 				else if (tipo_documento == TipoDocumento.NotaDebito)
 				{
-					serializacion = new XmlSerializer(typeof(DebitNoteType));
+					serializacion = new XmlSerializer(typeof(HGInetUBL.DebitNoteType));
 
-					DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+					HGInetUBL.DebitNoteType conversion = (HGInetUBL.DebitNoteType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = NotaDebitoXML.Convertir(conversion);
+					documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion);
 					documento.StrCufe = documento_obj.Cufe;
 				}
 
@@ -228,11 +223,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				};
 
 				// genera el nombre del archivo XML y PDF
-				documento_result.NombreXml = NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, tipo_documento, documento_obj.Prefijo);
+				documento_result.NombreXml = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, tipo_documento, documento_obj.Prefijo);
 				documento_result.NombrePdf = documento_result.NombreXml;
 
 				// genera el nombre del archivo ZIP
-				documento_result.NombreZip = NombramientoArchivo.ObtenerZip(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, tipo_documento, documento_obj.Prefijo);
+				documento_result.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, tipo_documento, documento_obj.Prefijo);
 
 				// firma el xml (valida si no ha realizado el envío a la DIAN vuelve a firmar)
 				if (respuesta.IdProceso < ProcesoEstado.FirmaXml.GetHashCode())

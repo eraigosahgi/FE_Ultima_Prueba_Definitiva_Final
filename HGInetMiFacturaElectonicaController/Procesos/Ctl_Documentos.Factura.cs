@@ -46,7 +46,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
 
 
-				
+
 
 				// genera un id único de la plataforma
 				Guid id_peticion = Guid.NewGuid();
@@ -131,13 +131,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException(string.Format("No se encontraron las resoluciones para el Facturador Electrónico '{0}'", facturador_electronico.StrIdentificacion));
 
 				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
-				
+
 				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count());
 
 				if (ListaPlanes == null)
 					throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
 
-				
+
 				int i = 0;
 				//Planes y transacciones
 				foreach (var item in documentos)
@@ -155,9 +155,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Planes y transacciones
 				Parallel.ForEach<Factura>(documentos, item =>
 				{
-					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+					DocumentoRespuesta item_respuesta = null;
+					switch (item.VersionDian)
+					{
+						case 1:
+							Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+							break;
+
+						case 2:
+							Procesar_v2(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+							break;
+
+						default:
+							Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+							break;
+					}
 					respuesta.Add(item_respuesta);
 				});
+
 				////Planes y transacciones
 				foreach (ObjPlanEnProceso plan in ListaPlanes)
 				{
@@ -192,7 +207,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				////Planes y transacciones
 				LogExcepcion.Guardar(ex);
 				throw new ApplicationException(ex.Message);
-								
+
 			}
 		}
 
@@ -360,6 +375,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			return item_respuesta;
 
+		}
+
+		/// <summary>
+		/// Procesa un documento por paralelismo
+		/// </summary>
+		/// <param name="item">objeto de datos factura</param>
+		/// <param name="facturador_electronico">facturador electrónico del documento</param>
+		/// <param name="id_peticion">identificador de petición</param>
+		/// <param name="fecha_actual">fecha actual de recepción del documento</param>
+		/// <param name="lista_resolucion">resoluciones habilitadas para el facturador electrónico</param>
+		/// <returns>resultado del proceso</returns>
+		private static DocumentoRespuesta Procesar_v2(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
+		{
+			DocumentoRespuesta item_respuesta = new DocumentoRespuesta() { DescuentaSaldo = false };
+			
+			return item_respuesta;
 		}
 
 		/// <summary>

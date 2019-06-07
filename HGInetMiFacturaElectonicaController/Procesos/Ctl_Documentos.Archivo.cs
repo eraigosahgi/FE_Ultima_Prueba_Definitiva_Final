@@ -6,7 +6,6 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
-using HGInetUBL;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
@@ -61,17 +60,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Valida tipo de documento para hacer la deserializacion
 				if (archivo.TipoDocumento == TipoDocumento.Factura.GetHashCode())
 				{
-					InvoiceType conversion = new InvoiceType();
+					HGInetUBL.InvoiceType conversion = new HGInetUBL.InvoiceType();
 
-					serializacion = new XmlSerializer(typeof(InvoiceType));
+					serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
 
-					conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+					conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
 
 					// agrega los campos de la Dian correspondientes al Proveedor Tecnológico
 					//conversion = (InvoiceType)AgregarCamposDian(conversion, TipoDocumento.Factura, facturador);
 
 
-					documento_obj = FacturaXML.Convertir(conversion);
+					documento_obj = HGInetUBL.FacturaXML.Convertir(conversion);
 
 					cufe_calculado = HGInetUBL.FacturaXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica);
 
@@ -85,17 +84,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else if (archivo.TipoDocumento == TipoDocumento.NotaCredito.GetHashCode())
 				{
 
-					CreditNoteType conversion = new CreditNoteType();
+					HGInetUBL.CreditNoteType conversion = new HGInetUBL.CreditNoteType();
 
-					serializacion = new XmlSerializer(typeof(CreditNoteType));
+					serializacion = new XmlSerializer(typeof(HGInetUBL.CreditNoteType));
 
-					conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+					conversion = (HGInetUBL.CreditNoteType)serializacion.Deserialize(xml_reader);
 
 					// agrega los campos de la Dian correspondientes al Proveedor Tecnológico
 					//conversion = (CreditNoteType)AgregarCamposDian(conversion, TipoDocumento.NotaCredito, facturador);
 
 
-					documento_obj = NotaCreditoXML.Convertir(conversion);
+					documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion);
 
 					cufe_calculado = HGInetUBL.NotaCreditoXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica, documento_obj.CufeFactura);
 
@@ -108,18 +107,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else if (archivo.TipoDocumento == TipoDocumento.NotaDebito.GetHashCode())
 				{
-					DebitNoteType conversion = new DebitNoteType();
+					HGInetUBL.DebitNoteType conversion = new HGInetUBL.DebitNoteType();
 
-					serializacion = new XmlSerializer(typeof(DebitNoteType));
+					serializacion = new XmlSerializer(typeof(HGInetUBL.DebitNoteType));
 
-					conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+					conversion = (HGInetUBL.DebitNoteType)serializacion.Deserialize(xml_reader);
 
 
 					// agrega los campos de la Dian correspondientes al Proveedor Tecnológico
 					//conversion = (DebitNoteType)AgregarCamposDian(conversion, TipoDocumento.NotaDebito, facturador);
 
 
-					documento_obj = NotaDebitoXML.Convertir(conversion);
+					documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion);
 
 					cufe_calculado = HGInetUBL.NotaDebitoXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica, documento_obj.CufeFactura);
 
@@ -204,11 +203,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento_result.DocumentoXml = txt_xml;
 
 					//Obtiene el nombre del archivo XML
-					documento_result.NombreXml = NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
+					documento_result.NombreXml = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
 					documento_result.NombrePdf = documento_result.NombreXml;
 
 					// genera el nombre del archivo ZIP
-					documento_result.NombreZip = NombramientoArchivo.ObtenerZip(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
+					documento_result.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
 
 					Ctl_Documento documento_tmp = new Ctl_Documento();
 
