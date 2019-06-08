@@ -1,5 +1,6 @@
 ﻿using HGInetDIANServicios;
 using HGInetDIANServicios.DianFactura;
+using HGInetFirmaDigital;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
@@ -99,12 +100,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="empresa">Obligado a facturar</param>
 		/// <param name="respuesta">Objeto de respuesta</param>
 		/// <returns>Segun la respuesta de la DIAN cambia el estado del documento</returns>
-		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta)
+		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "")
 		{
 
 			DateTime fecha_actual = Fecha.GetFecha();
 			Ctl_Documento documento_tmp = new Ctl_Documento();
-
 
 
 			try
@@ -136,22 +136,27 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (Archivo.ValidarExistencia(ruta_xml))
 					Archivo.Borrar(ruta_xml);
 
-				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
-				{
-					// obtiene los datos de prueba del proveedor tecnológico de la DIAN
-					DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
+				string ruta_certificado = string.Empty;
+				CertificadoDigital certificado = null;
 
-					IdSoftware = data_dian_habilitacion.IdSoftware;
-					PinSoftware = data_dian_habilitacion.Pin;
-					clave = data_dian_habilitacion.ClaveAmbiente;
-					url_ws_consulta = data_dian_habilitacion.UrlWSConsultaTransacciones;
-					obligado_identificacion = Constantes.NitResolucionsinPrefijo;
-				}
-				else
+				if (documentoBd.IntVersionDian == 2)
 				{
-					// obtiene los datos del proveedor tecnológico de la DIAN
-					DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
+					// obtiene la información de configuración del certificado digital
+					certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
+
+					// obtiene la empresa certificadora
+					EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
+
+					if (certificado.Certificadora.Equals("andes"))
+						empresa_certificadora = EnumCertificadoras.Andes;
+					else if (certificado.Certificadora.Equals("gse"))
+						empresa_certificadora = EnumCertificadoras.Gse;
+
+					// información del certificado digital
+					ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
+
+					// obtiene los datos del proveedor tecnológico de la DIAN para Validación Previa
+					DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
 					IdSoftware = data_dian.IdSoftware;
 					PinSoftware = data_dian.Pin;
@@ -159,15 +164,51 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					url_ws_consulta = data_dian.UrlWSConsultaTransacciones;
 					obligado_identificacion = empresa.StrIdentificacion;
 				}
+				else
+				{
+					// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
+					if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+					{
+						// obtiene los datos de prueba del proveedor tecnológico de la DIAN
+						DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
 
+						IdSoftware = data_dian_habilitacion.IdSoftware;
+						PinSoftware = data_dian_habilitacion.Pin;
+						clave = data_dian_habilitacion.ClaveAmbiente;
+						url_ws_consulta = data_dian_habilitacion.UrlWSConsultaTransacciones;
+						obligado_identificacion = Constantes.NitResolucionsinPrefijo;
+					}
+					else
+					{
+						// obtiene los datos del proveedor tecnológico de la DIAN
+						DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
 
-				HGInetDIANServicios.DianResultadoTransacciones.DocumentosRecibidos resultado = Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), IdSoftware, clave, documentoBd.IntDocTipo, documentoBd.StrPrefijo, documentoBd.IntNumero.ToString(), obligado_identificacion, documentoBd.DatFechaDocumento, documentoBd.StrCufe, url_ws_consulta, ruta_xml);
+						IdSoftware = data_dian.IdSoftware;
+						PinSoftware = data_dian.Pin;
+						clave = data_dian.ClaveAmbiente;
+						url_ws_consulta = data_dian.UrlWSConsultaTransacciones;
+						obligado_identificacion = empresa.StrIdentificacion;
+					}
+				}
 
-				ConsultaDocumento resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
+				ConsultaDocumento resultado_doc = null;
 
+				if (documentoBd.IntVersionDian == 2)
+				{
+					// Consulta del documento con validación previa
+					Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, ruta_xml, ruta_certificado, certificado.Clave, clave, url_ws_consulta);
+					resultado_doc = new ConsultaDocumento();
+					/*** FALTA ***/
+
+				}
+				else
+				{
+					HGInetDIANServicios.DianResultadoTransacciones.DocumentosRecibidos resultado = Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), IdSoftware, clave, documentoBd.IntDocTipo, documentoBd.StrPrefijo, documentoBd.IntNumero.ToString(), obligado_identificacion, documentoBd.DatFechaDocumento, documentoBd.StrCufe, url_ws_consulta, ruta_xml);
+					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
+				}
+				
 				// url pública del xml de respuesta de la DIAN 
 				string url_ppal_respuesta = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
-
 
 				// se indica la respuesta de la DIAN
 				respuesta.EstadoDian = new RespuestaDian();
@@ -182,7 +223,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				try
 				{
-					string respuestadian= Newtonsoft.Json.JsonConvert.SerializeObject(respuesta.EstadoDian);
+					string respuestadian = Newtonsoft.Json.JsonConvert.SerializeObject(respuesta.EstadoDian);
 					//valido la respuesta para saber que estado guardar en la Auditoria
 					int estado = 0;
 					if (resultado_doc.Estado == EstadoDocumentoDian.Aceptado)

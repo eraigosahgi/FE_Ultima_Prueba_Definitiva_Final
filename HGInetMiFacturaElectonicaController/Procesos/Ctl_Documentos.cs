@@ -252,12 +252,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 
-
-						// Consultar v2 con acuse.Comments
-
-
+						// id entregado por el servicio web de Validación Previa
+						string id_validacion_previa = string.Empty;						
+						if(documentoBd.IntVersionDian == 2)
+							id_validacion_previa = acuse.Comments;
+							
 						//Valida estado del documento en la Plataforma de la DIAN
-						respuesta = Consultar(documentoBd, empresa, ref respuesta);
+						respuesta = Consultar(documentoBd, empresa, ref respuesta, id_validacion_previa);
 
 						// envía el mail de documentos al adquiriente
 						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())

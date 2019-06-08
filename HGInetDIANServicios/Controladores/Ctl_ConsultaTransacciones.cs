@@ -14,7 +14,7 @@ namespace HGInetDIANServicios
 	/// Consultas del estado de transacciones en la DIAN
 	/// https://www.dian.gov.co/fizcalizacioncontrol/herramienconsulta/FacturaElectronica/Factura%20Electrnica/Nuevo%20servicio%20Web%20Consulta%20del%20Resultado%20de%20Transacciones.pdf
 	/// </summary>
-	public class Ctl_ConsultaTransacciones
+	public partial class Ctl_ConsultaTransacciones
 	{
 		/// <summary>
 		/// Consulta el estado de documentos en la DIAN

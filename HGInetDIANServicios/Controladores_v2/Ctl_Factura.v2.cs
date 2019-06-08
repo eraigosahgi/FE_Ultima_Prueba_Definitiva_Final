@@ -25,7 +25,7 @@ namespace HGInetDIANServicios
 		{
 			try
 			{
-				X509Certificate2 cert = new X509Certificate2(ruta_certificado, clave_certificado);				
+				X509Certificate2 cert = new X509Certificate2(ruta_certificado, clave_certificado);
 				DianWSValidacionPrevia.WcfDianCustomerServicesClient webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
 				webServiceHab.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
 				webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
