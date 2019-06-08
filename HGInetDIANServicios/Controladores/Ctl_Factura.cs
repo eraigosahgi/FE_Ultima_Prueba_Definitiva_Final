@@ -10,7 +10,7 @@ using LibreriaGlobalHGInet.General;
 
 namespace HGInetDIANServicios
 {
-	public class Ctl_Factura
+	public partial class Ctl_Factura
 	{
 
 		/// <summary>

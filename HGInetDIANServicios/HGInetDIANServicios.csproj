@@ -56,6 +56,7 @@
     <Compile Include="Controladores\Ctl_ConsultaTransacciones.cs" />
     <Compile Include="Controladores\Ctl_Factura.cs" />
     <Compile Include="Controladores\Ctl_Resolucion.cs" />
+    <Compile Include="Controladores_v2\Ctl_Factura.v2.cs" />
     <Compile Include="Enumerables\EstadoDocumentoDian.cs" />
     <Compile Include="Enumerables\RespuestaDocumentoDian.cs" />
     <Compile Include="Enumerables\ValidacionRespuestaDian.cs" />
@@ -77,6 +78,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\DianResultadoTransacciones\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\DianWSValidacionPrevia\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -104,11 +110,52 @@
     <None Include="Service References\DianResultadoTransacciones\HGInetDIANServicios.DianResultadoTransacciones.ConsultaResultadoValidacionDocumentosRespuesta.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.DianResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.EventResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.UploadDocumentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.wsdl" />
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices8.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\DianFactura\" />
     <WCFMetadataStorage Include="Service References\DianResolucion\" />
     <WCFMetadataStorage Include="Service References\DianResultadoTransacciones\" />
+    <WCFMetadataStorage Include="Service References\DianWSValidacionPrevia\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DianResolucion\configuration91.svcinfo" />
@@ -154,6 +201,21 @@
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianWSValidacionPrevia\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianWSValidacionPrevia\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianWSValidacionPrevia\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
