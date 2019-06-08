@@ -579,14 +579,38 @@ namespace HGInetUBL
 				#endregion
 
 				#region Datos de la empresa
+				if (empresa.TipoPersona.Equals(2))//Persona natural
+				{
+					PersonType1 Person = new PersonType1();
 
-				PartyLegalEntityType1[] PartyLegalEntitys = new PartyLegalEntityType1[1];
-				PartyLegalEntityType1 PartyLegalEntity = new PartyLegalEntityType1();
-				RegistrationNameType RegistrationName = new RegistrationNameType();
-				RegistrationName.Value = empresa.RazonSocial;
-				PartyLegalEntity.RegistrationName = RegistrationName;
-				PartyLegalEntitys[0] = PartyLegalEntity;
-				Party.PartyLegalEntity = PartyLegalEntitys;
+					FirstNameType FirstName = new FirstNameType();
+					FirstName.Value = empresa.PrimerNombre;
+					Person.FirstName = FirstName;
+
+					MiddleNameType MiddleName = new MiddleNameType();
+					if (empresa.SegundoNombre != null && !empresa.SegundoNombre.Equals(string.Empty))
+					{
+						MiddleName.Value = empresa.SegundoNombre;
+					}
+					Person.MiddleName = MiddleName;
+
+					FamilyNameType FamilyName = new FamilyNameType();
+					FamilyName.Value = string.Format("{0} {1}", empresa.PrimerApellido, empresa.SegundoApellido);
+					Person.FamilyName = FamilyName;
+
+					Party.Person = Person;
+				}
+				else if (empresa.TipoPersona.Equals(1)) //Persona juridica
+				{
+					PartyLegalEntityType1[] PartyLegalEntitys = new PartyLegalEntityType1[1];
+					PartyLegalEntityType1 PartyLegalEntity = new PartyLegalEntityType1();
+					RegistrationNameType RegistrationName = new RegistrationNameType();
+					RegistrationName.Value = empresa.RazonSocial;
+					PartyLegalEntity.RegistrationName = RegistrationName;
+					PartyLegalEntitys[0] = PartyLegalEntity;
+
+					Party.PartyLegalEntity = PartyLegalEntitys;
+				}
 
 				#endregion
 
