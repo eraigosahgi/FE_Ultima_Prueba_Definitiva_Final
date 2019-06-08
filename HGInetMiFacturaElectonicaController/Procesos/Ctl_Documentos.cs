@@ -253,6 +253,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 
 
+						// Consultar v2 con acuse.Comments
+
+
 						//Valida estado del documento en la Plataforma de la DIAN
 						respuesta = Consultar(documentoBd, empresa, ref respuesta);
 

@@ -163,7 +163,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							break;
 
 						case 2:
-							Procesar_v2(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+							Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);//_v2
 							break;
 
 						default:
