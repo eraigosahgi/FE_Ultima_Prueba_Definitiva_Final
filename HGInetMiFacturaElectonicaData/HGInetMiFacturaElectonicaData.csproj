@@ -204,6 +204,7 @@
     <Compile Include="Parametros\DataBaseAuditoria.cs" />
     <Compile Include="Parametros\DianProveedor.cs" />
     <Compile Include="Parametros\DianProveedorTest.cs" />
+    <Compile Include="Parametros\DianProveedorV2.cs" />
     <Compile Include="Parametros\HgiConfiguracion.cs" />
     <Compile Include="Parametros\MailServer.cs" />
     <Compile Include="Parametros\PasarelaPagos.cs" />
