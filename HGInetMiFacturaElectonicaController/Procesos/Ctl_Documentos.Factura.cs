@@ -159,15 +159,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					switch (item.VersionDian)
 					{
 						case 1:
-							Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+							item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 							break;
 
 						case 2:
-							Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);//_v2
+							item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);//_v2
 							break;
 
 						default:
-							Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
+							item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 							break;
 					}
 					respuesta.Add(item_respuesta);
