@@ -122,6 +122,8 @@
           <Property Name="StrMailRecepcion" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="StrMailAcuse" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="StrMailPagos" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="IntTimeout" Type="smallint" />
+          <Property Name="IntVersionDian" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasPasarela">
           <Key>
@@ -1032,6 +1034,8 @@
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblEmpresas" ToRole="TblUsuarios" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
+          <Property Name="IntTimeout" Type="Int16" />
+          <Property Name="IntVersionDian" Type="Int16" Nullable="false" DefaultValue="1" />
           </EntityType>
         <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1506,6 +1510,8 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
+                <ScalarProperty Name="IntTimeout" ColumnName="IntTimeout" />
                 <ScalarProperty Name="StrMailPagos" ColumnName="StrMailPagos" />
                 <ScalarProperty Name="StrMailAcuse" ColumnName="StrMailAcuse" />
                 <ScalarProperty Name="StrMailRecepcion" ColumnName="StrMailRecepcion" />

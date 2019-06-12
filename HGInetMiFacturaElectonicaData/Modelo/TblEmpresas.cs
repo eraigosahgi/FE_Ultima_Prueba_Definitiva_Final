@@ -17,6 +17,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblEmpresas()
         {
+            this.IntVersionDian = 1;
             this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
             this.TblOpcionesUsuario = new HashSet<TblOpcionesUsuario>();
             this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
@@ -55,6 +56,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrMailRecepcion { get; set; }
         public string StrMailAcuse { get; set; }
         public string StrMailPagos { get; set; }
+        public Nullable<short> IntTimeout { get; set; }
+        public short IntVersionDian { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }
