@@ -106,49 +106,31 @@
 		}
 	</style>
 	<link href="../../Content/dx.hgi.css?vjs201915" rel="stylesheet" />
-	<script>
-
+		<script>
 
 		$(document).ready(function () {
-			// Session timeout
-			$.sessionTimeout({
-				heading: 'h5',
-				title: 'Alerta de sesión',
-				message: 'Su sesión está a punto de caducar.',
-				keepBtnText: "Permanecer Conectado",
-				keepBtnClass: "btn btn-primary",
-				logoutBtnText: "Desconectar",
-				logoutBtnClass: "btn btn-danger",
-				ignoreUserActivity: false,
-				//Tiempo de alerta para notificar que la sesión está próxima a expirar.
-				warnAfter: 10000,
-				//Tiempo para el cierre de la sesión.
-				redirAfter: 30000,
-				keepAliveUrl: '/',
-				//página para cierre total de sesión, después de cumplido el redirAfter. 
-				redirUrl: '../Login/Default.aspx',
-				//página para botón Desconectar
-				logoutUrl: '../Login/Default.aspx'
-			});
-		});
-
-		/*$(document).ready(function () {
 			var dt = new Date();
 			window.setInterval("ValidarSesion()", 300000);
-		});*/
+		});
+
 
 
 		// jQuery
 		$(document).ready(function () {
+
+
 			$('#Menuocultar').on('click', function () {
 				//$('#sidebar').toggle();
 				//$('#sidebar').animate({ display: 'hide' }, "slow");
 				$('#sidebar').animate({ width: 'toggle' });
 			});
+
+
+
 		});
 
 
-		function ErrorSesion() {
+		function ErrorSesion() {			
 			swal({
 				title: 'Alerta',
 				text: 'Se ha iniciado sesión desde otra ubicación.',
