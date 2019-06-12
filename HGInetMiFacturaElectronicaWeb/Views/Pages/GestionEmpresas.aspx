@@ -68,6 +68,7 @@
 									<div id="tooltip_cboestado">Indica si la empresa esta Activa o Inactiva</div>
 								</div>
 
+
 								<div class="col-md-12 text-left" style="z-index: 8;">
 									<label style="margin-top: 16px; padding-top: 40px;">Observaciones:</label>
 									<div id="txtobservaciones"></div>
@@ -214,6 +215,13 @@
 							<div class="col-md-12" style="margin-top: 1%;">
 								<div data-hgi-filtro="EmpresaDescuenta"></div>
 								<div class="col-md-12 " id="tooltip_EmpresaDescuenta">Se puede indicar una empresa que este asociada para el descuento de saldo de documentos o <br /> se debe seleccionar la misma empresa</div>
+							</div>
+
+
+							<div class="col-md-12" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index: 9;">Versión:<strom style="color: red;">*</strom></label>
+									<div id="cboVersionDIAM"></div>
+									<div id="tooltip_cboVersionDIAM">Indica la versión con la que se configuro el Facturador (DIAN)</div>
 							</div>
 
 

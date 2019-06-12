@@ -46,6 +46,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 						lblEmailUsuario.InnerText = datos_usuario.StrMail;
 						LblNombreUsuario.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
 
+
+
+
 						//  if (PermisoActual != null)
 						//{
 
@@ -87,6 +90,14 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 
 						Hdf_Facturador.Value = datos_empresa.StrIdentificacion;
 
+						if (datos_empresa.IntAdministrador)
+						{
+							Hdf_Perfil.Value = "Administrador";
+						}
+						else
+						{
+							Hdf_Perfil.Value = (datos_empresa.IntAdquiriente && datos_empresa.IntObligado) ? "Facturador y Adquiriente" : datos_empresa.IntAdquiriente ? "Adquiriente" : datos_empresa.IntObligado ? "Facturador" : "";
+						}
 
 					}
 				}

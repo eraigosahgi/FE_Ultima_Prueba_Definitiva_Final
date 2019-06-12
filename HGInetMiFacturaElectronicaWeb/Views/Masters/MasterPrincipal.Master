@@ -153,6 +153,7 @@
 
 
 	</script>
+	<script type="text/javascript" async="" src="https://www.google-analytics.com/ga.js"></script>
 </head>
 <body>
 
@@ -177,6 +178,8 @@
 		<input type="hidden" id="Hdf_RutaSrvPagos" runat="server" />
 		<input type="hidden" id="Hdf_RutaPlataformaServicios" runat="server" />
 		<input type="hidden" id="Hdf_Facturador" runat="server" />
+		<input type="hidden" id="Hdf_Perfil" runat="server" />
+		
 
 		<!-- Barra de Navegación Principal -->
 		<div class="navbar navbar-inverse bg-slate-800">
@@ -466,5 +469,14 @@
 		<!-- /Contenedor de la página -->
 
 	</form>
+	<script>			
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-53441577-5',{'client_id': '<%= string.Format("{0}_{1}",Hdf_Facturador.Value, LblCodigoUsuario.InnerText)%>'}]);
+		_gaq.push(['_setCustomVar', 1, 'PerfilUsuario', '<%=Hdf_Perfil.Value%>', 1]);
+		_gaq.push(['_setCustomVar', 2, 'Empresa', '<%=Hdf_Facturador.Value%>', 1]);
+		_gaq.push(['_setCustomVar', 3, 'Usuario', '<%=LblCodigoUsuario.InnerText%>', 1]);
+		_gaq.push(['_setCustomVar', 4, 'TituloPagina', '<%=lb_TituloPagina.Text%>', 1]);
+		_gaq.push(['_trackPageview']);			
+	</script>
 </body>
 </html>

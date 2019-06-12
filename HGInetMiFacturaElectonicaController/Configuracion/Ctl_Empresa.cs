@@ -197,6 +197,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				EmpresaActualiza.StrTelefono = empresa.StrTelefono;
 
 				empresa.DatFechaActualizacion = Fecha.GetFecha();
+				EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
 
 				Actualizar(EmpresaActualiza);
 

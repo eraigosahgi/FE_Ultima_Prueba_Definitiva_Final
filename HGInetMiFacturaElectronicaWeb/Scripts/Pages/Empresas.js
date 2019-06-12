@@ -28,7 +28,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			Datos_Email_Acuse = "",
 			Datos_Email_Envio = "",
 			Datos_Email_Pagos = "",
-           codigo_adquiriente = "";
+           codigo_adquiriente = "",
+			Datos_VersionDIAN = "";
 
 	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 14).then(function (Datos) {
 		$scope.EmpresaAsociada = Datos;
@@ -494,6 +495,21 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			}
 		});
 
+		
+
+		$("#tooltip_cboVersionDIAM").dxPopover({
+			target: "#cboVersionDIAM",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
 
 		$("#tooltip_Integradora").dxPopover({
 			target: "#Integradora",
@@ -672,18 +688,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 
 
-		//$("#popover2").dxPopover({
-		//	target: "#link2",
-		//	showEvent: {
-		//		name: "mouseenter",
-		//		delay: 500
-		//	},
-		//	hideEvent: "mouseleave",
-		//	position: "bottom",
-		//	width: 300,
-		//	showTitle: true,
-		//	title: "Details:"
-		//});
+		$("#cboVersionDIAM").dxSelectBox({
+			placeholder: "Versión",
+			displayExpr: "Texto",
+			dataSource: VersionDIAN,
+			onValueChanged: function (data) {
+				Datos_VersionDIAN = data.value.ID;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "required",
+				message: "Debe indicar la versión DIAN"
+			}]
+		});
 
 		/////////////////////////////////////Tooltip
 
@@ -848,6 +865,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Email_Acuse = response.data[0].StrMailAcuse;
 				Datos_Email_Pagos = response.data[0].StrMailPagos;
 				Datos_telefono = response.data[0].telefono;
+				Datos_VersionDIAN = response.data[0].VersionDIAN;
+
 
 				$("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
 				$("#NumeroIdentificacion").dxTextBox({ readOnly: true });
@@ -859,7 +878,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				$("#txtMailPagos").dxTextBox({ value: Datos_Email_Pagos });
 				$("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
 				$("#TipoIndentificacion").dxSelectBox({ readOnly: true });
-
+							
 				$("#txttelefono").dxTextBox({ value: Datos_telefono });
 
 				Set_EmpresaAsociada((Datos_empresa_Asociada) ? Datos_empresa_Asociada : '');
@@ -890,6 +909,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 
 				$("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
+
+				$("#cboVersionDIAM").dxSelectBox({ value: VersionDIAN[BuscarID(VersionDIAN, Datos_VersionDIAN)] });
+
 
 				if (Datos_postpago == 1)
 					$("#postpagoaut").dxCheckBox({ value: true });
@@ -960,7 +982,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				StrMailRecepcion: Datos_Email_Recepcion,
 				StrMailAcuse: Datos_Email_Acuse,
 				StrMailPagos: Datos_Email_Pagos,
-				telefono: Datos_telefono
+				telefono: Datos_telefono,
+				version:Datos_VersionDIAN
 			});
 
 
@@ -1195,3 +1218,10 @@ var TiposEstado =
 { ID: "1", Texto: 'ACTIVO' },
 { ID: "2", Texto: 'INACTIVO' }
 ];
+
+var VersionDIAN =
+[
+{ ID: "1", Texto: 'Versión 1' },
+{ ID: "2", Texto: 'Versión Validación Previa' }
+];
+

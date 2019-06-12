@@ -237,7 +237,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				d.StrMailRecepcion,
 				d.StrMailAcuse,
 				Admin=  d.IntAdministrador,
-				telefono = d.StrTelefono
+				telefono = d.StrTelefono,
+				VersionDIAN = d.IntVersionDian
 			});
 
             return Ok(retorno);
@@ -264,7 +265,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="tipo">1.- Nuevo -- 2.- Editar</param>
 		/// <returns></returns>
 		[HttpPost]
-        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento,[FromUri]short intestado, [FromUri]short intpostpago,[FromUri]string StrMailEnvio, [FromUri]string StrMailRecepcion, [FromUri]string StrMailAcuse, [FromUri]string StrMailPagos, [FromUri]string telefono, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
+        public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo , [FromUri]bool IntEmailRecepcion,[FromUri] string StrEmpresaDescuento,[FromUri]short intestado, [FromUri]short intpostpago,[FromUri]string StrMailEnvio, [FromUri]string StrMailRecepcion, [FromUri]string StrMailAcuse, [FromUri]string StrMailPagos, [FromUri]string telefono,[FromUri]short version, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
         {
             Sesion.ValidarSesion();
 
@@ -279,7 +280,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 Empresa.IntAdquiriente = Intadquiriente;
                 Empresa.IntHabilitacion = IntHabilitacion;
                 Empresa.IntObligado = IntObligado;
-                Empresa.StrEmpresaAsociada = StrEmpresaAsociada;
+                Empresa.StrEmpresaAsociada = StrEmpresaAsociada.Trim();				
                 Empresa.StrObservaciones = StrObservaciones;
                 Empresa.IntIntegrador = IntIntegrador;
                 Empresa.IntNumUsuarios = IntNumUsuarios;
@@ -293,8 +294,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.StrMailRecepcion =StrMailRecepcion;
 				Empresa.StrMailPagos = StrMailPagos;
 				Empresa.StrTelefono = telefono;
+				Empresa.IntVersionDian = version;
 
-				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(StrEmpresaDescuento) ? Identificacion : StrEmpresaDescuento);
+				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(StrEmpresaDescuento) ? Identificacion : StrEmpresaDescuento.Trim());
 
 				if (tipo == 1)//Nuevo
                 {
