@@ -13,6 +13,8 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Funciones;
 using FirmaXadesNet.Utils;
 using LibreriaGlobalHGInet.Objetos;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HGInetFirmaDigital
 {
@@ -41,7 +43,7 @@ namespace HGInetFirmaDigital
 				Ctl_FirmadoXml Firmar = new Ctl_FirmadoXml();
 
 				if (datos.VersionDian == 2)
-				{	
+				{
 					// firmado de archivos XML desde el almacen de certificados
 					if (string.IsNullOrEmpty(certificado_ruta))
 						datos = Firmar.FirmarXAdesAlmacen(certificado_serial, certificado_clave, empresa_certificadora, datos);
@@ -497,7 +499,17 @@ namespace HGInetFirmaDigital
 					{
 						// elemento donde se encontrará la firma de acuerdo con la raíz del documento xml
 						XmlDocument documentoXml = XMLUtil.LoadDocument(fs);
-						parametros.SignatureDestination.XPathExpression = string.Format("/{0}/ext:UBLExtensions/ext:UBLExtension[2]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
+
+						if (archivo.VersionDian != 2)
+						{
+							parametros.SignatureDestination.XPathExpression = string.Format("/{0}/ext:UBLExtensions/ext:UBLExtension[2]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
+						}
+						else
+						{
+							parametros.SignatureDestination.Namespaces.Add("nsDocument", documentoXml.DocumentElement.NamespaceURI);
+
+							parametros.SignatureDestination.XPathExpression = string.Format("/nsDocument:{0}/ext:UBLExtensions/ext:UBLExtension[2]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
+						}
 
 						// lee el certificado digital para firmar
 						using (parametros.Signer = new Signer(MontCertificat))
