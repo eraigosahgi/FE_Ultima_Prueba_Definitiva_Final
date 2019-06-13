@@ -28,44 +28,84 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// resolución del documento
 			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
 
-			// obtiene los datos del proveedor tecnológico de la DIAN
-			DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
 
-			// obtiene los datos de prueba del proveedor tecnológico de la DIAN
-			DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
-
-			string IdSoftware = data_dian.IdSoftware;
-			string PinSoftware = data_dian.Pin;
-			string NitProveedor = data_dian.NitProveedor;
-
-			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-			if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+			if (empresa.IntVersionDian != 2)
 			{
-				IdSoftware = data_dian_habilitacion.IdSoftware;
-				PinSoftware = data_dian_habilitacion.Pin;
-				NitProveedor = data_dian_habilitacion.NitProveedor;
+
+				// obtiene los datos del proveedor tecnológico de la DIAN
+				DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
+
+				// obtiene los datos de prueba del proveedor tecnológico de la DIAN
+				DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
+
+				string IdSoftware = data_dian.IdSoftware;
+				string PinSoftware = data_dian.Pin;
+				string NitProveedor = data_dian.NitProveedor;
+
+				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
+				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+				{
+					IdSoftware = data_dian_habilitacion.IdSoftware;
+					PinSoftware = data_dian_habilitacion.Pin;
+					NitProveedor = data_dian_habilitacion.NitProveedor;
+				}
+
+				// convierte la información de la resolución a la extensión DIAN
+				extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
+				{
+					TipoDocumento = tipo_doc.GetHashCode(),
+					NumResolucion = resolucion.StrNumResolucion,
+					Prefijo = (!string.IsNullOrEmpty(resolucion.StrPrefijo)) ? resolucion.StrPrefijo : "",
+					FechaResIni = resolucion.DatFechaVigenciaDesde,
+					FechaResFin = resolucion.DatFechaVigenciaHasta,
+					RangoIni = resolucion.IntRangoInicial,
+					RangoFin = resolucion.IntRangoFinal,
+					IdSoftware = IdSoftware,
+					NitProveedor = NitProveedor,
+					ClaveTecnicaDIAN = resolucion.StrClaveTecnica,
+					PinSoftware = PinSoftware
+				};
 			}
-
-			// convierte la información de la resolución a la extensión DIAN
-			extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
+			else
 			{
-				TipoDocumento = tipo_doc.GetHashCode(),
-				NumResolucion = resolucion.StrNumResolucion,
-				Prefijo = (!string.IsNullOrEmpty(resolucion.StrPrefijo)) ? resolucion.StrPrefijo : "",
-				FechaResIni = resolucion.DatFechaVigenciaDesde,
-				FechaResFin = resolucion.DatFechaVigenciaHasta,
-				RangoIni = resolucion.IntRangoInicial,
-				RangoFin = resolucion.IntRangoFinal,
-				IdSoftware = IdSoftware,
-				NitProveedor = NitProveedor,
-				ClaveTecnicaDIAN = resolucion.StrClaveTecnica,
-				PinSoftware = PinSoftware
-			};
+				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+
+				//---Falta crear configuracion para el ambiente de habilitacion de la DIAN
+				DianProveedorV2 data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+
+				string IdSoftware = data_dian.IdSoftware;
+				string PinSoftware = data_dian.Pin;
+				string NitProveedor = data_dian.NitProveedor;
+
+				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
+				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+				{
+					IdSoftware = data_dian_habilitacion.IdSoftware;
+					PinSoftware = data_dian_habilitacion.Pin;
+					NitProveedor = data_dian_habilitacion.NitProveedor;
+				}
+
+				// convierte la información de la resolución a la extensión DIAN
+				extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
+				{
+					TipoDocumento = tipo_doc.GetHashCode(),
+					NumResolucion = resolucion.StrNumResolucion,
+					Prefijo = (!string.IsNullOrEmpty(resolucion.StrPrefijo)) ? resolucion.StrPrefijo : "",
+					FechaResIni = resolucion.DatFechaVigenciaDesde,
+					FechaResFin = resolucion.DatFechaVigenciaHasta,
+					RangoIni = resolucion.IntRangoInicial,
+					RangoFin = resolucion.IntRangoFinal,
+					IdSoftware = IdSoftware,
+					NitProveedor = NitProveedor,
+					ClaveTecnicaDIAN = resolucion.StrClaveTecnica,
+					PinSoftware = PinSoftware
+				};
+			}
 
 			FacturaE_Documento resultado = null;
 
 			// convierte el documento 
-			switch (documento.VersionDian)
+			switch (empresa.IntVersionDian)
 			{
 				case 1:
 					resultado = HGInetUBL.FacturaXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
@@ -219,7 +259,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					break;
 
 			}
-			
+
 			resultado.DocumentoTipo = tipo_doc;
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 

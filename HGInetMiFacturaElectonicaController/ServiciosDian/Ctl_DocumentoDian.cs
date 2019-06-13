@@ -32,7 +32,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 			string ruta_certificado = string.Empty;
 			CertificadoDigital certificado = null;
 
-			if (documento.VersionDian == 2)
+			if (empresa.IntVersionDian == 2)
 			{
 				// obtiene la información de configuración del certificado digital
 				certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
@@ -127,7 +127,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 			AcuseRecibo acuse = null;
 
-			switch (documento.VersionDian)
+			switch (empresa.IntVersionDian)
 			{
 				// envía el documento a través de los servicios web de la DIAN
 				case 1:  

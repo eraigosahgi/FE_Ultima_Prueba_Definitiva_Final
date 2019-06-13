@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Auditorias;
+﻿using HGInetDIANServicios;
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
@@ -86,7 +87,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 					// valida la información del documento
-					respuesta = Procesos.Ctl_Documentos.Validar(documento_obj, tipo_doc, resolucion, ref respuesta);
+					respuesta = Procesos.Ctl_Documentos.Validar(documento_obj, tipo_doc, resolucion, ref respuesta, empresa);
 					Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
 
 
@@ -131,6 +132,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						// genera el xml en ubl
 						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
+
+						// Establece la versión de la DIAN segun el Facturador
+						documento_result.VersionDian = empresa.IntVersionDian;
 
 						// almacena el xml en ubl
 						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
@@ -227,7 +231,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
-						
+
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "", null, false);
@@ -239,7 +243,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documentoBd = documento_tmp.Actualizar(documentoBd);
 							//Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
 						}
-/*
+
 						// envía el archivo zip con el xml firmado a la DIAN
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result);
 
@@ -251,10 +255,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 
+						// id entregado por el servicio web de Validación Previa
+						string id_validacion_previa = string.Empty;
+						id_validacion_previa = acuse.Comments;
 
 						//Valida estado del documento en la Plataforma de la DIAN
-						respuesta = Consultar(documentoBd, empresa, ref respuesta);
+						respuesta = Consultar(documentoBd, empresa, ref respuesta, id_validacion_previa);
 
+						/*
 						// envía el mail de documentos al adquiriente
 						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 						{
@@ -291,8 +299,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documentoBd.IntEnvioMail = true;
 							documento_tmp.Actualizar(documentoBd);
 							//Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
-						}
-						*/
+						}*/
+
 					}
 
 
