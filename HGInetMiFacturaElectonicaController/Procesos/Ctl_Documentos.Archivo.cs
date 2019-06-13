@@ -181,7 +181,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(archivo.TipoDocumento);
 
 				// valida la información del documento
-				respuesta = Validar(documento_obj, tipo_doc, resolucion, ref respuesta);
+				respuesta = Validar(documento_obj, tipo_doc, resolucion, ref respuesta, facturador);
 				ValidarRespuesta(respuesta);
 
 

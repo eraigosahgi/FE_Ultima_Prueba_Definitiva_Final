@@ -88,7 +88,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 
 					// valida la información del documento
-					respuesta = Validar(documento_obj, tipo_doc, resolucion, ref respuesta);
+					respuesta = Validar(documento_obj, tipo_doc, resolucion, ref respuesta, empresa);
 					ValidarRespuesta(respuesta);
 
 

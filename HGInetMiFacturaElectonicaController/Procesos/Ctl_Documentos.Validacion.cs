@@ -26,7 +26,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="resolucion">información de la resolución</param>
 		/// <param name="respuesta">datos de respuesta del documento</param>
 		/// <returns>información adicional de respuesta del documento</returns>
-		public static DocumentoRespuesta Validar(object documento_obj, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, ref DocumentoRespuesta respuesta)
+		public static DocumentoRespuesta Validar(object documento_obj, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, ref DocumentoRespuesta respuesta, TblEmpresas facturador)
 		{
 			try
 			{
@@ -36,7 +36,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
 
 				if (tipo_doc == TipoDocumento.Factura)
-					documento_obj = Validar((Factura)documento_obj, resolucion);
+					documento_obj = Validar((Factura)documento_obj, resolucion, facturador);
 				else if (tipo_doc == TipoDocumento.NotaCredito)
 					documento_obj = ValidarNotaCredito((NotaCredito)documento_obj, resolucion);
 				else if (tipo_doc == TipoDocumento.NotaDebito)
