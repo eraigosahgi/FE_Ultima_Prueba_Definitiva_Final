@@ -6,6 +6,7 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUBLv2_1.DianListas;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
@@ -17,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
+using ListaTipoMoneda = HGInetUBLv2_1.DianListas.ListaTipoMoneda;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -59,55 +61,69 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
 
-					Tercero DatosObligado = new Tercero()
+					if (facturador_electronico.IntVersionDian == 1)
 					{
-						Identificacion = "811021438",
-						IdentificacionDv = 4,
-						TipoIdentificacion = 31,
-						TipoPersona = 1,
-						Regimen = 2,
-						NombreComercial = "HGI",
-						Departamento = "Antioquia",
-						Ciudad = "Medellin",
-						Direccion = "Calle 48 Nro. 77C-06",
-						Telefono = "4444584",
-						Email = "info@hgi.com.co",
-						PaginaWeb = null,
-						CodigoPais = "CO",
-						RazonSocial = "HGI SAS",
-						PrimerApellido = null,
-						SegundoApellido = null,
-						PrimerNombre = null,
-						SegundoNombre = null
-					};
+						Tercero DatosObligado = new Tercero()
+						{
+							Identificacion = "811021438",
+							IdentificacionDv = 4,
+							TipoIdentificacion = 31,
+							TipoPersona = 1,
+							Regimen = 2,
+							NombreComercial = "HGI",
+							Departamento = "Antioquia",
+							Ciudad = "Medellin",
+							Direccion = "Calle 48 Nro. 77C-06",
+							Telefono = "4444584",
+							Email = "info@hgi.com.co",
+							PaginaWeb = null,
+							CodigoPais = "CO",
+							RazonSocial = "HGI SAS",
+							PrimerApellido = null,
+							SegundoApellido = null,
+							PrimerNombre = null,
+							SegundoNombre = null
+						};
 
-					//Valida que Resolucion tomar, con Prefijo o sin Prefijo
-					string resolucion_pruebas = string.Empty;
-					string nit_resolucion = string.Empty;
-					string prefijo_prueba = string.Empty;
-					if (documentos.FirstOrDefault().Prefijo.Equals(string.Empty))
-					{
-						resolucion_pruebas = Constantes.ResolucionPruebas;
-						nit_resolucion = Constantes.NitResolucionsinPrefijo;
+						//Valida que Resolucion tomar, con Prefijo o sin Prefijo
+						string resolucion_pruebas = string.Empty;
+						string nit_resolucion = string.Empty;
+						string prefijo_prueba = string.Empty;
+						if (documentos.FirstOrDefault().Prefijo.Equals(string.Empty))
+						{
+							resolucion_pruebas = Constantes.ResolucionPruebas;
+							nit_resolucion = Constantes.NitResolucionsinPrefijo;
 
+						}
+						else
+						{
+							resolucion_pruebas = Constantes.ResolucionPruebas;
+							nit_resolucion = Constantes.NitResolucionconPrefijo;
+							prefijo_prueba = Constantes.PrefijoResolucionPruebas;
+						}
+
+
+
+						Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
+						lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_prueba));
+
+						foreach (var item in documentos)
+						{
+							item.NumeroResolucion = resolucion_pruebas;
+							item.DatosObligado = DatosObligado;
+							item.Prefijo = prefijo_prueba;
+
+						}
 					}
 					else
 					{
-						resolucion_pruebas = Constantes.ResolucionPruebas;
-						nit_resolucion = Constantes.NitResolucionconPrefijo;
-						prefijo_prueba = Constantes.PrefijoResolucionPruebas;
-					}
+						Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
+						lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*");
+						foreach (var item in documentos)
+						{
+							item.DatosAdquiriente.Email = facturador_electronico.StrMailAdmin;
 
-
-
-					Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
-					lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_prueba));
-
-					foreach (var item in documentos)
-					{
-						item.NumeroResolucion = resolucion_pruebas;
-						item.DatosObligado = DatosObligado;
-						item.Prefijo = prefijo_prueba;
+						}
 
 					}
 				}
@@ -156,7 +172,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				Parallel.ForEach<Factura>(documentos, item =>
 				{
 					DocumentoRespuesta item_respuesta = null;
-					switch (item.VersionDian)
+					switch (facturador_electronico.IntVersionDian)
 					{
 						case 1:
 							item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
@@ -318,7 +334,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				catch (Exception) { }
 
 				// realiza el proceso de envío a la DIAN del documento
-				item_respuesta = Procesar(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion, facturador_electronico);
+				item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion, facturador_electronico);
 
 			}
 			catch (Exception excepcion)
@@ -389,7 +405,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		private static DocumentoRespuesta Procesar_v2(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
 		{
 			DocumentoRespuesta item_respuesta = new DocumentoRespuesta() { DescuentaSaldo = false };
-			
+
 			return item_respuesta;
 		}
 
@@ -398,7 +414,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// </summary>
 		/// <param name="documento">Objeto factura</param>
 		/// <returns></returns>
-		public static Factura Validar(Factura documento, TblEmpresasResoluciones resolucion)
+		public static Factura Validar(Factura documento, TblEmpresasResoluciones resolucion, TblEmpresas facturador)
 		//public static Factura Validar(Factura documento)
 		{
 			// valida objeto recibido
@@ -448,8 +464,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ApplicationException(string.Format("El prefijo '{0}' no es válido según Resolución", documento.Prefijo));
 
 			//Valida que la fecha este en los terminos
-			if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
-				throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+			if (facturador.IntVersionDian == 1)
+			{
+				if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
+					throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+			}
+			else
+			{
+				if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-5).Date || documento.Fecha.Date > Fecha.GetFecha().Date.AddDays(10))
+					throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+			}
 
 			if (documento.FechaVence.Date < documento.Fecha.Date)
 				throw new ApplicationException(string.Format("La fecha de vencimiento {0} debe ser mayor o igual a la fecha de elaboración del documento {1}", documento.FechaVence, documento.Fecha));
