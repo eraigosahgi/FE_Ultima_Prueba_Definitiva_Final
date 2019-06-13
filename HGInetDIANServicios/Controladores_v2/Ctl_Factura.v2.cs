@@ -33,7 +33,9 @@ namespace HGInetDIANServicios
 				//Convertir archivo a bytes para su envio
 				Byte[] bytes = File.ReadAllBytes(ruta_zip);
 
-				//Ejecución de prueba DIAN Enviando archivo ZIP			
+				//Se agrega instruccion para habilitar la seguridad en el envio
+				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+				//Ejecución de prueba DIAN Enviando archivo ZIP	
 				DianWSValidacionPrevia.UploadDocumentResponse resultadoHab = webServiceHab.SendTestSetAsync(nombre_archivo, bytes, clave_dian);
 				
 				return resultadoHab.ZipKey;
