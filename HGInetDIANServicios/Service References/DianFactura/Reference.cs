@@ -25,8 +25,8 @@ namespace HGInetDIANServicios.DianFactura {
         HGInetDIANServicios.DianFactura.EnvioFacturaElectronicaRespuesta EndEnvioFacturaElectronica(System.IAsyncResult result);
     }
     
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    /// <comentarios/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1590.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -41,7 +41,7 @@ namespace HGInetDIANServicios.DianFactura {
         
         private byte[] documentField;
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public string NIT {
             get {
@@ -53,7 +53,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string InvoiceNumber {
             get {
@@ -65,7 +65,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public System.DateTime IssueDate {
             get {
@@ -77,7 +77,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", Order=3)]
         public byte[] Document {
             get {
@@ -99,8 +99,8 @@ namespace HGInetDIANServicios.DianFactura {
         }
     }
     
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    /// <comentarios/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1590.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -115,7 +115,7 @@ namespace HGInetDIANServicios.DianFactura {
         
         private string commentsField;
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public string NumeroFactura {
             get {
@@ -127,7 +127,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string UUID {
             get {
@@ -139,7 +139,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public int Response {
             get {
@@ -151,7 +151,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public string Comments {
             get {
@@ -173,8 +173,8 @@ namespace HGInetDIANServicios.DianFactura {
         }
     }
     
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    /// <comentarios/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1590.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -193,7 +193,7 @@ namespace HGInetDIANServicios.DianFactura {
         
         private string commentsField;
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public ReceivedInvoice ReceivedInvoice {
             get {
@@ -205,7 +205,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string Version {
             get {
@@ -217,7 +217,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public System.DateTime ReceivedDateTime {
             get {
@@ -229,7 +229,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public System.DateTime ResponseDateTime {
             get {
@@ -241,7 +241,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=4)]
         public int Response {
             get {
@@ -253,7 +253,7 @@ namespace HGInetDIANServicios.DianFactura {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=5)]
         public string Comments {
             get {

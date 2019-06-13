@@ -26,8 +26,8 @@ namespace HGInetDIANServicios.DianResolucion {
         HGInetDIANServicios.DianResolucion.ConsultaResolucionesFacturacionRespuesta EndConsultaResolucionesFacturacion(System.IAsyncResult result);
     }
     
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    /// <comentarios/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1590.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -41,7 +41,7 @@ namespace HGInetDIANServicios.DianResolucion {
         
         private string identificadorSoftwareField;
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public string NITObligadoFacturarElectronicamente {
             get {
@@ -53,7 +53,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string NITProveedorTecnologico {
             get {
@@ -65,7 +65,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public string IdentificadorSoftware {
             get {
@@ -87,8 +87,8 @@ namespace HGInetDIANServicios.DianResolucion {
         }
     }
     
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    /// <comentarios/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1590.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -112,7 +112,7 @@ namespace HGInetDIANServicios.DianResolucion {
         
         private string claveTecnicaField;
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public long NumeroResolucion {
             get {
@@ -124,7 +124,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=1)]
         public System.DateTime FechaResolucion {
             get {
@@ -136,7 +136,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public string Prefijo {
             get {
@@ -148,7 +148,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public long RangoInicial {
             get {
@@ -160,7 +160,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=4)]
         public long RangoFinal {
             get {
@@ -172,7 +172,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=5)]
         public System.DateTime FechaVigenciaDesde {
             get {
@@ -184,7 +184,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(DataType="date", Order=6)]
         public System.DateTime FechaVigenciaHasta {
             get {
@@ -196,7 +196,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=7)]
         public string ClaveTecnica {
             get {
@@ -218,8 +218,8 @@ namespace HGInetDIANServicios.DianResolucion {
         }
     }
     
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    /// <comentarios/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1590.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -235,7 +235,7 @@ namespace HGInetDIANServicios.DianResolucion {
         
         private RangoFacturacion[] rangoFacturacionField;
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public CodigoType CodigoOperacion {
             get {
@@ -247,7 +247,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string DescripcionOperacion {
             get {
@@ -259,7 +259,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public decimal IdentificadorOperacion {
             get {
@@ -271,7 +271,7 @@ namespace HGInetDIANServicios.DianResolucion {
             }
         }
         
-        /// <remarks/>
+        /// <comentarios/>
         [System.Xml.Serialization.XmlElementAttribute("RangoFacturacion", Order=3)]
         public RangoFacturacion[] RangoFacturacion {
             get {
@@ -293,38 +293,38 @@ namespace HGInetDIANServicios.DianResolucion {
         }
     }
     
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    /// <comentarios/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1590.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion" +
         "")]
     public enum CodigoType {
         
-        /// <remarks/>
+        /// <comentarios/>
         OK,
         
-        /// <remarks/>
+        /// <comentarios/>
         ND,
         
-        /// <remarks/>
+        /// <comentarios/>
         EP,
         
-        /// <remarks/>
+        /// <comentarios/>
         ES,
         
-        /// <remarks/>
+        /// <comentarios/>
         EH,
         
-        /// <remarks/>
+        /// <comentarios/>
         EA,
         
-        /// <remarks/>
+        /// <comentarios/>
         ER,
         
-        /// <remarks/>
+        /// <comentarios/>
         EF,
         
-        /// <remarks/>
+        /// <comentarios/>
         EN,
     }
     
