@@ -193,7 +193,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				ConsultaDocumento resultado_doc = null;
 
-				if (documentoBd.IntVersionDian == 2)
+				if (empresa.IntVersionDian == 2)
 				{
 					// Consulta del documento con validación previa
 					Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, ruta_xml, ruta_certificado, certificado.Clave, clave, url_ws_consulta);
