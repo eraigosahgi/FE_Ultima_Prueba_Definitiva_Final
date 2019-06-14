@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HGInetMiFacturaElectonicaData.Modelo;
 
 namespace HGInetUBL
 {
@@ -20,7 +21,7 @@ namespace HGInetUBL
 		/// <param name="nota_credito_ubl">Archivo XML-UBL</param>
 		/// <param name="interopeabilidad">Indica si la conversión del archivo XML-UBL es sólo de encabezados</param>
 		/// <returns>objeto tipo NotaCredito</returns>
-		public static NotaCredito Convertir(CreditNoteType nota_credito_ubl, bool interopeabilidad = false)
+		public static NotaCredito Convertir(CreditNoteType nota_credito_ubl, TblDocumentos documento_bd, bool interopeabilidad = false)
 		{
 
 			try
@@ -306,8 +307,23 @@ namespace HGInetUBL
 				nota_credito_obj.Valor = nota_credito_obj.ValorSubtotal + nota_credito_obj.ValorDescuento;
 				nota_credito_obj.ValorIva = nota_credito_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value;
 				nota_credito_obj.Total = nota_credito_ubl.LegalMonetaryTotal.PayableAmount.Value;
-				nota_credito_obj.Neto = (nota_credito_obj.Total - (nota_credito_obj.ValorReteFuente + nota_credito_obj.ValorReteIca + nota_credito_obj.ValorReteIva));
 
+				//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
+				if (documento_bd != null)
+				{
+					if (documento_bd.IntValorNeto == 0)
+					{
+						nota_credito_obj.Neto = (nota_credito_obj.Total - (nota_credito_obj.ValorReteFuente + nota_credito_obj.ValorReteIca + nota_credito_obj.ValorReteIva));
+					}
+					else
+					{
+						nota_credito_obj.Neto = documento_bd.IntValorNeto;
+					}
+				}
+				else
+				{
+					nota_credito_obj.Neto = (nota_credito_obj.Total - (nota_credito_obj.ValorReteFuente + nota_credito_obj.ValorReteIca + nota_credito_obj.ValorReteIva));
+				}
 				#endregion
 
 

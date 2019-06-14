@@ -38,7 +38,7 @@ namespace HGInetFacturaETestConsola
 				Factura factura = new Factura();
 
 				//Convierto XML-UBL en Objeto
-				factura = FacturaXML.Convertir(objeto);
+				factura = FacturaXML.Convertir(objeto,null);
 
 				List<HGInetFacturaEServicios.ServicioFactura.Factura> list_factura = new List<HGInetFacturaEServicios.ServicioFactura.Factura>();
 

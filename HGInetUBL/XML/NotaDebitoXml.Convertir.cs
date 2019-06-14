@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
+﻿using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL.Recursos;
 using LibreriaGlobalHGInet.General;
 using Newtonsoft.Json;
@@ -20,7 +21,7 @@ namespace HGInetUBL
 		/// <param name="nota_debito_ubl">Archivo XML-UBL</param>
 		/// <param name="interopeabilidad">Indica si la conversión del archivo XML-UBL es sólo de encabezados</param>
 		/// <returns>objeto tipo NotaDebito</returns>
-		public static NotaDebito Convertir(DebitNoteType nota_debito_ubl, bool interopeabilidad = false)
+		public static NotaDebito Convertir(DebitNoteType nota_debito_ubl, TblDocumentos documento_bd, bool interopeabilidad = false)
 		{
 
 			try
@@ -305,7 +306,24 @@ namespace HGInetUBL
 				nota_debito_obj.Valor = nota_debito_obj.ValorSubtotal + nota_debito_obj.ValorDescuento;
 				nota_debito_obj.ValorIva = nota_debito_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value;
 				nota_debito_obj.Total = nota_debito_ubl.LegalMonetaryTotal.PayableAmount.Value;
-				nota_debito_obj.Neto = (nota_debito_obj.Total - (nota_debito_obj.ValorReteFuente + nota_debito_obj.ValorReteIca + nota_debito_obj.ValorReteIva));
+
+				//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
+				if (documento_bd != null)
+				{
+					if (documento_bd.IntValorNeto == 0)
+					{
+						nota_debito_obj.Neto = (nota_debito_obj.Total - (nota_debito_obj.ValorReteFuente + nota_debito_obj.ValorReteIca + nota_debito_obj.ValorReteIva));
+					}
+					else
+					{
+						nota_debito_obj.Neto = documento_bd.IntValorNeto;
+					}
+				}
+				else
+				{
+					nota_debito_obj.Neto = (nota_debito_obj.Total - (nota_debito_obj.ValorReteFuente + nota_debito_obj.ValorReteIca + nota_debito_obj.ValorReteIva));
+				}
+
 
 				#endregion
 

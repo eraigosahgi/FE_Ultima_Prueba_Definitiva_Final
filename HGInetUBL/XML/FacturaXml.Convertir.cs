@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using HGInetMiFacturaElectonicaData.Modelo;
 
 namespace HGInetUBL
 {
@@ -23,7 +24,7 @@ namespace HGInetUBL
 		/// <param name="factura_ubl">Archivo XML-UBL</param>
 		/// <param name="interopeabilidad">Indica si la conversión del archivo XML-UBL es sólo de encabezados</param>
 		/// <returns>objeto tipo Factura</returns>
-		public static Factura Convertir(InvoiceType factura_ubl, bool interopeabilidad = false)
+		public static Factura Convertir(InvoiceType factura_ubl, TblDocumentos documento_bd , bool interopeabilidad = false)
 		{
 			Factura factura_obj = new Factura();
 
@@ -397,7 +398,23 @@ namespace HGInetUBL
 				factura_obj.Valor = factura_obj.ValorSubtotal + factura_obj.ValorDescuento;
 				factura_obj.ValorIva = factura_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value;
 				factura_obj.Total = factura_ubl.LegalMonetaryTotal.PayableAmount.Value;
-				factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
+
+				//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
+				if (documento_bd != null)
+				{
+					if (documento_bd.IntValorNeto == 0)
+					{
+						factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
+					}
+					else
+					{
+						factura_obj.Neto = documento_bd.IntValorNeto;
+					}
+				}
+				else
+				{
+					factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
+				}
 
 				#endregion
 

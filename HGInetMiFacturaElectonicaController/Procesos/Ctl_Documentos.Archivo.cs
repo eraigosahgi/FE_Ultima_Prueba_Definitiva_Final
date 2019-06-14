@@ -70,7 +70,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//conversion = (InvoiceType)AgregarCamposDian(conversion, TipoDocumento.Factura, facturador);
 
 
-					documento_obj = HGInetUBL.FacturaXML.Convertir(conversion);
+					documento_obj = HGInetUBL.FacturaXML.Convertir(conversion,null);
 
 					cufe_calculado = HGInetUBL.FacturaXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica);
 
@@ -94,7 +94,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//conversion = (CreditNoteType)AgregarCamposDian(conversion, TipoDocumento.NotaCredito, facturador);
 
 
-					documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion);
+					documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion, null);
 
 					cufe_calculado = HGInetUBL.NotaCreditoXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica, documento_obj.CufeFactura);
 
@@ -118,7 +118,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//conversion = (DebitNoteType)AgregarCamposDian(conversion, TipoDocumento.NotaDebito, facturador);
 
 
-					documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion);
+					documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion, null);
 
 					cufe_calculado = HGInetUBL.NotaDebitoXML.CalcularCUFE(conversion, resolucion.StrClaveTecnica, documento_obj.CufeFactura);
 

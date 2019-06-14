@@ -159,7 +159,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = HGInetUBL.FacturaXML.Convertir(conversion);
+					documento_obj = HGInetUBL.FacturaXML.Convertir(conversion, documento);
 					documento.StrCufe = documento_obj.Cufe;
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
@@ -168,7 +168,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					HGInetUBL.CreditNoteType conversion = (HGInetUBL.CreditNoteType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion);
+					documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion, documento);
 					documento.StrCufe = documento_obj.Cufe;
 				}
 				else if (tipo_documento == TipoDocumento.NotaDebito)
@@ -177,7 +177,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					HGInetUBL.DebitNoteType conversion = (HGInetUBL.DebitNoteType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion);
+					documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion, documento);
 					documento.StrCufe = documento_obj.Cufe;
 				}
 

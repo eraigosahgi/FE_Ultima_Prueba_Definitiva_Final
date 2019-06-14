@@ -998,7 +998,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
 
-				documento_obj.DatosFactura = HGInetUBL.FacturaXML.Convertir(conversion);
+				documento_obj.DatosFactura = HGInetUBL.FacturaXML.Convertir(conversion, objetoBd);
 				documento_obj.DatosFactura.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 
 			}
@@ -1013,7 +1013,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				HGInetUBL.CreditNoteType conversion = (HGInetUBL.CreditNoteType)serializacion.Deserialize(xml_reader);
 
-				documento_obj.DatosNotaCredito = HGInetUBL.NotaCreditoXML.Convertir(conversion);
+				documento_obj.DatosNotaCredito = HGInetUBL.NotaCreditoXML.Convertir(conversion, objetoBd);
 				documento_obj.DatosNotaCredito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 			}
 			else if (objetoBd.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
@@ -1027,7 +1027,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				HGInetUBL.DebitNoteType conversion = (HGInetUBL.DebitNoteType)serializacion.Deserialize(xml_reader);
 
-				documento_obj.DatosNotaDebito = HGInetUBL.NotaDebitoXML.Convertir(conversion);
+				documento_obj.DatosNotaDebito = HGInetUBL.NotaDebitoXML.Convertir(conversion, objetoBd);
 				documento_obj.DatosNotaDebito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 
 			}
@@ -1604,7 +1604,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
 
-								documento_obj = HGInetUBL.FacturaXML.Convertir(conversion);
+								documento_obj = HGInetUBL.FacturaXML.Convertir(conversion, documento);
 
 							}
 							else if (documento.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
@@ -1616,7 +1616,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								conversion = (HGInetUBL.CreditNoteType)serializacion.Deserialize(xml_reader);
 
-								documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion);
+								documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion, documento);
 
 							}
 							else if (documento.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
@@ -1627,7 +1627,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								conversion = (HGInetUBL.DebitNoteType)serializacion.Deserialize(xml_reader);
 
-								documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion);
+								documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion, documento);
 
 							}
 

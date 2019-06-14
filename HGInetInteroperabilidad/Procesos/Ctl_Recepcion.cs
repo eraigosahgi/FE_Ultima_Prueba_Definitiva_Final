@@ -512,7 +512,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = FacturaXML.Convertir(conversion, true);
+					documento_obj = FacturaXML.Convertir(conversion, null ,true);
 
 					if (string.IsNullOrEmpty(documento_obj.DatosObligado.Email))
 						documento_obj.DatosObligado.Email = string.Empty;
@@ -524,7 +524,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = NotaCreditoXML.Convertir(conversion, true);
+					documento_obj = NotaCreditoXML.Convertir(conversion, null ,true);
 				}
 				else if (tipo_documento == DocumentType.NotaDebito)
 				{
@@ -532,7 +532,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = NotaDebitoXML.Convertir(conversion, true);
+					documento_obj = NotaDebitoXML.Convertir(conversion, null ,true);
 				}
 				else if (tipo_documento == DocumentType.AcuseDeRecibo)
 				{
