@@ -307,6 +307,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (documento.FechaFactura == null)
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
 
+			if (string.IsNullOrEmpty(documento.CufeFactura))
+				throw new ArgumentException("El Cufe de la Factura afectada no esta bien formado");
+
 			//valida resolucion
 			if (!resolucion.StrNumResolucion.Equals(documento.NumeroResolucion))
 				throw new ApplicationException(string.Format("El número de resolución {0} no es válido", documento.NumeroResolucion));
