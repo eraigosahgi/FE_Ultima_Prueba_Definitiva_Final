@@ -20,16 +20,16 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:61428/wcf/reenviodocumento.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="reenviodocumento1.disco" MetadataType="Disco" ID="127ba202-b85d-42c6-a38c-5b1697809057" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?disco" />
-    <MetadataFile FileName="reenviodocumento4.xsd" MetadataType="Schema" ID="b470edc3-3822-4dee-99fa-cb0af1d58978" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?xsd=xsd1" />
-    <MetadataFile FileName="reenviodocumento41.xsd" MetadataType="Schema" ID="acce3007-8960-4de1-b455-644febd1b1fb" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?xsd=xsd0" />
-    <MetadataFile FileName="reenviodocumento42.xsd" MetadataType="Schema" ID="5fa49625-9429-4e7d-9fb6-760b8eec7d78" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?xsd=xsd3" />
-    <MetadataFile FileName="reenviodocumento43.xsd" MetadataType="Schema" ID="775adeeb-5214-4772-80a3-1e6fbec6277b" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?xsd=xsd2" />
-    <MetadataFile FileName="reenviodocumento2.wsdl" MetadataType="Wsdl" ID="0221befe-d816-42f2-9491-92b467769e47" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="reenviodocumento21.wsdl" MetadataType="Wsdl" ID="19198fdb-37ee-4a20-903f-ab44d2f7837b" SourceId="1" SourceUrl="http://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?wsdl" />
+    <MetadataFile FileName="reenviodocumento.wsdl" MetadataType="Wsdl" ID="a97ee75f-9345-4985-bc64-51d3140ec2cd" SourceId="1" SourceUrl="http://localhost:61428/wcf/reenviodocumento.svc?wsdl" />
+    <MetadataFile FileName="reenviodocumento.xsd" MetadataType="Schema" ID="cc930c3f-9e26-4aab-90f3-74955c90b975" SourceId="1" SourceUrl="http://localhost:61428/wcf/reenviodocumento.svc?xsd=xsd0" />
+    <MetadataFile FileName="reenviodocumento1.wsdl" MetadataType="Wsdl" ID="4e98f3ab-5cbc-4d82-be16-9ceb0e2226ac" SourceId="1" SourceUrl="http://localhost:61428/wcf/reenviodocumento.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="reenviodocumento1.xsd" MetadataType="Schema" ID="32b526bf-c189-446a-9c65-b8e0bfa86160" SourceId="1" SourceUrl="http://localhost:61428/wcf/reenviodocumento.svc?xsd=xsd2" />
+    <MetadataFile FileName="reenviodocumento.disco" MetadataType="Disco" ID="b7531335-a5ac-4cf1-ab4a-75fb3945719b" SourceId="1" SourceUrl="http://localhost:61428/wcf/reenviodocumento.svc?disco" />
+    <MetadataFile FileName="reenviodocumento2.xsd" MetadataType="Schema" ID="f8d7d6fe-cadf-430d-b551-af5dce80aa1c" SourceId="1" SourceUrl="http://localhost:61428/wcf/reenviodocumento.svc?xsd=xsd3" />
+    <MetadataFile FileName="reenviodocumento3.xsd" MetadataType="Schema" ID="35f4b7e0-fdf3-4545-a0f7-6ffe856bb5cb" SourceId="1" SourceUrl="http://localhost:61428/wcf/reenviodocumento.svc?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

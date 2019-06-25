@@ -122,6 +122,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string VersionAplicativoField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int VersionDianField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -561,6 +564,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
             }
         }
         
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int VersionDian {
+            get {
+                return this.VersionDianField;
+            }
+            set {
+                if ((this.VersionDianField.Equals(value) != true)) {
+                    this.VersionDianField = value;
+                    this.RaisePropertyChanged("VersionDian");
+                }
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -663,7 +679,16 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private string CiudadField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoCiudadField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoDepartamentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodigoPaisField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoTributoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DepartamentoField;
@@ -697,6 +722,12 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int RegimenField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string RegimenFiscalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<string> ResponsabilidadesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string SegundoApellidoField;
@@ -737,6 +768,32 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoCiudad {
+            get {
+                return this.CodigoCiudadField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoCiudadField, value) != true)) {
+                    this.CodigoCiudadField = value;
+                    this.RaisePropertyChanged("CodigoCiudad");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoDepartamento {
+            get {
+                return this.CodigoDepartamentoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoDepartamentoField, value) != true)) {
+                    this.CodigoDepartamentoField = value;
+                    this.RaisePropertyChanged("CodigoDepartamento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string CodigoPais {
             get {
                 return this.CodigoPaisField;
@@ -745,6 +802,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.CodigoPaisField, value) != true)) {
                     this.CodigoPaisField = value;
                     this.RaisePropertyChanged("CodigoPais");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoTributo {
+            get {
+                return this.CodigoTributoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoTributoField, value) != true)) {
+                    this.CodigoTributoField = value;
+                    this.RaisePropertyChanged("CodigoTributo");
                 }
             }
         }
@@ -888,6 +958,32 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((this.RegimenField.Equals(value) != true)) {
                     this.RegimenField = value;
                     this.RaisePropertyChanged("Regimen");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string RegimenFiscal {
+            get {
+                return this.RegimenFiscalField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.RegimenFiscalField, value) != true)) {
+                    this.RegimenFiscalField = value;
+                    this.RaisePropertyChanged("RegimenFiscal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<string> Responsabilidades {
+            get {
+                return this.ResponsabilidadesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ResponsabilidadesField, value) != true)) {
+                    this.ResponsabilidadesField = value;
+                    this.RaisePropertyChanged("Responsabilidades");
                 }
             }
         }
@@ -1072,13 +1168,22 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int AiuField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string BodegaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int CalculaIVAField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal CantidadField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int CodigoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFacturaEServicios.ServicioNotaCredito.Tercero DatosMandatarioField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal DescuentoPorcentajeField;
@@ -1148,6 +1253,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Aiu {
+            get {
+                return this.AiuField;
+            }
+            set {
+                if ((this.AiuField.Equals(value) != true)) {
+                    this.AiuField = value;
+                    this.RaisePropertyChanged("Aiu");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Bodega {
             get {
                 return this.BodegaField;
@@ -1156,6 +1274,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.BodegaField, value) != true)) {
                     this.BodegaField = value;
                     this.RaisePropertyChanged("Bodega");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int CalculaIVA {
+            get {
+                return this.CalculaIVAField;
+            }
+            set {
+                if ((this.CalculaIVAField.Equals(value) != true)) {
+                    this.CalculaIVAField = value;
+                    this.RaisePropertyChanged("CalculaIVA");
                 }
             }
         }
@@ -1182,6 +1313,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((this.CodigoField.Equals(value) != true)) {
                     this.CodigoField = value;
                     this.RaisePropertyChanged("Codigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFacturaEServicios.ServicioNotaCredito.Tercero DatosMandatario {
+            get {
+                return this.DatosMandatarioField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DatosMandatarioField, value) != true)) {
+                    this.DatosMandatarioField = value;
+                    this.RaisePropertyChanged("DatosMandatario");
                 }
             }
         }
@@ -1541,7 +1685,13 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private string CufeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionAceptacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DescripcionEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionEstadoEnvioMailField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DescripcionProcesoField;
@@ -1572,6 +1722,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int IdEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdEstadoEnvioMailField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Guid IdPeticionField;
@@ -1662,6 +1815,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionAceptacion {
+            get {
+                return this.DescripcionAceptacionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionAceptacionField, value) != true)) {
+                    this.DescripcionAceptacionField = value;
+                    this.RaisePropertyChanged("DescripcionAceptacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string DescripcionEstado {
             get {
                 return this.DescripcionEstadoField;
@@ -1670,6 +1836,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.DescripcionEstadoField, value) != true)) {
                     this.DescripcionEstadoField = value;
                     this.RaisePropertyChanged("DescripcionEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionEstadoEnvioMail {
+            get {
+                return this.DescripcionEstadoEnvioMailField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionEstadoEnvioMailField, value) != true)) {
+                    this.DescripcionEstadoEnvioMailField = value;
+                    this.RaisePropertyChanged("DescripcionEstadoEnvioMail");
                 }
             }
         }
@@ -1800,6 +1979,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((this.IdEstadoField.Equals(value) != true)) {
                     this.IdEstadoField = value;
                     this.RaisePropertyChanged("IdEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdEstadoEnvioMail {
+            get {
+                return this.IdEstadoEnvioMailField;
+            }
+            set {
+                if ((this.IdEstadoEnvioMailField.Equals(value) != true)) {
+                    this.IdEstadoEnvioMailField = value;
+                    this.RaisePropertyChanged("IdEstadoEnvioMail");
                 }
             }
         }

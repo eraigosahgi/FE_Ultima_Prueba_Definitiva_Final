@@ -33,7 +33,13 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         private string CufeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionAceptacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DescripcionEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionEstadoEnvioMailField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DescripcionProcesoField;
@@ -64,6 +70,9 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int IdEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdEstadoEnvioMailField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Guid IdPeticionField;
@@ -154,6 +163,19 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionAceptacion {
+            get {
+                return this.DescripcionAceptacionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionAceptacionField, value) != true)) {
+                    this.DescripcionAceptacionField = value;
+                    this.RaisePropertyChanged("DescripcionAceptacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string DescripcionEstado {
             get {
                 return this.DescripcionEstadoField;
@@ -162,6 +184,19 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
                 if ((object.ReferenceEquals(this.DescripcionEstadoField, value) != true)) {
                     this.DescripcionEstadoField = value;
                     this.RaisePropertyChanged("DescripcionEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionEstadoEnvioMail {
+            get {
+                return this.DescripcionEstadoEnvioMailField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionEstadoEnvioMailField, value) != true)) {
+                    this.DescripcionEstadoEnvioMailField = value;
+                    this.RaisePropertyChanged("DescripcionEstadoEnvioMail");
                 }
             }
         }
@@ -292,6 +327,19 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
                 if ((this.IdEstadoField.Equals(value) != true)) {
                     this.IdEstadoField = value;
                     this.RaisePropertyChanged("IdEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdEstadoEnvioMail {
+            get {
+                return this.IdEstadoEnvioMailField;
+            }
+            set {
+                if ((this.IdEstadoEnvioMailField.Equals(value) != true)) {
+                    this.IdEstadoEnvioMailField = value;
+                    this.RaisePropertyChanged("IdEstadoEnvioMail");
                 }
             }
         }

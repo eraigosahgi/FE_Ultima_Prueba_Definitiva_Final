@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="eAAUGIslP6uGL//vaFPN0iJp2x4=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="rHaCWc+ByFibC9v8qbuQv6IdMV8=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="soap1">
       <properties>
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="soap1" contract="ServicioNotaCredito.ServicioNotaCredito" bindingType="basicHttpBinding" address="http://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc" bindingConfiguration="soap1">
+    <endpoint name="soap1" contract="ServicioNotaCredito.ServicioNotaCredito" bindingType="basicHttpBinding" address="http://localhost:61428/wcf/notacredito.svc" bindingConfiguration="soap1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc</serializedValue>
+          <serializedValue>http://localhost:61428/wcf/notacredito.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
