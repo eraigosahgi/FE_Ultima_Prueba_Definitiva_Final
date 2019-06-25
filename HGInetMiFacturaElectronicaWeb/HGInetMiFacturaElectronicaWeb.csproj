@@ -2813,6 +2813,7 @@
     </Content>
     <Content Include="wcf\acuserecibo.svc" />
     <Content Include="wcf\documentos.svc" />
+    <Content Include="wcf\empresas.svc" />
     <Content Include="wcf\factura.svc" />
     <Content Include="wcf\notacredito.svc" />
     <Content Include="wcf\notadebito.svc" />
@@ -3251,9 +3252,13 @@
     <Compile Include="wcf\documentos.svc.cs">
       <DependentUpon>documentos.svc</DependentUpon>
     </Compile>
+    <Compile Include="wcf\empresas.svc.cs">
+      <DependentUpon>empresas.svc</DependentUpon>
+    </Compile>
     <Compile Include="wcf\factura.svc.cs">
       <DependentUpon>factura.svc</DependentUpon>
     </Compile>
+    <Compile Include="wcf\interfaces\Iempresas.cs" />
     <Compile Include="wcf\interfaces\Iacuserecibo.cs" />
     <Compile Include="wcf\interfaces\Idocumentos.cs" />
     <Compile Include="wcf\interfaces\Inotadebito.cs" />
