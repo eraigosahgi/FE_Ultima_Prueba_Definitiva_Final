@@ -127,6 +127,7 @@
     <Compile Include="ModeloServicio\General\AIU.cs" />
     <Compile Include="ModeloServicio\General\Anexo.cs" />
     <Compile Include="ModeloServicio\General\DestinatarioEmail.cs" />
+    <Compile Include="ModeloServicio\General\Empresa.cs" />
     <Compile Include="ModeloServicio\General\ExtensionDian.cs" />
     <Compile Include="ModeloServicio\General\Formato.cs" />
     <Compile Include="ModeloServicio\General\FormatoCampo.cs" />

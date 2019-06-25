@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="Controladores\Ctl_AcuseRecibo.cs" />
     <Compile Include="Controladores\Ctl_Documentos.cs" />
+    <Compile Include="Controladores\Ctl_Empresas.cs" />
     <Compile Include="Controladores\Ctl_Factura.cs" />
     <Compile Include="Controladores\Ctl_NotaCredito.cs" />
     <Compile Include="Controladores\Ctl_NotaDebito.cs" />
@@ -61,6 +62,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ServicioDocumento\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioEmpresas\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -152,6 +158,26 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioDocumento\HGInetFacturaEServicios.ServicioDocumento.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioEmpresas\empresas.wsdl" />
+    <None Include="Service References\ServicioEmpresas\empresas.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\empresas1.wsdl" />
+    <None Include="Service References\ServicioEmpresas\empresas1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\empresas2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\empresas3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\HGInetFacturaEServicios.ServicioEmpresas.ObtenerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioEmpresas\HGInetFacturaEServicios.ServicioEmpresas.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioFactura\factura.wsdl" />
@@ -288,6 +314,7 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ServicioAcuseRecibo\" />
     <WCFMetadataStorage Include="Service References\ServicioDocumento\" />
+    <WCFMetadataStorage Include="Service References\ServicioEmpresas\" />
     <WCFMetadataStorage Include="Service References\ServicioFactura\" />
     <WCFMetadataStorage Include="Service References\ServicioNotaCredito\" />
     <WCFMetadataStorage Include="Service References\ServicioNotaDebito\" />
@@ -410,6 +437,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioResolucion\resolucion1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioEmpresas\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioEmpresas\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioEmpresas\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

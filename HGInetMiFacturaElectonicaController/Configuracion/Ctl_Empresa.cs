@@ -196,9 +196,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				EmpresaActualiza.StrTelefono = empresa.StrTelefono;
 
-				empresa.DatFechaActualizacion = Fecha.GetFecha();
 				EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
 
+				EmpresaActualiza.DatFechaActualizacion = Fecha.GetFecha();
+				EmpresaActualiza.IntTimeout = empresa.IntTimeout;
 				Actualizar(EmpresaActualiza);
 
 				//Obtiene el usuario principal de la empresa.
@@ -208,8 +209,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (usuario_principal != null)
 				{
 					clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, usuario_principal);
-				}else {
-				//	throw new ApplicationException("La empresa no tiene usuario generico");
+				}
+				else
+				{
+					//	throw new ApplicationException("La empresa no tiene usuario generico");
 				}
 
 				return EmpresaActualiza;
@@ -457,10 +460,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			//IntObligado = true -- Es Facturador
 			//IntCobroPostPago   -- 1 Tiene plan post pago automatico
 			List<TblEmpresas> ListaEmpresas = (from empresas in context.TblEmpresas
-								 where empresas.IntIdEstado== 1
-								 && empresas.IntCobroPostPago == 1
-								 && empresas.IntObligado ==true
-								 select empresas).ToList();			
+											   where empresas.IntIdEstado == 1
+											   && empresas.IntCobroPostPago == 1
+											   && empresas.IntObligado == true
+											   select empresas).ToList();
 
 			return ListaEmpresas;
 		}
@@ -468,19 +471,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		#endregion
 
 		#region Filtros
-		
+
 		public object ObtenerAdquirientes(string identificacion)
 		{
 
 			var datos = (from item in context.TblDocumentos
-						where item.TblEmpresasAdquiriente.IntAdquiriente==true
-						group item by new { item.StrEmpresaAdquiriente } into Adquirientes
-						select new {
-							ID=Adquirientes.FirstOrDefault().StrEmpresaAdquiriente,
-							Texto=Adquirientes.FirstOrDefault().TblEmpresasAdquiriente.StrRazonSocial,
-							Fact=Adquirientes.FirstOrDefault().TblEmpresasFacturador.StrIdentificacion														
-						 }).Where(x=>x.Fact.Equals(identificacion)).OrderBy(x=>x.Texto).ToList();
-										
+						 where item.TblEmpresasAdquiriente.IntAdquiriente == true
+						 group item by new { item.StrEmpresaAdquiriente } into Adquirientes
+						 select new
+						 {
+							 ID = Adquirientes.FirstOrDefault().StrEmpresaAdquiriente,
+							 Texto = Adquirientes.FirstOrDefault().TblEmpresasAdquiriente.StrRazonSocial,
+							 Fact = Adquirientes.FirstOrDefault().TblEmpresasFacturador.StrIdentificacion
+						 }).Where(x => x.Fact.Equals(identificacion)).OrderBy(x => x.Texto).ToList();
+
 			return datos;
 		}
 
@@ -492,15 +496,49 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="Identificacion">Numero de identificación</param>
 		/// <returns></returns>
-		public string ObtenerRazonSocial(string Identificacion) {
+		public string ObtenerRazonSocial(string Identificacion)
+		{
 			try
 			{
 				TblEmpresas empresa = context.TblEmpresas.Where(x => x.StrIdentificacion.Equals(Identificacion)).FirstOrDefault();
-				return string.Format("{0}--{1}",Identificacion, empresa.StrRazonSocial.ToString());
+				return string.Format("{0}--{1}", Identificacion, empresa.StrRazonSocial.ToString());
 			}
 			catch (Exception)
 			{
 				return Identificacion;
+			}
+		}
+
+		/// <summary>
+		/// Convierte un objeto de tipo TblEmpresas a Empresa
+		/// </summary>
+		/// <param name="datos_empresa">datos de la empresa</param>
+		/// <returns></returns>
+		public static Empresa ConvertirEmpresa(TblEmpresas datos_empresa)
+		{
+			try
+			{
+				if (datos_empresa == null)
+					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "empresa", "Ctl_Empresa"));
+
+				Empresa datos_retorno = new Empresa();
+				datos_retorno.Identificacion = datos_empresa.StrIdentificacion;
+				datos_retorno.IdentificacionDv = datos_empresa.IntIdentificacionDv;
+				datos_retorno.RazonSocial = datos_empresa.StrRazonSocial;
+				datos_retorno.Telefono = datos_empresa.StrTelefono;
+				datos_retorno.HorasAcuseTacito = datos_empresa.IntAcuseTacito.Value;
+				datos_retorno.ManejaAnexo = datos_empresa.IntManejaAnexos;
+				datos_retorno.EmailAdmin = datos_empresa.StrMailAdmin;
+				datos_retorno.EmailEnvio = datos_empresa.StrMailEnvio;
+				datos_retorno.EmailRecepcion = datos_empresa.StrMailRecepcion;
+				datos_retorno.EmailAcuse = datos_empresa.StrMailAcuse;
+				datos_retorno.EmailPagos = datos_empresa.StrMailPagos;
+				datos_retorno.VersionDian = datos_empresa.IntVersionDian;
+				return datos_retorno;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
 
