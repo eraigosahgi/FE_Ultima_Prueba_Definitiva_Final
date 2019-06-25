@@ -55,10 +55,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string NombreComercial { get; set; }
 
 		/// <summary>
+		/// Codigo Departamento necesario para V2
+		/// </summary>
+		public string CodigoDepartamento { get; set; }
+
+
+		/// <summary>
 		/// Departamento
 		/// </summary>
 		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
 		public string Departamento { get; set; }
+
+		/// <summary>
+		/// Codigo Ciudad necesario para V2
+		/// </summary>
+		public string CodigoCiudad { get; set; }
 
 		/// <summary>
 		/// Ciudad
@@ -125,6 +136,20 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string SegundoNombre { get; set; }
 
+		/// <summary>
+		/// Regimen Fiscal: 04-Simple, 05-Ordinario
+		/// </summary>
+		public string RegimenFiscal { get; set; }
+
+		/// <summary>
+		/// Responsabilidades fiscales lista 6.2.7
+		/// </summary>
+		public List<string> Responsabilidades { get; set; }
+
+		/// <summary>
+		///Código del tributo del que es responsable ejemplo:(01-IVA-Impuesto de Valor Agregado )(04-INC-Impuesto Nacional al Consumo)(05-ReteIVA-Retención sobre el IVA) 
+		/// </summary>
+		public string CodigoTributo { get; set; }
 
 	}
 }

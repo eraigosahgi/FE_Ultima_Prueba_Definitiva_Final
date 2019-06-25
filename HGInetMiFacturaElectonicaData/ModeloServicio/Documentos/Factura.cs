@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
 
 namespace HGInetMiFacturaElectonicaData.ModeloServicio
 {
@@ -211,6 +212,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// Id de seguridad del plan de donde se va a descontar el presente documento
         /// </summary>
         public Guid IdPlan { get; set; }
+
+		/// <summary>
+		/// Lista de Descuentos que afectan el total a Pagar
+		/// </summary>
+		public List<Descuento> Descuentos { get; set; }
+
+		/// <summary>
+		/// Lista de Cargos que afectan el total a pagar
+		/// </summary>
+		public List<Cargo> Cargos { get; set; }
+
+		/// <summary>
+		/// Anticipos generados al documento
+		/// </summary>
+		public List<Anticipo> Anticipos { get; set; }
 
 
 

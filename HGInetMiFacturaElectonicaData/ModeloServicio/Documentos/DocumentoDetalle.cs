@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HGInetMiFacturaElectonicaData.ModeloServicio.General;
 
 namespace HGInetMiFacturaElectonicaData.ModeloServicio
 {
@@ -135,6 +136,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Codigo EAN del producto y/o servicio
 		/// </summary>
 		public string ProductoCodigoEAN { get; set; }
+
+		/// <summary>
+		/// Informacion relacionado al manejo AIU: 0 - Ninguno, 1 - Utilidad, 2 - Administracion, 3 - Imprevisto
+		/// </summary>
+		public int Aiu { get; set; }
+
+		/// <summary>
+		/// Indica si el producto: 0 - Calcula IVA, 1 - Excento, 2 - Excluido
+		/// </summary>
+		public int CalculaIVA { get; set; }
+
+		/// <summary>
+		/// Informacion del Mandatario
+		/// </summary>
+		public Tercero DatosMandatario { get; set; }
 
 
 		#endregion
