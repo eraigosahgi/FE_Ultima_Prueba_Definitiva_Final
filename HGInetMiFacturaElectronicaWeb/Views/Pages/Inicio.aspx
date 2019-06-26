@@ -18,9 +18,21 @@
 		}
 	</style>
 
-	<!-- FILTROS DE BÚSQUEDA -->
-	<div class="col-md-12">
-		<div class="panel panel-white">
+	<%--Oculta el panel de los filtros según la visibilidad de los tabs--%>
+	<script>
+		$(document).ready(function () {
+
+			if ($('#LiTabAdministrador').is(':hidden') && $('#LiTabFacturador').is(':hidden') && $('#LiTabAdquiriente').is(':hidden'))
+			{ document.getElementById('panel_filtros').style.display = 'none'; }
+
+		});
+	</script>
+
+	<!-- CONTENEDOR PRINCIPAL -->
+	<div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController">
+
+		<!-- FILTROS DE BÚSQUEDA -->
+		<div class="panel panel-white" id="panel_filtros">
 			<div class="panel-body">
 
 				<div class="col-md-12" style="margin-bottom: 1%">
@@ -44,13 +56,7 @@
 			</div>
 
 		</div>
-	</div>
-	<!-- /FILTROS DE BÚSQUEDA -->
-
-
-	<!-- CONTENEDOR PRINCIPAL -->
-	<div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController">
-
+		<!-- /FILTROS DE BÚSQUEDA -->
 
 		<!-- CONTENIDO PANEL-->
 		<div class="panel-body">
