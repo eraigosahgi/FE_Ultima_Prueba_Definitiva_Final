@@ -20,16 +20,16 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:61428/wcf/resolucion.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="resolucion2.wsdl" MetadataType="Wsdl" ID="5ef77506-8f0e-473c-bef0-ca0d48c35026" SourceId="1" SourceUrl="http://localhost:61428/wcf/resolucion.svc?wsdl" />
-    <MetadataFile FileName="resolucion21.wsdl" MetadataType="Wsdl" ID="5e659fb0-bc4f-4419-884f-cc4176f084fe" SourceId="1" SourceUrl="http://localhost:61428/wcf/resolucion.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="resolucion4.xsd" MetadataType="Schema" ID="5391a98e-82e5-4f8c-93d5-6f541dc7d411" SourceId="1" SourceUrl="http://localhost:61428/wcf/resolucion.svc?xsd=xsd3" />
-    <MetadataFile FileName="resolucion41.xsd" MetadataType="Schema" ID="c3041ef7-cdda-4fcb-8cb2-610cded460f9" SourceId="1" SourceUrl="http://localhost:61428/wcf/resolucion.svc?xsd=xsd2" />
-    <MetadataFile FileName="resolucion42.xsd" MetadataType="Schema" ID="ace9c8d6-ee05-47a1-ad99-8261157cae0a" SourceId="1" SourceUrl="http://localhost:61428/wcf/resolucion.svc?xsd=xsd1" />
-    <MetadataFile FileName="resolucion43.xsd" MetadataType="Schema" ID="638c7e94-e3a8-40ad-b839-b38ab8b83281" SourceId="1" SourceUrl="http://localhost:61428/wcf/resolucion.svc?xsd=xsd0" />
-    <MetadataFile FileName="resolucion1.disco" MetadataType="Disco" ID="f0e8a529-4a47-49af-bf2f-0fcb0ec7e11c" SourceId="1" SourceUrl="http://localhost:61428/wcf/resolucion.svc?disco" />
+    <MetadataFile FileName="resolucion.xsd" MetadataType="Schema" ID="9201ac2b-6a64-49d8-9109-3aa2a2b3dfda" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc?xsd=xsd2" />
+    <MetadataFile FileName="resolucion1.xsd" MetadataType="Schema" ID="d946e4aa-c5a9-4817-a748-cf067511453b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc?xsd=xsd3" />
+    <MetadataFile FileName="resolucion.disco" MetadataType="Disco" ID="6b1f1c1e-9639-40c1-8519-66ae8323a319" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc?disco" />
+    <MetadataFile FileName="resolucion.wsdl" MetadataType="Wsdl" ID="8d931aec-01d4-462d-9c42-65e54289a416" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="resolucion2.xsd" MetadataType="Schema" ID="2d8654e9-aab1-4ead-9f45-d02bce3dcb47" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc?xsd=xsd1" />
+    <MetadataFile FileName="resolucion3.xsd" MetadataType="Schema" ID="f448d4a9-a735-41b8-aece-18cac0d2cdfd" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc?xsd=xsd0" />
+    <MetadataFile FileName="resolucion1.wsdl" MetadataType="Wsdl" ID="818d6359-60f1-4d54-9a4d-7cbf6ff7d868" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

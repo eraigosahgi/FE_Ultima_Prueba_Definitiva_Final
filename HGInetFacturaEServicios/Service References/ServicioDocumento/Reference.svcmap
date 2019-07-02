@@ -20,16 +20,16 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:61428/wcf/documentos.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="documentos1.disco" MetadataType="Disco" ID="ddc86dba-de68-4f76-82d1-0df51714a266" SourceId="1" SourceUrl="http://localhost:61428/wcf/documentos.svc?disco" />
-    <MetadataFile FileName="documentos2.wsdl" MetadataType="Wsdl" ID="f699d751-7a76-4c97-be3b-eb02a457810e" SourceId="1" SourceUrl="http://localhost:61428/wcf/documentos.svc?wsdl" />
-    <MetadataFile FileName="documentos21.wsdl" MetadataType="Wsdl" ID="4cda5260-4b04-49ba-b40b-d98bdf22413a" SourceId="1" SourceUrl="http://localhost:61428/wcf/documentos.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="documentos4.xsd" MetadataType="Schema" ID="eebdd898-dcdb-4299-8a4e-97a3999721d6" SourceId="1" SourceUrl="http://localhost:61428/wcf/documentos.svc?xsd=xsd1" />
-    <MetadataFile FileName="documentos41.xsd" MetadataType="Schema" ID="785dd7b1-50a1-42a4-b426-c90dce16851a" SourceId="1" SourceUrl="http://localhost:61428/wcf/documentos.svc?xsd=xsd0" />
-    <MetadataFile FileName="documentos42.xsd" MetadataType="Schema" ID="b4bd6ccb-9e3d-41fe-b1da-bc36e52c13b3" SourceId="1" SourceUrl="http://localhost:61428/wcf/documentos.svc?xsd=xsd3" />
-    <MetadataFile FileName="documentos43.xsd" MetadataType="Schema" ID="479bac8c-1f7f-4ab7-8aaa-f3392c42a790" SourceId="1" SourceUrl="http://localhost:61428/wcf/documentos.svc?xsd=xsd2" />
+    <MetadataFile FileName="documentos.xsd" MetadataType="Schema" ID="09895d50-ce4d-4a40-a606-501b0e83b3db" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?xsd=xsd0" />
+    <MetadataFile FileName="documentos.wsdl" MetadataType="Wsdl" ID="3a715523-1965-4dd7-8aca-47917ef59bdd" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?wsdl" />
+    <MetadataFile FileName="documentos1.xsd" MetadataType="Schema" ID="cb14514b-65d8-458f-976a-38d440ee8c56" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?xsd=xsd2" />
+    <MetadataFile FileName="documentos.disco" MetadataType="Disco" ID="b3ba14a6-7784-400b-8c2b-24c60cff16f3" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?disco" />
+    <MetadataFile FileName="documentos2.xsd" MetadataType="Schema" ID="86a3d1c7-157a-45ff-89a7-f06b4e1a0984" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?xsd=xsd1" />
+    <MetadataFile FileName="documentos3.xsd" MetadataType="Schema" ID="e276dcb0-d659-4d3c-bfa5-780f5338b999" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?xsd=xsd3" />
+    <MetadataFile FileName="documentos1.wsdl" MetadataType="Wsdl" ID="6905ab5b-6969-48ec-8a3f-ddd75d028e51" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?wsdl=wsdl0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -688,6 +688,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private string CodigoPaisField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoPostalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodigoTributoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -802,6 +805,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.CodigoPaisField, value) != true)) {
                     this.CodigoPaisField = value;
                     this.RaisePropertyChanged("CodigoPais");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoPostal {
+            get {
+                return this.CodigoPostalField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoPostalField, value) != true)) {
+                    this.CodigoPostalField = value;
+                    this.RaisePropertyChanged("CodigoPostal");
                 }
             }
         }

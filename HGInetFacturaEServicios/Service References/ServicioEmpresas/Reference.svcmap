@@ -20,15 +20,15 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:61421/wcf/empresas.svc?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/empresas.svc?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="empresas.xsd" MetadataType="Schema" ID="868385bf-1ab9-454f-8ba9-a7ce4eff0697" SourceId="1" SourceUrl="http://localhost:61421/wcf/empresas.svc?xsd=xsd2" />
-    <MetadataFile FileName="empresas1.xsd" MetadataType="Schema" ID="1453a4f2-027e-44e0-a6f2-2a6deb3f5922" SourceId="1" SourceUrl="http://localhost:61421/wcf/empresas.svc?xsd=xsd1" />
-    <MetadataFile FileName="empresas2.xsd" MetadataType="Schema" ID="67f8c418-6340-433f-b211-e535abe8ca2c" SourceId="1" SourceUrl="http://localhost:61421/wcf/empresas.svc?xsd=xsd3" />
-    <MetadataFile FileName="empresas.wsdl" MetadataType="Wsdl" ID="9b3d17ee-083f-4afb-970f-038b5b2f3a74" SourceId="1" SourceUrl="http://localhost:61421/wcf/empresas.svc?wsdl" />
-    <MetadataFile FileName="empresas1.wsdl" MetadataType="Wsdl" ID="cf88b4c7-6fd4-4d62-8fe2-40e452d7f601" SourceId="1" SourceUrl="http://localhost:61421/wcf/empresas.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="empresas3.xsd" MetadataType="Schema" ID="1a69e5e1-ecb9-4a80-b404-664291c652ae" SourceId="1" SourceUrl="http://localhost:61421/wcf/empresas.svc?xsd=xsd0" />
+    <MetadataFile FileName="empresas2.wsdl" MetadataType="Wsdl" ID="8ca3ba62-e679-46c5-a431-231fdd4050e4" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/empresas.svc?wsdl" />
+    <MetadataFile FileName="empresas21.wsdl" MetadataType="Wsdl" ID="22bb9910-b2cf-42c0-b913-3939bab109e9" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/empresas.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="empresas4.xsd" MetadataType="Schema" ID="c9e70b54-57ed-4162-846d-5fc74bc7e461" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/empresas.svc?xsd=xsd3" />
+    <MetadataFile FileName="empresas41.xsd" MetadataType="Schema" ID="e9393228-f141-44f4-9a13-b86947869da5" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/empresas.svc?xsd=xsd2" />
+    <MetadataFile FileName="empresas42.xsd" MetadataType="Schema" ID="6ffc1987-89c0-418e-8842-7f3e1db6f8ac" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/empresas.svc?xsd=xsd1" />
+    <MetadataFile FileName="empresas43.xsd" MetadataType="Schema" ID="c305e272-61c7-4bd2-b602-ed4c6403aed8" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/empresas.svc?xsd=xsd0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
