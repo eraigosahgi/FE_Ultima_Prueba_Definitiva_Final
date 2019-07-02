@@ -337,14 +337,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
 				ObjPlanTransacciones.IntTipoProceso = IntTipoProceso;
-				ObjPlanTransacciones.StrEmpresaUsuario = StrEmpresa;
+				ObjPlanTransacciones.StrEmpresaUsuario = StrEmpresa.Trim();
 				ObjPlanTransacciones.StrUsuario = StrUsuario;
 				ObjPlanTransacciones.IntNumTransaccCompra = IntNumTransaccCompra;
 				ObjPlanTransacciones.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
 				ObjPlanTransacciones.IntValor = IntValor;
 				ObjPlanTransacciones.IntEstado = Estado;
 				ObjPlanTransacciones.StrObservaciones = StrObservaciones;
-				ObjPlanTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
+				ObjPlanTransacciones.StrEmpresaFacturador = StrEmpresaFacturador.Trim();
 
 				if (Vence)
 				{
@@ -385,14 +385,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				TblPlanesTransacciones ObjPTransacciones = new TblPlanesTransacciones();
 				ObjPTransacciones.IntTipoProceso = IntTipoProceso;
-				ObjPTransacciones.StrEmpresaUsuario = StrEmpresa;
+				ObjPTransacciones.StrEmpresaUsuario = StrEmpresa.Trim();
 				ObjPTransacciones.StrUsuario = StrUsuario;
 				ObjPTransacciones.IntNumTransaccCompra = IntNumTransaccCompra;
 				ObjPTransacciones.IntNumTransaccProcesadas = IntNumTransaccProcesadas;
 				ObjPTransacciones.IntValor = IntValor;
 				ObjPTransacciones.IntEstado = Estado;
 				ObjPTransacciones.StrObservaciones = StrObservaciones;
-				ObjPTransacciones.StrEmpresaFacturador = StrEmpresaFacturador;
+				ObjPTransacciones.StrEmpresaFacturador = StrEmpresaFacturador.Trim();
 				ObjPTransacciones.StrIdSeguridad = StrIdSeguridad;
 				if (Vence)
 				{

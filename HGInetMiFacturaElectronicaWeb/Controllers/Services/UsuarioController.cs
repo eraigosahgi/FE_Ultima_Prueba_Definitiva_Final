@@ -345,9 +345,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
             try
             {
                 Ctl_Usuario ctl_usuario = new Ctl_Usuario();
+				//Quitamos espacios
+				StrEmpresa = StrEmpresa.Trim();
 
-
-                if (Tipo == 1)
+				if (Tipo == 1)
                 {
                     TblUsuarios usuario = new TblUsuarios();
                     usuario.StrEmpresa = StrEmpresa;
