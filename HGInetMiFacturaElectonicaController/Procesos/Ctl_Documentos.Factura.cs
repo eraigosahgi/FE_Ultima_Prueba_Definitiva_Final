@@ -333,9 +333,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception) { }
 
-				// realiza el proceso de envío a la DIAN del documento
-				item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion, facturador_electronico);
-
+				if (facturador_electronico.IntVersionDian == 1)
+				{
+					// realiza el proceso de envío a la DIAN del documento
+					item_respuesta = Procesar(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion,
+						facturador_electronico);
+				}
+				else
+				{
+					// realiza el proceso de envío a la DIAN del documento en Validacion Previa V2
+					item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion,
+						facturador_electronico);
+				}
 			}
 			catch (Exception excepcion)
 			{

@@ -101,7 +101,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_result.IdSeguridadDocumento = Guid.Parse(respuesta.IdDocumento);
 
 						// Establece la versión de la DIAN
-						documento_result.VersionDian = documento_obj.VersionDian;
+						documento_result.VersionDian = empresa.IntVersionDian;
 
 						//Valida que el Proveedor Receptor enviado exista en Bd
 						if (documento_obj.IdentificacionProveedor != null)

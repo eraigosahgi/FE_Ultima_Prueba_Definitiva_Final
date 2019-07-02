@@ -102,7 +102,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_result.IdSeguridadDocumento = Guid.Parse(respuesta.IdDocumento);
 
 						// Establece la versión de la DIAN
-						documento_result.VersionDian = documento_obj.VersionDian;
+						documento_result.VersionDian = empresa.IntVersionDian;
+
 
 						//Valida que el Proveedor Receptor enviado exista en Bd
 						if (documento_obj.IdentificacionProveedor != null)
@@ -133,6 +134,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						// genera el xml en ubl
 						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
+
+						// Establece la versión de la DIAN segun el Facturador
+						documento_result.VersionDian = empresa.IntVersionDian;
 
 						// almacena el xml en ubl
 						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);

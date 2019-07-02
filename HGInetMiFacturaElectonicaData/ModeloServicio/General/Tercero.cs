@@ -84,6 +84,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string Direccion { get; set; }
 
 		/// <summary>
+		/// Codigo Postal necesario para V2
+		/// </summary>
+		public string CodigoPostal { get; set; }
+
+		/// <summary>
 		/// Telefono
 		/// </summary>
 		[Required(ErrorMessage = "{0} es un campo obligatorio")]

@@ -954,8 +954,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.StrProveedorReceptor = documento_obj.IdentificacionProveedor;
 				tbl_documento.IntValorSubtotal = documento_obj.ValorSubtotal;
 				tbl_documento.IntValorNeto = documento_obj.Neto;
-				//si no llega version 2 se asume que es version 1
-				tbl_documento.IntVersionDian = documento_obj.VersionDian != 2 ? Convert.ToInt16(1) : Convert.ToInt16(documento_obj.VersionDian);
+				tbl_documento.IntVersionDian = empresa.IntVersionDian;
 				return tbl_documento;
 			}
 			catch (Exception excepcion)
