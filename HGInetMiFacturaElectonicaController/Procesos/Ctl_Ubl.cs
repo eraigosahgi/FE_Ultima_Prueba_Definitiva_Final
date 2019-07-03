@@ -174,7 +174,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			FacturaE_Documento resultado = null;
 
 			// convierte el documento 
-			switch (documento.VersionDian)
+			switch (empresa.IntVersionDian)
 			{
 				case 1:
 					resultado = HGInetUBL.NotaCreditoXML.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc);
@@ -244,7 +244,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// convierte el documento 
 			FacturaE_Documento resultado = null;
 
-			switch (documento.VersionDian)
+			switch (empresa.IntVersionDian)
 			{
 				case 1:
 					resultado = HGInetUBL.NotaDebitoXML.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);

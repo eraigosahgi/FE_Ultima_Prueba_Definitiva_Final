@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -203,11 +204,20 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public Guid IdPlan { get; set; }
 
+        /// <summary>
+        /// Lista de Descuentos que afectan el total a Pagar
+        /// </summary>
+        public List<Descuento> Descuentos { get; set; }
 
-		/// <summary>
-		/// Versión de la DIAN (1: 2018 - 2: Validación Previa 2019)
-		/// </summary>
-		public int VersionDian { get; set; }
+        /// <summary>
+        /// Lista de Cargos que afectan el total a pagar
+        /// </summary>
+        public List<Cargo> Cargos { get; set; }
+
+        /// <summary>
+        /// Anticipos generados al documento
+        /// </summary>
+        public List<Anticipo> Anticipos { get; set; }
 
 		#endregion
 	}
