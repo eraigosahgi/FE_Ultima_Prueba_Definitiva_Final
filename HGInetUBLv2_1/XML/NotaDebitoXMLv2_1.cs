@@ -97,7 +97,7 @@ namespace HGInetUBLv2_1
 
 				IssueTimeType IssueTime = new IssueTimeType();
 				DateTime fecha_univ = DateTime.UtcNow;
-				IssueTime.Value = Convert.ToDateTime(fecha_univ.ToString("HH:m:s tt zzz"));//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa));
+				IssueTime.Value = documento.Fecha.ToString("HH:mm:ss");//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa));
 				nota_debito.IssueTime = IssueTime;
 
 				#endregion
@@ -448,7 +448,7 @@ namespace HGInetUBLv2_1
 				//fecha = fecha.Date + hora;
 
 				string NumCr = nota_debito.ID.Value;
-				string FecCr = string.Format("{0}{1}", nota_debito.IssueDate.Value.ToString("yyyy-MM-dd"), nota_debito.IssueTime.Value.ToString("HH:mm:ss.fffffffzzz"));//fecha.ToString(Fecha.formato_fecha_java);
+				string FecCr = string.Format("{0}{1}", nota_debito.IssueDate.Value.ToString("yyyy-MM-dd"), nota_debito.IssueTime.Value);//fecha.ToString(Fecha.formato_fecha_java);
 				string ValCr = nota_debito.RequestedMonetaryTotal.LineExtensionAmount.Value.ToString();
 
 				//Impuesto 1

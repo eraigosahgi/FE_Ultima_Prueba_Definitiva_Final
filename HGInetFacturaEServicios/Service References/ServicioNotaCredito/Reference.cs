@@ -24,7 +24,13 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.Anticipo> AnticiposField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private HGInetFacturaEServicios.ServicioNotaCredito.Anexo ArchivoAnexosField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.Cargo> CargosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodigoRegistroField;
@@ -46,6 +52,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private HGInetFacturaEServicios.ServicioNotaCredito.Tercero DatosObligadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.Descuento> DescuentosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private long DocumentoField;
@@ -122,9 +131,6 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string VersionAplicativoField;
         
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int VersionDianField;
-        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -132,6 +138,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.Anticipo> Anticipos {
+            get {
+                return this.AnticiposField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AnticiposField, value) != true)) {
+                    this.AnticiposField = value;
+                    this.RaisePropertyChanged("Anticipos");
+                }
             }
         }
         
@@ -144,6 +163,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.ArchivoAnexosField, value) != true)) {
                     this.ArchivoAnexosField = value;
                     this.RaisePropertyChanged("ArchivoAnexos");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.Cargo> Cargos {
+            get {
+                return this.CargosField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CargosField, value) != true)) {
+                    this.CargosField = value;
+                    this.RaisePropertyChanged("Cargos");
                 }
             }
         }
@@ -235,6 +267,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.DatosObligadoField, value) != true)) {
                     this.DatosObligadoField = value;
                     this.RaisePropertyChanged("DatosObligado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioNotaCredito.Descuento> Descuentos {
+            get {
+                return this.DescuentosField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescuentosField, value) != true)) {
+                    this.DescuentosField = value;
+                    this.RaisePropertyChanged("Descuentos");
                 }
             }
         }
@@ -560,19 +605,6 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.VersionAplicativoField, value) != true)) {
                     this.VersionAplicativoField = value;
                     this.RaisePropertyChanged("VersionAplicativo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int VersionDian {
-            get {
-                return this.VersionDianField;
-            }
-            set {
-                if ((this.VersionDianField.Equals(value) != true)) {
-                    this.VersionDianField = value;
-                    this.RaisePropertyChanged("VersionDian");
                 }
             }
         }
@@ -1159,6 +1191,224 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.TituloField, value) != true)) {
                     this.TituloField = value;
                     this.RaisePropertyChanged("Titulo");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Anticipo", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio.Documentos")]
+    [System.SerializableAttribute()]
+    public partial class Anticipo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Codigo {
+            get {
+                return this.CodigoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoField, value) != true)) {
+                    this.CodigoField = value;
+                    this.RaisePropertyChanged("Codigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((this.ValorField.Equals(value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Cargo", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio.Documentos")]
+    [System.SerializableAttribute()]
+    public partial class Cargo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal PorcentajeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Descripcion {
+            get {
+                return this.DescripcionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionField, value) != true)) {
+                    this.DescripcionField = value;
+                    this.RaisePropertyChanged("Descripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Porcentaje {
+            get {
+                return this.PorcentajeField;
+            }
+            set {
+                if ((this.PorcentajeField.Equals(value) != true)) {
+                    this.PorcentajeField = value;
+                    this.RaisePropertyChanged("Porcentaje");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((this.ValorField.Equals(value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Descuento", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio.Documentos")]
+    [System.SerializableAttribute()]
+    public partial class Descuento : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal PorcentajeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Codigo {
+            get {
+                return this.CodigoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoField, value) != true)) {
+                    this.CodigoField = value;
+                    this.RaisePropertyChanged("Codigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Porcentaje {
+            get {
+                return this.PorcentajeField;
+            }
+            set {
+                if ((this.PorcentajeField.Equals(value) != true)) {
+                    this.PorcentajeField = value;
+                    this.RaisePropertyChanged("Porcentaje");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((this.ValorField.Equals(value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
                 }
             }
         }

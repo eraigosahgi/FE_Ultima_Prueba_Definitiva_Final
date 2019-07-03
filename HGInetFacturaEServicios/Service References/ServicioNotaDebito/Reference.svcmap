@@ -30,6 +30,7 @@
     <MetadataFile FileName="notadebito1.disco" MetadataType="Disco" ID="b5dd89f2-4039-4117-b0d0-ec3b6151e5bb" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?disco" />
     <MetadataFile FileName="notadebito52.xsd" MetadataType="Schema" ID="db40f264-1338-4234-b2a2-c7a4e8e7c858" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd1" />
     <MetadataFile FileName="notadebito53.xsd" MetadataType="Schema" ID="cacde732-66ac-4eb2-8b64-ca388fe8c4eb" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd4" />
+    <MetadataFile FileName="notadebito.xsd" MetadataType="Schema" ID="d760c2bd-d212-48d4-94f2-1ad3943d724e" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd5" />
     <MetadataFile FileName="notadebito54.xsd" MetadataType="Schema" ID="f0cfa613-390b-4344-bd13-96a886d375ef" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd2" />
   </Metadata>
   <Extensions>
