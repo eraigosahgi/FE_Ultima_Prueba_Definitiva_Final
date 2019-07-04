@@ -57,7 +57,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		{
 			try
 			{
-				// valida
+				// valida 
 				Peticion.Validar(DataKey, Identificacion);
 				
 				// obtiene las resoluciones

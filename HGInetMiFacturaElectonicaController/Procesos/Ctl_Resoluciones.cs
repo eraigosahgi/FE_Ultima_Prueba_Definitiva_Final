@@ -68,7 +68,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns>resolución creada</returns>
 		public static List<Resolucion> CrearHabilitacion(Resolucion datos_resolucion, string obligado)
 		{
-			//obtiene los datos de la empresa
+			//obtiene los datos de la empresa 
 			Ctl_Empresa Peticion = new Ctl_Empresa();
 			TblEmpresas facturador_electronico = Peticion.Obtener(obligado);
 
