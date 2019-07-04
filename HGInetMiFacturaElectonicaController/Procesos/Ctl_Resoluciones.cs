@@ -20,8 +20,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 	/// </summary>
 	public class Ctl_Resoluciones
 	{
+		/// <summary>
+		/// Obtiene las resoluciones de facturación para el obligado
+		/// </summary>
+		/// <param name="identificacion_obligado">número de identificación</param>
+		/// <returns>resoluciones</returns>
 		public static List<Resolucion> Obtener(string identificacion_obligado)
 		{
+			List<Resolucion> resoluciones_respuesta = new List<Resolucion>();
+
 			Guid id_peticion = Guid.NewGuid();
 
 			Ctl_Empresa Peticion = new Ctl_Empresa();
@@ -29,14 +36,70 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//obtiene los datos de la empresa
 			TblEmpresas facturador_electronico = Peticion.Obtener(identificacion_obligado);
 
-			List<TblEmpresasResoluciones> resoluciones_bd = Actualizar(id_peticion, facturador_electronico);
+			List<TblEmpresasResoluciones> resoluciones_bd = null;
+
+			if (facturador_electronico.IntVersionDian == 1)
+			{
+				resoluciones_bd = Actualizar(id_peticion, facturador_electronico);
+			}
+			else if (facturador_electronico.IntVersionDian == 2)
+			{
+				//obtiene las Resoluciones del facturador y las actualiza para que no permita la recepcion de documento
+				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
+				resoluciones_bd = empresa_resolucion.ObtenerResoluciones(identificacion_obligado, "*");
+			}
+
+			if (resoluciones_bd != null)
+			{
+				foreach (TblEmpresasResoluciones item in resoluciones_bd)
+				{
+					resoluciones_respuesta.Add(Ctl_EmpresaResolucion.Convertir(item));
+				}
+			}
+
+			return resoluciones_respuesta;
+		}
+
+		/// <summary>
+		/// Crea la resolución en versión 2 y modo habilitación
+		/// </summary>
+		/// <param name="resoluciones_dian">datos de la resolución</param>
+		/// <param name="obligado">identificación del obligado</param>
+		/// <returns>resolución creada</returns>
+		public static List<Resolucion> CrearHabilitacion(Resolucion datos_resolucion, string obligado)
+		{
+			//obtiene los datos de la empresa
+			Ctl_Empresa Peticion = new Ctl_Empresa();
+			TblEmpresas facturador_electronico = Peticion.Obtener(obligado);
 
 			List<Resolucion> resoluciones_respuesta = new List<Resolucion>();
+			
+			ResolucionesFacturacion resolucion_dian = new ResolucionesFacturacion();
+			resolucion_dian.RangoFacturacion = new RangoFacturacion[1];
+			resolucion_dian.RangoFacturacion[0].ClaveTecnica = datos_resolucion.ClaveTecnica;
+			resolucion_dian.RangoFacturacion[0].FechaResolucion = datos_resolucion.FechaResolucion;
+			resolucion_dian.RangoFacturacion[0].FechaVigenciaDesde = datos_resolucion.FechaVigenciaInicial;
+			resolucion_dian.RangoFacturacion[0].FechaVigenciaHasta = datos_resolucion.FechaVigenciaFinal;
+			resolucion_dian.RangoFacturacion[0].NumeroResolucion = Convert.ToInt64(datos_resolucion.NumeroResolucion);
+			resolucion_dian.RangoFacturacion[0].Prefijo = datos_resolucion.Prefijo;
+			resolucion_dian.RangoFacturacion[0].RangoFinal = datos_resolucion.RangoFinal;
+			resolucion_dian.RangoFacturacion[0].RangoInicial = datos_resolucion.RangoInicial;
 
-			foreach (TblEmpresasResoluciones item in resoluciones_bd)
+			if (facturador_electronico.IntVersionDian == 2 && facturador_electronico.IntHabilitacion.Value < 99)
 			{
-				resoluciones_respuesta.Add(Ctl_EmpresaResolucion.Convertir(item));
+				// crea o actualiza las resoluciones obtenidas en la base de datos
+				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
+				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.Crear(resolucion_dian, obligado);
+				
+				if (resoluciones_bd != null)
+				{
+					foreach (TblEmpresasResoluciones item in resoluciones_bd)
+					{
+						resoluciones_respuesta.Add(Ctl_EmpresaResolucion.Convertir(item));
+					}
+				}
 			}
+
 			return resoluciones_respuesta;
 		}
 
