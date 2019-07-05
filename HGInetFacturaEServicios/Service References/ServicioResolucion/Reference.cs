@@ -27,6 +27,9 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         private string ClaveTecnicaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DataKeyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaResolucionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -34,6 +37,9 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaVigenciaInicialField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string NumeroResolucionField;
@@ -66,6 +72,19 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
                 if ((object.ReferenceEquals(this.ClaveTecnicaField, value) != true)) {
                     this.ClaveTecnicaField = value;
                     this.RaisePropertyChanged("ClaveTecnica");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DataKey {
+            get {
+                return this.DataKeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DataKeyField, value) != true)) {
+                    this.DataKeyField = value;
+                    this.RaisePropertyChanged("DataKey");
                 }
             }
         }
@@ -105,6 +124,19 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
                 if ((this.FechaVigenciaInicialField.Equals(value) != true)) {
                     this.FechaVigenciaInicialField = value;
                     this.RaisePropertyChanged("FechaVigenciaInicial");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Identificacion {
+            get {
+                return this.IdentificacionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionField, value) != true)) {
+                    this.IdentificacionField = value;
+                    this.RaisePropertyChanged("Identificacion");
                 }
             }
         }
@@ -191,6 +223,17 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         System.IAsyncResult BeginConsultar(HGInetFacturaEServicios.ServicioResolucion.ConsultarRequest request, System.AsyncCallback callback, object asyncState);
         
         HGInetFacturaEServicios.ServicioResolucion.ConsultarResponse EndConsultar(System.IAsyncResult result);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioResolucion/ConsultarResolucion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioResolucion/ConsultarResolucionRespo" +
+            "nse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="ConsultarResolucion", Name="Error")]
+        HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionResponse ConsultarResolucion(HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="HGInetFacturaElectronica.ServiciosWcf/ServicioResolucion/ConsultarResolucion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioResolucion/ConsultarResolucionRespo" +
+            "nse")]
+        System.IAsyncResult BeginConsultarResolucion(HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionRequest request, System.AsyncCallback callback, object asyncState);
+        
+        HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionResponse EndConsultarResolucion(System.IAsyncResult result);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -254,6 +297,38 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultarResolucion", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultarResolucionRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public HGInetFacturaEServicios.ServicioResolucion.Resolucion Resolucion;
+        
+        public ConsultarResolucionRequest() {
+        }
+        
+        public ConsultarResolucionRequest(HGInetFacturaEServicios.ServicioResolucion.Resolucion Resolucion) {
+            this.Resolucion = Resolucion;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultarResolucionResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultarResolucionResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> ConsultarResolucionResult;
+        
+        public ConsultarResolucionResponse() {
+        }
+        
+        public ConsultarResolucionResponse(System.Collections.Generic.List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> ConsultarResolucionResult) {
+            this.ConsultarResolucionResult = ConsultarResolucionResult;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface ServicioResolucionChannel : HGInetFacturaEServicios.ServicioResolucion.ServicioResolucion, System.ServiceModel.IClientChannel {
     }
@@ -298,6 +373,25 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class ConsultarResolucionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        public ConsultarResolucionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        public HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionResponse Result {
+            get {
+                base.RaiseExceptionIfNecessary();
+                return ((HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionResponse)(this.results[0]));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public partial class ServicioResolucionClient : System.ServiceModel.ClientBase<HGInetFacturaEServicios.ServicioResolucion.ServicioResolucion>, HGInetFacturaEServicios.ServicioResolucion.ServicioResolucion {
         
         private BeginOperationDelegate onBeginTestDelegate;
@@ -311,6 +405,12 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         private EndOperationDelegate onEndConsultarDelegate;
         
         private System.Threading.SendOrPostCallback onConsultarCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginConsultarResolucionDelegate;
+        
+        private EndOperationDelegate onEndConsultarResolucionDelegate;
+        
+        private System.Threading.SendOrPostCallback onConsultarResolucionCompletedDelegate;
         
         public ServicioResolucionClient() {
         }
@@ -334,6 +434,8 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         public event System.EventHandler<TestCompletedEventArgs> TestCompleted;
         
         public event System.EventHandler<ConsultarCompletedEventArgs> ConsultarCompleted;
+        
+        public event System.EventHandler<ConsultarResolucionCompletedEventArgs> ConsultarResolucionCompleted;
         
         public HGInetFacturaEServicios.ServicioResolucion.TestResponse Test(HGInetFacturaEServicios.ServicioResolucion.TestRequest request) {
             return base.Channel.Test(request);
@@ -433,6 +535,56 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
             }
             base.InvokeAsync(this.onBeginConsultarDelegate, new object[] {
                         request}, this.onEndConsultarDelegate, this.onConsultarCompletedDelegate, userState);
+        }
+        
+        public HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionResponse ConsultarResolucion(HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionRequest request) {
+            return base.Channel.ConsultarResolucion(request);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginConsultarResolucion(HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionRequest request, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginConsultarResolucion(request, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionResponse EndConsultarResolucion(System.IAsyncResult result) {
+            return base.Channel.EndConsultarResolucion(result);
+        }
+        
+        private System.IAsyncResult OnBeginConsultarResolucion(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionRequest request = ((HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionRequest)(inValues[0]));
+            return this.BeginConsultarResolucion(request, callback, asyncState);
+        }
+        
+        private object[] OnEndConsultarResolucion(System.IAsyncResult result) {
+            HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionResponse retVal = this.EndConsultarResolucion(result);
+            return new object[] {
+                    retVal};
+        }
+        
+        private void OnConsultarResolucionCompleted(object state) {
+            if ((this.ConsultarResolucionCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.ConsultarResolucionCompleted(this, new ConsultarResolucionCompletedEventArgs(e.Results, e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void ConsultarResolucionAsync(HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionRequest request) {
+            this.ConsultarResolucionAsync(request, null);
+        }
+        
+        public void ConsultarResolucionAsync(HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionRequest request, object userState) {
+            if ((this.onBeginConsultarResolucionDelegate == null)) {
+                this.onBeginConsultarResolucionDelegate = new BeginOperationDelegate(this.OnBeginConsultarResolucion);
+            }
+            if ((this.onEndConsultarResolucionDelegate == null)) {
+                this.onEndConsultarResolucionDelegate = new EndOperationDelegate(this.OnEndConsultarResolucion);
+            }
+            if ((this.onConsultarResolucionCompletedDelegate == null)) {
+                this.onConsultarResolucionCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnConsultarResolucionCompleted);
+            }
+            base.InvokeAsync(this.onBeginConsultarResolucionDelegate, new object[] {
+                        request}, this.onEndConsultarResolucionDelegate, this.onConsultarResolucionCompletedDelegate, userState);
         }
     }
 }

@@ -296,6 +296,9 @@
     <None Include="Service References\ServicioReenvioDocumento\reenviodocumento43.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioResolucion\HGInetFacturaEServicios.ServicioResolucion.ConsultarResolucionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioResolucion\HGInetFacturaEServicios.ServicioResolucion.ConsultarResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -310,10 +313,24 @@
     <None Include="Service References\ServicioResolucion\resolucion1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioResolucion\resolucion2.wsdl" />
     <None Include="Service References\ServicioResolucion\resolucion2.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioResolucion\resolucion21.wsdl" />
     <None Include="Service References\ServicioResolucion\resolucion3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioResolucion\resolucion4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioResolucion\resolucion41.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioResolucion\resolucion42.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioResolucion\resolucion43.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -452,6 +469,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioReenvioDocumento\reenviodocumento1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioResolucion\resolucion1.disco" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioResolucion\resolucion.disco" />

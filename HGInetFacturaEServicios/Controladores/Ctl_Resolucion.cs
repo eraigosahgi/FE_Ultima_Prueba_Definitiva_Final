@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HGInetFacturaEServicios.ServicioResolucion;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -58,6 +59,81 @@ namespace HGInetFacturaEServicios
 
 				// resultado del servicio web
 				List<ServicioResolucion.Resolucion> result = respuesta.ConsultarResult;
+
+				if (respuesta != null)
+					return result;
+				else
+					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			}
+			catch (FaultException excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion);
+			}
+			catch (CommunicationException excepcion)
+			{
+				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			}
+			catch (Exception excepcion)
+			{
+				throw excepcion;
+			}
+			finally
+			{
+				if (cliente_ws != null)
+					cliente_ws.Abort();
+			}
+		}
+
+		/// <summary>
+		/// Permite obtener las resoluciones registradas en Bd por el Facturador Electrónico
+		/// o Crear una en el Ambiente de Habilitacion
+		/// </summary>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
+		/// <param name="Resolucion">Objeto con la Resolucion Ingresada</param>
+		/// <returns>datos de las resoluciones</returns>
+		public static List<ServicioResolucion.Resolucion> ObtenerResHab(string UrlWs, string Serial, string Identificacion, Resolucion Resolucion)
+		{
+			// valida la URL del servicio web
+			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			// valida el parámetro Serial
+			if (string.IsNullOrEmpty(Serial))
+				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
+
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(Identificacion))
+				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+			if (Resolucion == null)
+				throw new ApplicationException("Objeto Resolucion inválido");
+
+			List<ServicioResolucion.Resolucion> datos = new List<ServicioResolucion.Resolucion>();
+
+			// conexión cliente para el servicio web
+			ServicioResolucion.ServicioResolucionClient cliente_ws = new ServicioResolucion.ServicioResolucionClient();
+			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			try
+			{
+				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+
+				Resolucion.DataKey = dataKey;
+
+				// datos para la petición
+				ServicioResolucion.ConsultarResolucionRequest peticion = new ServicioResolucion.ConsultarResolucionRequest()
+				{
+					Resolucion = Resolucion
+				};
+
+				// ejecución del servicio web
+				ServicioResolucion.ConsultarResolucionResponse respuesta = cliente_ws.ConsultarResolucion(peticion);
+
+				// resultado del servicio web
+				List<ServicioResolucion.Resolucion> result = respuesta.ConsultarResolucionResult;
 
 				if (respuesta != null)
 					return result;
