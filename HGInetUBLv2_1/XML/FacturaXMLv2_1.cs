@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using LibreriaGlobalHGInet.General;
 using System.Xml;
 using System.IO;
+using LibreriaGlobalHGInet.HgiNet.Controladores;
 
 namespace HGInetUBLv2_1
 {
@@ -88,7 +89,7 @@ namespace HGInetUBLv2_1
 				DateTime fecha_univ = DateTime.UtcNow;
 				//DateTime hora_univ =  new DateTime(fecha_univ.Hour, fecha_univ.Minute, fecha_univ.Second);//Fecha.GetFecha().ToString("HH:m:s zzz");//
 				//string hora_documento = fecha_univ.ToString("HH:mm:sszzz");
-				IssueTime.Value = Convert.ToDateTime(fecha_univ.ToString("HH:mm:sszzz"));//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
+				IssueTime.Value = documento.Fecha.AddHours(5).ToString("HH:mm:sszzz");//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
 				facturaXML.IssueTime = IssueTime;
 				#endregion
 
@@ -524,7 +525,7 @@ namespace HGInetUBLv2_1
 				//string hora_gmt = TimeZoneInfo.ConvertTimeToUtc(fecha).ToString("yyyy-MM-ddHH:mm:sszz:ss");
 
 				string NumFac = factura.ID.Value;
-				string FecFac = string.Format("{0}{1}", factura.IssueDate.Value.ToString("yyyy-MM-dd"), factura.IssueTime.Value.ToString("HH:mm:ss.fffffffzzz"));//string.Format("{0}{1}",fecha.ToString(Fecha.formato_fecha_hora_completa),fecha_hora.ToString(Fecha.formato_hora_completa));//TimeZoneInfo.ConvertTimeToUtc(fecha).ToString("yyyy-MM-ddHH:mm:sszz:ss");//
+				string FecFac = string.Format("{0}{1}", factura.IssueDate.Value.ToString("yyyy-MM-dd"), factura.IssueTime.Value);//string.Format("{0}{1}",fecha.ToString(Fecha.formato_fecha_hora_completa),fecha_hora.ToString(Fecha.formato_hora_completa));//TimeZoneInfo.ConvertTimeToUtc(fecha).ToString("yyyy-MM-ddHH:mm:sszz:ss");//
 				string ValFac = factura.LegalMonetaryTotal.LineExtensionAmount.Value.ToString();
 
 				//Impuesto 1
@@ -598,7 +599,7 @@ namespace HGInetUBLv2_1
 					+ ambiente
 				;
 
-				string cufe_encriptado = Encriptar.Encriptar_SHA384(cufe);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac, fecha, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);
 				return cufe_encriptado;
 				#endregion
 			}
