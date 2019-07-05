@@ -9,7 +9,6 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Error;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
-using HGInetDIANServicios.DianResolucion;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -53,15 +52,15 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <param name="Resolucion">resolución enviada por el Facturador Electrónico</param>
 		/// <returns>resoluciones</returns>
-		public List<Resolucion> ConsultarResolucion(string DataKey, string Identificacion, Resolucion Resolucion)
+		public List<Resolucion> ConsultarResolucion(Resolucion Resolucion)
 		{
 			try
 			{
 				// valida 
-				Peticion.Validar(DataKey, Identificacion);
+				Peticion.Validar(Resolucion.DataKey, Resolucion.Identificacion);
 				
 				// obtiene las resoluciones
-				List<Resolucion> resoluciones_respuesta = Ctl_Resoluciones.Obtener(Identificacion);
+				List<Resolucion> resoluciones_respuesta = Ctl_Resoluciones.Obtener(Resolucion.Identificacion);
 
 				bool crear_resolucion = true;
 
@@ -75,7 +74,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				if(crear_resolucion)
 				{
-					List<Resolucion> resolucion_creada = Ctl_Resoluciones.CrearHabilitacion(Resolucion, Identificacion);
+					List<Resolucion> resolucion_creada = Ctl_Resoluciones.CrearHabilitacion(Resolucion, Resolucion.Identificacion);
 					resoluciones_respuesta.AddRange(resolucion_creada);
 				}
 
