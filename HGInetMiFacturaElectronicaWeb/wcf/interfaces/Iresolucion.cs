@@ -26,7 +26,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 		[OperationContract(Name = "ConsultarResolucion")]
 		[FaultContract(typeof(Error), Action = "ConsultarResolucion", Name = "Error")]
-		[WebInvoke(Method = "GET")]
+		[WebInvoke(Method = "POST")]
 		List<Resolucion> ConsultarResolucion(Resolucion Resolucion);
 
 	}
