@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HGInetDIANServicios.DianFactura;
+using LibreriaGlobalHGInet.Funciones;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace HGInetDIANServicios
 		/// <param name="clave_dian">Clave proporcionada en la plataforma de la Dian</param>
 		/// <param name="ruta_servicio_web">Url del servicio web de la DIAN</param>
 		/// <returns></returns>
-		public static string Enviar_v2(string ruta_zip, string nombre_archivo, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web)
+		public static AcuseRecibo Enviar_v2(string ruta_zip, string nombre_archivo, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web)
 		{
 			try
 			{
@@ -37,9 +39,19 @@ namespace HGInetDIANServicios
 				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 				//Ejecución de prueba DIAN Enviando archivo ZIP	
 				DianWSValidacionPrevia.UploadDocumentResponse resultadoHab = webServiceHab.SendTestSetAsync(nombre_archivo, bytes, clave_dian);
-				
-				return resultadoHab.ZipKey;
 
+				AcuseRecibo acuse_recibo = new AcuseRecibo();
+				acuse_recibo.KeyV2 = resultadoHab.ZipKey;
+				acuse_recibo.MessagesFieldV2 = resultadoHab.ErrorMessageList;
+				acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
+				acuse_recibo.ResponseDateTime = Fecha.GetFecha();
+				acuse_recibo.Version = "2";
+
+				if(!string.IsNullOrWhiteSpace(resultadoHab.ZipKey))
+					acuse_recibo.Response = 200;
+				
+				return acuse_recibo;
+				
 			}
 			catch (Exception e)
 			{

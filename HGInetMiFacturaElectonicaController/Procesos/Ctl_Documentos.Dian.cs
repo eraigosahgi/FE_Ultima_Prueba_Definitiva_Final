@@ -49,6 +49,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.FechaUltimoProceso = Fecha.GetFecha();
 					respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
 				}
+				else if (acuse.MessagesFieldV2 != null)
+				{
+					string msg_response = "";
+
+					
+				}
 			}
 			catch (Exception excepcion)
 			{
