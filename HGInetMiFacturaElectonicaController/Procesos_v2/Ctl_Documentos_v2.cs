@@ -78,6 +78,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					IdPeticion = id_peticion,
 					IdentificacionObligado = documento_obj.DatosObligado.Identificacion,
 					UrlAuditoria = string.Format("{0}{1}", datos_plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", id_radicado.ToString())),
+					IdVersionDian = empresa.IntVersionDian
 				};
 
 				try
@@ -262,7 +263,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//Valida estado del documento en la Plataforma de la DIAN
 						respuesta = Consultar(documentoBd, empresa, ref respuesta, id_validacion_previa);
 
-						/*
+						
 						// envía el mail de documentos al adquiriente
 						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 						{
@@ -299,7 +300,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documentoBd.IntEnvioMail = true;
 							documento_tmp.Actualizar(documentoBd);
 							//Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
-						}*/
+						}
 
 					}
 

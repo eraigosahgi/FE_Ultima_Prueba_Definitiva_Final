@@ -91,7 +91,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <param name="resoluciones">Objeto de resoluciones obtenida de la DIAN</param>
         /// <param name="obligado">Identificacion del facturdor</param>
         /// <returns>Lista de resoluciones</returns>
-        public List<TblEmpresasResoluciones> Crear(ResolucionesFacturacion resoluciones, string obligado)
+        public List<TblEmpresasResoluciones> Crear(ResolucionesFacturacion resoluciones, string obligado, string setidpruebas = "")
         {
 
             Ctl_Empresa empresa = new Ctl_Empresa();
@@ -108,7 +108,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 TblEmpresasResoluciones tbl_resolucion_actual = Obtener(empresaBd.StrIdentificacion, item.NumeroResolucion.ToString(), item.Prefijo);
 
                 // convierte el objeto del servicio a base de datos
-                TblEmpresasResoluciones tbl_resolucion = Convertir(item, empresaBd);
+                TblEmpresasResoluciones tbl_resolucion = Convertir(item, empresaBd, setidpruebas);
 
                 if (tbl_resolucion_actual == null)
                 {
@@ -126,6 +126,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                     tbl_resolucion_actual.StrClaveTecnica = tbl_resolucion.StrClaveTecnica;
                     tbl_resolucion_actual.StrPrefijo = tbl_resolucion.StrPrefijo;
                     tbl_resolucion_actual.DatFechaActualizacion = Fecha.GetFecha();
+                    tbl_resolucion_actual.StrIdSetDian = tbl_resolucion.StrIdSetDian;
+                    tbl_resolucion_actual.IntVersionDian = tbl_resolucion.IntVersionDian;
 
                     this.Edit(tbl_resolucion_actual);
                     lista_resolucion.Add(tbl_resolucion_actual);
@@ -142,7 +144,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <param name="item">Resolucion obtenida de la DIAN</param>
         /// <param name="empresa">Identificacion del facturador electrónico</param>
         /// <returns>Tbl de resolucion</returns>
-        public static TblEmpresasResoluciones Convertir(RangoFacturacion item, TblEmpresas empresa)
+        public static TblEmpresasResoluciones Convertir(RangoFacturacion item, TblEmpresas empresa, string setidpruebas)
         {
             TblEmpresasResoluciones tbl_resolucion = new TblEmpresasResoluciones()
             {
@@ -157,7 +159,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 StrIdSeguridad = Guid.NewGuid(),
                 DatFechaIngreso = Fecha.GetFecha(),
                 DatFechaActualizacion = Fecha.GetFecha(),
-                IntTipoDoc = 1
+				StrIdSetDian = setidpruebas,
+				IntVersionDian = empresa.IntVersionDian,
+				IntTipoDoc = 1
 
 
             };
@@ -214,7 +218,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 NumeroResolucion = resolucion_bd.StrNumResolucion,
                 Prefijo = resolucion_bd.StrPrefijo,
                 RangoInicial = resolucion_bd.IntRangoInicial,
-                RangoFinal = resolucion_bd.IntRangoFinal
+                RangoFinal = resolucion_bd.IntRangoFinal,
+				VersionDian = resolucion_bd.IntVersionDian,
+				SetIdDian = resolucion_bd.StrIdSetDian
             };
 
             return resolucion_respuesta;

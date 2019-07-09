@@ -152,6 +152,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public Tercero DatosMandatario { get; set; }
 
+		/// <summary>
+		/// Lista de valores para precios de referencia, los cuales se deben informar cuando se trate de muestras y/o regalos sin valor comercial
+		/// 01- Valor Comercial; 02 - Valor en Inventarios; 03 - Otro Valor
+		/// </summary>
+		public string ProductoGratisPrecioRef { get; set; }
 
 		#endregion
 

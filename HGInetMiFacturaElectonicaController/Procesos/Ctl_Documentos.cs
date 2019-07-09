@@ -16,6 +16,8 @@ using HGInetMiFacturaElectonicaController.Properties;
 using LibreriaGlobalHGInet.Enumerables;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
+using HGInetUBLv2_1.DianListas;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -82,6 +84,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					IdPeticion = id_peticion,
 					IdentificacionObligado = documento_obj.DatosObligado.Identificacion,
 					UrlAuditoria = string.Format("{0}{1}", datos_plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", id_radicado.ToString())),
+					IdVersionDian = empresa.IntVersionDian
 				};
 
 				try
@@ -149,7 +152,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta.Cufe = documento_result.CUFE;
 
 						// almacena Formato
-						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result,empresa);
+						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result, empresa);
 						ValidarRespuesta(respuesta, respuesta.UrlPdf);
 
 						// almacena Anexos enviados
@@ -255,7 +258,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documentoBd = documento_tmp.Actualizar(documentoBd);
 						}
 						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
-							
+
 						//Valida estado del documento en la Plataforma de la DIAN
 						respuesta = Consultar(documentoBd, empresa, ref respuesta);
 
@@ -266,7 +269,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 							{
 								respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
-								
+
 							}
 							else
 							{
@@ -296,7 +299,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documento_tmp.Actualizar(documentoBd);
 							//ValidarRespuesta(respuesta);
 						}
-						
+
 					}
 
 
@@ -319,7 +322,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// </summary>
 		/// <param name="tercero">Objeto</param>
 		/// <param name="tipo">Tipo de Tercero: Adquiriente - Obligado</param>
-		public static void ValidarTercero(Tercero tercero, string tipo)
+		public static void ValidarTercero(Tercero tercero, string tipo, TblEmpresas Facturador)
 		{
 
 			if (tercero == null)
@@ -413,6 +416,61 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerNombre", tipo).Replace("de tipo", "del"));
 			}
 
+			if (Facturador.IntVersionDian == 2)
+			{
+
+				ListaTipoIdFiscal list_tipoId = new ListaTipoIdFiscal();
+				ListaItem identi = list_tipoId.Items.Where(d => d.Codigo.Equals(tercero.TipoIdentificacion.ToString())).FirstOrDefault();
+				if (identi == null)
+					throw new ArgumentException(string.Format("El Tipo de Identificacion {0} no esta bien formado del {1}", tercero.TipoIdentificacion, tipo));
+
+				ListaTipoRegimen list_fiscal = new ListaTipoRegimen();
+				ListaItem regimenfiscal = list_fiscal.Items.Where(d => d.Codigo.Equals(tercero.RegimenFiscal)).FirstOrDefault();
+				if (regimenfiscal == null)
+					throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.TipoIdentificacion, tipo));
+
+				ListaMunicipio list_municipio = new ListaMunicipio();
+				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
+				if (municipio == null)
+					throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}",tercero.CodigoCiudad, tipo));
+				else
+					tercero.Ciudad = municipio.Nombre;
+				
+
+				ListaDepartamentos list_depart = new ListaDepartamentos();
+				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
+				if (departamento == null)
+					throw new ArgumentException(string.Format("El Codigo Departamento {0} no esta bien formado del {1}", tercero.CodigoDepartamento, tipo));
+				else
+					tercero.Departamento = departamento.Nombre;
+
+				ListaPaises list_paises = new ListaPaises();
+				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.CodigoPais)).FirstOrDefault();
+				if (pais == null)
+					throw new ArgumentException(string.Format("El Codigo Pais {0} no esta bien formado del {1}", tercero.CodigoPais, tipo));
+
+				ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
+				ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(tercero.CodigoTributo)).FirstOrDefault();
+				if (tipoimp == null)
+					throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
+
+				if (!tercero.CodigoPostal.StartsWith(tercero.Departamento))
+					throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
+
+				if (tercero.Responsabilidades == null || tercero.Responsabilidades.Any())
+				{
+					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Responsabilidades", tipo).Replace("de tipo", "del"));
+				}
+				else
+				{
+					if (tercero.Responsabilidades.Count == 1 && tercero.Responsabilidades[0].Equals("O-00"))
+					{
+						throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", tercero.Responsabilidades[0], tipo));
+					}
+				}
+
+			}
+
 		}
 
 		/// <summary>
@@ -422,7 +480,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="documento_nc">Documento Nota Credito</param>
 		/// <param name="documento_nd">Documento Nota Debito</param>
 		/// <param name="tipo_doc">Tipo de Documento enviado</param>
-		public static void ValidarTotales(Factura documento_fac, NotaCredito documento_nc, NotaDebito documento_nd, TipoDocumento tipo_doc)
+		public static void ValidarTotales(Factura documento_fac, NotaCredito documento_nc, NotaDebito documento_nd, TipoDocumento tipo_doc, TblEmpresas facturador)
 		{
 
 			var documento = (dynamic)null;
@@ -514,8 +572,166 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorReteIva).Replace(",", ".")))
 					throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteIva", documento.ValorReteIva));
 
+				if (facturador.IntVersionDian == 2)
+				{
+
+					if (documento.ValorSubtotal > documento.Total)
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Subtotal", documento.ValorSubtotal));
+
+					//Validacion Del valor bruto con respecto al detalle
+					List<DocumentoDetalle> detalle = new List<DocumentoDetalle>();
+					detalle = documento.DocumentoDetalles;
+					if (detalle.Sum(v => (v.ValorSubtotal)) != documento.ValorSubtotal)
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", documento.ValorSubtotal));
+
+					if (detalle.Sum(v => (v.IvaValor)) != documento.ValorIva)
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "IVA", documento.ValorIva));
+
+					if (detalle.Sum(v => (v.ReteFuenteValor)) != documento.ValorReteFuente)
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", documento.ValorReteFuente));
+
+					if (detalle.Sum(v => (v.ValorImpuestoConsumo)) != documento.ValorImpuestoConsumo)
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ImpuestoConsumo", documento.ValorImpuestoConsumo));
+
+					//Validacion del Anticipo calculado con el que es enviado en el documento
+					if ((documento.Anticipos == null || documento.Anticipos.Any()) && documento.ValorAnticipo == 0)
+					{
+
+						documento.ValorAnticipo = Convert.ToDecimal(0.00M);
+
+						if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorAnticipo).Replace(",", ".")))
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
+					}
+					else
+					{
+						List<Anticipo> list_ant = documento.Anticipos;
+						if (!list_ant.Sum(v => v.Valor).Equals(documento.ValorAnticipo))
+						{
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
+						}
+						else
+						{
+							Anticipo anticipo = new Anticipo();
+							anticipo = list_ant.Find(d => string.IsNullOrEmpty(d.Codigo));
+							if (string.IsNullOrEmpty(anticipo.Codigo))
+							{
+								throw new ApplicationException(string.Format("El identificador del {0} no está bien formado", "Anticipo"));
+							}
+						}
+
+						if (documento.ValorAnticipo > documento.Total)
+						{
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Anticipo", documento.ValorAnticipo));
+						}
+					}
+
+					//Validacion de los Cargos calculados enviados en el documento
+					if ((documento.Cargos == null || documento.Cargos.Any()) && documento.ValorCargo == 0)
+					{
+						documento.ValorCargo = Convert.ToDecimal(0.00M);
+
+						if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorCargo).Replace(",", ".")))
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
+
+					}
+					else
+					{
+						List<Cargo> list_cargo = documento.Cargos;
+						if (!list_cargo.Sum(v => v.Valor).Equals(documento.ValorCargo))
+						{
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
+						}
+						else
+						{
+							Cargo cargo = new Cargo();
+							cargo = list_cargo.Find(d => string.IsNullOrEmpty(d.Descripcion));
+							if (string.IsNullOrEmpty(cargo.Descripcion))
+							{
+								throw new ApplicationException("La Descripción del campo Cargo no está bien formado");
+							}
+
+							cargo = list_cargo.Find(d => d.Porcentaje > 100);
+							if (cargo != null)
+							{
+								throw new ApplicationException("El porcentaje del campo Cargo no puede ser mayor a 100");
+							}
+
+							cargo = list_cargo.Find(d => d.Valor > documento.ValorSubtotal);
+							if (cargo != null)
+							{
+								throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+							}
+						}
+					}
+
+					//Validacion de los Descuentos calculados enviados en el documento
+					if ((documento.Descuentos == null || documento.Descuentos.Any()) && documento.ValorDescuento == 0)
+					{
+						documento.ValorDescuento = Convert.ToDecimal(0.00M);
+
+						if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
+
+					}
+					else
+					{
+
+						if (documento.Descuentos != null)
+						{
+	
+							List<Descuento> list_descuento = documento.Descuentos;
+							if (!list_descuento.Sum(v => v.Valor).Equals(documento.ValorDescuento))
+							{
+								throw new ApplicationException(string.Format(
+									"El campo {0} con valor {1} del encabezado no está bien formado", "Descuento",
+									documento.ValorDescuento));
+							}
+							else
+							{
+								Descuento descuento = new Descuento();
+								descuento = list_descuento.Find(d => string.IsNullOrEmpty(d.Codigo));
+								if (string.IsNullOrEmpty(descuento.Codigo))
+								{
+									throw new ApplicationException(
+										"El Código del campo Descuento no está bien formado");
+								}
+
+								descuento = list_descuento.Find(d => d.Porcentaje > 100);
+								if (descuento != null)
+								{
+									throw new ApplicationException(
+										"El porcentaje del campo Descuento no puede ser mayor a 100");
+								}
+
+								descuento = list_descuento.Find(d => d.Valor > documento.ValorSubtotal);
+								if (descuento != null)
+								{
+									throw new ApplicationException(
+										"El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+								}
+							}
+						}
+						else
+						{
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
+						}
+					}
+
+					//Validacion del total
+					if ((documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo) != documento.Total)
+					{
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Total", documento.Total));
+					}
+
+					//Validacion del Valor Neto
+					if ((documento.Total + documento.ValorCargo - documento.Descuentos - documento.ValorAnticipo - documento.ValorReteFuente) != documento.Neto)
+					{
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Neto", documento.Neto));
+					}
+				}
+
 				//Se valida el detalle del documento
-				ValidarDetalleDocumento(documento.DocumentoDetalles);
+				ValidarDetalleDocumento(documento.DocumentoDetalles, facturador);
 
 			}
 		}
@@ -525,12 +741,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// </summary>
 		/// <param name="documentoDetalle"></param>
 		/// <returns></returns>
-		public static void ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle)
+		public static void ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle, TblEmpresas facturador)
 		{
 
 			if (documentoDetalle == null || !documentoDetalle.Any())
 				throw new Exception("El detalle del documento es inválido.");
 
+			bool validacion_Aiu = true;
 
 			foreach (DocumentoDetalle Docdet in documentoDetalle)
 			{
@@ -602,14 +819,122 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(Docdet.ReteFuenteValor).Replace(",", ".")))
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "ReteFuente", Docdet.ReteFuenteValor));
-				}
 
+					if (facturador.IntVersionDian == 2)
+					{
+						//Se valida si llega informacion con AIU que tenga como minimo un item con descripcion
+						if (validacion_Aiu == true)
+						{
+							validacion_Aiu = false;
+							List<DocumentoDetalle> lis_detalle = new List<DocumentoDetalle>();
+							lis_detalle = documentoDetalle.FindAll(v => v.Aiu > 0);
+							if (lis_detalle != null && lis_detalle.Any())
+							{
+								DocumentoDetalle detalle = new DocumentoDetalle();
+								detalle = lis_detalle.Find(d => !string.IsNullOrEmpty(d.ProductoDescripcion));
+								if (detalle == null)
+									throw new ApplicationException("No se encontro descripción del contrato AIU en el campo ProductoDescripcion en el detalle del documento");
+							}
+						}
+
+						if (Docdet.ValorUnitario == 0)
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
+						
+						if (Docdet.ProductoGratis == true)
+						{
+							ListaCodigoPrecioReferencia list_precioref = new ListaCodigoPrecioReferencia();
+							ListaItem precioref = list_precioref.Items.Where(d => d.Codigo.Equals(Docdet.ProductoGratisPrecioRef)).FirstOrDefault();
+							if (precioref == null)
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} para informar muestra y/o regalo del detalle no está bien formado", "PrecioReferencia", Docdet.ProductoGratisPrecioRef));
+						}
+
+
+						if (Docdet.CalculaIVA == 0)
+						{
+							if ((Docdet.ValorSubtotal * Docdet.IvaPorcentaje) == Docdet.IvaValor)
+							{
+								ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
+								ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(Docdet.IvaPorcentaje.ToString())).FirstOrDefault();
+
+								if (iva == null)
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "IvaPorcentaje", Docdet.IvaPorcentaje));
+							}
+							else
+							{
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Iva", Docdet.IvaValor));
+							}
+						}
+						else
+						{
+							if (Docdet.IvaValor > 0)
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "CalculaIVA", Docdet.CalculaIVA));
+						}
+
+						if (!string.IsNullOrEmpty(Docdet.UnidadCodigo))
+						{
+							ListaUnidadesMedida list_unidad = new ListaUnidadesMedida();
+							ListaItem unidad = list_unidad.Items.Where(d => d.Codigo.Equals(Docdet.UnidadCodigo)).FirstOrDefault();
+							if (unidad == null)
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "UnidadCodigo", Docdet.UnidadCodigo));
+						}
+						else
+						{
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "UnidadCodigo", Docdet.UnidadCodigo));
+						}
+
+						if (Docdet.ReteFuenteValor > 0)
+						{
+
+							if ((Docdet.ValorSubtotal * Docdet.ReteFuentePorcentaje) == Docdet.ReteFuenteValor)
+							{
+								ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
+								ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString())).FirstOrDefault();
+								if (retfte == null)
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ReteFuentePorcentaje", Docdet.ReteFuentePorcentaje));
+							}
+							else
+							{
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "ReteFuente", Docdet.ReteFuenteValor));
+							}
+
+						}
+
+						if (Docdet.DescuentoValor > 0)
+						{
+							if (((Docdet.ValorUnitario * Docdet.Cantidad) * Docdet.DescuentoPorcentaje) != Docdet.DescuentoValor)
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "DescuentoValor", Docdet.DescuentoValor));
+						}
+
+						if (Docdet.ValorImpuestoConsumo > 0)
+						{
+							if ((Docdet.ValorSubtotal * Docdet.ImpoConsumoPorcentaje) == Docdet.ValorImpuestoConsumo)
+							{
+								ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
+								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString())).FirstOrDefault();
+								if (consumo == null)
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ImpoConsumoPorcentaje", Docdet.ImpoConsumoPorcentaje));
+							}
+							else
+							{
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ValorImpuestoConsumo", Docdet.ValorImpuestoConsumo));
+							}
+
+						}
+
+						if (Docdet.DatosMandatario != null)
+						{
+							ValidarTercero(Docdet.DatosMandatario, "Mandatario", facturador);
+
+						}
+
+					}
+				}
 				catch (Exception ex)
 				{
 					LogExcepcion.Guardar(ex);
 					throw ex;
 				}
-			}
+			}	
 
 
 		}

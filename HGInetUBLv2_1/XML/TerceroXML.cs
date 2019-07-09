@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HGInetUBLv2_1.DianListas;
 
 namespace HGInetUBLv2_1
 {
@@ -15,7 +16,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="empresa">Datos de la empresa</param>
 		/// <returns>Objeto de tipo SupplierPartyType1</returns>
-		public static SupplierPartyType ObtenerObligado(Tercero empresa)
+		public static SupplierPartyType ObtenerObligado(Tercero empresa, string prefijo)
 		{
 			try
 			{
@@ -63,17 +64,21 @@ namespace HGInetUBLv2_1
 
 				//----6.4.3. Municipios:  cbc:CityName Ver listado del DANE
 				Address.ID = new IDType();
-				Address.ID.Value = "05001";
+				Address.ID.Value = empresa.CodigoCiudad;
 				CityNameType City = new CityNameType();
-				City.Value = empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				ListaMunicipio list_municipio = new ListaMunicipio();
+				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empresa.CodigoCiudad)).FirstOrDefault();
+				City.Value = municipio.Nombre; //empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
 				Address.CityName = City;
 
 				//6.4.2. Departamentos (ISO 3166-2:CO):  cbc:CountrySubentity, cbc:CountrySubentityCode
 				CountrySubentityType CountrySubentity = new CountrySubentityType();
-				CountrySubentity.Value = "Antioquia";//Listado de Departamentos el Nombre
+				ListaDepartamentos list_depart = new ListaDepartamentos();
+				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(empresa.CodigoDepartamento)).FirstOrDefault();
+				CountrySubentity.Value = departamento.Nombre;//"Antioquia";//Listado de Departamentos el Nombre
 				Address.CountrySubentity = CountrySubentity;
 				CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
-				CountrySubentityCode.Value = "05";//Listado de Departamentos el codigo
+				CountrySubentityCode.Value = empresa.CodigoDepartamento;//Listado de Departamentos el codigo
 				Address.CountrySubentityCode = CountrySubentityCode;
 
 				//Direccion
@@ -87,8 +92,8 @@ namespace HGInetUBLv2_1
 				Address.AddressLine = AddressLines;
 
 				//---Zona Postal
-				//Address.PostalZone = new PostalZoneType();
-				//Address.PostalZone.Value = "050001";//Listado de Zona Postal de Colombia
+				Address.PostalZone = new PostalZoneType();
+				Address.PostalZone.Value = empresa.CodigoPostal;//Listado de Zona Postal de Colombia
 
 				//6.4.1. Países (ISO 3166-1): cbc:IdentificationCode 
 				//ISO 3166-1 alfa-2: Códigos de país de das letras. Si recomienda como el código de propósito
@@ -98,7 +103,9 @@ namespace HGInetUBLv2_1
 				IdentificationCode.Value = empresa.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
 				Country.IdentificationCode = IdentificationCode;
 				Country.Name = new NameType1();
-				Country.Name.Value = "Colombia";//Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
+				ListaPaises list_paises = new ListaPaises();
+				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(empresa.CodigoPais)).FirstOrDefault();
+				Country.Name.Value = pais.Nombre;//"Colombia";//Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
 				Country.Name.languageID = "es";
 				Address.Country = Country;
 
@@ -139,12 +146,13 @@ namespace HGInetUBLv2_1
 				//----Validar si cambia la ocurrecia de las responsabilidades esta de 1..1 y deberia estar 1..N
 				TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
 				//-----Listado 6.2.4
-				TaxLevelCode.listName = "05";
+				TaxLevelCode.listName = empresa.RegimenFiscal;
 
 				//---Listado 6.2.7 Responsabilidades pero solo permite 1 actualmente
 				//TaxLevelCode.Value = empresa.Regimen.ToString();
 				///----Se pone responsabilidad para las pruebas
-				TaxLevelCode.Value = "O-99";
+				string list_responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(empresa.Responsabilidades,';');
+				TaxLevelCode.Value = list_responsabilidades;//"O-99";
 				PartyTaxScheme.TaxLevelCode = TaxLevelCode;
 
 				//Grupo de información para informar dirección fiscal - RUT
@@ -157,9 +165,11 @@ namespace HGInetUBLv2_1
 				//--Validar el llenado
 				TaxSchemeType TaxScheme = new TaxSchemeType();
 				TaxScheme.ID = new IDType();
-				TaxScheme.ID.Value = "01";
+				TaxScheme.ID.Value = empresa.CodigoTributo;
+				ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
+				ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(empresa.CodigoTributo)).FirstOrDefault();
 				TaxScheme.Name = new NameType1();
-				TaxScheme.Name.Value = "IVA";
+				TaxScheme.Name.Value = tipoimp.Nombre; //"IVA";
 				PartyTaxScheme.TaxScheme = TaxScheme;
 				PartyTaxSchemes[0] = PartyTaxScheme;
 				Party.PartyTaxScheme = PartyTaxSchemes;
@@ -179,12 +189,12 @@ namespace HGInetUBLv2_1
 				//Prefijo de la facturación usada para el punto de venta
 				//---Validar---obligatorio para el obligado ocurrencia 1..1
 				PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
-				PartyLegalEntity.CorporateRegistrationScheme.ID.Value = "SETP";
+				PartyLegalEntity.CorporateRegistrationScheme.ID.Value = prefijo; //"SETP";
 
 				//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
 				//---Validar--ocurrencia 0..1
 				PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
-				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "HGI SAS";
+				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = empresa.NombreComercial; //"HGI SAS";
 
 				PartyLegalEntitys[0] = PartyLegalEntity;
 				Party.PartyLegalEntity = PartyLegalEntitys;

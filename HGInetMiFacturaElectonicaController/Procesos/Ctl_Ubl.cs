@@ -112,7 +112,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					break;
 
 				case 2:
-					resultado = HGInetUBLv2_1.FacturaXMLv2_1.CrearDocumento(id_documento, documento, extension_documento);
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
+					string ambiente_dian = string.Empty;
+
+					if (plataforma_datos.RutaPublica.Contains("app"))
+						ambiente_dian = "1";
+					else
+						ambiente_dian = "2";
+
+					resultado = HGInetUBLv2_1.FacturaXMLv2_1.CrearDocumento(id_documento, documento, extension_documento, ambiente_dian);
 					break;
 
 				default:
@@ -181,7 +191,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					break;
 
 				case 2:
-					resultado = HGInetUBLv2_1.NotaCreditoXMLv2_1.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc);
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
+					string ambiente_dian = string.Empty;
+
+					if (plataforma_datos.RutaPublica.Contains("app"))
+						ambiente_dian = "1";
+					else
+						ambiente_dian = "2";
+
+					resultado = HGInetUBLv2_1.NotaCreditoXMLv2_1.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc, ambiente_dian);
 					break;
 
 				default:
@@ -251,7 +271,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					break;
 
 				case 2:
-					resultado = HGInetUBLv2_1.NotaDebitoXML2_1.CrearDocumento(id_documento, documento, extension_documento, tipo_doc);
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
+					string ambiente_dian = string.Empty;
+
+					if (plataforma_datos.RutaPublica.Contains("app"))
+						ambiente_dian = "1";
+					else
+						ambiente_dian = "2";
+
+					resultado = HGInetUBLv2_1.NotaDebitoXML2_1.CrearDocumento(id_documento, documento, extension_documento, tipo_doc, ambiente_dian);
 					break;
 
 				default:

@@ -35,12 +35,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
 				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
 
+
 				if (tipo_doc == TipoDocumento.Factura)
 					documento_obj = Validar((Factura)documento_obj, resolucion, facturador);
 				else if (tipo_doc == TipoDocumento.NotaCredito)
-					documento_obj = ValidarNotaCredito((NotaCredito)documento_obj, resolucion);
+					documento_obj = ValidarNotaCredito((NotaCredito)documento_obj, resolucion, facturador);
 				else if (tipo_doc == TipoDocumento.NotaDebito)
-					documento_obj = ValidarNotaDebito((NotaDebito)documento_obj, resolucion);
+					documento_obj = ValidarNotaDebito((NotaDebito)documento_obj, resolucion, facturador);
+
 
 
 			}
@@ -56,7 +58,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// Valida si la respuesta generó error 
 		/// </summary>
 		/// <param name="respuesta">información de respuesta</param>
-		public static void ValidarRespuesta(DocumentoRespuesta respuesta,string resultadoproceso="", List<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta.MensajeEnvio> Mensaje = null,bool guardaAudit = true)
+		public static void ValidarRespuesta(DocumentoRespuesta respuesta, string resultadoproceso = "", List<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta.MensajeEnvio> Mensaje = null, bool guardaAudit = true)
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 
@@ -71,7 +73,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					try
 					{
-						clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(respuesta.IdProceso),TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, string.Format("{0}", respuesta.Error.Codigo), respuesta.Error.Mensaje, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
+						clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(respuesta.IdProceso), TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, string.Format("{0}", respuesta.Error.Codigo), respuesta.Error.Mensaje, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
 					}
 					catch (Exception) { }
 

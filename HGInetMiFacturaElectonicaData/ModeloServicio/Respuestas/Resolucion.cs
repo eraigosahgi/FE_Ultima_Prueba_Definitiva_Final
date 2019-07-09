@@ -21,6 +21,8 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public DateTime FechaVigenciaInicial { get; set; }
 		public DateTime FechaVigenciaFinal { get; set; }
 		public string ClaveTecnica { get; set; }
+		public int VersionDian { get; set; }
+		public string SetIdDian { get; set; }
 
 	}
 }

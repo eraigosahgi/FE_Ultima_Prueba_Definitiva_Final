@@ -171,21 +171,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Planes y transacciones
 				Parallel.ForEach<Factura>(documentos, item =>
 				{
-					DocumentoRespuesta item_respuesta = null;
-					switch (facturador_electronico.IntVersionDian)
-					{
-						case 1:
-							item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
-							break;
-
-						case 2:
-							item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);//_v2
-							break;
-
-						default:
-							item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
-							break;
-					}
+					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 					respuesta.Add(item_respuesta);
 				});
 
@@ -295,15 +281,32 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (numero_documento != null)
 				{
-					mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
+					if (facturador_electronico.IntVersionDian == 1)
+					{
+						mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
 
-					item_respuesta = Ctl_Documento.Convertir(numero_documento);
-					item_respuesta.IdPeticion = id_peticion;
-					id_radicado = Guid.Parse(item_respuesta.IdDocumento);
-					doc_existe = true;
+						item_respuesta = Ctl_Documento.Convertir(numero_documento);
+						item_respuesta.IdPeticion = id_peticion;
+						id_radicado = Guid.Parse(item_respuesta.IdDocumento);
+						doc_existe = true;
 
-					throw new ApplicationException(mensaje);
+						throw new ApplicationException(mensaje);
+					}
+					else if (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode())
+					{
+
+						mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
+
+						item_respuesta = Ctl_Documento.Convertir(numero_documento);
+						item_respuesta.IdPeticion = id_peticion;
+						id_radicado = Guid.Parse(item_respuesta.IdDocumento);
+						doc_existe = true;
+
+						throw new ApplicationException(mensaje);
+
+					}
 				}
+				
 
 				TblEmpresasResoluciones resolucion = null;
 				try
@@ -325,6 +328,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException(string.Format("No se encontró la resolución '{0}' para el Facturador Electrónico '{1}' con prefijo '{2}'", item.NumeroResolucion, facturador_electronico.StrIdentificacion, item.Prefijo));
 				}
 
+				if (resolucion.IntVersionDian != facturador_electronico.IntVersionDian)
+				{
+					throw new ApplicationException("La versión de la resolución no corresponde a la versión del documento");
+				}
 
 				try
 				{
@@ -386,7 +393,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						IdEstado = estado.GetHashCode(),
 						IdPeticion = id_peticion,
 						IdentificacionObligado = (item.DatosObligado != null) ? item.DatosObligado.Identificacion : "",
-						DescuentaSaldo = false
+						DescuentaSaldo = false,
+						IdVersionDian = facturador_electronico.IntVersionDian
 					};
 				}
 				else
@@ -482,6 +490,28 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-5).Date || documento.Fecha.Date > Fecha.GetFecha().Date.AddDays(10))
 					throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+
+				if (documento.FormaPago != 0)
+				{
+					ListaFormasPago list_forma = new ListaFormasPago();
+					ListaItem forma = list_forma.Items.Where(d => d.Codigo.Equals(documento.FormaPago)).FirstOrDefault();
+					if (forma == null)
+						throw new ApplicationException(string.Format("La Forma de Pago '{0}' no es válido según Estandar DIAN", documento.FormaPago));
+				}
+				else
+				{
+					throw new ApplicationException(string.Format("La Forma de Pago '{0}' no es válido según Estandar DIAN", documento.FormaPago));
+				}
+
+				if (documento.FormaPago == 2)
+				{
+
+					ListaMediosPago list_medio = new ListaMediosPago();
+					ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento.TerminoPago)).FirstOrDefault();
+					if (medio == null)
+						throw new ApplicationException(string.Format("El Medio de Pago '{0}' no es válido según Estandar DIAN", documento.TerminoPago));
+				}
+
 			}
 
 			if (documento.FechaVence.Date < documento.Fecha.Date)
@@ -495,13 +525,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
 
 			//Valida que no este vacio y este bien formado 
-			ValidarTercero(documento.DatosObligado, "Obligado");
+			ValidarTercero(documento.DatosObligado, "Obligado", facturador);
 
 			//Valida que no este vacio y este bien formado 
-			ValidarTercero(documento.DatosAdquiriente, "Adquiriente");
+			ValidarTercero(documento.DatosAdquiriente, "Adquiriente", facturador);
 
 			//Valida totales del objeto
-			ValidarTotales(documento, null, null, TipoDocumento.Factura);
+			ValidarTotales(documento, null, null, TipoDocumento.Factura, facturador);
 
 			//Valida que envien el titulo del documento y si es vacio lo llena
 			if (string.IsNullOrEmpty(documento.DocumentoFormato.Titulo) || documento.DocumentoFormato.Titulo == null)

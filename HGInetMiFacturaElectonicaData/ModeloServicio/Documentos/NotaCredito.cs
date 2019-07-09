@@ -134,9 +134,19 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public decimal ValorDescuento { get; set; }
 
         /// <summary>
-        /// Valor total de IVA del documento
+        /// Valor Total de Cargos que suman al total del documento
         /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        public decimal ValorCargo { get; set; }
+
+        /// <summary>
+        /// Valor Total de Anticipos que restan al total del documento
+        /// </summary>
+        public decimal ValorAnticipo { get; set; }
+
+		/// <summary>
+		/// Valor total de IVA del documento
+		/// </summary>
+		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorIva { get; set; }
 
         /// <summary>

@@ -110,6 +110,9 @@ namespace HGInetFacturaEServicios
 			if (Resolucion == null)
 				throw new ApplicationException("Objeto Resolucion inválido");
 
+			if (string.IsNullOrEmpty(Resolucion.SetIdDian))
+				throw new ApplicationException("Parámetro SetIdDian de tipo string inválido.");
+
 			List<ServicioResolucion.Resolucion> datos = new List<ServicioResolucion.Resolucion>();
 
 			// conexión cliente para el servicio web

@@ -89,7 +89,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				// crea o actualiza las resoluciones obtenidas en la base de datos
 				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
-				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.Crear(resolucion_dian, obligado);
+				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.Crear(resolucion_dian, obligado, datos_resolucion.SetIdDian);
 				
 				if (resoluciones_bd != null)
 				{

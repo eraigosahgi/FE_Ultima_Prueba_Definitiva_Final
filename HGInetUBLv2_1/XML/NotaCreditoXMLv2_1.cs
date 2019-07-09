@@ -28,7 +28,7 @@ namespace HGInetUBLv2_1
 		/// <param name="reemplazar_archivo">Indica si sobreescribe el archivo existente</param>
 		/// <param name="tipo">Indica el tipo de documento</param>
 		/// <returns>Ruta donde se guardo el archivo XML</returns>  
-		public static FacturaE_Documento CrearDocumento(Guid id_documento, NotaCredito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo)
+		public static FacturaE_Documento CrearDocumento(Guid id_documento, NotaCredito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo, string ambiente_dian)
 		{
 			try
 			{
@@ -67,7 +67,7 @@ namespace HGInetUBLv2_1
 				//---Ambiente de Pruebas
 				nota_credito.ProfileExecutionID = new ProfileExecutionIDType()
 				{
-					Value = "2"
+					Value = ambiente_dian//"2"
 				};
 				#endregion
 
@@ -92,8 +92,7 @@ namespace HGInetUBLv2_1
 
 				#region nota_credito.IssueTime //Hora de la nota_credito
 				IssueTimeType IssueTime = new IssueTimeType();
-				DateTime fecha_univ = DateTime.UtcNow;
-				IssueTime.Value = documento.Fecha.ToString("HH:mm:ss");//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa));
+				IssueTime.Value = documento.Fecha.AddHours(5).ToString("HH:mm:sszzz");//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa));
 				nota_credito.IssueTime = IssueTime;
 				#endregion
 
@@ -287,7 +286,7 @@ namespace HGInetUBLv2_1
 				#endregion
 
 				#region nota_credito.AccountingSupplierParty // Información del obligado a facturar
-				nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado);
+				nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado,documento.Prefijo);
 				#endregion
 
 				#region nota_credito.AccountingCustomerParty //Información del Adquiriente

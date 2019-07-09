@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HGInetUBLv2_1.DianListas;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
@@ -277,7 +278,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// </summary>
 		/// <param name="documento">Objeto NotaCredito</param>
 		/// <returns></returns>
-		public static NotaCredito ValidarNotaCredito(NotaCredito documento, TblEmpresasResoluciones resolucion)
+		public static NotaCredito ValidarNotaCredito(NotaCredito documento, TblEmpresasResoluciones resolucion, TblEmpresas facturador)
 		{
 			// valida objeto recibido
 			if (documento == null)
@@ -327,8 +328,37 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Concepto", "string"));
 
 			//Valida que la fecha este en los terminos
-			if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
-				throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+			if (facturador.IntVersionDian == 1)
+			{
+				if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
+					throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+			}
+			else
+			{
+				if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-5).Date || documento.Fecha.Date > Fecha.GetFecha().Date.AddDays(10))
+					throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+
+				ListaConceptoNotaCredito list_concepto = new ListaConceptoNotaCredito();
+				ListaItem concepto = list_concepto.Items.Where(d => d.Codigo.Equals(documento.Concepto)).FirstOrDefault();
+				if (concepto == null)
+					throw new ApplicationException(string.Format("El concepto {0} no es válido según Estandar DIAN", documento.Concepto));
+
+				Ctl_Documento num_doc = new Ctl_Documento();
+
+				//valida si el Documento afectado ya existe en Base de Datos
+				List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), documento.DocumentoRef);
+				DocumentoRespuesta doc_resp = doc_ref.Find(d => d.Cufe.Equals(documento.CufeFactura));
+				if (doc_resp != null)
+				{
+					if (doc_resp.IdVersionDian != facturador.IntVersionDian)
+						throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", documento.DocumentoRef));
+				}
+				else
+				{
+					throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", documento.DocumentoRef));
+				}
+
+			}
 
 			//Valida que no este vacio y Formato
 			if (string.IsNullOrEmpty(documento.Moneda))
@@ -338,13 +368,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
 
 			//Valida que no este vacio y este bien formado 
-			ValidarTercero(documento.DatosObligado, "Obligado");
+			ValidarTercero(documento.DatosObligado, "Obligado", facturador);
 
 			//Valida que no este vacio y este bien formado 
-			ValidarTercero(documento.DatosAdquiriente, "Adquiriente");
+			ValidarTercero(documento.DatosAdquiriente, "Adquiriente", facturador);
 
 			//Valida totales del objeto
-			ValidarTotales(null, documento, null, TipoDocumento.NotaCredito);
+			ValidarTotales(null, documento, null, TipoDocumento.NotaCredito, facturador);
 
 			//Valida que envien el titulo del documento y si es vacio lo llena
 			if (string.IsNullOrEmpty(documento.DocumentoFormato.Titulo) || documento.DocumentoFormato.Titulo == null)

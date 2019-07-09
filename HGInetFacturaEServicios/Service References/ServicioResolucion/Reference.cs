@@ -53,6 +53,12 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int RangoInicialField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SetIdDianField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int VersionDianField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -189,6 +195,32 @@ namespace HGInetFacturaEServicios.ServicioResolucion {
                 if ((this.RangoInicialField.Equals(value) != true)) {
                     this.RangoInicialField = value;
                     this.RaisePropertyChanged("RangoInicial");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SetIdDian {
+            get {
+                return this.SetIdDianField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SetIdDianField, value) != true)) {
+                    this.SetIdDianField = value;
+                    this.RaisePropertyChanged("SetIdDian");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int VersionDian {
+            get {
+                return this.VersionDianField;
+            }
+            set {
+                if ((this.VersionDianField.Equals(value) != true)) {
+                    this.VersionDianField = value;
+                    this.RaisePropertyChanged("VersionDian");
                 }
             }
         }

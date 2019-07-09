@@ -24,7 +24,7 @@ namespace HGInetUBLv2_1
 		/// <param name="resolucion">Objeto de tipo Extension DIAN </param>
 		/// <param name="tipo">Indica el tipo de documento</param>
 		/// <returns>Ruta donde se guardo el archivo XML</returns>  
-		public static FacturaE_Documento CrearDocumento(Guid id_documento, NotaDebito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo)
+		public static FacturaE_Documento CrearDocumento(Guid id_documento, NotaDebito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo, string ambiente_dian)
 		{
 			try
 			{
@@ -67,7 +67,7 @@ namespace HGInetUBLv2_1
 				//---Ambiente de Pruebas
 				nota_debito.ProfileExecutionID = new ProfileExecutionIDType()
 				{
-					Value = "2"
+					Value = ambiente_dian//"2"
 				};
 
 				#region nota_debito.ID //Número de documento: Número de nota_debito o nota_debito cambiaria.
@@ -96,8 +96,7 @@ namespace HGInetUBLv2_1
 				#region nota_debito.IssueTime //Hora de la nota_debito
 
 				IssueTimeType IssueTime = new IssueTimeType();
-				DateTime fecha_univ = DateTime.UtcNow;
-				IssueTime.Value = documento.Fecha.ToString("HH:mm:ss");//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa));
+				IssueTime.Value = documento.Fecha.AddHours(5).ToString("HH:mm:sszzz");//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa));
 				nota_debito.IssueTime = IssueTime;
 
 				#endregion
@@ -270,7 +269,7 @@ namespace HGInetUBLv2_1
 
 				#region nota_debito.AccountingSupplierParty // Información del obligado a facturar
 
-				nota_debito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado);
+				nota_debito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado, documento.Prefijo);
 
 				#endregion
 

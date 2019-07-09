@@ -1157,6 +1157,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				obj_documento.IdEstadoEnvioMail = respuesta.IntEstadoEnvio;
 				obj_documento.DescripcionEstadoEnvioMail = string.Format("{0} - {1}", Enumeracion.GetDescription(Enumeracion.ParseToEnum<EstadoEnvio>(Convert.ToInt32(respuesta.IntEstadoEnvio))), Enumeracion.GetDescription(Enumeracion.ParseToEnum<MensajeEstado>(Convert.ToInt32(respuesta.IntMensajeEnvio))));
+				obj_documento.IdVersionDian = respuesta.IntVersionDian;
 
 				return obj_documento;
 			}

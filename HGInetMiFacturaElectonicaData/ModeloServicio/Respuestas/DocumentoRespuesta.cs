@@ -155,6 +155,14 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public Guid IdPeticion { get; set; }
 
+		/// <summary>
+		/// Url de la pagina de Auditoria
+		/// </summary>
 		public string UrlAuditoria { get; set; }
+
+		/// <summary>
+		/// Version de la DIAN que fue enviado el Documento
+		/// </summary>
+		public int IdVersionDian { get; set; }
 	}
 }

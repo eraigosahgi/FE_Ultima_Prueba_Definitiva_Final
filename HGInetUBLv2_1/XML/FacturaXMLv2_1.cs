@@ -11,6 +11,8 @@ using LibreriaGlobalHGInet.General;
 using System.Xml;
 using System.IO;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
+using HGInetUBLv2_1.DianListas;
+using HGInetMiFacturaElectonicaData;
 
 namespace HGInetUBLv2_1
 {
@@ -24,13 +26,13 @@ namespace HGInetUBLv2_1
 		/// <param name="documento">Objeto de tipo TblDocumentos que contiene la informacion de la factura</param>
 		/// <param name="resolucion">Objeto que contiene los parametros de la DIAN</param>
 		/// <returns>información del documento procesado</returns>
-		public static FacturaE_Documento CrearDocumento(Guid id_documento, Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion)
+		public static FacturaE_Documento CrearDocumento(Guid id_documento, Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, string ambiente)
 		{
 			TipoDocumento tipo = TipoDocumento.Factura;
 
 			if (documento == null)
 				throw new Exception("Documento esta vacío.");
-				
+
 			try
 			{
 				//Obtiene el nombre del archivo XML
@@ -57,12 +59,12 @@ namespace HGInetUBLv2_1
 
 				//---Ambiente al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 				facturaXML.ProfileExecutionID = new ProfileExecutionIDType();
-				facturaXML.ProfileExecutionID.Value = "2";
+				facturaXML.ProfileExecutionID.Value = ambiente;//"2";
 
 				#region facturaXML.ID - Número de documento
 
 				string numero_documento = "";
-				
+
 				if (!string.IsNullOrEmpty(documento.Prefijo))
 					numero_documento = string.Format("{0}", documento.Prefijo);
 
@@ -86,8 +88,6 @@ namespace HGInetUBLv2_1
 				/*Hora de emision de la facturaXML*/
 				//----Se debe enviar la hora de emision con -5 horas
 				IssueTimeType IssueTime = new IssueTimeType();
-				DateTime fecha_univ = DateTime.UtcNow;
-				//DateTime hora_univ =  new DateTime(fecha_univ.Hour, fecha_univ.Minute, fecha_univ.Second);//Fecha.GetFecha().ToString("HH:m:s zzz");//
 				//string hora_documento = fecha_univ.ToString("HH:mm:sszzz");
 				IssueTime.Value = documento.Fecha.AddHours(5).ToString("HH:mm:sszzz");//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
 				facturaXML.IssueTime = IssueTime;
@@ -286,7 +286,7 @@ namespace HGInetUBLv2_1
 				PartyIdentificationType[] PartyIdentification = new PartyIdentificationType[1];
 				PartyIdentificationType PartyIdentificate = new PartyIdentificationType();
 				PartyIdentificate.ID = new IDType();
-				PartyIdentificate.ID.Value = "811021438"; 
+				PartyIdentificate.ID.Value = "811021438";
 				PartyIdentificate.ID.schemeID = "4";
 				PartyIdentificate.ID.schemeName = "31";
 				PartyIdentificate.ID.schemeAgencyID = "195";
@@ -297,7 +297,7 @@ namespace HGInetUBLv2_1
 				#endregion
 
 				#region facturaXML.AccountingSupplierParty - Información del obligado a facturaXMLr
-				facturaXML.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado);
+				facturaXML.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado, documento.Prefijo);
 				#endregion
 
 				#region facturaXML.AccountingCustomerParty - Información del Adquiriente
@@ -348,7 +348,11 @@ namespace HGInetUBLv2_1
 
 				#region facturaXML.InvoiceLine - Línea de facturaXML
 				/*Elemento que agrupa todos los campos de una línea de facturaXML. Detalle del documento*/
-				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda);
+				bool autoretenedor = false;
+				string resp = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.DatosObligado.Responsabilidades, ';');
+				if (resp.Contains("O-15") == true)
+					autoretenedor = true;
+				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda, autoretenedor);
 				#endregion
 
 				#region	facturaXML.TaxTotal - Impuesto y Impuesto Retenido
@@ -386,7 +390,7 @@ namespace HGInetUBLv2_1
 				resolucion.RangoFin = 995000000;
 				resolucion.TipoDocumento = 1;
 				*/
-				
+
 				// Extension de la Dian
 				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
 				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value);
@@ -406,12 +410,12 @@ namespace HGInetUBLv2_1
 				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
 				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
 				UBLExtensions.Add(UBLExtensionFirma);
-				
+
 				// Extension de HGI
 				UBLExtensionType UBLExtensionHgi = new UBLExtensionType();
 				UBLExtensionHgi.ExtensionContent = ExtensionHgiSas.Obtener(id_documento, documento);
 				UBLExtensions.Add(UBLExtensionHgi);
-				
+
 
 				facturaXML.UBLExtensions = UBLExtensions.ToArray();
 				#endregion
@@ -760,7 +764,7 @@ namespace HGInetUBLv2_1
 				TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
 				//-----Listado 5.2.4
 				TaxLevelCode.listName = "05"; /*** QUEMADO ***/
-				//---Listado 5.2.7 Responsabilidades pero solo permite 1 actualmente
+											  //---Listado 5.2.7 Responsabilidades pero solo permite 1 actualmente
 				TaxLevelCode.Value = empresa.Regimen.ToString();
 				PartyTaxScheme.TaxLevelCode = TaxLevelCode;
 
@@ -946,7 +950,7 @@ namespace HGInetUBLv2_1
 				TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
 				//-----Listado 5.2.4
 				TaxLevelCode.listName = "05"; /*** QUEMADO ***/
-				//---Listado 5.2.7 Responsabilidades pero solo permite 1 actualmente
+											  //---Listado 5.2.7 Responsabilidades pero solo permite 1 actualmente
 				TaxLevelCode.Value = tercero.Regimen.ToString();
 				PartyTaxScheme.TaxLevelCode = TaxLevelCode;
 
@@ -1060,7 +1064,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo InvoiceLineType1</returns>
-		private static InvoiceLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string moneda)
+		private static InvoiceLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string moneda, bool Autoretenedor)
 		{
 			try
 			{
@@ -1111,17 +1115,6 @@ namespace HGInetUBLv2_1
 					LineExtensionAmount.currencyID = moneda_detalle.ToString();
 					LineExtensionAmount.Value = decimal.Round(DocDet.ValorSubtotal, 2);
 					InvoiceLineType1.LineExtensionAmount = LineExtensionAmount;
-					#endregion
-
-
-					#region Producto gratuito 
-					// indica que la línea de factura es gratuita (verdadera) o no (falsa)
-					// <cbc:FreeOfChargeIndicator>
-					FreeOfChargeIndicatorType FreeOfChargeIndicator = new FreeOfChargeIndicatorType();
-					FreeOfChargeIndicator.Value = DocDet.ProductoGratis;
-					InvoiceLineType1.FreeOfChargeIndicator = FreeOfChargeIndicator;
-
-
 					#endregion
 
 
@@ -1383,6 +1376,88 @@ namespace HGInetUBLv2_1
 					TaxesTotal[0] = TaxTotal;*/
 					#endregion
 
+					if (DocDet.ReteFuenteValor > 0 && Autoretenedor == true)
+					{
+
+						List<TaxTotalType> TaxesTotalRete = new List<TaxTotalType>();
+
+						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+						TaxTotalType TaxTotal = new TaxTotalType();
+
+						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+						// <cbc:TaxAmount>
+						TaxTotal.TaxAmount = new TaxAmountType()
+						{
+							currencyID = moneda_detalle.ToString(),
+							Value = decimal.Round(DocDet.ReteFuenteValor, 2)
+						};
+
+						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+						// <cbc:TaxEvidenceIndicator>
+						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+						{
+							Value = false
+						};
+
+						// Debe ser informado un grupo de estos para cada tarifa. 
+						// <cac:TaxSubtotal>
+						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+
+						TaxSubtotalType TaxSubtotalRete = new TaxSubtotalType();
+
+						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+						//Base Imponible sobre la que se calcula el valor del tributo
+						//----Se debe Solicitar la base con la que calculo el impuesto
+						// <cbc:TaxAmount>
+						TaxSubtotalRete.TaxableAmount = new TaxableAmountType()
+						{
+							currencyID = moneda_detalle.ToString(),
+							Value = DocDet.ValorSubtotal
+						};
+
+						// El monto de este subtotal fiscal.
+						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+						// <cbc:TaxAmount>
+						TaxSubtotalRete.TaxAmount = new TaxAmountType()
+						{
+							currencyID = moneda_detalle.ToString(),
+							Value = DocDet.ReteFuenteValor
+						};
+
+						// categoría de impuestos aplicable a este subtotal.
+						//Grupo de informaciones sobre el tributo 
+						// <cac:TaxCategory>
+						TaxCategoryType TaxCategoryRete = new TaxCategoryType();
+
+						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+						//Tarifa del tributo
+						// <cbc:Percent>
+						TaxCategoryRete.Percent = new PercentType1()
+						{
+							Value = decimal.Round((DocDet.ReteFuentePorcentaje), 2)
+						};
+
+						// <cac:TaxScheme>
+						//Grupo de informaciones específicas sobre el tributo
+						TaxSchemeType TaxSchemeIva = new TaxSchemeType();
+						//Identificador del tributo
+						ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
+						ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals("06")).FirstOrDefault();
+						TaxSchemeIva.ID = new IDType(); /*** QUEMADO ***/
+						TaxSchemeIva.ID.Value = tipoimp.Codigo;//"01";//TipoImpuestos.Iva,
+															   //Nombre del tributo
+						TaxSchemeIva.Name = new NameType1();
+						TaxSchemeIva.Name.Value = tipoimp.Nombre; //"IVA";/*** QUEMADO ***/
+
+						TaxCategoryRete.TaxScheme = TaxSchemeIva;
+						TaxSubtotalRete.TaxCategory = TaxCategoryRete;
+						TaxesSubtotal[0] = TaxSubtotalRete;
+						TaxTotal.TaxSubtotal = TaxesSubtotal;
+						TaxesTotalRete.Add(TaxTotal);
+
+						InvoiceLineType1.WithholdingTaxTotal = TaxesTotalRete.ToArray();
+					}
+
 					InvoiceLineType1.TaxTotal = TaxesTotal.ToArray();
 
 
@@ -1448,6 +1523,58 @@ namespace HGInetUBLv2_1
 					Property[0] = Oculto;
 					Item.AdditionalItemProperty = Property;
 
+					if (DocDet.DatosMandatario != null)
+					{
+
+						PartyType Mandantario = new PartyType();
+						Mandantario.PowerOfAttorney = new PowerOfAttorneyType[1];
+						PowerOfAttorneyType power = new PowerOfAttorneyType();
+						power.AgentParty = new PartyType();
+						power.AgentParty.PartyIdentification = new PartyIdentificationType[1];
+						power.AgentParty.PartyIdentification[0].ID = new IDType();
+						power.AgentParty.PartyIdentification[0].ID.Value = DocDet.DatosMandatario.Identificacion;
+						power.AgentParty.PartyIdentification[0].ID.schemeAgencyID = "195";
+						power.AgentParty.PartyIdentification[0].ID.schemeID = DocDet.DatosMandatario.IdentificacionDv.ToString();
+						power.AgentParty.PartyIdentification[0].ID.schemeName = DocDet.DatosMandatario.TipoIdentificacion.ToString();
+						Mandantario.PowerOfAttorney[0] = power;
+
+						Item.InformationContentProviderParty = Mandantario;
+					}
+
+
+					#region Producto gratuito 
+					// indica que la línea de factura es gratuita (verdadera) o no (falsa)
+					// <cbc:FreeOfChargeIndicator>
+					FreeOfChargeIndicatorType FreeOfChargeIndicator = new FreeOfChargeIndicatorType();
+					FreeOfChargeIndicator.Value = DocDet.ProductoGratis;
+					InvoiceLineType1.FreeOfChargeIndicator = FreeOfChargeIndicator;
+
+					if (DocDet.ProductoGratis == true)
+					{
+						PricingReferenceType Precio = new PricingReferenceType();
+						Precio.AlternativeConditionPrice = new PriceType[1];
+
+						// <fe:Price>
+						PriceType PriceG = new PriceType();
+
+						// <cbc:PriceAmount>
+						PriceAmountType PriceAmountP = new PriceAmountType();
+						PriceAmountP.currencyID = moneda_detalle.ToString();
+						PriceAmountP.Value = decimal.Round(DocDet.ValorUnitario, 2);
+						PriceG.PriceAmount = PriceAmountP;
+
+						//Código del tipo de precio informado ista de valores posibles en 6.3.10 
+						PriceTypeCodeType PriceTypeCode = new PriceTypeCodeType();
+						PriceTypeCode.Value = DocDet.ProductoGratisPrecioRef;
+						PriceG.PriceTypeCode = PriceTypeCode;
+
+						Precio.AlternativeConditionPrice[0] = PriceG;
+						InvoiceLineType1.PricingReference = Precio;
+
+					}
+
+					#endregion
+
 					InvoiceLineType1.Item = Item;
 					#endregion
 
@@ -1456,11 +1583,18 @@ namespace HGInetUBLv2_1
 					PriceType Price = new PriceType();
 
 					// <cbc:PriceAmount>
+
 					PriceAmountType PriceAmount = new PriceAmountType();
 					PriceAmount.currencyID = moneda_detalle.ToString();
-					PriceAmount.Value = decimal.Round(DocDet.ValorUnitario, 2);
+					if (DocDet.ProductoGratis == false)
+					{
+						PriceAmount.Value = decimal.Round(DocDet.ValorUnitario, 2);
+					}
+					else
+					{
+						PriceAmount.Value = decimal.Round(0, 2);
+					}
 					Price.PriceAmount = PriceAmount;
-
 					//---Segun la base de la unidad utilizada
 					BaseQuantityType BaseQuantity = new BaseQuantityType();
 					BaseQuantity.unitCode = InvoicedQuantity.unitCode;
@@ -1470,8 +1604,6 @@ namespace HGInetUBLv2_1
 
 					InvoiceLineType1.Price = Price;
 					#endregion
-
-
 
 
 					InvoicesLineType1[contadorPosicion] = InvoiceLineType1;

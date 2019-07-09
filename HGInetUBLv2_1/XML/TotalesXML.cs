@@ -113,17 +113,23 @@ namespace HGInetUBLv2_1
 				AllowanceTotalAmountType AllowanceTotalAmount = new AllowanceTotalAmountType();
 				AllowanceTotalAmount.currencyID = moneda_documento.ToString();
 				//-----Se pone 0 en descuentos para las pruebas
-				documento.ValorDescuento = decimal.Round(0.00M, 2);
+				//documento.ValorDescuento = decimal.Round(0.00M, 2);
 				AllowanceTotalAmount.Value = decimal.Round(documento.ValorDescuento, 2);
 				LegalMonetaryTotal.AllowanceTotalAmount = AllowanceTotalAmount;
 
 				#endregion
 
+				//Anticipo Total: Suma de todos los pagos anticipados
+				PrepaidAmountType PrepaidAmount = new PrepaidAmountType();
+				PrepaidAmount.currencyID = moneda_documento.ToString();
+				PrepaidAmount.Value = decimal.Round(documento.ValorAnticipo);
+				LegalMonetaryTotal.PrepaidAmount = PrepaidAmount;
+
 				//Cargos: Suma de todos los cargos aplicados al total de la factura
-				//-----Se utiliza para sumarle al subtotal, ejemplo costo de financiamiento
+				//-----Se utiliza para sumarle al Total, ejemplo costo de financiamiento
 				ChargeTotalAmountType ChargeTotalAmount = new ChargeTotalAmountType();
 				ChargeTotalAmount.currencyID = moneda_documento.ToString();
-				ChargeTotalAmount.Value = decimal.Round(documento.ValorDescuento, 2);
+				ChargeTotalAmount.Value = decimal.Round(documento.ValorCargo, 2);
 				LegalMonetaryTotal.ChargeTotalAmount = ChargeTotalAmount;
 
 				#region Valor total de pago //  Total de Factura =  Valor total bases - Valor descuentos + Valor total Impuestos - Valor total impuestos retenidos
