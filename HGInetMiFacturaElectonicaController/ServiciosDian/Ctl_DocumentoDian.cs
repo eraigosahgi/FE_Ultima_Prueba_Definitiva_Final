@@ -136,11 +136,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 				case 2:
 					acuse = new AcuseRecibo();
-					acuse.Comments = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado, certificado.Clave, clave, UrlServicioWeb);
-					acuse.Response = 200;
-					acuse.ReceivedDateTime = Fecha.GetFecha();
-					acuse.ResponseDateTime = Fecha.GetFecha();
-					acuse.Version = "2";
+					acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado, certificado.Clave, clave, UrlServicioWeb);
 					break;
 
 				default:
