@@ -109,6 +109,16 @@ namespace HGInetMiFacturaElectonicaData
 		[Category("400")]
 		FinalizacionErrorDian = 90,
 
+		[Description("Error Prevalidación Dian V2")]
+		[AmbientValue("privado")]
+		[Category("100")]
+		PrevalidacionErrorDian = 92,
+
+		[Description("Error Prevalidación Plataforma V2")]
+		[AmbientValue("privado")]
+		[Category("100")]
+		PrevalidacionErrorPlataforma = 93,
+
 		[Description("Fin Proceso Exitoso")]
 		[AmbientValue("publico")]
 		[Category("300")]
