@@ -36,6 +36,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public Nullable<int> IntComercioId { get; set; }
         public int IntTipoDoc { get; set; }
         public Nullable<bool> IntPermiteParciales { get; set; }
+        public string StrIdSetDian { get; set; }
+        public short IntVersionDian { get; set; }
     
         public virtual TblEmpresasPasarela TblEmpresasPasarela { get; set; }
         public virtual TblEmpresas TblEmpresas { get; set; }

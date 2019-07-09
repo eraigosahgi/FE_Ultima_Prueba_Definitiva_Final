@@ -227,6 +227,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.3", "v2019.3", "{E00C
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\v2019.3\20190507-IntVersionDianTblDocumentos.txt = Documentacion\Liberaciones\v2019.3\20190507-IntVersionDianTblDocumentos.txt
 		Documentacion\Liberaciones\v2019.3\20190512-IntVersionDianTblEmpresas.txt = Documentacion\Liberaciones\v2019.3\20190512-IntVersionDianTblEmpresas.txt
+		Documentacion\Liberaciones\v2019.3\20190709-Caso464898.txt = Documentacion\Liberaciones\v2019.3\20190709-Caso464898.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetUBLv2_1", "HGInetUBLv2_1\HGInetUBLv2_1.csproj", "{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}"

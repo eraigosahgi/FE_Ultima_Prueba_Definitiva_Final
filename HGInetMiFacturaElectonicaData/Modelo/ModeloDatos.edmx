@@ -88,6 +88,7 @@
           <Property Name="IntEstadoEnvio" Type="smallint" Nullable="false" />
           <Property Name="IntMensajeEnvio" Type="smallint" Nullable="false" />
           <Property Name="IntVersionDian" Type="smallint" Nullable="false" />
+          <Property Name="StrIdRadicadoDian" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -158,6 +159,8 @@
           <Property Name="IntComercioId" Type="int" />
           <Property Name="IntTipoDoc" Type="int" Nullable="false" />
           <Property Name="IntPermiteParciales" Type="bit" />
+          <Property Name="StrIdSetDian" Type="varchar" MaxLength="50" />
+          <Property Name="IntVersionDian" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblFormatos">
           <Key>
@@ -919,6 +922,8 @@
           <NavigationProperty Name="TblEmpresasPasarela" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresasPasarela" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblEmpresasResoluciones" ToRole="TblDocumentos" />
+          <Property Name="StrIdSetDian" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntVersionDian" Type="Int16" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblEmpresasResoluciones_TblEmpresasPasarela">
           <End Type="Modelo.TblEmpresasPasarela" Role="TblEmpresasPasarela" Multiplicity="0..1" />
@@ -1238,6 +1243,7 @@
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblDocumentos" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblPagosElectronicos" Relationship="Modelo.FK_TblPagosElectronicos_TblDocumentos" FromRole="TblDocumentos" ToRole="TblPagosElectronicos" />
           <Property Name="IntVersionDian" Type="Int16" Nullable="false" DefaultValue="1" />
+          <Property Name="StrIdRadicadoDian" Type="Guid" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Type="Modelo.TblConfiguracionInteroperabilidad" Role="TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
@@ -1444,6 +1450,8 @@
           <EntitySetMapping Name="TblEmpresasResoluciones">
             <EntityTypeMapping TypeName="Modelo.TblEmpresasResoluciones">
               <MappingFragment StoreEntitySet="TblEmpresasResoluciones">
+                <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
+                <ScalarProperty Name="StrIdSetDian" ColumnName="StrIdSetDian" />
                 <ScalarProperty Name="IntPermiteParciales" ColumnName="IntPermiteParciales" />
                 <ScalarProperty Name="IntTipoDoc" ColumnName="IntTipoDoc" />
                 <ScalarProperty Name="IntComercioId" ColumnName="IntComercioId" />
@@ -1608,6 +1616,7 @@
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
+                <ScalarProperty Name="StrIdRadicadoDian" ColumnName="StrIdRadicadoDian" />
                 <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
                 <ScalarProperty Name="IntMensajeEnvio" ColumnName="IntMensajeEnvio" />
                 <ScalarProperty Name="IntEstadoEnvio" ColumnName="IntEstadoEnvio" />
