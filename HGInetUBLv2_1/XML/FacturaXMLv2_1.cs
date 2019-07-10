@@ -369,6 +369,16 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
+				/*** QUEMADO ***/
+				UUIDType UUID = new UUIDType();
+				//-----Se agrega Ambiente al cual se va enviar el documento
+				string CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value);//resolucion.ClaveTecnicaDIAN
+				UUID.Value = CUFE;
+				UUID.schemeName = "CUFE-SHA384";
+				UUID.schemeID = facturaXML.ProfileExecutionID.Value; //"2";
+				facturaXML.UUID = UUID;
+
+				
 				#region factura.UBLExtensions
 				XmlDocument doc = new XmlDocument();
 				doc.LoadXml("<firma></firma>");
@@ -391,9 +401,18 @@ namespace HGInetUBLv2_1
 				resolucion.TipoDocumento = 1;
 				*/
 
+				//Informacion del QR
+				string ruta_qr_Dian = "https://muisca.dian.gov.co/WebFacturaelectronica/paginas/VerificarFacturaElectronicaExterno.faces?";
+				string tipo_doc = facturaXML.InvoiceTypeCode.Value;
+				string num_doc = facturaXML.ID.Value;
+				string nit_fac = documento.DatosObligado.Identificacion;
+				string nit_adq = documento.DatosAdquiriente.Identificacion;
+				string cadena_qr = string.Format("{0}TipoDocumento={1}NroDocumento={2}NITFacturador={3}NumIdentAdquiriente={3}Cufe={4}", ruta_qr_Dian, tipo_doc, num_doc, nit_fac, nit_adq, CUFE);
+
+
 				// Extension de la Dian
 				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
-				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value);
+				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value, cadena_qr);
 				UBLExtensions.Add(UBLExtensionDian);
 
 				/*
@@ -419,15 +438,6 @@ namespace HGInetUBLv2_1
 
 				facturaXML.UBLExtensions = UBLExtensions.ToArray();
 				#endregion
-
-				/*** QUEMADO ***/
-				UUIDType UUID = new UUIDType();
-				//-----Se agrega Ambiente al cual se va enviar el documento
-				string CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value);//resolucion.ClaveTecnicaDIAN
-				UUID.Value = CUFE;
-				UUID.schemeName = "CUFE-SHA384";
-				UUID.schemeID = facturaXML.ProfileExecutionID.Value; //"2";
-				facturaXML.UUID = UUID;
 
 				// convierte los datos del objeto en texto XML 
 				//StringBuilder txt_xml = ConvertirXml(facturaXML, namespaces_xml);

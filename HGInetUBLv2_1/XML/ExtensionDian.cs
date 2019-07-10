@@ -18,7 +18,7 @@ namespace HGInetUBLv2_1
 		/// <summary>
 		/// Genera el elemento XML para la extensión de la DIAN
 		/// </summary>
-		public static XmlElement Obtener(HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension, TipoDocumento tipo_doc, string numero_documento)
+		public static XmlElement Obtener(HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension, TipoDocumento tipo_doc, string numero_documento, string cadena_qr)
 		{
 
 			string IdentificadorSoftware = extension.IdSoftware;//Identificador del software proporcionado en la plataforma de la DIAN
@@ -145,7 +145,7 @@ namespace HGInetUBLv2_1
 			#endregion
 
 
-			DianExtensions.QRCode = "Cadena para calcular el CUFE";
+			DianExtensions.QRCode = cadena_qr;
 
 
 			AuthorizationProvider ProviderAuthorization = new AuthorizationProvider();

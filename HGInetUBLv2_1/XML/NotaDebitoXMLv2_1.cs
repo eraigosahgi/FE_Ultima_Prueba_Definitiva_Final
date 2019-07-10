@@ -102,49 +102,6 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
-				#region nota_debito.UBLExtensions
-
-				XmlDocument doc = new XmlDocument();
-				doc.LoadXml("<firma></firma>");
-
-				List<UBLExtensionType> UBLExtensions = new List<UBLExtensionType>();
-
-				/*
-				//Resolucion de ejemplos de la DIAN
-				HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion =
-					new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
-				resolucion.ClaveTecnicaDIAN = "No necesita";
-				resolucion.FechaResIni = new DateTime(2019, 01, 19);
-				resolucion.FechaResFin = new DateTime(2030, 01, 19);
-				resolucion.IdSoftware = "def923e2-8326-42e2-a022-d0fa4a2f8188";//"22fa3f6f-c40d-434b-a3db-08a5d435a372";
-				resolucion.NitProveedor = "811021438";
-				resolucion.PinSoftware = "05097";
-				resolucion.NumResolucion = "18760000001";
-				resolucion.Prefijo = "ND";
-				resolucion.RangoIni = 1;
-				resolucion.RangoFin = 2000;
-				resolucion.TipoDocumento = 2;
-				*/
-
-				// Extension de la Dian
-				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
-				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, TipoDocumento.NotaDebito, nota_debito.ID.Value);
-				UBLExtensions.Add(UBLExtensionDian);
-
-				//Extension de la firma
-				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
-				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
-				UBLExtensions.Add(UBLExtensionFirma);
-
-				// Extension de HGI
-				/*
-				UBLExtensionType UBLExtensionHgi = new UBLExtensionType();
-				UBLExtensionHgi.ExtensionContent = ExtensionHgiSas.Obtener(id_documento, documento);
-				UBLExtensions.Add(UBLExtensionHgi);*/
-
-				nota_debito.UBLExtensions = UBLExtensions.ToArray();
-
-				#endregion
 
 				#region nota_debito.Note //Información adicional
 
@@ -329,10 +286,8 @@ namespace HGInetUBLv2_1
 
 				nota_debito.LineCountNumeric = new LineCountNumericType();
 				nota_debito.LineCountNumeric.Value = documento.DocumentoDetalles.Count;
-
-				//La nota credito no requiere CUFE
-
-				#region nota_debito.UUID //CUFE:Codigo Unico de facturacion Electronica.
+				
+				#region nota_debito.UUID //CUDE:Codigo Unico de Documento Electronico.
 
 				/*
 				  CUFE: Obligatorio si es factura nacional.
@@ -362,7 +317,34 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
-			
+				#region nota_debito.UBLExtensions
+
+				XmlDocument doc = new XmlDocument();
+				doc.LoadXml("<firma></firma>");
+
+				List<UBLExtensionType> UBLExtensions = new List<UBLExtensionType>();
+
+				//Informacion del QR
+				string ruta_qr_Dian = "https://muisca.dian.gov.co/WebFacturaelectronica/paginas/VerificarFacturaElectronicaExterno.faces?";
+				string tipo_doc = "92";
+				string num_doc = nota_debito.ID.Value;
+				string nit_fac = documento.DatosObligado.Identificacion;
+				string nit_adq = documento.DatosAdquiriente.Identificacion;
+				string cadena_qr = string.Format("{0}TipoDocumento={1}NroDocumento={2}NITFacturador={3}NumIdentAdquiriente={3}Cufe={4}", ruta_qr_Dian, tipo_doc, num_doc, nit_fac, nit_adq, CUFE);
+
+				// Extension de la Dian
+				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
+				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, TipoDocumento.NotaDebito, nota_debito.ID.Value, cadena_qr);
+				UBLExtensions.Add(UBLExtensionDian);
+
+				//Extension de la firma
+				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
+				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
+				UBLExtensions.Add(UBLExtensionFirma);
+
+				nota_debito.UBLExtensions = UBLExtensions.ToArray();
+
+				#endregion
 
 				// convierte los datos del objeto en texto XML 
 				StringBuilder txt_xml = ConvertirXML.Convertir(nota_debito, namespaces_xml, TipoDocumento.NotaDebito);
