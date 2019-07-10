@@ -346,6 +346,38 @@ namespace HGInetFacturaEServicios
 			}
 		}
 
+		/// <summary>
+		/// Calcula el código CUFE de la factura
+		/// </summary>     
+		/// <param name="clave_tecnica">Clave técnica de la resolución</param>
+		/// <param name="numero_factura">Número de la factura</param>
+		/// <param name="fecha_factura">Fecha de elaboración de la factura</param>
+		/// <param name="nit_facturador">Documento de identificación del facturador electrónico</param>
+		/// <param name="ambiente">Ambiente a donde se va enviar el documento </param>
+		/// <param name="nit_adquiriente">Número de identificación del adquiriente</param>
+		/// <param name="total">Total de la factura</param>
+		/// <param name="subtotal">Subtotal de la factura</param>
+		/// <param name="iva">Iva de la factura</param>
+		/// <param name="impto_consumo">Impuesto al consumo de la factura</param>
+		/// <param name="rte_ica">Retención del ICA de la factura</param>
+		/// <returns>Texto con la encriptación del CUFE</returns>
+		public static string CalcularCUFEV2(string clave_tecnica, string prefijo, string numero_factura, DateTime fecha_factura, string nit_facturador, string ambiente, string nit_adquiriente, decimal total, decimal subtotal, decimal iva, decimal impto_consumo, decimal rte_ica)
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(ambiente))
+					throw new Exception("Ambiente de Envío del documento no valido");
+
+				string fecha = fecha_factura.AddHours(5).ToString("HH:mm:sszzz");
+				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, prefijo, numero_factura, fecha, nit_facturador, ambiente, nit_adquiriente, total, subtotal, iva, impto_consumo, rte_ica, true);
+				return cufe_encriptado;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 	}
 }

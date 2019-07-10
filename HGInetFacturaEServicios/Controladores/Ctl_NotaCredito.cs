@@ -336,6 +336,42 @@ namespace HGInetFacturaEServicios
 			}
 		}
 
+		/// <summary>
+		/// Calcula el código CUFE de la nota crédito
+		/// </summary>
+		/// <param name="pin_software">Pin del software registrado en el catalogo del participante, el cual no esta expresado en el XML</param>
+		/// <param name="numero_nota_credito">Número de la nota crédito</param>
+		/// <param name="fecha_nota_credito">Fecha y Hora de la nota crédito en hora Colombiana</param>
+		/// <param name="nit_facturador">Número de identificación del facturador electrónico</param>
+		/// <param name="ambiente">Ambiente a donde se va enviar el documento </param>
+		/// <param name="nit_adquiriente">Número de identificación del adquiriente</param>
+		/// <param name="total">Total de la nota crédito</param>
+		/// <param name="subtotal">Subtotal de la nota crédito</param>
+		/// <param name="iva">Iva de la nota crédito</param>
+		/// <param name="impto_consumo">Impuesto al consumo de la nota crédito</param>
+		/// <param name="rte_ica">Retención del ICA de la nota crédito</param>
+		/// <returns>Texto con la encriptación del CUFE</returns>
+		public static string CalcularCUFEV2(string pin_software, string prefijo, string numero_nota_credito, DateTime fecha_nota_credito, string nit_facturador, string ambiente, string nit_adquiriente, decimal total, decimal subtotal, decimal iva, decimal impto_consumo, decimal rte_ica)
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(ambiente))
+					throw new Exception("Ambiente de Envío del documento no valido");
+
+				if (string.IsNullOrEmpty(pin_software))
+					throw new Exception("Pin del Software no valido");
+
+
+				string fecha = fecha_nota_credito.AddHours(5).ToString("HH:mm:sszzz");
+				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaCreditoV2(pin_software, prefijo, numero_nota_credito, fecha, nit_facturador, ambiente, nit_adquiriente, total, subtotal, iva, impto_consumo, rte_ica, true);
+				return cufe_encriptado;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 
 	}

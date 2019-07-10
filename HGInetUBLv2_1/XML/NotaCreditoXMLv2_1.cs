@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using LibreriaGlobalHGInet.HgiNet.Controladores;
 
 namespace HGInetUBLv2_1
 {
@@ -354,7 +355,7 @@ namespace HGInetUBLv2_1
 				string CUFE = CalcularCUFE(nota_credito, resolucion.PinSoftware, documento.CufeFactura, nota_credito.ProfileExecutionID.Value);
 				UUID.Value = CUFE;
 				UUID.schemeName = "CUDE-SHA384";
-				UUID.schemeID = "2";
+				UUID.schemeID = nota_credito.ProfileExecutionID.Value; //"2";
 				nota_credito.UUID = UUID;
 				#endregion
 
@@ -515,7 +516,8 @@ namespace HGInetUBLv2_1
 					+ ambiente
 				;
 
-				string cufe_encriptado = Encriptar.Encriptar_SHA384(cufe);
+				//string cufe_encriptado = Encriptar.Encriptar_SHA384(cufe);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaCreditoV2(pin_software,String.Empty, NumCr,FecCr,NitOFE,ambiente,NumAdq,Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr),ValImp1,ValImp2,ValImp3,false);
 				return cufe_encriptado;
 				#endregion
 			}

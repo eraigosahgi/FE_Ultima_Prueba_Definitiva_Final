@@ -10,6 +10,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using HGInetUBLv2_1.DianListas;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.HgiNet.Controladores;
 
 namespace HGInetUBLv2_1
 {
@@ -517,7 +518,7 @@ namespace HGInetUBLv2_1
 							  + ambiente
 					;
 
-				string cufe_encriptado = Encriptar.Encriptar_SHA384(cufe);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaDebitoV2(pin_software, String.Empty, NumCr, FecCr, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr), ValImp1, ValImp2, ValImp3, false);
 				return cufe_encriptado;
 
 				#endregion

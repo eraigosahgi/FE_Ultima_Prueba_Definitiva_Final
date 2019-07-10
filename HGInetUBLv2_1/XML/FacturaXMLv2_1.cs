@@ -426,7 +426,7 @@ namespace HGInetUBLv2_1
 				string CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value);//resolucion.ClaveTecnicaDIAN
 				UUID.Value = CUFE;
 				UUID.schemeName = "CUFE-SHA384";
-				UUID.schemeID = "2";
+				UUID.schemeID = facturaXML.ProfileExecutionID.Value; //"2";
 				facturaXML.UUID = UUID;
 
 				// convierte los datos del objeto en texto XML 
@@ -597,13 +597,12 @@ namespace HGInetUBLv2_1
 					+ ValImp3.ToString().Replace(",", ".")
 					+ ValImp.Replace(",", ".")
 					+ NitOFE
-					//+ TipAdq
 					+ NumAdq
 					+ clave_tecnica
 					+ ambiente
 				;
 
-				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac, fecha, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac,FecFac, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);
 				return cufe_encriptado;
 				#endregion
 			}
