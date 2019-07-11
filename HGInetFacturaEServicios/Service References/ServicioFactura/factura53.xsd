@@ -42,6 +42,8 @@
       <xs:element minOccurs="0" name="TerminoPago" type="xs:int" />
       <xs:element minOccurs="0" name="Total" type="xs:decimal" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ValorAnticipo" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ValorCargo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorDescuento" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorImpuestoConsumo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorIva" type="xs:decimal" />
@@ -128,6 +130,7 @@
       <xs:element minOccurs="0" name="ProductoCodigoEAN" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoGratis" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ProductoGratisPrecioRef" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoNombre" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReteFuentePorcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="ReteFuenteValor" type="xs:decimal" />
@@ -191,6 +194,7 @@
       <xs:element minOccurs="0" name="IdPeticion" type="ser:guid" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
       <xs:element minOccurs="0" name="IdProceso" type="xs:int" />
+      <xs:element minOccurs="0" name="IdVersionDian" type="xs:int" />
       <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdentificacionObligado" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="MotivoRechazo" nillable="true" type="xs:string" />

@@ -84,6 +84,9 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
         private int IdProcesoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdVersionDianField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string IdentificacionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -379,6 +382,19 @@ namespace HGInetFacturaEServicios.ServicioDocumento {
                 if ((this.IdProcesoField.Equals(value) != true)) {
                     this.IdProcesoField = value;
                     this.RaisePropertyChanged("IdProceso");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdVersionDian {
+            get {
+                return this.IdVersionDianField;
+            }
+            set {
+                if ((this.IdVersionDianField.Equals(value) != true)) {
+                    this.IdVersionDianField = value;
+                    this.RaisePropertyChanged("IdVersionDian");
                 }
             }
         }

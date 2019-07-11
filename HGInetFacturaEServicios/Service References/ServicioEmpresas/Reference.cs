@@ -51,6 +51,9 @@ namespace HGInetFacturaEServicios.ServicioEmpresas {
         private bool ManejaAnexoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PinSoftwareField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string RazonSocialField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -182,6 +185,19 @@ namespace HGInetFacturaEServicios.ServicioEmpresas {
                 if ((this.ManejaAnexoField.Equals(value) != true)) {
                     this.ManejaAnexoField = value;
                     this.RaisePropertyChanged("ManejaAnexo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string PinSoftware {
+            get {
+                return this.PinSoftwareField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PinSoftwareField, value) != true)) {
+                    this.PinSoftwareField = value;
+                    this.RaisePropertyChanged("PinSoftware");
                 }
             }
         }

@@ -114,6 +114,12 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private decimal ValorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorAnticipoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorCargoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorDescuentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -533,6 +539,32 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((this.ValorField.Equals(value) != true)) {
                     this.ValorField = value;
                     this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorAnticipo {
+            get {
+                return this.ValorAnticipoField;
+            }
+            set {
+                if ((this.ValorAnticipoField.Equals(value) != true)) {
+                    this.ValorAnticipoField = value;
+                    this.RaisePropertyChanged("ValorAnticipo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorCargo {
+            get {
+                return this.ValorCargoField;
+            }
+            set {
+                if ((this.ValorCargoField.Equals(value) != true)) {
+                    this.ValorCargoField = value;
+                    this.RaisePropertyChanged("ValorCargo");
                 }
             }
         }
@@ -1592,6 +1624,9 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         private bool ProductoGratisField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ProductoGratisPrecioRefField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ProductoNombreField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1832,6 +1867,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((this.ProductoGratisField.Equals(value) != true)) {
                     this.ProductoGratisField = value;
                     this.RaisePropertyChanged("ProductoGratis");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProductoGratisPrecioRef {
+            get {
+                return this.ProductoGratisPrecioRefField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProductoGratisPrecioRefField, value) != true)) {
+                    this.ProductoGratisPrecioRefField = value;
+                    this.RaisePropertyChanged("ProductoGratisPrecioRef");
                 }
             }
         }
@@ -2110,6 +2158,9 @@ namespace HGInetFacturaEServicios.ServicioFactura {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int IdProcesoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdVersionDianField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string IdentificacionField;
@@ -2407,6 +2458,19 @@ namespace HGInetFacturaEServicios.ServicioFactura {
                 if ((this.IdProcesoField.Equals(value) != true)) {
                     this.IdProcesoField = value;
                     this.RaisePropertyChanged("IdProceso");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdVersionDian {
+            get {
+                return this.IdVersionDianField;
+            }
+            set {
+                if ((this.IdVersionDianField.Equals(value) != true)) {
+                    this.IdVersionDianField = value;
+                    this.RaisePropertyChanged("IdVersionDian");
                 }
             }
         }

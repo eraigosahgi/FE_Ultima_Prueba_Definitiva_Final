@@ -30,6 +30,7 @@
       <xs:element minOccurs="0" name="IdPeticion" type="ser:guid" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
       <xs:element minOccurs="0" name="IdProceso" type="xs:int" />
+      <xs:element minOccurs="0" name="IdVersionDian" type="xs:int" />
       <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdentificacionObligado" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="MotivoRechazo" nillable="true" type="xs:string" />
