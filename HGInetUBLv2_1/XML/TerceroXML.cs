@@ -313,6 +313,7 @@ namespace HGInetUBLv2_1
 				IdentificationCodeType IdentificationCode = new IdentificationCodeType();
 				IdentificationCode.Value = tercero.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
 				Country.IdentificationCode = IdentificationCode;
+				Country.Name = new NameType1();
 				ListaPaises list_paises = new ListaPaises();
 				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.CodigoPais)).FirstOrDefault();
 				Country.Name.Value = pais.Nombre;//"Colombia";//Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
