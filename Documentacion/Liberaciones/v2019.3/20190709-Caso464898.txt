@@ -1,0 +1,12 @@
+ALTER TABLE TblDocumentos ADD
+	StrIdRadicadoDian uniqueidentifier  NULL
+GO
+
+
+ALTER TABLE TblEmpresasResoluciones ADD
+	StrIdSetDian varchar(50)  NULL
+GO
+
+ALTER TABLE TblEmpresasResoluciones ADD
+	IntVersionDian smallint  NOT NULL default(1)
+GO
