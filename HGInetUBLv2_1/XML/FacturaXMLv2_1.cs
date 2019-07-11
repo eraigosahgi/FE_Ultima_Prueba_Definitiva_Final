@@ -411,9 +411,9 @@ namespace HGInetUBLv2_1
 
 
 				// Extension de la Dian
-				//UBLExtensionType UBLExtensionDian = new UBLExtensionType();
-				//UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value, cadena_qr);
-				//UBLExtensions.Add(UBLExtensionDian);
+				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
+				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value, cadena_qr);
+				UBLExtensions.Add(UBLExtensionDian);
 
 				/*
 				UBLExtensionType UBLExtensionAuthorizationProvider = new UBLExtensionType();
@@ -431,9 +431,9 @@ namespace HGInetUBLv2_1
 				UBLExtensions.Add(UBLExtensionFirma);
 
 				// Extension de HGI
-				UBLExtensionType UBLExtensionHgi = new UBLExtensionType();
-				UBLExtensionHgi.ExtensionContent = ExtensionHgiSas.Obtener(id_documento, documento);
-				UBLExtensions.Add(UBLExtensionHgi);
+				//UBLExtensionType UBLExtensionHgi = new UBLExtensionType();
+				//UBLExtensionHgi.ExtensionContent = ExtensionHgiSas.Obtener(id_documento, documento);
+				//UBLExtensions.Add(UBLExtensionHgi);
 
 
 				facturaXML.UBLExtensions = UBLExtensions.ToArray();
