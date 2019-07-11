@@ -362,7 +362,7 @@ namespace HGInetFacturaEServicios
 				if (string.IsNullOrEmpty(pin_software))
 					throw new Exception("Pin del Software no valido");
 
-				string fecha = fecha_nota_debito.AddHours(5).ToString("HH:mm:sszzz");
+				string fecha = fecha_nota_debito.AddHours(5).ToString(Fecha.formato_fecha_hora_zona);
 				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaDebitoV2(pin_software, prefijo, numero_nota_debito, fecha, nit_facturador, ambiente, nit_adquiriente, total, subtotal, iva, impto_consumo, rte_ica, true);
 				return cufe_encriptado;
 			}

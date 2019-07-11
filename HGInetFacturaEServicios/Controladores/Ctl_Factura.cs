@@ -368,7 +368,7 @@ namespace HGInetFacturaEServicios
 				if (string.IsNullOrEmpty(ambiente))
 					throw new Exception("Ambiente de Envío del documento no valido");
 
-				string fecha = fecha_factura.AddHours(5).ToString("HH:mm:sszzz");
+				string fecha = fecha_factura.AddHours(5).ToString(Fecha.formato_fecha_hora_zona);
 				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, prefijo, numero_factura, fecha, nit_facturador, ambiente, nit_adquiriente, total, subtotal, iva, impto_consumo, rte_ica, true);
 				return cufe_encriptado;
 			}
