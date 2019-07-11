@@ -10,6 +10,7 @@ using System.ServiceModel;
 using LibreriaGlobalHGInet.Error;
 using System.ServiceModel.Activation;
 using System.Text;
+using HGInetMiFacturaElectonicaData;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -47,7 +48,11 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				//Valida si se obtuvieron datos y convierte la tbl a Empresa.
 				if (datos_tbl != null)
+				{
 					respuesta = Ctl_Empresa.ConvertirEmpresa(datos_tbl);
+					DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+					respuesta.PinSoftware = data_dian.Pin;
+				}
 
 				return respuesta;
 			}

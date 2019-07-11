@@ -89,7 +89,7 @@ namespace HGInetUBLv2_1
 				//----Se debe enviar la hora de emision con -5 horas
 				IssueTimeType IssueTime = new IssueTimeType();
 				//string hora_documento = fecha_univ.ToString("HH:mm:sszzz");
-				IssueTime.Value = documento.Fecha.AddHours(5).ToString("HH:mm:sszzz");//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
+				IssueTime.Value = documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona);//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
 				facturaXML.IssueTime = IssueTime;
 				#endregion
 
@@ -349,7 +349,7 @@ namespace HGInetUBLv2_1
 				#region facturaXML.InvoiceLine - Línea de facturaXML
 				/*Elemento que agrupa todos los campos de una línea de facturaXML. Detalle del documento*/
 				bool autoretenedor = false;
-				string resp = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.DatosObligado.Responsabilidades, ';');
+				string resp = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.DatosObligado.Responsabilidades, ";");
 				if (resp.Contains("O-15") == true)
 					autoretenedor = true;
 				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda, autoretenedor);
@@ -378,7 +378,7 @@ namespace HGInetUBLv2_1
 				UUID.schemeID = facturaXML.ProfileExecutionID.Value; //"2";
 				facturaXML.UUID = UUID;
 
-				
+
 				#region factura.UBLExtensions
 				XmlDocument doc = new XmlDocument();
 				doc.LoadXml("<firma></firma>");
@@ -407,13 +407,13 @@ namespace HGInetUBLv2_1
 				string num_doc = facturaXML.ID.Value;
 				string nit_fac = documento.DatosObligado.Identificacion;
 				string nit_adq = documento.DatosAdquiriente.Identificacion;
-				string cadena_qr = string.Format("{0}TipoDocumento={1}NroDocumento={2}NITFacturador={3}NumIdentAdquiriente={3}Cufe={4}", ruta_qr_Dian, tipo_doc, num_doc, nit_fac, nit_adq, CUFE);
+				string cadena_qr = string.Format("{0}TipoDocumento={1}NroDocumento={2}NITFacturador={3}NumIdentAdquiriente={4}Cufe={5}", ruta_qr_Dian, tipo_doc, num_doc, nit_fac, nit_adq, CUFE);
 
 
 				// Extension de la Dian
-				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
-				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value, cadena_qr);
-				UBLExtensions.Add(UBLExtensionDian);
+				//UBLExtensionType UBLExtensionDian = new UBLExtensionType();
+				//UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value, cadena_qr);
+				//UBLExtensions.Add(UBLExtensionDian);
 
 				/*
 				UBLExtensionType UBLExtensionAuthorizationProvider = new UBLExtensionType();
@@ -539,7 +539,7 @@ namespace HGInetUBLv2_1
 				//string hora_gmt = TimeZoneInfo.ConvertTimeToUtc(fecha).ToString("yyyy-MM-ddHH:mm:sszz:ss");
 
 				string NumFac = factura.ID.Value;
-				string FecFac = string.Format("{0}{1}", factura.IssueDate.Value.ToString("yyyy-MM-dd"), factura.IssueTime.Value);//string.Format("{0}{1}",fecha.ToString(Fecha.formato_fecha_hora_completa),fecha_hora.ToString(Fecha.formato_hora_completa));//TimeZoneInfo.ConvertTimeToUtc(fecha).ToString("yyyy-MM-ddHH:mm:sszz:ss");//
+				string FecFac = string.Format("{0}{1}", factura.IssueDate.Value.ToString(Fecha.formato_fecha_hginet), factura.IssueTime.Value);//string.Format("{0}{1}",fecha.ToString(Fecha.formato_fecha_hora_completa),fecha_hora.ToString(Fecha.formato_hora_completa));//TimeZoneInfo.ConvertTimeToUtc(fecha).ToString("yyyy-MM-ddHH:mm:sszz:ss");//
 				string ValFac = factura.LegalMonetaryTotal.LineExtensionAmount.Value.ToString();
 
 				//Impuesto 1
@@ -612,7 +612,7 @@ namespace HGInetUBLv2_1
 					+ ambiente
 				;
 
-				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac,FecFac, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac, FecFac, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);
 				return cufe_encriptado;
 				#endregion
 			}
@@ -1086,13 +1086,10 @@ namespace HGInetUBLv2_1
 				int contadorPosicion = 0;
 				int contadorProducto = 1;
 
-				foreach (var DocDet in documentoDetalle)
+				foreach (DocumentoDetalle DocDet in documentoDetalle)
 				{
 					//Crear Enumerable para que lea segun la moneda
 					CurrencyCodeContentType moneda_detalle = Ctl_Enumeracion.ObtenerMoneda(moneda);
-
-					if (string.IsNullOrEmpty(DocDet.UnidadCodigo))
-						DocDet.UnidadCodigo = "EA"; /*** QUEMADO ***/
 
 					// <fe:InvoiceLine>
 					// http://www.datypic.com/sc/ubl21/e-cac_InvoiceLine.html
@@ -1112,8 +1109,11 @@ namespace HGInetUBLv2_1
 					InvoicedQuantityType InvoicedQuantity = new InvoicedQuantityType();
 					InvoicedQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
 
-					// Unidad de medida Ver lista de valores posibles en 6.3.6(Defecto EA codigo - 94)
-					InvoicedQuantity.unitCode = Ctl_Enumeracion.ObtenerUnidadMedida(DocDet.UnidadCodigo).ToString();
+					// Unidad de medida Ver lista de valores posibles en 6.3.6(Defecto codigo - 94)
+					ListaUnidadesMedida list_unidad = new ListaUnidadesMedida();
+					ListaItem unidad = list_unidad.Items.Where(d => d.Codigo.Equals(DocDet.UnidadCodigo)).FirstOrDefault();
+
+					InvoicedQuantity.unitCode = unidad.Codigo;
 					InvoiceLineType1.InvoicedQuantity = InvoicedQuantity;
 					#endregion
 

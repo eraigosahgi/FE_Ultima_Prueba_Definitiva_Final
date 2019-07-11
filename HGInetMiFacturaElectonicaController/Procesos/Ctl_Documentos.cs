@@ -432,10 +432,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				ListaMunicipio list_municipio = new ListaMunicipio();
 				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
 				if (municipio == null)
-					throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}",tercero.CodigoCiudad, tipo));
+					throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}", tercero.CodigoCiudad, tipo));
 				else
 					tercero.Ciudad = municipio.Nombre;
-				
+
 
 				ListaDepartamentos list_depart = new ListaDepartamentos();
 				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
@@ -454,10 +454,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (tipoimp == null)
 					throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
 
-				if (!tercero.CodigoPostal.StartsWith(tercero.Departamento))
+				if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
 					throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
 
-				if (tercero.Responsabilidades == null || tercero.Responsabilidades.Any())
+				if (tercero.Responsabilidades == null || !tercero.Responsabilidades.Any())
 				{
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Responsabilidades", tipo).Replace("de tipo", "del"));
 				}
@@ -467,6 +467,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", tercero.Responsabilidades[0], tipo));
 					}
+					else
+					{
+						foreach (string item in tercero.Responsabilidades)
+						{
+							ListaTipoResponsabilidad list_resp = new ListaTipoResponsabilidad();
+							ListaItem responsabilidad = list_resp.Items.Where(r => r.Codigo.Equals(item)).FirstOrDefault();
+							if (responsabilidad == null)
+								throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", item, tipo));
+							//--Se quitan estas responsabilidades por que no aparecen en el listado
+							else if (item.Equals("O-48"))
+								tercero.Responsabilidades.Remove(item);
+							else if (item.Equals("O-49"))
+								tercero.Responsabilidades.Remove(item);
+
+						}
+					}
+
 				}
 
 			}
@@ -594,91 +611,145 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ImpuestoConsumo", documento.ValorImpuestoConsumo));
 
 					//Validacion del Anticipo calculado con el que es enviado en el documento
-					if ((documento.Anticipos == null || documento.Anticipos.Any()) && documento.ValorAnticipo == 0)
+					if (documento.Anticipos == null)
 					{
 
-						documento.ValorAnticipo = Convert.ToDecimal(0.00M);
-
-						if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorAnticipo).Replace(",", ".")))
-							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
-					}
-					else
-					{
-						List<Anticipo> list_ant = documento.Anticipos;
-						if (!list_ant.Sum(v => v.Valor).Equals(documento.ValorAnticipo))
+						if (documento.ValorAnticipo == 0)
 						{
-							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
+							documento.ValorAnticipo = Convert.ToDecimal(0.00M);
+
+							if (!Texto.ValidarExpresion(TipoExpresion.Decimal,
+								Convert.ToString(documento.ValorAnticipo).Replace(",", ".")))
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo",documento.ValorAnticipo));
 						}
 						else
 						{
-							Anticipo anticipo = new Anticipo();
-							anticipo = list_ant.Find(d => string.IsNullOrEmpty(d.Codigo));
-							if (string.IsNullOrEmpty(anticipo.Codigo))
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
+						}
+					}
+					else
+					{
+						if (documento.Anticipos.Count > 0 && documento.ValorAnticipo != 0)
+						{
+							List<Anticipo> list_ant = documento.Anticipos;
+							if (!list_ant.Sum(v => v.Valor).Equals(documento.ValorAnticipo))
 							{
-								throw new ApplicationException(string.Format("El identificador del {0} no está bien formado", "Anticipo"));
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
 							}
+							else
+							{
+								Anticipo anticipo = new Anticipo();
+								anticipo = list_ant.Where(d => string.IsNullOrEmpty(d.Codigo)).FirstOrDefault();
+								if (anticipo != null)
+								{
+									throw new ApplicationException(string.Format("El identificador del {0} no está bien formado", "Anticipo"));
+								}
+							}
+
+							if (documento.ValorAnticipo > documento.Total)
+							{
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Anticipo", documento.ValorAnticipo));
+							}
+
+						}
+						else if (documento.Anticipos.Count == 0 && documento.ValorAnticipo == 0)
+						{
+							documento.ValorAnticipo = Convert.ToDecimal(0.00M);
+
+							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorAnticipo).Replace(",", ".")))
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
+
+						}
+						else
+						{
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
 						}
 
-						if (documento.ValorAnticipo > documento.Total)
-						{
-							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Anticipo", documento.ValorAnticipo));
-						}
 					}
 
 					//Validacion de los Cargos calculados enviados en el documento
-					if ((documento.Cargos == null || documento.Cargos.Any()) && documento.ValorCargo == 0)
+					if (documento.Cargos == null)
 					{
-						documento.ValorCargo = Convert.ToDecimal(0.00M);
-
-						if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorCargo).Replace(",", ".")))
-							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
-
-					}
-					else
-					{
-						List<Cargo> list_cargo = documento.Cargos;
-						if (!list_cargo.Sum(v => v.Valor).Equals(documento.ValorCargo))
+						if (documento.ValorCargo == 0)
 						{
-							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
+							documento.ValorCargo = Convert.ToDecimal(0.00M);
+
+							if (!Texto.ValidarExpresion(TipoExpresion.Decimal,Convert.ToString(documento.ValorCargo).Replace(",", ".")))
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo",documento.ValorCargo));
 						}
 						else
 						{
-							Cargo cargo = new Cargo();
-							cargo = list_cargo.Find(d => string.IsNullOrEmpty(d.Descripcion));
-							if (string.IsNullOrEmpty(cargo.Descripcion))
-							{
-								throw new ApplicationException("La Descripción del campo Cargo no está bien formado");
-							}
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
+						}
+					}
+					else
+					{
+						if (documento.Cargos.Count > 0 && documento.ValorCargo != 0)
+						{
 
-							cargo = list_cargo.Find(d => d.Porcentaje > 100);
-							if (cargo != null)
+							List<Cargo> list_cargo = documento.Cargos;
+							if (!list_cargo.Sum(v => v.Valor).Equals(documento.ValorCargo))
 							{
-								throw new ApplicationException("El porcentaje del campo Cargo no puede ser mayor a 100");
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
 							}
-
-							cargo = list_cargo.Find(d => d.Valor > documento.ValorSubtotal);
-							if (cargo != null)
+							else
 							{
-								throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+								Cargo cargo = new Cargo();
+								cargo = list_cargo.Where(d => string.IsNullOrEmpty(d.Descripcion)).FirstOrDefault();
+								if (cargo != null)
+								{
+									throw new ApplicationException("La Descripción del campo Cargo no está bien formado");
+								}
+
+								cargo = list_cargo.Where(d => d.Porcentaje > 100).FirstOrDefault();
+								if (cargo != null)
+								{
+									throw new ApplicationException("El porcentaje del campo Cargo no puede ser mayor a 100");
+								}
+
+								cargo = list_cargo.Find(d => d.Valor > documento.ValorSubtotal);
+								if (cargo != null)
+								{
+									throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+								}
 							}
 						}
+						else if (documento.Cargos.Count == 0 && documento.ValorCargo == 0)
+						{
+							documento.ValorCargo = Convert.ToDecimal(0.00M);
+
+							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorCargo).Replace(",", ".")))
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
+
+						}
+						else
+						{
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
+						}
+
 					}
 
 					//Validacion de los Descuentos calculados enviados en el documento
-					if ((documento.Descuentos == null || documento.Descuentos.Any()) && documento.ValorDescuento == 0)
+					if (documento.Descuentos == null)
 					{
-						documento.ValorDescuento = Convert.ToDecimal(0.00M);
+						if (documento.ValorDescuento == 0)
+						{
+							documento.ValorDescuento = Convert.ToDecimal(0.00M);
 
-						if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+							if (!Texto.ValidarExpresion(TipoExpresion.Decimal,Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento",documento.ValorDescuento));
+						}
+						else
+						{
 							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
-
+						}
 					}
 					else
 					{
 
-						if (documento.Descuentos != null)
+						if (documento.Descuentos.Count > 0 && documento.ValorDescuento != 0)
 						{
-	
+
 							List<Descuento> list_descuento = documento.Descuentos;
 							if (!list_descuento.Sum(v => v.Valor).Equals(documento.ValorDescuento))
 							{
@@ -689,27 +760,31 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							else
 							{
 								Descuento descuento = new Descuento();
-								descuento = list_descuento.Find(d => string.IsNullOrEmpty(d.Codigo));
-								if (string.IsNullOrEmpty(descuento.Codigo))
-								{
-									throw new ApplicationException(
-										"El Código del campo Descuento no está bien formado");
-								}
-
-								descuento = list_descuento.Find(d => d.Porcentaje > 100);
+								descuento = list_descuento.Where(d => string.IsNullOrEmpty(d.Codigo)).FirstOrDefault();
 								if (descuento != null)
 								{
-									throw new ApplicationException(
-										"El porcentaje del campo Descuento no puede ser mayor a 100");
+									throw new ApplicationException("El Código del campo Descuento no está bien formado");
 								}
 
-								descuento = list_descuento.Find(d => d.Valor > documento.ValorSubtotal);
+								descuento = list_descuento.Where(d => d.Porcentaje > 100).FirstOrDefault();
 								if (descuento != null)
 								{
-									throw new ApplicationException(
-										"El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+									throw new ApplicationException("El porcentaje del campo Descuento no puede ser mayor a 100");
+								}
+
+								descuento = list_descuento.Where(d => d.Valor > documento.ValorSubtotal).FirstOrDefault();
+								if (descuento != null)
+								{
+									throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
 								}
 							}
+						}
+						else if (documento.Descuentos.Count == 0 && documento.ValorDescuento == 0)
+						{
+							documento.ValorDescuento = Convert.ToDecimal(0.00M);
+
+							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
 						}
 						else
 						{
@@ -724,7 +799,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					//Validacion del Valor Neto
-					if ((documento.Total + documento.ValorCargo - documento.Descuentos - documento.ValorAnticipo - documento.ValorReteFuente) != documento.Neto)
+					if ((documento.Total + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo - documento.ValorReteFuente) != documento.Neto)
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Neto", documento.Neto));
 					}
@@ -827,11 +902,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							validacion_Aiu = false;
 							List<DocumentoDetalle> lis_detalle = new List<DocumentoDetalle>();
-							lis_detalle = documentoDetalle.FindAll(v => v.Aiu > 0);
+							lis_detalle = documentoDetalle.Where(v => v.Aiu > 0).ToList();
 							if (lis_detalle != null && lis_detalle.Any())
 							{
 								DocumentoDetalle detalle = new DocumentoDetalle();
-								detalle = lis_detalle.Find(d => !string.IsNullOrEmpty(d.ProductoDescripcion));
+								detalle = lis_detalle.Where(d => !string.IsNullOrEmpty(d.ProductoDescripcion)).FirstOrDefault();
 								if (detalle == null)
 									throw new ApplicationException("No se encontro descripción del contrato AIU en el campo ProductoDescripcion en el detalle del documento");
 							}
@@ -839,7 +914,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.ValorUnitario == 0)
 							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
-						
+
 						if (Docdet.ProductoGratis == true)
 						{
 							ListaCodigoPrecioReferencia list_precioref = new ListaCodigoPrecioReferencia();
@@ -851,11 +926,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.CalculaIVA == 0)
 						{
-							if ((Docdet.ValorSubtotal * Docdet.IvaPorcentaje) == Docdet.IvaValor)
+							if ((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)) == Docdet.IvaValor)
 							{
 								ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
-								ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(Docdet.IvaPorcentaje.ToString())).FirstOrDefault();
-
+								ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(Docdet.IvaPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+								
 								if (iva == null)
 									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "IvaPorcentaje", Docdet.IvaPorcentaje));
 							}
@@ -885,10 +960,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (Docdet.ReteFuenteValor > 0)
 						{
 
-							if ((Docdet.ValorSubtotal * Docdet.ReteFuentePorcentaje) == Docdet.ReteFuenteValor)
+							if ((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)) == Docdet.ReteFuenteValor)
 							{
 								ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
-								ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString())).FirstOrDefault();
+								ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 								if (retfte == null)
 									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ReteFuentePorcentaje", Docdet.ReteFuentePorcentaje));
 							}
@@ -901,16 +976,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.DescuentoValor > 0)
 						{
-							if (((Docdet.ValorUnitario * Docdet.Cantidad) * Docdet.DescuentoPorcentaje) != Docdet.DescuentoValor)
+							if (((Docdet.ValorUnitario * Docdet.Cantidad) * (Docdet.DescuentoPorcentaje / 100)) != Docdet.DescuentoValor)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "DescuentoValor", Docdet.DescuentoValor));
 						}
 
 						if (Docdet.ValorImpuestoConsumo > 0)
 						{
-							if ((Docdet.ValorSubtotal * Docdet.ImpoConsumoPorcentaje) == Docdet.ValorImpuestoConsumo)
+							if ((Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje * 100)) == Docdet.ValorImpuestoConsumo)
 							{
 								ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
-								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString())).FirstOrDefault();
+								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 								if (consumo == null)
 									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ImpoConsumoPorcentaje", Docdet.ImpoConsumoPorcentaje));
 							}
@@ -934,7 +1009,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					LogExcepcion.Guardar(ex);
 					throw ex;
 				}
-			}	
+			}
 
 
 		}

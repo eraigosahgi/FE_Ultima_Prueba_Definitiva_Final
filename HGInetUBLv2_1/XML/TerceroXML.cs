@@ -134,7 +134,7 @@ namespace HGInetUBLv2_1
 				CompanyID.Value = empresa.Identificacion.ToString();
 
 				//---Si es Nit debe star bien calculado
-				CompanyID.schemeID = empresa.PaginaWeb; //empresa.IdentificacionDv.ToString();
+				CompanyID.schemeID = empresa.IdentificacionDv.ToString();
 
 				//----//Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN 6.2.1)
 				CompanyID.schemeName = empresa.TipoIdentificacion.ToString();
@@ -151,7 +151,7 @@ namespace HGInetUBLv2_1
 				//---Listado 6.2.7 Responsabilidades pero solo permite 1 actualmente
 				//TaxLevelCode.Value = empresa.Regimen.ToString();
 				///----Se pone responsabilidad para las pruebas
-				string list_responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(empresa.Responsabilidades,';');
+				string list_responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(empresa.Responsabilidades,";");
 				TaxLevelCode.Value = list_responsabilidades;//"O-99";
 				PartyTaxScheme.TaxLevelCode = TaxLevelCode;
 
@@ -270,18 +270,24 @@ namespace HGInetUBLv2_1
 
 				//----5.4.3. Municipios:  cbc:CityName Ver listado del DANE
 				Address.ID = new IDType();
-				Address.ID.Value = "05001";
+				Address.ID.Value = tercero.CodigoCiudad;
 				CityNameType City = new CityNameType();
-				City.Value = tercero.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				ListaMunicipio list_municipio = new ListaMunicipio();
+				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
+				City.Value = municipio.Nombre; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
 				Address.CityName = City;
+				tercero.Ciudad = municipio.Nombre;
 
 				//5.4.2. Departamentos (ISO 3166-2:CO):  cbc:CountrySubentity, cbc:CountrySubentityCode
 				CountrySubentityType CountrySubentity = new CountrySubentityType();
-				CountrySubentity.Value = "Antioquia";//Listado de Departamentos el Nombre
+				ListaDepartamentos list_depart = new ListaDepartamentos();
+				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
+				CountrySubentity.Value = departamento.Nombre;//Listado de Departamentos el Nombre
 				Address.CountrySubentity = CountrySubentity;
 				CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
-				CountrySubentityCode.Value = "05";//Listado de Departamentos el codigo
+				CountrySubentityCode.Value = tercero.CodigoDepartamento;//Listado de Departamentos el codigo
 				Address.CountrySubentityCode = CountrySubentityCode;
+				tercero.Departamento = departamento.Nombre;
 
 				//Direccion
 				//Informar la dirección, sin ciudad ni departamento.
@@ -303,11 +309,13 @@ namespace HGInetUBLv2_1
 				//ISO 3166-1 alfa-2: Códigos de país de das letras. Si recomienda como el código de propósito
 				//general.Estos códigos se utilizan por ejemplo en internet como dominios geográficos de nivel superior.
 				CountryType Country = new CountryType();
+
 				IdentificationCodeType IdentificationCode = new IdentificationCodeType();
 				IdentificationCode.Value = tercero.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
 				Country.IdentificationCode = IdentificationCode;
-				Country.Name = new NameType1();
-				Country.Name.Value = "Colombia";//Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
+				ListaPaises list_paises = new ListaPaises();
+				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.CodigoPais)).FirstOrDefault();
+				Country.Name.Value = pais.Nombre;//"Colombia";//Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
 				Country.Name.languageID = "es";
 				Address.Country = Country;
 
@@ -340,7 +348,7 @@ namespace HGInetUBLv2_1
 				//---Validar si es NIT
 				CompanyID.Value = tercero.Identificacion.ToString();
 				//---Si es Nit debe star bien calculado
-				CompanyID.schemeID = tercero.PaginaWeb;//tercero.IdentificacionDv.ToString();
+				CompanyID.schemeID = tercero.IdentificacionDv.ToString();
 				//----//Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.2.1)
 				CompanyID.schemeName = tercero.TipoIdentificacion.ToString();
 				CompanyID.schemeAgencyID = "195";
@@ -351,11 +359,12 @@ namespace HGInetUBLv2_1
 				//----validar el regimen
 				TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
 				//-----Listado 6.2.4
-				TaxLevelCode.listName = "05";
+				TaxLevelCode.listName = tercero.RegimenFiscal;
 				//---Listado 6.2.7 Responsabilidades para enviar varias se deben seperar por ;
 				//TaxLevelCode.Value = tercero.Regimen.ToString();
 				//----Se pone Responsabilidad para las pruebas
-				TaxLevelCode.Value = "O-99";
+				string list_responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(tercero.Responsabilidades, ";");
+				TaxLevelCode.Value = list_responsabilidades;
 				PartyTaxScheme.TaxLevelCode = TaxLevelCode;
 
 
@@ -364,9 +373,11 @@ namespace HGInetUBLv2_1
 				//--Validar si se pueden varias en ejemplo solo presenta 1 y si se repite todo el PartyTaxScheme para los que aplique
 				TaxSchemeType TaxScheme = new TaxSchemeType();
 				TaxScheme.ID = new IDType();
-				TaxScheme.ID.Value = "01";
+				TaxScheme.ID.Value = tercero.CodigoTributo;
+				ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
+				ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(tercero.CodigoTributo)).FirstOrDefault();
 				TaxScheme.Name = new NameType1();
-				TaxScheme.Name.Value = "IVA";
+				TaxScheme.Name.Value = tipoimp.Nombre; //"IVA";
 				PartyTaxScheme.TaxScheme = TaxScheme;
 				PartyTaxSchemes[0] = PartyTaxScheme;
 				Party.PartyTaxScheme = PartyTaxSchemes;
@@ -385,13 +396,13 @@ namespace HGInetUBLv2_1
 
 				//Prefijo de la facturación usada para el punto de venta
 				//---Validar---
-				PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
-				PartyLegalEntity.CorporateRegistrationScheme.ID.Value = "";
+				//PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
+				//PartyLegalEntity.CorporateRegistrationScheme.ID.Value = "";
 
 				//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
 				//---Validar
 				PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
-				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "";
+				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = tercero.NombreComercial;
 
 				PartyLegalEntitys[0] = PartyLegalEntity;
 				Party.PartyLegalEntity = PartyLegalEntitys;

@@ -494,7 +494,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (documento.FormaPago != 0)
 				{
 					ListaFormasPago list_forma = new ListaFormasPago();
-					ListaItem forma = list_forma.Items.Where(d => d.Codigo.Equals(documento.FormaPago)).FirstOrDefault();
+					ListaItem forma = list_forma.Items.Where(d => d.Codigo.Equals(documento.FormaPago.ToString())).FirstOrDefault();
 					if (forma == null)
 						throw new ApplicationException(string.Format("La Forma de Pago '{0}' no es válido según Estandar DIAN", documento.FormaPago));
 				}
@@ -507,7 +507,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 
 					ListaMediosPago list_medio = new ListaMediosPago();
-					ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento.TerminoPago)).FirstOrDefault();
+					ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento.TerminoPago.ToString())).FirstOrDefault();
 					if (medio == null)
 						throw new ApplicationException(string.Format("El Medio de Pago '{0}' no es válido según Estandar DIAN", documento.TerminoPago));
 				}

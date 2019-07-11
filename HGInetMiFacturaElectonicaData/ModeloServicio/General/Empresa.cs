@@ -20,5 +20,6 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public short HorasAcuseTacito { get; set; }
 		public bool ManejaAnexo { get; set; }
 		public int VersionDian { get; set; }
+		public string PinSoftware { get; set; }
 	}
 }

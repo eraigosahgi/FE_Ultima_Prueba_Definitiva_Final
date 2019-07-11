@@ -41,8 +41,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			var documento_obj = (dynamic)null;
 			documento_obj = documento;
 
-			//Si fecha trae hora la setea a las 12:00
-			documento_obj.Fecha = documento_obj.Fecha.Date;
 
 			if (documento_obj != null)
 			{
@@ -258,7 +256,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// id entregado por el servicio web de Validación Previa
 						string id_validacion_previa = string.Empty;
-						id_validacion_previa = acuse.Comments;
+						id_validacion_previa = acuse.KeyV2;
 
 						//Valida estado del documento en la Plataforma de la DIAN
 						respuesta = Consultar(documentoBd, empresa, ref respuesta, id_validacion_previa);
