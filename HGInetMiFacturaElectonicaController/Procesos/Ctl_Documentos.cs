@@ -469,17 +469,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					else
 					{
+						//--Se quitan estas responsabilidades por que no aparecen en el listado
+						if (tercero.Responsabilidades.Contains("O-48"))
+						{
+							int id = tercero.Responsabilidades.IndexOf("O-48");
+							tercero.Responsabilidades.RemoveAt(id);
+						}
+
+						if (tercero.Responsabilidades.Contains("O-49"))
+						{
+							int id = tercero.Responsabilidades.IndexOf("O-49");
+							tercero.Responsabilidades.RemoveAt(id);
+						}
+
+
 						foreach (string item in tercero.Responsabilidades)
 						{
 							ListaTipoResponsabilidad list_resp = new ListaTipoResponsabilidad();
 							ListaItem responsabilidad = list_resp.Items.Where(r => r.Codigo.Equals(item)).FirstOrDefault();
 							if (responsabilidad == null)
 								throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", item, tipo));
-							//--Se quitan estas responsabilidades por que no aparecen en el listado
-							else if (item.Equals("O-48"))
-								tercero.Responsabilidades.Remove(item);
-							else if (item.Equals("O-49"))
-								tercero.Responsabilidades.Remove(item);
 
 						}
 					}
@@ -620,7 +629,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 							if (!Texto.ValidarExpresion(TipoExpresion.Decimal,
 								Convert.ToString(documento.ValorAnticipo).Replace(",", ".")))
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo",documento.ValorAnticipo));
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
 						}
 						else
 						{
@@ -674,8 +683,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							documento.ValorCargo = Convert.ToDecimal(0.00M);
 
-							if (!Texto.ValidarExpresion(TipoExpresion.Decimal,Convert.ToString(documento.ValorCargo).Replace(",", ".")))
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo",documento.ValorCargo));
+							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorCargo).Replace(",", ".")))
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
 						}
 						else
 						{
@@ -736,8 +745,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							documento.ValorDescuento = Convert.ToDecimal(0.00M);
 
-							if (!Texto.ValidarExpresion(TipoExpresion.Decimal,Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento",documento.ValorDescuento));
+							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
 						}
 						else
 						{
@@ -930,7 +939,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							{
 								ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
 								ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(Docdet.IvaPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
-								
+
 								if (iva == null)
 									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "IvaPorcentaje", Docdet.IvaPorcentaje));
 							}
