@@ -292,7 +292,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						throw new ApplicationException(mensaje);
 					}
-					else if (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode())
+					else if (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode() || numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
 					{
 
 						mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);

@@ -58,6 +58,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					//---Manejar funcion de Alerta
 					msg_response = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(acuse.MessagesFieldV2.Select(_X => _X.ProcessedMessage).ToList(),";");
+					respuesta.FechaUltimoProceso = Fecha.GetFecha();
+					respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 					throw new ArgumentException();
 				}
 			}
