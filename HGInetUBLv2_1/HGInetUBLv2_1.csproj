@@ -1399,6 +1399,7 @@
     <Compile Include="XML\TerceroXML.cs" />
     <Compile Include="XML\TotalesXML.cs" />
     <Compile Include="XML\ValidacionObjeto.cs" />
+    <Compile Include="XML\ValoresAdicionalesXML.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dian\TipoImpuestos.resx">

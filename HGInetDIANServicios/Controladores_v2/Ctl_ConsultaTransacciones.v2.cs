@@ -13,7 +13,7 @@ namespace HGInetDIANServicios
 	{
 
 
-		public static string Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web)
+		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web)
 		{
 
 			try
@@ -47,12 +47,46 @@ namespace HGInetDIANServicios
 					fs.Close();
 				}
 
-				return ruta_xml;
+				return resultado;
 			}
-			catch (Exception e)
+			catch (Exception excepcion)
 			{
-				throw e;
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
+		}
+
+
+		/// <summary>
+		/// Valida la respuesta de la consulta de transacciones
+		/// </summary>
+		/// <param name="documento">respuesta del servicio web</param>
+		/// <returns>validación propia de HGI</returns>
+		public static ConsultaDocumento ValidarTransaccionV2(List<DianWSValidacionPrevia.DianResponse> documento)
+		{
+
+			ConsultaDocumento resultado = new ConsultaDocumento();
+			resultado.RecepcionDocumento = ValidacionRespuestaDian.Pendiente;
+			resultado.Mensaje = "";
+
+			DianWSValidacionPrevia.DianResponse doc_valido = documento.Where(d => d.IsValid == true && d.StatusCode == "0").FirstOrDefault();
+
+			if (doc_valido != null)
+			{
+				resultado.CodigoEstadoDian = doc_valido.StatusCode;
+				resultado.EstadoDianDescripcion = doc_valido.StatusDescription;
+				resultado.Estado = EstadoDocumentoDian.Aceptado;
+			}
+			else
+			{
+				resultado.CodigoEstadoDian = "99";
+				resultado.EstadoDianDescripcion = "validaciones contienen errores en campos mandatorios";
+				resultado.Estado = EstadoDocumentoDian.Rechazado;
+			}
+			
+
+
+			return resultado;
+
 		}
 	}
 }

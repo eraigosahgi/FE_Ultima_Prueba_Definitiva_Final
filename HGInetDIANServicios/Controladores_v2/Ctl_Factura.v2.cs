@@ -1,5 +1,6 @@
 ﻿using HGInetDIANServicios.DianFactura;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,21 +42,29 @@ namespace HGInetDIANServicios
 				DianWSValidacionPrevia.UploadDocumentResponse resultadoHab = webServiceHab.SendTestSetAsync(nombre_archivo, bytes, clave_dian);
 
 				AcuseRecibo acuse_recibo = new AcuseRecibo();
-				acuse_recibo.KeyV2 = resultadoHab.ZipKey;
-				acuse_recibo.MessagesFieldV2 = resultadoHab.ErrorMessageList;
 				acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
 				acuse_recibo.ResponseDateTime = Fecha.GetFecha();
+				acuse_recibo.MessagesFieldV2 = resultadoHab.ErrorMessageList;
+				acuse_recibo.KeyV2 = resultadoHab.ZipKey;
 				acuse_recibo.Version = "2";
 
-				if(!string.IsNullOrWhiteSpace(resultadoHab.ZipKey))
+				if (!string.IsNullOrWhiteSpace(resultadoHab.ZipKey))
 					acuse_recibo.Response = 200;
-				
+
+				string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
+
+				string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+
+				// almacena el mensaje de respuesta del servicio web
+				archivo = Xml.GuardarObjeto(resultadoHab, carpeta, archivo);
+
+
 				return acuse_recibo;
-				
+
 			}
-			catch (Exception e)
+			catch (Exception excepcion)
 			{
-				throw e;
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
 

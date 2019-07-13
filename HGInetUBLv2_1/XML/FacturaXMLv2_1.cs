@@ -13,6 +13,7 @@ using System.IO;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
 using HGInetUBLv2_1.DianListas;
 using HGInetMiFacturaElectonicaData;
+using HGInetUBLv2_1.XML;
 
 namespace HGInetUBLv2_1
 {
@@ -314,6 +315,28 @@ namespace HGInetUBLv2_1
 				52 sea del caso, y conserva para su posterior exhibición*/
 
 				facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
+				#endregion
+
+				if (documento.Descuentos != null || documento.Cargos != null)
+					facturaXML.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
+
+
+				#region Anticipos
+				if (documento.Anticipos.Any())
+				{
+					List<PaymentType> list_anticipos = new List<PaymentType>();
+					foreach (var item in documento.Anticipos)
+					{
+						PaymentType anticipo = new PaymentType();
+						anticipo.ID = new IDType();
+						anticipo.ID.Value = item.Codigo;
+						anticipo.PaidAmount = new PaidAmountType();
+						anticipo.PaidAmount.Value = item.Valor;
+						anticipo.PaidAmount.currencyID = Ctl_Enumeracion.ObtenerMoneda(documento.Moneda).ToString();
+						list_anticipos.Add(anticipo);
+					}
+					facturaXML.PrepaidPayment = list_anticipos.ToArray();
+				}
 				#endregion
 
 

@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using LibreriaGlobalHGInet.HgiNet;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -37,9 +38,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns>información adicional de respuesta del documento</returns>
 		public static AcuseRecibo EnviarDian(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
 		{
+
+			string msg_response = String.Empty;
+
 			HGInetDIANServicios.DianFactura.AcuseRecibo acuse = new HGInetDIANServicios.DianFactura.AcuseRecibo();
 			try
 			{
+
 
 				acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
 
@@ -51,16 +56,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else if (acuse.MessagesFieldV2 != null)
 				{
-					string msg_response = "";
-
-					
+					//---Manejar funcion de Alerta
+					msg_response = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(acuse.MessagesFieldV2.Select(_X => _X.ProcessedMessage).ToList(),";");
+					throw new ArgumentException();
 				}
 			}
 			catch (Exception excepcion)
 			{
-				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el envío del archivo ZIP con el XML firmado a la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				if (empresa.IntVersionDian == 1)
+				{
+					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el envío del archivo ZIP con el XML firmado a la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+					documentoBd.IntEnvioMail = true;
+				}
+				else
+				{
+					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("No es posible la comunicación con la Plataforma de la DIAN para el envío del archivo ZIP con el XML firmado"), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+				}
+				
 				LogExcepcion.Guardar(excepcion);
-				documentoBd.IntEnvioMail = true;
 				return null;
 			}
 
@@ -76,6 +89,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			documentoBd.StrUrlArchivoZip = url_ppal_zip;
 			documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 			documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+			if (empresa.IntVersionDian == 2)
+				documentoBd.StrIdRadicadoDian = Guid.Parse(acuse.KeyV2);
 
 			Ctl_Documento documento_tmp = new Ctl_Documento();
 			documento_tmp.Actualizar(documentoBd);
@@ -145,7 +160,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string ruta_certificado = string.Empty;
 				CertificadoDigital certificado = null;
 
-				if (documentoBd.IntVersionDian == 2)
+				if (empresa.IntVersionDian == 2)
 				{
 					// obtiene la información de configuración del certificado digital
 					certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
@@ -202,9 +217,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (empresa.IntVersionDian == 2)
 				{
 					// Consulta del documento con validación previa
-					Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, clave, url_ws_consulta);
-					resultado_doc = new ConsultaDocumento();
-					/*** FALTA ***/
+					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, clave, url_ws_consulta);
+					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(resultado);
 
 				}
 				else
@@ -255,11 +269,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (resultado_doc.Estado == EstadoDocumentoDian.Rechazado)
 				{
 					fecha_actual = Fecha.GetFecha();
-					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.FinalizacionErrorDian);
+					if (empresa.IntVersionDian == 1)
+					{
+						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.FinalizacionErrorDian);
+						respuesta.IdProceso = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
+						respuesta.ProcesoFinalizado = 1;
+					}
+					else
+					{
+						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PrevalidacionErrorDian);
+						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorDian.GetHashCode();
+					}
+					
 					respuesta.FechaUltimoProceso = fecha_actual;
-					respuesta.IdProceso = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
-					respuesta.ProcesoFinalizado = 1;
-
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
 					respuesta.Error.Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION;
 					respuesta.Error.Fecha = fecha_actual;
