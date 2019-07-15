@@ -322,7 +322,7 @@ namespace HGInetUBLv2_1
 
 
 				#region Anticipos
-				if (documento.Anticipos.Any())
+				if (documento.Anticipos != null)
 				{
 					List<PaymentType> list_anticipos = new List<PaymentType>();
 					foreach (var item in documento.Anticipos)
