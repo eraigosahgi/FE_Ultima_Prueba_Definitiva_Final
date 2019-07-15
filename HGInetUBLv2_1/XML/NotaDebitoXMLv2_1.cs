@@ -540,9 +540,6 @@ namespace HGInetUBLv2_1
 					//Crear Enumerable para que lea segun la moneda
 					CurrencyCodeContentType moneda_detalle = Ctl_Enumeracion.ObtenerMoneda(moneda);
 
-					if (string.IsNullOrEmpty(DocDet.UnidadCodigo))
-						DocDet.UnidadCodigo = "EA";
-
 					decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
 					DebitNoteLineType DebitNoteLine = new DebitNoteLineType();
 
@@ -563,8 +560,12 @@ namespace HGInetUBLv2_1
 					DebitedQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
 					DebitNoteLine.DebitedQuantity = DebitedQuantity;
 
+					// Unidad de medida Ver lista de valores posibles en 6.3.6(Defecto codigo - 94)
+					ListaUnidadesMedida list_unidad = new ListaUnidadesMedida();
+					ListaItem unidad = list_unidad.Items.Where(d => d.Codigo.Equals(DocDet.UnidadCodigo)).FirstOrDefault();
+
 					// Unidad de medida
-					DebitedQuantity.unitCode = Ctl_Enumeracion.ObtenerUnidadMedida(DocDet.UnidadCodigo).ToString();
+					DebitedQuantity.unitCode = unidad.Codigo;
 					DebitNoteLine.DebitedQuantity = DebitedQuantity;
 
 					#endregion
