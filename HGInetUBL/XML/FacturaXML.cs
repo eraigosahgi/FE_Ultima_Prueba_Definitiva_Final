@@ -238,7 +238,7 @@ namespace HGInetUBL
 				BillingReferenceType DocReference = new BillingReferenceType();
 				DocumentReferenceType DocumentReference = new DocumentReferenceType();
 				DocumentReference.ID = new IDType();
-				DocumentReference.ID.Value = documento.DocumentoRef.ToString();
+				DocumentReference.ID.Value = (string.IsNullOrEmpty(documento.PedidoRef)) ? string.Empty : documento.PedidoRef.ToString();
 				DocReference.InvoiceDocumentReference = DocumentReference;
 
 				factura.BillingReference[0] = DocReference;
@@ -252,7 +252,7 @@ namespace HGInetUBL
 				factura.OrderReference = new OrderReferenceType[1];
 
 				OrderReferenceType DocOrderReference = new OrderReferenceType();
-				DocOrderReference.ID = new IDType() { Value = documento.PedidoRef.ToString() };
+				DocOrderReference.ID = new IDType() { Value = (string.IsNullOrEmpty(documento.DocumentoRef)) ? string.Empty : documento.DocumentoRef.ToString()};
 				factura.OrderReference[0] = DocOrderReference;
 
 				#endregion

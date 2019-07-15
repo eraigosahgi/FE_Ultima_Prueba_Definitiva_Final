@@ -621,7 +621,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					try
 					{
-						resolucion = Ctl_EmpresaResolucion.Convertir(documento_obj.DatosObligado.Identificacion, documento_obj.Prefijo, tipo_documento, documento_obj.NumeroResolucion);
+						resolucion = Ctl_EmpresaResolucion.Convertir(documento_obj.DatosObligado.Identificacion, documento_obj.Prefijo, tipo_documento, facturador_emisor.IntVersionDian, documento_obj.NumeroResolucion);
 					}
 					catch (Exception ex)
 					{

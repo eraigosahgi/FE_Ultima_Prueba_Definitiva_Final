@@ -177,7 +177,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         /// <param name="tipo_doc">Tipo de documento</param>
         /// <param name="resolucion">Resolucion del Facturador Emisor registrada en el Documento</param>
         /// <returns>Tbl de resolucion</returns>
-        public static TblEmpresasResoluciones Convertir(string facturador, string prefijo, int tipo_doc, string resolucion = "")
+        public static TblEmpresasResoluciones Convertir(string facturador, string prefijo, int tipo_doc, int version_dian , string resolucion = "")
         {
 
             DateTime fecha_actual = Fecha.GetFecha();
@@ -197,7 +197,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 StrIdSeguridad = resolucion_info,
                 DatFechaIngreso = fecha_actual,
                 DatFechaActualizacion = fecha_actual,
+				IntVersionDian = (short)version_dian,
                 IntTipoDoc = tipo_doc
+				
             };
             return tbl_resolucion;
         }

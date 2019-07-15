@@ -256,7 +256,7 @@ namespace HGInetUBLv2_1
 
 				OrderReferenceType DocOrderReference = new OrderReferenceType();
 				DocOrderReference.ID = new IDType();
-				DocOrderReference.ID.Value = (string.IsNullOrEmpty(documento.PedidoRef)) ? string.Empty : documento.PedidoRef.ToString();
+				DocOrderReference.ID.Value = (string.IsNullOrEmpty(documento.DocumentoRef)) ? string.Empty : documento.DocumentoRef.ToString();
 				facturaXML.OrderReference = DocOrderReference;
 
 				#endregion
@@ -267,7 +267,7 @@ namespace HGInetUBLv2_1
 				facturaXML.DespatchDocumentReference = new DocumentReferenceType[1];
 				DocumentReferenceType DocumentReference = new DocumentReferenceType();
 				DocumentReference.ID = new IDType();
-				DocumentReference.ID.Value = documento.DocumentoRef.ToString();
+				DocumentReference.ID.Value = (string.IsNullOrEmpty(documento.PedidoRef)) ? string.Empty : documento.PedidoRef.ToString();
 				facturaXML.DespatchDocumentReference[0] = DocumentReference;
 
 				#endregion
@@ -276,7 +276,7 @@ namespace HGInetUBLv2_1
 				facturaXML.ReceiptDocumentReference = new DocumentReferenceType[1];
 				DocumentReferenceType ReceiptDocument = new DocumentReferenceType();
 				ReceiptDocument.ID = new IDType();
-				ReceiptDocument.ID.Value = documento.DocumentoRef.ToString();
+				ReceiptDocument.ID.Value = (string.IsNullOrEmpty(documento.DocumentoRef)) ? string.Empty : documento.DocumentoRef.ToString();
 				facturaXML.ReceiptDocumentReference[0] = ReceiptDocument;
 				#endregion
 

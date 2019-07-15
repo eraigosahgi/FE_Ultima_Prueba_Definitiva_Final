@@ -47,15 +47,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!facturador_electronico.IntObligado)
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
 
-
-
-
 				// genera un id único de la plataforma
 				Guid id_peticion = Guid.NewGuid();
 
 				DateTime fecha_actual = Fecha.GetFecha();
 
 				List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+
+				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 
 				// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
 				if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
@@ -102,9 +101,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							prefijo_prueba = Constantes.PrefijoResolucionPruebas;
 						}
 
-
-
-						Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 						lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_prueba));
 
 						foreach (var item in documentos)
@@ -117,7 +113,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					else
 					{
-						Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 						lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*");
 						foreach (var item in documentos)
 						{
@@ -129,7 +124,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
-					Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*");
 
 					if (lista_resolucion == null || lista_resolucion.Count < 1)

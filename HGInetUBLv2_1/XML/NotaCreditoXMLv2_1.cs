@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
+using HGInetUBLv2_1.XML;
 
 namespace HGInetUBLv2_1
 {
@@ -175,7 +176,6 @@ namespace HGInetUBLv2_1
 				nota_credito.DocumentCurrencyCode = DocumentCurrencyCode;
 				#endregion
 
-				//PENDIENTE CODIGO CONCEPTO
 				#region nota_credito.DiscrepancyResponse // Documento afectado y sustentacion de la afectacion
 				/*Contiene el tipo de nota de crédito, el sustento de la emisión de la nota de crédito, así como la 
 				identificación de la factura de venta electrónica afectada.*/
@@ -256,6 +256,9 @@ namespace HGInetUBLv2_1
 
 				nota_credito.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
 				#endregion
+
+				if (documento.Descuentos != null || documento.Cargos != null)
+					nota_credito.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
 
 				#region nota_credito.PayeeParty //Receptor del Pago
 				/*Receptor del Pago: Participante, Entidad,

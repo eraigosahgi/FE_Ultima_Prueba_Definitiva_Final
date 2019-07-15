@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using HGInetUBLv2_1.DianListas;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
+using HGInetUBLv2_1.XML;
 
 namespace HGInetUBLv2_1
 {
@@ -283,6 +284,9 @@ namespace HGInetUBLv2_1
 				nota_debito.DebitNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(),documento.CufeFactura, documento.Moneda);
 
 				#endregion
+
+				if (documento.Descuentos != null || documento.Cargos != null)
+					nota_debito.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
 
 				nota_debito.LineCountNumeric = new LineCountNumericType();
 				nota_debito.LineCountNumeric.Value = documento.DocumentoDetalles.Count;
