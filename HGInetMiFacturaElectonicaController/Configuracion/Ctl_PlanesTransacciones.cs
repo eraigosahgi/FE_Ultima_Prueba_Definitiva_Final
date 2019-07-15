@@ -711,7 +711,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					//Itereamos la lista de planes activos validar diferencias
 					foreach (var item in planes)
 					{
-						
+					
 						//Validamos que exista diferencia entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
 						if (item.IntNumTransaccProcesadas != item.TblDocumentos.Count())
 						{
@@ -750,6 +750,36 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								item.IntNumTransaccProceso = 0;
 								this.Edit(item);
 							}
+
+							if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
+							{
+								switch (item.IntTipoProceso)
+								{
+									case 1://Contersia
+									case 2://Compra
+										   //Si es compra o cortesia, se debe validar si supero el numero de documentos adquiridos
+										if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
+										{
+											//Si es asi, entonces cerramos el plan.
+											item.IntEstado = 2;
+											this.Edit(item);
+										}
+										break;
+									case 3://PostPago
+										   //Si es post pago, entonces el numero de transacciones adquiridas, deben ser igual al numero de transacciones procesadas
+										if (item.IntNumTransaccCompra != item.IntNumTransaccProcesadas)
+										{
+											item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
+											this.Edit(item);
+										}
+										break;
+									default:
+										break;
+								}
+
+								
+							}
+
 						}
 
 					}
