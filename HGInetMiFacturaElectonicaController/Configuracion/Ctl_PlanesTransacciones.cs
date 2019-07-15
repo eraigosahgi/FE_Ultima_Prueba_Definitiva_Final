@@ -28,10 +28,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblPlanesTransacciones Crear(TblPlanesTransacciones datos_plan, bool Envia_email = true)
 		{
-			datos_plan.DatFecha = Fecha.GetFecha();			
+			datos_plan.DatFecha = Fecha.GetFecha();
 			datos_plan.StrIdSeguridad = Guid.NewGuid();
 
-			datos_plan = this.Add(datos_plan);		
+			datos_plan = this.Add(datos_plan);
 
 			Ctl_Empresa empresa = new Ctl_Empresa();
 
@@ -59,7 +59,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (datos_plan.IntEstado == EstadoPlan.Habilitado.GetHashCode())
 				{
 					Ctl_AlertasHistAudit _AlertasHist = new Ctl_AlertasHistAudit();
-					_AlertasHist.ReiniciarAlertaPorcentaje(facturador.StrIdSeguridad); 
+					_AlertasHist.ReiniciarAlertaPorcentaje(facturador.StrIdSeguridad);
 				}
 			}
 			catch (Exception excepcion)
@@ -80,7 +80,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblPlanesTransacciones Editar(TblPlanesTransacciones datos_plan)
 		{
-		
+
 			TblPlanesTransacciones Ptransaccion = (from t in context.TblPlanesTransacciones
 												   where t.StrIdSeguridad.Equals(datos_plan.StrIdSeguridad)
 												   select t).FirstOrDefault();
@@ -353,11 +353,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			int Estado = EstadoPlan.Habilitado.GetHashCode();
 			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();
 			DateTime Fecha_Actual = Fecha.GetFecha();
-		
+
 			var ListaFacturadores = (from lista in context.TblEmpresas
 									 where lista.StrEmpresaDescuento.Equals(
 										 (from datos in context.TblEmpresas
-										  where datos.StrIdentificacion.Equals(identificacion)										  
+										  where datos.StrIdentificacion.Equals(identificacion)
 										  select datos.StrEmpresaDescuento).FirstOrDefault())
 									 select lista.StrIdentificacion).ToList();
 
@@ -370,9 +370,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones
-													   where ListaFacturadores.Contains(t.StrEmpresaFacturador) 
-														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual ) || t.DatFechaVencimiento==null)
-														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0)  || (t.IntTipoProceso == Plan_PostPago))
+													   where ListaFacturadores.Contains(t.StrEmpresaFacturador)
+														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
+														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == Plan_PostPago))
 													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFechaVencimiento }).ToList();
 
 			List<ObjPlanEnProceso> listaobjproceso = new List<ObjPlanEnProceso>();
@@ -472,11 +472,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			//En el campo de en proceso, se debe restar la cantidad de documentos reservados del objeto a la cantidad de objetos de la tabla
 			PlanesTransacciones.IntNumTransaccProceso = PlanesTransacciones.IntNumTransaccProceso - planenproceso.enProceso;
 
-			if (PlanesTransacciones.IntTipoProceso == (Int16)TipoCompra.PostPago) {
+			if (PlanesTransacciones.IntTipoProceso == (Int16)TipoCompra.PostPago)
+			{
 				//Si el plan es post-pago, entonces iguala el numero de transacciones adquiridas, por numero de transacciones procesadas
 				//con el fin de que todos los indicadores queden bien representados.
 				PlanesTransacciones.IntNumTransaccCompra = PlanesTransacciones.IntNumTransaccProcesadas;
-			} else {
+			}
+			else
+			{
 
 				if (PlanesTransacciones.IntEstado != EstadoPlan.Procesado.GetHashCode())
 				{
@@ -487,7 +490,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 				}
 			}
-			
+
 
 			PlanesTransacciones = this.Edit(PlanesTransacciones);
 			///Validación de alertas y notificaciones
@@ -556,7 +559,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
-				var Tarea = TareaCrearPlanesPostapago( EmpresaCrea,  UsuarioCrea, Notifica);
+				var Tarea = TareaCrearPlanesPostapago(EmpresaCrea, UsuarioCrea, Notifica);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -569,7 +572,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Tarea asincrona para crear planes post pago automaticamente cada mes
 		/// </summary>
 		/// <returns></returns>
-		public async Task TareaCrearPlanesPostapago(string EmpresaCrea,string UsuarioCrea,bool Notifica)
+		public async Task TareaCrearPlanesPostapago(string EmpresaCrea, string UsuarioCrea, bool Notifica)
 		{
 			try
 			{
@@ -580,12 +583,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						listaempresas = controlador.ObtenerEmpPostPago();
 						TblPlanesTransacciones plan = new TblPlanesTransacciones();
 						foreach (var item in listaempresas)
-						{							
+						{
 							if (CerrarplanesPostpago(item.StrIdentificacion))
-							{								
-								plan = new TblPlanesTransacciones();								
+							{
+								plan = new TblPlanesTransacciones();
 								//Se suma un mes al primer dia del mes
-								DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month + 1, 1);								
+								DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month + 1, 1);
 								//Se resta un dia para que nos de el ultimo dia del mes
 								DateTime FechaVenc = Fecha1.AddDays(-1);
 								//Se coloca la ultima hora y minuto del dia para que pueda seguir enviando documentos el ultimo dias del plan.
@@ -601,7 +604,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
 								string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
 								plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
-								Crear(plan, Notifica); 
+								Crear(plan, Notifica);
 							}
 						}
 					});
@@ -615,7 +618,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Cierra los planes postpago de un facturador en especifico
 		/// </summary>
 		/// <param name="Facturador">Documento del Facturador</param>
-		public bool CerrarplanesPostpago(string Facturador) {
+		public bool CerrarplanesPostpago(string Facturador)
+		{
 			bool CrearPlan = true;
 			try
 			{
@@ -627,7 +631,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						  && datos.IntEstado == habilitado
 						  && datos.IntTipoProceso == postapago
 						  select datos).ToList();
-				
+
 				foreach (var item in planes)
 				{
 					// Si tiene un plan activo el mismo año y mismo mes, no crea nuevo plan
@@ -642,8 +646,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						string fecha_creacion = item.DatFecha.ToString(Fecha.formato_fecha_hora);
 						item.IntEstado = EstadoPlan.Procesado.GetHashCode();
 						item.StrObservaciones = string.Format("{0}{1}{2}{3}", item.StrObservaciones, Environment.NewLine, Environment.NewLine, string.Format(Constantes.CierreAutomaticoPostPago, fecha_creacion, item.IntNumTransaccProcesadas, fecha_vencimiento));
-						this.Edit(item);						
-					}				
+						this.Edit(item);
+					}
 				}
 				return CrearPlan;
 			}
@@ -653,6 +657,111 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				return true;
 			}
 		}
+		#endregion
+
+
+
+
+
+
+
+		#region Sonda: conciliacion de planes
+
+
+		/// <summary>
+		/// Sonda para procesar documentos
+		/// </summary>
+		/// <returns></returns>
+		public async Task TareaSondaConciliarPlanes()
+		{
+			try
+			{
+				var Tarea = SondaConciliarPlanes();
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+			}
+		}
+
+		/// <summary>
+		/// Concilia los planes de la siguiente manera:
+		/// * Cuando existen diferencias entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
+		///   Actualiza este campo para que la cantidad de documentos disponibles sea la correcta.
+		///   
+		/// * Tambien se valida que no existan documentos por procesar, si existen algunos, los coloca en cero(0).
+		/// </summary>
+		/// <returns></returns>
+		public async Task SondaConciliarPlanes()
+		{
+			bool CrearPlan = true;
+			try
+
+			{
+				await Task.Factory.StartNew(() =>
+				{
+					//Obtenemos todos los planes activos				
+					List<TblPlanesTransacciones> planes = new List<TblPlanesTransacciones>();
+					byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());
+					planes = (from datos in context.TblPlanesTransacciones
+							  where datos.IntEstado == habilitado
+							  select datos).ToList();
+
+					//Itereamos la lista de planes activos validar diferencias
+					foreach (var item in planes)
+					{
+						
+						//Validamos que exista diferencia entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
+						if (item.IntNumTransaccProcesadas != item.TblDocumentos.Count())
+						{
+							//Asignamos la cantidad de documentos procesados a la cantidad de transacciones procesadas del plan			
+							item.IntNumTransaccProcesadas = item.TblDocumentos.Count();
+							//Se deja en cero el numero de transacciones en proceso
+							item.IntNumTransaccProceso = 0;
+							//validamos el tipo de plan.
+							switch (item.IntTipoProceso)
+							{
+								case 1://Contersia
+								case 2://Compra
+									   //Si es compra o cortesia, se debe validar si supero el numero de documentos adquiridos
+									if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
+									{
+										//Si es asi, entonces cerramos el plan.
+										item.IntEstado = 2;
+									}
+									break;
+								case 3://PostPago
+									   //Si es post pago, entonces el numero de transacciones adquiridas, deben ser igual al numero de transacciones procesadas
+									item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
+									break;
+								default:
+									break;
+							}
+
+							this.Edit(item);
+						}
+						else
+						{
+							// En el caso de que el numero de documentos procesados(tbltransacciones) sea igual, al numero de documentos(tbldocumentos), entonces preguntamos si tiene algun documento pendiente por procesar 
+							if (item.IntNumTransaccProceso > 0)
+							{
+								//Si es asi, entonces lo colocamos en cero ya que estamos conciliando y no puede existir ningún proceso pendiente a esta hora.
+								item.IntNumTransaccProceso = 0;
+								this.Edit(item);
+							}
+						}
+
+					}
+					return CrearPlan;
+				});
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);				
+			}
+		}
+
 		#endregion
 
 	}
