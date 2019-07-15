@@ -42,9 +42,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			string msg_response = String.Empty;
 
 			HGInetDIANServicios.DianFactura.AcuseRecibo acuse = new HGInetDIANServicios.DianFactura.AcuseRecibo();
+			Ctl_Documento documento_tmp = new Ctl_Documento();
 			try
 			{
-
 
 				acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
 
@@ -60,6 +60,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					msg_response = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(acuse.MessagesFieldV2.Select(_X => _X.ProcessedMessage).ToList(),";");
 					respuesta.FechaUltimoProceso = Fecha.GetFecha();
 					respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+
+					documentoBd.StrCufe = respuesta.Cufe;
+					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+					
+					documento_tmp.Actualizar(documentoBd);
 					throw new ArgumentException();
 				}
 			}
@@ -94,7 +100,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (empresa.IntVersionDian == 2)
 				documentoBd.StrIdRadicadoDian = Guid.Parse(acuse.KeyV2);
 
-			Ctl_Documento documento_tmp = new Ctl_Documento();
 			documento_tmp.Actualizar(documentoBd);
 
 			//Actualiza la categoria con el nuevo estado
@@ -271,24 +276,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (resultado_doc.Estado == EstadoDocumentoDian.Rechazado)
 				{
 					fecha_actual = Fecha.GetFecha();
-					if (empresa.IntVersionDian == 1)
-					{
-						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.FinalizacionErrorDian);
-						respuesta.IdProceso = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
-						respuesta.ProcesoFinalizado = 1;
-					}
-					else
-					{
-						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PrevalidacionErrorDian);
-						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorDian.GetHashCode();
-					}
-					
+
 					respuesta.FechaUltimoProceso = fecha_actual;
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
 					respuesta.Error.Codigo = LibreriaGlobalHGInet.Error.CodigoError.VALIDACION;
 					respuesta.Error.Fecha = fecha_actual;
 
-					respuesta.Error.Mensaje = string.Format("Documento rechazado DIAN: {0} - Cod. {1} ", resultado_doc.EstadoDianDescripcion, resultado_doc.CodigoEstadoDian);
+					if (empresa.IntVersionDian == 1)
+					{
+						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.FinalizacionErrorDian);
+						respuesta.IdProceso = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
+						respuesta.ProcesoFinalizado = 1;
+						respuesta.Error.Mensaje = string.Format("Documento rechazado DIAN: {0} - Cod. {1} ", resultado_doc.EstadoDianDescripcion, resultado_doc.CodigoEstadoDian);
+					}
+					else
+					{
+						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PrevalidacionErrorDian);
+						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorDian.GetHashCode();
+						respuesta.Error.Mensaje = string.Format("Documento rechazado DIAN: {0} - Validar inconsistencias de la DIAN en la ruta {1} ", resultado_doc.EstadoDianDescripcion, respuesta.EstadoDian.UrlXmlRespuesta);
+					}
 
 					//Actualiza Documento en Base de Datos
 					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
