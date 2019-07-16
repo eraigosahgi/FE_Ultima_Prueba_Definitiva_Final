@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibreriaGlobalHGInet.General;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace HGInetDIANServicios
 				//Guardo la respuesta en XML
 				foreach (var respuesta in resultado)
 				{
-					string archivo = string.Format("{0}-Respuesta.xml", respuesta.XmlFileName);
+					string archivo = respuesta.XmlFileName;
 					
 					var ser = new XmlSerializer(typeof(List<DianWSValidacionPrevia.DianResponse>));
 					TextWriter writer = new StreamWriter(string.Format(@"{0}\{1}", ruta_xml, archivo));
@@ -51,6 +52,7 @@ namespace HGInetDIANServicios
 			}
 			catch (Exception excepcion)
 			{
+				LogExcepcion.Guardar(excepcion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -64,28 +66,34 @@ namespace HGInetDIANServicios
 		public static ConsultaDocumento ValidarTransaccionV2(List<DianWSValidacionPrevia.DianResponse> documento)
 		{
 
-			ConsultaDocumento resultado = new ConsultaDocumento();
-			resultado.RecepcionDocumento = ValidacionRespuestaDian.Pendiente;
-			resultado.Mensaje = "";
-
-			DianWSValidacionPrevia.DianResponse doc_valido = documento.Where(d => d.IsValid == true && d.StatusCode == "0").FirstOrDefault();
-
-			if (doc_valido != null)
+			try
 			{
-				resultado.CodigoEstadoDian = doc_valido.StatusCode;
-				resultado.EstadoDianDescripcion = doc_valido.StatusDescription;
-				resultado.Estado = EstadoDocumentoDian.Aceptado;
+				ConsultaDocumento resultado = new ConsultaDocumento();
+				resultado.RecepcionDocumento = ValidacionRespuestaDian.Pendiente;
+				resultado.Mensaje = "";
+
+				DianWSValidacionPrevia.DianResponse doc_valido = documento.Where(d => d.IsValid == true && d.StatusCode == "0").FirstOrDefault();
+
+				if (doc_valido != null)
+				{
+					resultado.CodigoEstadoDian = doc_valido.StatusCode;
+					resultado.EstadoDianDescripcion = doc_valido.StatusDescription;
+					resultado.Estado = EstadoDocumentoDian.Aceptado;
+				}
+				else
+				{
+					resultado.CodigoEstadoDian = "99";
+					resultado.EstadoDianDescripcion = "validaciones contienen errores en campos mandatorios";
+					resultado.Estado = EstadoDocumentoDian.Rechazado;
+				}
+
+				return resultado;
 			}
-			else
+			catch (Exception excepcion)
 			{
-				resultado.CodigoEstadoDian = "99";
-				resultado.EstadoDianDescripcion = "validaciones contienen errores en campos mandatorios";
-				resultado.Estado = EstadoDocumentoDian.Rechazado;
+				LogExcepcion.Guardar(excepcion);
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
-			
-
-
-			return resultado;
 
 		}
 	}

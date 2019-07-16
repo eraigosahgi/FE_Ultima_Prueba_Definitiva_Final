@@ -31,12 +31,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="resolucion">resolución del documento</param>
 		/// <param name="empresa">facturador electrónico del documento</param>
 		/// <returns>resultado del proceso</returns>
-		public static DocumentoRespuesta Procesar_v2(Guid id_peticion, Guid id_radicado, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa)
+		public static DocumentoRespuesta Procesar_v2(Guid id_peticion, Guid id_radicado, object documento, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblEmpresas empresa, TblDocumentos documento_ex)
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 
 			string numero_resolucion = string.Empty;
 			string prefijo = string.Empty;
+
+			bool documento_existente = false;
+
+			if (documento_ex.StrIdPlanTransaccion != null)
+				documento_existente = true;
+
 
 			var documento_obj = (dynamic)null;
 			documento_obj = documento;
@@ -128,6 +134,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, tipo_doc);
 						documentoBd.StrIdPlanTransaccion = documento_obj.IdPlan;
 
+						//Valida que si el documento existe continue con el Idseguridad y Plan que se registro inicialmente.
+						if (documento_existente == true)
+						{
+							documentoBd.StrIdSeguridad = documento_ex.StrIdSeguridad;
+							documentoBd.StrIdPlanTransaccion = documento_ex.StrIdPlanTransaccion;
+						}
+
+
 						// genera el xml en ubl
 						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
@@ -214,9 +228,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//Crea el documento en BD
 						try
 						{
-							documentoBd = documento_tmp.Crear(documentoBd);
+							if (documento_existente == false)
+							{
+								documentoBd = documento_tmp.Crear(documentoBd);
+								respuesta.DescuentaSaldo = true;
+							}
+							else
+							{
+								documentoBd = documento_tmp.Actualizar(documentoBd);
+							}
+
 							documentoBd.TblEmpresasResoluciones = resolucion;
-							respuesta.DescuentaSaldo = true;
+
 							respuesta.IdPlan = documentoBd.StrIdPlanTransaccion.Value;
 						}
 						catch (Exception excepcion)
@@ -235,33 +258,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "", null, false);
 
-						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
-						{
-							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
-							documento_tmp = new Ctl_Documento();
-							documentoBd = documento_tmp.Actualizar(documentoBd);
-							//Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
-						}
-
 						// envía el archivo zip con el xml firmado a la DIAN
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result);
-
-						if (documentoBd.IntEnvioMail == true && empresa.IntEnvioMailRecepcion == true)
-						{
-							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
-							documento_tmp = new Ctl_Documento();
-							documentoBd = documento_tmp.Actualizar(documentoBd);
-						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 
-						// id entregado por el servicio web de Validación Previa
-						string id_validacion_previa = string.Empty;
-						id_validacion_previa = acuse.KeyV2;
-
 						//Valida estado del documento en la Plataforma de la DIAN
-						respuesta = Consultar(documentoBd, empresa, ref respuesta, id_validacion_previa);
+						respuesta = Consultar(documentoBd, empresa, ref respuesta, acuse.KeyV2);
 
-						
+
 						// envía el mail de documentos al adquiriente
 						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 						{

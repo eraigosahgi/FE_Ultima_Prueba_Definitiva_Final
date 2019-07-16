@@ -48,15 +48,23 @@ namespace HGInetDIANServicios
 				acuse_recibo.KeyV2 = resultadoHab.ZipKey;
 				acuse_recibo.Version = "2";
 
-				if (!string.IsNullOrWhiteSpace(resultadoHab.ZipKey))
-					acuse_recibo.Response = 200;
+				try
+				{
+					if (!string.IsNullOrWhiteSpace(resultadoHab.ZipKey))
+						acuse_recibo.Response = 200;
 
-				string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
+					string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
 
-				string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+					string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
 
-				// almacena el mensaje de respuesta del servicio web
-				archivo = Xml.GuardarObjeto(resultadoHab, carpeta, archivo);
+					// almacena el mensaje de respuesta del servicio web
+					archivo = Xml.GuardarObjeto(resultadoHab, carpeta, archivo);
+				}
+				catch (Exception excepcion)
+				{
+
+					LogExcepcion.Guardar(excepcion);
+				}
 
 
 				return acuse_recibo;
@@ -64,6 +72,7 @@ namespace HGInetDIANServicios
 			}
 			catch (Exception excepcion)
 			{
+				LogExcepcion.Guardar(excepcion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}

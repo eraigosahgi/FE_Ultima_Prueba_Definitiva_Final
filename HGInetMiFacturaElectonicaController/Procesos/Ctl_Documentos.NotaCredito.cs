@@ -220,6 +220,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//valida si el Documento ya existe en Base de Datos
 				TblDocumentos numero_documento = num_doc.Obtener(item.DatosObligado.Identificacion, item.Documento, item.Prefijo);
 
+				TblDocumentos documento_bd = new TblDocumentos();
+
 				if (numero_documento != null)
 				{
 					if (facturador_electronico.IntVersionDian == 1)
@@ -230,18 +232,32 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						doc_existe = true;
 						throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
 					}
-					else if (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode() || numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+					else
 					{
+						if (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode() && numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+						{
 
-						mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
+							mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
 
-						item_respuesta = Ctl_Documento.Convertir(numero_documento);
-						item_respuesta.IdPeticion = id_peticion;
-						id_radicado = Guid.Parse(item_respuesta.IdDocumento);
-						doc_existe = true;
+							item_respuesta = Ctl_Documento.Convertir(numero_documento);
+							item_respuesta.IdPeticion = id_peticion;
+							id_radicado = Guid.Parse(item_respuesta.IdDocumento);
+							doc_existe = true;
 
-						throw new ApplicationException(mensaje);
+							throw new ApplicationException(mensaje);
 
+						}
+						else
+						{
+							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
+							documento_bd.StrIdSeguridad = numero_documento.StrIdSeguridad;
+							documento_bd.StrIdPlanTransaccion = numero_documento.StrIdPlanTransaccion;
+
+							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
+							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
+							numero_documento = num_doc.Actualizar(numero_documento);
+
+						}
 					}
 				}
 
@@ -296,7 +312,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					// realiza el proceso de envío a la DIAN del documento en V1
 					item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.NotaCredito, resolucion,
-						facturador_electronico);
+						facturador_electronico,documento_bd);
 				}
 
 			}
