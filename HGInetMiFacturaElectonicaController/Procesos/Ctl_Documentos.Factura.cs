@@ -286,18 +286,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						throw new ApplicationException(mensaje);
 					}
-					else if (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode() || numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+					else
 					{
+						if (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode() &&
+						    numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+						{
 
-						mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
+							mensaje = string.Format(
+								"El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'",
+								item.Documento, prefijo, facturador_electronico.StrIdentificacion);
 
-						item_respuesta = Ctl_Documento.Convertir(numero_documento);
-						item_respuesta.IdPeticion = id_peticion;
-						id_radicado = Guid.Parse(item_respuesta.IdDocumento);
-						doc_existe = true;
+							item_respuesta = Ctl_Documento.Convertir(numero_documento);
+							item_respuesta.IdPeticion = id_peticion;
+							id_radicado = Guid.Parse(item_respuesta.IdDocumento);
+							doc_existe = true;
 
-						throw new ApplicationException(mensaje);
+							throw new ApplicationException(mensaje);
 
+						}
+						//else
+						//{
+							
+							
+							
+						//}
 					}
 				}
 				
