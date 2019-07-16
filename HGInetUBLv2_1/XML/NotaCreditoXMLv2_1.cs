@@ -38,7 +38,7 @@ namespace HGInetUBLv2_1
 					throw new Exception("La documento es inválido.");
 
 				//Obtiene el nombre del archivo XML
-				//string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo, documento.Prefijo);
+				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo, documento.Prefijo);
 
 
 				CreditNoteType nota_credito = new CreditNoteType();
@@ -359,7 +359,7 @@ namespace HGInetUBLv2_1
 
 				FacturaE_Documento xml_sin_firma = new FacturaE_Documento();
 				xml_sin_firma.Documento = documento;
-				xml_sin_firma.NombreXml = string.Format("{0}{1}", "PruebaNC-", numero_documento); //nombre_archivo_xml;
+				xml_sin_firma.NombreXml = nombre_archivo_xml;
 				xml_sin_firma.DocumentoXml = txt_xml;
 				xml_sin_firma.CUFE = CUFE;
 
