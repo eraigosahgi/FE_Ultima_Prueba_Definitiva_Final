@@ -711,48 +711,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					//Itereamos la lista de planes activos validar diferencias
 					foreach (var item in planes)
 					{
-					
-						//Validamos que exista diferencia entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
-						if (item.IntNumTransaccProcesadas != item.TblDocumentos.Count())
-						{
-							//Asignamos la cantidad de documentos procesados a la cantidad de transacciones procesadas del plan			
-							item.IntNumTransaccProcesadas = item.TblDocumentos.Count();
-							//Se deja en cero el numero de transacciones en proceso
-							item.IntNumTransaccProceso = 0;
-							//validamos el tipo de plan.
-							switch (item.IntTipoProceso)
-							{
-								case 1://Contersia
-								case 2://Compra
-									   //Si es compra o cortesia, se debe validar si supero el numero de documentos adquiridos
-									if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
-									{
-										//Si es asi, entonces cerramos el plan.
-										item.IntEstado = 2;
-									}
-									break;
-								case 3://PostPago
-									   //Si es post pago, entonces el numero de transacciones adquiridas, deben ser igual al numero de transacciones procesadas
-									item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
-									break;
-								default:
-									break;
-							}
 
-							this.Edit(item);
-						}
-						else
+						try
 						{
-							// En el caso de que el numero de documentos procesados(tbltransacciones) sea igual, al numero de documentos(tbldocumentos), entonces preguntamos si tiene algun documento pendiente por procesar 
-							if (item.IntNumTransaccProceso > 0)
+							//Validamos que exista diferencia entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
+							if (item.IntNumTransaccProcesadas != item.TblDocumentos.Count())
 							{
-								//Si es asi, entonces lo colocamos en cero ya que estamos conciliando y no puede existir ningún proceso pendiente a esta hora.
+								//Asignamos la cantidad de documentos procesados a la cantidad de transacciones procesadas del plan			
+								item.IntNumTransaccProcesadas = item.TblDocumentos.Count();
+								//Se deja en cero el numero de transacciones en proceso
 								item.IntNumTransaccProceso = 0;
-								this.Edit(item);
-							}
-
-							if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
-							{
+								//validamos el tipo de plan.
 								switch (item.IntTipoProceso)
 								{
 									case 1://Contersia
@@ -762,24 +731,62 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 										{
 											//Si es asi, entonces cerramos el plan.
 											item.IntEstado = 2;
-											this.Edit(item);
 										}
 										break;
 									case 3://PostPago
 										   //Si es post pago, entonces el numero de transacciones adquiridas, deben ser igual al numero de transacciones procesadas
-										if (item.IntNumTransaccCompra != item.IntNumTransaccProcesadas)
-										{
-											item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
-											this.Edit(item);
-										}
+										item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
 										break;
 									default:
 										break;
 								}
 
-								
+								this.Edit(item);
 							}
+							else
+							{
+								// En el caso de que el numero de documentos procesados(tbltransacciones) sea igual, al numero de documentos(tbldocumentos), entonces preguntamos si tiene algun documento pendiente por procesar 
+								if (item.IntNumTransaccProceso > 0)
+								{
+									//Si es asi, entonces lo colocamos en cero ya que estamos conciliando y no puede existir ningún proceso pendiente a esta hora.
+									item.IntNumTransaccProceso = 0;
+									this.Edit(item);
+								}
 
+								if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
+								{
+									switch (item.IntTipoProceso)
+									{
+										case 1://Contersia
+										case 2://Compra
+											   //Si es compra o cortesia, se debe validar si supero el numero de documentos adquiridos
+											if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
+											{
+												//Si es asi, entonces cerramos el plan.
+												item.IntEstado = 2;
+												this.Edit(item);
+											}
+											break;
+										case 3://PostPago
+											   //Si es post pago, entonces el numero de transacciones adquiridas, deben ser igual al numero de transacciones procesadas
+											if (item.IntNumTransaccCompra != item.IntNumTransaccProcesadas)
+											{
+												item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
+												this.Edit(item);
+											}
+											break;
+										default:
+											break;
+									}
+
+
+								}
+
+							}
+						}
+						catch (Exception excepcion)
+						{
+							LogExcepcion.Guardar(excepcion);
 						}
 
 					}
