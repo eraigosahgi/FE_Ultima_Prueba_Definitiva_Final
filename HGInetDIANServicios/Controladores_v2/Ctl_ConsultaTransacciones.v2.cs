@@ -35,7 +35,7 @@ namespace HGInetDIANServicios
 					string archivo = respuesta.XmlFileName;
 					
 					var ser = new XmlSerializer(typeof(List<DianWSValidacionPrevia.DianResponse>));
-					TextWriter writer = new StreamWriter(string.Format(@"{0}\{1}", ruta_xml, archivo));
+					TextWriter writer = new StreamWriter(string.Format(@"{0}\{1}.xml", ruta_xml, archivo));
 					ser.Serialize(writer, resultado);
 
 					//Guardo el Base64 de la Respuesta
