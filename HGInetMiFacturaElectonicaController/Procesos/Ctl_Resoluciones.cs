@@ -76,6 +76,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			
 			ResolucionesFacturacion resolucion_dian = new ResolucionesFacturacion();
 			resolucion_dian.RangoFacturacion = new RangoFacturacion[1];
+
+			resolucion_dian.RangoFacturacion[0] = new RangoFacturacion();
 			resolucion_dian.RangoFacturacion[0].ClaveTecnica = datos_resolucion.ClaveTecnica;
 			resolucion_dian.RangoFacturacion[0].FechaResolucion = datos_resolucion.FechaResolucion;
 			resolucion_dian.RangoFacturacion[0].FechaVigenciaDesde = datos_resolucion.FechaVigenciaInicial;
