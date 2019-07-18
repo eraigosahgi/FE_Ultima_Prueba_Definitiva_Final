@@ -485,10 +485,9 @@ namespace HGInetUBLv2_1
 				return xml_sin_firma;
 
 			}
-			catch (Exception exception)
+			catch (Exception excepcion)
 			{
-				Console.WriteLine(exception);
-				throw;
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
 

@@ -93,6 +93,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					// valida la información del documento
 					respuesta = Procesos.Ctl_Documentos.Validar(documento_obj, tipo_doc, resolucion, ref respuesta, empresa);
+					if (respuesta.Error != null && documento_existente == true)
+					{
+						//Se actualiza el estado del documento en BD para que lo envien de nuevo
+						documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+						Ctl_Documento num_doc = new Ctl_Documento();
+						documento_ex = num_doc.Actualizar(documento_ex);
+					}
 					Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
 
 
@@ -144,6 +151,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// genera el xml en ubl
 						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
+						if (respuesta.Error != null && documento_existente == true)
+						{
+							//Se actualiza el estado del documento en BD para que lo envien de nuevo
+							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							Ctl_Documento num_doc = new Ctl_Documento();
+							documento_ex = num_doc.Actualizar(documento_ex);
+						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 						// Establece la versión de la DIAN segun el Facturador
@@ -151,6 +165,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// almacena el xml en ubl
 						respuesta = UblGuardar(documentoBd, ref respuesta, ref documento_result);
+						if (respuesta.Error != null && documento_existente == true)
+						{
+							//Se actualiza el estado del documento en BD para que lo envien de nuevo
+							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							Ctl_Documento num_doc = new Ctl_Documento();
+							documento_ex = num_doc.Actualizar(documento_ex);
+						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 						//Asignación de Cufe a documento_obj 
@@ -161,6 +182,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// almacena Formato
 						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result, empresa);
+						if (respuesta.Error != null && documento_existente == true)
+						{
+							//Se actualiza el estado del documento en BD para que lo envien de nuevo
+							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							Ctl_Documento num_doc = new Ctl_Documento();
+							documento_ex = num_doc.Actualizar(documento_ex);
+						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlPdf);
 
 						// almacena Anexos enviados
@@ -169,6 +197,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (empresa.IntManejaAnexos)
 							{
 								respuesta = GuardarAnexo(documento_obj.ArchivoAnexos, documentoBd, ref respuesta, ref documento_result);
+								if (respuesta.Error != null && documento_existente == true)
+								{
+									//Se actualiza el estado del documento en BD para que lo envien de nuevo
+									documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+									Ctl_Documento num_doc = new Ctl_Documento();
+									documento_ex = num_doc.Actualizar(documento_ex);
+								}
 								Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlAnexo);
 							}
 							else
@@ -181,6 +216,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								respuesta.UrlPdf = null;
 								respuesta.UrlXmlUbl = null;
 								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("El Facturador Electrónico {0} no se encuentra habilitado para el procesamiento de anexos", documentoBd.StrEmpresaFacturador), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+								if (documento_existente == true)
+								{
+									//Se actualiza el estado del documento en BD para que lo envien de nuevo
+									documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+									Ctl_Documento num_doc = new Ctl_Documento();
+									documento_ex = num_doc.Actualizar(documento_ex);
+								}
 								Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "El Facturador Electrónico no se encuentra habilitado para el procesamiento de anexos");
 							}
 						}
@@ -251,11 +293,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// firma el xml
 						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
+						if (respuesta.Error != null && documento_existente == true)
+						{
+							//Se actualiza el estado en BD para que lo envien de nuevo
+							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							Ctl_Documento num_doc = new Ctl_Documento();
+							documento_ex = num_doc.Actualizar(documento_ex);
+						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
+						if (respuesta.Error != null && documento_existente == true)
+						{
+							//Se actualiza el estado del documento en BD para que lo envien de nuevo
+							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							Ctl_Documento num_doc = new Ctl_Documento();
+							documento_ex = num_doc.Actualizar(documento_ex);
+						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "", null, false);
 
 						// envía el archivo zip con el xml firmado a la DIAN

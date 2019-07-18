@@ -263,15 +263,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				return item_respuesta;
 			}
 
+			TblDocumentos numero_documento = new TblDocumentos();
+			Ctl_Documento num_doc = new Ctl_Documento();
+
 			try
 			{
 				if (string.IsNullOrEmpty(item.NumeroResolucion))
 					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
-				Ctl_Documento num_doc = new Ctl_Documento();
-
 				//valida si el Documento ya existe en Base de Datos
-				TblDocumentos numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
 				
 				TblDocumentos documento_bd = new TblDocumentos();
 
@@ -308,7 +309,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
 							documento_bd.StrIdSeguridad = numero_documento.StrIdSeguridad;
 							documento_bd.StrIdPlanTransaccion = numero_documento.StrIdPlanTransaccion;
-							
+							doc_existe = true;
+
 							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
 							numero_documento = num_doc.Actualizar(numero_documento);
@@ -406,6 +408,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						DescuentaSaldo = false,
 						IdVersionDian = facturador_electronico.IntVersionDian
 					};
+					if (facturador_electronico.IntVersionDian == 2)
+					{
+						//Se actualiza el estado del documento en BD para que lo envien de nuevo
+						numero_documento.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+						numero_documento = num_doc.Actualizar(numero_documento);
+					}
 				}
 				else
 				{
