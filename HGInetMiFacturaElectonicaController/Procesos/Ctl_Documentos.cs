@@ -661,7 +661,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 
 						}
-						else if (documento.Anticipos.Count == 0 && documento.ValorAnticipo == 0)
+						else if (documento.Anticipos.Count > 0 && documento.ValorAnticipo == 0)
 						{
 							documento.ValorAnticipo = Convert.ToDecimal(0.00M);
 
@@ -723,7 +723,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								}
 							}
 						}
-						else if (documento.Cargos.Count == 0 && documento.ValorCargo == 0)
+						else if (documento.Cargos.Count > 0 && documento.ValorCargo == 0)
 						{
 							documento.ValorCargo = Convert.ToDecimal(0.00M);
 

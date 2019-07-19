@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetDIANServicios
 {
@@ -26,27 +27,47 @@ namespace HGInetDIANServicios
 		/// <returns></returns>
 		public static AcuseRecibo Enviar_v2(string ruta_zip, string nombre_archivo, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web)
 		{
+
+			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
+			MensajeAccion log_accion = MensajeAccion.lectura;
+
 			try
 			{
+
 				X509Certificate2 cert = new X509Certificate2(ruta_certificado, clave_certificado);
-				DianWSValidacionPrevia.WcfDianCustomerServicesClient webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
-				webServiceHab.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
-				webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
 
 				//Convertir archivo a bytes para su envio
 				Byte[] bytes = File.ReadAllBytes(ruta_zip);
 
-				//Se agrega instruccion para habilitar la seguridad en el envio
-				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-				//Ejecución de prueba DIAN Enviando archivo ZIP	
-				DianWSValidacionPrevia.UploadDocumentResponse resultadoHab = webServiceHab.SendTestSetAsync(nombre_archivo, bytes, clave_dian);
+				DianWSValidacionPrevia.UploadDocumentResponse resultadoHab = null;
 
 				AcuseRecibo acuse_recibo = new AcuseRecibo();
-				acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
-				acuse_recibo.ResponseDateTime = Fecha.GetFecha();
-				acuse_recibo.MessagesFieldV2 = resultadoHab.ErrorMessageList;
-				acuse_recibo.KeyV2 = resultadoHab.ZipKey;
-				acuse_recibo.Version = "2";
+
+				try
+				{
+					log_categoria = MensajeCategoria.ServicioDian;
+					log_accion = MensajeAccion.envio;
+
+					DianWSValidacionPrevia.WcfDianCustomerServicesClient webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
+					webServiceHab.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
+					webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
+
+					//Se agrega instruccion para habilitar la seguridad en el envio
+					System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+					//Ejecución de prueba DIAN Enviando archivo ZIP	
+					resultadoHab = webServiceHab.SendTestSetAsync(nombre_archivo, bytes, clave_dian);
+
+					acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
+					acuse_recibo.ResponseDateTime = Fecha.GetFecha();
+					acuse_recibo.MessagesFieldV2 = resultadoHab.ErrorMessageList;
+					acuse_recibo.KeyV2 = resultadoHab.ZipKey;
+					acuse_recibo.Version = "2";
+				}
+				catch (Exception excepcion)
+				{
+					throw excepcion;
+				}
 
 				try
 				{
@@ -56,17 +77,20 @@ namespace HGInetDIANServicios
 						acuse_recibo.Comments = "Documento Electrónico recibido exitosamente";
 					}
 
+					log_categoria = MensajeCategoria.Archivos;
+					log_accion = MensajeAccion.creacion;
+
 					string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
 
 					string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
 
 					// almacena el mensaje de respuesta del servicio web
 					archivo = Xml.GuardarObjeto(resultadoHab, carpeta, archivo);
+
 				}
 				catch (Exception excepcion)
 				{
-
-					LogExcepcion.Guardar(excepcion);
+					RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
 				}
 
 
@@ -75,7 +99,8 @@ namespace HGInetDIANServicios
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
