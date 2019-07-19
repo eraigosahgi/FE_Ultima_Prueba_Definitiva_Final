@@ -78,6 +78,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
+					if (documentoBd.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+					{
+						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+
+						documentoBd.StrCufe = respuesta.Cufe;
+						documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+						documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+						documento_tmp.Actualizar(documentoBd);
+					}
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("No es posible la comunicación con la Plataforma de la DIAN para el envío del archivo ZIP con el XML firmado"), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 				}
 				

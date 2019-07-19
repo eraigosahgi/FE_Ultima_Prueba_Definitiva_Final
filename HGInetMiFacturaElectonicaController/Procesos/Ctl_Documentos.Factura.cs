@@ -291,25 +291,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					else
 					{
-						if (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode() && numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+						item_respuesta = Ctl_Documento.Convertir(numero_documento);
+						item_respuesta.IdPeticion = id_peticion;
+						id_radicado = Guid.Parse(item_respuesta.IdDocumento);
+						doc_existe = true;
+						if (numero_documento.IntIdEstado < ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode() && numero_documento.IntIdEstado > ProcesoEstado.PrevalidacionErrorDian.GetHashCode())
 						{
-
 							mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'",item.Documento, prefijo, facturador_electronico.StrIdentificacion);
-
-							item_respuesta = Ctl_Documento.Convertir(numero_documento);
-							item_respuesta.IdPeticion = id_peticion;
-							id_radicado = Guid.Parse(item_respuesta.IdDocumento);
-							doc_existe = true;
-
 							throw new ApplicationException(mensaje);
-
 						}
 						else
 						{
 							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
 							documento_bd.StrIdSeguridad = numero_documento.StrIdSeguridad;
 							documento_bd.StrIdPlanTransaccion = numero_documento.StrIdPlanTransaccion;
-							doc_existe = true;
 
 							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
@@ -408,16 +403,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						DescuentaSaldo = false,
 						IdVersionDian = facturador_electronico.IntVersionDian
 					};
-					if (facturador_electronico.IntVersionDian == 2)
-					{
-						//Se actualiza el estado del documento en BD para que lo envien de nuevo
-						numero_documento.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
-						numero_documento = num_doc.Actualizar(numero_documento);
-					}
 				}
 				else
 				{
 					item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+					if (facturador_electronico.IntVersionDian == 2)
+					{
+						if (numero_documento.IntIdEstado == (short)ProcesoEstado.Recepcion.GetHashCode())
+							item_respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+
+						//Se actualiza el estado del documento en BD para que lo envien de nuevo
+						numero_documento.IntIdEstado = (short)item_respuesta.IdProceso;
+						numero_documento = num_doc.Actualizar(numero_documento);
+					}
 				}
 
 			}
