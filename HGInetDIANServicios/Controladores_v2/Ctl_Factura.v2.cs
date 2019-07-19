@@ -51,7 +51,10 @@ namespace HGInetDIANServicios
 				try
 				{
 					if (!string.IsNullOrWhiteSpace(resultadoHab.ZipKey))
+					{
 						acuse_recibo.Response = 200;
+						acuse_recibo.Comments = "Documento Electrónico recibido exitosamente";
+					}
 
 					string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
 
