@@ -303,8 +303,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						else
 						{
 							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
-							documento_bd.StrIdSeguridad = numero_documento.StrIdSeguridad;
-							documento_bd.StrIdPlanTransaccion = numero_documento.StrIdPlanTransaccion;
+							documento_bd = numero_documento;
+							//documento_bd.StrIdSeguridad = numero_documento.StrIdSeguridad;
+							//documento_bd.StrIdPlanTransaccion = numero_documento.StrIdPlanTransaccion;
 
 							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();

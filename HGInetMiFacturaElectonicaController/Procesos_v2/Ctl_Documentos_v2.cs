@@ -99,6 +99,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 						Ctl_Documento num_doc = new Ctl_Documento();
 						documento_ex = num_doc.Actualizar(documento_ex);
+						respuesta.IdProceso = documento_ex.IntIdEstado;
+						respuesta.IdEstado = documento_ex.IdCategoriaEstado;
 					}
 					Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
 
@@ -154,9 +156,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (respuesta.Error != null && documento_existente == true)
 						{
 							//Se actualiza el estado del documento en BD para que lo envien de nuevo
-							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 							Ctl_Documento num_doc = new Ctl_Documento();
-							documento_ex = num_doc.Actualizar(documento_ex);
+							documentoBd = num_doc.Actualizar(documentoBd);
+							respuesta.IdProceso = documentoBd.IntIdEstado;
+							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
@@ -168,9 +172,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (respuesta.Error != null && documento_existente == true)
 						{
 							//Se actualiza el estado del documento en BD para que lo envien de nuevo
-							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 							Ctl_Documento num_doc = new Ctl_Documento();
-							documento_ex = num_doc.Actualizar(documento_ex);
+							documentoBd = num_doc.Actualizar(documentoBd);
+							respuesta.IdProceso = documentoBd.IntIdEstado;
+							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
@@ -185,9 +191,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (respuesta.Error != null && documento_existente == true)
 						{
 							//Se actualiza el estado del documento en BD para que lo envien de nuevo
-							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 							Ctl_Documento num_doc = new Ctl_Documento();
-							documento_ex = num_doc.Actualizar(documento_ex);
+							documentoBd = num_doc.Actualizar(documentoBd);
+							respuesta.IdProceso = documentoBd.IntIdEstado;
+							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlPdf);
 
@@ -200,9 +208,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								if (respuesta.Error != null && documento_existente == true)
 								{
 									//Se actualiza el estado del documento en BD para que lo envien de nuevo
-									documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+									documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 									Ctl_Documento num_doc = new Ctl_Documento();
-									documento_ex = num_doc.Actualizar(documento_ex);
+									documentoBd = num_doc.Actualizar(documentoBd);
+									respuesta.IdProceso = documentoBd.IntIdEstado;
+									respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 								}
 								Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlAnexo);
 							}
@@ -219,9 +229,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								if (documento_existente == true)
 								{
 									//Se actualiza el estado del documento en BD para que lo envien de nuevo
-									documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+									documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 									Ctl_Documento num_doc = new Ctl_Documento();
-									documento_ex = num_doc.Actualizar(documento_ex);
+									documentoBd = num_doc.Actualizar(documentoBd);
+									respuesta.IdProceso = documentoBd.IntIdEstado;
+									respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 								}
 								Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "El Facturador Electrónico no se encuentra habilitado para el procesamiento de anexos");
 							}
@@ -293,29 +305,33 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						// firma el xml
 						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
-						if (respuesta.Error != null && documento_existente == true)
+						if (respuesta.Error != null)
 						{
-							//Se actualiza el estado en BD para que lo envien de nuevo
-							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							//Se actualiza el estado del documento en BD para que lo envien de nuevo
+							documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 							Ctl_Documento num_doc = new Ctl_Documento();
-							documento_ex = num_doc.Actualizar(documento_ex);
+							documentoBd = num_doc.Actualizar(documentoBd);
+							respuesta.IdProceso = documentoBd.IntIdEstado;
+							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);
-						if (respuesta.Error != null && documento_existente == true)
+						if (respuesta.Error != null)
 						{
 							//Se actualiza el estado del documento en BD para que lo envien de nuevo
-							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 							Ctl_Documento num_doc = new Ctl_Documento();
-							documento_ex = num_doc.Actualizar(documento_ex);
+							documentoBd = num_doc.Actualizar(documentoBd);
+							respuesta.IdProceso = documentoBd.IntIdEstado;
+							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "", null, false);
 
 						// envía el archivo zip con el xml firmado a la DIAN
-						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result);
+						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result,resolucion.StrIdSetDian);
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 
 						//Valida estado del documento en la Plataforma de la DIAN

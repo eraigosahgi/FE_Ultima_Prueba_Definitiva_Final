@@ -119,6 +119,11 @@ namespace HGInetMiFacturaElectonicaData
 		[Category("100")]
 		PrevalidacionErrorPlataforma = 93,
 
+		[Description("Proceso Pausado Prevalidación Plataforma Dian V2")]
+		[AmbientValue("privado")]
+		[Category("100")]
+		ProcesoPausadoPlataformaDian = 94,
+
 		[Description("Fin Proceso Exitoso")]
 		[AmbientValue("publico")]
 		[Category("300")]

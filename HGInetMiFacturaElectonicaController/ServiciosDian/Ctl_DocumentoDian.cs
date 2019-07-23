@@ -20,13 +20,15 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 	public class Ctl_DocumentoDian
 	{
 
-		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblEmpresas empresa)
+		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblEmpresas empresa, string IdSetDian)
 		{
 
 			string IdSoftware = null;
 			string PinSoftware = null;
 			string clave = null;
 			string UrlServicioWeb = null;
+			//V2-Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
+			string ambiente_dian = string.Empty;
 
 
 			string ruta_certificado = string.Empty;
@@ -34,6 +36,19 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 			if (empresa.IntVersionDian == 2)
 			{
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				if (plataforma_datos.RutaPublica.Contains("app"))
+				{
+					ambiente_dian = "1";
+				}
+				else
+				{
+					ambiente_dian = "2";
+					if (string.IsNullOrEmpty(IdSetDian))
+						throw new ApplicationException("El campo IdSetDian de Pruebas no se encontró en la resolución");
+				}
+
 				// obtiene la información de configuración del certificado digital
 				certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
 
@@ -53,7 +68,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 				IdSoftware = data_dian.IdSoftware;
 				PinSoftware = data_dian.Pin;
-				clave = data_dian.ClaveAmbiente;
+				clave = IdSetDian;//data_dian.ClaveAmbiente;
 				UrlServicioWeb = data_dian.UrlServicioWeb;
 			}
 			else
@@ -136,7 +151,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 				case 2:
 					acuse = new AcuseRecibo();
-					acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado, certificado.Clave, clave, UrlServicioWeb);
+					acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado, certificado.Clave, clave, UrlServicioWeb, ambiente_dian);
 					break;
 
 				default:

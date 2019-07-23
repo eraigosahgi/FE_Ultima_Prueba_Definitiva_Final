@@ -14,7 +14,7 @@ namespace HGInetDIANServicios
 	{
 
 
-		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web)
+		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web)
 		{
 
 			try

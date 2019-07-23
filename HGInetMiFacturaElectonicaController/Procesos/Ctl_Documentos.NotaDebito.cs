@@ -248,8 +248,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						else
 						{
 							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
-							documento_bd.StrIdSeguridad = numero_documento.StrIdSeguridad;
-							documento_bd.StrIdPlanTransaccion = numero_documento.StrIdPlanTransaccion;
+							documento_bd = numero_documento;
+							//documento_bd.StrIdSeguridad = numero_documento.StrIdSeguridad;
+							//documento_bd.StrIdPlanTransaccion = numero_documento.StrIdPlanTransaccion;
 
 							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
@@ -294,6 +295,29 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					item.NumeroResolucion = resolucion.StrNumResolucion;
 				}
 
+				TblEmpresas facturadorelec_proceso = new TblEmpresas();
+				facturadorelec_proceso = facturador_electronico;
+
+				//Se valida en V2 que la factura afectada exista y en que version esta
+				if (facturador_electronico.IntVersionDian == 2)
+				{
+
+					//valida si el Documento afectado ya existe en Base de Datos
+					List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
+					DocumentoRespuesta doc_resp = doc_ref.Find(d => d.Cufe.Equals(item.CufeFactura));
+					if (doc_resp != null)
+					{
+						//Si el documento afectado es diferente a la version de la empresa emisora se cambia para que ese documento lo procese en la version del documento afectado 
+						if (doc_resp.IdVersionDian != facturador_electronico.IntVersionDian)
+							facturadorelec_proceso.IntVersionDian = (short)doc_resp.IdVersionDian;
+						//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
+					}
+					else
+					{
+						throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
+					}
+				}
+
 				try
 				{
 					mensaje = Enumeracion.GetDescription(estado);
@@ -301,17 +325,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception) { }
 
-				if (facturador_electronico.IntVersionDian == 1)
+				if (facturadorelec_proceso.IntVersionDian == 1)
 				{
 					// realiza el proceso de envío a la DIAN del documento en V1
 					item_respuesta = Procesar(id_peticion, id_radicado, item, TipoDocumento.NotaDebito, resolucion,
-						facturador_electronico);
+						facturadorelec_proceso);
 				}
 				else
 				{
 					// realiza el proceso de envío a la DIAN del documento en V1
 					item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.NotaDebito, resolucion,
-						facturador_electronico, documento_bd);
+						facturadorelec_proceso, documento_bd);
 				}
 			}
 			catch (Exception excepcion)

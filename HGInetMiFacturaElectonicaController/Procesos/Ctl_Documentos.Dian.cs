@@ -36,7 +36,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="respuesta">datos de respuesta del documento</param>
 		/// <param name="documento_result">información del proceso interno del documento</param>
 		/// <returns>información adicional de respuesta del documento</returns>
-		public static AcuseRecibo EnviarDian(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+		public static AcuseRecibo EnviarDian(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result, string IdSetDian = "")
 		{
 
 			string msg_response = String.Empty;
@@ -46,7 +46,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			try
 			{
 
-				acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa);
+				acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa, IdSetDian);
 
 				if (acuse.Response.Equals(200))
 				{
@@ -198,7 +198,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					IdSoftware = data_dian.IdSoftware;
 					PinSoftware = data_dian.Pin;
-					clave = data_dian.ClaveAmbiente;
+					//clave = data_dian.ClaveAmbiente;
 					url_ws_consulta = data_dian.UrlWSConsultaTransacciones;
 					obligado_identificacion = empresa.StrIdentificacion;
 				}
@@ -234,7 +234,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (empresa.IntVersionDian == 2)
 				{
 					// Consulta del documento con validación previa
-					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, clave, url_ws_consulta);
+					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta);
 					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(resultado);
 
 				}

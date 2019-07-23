@@ -661,7 +661,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 
 						}
-						else if (documento.Anticipos.Count > 0 && documento.ValorAnticipo == 0)
+						else if (documento.Anticipos.Count == 0 && documento.ValorAnticipo == 0)
 						{
 							documento.ValorAnticipo = Convert.ToDecimal(0.00M);
 

@@ -25,7 +25,7 @@ namespace HGInetDIANServicios
 		/// <param name="clave_dian">Clave proporcionada en la plataforma de la Dian</param>
 		/// <param name="ruta_servicio_web">Url del servicio web de la DIAN</param>
 		/// <returns></returns>
-		public static AcuseRecibo Enviar_v2(string ruta_zip, string nombre_archivo, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web)
+		public static AcuseRecibo Enviar_v2(string ruta_zip, string nombre_archivo, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web, string ambiente)
 		{
 
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
@@ -55,8 +55,16 @@ namespace HGInetDIANServicios
 					//Se agrega instruccion para habilitar la seguridad en el envio
 					System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-					//Ejecución de prueba DIAN Enviando archivo ZIP	
-					resultadoHab = webServiceHab.SendTestSetAsync(nombre_archivo, bytes, clave_dian);
+					if (ambiente.Equals("2"))
+					{
+						//Ejecución de prueba DIAN Enviando archivo ZIP	y IdsetDian
+						resultadoHab = webServiceHab.SendTestSetAsync(nombre_archivo, bytes, clave_dian);
+					}
+					else
+					{
+						//Ejecución de produccion DIAN Enviando archivo ZIP	
+						resultadoHab = webServiceHab.SendBillAsync(nombre_archivo, bytes);
+					}
 
 					acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
 					acuse_recibo.ResponseDateTime = Fecha.GetFecha();
