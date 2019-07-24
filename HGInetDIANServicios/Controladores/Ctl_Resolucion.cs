@@ -11,7 +11,7 @@ using System.IO;
 
 namespace HGInetDIANServicios
 {
-	public class Ctl_Resolucion
+	public partial class Ctl_Resolucion
 	{
 		public static DianResolucion.ResolucionesFacturacion Obtener(Guid id_peticion, string identificador_software, string clave, string identificacion_empresa, string identificacion_proveedor, DateTime fecha, string archivo_log, bool prueba = false)
 		{

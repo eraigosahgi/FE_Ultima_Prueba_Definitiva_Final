@@ -463,7 +463,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (concepto == null)
 					throw new ApplicationException(string.Format("El concepto {0} no es válido según Estandar DIAN", documento.Concepto));
 
-				Ctl_Documento num_doc = new Ctl_Documento();
+				/*Ctl_Documento num_doc = new Ctl_Documento();
 
 				//valida si el Documento afectado ya existe en Base de Datos
 				List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), documento.DocumentoRef);
@@ -476,7 +476,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else
 				{
 					throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", documento.DocumentoRef));
-				}
+				}*/
 
 			}
 

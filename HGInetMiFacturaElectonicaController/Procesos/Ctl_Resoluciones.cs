@@ -38,11 +38,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			List<TblEmpresasResoluciones> resoluciones_bd = null;
 
-			if (facturador_electronico.IntVersionDian == 1)
+			if (facturador_electronico.IntHabilitacion.Value == 99)
 			{
 				resoluciones_bd = Actualizar(id_peticion, facturador_electronico);
 			}
-			else if (facturador_electronico.IntVersionDian == 2)
+			else
 			{
 				//obtiene las Resoluciones del facturador y las actualiza para que no permita la recepcion de documento
 				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
@@ -73,7 +73,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			TblEmpresas facturador_electronico = Peticion.Obtener(obligado);
 
 			List<Resolucion> resoluciones_respuesta = new List<Resolucion>();
-			
+
 			ResolucionesFacturacion resolucion_dian = new ResolucionesFacturacion();
 			resolucion_dian.RangoFacturacion = new RangoFacturacion[1];
 
@@ -92,7 +92,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// crea o actualiza las resoluciones obtenidas en la base de datos
 				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
 				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.Crear(resolucion_dian, obligado, datos_resolucion.SetIdDian);
-				
+
 				if (resoluciones_bd != null)
 				{
 					foreach (TblEmpresasResoluciones item in resoluciones_bd)
@@ -124,11 +124,31 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			string carpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, obligado.StrIdSeguridad.ToString());
 			string archivo_log = string.Format(@"{0}\{1}\{2}.xml", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaEResoluciones, id_peticion);
 
-			// obtiene los datos de prueba del proveedor tecnológico de la DIAN
-			DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
+			ResolucionesFacturacion resoluciones_dian = null;
 
-			//Obtiene la resolucion de la DIAN para el Obligado enviado
-			ResolucionesFacturacion resoluciones_dian = Ctl_Resolucion.Obtener(id_peticion, data_dian.IdSoftware, data_dian.ClaveAmbiente, obligado.StrIdentificacion, data_dian.NitProveedor, fecha_actual, archivo_log);
+			if (obligado.IntVersionDian == 1)
+			{
+
+				// obtiene los datos de prueba del proveedor tecnológico de la DIAN
+				DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
+
+				//Obtiene la resolucion de la DIAN para el Obligado enviado
+				resoluciones_dian = Ctl_Resolucion.Obtener(id_peticion, data_dian.IdSoftware, data_dian.ClaveAmbiente, obligado.StrIdentificacion, data_dian.NitProveedor, fecha_actual, archivo_log);
+			}
+			else
+			{
+				// obtiene los datos de prueba del proveedor tecnológico de la DIAN
+				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+
+				CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
+				
+				// información del certificado digital
+				string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
+
+				//Obtiene la resolucion de la DIAN para el Obligado enviado
+				resoluciones_dian = Ctl_Resolucion.Obtener_v2(id_peticion, data_dian.IdSoftware, data_dian.ClaveAmbiente, obligado.StrIdentificacion, data_dian.NitProveedor, fecha_actual, archivo_log, ruta_certificado, certificado.Clave, data_dian.UrlServicioWeb);
+
+			}
 
 			if (resoluciones_dian.CodigoOperacion == CodigoType.OK)
 			{

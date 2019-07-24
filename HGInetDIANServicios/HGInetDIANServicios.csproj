@@ -59,6 +59,7 @@
     <Compile Include="Controladores\Ctl_Resolucion.cs" />
     <Compile Include="Controladores_v2\Ctl_ConsultaTransacciones.v2.cs" />
     <Compile Include="Controladores_v2\Ctl_Factura.v2.cs" />
+    <Compile Include="Controladores_v2\Ctl_Resolucion.v2.cs" />
     <Compile Include="Enumerables\EstadoDocumentoDian.cs" />
     <Compile Include="Enumerables\RespuestaDocumentoDian.cs" />
     <Compile Include="Enumerables\ValidacionRespuestaDian.cs" />

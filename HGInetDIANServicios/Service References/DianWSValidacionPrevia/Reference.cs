@@ -369,9 +369,6 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         private string CodeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int[] ConsecutiveMissingNsusField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MessageField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -396,19 +393,6 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
                 if ((object.ReferenceEquals(this.CodeField, value) != true)) {
                     this.CodeField = value;
                     this.RaisePropertyChanged("Code");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int[] ConsecutiveMissingNsus {
-            get {
-                return this.ConsecutiveMissingNsusField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ConsecutiveMissingNsusField, value) != true)) {
-                    this.ConsecutiveMissingNsusField = value;
-                    this.RaisePropertyChanged("ConsecutiveMissingNsus");
                 }
             }
         }
@@ -536,34 +520,28 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string AccountCodeField;
+        private string ResolutionNumberField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int DocumentTypeField;
+        private string ResolutionDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PrefixField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private long FromNumberField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<System.DateTime> ResolutionDateTimeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ResolutionNumberField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string SerieField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TechnicalKeyField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private long ToNumberField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<long> ValidDateNumberFromField;
+        private string ValidDateFromField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<long> ValidDateNumberToField;
+        private string ValidDateToField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TechnicalKeyField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -572,58 +550,6 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
             }
             set {
                 this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string AccountCode {
-            get {
-                return this.AccountCodeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.AccountCodeField, value) != true)) {
-                    this.AccountCodeField = value;
-                    this.RaisePropertyChanged("AccountCode");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int DocumentType {
-            get {
-                return this.DocumentTypeField;
-            }
-            set {
-                if ((this.DocumentTypeField.Equals(value) != true)) {
-                    this.DocumentTypeField = value;
-                    this.RaisePropertyChanged("DocumentType");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public long FromNumber {
-            get {
-                return this.FromNumberField;
-            }
-            set {
-                if ((this.FromNumberField.Equals(value) != true)) {
-                    this.FromNumberField = value;
-                    this.RaisePropertyChanged("FromNumber");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<System.DateTime> ResolutionDateTime {
-            get {
-                return this.ResolutionDateTimeField;
-            }
-            set {
-                if ((this.ResolutionDateTimeField.Equals(value) != true)) {
-                    this.ResolutionDateTimeField = value;
-                    this.RaisePropertyChanged("ResolutionDateTime");
-                }
             }
         }
         
@@ -640,33 +566,46 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Serie {
+        [System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+        public string ResolutionDate {
             get {
-                return this.SerieField;
+                return this.ResolutionDateField;
             }
             set {
-                if ((object.ReferenceEquals(this.SerieField, value) != true)) {
-                    this.SerieField = value;
-                    this.RaisePropertyChanged("Serie");
+                if ((object.ReferenceEquals(this.ResolutionDateField, value) != true)) {
+                    this.ResolutionDateField = value;
+                    this.RaisePropertyChanged("ResolutionDate");
                 }
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string TechnicalKey {
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+        public string Prefix {
             get {
-                return this.TechnicalKeyField;
+                return this.PrefixField;
             }
             set {
-                if ((object.ReferenceEquals(this.TechnicalKeyField, value) != true)) {
-                    this.TechnicalKeyField = value;
-                    this.RaisePropertyChanged("TechnicalKey");
+                if ((object.ReferenceEquals(this.PrefixField, value) != true)) {
+                    this.PrefixField = value;
+                    this.RaisePropertyChanged("Prefix");
                 }
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
+        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+        public long FromNumber {
+            get {
+                return this.FromNumberField;
+            }
+            set {
+                if ((this.FromNumberField.Equals(value) != true)) {
+                    this.FromNumberField = value;
+                    this.RaisePropertyChanged("FromNumber");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
         public long ToNumber {
             get {
                 return this.ToNumberField;
@@ -679,28 +618,41 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<long> ValidDateNumberFrom {
+        [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+        public string ValidDateFrom {
             get {
-                return this.ValidDateNumberFromField;
+                return this.ValidDateFromField;
             }
             set {
-                if ((this.ValidDateNumberFromField.Equals(value) != true)) {
-                    this.ValidDateNumberFromField = value;
-                    this.RaisePropertyChanged("ValidDateNumberFrom");
+                if ((object.ReferenceEquals(this.ValidDateFromField, value) != true)) {
+                    this.ValidDateFromField = value;
+                    this.RaisePropertyChanged("ValidDateFrom");
                 }
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<long> ValidDateNumberTo {
+        [System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+        public string ValidDateTo {
             get {
-                return this.ValidDateNumberToField;
+                return this.ValidDateToField;
             }
             set {
-                if ((this.ValidDateNumberToField.Equals(value) != true)) {
-                    this.ValidDateNumberToField = value;
-                    this.RaisePropertyChanged("ValidDateNumberTo");
+                if ((object.ReferenceEquals(this.ValidDateToField, value) != true)) {
+                    this.ValidDateToField = value;
+                    this.RaisePropertyChanged("ValidDateTo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+        public string TechnicalKey {
+            get {
+                return this.TechnicalKeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TechnicalKeyField, value) != true)) {
+                    this.TechnicalKeyField = value;
+                    this.RaisePropertyChanged("TechnicalKey");
                 }
             }
         }
@@ -764,10 +716,10 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.EventResponse[]> SendEventUpdateStatusAsync(byte[] contentFile);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRange", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRangeResponse")]
-        HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList GetNumberingRange(string accountCode, int docType);
+        HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList GetNumberingRange(string accountCode, string accountCodeT, string softwareCode);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRange", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRangeResponse")]
-        System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList> GetNumberingRangeAsync(string accountCode, int docType);
+        System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList> GetNumberingRangeAsync(string accountCode, string accountCodeT, string softwareCode);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKey", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKeyResponse")]
         HGInetDIANServicios.DianWSValidacionPrevia.EventResponse GetXmlByDocumentKey(string trackId);
@@ -859,12 +811,12 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
             return base.Channel.SendEventUpdateStatusAsync(contentFile);
         }
         
-        public HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList GetNumberingRange(string accountCode, int docType) {
-            return base.Channel.GetNumberingRange(accountCode, docType);
+        public HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList GetNumberingRange(string accountCode, string accountCodeT, string softwareCode) {
+            return base.Channel.GetNumberingRange(accountCode, accountCodeT, softwareCode);
         }
         
-        public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList> GetNumberingRangeAsync(string accountCode, int docType) {
-            return base.Channel.GetNumberingRangeAsync(accountCode, docType);
+        public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList> GetNumberingRangeAsync(string accountCode, string accountCodeT, string softwareCode) {
+            return base.Channel.GetNumberingRangeAsync(accountCode, accountCodeT, softwareCode);
         }
         
         public HGInetDIANServicios.DianWSValidacionPrevia.EventResponse GetXmlByDocumentKey(string trackId) {
