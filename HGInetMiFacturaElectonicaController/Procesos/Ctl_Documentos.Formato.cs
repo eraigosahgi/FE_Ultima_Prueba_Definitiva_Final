@@ -98,6 +98,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						if (item.OcultarItem == 0)
 							detalles_formato.Add(item);
+						documento_obj.ValorDescuentoDet += item.DescuentoValor;
 					}
 
 					documento_obj.DocumentoDetalles = detalles_formato;

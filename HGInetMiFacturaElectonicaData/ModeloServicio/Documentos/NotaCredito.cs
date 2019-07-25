@@ -134,9 +134,14 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public decimal ValorDescuento { get; set; }
 
         /// <summary>
-        /// Valor Total de Cargos que suman al total del documento
+        /// Valor Total de Descuento del detalle - Es calculado por la plataforma para la generacion de Formatos en V2
         /// </summary>
-        public decimal ValorCargo { get; set; }
+        public decimal ValorDescuentoDet { get; set; }
+
+		/// <summary>
+		/// Valor Total de Cargos que suman al total del documento
+		/// </summary>
+		public decimal ValorCargo { get; set; }
 
         /// <summary>
         /// Valor Total de Anticipos que restan al total del documento
