@@ -18,15 +18,7 @@
 		}
 	</style>
 
-	<%--Oculta el panel de los filtros según la visibilidad de los tabs--%>
-	<script>
-		$(document).ready(function () {
 
-			if ($('#LiTabAdministrador').is(':hidden') && $('#LiTabFacturador').is(':hidden') && $('#LiTabAdquiriente').is(':hidden'))
-			{ document.getElementById('panel_filtros').style.display = 'none'; }
-
-		});
-	</script>
 
 	<!-- CONTENEDOR PRINCIPAL -->
 	<div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController">
