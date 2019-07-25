@@ -11,7 +11,7 @@
 
 	<script src="../../Scripts/Pages/ReportDesignerWeb.js"></script>
 
-	<dx:ASPxReportDesigner ID="ASPxReportDesignerWeb" runat="server" ColorScheme="dark" ClientSideEvents-OnServerError="reportDesigner_OnServerError"
+	<dx:ASPxReportDesigner ID="ASPxReportDesignerWeb" runat="server" ColorScheme="Light" ClientSideEvents-OnServerError="reportDesigner_OnServerError"
 		ClientSideEvents-ExitDesigner="ExitDesignerfunction"
 		ClientSideEvents-CustomizeMenuActions="reportDesigner_CustomizeMenuActions" DisableHttpHandlerValidation="False" ClientSideEvents-SaveCommandExecute="reportDesigner_SaveCommandExecute"
 		ShouldDisposeDataSources="true" OnSaveReportLayout="ASPxReportDesignerWeb_SaveReportLayout" ClientSideEvents-EndCallback="reportDesigner_EndCallback">
