@@ -1,5 +1,5 @@
 ﻿
-var GoogleAnalytics = 'UA-53441577-4';
+var GoogleAnalytics = 'UA-53441577-5';
 
 function ColocarEstado(Estado, Descripcion) {
 	return "<span " + ((Estado == '400') ? " class='badge badge-FallidoDIAN'  title='" + Descripcion + "'" : (Estado == '300') ? " class='badge badge-ValidadoDIAN'  title='" + Descripcion + "'" : (Estado == '200') ? " class='badge badge-envioDian'   title='" + Descripcion + "'" : " class='badge badge-RecibidoPlataforma'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
