@@ -7,7 +7,9 @@ var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var App = angular.module('App', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'ModalEmpresasApp', 'AppSrvFiltro']);
 App.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope, SrvFiltro) {
-
+	//Google Analytics
+	ga('send', 'event', 'Pages_DocumentosAdmin', 'Consulta', 'Consulta Documentos');
+	
 	var now = new Date();
 	var Estado;
 

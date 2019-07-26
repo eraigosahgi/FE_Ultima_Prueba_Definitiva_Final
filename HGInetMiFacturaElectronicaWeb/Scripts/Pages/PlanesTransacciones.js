@@ -5,7 +5,7 @@ var GestionPlanesApp = angular.module('GestionPlanesApp', ['dx', 'AppMaestrosEnu
 
 //Controlador para la gestion planes transaccionales
 GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
-
+	
 	var TiposProceso = [];
 	var now = new Date();
 
@@ -47,9 +47,17 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					if (StrIdSeguridad) {
 						respuesta = response.data[0].Editar;
 						$scope.PanelNotificacion = false;
+						try {
+							//Google Analytics							
+							ga('send', 'event', 'Consulta_Plan', 'Plan : ' + StrIdSeguridad, sessionStorage.getItem("Usuario"));
+						} catch (e) { }
 					} else {
 						respuesta = response.data[0].Agregar
 						$scope.PanelNotificacion = true;
+						try {
+							//Google Analytics
+							ga('send', 'event', 'Consulta_Plan', 'Nuevo Plan', sessionStorage.getItem("Usuario"));							
+						} catch (e) { }
 					}
 
 					//Valida la visibilidad del control según los permisos.
@@ -362,6 +370,18 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				$("#button").hide();
 				$("#btncancelar").hide();
 				setTimeout(IrAConsulta, 1000);
+
+				try {
+					//Google Analytics
+					if (StrIdSeguridad) {						
+						ga('send', 'event', 'Editando_Plan', 'Plan : ' + StrIdSeguridad, sessionStorage.getItem("Usuario"));
+					} else {
+						ga('send', 'event', 'Creando_Plan', 'Nuevo Plan', sessionStorage.getItem("Usuario"));						
+					}
+				} catch (e) { }
+
+
+
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 3000);
 			}
@@ -442,6 +462,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 });
 
 GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesController($scope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
+	
+
 	var now = new Date();
 
 	var codigo_facturador = "",

@@ -4,6 +4,9 @@ var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var GestionPlanesApp = angular.module('GestionPlanesApp', ['ModalEmpresasApp', 'dx', 'AppMaestrosEnum']);
 GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesController($scope, $http, $location) {
+
+
+
 	var now = new Date();
 
 	var date = new Date();

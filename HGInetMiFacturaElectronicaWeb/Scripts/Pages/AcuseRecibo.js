@@ -193,6 +193,21 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 
 				$('#plugin').attr('src', $scope.RespuestaAcuse[0].Pdf);
 
+				try {
+					ga('create', GoogleAnalytics, {
+						'clientId': (sessionStorage.getItem("Usuario")) ? sessionStorage.getItem("Usuario") : response.data[0].IdAdquiriente + '_' + response.data[0].IdAdquiriente
+					});
+
+					ga('send', 'pageview');
+
+					var pagina = self.location.href.match(/\/([^/]+)$/)[1];
+
+					pagina = pagina.split('.')[0];
+
+					ga('send', 'event', 'Pagina Vista', pagina, (sessionStorage.getItem("Usuario")) ? sessionStorage.getItem("Usuario") : response.data[0].NombreAdquiriente);
+				} catch (e) {
+
+				}				
 				//Si estatus es igual a 2, entonces asigno los valores a las variables para ejecutar la consulta de saldo
 				if (response.data[0].Estatus == 2) {
 					$scope.Idregistro = response.data[0].pago[0].StrIdRegistro

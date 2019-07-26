@@ -68,8 +68,8 @@
             background-color: white;
         }
     </style>
-
-    <script src="../../Scripts/Pages/Autenticacion.js?vjs201915"></script>
+	<script src="../../Scripts/config.js?vjs201917"></script>
+    <script src="../../Scripts/Pages/Autenticacion.js?vjs201917"></script>
 
 </head>
 <body class="login-container" style="background-color: #eeeded">
@@ -88,7 +88,7 @@
         <div class="col-md-6 col-lg-4" style="background-color: white; height: 100%;">
             <div ng-app="AutenticacionApp">
                 <!-- Contenedor de Página -->
-                <div class="page-container" ng-controller="AutenticacionController">
+                <div class="page-container" data-ng-controller="AutenticacionController">
 
                     <!-- Contenido de Página -->
                     <div class="page-content">
@@ -99,7 +99,7 @@
                             <!-- Área de Contenido -->
                             <div class="content">
 
-                                <form ng-submit="onFormSubmit($event)">
+                                <form data-ng-submit="onFormSubmit($event)">
 
                                     <div>
                                         <div class="text-center">
@@ -109,7 +109,7 @@
                                         </div>
 
                                         <div class="widget-container">
-                                            <div id="form" dx-form="formOptions">
+                                            <div id="form" data-dx-form="formOptions">
                                             </div>
                                         </div>
                                         <br />
@@ -117,7 +117,7 @@
                                             <h6>Restablecer contraseña</h6>
                                         </a>
                                         <br />
-                                        <div dx-button="buttonOptions"></div>
+                                        <div data-dx-button="buttonOptions"></div>
 
 
 
@@ -144,7 +144,7 @@
                 </div>
                 <!-- /Contenedor de Página -->
                 <%--Modal Restablecer Contraseña--%>
-                <form ng-submit="onFormSubmit($event)" ng-controller="RestablecerController">
+                <form data-ng-submit="onFormSubmit($event)" data-ng-controller="RestablecerController">
                     <div id="modal_restablecer_clave" class="modal fade" style="display: none;">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -160,7 +160,7 @@
                                         <div id="formulario" class="row">
 
 
-                                            <div id="formvalidar" dx-form="formOptions2">
+                                            <div id="formvalidar" data-dx-form="formOptions2">
                                             </div>
 
 
@@ -171,8 +171,8 @@
                                 </div>
 
                                 <div id="divsombra" class="modal-footer" style="margin-top: 22%">
-                                    <div dx-button="buttonCerrarRestablecer" data-dismiss="modal"></div>
-                                    <div dx-button="buttonRestablecer"></div>
+                                    <div data-dx-button="buttonCerrarRestablecer" data-dismiss="modal"></div>
+                                    <div data-dx-button="buttonRestablecer"></div>
                                 </div>
 
                             </div>
@@ -185,5 +185,16 @@
     </div>
 	<div id="panelfondo"></div>
     <%--/ Modal Restablecer Contraseña--%>
+
+
+
+	<script>
+		 (function (i, s, o, g, r, a, m) {
+        	i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
+			m = s.getElementsByTagName(o)
+			[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+	</script>
+
 </body>
 </html>

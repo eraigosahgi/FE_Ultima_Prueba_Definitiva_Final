@@ -353,7 +353,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                                     		$('input:text[name=EmailDestino]').val("");
                                     		if (permite_envio != "") {
                                     			SrvDocumento.ConsultarEmailUbl(options.data.StrIdSeguridad).then(function (data) {
-                                    				$('input:text[name=EmailDestino]').val(data);
+                                    				$('input:text[name=EmailDestino]').val(data);                                    				
                                     			});
                                     		}
                                     	}
@@ -682,6 +682,11 @@ App.controller('EnvioEmailController', function EnvioEmailController($scope, $ht
 				if (email_destino == "") {
 					throw new DOMException("El e-mail de destino es obligatorio.");
 				}
+				try {
+					//Google Analytics							
+					ga('send', 'event', 'Reenvio Email', 'Email : ' + email_destino + ' Id:' + id_seguridad, sessionStorage.getItem("Usuario"));
+				} catch (e) { }
+
 				$('#wait').show();
 				$http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino + '&Usuario=' + UsuarioSession).then(function (responseEnvio) {
 					$('#wait').hide();
@@ -708,6 +713,9 @@ App.controller('EnvioEmailController', function EnvioEmailController($scope, $ht
 							html: true,
 						});
 					}
+
+					
+
 					$('input:text[name=EmailDestino]').val("");
 					$('#btncerrarModal').click();
 				}, function errorCallback(response) {

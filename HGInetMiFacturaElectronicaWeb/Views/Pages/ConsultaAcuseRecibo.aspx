@@ -4,11 +4,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201915"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201915"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201915"></script>
-	<script src="../../Scripts/Pages/ConsultaAcuse.js?vjs201915"></script>
-	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201915"></script>
+	<script src="../../Scripts/config.js?vjs201917"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201917"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201917"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201917"></script>
+	<script src="../../Scripts/Pages/ConsultaAcuse.js?vjs201917"></script>
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201917"></script>
 
 	<!-- CONTENEDOR PRINCIPAL -->
 	<div data-ng-app="App" data-ng-controller="AcuseConsultaController">
@@ -134,6 +135,5 @@
 
 		<div data-ng-include="'AuditoriaDocumento.aspx'"></div>
 	</div>
-	<!-- /CONTENEDOR PRINCIPAL -->
-
+	<!-- /CONTENEDOR PRINCIPAL -->	
 </asp:Content>

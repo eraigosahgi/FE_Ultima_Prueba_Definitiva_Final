@@ -88,9 +88,10 @@
 	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
 
 	<!-- JS AcuseRecibo -->
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201915"></script>
-	<script src="../../Scripts/config.js?vjs201915"></script>
-	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs201915"></script>
+	<script src="../../Scripts/config.js?vjs201917"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201917"></script>
+	<script src="../../Scripts/config.js?vjs201917"></script>
+	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs201917"></script>
 
 </head>
 
@@ -395,7 +396,15 @@
 
 
 
-
+	<script>
+		try {
+			(function (i, s, o, g, r, a, m) {
+				i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
+				m = s.getElementsByTagName(o)
+				[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+			})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');		
+		} catch (e) { }
+	</script>
 </body>
 
 
