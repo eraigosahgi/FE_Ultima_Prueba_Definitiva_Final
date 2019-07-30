@@ -110,9 +110,7 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 		try {
 			var Id = dato_usuario.toUpperCase() + '_' + dato_identificacion;
 
-			sessionStorage.setItem("Usuario", Id);
-
-			console.log("Condigo de Analytics: " + GoogleAnalytics );
+			sessionStorage.setItem("Usuario", Id);			
 
 			ga('create', GoogleAnalytics, {
 				'clientId': Id
