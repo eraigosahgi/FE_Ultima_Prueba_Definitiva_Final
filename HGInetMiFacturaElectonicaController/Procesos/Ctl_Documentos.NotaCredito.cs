@@ -282,6 +282,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 					{
 						tbl_resolucion = Ctl_EmpresaResolucion.Convertir(facturador_electronico.StrIdentificacion, item.Prefijo, TipoDocumento.NotaCredito.GetHashCode(), facturador_electronico.IntVersionDian);
+						
+						//Toma el IdsetDian de la resolucion de pruebas de Factura cuando esta en habilitacion
+						if (facturador_electronico.IntHabilitacion < 99)
+						{
+							TblEmpresasResoluciones resol_factura = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
+						                                                              !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
+						                                                              && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
+
+							if (resol_factura == null)
+								throw new ApplicationException("No se encontró IdSetDian registrado para el facturador electrónico");
+							else
+								tbl_resolucion.StrIdSetDian = resol_factura.StrIdSetDian;
+						}
 					}
 					// crea el registro en base de datos
 					resolucion = _resolucion.Crear(tbl_resolucion);

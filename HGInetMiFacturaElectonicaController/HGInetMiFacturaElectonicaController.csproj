@@ -139,6 +139,7 @@
     <Compile Include="Procesos\Ctl_Documentos.Validacion.cs" />
     <Compile Include="Procesos\Ctl_Documentos.Xml.cs" />
     <Compile Include="Procesos_v2\Ctl_Documentos_v2.cs" />
+    <Compile Include="Procesos_v2\Ctl_Documentos_v2.Procesar.cs" />
     <Compile Include="Properties\Constantes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

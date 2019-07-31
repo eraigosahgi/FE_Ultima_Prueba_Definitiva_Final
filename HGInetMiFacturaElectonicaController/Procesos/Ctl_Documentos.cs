@@ -944,6 +944,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)),2) == Docdet.IvaValor)
 							{
+								if (Docdet.IvaPorcentaje == 0)
+								{
+									Docdet.IvaPorcentaje = 0.00M;
+								}
 								ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
 								ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(Docdet.IvaPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 

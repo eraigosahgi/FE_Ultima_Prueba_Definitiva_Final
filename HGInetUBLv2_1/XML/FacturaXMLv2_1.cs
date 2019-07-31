@@ -17,7 +17,7 @@ using HGInetUBLv2_1.XML;
 
 namespace HGInetUBLv2_1
 {
-	public class FacturaXMLv2_1
+	public partial class FacturaXMLv2_1
 	{
 
 		/// <summary>
@@ -212,13 +212,45 @@ namespace HGInetUBLv2_1
 				#endregion
 
 				//----solo recibe una sola nota por encabezado---
+				//En el Anexo Tecnico la Ocurrencia tiene 0..N a fecha de 2019-07-26
 				#region Note - Nota adicional (Resolución texto)
 
+				string prefijo = string.Empty;
+				if (!string.IsNullOrEmpty(documento.Prefijo))
+					prefijo = string.Format("{0}-", documento.Prefijo);
+
+				string dian_resolucion = string.Format(" {0} de {1} del {2}{3} al {4}{5}", resolucion.NumResolucion, resolucion.FechaResIni.ToString(Fecha.formato_fecha_hginet), prefijo, resolucion.RangoIni, prefijo, resolucion.RangoFin);
+
+				List<string> notas_documento = new List<string>();
+
+				// agrega la resolución en la 1ra posición
+				notas_documento.Add(dian_resolucion);
+
+				// agrega las observaciones del documento en la 3ra posición
+				notas_documento.Add(documento.Nota);
+
+				// agrega las notas adicionales del documento
+				if (documento.Notas != null)
+					notas_documento.AddRange(documento.Notas);
+
+
+				NoteType[] Notes = new NoteType[notas_documento.Count];
+
+				for (int i = 0; i < notas_documento.Count; i++)
+				{
+					NoteType Note = new NoteType();
+					Note.Value = notas_documento[i];
+					Notes[i] = Note;
+				}
+				facturaXML.Note = Notes;
+
+
+				/*
 				NoteType[] Notes = new NoteType[1];
 				NoteType nota = new NoteType();
 				nota.Value = documento.Nota;
 				Notes[0] = nota;
-				facturaXML.Note = Notes;
+				facturaXML.Note = Notes;*/
 
 				#endregion
 
@@ -1529,6 +1561,8 @@ namespace HGInetUBLv2_1
 					IDType IDItemStandard = new IDType();
 					//---Validar que no venag null
 					IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
+					// -- 6.3.5. Productos: @schemeID, @schemeName, @schemeAgencyID 
+					IDItemStandard.schemeID = "999";
 					StandardItemIdentification.ID = IDItemStandard;
 					Item.StandardItemIdentification = StandardItemIdentification;
 					#endregion
@@ -1629,7 +1663,7 @@ namespace HGInetUBLv2_1
 					//---Segun la base de la unidad utilizada
 					BaseQuantityType BaseQuantity = new BaseQuantityType();
 					BaseQuantity.unitCode = InvoicedQuantity.unitCode;
-					BaseQuantity.Value = DocDet.Cantidad;
+					BaseQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
 					Price.BaseQuantity = BaseQuantity;
 
 

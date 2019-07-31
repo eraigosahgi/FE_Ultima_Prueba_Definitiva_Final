@@ -16,7 +16,7 @@ using HGInetUBLv2_1.XML;
 
 namespace HGInetUBLv2_1
 {
-	public class NotaCreditoXMLv2_1
+	public partial class NotaCreditoXMLv2_1
 	{
 
 		/// <summary>
