@@ -823,5 +823,23 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			public string StrEmail { get; set; }
 		}
 		#endregion
+
+		#region Notificación Alertas documento en la DIAN
+		/// <summary>
+		/// Genera una alerta por correo al personal de HGI para indicar las inconsistencias generadas por la DIAN con respecto al documento
+		/// </summary>
+		/// <param name="Facturador">Nit del Facturador</param>
+		/// <param name="Documento">Documento Electronico</param>
+		/// <param name="ListaNotificacion">Lista de inconsistencias</param>
+		/// <param name="Proceso">0: Desconocido, 1: Envio, 2: Consulta</param>
+		/// <param name="Resultado">true: recibido, false: No Recibido</param>
+		public void Alertas(string Facturador , string Documento, List<String> ListaNotificacion,int Proceso, bool Resultado)
+		{
+
+
+		}
+
+
+		#endregion
 	}
 }
