@@ -398,12 +398,12 @@ namespace HGInetUBLv2_1
 				//Prefijo de la facturación usada para el punto de venta
 				//---Validar---
 				//PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
-				//PartyLegalEntity.CorporateRegistrationScheme.ID.Value = "";
+				//PartyLegalEntity.CorporateRegistrationScheme.ID.Value = "0123";
 
 				//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
 				//---Validar
 				PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
-				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = tercero.NombreComercial;
+				PartyLegalEntity.CorporateRegistrationScheme.Name.Value =(!string.IsNullOrEmpty(tercero.NombreComercial)) ? tercero.NombreComercial : tercero.RazonSocial;
 
 				PartyLegalEntitys[0] = PartyLegalEntity;
 				Party.PartyLegalEntity = PartyLegalEntitys;
