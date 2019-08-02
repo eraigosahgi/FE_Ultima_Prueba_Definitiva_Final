@@ -194,7 +194,7 @@ namespace HGInetUBLv2_1
 				//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
 				//---Validar--ocurrencia 0..1
 				PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
-				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = empresa.NombreComercial; //"HGI SAS";
+				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "0";//empresa.NombreComercial; //"HGI SAS";
 
 				PartyLegalEntitys[0] = PartyLegalEntity;
 				Party.PartyLegalEntity = PartyLegalEntitys;
@@ -403,7 +403,7 @@ namespace HGInetUBLv2_1
 				//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
 				//---Validar
 				PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
-				PartyLegalEntity.CorporateRegistrationScheme.Name.Value =(!string.IsNullOrEmpty(tercero.NombreComercial)) ? tercero.NombreComercial : tercero.RazonSocial;
+				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "0";//(!string.IsNullOrEmpty(tercero.NombreComercial)) ? tercero.NombreComercial : tercero.RazonSocial;
 
 				PartyLegalEntitys[0] = PartyLegalEntity;
 				Party.PartyLegalEntity = PartyLegalEntitys;
