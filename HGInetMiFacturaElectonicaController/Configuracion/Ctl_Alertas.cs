@@ -833,10 +833,37 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="ListaNotificacion">Lista de inconsistencias</param>
 		/// <param name="Proceso">0: Desconocido, 1: Envio, 2: Consulta</param>
 		/// <param name="Resultado">true: recibido, false: No Recibido</param>
-		public void Alertas(string Facturador , string Documento, List<String> ListaNotificacion,int Proceso, bool Resultado)
+		public void Alertas(string Facturador, string Documento, List<String> ListaNotificacion, int Proceso, bool Resultado)
 		{
 
+			try
+			{
+				List<TblAlertas> Alertas = ObtenerAlerta(0, (Int32)TipoAlerta.AlertaDocDIAN);
 
+				string mail = string.Empty;
+				foreach (var alerta in Alertas)
+				{
+					//Evalua el tipo  envio de notificación
+					//if (alerta.IntCliente == true)
+					//{
+					//	notificacion.email = string.Format("Cliente:{0}", Obligado.Email);
+					//}
+					//if (alerta.IntInterno == true)
+					//{
+					//	notificacion.email = string.Format("Interno:{0}", alerta.StrInternoMails);
+					//}
+					mail = alerta.StrInternoMails.ToString();
+				}
+
+				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+				email.EnviaNotificacionAlertaDIAN(Facturador, Documento, ListaNotificacion, Proceso, Resultado, mail);
+
+			}
+			catch (Exception excepcion)
+			{
+
+				LogExcepcion.Guardar(excepcion);
+			}
 		}
 
 

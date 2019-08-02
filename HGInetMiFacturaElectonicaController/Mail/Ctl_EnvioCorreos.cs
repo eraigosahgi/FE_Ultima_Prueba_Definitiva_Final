@@ -2329,6 +2329,129 @@ namespace HGInetMiFacturaElectonicaController
 			}
 		}
 
+
+
+
+
+		#region Alertas Documentos DIAN		
+		/// <summary>
+		/// Envia Correo Electronico con información sobre alguna alerta, a personal de HGI
+		/// </summary>
+		/// <param name="identificacion">Nit del Facturador</param>
+		/// <param name="mail">email al que se va enviar el correo</param>
+		/// <returns></returns>
+		public List<MensajeEnvio> EnviaNotificacionAlertaDIAN(string Facturador, string Documento, List<String> ListaNotificacion, int Proceso, bool Resultado,string mail)
+		{
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				List<MensajeEnvio> RespuestaMail = new List<MensajeEnvio>();
+
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaAlertaDocumentoDIAN);
+
+				string asunto = "ALERTA DE INCONSISTENCIAS DE DOCUMENTO ELECTRÓNICO EN LA DIAN";
+
+				// obtiene los datos del Facturador
+				Ctl_Empresa empresa = new Ctl_Empresa();
+				TblEmpresas facturador = empresa.Obtener(Facturador);
+
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{
+						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
+						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
+
+						string detalle = string.Empty;
+
+						foreach (var item in ListaNotificacion)
+						{
+							//	detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3} Documentos</td><td>{4}</td><td>{5}</td></tr>", detalle, item.identificacion, item.facturador, item.tdisponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.intIdtipo)), item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet));
+								detalle += string.Format("<tr><td>{0}</td></tr>", item);
+						}
+
+						mensaje = mensaje.Replace("{TablaHtml}", detalle);
+						mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
+						mensaje = mensaje.Replace("{Documento}", Documento);
+						mensaje = mensaje.Replace("{Estado}", (Resultado)?"Recibido": "No Recibido");
+						mensaje = mensaje.Replace("{Proceso}", (Proceso==0) ? "Desconocido" : (Proceso == 1) ? "Envío" : "Consulta");
+
+
+						DestinatarioEmail remitente = new DestinatarioEmail();
+						remitente.Email = Constantes.EmailRemitente;
+						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						DestinatarioEmail destinatario = new DestinatarioEmail();
+						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+						if (mail.Contains(";"))
+						{
+							foreach (var item_mail in Coleccion.ConvertirLista(mail, ';'))
+							{
+								// recibe el email el adquiriente
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = "ADMINISTRACIÓN";
+								destinatario.Email = item_mail;
+								correos_destino.Add(destinatario);
+							}
+						}
+						else
+						{
+							destinatario.Nombre = "ADMINISTRACIÓN";
+							destinatario.Email = mail;
+						}
+
+
+
+
+						correos_destino.Add(destinatario);
+
+
+						// envía correo electrónico con copia de auditoría
+						List<DestinatarioEmail> correos_copia_oculta = null;
+						if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+						{
+							correos_copia_oculta = new List<DestinatarioEmail>();
+
+							DestinatarioEmail copia_oculta = new DestinatarioEmail();
+							copia_oculta.Nombre = "Auditoría";
+							copia_oculta.Email = Constantes.EmailCopiaOculta;
+							correos_copia_oculta.Add(copia_oculta);
+						}
+
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						RespuestaMail = clase_email.EnviarEmail("ADMINISTRACIÓN", false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+
+					}
+				}
+
+				return RespuestaMail;
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException(ex.Message);
+			}
+
+		}
+
+		#endregion
+
+
+
 	}
 
 }

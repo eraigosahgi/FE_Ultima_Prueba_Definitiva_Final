@@ -268,6 +268,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_notifica_alertas_documentos_DIAN.html.
+        /// </summary>
+        public static string RutaPlantillaAlertaDocumentoDIAN {
+            get {
+                return ResourceManager.GetString("RutaPlantillaAlertaDocumentoDIAN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_bienvenida_adquiriente.html.
         /// </summary>
         public static string RutaPlantillaBienvenidaAdquiriente {

@@ -182,6 +182,7 @@
     <Content Include="emails\plantilla_notificacion_planes_vence_hgi.html" />
     <Content Include="emails\plantilla_notificacion_sinsaldo.html" />
     <Content Include="emails\plantilla_notificacion_sinsaldo_hgi.html" />
+    <Content Include="emails\plantilla_notifica_alertas_documentos_DIAN.html" />
     <Content Include="emails\plantilla_prueba_formato.html" />
     <Content Include="emails\plantilla_recarga_transacciones.html" />
     <Content Include="emails\plantilla_envio_serial.html" />

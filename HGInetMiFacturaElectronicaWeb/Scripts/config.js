@@ -489,11 +489,14 @@ var collapsed = false;
 var TipoAlerta =
     [
         { "ID": 1, "Name": "Porcentaje." },
-        { "ID": 2, "Name": "Vencimiento de Planes." },
-        { "ID": 3, "Name": "Facturador sin Saldo." },
-		{ "ID": 4, "Name": "Solicitud Aprobación de Formato." },
-		{ "ID": 5, "Name": "Aprobación de Formato." },
-		{ "ID": 6, "Name": "Publicación de Formato." }
+        { "ID": 2, "Name": "Facturador sin Saldo." },
+        { "ID": 3, "Name": "Vencimiento de Planes." },
+		{ "ID": 4, "Name": "Por Recarga." },
+		{ "ID": 5, "Name": "Por Pago." },
+		{ "ID": 6, "Name": "Solicitud Aprobación de Formato." },
+		{ "ID": 7, "Name": "Aprobación de Formato." },
+		{ "ID": 8, "Name": "Publicación de Formato." },
+		{ "ID": 9, "Name": "Alertas Documentos DIAN." }
     ];
 
 var EstadoAlerta =

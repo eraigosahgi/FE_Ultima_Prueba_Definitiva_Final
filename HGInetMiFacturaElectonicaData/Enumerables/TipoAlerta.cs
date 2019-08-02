@@ -32,6 +32,9 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
 
 		[Description("PublicacionFormato")]
 		PublicacionFormato = 8,
+
+		[Description("AlertaDocDIAN")]
+		AlertaDocDIAN = 9,
 	}
 
 

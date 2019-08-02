@@ -277,4 +277,8 @@
     <value>emails\\plantilla_prueba_formato.html</value>
     <comment>Ruta de la plantilla HTML de envío de prueba de formato</comment>
   </data>
+  <data name="RutaPlantillaAlertaDocumentoDIAN" xml:space="preserve">
+    <value>emails\\plantilla_notifica_alertas_documentos_DIAN.html</value>
+    <comment>Ruta de la plantilla de Alerta de inconsistencias de Documento en la DIAN</comment>
+  </data>
 </root>
