@@ -457,7 +457,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
 					throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
 
-				if (tercero.Responsabilidades == null || !tercero.Responsabilidades.Any())
+				if ((tercero.Responsabilidades == null || !tercero.Responsabilidades.Any()) && tipo.Equals("Obligado"))
 				{
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Responsabilidades", tipo).Replace("de tipo", "del"));
 				}
@@ -492,7 +492,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", item, tipo));
 
 						}
-						if (responsabilidades.Count == 0)
+						if (responsabilidades.Count == 0 && tipo.Equals("Obligado"))
 						{
 							throw new ArgumentException(string.Format(" Las Responsabilidades enviadas del {0} no cumplen con el listado de la DIAN", tipo));
 						}

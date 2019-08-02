@@ -57,16 +57,45 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else if (acuse.MessagesFieldV2 != null)
 				{
 					//---Manejar funcion de Alerta
-					msg_response = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(acuse.MessagesFieldV2.Select(_X => _X.ProcessedMessage).ToList(),";");
 					respuesta.FechaUltimoProceso = Fecha.GetFecha();
-					respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+					if (acuse.MessagesFieldV2.FirstOrDefault().ProcessedMessage.Equals("Documento enviado previamente"))
+					{
+						//Se pone codigo 201 para identificar que el documento esta en la DIAN pero no se Tiene Radicado y no se haga consulta por este campo a la DIAN
+						acuse.Response = 201;
+						acuse.Comments = "Documento Electrónico recibido exitosamente";
+						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
+						respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
 
-					documentoBd.StrCufe = respuesta.Cufe;
-					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-					
-					documento_tmp.Actualizar(documentoBd);
-					throw new ArgumentException();
+						respuesta.EstadoDian = new RespuestaDian();
+						respuesta.EstadoDian.CodigoRespuesta = "0";
+						respuesta.EstadoDian.Descripcion = "Procesado Correctamente";
+						respuesta.EstadoDian.EstadoDocumento = EstadoDocumentoDian.Aceptado.GetHashCode();
+						respuesta.EstadoDian.FechaConsulta = respuesta.FechaUltimoProceso;
+
+						//Auditoria
+
+						try
+						{
+							string respuestadian = Newtonsoft.Json.JsonConvert.SerializeObject(respuesta.EstadoDian);
+							//valido la respuesta para saber que estado guardar en la Auditoria
+							int estado = CategoriaEstado.ValidadoDian.GetHashCode();
+							Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+							clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.ConsultaDian, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, Enumeracion.GetDescription(ProcesoEstado.ConsultaDian), respuestadian, respuesta.Prefijo, Convert.ToString(respuesta.Documento), estado);
+						}
+						catch (Exception e) { }
+
+					}
+					else
+					{
+						msg_response = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(acuse.MessagesFieldV2.Select(_X => _X.ProcessedMessage).ToList(), ";");
+						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+						documentoBd.StrCufe = respuesta.Cufe;
+						documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+						documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+						documento_tmp.Actualizar(documentoBd);
+						throw new ArgumentException();
+					}
 				}
 			}
 			catch (Exception excepcion)
@@ -90,7 +119,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("No es posible la comunicación con la Plataforma de la DIAN para el envío del archivo ZIP con el XML firmado"), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 				}
-				
+
 				LogExcepcion.Guardar(excepcion);
 				return null;
 			}
@@ -107,7 +136,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			documentoBd.StrUrlArchivoZip = url_ppal_zip;
 			documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 			documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-			if (empresa.IntVersionDian == 2)
+			if (empresa.IntVersionDian == 2 && acuse.Response.Equals(200))
 				documentoBd.StrIdRadicadoDian = Guid.Parse(acuse.KeyV2);
 
 			documento_tmp.Actualizar(documentoBd);
@@ -116,16 +145,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 			respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 
-			//Auditoria
-			try
+			if (acuse.Response != 201)
 			{
-				Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
-				clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.CompresionXml, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, "Compresión Archivo Zip", url_ppal_zip, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
-			}
-			catch (Exception e) { }
+				//Auditoria
+				try
+				{
+					Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+					clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion,respuesta.IdentificacionObligado, ProcesoEstado.CompresionXml, TipoRegistro.Proceso,Procedencia.Plataforma, string.Empty, "Compresión Archivo Zip", url_ppal_zip, respuesta.Prefijo,Convert.ToString(respuesta.Documento));
+				}
+				catch (Exception e)
+				{
+				}
 
-			//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
-			System.Threading.Thread.Sleep(5000);
+				//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
+				System.Threading.Thread.Sleep(5000);
+			}
 
 			return acuse;
 		}
@@ -243,7 +277,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					HGInetDIANServicios.DianResultadoTransacciones.DocumentosRecibidos resultado = Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), IdSoftware, clave, documentoBd.IntDocTipo, documentoBd.StrPrefijo, documentoBd.IntNumero.ToString(), obligado_identificacion, documentoBd.DatFechaDocumento, documentoBd.StrCufe, url_ws_consulta, ruta_xml);
 					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
 				}
-				
+
 				// url pública del xml de respuesta de la DIAN 
 				string url_ppal_respuesta = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
 

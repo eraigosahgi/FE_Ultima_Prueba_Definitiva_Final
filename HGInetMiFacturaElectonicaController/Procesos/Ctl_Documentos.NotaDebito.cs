@@ -240,22 +240,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						item_respuesta.IdPeticion = id_peticion;
 						id_radicado = Guid.Parse(item_respuesta.IdDocumento);
 						doc_existe = true;
-						if (numero_documento.IntIdEstado < ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode() || numero_documento.IntIdEstado > ProcesoEstado.PrevalidacionErrorDian.GetHashCode())
-						{
-							mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
-							throw new ApplicationException(mensaje);
-						}
-						else
+						if (numero_documento.IntIdEstado == ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.PrevalidacionErrorDian.GetHashCode())
 						{
 							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
 							documento_bd = numero_documento;
-							//documento_bd.StrIdSeguridad = numero_documento.StrIdSeguridad;
-							//documento_bd.StrIdPlanTransaccion = numero_documento.StrIdPlanTransaccion;
 
 							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
 							numero_documento = num_doc.Actualizar(numero_documento);
-
+						}
+						else
+						{
+							mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
+							throw new ApplicationException(mensaje);
 						}
 					}
 				}

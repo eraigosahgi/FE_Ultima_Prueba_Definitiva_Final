@@ -265,7 +265,7 @@ namespace HGInetUBLv2_1
 					nota_debito_obj.ValorCargo = nota_debito_ubl.RequestedMonetaryTotal.ChargeTotalAmount.Value;
 				if (nota_debito_ubl.RequestedMonetaryTotal.PrepaidAmount != null)
 					nota_debito_obj.ValorAnticipo = nota_debito_ubl.RequestedMonetaryTotal.PrepaidAmount.Value;
-				nota_debito_obj.ValorIva = nota_debito_ubl.RequestedMonetaryTotal.TaxExclusiveAmount.Value;
+				nota_debito_obj.ValorIva = nota_debito_ubl.RequestedMonetaryTotal.TaxExclusiveAmount.Value - nota_debito_ubl.RequestedMonetaryTotal.LineExtensionAmount.Value;
 				nota_debito_obj.Total = nota_debito_ubl.RequestedMonetaryTotal.PayableAmount.Value;
 
 				//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado

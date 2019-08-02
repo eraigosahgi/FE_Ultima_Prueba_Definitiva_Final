@@ -436,7 +436,7 @@ namespace HGInetUBLv2_1
 					factura_obj.ValorCargo = factura_ubl.LegalMonetaryTotal.ChargeTotalAmount.Value;
 				if (factura_ubl.LegalMonetaryTotal.PrepaidAmount != null)
 					factura_obj.ValorAnticipo = factura_ubl.LegalMonetaryTotal.PrepaidAmount.Value;
-				factura_obj.ValorIva = factura_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value;
+				factura_obj.ValorIva = factura_ubl.LegalMonetaryTotal.TaxExclusiveAmount.Value - factura_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
 				factura_obj.Total = factura_ubl.LegalMonetaryTotal.PayableAmount.Value;
 
 				//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado

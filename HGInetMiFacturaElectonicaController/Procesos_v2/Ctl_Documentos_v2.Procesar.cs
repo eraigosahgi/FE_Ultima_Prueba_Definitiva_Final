@@ -248,9 +248,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Valida estado del documento en la Plataforma de la DIAN
 				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode())
 				{
-					if (respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
+					if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()) && documento.StrIdRadicadoDian != null)
 					{
-						respuesta = Consultar(documento, empresa, ref respuesta, documento.StrIdRadicadoDian.ToString());
+						respuesta = Consultar(documento, empresa, ref respuesta);
+					}
+
+					if (respuesta.EstadoDian.EstadoDocumento < EstadoDocumentoDian.Aceptado.GetHashCode())
+					{
+						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 					}
 
 					// envía el mail de documentos al adquiriente

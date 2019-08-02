@@ -993,11 +993,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				FacturaConsulta factura = new FacturaConsulta();
 				documento_obj = factura;
 
-				serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
+				if (objetoBd.IntVersionDian == 1)
+				{
+					serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
 
-				HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
+					HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType) serializacion.Deserialize(xml_reader);
 
-				documento_obj.DatosFactura = HGInetUBL.FacturaXML.Convertir(conversion, objetoBd);
+					documento_obj.DatosFactura = HGInetUBL.FacturaXML.Convertir(conversion, objetoBd, true);
+				}
+				else
+				{
+					serializacion = new XmlSerializer(typeof(InvoiceType));
+
+					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+
+					documento_obj.DatosFactura = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, objetoBd, true);
+				}
+
 				documento_obj.DatosFactura.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 
 			}
@@ -1008,11 +1020,24 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				documento_obj = nota_credito;
 
-				serializacion = new XmlSerializer(typeof(HGInetUBL.CreditNoteType));
+				if (objetoBd.IntVersionDian == 1)
+				{
 
-				HGInetUBL.CreditNoteType conversion = (HGInetUBL.CreditNoteType)serializacion.Deserialize(xml_reader);
+					serializacion = new XmlSerializer(typeof(HGInetUBL.CreditNoteType));
 
-				documento_obj.DatosNotaCredito = HGInetUBL.NotaCreditoXML.Convertir(conversion, objetoBd);
+					HGInetUBL.CreditNoteType conversion = (HGInetUBL.CreditNoteType) serializacion.Deserialize(xml_reader);
+
+					documento_obj.DatosNotaCredito = HGInetUBL.NotaCreditoXML.Convertir(conversion, objetoBd, true);
+				}
+				else
+				{
+					serializacion = new XmlSerializer(typeof(CreditNoteType));
+
+					CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+
+					documento_obj.DatosNotaCredito = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, objetoBd, true);
+				}
+
 				documento_obj.DatosNotaCredito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 			}
 			else if (objetoBd.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
@@ -1022,11 +1047,25 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				documento_obj = nota_debito;
 
-				serializacion = new XmlSerializer(typeof(HGInetUBL.DebitNoteType));
+				if (objetoBd.IntVersionDian == 1)
+				{
 
-				HGInetUBL.DebitNoteType conversion = (HGInetUBL.DebitNoteType)serializacion.Deserialize(xml_reader);
+					serializacion = new XmlSerializer(typeof(HGInetUBL.DebitNoteType));
 
-				documento_obj.DatosNotaDebito = HGInetUBL.NotaDebitoXML.Convertir(conversion, objetoBd);
+					HGInetUBL.DebitNoteType conversion = (HGInetUBL.DebitNoteType) serializacion.Deserialize(xml_reader);
+
+					documento_obj.DatosNotaDebito = HGInetUBL.NotaDebitoXML.Convertir(conversion, objetoBd);
+				}
+				else
+				{
+					serializacion = new XmlSerializer(typeof(DebitNoteType));
+
+					DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+					documento_obj.DatosNotaDebito = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, objetoBd, true);
+				}
+
+
 				documento_obj.DatosNotaDebito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 
 			}

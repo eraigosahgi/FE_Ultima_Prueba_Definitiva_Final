@@ -26,29 +26,37 @@ namespace HGInetDIANServicios
 				//Certificado de producción
 				X509Certificate2 cert = new X509Certificate2(ruta_certificado, clave_certificado);
 				webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
-				
-				List<DianWSValidacionPrevia.DianResponse> resultado = webServiceHab.GetStatusZip(TrackId).ToList();
-				
-				//Guardo la respuesta en XML
-				foreach (var respuesta in resultado)
+
+				List<DianWSValidacionPrevia.DianResponse> resultado = null;
+
+				if (!string.IsNullOrEmpty(TrackId))
 				{
-					string archivo = string.Format("{0}.xml", respuesta.XmlFileName);
 
-					var ser = new XmlSerializer(typeof(List<DianWSValidacionPrevia.DianResponse>));
-					TextWriter writer = new StreamWriter(string.Format(@"{0}\{1}", ruta_xml, archivo));
-					ser.Serialize(writer, resultado);
+					resultado = webServiceHab.GetStatusZip(TrackId).ToList();
 
-					//Guardo el Base64 de la Respuesta
-					string base64 = string.Format("{0}-Base64.xml", respuesta.XmlFileName);
+					//Guardo la respuesta en XML
+					foreach (var respuesta in resultado)
+					{
+						string archivo = string.Format("{0}.xml", respuesta.XmlFileName);
 
-					FileStream fs = new FileStream(string.Format(@"{0}\{1}", ruta_xml, base64), FileMode.Create, FileAccess.ReadWrite);
-					BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
-					bw.Write(respuesta.XmlBase64Bytes);
-					bw.Close();
-					fs.Close();
+						var ser = new XmlSerializer(typeof(List<DianWSValidacionPrevia.DianResponse>));
+						TextWriter writer = new StreamWriter(string.Format(@"{0}\{1}", ruta_xml, archivo));
+						ser.Serialize(writer, resultado);
+
+						//Guardo el Base64 de la Respuesta
+						string base64 = string.Format("{0}-Base64.xml", respuesta.XmlFileName);
+
+						FileStream fs = new FileStream(string.Format(@"{0}\{1}", ruta_xml, base64), FileMode.Create,FileAccess.ReadWrite);
+						BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+						bw.Write(respuesta.XmlBase64Bytes);
+						bw.Close();
+						fs.Close();
+					}
+					
 				}
 
 				return resultado;
+
 			}
 			catch (Exception excepcion)
 			{
