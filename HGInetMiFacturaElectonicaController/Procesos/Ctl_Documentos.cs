@@ -950,7 +950,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.CalculaIVA == 0)
 						{
-							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), 0) == Docdet.IvaValor)
+							//Se redondea en el valor medio hacia arriba ej: 121.5 redondeado = 122
+							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), MidpointRounding.AwayFromZero) == Docdet.IvaValor)
 							{
 								if (Docdet.IvaPorcentaje == 0)
 								{
@@ -989,7 +990,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (Docdet.ReteFuenteValor > 0)
 						{
 
-							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), 0) == Docdet.ReteFuenteValor)
+							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), MidpointRounding.AwayFromZero) == Docdet.ReteFuenteValor)
 							{
 								ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
 								ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
@@ -998,8 +999,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							else
 							{
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "ReteFuente",
-									Docdet.ReteFuenteValor));
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "ReteFuente",Docdet.ReteFuenteValor));
 							}
 
 						}
@@ -1007,13 +1007,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.DescuentoValor > 0)
 						{
-							if (decimal.Round(((Docdet.ValorUnitario * Docdet.Cantidad) * (Docdet.DescuentoPorcentaje / 100)), 0) != Docdet.DescuentoValor)
+							if (decimal.Round(((Docdet.ValorUnitario * Docdet.Cantidad) * (Docdet.DescuentoPorcentaje / 100)),MidpointRounding.AwayFromZero) != Docdet.DescuentoValor)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "DescuentoValor", Docdet.DescuentoValor));
 						}
 
 						if (Docdet.ValorImpuestoConsumo > 0)
 						{
-							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje * 100)), 0) == Docdet.ValorImpuestoConsumo)
+							if (decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje * 100), MidpointRounding.AwayFromZero) == Docdet.ValorImpuestoConsumo)
 							{
 								ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
 								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
