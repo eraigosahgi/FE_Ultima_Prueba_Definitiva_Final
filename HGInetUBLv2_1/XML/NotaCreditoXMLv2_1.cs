@@ -274,6 +274,12 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
+				#region nota_credito.CreditNoteLine  //Línea de nota_credito
+				//Elemento que agrupa todos los campos de una línea de nota_credito
+				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.CufeFactura, documento.Moneda);
+
+				#endregion
+
 				#region	nota_credito.TaxTotal //Impuesto y Impuesto Retenido
 				/*Impuesto Retenido: Elemento raíz compuesto utilizado para informar de un impuesto	retenido. 
 			    *Impuesto: Elemento raíz compuesto utilizado para informar de un impuesto.*/
@@ -288,7 +294,11 @@ namespace HGInetUBLv2_1
 				en cuenta las líneas de nota_credito y elementos a
 				nivel de nota_credito, como descuentos, cargos,
 				impuestos, etc*/
-				nota_credito.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento);
+
+				decimal subtotal = nota_credito.CreditNoteLine.Sum(s => s.LineExtensionAmount.Value);
+				decimal impuestos = nota_credito.TaxTotal.Sum(i => i.TaxAmount.Value);
+
+				nota_credito.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
 				#endregion
 
 				
@@ -345,12 +355,6 @@ namespace HGInetUBLv2_1
 				UBLExtensions.Add(UBLExtensionFirma);
 
 				nota_credito.UBLExtensions = UBLExtensions.ToArray();
-
-				#endregion
-
-				#region nota_credito.CreditNoteLine  //Línea de nota_credito
-				//Elemento que agrupa todos los campos de una línea de nota_credito
-				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.CufeFactura, documento.Moneda);
 
 				#endregion
 

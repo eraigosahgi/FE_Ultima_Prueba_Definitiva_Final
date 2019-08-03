@@ -420,7 +420,11 @@ namespace HGInetUBLv2_1
 				#region facturaXML.LegalMonetaryTotal //Datos Importes Totales
 				/*Agrupación de campos relativos a los importes totales aplicables a la	facturaXML. Estos importes son calculados teniendo
                 en cuenta las líneas de facturaXML y elementos a nivel de facturaXML, como descuentos, cargos, impuestos, etc*/
-				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento);
+
+				decimal subtotal = facturaXML.InvoiceLine.Sum(s => s.LineExtensionAmount.Value);
+				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
+
+				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
 
 				#endregion
 
@@ -1187,6 +1191,22 @@ namespace HGInetUBLv2_1
 					{
 						AllowanceChargeType[] AllowanceCharges = new AllowanceChargeType[1];
 						AllowanceChargeType AllowanceCharge = new AllowanceChargeType();
+						AllowanceCharge.BaseAmount = new BaseAmountType();
+						AllowanceCharge.BaseAmount.currencyID = moneda_detalle.ToString();
+						if (DocDet.DescuentoPorcentaje > 0)
+						{
+							decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
+							AllowanceCharge.BaseAmount.Value = decimal.Round(valorTotal, 2);
+						}
+						else
+						{
+							AllowanceCharge.BaseAmount.Value = 0.00M;
+						}
+
+						decimal desc_cal = decimal.Round((AllowanceCharge.BaseAmount.Value * (DocDet.DescuentoPorcentaje / 100)), 2);
+						if ((AllowanceCharge.BaseAmount.Value - desc_cal) != DocDet.ValorSubtotal)
+							DocDet.ValorSubtotal = AllowanceCharge.BaseAmount.Value - desc_cal;
+
 						AllowanceCharge.ChargeIndicator = new ChargeIndicatorType();
 						AllowanceCharge.ChargeIndicator.Value = false;
 						AllowanceCharge.AllowanceChargeReasonCode = new AllowanceChargeReasonCodeType();
@@ -1200,19 +1220,7 @@ namespace HGInetUBLv2_1
 						AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 2);
 						AllowanceCharge.Amount = new AmountType2();
 						AllowanceCharge.Amount.currencyID = moneda_detalle.ToString();
-						AllowanceCharge.Amount.Value = decimal.Round(DocDet.DescuentoValor, 2);
-						AllowanceCharge.BaseAmount = new BaseAmountType();
-						AllowanceCharge.BaseAmount.currencyID = moneda_detalle.ToString();
-						if (DocDet.DescuentoPorcentaje > 0)
-						{
-							decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
-							AllowanceCharge.BaseAmount.Value = decimal.Round(valorTotal, 2);
-						}
-						else
-						{
-							AllowanceCharge.BaseAmount.Value = 0.00M;
-						}
-
+						AllowanceCharge.Amount.Value = decimal.Round(desc_cal, 2);
 						AllowanceCharges[0] = AllowanceCharge;
 
 						InvoiceLineType1.AllowanceCharge = AllowanceCharges;
@@ -1226,10 +1234,13 @@ namespace HGInetUBLv2_1
 					// <cac:TaxTotal>
 					List<TaxTotalType> TaxesTotal = new List<TaxTotalType>();
 
-					if (DocDet.IvaValor > 0)
+					if (DocDet.IvaValor >= 0)
 					{
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();
+
+						if (decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2) != DocDet.IvaValor)
+							DocDet.IvaValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2);
 
 						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
 						// <cbc:TaxAmount>
@@ -1312,6 +1323,9 @@ namespace HGInetUBLv2_1
 
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();
+
+						if (decimal.Round((DocDet.ValorSubtotal * (DocDet.ImpoConsumoPorcentaje * 100)), 2) != DocDet.ValorImpuestoConsumo)
+							DocDet.ValorImpuestoConsumo = decimal.Round((DocDet.ValorSubtotal * (DocDet.ImpoConsumoPorcentaje * 100)), 2);
 
 						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
 						// <cbc:TaxAmount>
@@ -1443,6 +1457,9 @@ namespace HGInetUBLv2_1
 					{
 
 						List<TaxTotalType> TaxesTotalRete = new List<TaxTotalType>();
+
+						if (decimal.Round((DocDet.ValorSubtotal * (DocDet.ReteFuentePorcentaje / 100)), 0) != DocDet.ReteFuenteValor)
+							DocDet.ReteFuenteValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.ReteFuentePorcentaje / 100)), 2);
 
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();

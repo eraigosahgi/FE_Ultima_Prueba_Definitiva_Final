@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetUBLv2_1
@@ -15,7 +16,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="documento">datos del documento</param>
 		/// <returns>MonetaryTotalType1</returns>
-		public static MonetaryTotalType ObtenerTotales(object documento_obj)
+		public static MonetaryTotalType ObtenerTotales(object documento_obj, decimal subtotal, decimal impuesto)
 		{
 			try
 			{
@@ -140,6 +141,16 @@ namespace HGInetUBLv2_1
 				LegalMonetaryTotal.PayableAmount = PayableAmount;
 
 				#endregion
+
+				
+				if (decimal.Round(subtotal + impuesto + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo, 2) != documento.Total)
+				{
+					decimal total_cal = decimal.Round(subtotal + impuesto + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo, 2);
+					PayableRoundingAmountType Rounding = new PayableRoundingAmountType();
+					Rounding.currencyID = moneda_documento.ToString();
+					Rounding.Value = decimal.Round(documento.Total - total_cal, 2);
+					LegalMonetaryTotal.PayableRoundingAmount = Rounding;
+				}
 
 				return LegalMonetaryTotal;
 

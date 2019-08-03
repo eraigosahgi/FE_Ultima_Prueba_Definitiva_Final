@@ -74,6 +74,7 @@ namespace HGInetDIANServicios
 				}
 				catch (Exception excepcion)
 				{
+					RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
 					throw excepcion;
 				}
 

@@ -267,17 +267,6 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
-				#region nota_debito.LegalMonetaryTotal //Datos Importes Totales
-
-				/*Agrupación de campos
-				relativos a los importes totales aplicables a la
-				nota_debito. Estos importes son calculados teniendo
-				en cuenta las líneas de nota_debito y elementos a
-				nivel de nota_debito, como descuentos, cargos,
-				impuestos, etc*/
-				nota_debito.RequestedMonetaryTotal = TotalesXML.ObtenerTotales(documento);
-				#endregion
-
 				#region nota_debito.CreditNoteLine  //Línea de nota_debito
 
 				//Elemento que agrupa todos los campos de una línea de nota_debito
@@ -290,7 +279,22 @@ namespace HGInetUBLv2_1
 
 				nota_debito.LineCountNumeric = new LineCountNumericType();
 				nota_debito.LineCountNumeric.Value = documento.DocumentoDetalles.Count;
-				
+
+				#region nota_debito.LegalMonetaryTotal //Datos Importes Totales
+
+				/*Agrupación de campos
+				relativos a los importes totales aplicables a la
+				nota_debito. Estos importes son calculados teniendo
+				en cuenta las líneas de nota_debito y elementos a
+				nivel de nota_debito, como descuentos, cargos,
+				impuestos, etc*/
+
+				decimal subtotal = nota_debito.DebitNoteLine.Sum(s => s.LineExtensionAmount.Value);
+				decimal impuestos = nota_debito.TaxTotal.Sum(i => i.TaxAmount.Value);
+
+				nota_debito.RequestedMonetaryTotal = TotalesXML.ObtenerTotales(documento, subtotal, impuestos);
+				#endregion
+
 				#region nota_debito.UUID //CUDE:Codigo Unico de Documento Electronico.
 
 				/*
