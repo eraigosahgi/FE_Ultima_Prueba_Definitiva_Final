@@ -295,7 +295,7 @@ namespace HGInetUBLv2_1
 				nivel de nota_credito, como descuentos, cargos,
 				impuestos, etc*/
 
-				decimal subtotal = nota_credito.CreditNoteLine.Sum(s => s.LineExtensionAmount.Value);
+				decimal subtotal = nota_credito.TaxTotal.Sum(s => s.TaxSubtotal.Sum(v => v.TaxableAmount.Value));
 				decimal impuestos = nota_credito.TaxTotal.Sum(i => i.TaxAmount.Value);
 
 				nota_credito.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);

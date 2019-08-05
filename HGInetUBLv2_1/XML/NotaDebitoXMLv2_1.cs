@@ -289,7 +289,7 @@ namespace HGInetUBLv2_1
 				nivel de nota_debito, como descuentos, cargos,
 				impuestos, etc*/
 
-				decimal subtotal = nota_debito.DebitNoteLine.Sum(s => s.LineExtensionAmount.Value);
+				decimal subtotal = nota_debito.TaxTotal.Sum(s => s.TaxSubtotal.Sum(v => v.TaxableAmount.Value));
 				decimal impuestos = nota_debito.TaxTotal.Sum(i => i.TaxAmount.Value);
 
 				nota_debito.RequestedMonetaryTotal = TotalesXML.ObtenerTotales(documento, subtotal, impuestos);

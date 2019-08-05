@@ -456,6 +456,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
 					throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
+				ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
+				ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
+				if (codpostal == null)
+					throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoTributo, tipo));
 
 				if ((tercero.Responsabilidades == null || !tercero.Responsabilidades.Any()) && tipo.Equals("Obligado"))
 				{

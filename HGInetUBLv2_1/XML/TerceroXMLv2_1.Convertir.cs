@@ -23,7 +23,7 @@ namespace HGInetUBLv2_1
 			obligado.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(empresa.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
 			obligado.CodigoTributo = empresa.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID.Value;
 			obligado.RazonSocial = empresa.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
-			obligado.NombreComercial = empresa.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.Name.Value;
+			obligado.NombreComercial = obligado.RazonSocial; //empresa.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.Name.Value;
 
 			//Valida si es persona Natural
 			if (empresa.Party.Person != null)
@@ -42,6 +42,8 @@ namespace HGInetUBLv2_1
 			obligado.Departamento = empresa.Party.PhysicalLocation.Address.CountrySubentity.Value;
 			obligado.CodigoDepartamento = empresa.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
 			obligado.CodigoPais = empresa.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
+			if (empresa.Party.PhysicalLocation.Address.PostalZone != null)
+				obligado.CodigoPostal = empresa.Party.PhysicalLocation.Address.PostalZone.Value;
 
 			if (empresa.Party.Contact != null)
 			{
@@ -66,10 +68,11 @@ namespace HGInetUBLv2_1
 			adquiriente.TipoIdentificacion = Convert.ToInt16(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName);
 			adquiriente.TipoPersona = Convert.ToInt16(cliente.AdditionalAccountID.FirstOrDefault().Value);
 			adquiriente.RegimenFiscal = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName;
-			adquiriente.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
+			if (!string.IsNullOrEmpty(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value))
+				adquiriente.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
 			adquiriente.CodigoTributo = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID.Value;
 			adquiriente.RazonSocial = cliente.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
-			adquiriente.NombreComercial = cliente.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.Name.Value;
+			adquiriente.NombreComercial = adquiriente.RazonSocial; //cliente.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.Name.Value;
 
 			//Valida si es persona Natural 
 			if (cliente.Party.Person != null)
@@ -87,6 +90,8 @@ namespace HGInetUBLv2_1
 			adquiriente.Departamento = cliente.Party.PhysicalLocation.Address.CountrySubentity.Value;
 			adquiriente.CodigoDepartamento = cliente.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
 			adquiriente.CodigoPais = cliente.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
+			if (cliente.Party.PhysicalLocation.Address.PostalZone != null)
+				adquiriente.CodigoPostal = cliente.Party.PhysicalLocation.Address.PostalZone.Value;
 
 			//Valida si tiene Contacto
 			if (cliente.Party.Contact != null)

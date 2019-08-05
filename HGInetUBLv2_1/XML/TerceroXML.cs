@@ -302,8 +302,8 @@ namespace HGInetUBLv2_1
 				Address.AddressLine = AddressLines;
 
 				//Zona Postal - Obligatorio para emisores y Adquirentes Responsables 
-				//Address.PostalZone = new PostalZoneType();
-				//Address.PostalZone.Value = "";//Listado de Zona Postal de Colombia
+				Address.PostalZone = new PostalZoneType();
+				Address.PostalZone.Value = tercero.CodigoPostal;//Listado de Zona Postal de Colombia
 
 				//5.4.1. Países (ISO 3166-1): cbc:IdentificationCode 
 				//ISO 3166-1 alfa-2: Códigos de país de das letras. Si recomienda como el código de propósito

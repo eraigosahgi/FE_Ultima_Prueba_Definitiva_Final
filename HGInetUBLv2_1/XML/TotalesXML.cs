@@ -82,7 +82,7 @@ namespace HGInetUBLv2_1
 				//	Total importe bruto, suma de los importes brutos de las líneas de la factura - los productos que son regalos.
 				LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
 				LineExtensionAmount.currencyID = moneda_documento.ToString();
-				LineExtensionAmount.Value = decimal.Round(documento.ValorSubtotal, 2);
+				LineExtensionAmount.Value = decimal.Round(subtotal, 2);//decimal.Round(documento.ValorSubtotal, 2);
 				LegalMonetaryTotal.LineExtensionAmount = LineExtensionAmount;
 
 				#endregion
@@ -93,7 +93,7 @@ namespace HGInetUBLv2_1
 				//Subtotal de la factura incluyendo los productos que son regalo.
 				TaxExclusiveAmountType TaxExclusiveAmount = new TaxExclusiveAmountType();
 				TaxExclusiveAmount.currencyID = moneda_documento.ToString();
-				TaxExclusiveAmount.Value = decimal.Round(documento.ValorSubtotal, 2);
+				TaxExclusiveAmount.Value = decimal.Round(subtotal, 2);//decimal.Round(documento.ValorSubtotal, 2);
 				LegalMonetaryTotal.TaxExclusiveAmount = TaxExclusiveAmount;
 
 				#endregion
@@ -103,7 +103,7 @@ namespace HGInetUBLv2_1
 				#region Valor total base no imponible (no generó impuestos)
 				TaxInclusiveAmountType TaxInclusiveAmount = new TaxInclusiveAmountType();
 				TaxInclusiveAmount.currencyID = moneda_documento.ToString();
-				TaxInclusiveAmount.Value = decimal.Round(documento.ValorSubtotal, 2) + decimal.Round(documento.ValorIva, 2);
+				TaxInclusiveAmount.Value = decimal.Round(subtotal, 2) + decimal.Round(impuesto, 2);//decimal.Round(documento.ValorSubtotal, 2) + decimal.Round(documento.ValorIva, 2);
 				LegalMonetaryTotal.TaxInclusiveAmount = TaxInclusiveAmount;
 				#endregion
 

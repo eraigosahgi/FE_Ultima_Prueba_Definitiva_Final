@@ -421,7 +421,7 @@ namespace HGInetUBLv2_1
 				/*Agrupación de campos relativos a los importes totales aplicables a la	facturaXML. Estos importes son calculados teniendo
                 en cuenta las líneas de facturaXML y elementos a nivel de facturaXML, como descuentos, cargos, impuestos, etc*/
 
-				decimal subtotal = facturaXML.InvoiceLine.Sum(s => s.LineExtensionAmount.Value);
+				decimal subtotal = facturaXML.TaxTotal.Sum(s => s.TaxSubtotal.Sum(v => v.TaxableAmount.Value));
 				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
 
 				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
