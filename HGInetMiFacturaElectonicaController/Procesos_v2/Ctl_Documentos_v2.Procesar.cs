@@ -250,7 +250,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()) && documento.StrIdRadicadoDian != null)
 					{
-						respuesta = Consultar(documento, empresa, ref respuesta);
+						respuesta = Consultar(documento, empresa, ref respuesta, documento.StrIdRadicadoDian.ToString());
 					}
 
 					if (respuesta.EstadoDian.EstadoDocumento < EstadoDocumentoDian.Aceptado.GetHashCode())

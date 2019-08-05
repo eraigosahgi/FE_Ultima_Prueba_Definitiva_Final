@@ -1,4 +1,5 @@
 ﻿using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,16 +17,26 @@ namespace HGInetDIANServicios
 
 		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web)
 		{
+				
+			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
+			MensajeAccion log_accion = MensajeAccion.lectura;
 
 			try
 			{
 				
+
 				DianWSValidacionPrevia.WcfDianCustomerServicesClient webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
 				webServiceHab.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
 
 				//Certificado de producción
 				X509Certificate2 cert = new X509Certificate2(ruta_certificado, clave_certificado);
 				webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
+
+				//Se agrega instruccion para habilitar la seguridad en el envio
+				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+				log_categoria = MensajeCategoria.ServicioDian;
+				log_accion = MensajeAccion.consulta;
 
 				List<DianWSValidacionPrevia.DianResponse> resultado = null;
 
@@ -54,13 +65,20 @@ namespace HGInetDIANServicios
 					}
 					
 				}
+				else
+				{
+					log_categoria = MensajeCategoria.ServicioDian;
+					log_accion = MensajeAccion.ninguna;
+					throw new ApplicationException("No se encontro trackid");
+				}
 
 				return resultado;
 
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+				//LogExcepcion.Guardar(excepcion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -73,6 +91,9 @@ namespace HGInetDIANServicios
 		/// <returns>validación propia de HGI</returns>
 		public static ConsultaDocumento ValidarTransaccionV2(List<DianWSValidacionPrevia.DianResponse> documento)
 		{
+
+			MensajeCategoria log_categoria = MensajeCategoria.ServicioDian;
+			MensajeAccion log_accion = MensajeAccion.lectura;
 
 			try
 			{
@@ -99,7 +120,8 @@ namespace HGInetDIANServicios
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+				//LogExcepcion.Guardar(excepcion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
