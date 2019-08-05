@@ -264,6 +264,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (respuesta.EstadoDian.CodigoRespuesta == ValidacionRespuestaDian.NoRecibido.ToString())
 						{
 							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+							//Se valida si esta es la respuesta por que es un error de la DIAN pero se debe enviar el correo al adquiriente
+							if (acuse.Response.Equals(100))
+							{
+								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
+								Ctl_Documento documento_tmp = new Ctl_Documento();
+								documento_tmp.Actualizar(documento);
+							}
+
 							ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 						}
 						else if (respuesta.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Pendiente.GetHashCode())
@@ -288,6 +296,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 					{
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+						//Se valida si esta es la respuesta por que es un error de la DIAN pero se debe enviar el correo al adquiriente  
+						if (acuse.Response.Equals(100))
+						{
+							respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
+							Ctl_Documento documento_tmp = new Ctl_Documento();
+							documento_tmp.Actualizar(documento);
+						}
 						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 					}
 				}

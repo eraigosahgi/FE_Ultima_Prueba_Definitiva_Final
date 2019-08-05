@@ -54,6 +54,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.FechaUltimoProceso = Fecha.GetFecha();
 					respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
 				}
+				else if (acuse.Response.Equals(100))
+				{
+					documentoBd.IntEnvioMail = true;
+				}
 				else if (acuse.MessagesFieldV2 != null)
 				{
 					//---Manejar funcion de Alerta
