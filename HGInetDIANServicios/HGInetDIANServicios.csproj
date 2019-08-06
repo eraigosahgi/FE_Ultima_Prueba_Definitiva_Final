@@ -116,7 +116,47 @@
     <None Include="Service References\DianResultadoTransacciones\HGInetDIANServicios.DianResultadoTransacciones.ConsultaResultadoValidacionDocumentosRespuesta.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.DianResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.EventResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.UploadDocumentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.wsdl" />
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.wsdl" />
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices8.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices9.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -214,6 +254,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
