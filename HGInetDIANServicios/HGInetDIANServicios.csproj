@@ -116,44 +116,32 @@
     <None Include="Service References\DianResultadoTransacciones\HGInetDIANServicios.DianResultadoTransacciones.ConsultaResultadoValidacionDocumentosRespuesta.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.DianResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.EventResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.UploadDocumentResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.wsdl" />
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.wsdl" />
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices9.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices91.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices2.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices92.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices3.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices93.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices4.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices94.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices5.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices95.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices6.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices96.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices7.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices97.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices8.xsd">
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices98.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -213,9 +201,6 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\DianWSValidacionPrevia\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +211,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
