@@ -255,7 +255,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					if (respuesta.EstadoDian.EstadoDocumento < EstadoDocumentoDian.Aceptado.GetHashCode())
 					{
-						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
+						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian);
 						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 					}
 

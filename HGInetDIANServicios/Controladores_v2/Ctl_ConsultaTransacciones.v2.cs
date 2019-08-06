@@ -17,13 +17,13 @@ namespace HGInetDIANServicios
 
 		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web)
 		{
-				
+
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
 			MensajeAccion log_accion = MensajeAccion.lectura;
 
 			try
 			{
-				
+
 
 				DianWSValidacionPrevia.WcfDianCustomerServicesClient webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
 				webServiceHab.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
@@ -63,7 +63,7 @@ namespace HGInetDIANServicios
 						bw.Close();
 						fs.Close();
 					}
-					
+
 				}
 				else
 				{
@@ -102,6 +102,12 @@ namespace HGInetDIANServicios
 				resultado.Mensaje = "";
 
 				DianWSValidacionPrevia.DianResponse doc_valido = documento.Where(d => d.IsValid == true && d.StatusCode == "0").FirstOrDefault();
+
+				//Se guarda errores presentados por la DIAN
+				if (doc_valido.ErrorMessage != null)
+				{
+					resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_valido.ErrorMessage.ToList(), ";");
+				}
 
 				if (doc_valido != null)
 				{

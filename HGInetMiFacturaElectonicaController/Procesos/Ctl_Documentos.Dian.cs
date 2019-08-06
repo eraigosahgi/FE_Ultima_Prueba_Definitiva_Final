@@ -21,7 +21,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using LibreriaGlobalHGInet.HgiNet;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -40,6 +42,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		{
 
 			string msg_response = String.Empty;
+
+			MensajeCategoria log_categoria = MensajeCategoria.Conexion;
+			MensajeAccion log_accion = MensajeAccion.envio;
 
 			HGInetDIANServicios.DianFactura.AcuseRecibo acuse = new HGInetDIANServicios.DianFactura.AcuseRecibo();
 			Ctl_Documento documento_tmp = new Ctl_Documento();
@@ -60,7 +65,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else if (acuse.MessagesFieldV2 != null)
 				{
-					//---Manejar funcion de Alerta
 					respuesta.FechaUltimoProceso = Fecha.GetFecha();
 					if (acuse.MessagesFieldV2.FirstOrDefault().ProcessedMessage.Equals("Documento enviado previamente"))
 					{
@@ -91,14 +95,27 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					else
 					{
+						log_categoria = MensajeCategoria.Servicio;
+						log_accion = MensajeAccion.alarma;
+						try
+						{
+							Ctl_Alertas alerta = new Ctl_Alertas();
+							alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), acuse.MessagesFieldV2.Select(_X => _X.ProcessedMessage).ToList(), 1, false);
+
+						}
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+						}
+
 						msg_response = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(acuse.MessagesFieldV2.Select(_X => _X.ProcessedMessage).ToList(), ";");
-						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorDian.GetHashCode();
 						documentoBd.StrCufe = respuesta.Cufe;
 						documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 						documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
 						documento_tmp.Actualizar(documentoBd);
-						throw new ArgumentException();
+						throw new ApplicationException(string.Format("Respuesta Dian: {0}", msg_response));
 					}
 				}
 			}
@@ -111,9 +128,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
-					if (documentoBd.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+					if (documentoBd.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode())
 					{
-						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorDian.GetHashCode();
 
 						documentoBd.StrCufe = respuesta.Cufe;
 						documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
@@ -121,10 +138,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						documento_tmp.Actualizar(documentoBd);
 					}
-					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("No es posible la comunicación con la Plataforma de la DIAN para el envío del archivo ZIP con el XML firmado"), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+					//respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("No es posible la comunicación con la Plataforma de la DIAN para el envío del archivo ZIP con el XML firmado"), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Se presentó inconsistencias en el envío del archivo ZIP con el XML firmado a la Plataforma de la DIAN: {0}", msg_response), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 				}
-
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+				//LogExcepcion.Guardar(excepcion);
 				return null;
 			}
 
@@ -155,7 +173,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				try
 				{
 					Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
-					clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion,respuesta.IdentificacionObligado, ProcesoEstado.CompresionXml, TipoRegistro.Proceso,Procedencia.Plataforma, string.Empty, "Compresión Archivo Zip", url_ppal_zip, respuesta.Prefijo,Convert.ToString(respuesta.Documento));
+					clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.CompresionXml, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, "Compresión Archivo Zip", url_ppal_zip, respuesta.Prefijo, Convert.ToString(respuesta.Documento));
 				}
 				catch (Exception e)
 				{
@@ -274,7 +292,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					// Consulta del documento con validación previa
 					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta);
 					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(resultado);
-
 				}
 				else
 				{
@@ -299,15 +316,53 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				try
 				{
 					string respuestadian = Newtonsoft.Json.JsonConvert.SerializeObject(respuesta.EstadoDian);
-					//valido la respuesta para saber que estado guardar en la Auditoria
+					List<string> list_errormsg = null;
+					if (resultado_doc.Mensaje != null && empresa.IntVersionDian == 2)
+						list_errormsg = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(resultado_doc.Mensaje, ';');
+
+					//valido la respuesta para saber que estado guardar en la Auditoria y generar notificacion
 					int estado = 0;
 					if (resultado_doc.Estado == EstadoDocumentoDian.Aceptado)
 					{
 						estado = CategoriaEstado.ValidadoDian.GetHashCode();
+
+						//Si la respuesta es de V2 y llego con errores alerto para validar
+						if (list_errormsg != null)
+						{
+							MensajeCategoria log_categoria = MensajeCategoria.Servicio;
+							MensajeAccion log_accion = MensajeAccion.alarma;
+							try
+							{
+								Ctl_Alertas alerta = new Ctl_Alertas();
+								alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), list_errormsg, 2, true);
+							}
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+							}
+
+						}
+
 					}
 					else if (resultado_doc.Estado == EstadoDocumentoDian.Rechazado)
 					{
 						estado = CategoriaEstado.FallidoDian.GetHashCode();
+
+						//Si la respuesta es de V2 y llego con errores alerto para validar
+						if (list_errormsg != null)
+						{
+							MensajeCategoria log_categoria = MensajeCategoria.Servicio;
+							MensajeAccion log_accion = MensajeAccion.alarma;
+							try
+							{
+								Ctl_Alertas alerta = new Ctl_Alertas();
+								alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), list_errormsg, 2, false);
+							}
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+							}
+						}
 					}
 					else
 					{
