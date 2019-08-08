@@ -317,7 +317,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					string respuestadian = Newtonsoft.Json.JsonConvert.SerializeObject(respuesta.EstadoDian);
 					List<string> list_errormsg = null;
-					if (string.IsNullOrEmpty(resultado_doc.Mensaje) && empresa.IntVersionDian == 2)
+					if (!string.IsNullOrEmpty(resultado_doc.Mensaje) && empresa.IntVersionDian == 2)
 						list_errormsg = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(resultado_doc.Mensaje, ';');
 
 					//valido la respuesta para saber que estado guardar en la Auditoria y generar notificacion
