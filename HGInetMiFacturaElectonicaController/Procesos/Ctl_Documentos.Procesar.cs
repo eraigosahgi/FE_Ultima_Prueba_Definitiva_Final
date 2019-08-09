@@ -207,6 +207,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// facturador electrónico del documento
 				empresa = documento.TblEmpresasFacturador;
 
+				//Se pone la version que tiene el documento a la empresa para que los demas procesos lo haga por esta version
+				empresa.IntVersionDian = documento.IntVersionDian;
+
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				// ruta física del xml

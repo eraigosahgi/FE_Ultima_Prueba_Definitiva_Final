@@ -128,8 +128,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                     tbl_resolucion_actual.DatFechaActualizacion = Fecha.GetFecha();
                     tbl_resolucion_actual.StrIdSetDian = tbl_resolucion.StrIdSetDian;
                     tbl_resolucion_actual.IntVersionDian = tbl_resolucion.IntVersionDian;
+                    if (!string.IsNullOrEmpty(setidpruebas))
+	                    tbl_resolucion.StrIdSetDian = setidpruebas;
 
-                    this.Edit(tbl_resolucion_actual);
+					this.Edit(tbl_resolucion_actual);
                     lista_resolucion.Add(tbl_resolucion_actual);
                 }
             }

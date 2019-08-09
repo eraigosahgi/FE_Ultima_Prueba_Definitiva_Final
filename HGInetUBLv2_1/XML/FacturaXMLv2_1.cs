@@ -1165,7 +1165,7 @@ namespace HGInetUBLv2_1
 					#region Cantidad producto
 					// <cbc:InvoicedQuantity>
 					InvoicedQuantityType InvoicedQuantity = new InvoicedQuantityType();
-					InvoicedQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
+					InvoicedQuantity.Value = decimal.Round(DocDet.Cantidad, 6);
 
 					// Unidad de medida Ver lista de valores posibles en 6.3.6(Defecto codigo - 94)
 					ListaUnidadesMedida list_unidad = new ListaUnidadesMedida();
@@ -1217,7 +1217,7 @@ namespace HGInetUBLv2_1
 						AllowanceChargeReasonType[0] = AllowanceChargeReason;
 						AllowanceCharge.AllowanceChargeReason = AllowanceChargeReasonType;
 						AllowanceCharge.MultiplierFactorNumeric = new MultiplierFactorNumericType();
-						AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 2);
+						AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 6);
 						AllowanceCharge.Amount = new AmountType2();
 						AllowanceCharge.Amount.currencyID = moneda_detalle.ToString();
 						AllowanceCharge.Amount.Value = decimal.Round(desc_cal, 2);
@@ -1680,7 +1680,7 @@ namespace HGInetUBLv2_1
 					//---Segun la base de la unidad utilizada
 					BaseQuantityType BaseQuantity = new BaseQuantityType();
 					BaseQuantity.unitCode = InvoicedQuantity.unitCode;
-					BaseQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
+					BaseQuantity.Value = decimal.Round(DocDet.Cantidad, 6);
 					Price.BaseQuantity = BaseQuantity;
 
 

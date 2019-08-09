@@ -58,25 +58,14 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 			{
 				// valida 
 				Peticion.Validar(Resolucion.DataKey, Resolucion.Identificacion);
-				
+
+				List<Resolucion> resolucion_creada = Ctl_Resoluciones.CrearHabilitacion(Resolucion, Resolucion.Identificacion);
+
 				// obtiene las resoluciones
 				List<Resolucion> resoluciones_respuesta = Ctl_Resoluciones.Obtener(Resolucion.Identificacion);
 
-				bool crear_resolucion = true;
-
-				if(resoluciones_respuesta.Any())
-				{
-					Resolucion resolucion_validacion = resoluciones_respuesta.Where(_resolucion => _resolucion.NumeroResolucion.Equals(Resolucion.NumeroResolucion)).FirstOrDefault();
-
-					if (resolucion_validacion != null)
-						crear_resolucion = false;
-				}
-
-				if(crear_resolucion)
-				{
-					List<Resolucion> resolucion_creada = Ctl_Resoluciones.CrearHabilitacion(Resolucion, Resolucion.Identificacion);
-					resoluciones_respuesta.AddRange(resolucion_creada);
-				}
+				//Se agrega la que se creo o actualizo en el proceso.
+				resoluciones_respuesta.AddRange(resolucion_creada);
 
 				return resoluciones_respuesta;
 

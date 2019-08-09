@@ -103,23 +103,19 @@ namespace HGInetDIANServicios
 
 				DianWSValidacionPrevia.DianResponse doc_valido = documento.Where(d => d.IsValid == true && d.StatusCode == "0").FirstOrDefault();
 
-				//Se guarda errores presentados por la DIAN
-				if (doc_valido.ErrorMessage != null)
-				{
-					resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_valido.ErrorMessage.ToList(), ";");
-				}
-
 				if (doc_valido != null)
 				{
 					resultado.CodigoEstadoDian = doc_valido.StatusCode;
 					resultado.EstadoDianDescripcion = doc_valido.StatusDescription;
 					resultado.Estado = EstadoDocumentoDian.Aceptado;
+					resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_valido.ErrorMessage.ToList(), ";");
 				}
 				else
 				{
 					resultado.CodigoEstadoDian = "99";
 					resultado.EstadoDianDescripcion = "validaciones contienen errores en campos mandatorios";
 					resultado.Estado = EstadoDocumentoDian.Rechazado;
+					resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.FirstOrDefault().ErrorMessage.ToList(), ";");
 				}
 
 				return resultado;
