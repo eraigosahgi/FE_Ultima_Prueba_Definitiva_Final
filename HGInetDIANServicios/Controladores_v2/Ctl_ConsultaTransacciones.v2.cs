@@ -108,7 +108,8 @@ namespace HGInetDIANServicios
 					resultado.CodigoEstadoDian = doc_valido.StatusCode;
 					resultado.EstadoDianDescripcion = doc_valido.StatusDescription;
 					resultado.Estado = EstadoDocumentoDian.Aceptado;
-					resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_valido.ErrorMessage.ToList(), ";");
+					if (doc_valido.ErrorMessage != null)
+						resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_valido.ErrorMessage.ToList(), ";");
 				}
 				else
 				{
