@@ -274,6 +274,23 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
+				#region --- Esta seccion se debe validar, como aplica en Nota Debito forma de pago.
+				List<PaymentMeansType> PaymentMeans = new List<PaymentMeansType>();
+				PaymentMeansType PaymentMean = new PaymentMeansType();
+				PaymentMeansCodeType MeansCode = new PaymentMeansCodeType();
+				MeansCode.Value = "10";
+				PaymentMean.ID = new IDType();
+				PaymentMean.ID.Value = "1";
+				PaymentMean.PaymentID = new PaymentIDType[1];
+				PaymentIDType Paymentid = new PaymentIDType();
+				Paymentid.Value = documento.DocumentoRef.ToString();
+				PaymentMean.PaymentID[0] = Paymentid;
+
+				PaymentMean.PaymentMeansCode = MeansCode;
+				PaymentMeans.Add(PaymentMean);
+				nota_debito.PaymentMeans = PaymentMeans.ToArray();
+				#endregion
+
 				if (documento.Descuentos != null || documento.Cargos != null)
 					nota_debito.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
 
@@ -589,7 +606,7 @@ namespace HGInetUBLv2_1
 					// <cac:TaxTotal>
 					List<TaxTotalType> TaxesTotal = new List<TaxTotalType>();
 
-					if (DocDet.IvaValor > 0)
+					if (DocDet.IvaValor >= 0)
 					{
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();

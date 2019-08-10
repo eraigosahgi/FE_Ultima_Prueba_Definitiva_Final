@@ -108,22 +108,20 @@ namespace HGInetUBLv2_1
 				if (documento.TerminoPago == 0)
 					documento.TerminoPago = 10;*/
 
-				//List<PaymentMeansType> PaymentMeans = new List<PaymentMeansType>();
-				//PaymentMeansType PaymentMean = new PaymentMeansType();
-				//PaymentMeansCodeType MeansCode = new PaymentMeansCodeType();
-				//MeansCode.Value = "10";//documento.TerminoPago.ToString();
-				////MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(documento.FormaPago);
-				//PaymentMean.ID = new IDType();
-				//PaymentMean.ID.Value = "1"; //documento.FormaPago.ToString();
-				////---Si es pago a credito debe indicarse el identificador del pago
-				//PaymentMean.PaymentID = new PaymentIDType[1];
-				//PaymentIDType Paymentid = new PaymentIDType();
-				//Paymentid.Value = documento.DocumentoRef.ToString();
-				//PaymentMean.PaymentID[0] = Paymentid;
+				List<PaymentMeansType> PaymentMeans = new List<PaymentMeansType>();
+				PaymentMeansType PaymentMean = new PaymentMeansType();
+				PaymentMeansCodeType MeansCode = new PaymentMeansCodeType();
+				MeansCode.Value = "10";
+				PaymentMean.ID = new IDType();
+				PaymentMean.ID.Value = "1";
+				PaymentMean.PaymentID = new PaymentIDType[1];
+				PaymentIDType Paymentid = new PaymentIDType();
+				Paymentid.Value = documento.DocumentoRef.ToString();
+				PaymentMean.PaymentID[0] = Paymentid;
 
-				////PaymentMean.PaymentMeansCode = MeansCode;
-				//PaymentMeans.Add(PaymentMean);
-				//nota_credito.PaymentMeans = PaymentMeans.ToArray();
+				PaymentMean.PaymentMeansCode = MeansCode;
+				PaymentMeans.Add(PaymentMean);
+				nota_credito.PaymentMeans = PaymentMeans.ToArray();
 				#endregion
 
 				//---Identificador del documento
@@ -583,7 +581,7 @@ namespace HGInetUBLv2_1
 					// <cac:TaxTotal>
 					List<TaxTotalType> TaxesTotal = new List<TaxTotalType>();
 
-					if (DocDet.IvaValor > 0)
+					if (DocDet.IvaValor >= 0)
 					{
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();
