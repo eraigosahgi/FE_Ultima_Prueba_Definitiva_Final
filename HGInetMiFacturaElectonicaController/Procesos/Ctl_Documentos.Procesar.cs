@@ -251,6 +251,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//// comprime el archivo xml firmado
 				if (respuesta.IdProceso < ProcesoEstado.CompresionXml.GetHashCode())
 				{
+					if (documento.DatFechaIngreso.Date < Fecha.GetFecha().AddDays(-1).Date)
+					{
+						respuesta = UblFirmar(documento, ref respuesta, ref documento_result);
+						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
+					}
+
 					respuesta = UblComprimir(documento, ref respuesta, ref documento_result);
 					ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 				}
