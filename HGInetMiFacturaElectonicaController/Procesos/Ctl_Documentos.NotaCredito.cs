@@ -269,7 +269,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 						{
-							tbl_resolucion = Ctl_EmpresaResolucion.Convertir(facturador_electronico.StrIdentificacion, item.Prefijo, TipoDocumento.NotaCredito.GetHashCode(),facturador_electronico.IntVersionDian);
+							tbl_resolucion = Ctl_EmpresaResolucion.Convertir(facturador_electronico.StrIdentificacion, item.Prefijo, TipoDocumento.NotaCredito.GetHashCode(), facturador_electronico.IntVersionDian);
 						}
 						else
 						{
@@ -279,13 +279,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 					{
 						tbl_resolucion = Ctl_EmpresaResolucion.Convertir(facturador_electronico.StrIdentificacion, item.Prefijo, TipoDocumento.NotaCredito.GetHashCode(), facturador_electronico.IntVersionDian);
-						
+
 						//Toma el IdsetDian de la resolucion de pruebas de Factura cuando esta en habilitacion
 						if (facturador_electronico.IntHabilitacion < 99)
 						{
 							TblEmpresasResoluciones resol_factura = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
-						                                                              !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
-						                                                              && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
+																					  !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
+																					  && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
 
 							if (resol_factura == null)
 								throw new ApplicationException("No se encontró IdSetDian registrado para el facturador electrónico");
@@ -299,25 +299,43 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
+					//Toma el IdsetDian de la resolucion de pruebas de Factura cuando esta en habilitacion
+					if ((facturador_electronico.IntVersionDian.Equals(2)) && (facturador_electronico.IntHabilitacion < 99) && string.IsNullOrEmpty(resolucion_doc.StrIdSetDian))
+					{
+
+						TblEmpresasResoluciones resol_factura = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
+						                                                                                  !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
+						                                                                                  && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
+
+						if (resol_factura == null)
+							throw new ApplicationException("No se encontró IdSetDian registrado para el facturador electrónico");
+						else
+						{
+							resolucion_doc.StrIdSetDian = resol_factura.StrIdSetDian;
+							//resolucion_doc.IntVersionDian = resol_factura.IntVersionDian;
+							_resolucion.Edit(resolucion_doc);
+						}
+					}
 					resolucion = resolucion_doc;
 					item.NumeroResolucion = resolucion.StrNumResolucion;
+
 				}
 
 				TblEmpresas facturadorelec_proceso = new TblEmpresas();
 				facturadorelec_proceso = facturador_electronico;
-				
+
 				//Se valida en V2 que la factura afectada exista y en que version esta
 				if (facturador_electronico.IntVersionDian == 2)
 				{
 
 					//valida si el Documento afectado ya existe en Base de Datos
-					List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(),item.DocumentoRef);
+					List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
 					DocumentoRespuesta doc_resp = doc_ref.Find(d => d.Cufe.Equals(item.CufeFactura));
 					if (doc_resp != null)
 					{
 						//Si el documento afectado es diferente a la version de la empresa emisora se cambia para que ese documento lo procese en la version del documento afectado 
 						if (doc_resp.IdVersionDian != facturador_electronico.IntVersionDian)
-							facturadorelec_proceso.IntVersionDian = (short) doc_resp.IdVersionDian;
+							facturadorelec_proceso.IntVersionDian = (short)doc_resp.IdVersionDian;
 						//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
 					}
 					else

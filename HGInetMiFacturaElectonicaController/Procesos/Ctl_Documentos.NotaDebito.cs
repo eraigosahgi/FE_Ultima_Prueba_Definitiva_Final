@@ -232,7 +232,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						item_respuesta.IdPeticion = id_peticion;
 						id_radicado = Guid.Parse(item_respuesta.IdDocumento);
 						doc_existe = true;
-						throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}",item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
+						throw new ApplicationException(string.Format("El documento {0} con prefijo {1} ya xiste para el Facturador Electrónico {2}", item.Documento, item.Prefijo, facturador_electronico.StrIdentificacion));
 					}
 					else
 					{
@@ -281,13 +281,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 					{
 						tbl_resolucion = Ctl_EmpresaResolucion.Convertir(facturador_electronico.StrIdentificacion, item.Prefijo, TipoDocumento.NotaDebito.GetHashCode(), facturador_electronico.IntVersionDian);
-						
+
 						//Toma el IdsetDian de la resolucion de pruebas de Factura cuando esta en habilitacion
 						if (facturador_electronico.IntHabilitacion < 99)
 						{
 							TblEmpresasResoluciones resol_factura = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
-							                                                                                  !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
-							                                                                                  && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
+																											  !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
+																											  && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
 
 							if (resol_factura == null)
 								throw new ApplicationException("No se encontró IdSetDian registrado para el facturador electrónico");
@@ -301,8 +301,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
+					//Toma el IdsetDian de la resolucion de pruebas de Factura cuando esta en habilitacion
+					if ((facturador_electronico.IntVersionDian.Equals(2)) && (facturador_electronico.IntHabilitacion < 99) && string.IsNullOrEmpty(resolucion_doc.StrIdSetDian))
+					{
+
+						TblEmpresasResoluciones resol_factura = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
+																										  !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
+																										  && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
+
+						if (resol_factura == null)
+							throw new ApplicationException("No se encontró IdSetDian registrado para el facturador electrónico");
+						else
+						{
+							resolucion_doc.StrIdSetDian = resol_factura.StrIdSetDian;
+							//resolucion_doc.IntVersionDian = resol_factura.IntVersionDian;
+							_resolucion.Edit(resolucion_doc);
+						}
+					}
 					resolucion = resolucion_doc;
 					item.NumeroResolucion = resolucion.StrNumResolucion;
+
 				}
 
 				TblEmpresas facturadorelec_proceso = new TblEmpresas();
