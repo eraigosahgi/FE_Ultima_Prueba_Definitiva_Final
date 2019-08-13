@@ -55,8 +55,10 @@ namespace HGInetUBLv2_1
 				//Capturo la informacion del encabezado del documento
 				if (nota_credito_ubl.UUID != null)
 					nota_credito_obj.Cufe = nota_credito_ubl.UUID.Value;
-				string fecha_hora = string.Format("{0}{1}", nota_credito_ubl.IssueDate.Value.ToString(Fecha.formato_fecha_hginet), nota_credito_ubl.IssueTime.Value);
-				nota_credito_obj.Fecha = Convert.ToDateTime(fecha_hora);
+				DateTime hora = Convert.ToDateTime(nota_credito_ubl.IssueTime.Value).AddHours(-5);
+				DateTime fecha = nota_credito_ubl.IssueDate.Value;
+				DateTime fecha_hora = new DateTime(fecha.Year, fecha.Month, fecha.Day, hora.Hour, hora.Minute, hora.Second);
+				nota_credito_obj.Fecha = fecha_hora;
 				nota_credito_obj.Moneda = nota_credito_ubl.DocumentCurrencyCode.Value;
 
 				nota_credito_obj.Concepto = string.Empty;
