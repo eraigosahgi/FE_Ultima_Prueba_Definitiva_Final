@@ -348,6 +348,7 @@
 
 							<div class="heading-elements">
 								<div class="heading-btn-group">
+								<a id="a_manuales_plataforma" class="btn btn-link btn-float text-size-small has-text" data-toggle="modal" data-target="#modal_manuales"><i class="icon-info22"></i><span>Manuales</span></a>
 									<a id="a_info_acerca" class="btn btn-link btn-float text-size-small has-text" data-toggle="modal" data-target="#modal_default"><i class="icon-info22"></i><span>Acerca de..</span></a>
 								</div>
 							</div>
@@ -432,6 +433,55 @@
 								</div>
 							</div>
 							<!-- /Modal Acerca de -->
+
+
+							<!-- Modal Manuales -->
+							<div id="modal_manuales" class="modal fade">
+								<div class="modal-dialog modal-sm">
+									<div class="modal-content">
+										<div class="modal-header bg-primary" style="background-color: #0C4995; color: white">
+											<button style="color: white" type="button" class="close" data-dismiss="modal">&times;</button>
+											<%--<h5 class="modal-title">HGInet Smart</h5>--%>
+											<h4 class="modal-title" style="margin-top: 2%;">HGInet Factura Electrónica</h4>
+										</div>
+
+										<div class="modal-body">
+											<img class="img-responsive" src="../../Scripts/Images/LogoPlataforma.PNG" width="300" style="margin-top: 2%; margin-left: 10%" />
+
+											<div style="margin-top: 5%; margin-left: 26%">
+
+												<!-- Manual Facturador -->
+												<div class="media-left media-middle">
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://app.mifacturaenlinea.com.co/ManualUsuarioFacturador.pdf');"><i class="icon-user-tie"></i>Manual Facturador</label>
+												</div>
+												<div class="media-left">
+													<label id="Label7" class="text-default text-semibold" style="font-size: medium"></label>
+												</div>
+												<br />
+												<!-- / Manual Facturador -->
+
+												<!-- Manual Adquiriente -->
+												<div class="media-left media-middle">
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://app.mifacturaenlinea.com.co/ManualUsuarioAdquiriente.pdf');"><i class="icon-reading"></i>Manual Adquiriente</label>
+												</div>
+												<br />
+												<!-- / Manual Adquiriente -->
+
+											</div>
+
+											<div class=" text-center" style="margin-top: 2%;">
+												<img src="../../Scripts/Images/Logo.png" style="align-content: center; width: 130px" class="img-responsive center-block" />
+												<label class="text-default text-semibold" style="text-align: center">
+													Copyright © 2018 HGI S.A.S - NIT 811.021.438-4<br />
+													Todos los Derechos Reservados</label>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /Modal Manuales -->
+
 
 						</div>
 
