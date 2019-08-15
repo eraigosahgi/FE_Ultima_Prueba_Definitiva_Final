@@ -151,6 +151,9 @@
 			window.location.assign("/Views/Pages/Inicio.aspx");
 		}
 
+		function popup(ruta_archivo) {
+			window.open(ruta_archivo, "ventana1", "width=700,height=850,scrollbars=NO")
+		}
 
 	</script>
 	<script type="text/javascript" async="" src="https://www.google-analytics.com/ga.js"></script>
