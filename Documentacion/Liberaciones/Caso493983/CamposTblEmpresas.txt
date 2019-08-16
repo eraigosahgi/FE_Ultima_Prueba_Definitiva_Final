@@ -7,23 +7,23 @@ IntMailPagosVerificado (bit - Null - Defecto: 0)
 */
 
 ALTER TABLE TblEmpresas ADD
-IntMailEnvioVerificado bit NULL Default(0)
+IntMailEnvioVerificado smallint NOT NULL Default(0)
 GO
 
 ALTER TABLE TblEmpresas ADD
-IntMailAdminVerificado bit NULL Default(0)
+IntMailAdminVerificado smallint NOT NULL Default(0)
 GO
 
 ALTER TABLE TblEmpresas ADD
-IntMailRecepcionVerificado bit NULL Default(0)
+IntMailRecepcionVerificado smallint NOT NULL Default(0)
 GO
 
 ALTER TABLE TblEmpresas ADD
-IntMailAcuseVerificado bit NULL Default(0)
+IntMailAcuseVerificado smallint NOT NULL Default(0)
 GO
 
 ALTER TABLE TblEmpresas ADD
-IntMailPagosVerificado bit NULL Default(0)
+IntMailPagosVerificado smallint NOT NULL Default(0)
 GO
 
 

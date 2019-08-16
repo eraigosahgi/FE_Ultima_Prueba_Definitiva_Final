@@ -17,14 +17,13 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblEmpresas()
         {
-            this.IntVersionDian = 1;
-            this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
-            this.TblOpcionesUsuario = new HashSet<TblOpcionesUsuario>();
-            this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
-            this.TblFormatos = new HashSet<TblFormatos>();
-            this.TblUsuarios = new HashSet<TblUsuarios>();
             this.TblEmpresasAdquiriente = new HashSet<TblDocumentos>();
             this.TblEmpresasFacturador = new HashSet<TblDocumentos>();
+            this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
+            this.TblFormatos = new HashSet<TblFormatos>();
+            this.TblOpcionesUsuario = new HashSet<TblOpcionesUsuario>();
+            this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
+            this.TblUsuarios = new HashSet<TblUsuarios>();
         }
     
         public string StrIdentificacion { get; set; }
@@ -58,31 +57,31 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrMailPagos { get; set; }
         public Nullable<short> IntTimeout { get; set; }
         public short IntVersionDian { get; set; }
-        public Nullable<bool> IntMailEnvioVerificado { get; set; }
-        public Nullable<bool> IntMailAdminVerificado { get; set; }
-        public Nullable<bool> IntMailRecepcionVerificado { get; set; }
-        public Nullable<bool> IntMailAcuseVerificado { get; set; }
-        public Nullable<bool> IntMailPagosVerificado { get; set; }
         public Nullable<bool> IntCertResponsableHGI { get; set; }
         public Nullable<bool> IntCertNotificar { get; set; }
         public string StrCertRuta { get; set; }
         public string StrCertClave { get; set; }
         public Nullable<short> IntCertProveedor { get; set; }
         public Nullable<System.DateTime> DatCertVence { get; set; }
+        public short IntMailEnvioVerificado { get; set; }
+        public short IntMailAdminVerificado { get; set; }
+        public short IntMailRecepcionVerificado { get; set; }
+        public short IntMailAcuseVerificado { get; set; }
+        public short IntMailPagosVerificado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblDocumentos> TblEmpresasFacturador { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblFormatos> TblFormatos { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblOpcionesUsuario> TblOpcionesUsuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblFormatos> TblFormatos { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblUsuarios> TblUsuarios { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblDocumentos> TblEmpresasFacturador { get; set; }
     }
 }
