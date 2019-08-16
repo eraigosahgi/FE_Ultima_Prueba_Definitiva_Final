@@ -58,6 +58,17 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrMailPagos { get; set; }
         public Nullable<short> IntTimeout { get; set; }
         public short IntVersionDian { get; set; }
+        public Nullable<bool> IntMailEnvioVerificado { get; set; }
+        public Nullable<bool> IntMailAdminVerificado { get; set; }
+        public Nullable<bool> IntMailRecepcionVerificado { get; set; }
+        public Nullable<bool> IntMailAcuseVerificado { get; set; }
+        public Nullable<bool> IntMailPagosVerificado { get; set; }
+        public Nullable<bool> IntCertResponsableHGI { get; set; }
+        public Nullable<bool> IntCertNotificar { get; set; }
+        public string StrCertRuta { get; set; }
+        public string StrCertClave { get; set; }
+        public Nullable<short> IntCertProveedor { get; set; }
+        public Nullable<System.DateTime> DatCertVence { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }

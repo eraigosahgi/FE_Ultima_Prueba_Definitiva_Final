@@ -125,6 +125,17 @@
           <Property Name="StrMailPagos" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="IntTimeout" Type="smallint" />
           <Property Name="IntVersionDian" Type="smallint" Nullable="false" />
+          <Property Name="IntMailEnvioVerificado" Type="bit" />
+          <Property Name="IntMailAdminVerificado" Type="bit" />
+          <Property Name="IntMailRecepcionVerificado" Type="bit" />
+          <Property Name="IntMailAcuseVerificado" Type="bit" />
+          <Property Name="IntMailPagosVerificado" Type="bit" />
+          <Property Name="IntCertResponsableHGI" Type="bit" />
+          <Property Name="IntCertNotificar" Type="bit" />
+          <Property Name="StrCertRuta" Type="varchar" MaxLength="200" />
+          <Property Name="StrCertClave" Type="varchar" MaxLength="200" />
+          <Property Name="IntCertProveedor" Type="smallint" />
+          <Property Name="DatCertVence" Type="date" />
         </EntityType>
         <EntityType Name="TblEmpresasPasarela">
           <Key>
@@ -1041,6 +1052,17 @@
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <Property Name="IntTimeout" Type="Int16" />
           <Property Name="IntVersionDian" Type="Int16" Nullable="false" DefaultValue="1" />
+          <Property Name="IntMailEnvioVerificado" Type="Boolean" />
+          <Property Name="IntMailAdminVerificado" Type="Boolean" />
+          <Property Name="IntMailRecepcionVerificado" Type="Boolean" />
+          <Property Name="IntMailAcuseVerificado" Type="Boolean" />
+          <Property Name="IntMailPagosVerificado" Type="Boolean" />
+          <Property Name="IntCertResponsableHGI" Type="Boolean" />
+          <Property Name="IntCertNotificar" Type="Boolean" />
+          <Property Name="StrCertRuta" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="StrCertClave" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IntCertProveedor" Type="Int16" />
+          <Property Name="DatCertVence" Type="DateTime" Precision="0" />
           </EntityType>
         <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1518,6 +1540,17 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="DatCertVence" ColumnName="DatCertVence" />
+                <ScalarProperty Name="IntCertProveedor" ColumnName="IntCertProveedor" />
+                <ScalarProperty Name="StrCertClave" ColumnName="StrCertClave" />
+                <ScalarProperty Name="StrCertRuta" ColumnName="StrCertRuta" />
+                <ScalarProperty Name="IntCertNotificar" ColumnName="IntCertNotificar" />
+                <ScalarProperty Name="IntCertResponsableHGI" ColumnName="IntCertResponsableHGI" />
+                <ScalarProperty Name="IntMailPagosVerificado" ColumnName="IntMailPagosVerificado" />
+                <ScalarProperty Name="IntMailAcuseVerificado" ColumnName="IntMailAcuseVerificado" />
+                <ScalarProperty Name="IntMailRecepcionVerificado" ColumnName="IntMailRecepcionVerificado" />
+                <ScalarProperty Name="IntMailAdminVerificado" ColumnName="IntMailAdminVerificado" />
+                <ScalarProperty Name="IntMailEnvioVerificado" ColumnName="IntMailEnvioVerificado" />
                 <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
                 <ScalarProperty Name="IntTimeout" ColumnName="IntTimeout" />
                 <ScalarProperty Name="StrMailPagos" ColumnName="StrMailPagos" />

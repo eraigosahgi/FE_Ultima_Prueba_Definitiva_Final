@@ -5,10 +5,10 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="80" DisplayType="true">
-        <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="5.625" PointY="12.75" />
+        <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="5.75" PointY="13.25" />
         <EntityTypeShape EntityType="Modelo.TblPlanes" Width="1.5" PointX="3.375" PointY="0.75" />
         <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="16.125" PointY="15.5" />
-        <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="13" PointY="14.75" />
+        <EntityTypeShape EntityType="Modelo.TblOpciones" Width="1.5" PointX="12.875" PointY="16.5" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesPerfil_TblOpciones" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblOpciones" ManuallyRouted="false" >
         </AssociationConnector>
@@ -19,7 +19,7 @@
         <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="1.875" PointX="10.125" PointY="2.625" IsExpanded="true" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" />
         <EntityTypeShape EntityType="Modelo.TblConfiguracionInteroperabilidad" Width="2.125" PointX="18.375" PointY="0.5" />
-        <EntityTypeShape EntityType="Modelo.TblPlanesTransacciones" Width="2.125" PointX="13.375" PointY="11.375" />
+        <EntityTypeShape EntityType="Modelo.TblPlanesTransacciones" Width="2.125" PointX="13.5" PointY="11" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
         <EntityTypeShape EntityType="Modelo.TblEmpresas" Width="2" PointX="6.75" PointY="0.75" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" />
@@ -28,7 +28,7 @@
         <EntityTypeShape EntityType="Modelo.TblAlertas" Width="1.625" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="Modelo.TblFormatos" Width="1.5" PointX="3.875" PointY="7" />
         <AssociationConnector Association="Modelo.FK_TblFormatos_TblEmpresas" />
-        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="1.875" PointX="9.125" PointY="12.375" />
+        <EntityTypeShape EntityType="Modelo.TblUsuarios" Width="1.875" PointX="9.625" PointY="11.375" />
         <AssociationConnector Association="Modelo.FK_TblUsuarios_TblEmpresas" />
         <AssociationConnector Association="Modelo.FK_TblOpcionesUsuario_TblUsuarios" />
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
