@@ -346,10 +346,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if ((tercero.IdentificacionDv < 0) || (tercero.IdentificacionDv > 9))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "IdentificacionDv", tipo).Replace("de tipo", "del"));
 
-			if (string.IsNullOrEmpty(tercero.Ciudad))
+			if (string.IsNullOrEmpty(tercero.CodigoPais))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
+
+			if (!ConfiguracionRegional.ValidarCodigoPais(tercero.CodigoPais))
+				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "CodigoPais", tercero.CodigoPais, tipo));
+
+
+			if (string.IsNullOrEmpty(tercero.Ciudad) && tercero.CodigoPais.Equals("CO"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Ciudad", tipo).Replace("de tipo", "del"));
 
-			if (string.IsNullOrEmpty(tercero.Departamento))
+			if (string.IsNullOrEmpty(tercero.Departamento) && tercero.CodigoPais.Equals("CO"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Departamento", tipo).Replace("de tipo", "del"));
 
 			if (string.IsNullOrEmpty(tercero.Direccion))
@@ -395,12 +402,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			else if (!Texto.ValidarExpresion(TipoExpresion.PaginaWeb, tercero.PaginaWeb))
 				tercero.PaginaWeb = string.Empty;
 
-			if (string.IsNullOrEmpty(tercero.CodigoPais))
-				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
-
-			if (!ConfiguracionRegional.ValidarCodigoPais(tercero.CodigoPais))
-				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "CodigoPais", tercero.CodigoPais, tipo));
-
 			if (string.IsNullOrEmpty(tercero.RazonSocial))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial", tipo).Replace("de tipo", "del"));
 
@@ -429,37 +430,41 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (regimenfiscal == null)
 					throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.TipoIdentificacion, tipo));
 
-				ListaMunicipio list_municipio = new ListaMunicipio();
-				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
-				if (municipio == null)
-					throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}", tercero.CodigoCiudad, tipo));
-				else
-					tercero.Ciudad = municipio.Nombre;
-
-
-				ListaDepartamentos list_depart = new ListaDepartamentos();
-				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
-				if (departamento == null)
-					throw new ArgumentException(string.Format("El Codigo Departamento {0} no esta bien formado del {1}", tercero.CodigoDepartamento, tipo));
-				else
-					tercero.Departamento = departamento.Nombre;
-
 				ListaPaises list_paises = new ListaPaises();
 				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.CodigoPais)).FirstOrDefault();
 				if (pais == null)
 					throw new ArgumentException(string.Format("El Codigo Pais {0} no esta bien formado del {1}", tercero.CodigoPais, tipo));
 
+				if (tercero.CodigoPais.Equals("CO"))
+				{
+
+					ListaMunicipio list_municipio = new ListaMunicipio();
+					ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
+					if (municipio == null)
+						throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}", tercero.CodigoCiudad, tipo));
+					else
+						tercero.Ciudad = municipio.Nombre;
+
+
+					ListaDepartamentos list_depart = new ListaDepartamentos();
+					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
+					if (departamento == null)
+						throw new ArgumentException(string.Format("El Codigo Departamento {0} no esta bien formado del {1}", tercero.CodigoDepartamento, tipo));
+					else
+						tercero.Departamento = departamento.Nombre;
+
+					if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
+						throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
+					ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
+					ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
+					if (codpostal == null)
+						throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoTributo, tipo));
+				}
+
 				ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
 				ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(tercero.CodigoTributo)).FirstOrDefault();
 				if (tipoimp == null)
 					throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
-
-				if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
-					throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
-				ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
-				ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
-				if (codpostal == null)
-					throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoTributo, tipo));
 
 				if ((tercero.Responsabilidades == null || !tercero.Responsabilidades.Any()) && tipo.Equals("Obligado"))
 				{
@@ -821,13 +826,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					//Validacion del total
-					if (decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo) != documento.Total)
+					if (decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo,MidpointRounding.AwayFromZero) != decimal.Round(documento.Total, MidpointRounding.AwayFromZero))
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Total", documento.Total));
 					}
 
 					//Validacion del Valor Neto
-					if (decimal.Round(documento.Total - documento.ValorReteFuente - documento.ValorReteIva - documento.ValorReteIca) != documento.Neto)
+					if (decimal.Round(documento.Total - documento.ValorReteFuente - documento.ValorReteIva - documento.ValorReteIca, MidpointRounding.AwayFromZero) != decimal.Round(documento.Neto, MidpointRounding.AwayFromZero))
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Neto", documento.Neto));
 					}
@@ -943,7 +948,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (Docdet.ValorUnitario == 0)
 							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
 
-						if (Docdet.ProductoGratis == true)
+						if (Docdet.ProductoGratis == true && Docdet.ProductoGratis == false)
 						{
 							ListaCodigoPrecioReferencia list_precioref = new ListaCodigoPrecioReferencia();
 							ListaItem precioref = list_precioref.Items.Where(d => d.Codigo.Equals(Docdet.ProductoGratisPrecioRef)).FirstOrDefault();
@@ -955,7 +960,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (Docdet.CalculaIVA == 0)
 						{
 							//Se redondea en el valor medio hacia arriba ej: 121.5 redondeado = 122
-							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), MidpointRounding.AwayFromZero) == Docdet.IvaValor)
+							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), MidpointRounding.AwayFromZero) == decimal.Round(Docdet.IvaValor,MidpointRounding.AwayFromZero))
 							{
 								if (Docdet.IvaPorcentaje == 0)
 								{
@@ -994,7 +999,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (Docdet.ReteFuenteValor > 0)
 						{
 
-							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), MidpointRounding.AwayFromZero) == Docdet.ReteFuenteValor)
+							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), MidpointRounding.AwayFromZero) == decimal.Round(Docdet.ReteFuenteValor, MidpointRounding.AwayFromZero))
 							{
 								ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
 								ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
@@ -1017,7 +1022,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.ValorImpuestoConsumo > 0)
 						{
-							if (decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje * 100), MidpointRounding.AwayFromZero) == Docdet.ValorImpuestoConsumo)
+							if (decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje * 100), MidpointRounding.AwayFromZero) == decimal.Round(Docdet.ValorImpuestoConsumo, MidpointRounding.AwayFromZero))
 							{
 								ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
 								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
