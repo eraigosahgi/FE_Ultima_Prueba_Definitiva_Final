@@ -81,7 +81,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                         }
                         break;
                     case 6:
-                        //Obttiene la lista de items del enumerable ProcesoEstado, y si le pasamos el tipo de ambiente(publico, privado) crea un filtro de resultados
+                        //Obtiene la lista de items del enumerable ProcesoEstado, y si le pasamos el tipo de ambiente(publico, privado) crea un filtro de resultados
                         foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.ProcesoEstado)))
                         {
                             FieldInfo fi = value.GetType().GetField(value.ToString());
@@ -91,7 +91,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                         }
                         break;
 					case 7:
-						//Obttiene la lista de items del enumerable TipoRegistro de la Auditoria
+						//Obtiene la lista de items del enumerable TipoRegistro de la Auditoria
 						foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.TipoRegistro)))
 						{
 							string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.TipoRegistro>((int)value)))).Split(',');
@@ -99,11 +99,36 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						}
 						break;
 					case 8:
-						//Obttiene la lista de items del enumerable Procedencia de la Auditoria
+						//Obtiene la lista de items del enumerable Procedencia de la Auditoria
 						foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.Procedencia)))
 						{
 							string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Procedencia>((int)value)))).Split(',');
 							datos.Add(datos_enum);
+						}
+						break;
+					case 9:
+						//Obtiene la lista de items del enumerable EnumCertificadoras, y si le pasamos el tipo de ambiente(publico, privado) crea un filtro de resultados
+						// retorno:  ID,Descripcion,CamposRequeridos
+						foreach (var value in Enum.GetValues(typeof(HGInetFirmaDigital.EnumCertificadoras)))
+						{
+							FieldInfo fi = value.GetType().GetField(value.ToString());
+							AmbientValueAttribute[] ambiente = (AmbientValueAttribute[])fi.GetCustomAttributes(typeof(AmbientValueAttribute), false);
+
+							CategoryAttribute[] Categoria = (CategoryAttribute[])fi.GetCustomAttributes(typeof(CategoryAttribute), false);
+
+							if (tipo_ambiente != "*")
+							{
+								if (ambiente[0].Value.ToString() == tipo_ambiente)
+								{
+									string[] datos_enum = string.Format("{0},{1},{2}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetFirmaDigital.EnumCertificadoras>((int)value))), Categoria[0].Category.ToString()).Split(',');
+									datos.Add(datos_enum);
+								}
+							}
+							else
+							{
+								string[] datos_enum = string.Format("{0},{1},{2}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetFirmaDigital.EnumCertificadoras>((int)value))), Categoria[0].Category.ToString()).Split(',');
+								datos.Add(datos_enum);
+							}
 						}
 						break;
 				}

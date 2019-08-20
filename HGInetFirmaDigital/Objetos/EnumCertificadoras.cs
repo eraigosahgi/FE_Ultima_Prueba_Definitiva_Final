@@ -13,11 +13,23 @@ namespace HGInetFirmaDigital
 	/// </summary>
 	public enum EnumCertificadoras
 	{
+
+		/// <summary>
+		/// HGI SAS PROVEEDOR TECNOLOGICO
+		/// https://www.hgi.com.co
+		/// </summary>
+		[Description("HGI SAS PROVEEDOR TECNOLOGICO")]
+		[AmbientValue("publico")]
+		[Category("0")]
+		Hgi = 0,
+
 		/// <summary>
 		/// GSE- GESTIÓN DE SEGURIDAD ELECTRÓNICA S.A.
 		/// http://www.gse.com.co
 		/// </summary>
 		[Description("GSE")]
+		[AmbientValue("privado")]
+		[Category("1")]
 		Gse = 1,
 
 		/// <summary>
@@ -25,6 +37,8 @@ namespace HGInetFirmaDigital
 		/// https://www.andesscd.com.co/
 		/// </summary>
 		[Description("Andes")]
+		[AmbientValue("publico")]
+		[Category("1")]
 		Andes = 2
 
 	}
