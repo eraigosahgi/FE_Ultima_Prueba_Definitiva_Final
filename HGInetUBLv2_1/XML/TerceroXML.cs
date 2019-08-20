@@ -241,6 +241,8 @@ namespace HGInetUBLv2_1
 				CustomerPartyType AccountingCustomerParty = new CustomerPartyType();
 				PartyType Party = new PartyType();
 
+				
+
 				#region Tipo de persona
 				//1-Persona Juridica; 2-Persona Natural
 				AdditionalAccountIDType AdditionalAccountID = new AdditionalAccountIDType();
@@ -270,24 +272,43 @@ namespace HGInetUBLv2_1
 
 				//----5.4.3. Municipios:  cbc:CityName Ver listado del DANE
 				Address.ID = new IDType();
-				Address.ID.Value = tercero.CodigoCiudad;
+				Address.ID.Value = (!string.IsNullOrEmpty(tercero.CodigoCiudad) && tercero.CodigoPais.Equals("CO"))? tercero.CodigoCiudad : "";
 				CityNameType City = new CityNameType();
-				ListaMunicipio list_municipio = new ListaMunicipio();
-				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
-				City.Value = municipio.Nombre; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				if (tercero.CodigoPais.Equals("CO"))
+				{
+					ListaMunicipio list_municipio = new ListaMunicipio();
+					ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
+					City.Value = municipio.Nombre; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					tercero.Ciudad = municipio.Nombre;
+				}
+				else
+				{
+					City.Value = tercero.Ciudad;
+				}
 				Address.CityName = City;
-				tercero.Ciudad = municipio.Nombre;
+				
 
 				//5.4.2. Departamentos (ISO 3166-2:CO):  cbc:CountrySubentity, cbc:CountrySubentityCode
 				CountrySubentityType CountrySubentity = new CountrySubentityType();
-				ListaDepartamentos list_depart = new ListaDepartamentos();
-				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
-				CountrySubentity.Value = departamento.Nombre;//Listado de Departamentos el Nombre
-				Address.CountrySubentity = CountrySubentity;
-				CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
-				CountrySubentityCode.Value = tercero.CodigoDepartamento;//Listado de Departamentos el codigo
-				Address.CountrySubentityCode = CountrySubentityCode;
-				tercero.Departamento = departamento.Nombre;
+				if (tercero.CodigoPais.Equals("CO"))
+				{
+					ListaDepartamentos list_depart = new ListaDepartamentos();
+					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
+					CountrySubentity.Value = departamento.Nombre; //Listado de Departamentos el Nombre
+					Address.CountrySubentity = CountrySubentity;
+					CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
+					CountrySubentityCode.Value = tercero.CodigoDepartamento; //Listado de Departamentos el codigo
+					Address.CountrySubentityCode = CountrySubentityCode;
+					tercero.Departamento = departamento.Nombre;
+				}
+				else
+				{
+					CountrySubentity.Value = tercero.Departamento; //Listado de Departamentos el Nombre
+					Address.CountrySubentity = CountrySubentity;
+					CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
+					CountrySubentityCode.Value = (string.IsNullOrEmpty(tercero.CodigoDepartamento)) ? "": tercero.CodigoDepartamento; //Listado de Departamentos el codigo
+					Address.CountrySubentityCode = CountrySubentityCode;
+				}
 
 				//Direccion
 				//Informar la dirección, sin ciudad ni departamento.

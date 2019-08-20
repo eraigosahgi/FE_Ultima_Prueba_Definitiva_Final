@@ -423,7 +423,7 @@ namespace HGInetUBLv2_1
 
 				decimal subtotal = facturaXML.TaxTotal.Sum(s => s.TaxSubtotal.Sum(v => v.TaxableAmount.Value));
 				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
-
+				
 				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
 
 				#endregion
@@ -1317,9 +1317,11 @@ namespace HGInetUBLv2_1
 						#endregion
 					}
 
-					if (DocDet.ValorImpuestoConsumo > 0)
+					#region impuesto: Consumo
+
+					if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == false)
 					{
-						#region impuesto: Consumo
+
 
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();
@@ -1382,12 +1384,99 @@ namespace HGInetUBLv2_1
 						// <cac:TaxScheme>
 						//Grupo de informaciones específicas sobre el tributo
 						TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
+						ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
+						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals("04")).FirstOrDefault();
 						//Identificador del tributo
 						TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
-						TaxSchemeConsumo.ID.Value = "02";//TipoImpuestos.Consumo,
-														 //Nombre del tributo
+						TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"04";//TipoImpuestos.Consumo,
+																   //Nombre del tributo
 						TaxSchemeConsumo.Name = new NameType1();
-						TaxSchemeConsumo.Name.Value = "IC"; /*** QUEMADO ***/
+						TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"INC"; /*** QUEMADO ***/
+
+						TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
+						TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
+						TaxesSubtotal[0] = TaxSubtotalConsumo;
+						TaxTotal.TaxSubtotal = TaxesSubtotal;
+						TaxesTotal.Add(TaxTotal);
+					}
+					else if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == true)
+					{
+						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+						TaxTotalType TaxTotal = new TaxTotalType();
+
+						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+						// <cbc:TaxAmount>
+						TaxTotal.TaxAmount = new TaxAmountType()
+						{
+							currencyID = moneda_detalle.ToString(),
+							Value = decimal.Round(DocDet.ValorImpuestoConsumo, 2)
+						};
+
+						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+						// <cbc:TaxEvidenceIndicator>
+						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+						{
+							Value = false
+						};
+
+						// Debe ser informado un grupo de estos para cada tarifa. 
+						// <cac:TaxSubtotal>
+						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+
+						TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
+
+						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+						//Base Imponible sobre la que se calcula el valor del tributo
+						//----Se debe Solicitar la base con la que calculo el impuesto
+						TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
+						{
+							unitCode = InvoicedQuantity.unitCode,
+							Value = decimal.Round(DocDet.Cantidad, 6)
+						};
+
+						// El monto de este subtotal fiscal.
+						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+						// <cbc:TaxAmount>
+						TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
+						{
+							currencyID = moneda_detalle.ToString(),
+							Value = DocDet.ValorImpuestoConsumo
+						};
+
+						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+						//Tarifa del tributo
+						// <cbc:Percent>
+						TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
+						{
+							currencyID = moneda_detalle.ToString(),
+							Value = decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2)
+						};
+
+						// categoría de impuestos aplicable a este subtotal.
+						//Grupo de informaciones sobre el tributo 
+						// <cac:TaxCategory>
+						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
+
+						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+						//Tarifa del tributo
+						// <cbc:Percent>
+						//TaxCategoryConsumo.PerUnitAmount = new PerUnitAmountType()
+						//{
+						//	currencyID = moneda_detalle.ToString(),
+						//	Value = decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2)
+						//};
+
+						// <cac:TaxScheme>
+						//Grupo de informaciones específicas sobre el tributo
+						TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
+						ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
+						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals("22")).FirstOrDefault();
+						//Identificador del tributo
+						TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
+						TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"22";//TipoImpuestos.Consumo,
+																   //Nombre del tributo
+						TaxSchemeConsumo.Name = new NameType1();
+						TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"Bolsas"; /*** QUEMADO ***/
 
 						TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
 						TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
@@ -1395,8 +1484,9 @@ namespace HGInetUBLv2_1
 						TaxTotal.TaxSubtotal = TaxesSubtotal;
 						TaxesTotal.Add(TaxTotal);
 
-						#endregion
 					}
+
+					#endregion
 
 					#region impuesto: Ica -- Hacer cambio 
 					/*
@@ -1642,7 +1732,7 @@ namespace HGInetUBLv2_1
 						// <cbc:PriceAmount>
 						PriceAmountType PriceAmountP = new PriceAmountType();
 						PriceAmountP.currencyID = moneda_detalle.ToString();
-						PriceAmountP.Value = decimal.Round(DocDet.ValorUnitario, 2);
+						PriceAmountP.Value = decimal.Round((decimal.Round(DocDet.ValorUnitario, 2) > 0) ? decimal.Round(DocDet.ValorUnitario, 2) : (decimal.Round(DocDet.ValorImpuestoConsumo,2) / decimal.Round(DocDet.Cantidad,2)), 2);
 						PriceG.PriceAmount = PriceAmountP;
 
 						//Código del tipo de precio informado ista de valores posibles en 6.3.10 

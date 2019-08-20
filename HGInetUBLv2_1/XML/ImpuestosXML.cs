@@ -63,10 +63,10 @@ namespace HGInetUBLv2_1
 				}
 
 				//Toma el impuesto al consumo de los productos que esten el detalle
-				var impuesto_consumo = documentoDetalle
-					.Select(_consumo => new
+				var impuesto_consumo = documentoDetalle.Select(_consumo => new
 					{ _consumo.ImpoConsumoPorcentaje, TipoImpuestos.Consumo, _consumo.ValorImpuestoConsumo }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje }).Select(_consumo => _consumo.First());
 				decimal BaseImponibleImpConsumo = 0;
+				decimal BaseImponibleBolsa = 0;
 
 
 
@@ -78,26 +78,49 @@ namespace HGInetUBLv2_1
 						if (item.ValorImpuestoConsumo != 0)
 						{
 							DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-							List<DocumentoDetalle> doc_ = documentoDetalle
-								.Where(docDet => docDet.ValorImpuestoConsumo != 0).ToList();
-							BaseImponibleImpConsumo =
-								decimal.Round(
-									documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0)
-										.Sum(docDet => docDet.ValorSubtotal), 2);
+							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).ToList();
+							DocumentoDetalle bolsa = doc_.Where(det => det.ProductoGratis == true && det.ValorImpuestoConsumo > 0).FirstOrDefault();
 
-							//imp_doc.Codigo = item.IntImpConsumo.ToString();
-							//imp_doc.Nombre = item.StrDescripcion;
-							imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2);
-							imp_doc.TipoImpuesto = item.Consumo;
-							imp_doc.BaseImponible = BaseImponibleImpConsumo;
-							foreach (var docDet in doc_)
+							if (bolsa == null)
 							{
-								imp_doc.ValorImpuesto =
-									decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2);
-							}
 
-							if (imp_doc.Porcentaje > 0)
-								doc_impuestos.Add(imp_doc);
+								BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorSubtotal), 2);
+
+								//imp_doc.Codigo = item.IntImpConsumo.ToString();
+								//imp_doc.Nombre = item.StrDescripcion;
+								ListaTarifaImpuestoINC lista_inc = new ListaTarifaImpuestoINC();
+								ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(item.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+								imp_doc.Nombre = inc.Nombre;
+
+								imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2);
+								imp_doc.TipoImpuesto = item.Consumo;
+								imp_doc.BaseImponible = BaseImponibleImpConsumo;
+								foreach (var docDet in doc_)
+								{
+									imp_doc.ValorImpuesto =
+										decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2);
+								}
+
+								if (imp_doc.Porcentaje > 0)
+									doc_impuestos.Add(imp_doc);
+							}
+							else
+							{
+								BaseImponibleBolsa = decimal.Round(item.ValorImpuestoConsumo, 2);
+								imp_doc.Porcentaje = decimal.Round(0.00M);
+								ListaTipoImpuesto list_impBolsa = new ListaTipoImpuesto();
+								ListaItem impBolsa = list_impBolsa.Items.Where(d => d.Codigo.Equals("22")).FirstOrDefault();
+
+								imp_doc.TipoImpuesto = impBolsa.Codigo;
+								imp_doc.Nombre = impBolsa.Nombre;//bolsa.UnidadCodigo;
+								imp_doc.Codigo = bolsa.UnidadCodigo;
+								imp_doc.BaseImponible = decimal.Round(bolsa.Cantidad, 2);
+								imp_doc.ValorImpuesto = BaseImponibleBolsa;
+
+								if (imp_doc.BaseImponible > 0)
+									doc_impuestos.Add(imp_doc);
+
+							}
 						}
 
 					}
@@ -166,69 +189,136 @@ namespace HGInetUBLv2_1
 					{
 						#region Impuesto Legal ***PENDIENTE
 
-						// Indicador de si estos totales se reconocen como evidencia legal a efectos impositivos.
-						TaxEvidenceIndicatorType TaxEvidenceIndicator = new TaxEvidenceIndicatorType();
-						TaxEvidenceIndicator.Value = false;
-						TaxTotal.TaxEvidenceIndicator = TaxEvidenceIndicator;
+						if (!item_sub.TipoImpuesto.Equals("22"))
+						{
 
-						#endregion
+							// Indicador de si estos totales se reconocen como evidencia legal a efectos impositivos.
+							TaxEvidenceIndicatorType TaxEvidenceIndicator = new TaxEvidenceIndicatorType();
+							TaxEvidenceIndicator.Value = false;
+							TaxTotal.TaxEvidenceIndicator = TaxEvidenceIndicator;
+
+							#endregion
+
+							TaxSubtotalType TaxSubtotal = new TaxSubtotalType();
+
+							#region Base Imponible: Base	Imponible sobre la que se calcula la retención de impuesto
+
+							//Base Imponible = Importe bruto + cargos - descuentos
+							TaxableAmountType TaxableAmount = new TaxableAmountType();
+							TaxableAmount.currencyID = moneda_detalle.ToString();
+							TaxableAmount.Value = decimal.Round(item_sub.BaseImponible, 2);
+							TaxSubtotal.TaxableAmount = TaxableAmount;
+
+							#endregion
+
+							#region Importe Impuesto (detalle): Importe del impuesto retenido
+
+							//Valor total del impuesto retenido
+							TaxAmountType TaxAmountSubtotal = new TaxAmountType();
+							TaxAmountSubtotal.currencyID = moneda_detalle.ToString();
+							TaxAmountSubtotal.Value = decimal.Round(item_sub.ValorImpuesto, 2);
+							TaxSubtotal.TaxAmount = TaxAmountSubtotal;
+
+							#endregion
+
+							#region Tipo o clase impuesto
+
+							/* Tipo o clase impuesto. Concepto fiscal por el que se tributa. Debería si un	campo que referencia a una lista de códigos. En
+							   la lista deberían aparecer los impuestos	estatales o nacionales*/
+							TaxCategoryType TaxCategory = new TaxCategoryType();
+
+							#region Porcentaje: Porcentaje a aplicar
+
+							PercentType1 Percent = new PercentType1();
+							Percent = new PercentType1();
+							Percent.Value = item_sub.Porcentaje;
+							TaxCategory.Percent = Percent;
+
+							#endregion
+
+							TaxSchemeType TaxScheme = new TaxSchemeType();
+							IDType IDTaxScheme = new IDType();
+							IDTaxScheme.Value = item_sub.TipoImpuesto; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
+							TaxScheme.ID = IDTaxScheme;
+
+							NameType1 Name = new NameType1();
+							Name.Value = item_sub.Nombre.ToString();
+
+							TaxScheme.Name = Name;
+							TaxCategory.TaxScheme = TaxScheme;
+							TaxSubtotal.TaxCategory = TaxCategory;
 						
-						TaxSubtotalType TaxSubtotal = new TaxSubtotalType();
+							#endregion
 
-						#region Base Imponible: Base	Imponible sobre la que se calcula la retención de impuesto
+							TaxSubtotals.Add(TaxSubtotal);
+							
+						}
+						else
+						{
+							TaxSubtotalType TaxSubtotal = new TaxSubtotalType();
 
-						//Base Imponible = Importe bruto + cargos - descuentos
-						TaxableAmountType TaxableAmount = new TaxableAmountType();
-						TaxableAmount.currencyID = moneda_detalle.ToString();
-						TaxableAmount.Value = decimal.Round(item_sub.BaseImponible, 2);
-						TaxSubtotal.TaxableAmount = TaxableAmount;
+							#region Base Imponible: Base	Imponible sobre la que se calcula la retención de impuesto
 
-						#endregion
+							//Base Imponible = Importe bruto + cargos - descuentos
+							BaseUnitMeasureType BaseUnitMeasure = new BaseUnitMeasureType();
+							BaseUnitMeasure.unitCode = item_sub.Codigo; //moneda_detalle.ToString();
+							BaseUnitMeasure.Value = decimal.Round(item_sub.BaseImponible, 2);
+							TaxSubtotal.BaseUnitMeasure = BaseUnitMeasure;
 
-						#region Importe Impuesto (detalle): Importe del impuesto retenido
+							#endregion
 
-						//Valor total del impuesto retenido
-						TaxAmountType TaxAmountSubtotal = new TaxAmountType();
-						TaxAmountSubtotal.currencyID = moneda_detalle.ToString();
-						TaxAmountSubtotal.Value = decimal.Round(item_sub.ValorImpuesto, 2);
-						TaxSubtotal.TaxAmount = TaxAmountSubtotal;
+							//Base Imponible = Importe bruto + cargos - descuentos
+							TaxableAmountType TaxableAmount = new TaxableAmountType();
+							TaxableAmount.currencyID = moneda_detalle.ToString();
+							TaxableAmount.Value = 0.00M;
+							TaxSubtotal.TaxableAmount = TaxableAmount;
 
-						#endregion
+							#region Importe Impuesto (detalle): Importe del impuesto retenido
 
-						#region Tipo o clase impuesto
+							//Valor total del impuesto retenido
+							TaxAmountType TaxAmountSubtotal = new TaxAmountType();
+							TaxAmountSubtotal.currencyID = moneda_detalle.ToString();
+							TaxAmountSubtotal.Value = decimal.Round(item_sub.ValorImpuesto, 2);
+							TaxSubtotal.TaxAmount = TaxAmountSubtotal;
 
-						/* Tipo o clase impuesto. Concepto fiscal por el que se tributa. Debería si un	campo que referencia a una lista de códigos. En
-						   la lista deberían aparecer los impuestos	estatales o nacionales*/
-						TaxCategoryType TaxCategory = new TaxCategoryType();
+							#endregion
 
-						#region Porcentaje: Porcentaje a aplicar
+							#region Porcentaje: Porcentaje a aplicar
 
-						PercentType1 Percent = new PercentType1();
-						Percent = new PercentType1();
-						Percent.Value = item_sub.Porcentaje;
-						TaxCategory.Percent = Percent;
+							PerUnitAmountType Percent = new PerUnitAmountType();
+							Percent.currencyID = moneda_detalle.ToString();
+							Percent.Value = decimal.Round(item_sub.ValorImpuesto / item_sub.BaseImponible, 2);
 
-						#endregion
+							#endregion
 
-						TaxSchemeType TaxScheme = new TaxSchemeType();
-						IDType IDTaxScheme = new IDType();
-						IDTaxScheme.Value = TipoImpuestos.Iva; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-						TaxScheme.ID = IDTaxScheme;
+							#region Tipo o clase impuesto
 
-						NameType1 Name = new NameType1();
-						Name.Value = item_sub.Nombre.ToString();
+							/* Tipo o clase impuesto. Concepto fiscal por el que se tributa. Debería si un	campo que referencia a una lista de códigos. En
+							   la lista deberían aparecer los impuestos	estatales o nacionales*/
+							TaxCategoryType TaxCategory = new TaxCategoryType();
 
-						TaxScheme.Name = Name;
-						TaxCategory.TaxScheme = TaxScheme;
-						TaxSubtotal.TaxCategory = TaxCategory;
+							TaxSchemeType TaxScheme = new TaxSchemeType();
+							IDType IDTaxScheme = new IDType();
+							IDTaxScheme.Value = item_sub.TipoImpuesto; //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
+							TaxScheme.ID = IDTaxScheme;
 
-						#endregion
+							NameType1 Name = new NameType1();
+							Name.Value = item_sub.Nombre.ToString();
 
-						TaxSubtotals.Add(TaxSubtotal);
+							TaxScheme.Name = Name;
+							TaxCategory.TaxScheme = TaxScheme;
+							TaxSubtotal.PerUnitAmount = Percent;
+							TaxSubtotal.TaxCategory = TaxCategory;
+
+							#endregion
+
+							TaxSubtotals.Add(TaxSubtotal);
+						}
+
 						TaxTotal.TaxSubtotal = TaxSubtotals.ToArray();
 					}
 
-					
+
 					List_Taxtotal.Add(TaxTotal);
 				}
 				TaxTotals = List_Taxtotal.ToArray();
