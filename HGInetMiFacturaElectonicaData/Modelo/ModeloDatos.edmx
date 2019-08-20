@@ -136,6 +136,7 @@
           <Property Name="IntMailRecepcionVerificado" Type="smallint" Nullable="false" />
           <Property Name="IntMailAcuseVerificado" Type="smallint" Nullable="false" />
           <Property Name="IntMailPagosVerificado" Type="smallint" Nullable="false" />
+          <Property Name="IntCertFirma" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasPasarela">
           <Key>
@@ -1270,6 +1271,7 @@
           <NavigationProperty Name="TblOpcionesUsuario" Relationship="Modelo.FK_TblOpcionesUsuario_TblEmpresas" FromRole="TblEmpresas" ToRole="TblOpcionesUsuario" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblUsuarios_TblEmpresas" FromRole="TblEmpresas" ToRole="TblUsuarios" />
+          <Property Name="IntCertFirma" Type="Int16" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1646,6 +1648,7 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntCertFirma" ColumnName="IntCertFirma" />
                 <ScalarProperty Name="IntMailPagosVerificado" ColumnName="IntMailPagosVerificado" />
                 <ScalarProperty Name="IntMailAcuseVerificado" ColumnName="IntMailAcuseVerificado" />
                 <ScalarProperty Name="IntMailRecepcionVerificado" ColumnName="IntMailRecepcionVerificado" />

@@ -68,6 +68,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntMailRecepcionVerificado { get; set; }
         public short IntMailAcuseVerificado { get; set; }
         public short IntMailPagosVerificado { get; set; }
+        public short IntCertFirma { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }

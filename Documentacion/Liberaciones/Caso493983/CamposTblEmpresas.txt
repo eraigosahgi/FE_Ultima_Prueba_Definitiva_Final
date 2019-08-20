@@ -61,3 +61,12 @@ GO
 ALTER TABLE TblEmpresas ADD
 DatCertVence Date NULL default(NULL)
 GO
+
+
+/****
+Se requiere la creación del campo IntCertFirma de tipo smallint, en la tabla TblEmpresas el cual no permitirá valores null y el valor por defecto será cero.
+****/
+
+ALTER TABLE TblEmpresas ADD
+IntCertFirma smallint NOT NULL Default(0)
+GO
