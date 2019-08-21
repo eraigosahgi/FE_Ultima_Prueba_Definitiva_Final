@@ -281,4 +281,8 @@
     <value>emails\\plantilla_notifica_alertas_documentos_DIAN.html</value>
     <comment>Ruta de la plantilla de Alerta de inconsistencias de Documento en la DIAN</comment>
   </data>
+  <data name="CarpetaCertificadosDigitales" xml:space="preserve">
+    <value>certificados</value>
+    <comment>Carpeta para guardar los certificados digitales para la firma de documentos electrónicos.</comment>
+  </data>
 </root>

@@ -97,6 +97,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a certificados.
+        /// </summary>
+        public static string CarpetaCertificadosDigitales {
+            get {
+                return ResourceManager.GetString("CarpetaCertificadosDigitales", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a facturaelectronica.
         /// </summary>
         public static string CarpetaFacturaElectronica {

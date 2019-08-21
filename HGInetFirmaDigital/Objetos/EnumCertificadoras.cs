@@ -19,7 +19,7 @@ namespace HGInetFirmaDigital
 		/// https://www.hgi.com.co
 		/// </summary>
 		[Description("HGI SAS PROVEEDOR TECNOLOGICO")]
-		[AmbientValue("publico")]
+		[AmbientValue("privado")]
 		[Category("0")]
 		Hgi = 0,
 
