@@ -28,12 +28,13 @@ namespace HGInetFirmaDigital
 		/// Firma de archivos con formato XADES-EPES
 		/// </summary>
 		/// <param name="certificado_ruta">Ruta física del archivo del Certificado "C:/Certificado.pfx";</param>
-		/// <param name="certificado_serial">Número de serie del certificado digital "‎‎74 c7 43 04 a4 ac 86 b6"</param>
+		/// <param name="certificado_serial">Número de serie del certificado digital "‎‎74 c7 43 04 a4 ac 86 b6" para búsqueda en el almacen (no para certificado físico)</param>
 		/// <param name="certificado_clave">Clave del certificado digital</param>
 		/// <param name="empresa_certificadora">empresa certificadora</param>
-		/// <param name="rutas">Archivos XML para firmar</param>
+		/// <param name="datos">Archivos XML para firmar</param>
+		/// <param name="firma_proveedor">indica si firma el proveedor tecnológico (true) o el obligado(false)</param>
 		/// <returns>Archivos Xml procesados</returns>  
-		public static FacturaE_Documento FirmarDocumentos(string certificado_ruta, string certificado_serial, string certificado_clave, EnumCertificadoras empresa_certificadora, FacturaE_Documento datos)
+		public static FacturaE_Documento FirmarDocumentos(string certificado_ruta, string certificado_serial, string certificado_clave, EnumCertificadoras empresa_certificadora, FacturaE_Documento datos, bool firma_proveedor)
 		{
 			try
 			{
@@ -49,7 +50,7 @@ namespace HGInetFirmaDigital
 						datos = Firmar.FirmarXAdesAlmacen(certificado_serial, certificado_clave, empresa_certificadora, datos);
 					// firmado de archivos XML desde un certificado físico
 					else
-						datos = Firmar.FirmarXAdesFisico_v2(certificado_ruta, certificado_serial, certificado_clave, empresa_certificadora, datos);
+						datos = Firmar.FirmarXAdesFisico_v2(certificado_ruta, certificado_clave, empresa_certificadora, datos, firma_proveedor);
 				}
 				else
 				{
@@ -58,7 +59,7 @@ namespace HGInetFirmaDigital
 						datos = Firmar.FirmarXAdesAlmacen(certificado_serial, certificado_clave, empresa_certificadora, datos);
 					// firmado de archivos XML desde un certificado físico
 					else
-						datos = Firmar.FirmarXAdesFisico(certificado_ruta, certificado_serial, certificado_clave, empresa_certificadora, datos);
+						datos = Firmar.FirmarXAdesFisico(certificado_ruta, certificado_clave, empresa_certificadora, datos);
 				}
 
 				return datos;
@@ -74,13 +75,12 @@ namespace HGInetFirmaDigital
 		/// Firmado de varios archivos XML a través del certificado físico
 		/// </summary>
 		/// <param name="RutaCertificado">Ruta física del archivo del Certificado "C:/Certificado.pfx";</param>
-		/// <param name="SerieCertificado">Número de Serie del Certificado "‎‎74 c7 43 04 a4 ac 86 b6"</param>
 		/// <param name="ClaveCertificado">Clave del Certificado</param>
 		/// <param name="EmpresaCertificadora">Empresa que generó el certificado</param>
 		/// <param name="rutas_archivos">Archivos XML para firmar</param>
 		/// <returns>Archivos Xml procesados</returns>
 		[AutoComplete(true)]
-		protected FacturaE_Documento FirmarXAdesFisico(string RutaCertificado, string SerieCertificado, string ClaveCertificado, EnumCertificadoras EmpresaCertificadora, FacturaE_Documento datos)
+		protected FacturaE_Documento FirmarXAdesFisico(string RutaCertificado, string ClaveCertificado, EnumCertificadoras EmpresaCertificadora, FacturaE_Documento datos)
 		{
 			X509Certificate2 MontCertificat = null;
 			SignatureParameters parametros = null;
@@ -328,13 +328,13 @@ namespace HGInetFirmaDigital
 		/// Firmado de varios archivos XML a través del certificado físico
 		/// </summary>
 		/// <param name="RutaCertificado">Ruta física del archivo del Certificado "C:/Certificado.pfx";</param>
-		/// <param name="SerieCertificado">Número de Serie del Certificado "‎‎74 c7 43 04 a4 ac 86 b6"</param>
 		/// <param name="ClaveCertificado">Clave del Certificado</param>
 		/// <param name="EmpresaCertificadora">Empresa que generó el certificado</param>
-		/// <param name="rutas_archivos">Archivos XML para firmar</param>
+		/// <param name="datos">Archivo XML para firmar</param>
+		/// <param name="firma_proveedor">indica si firma el proveedor tecnológico (true) o el obligado(false)</param>
 		/// <returns>Archivos Xml procesados</returns>
 		[AutoComplete(true)]
-		protected FacturaE_Documento FirmarXAdesFisico_v2(string RutaCertificado, string SerieCertificado, string ClaveCertificado, EnumCertificadoras EmpresaCertificadora, FacturaE_Documento datos)
+		protected FacturaE_Documento FirmarXAdesFisico_v2(string RutaCertificado, string ClaveCertificado, EnumCertificadoras EmpresaCertificadora, FacturaE_Documento datos, bool firma_proveedor)
 		{
 			X509Certificate2 MontCertificat = null;
 			SignatureParameters parametros = null;
@@ -352,8 +352,12 @@ namespace HGInetFirmaDigital
 				parametros.DigestMethod = DigestMethod.SHA256;
 
 				parametros.SignerRole = new SignerRole();
-				parametros.SignerRole.ClaimedRoles.Add("third party");
 
+				if (firma_proveedor)
+					parametros.SignerRole.ClaimedRoles.Add("third party");
+				else
+					parametros.SignerRole.ClaimedRoles.Add("supplier");
+					
 				parametros.DatoIssuername = "";
 				parametros.DatoIssuername1 = "";
 				parametros.DatoIssuername0 = "";
