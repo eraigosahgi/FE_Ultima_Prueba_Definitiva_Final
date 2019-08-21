@@ -272,7 +272,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 					// firma el xml
-					respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
+					respuesta = UblFirmar(facturador, documentoBd, ref respuesta, ref documento_result);
 					if (documentoBd.IntEnvioMail == true && facturador.IntEnvioMailRecepcion == true)
 					{
 						respuesta = Envio(documento_obj, documentoBd, facturador, ref respuesta, ref documento_result, true);

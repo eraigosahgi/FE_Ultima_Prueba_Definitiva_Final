@@ -233,7 +233,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 
 						// firma el xml
-						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
+						respuesta = UblFirmar(empresa, documentoBd, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 						// comprime el archivo xml firmado                        

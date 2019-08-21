@@ -100,14 +100,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             return respuesta;
         }
 
-        /// <summary>
-        /// Realiza el proceso de firmado del documento XML en estandar UBL
-        /// </summary>
-        /// <param name="documentoBd">información del documento en base de datos</param>
-        /// <param name="respuesta">datos de respuesta del documento</param>
-        /// <param name="documento_result">información del proceso interno del documento</param>
-        /// <returns>información adicional de respuesta del documento</returns>
-        public static DocumentoRespuesta UblFirmar(TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+		/// <summary>
+		/// Realiza el proceso de firmado del documento XML en estandar UBL
+		/// </summary>
+		/// <param name="empresa">información del obligado</param>
+		/// <param name="documentoBd">información del documento en base de datos</param>
+		/// <param name="respuesta">datos de respuesta del documento</param>
+		/// <param name="documento_result">información del proceso interno del documento</param>
+		/// <returns>información adicional de respuesta del documento</returns>
+		public static DocumentoRespuesta UblFirmar(TblEmpresas empresa, TblDocumentos documentoBd, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
         {
             try
             {
@@ -116,22 +117,44 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                 respuesta.IdProceso = ProcesoEstado.FirmaXml.GetHashCode();
 				respuesta.IdEstado = Ctl_Documento.ObtenerCategoria(respuesta.IdProceso);
 
-				// obtiene la información de configuración del certificado digital
-				CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
-
-                // obtiene la empresa certificadora
-                EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
-
-                if (certificado.Certificadora.Equals("andes"))
-                    empresa_certificadora = EnumCertificadoras.Andes;
-                else if (certificado.Certificadora.Equals("gse"))
-                    empresa_certificadora = EnumCertificadoras.Gse;
-
-                // información del certificado digital
-                string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
-                documento_result = Ctl_Firma.Generar(ruta_certificado, certificado.Serial, certificado.Clave, empresa_certificadora, documento_result);
-
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+				
+				bool firma_proveedor = true;
+				string ruta_certificado = string.Empty;
+				string certificado_clave = string.Empty;
+				string certificado_serial = string.Empty;
+				
+				// obtiene la empresa certificadora
+				EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
+
+				// si firma HGI SAS como Proveedor Tecnológico
+				if (empresa.IntCertFirma == 0)
+				{
+					// obtiene la información de configuración del certificado digital
+					CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
+										
+					if (certificado.Certificadora.Equals("andes"))
+						empresa_certificadora = EnumCertificadoras.Andes;
+					else if (certificado.Certificadora.Equals("gse"))
+						empresa_certificadora = EnumCertificadoras.Gse;
+
+					certificado_clave = certificado.Clave;
+
+					ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
+				}
+				else
+				{
+					certificado_clave = empresa.StrCertClave;
+
+					empresa_certificadora = Enumeracion.GetEnumObjectByValue<HGInetFirmaDigital.EnumCertificadoras>((int)empresa.IntCertProveedor);
+
+					firma_proveedor = false;
+					
+					ruta_certificado = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, empresa.StrCertRuta);
+				}
+				
+				// genera la firma del documento XML
+				documento_result = Ctl_Firma.Generar(ruta_certificado, certificado_serial, certificado_clave, empresa_certificadora, documento_result, firma_proveedor);
 
 				// ruta física del xml
 				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());

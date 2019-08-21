@@ -304,7 +304,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 
 						// firma el xml
-						respuesta = UblFirmar(documentoBd, ref respuesta, ref documento_result);
+						respuesta = UblFirmar(empresa, documentoBd, ref respuesta, ref documento_result);
 						if (respuesta.Error != null)
 						{
 							//Se actualiza el estado del documento en BD para que lo envien de nuevo

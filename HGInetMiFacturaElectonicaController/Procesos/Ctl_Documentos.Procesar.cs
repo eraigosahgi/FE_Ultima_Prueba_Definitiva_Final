@@ -244,16 +244,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// firma el xml (valida si no ha realizado el envío a la DIAN vuelve a firmar)
 				if (respuesta.IdProceso < ProcesoEstado.FirmaXml.GetHashCode())
 				{
-					respuesta = UblFirmar(documento, ref respuesta, ref documento_result);
+					respuesta = UblFirmar(empresa, documento, ref respuesta, ref documento_result);
 					ValidarRespuesta(respuesta,respuesta.UrlXmlUbl);
 				}
 
-				//// comprime el archivo xml firmado
+				// comprime el archivo xml firmado
 				if (respuesta.IdProceso < ProcesoEstado.CompresionXml.GetHashCode())
 				{
 					if (documento.DatFechaIngreso.Date < Fecha.GetFecha().AddDays(-1).Date)
 					{
-						respuesta = UblFirmar(documento, ref respuesta, ref documento_result);
+						respuesta = UblFirmar(empresa, documento, ref respuesta, ref documento_result);
 						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 					}
 
