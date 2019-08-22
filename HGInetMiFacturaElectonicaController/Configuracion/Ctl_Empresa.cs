@@ -15,6 +15,10 @@ using LibreriaGlobalHGInet.HgiNet;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.Formato;
 using HGInetMiFacturaElectonicaData.Enumerables;
+using LibreriaGlobalHGInet.Enumerables;
+using System.Security.Cryptography.X509Certificates;
+using HGInetMiFacturaElectonicaController.Properties;
+using LibreriaGlobalHGInet.General;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -135,6 +139,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				empresa.IntIdentificacionDv = FuncionesIdentificacion.Dv(empresa.StrIdentificacion);
 
+
+				empresa.StrMailAdmin = empresa.StrMailAdmin;
+				empresa.StrMailRecepcion = (string.IsNullOrEmpty(empresa.StrMailRecepcion)) ? string.Empty : empresa.StrMailRecepcion;
+				empresa.StrMailEnvio = (string.IsNullOrEmpty(empresa.StrMailEnvio)) ? string.Empty : empresa.StrMailEnvio;
+				empresa.StrMailAcuse = (string.IsNullOrEmpty(empresa.StrMailAcuse)) ? string.Empty : empresa.StrMailAcuse;
+				empresa.StrMailPagos = (string.IsNullOrEmpty(empresa.StrMailPagos)) ? string.Empty : empresa.StrMailPagos;
+
 				//Automaricos                
 				empresa.DatFechaIngreso = Fecha.GetFecha();
 				empresa.DatFechaActualizacion = Fecha.GetFecha();
@@ -167,7 +178,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="empresa">Objeto BD de la empresa a Actualizar</param>
 		/// <returns></returns>
-		public TblEmpresas Editar(TblEmpresas empresa)
+		public TblEmpresas Editar(TblEmpresas empresa, bool Administrador)
 		{
 			try
 			{
@@ -182,34 +193,95 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (EmpresaActualiza == null)
 					throw new ApplicationException("La empresa que desea Actualizar no Existe");
 
-				EmpresaActualiza.StrRazonSocial = empresa.StrRazonSocial;
-				EmpresaActualiza.StrMailAdmin = empresa.StrMailAdmin;
-				EmpresaActualiza.IntAdquiriente = empresa.IntAdquiriente;
-				EmpresaActualiza.IntHabilitacion = empresa.IntHabilitacion;
-				EmpresaActualiza.IntObligado = empresa.IntObligado;
-				EmpresaActualiza.StrEmpresaAsociada = empresa.StrEmpresaAsociada;
-				EmpresaActualiza.StrResolucionDian = empresa.StrResolucionDian;
-				EmpresaActualiza.StrObservaciones = empresa.StrObservaciones;
-				EmpresaActualiza.IntIntegrador = empresa.IntIntegrador;
-				EmpresaActualiza.IntNumUsuarios = empresa.IntNumUsuarios;
+
+				//Solo si es administrador, podra guardar toda la información, de resto solo actualizara la información de Facturador o Integrador.
+				if (Administrador)
+				{
+					EmpresaActualiza.StrRazonSocial = empresa.StrRazonSocial;
+
+					EmpresaActualiza.IntAdquiriente = empresa.IntAdquiriente;
+					EmpresaActualiza.IntHabilitacion = empresa.IntHabilitacion;
+					EmpresaActualiza.IntObligado = empresa.IntObligado;
+					EmpresaActualiza.StrEmpresaAsociada = empresa.StrEmpresaAsociada;
+					EmpresaActualiza.StrResolucionDian = empresa.StrResolucionDian;
+					EmpresaActualiza.StrObservaciones = empresa.StrObservaciones;
+					EmpresaActualiza.IntIntegrador = empresa.IntIntegrador;
+					EmpresaActualiza.IntNumUsuarios = empresa.IntNumUsuarios;
+
+					EmpresaActualiza.IntManejaAnexos = empresa.IntManejaAnexos;
+
+					EmpresaActualiza.StrEmpresaDescuento = empresa.StrEmpresaDescuento;
+					EmpresaActualiza.IntIdEstado = empresa.IntIdEstado;
+					EmpresaActualiza.IntCobroPostPago = empresa.IntCobroPostPago;
+					EmpresaActualiza.IntEnvioMailRecepcion = empresa.IntEnvioMailRecepcion;
+					EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
+					EmpresaActualiza.IntTimeout = empresa.IntTimeout;
+
+					#region Certificado
+					EmpresaActualiza.IntCertFirma = empresa.IntCertFirma;
+					EmpresaActualiza.IntCertProveedor = empresa.IntCertProveedor;
+					EmpresaActualiza.IntCertResponsableHGI = empresa.IntCertResponsableHGI;
+					EmpresaActualiza.IntCertNotificar = empresa.IntCertNotificar;
+					EmpresaActualiza.StrCertClave = empresa.StrCertClave;
+					EmpresaActualiza.DatCertVence = empresa.DatCertVence;
+					#endregion
+
+				}
+
+
 				EmpresaActualiza.IntAcuseTacito = empresa.IntAcuseTacito;
-				EmpresaActualiza.IntManejaAnexos = empresa.IntManejaAnexos;
-				EmpresaActualiza.IntEnvioMailRecepcion = empresa.IntEnvioMailRecepcion;
-				EmpresaActualiza.StrEmpresaDescuento = empresa.StrEmpresaDescuento;
-				EmpresaActualiza.IntIdEstado = empresa.IntIdEstado;
-				EmpresaActualiza.IntCobroPostPago = empresa.IntCobroPostPago;
 
-				EmpresaActualiza.StrMailRecepcion = empresa.StrMailRecepcion;
-				EmpresaActualiza.StrMailEnvio = empresa.StrMailEnvio;
-				EmpresaActualiza.StrMailAcuse = empresa.StrMailAcuse;
-				EmpresaActualiza.StrMailPagos = empresa.StrMailPagos;
+				if (string.IsNullOrEmpty(empresa.StrMailAdmin))
+					throw new ApplicationException("El Email Administrativo es obligatorio");
 
+				EmpresaActualiza.StrMailAdmin = empresa.StrMailAdmin;
+				EmpresaActualiza.StrMailRecepcion = (string.IsNullOrEmpty(empresa.StrMailRecepcion)) ? string.Empty : empresa.StrMailRecepcion;
+				EmpresaActualiza.StrMailEnvio = (string.IsNullOrEmpty(empresa.StrMailEnvio)) ? string.Empty : empresa.StrMailEnvio;
+				EmpresaActualiza.StrMailAcuse = (string.IsNullOrEmpty(empresa.StrMailAcuse)) ? string.Empty : empresa.StrMailAcuse;
+				EmpresaActualiza.StrMailPagos = (string.IsNullOrEmpty(empresa.StrMailPagos)) ? string.Empty : empresa.StrMailPagos;
+				EmpresaActualiza.DatFechaActualizacion = Fecha.GetFecha();
 				EmpresaActualiza.StrTelefono = empresa.StrTelefono;
 
-				EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
 
-				EmpresaActualiza.DatFechaActualizacion = Fecha.GetFecha();
-				EmpresaActualiza.IntTimeout = empresa.IntTimeout;
+				List<ObjVerificacionEmail> ListaEmailVerificados = new List<ObjVerificacionEmail>();
+
+				//Si el Email Admin esta verificado
+				if (empresa.IntMailAdminVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailAdmin))
+				{
+					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailAdmin });
+				}
+
+				if (empresa.IntMailRecepcionVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailRecepcion))
+				{
+					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailRecepcion });
+				}
+
+
+				if (empresa.IntMailEnvioVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailEnvio))
+				{
+					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailEnvio });
+				}
+
+
+				if (empresa.IntMailAcuseVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailAcuse))
+				{
+					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailAcuse });
+				}
+
+
+				if (empresa.IntMailPagosVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailPagos))
+				{
+					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailPagos });
+				}
+
+
+				//Verificación de Emails
+				EmpresaActualiza.IntMailAdminVerificado = (EmailVerificado(ListaEmailVerificados, EmpresaActualiza.StrMailAdmin)) ? (short)EstadoVerificacionEmail.Verificado.GetHashCode() : empresa.IntMailAdminVerificado;
+				EmpresaActualiza.IntMailEnvioVerificado = (EmailVerificado(ListaEmailVerificados, EmpresaActualiza.StrMailEnvio)) ? (short)EstadoVerificacionEmail.Verificado.GetHashCode() : empresa.IntMailEnvioVerificado;
+				EmpresaActualiza.IntMailAcuseVerificado = (EmailVerificado(ListaEmailVerificados, EmpresaActualiza.StrMailAcuse)) ? (short)EstadoVerificacionEmail.Verificado.GetHashCode() : empresa.IntMailAcuseVerificado;
+				EmpresaActualiza.IntMailRecepcionVerificado = (EmailVerificado(ListaEmailVerificados, EmpresaActualiza.StrMailRecepcion)) ? (short)EstadoVerificacionEmail.Verificado.GetHashCode() : empresa.IntMailRecepcionVerificado;
+				EmpresaActualiza.IntMailPagosVerificado = (EmailVerificado(ListaEmailVerificados, EmpresaActualiza.StrMailPagos)) ? (short)EstadoVerificacionEmail.Verificado.GetHashCode() : empresa.IntMailPagosVerificado;
+
 				Actualizar(EmpresaActualiza);
 
 				//Obtiene el usuario principal de la empresa.
@@ -219,6 +291,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (usuario_principal != null)
 				{
 					clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, usuario_principal);
+					clase_usuario.ActualizarEmail(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMailAdmin);
 				}
 				else
 				{
@@ -330,19 +403,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			TblEmpresas tbl_empresa = new TblEmpresas();
 
-			if (empresa.Email.Contains(";"))
-			{
-				foreach (var item_mail in Coleccion.ConvertirLista(empresa.Email, ';'))
-				{
-					// recibe el email el adquiriente
-					tbl_empresa.StrMailAdmin = item_mail;
-					break;
-				}
-			}
-			else
-			{
-				tbl_empresa.StrMailAdmin = empresa.Email;
-			}
+			//if (empresa.Email.Contains(";"))
+			//{
+			//	foreach (var item_mail in Coleccion.ConvertirLista(empresa.Email, ';'))
+			//	{
+			//		// recibe el email el adquiriente
+			//		tbl_empresa.StrMailAdmin = item_mail;
+			//		break;
+			//	}
+			//}
+			//else
+			//{
+			//	tbl_empresa.StrMailAdmin = empresa.Email;
+			//}
 
 			tbl_empresa.StrTipoIdentificacion = empresa.TipoIdentificacion.ToString();
 			tbl_empresa.StrIdentificacion = empresa.Identificacion;
@@ -360,11 +433,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			tbl_empresa.StrEmpresaAsociada = empresa.Identificacion;
 			tbl_empresa.StrEmpresaDescuento = empresa.Identificacion;
 
-			tbl_empresa.StrMailAcuse = tbl_empresa.StrMailAdmin;
-			tbl_empresa.StrMailEnvio = tbl_empresa.StrMailAdmin;
-			tbl_empresa.StrMailRecepcion = tbl_empresa.StrMailAdmin;
-			tbl_empresa.StrMailPagos = tbl_empresa.StrMailAdmin;
-
+			//tbl_empresa.StrMailAcuse = tbl_empresa.StrMailAdmin;
+			//tbl_empresa.StrMailEnvio = tbl_empresa.StrMailAdmin;
+			//tbl_empresa.StrMailRecepcion = tbl_empresa.StrMailAdmin;
+			//tbl_empresa.StrMailPagos = tbl_empresa.StrMailAdmin;
 
 			return tbl_empresa;
 		}
@@ -445,6 +517,45 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 
+		/// <summary>
+		/// Obtiene los datos del certificado
+		/// </summary>
+		/// <param name="IdSeguridad">Id de seguridad de la empresa</param>
+		/// <param name="clave">Clave del certificado</param>
+		/// <returns>DatosCertificados con datos del nombre y fecha de vencimiento del certificado </returns>
+		public CertificadoDigital ObtenerInfCert(System.Guid IdSeguridad, string clave)
+		{
+			try
+			{
+				TblEmpresas Empresa = new TblEmpresas();
+				Empresa = Obtener(IdSeguridad).FirstOrDefault();
+
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				string carpeta_certificado = string.Format("{0}\\{1}\\{2}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, Empresa.StrIdSeguridad);
+
+				X509Certificate2 Certificado = new X509Certificate2(carpeta_certificado, clave);
+
+
+				CertificadoDigital Datos = new CertificadoDigital();
+				
+
+				Datos.Fechavenc =  Certificado.NotAfter;
+
+				Datos.Propietario = Certificado.FriendlyName;
+
+				Datos.Serial = Certificado.SerialNumber;
+
+				Datos.Certificadora = Certificado.Issuer;
+
+				return Datos;
+			}
+			catch (Exception excepcion)
+			{
+				LogExcepcion.Guardar(excepcion);
+				throw new ArgumentException(excepcion.Message);
+			}
+		}
 
 		/// <summary>
 		/// Actualizar Empresa
@@ -551,6 +662,35 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+
+		#region Porceso de verificación de Email
+		/// <summary>
+		/// Valida si un email ya esta verificado 
+		/// </summary>
+		/// <param name="Lista">Lista de Emails verificados</param>
+		/// <param name="Email">Email que se desea validar</param>
+		/// <returns>Retorna true si el email esta verificado</returns>
+		public bool EmailVerificado(List<ObjVerificacionEmail> Lista, string Email)
+		{
+			var Result = Lista.Where(x => x.email == Email).FirstOrDefault();
+
+			if (Result == null)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+
+		public class ObjVerificacionEmail
+		{
+			public string email { get; set; }
+		}
+		#endregion
 
 	}
 }

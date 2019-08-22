@@ -1,47 +1,142 @@
 ﻿DevExpress.localization.locale(navigator.language);
 var opc_pagina = "1332";
 var TiposHabilitacion = [];
+var Lista_Proveedores_Firma = [];
+var Regresa_Listado = false;//Indica true o false si puede regresar a la pagina con la lista de empresas
+var id_seguridad
+//Estas variables son para tener la copia de cada correo y guardar si tienen algun cambio
+var Copia_Email_Administracion = "";
+var Copia_Email_Recepcion = "";
+var Copia_Email_Acuse = "";
+var Copia_Email_Envio = "";
+var Copia_Email_Pagos = "";
 
-//var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
-var EmpresasApp = angular.module('EmpresasApp', ['dx', 'AppSrvFiltro']);
+//Estas variables son para identificar el proceso de validación de cada correo
+var Proc_Email = 0,
+Proc_MailEnvio = 0,
+Proc_MailRecepcion = 0,
+Proc_MailAcuse = 0,
+Proc_MailPagos = 0
+
+var Copia_Proc_Email = 0,
+Copia_Proc_MailEnvio = 0,
+Copia_Proc_MailRecepcion = 0,
+Copia_Proc_MailAcuse = 0,
+Copia_Proc_MailPagos = 0
+
+var codigo_facturador = "",
+numero_documento = "",
+estado_dian = "",
+estado_recibo = "",
+fecha_inicio = "",
+fecha_fin = "",
+Habilitacion = "",
+Datos_estado = "",
+Datos_postpago = 0,
+Datos_Email_Recepcion = "",
+Datos_Email_Acuse = "",
+Datos_Email_Envio = "",
+Datos_Email_Pagos = "",
+codigo_adquiriente = "",
+Datos_VersionDIAN = "",
+Datos_CertFirma = "",
+Datos_Hgi_Responsable = "",
+Datos_Hgi_Notifica = "",
+Datos_FechaCert = "",
+id_seguridad = "",
+Datos_ClaveCert = "",
+Datos_proveedores = "";
+
+var EmpresasApp = angular.module('EmpresasApp', ['dx', 'AppSrvFiltro', 'AppMaestrosEnum', 'AppSrvEmpresas']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
-EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location, SrvFiltro) {
+EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location, SrvFiltro, SrvMaestrosEnum, SrvEmpresas) {
+
+	$("#Recargar").dxButton({
+		icon: "refresh",
+		onClick: function (e) {
+			consultar();
+		}
+	});
+
+	$("#InfCert").dxButton({
+		name: "InformacionCert",
+		icon: "search",
+		onClick: function (e) {
+			if (Datos_ClaveCert == "" || Datos_ClaveCert == undefined) {
+				DevExpress.ui.notify("Debe ingresar la contraseña del certificado", 'error', 3000);
+				return false;
+			}
+			SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+				Datos_FechaCert = data.FechaVencimiento;
+				$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+				showInfo(data);
+			});
+		}
+	}).removeClass("dx-icon");
+
+	//Modal Certificado
+	//*******************************************************************************************
+	var Certificado = {},
+	   popup = null,
+	   popupOptions = {
+	   	width: 500,
+	   	height: 200,
+	   	contentTemplate: function () {
+	   		return $("<div />").append(
+				  $("<p>Descripción:     <span>" + Certificado.Descripcion + "</span></p>"),
+                  $("<p>Fecha de vencimiento:      <span>" + Certificado.FechaVencimiento + "</span></p>"),
+				  $("<p>Serial:      <span>" + Certificado.Serial + "</span></p>")
+			);
+	   	},
+	   	showTitle: true,
+	   	title: "Información del Certificado",
+	   	visible: false,
+	   	dragEnabled: false,
+	   	closeOnOutsideClick: true
+	   };
+
+	var showInfo = function (data) {
+		console.log(data);
+		Certificado = data;
+		if (popup) {
+			$(".popup").remove();
+		}
+		var $popupContainer = $("<div />")
+                                .addClass("popup")
+                                .appendTo($("#popup"));
+		popup = $popupContainer.dxPopup(popupOptions).dxPopup("instance");
+		popup.show();
+	};
+	//*******************************************************************************************
 
 	$('#modal_Buscar_empresa').modal('show');
 
 	//Consultar por el id de seguridad para obtener los datos de la empresa a modificar
-	var id_seguridad = location.search.split('IdSeguridad=')[1];
+	id_seguridad = location.search.split('IdSeguridad=')[1];
 
 	var now = new Date();
+	
+	try {
+		SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 14).then(function (Datos) {
+			$scope.EmpresaAsociada = Datos;
+		});
+	} catch (e) {
+		//cuando el usuario no es administrador esta consulta no es necesario
+	}
 
-	var codigo_facturador = "",
-           numero_documento = "",
-           estado_dian = "",
-           estado_recibo = "",
-           fecha_inicio = "",
-           fecha_fin = "",
-           Habilitacion = "",
-		   Datos_estado = "",
-		   Datos_postpago = 0,
-		   Datos_Email_Recepcion = "",
-			Datos_Email_Acuse = "",
-			Datos_Email_Envio = "",
-			Datos_Email_Pagos = "",
-           codigo_adquiriente = "",
-			Datos_VersionDIAN = "";
-
-	SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 14).then(function (Datos) {
-		$scope.EmpresaAsociada = Datos;
-	});
-
-
-	SrvFiltro.ObtenerFiltro('Empresa Descuenta', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 17).then(function (Datos) {
-		$scope.EmpresaDescuenta = Datos;
-	});
-
+	try {
+		SrvFiltro.ObtenerFiltro('Empresa Descuenta', 'EmpresaDescuenta', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 17).then(function (Datos) {
+			$scope.EmpresaDescuenta = Datos;
+		});
+	} catch (e) {
+		//cuando el usuario no es administrador esta consulta no es necesario
+	}
 
 	$http.get('/api/DatosSesion/').then(function (response) {
+
+		$scope.Integrador = response.data[0].Integrador
+
 		codigo_facturador = response.data[0].Identificacion;
 		Habilitacion = response.data[0].Habilitacion;
 		var tipo = response.data[0].Admin;
@@ -49,10 +144,17 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			$scope.Admin = true;
 		} else {
 			$scope.Admin = false;
-			Bloquear_EmpresaDescuenta();
-			Bloquear_EmpresaAsociada();
+			//Bloquear_EmpresaDescuenta();
+			//Bloquear_EmpresaAsociada();
 		};
 		$scope.AdminIntegrador = $scope.Admin;
+
+		//Aqui valido si regreso al Listado o me quedo en la misma vista de empresa
+		if ($scope.Integrador || $scope.Admin) {
+			Regresa_Listado = true;
+		} else {
+			Regresa_Listado = false;
+		}
 
 		//Obtiene el usuario autenticado.
 		$http.get('/api/Usuario/').then(function (response) {
@@ -63,11 +165,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					var respuesta;
 
 					//Valida si el id_seguridad contiene datos
-					if (id_seguridad)
+					if (id_seguridad) {
+						$scope.id_seguridad = "      -   Id de seguridad : " + id_seguridad;
 						respuesta = response.data[0].Editar;
-					else
+					} else {
+						$scope.id_seguridad = "";
 						respuesta = response.data[0].Agregar
-
+					}
 					//Valida la visibilidad del control según los permisos.
 					if (respuesta)
 						$('#button').show();
@@ -86,22 +190,22 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	});
 
 	var Datos_Tipoidentificacion = "",
-        Datos_Idententificacion = "",
-        Datos_Razon_Social = "",
-        Datos_Email = "",
-        Datos_Adquiriente = "",
-        Datos_Obligado = "",
-        Datos_Habilitacion = "",
+		Datos_Idententificacion = "",
+		Datos_Razon_Social = "",
+		Datos_Email = "",
+		Datos_Adquiriente = "",
+		Datos_Obligado = "",
+		Datos_Habilitacion = "",
 		Datos_telefono = "",
-    Datos_IdentificacionDv = "",
-    Datos_Tipo = "1",
-    Datos_Observaciones = "",
-    Datos_empresa_Asociada = "",
-    Datos_Integrador = false,
+	Datos_IdentificacionDv = "",
+	Datos_Tipo = "1",
+	Datos_Observaciones = "",
+	Datos_empresa_Asociada = "",
+	Datos_Integrador = false,
 	Datos_Anexo = false,
 	Datos_EmailRecepcion = false,
-    Datos_Numero_usuarios = 1,
-    Datos_Dias_Acuse = 10;
+	Datos_Numero_usuarios = 1,
+	Datos_Horas_Acuse = 0;
 
 
 	//Define los campos del Formulario  
@@ -125,24 +229,26 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		$("#NumeroIdentificacion").dxTextBox({
 			onValueChanged: function (data) {
 				Datos_Idententificacion = data.value;
-				Set_EmpresaAsociada(Datos_Idententificacion);
-				Set_EmpresaDescuenta(Datos_Idententificacion);
+				if ($scope.Admin) {
+					Set_EmpresaAsociada(Datos_Idententificacion);
+					Set_EmpresaDescuenta(Datos_Idententificacion);
+				}
 			}
 		})
-        .dxValidator({
-        	validationRules: [{
-        		type: "required",
-        		message: "Debe Indicar el numero de Identificación"
-        	}, {
-        		type: "stringLength",
-        		max: 50,
-        		min: 6,
-        		message: "El numero de Identificación no puede ser mayor a 50 digitos ni menor a 6"
-        	}, {
-        		type: "numeric",
-        		message: "El numero de Identificación debe ser numérico"
-        	}]
-        });
+		.dxValidator({
+			validationRules: [{
+				type: "required",
+				message: "Debe Indicar el numero de Identificación"
+			}, {
+				type: "stringLength",
+				max: 50,
+				min: 6,
+				message: "El numero de Identificación no puede ser mayor a 50 digitos ni menor a 6"
+			}, {
+				type: "numeric",
+				message: "El numero de Identificación debe ser numérico"
+			}]
+		});
 
 
 		$("#txttelefono").dxTextBox({
@@ -150,18 +256,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_telefono = data.value;
 			}
 		})
-        .dxValidator({
-        	validationRules: [
-			//{
-        	//	type: "required",
-        	//	message: "Debe Indicar el teléfono"
-			//},
+		.dxValidator({
+			validationRules: [
 			 {
 			 	type: "stringLength",
 			 	max: 50,
 			 	message: "El teléfono no puede ser mayor a 50 caracteres"
 			 }]
-        });
+		});
 
 
 
@@ -170,20 +272,25 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Razon_Social = data.value.toUpperCase();
 			}
 		})
-            .dxValidator({
-            	validationRules: [{
-            		type: "stringLength",
-            		max: 200,
-            		message: "La razón Social no puede ser mayor a 200 caracteres"
-            	}, {
-            		type: "required",
-            		message: "Debe introducir la Razón Social"
-            	}]
-            });
+			.dxValidator({
+				validationRules: [{
+					type: "stringLength",
+					max: 200,
+					message: "La razón Social no puede ser mayor a 200 caracteres"
+				}, {
+					type: "required",
+					message: "Debe introducir la Razón Social"
+				}]
+			});
 
 		$("#txtEmail").dxTextBox({
 			onValueChanged: function (data) {
 				Datos_Email = data.value;
+				if (Copia_Email_Administracion != Datos_Email) {
+					AsigEstado("Proc_Email", 0);
+				} else {
+					AsigEstado("Proc_Email", Copia_Proc_Email);
+				}
 			}
 		}).dxValidator({
 			validationRules: [{
@@ -199,147 +306,31 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			}]
 		});
 
-		$("#Facturador").dxCheckBox({
-			name: "PerfilFacturador",
-			text: "Facturador Electrónico",
-			value: false,
+
+
+
+
+
+		$("#txtHorasAcuse").dxNumberBox({
+			value: Datos_Horas_Acuse,
 			onValueChanged: function (data) {
-				Datos_Obligado = data.value;
-				ValidarSeleccionPerfil();
-				validarHabilitacion();
-				if (Datos_Obligado === true) {
-					$("#txtEmail").dxTextBox({ value: "" });
+				Datos_Horas_Acuse = data.value;
+			}
+		}).dxValidator({
+			validationRules: [
+				{
+					type: "required",
+					message: "Debe introducir el número días para el acuse"
+				},
+			{
+				type: 'custom', validationCallback: function (options) {
+					if (!validarHorasAcuse()) {
+						options.rule.message = "Las horas de acuse deben ser mayor a 71 o cero(0) para no tomar en cuenta este parametro";
+						return false;
+					} else { return true; }
 				}
 
-			}
-		}).dxValidator({
-			validationRules: [
-                {
-                	type: 'custom', validationCallback: function (options) {
-                		if (validar()) {
-                			options.rule.message = "Debe Indicar si es Facturador o Adquiriente";
-                			return false;
-                		} else { return true; }
-                	}
-                }
-			]
-		});
-
-
-		$("#Adquiriente").dxCheckBox({
-			name: "PerfilAdquiriente",
-			text: "Adquiriente",
-			value: false,
-			onValueChanged: function (data) {
-				Datos_Adquiriente = data.value;
-				ValidarSeleccionPerfil();
-				validarHabilitacion();
-
-			}
-		}).dxValidator({
-			validationRules: [
-                {
-                	type: 'custom', validationCallback: function (options) {
-                		if (validar()) {
-                			options.rule.message = "Debe Indicar si es Facturador o Adquiriente";
-                			return false;
-                		} else { return true; }
-                	}
-                }
-			]
-		});
-
-
-		$("#Anexo").dxCheckBox({
-			name: "Anexo",
-			value: false,
-			onValueChanged: function (data) {
-				Datos_Anexo = data.value;
-			}
-		});
-
-		$("#EmailRecepcion").dxCheckBox({
-			name: "EmailRecepcion",
-			value: true,
-			readOnly: true,
-			onValueChanged: function (data) {
-				Datos_EmailRecepcion = data.value;
-			}
-		});
-
-		$("#txtUsuarios").dxNumberBox({
-			value: Datos_Numero_usuarios,
-			onValueChanged: function (data) {
-				Datos_Numero_usuarios = data.value;
-			}
-		}).dxValidator({
-			validationRules: [
-                {
-                	type: "required",
-                	message: "Debe introducir el número de usuarios"
-                }]
-		});
-
-
-
-
-		$("#txtDiasAcuse").dxNumberBox({
-			value: Datos_Dias_Acuse,
-			onValueChanged: function (data) {
-				Datos_Dias_Acuse = data.value;
-			}
-		}).dxValidator({
-			validationRules: [
-                {
-                	type: "required",
-                	message: "Debe introducir el número días para el acuse"
-                }]
-		});
-
-		$("#Integradora").dxCheckBox({
-			name: "Empresa_Integradora",
-			text: "Integrador",
-			value: false,
-			onValueChanged: function (data) {
-				Datos_Integrador = data.value;
-				//Si es verdadero, entonces inabilito el modal popop de selección de empresa
-				if (data.value) {
-					$scope.Admin = false;
-					//$("#txtempresaasociada").dxTextBox({ value: Datos_Idententificacion });
-					//$('#txt_filtro_EmpresaAsociada').val(Datos_Idententificacion);
-					Set_EmpresaAsociada(Datos_Idententificacion);
-					Bloquear_EmpresaAsociada();
-				} else {
-					//Si No es verdadero, entonces primero pregunto si no es empresa Administradora ya
-					//que no debe tener permisos para el modal popop de selección de empresa
-					if ($scope.AdminIntegrador) {
-						$scope.Admin = true;
-						Desbloquear_EmpresaAsociada();
-					}
-				}
-			}
-		});
-
-
-		$("#cboestado").dxSelectBox({
-			placeholder: "Estado",
-			displayExpr: "Texto",
-			dataSource: TiposEstado,
-			onValueChanged: function (data) {
-				Datos_estado = data.value.ID;
-			}
-		}).dxValidator({
-			validationRules: [{
-				type: "required",
-				message: "Debe seleccionar el Estado"
 			}]
-		});
-
-		$("#postpagoaut").dxCheckBox({
-			name: "postpagoaut",
-			onValueChanged: function (data) {
-				Datos_postpago = (data.value == true) ? 1 : 0;
-			}
 		});
 
 
@@ -347,24 +338,60 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		$("#txtMailEnvio").dxTextBox({
 			onValueChanged: function (data) {
 				Datos_Email_Envio = data.value;
+				if (Copia_Email_Envio != Datos_Email_Envio) {
+					AsigEstado("Proc_MailEnvio", 0);
+					Proc_MailEnvio = 0;
+				} else {
+					AsigEstado("Proc_MailEnvio", Copia_Proc_MailEnvio);
+				}
+				//Validación adicional
+				$("#txtMailEnvio").dxValidator({
+					validationRules: [{
+						type: "email",
+						message: "El campo Email de envío no tiene el formato correcto"
+					}]
+				});
 			}
 		}).dxValidator({
 			validationRules: [{
 				type: "stringLength",
 				max: 200,
 				message: "El Email de envío no puede ser mayor a 200 caracteres"
-			}, {
-				type: "required",
-				message: "Debe introducir el Email de envío"
-			}, {
+			},
+			{
 				type: "email",
 				message: "El campo Email de envío no tiene el formato correcto"
-			}]
+			},
+			{
+				type: 'custom', validationCallback: function (options) {
+					if (!validarEmailEnvio()) {
+						options.rule.message = "Debe introducir el Email de Envio";
+						return false;
+					} else { return true; }
+				}
+
+			}
+
+			]
 		});
 
 		$("#txtMailRecepcion").dxTextBox({
 			onValueChanged: function (data) {
 				Datos_Email_Recepcion = data.value;
+				if (Copia_Email_Recepcion != Datos_Email_Recepcion) {
+					AsigEstado("Proc_MailRecepcion", 0);
+					Proc_MailRecepcion = 0;
+				} else {
+					AsigEstado("Proc_MailRecepcion", Copia_Proc_MailRecepcion);
+				}
+
+				//Validación adicional
+				$("#txtMailRecepcion").dxValidator({
+					validationRules: [{
+						type: "email",
+						message: "El campo Email de Recepción no tiene el formato correcto"
+					}]
+				});
 			}
 		}).dxValidator({
 			validationRules: [{
@@ -372,8 +399,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				max: 200,
 				message: "El Email de Recepción no puede ser mayor a 200 caracteres"
 			}, {
-				type: "required",
-				message: "Debe introducir el Email de Recepción"
+				type: 'custom', validationCallback: function (options) {
+					if (!validarEmailRecepcion()) {
+						options.rule.message = "Debe introducir el Email de Recepción";
+						return false;
+					} else { return true; }
+				}
+
 			}, {
 				type: "email",
 				message: "El campo Email de Recepción no tiene el formato correcto"
@@ -385,6 +417,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		$("#txtMailAcuse").dxTextBox({
 			onValueChanged: function (data) {
 				Datos_Email_Acuse = data.value;
+				if (Copia_Email_Acuse != Datos_Email_Acuse) {
+					AsigEstado("Proc_MailAcuse", 0);
+					Proc_MailAcuse = 0;
+				} else {
+					AsigEstado("Proc_MailAcuse", Copia_Proc_MailAcuse);
+				}
+				//Validación adicional
+				$("#txtMailAcuse").dxValidator({
+					validationRules: [{
+						type: "email",
+						message: "El campo Email de Acuse no tiene el formato correcto"
+					}]
+				});
 			}
 		}).dxValidator({
 			validationRules: [{
@@ -392,8 +437,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				max: 200,
 				message: "El Email de Acuse no puede ser mayor a 200 caracteres"
 			}, {
-				type: "required",
-				message: "Debe introducir el Email de Acuse"
+
+				type: 'custom', validationCallback: function (options) {
+					if (!validarEmailAcuse()) {
+						options.rule.message = "Debe introducir el Email de Acuse";
+						return false;
+					} else { return true; }
+				}
 			}, {
 				type: "email",
 				message: "El campo Email de Acuse no tiene el formato correcto"
@@ -403,6 +453,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		$("#txtMailPagos").dxTextBox({
 			onValueChanged: function (data) {
 				Datos_Email_Pagos = data.value;
+				if (Copia_Email_Pagos != Datos_Email_Pagos) {
+					AsigEstado("Proc_MailPagos", 0);
+					Proc_MailPagos = 0;
+				} else {
+					AsigEstado("Proc_MailPagos", Copia_Proc_MailPagos);
+				}
+				//Validación adicional
+				$("#txtMailPagos").dxValidator({
+					validationRules: [{
+						type: "email",
+						message: "El campo Email de Pagos no tiene el formato correcto"
+					}]
+				});
 			}
 		}).dxValidator({
 			validationRules: [{
@@ -410,13 +473,385 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				max: 200,
 				message: "El Email de Pagos no puede ser mayor a 200 caracteres"
 			}, {
-				type: "required",
-				message: "Debe introducir el Email de Pagos"
+
+				type: 'custom', validationCallback: function (options) {
+					if (!validarEmailPagos()) {
+						options.rule.message = "Debe introducir el Email de Pagos";
+						return false;
+					} else { return true; }
+				}
 			}, {
 				type: "email",
-				message: "El campo Email de Pagos no tiene el formato correcto."
+				message: "El campo Email de Pagos no tiene el formato correcto"
 			}]
 		});
+
+
+
+		//****************En caso de Ser Administrador, muestro estos puntos********************************************************
+		if ($scope.Admin) {
+			$("#Integradora").dxCheckBox({
+				name: "Empresa_Integradora",
+				text: "Integrador",
+				value: false,
+				onValueChanged: function (data) {
+					Datos_Integrador = data.value;
+					//Si es verdadero, entonces inabilito el modal popop de selección de empresa
+					if (data.value) {
+						$scope.Admin = false;
+						Set_EmpresaAsociada(Datos_Idententificacion);
+						Bloquear_EmpresaAsociada();
+					} else {
+						//Si No es verdadero, entonces primero pregunto si no es empresa Administradora ya
+						//que no debe tener permisos para el modal popop de selección de empresa
+						if ($scope.AdminIntegrador) {
+							$scope.Admin = true;
+							Desbloquear_EmpresaAsociada();
+						}
+					}
+				}
+			});
+
+
+			$("#cboestado").dxSelectBox({
+				placeholder: "Estado",
+				displayExpr: "Texto",
+				dataSource: TiposEstado,
+				onValueChanged: function (data) {
+					Datos_estado = data.value.ID;
+					if (Datos_estado == 3) {
+						//Si es proceso de registro, entonces todos los campos de Email se colocan blanco ""
+						$("#txtEmail").dxTextBox({ value: "" });
+						$("#txtMailEnvio").dxTextBox({ value: "" });
+						$("#txtMailRecepcion").dxTextBox({ value: "" });
+						$("#txtMailAcuse").dxTextBox({ value: "" });
+						$("#txtMailPagos").dxTextBox({ value: "" });
+					} else {
+						//Si Se activa nuevamente la empresa, entonces se valida si ya existen datos de esta empresa en Emails
+						Proc_Email = Copia_Proc_Email;
+						Proc_MailEnvio = Copia_Proc_MailEnvio;
+						Proc_MailRecepcion = Copia_Proc_MailRecepcion;
+						Proc_MailAcuse = Copia_Proc_MailAcuse,
+						Proc_MailPagos = Copia_Proc_MailPagos;
+
+						$("#txtEmail").dxTextBox({ value: Copia_Email_Administracion });
+						$("#txtMailRecepcion").dxTextBox({ value: Copia_Email_Recepcion });
+						$("#txtMailEnvio").dxTextBox({ value: Copia_Email_Envio });
+						$("#txtMailAcuse").dxTextBox({ value: Copia_Email_Acuse });
+						$("#txtMailPagos").dxTextBox({ value: Copia_Email_Pagos });
+
+					}
+
+
+					//Validar cuando cambia de Activo a Registro******************************************************
+					$("#txtMailEnvio").dxValidator({
+						validationRules: [
+						{
+							type: 'custom', validationCallback: function (options) {
+								if (!validarEmailEnvio()) {
+									options.rule.message = "Debe introducir el Email de Envio";
+									return false;
+								} else { return true; }
+							}
+
+						}
+						]
+					});
+
+					$("#txtMailRecepcion").dxValidator({
+						validationRules: [
+						{
+							type: 'custom', validationCallback: function (options) {
+								if (!validarEmailRecepcion()) {
+									options.rule.message = "Debe introducir el Email de Recepción";
+									return false;
+								} else { return true; }
+							}
+
+						}]
+					});
+
+
+
+					$("#txtMailAcuse").dxValidator({
+						validationRules: [{
+							type: 'custom', validationCallback: function (options) {
+								if (!validarEmailAcuse()) {
+									options.rule.message = "Debe introducir el Email de Acuse";
+									return false;
+								} else { return true; }
+							}
+						}]
+					});
+
+					$("#txtMailPagos").dxValidator({
+						validationRules: [{
+							type: 'custom', validationCallback: function (options) {
+								if (!validarEmailPagos()) {
+									options.rule.message = "Debe introducir el Email de Pagos";
+									return false;
+								} else { return true; }
+							}
+						}]
+					});
+
+					//Validar cuando cambia de Activo a Registro******************************************************
+
+				}
+			}).dxValidator({
+				validationRules: [{
+					type: "required",
+					message: "Debe seleccionar el Estado"
+				}]
+			});
+
+			$("#postpagoaut").dxCheckBox({
+				name: "postpagoaut",
+				onValueChanged: function (data) {
+					Datos_postpago = (data.value == true) ? 1 : 0;
+				}
+			});
+
+			$("#txtUsuarios").dxNumberBox({
+				value: Datos_Numero_usuarios,
+				onValueChanged: function (data) {
+					Datos_Numero_usuarios = data.value;
+				}
+			}).dxValidator({
+				validationRules: [
+					{
+						type: "required",
+						message: "Debe introducir el número de usuarios"
+					}]
+			});
+
+
+			$("#cboVersionDIAM").dxSelectBox({
+				placeholder: "Versión",
+				displayExpr: "Texto",
+				dataSource: VersionDIAN,
+				onValueChanged: function (data) {
+					Datos_VersionDIAN = data.value.ID;
+				}
+			}).dxValidator({
+				validationRules: [{
+					type: "required",
+					message: "Debe indicar la versión DIAN"
+				}]
+			});
+
+
+			$http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {
+				TiposHabilitacion = response.data;
+				$("#Habilitacion").dxRadioGroup({
+					searchEnabled: true,
+					caption: 'Habilitación',
+					dataSource: new DevExpress.data.ArrayStore({
+						data: TiposHabilitacion,
+						key: "ID"
+					}),
+					displayExpr: "Texto",
+					Enabled: true,
+					onValueChanged: function (data) {
+						Datos_Habilitacion = data.value.ID;
+					}
+				}).dxValidator({
+					validationRules: [{
+						type: "required",
+						message: "Debe indicar el tipo de Habilitacion"
+					}]
+				});
+
+				//*********************************
+				SrvMaestrosEnum.ObtenerEnum(9, 'publico').then(function (data) {
+					Lista_Proveedores_Firma = data;
+					$("#cboProveedor").dxSelectBox({
+						placeholder: "Proveedor del Certificado",
+						displayExpr: "Descripcion",
+						dataSource: data,
+						onValueChanged: function (data) {
+							Datos_proveedores = data.value.ID;
+						}
+					})
+					/*.dxValidator({
+						validationRules: [{
+							type: "required",
+							message: "Debe seleccionar el Proveedor del Certificado"
+						}]
+					})*/
+					;
+
+					if (id_seguridad) { consultar(); }
+				});
+
+				//*********************************
+			});
+
+
+			$("#txtobservaciones").dxTextArea({
+				height: "190px",
+				onValueChanged: function (data) {
+					Datos_Observaciones = data.value.toUpperCase();
+				}
+			})
+			 .dxValidator({
+			 	validationRules: [
+				{
+					type: "stringLength",
+					max: 150,
+					message: "El campo Observación no puede ser mayor a 150 caracteres"
+				}]
+			 });
+
+			$("#Facturador").dxCheckBox({
+				name: "PerfilFacturador",
+				text: "Facturador Electrónico",
+				value: false,
+				onValueChanged: function (data) {
+					Datos_Obligado = data.value;
+					ValidarSeleccionPerfil();
+					validarHabilitacion();
+					if (Datos_Obligado === true) {
+						$("#txtEmail").dxTextBox({ value: "" });
+					}
+
+				}
+			}).dxValidator({
+				validationRules: [
+					{
+						type: 'custom', validationCallback: function (options) {
+							if (validar()) {
+								options.rule.message = "Debe Indicar si es Facturador o Adquiriente";
+								return false;
+							} else { return true; }
+						}
+					}
+				]
+			});
+
+
+			$("#Adquiriente").dxCheckBox({
+				name: "PerfilAdquiriente",
+				text: "Adquiriente",
+				value: false,
+				onValueChanged: function (data) {
+					Datos_Adquiriente = data.value;
+					ValidarSeleccionPerfil();
+					validarHabilitacion();
+
+				}
+			}).dxValidator({
+				validationRules: [
+					{
+						type: 'custom', validationCallback: function (options) {
+							if (validar()) {
+								options.rule.message = "Debe Indicar si es Facturador o Adquiriente";
+								return false;
+							} else { return true; }
+						}
+					}
+				]
+			});
+
+
+			$("#Anexo").dxCheckBox({
+				name: "Anexo",
+				value: false,
+				onValueChanged: function (data) {
+					Datos_Anexo = data.value;
+				}
+			});
+
+			$("#EmailRecepcion").dxCheckBox({
+				name: "EmailRecepcion",
+				value: true,
+				readOnly: true,
+				onValueChanged: function (data) {
+					Datos_EmailRecepcion = data.value;
+				}
+			});
+
+
+
+
+			//***********************Datos del Cerificado
+			$("#CerFirma").dxRadioGroup({
+				searchEnabled: true,
+				caption: 'Firma',
+				dataSource: new DevExpress.data.ArrayStore({
+					data: TiposCertFirma,
+					key: "ID"
+				}),
+				displayExpr: "Texto",
+				Enabled: true,
+				onValueChanged: function (data) {
+					Datos_CertFirma = data.value.ID;
+				}
+			})
+			/*.dxValidator({
+				validationRules: [{
+					type: "required",
+					message: "Debe indicar quien firma con el certificado"
+				}]
+			})*/
+			;
+
+
+
+
+
+			$("#Certificado").dxFileUploader({
+				multiple: true,
+				uploadMode: "useButtons",
+				//uploadUrl: "https://js.devexpress.com/Content/Services/upload.aspx",
+				//maxFileSize: 4000000
+			});
+
+
+			$("#Hgi_Responsable").dxCheckBox({
+				name: "Hgi_Responsable",
+				onValueChanged: function (data) {
+					Datos_Hgi_Responsable = data.value;
+				}
+			});
+
+			$("#Hgi_Notifica").dxCheckBox({
+				name: "Hgi_Notifica",
+				onValueChanged: function (data) {
+					Datos_Hgi_Notifica = data.value;
+				}
+			});
+
+
+			$("#ClaveCert").dxTextBox({
+				mode: "password",
+				placeholder: "Contraseña",
+				showClearButton: true,
+				onValueChanged: function (data) {
+					Datos_ClaveCert = data.value;
+				}
+			});
+
+			$("#VenceCert").dxTextBox({
+				placeholder: "Fecha de vencimiento",
+				readOnly: true,
+				onValueChanged: function (data) {
+					Datos_FechaCert = data.value;
+				}
+			});
+
+
+		} else {
+			//Aqui consultamos el registro de empresa como Facturador común o integrador
+			if (id_seguridad) {
+				consultar();
+				//Si es Facturador Común o Integrador, entonces no debe tener activa la opción de manejar anexos
+				$("#Anexo").dxCheckBox({ readOnly: true });
+				$("#txtRasonSocial").dxTextBox({ readOnly: true });
+			}
+		}
+		//****************En caso de Ser Administración o Integrador, muestro estos puntos
+
 
 		/////////////////////////////////////Tooltip
 		$("#ttEmail").dxPopover({
@@ -495,7 +930,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			}
 		});
 
-		
+
 
 		$("#tooltip_cboVersionDIAM").dxPopover({
 			target: "#cboVersionDIAM",
@@ -604,8 +1039,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 
 
-		$("#tooltip_txtDiasAcuse").dxPopover({
-			target: "#txtDiasAcuse",
+		$("#tooltip_txtHorasAcuse").dxPopover({
+			target: "#txtHorasAcuse",
 			showEvent: {
 				name: "mouseenter",
 				delay: 500
@@ -680,27 +1115,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				name: "mouseenter",
 				delay: 500
 			},
-				hideEvent: "mouseleave",
-				position: "bottom",
-				width: 300,
-				showTitle: true,
-				title: "Detalle:"
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
 		});
 
 
-		$("#cboVersionDIAM").dxSelectBox({
-			placeholder: "Versión",
-			displayExpr: "Texto",
-			dataSource: VersionDIAN,
-			onValueChanged: function (data) {
-				Datos_VersionDIAN = data.value.ID;
-			}
-		}).dxValidator({
-			validationRules: [{
-				type: "required",
-				message: "Debe indicar la versión DIAN"
-			}]
-		});
+
 
 		/////////////////////////////////////Tooltip
 
@@ -772,49 +1195,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		}
 
 
-
-
-		$http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {
-			TiposHabilitacion = response.data;
-			$("#Habilitacion").dxRadioGroup({
-				searchEnabled: true,
-				caption: 'Habilitación',
-				dataSource: new DevExpress.data.ArrayStore({
-					data: TiposHabilitacion,
-					key: "ID"
-				}),
-				displayExpr: "Texto",
-				Enabled: true,
-				onValueChanged: function (data) {
-					Datos_Habilitacion = data.value.ID;
-				}
-			}).dxValidator({
-				validationRules: [{
-					type: "required",
-					message: "Debe indicar el tipo de Habilitacion"
-				}]
-			});
-
-
-			if (id_seguridad) { consultar(); }
+		$("#form1").on("submit", function (e) {
+			guardarEmpresa();
+			e.preventDefault();
 		});
-
-
-		$("#txtobservaciones").dxTextArea({
-			height:"200px",
-			onValueChanged: function (data) {
-				Datos_Observaciones = data.value.toUpperCase();
-			}
-		})
-         .dxValidator({
-         	validationRules: [
-			{
-				type: "stringLength",
-				max: 150,
-				message: "El campo Observación no puede ser mayor a 150 caracteres"
-			}]
-         });
-
 
 		$("#button").dxButton({
 			text: "Guardar",
@@ -822,27 +1206,86 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			useSubmitBehavior: true
 		});
 
+	};
 
-		$("#form1").on("submit", function (e) {
-			guardarEmpresa();
-			e.preventDefault();
-		});
 
-		function validar() {
-			if (Datos_Adquiriente == true || Datos_Obligado == true) {
+
+
+	//Funciones
+	function validar() {
+		if (Datos_Adquiriente == true || Datos_Obligado == true) {
+			return false;
+		}
+		return true;
+	}
+
+	//Validación de Email
+	function validarEmailEnvio() {
+		if (Datos_estado != 3) {
+			if (Datos_Email_Envio == "" || Datos_Email_Envio == undefined) {
 				return false;
 			}
+		} else {
 			return true;
 		}
 
-	};
+		return true;
+	}
+
+	function validarEmailRecepcion() {
+		if (Datos_estado != 3) {
+			if (Datos_Email_Recepcion == "" || Datos_Email_Recepcion == undefined) {
+				return false;
+			}
+		} else {
+			return true;
+		}
+
+		return true;
+	}
+
+	function validarEmailAcuse() {
+		if (Datos_estado != 3) {
+			if (Datos_Email_Acuse == "" || Datos_Email_Acuse == undefined) {
+				return false;
+			}
+		} else {
+			return true;
+		}
+
+		return true;
+	}
+
+	function validarEmailPagos() {
+		if (Datos_estado != 3) {
+			if (Datos_Email_Pagos == "" || Datos_Email_Pagos == undefined) {
+				return false;
+			}
+		} else {
+			return true;
+		}
+
+		return true;
+	}
+
+	function validarHorasAcuse() {
+		if (Datos_Horas_Acuse == 0) {
+			return true;
+		}
+		if (Datos_Horas_Acuse != 0 && Datos_Horas_Acuse < 72) {
+			return false;
+		}
+		return true;
+	}
+
+
+
 
 	function consultar() {
 		Datos_Tipo = "2";
 		//SrvEmpresas.ObtenerEmpresa(id_seguridad).then(function (response) {
 		$http.get('/api/Empresas?IdSeguridad=' + id_seguridad).then(function (response) {
 			try {
-
 				Datos_Tipoidentificacion = response.data[0].TipoIdentificacion;
 				Datos_Idententificacion = response.data[0].Identificacion;
 				Datos_Razon_Social = response.data[0].RazonSocial;
@@ -855,7 +1298,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
 				Datos_Integrador = response.data[0].IntIntegrador;
 				Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
-				Datos_Dias_Acuse = response.data[0].IntAcuseTacito;
+				Datos_Horas_Acuse = response.data[0].IntAcuseTacito;
 				Datos_Anexo = response.data[0].IntAnexo;
 				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
 				Datos_estado = response.data[0].Estado;
@@ -867,54 +1310,121 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_telefono = response.data[0].telefono;
 				Datos_VersionDIAN = response.data[0].VersionDIAN;
 
+				//Certificado				
+				Datos_CertFirma = response.data[0].IntCertFirma;
+				Datos_proveedores = response.data[0].IntCertProveedor;
+				Datos_Hgi_Responsable = response.data[0].IntCertResponsableHGI;
+				Datos_Hgi_Notifica = response.data[0].IntCertNotificar;
+				Datos_ClaveCert = response.data[0].StrCertClave;
+				Datos_FechaCert = (response.data[0].DatCertVence == "0001-01-01" || response.data[0].DatCertVence == "") ? "" : response.data[0].DatCertVence;
+				//Certificado
+
+				//Se guardan variables para poder identifcar si algún correo tiene un cambio
+				Copia_Email_Administracion = Datos_Email;
+				Copia_Email_Recepcion = Datos_Email_Recepcion;
+				Copia_Email_Acuse = Datos_Email_Acuse;
+				Copia_Email_Envio = Datos_Email_Envio;
+				Copia_Email_Pagos = Datos_Email_Pagos;
 
 				$("#NumeroIdentificacion").dxTextBox({ value: Datos_Idententificacion });
 				$("#NumeroIdentificacion").dxTextBox({ readOnly: true });
 				$("#txtRasonSocial").dxTextBox({ value: Datos_Razon_Social });
+
+				$("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
+				$("#TipoIndentificacion").dxSelectBox({ readOnly: true });
+
+				$("#txttelefono").dxTextBox({ value: Datos_telefono });
+				$("#txtHorasAcuse").dxNumberBox({ value: Datos_Horas_Acuse });
+				if (Datos_Anexo == 1) {
+					$("#Anexo").dxCheckBox({ value: true });
+				}
+
+				//Proceso de validación de Correo****************************
+				//Si la Empresa esta activa, no hago validaciones de ningún tipo
+
+				Proc_Email = response.data[0].Proc_Email;
+				Proc_MailEnvio = response.data[0].Proc_MailEnvio;
+				Proc_MailRecepcion = response.data[0].Proc_MailRecepcion;
+				Proc_MailAcuse = response.data[0].Proc_MailAcuse;
+				Proc_MailPagos = response.data[0].Proc_MailPagos;
+				//Guardo Copia en caso de cambios en la vista
+				Copia_Proc_Email = Proc_Email;
+				Copia_Proc_MailEnvio = Proc_MailEnvio;
+				Copia_Proc_MailRecepcion = Proc_MailRecepcion;
+				Copia_Proc_MailAcuse = Proc_MailAcuse;
+				Copia_Proc_MailPagos = Proc_MailPagos;
+
+				//***********************************************************				
+
+				//Si es administrador o integrador
+				if ($scope.Admin) {
+					Set_EmpresaAsociada((Datos_empresa_Asociada) ? Datos_empresa_Asociada : '');
+					Set_EmpresaDescuenta((response.data[0].StrEmpresaDescuenta) ? response.data[0].StrEmpresaDescuenta : Datos_Idententificacion)
+					if (Datos_Observaciones != null) {
+						$("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
+					}
+					if (Datos_Adquiriente == 1) {
+						$("#Adquiriente").dxCheckBox({ value: 1 });
+					}
+					if (Datos_Integrador == 1)
+						$("#Integradora").dxCheckBox({ value: true });
+
+					$("#txtUsuarios").dxNumberBox({ value: Datos_Numero_usuarios });
+
+					if (Datos_Obligado == 1) {
+						$("#Facturador").dxCheckBox({ value: 1 });
+						$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
+					}
+
+					Datos_EmailRecepcion = true;//Se coloca como true la variable ya que este campo debe estar en True y de solo lectura, solicitud: mparamo
+					if (Datos_EmailRecepcion == true) {
+						$("#EmailRecepcion").dxCheckBox({ value: true });
+					} else {
+						$("#EmailRecepcion").dxCheckBox({ value: false });
+					}
+
+					$("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
+
+					$("#cboVersionDIAM").dxSelectBox({ value: VersionDIAN[BuscarID(VersionDIAN, Datos_VersionDIAN)] });
+
+
+					if (Datos_postpago == 1) {
+						$("#postpagoaut").dxCheckBox({ value: true });
+					}
+
+					//Certificado
+					try {
+						$("#CerFirma").dxRadioGroup({ value: TiposCertFirma[BuscarID(TiposCertFirma, Datos_CertFirma)] });
+					} catch (e) { }
+					try {
+						$("#cboProveedor").dxSelectBox({ value: Lista_Proveedores_Firma[BuscarID(Lista_Proveedores_Firma, Datos_proveedores)] });
+					} catch (e) { }
+					try {
+						$("#ClaveCert").dxTextBox({ value: Datos_ClaveCert });
+					} catch (e) { }
+					try {
+						$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+					} catch (e) { }
+					try {
+						$("#Hgi_Notifica").dxCheckBox({ value: Datos_Hgi_Notifica });
+					} catch (e) { }
+					try {
+						$("#Hgi_Responsable").dxCheckBox({ value: Datos_Hgi_Responsable });
+					} catch (e) { }
+					//Certificado
+				}
+
 				$("#txtEmail").dxTextBox({ value: Datos_Email });
 				$("#txtMailEnvio").dxTextBox({ value: Datos_Email_Envio });
 				$("#txtMailRecepcion").dxTextBox({ value: Datos_Email_Recepcion });
 				$("#txtMailAcuse").dxTextBox({ value: Datos_Email_Acuse });
 				$("#txtMailPagos").dxTextBox({ value: Datos_Email_Pagos });
-				$("#TipoIndentificacion").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_Tipoidentificacion)] });
-				$("#TipoIndentificacion").dxSelectBox({ readOnly: true });
-							
-				$("#txttelefono").dxTextBox({ value: Datos_telefono });
 
-				Set_EmpresaAsociada((Datos_empresa_Asociada) ? Datos_empresa_Asociada : '');
-				Set_EmpresaDescuenta((response.data[0].StrEmpresaDescuenta) ? response.data[0].StrEmpresaDescuenta : Datos_Idententificacion)
-				if (Datos_Observaciones != null) {
-					$("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
-				}
-				if (Datos_Adquiriente == 1) {
-					$("#Adquiriente").dxCheckBox({ value: 1 });
-				}
-				if (Datos_Integrador == 1)
-					$("#Integradora").dxCheckBox({ value: true });
-
-				$("#txtUsuarios").dxNumberBox({ value: Datos_Numero_usuarios });
-				$("#txtDiasAcuse").dxNumberBox({ value: Datos_Dias_Acuse });
-				if (Datos_Obligado == 1) {
-					$("#Facturador").dxCheckBox({ value: 1 });
-					$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
-				}
-
-				if (Datos_Anexo == 1)
-					$("#Anexo").dxCheckBox({ value: true });
-
-				if (Datos_EmailRecepcion == 1) {
-					$("#EmailRecepcion").dxCheckBox({ value: true });
-				} else {
-					$("#EmailRecepcion").dxCheckBox({ value: false });
-				}
-
-				$("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
-
-				$("#cboVersionDIAM").dxSelectBox({ value: VersionDIAN[BuscarID(VersionDIAN, Datos_VersionDIAN)] });
-
-
-				if (Datos_postpago == 1)
-					$("#postpagoaut").dxCheckBox({ value: true });
+				AsigEstado("Proc_Email", Proc_Email);
+				AsigEstado("Proc_MailEnvio", Proc_MailEnvio);
+				AsigEstado("Proc_MailRecepcion", Proc_MailRecepcion);
+				AsigEstado("Proc_MailAcuse", Proc_MailAcuse);
+				AsigEstado("Proc_MailPagos", Proc_MailPagos);
 
 
 			} catch (err) {
@@ -923,7 +1433,33 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 	}
 
+	function AsigEstado(mail, Proceso) {
+		var Icono_Registro = "icon-cross2 text-danger-400";
+		var Icono_Verificíon = "icon-circles text-orange";
+		var Icono_Activo = "icon-checkmark3 text-success";
+		var Icono = "";
+		var Titulo = "";
 
+		if (Proceso == 0) {
+			Titulo = "En proceso de Registro";
+			Icono = Icono_Registro;
+		}
+
+		if (Proceso == 1) {
+			Titulo = "En proceso de Verificación";
+			Icono = Icono_Verificíon;
+		}
+
+		if (Proceso == 2) {
+			Titulo = "Correo Verificado";
+			Icono = Icono_Activo;
+		}
+
+		$('#Html' + mail).attr("title", Titulo);
+		$('#Html' + mail).removeClass();
+		$('#Html' + mail).addClass(Icono);
+
+	}
 
 	$scope.ButtonGuardar = {
 		text: 'Guardar',
@@ -937,58 +1473,78 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	};
 	//Valida los campos asociadas y descuenta
 	function ValidarAsociadaDescuenta() {
-		if (txt_hgi_EmpresaAsociada == undefined || txt_hgi_EmpresaAsociada == '') {
-			Campo_Invalido_EmpresaAsociada();
-			return false;
-		}
-		if (txt_hgi_EmpresaDescuenta == undefined || txt_hgi_EmpresaDescuenta == '') {
-			Campo_Invalido_EmpresaDescuenta();
-			return false;
+		//Si es administrador o integrador
+		if ($scope.Admin) {
+			if (txt_hgi_EmpresaAsociada == undefined || txt_hgi_EmpresaAsociada == '') {
+				Campo_Invalido_EmpresaAsociada();
+				return false;
+			}
+			if (txt_hgi_EmpresaDescuenta == undefined || txt_hgi_EmpresaDescuenta == '') {
+				Campo_Invalido_EmpresaDescuenta();
+				return false;
+			}
 		}
 		return true;
 	}
+
 
 	function guardarEmpresa() {
 		if (ValidarAsociadaDescuenta()) {
 			var empresa = null;
 			var Asociada = "";
-			if (txt_hgi_EmpresaAsociada != null && txt_hgi_EmpresaAsociada != "") {
-				Asociada = txt_hgi_EmpresaAsociada;
-			} else {
-				empresa = Datos_Idententificacion;
-				Asociada = empresa;
+			var empresaDescuenta = 0;
+			//Si es administrador o integrador
+			if ($scope.Admin) {
+				if (txt_hgi_EmpresaAsociada != null && txt_hgi_EmpresaAsociada != "") {
+					Asociada = txt_hgi_EmpresaAsociada;
+				} else {
+					empresa = Datos_Idententificacion;
+					Asociada = empresa;
+				}
+				empresaDescuenta = txt_hgi_EmpresaDescuenta;
 			}
 
-			var data = $.param({
-				TipoIdentificacion: Datos_Tipoidentificacion,
-				Identificacion: Datos_Idententificacion,
-				RazonSocial: Datos_Razon_Social,
-				Email: Datos_Email,
-				Intadquiriente: (Datos_Adquiriente) ? true : false,
+			var ObjEmpresa = ({
+				StrIdSeguridad: id_seguridad,
+				StrTipoIdentificacion: Datos_Tipoidentificacion,
+				StrIdentificacion: Datos_Idententificacion,
+				StrRazonSocial: Datos_Razon_Social,
+				StrMailAdmin: Datos_Email,
+				IntAdquiriente: (Datos_Adquiriente) ? true : false,
 				IntObligado: (Datos_Obligado) ? true : false,
 				IntHabilitacion: Datos_Habilitacion,
 				StrEmpresaAsociada: Asociada,
-				tipo: Datos_Tipo,
 				StrObservaciones: Datos_Observaciones,
 				IntIntegrador: Datos_Integrador,
 				IntNumUsuarios: Datos_Numero_usuarios,
-				IntAcuseTacito: Datos_Dias_Acuse,
-				IntAnexo: Datos_Anexo,
-				IntEmailRecepcion: Datos_EmailRecepcion,
-				StrEmpresaDescuento: txt_hgi_EmpresaDescuenta,
-				intestado: Datos_estado,
-				intpostpago: Datos_postpago,
+				IntAcuseTacito: Datos_Horas_Acuse,
+				IntManejaAnexos: Datos_Anexo,
+				IntEnvioMailRecepcion: Datos_EmailRecepcion,
+				StrEmpresaDescuento: empresaDescuenta,
+				IntIdEstado: Datos_estado,
+				IntCobroPostPago: Datos_postpago,
 				StrMailEnvio: Datos_Email_Envio,
 				StrMailRecepcion: Datos_Email_Recepcion,
 				StrMailAcuse: Datos_Email_Acuse,
 				StrMailPagos: Datos_Email_Pagos,
-				telefono: Datos_telefono,
-				version:Datos_VersionDIAN
+				StrTelefono: Datos_telefono,
+				IntVersionDian: Datos_VersionDIAN,
+				IntMailAdminVerificado: Proc_Email,
+				IntMailEnvioVerificado: Proc_MailEnvio,
+				IntMailRecepcionVerificado: Proc_MailRecepcion,
+				IntMailAcuseVerificado: Proc_MailAcuse,
+				IntMailPagosVerificado: Proc_MailPagos,
+				IntCertFirma: Datos_CertFirma,
+				IntCertProveedor: Datos_proveedores,
+				IntCertResponsableHGI: Datos_Hgi_Responsable,
+				IntCertNotificar: Datos_Hgi_Notifica,
+				StrCertClave: Datos_ClaveCert,
+				DatCertVence: Datos_FechaCert
 			});
+			var tipo = Datos_Tipo;
 
-
-			//SrvEmpresas.GuardarEmpresa(data).then(function (response) {
-			$http.post('/api/Empresas?' + data).then(function (response) {
+			$http({ url: '/api/GuardarEmpresa/', data: ObjEmpresa, method: 'Post' }).then(function (response) {
+				//$http.post('/api/Empresas?' + data).then(function (response) {
 				try {
 					//Aqui se debe colocar los pasos a seguir
 					DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
@@ -1002,6 +1558,75 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		}
 	}
 
+
+	//function guardarEmpresa() {
+	//	if (ValidarAsociadaDescuenta()) {
+	//		var empresa = null;
+	//		var Asociada = "";
+	//		var empresaDescuenta = 0;
+	//		//Si es administrador o integrador
+	//		if ($scope.Admin) {
+	//			if (txt_hgi_EmpresaAsociada != null && txt_hgi_EmpresaAsociada != "") {
+	//				Asociada = txt_hgi_EmpresaAsociada;
+	//			} else {
+	//				empresa = Datos_Idententificacion;
+	//				Asociada = empresa;
+	//			}
+	//			empresaDescuenta = txt_hgi_EmpresaDescuenta;
+	//		}
+
+	//		var data = $.param({
+	//			TipoIdentificacion: Datos_Tipoidentificacion,
+	//			Identificacion: Datos_Idententificacion,
+	//			RazonSocial: Datos_Razon_Social,
+	//			Email: Datos_Email,
+	//			Intadquiriente: (Datos_Adquiriente) ? true : false,
+	//			IntObligado: (Datos_Obligado) ? true : false,
+	//			IntHabilitacion: Datos_Habilitacion,
+	//			StrEmpresaAsociada: Asociada,
+	//			tipo: Datos_Tipo,
+	//			StrObservaciones: Datos_Observaciones,
+	//			IntIntegrador: Datos_Integrador,
+	//			IntNumUsuarios: Datos_Numero_usuarios,
+	//			IntAcuseTacito: Datos_Horas_Acuse,
+	//			IntAnexo: Datos_Anexo,
+	//			IntEmailRecepcion: Datos_EmailRecepcion,
+	//			StrEmpresaDescuento: empresaDescuenta,
+	//			intestado: Datos_estado,
+	//			intpostpago: Datos_postpago,
+	//			StrMailEnvio: Datos_Email_Envio,
+	//			StrMailRecepcion: Datos_Email_Recepcion,
+	//			StrMailAcuse: Datos_Email_Acuse,
+	//			StrMailPagos: Datos_Email_Pagos,
+	//			telefono: Datos_telefono,
+	//			version: Datos_VersionDIAN,
+	//			IntMailAdminVerificado: Proc_Email,
+	//			IntMailEnvioVerificado: Proc_MailEnvio,
+	//			IntMailRecepcionVerificado: Proc_MailRecepcion,
+	//			IntMailAcuseVerificado: Proc_MailAcuse,
+	//			IntMailPagosVerificado: Proc_MailPagos,
+	//			IntCertFirma: Datos_CertFirma,
+	//			IntCertProveedor: Datos_proveedores,
+	//			IntCertResponsableHGI: Datos_Hgi_Responsable,
+	//			IntCertNotificar: Datos_Hgi_Notifica,
+	//			StrCertClave: Datos_ClaveCert,
+	//			DatCertVence: Datos_FechaCert
+	//		});
+
+	//		$http.post('/api/Empresas?' + data).then(function (response) {
+	//			try {
+	//				//Aqui se debe colocar los pasos a seguir
+	//				DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
+	//				$("#button").hide();
+	//				$("#btncancelar").hide();
+	//				setTimeout(IrAConsulta, 2000);
+	//			} catch (err) {
+	//				DevExpress.ui.notify(err.message, 'error', 3000);
+	//			}
+	//		});
+	//	}
+	//}
+
 });
 
 //Controlador para gestionar la consulta de empresas
@@ -1013,6 +1638,10 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 	function consultar() {
 		$("#wait").show();
 		$http.get('/api/DatosSesion/').then(function (response) {
+			if (response.data[0].Admin == false && response.data[0].Integrador == false) {
+				window.location.assign("../Pages/GestionEmpresas.aspx?IdSeguridad=" + response.data[0].IdSeguridad);
+			}
+
 			codigo_facturador = response.data[0].Identificacion;
 			var tipo = response.data[0].Admin;
 			if (tipo) {
@@ -1040,8 +1669,12 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 							  	try {
 							  		if (options.data.Estado == 1) {
 							  			estado = " style='color:green; cursor:default;' title='Activo'";
-							  		} else {
+							  		}
+							  		if (options.data.Estado == 2) {
 							  			estado = " style='color:red; cursor:default;' title='Inactivo'";
+							  		}
+							  		if (options.data.Estado == 3) {
+							  			estado = " style='color:orange; cursor:default;' title='En proceso de registro'";
 							  		}
 
 							  	} catch (err) {
@@ -1188,8 +1821,15 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 
 //Esta funcion es para ir a la pagina de consulta
 function IrAConsulta() {
-	window.location.assign("../Pages/ConsultaEmpresas.aspx");
+	if (Regresa_Listado) {
+		window.location.assign("../Pages/ConsultaEmpresas.aspx");
+	} else {
+		window.location.assign("../Pages/GestionEmpresas.aspx?IdSeguridad=" + id_seguridad);
+	}
+
+
 }
+
 
 //Funcion para Buscar el indice el Array de los objetos, segun el id de base de datos
 function BuscarID(miArray, ID) {
@@ -1215,9 +1855,11 @@ var TiposIdentificacion =
 
 var TiposEstado =
 [
-{ ID: "1", Texto: 'ACTIVO' },
-{ ID: "2", Texto: 'INACTIVO' }
+	{ ID: "1", Texto: 'ACTIVO' },
+	{ ID: "2", Texto: 'INACTIVO' },
+	{ ID: "3", Texto: 'EN PROCESO DE REGISTRO' }
 ];
+
 
 var VersionDIAN =
 [
@@ -1225,3 +1867,9 @@ var VersionDIAN =
 { ID: "2", Texto: 'Versión Validación Previa' }
 ];
 
+
+var TiposCertFirma =
+[
+{ ID: "0", Texto: 'HGI SAS' },
+{ ID: "1", Texto: 'FACTURADOR' }
+];

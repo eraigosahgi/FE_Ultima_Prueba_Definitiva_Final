@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using HGInetMiFacturaElectonicaData.ModeloServicio.General;
 using System.Net;
@@ -260,6 +259,40 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			
 		}
+
+		/// <summary>
+		/// Actualiza el Email de un usuario en especifico
+		/// </summary>
+		/// <param name="Usuario">Codigo de usuario</param>
+		/// <param name="Email">Email que se desea actualizar</param>
+		/// <returns>Retirna una variable booleana indicando si actualizo el email</returns>
+		public bool ActualizarEmail(string Usuario,string Email)
+		{
+			try
+			{
+				TblUsuarios usuario = (from item in context.TblUsuarios
+									   where item.StrUsuario.Equals(Usuario)									   
+									   select item).FirstOrDefault();
+
+				if (usuario != null)
+				{
+					usuario.StrMail = Email;
+					Actualizar_usuario(usuario);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+
+		}
+
+
 
 
 
@@ -687,7 +720,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 		#endregion
-
 
 		#region Permisos Usuarios
 		/// <summary>

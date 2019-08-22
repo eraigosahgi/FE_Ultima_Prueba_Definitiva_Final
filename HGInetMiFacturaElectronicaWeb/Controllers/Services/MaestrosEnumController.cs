@@ -25,7 +25,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
         {
             try
             {
-                List<string[]> datos = Ctl_MaestrosEnum.ListaEnum(tipo_enum, tipo_ambiente); //new List<string[]>();
+                List<string[]> datos = Ctl_MaestrosEnum.ListaEnum(tipo_enum, tipo_ambiente);
 
                 var retorno = datos.Select(d => new
                 {
