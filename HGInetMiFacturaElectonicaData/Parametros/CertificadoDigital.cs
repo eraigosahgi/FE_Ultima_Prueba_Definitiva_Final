@@ -37,19 +37,17 @@ namespace HGInetMiFacturaElectonicaData
             get { return (string)this["Certificadora"]; }
             set { this["Certificadora"] = value; }
         }
-
-		[ConfigurationProperty("Propietario", DefaultValue = "", IsKey = false, IsRequired = false)]
+		
 		public string Propietario
 		{
-			get { return (string)this["Propietario"]; }
-			set { this["Propietario"] = value; }
+			get;
+			set;
 		}
 
-		[ConfigurationProperty("Fechavenc", DefaultValue = "", IsKey = false, IsRequired = false)]
 		public DateTime Fechavenc
 		{
-			get { return (DateTime)this["Fechavenc"]; }
-			set { this["Fechavenc"] = value; }
+			get;
+			set;
 		}
 
 		public CertificadoDigital() { }
