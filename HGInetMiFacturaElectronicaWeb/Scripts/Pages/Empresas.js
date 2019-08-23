@@ -46,6 +46,7 @@ Datos_Hgi_Notifica = "",
 Datos_FechaCert = "",
 id_seguridad = "",
 Datos_ClaveCert = "",
+Datos_Serial = "",
 Datos_proveedores = "";
 
 var EmpresasApp = angular.module('EmpresasApp', ['dx', 'AppSrvFiltro', 'AppMaestrosEnum', 'AppSrvEmpresas']);
@@ -81,12 +82,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	   popup = null,
 	   popupOptions = {
 	   	width: 500,
-	   	height: 200,
+	   	height: 250,
 	   	contentTemplate: function () {
 	   		return $("<div />").append(
 				  $("<p>Descripción:     <span>" + Certificado.Descripcion + "</span></p>"),
                   $("<p>Fecha de vencimiento:      <span>" + Certificado.FechaVencimiento + "</span></p>"),
-				  $("<p>Serial:      <span>" + Certificado.Serial + "</span></p>")
+				  $("<p>Serial:      <span>" + Certificado.Serial + "</span></p>"),
+				  $("<p>Emisor:      <span>" + Certificado.Emisor + "</span></p>")
 			);
 	   	},
 	   	showTitle: true,
@@ -116,7 +118,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	id_seguridad = location.search.split('IdSeguridad=')[1];
 
 	var now = new Date();
-	
+
 	try {
 		SrvFiltro.ObtenerFiltro('Empresa Asociada', 'EmpresaAsociada', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', true, 14).then(function (Datos) {
 			$scope.EmpresaAsociada = Datos;
@@ -288,6 +290,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Email = data.value;
 				if (Copia_Email_Administracion != Datos_Email) {
 					AsigEstado("Proc_Email", 0);
+					Proc_Email = 0;
 				} else {
 					AsigEstado("Proc_Email", Copia_Proc_Email);
 				}
@@ -689,7 +692,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
 			$("#txtobservaciones").dxTextArea({
-				height: "190px",
+				height: "100px",
 				onValueChanged: function (data) {
 					Datos_Observaciones = data.value.toUpperCase();
 				}
@@ -702,6 +705,26 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					message: "El campo Observación no puede ser mayor a 150 caracteres"
 				}]
 			 });
+
+
+			$("#txtSerial").dxTextBox({
+
+				onValueChanged: function (data) {
+					Datos_Serial = data.value;
+				}
+			})
+			.dxValidator({
+				validationRules: [
+				{
+					type: "stringLength",
+					max: 50,
+					message: "El campo Serial no puede ser mayor a 50 caracteres"
+				}, {
+					type: "required",
+					message: "Debe indicar el Serial"
+				}]
+			});
+
 
 			$("#Facturador").dxCheckBox({
 				name: "PerfilFacturador",
@@ -786,19 +809,57 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Enabled: true,
 				onValueChanged: function (data) {
 					Datos_CertFirma = data.value.ID;
+
+					if (Datos_CertFirma == 0) {
+						$('#PanelFirmaFacturador').hide();
+						//Coloco como NO requerido el proveedor del certificado
+						$("#cboProveedor").dxValidator({ validationRules: [] });
+						//Coloco como NO requerida la clave del certificado						
+						$("#ClaveCert").dxValidator({ validationRules: [] });
+
+						try {
+							//Coloco como NO requerida la clave del certificado						
+							//Se coloca dentro de try porque este campo no existe cuando la empresa es nueva
+							$("#VenceCert").dxTextBox({ validationRules: [] });
+						} catch (e) {}
+
+					} else {
+						$('#PanelFirmaFacturador').show();
+						//Coloco como requerido el proveedor del certificado
+						$("#cboProveedor").dxValidator({
+							validationRules: [{
+								type: "required",
+								message: "Debe seleccionar el proveedor del certificado"
+							}]
+						});
+						//Coloco como requerida la clave del certificado
+						$("#ClaveCert").dxValidator({
+							validationRules: [{
+								type: "required",
+								message: "Debe ingresar la clave del certificado"
+							}]
+						});
+
+						if (id_seguridad != "") {
+							$("#VenceCert").dxTextBox(
+							{
+								validationRules: [{
+									type: "required",
+									message: "Debe consultar los datos del certificado para obtener la fecha de vencimiento"
+								}]
+							});
+						}
+
+					}
 				}
 			})
-			/*.dxValidator({
+			.dxValidator({
 				validationRules: [{
 					type: "required",
 					message: "Debe indicar quien firma con el certificado"
 				}]
-			})*/
+			})
 			;
-
-
-
-
 
 			$("#Certificado").dxFileUploader({
 				multiple: true,
@@ -1295,6 +1356,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Habilitacion = response.data[0].Habilitacion;
 				Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
 				Datos_Observaciones = response.data[0].StrObservaciones;
+				Datos_Serial = response.data[0].Serial;
 				Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
 				Datos_Integrador = response.data[0].IntIntegrador;
 				Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
@@ -1363,6 +1425,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					if (Datos_Observaciones != null) {
 						$("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
 					}
+
+					if (Datos_Serial != null) {
+						$("#txtSerial").dxTextBox({ value: Datos_Serial });
+					}
+
 					if (Datos_Adquiriente == 1) {
 						$("#Adquiriente").dxCheckBox({ value: 1 });
 					}
@@ -1515,6 +1582,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntHabilitacion: Datos_Habilitacion,
 				StrEmpresaAsociada: Asociada,
 				StrObservaciones: Datos_Observaciones,
+				StrSerial: Datos_Serial,
 				IntIntegrador: Datos_Integrador,
 				IntNumUsuarios: Datos_Numero_usuarios,
 				IntAcuseTacito: Datos_Horas_Acuse,
@@ -1559,73 +1627,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 
-	//function guardarEmpresa() {
-	//	if (ValidarAsociadaDescuenta()) {
-	//		var empresa = null;
-	//		var Asociada = "";
-	//		var empresaDescuenta = 0;
-	//		//Si es administrador o integrador
-	//		if ($scope.Admin) {
-	//			if (txt_hgi_EmpresaAsociada != null && txt_hgi_EmpresaAsociada != "") {
-	//				Asociada = txt_hgi_EmpresaAsociada;
-	//			} else {
-	//				empresa = Datos_Idententificacion;
-	//				Asociada = empresa;
-	//			}
-	//			empresaDescuenta = txt_hgi_EmpresaDescuenta;
-	//		}
-
-	//		var data = $.param({
-	//			TipoIdentificacion: Datos_Tipoidentificacion,
-	//			Identificacion: Datos_Idententificacion,
-	//			RazonSocial: Datos_Razon_Social,
-	//			Email: Datos_Email,
-	//			Intadquiriente: (Datos_Adquiriente) ? true : false,
-	//			IntObligado: (Datos_Obligado) ? true : false,
-	//			IntHabilitacion: Datos_Habilitacion,
-	//			StrEmpresaAsociada: Asociada,
-	//			tipo: Datos_Tipo,
-	//			StrObservaciones: Datos_Observaciones,
-	//			IntIntegrador: Datos_Integrador,
-	//			IntNumUsuarios: Datos_Numero_usuarios,
-	//			IntAcuseTacito: Datos_Horas_Acuse,
-	//			IntAnexo: Datos_Anexo,
-	//			IntEmailRecepcion: Datos_EmailRecepcion,
-	//			StrEmpresaDescuento: empresaDescuenta,
-	//			intestado: Datos_estado,
-	//			intpostpago: Datos_postpago,
-	//			StrMailEnvio: Datos_Email_Envio,
-	//			StrMailRecepcion: Datos_Email_Recepcion,
-	//			StrMailAcuse: Datos_Email_Acuse,
-	//			StrMailPagos: Datos_Email_Pagos,
-	//			telefono: Datos_telefono,
-	//			version: Datos_VersionDIAN,
-	//			IntMailAdminVerificado: Proc_Email,
-	//			IntMailEnvioVerificado: Proc_MailEnvio,
-	//			IntMailRecepcionVerificado: Proc_MailRecepcion,
-	//			IntMailAcuseVerificado: Proc_MailAcuse,
-	//			IntMailPagosVerificado: Proc_MailPagos,
-	//			IntCertFirma: Datos_CertFirma,
-	//			IntCertProveedor: Datos_proveedores,
-	//			IntCertResponsableHGI: Datos_Hgi_Responsable,
-	//			IntCertNotificar: Datos_Hgi_Notifica,
-	//			StrCertClave: Datos_ClaveCert,
-	//			DatCertVence: Datos_FechaCert
-	//		});
-
-	//		$http.post('/api/Empresas?' + data).then(function (response) {
-	//			try {
-	//				//Aqui se debe colocar los pasos a seguir
-	//				DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
-	//				$("#button").hide();
-	//				$("#btncancelar").hide();
-	//				setTimeout(IrAConsulta, 2000);
-	//			} catch (err) {
-	//				DevExpress.ui.notify(err.message, 'error', 3000);
-	//			}
-	//		});
-	//	}
-	//}
+	
 
 });
 
@@ -1705,7 +1707,9 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 									.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
 									.appendTo(container);
 						   	}
-						   },
+						   }
+
+						   ,
 
 						   {
 						   	caption: "Identificacion",

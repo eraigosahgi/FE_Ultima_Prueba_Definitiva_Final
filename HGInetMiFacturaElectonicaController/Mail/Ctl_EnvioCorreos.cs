@@ -2414,11 +2414,112 @@ namespace HGInetMiFacturaElectonicaController
 							destinatario.Email = mail;
 						}
 
-
-
-
 						correos_destino.Add(destinatario);
 
+						// envía correo electrónico con copia de auditoría
+						List<DestinatarioEmail> correos_copia_oculta = null;
+						if (!string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+						{
+							correos_copia_oculta = new List<DestinatarioEmail>();
+
+							DestinatarioEmail copia_oculta = new DestinatarioEmail();
+							copia_oculta.Nombre = "Auditoría";
+							copia_oculta.Email = Constantes.EmailCopiaOculta;
+							correos_copia_oculta.Add(copia_oculta);
+						}
+
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						RespuestaMail = clase_email.EnviarEmail("ADMINISTRACIÓN", false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+
+					}
+				}
+
+				return RespuestaMail;
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException(ex.Message);
+			}
+
+		}
+
+		#endregion
+
+
+
+		#region Confirmación de correos
+		/// <summary>
+		/// Envia Correo Electronico con información sobre alguna alerta, a personal de HGI
+		/// </summary>
+		/// <param name="identificacion">Nit del Facturador</param>
+		/// <param name="mail">email al que se va enviar el correo</param>
+		/// <returns></returns>
+		public List<MensajeEnvio> EnviaConfirmacionEmail(string Facturador, string mail)
+		{
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				List<MensajeEnvio> RespuestaMail = new List<MensajeEnvio>();
+
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaConfirmacionEmail);
+
+				string asunto = "CONFIRMACIÓN DE EMAIL FACTURA ELECTRÓNICA";
+
+				// obtiene los datos del Facturador
+				Ctl_Empresa empresa = new Ctl_Empresa();
+				TblEmpresas facturador = empresa.Obtener(Facturador);
+
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{
+						CultureInfo elGR = CultureInfo.CreateSpecificCulture("el-GR");
+						if (facturador.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						{
+							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
+
+							mensaje = mensaje.Replace("{TextoHabilitacion}", div_prueba);
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{TextoHabilitacion}", "");
+						}
+
+						string RutaUrl = string.Empty;
+						
+						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}/Views/Pages/ConfirmacionEmail.aspx?ID={1}&Mail={2}", plataforma.RutaPublica, facturador.StrIdSeguridad, mail));
+						mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
+						
+						DestinatarioEmail remitente = new DestinatarioEmail();
+						remitente.Email = Constantes.EmailRemitente;
+						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						DestinatarioEmail destinatario = new DestinatarioEmail();
+						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+						if (mail.Contains(";"))
+						{
+							foreach (var item_mail in Coleccion.ConvertirLista(mail, ';'))
+							{
+								// recibe el email el adquiriente
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = "ADMINISTRACIÓN";
+								destinatario.Email = item_mail;
+								correos_destino.Add(destinatario);
+							}
+						}
+						else
+						{
+							destinatario.Nombre = "ADMINISTRACIÓN";
+							destinatario.Email = mail;
+						}
+
+						correos_destino.Add(destinatario);
 
 						// envía correo electrónico con copia de auditoría
 						List<DestinatarioEmail> correos_copia_oculta = null;

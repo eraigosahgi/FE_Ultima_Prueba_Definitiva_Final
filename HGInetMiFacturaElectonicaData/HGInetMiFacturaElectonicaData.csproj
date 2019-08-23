@@ -97,6 +97,7 @@
     <Compile Include="Enumerables\Auditorias.cs" />
     <Compile Include="Enumerables\CategoriaEstado.cs" />
     <Compile Include="Enumerables\EstadoEmail.cs" />
+    <Compile Include="Enumerables\EstadoEmpresa.cs" />
     <Compile Include="Enumerables\EstadoPago.cs" />
     <Compile Include="Enumerables\EstadoPlan.cs" />
     <Compile Include="Enumerables\EstadosFormato.cs" />

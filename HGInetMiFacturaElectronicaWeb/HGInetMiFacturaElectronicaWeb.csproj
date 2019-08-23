@@ -170,6 +170,7 @@
     <Content Include="Content\layouts\Popup\PopupLayout.js" />
     <Content Include="emails\plantilla_bienvenida_adquiriente.html" />
     <Content Include="emails\plantilla_bienvenida_facturador.html" />
+    <Content Include="emails\plantilla_confirmacion_email.html" />
     <Content Include="emails\plantilla_documento.html" />
     <Content Include="emails\plantilla_documento2.html" />
     <Content Include="emails\plantilla_documento_acuse.html" />
@@ -2764,6 +2765,7 @@
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConfirmacionEmail.aspx" />
     <Content Include="Views\Pages\GestionAlertas.aspx" />
     <Content Include="Views\Pages\ConfigurarPlanes.aspx" />
     <Content Include="Views\Pages\AuditoriaDocumento.aspx" />
@@ -2939,6 +2941,13 @@
     </Compile>
     <Compile Include="Views\Pages\AuditoriaDocumento.aspx.designer.cs">
       <DependentUpon>AuditoriaDocumento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConfirmacionEmail.aspx.cs">
+      <DependentUpon>ConfirmacionEmail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConfirmacionEmail.aspx.designer.cs">
+      <DependentUpon>ConfirmacionEmail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\GestionAlertas.aspx.cs">
       <DependentUpon>GestionAlertas.aspx</DependentUpon>

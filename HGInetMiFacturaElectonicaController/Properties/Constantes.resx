@@ -285,4 +285,8 @@
     <value>certificados</value>
     <comment>Carpeta para guardar los certificados digitales para la firma de documentos electrónicos.</comment>
   </data>
+  <data name="RutaPlantillaConfirmacionEmail" xml:space="preserve">
+    <value>emails\\plantilla_confirmacion_email.html</value>
+    <comment>Ruta de la plantilla Html que contiene la confirmación del email</comment>
+  </data>
 </root>

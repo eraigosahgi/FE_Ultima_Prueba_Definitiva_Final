@@ -21,6 +21,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
 using System.Xml;
+using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_Empresa;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
@@ -252,7 +253,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				IntCertResponsableHGI = d.IntCertResponsableHGI,
 				IntCertNotificar = d.IntCertNotificar,
 				StrCertClave = d.StrCertClave,
-				DatCertVence = Convert.ToDateTime(d.DatCertVence).ToString(Fecha.formato_fecha_hginet)			
+				DatCertVence = Convert.ToDateTime(d.DatCertVence).ToString(Fecha.formato_fecha_hginet)
 
 			});
 
@@ -268,7 +269,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("api/ObtenerInfCert")]
-		public IHttpActionResult ObtenerInfCert(System.Guid IdSeguridad,string Clave)// "Shh4DshyVN"
+		public IHttpActionResult ObtenerInfCert(System.Guid IdSeguridad, string Clave)// "Shh4DshyVN"
 		{
 			try
 			{
@@ -277,13 +278,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
 
 				var datos = ctl_empresa.ObtenerInfCert(IdSeguridad, Clave);
-			
+
 				if (datos == null)
 				{
 					return NotFound();
 				}
 				//Generamos formato al resultado
-				var Resultado = new { Descripcion = datos.Propietario, FechaVencimiento =  Convert.ToDateTime(datos.Fechavenc ).ToString(Fecha.formato_fecha_hginet), Serial = datos.Serial };
+				var Resultado = new { Descripcion = datos.Propietario, FechaVencimiento = Convert.ToDateTime(datos.Fechavenc).ToString(Fecha.formato_fecha_hginet), Serial = datos.Serial, Emisor = datos.Certificadora };
 
 				return Ok(Resultado);
 			}
@@ -294,175 +295,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		}
 
 		/// <summary>
-		/// Crea o Modifica una empresa una  Empresa
+		/// Crea o actualiza un empresa
 		/// </summary>
-		/// <param name="TipoIdentificacion">Tipo de Identificación de la empresa</param>
-		/// <param name="Identificacion">Identificación de la empresa</param>
-		/// <param name="RazonSocial">Razon Social</param>
-		/// <param name="Email">Email</param>
-		/// <param name="Intadquiriente">Si es adquiriente</param>
-		/// <param name="IntObligado">Si es facturador</param>
-		/// <param name="IntHabilitacion">Si esta habilitado</param>
-		/// <param name="StrEmpresaAsociada">Si tiene una empresa asociada</param>
-		/// <param name="StrObservaciones">Observaciones</param>
-		/// <param name="IntIntegrador">Si es integrador</param>
-		/// <param name="IntNumUsuarios">Numero de usuarios permitidos</param>
-		/// <param name="IntAcuseTacito">Numero de horas para el acuse tacito</param>
-		/// <param name="IntAnexo">Si permite anexos</param>
-		/// <param name="IntEmailRecepcion"></param>
-		/// <param name="StrEmpresaDescuento">Empresa para el descuento de los planes</param>
-		/// <param name="tipo">1.- Nuevo -- 2.- Editar</param>
-		/// <returns></returns>
-		//[HttpPost]
-		//public IHttpActionResult Post([FromUri] string TipoIdentificacion, [FromUri]string Identificacion, [FromUri]string RazonSocial, [FromUri]string Email, [FromUri]bool Intadquiriente, [FromUri]bool IntObligado, [FromUri]Byte IntHabilitacion, [FromUri] string StrEmpresaAsociada, [FromUri]string StrObservaciones, [FromUri] bool IntIntegrador, [FromUri] int IntNumUsuarios, [FromUri] short IntAcuseTacito, [FromUri]bool IntAnexo, [FromUri]bool IntEmailRecepcion, [FromUri] string StrEmpresaDescuento, [FromUri]short intestado, [FromUri]short intpostpago, [FromUri]string StrMailEnvio, [FromUri]string StrMailRecepcion, [FromUri]string StrMailAcuse, [FromUri]string StrMailPagos, [FromUri]string telefono, [FromUri]short version, [FromUri] short IntMailAdminVerificado, [FromUri] short IntMailEnvioVerificado, [FromUri] short IntMailRecepcionVerificado, [FromUri] short IntMailAcuseVerificado, [FromUri] short IntMailPagosVerificado, [FromUri]short IntCertFirma, [FromUri]short IntCertProveedor, [FromUri]bool IntCertResponsableHGI, [FromUri] bool IntCertNotificar, [FromUri]string StrCertClave, [FromUri]DateTime DatCertVence, [FromUri]int tipo)//1.- Nuevo -- 2.- Editar
-		//{
-		//	Sesion.ValidarSesion();
-
-
-		//	Sesion.ValidarSesion();
-
-		//	Ctl_Empresa ctl_empresa = new Ctl_Empresa();
-		//	TblEmpresas Empresa = new TblEmpresas();
-		//	try
-		//	{
-
-		//		Empresa.StrTipoIdentificacion = TipoIdentificacion;
-		//		Empresa.StrIdentificacion = Identificacion;
-		//		Empresa.StrRazonSocial = RazonSocial;
-		//		Empresa.IntAdquiriente = Intadquiriente;
-		//		Empresa.IntHabilitacion = IntHabilitacion;
-		//		Empresa.IntObligado = IntObligado;
-		//		Empresa.StrEmpresaAsociada = (string.IsNullOrEmpty(StrEmpresaAsociada) ? Identificacion.Trim() : StrEmpresaAsociada.Trim());
-		//		Empresa.StrObservaciones = StrObservaciones;
-		//		Empresa.IntIntegrador = IntIntegrador;
-		//		Empresa.IntNumUsuarios = IntNumUsuarios;
-		//		Empresa.IntIdEstado = intestado;
-		//		Empresa.IntCobroPostPago = intpostpago;
-		//		Empresa.IntManejaAnexos = IntAnexo;
-		//		Empresa.IntEnvioMailRecepcion = IntEmailRecepcion;
-		//		Empresa.IntVersionDian = version;
-		//		Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(StrEmpresaDescuento) ? Identificacion.Trim() : StrEmpresaDescuento.Trim());
-
-		//		#region Certificado
-		//		Empresa.IntCertFirma = IntCertFirma;
-		//		Empresa.IntCertProveedor = IntCertProveedor;
-		//		Empresa.IntCertResponsableHGI = IntCertResponsableHGI;
-		//		Empresa.IntCertNotificar = IntCertNotificar;
-		//		Empresa.StrCertClave = StrCertClave;
-		//		Empresa.DatCertVence = DatCertVence;
-		//		#endregion
-
-		//		Empresa.StrMailAdmin = Email;
-		//		Empresa.IntAcuseTacito = IntAcuseTacito;
-		//		Empresa.StrMailAcuse = StrMailAcuse;
-		//		Empresa.StrMailEnvio = StrMailEnvio;
-		//		Empresa.StrMailRecepcion = StrMailRecepcion;
-		//		Empresa.StrMailPagos = StrMailPagos;
-		//		Empresa.StrTelefono = telefono;
-
-		//		#region Verificación de Email
-
-		//		Empresa.IntMailAdminVerificado = IntMailAdminVerificado;
-		//		Empresa.IntMailEnvioVerificado = IntMailEnvioVerificado;
-		//		Empresa.IntMailRecepcionVerificado = IntMailRecepcionVerificado;
-		//		Empresa.IntMailAcuseVerificado = IntMailAcuseVerificado;
-		//		Empresa.IntMailPagosVerificado = IntMailPagosVerificado;
-
-		//		//Admin
-		//		if (IntMailAdminVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailAdmin))
-		//		{
-		//			Empresa.IntMailAdminVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
-		//		}
-
-		//		if (IntMailAdminVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailAdmin))
-		//		{
-		//			Empresa.IntMailAdminVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-		//		}
-		//		//Recepción
-		//		if (IntMailRecepcionVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailRecepcion))
-		//		{
-		//			Empresa.IntMailRecepcionVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
-		//		}
-
-		//		if (IntMailRecepcionVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailRecepcion))
-		//		{
-		//			Empresa.IntMailRecepcionVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-		//		}
-		//		//Envio
-		//		if (IntMailEnvioVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailEnvio))
-		//		{
-		//			Empresa.IntMailEnvioVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
-		//		}
-
-		//		if (IntMailEnvioVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailEnvio))
-		//		{
-		//			Empresa.IntMailEnvioVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-		//		}
-		//		//Acuse
-		//		if (IntMailAcuseVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailAcuse))
-		//		{
-		//			Empresa.IntMailAcuseVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
-		//		}
-
-		//		if (IntMailAcuseVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailAcuse))
-		//		{
-		//			Empresa.IntMailAcuseVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-		//		}
-		//		//Pagos
-		//		if (IntMailPagosVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailPagos))
-		//		{
-		//			Empresa.IntMailPagosVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
-		//		}
-
-		//		if (IntMailPagosVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailPagos))
-		//		{
-		//			Empresa.IntMailPagosVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-		//		}
-		//		#endregion
-
-
-		//		if (tipo == 1)//Nuevo
-		//		{
-
-		//			List<TblEmpresas> datosSesion = new List<TblEmpresas>();
-
-		//			datosSesion.Add(Sesion.DatosEmpresa);
-
-		//			TblEmpresas empresaSession = datosSesion.FirstOrDefault();
-
-		//			if (empresaSession.IntAdministrador)
-		//			{
-		//				var datos = ctl_empresa.Guardar(Empresa);
-		//			}
-		//			else
-		//			{
-		//				throw new ApplicationException("No tiene permisos para crear Empresas");
-		//			}
-
-		//		}
-
-		//		if (tipo == 2)//Editar
-		//		{
-		//			var datos = ctl_empresa.Editar(Empresa, Sesion.DatosEmpresa.IntAdministrador);
-		//		}
-
-		//		return Ok();
-		//	}
-		//	catch (Exception excepcion)
-		//	{
-		//		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-		//	}
-		//}
-
-
-
-
-
+		/// <param name="ObjEmpresa">Tabla empresas</param>
+		/// <returns>Ok() O error indicando el Error</returns>
 		[HttpPost]
-		[Route("api/GuardarEmpresa")]		
+		[Route("api/GuardarEmpresa")]
 		public IHttpActionResult GuardarEmpresa(TblEmpresas ObjEmpresa)
 		{
-			Sesion.ValidarSesion();						
+			Sesion.ValidarSesion();
 
 			Ctl_Empresa ctl_empresa = new Ctl_Empresa();
 			TblEmpresas Empresa = new TblEmpresas();
@@ -477,6 +318,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntObligado = ObjEmpresa.IntObligado;
 				Empresa.StrEmpresaAsociada = (string.IsNullOrEmpty(ObjEmpresa.StrEmpresaAsociada) ? ObjEmpresa.StrIdentificacion.Trim() : ObjEmpresa.StrEmpresaAsociada.Trim());
 				Empresa.StrObservaciones = ObjEmpresa.StrObservaciones;
+				Empresa.StrSerial = ObjEmpresa.StrSerial;
 				Empresa.IntIntegrador = ObjEmpresa.IntIntegrador;
 				Empresa.IntNumUsuarios = ObjEmpresa.IntNumUsuarios;
 				Empresa.IntIdEstado = ObjEmpresa.IntIdEstado;
@@ -510,57 +352,104 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntMailRecepcionVerificado = ObjEmpresa.IntMailRecepcionVerificado;
 				Empresa.IntMailAcuseVerificado = ObjEmpresa.IntMailAcuseVerificado;
 				Empresa.IntMailPagosVerificado = ObjEmpresa.IntMailPagosVerificado;
+				
+				//Lista de correos 
+				List<ObjVerificacionEmail> ListaEmailRegistro = new List<ObjVerificacionEmail>();
 
-				//Admin
+				#region Correo administrativo
+				//Validamos si esta en registro o verificado y el email esta diferente de string.IsNullOrEmpty entonces lo coloco en estado de verificación
 				if (ObjEmpresa.IntMailAdminVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailAdmin))
 				{
+					//Si esta en esta de registro, entonces guardo el email en la lista de email de registro para enviar los emails de verificación
+					if (ObjEmpresa.IntMailAdminVerificado == EstadoVerificacionEmail.Registro.GetHashCode())
+					{
+						ListaEmailRegistro.Add(new ObjVerificacionEmail  { email= Empresa.StrMailAdmin });
+					}
+					//Aqui asigno el estado de verificación
 					Empresa.IntMailAdminVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
 				}
 
-				if (ObjEmpresa.IntMailAdminVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailAdmin))
+				//Si el email esta en blanco, entonces dejamos el estatus de verificado en registro
+				if (string.IsNullOrEmpty(Empresa.StrMailAdmin))
 				{
 					Empresa.IntMailAdminVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
 				}
+				#endregion
+
+				#region Recepción
 				//Recepción
 				if (ObjEmpresa.IntMailRecepcionVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailRecepcion))
 				{
+					if (ObjEmpresa.IntMailRecepcionVerificado == EstadoVerificacionEmail.Registro.GetHashCode())
+					{
+						ListaEmailRegistro.Add(new ObjVerificacionEmail { email = Empresa.StrMailRecepcion });
+					}
 					Empresa.IntMailRecepcionVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
 				}
-
-				if (ObjEmpresa.IntMailRecepcionVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailRecepcion))
+				//Si el email esta en blanco, entonces dejamos el estatus de verificado en registro
+				if (string.IsNullOrEmpty(Empresa.StrMailRecepcion))
 				{
 					Empresa.IntMailRecepcionVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
 				}
+				#endregion
+
+				#region Correo de Envio
 				//Envio
 				if (ObjEmpresa.IntMailEnvioVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailEnvio))
 				{
+					//Si esta en esta de registro, entonces guardo el email en la lista de email de registro para enviar los emails de verificación
+					if (ObjEmpresa.IntMailEnvioVerificado == EstadoVerificacionEmail.Registro.GetHashCode())
+					{
+						ListaEmailRegistro.Add(new ObjVerificacionEmail { email = Empresa.StrMailEnvio });
+					}
+					//Aqui asigno el estado de verificación
 					Empresa.IntMailEnvioVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
 				}
-
-				if (ObjEmpresa.IntMailEnvioVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailEnvio))
+				//Si el email esta en blanco, entonces dejamos el estatus de verificado en registro
+				if (string.IsNullOrEmpty(Empresa.StrMailEnvio))
 				{
 					Empresa.IntMailEnvioVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-				}
+				} 
+				#endregion
+
+				#region Correo de Acuse
 				//Acuse
 				if (ObjEmpresa.IntMailAcuseVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailAcuse))
 				{
+					//Si esta en esta de registro, entonces guardo el email en la lista de email de registro para enviar los emails de verificación
+					if (ObjEmpresa.IntMailAcuseVerificado == EstadoVerificacionEmail.Registro.GetHashCode())
+					{
+						ListaEmailRegistro.Add(new ObjVerificacionEmail { email = Empresa.StrMailAcuse });
+					}
+					//Aqui asigno el estado de verificación
 					Empresa.IntMailAcuseVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
 				}
-
-				if (ObjEmpresa.IntMailAcuseVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailAcuse))
+				//Si el email esta en blanco, entonces dejamos el estatus de verificado en registro
+				if (string.IsNullOrEmpty(Empresa.StrMailAcuse))
 				{
 					Empresa.IntMailAcuseVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
 				}
+				#endregion
+
+				#region Correo de pagos
 				//Pagos
 				if (ObjEmpresa.IntMailPagosVerificado <= EstadoVerificacionEmail.Verificacion.GetHashCode() && !string.IsNullOrEmpty(Empresa.StrMailPagos))
 				{
+					//Si esta en esta de registro, entonces guardo el email en la lista de email de registro para enviar los emails de verificación
+					if (ObjEmpresa.IntMailPagosVerificado == EstadoVerificacionEmail.Registro.GetHashCode())
+					{
+						ListaEmailRegistro.Add(new ObjVerificacionEmail { email = Empresa.StrMailPagos });
+					}
+					//Aqui asigno el estado de verificación
 					Empresa.IntMailPagosVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
 				}
-
-				if (ObjEmpresa.IntMailPagosVerificado > EstadoVerificacionEmail.Registro.GetHashCode() && string.IsNullOrEmpty(Empresa.StrMailPagos))
+				//Si el email esta en blanco, entonces dejamos el estatus de verificado en registro
+				if (string.IsNullOrEmpty(Empresa.StrMailPagos))
 				{
 					Empresa.IntMailPagosVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-				}
+				} 
+				#endregion
+
 				#endregion
 
 
@@ -575,7 +464,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 					if (empresaSession.IntAdministrador)
 					{
-						var datos = ctl_empresa.Guardar(Empresa);
+						var datos = ctl_empresa.Guardar(Empresa, ListaEmailRegistro);
 					}
 					else
 					{
@@ -585,11 +474,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				else
 				{
 					{
-						var datos = ctl_empresa.Editar(Empresa, Sesion.DatosEmpresa.IntAdministrador);
+						var datos = ctl_empresa.Editar(Empresa, Sesion.DatosEmpresa.IntAdministrador, ListaEmailRegistro);
 					}
 				}
-					return Ok();
-				}
+				return Ok();
+			}
 
 			catch (Exception excepcion)
 			{

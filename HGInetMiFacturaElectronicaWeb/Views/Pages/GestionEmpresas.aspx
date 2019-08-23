@@ -74,7 +74,7 @@
 								</div>
 							</div>
 
-							<div class="dx-fieldset" style="padding: 20px;">
+							<div class="dx-fieldset" style="padding: -80px;">
 								<div id="summary"></div>
 							</div>
 
@@ -211,6 +211,13 @@
 									<div id="tooltip_txtobservaciones">Se pueden especificar observaciones adicionales</div>
 								</div>
 
+								<div class="col-md-12 text-left" style="z-index: 8;">
+									<label style="margin-top: 16px; padding-top: 1%;">Serial:</label>
+									<div id="txtSerial"></div>
+									<%--<div id="tooltip_txtobservaciones">Se pueden especificar observaciones adicionales</div>--%>
+								</div>
+
+
 							</div>
 
 
@@ -311,61 +318,63 @@
 
 											</div>
 										</div>
+									</div>
+
+									<div class="col-md-12" id="PanelFirmaFacturador">
+										<div class="col-md-6">
+
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%;">Proveedor del Certificado:<strom style="color: red;">*</strom></label>
+											<div id="cboProveedor"></div>
 
 
-										<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%;">Proveedor del Certificado:<strom style="color: red;">*</strom></label>
-										<div id="cboProveedor"></div>
 
 
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Contraseña del Certificado:<strom style="color: red;">*</strom></label>
+											<div id="ClaveCert"></div>
 
 
-										<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Contraseña del Certificado:<strom style="color: red;">*</strom></label>
-										<div id="ClaveCert"></div>
+											<div class="col-md-12" style="margin-left: -20px; margin-top: 10px;">
+												<div class="col-md-1">
+													<div class="col-md-12" style="margin-top: 5%; margin-left: -10px">
+														<div id="Hgi_Responsable"></div>
+													</div>
+												</div>
+												<div class="col-md-5">
+													<label style="margin: 0px; margin-top: 5px; margin-bottom: 1%">HGI Responsable</label>
+												</div>
 
-
-										<div class="col-md-12" style="margin-left: -20px; margin-top: 10px;">
-											<div class="col-md-1">
-												<div class="col-md-12" style="margin-top: 5%; margin-left: -10px">
-													<div id="Hgi_Responsable"></div>
+												<div class="col-md-1">
+													<div class="col-md-12" style="margin-top: 5%; margin-left: -10px">
+														<div id="Hgi_Notifica"></div>
+													</div>
+												</div>
+												<div class="col-md-5">
+													<label style="margin: 0px; margin-top: 5px; margin-bottom: 1%">Notifica</label>
 												</div>
 											</div>
-											<div class="col-md-5">
-												<label style="margin: 0px; margin-top: 5px; margin-bottom: 1%">HGI Responsable</label>
-											</div>
 
-											<div class="col-md-1">
-												<div class="col-md-12" style="margin-top: 5%; margin-left: -10px">
-													<div id="Hgi_Notifica"></div>
-												</div>
+										</div>
+
+										<div class="col-md-6" style="margin-top: 0px;">
+											<div class="file-uploader-block" style="float: right; display: none">
+												<div id="Certificado"></div>
 											</div>
-											<div class="col-md-5">
-												<label style="margin: 0px; margin-top: 5px; margin-bottom: 1%">Notifica</label>
+										</div>
+
+
+										<div class="col-md-5" style="margin-top: 0px;" data-ng-show="id_seguridad != ''">
+											<div id="popup">
+												<div class="popup"></div>
+											</div>
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Fecha Vencimiento:<strom style="color: red;">*</strom></label>
+											<div id="VenceCert"></div>
+
+											<div class="text-right" style="z-index: 9999; margin-top: -38px; margin-right: -40px;" title="Obtener información del certificado">
+												<div id="InfCert"></div>
 											</div>
 										</div>
 
 									</div>
-
-									<div class="col-md-6" style="margin-top: 0px;">
-										<div class="file-uploader-block" style="float: right">
-											<div id="Certificado"></div>
-
-										</div>
-									</div>
-
-
-									<div class="col-md-5" style="margin-top: 0px;">
-										<div id="popup">
-											<div class="popup"></div>
-										</div>
-										<label style="margin: 0px; margin-top: 9px; margin-bottom: 1%">Fecha Vencimiento:<strom style="color: red;">*</strom></label>
-										<div id="VenceCert"></div>
-
-										<div class="text-right" style="z-index: 9999;  margin-top: -38px; margin-right: -40px;" title="Obtener información del certificado">
-											<div id="InfCert"></div>
-										</div>
-									</div>
-
-
 
 
 								</div>

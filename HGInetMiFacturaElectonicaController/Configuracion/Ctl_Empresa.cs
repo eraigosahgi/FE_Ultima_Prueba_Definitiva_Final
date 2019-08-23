@@ -108,7 +108,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="empresa">Objeto BD de la empresa a crear</param>
 		/// <returns></returns>
-		public TblEmpresas Guardar(TblEmpresas empresa)
+		public TblEmpresas Guardar(TblEmpresas empresa, List<ObjVerificacionEmail> ListaEmailRegistro)
 		{
 			try
 			{
@@ -136,17 +136,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (empresa.IntAdquiriente == false && empresa.IntObligado == false)
 					throw new ApplicationException("Debe Indicar el Perfil");
 
+				if (String.IsNullOrEmpty(empresa.StrSerial))
+					throw new ApplicationException("Debe ingresar el serial de la empresa");
 
 				empresa.IntIdentificacionDv = FuncionesIdentificacion.Dv(empresa.StrIdentificacion);
 
 
 				empresa.StrMailAdmin = empresa.StrMailAdmin;
-				empresa.StrMailRecepcion = (string.IsNullOrEmpty(empresa.StrMailRecepcion)) ? string.Empty : empresa.StrMailRecepcion;
 				empresa.StrMailEnvio = (string.IsNullOrEmpty(empresa.StrMailEnvio)) ? string.Empty : empresa.StrMailEnvio;
+				empresa.StrMailRecepcion = (string.IsNullOrEmpty(empresa.StrMailRecepcion)) ? string.Empty : empresa.StrMailRecepcion;
 				empresa.StrMailAcuse = (string.IsNullOrEmpty(empresa.StrMailAcuse)) ? string.Empty : empresa.StrMailAcuse;
 				empresa.StrMailPagos = (string.IsNullOrEmpty(empresa.StrMailPagos)) ? string.Empty : empresa.StrMailPagos;
 
-				//Automaricos                
+				//Automaticos                
 				empresa.DatFechaIngreso = Fecha.GetFecha();
 				empresa.DatFechaActualizacion = Fecha.GetFecha();
 				empresa.StrIdSeguridad = Guid.NewGuid();
@@ -164,6 +166,38 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				//Objeto de respuesta
 				List<MensajeEnvio> Enviarmail = Email.Bienvenida(empresa, UsuarioBd);
 
+				//Lista de email a confirmar
+				//Proceso de verificación de email a confirmar
+				List<ObjVerificacionEmail> ListEmailConfirmar = new List<ObjVerificacionEmail>();
+				foreach (var item in ListaEmailRegistro)
+				{
+					//Y tampoco esta en la lista de email a enviar para confirmación, entonces lo agrego
+					if (!EmailVerificado(ListEmailConfirmar, item.email))
+					{
+						//Esta validación es para no agregar el mismo correo dos veces
+						ListEmailConfirmar.Add(item);
+					}
+				}
+				//Proceso asincrono para el envio de emails
+				var Tarea = EnvioEmailsConfirmacion(empresa.StrIdentificacion, ListEmailConfirmar);
+				Task.WhenAny(Tarea);
+
+
+				//#region Envio de correo con serial de activación
+				//try
+				//{	//Envia Email de activación de Serial
+				//	Ctl_EnvioCorreos Ctrl_Email = new Ctl_EnvioCorreos();
+				//	Ctrl_Email.EnviaSerial(empresa.StrIdentificacion, empresa.StrMailAdmin);
+				//}
+				//catch (Exception excepcion)
+				//{
+				//	LogExcepcion.Guardar(excepcion);
+				//	throw new ApplicationException(string.Format("Error en el envio de correo con el serial : {0}", excepcion.Message), excepcion);
+				//}
+				//#endregion
+
+
+
 				return empresa;
 			}
 			catch (Exception excepcion)
@@ -178,10 +212,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="empresa">Objeto BD de la empresa a Actualizar</param>
 		/// <returns></returns>
-		public TblEmpresas Editar(TblEmpresas empresa, bool Administrador)
+		public TblEmpresas Editar(TblEmpresas empresa, bool Administrador, List<ObjVerificacionEmail> ListaEmailRegistro)
 		{
 			try
 			{
+				bool EnviaCorreoSerial = false;
 
 				if (empresa == null)
 					throw new ApplicationException("La empresa es incorrecta!, Error");
@@ -197,6 +232,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				//Solo si es administrador, podra guardar toda la información, de resto solo actualizara la información de Facturador o Integrador.
 				if (Administrador)
 				{
+					//If el Serial estaba en null o empty y viene con un dato para actualizar, entonces se debe enviar el correo 
+					if (string.IsNullOrEmpty(EmpresaActualiza.StrSerial))
+					{
+						EnviaCorreoSerial = true;
+					}
+
 					EmpresaActualiza.StrRazonSocial = empresa.StrRazonSocial;
 
 					EmpresaActualiza.IntAdquiriente = empresa.IntAdquiriente;
@@ -205,6 +246,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.StrEmpresaAsociada = empresa.StrEmpresaAsociada;
 					EmpresaActualiza.StrResolucionDian = empresa.StrResolucionDian;
 					EmpresaActualiza.StrObservaciones = empresa.StrObservaciones;
+					EmpresaActualiza.StrSerial = empresa.StrSerial;
 					EmpresaActualiza.IntIntegrador = empresa.IntIntegrador;
 					EmpresaActualiza.IntNumUsuarios = empresa.IntNumUsuarios;
 
@@ -242,38 +284,34 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				EmpresaActualiza.DatFechaActualizacion = Fecha.GetFecha();
 				EmpresaActualiza.StrTelefono = empresa.StrTelefono;
 
-
+				//Creamos una lista para agregar los emails que ya estan confirmados y asi poder validar si uno que esta en proceso de verificación ya existe en la lista de correos confirmados
 				List<ObjVerificacionEmail> ListaEmailVerificados = new List<ObjVerificacionEmail>();
 
-				//Si el Email Admin esta verificado
+				//Si el Email esta verificado entonces lo agrego a la lista de emails verificados para poder consultarlos alli
 				if (empresa.IntMailAdminVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailAdmin))
 				{
 					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailAdmin });
 				}
-
+				//Si el Email esta verificado entonces lo agrego a la lista de emails verificados para poder consultarlos alli
 				if (empresa.IntMailRecepcionVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailRecepcion))
 				{
 					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailRecepcion });
 				}
-
-
+				//Si el Email esta verificado entonces lo agrego a la lista de emails verificados para poder consultarlos alli
 				if (empresa.IntMailEnvioVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailEnvio))
 				{
 					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailEnvio });
 				}
-
-
+				//Si el Email esta verificado entonces lo agrego a la lista de emails verificados para poder consultarlos alli
 				if (empresa.IntMailAcuseVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailAcuse))
 				{
 					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailAcuse });
 				}
-
-
+				//Si el Email esta verificado entonces lo agrego a la lista de emails verificados para poder consultarlos alli
 				if (empresa.IntMailPagosVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && !string.IsNullOrEmpty(EmpresaActualiza.StrMailPagos))
 				{
 					ListaEmailVerificados.Add(new ObjVerificacionEmail { email = EmpresaActualiza.StrMailPagos });
 				}
-
 
 				//Verificación de Emails
 				EmpresaActualiza.IntMailAdminVerificado = (EmailVerificado(ListaEmailVerificados, EmpresaActualiza.StrMailAdmin)) ? (short)EstadoVerificacionEmail.Verificado.GetHashCode() : empresa.IntMailAdminVerificado;
@@ -291,21 +329,249 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (usuario_principal != null)
 				{
 					clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, usuario_principal);
+					//Actualiza el email del usuario generico
 					clase_usuario.ActualizarEmail(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMailAdmin);
 				}
 				else
 				{
-					//	throw new ApplicationException("La empresa no tiene usuario generico");
+					try
+					{
+						//Creacion de usuario generico 
+						TblUsuarios UsuarioBd = null;
+						Ctl_Usuario Usuario = new Ctl_Usuario();
+						UsuarioBd = Usuario.Crear(EmpresaActualiza);
+
+						clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, usuario_principal);
+						//Actualiza el email del usuario generico						
+						clase_usuario.ActualizarEmail(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMailAdmin);
+
+					}
+					catch (Exception excepcion)
+					{
+						LogExcepcion.Guardar(excepcion);
+						throw new ApplicationException(string.Format("Error al crear usuario generico de la empresa o sus permisos : {0}", excepcion.Message), excepcion);
+					}
+
 				}
+
+				#region Proceso de verificación de email para envio de correos de confirmación
+				//Lista de email a confirmar
+				//Proceso de verificación de email a confirmar
+				List<ObjVerificacionEmail> ListEmailConfirmar = new List<ObjVerificacionEmail>();
+				foreach (var item in ListaEmailRegistro)
+				{
+					//Si no esta en la lista de email confirmados
+					if (!EmailVerificado(ListaEmailVerificados, item.email))
+					{
+						//Y tampoco esta en la lista de email a enviar para confirmación, entonces lo agrego
+						if (!EmailVerificado(ListEmailConfirmar, item.email))
+						{
+							//Esta validación es para no agregar el mismo correo dos veces
+							ListEmailConfirmar.Add(item);
+						}
+					}
+
+				}
+
+				//Validamos si todos los emails estan confirmados
+				if (EmpresaActualiza.IntMailAdminVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && EmpresaActualiza.IntMailEnvioVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && EmpresaActualiza.IntMailRecepcionVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && EmpresaActualiza.IntMailAcuseVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && EmpresaActualiza.IntMailPagosVerificado == EstadoVerificacionEmail.Verificado.GetHashCode())
+				{
+					//Si la empresa esta en proceso de registro y todos los emails estan confirmados, entonces activamos la empresa
+					if (EmpresaActualiza.IntIdEstado == EstadoEmpresa.REGISTRO.GetHashCode())//Registro
+					{
+						EmpresaActualiza.IntIdEstado = (short)EstadoEmpresa.ACTIVA.GetHashCode();//Activa
+						this.Actualizar(EmpresaActualiza);
+					}
+
+				}
+				else
+				{
+					{
+						//Proceso asincrono para el envio de emails
+						var Tarea = EnvioEmailsConfirmacion(empresa.StrIdentificacion, ListEmailConfirmar);
+						Task.WhenAny(Tarea);
+					}
+				}
+
+				#endregion
+
+				//#region Envio de correo con serial de activación
+				//try
+				//{
+				//	//Esta variable se activa solo si la empresa autenticada es administradora y el serial de activación paso de null a tener un valor real
+				//	if (EnviaCorreoSerial)
+				//	{
+				//		Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+				//		List<MensajeEnvio> Enviarmail = Email.EnviaSerial(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMailAdmin);
+				//	}
+				//}
+				//catch (Exception excepcion)
+				//{
+				//	LogExcepcion.Guardar(excepcion);
+				//	throw new ApplicationException(string.Format("Error en el envio de correo con el serial : {0}", excepcion.Message), excepcion);
+				//}
+				//#endregion
+
+
+
+
+
+
 
 				return EmpresaActualiza;
 			}
 			catch (Exception excepcion)
 			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				LogExcepcion.Guardar(excepcion);
+				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 
 		}
+
+
+
+		/// <summary>
+		/// Proceso para el envio de emails de confirmación
+		/// </summary>
+		/// <param name="ListEmailConfirmar">Lista de emails a confirmar</param>
+		/// <returns>Tarea</returns>
+		public async Task EnvioEmailsConfirmacion(string Empresa, List<ObjVerificacionEmail> ListEmailConfirmar)
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+				//Recorremos la lista para enviar cada uno de los Emails
+				foreach (var Datos in ListEmailConfirmar)
+				{
+					try
+					{
+						//Hacemos el envio de la confirmación del email
+						var Enviarmail = Email.EnviaConfirmacionEmail(Empresa, Datos.email);
+					}
+					catch (Exception excepcion)
+					{
+						LogExcepcion.Guardar(excepcion);
+					}
+				}
+			});
+		}
+
+		/// <summary>
+		/// Confirma los email enviados al correo
+		/// </summary>
+		/// <param name="IdSeguridad">Guid de seguridad de la empresa</param>
+		/// <param name="Mail">Email que se desea validar o confirmar</param>
+		/// <returns>Retorna un string indicando si se actualizo la información exitosamente</returns>
+		public string ConfirmarMail(Guid IdSeguridad, string Mail)
+		{
+			bool Concidencia = false;
+			bool Actualizo = false;
+
+			TblEmpresas Empresa = Obtener(IdSeguridad).FirstOrDefault();
+
+			//Caso Correo administrativo
+			if (Empresa.StrMailAdmin.Equals(Mail))
+			{
+				//Valido si el correo ya fue verificado para no actualizar nuevamente el correo
+				if (Empresa.IntMailAdminVerificado != EstadoVerificacionEmail.Verificado.GetHashCode())
+				{
+					Empresa.IntMailAdminVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+					Actualizo = true;
+				}
+				Concidencia = true;
+			}
+
+			//Caso Correo de Envio
+			if (Empresa.StrMailEnvio.Equals(Mail))
+			{
+				//Valido si el correo ya fue verificado para no actualizar nuevamente el correo
+				if (Empresa.IntMailEnvioVerificado != EstadoVerificacionEmail.Verificado.GetHashCode())
+				{
+					Empresa.IntMailEnvioVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+					Actualizo = true;
+				}
+				Empresa.IntMailEnvioVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+				Concidencia = true;
+			}
+
+			//Caso Correo de Acuse
+			if (Empresa.StrMailAcuse.Equals(Mail))
+			{
+				//Valido si el correo ya fue verificado para no actualizar nuevamente el correo
+				if (Empresa.IntMailAcuseVerificado != EstadoVerificacionEmail.Verificado.GetHashCode())
+				{
+					Empresa.IntMailAcuseVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+					Actualizo = true;
+				}
+				Empresa.IntMailAcuseVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+				Concidencia = true;
+			}
+
+			//Caso Correo de Recepción
+			if (Empresa.StrMailRecepcion.Equals(Mail))
+			{
+				//Valido si el correo ya fue verificado para no actualizar nuevamente el correo
+				if (Empresa.IntMailRecepcionVerificado != EstadoVerificacionEmail.Verificado.GetHashCode())
+				{
+					Empresa.IntMailRecepcionVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+					Actualizo = true;
+				}
+				Empresa.IntMailRecepcionVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+				Concidencia = true;
+			}
+
+			//Caso Correo de Recepción
+			if (Empresa.StrMailPagos.Equals(Mail))
+			{
+				//Valido si el correo ya fue verificado para no actualizar nuevamente el correo
+				if (Empresa.IntMailPagosVerificado != EstadoVerificacionEmail.Verificado.GetHashCode())
+				{
+					Empresa.IntMailPagosVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+					Actualizo = true;
+				}
+				Empresa.IntMailPagosVerificado = (short)EstadoVerificacionEmail.Verificado.GetHashCode();
+				Concidencia = true;
+			}
+
+			// ! No existe el correo indicado
+			if (Concidencia)
+			{
+				// ! Correo confirmado anteriormente
+				if (Actualizo)
+				{
+					//Validamos si todos los emails estan confirmados
+					if (Empresa.IntMailAdminVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && Empresa.IntMailEnvioVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && Empresa.IntMailRecepcionVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && Empresa.IntMailAcuseVerificado == EstadoVerificacionEmail.Verificado.GetHashCode() && Empresa.IntMailPagosVerificado == EstadoVerificacionEmail.Verificado.GetHashCode())
+					{
+						//Si la empresa esta en proceso de registro y todos los emails estan confirmados, entonces activamos la empresa
+						if (Empresa.IntIdEstado == EstadoEmpresa.REGISTRO.GetHashCode())//Registro
+						{
+							Empresa.IntIdEstado = (short)EstadoEmpresa.ACTIVA.GetHashCode();//Activa
+							this.Actualizar(Empresa);
+							//Correo actualizado con exito y empresa activada
+							return string.Format("Correo {0} confirmado exitosamente y empresa {1} activa con exito", Mail, Empresa.StrRazonSocial);
+						}
+					}
+					//Correo actualizado exitosamente pero la empresa aun no se ha activado
+					this.Actualizar(Empresa);
+					return string.Format("Correo {0} confirmado exitosamente ", Mail);
+				}
+				else
+				{
+					//Correo confirmado anteriormente
+					return string.Format("Correo {0} ya habia sido confirmado anteriormente", Mail);
+				}
+			}
+			else
+			{
+				//No existe el correo indicado
+				return string.Format("Correo {0} sin coincidencia", Mail);
+			}
+
+		}
+
+
+
+
 		/// <summary>
 		/// Actualizar el serial de la empresa  en la BD
 		/// </summary>
@@ -355,7 +621,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				LogExcepcion.Guardar(excepcion);
+				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 
 		}
@@ -525,6 +792,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns>DatosCertificados con datos del nombre y fecha de vencimiento del certificado </returns>
 		public CertificadoDigital ObtenerInfCert(System.Guid IdSeguridad, string clave)
 		{
+			string carpeta_certificado = string.Empty;
+
 			try
 			{
 				TblEmpresas Empresa = new TblEmpresas();
@@ -532,15 +801,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-				string carpeta_certificado = string.Format("{0}\\{1}\\{2}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, Empresa.StrIdSeguridad);
+				carpeta_certificado = string.Format("{0}\\{1}\\{2}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, Empresa.StrIdSeguridad);
 
 				X509Certificate2 Certificado = new X509Certificate2(carpeta_certificado, clave);
 
-
 				CertificadoDigital Datos = new CertificadoDigital();
-				
 
-				Datos.Fechavenc =  Certificado.NotAfter;
+				Datos.Fechavenc = Certificado.NotAfter;
 
 				Datos.Propietario = Certificado.FriendlyName;
 
@@ -553,7 +820,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			catch (Exception excepcion)
 			{
 				LogExcepcion.Guardar(excepcion);
-				throw new ArgumentException(excepcion.Message);
+				throw new ApplicationException(string.Format("Error en la lectura del certificado: {0}", excepcion.Message), excepcion);
 			}
 		}
 
@@ -659,7 +926,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				LogExcepcion.Guardar(excepcion);
+				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 		}
 
@@ -685,7 +953,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 		}
 
-
+		/// <summary>
+		/// Se crea clase anidada para el envio de Correos de confirmación
+		/// </summary>
 		public class ObjVerificacionEmail
 		{
 			public string email { get; set; }
