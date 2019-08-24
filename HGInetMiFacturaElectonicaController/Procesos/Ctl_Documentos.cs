@@ -945,7 +945,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 						}
 
-						if (Docdet.ValorUnitario == 0)
+						if (Docdet.ValorUnitario == 0 && Docdet.ProductoGratis == false)
 							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
 
 						if (Docdet.ProductoGratis == true && Docdet.ProductoGratis == false)
@@ -956,11 +956,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} para informar muestra y/o regalo del detalle no está bien formado", "PrecioReferencia", Docdet.ProductoGratisPrecioRef));
 						}
 
+						if (decimal.Round((Docdet.Cantidad * Docdet.ValorUnitario)- Docdet.DescuentoValor, 2) != Docdet.ValorSubtotal)
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "SubTotal", Docdet.ValorSubtotal));
 
 						if (Docdet.CalculaIVA == 0)
 						{
 							//Se redondea en el valor medio hacia arriba ej: 121.5 redondeado = 122
-							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), MidpointRounding.AwayFromZero) == decimal.Round(Docdet.IvaValor,MidpointRounding.AwayFromZero))
+							//if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), 2) == Docdet.IvaValor)
+							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), 2) == Docdet.IvaValor)
 							{
 								if (Docdet.IvaPorcentaje == 0)
 								{
@@ -998,8 +1001,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.ReteFuenteValor > 0)
 						{
-
-							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), MidpointRounding.AwayFromZero) == decimal.Round(Docdet.ReteFuenteValor, MidpointRounding.AwayFromZero))
+							//if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), MidpointRounding.AwayFromZero) == Docdet.ReteFuenteValor)
+							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), 2) == Docdet.ReteFuenteValor)
 							{
 								ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
 								ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
@@ -1016,13 +1019,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.DescuentoValor > 0)
 						{
-							if (decimal.Round(((Docdet.ValorUnitario * Docdet.Cantidad) * (Docdet.DescuentoPorcentaje / 100)),MidpointRounding.AwayFromZero) != Docdet.DescuentoValor)
+							if (decimal.Round(((Docdet.ValorUnitario * Docdet.Cantidad) * (Docdet.DescuentoPorcentaje / 100)),2) != Docdet.DescuentoValor)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "DescuentoValor", Docdet.DescuentoValor));
 						}
 
-						if (Docdet.ValorImpuestoConsumo > 0)
+						if ((Docdet.ValorImpuestoConsumo > 0) && Docdet.ProductoGratis == false)
 						{
-							if (decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje * 100), MidpointRounding.AwayFromZero) == decimal.Round(Docdet.ValorImpuestoConsumo, MidpointRounding.AwayFromZero))
+							if (decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje * 100), 2) == Docdet.ValorImpuestoConsumo)
 							{
 								ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
 								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
