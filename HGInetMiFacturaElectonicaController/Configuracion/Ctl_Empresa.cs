@@ -341,10 +341,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						Ctl_Usuario Usuario = new Ctl_Usuario();
 						UsuarioBd = Usuario.Crear(EmpresaActualiza);
 
-						clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, usuario_principal);
-						//Actualiza el email del usuario generico						
-						clase_usuario.ActualizarEmail(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMailAdmin);
-
+						clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, UsuarioBd);						
 					}
 					catch (Exception excepcion)
 					{
