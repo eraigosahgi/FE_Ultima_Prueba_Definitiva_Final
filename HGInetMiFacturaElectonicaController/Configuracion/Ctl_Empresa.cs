@@ -462,10 +462,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="IdSeguridad">Guid de seguridad de la empresa</param>
 		/// <param name="Mail">Email que se desea validar o confirmar</param>
 		/// <returns>Retorna un string indicando si se actualizo la información exitosamente</returns>
-		public string ConfirmarMail(Guid IdSeguridad, string Mail)
+		public ObjResultado ConfirmarMail(Guid IdSeguridad, string Mail)
 		{
 			bool Concidencia = false;
 			bool Actualizo = false;
+
+			ObjResultado Result = new ObjResultado();
 
 			TblEmpresas Empresa = Obtener(IdSeguridad).FirstOrDefault();
 
@@ -548,27 +550,41 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							Empresa.IntIdEstado = (short)EstadoEmpresa.ACTIVA.GetHashCode();//Activa
 							this.Actualizar(Empresa);
 							//Correo actualizado con exito y empresa activada
-							return string.Format("Correo {0} confirmado exitosamente y empresa {1} activa con exito", Mail, Empresa.StrRazonSocial);
+							Result.Codigo = 1;
+							Result.Descripcion = string.Format("Correo: {0} confirmado exitosamente y empresa {1} activada con exito", Mail, Empresa.StrRazonSocial);
+							return Result;
 						}
 					}
 					//Correo actualizado exitosamente pero la empresa aun no se ha activado
-					this.Actualizar(Empresa);
-					return string.Format("Correo {0} confirmado exitosamente ", Mail);
+					this.Actualizar(Empresa);					
+					Result.Codigo = 1;
+					Result.Descripcion = string.Format("Correo: {0} confirmado exitosamente ", Mail);
+					return Result;
 				}
 				else
 				{
-					//Correo confirmado anteriormente
-					return string.Format("Correo {0} ya habia sido confirmado anteriormente", Mail);
+					//Correo confirmado anteriormente					
+					Result.Codigo = 2;
+					Result.Descripcion = string.Format("Correo: {0} ya habia sido confirmado anteriormente", Mail);
+					return Result;
 				}
 			}
 			else
 			{
-				//No existe el correo indicado
-				return string.Format("Correo {0} sin coincidencia", Mail);
+				//No existe el correo indicado				
+				Result.Codigo = 3;
+				Result.Descripcion = string.Format("Correo: {0} No se encontro el correo que desea confirmar", Mail);
+				return Result;
 			}
 
 		}
 
+
+		public class ObjResultado
+		{
+			public string Descripcion { get; set; }
+			public int Codigo { get; set; }
+		}
 
 
 
