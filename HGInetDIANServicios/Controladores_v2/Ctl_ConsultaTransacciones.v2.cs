@@ -13,9 +13,17 @@ namespace HGInetDIANServicios
 {
 	public partial class Ctl_ConsultaTransacciones
 	{
-
-
-		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web)
+		/// <summary>
+		/// Metodo para consultar el estado de los documentos en V2 en la DIAN
+		/// </summary>
+		/// <param name="TrackId">Identificaro del documento entregado por la DIAN cuando lo recibio</param>
+		/// <param name="ruta_xml">Ruta donde se va a guardar la respuesta</param>
+		/// <param name="ruta_certificado">Ruta del certificado utilizado en el proceso</param>
+		/// <param name="clave_certificado">Clave del certificado utilizado en el proceso</param>
+		/// <param name="ruta_servicio_web">Ruta del Sw de la DIAN</param>
+		/// <param name="xml_archivo">Nombre con el que se guarda el documento</param>
+		/// <returns></returns>
+		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string xml_archivo = "")
 		{
 
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
@@ -45,23 +53,91 @@ namespace HGInetDIANServicios
 
 					resultado = webServiceHab.GetStatusZip(TrackId).ToList();
 
-					//Guardo la respuesta en XML
-					foreach (var respuesta in resultado)
+					if (resultado != null)
 					{
-						string archivo = string.Format("{0}.xml", respuesta.XmlFileName);
+					
+						if (string.IsNullOrEmpty(xml_archivo))
+							xml_archivo = string.Format("{0}", TrackId);
+							
+						//Guardo la respuesta en XML
+						foreach (var respuesta in resultado)
+						{
+							if (!string.IsNullOrEmpty(respuesta.XmlFileName))
+							{
+								if(string.IsNullOrEmpty(xml_archivo))
+									xml_archivo = string.Format("{0}", respuesta.XmlFileName);
+								
+								FileStream fs = null;
 
-						var ser = new XmlSerializer(typeof(List<DianWSValidacionPrevia.DianResponse>));
-						TextWriter writer = new StreamWriter(string.Format(@"{0}\{1}", ruta_xml, archivo));
-						ser.Serialize(writer, resultado);
+								try
+								{
+									//Guardo el Base64 de la Respuesta 
+									using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo), FileMode.Create, FileAccess.ReadWrite))
+									{
+										BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+										bw.Write(respuesta.XmlBase64Bytes);
+										bw.Close();
+										fs.Close();
+									}
+									
+									xml_archivo = string.Format("{0}-WS", xml_archivo);
 
-						//Guardo el Base64 de la Respuesta
-						string base64 = string.Format("{0}-Base64.xml", respuesta.XmlFileName);
+								}
+								catch (Exception excepcion)
+								{
+									respuesta.StatusCode = "99";
+									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion
+										.ConvertirLista(string.Format(
+											"No se guardo respuesta de la DIAN consultando el estado del documento.{0}",
+											TrackId)).ToArray();
+									respuesta.IsValid = false;
+									log_categoria = MensajeCategoria.ServicioDian;
+									log_accion = MensajeAccion.consulta;
+									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+								}
+								finally
+								{
+									if (fs != null)
+										fs.Close();
+								}
+							}
+							else
+							{
+								respuesta.StatusCode = "99";
+								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento. Radicado:{0}", TrackId)).ToArray();
+								respuesta.IsValid = false;
+							}
 
-						FileStream fs = new FileStream(string.Format(@"{0}\{1}", ruta_xml, base64), FileMode.Create,FileAccess.ReadWrite);
-						BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
-						bw.Write(respuesta.XmlBase64Bytes);
-						bw.Close();
-						fs.Close();
+						}
+						
+						// Guarda resultado del servicio web de consulta de la DIAN por TrackId
+						TextWriter writer = null;
+						try
+						{
+							using (writer = new StreamWriter(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo)))
+							{
+								var ser = new XmlSerializer(typeof(List<DianWSValidacionPrevia.DianResponse>));
+								ser.Serialize(writer, resultado);
+								writer.Close();
+							}
+						}
+						catch (Exception e)
+						{
+						}
+						finally
+						{
+							if (writer != null)
+								writer.Close();
+						}
+						
+
+
+					}
+					else
+					{
+						log_categoria = MensajeCategoria.ServicioDian;
+						log_accion = MensajeAccion.consulta;
+						throw new ApplicationException("No se obtuvo respuesta de la Plataforma de la DIAN");
 					}
 
 				}

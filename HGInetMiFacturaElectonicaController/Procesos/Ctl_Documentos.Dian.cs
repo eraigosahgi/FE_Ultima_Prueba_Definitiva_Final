@@ -158,6 +158,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			documentoBd.StrUrlArchivoZip = url_ppal_zip;
 			documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 			documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
 			if (empresa.IntVersionDian == 2 && acuse.Response.Equals(200))
 				documentoBd.StrIdRadicadoDian = Guid.Parse(acuse.KeyV2);
 
@@ -289,8 +290,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (empresa.IntVersionDian == 2)
 				{
+					string xml_archivo = Path.GetFileNameWithoutExtension(archivo_xml);
+
 					// Consulta del documento con validación previa
-					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta);
+					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta, xml_archivo);
 					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(resultado);
 				}
 				else
