@@ -4,11 +4,11 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
     
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201917"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201917"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201917"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201917"></script>
-    <script src="../../Scripts/Pages/Empresas.js?vjs201917"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201919"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201919"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201919"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201919"></script>
+    <script src="../../Scripts/Pages/Empresas.js?vjs201919"></script>
     
     <div data-ng-app="EmpresasApp" data-ng-controller="ConsultaEmpresasController" data-ng-init="Admin=false">
         

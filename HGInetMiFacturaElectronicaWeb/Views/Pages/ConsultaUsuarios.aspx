@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
     
-    <script src="../../Scripts/Pages/Usuarios.js?vjs201917"></script>
+    <script src="../../Scripts/Pages/Usuarios.js?vjs201919"></script>
     
     <div data-ng-app="ConsultaUsuarioApp" data-ng-controller="ConsultaUsuarioController">
         

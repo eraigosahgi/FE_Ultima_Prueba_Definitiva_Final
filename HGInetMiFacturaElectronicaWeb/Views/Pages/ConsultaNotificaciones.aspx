@@ -3,10 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-	<script src="../../Scripts/Services/SrvAlertas.js?vjs201917"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201917"></script>
-	<script src="../../Scripts/Pages/ConsultaNotificaciones.js?vjs201917"></script>
-	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201917"></script>
+	<script src="../../Scripts/Services/SrvAlertas.js?vjs201919"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201919"></script>
+	<script src="../../Scripts/Pages/ConsultaNotificaciones.js?vjs201919"></script>
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201919"></script>
 
 
 	<div data-ng-app="ConsultaNotificacionApp" data-ng-controller="ConsultaNotificacionController">
