@@ -88,12 +88,13 @@ namespace FirmaXadesNet.Signature.Parameters
         public string cClaveCertificado { get; set; }
         public string cDescripcionPolicy { get; set; }
 
+        public bool cKeyInfoDataAdditional { get; set; }
 
-        #endregion
+		#endregion
 
-        #region Constructors
+		#region Constructors
 
-        public SignatureParameters()
+		public SignatureParameters()
         {
             this.XPathTransformations = new List<SignatureXPathExpression>();
             this.SignatureMethod = _defaultSignatureMethod;

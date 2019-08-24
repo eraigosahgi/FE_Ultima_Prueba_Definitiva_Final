@@ -38,16 +38,17 @@ namespace HGInetFirmaDigital
 		{
 			try
 			{
-				if (string.IsNullOrWhiteSpace(certificado_serial))
-					throw new Exception("El serial del certificado digital es inválido.");
-
 				Ctl_FirmadoXml Firmar = new Ctl_FirmadoXml();
 
 				if (datos.VersionDian == 2)
 				{
 					// firmado de archivos XML desde el almacen de certificados
 					if (string.IsNullOrEmpty(certificado_ruta))
-						datos = Firmar.FirmarXAdesAlmacen(certificado_serial, certificado_clave, empresa_certificadora, datos);
+					{
+						//if (string.IsNullOrWhiteSpace(certificado_serial))
+						//	throw new Exception("El serial del certificado digital es inválido.");
+						datos = Firmar.FirmarXAdesAlmacen(certificado_serial, certificado_clave, empresa_certificadora,datos);
+					}
 					// firmado de archivos XML desde un certificado físico
 					else
 						datos = Firmar.FirmarXAdesFisico_v2(certificado_ruta, certificado_clave, empresa_certificadora, datos, firma_proveedor);
@@ -376,6 +377,9 @@ namespace HGInetFirmaDigital
 					parametros.DatoIssuername = CertificadorasDatos.Andes_DatoIssuername;
 				}
 
+				//Agrega subjectname y serial en el KeyInfoData para V2
+				parametros.cKeyInfoDataAdditional = true;
+
 				//inserta en nodo
 				parametros.SignatureDestination = new SignatureXPathExpression();
 				parametros.SignatureDestination.Namespaces.Add("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
@@ -441,7 +445,7 @@ namespace HGInetFirmaDigital
 
 				parametros.cNombreCertificado = RutaCertificado;
 				parametros.cClaveCertificado = ClaveCertificado;
-				parametros.cdesdealmacen = "NO";
+				parametros.cdesdealmacen = "NO";	
 
 			}
 			catch (Exception excepcion)
