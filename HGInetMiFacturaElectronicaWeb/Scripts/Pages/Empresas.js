@@ -501,14 +501,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					Datos_Integrador = data.value;
 					//Si es verdadero, entonces inabilito el modal popop de selección de empresa
 					if (data.value) {
-						$scope.Admin = false;
+						//$scope.Admin = false;
 						Set_EmpresaAsociada(Datos_Idententificacion);
 						Bloquear_EmpresaAsociada();
 					} else {
 						//Si No es verdadero, entonces primero pregunto si no es empresa Administradora ya
 						//que no debe tener permisos para el modal popop de selección de empresa
 						if ($scope.AdminIntegrador) {
-							$scope.Admin = true;
+							//$scope.Admin = true;
 							Desbloquear_EmpresaAsociada();
 						}
 					}
