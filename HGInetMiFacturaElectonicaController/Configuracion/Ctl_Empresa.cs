@@ -683,19 +683,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			TblEmpresas tbl_empresa = new TblEmpresas();
 
-			//if (empresa.Email.Contains(";"))
-			//{
-			//	foreach (var item_mail in Coleccion.ConvertirLista(empresa.Email, ';'))
-			//	{
-			//		// recibe el email el adquiriente
-			//		tbl_empresa.StrMailAdmin = item_mail;
-			//		break;
-			//	}
-			//}
-			//else
-			//{
-			//	tbl_empresa.StrMailAdmin = empresa.Email;
-			//}
+			if (empresa.Email.Contains(";"))
+			{
+				foreach (var item_mail in Coleccion.ConvertirLista(empresa.Email, ';'))
+				{
+					// recibe el email el adquiriente
+					tbl_empresa.StrMailAdmin = item_mail;
+					break;
+				}
+			}
+			else
+			{
+				tbl_empresa.StrMailAdmin = empresa.Email;
+			}
 
 			tbl_empresa.StrTipoIdentificacion = empresa.TipoIdentificacion.ToString();
 			tbl_empresa.StrIdentificacion = empresa.Identificacion;
@@ -713,10 +713,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			tbl_empresa.StrEmpresaAsociada = empresa.Identificacion;
 			tbl_empresa.StrEmpresaDescuento = empresa.Identificacion;
 
-			//tbl_empresa.StrMailAcuse = tbl_empresa.StrMailAdmin;
-			//tbl_empresa.StrMailEnvio = tbl_empresa.StrMailAdmin;
-			//tbl_empresa.StrMailRecepcion = tbl_empresa.StrMailAdmin;
-			//tbl_empresa.StrMailPagos = tbl_empresa.StrMailAdmin;
+			tbl_empresa.StrMailAcuse = String.Empty;
+			tbl_empresa.StrMailEnvio = String.Empty;
+			tbl_empresa.StrMailRecepcion = String.Empty;
+			tbl_empresa.StrMailPagos = String.Empty;
 
 			return tbl_empresa;
 		}

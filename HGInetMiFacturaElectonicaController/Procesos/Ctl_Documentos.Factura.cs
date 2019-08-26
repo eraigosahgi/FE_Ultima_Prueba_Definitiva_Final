@@ -405,6 +405,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else
 				{
 					item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+					//Si el estado es menor a firmado, la respuesta del estado siempre
+					if (item_respuesta.IdProceso < (short) ProcesoEstado.FirmaXml.GetHashCode())
+					{
+						item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
+						item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+					}
 					if (facturador_electronico.IntVersionDian == 2)
 					{
 						if (numero_documento.IntIdEstado == (short)ProcesoEstado.Recepcion.GetHashCode())
@@ -419,6 +425,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			if (item_respuesta.Error == null)
 				item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
+			//Si el estado es menor a firmado, la respuesta del estado siempre
+			if (item_respuesta.IdProceso < (short)ProcesoEstado.FirmaXml.GetHashCode())
+			{
+				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
+				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+			}
 
 			return item_respuesta;
 

@@ -70,15 +70,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
-				//---Falta crear configuracion para el ambiente de Produccion de la DIAN
-				DianProveedorV2 data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+				//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
+				DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
 
 				string IdSoftware = data_dian.IdSoftware;
 				string PinSoftware = data_dian.Pin;
 				string NitProveedor = data_dian.NitProveedor;
 
-				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación y es HGI
+				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode() && empresa.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor))
 				{
 					IdSoftware = data_dian_habilitacion.IdSoftware;
 					PinSoftware = data_dian_habilitacion.Pin;
@@ -188,15 +188,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
-				//---Falta crear configuracion para el ambiente de Produccion de la DIAN
-				DianProveedorV2 data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+				//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
+				DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
 
 				string IdSoftware = data_dian.IdSoftware;
 				string PinSoftware = data_dian.Pin;
 				string NitProveedor = data_dian.NitProveedor;
 
-				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación y es HGI
+				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode() && empresa.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor))
 				{
 					IdSoftware = data_dian_habilitacion.IdSoftware;
 					PinSoftware = data_dian_habilitacion.Pin;
@@ -306,15 +306,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
-				//---Falta crear configuracion para el ambiente de Produccion de la DIAN
-				DianProveedorV2 data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+				//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
+				DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
 
 				string IdSoftware = data_dian.IdSoftware;
 				string PinSoftware = data_dian.Pin;
 				string NitProveedor = data_dian.NitProveedor;
 
-				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+				// sobre escribe los datos de la resolución si se encuentra en estado de habilitación y es HGI
+				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode() && empresa.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor))
 				{
 					IdSoftware = data_dian_habilitacion.IdSoftware;
 					PinSoftware = data_dian_habilitacion.Pin;

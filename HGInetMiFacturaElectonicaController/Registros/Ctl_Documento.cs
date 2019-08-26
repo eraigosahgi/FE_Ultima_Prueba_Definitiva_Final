@@ -80,7 +80,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			switch (estado)
 			{
-				case 4:
+				//case 4:
 				case 5:
 				case 6:
 				case 20:
