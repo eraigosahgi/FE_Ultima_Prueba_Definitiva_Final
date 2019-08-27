@@ -34,6 +34,7 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("24", "INCombustibles", "INCombustibles"),
 			new ListaItem("25", "Sobretasa Combustibles", "Sobretasa Combustibles"),
 			new ListaItem("26", "Sordicom", "Sordicom"),
+			new ListaItem("ZY", "No causa", "No responsable de tributo"),
 			new ListaItem("ZZ", "Nombre de la figura tributaria", "Nombre de la figura tributaria"),
 
 		};

@@ -956,7 +956,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} para informar muestra y/o regalo del detalle no está bien formado", "PrecioReferencia", Docdet.ProductoGratisPrecioRef));
 						}
 
-						if (decimal.Round((Docdet.Cantidad * Docdet.ValorUnitario)- Docdet.DescuentoValor, 2) != Docdet.ValorSubtotal)
+						if (decimal.Round((Docdet.Cantidad * Docdet.ValorUnitario)- Docdet.DescuentoValor, 2, MidpointRounding.AwayFromZero) != Docdet.ValorSubtotal)
 							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "SubTotal", Docdet.ValorSubtotal));
 
 						if (Docdet.CalculaIVA == 0)
