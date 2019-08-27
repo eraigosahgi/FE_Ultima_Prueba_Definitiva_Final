@@ -40,13 +40,17 @@ namespace HGInetUBLv2_1
 				foreach (var item in impuestos_iva)
 				{
 					DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+					decimal porcentaje = item.IvaPorcentaje;
+
 					List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
-					BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorSubtotal), 2);
+					BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
 
 					//imp_doc.Codigo = item.IntIva;
 					//-------Hay que hacer Enumerable
+					if (item.IvaPorcentaje == 0)
+						porcentaje = Convert.ToDecimal(0.00M);
 					ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
-					ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(item.IvaPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+					ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(porcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 
 					imp_doc.Nombre = iva.Nombre;
 					imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje, 2);
@@ -55,8 +59,13 @@ namespace HGInetUBLv2_1
 
 					foreach (var docDet in doc_)
 					{
-						imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IvaValor, 2);
+						imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IvaValor, 2, MidpointRounding.AwayFromZero);
 					}
+
+					decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+
+					if (imp_cal != imp_doc.ValorImpuesto)
+						imp_doc.ValorImpuesto = imp_cal;
 
 					doc_impuestos.Add(imp_doc);
 
@@ -84,7 +93,7 @@ namespace HGInetUBLv2_1
 							if (bolsa == null)
 							{
 
-								BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorSubtotal), 2);
+								BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
 
 								//imp_doc.Codigo = item.IntImpConsumo.ToString();
 								//imp_doc.Nombre = item.StrDescripcion;
@@ -92,17 +101,24 @@ namespace HGInetUBLv2_1
 								ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(item.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 								imp_doc.Nombre = inc.Nombre;
 
-								imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2);
+								imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2, MidpointRounding.AwayFromZero);
 								imp_doc.TipoImpuesto = item.Consumo;
 								imp_doc.BaseImponible = BaseImponibleImpConsumo;
 								foreach (var docDet in doc_)
 								{
-									imp_doc.ValorImpuesto =
-										decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2);
+									imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2, MidpointRounding.AwayFromZero);
 								}
 
 								if (imp_doc.Porcentaje > 0)
+								{
+									decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+
+									if (imp_cal != imp_doc.ValorImpuesto)
+										imp_doc.ValorImpuesto = imp_cal;
+
 									doc_impuestos.Add(imp_doc);
+								}
+									
 							}
 							else
 							{
@@ -178,7 +194,7 @@ namespace HGInetUBLv2_1
 
 					TaxAmountType TaxAmount = new TaxAmountType();
 					TaxAmount.currencyID = moneda_detalle.ToString();
-					TaxAmount.Value = decimal.Round(doc_impuestos.Where(d => d.TipoImpuesto.Equals(item)).Sum(v => v.ValorImpuesto), 2);
+					TaxAmount.Value = decimal.Round(doc_impuestos.Where(d => d.TipoImpuesto.Equals(item)).Sum(v => v.ValorImpuesto), 2, MidpointRounding.AwayFromZero);
 					TaxTotal.TaxAmount = TaxAmount;
 
 					#endregion
