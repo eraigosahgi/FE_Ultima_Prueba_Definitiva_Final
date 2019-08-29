@@ -601,6 +601,45 @@ namespace HGInetUBLv2_1
 
 					#endregion
 
+					if (DocDet.DescuentoValor > 0)
+					{
+						AllowanceChargeType[] AllowanceCharges = new AllowanceChargeType[1];
+						AllowanceChargeType AllowanceCharge = new AllowanceChargeType();
+						AllowanceCharge.BaseAmount = new BaseAmountType();
+						AllowanceCharge.BaseAmount.currencyID = moneda_detalle.ToString();
+						if (DocDet.DescuentoPorcentaje > 0)
+						{
+							decimal valorTotal_cal = DocDet.Cantidad * DocDet.ValorUnitario;
+							AllowanceCharge.BaseAmount.Value = decimal.Round(valorTotal_cal, 2);
+						}
+						else
+						{
+							AllowanceCharge.BaseAmount.Value = 0.00M;
+						}
+
+						decimal desc_cal = decimal.Round((AllowanceCharge.BaseAmount.Value * (DocDet.DescuentoPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
+						if ((AllowanceCharge.BaseAmount.Value - desc_cal) != DocDet.ValorSubtotal)
+							DocDet.ValorSubtotal = AllowanceCharge.BaseAmount.Value - desc_cal;
+
+						AllowanceCharge.ChargeIndicator = new ChargeIndicatorType();
+						AllowanceCharge.ChargeIndicator.Value = false;
+						AllowanceCharge.AllowanceChargeReasonCode = new AllowanceChargeReasonCodeType();
+						AllowanceCharge.AllowanceChargeReasonCode.Value = "11"; /*** QUEMADO ***/
+						AllowanceChargeReasonType[] AllowanceChargeReasonType = new AllowanceChargeReasonType[1];
+						AllowanceChargeReasonType AllowanceChargeReason = new AllowanceChargeReasonType();
+						AllowanceChargeReason.Value = "Descuento comercial"; /*** QUEMADO ***/
+						AllowanceChargeReasonType[0] = AllowanceChargeReason;
+						AllowanceCharge.AllowanceChargeReason = AllowanceChargeReasonType;
+						AllowanceCharge.MultiplierFactorNumeric = new MultiplierFactorNumericType();
+						AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 6);
+						AllowanceCharge.Amount = new AmountType2();
+						AllowanceCharge.Amount.currencyID = moneda_detalle.ToString();
+						AllowanceCharge.Amount.Value = decimal.Round(desc_cal, 2);
+						AllowanceCharges[0] = AllowanceCharge;
+
+						DebitNoteLine.AllowanceCharge = AllowanceCharges;
+					}
+
 					#region Impuestos del producto
 
 					// <cac:TaxTotal>
