@@ -12,6 +12,7 @@ using LibreriaGlobalHGInet.General;
 using HGInetMiFacturaElectonicaData.ModeloServicio.General;
 using System.Net;
 using System.Net.Sockets;
+using HGInetMiFacturaElectonicaData.Objetos;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -234,7 +235,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="idseguridad">id de seguridad del usuario</param>		
 		/// <returns></returns>
-		public bool ValidarToken(string Empresa, Guid Idseguridad,Guid Token)
+		public bool ValidarToken(string Empresa, Guid Idseguridad, Guid Token)
 		{
 			try
 			{
@@ -257,7 +258,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				return false;
 			}
-			
+
 		}
 
 		/// <summary>
@@ -266,12 +267,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="Usuario">Codigo de usuario</param>
 		/// <param name="Email">Email que se desea actualizar</param>
 		/// <returns>Retirna una variable booleana indicando si actualizo el email</returns>
-		public bool ActualizarEmail(string Usuario,string Email)
+		public bool ActualizarEmail(string Usuario, string Email)
 		{
 			try
 			{
 				TblUsuarios usuario = (from item in context.TblUsuarios
-									   where item.StrUsuario.Equals(Usuario)									   
+									   where item.StrUsuario.Equals(Usuario)
 									   select item).FirstOrDefault();
 
 				if (usuario != null)
@@ -455,7 +456,26 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 				else
 					throw new ApplicationException("Datos de autenticación inválidos.");
-				
+
+
+				///Si el usuario que ingresa es el generico, entonces validamos los permisos del perfil
+				try
+				{
+					if (codigo_empresa.Equals(codigo_usuario))
+					{	
+						//Envio los datos de la empresa y usuario en la actualización de los permisos
+						Ctl_Empresa Controlador_Empresa = new Ctl_Empresa();
+						TblEmpresas Empresa = Controlador_Empresa.Obtener(codigo_empresa);				
+						ValidarPermisosUsuario(Empresa, respuesta.FirstOrDefault());
+					}
+				}
+				catch (Exception)
+				{
+
+					throw;
+				}
+
+
 				return respuesta.ToList();
 			}
 			catch (Exception excepcion)
@@ -481,13 +501,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			//Obtiene las opciones del usuario en base de datos
 			opciones_usuario_bd = clase_opc_usuario.ObtenerOpcionesUsuarios(datos_usuario.StrUsuario, datos_usuario.StrEmpresa);
 
+			//Obtiene permisos del Integrador
+			if (datos_empresa.IntIntegrador)
+				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Integrador));
+
 			//Obtiene permisos del facturador.
 			if (datos_empresa.IntObligado)
 				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Facturador));
 
 			//Obtiene permisos del adquiriente.
 			if (datos_empresa.IntAdquiriente)
-				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Adquiriente));
+				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Adquiriente));		
 
 			opciones_perfil = opciones_perfil.GroupBy(x => x.IntIdOpcion).Select(d => d.First()).ToList();
 
@@ -546,12 +570,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
-				var respuesta = from usuario in context.TblUsuarios
-								where (usuario.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
-								&& (usuario.StrEmpresa.Equals(codigo_empresa) || codigo_empresa.Equals("*"))
-								select usuario;
+				var respuesta = (from usuario in context.TblUsuarios
+								 where (usuario.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
+								 && (usuario.StrEmpresa.Equals(codigo_empresa) || codigo_empresa.Equals("*"))
+								 select usuario).ToList();
 
-				return respuesta.ToList();
+				return respuesta;
 			}
 			catch (Exception excepcion)
 			{
@@ -559,23 +583,88 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 		}
 
+		/// <summary>
+		/// Obtiene la lista de usuarios sin la relación de las entidades
+		/// </summary>
+		/// <param name="codigo_usuario">Codigo de Usuario</param>
+		/// <param name="codigo_empresa">Codigo de empresa</param>
+		/// <returns></returns>
+		public List<ObjUsuario> ConsultaUsuarios(string codigo_usuario, string codigo_empresa)
+		{
+			try
+			{
+				var respuesta = (from d in context.TblUsuarios
+								 where (d.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
+								 && (d.StrEmpresa.Equals(codigo_empresa) || codigo_empresa.Equals("*"))
+								 select new ObjUsuario
+								 {
+									 FechaActualizacion = d.DatFechaActualizacion,
+									 FechaCambioClave = d.DatFechaCambioClave.ToString(),
+									 FechaIngreso = d.DatFechaIngreso,
+									 Estado = d.IntIdEstado,
+									 Apellidos = d.StrApellidos,
+									 Cargo = d.StrCargo,
+									 Celular = d.StrCelular,
+									 Clave = d.StrClave,
+									 Empresa = d.StrEmpresa,
+									 Extension = d.StrExtension,
+									 IdCambioClave = d.StrIdCambioClave.ToString(),
+									 IdSeguridad = d.StrIdSeguridad,
+									 Mail = d.StrMail,
+									 Nombres = d.StrNombres,
+									 NombreCompleto = d.StrNombres + d.StrApellidos,
+									 Telefono = d.StrTelefono,
+									 Usuario = d.StrUsuario,
+									 RazonSocial = d.TblEmpresas.StrRazonSocial
+
+								 }).ToList();
 
 
+				return respuesta;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+	
 		/// <summary>
 		/// Obtiene la lista de usuarios de la empresa y de la lista de empresas asociadas
 		/// </summary>
 		/// <param name="codigo_usuario"></param>
 		/// <returns></returns>
-		public List<TblUsuarios> ObtenerListaUsuarios(string codigo_usuario, string codigo_empresa)
+		public List<ObjUsuario> ObtenerListaUsuarios(string codigo_usuario, string codigo_empresa)
 		{
 			try
 			{
-				var respuesta = from usuario in context.TblUsuarios
-								where (usuario.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
-								&& (usuario.StrEmpresa.Equals(codigo_empresa) || usuario.TblEmpresas.StrEmpresaAsociada.Equals(codigo_empresa))
-								select usuario;
+				List<ObjUsuario> respuesta = (from d in context.TblUsuarios
+											 where (d.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
+											 && (d.StrEmpresa.Equals(codigo_empresa) || d.TblEmpresas.StrEmpresaAsociada.Equals(codigo_empresa))
+											  select new ObjUsuario
+											  {
+												  FechaActualizacion = d.DatFechaActualizacion,
+												  FechaCambioClave = d.DatFechaCambioClave.ToString(),
+												  FechaIngreso = d.DatFechaIngreso,
+												  Estado = d.IntIdEstado,
+												  Apellidos = d.StrApellidos,
+												  Cargo = d.StrCargo,
+												  Celular = d.StrCelular,
+												  Clave = d.StrClave,
+												  Empresa = d.StrEmpresa,
+												  Extension = d.StrExtension,
+												  IdCambioClave = d.StrIdCambioClave.ToString(),
+												  IdSeguridad = d.StrIdSeguridad,
+												  Mail = d.StrMail,
+												  Nombres = d.StrNombres,
+												  NombreCompleto = d.StrNombres + d.StrApellidos,
+												  Telefono = d.StrTelefono,
+												  Usuario = d.StrUsuario,
+												  RazonSocial = d.TblEmpresas.StrRazonSocial
 
-				return respuesta.ToList();
+											  }).ToList();
+				
+								
+				return respuesta;
 			}
 			catch (Exception excepcion)
 			{
@@ -740,6 +829,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 								 select opciones);
 
+
 				return respuesta.ToList();
 			}
 			catch (Exception excepcion)
@@ -747,6 +837,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+
+
+		
 
 		#endregion
 
