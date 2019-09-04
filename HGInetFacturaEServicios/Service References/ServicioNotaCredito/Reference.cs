@@ -117,6 +117,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private decimal ValorDescuentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorDescuentoDetField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorImpuestoConsumoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -551,6 +554,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorDescuentoDet {
+            get {
+                return this.ValorDescuentoDetField;
+            }
+            set {
+                if ((this.ValorDescuentoDetField.Equals(value) != true)) {
+                    this.ValorDescuentoDetField = value;
+                    this.RaisePropertyChanged("ValorDescuentoDet");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public decimal ValorImpuestoConsumo {
             get {
                 return this.ValorImpuestoConsumoField;
@@ -740,6 +756,9 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ActividadEconomicaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CiudadField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -818,6 +837,19 @@ namespace HGInetFacturaEServicios.ServicioNotaCredito {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ActividadEconomica {
+            get {
+                return this.ActividadEconomicaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ActividadEconomicaField, value) != true)) {
+                    this.ActividadEconomicaField = value;
+                    this.RaisePropertyChanged("ActividadEconomica");
+                }
             }
         }
         

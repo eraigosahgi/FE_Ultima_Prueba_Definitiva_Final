@@ -43,6 +43,7 @@
       <xs:element minOccurs="0" name="ValorAnticipo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorCargo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorDescuento" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ValorDescuentoDet" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorImpuestoConsumo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorIva" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorReteFuente" type="xs:decimal" />
@@ -63,6 +64,7 @@
   <xs:element name="Anexo" nillable="true" type="tns:Anexo" />
   <xs:complexType name="Tercero">
     <xs:sequence>
+      <xs:element minOccurs="0" name="ActividadEconomica" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Ciudad" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CodigoCiudad" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CodigoDepartamento" nillable="true" type="xs:string" />
