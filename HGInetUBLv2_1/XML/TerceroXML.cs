@@ -196,6 +196,12 @@ namespace HGInetUBLv2_1
 				PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
 				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "0";//empresa.NombreComercial; //"HGI SAS";
 
+				if (!string.IsNullOrEmpty(empresa.ActividadEconomica))
+				{
+					Party.IndustryClassificationCode = new IndustryClassificationCodeType();
+					Party.IndustryClassificationCode.Value = empresa.ActividadEconomica;
+				}
+
 				PartyLegalEntitys[0] = PartyLegalEntity;
 				Party.PartyLegalEntity = PartyLegalEntitys;
 				#endregion

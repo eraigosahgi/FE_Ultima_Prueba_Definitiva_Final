@@ -181,6 +181,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
+						//Validacion de Cufe a documento_obj VS el calculado en Plataforma 
+						if ((documento_obj.DocumentoFormato.Codigo == -1) && (!string.IsNullOrEmpty(documento_obj.Cufe)) && (documento_obj.Cufe != documento_result.CUFE))
+						{
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error("Por favor regrabar el documento y enviar de nuevo el documento", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+							throw new ApplicationException("Por favor regrabar el documento y enviar de nuevo el documento");
+						}
+
 						//Asignación de Cufe a documento_obj 
 						documento_obj.Cufe = documento_result.CUFE;
 

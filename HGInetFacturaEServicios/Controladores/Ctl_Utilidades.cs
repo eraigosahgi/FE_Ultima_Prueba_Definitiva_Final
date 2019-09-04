@@ -41,7 +41,18 @@ namespace HGInetFacturaEServicios
 			return sb.ToString();
 		}
 
-        public static System.ServiceModel.Channels.Binding ObtenerBinding(string url, string binding_name)
+		public static string Encriptar_SHA512(string texto)
+		{
+			SHA512 sha512 = SHA512Managed.Create();
+			ASCIIEncoding encoding = new ASCIIEncoding();
+			byte[] stream = null;
+			StringBuilder sb = new StringBuilder();
+			stream = sha512.ComputeHash(encoding.GetBytes(texto));
+			for (int i = 0; i < stream.Length; i++) sb.AppendFormat("{0:x2}", stream[i]);
+			return sb.ToString();
+		}
+
+		public static System.ServiceModel.Channels.Binding ObtenerBinding(string url, string binding_name)
         {
 
             string http_tipo = url.ToLowerInvariant().Split(':')[0];

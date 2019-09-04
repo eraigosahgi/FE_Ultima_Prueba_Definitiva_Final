@@ -53,7 +53,12 @@ namespace HGInetUBLv2_1
 				if (empresa.Party.WebsiteURI != null)
 					obligado.PaginaWeb = empresa.Party.WebsiteURI.Value;
 			}
-			
+
+			if (empresa.Party.IndustryClassificationCode != null)
+			{
+				obligado.ActividadEconomica = empresa.Party.IndustryClassificationCode.Value;
+			}
+
 			return obligado;
 		}
 

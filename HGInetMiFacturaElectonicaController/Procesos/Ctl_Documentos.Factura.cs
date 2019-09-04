@@ -484,8 +484,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (string.IsNullOrEmpty(documento.PedidoRef))
 				documento.PedidoRef = string.Empty;
 
-			//setea el campo y lo deja en blanco
-			documento.Cufe = string.Empty;
+			//setea el campo y lo deja en blanco si no es de HGI
+			//if (documento.DocumentoFormato.Codigo != -1 && !string.IsNullOrEmpty(documento.Cufe))
+			//	documento.Cufe = string.Empty;
 
 			//Validar que no este vacio y este vigente en los terminos.
 			if (string.IsNullOrEmpty(documento.NumeroResolucion))

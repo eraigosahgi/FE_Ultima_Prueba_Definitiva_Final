@@ -88,7 +88,7 @@ namespace HGInetDIANServicios
 									respuesta.StatusCode = "99";
 									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion
 										.ConvertirLista(string.Format(
-											"No se guardo respuesta de la DIAN consultando el estado del documento.{0}",
+											"No se guardo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}",
 											TrackId)).ToArray();
 									respuesta.IsValid = false;
 									log_categoria = MensajeCategoria.ServicioDian;
@@ -104,7 +104,7 @@ namespace HGInetDIANServicios
 							else
 							{
 								respuesta.StatusCode = "99";
-								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento. Radicado:{0}", TrackId)).ToArray();
+								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}", TrackId)).ToArray();
 								respuesta.IsValid = false;
 							}
 

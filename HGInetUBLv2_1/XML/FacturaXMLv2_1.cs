@@ -165,34 +165,34 @@ namespace HGInetUBLv2_1
 
 					//-----Validar el Manejo de cuotas no hay documentacion----
 					#region Cuotas
-					/*
-							if (documento.Cuotas != null && documento.Cuotas.Any())
-							{
 
-								//PaymentTermsTypes = ObtenerCuotas(documento.Cuotas.ToList(), documento.FormaPago, documento.Moneda).ToList();
-							}
-							else
-							{
-								//-----Validar con el ejemplo no hay documentacion-------
-								//Terminos de pago de la facturaXML
-								/*
-								TermsType.ID = new IDType();
-								TermsType.ID.Value = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
-								NoteType[] Note_Terms = new NoteType[1];
-								NoteType Note_term = new NoteType();
-								Note_term.Value = string.Format("Pago a {0} dias", documento.Plazo);
-								Note_Terms[0] = Note_term;
-								TermsType.Note = Note_Terms;
-								TermsType.PaymentMeansID = new PaymentMeansIDType();
-								TermsType.PaymentMeansID.Value = documento.TerminoPago.ToString();
-								TermsType.PaymentMeansID.schemeName = Ctl_Enumeracion.ObtenerTerminoPago(documento.TerminoPago);
-								TermsType.Amount = new AmountType1();
-								TermsType.Amount.Value = documento.Total;
-								CurrencyCodeContentType moneda_documento = Ctl_Enumeracion.ObtenerMoneda(documento.Moneda);
-								TermsType.Amount.currencyID = moneda_documento;
+					if (documento.Cuotas != null && documento.Cuotas.Any())
+					{
+
+						PaymentTermsTypes = ObtenerCuotas(documento.Cuotas.ToList(), documento.TerminoPago, documento.Moneda).ToList();
+					}
+					else
+					{
+						//-----Validar con el ejemplo no hay documentacion-------
+						//Terminos de pago de la facturaXML
+
+						TermsType.ID = new IDType();
+						TermsType.ID.Value = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
+						NoteType[] Note_Terms = new NoteType[1];
+						NoteType Note_term = new NoteType();
+						Note_term.Value = string.Format("Pago a {0} dias", documento.Plazo);
+						Note_Terms[0] = Note_term;
+						TermsType.Note = Note_Terms;
+						//TermsType.PaymentMeansID = new PaymentMeansIDType[1];
+						//TermsType.PaymentMeansID[0].Value = documento.TerminoPago.ToString();
+						//TermsType.PaymentMeansID[0].schemeName = Ctl_Enumeracion.ObtenerTerminoPago(documento.TerminoPago);
+						TermsType.Amount = new AmountType2();
+						TermsType.Amount.Value = documento.Total;
+						//CurrencyCodeContentType moneda_documento = Ctl_Enumeracion.ObtenerMoneda(documento.Moneda);
+						TermsType.Amount.currencyID = documento.Moneda;
 
 
-							}*/
+					}
 					#endregion
 					facturaXML.PaymentTerms = PaymentTermsTypes.ToArray();
 					#endregion
@@ -423,7 +423,7 @@ namespace HGInetUBLv2_1
 
 				decimal subtotal = facturaXML.TaxTotal.Sum(s => s.TaxSubtotal.Sum(v => v.TaxableAmount.Value));
 				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
-				
+
 				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
 
 				#endregion
@@ -1240,7 +1240,7 @@ namespace HGInetUBLv2_1
 						TaxTotalType TaxTotal = new TaxTotalType();
 
 						//if (decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero) != DocDet.IvaValor)
-							//DocDet.IvaValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
+						//DocDet.IvaValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
 
 						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
 						// <cbc:TaxAmount>
@@ -1817,6 +1817,7 @@ namespace HGInetUBLv2_1
 				MeansCode.Value = medio_pago.ToString();
 				//MeansCode.Value = "24";
 				//MeansCode.schemeName = Ctl_Enumeracion.ObtenerMedioPago(medio_pago);
+				TermsType.PaymentMeansID = new PaymentMeansIDType[1];
 				TermsType.PaymentMeansID[0] = MeansCode;
 
 				List<NoteType> Instructions = new List<NoteType>();
@@ -1827,12 +1828,17 @@ namespace HGInetUBLv2_1
 				TermsType.Note = Instructions.ToArray();
 
 				//Terminos de pago
-				TermsType.SettlementPeriod = new PeriodType();
-				TermsType.SettlementPeriod.EndDate = new EndDateType();
-				TermsType.SettlementPeriod.EndDate.Value = Convert.ToDateTime(item.FechaVence.ToString(Fecha.formato_fecha_hginet));
+				//TermsType.SettlementPeriod = new PeriodType();
+				//TermsType.SettlementPeriod.EndDate = new EndDateType();
+				//TermsType.SettlementPeriod.EndDate.Value = Convert.ToDateTime(item.FechaVence.ToString(Fecha.formato_fecha_hginet));
 				TermsType.Amount = new AmountType2();
 				TermsType.Amount.Value = item.Valor;
-				TermsType.Amount.currencyID = Ctl_Enumeracion.ObtenerMoneda(moneda).ToString();
+				TermsType.Amount.currencyID = moneda;
+
+				PaymentDueDateType PDueDate = new PaymentDueDateType();
+				PDueDate.Value = Convert.ToDateTime(item.FechaVence.ToString(Fecha.formato_fecha_hginet));
+				TermsType.PaymentDueDate = PDueDate;
+
 				PaymentTerms.Add(TermsType);
 
 			}

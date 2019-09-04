@@ -156,5 +156,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string CodigoTributo { get; set; }
 
+		/// <summary>
+		/// Codigo de la Actividad Economica Principal del Obligado segun el RUT
+		/// </summary>
+		public string ActividadEconomica { get; set; }
+
 	}
 }

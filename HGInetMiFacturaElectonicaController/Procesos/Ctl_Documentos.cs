@@ -627,7 +627,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (detalle.Sum(v => (v.ValorSubtotal)) != documento.ValorSubtotal)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", documento.ValorSubtotal));
 
-					if (detalle.Sum(v => (v.IvaValor)) != documento.ValorIva)
+					if (decimal.Round(detalle.Sum(v => (v.IvaValor)), MidpointRounding.AwayFromZero) != decimal.Round(documento.ValorIva, MidpointRounding.AwayFromZero))
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "IVA", documento.ValorIva));
 
 					if (detalle.Sum(v => (v.ReteFuenteValor)) != documento.ValorReteFuente)
@@ -1084,6 +1084,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			DateTime fecha_actual = Fecha.GetFecha();
 			List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+			Ctl_EmpresaResolucion resolucion_bd = new Ctl_EmpresaResolucion();
 
 			// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
 			if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
@@ -1107,15 +1108,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 
-
-				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
-				lista_resolucion.Add(_resolucion.Obtener(nit_resolucion, resolucion_pruebas, prefijo_pruebas));
+				lista_resolucion.Add(resolucion_bd.Obtener(nit_resolucion, resolucion_pruebas, prefijo_pruebas));
 
 			}
 			else
 			{
-				// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
-				lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, facturador_electronico);
+
+				lista_resolucion = resolucion_bd.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*");
+
+				if (lista_resolucion == null || lista_resolucion.Count < 1)
+				{
+					// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
+					lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, facturador_electronico);
+				}
+
 			}
 
 
@@ -1164,7 +1170,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						LogExcepcion.Guardar(exTMP);
 
 						// filtra la resolución del documento
-						resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(objeto.NumeroResolucion)).FirstOrDefault();
+						resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(objeto.NumeroResolucion) && _resolucion.StrPrefijo.Equals(objeto.Prefijo)).FirstOrDefault();
 					}
 					catch (Exception excepcion)
 					{

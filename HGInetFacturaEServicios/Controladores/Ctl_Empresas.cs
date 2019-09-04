@@ -33,7 +33,7 @@ namespace HGInetFacturaEServicios
 			try
 			{
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 				// datos para la petición
 				ServicioEmpresas.ObtenerRequest peticion = new ServicioEmpresas.ObtenerRequest()

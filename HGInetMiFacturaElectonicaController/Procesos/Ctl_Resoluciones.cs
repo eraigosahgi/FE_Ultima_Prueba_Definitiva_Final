@@ -121,8 +121,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 			// ruta física del xml
-			string carpeta = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, obligado.StrIdSeguridad.ToString());
-			string archivo_log = string.Format(@"{0}\{1}\{2}.xml", carpeta, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaEResoluciones, id_peticion);
+			string carpeta = string.Format("{0}\\{1}\\{2}\\{3}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, obligado.StrIdSeguridad.ToString(), LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaEResoluciones);
+			string archivo_log = string.Format(@"{0}\{1}.xml", carpeta, id_peticion);
+
+			// valida la existencia de la carpeta
+			if (!Directorio.ValidarExistenciaArchivo(carpeta))
+				Directorio.CrearDirectorio(carpeta);
 
 			ResolucionesFacturacion resoluciones_dian = null;
 

@@ -133,7 +133,7 @@ namespace HGInetUBLv2_1
 								imp_doc.BaseImponible = decimal.Round(bolsa.Cantidad, 2);
 								imp_doc.ValorImpuesto = BaseImponibleBolsa;
 
-								if (imp_doc.BaseImponible > 0)
+								if (imp_doc.ValorImpuesto > 0)
 									doc_impuestos.Add(imp_doc);
 
 							}

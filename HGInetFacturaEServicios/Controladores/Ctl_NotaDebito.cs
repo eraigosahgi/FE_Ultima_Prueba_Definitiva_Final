@@ -51,7 +51,7 @@ namespace HGInetFacturaEServicios
 			try
 			{
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 				foreach (ServicioNotaDebito.NotaDebito item in documentos_envio)
 				{
@@ -137,7 +137,7 @@ namespace HGInetFacturaEServicios
             try
             {
                 // configura la cadena de autenticación para la ejecución del servicio web en SHA1
-                string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+                string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
                 // datos para la petición
                 ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteRequest peticion = new ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteRequest()
@@ -218,7 +218,7 @@ namespace HGInetFacturaEServicios
 			try
 			{
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 				// datos para la petición
 				ServicioNotaDebito.ObtenerPorFechasAdquirienteRequest peticion = new ServicioNotaDebito.ObtenerPorFechasAdquirienteRequest()
@@ -362,8 +362,11 @@ namespace HGInetFacturaEServicios
 				if (string.IsNullOrEmpty(pin_software))
 					throw new Exception("Pin del Software no valido");
 
-				string fecha = fecha_nota_debito.AddHours(5).ToString(Fecha.formato_fecha_hora_zona);
-				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaDebitoV2(pin_software, prefijo, numero_nota_debito, fecha, nit_facturador, ambiente, nit_adquiriente, total, subtotal, iva, impto_consumo, rte_ica, true);
+				//string fecha = fecha_nota_debito.AddHours(5).ToString(Fecha.formato_fecha_hora_zona);
+				string fecha = fecha_nota_debito.ToString(Fecha.formato_fecha_hginet);
+				string hora = fecha_nota_debito.AddHours(5).ToString(Fecha.formato_hora_zona);
+				string fec_hor = string.Format("{0}{1}", fecha, hora);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaDebitoV2(pin_software, prefijo, numero_nota_debito, fec_hor, nit_facturador, ambiente, nit_adquiriente, total, subtotal, iva, impto_consumo, rte_ica, true);
 				return cufe_encriptado;
 			}
 			catch (Exception excepcion)

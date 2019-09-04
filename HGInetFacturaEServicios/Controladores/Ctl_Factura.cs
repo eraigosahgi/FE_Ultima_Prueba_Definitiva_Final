@@ -51,7 +51,7 @@ namespace HGInetFacturaEServicios
 			try
 			{
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 				foreach (ServicioFactura.Factura item in documentos_envio)
 				{
@@ -150,7 +150,7 @@ namespace HGInetFacturaEServicios
 			try
 			{
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 				// datos para la petición
 				ServicioFactura.ObtenerPorFechasAdquirienteRequest peticion = new ServicioFactura.ObtenerPorFechasAdquirienteRequest()
@@ -227,7 +227,7 @@ namespace HGInetFacturaEServicios
 			try
 			{
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 				// datos para la petición
 				ServicioFactura.ObtenerPorIdSeguridadAdquirienteRequest peticion = new ServicioFactura.ObtenerPorIdSeguridadAdquirienteRequest()
@@ -368,8 +368,11 @@ namespace HGInetFacturaEServicios
 				if (string.IsNullOrEmpty(ambiente))
 					throw new Exception("Ambiente de Envío del documento no valido");
 
-				string fecha = fecha_factura.AddHours(5).ToString(Fecha.formato_fecha_hora_zona);
-				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, prefijo, numero_factura, fecha, nit_facturador, ambiente, nit_adquiriente, total, subtotal, iva, impto_consumo, rte_ica, true);
+				//string fecha = fecha_factura.AddHours(5).ToString(Fecha.formato_fecha_hora_zona);
+				string fecha = fecha_factura.ToString(Fecha.formato_fecha_hginet);
+				string hora = fecha_factura.AddHours(5).ToString(Fecha.formato_hora_zona);
+				string fec_hor = string.Format("{0}{1}", fecha, hora);
+				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, prefijo, numero_factura, fec_hor, nit_facturador, ambiente, nit_adquiriente, total, subtotal, iva, impto_consumo, rte_ica, true);
 				return cufe_encriptado;
 			}
 			catch (Exception excepcion)
