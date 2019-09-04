@@ -1785,7 +1785,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					try
 					{
-						var documento = ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+						//Se quitan las observaciones del acuse tácito
+						var documento = ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(),string.Empty);
 					}
 					catch (Exception excepcion)
 					{
