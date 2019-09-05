@@ -970,7 +970,7 @@ namespace HGInetMiFacturaElectonicaController
 				// envía como email de respuesta el Adquiriente
 				DestinatarioEmail remitente = new DestinatarioEmail();
 				remitente.Nombre = adquiriente.StrRazonSocial;
-				remitente.Email = adquiriente.StrMailEnvio;
+				remitente.Email = Constantes.EmailRemitente; //(!string.IsNullOrEmpty(adquiriente.StrMailEnvio) ? adquiriente.StrMailEnvio : adquiriente.StrMailAdmin);
 
 				//// recibe el email el Facturador Electrónico
 				//DestinatarioEmail destinatario = new DestinatarioEmail();
