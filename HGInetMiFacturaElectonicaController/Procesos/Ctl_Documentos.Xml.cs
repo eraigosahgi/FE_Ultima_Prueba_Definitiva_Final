@@ -150,7 +150,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					firma_proveedor = false;
 					
-					ruta_certificado = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, empresa.StrCertRuta);
+					ruta_certificado = string.Format("{0}\\{1}\\{2}\\{3}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, empresa.StrCertRuta,empresa.StrIdSeguridad);
 				}
 				
 				// genera la firma del documento XML

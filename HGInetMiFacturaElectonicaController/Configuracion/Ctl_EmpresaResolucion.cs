@@ -157,7 +157,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 IntRangoFinal = Convert.ToInt32(item.RangoFinal),
                 DatFechaVigenciaDesde = item.FechaVigenciaDesde,
                 DatFechaVigenciaHasta = item.FechaVigenciaHasta,
-                StrClaveTecnica = item.ClaveTecnica,
+                StrClaveTecnica =  (!string.IsNullOrEmpty(item.ClaveTecnica)) ? item.ClaveTecnica : "0" ,
                 StrIdSeguridad = Guid.NewGuid(),
                 DatFechaIngreso = Fecha.GetFecha(),
                 DatFechaActualizacion = Fecha.GetFecha(),
