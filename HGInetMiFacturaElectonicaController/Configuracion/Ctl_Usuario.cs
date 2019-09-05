@@ -501,6 +501,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			//Obtiene las opciones del usuario en base de datos
 			opciones_usuario_bd = clase_opc_usuario.ObtenerOpcionesUsuarios(datos_usuario.StrUsuario, datos_usuario.StrEmpresa);
 
+
+
+			//Obtiene permisos del Administrador
+			if (datos_empresa.IntAdministrador)
+				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Administrador));
+
 			//Obtiene permisos del Integrador
 			if (datos_empresa.IntIntegrador)
 				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Integrador));
