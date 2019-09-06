@@ -128,7 +128,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
 
 				// si firma HGI SAS como Proveedor Tecnológico
-				if (empresa.IntCertFirma == 0)
+				if (empresa.IntCertFirma == 0 || empresa.IntVersionDian ==1)
 				{
 					// obtiene la información de configuración del certificado digital
 					CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
