@@ -304,6 +304,9 @@
           <Property Name="DatFechaVencimiento" Type="datetime" />
           <Property Name="IntNumTransaccProceso" Type="int" Nullable="false" />
           <Property Name="IntEstado" Type="int" Nullable="false" />
+          <Property Name="IntMesesVence" Type="smallint" Nullable="false" />
+          <Property Name="DocumentoRef" Type="nvarchar" MaxLength="10" />
+          <Property Name="DatFechaInicio" Type="datetime" />
         </EntityType>
         <EntityType Name="TblUsuarios">
           <Key>
@@ -998,6 +1001,9 @@
           <NavigationProperty Name="TblUsuarios" Relationship="Modelo.FK_TblPlanesTransacciones_TblUsuarios" FromRole="TblPlanesTransacciones" ToRole="TblUsuarios" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblPlanesTransacciones" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblPlanesTransacciones" ToRole="TblEmpresas" />
+          <Property Name="IntMesesVence" Type="Int16" Nullable="false" />
+          <Property Name="DocumentoRef" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DatFechaInicio" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_TblPagosElectronicos_TblPlanesTransacciones">
           <End Type="Modelo.TblPlanesTransacciones" Role="TblPlanesTransacciones" Multiplicity="0..1" />
@@ -1523,6 +1529,9 @@
           <EntitySetMapping Name="TblPlanesTransacciones">
             <EntityTypeMapping TypeName="Modelo.TblPlanesTransacciones">
               <MappingFragment StoreEntitySet="TblPlanesTransacciones">
+                <ScalarProperty Name="DatFechaInicio" ColumnName="DatFechaInicio" />
+                <ScalarProperty Name="DocumentoRef" ColumnName="DocumentoRef" />
+                <ScalarProperty Name="IntMesesVence" ColumnName="IntMesesVence" />
                 <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
                 <ScalarProperty Name="IntNumTransaccProceso" ColumnName="IntNumTransaccProceso" />
                 <ScalarProperty Name="DatFechaVencimiento" ColumnName="DatFechaVencimiento" />

@@ -34,6 +34,9 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public Nullable<System.DateTime> DatFechaVencimiento { get; set; }
         public int IntNumTransaccProceso { get; set; }
         public int IntEstado { get; set; }
+        public short IntMesesVence { get; set; }
+        public string DocumentoRef { get; set; }
+        public Nullable<System.DateTime> DatFechaInicio { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
