@@ -421,7 +421,16 @@ namespace HGInetUBLv2_1
 				/*Agrupación de campos relativos a los importes totales aplicables a la	facturaXML. Estos importes son calculados teniendo
                 en cuenta las líneas de facturaXML y elementos a nivel de facturaXML, como descuentos, cargos, impuestos, etc*/
 
-				decimal subtotal = facturaXML.TaxTotal.Sum(s => s.TaxSubtotal.Sum(v => v.TaxableAmount.Value));
+				decimal subtotal = 0.00M;
+				if (facturaXML.TaxTotal.Length > 0)
+				{
+					subtotal = facturaXML.TaxTotal.Sum(s => s.TaxSubtotal.Sum(v => v.TaxableAmount.Value));
+				}
+				else
+				{
+					subtotal = facturaXML.InvoiceLine.Sum(s => s.LineExtensionAmount.Value);
+				}
+
 				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
 
 				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
@@ -1293,6 +1302,8 @@ namespace HGInetUBLv2_1
 						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
 						//Tarifa del tributo
 						// <cbc:Percent>
+						if (DocDet.CalculaIVA > 0 && DocDet.IvaPorcentaje > 0)
+							DocDet.IvaPorcentaje = 0.00M;
 						TaxCategoryIva.Percent = new PercentType1()
 						{
 							Value = decimal.Round((DocDet.IvaPorcentaje), 2)

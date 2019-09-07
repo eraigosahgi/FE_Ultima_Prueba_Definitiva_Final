@@ -26,9 +26,7 @@ namespace HGInetUBLv2_1
 					throw new Exception("El detalle del documento es inválido.");
 
 				//Toma los impuestos de IVA que tiene el producto en el detalle del documento
-				var impuestos_iva = documentoDetalle
-					.Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor })
-					.GroupBy(_impuesto => new { _impuesto.IvaPorcentaje }).Select(_impuesto => _impuesto.First());
+				var impuestos_iva = documentoDetalle.Where(d => d.CalculaIVA == 0).ToList().Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor }).GroupBy(_impuesto => new { _impuesto.IvaPorcentaje }).Select(_impuesto => _impuesto.First()).ToList();
 
 				List<DocumentoImpuestos> doc_impuestos = new List<DocumentoImpuestos>();
 
