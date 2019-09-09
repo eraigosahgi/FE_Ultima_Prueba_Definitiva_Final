@@ -19,3 +19,6 @@ GO
 ALTER TABLE TblPlanesTransacciones ADD
 DatFechaInicio DateTime NULL
 GO
+
+--Actualizar Fecha de Inicio de Planes antiguos
+UPDATE TblPlanesTransacciones SET DatFechaInicio = DatFecha

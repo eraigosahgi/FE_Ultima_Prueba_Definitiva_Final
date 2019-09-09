@@ -91,8 +91,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.IntValor = datos_plan.IntValor;
 			Ptransaccion.IntEstado = datos_plan.IntEstado;
 			Ptransaccion.StrObservaciones = datos_plan.StrObservaciones;
-			Ptransaccion.StrEmpresaFacturador = datos_plan.StrEmpresaFacturador;
+			Ptransaccion.StrEmpresaFacturador = datos_plan.StrEmpresaFacturador.Trim();
+			Ptransaccion.DocumentoRef = datos_plan.DocumentoRef;
+			Ptransaccion.IntMesesVence = datos_plan.IntMesesVence;
 			Ptransaccion.DatFechaVencimiento = datos_plan.DatFechaVencimiento;
+			Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaVencimiento;
+
+			if (Ptransaccion.IntMesesVence > 0 && Ptransaccion.DatFechaInicio!=null)
+			{
+				Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaInicio.Value.AddMonths(Ptransaccion.IntMesesVence);
+			}
 
 			Ptransaccion = this.Edit(Ptransaccion);
 
@@ -466,6 +474,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 														  where t.StrIdSeguridad.Equals(planenproceso.plan)
 														  select t).FirstOrDefault();
 
+
+			//Validamos si el plan ya ha procesado algun documento para colocarle la fecha de inicio y la fecha de vencimiento
+			if (PlanesTransacciones.IntNumTransaccProcesadas == 0 && planenproceso.procesado>0)
+			{
+				PlanesTransacciones.DatFechaInicio = Fecha.GetFecha();
+
+				//Si Meses de Vencimiento es mayor a cero, entonces el plan vence
+				if (PlanesTransacciones.IntMesesVence > 0)
+				{
+					//Se agregan los meses de vencimiento al mes a la fecha actual para que comience a contar desde hoy los meses indicados
+					PlanesTransacciones.DatFechaVencimiento = Fecha.GetFecha().AddMonths(PlanesTransacciones.IntMesesVence);
+				}
+
+			}			
+
 			//Se debe Sumar el procesado del objeto a la cantidad de documentos procesados en la tabla             
 			PlanesTransacciones.IntNumTransaccProcesadas = PlanesTransacciones.IntNumTransaccProcesadas + planenproceso.procesado;
 
@@ -491,6 +514,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 			}
 
+
+			
 
 			PlanesTransacciones = this.Edit(PlanesTransacciones);
 			///Validación de alertas y notificaciones
@@ -795,7 +820,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);				
+				LogExcepcion.Guardar(excepcion);
 			}
 		}
 

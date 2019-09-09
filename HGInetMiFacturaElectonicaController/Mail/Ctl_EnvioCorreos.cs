@@ -1226,8 +1226,8 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Estado}", (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPlan>(plan.IntEstado))));
 						mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
 						mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString("N0"));
-						mensaje = mensaje.Replace("{Vence}", (plan.DatFechaVencimiento != null) ? plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet) : "");
-
+						mensaje = mensaje.Replace("{Meses}", (plan.IntMesesVence > 0) ? string.Format("<td class='tg-yzt1'>Vencimiento:</td> <td class='tg-3we0'>Esta recarga tiene {0} meses de vigencia a partir de la recepción del primer documento que consuma la misma.</td>", plan.IntMesesVence.ToString()) : "");
+																							
 						string asunto = "RECARGA DE SALDO DE DOCUMENTOS ELECTRÓNICOS";
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
