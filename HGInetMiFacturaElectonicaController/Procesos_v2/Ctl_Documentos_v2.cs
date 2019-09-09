@@ -389,7 +389,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
 							#endregion
 
-							//Se actualiza respuesta	
+							//Se actualiza respuesta
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(respuesta.EstadoDian.Descripcion, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
 							respuesta.FechaUltimoProceso = Fecha.GetFecha();
 							respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();

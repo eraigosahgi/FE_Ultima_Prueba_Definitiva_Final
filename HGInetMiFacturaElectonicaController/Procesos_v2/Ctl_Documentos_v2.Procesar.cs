@@ -252,8 +252,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						respuesta = Consultar(documento, empresa, ref respuesta, documento.StrIdRadicadoDian.ToString());
 					}
-
-					if (respuesta.EstadoDian.EstadoDocumento < EstadoDocumentoDian.Aceptado.GetHashCode() && respuesta.EstadoDian.EstadoDocumento > EstadoDocumentoDian.Rechazado.GetHashCode())
+					else if (respuesta.EstadoDian == null && documento.StrIdRadicadoDian == null)
 					{
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian);
 						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
@@ -316,14 +315,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
 						}
 					}
-					/*else if ((respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode()) && (documento.IntEnvioMail == null || documento.IntEnvioMail == false))
+					else if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
 					{
-						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
+						/*respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
 						Ctl_Documento documento_tmp = new Ctl_Documento();
-						documento_tmp.Actualizar(documento);
+						documento_tmp.Actualizar(documento);*/
 						//ValidarRespuesta(respuesta);
 
-					}*/
+						respuesta.Error = new LibreriaGlobalHGInet.Error.Error(respuesta.EstadoDian.Descripcion, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+
+					}
 				}
 
 				// envía el mail de acuse de recibo al facturador electrónico
