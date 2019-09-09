@@ -100,7 +100,7 @@ namespace HGInetUBLv2_1
 				//string fecha_hora = string.Format("{0}{1}", factura_ubl.IssueDate.Value.ToString(Fecha.formato_fecha_hginet), factura_ubl.IssueTime.Value);
 				DateTime hora = Convert.ToDateTime(factura_ubl.IssueTime.Value).AddHours(-5);
 				DateTime fecha = factura_ubl.IssueDate.Value;
-				DateTime fecha_hora = new DateTime(fecha.Year,fecha.Month,fecha.Day,hora.Hour,hora.Minute,hora.Second);
+				DateTime fecha_hora = new DateTime(fecha.Year, fecha.Month, fecha.Day, hora.Hour, hora.Minute, hora.Second);
 				factura_obj.Fecha = fecha_hora;
 				factura_obj.FechaVence = factura_ubl.DueDate.Value;
 				factura_obj.FormaPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().ID.Value);
@@ -108,9 +108,10 @@ namespace HGInetUBLv2_1
 
 				if (factura_ubl.PaymentTerms != null)
 				{
-					if (factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure != null)
+					if (factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod != null)
 					{
-						factura_obj.Plazo = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure.Value);
+						if (factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure != null)
+							factura_obj.Plazo = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure.Value);
 					}
 				}
 
@@ -118,36 +119,37 @@ namespace HGInetUBLv2_1
 				{
 					//--Falta este proceso de Validar si tiene cuotas
 					#region Cuotas
-					/*
-								if (factura_ubl.PaymentTerms != null)
-								{
-									if (factura_ubl.PaymentTerms.Count() > 1)
-									{
-										List<Cuota> cuotas = new List<Cuota>();
 
-										for (int i = 0; i < factura_ubl.PaymentTerms.Count(); i++)
-										{
-											Cuota cuota = new Cuota();
-											cuota.Codigo = Convert.ToInt16(factura_ubl.PaymentTerms[i].ID.Value);
-											cuota.Valor = factura_ubl.PaymentTerms[i].Amount.Value;
-											cuota.FechaVence = factura_ubl.PaymentTerms[i].SettlementPeriod.EndDate.Value;
-											cuotas.Add(cuota);
-										}
-										factura_obj.Cuotas = cuotas;
-										factura_obj.TerminoPago = 3;
-									}
-									else
-									{
-										if (factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure != null)
-										{
-											factura_obj.Plazo = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure.Value);
-										}
-										if (factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID != null)
-										{
-											factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID.Value);
-										}
-									}
-								}*/
+					if (factura_ubl.PaymentTerms != null)
+					{
+						if (factura_ubl.PaymentTerms.Count() > 1)
+						{
+							List<Cuota> cuotas = new List<Cuota>();
+
+							for (int i = 0; i < factura_ubl.PaymentTerms.Count(); i++)
+							{
+								Cuota cuota = new Cuota();
+								cuota.Codigo = Convert.ToInt16(factura_ubl.PaymentTerms[i].ID.Value);
+								cuota.Valor = factura_ubl.PaymentTerms[i].Amount.Value;
+								cuota.FechaVence = factura_ubl.PaymentTerms[i].SettlementPeriod.EndDate.Value;
+								cuotas.Add(cuota);
+							}
+							factura_obj.Cuotas = cuotas;
+							factura_obj.TerminoPago = 3;
+						}
+						else
+						{
+							if (factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod != null)
+							{
+								if (factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure != null)
+									factura_obj.Plazo = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().SettlementPeriod.DurationMeasure.Value);
+							}
+							if (factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID != null)
+							{
+								factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID.FirstOrDefault().Value);
+							}
+						}
+					}
 					#endregion
 
 					factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;

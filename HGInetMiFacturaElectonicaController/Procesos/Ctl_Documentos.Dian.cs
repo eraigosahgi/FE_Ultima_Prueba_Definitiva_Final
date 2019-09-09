@@ -325,31 +325,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					//valido la respuesta para saber que estado guardar en la Auditoria y generar notificacion
 					int estado = 0;
-					if (resultado_doc.Estado == EstadoDocumentoDian.Aceptado)
+					if (resultado_doc.Estado == EstadoDocumentoDian.Aceptado || resultado_doc.Estado == EstadoDocumentoDian.Rechazado)
 					{
+						// aceptado
+						bool resultado = true;
 						estado = CategoriaEstado.ValidadoDian.GetHashCode();
 
-						//Si la respuesta es de V2 y llego con errores alerto para validar
-						if (list_errormsg != null)
+						// rechazado
+						if (resultado_doc.Estado == EstadoDocumentoDian.Rechazado)
 						{
-							MensajeCategoria log_categoria = MensajeCategoria.Servicio;
-							MensajeAccion log_accion = MensajeAccion.alarma;
-							try
-							{
-								Ctl_Alertas alerta = new Ctl_Alertas();
-								alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), list_errormsg, 2, true);
-							}
-							catch (Exception excepcion)
-							{
-								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
-							}
-
+							resultado = false;
+							estado = CategoriaEstado.FallidoDian.GetHashCode();
 						}
-
-					}
-					else if (resultado_doc.Estado == EstadoDocumentoDian.Rechazado)
-					{
-						estado = CategoriaEstado.FallidoDian.GetHashCode();
 
 						//Si la respuesta es de V2 y llego con errores alerto para validar
 						if (list_errormsg != null)
@@ -359,13 +346,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							try
 							{
 								Ctl_Alertas alerta = new Ctl_Alertas();
-								alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), list_errormsg, 2, false);
+								alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), list_errormsg, 2, resultado);
 							}
 							catch (Exception excepcion)
 							{
 								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
 							}
+
 						}
+
 					}
 					else
 					{

@@ -206,12 +206,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta = Consultar(documento, empresa, ref respuesta,documento.StrIdRadicadoDian.ToString());
 
 							//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-							if (respuesta.EstadoDian.CodigoRespuesta == ValidacionRespuestaDian.NoRecibido.ToString())
+							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
 							{
 								HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa,ref respuesta, ref documento_result, resolucion.StrIdSetDian);
 								ValidarRespuesta(respuesta,(acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 							}
-							else if (respuesta.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Pendiente.GetHashCode())
+							else
 							{
 								respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
 								//Actualiza la respuesta
@@ -246,17 +246,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 				//Valida estado del documento en la Plataforma de la DIAN
-				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode())
+				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode() || respuesta.IdProceso == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode())
 				{
 					if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()) && documento.StrIdRadicadoDian != null)
 					{
 						respuesta = Consultar(documento, empresa, ref respuesta, documento.StrIdRadicadoDian.ToString());
 					}
 
-					if (respuesta.EstadoDian.EstadoDocumento < EstadoDocumentoDian.Aceptado.GetHashCode())
+					if (respuesta.EstadoDian.EstadoDocumento < EstadoDocumentoDian.Aceptado.GetHashCode() && respuesta.EstadoDian.EstadoDocumento > EstadoDocumentoDian.Rechazado.GetHashCode())
 					{
 						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian);
 						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
+
+						if (acuse.Response == 200)
+							respuesta = Consultar(documento, empresa, ref respuesta, acuse.KeyV2);
 					}
 
 					// envía el mail de documentos al adquiriente

@@ -85,7 +85,7 @@ namespace HGInetDIANServicios
 								}
 								catch (Exception excepcion)
 								{
-									respuesta.StatusCode = "99";
+									respuesta.StatusCode = "94";
 									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion
 										.ConvertirLista(string.Format(
 											"No se guardo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}",
@@ -103,7 +103,7 @@ namespace HGInetDIANServicios
 							}
 							else
 							{
-								respuesta.StatusCode = "99";
+								respuesta.StatusCode = "94";
 								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}", TrackId)).ToArray();
 								respuesta.IsValid = false;
 							}
@@ -189,10 +189,23 @@ namespace HGInetDIANServicios
 				}
 				else
 				{
-					resultado.CodigoEstadoDian = "99";
-					resultado.EstadoDianDescripcion = "validaciones contienen errores en campos mandatorios";
-					resultado.Estado = EstadoDocumentoDian.Rechazado;
-					resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.FirstOrDefault().ErrorMessage.ToList(), ";");
+					DianWSValidacionPrevia.DianResponse doc_pendiente = documento.Where(d => d.IsValid == false && d.StatusCode == "94").FirstOrDefault();
+
+					if (doc_pendiente != null)
+					{
+						resultado.CodigoEstadoDian = doc_pendiente.StatusCode;
+						resultado.EstadoDianDescripcion = "DIAN: En proceso de validación";
+						resultado.Estado = EstadoDocumentoDian.Pendiente;
+						resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.FirstOrDefault().ErrorMessage.ToList(), ";");
+					}
+					else
+					{
+
+						resultado.CodigoEstadoDian = "99";
+						resultado.EstadoDianDescripcion = "validaciones contienen errores en campos mandatorios";
+						resultado.Estado = EstadoDocumentoDian.Rechazado;
+						resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.FirstOrDefault().ErrorMessage.ToList(), ";");
+					}
 				}
 
 				return resultado;

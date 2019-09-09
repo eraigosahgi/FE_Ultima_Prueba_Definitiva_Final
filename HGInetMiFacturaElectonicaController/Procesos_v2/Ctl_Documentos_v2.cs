@@ -379,13 +379,33 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 							}
 						}
-						else if ((respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode()) && documentoBd.IntEnvioMail == null)
+						else if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode())
 						{
-							respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
-							documento_tmp = new Ctl_Documento();
-							documentoBd.IntEnvioMail = true;
-							documento_tmp.Actualizar(documentoBd);
+							#region Proceso anterior V1
+							//respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
+							//documento_tmp = new Ctl_Documento();
+							//documentoBd.IntEnvioMail = true;
+							//documento_tmp.Actualizar(documentoBd);
 							//Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
+							#endregion
+
+							//Se actualiza respuesta	
+							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
+							respuesta.FechaUltimoProceso = Fecha.GetFecha();
+							respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
+
+							//Actualiza Documento en Base de Datos
+							documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();
+							documentoBd.IntIdEstado = (short)respuesta.IdProceso;
+
+							//Actualizo el estado del documento para enviar al proveedor receptor
+							documento_tmp = new Ctl_Documento();
+							documento_tmp.Actualizar(documentoBd);
+
+							//Actualiza la categoria con el nuevo estado
+							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+
 						}
 
 					}

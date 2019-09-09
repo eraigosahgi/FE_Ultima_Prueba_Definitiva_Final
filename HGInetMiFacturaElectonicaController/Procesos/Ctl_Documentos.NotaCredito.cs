@@ -248,6 +248,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
 							numero_documento = num_doc.Actualizar(numero_documento);
 						}
+						else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode())
+						{
+							// procesa el documento en V2
+							item_respuesta = ProcesarV2(numero_documento, true);
+							return item_respuesta;
+						}
 						else
 						{
 							mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
