@@ -527,6 +527,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		{
 
 			var documento = (dynamic)null;
+			bool autoretenedor = false;
 
 			if (tipo_doc == TipoDocumento.Factura)
 				documento = documento_fac;
@@ -617,6 +618,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (facturador.IntVersionDian == 2)
 				{
+					string resp = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.DatosObligado.Responsabilidades, ";");
+					if (resp.Contains("O-15") == true)
+						autoretenedor = true;
 
 					if (documento.ValorSubtotal > documento.Total)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Subtotal", documento.ValorSubtotal));
@@ -630,7 +634,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (decimal.Round(detalle.Sum(v => (v.IvaValor)), MidpointRounding.AwayFromZero) != decimal.Round(documento.ValorIva, MidpointRounding.AwayFromZero))
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "IVA", documento.ValorIva));
 
-					if (detalle.Sum(v => (v.ReteFuenteValor)) != documento.ValorReteFuente)
+					if ((detalle.Sum(v => (v.ReteFuenteValor)) != documento.ValorReteFuente) && autoretenedor == true)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "ReteFuente", documento.ValorReteFuente));
 
 					if (detalle.Sum(v => (v.ValorImpuestoConsumo)) != documento.ValorImpuestoConsumo)
@@ -839,7 +843,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Se valida el detalle del documento
-				ValidarDetalleDocumento(documento.DocumentoDetalles, facturador);
+				ValidarDetalleDocumento(documento.DocumentoDetalles, facturador,autoretenedor);
 
 			}
 		}
@@ -849,7 +853,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// </summary>
 		/// <param name="documentoDetalle"></param>
 		/// <returns></returns>
-		public static void ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle, TblEmpresas facturador)
+		public static void ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle, TblEmpresas facturador, bool autorretenedor)
 		{
 
 			if (documentoDetalle == null || !documentoDetalle.Any())
@@ -1000,7 +1004,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 
 
-						if (Docdet.ReteFuenteValor > 0)
+						if (Docdet.ReteFuenteValor > 0 && autorretenedor == true)
 						{
 							//if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), MidpointRounding.AwayFromZero) == Docdet.ReteFuenteValor)
 							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), 2, MidpointRounding.AwayFromZero) == Docdet.ReteFuenteValor)
