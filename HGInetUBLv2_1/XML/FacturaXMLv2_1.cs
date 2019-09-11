@@ -422,15 +422,8 @@ namespace HGInetUBLv2_1
                 en cuenta las líneas de facturaXML y elementos a nivel de facturaXML, como descuentos, cargos, impuestos, etc*/
 
 				decimal subtotal = 0.00M;
-				if (facturaXML.TaxTotal.Length > 0)
-				{
-					subtotal = facturaXML.TaxTotal.Sum(s => s.TaxSubtotal.Sum(v => v.TaxableAmount.Value));
-				}
-				else
-				{
-					subtotal = facturaXML.InvoiceLine.Sum(s => s.LineExtensionAmount.Value);
-				}
-
+				subtotal = facturaXML.InvoiceLine.Sum(s => s.LineExtensionAmount.Value);
+				
 				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
 
 				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
