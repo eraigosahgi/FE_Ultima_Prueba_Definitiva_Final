@@ -3,13 +3,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-    
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201919"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201919"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201919"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201919"></script>
-    <script src="../../Scripts/Pages/Empresas.js?vjs201919"></script>
-    
+	
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201921"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201921"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201921"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201921"></script>
+    <script src="../../Scripts/Pages/Empresas.js?vjs201921"></script>	    
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201921"></script>
     <div data-ng-app="EmpresasApp" data-ng-controller="ConsultaEmpresasController" data-ng-init="Admin=false">
         
         <div class="col-md-12">
@@ -36,5 +36,6 @@
                 </div>
             </div>
         </div>
+		<div data-ng-include="'ModalDetalleEmpresa.aspx'"></div>
     </div>
 </asp:Content>

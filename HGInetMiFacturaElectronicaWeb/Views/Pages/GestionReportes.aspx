@@ -4,8 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Pages/ReportDesignerWeb.js?vjs201919"></script>
-	<script src="../../Scripts/Pages/ModalAsignarFormato.js?vjs201919"></script>
+	<script src="../../Scripts/Pages/ReportDesignerWeb.js?vjs201921"></script>
+	<script src="../../Scripts/Pages/ModalAsignarFormato.js?vjs201921"></script>
 	<style>
 		.BtnStyleNone {
 			background-color: transparent;

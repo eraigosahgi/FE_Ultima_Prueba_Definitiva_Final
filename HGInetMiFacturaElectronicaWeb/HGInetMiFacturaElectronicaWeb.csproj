@@ -1954,6 +1954,7 @@
     <Content Include="Scripts\Services\SrvPlanes.js" />
     <Content Include="Scripts\Services\SrvProveedor.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
+    <Content Include="Scripts\WebConfig.js" />
     <Content Include="Views\Demos\Demo.aspx" />
     <Content Include="Views\Demos\Demos.aspx" />
     <Content Include="Global.asax" />

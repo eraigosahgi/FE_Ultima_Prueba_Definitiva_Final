@@ -5,12 +5,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201919"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201919"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201919"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201919"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs201919"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201919"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201921"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201921"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201921"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201921"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs201921"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201921"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController" class="col-md-12">
 		<%--Panel información General--%>

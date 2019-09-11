@@ -1,12 +1,20 @@
 ﻿
+
+var Proc_Email;
+var Proc_MailEnvio;
+var Proc_MailRecepcion;
+var Proc_MailAcuse ;
+var Proc_MailPagos ;
+
+
 var ModalDetalleEmpresasApp = angular.module('ModalDetalleEmpresasApp', ['dx']);
 
 ModalDetalleEmpresasApp.controller('EmpresasModalController', function EmpresasModalController($scope, $http, $rootScope) {
 	
 	$rootScope.ConsultaDetalleEmpresa = function (idseguridadEmpresa) {
-		
-		$http.get('/api/Empresas?IdSeguridad=' + idseguridadEmpresa).then(function (response) {
-			console.log(response.data[0]);
+	
+	
+		$http.get('/api/Empresas?IdSeguridad=' + idseguridadEmpresa).then(function (response) {			
 			$('#modal_detalle_empresa').modal('show');
 			$scope.Nit = response.data[0].Identificacion;			
 			$scope.RazonSocial = response.data[0].RazonSocial;			
@@ -22,7 +30,7 @@ ModalDetalleEmpresasApp.controller('EmpresasModalController', function EmpresasM
 			$scope.StrMailAcuse = response.data[0].StrMailAcuse;
 			$scope.PostPago = (response.data[0].Postpago == 1) ? "SI" : "NO";
 			$scope.Administradora = response.data[0].Admin;	
-			$scope.Perfil = (response.data[0].intObligado == true && response.data[0].Intadquiriente == true) ? "Facturador y Adquiriente" : (response.data[0].intObligado == true) ? "Facturador":"Adquiriente";
+			$scope.Perfil = (response.data[0].intObligado == true && response.data[0].Intadquiriente == true) ? "FACTURADOR y ADQUIRIENTE" : (response.data[0].intObligado == true) ? "FACTURADOR" : "ADQUIRIENTE";
 			$scope.StrObservaciones = response.data[0].StrObservaciones;			
 			$scope.Integrador = (response.data[0].IntIntegrador) ? "SI" : "NO";
 			$scope.Facturador = response.data[0].intObligado
@@ -33,15 +41,77 @@ ModalDetalleEmpresasApp.controller('EmpresasModalController', function EmpresasM
 			$scope.IntNumUsuarios = response.data[0].IntNumUsuarios;
 			$scope.IntAcuseTacito = response.data[0].IntAcuseTacito;
 			$scope.IntEmailRecepcion = (response.data[0].IntEmailRecepcion)?"SI":"NO";
+			$scope.Version =(response.data[0].VersionDIAN==2)?'VERSIÓN VALIDACIÓN PREVIA':'VERSIÓN 1';
+			$scope.Firma = (response.data[0].IntCertFirma == 0) ? 'HGI SAS' : 'FACTURADOR';
 			
+
+			$scope.FechaVenc = (response.data[0].DatCertVence != null && response.data[0].DatCertVence != '0001-01-01') ? response.data[0].DatCertVence : '';
+
+			$scope.MuestraFechaVenc = (response.data[0].IntCertFirma == 0) ? false : true;
+
+			Proc_Email = response.data[0].Proc_Email;
+			Proc_MailEnvio = response.data[0].Proc_MailEnvio;
+			Proc_MailRecepcion = response.data[0].Proc_MailRecepcion;
+			Proc_MailAcuse = response.data[0].Proc_MailAcuse;
+			Proc_MailPagos = response.data[0].Proc_MailPagos;
+			
+			
+
+			setTimeout(ActualizarEstadoEmail, 200);
 			
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 7000);
 		});
+
+
+		
+
+		
 	}
+
 	
 });
+
+function ActualizarEstadoEmail() {
+		
+	AsigEstado("Proc_Email", Proc_Email);
+	AsigEstado("Proc_MailEnvio", Proc_MailEnvio);
+	AsigEstado("Proc_MailRecepcion", Proc_MailRecepcion);
+	AsigEstado("Proc_MailAcuse", Proc_MailAcuse);
+	AsigEstado("Proc_MailPagos", Proc_MailPagos);
+}
+
+
+//Colocar Icono de estado de validación de los correos
+function AsigEstado(mail, Proceso) {
+	var Icono_Registro = "icon-cross2 text-danger-400";
+	var Icono_Verificíon = "icon-circles text-orange";
+	var Icono_Activo = "icon-checkmark3 text-success";
+	var Icono = "";
+	var Titulo = "";
+
+	if (Proceso == 0) {
+		Titulo = "En proceso de Registro";
+		Icono = Icono_Registro;
+	}
+
+	if (Proceso == 1) {
+		Titulo = "En proceso de Verificación";
+		Icono = Icono_Verificíon;
+	}
+
+	if (Proceso == 2) {
+		Titulo = "Correo Verificado";
+		Icono = Icono_Activo;
+	}
+
+	$('#Html_Modal' + mail).attr("title", Titulo);
+	$('#Html_Modal' + mail).removeClass();
+	$('#Html_Modal' + mail).addClass(Icono);
+
+}
+
 
 
 

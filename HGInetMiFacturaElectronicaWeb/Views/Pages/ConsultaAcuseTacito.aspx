@@ -4,10 +4,10 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
     <!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201919"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201919"></script>
-    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201919"></script>
-    <script src="../../Scripts/Pages/ConsultaAcuseTacito.js?vjs201919"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201921"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201921"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201921"></script>
+    <script src="../../Scripts/Pages/ConsultaAcuseTacito.js?vjs201921"></script>
     <!-- CONTENEDOR PRINCIPAL -->
     <div data-ng-app="AcuseConsultaApp" data-ng-controller="AcuseConsultaController"  data-ng-init="total=0">
 

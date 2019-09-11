@@ -5,11 +5,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
     <!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201919"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201919"></script>
-    <script src="../../Scripts/Pages/ConsultaDocumentosClientes.js?vjs201919"></script>
-    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201919"></script>
-	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201919"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201921"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201921"></script>
+    <script src="../../Scripts/Pages/ConsultaDocumentosClientes.js?vjs201921"></script>
+    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201921"></script>
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201921"></script>
 	<div data-ng-app="App">
 
         <!-- CONTENEDOR PRINCIPAL -->

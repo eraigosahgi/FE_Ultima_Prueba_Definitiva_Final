@@ -95,8 +95,8 @@
 		}
 	</style>
 
-	<script src="../../Scripts/Pages/ConsultaAuditoriaDocumento.js?vjs201919"></script>
-	<script src="../../Scripts/config.js?vjs201919"></script>
+	<script src="../../Scripts/Pages/ConsultaAuditoriaDocumento.js?vjs201921"></script>
+	<script src="../../Scripts/config.js?vjs201921"></script>
 
 </head>
 <body class="login-container" style="background-color: #eeeded">

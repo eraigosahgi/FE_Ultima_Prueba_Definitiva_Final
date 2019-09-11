@@ -49,7 +49,9 @@ Datos_ClaveCert = "",
 Datos_Serial = "",
 Datos_proveedores = "";
 
-var EmpresasApp = angular.module('EmpresasApp', ['dx', 'AppSrvFiltro', 'AppMaestrosEnum', 'AppSrvEmpresas']);
+var ModalDetalleEmpresasApp = angular.module('ModalDetalleEmpresasApp', []);
+
+var EmpresasApp = angular.module('EmpresasApp', ['ModalDetalleEmpresasApp','dx', 'AppSrvFiltro', 'AppMaestrosEnum', 'AppSrvEmpresas']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
 EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location, SrvFiltro, SrvMaestrosEnum, SrvEmpresas) {
 
@@ -1632,7 +1634,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 });
 
 //Controlador para gestionar la consulta de empresas
-EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $location) {
+EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http,$rootScope, $location) {
 
 
 	$scope.Admin = false;
@@ -1650,8 +1652,8 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 				$scope.Admin = true;
 			};
 			$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador).then(function (response) {
-				$('#wait').hide();
-				$("#gridEmpresas").dxDataGrid({
+				$('#wait').hide();				
+				$("#gridEmpresas").dxDataGrid({					
 					dataSource: response.data,
 
 					paging: {
@@ -1703,8 +1705,21 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 						   {
 						   	cssClass: "col-md-1 col-xs-2",
 						   	cellTemplate: function (container, options) {
+						   		var ver = "class='icon-user-tie' style='margin-left:5%; font-size:19px;color: #1E88E5;'";
+						   		$("<div title='Detalle : " + options.data.RazonSocial + "' >")
 						   		$("<div style='text-align:center'>")
 									.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
+									
+
+														   		
+						   		
+									.append(
+										$("<i " + ver + "></i>").dxButton({
+											onClick: function () {
+												$rootScope.ConsultaDetalleEmpresa(options.data.IdSeguridad);
+											}
+										}).removeClass("dx-button dx-button-normal dx-widget")
+								)
 									.appendTo(container);
 						   	}
 						   }
@@ -1739,70 +1754,8 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 									.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
 									.appendTo(container);
 						   	}
-						   },
-						   {
-						   	caption: "Asociado",
-						   	dataField: "Asociado",
-						   	hidingPriority: 0
-						   },
-						   {
-						   	caption: "Empresa descuento",
-						   	dataField: "EmpresaDescuento",
-						   	hidingPriority: 1
-						   },
-
-						   {
-						   	caption: "Post-Pago automatico",
-						   	dataField: "Postpago",
-						   	hidingPriority: 2
-						   },
-						   {
-						   	caption: "Nº Usuarios activos",
-						   	dataField: "Nusuaurios",
-						   	hidingPriority: 3
-						   },
-						   {
-						   	caption: "Nº Horas para acuse tacito",
-						   	dataField: "HorasAcuse",
-						   	hidingPriority: 4
-						   },
-						   {
-						   	caption: "Notificación en recepción",
-						   	dataField: "NotificacionMail",
-						   	hidingPriority: 5
-						   },
-							{
-								caption: "Correo de Recepción de Documentos",
-								dataField: "StrMailRecepcion",
-								hidingPriority: 6
-							}
-							,
-							{
-								caption: "Correo de Recepción de Acuse",
-								dataField: "StrMailAcuse",
-								hidingPriority: 7
-							}
-							,
-							{
-								caption: "Correo para Envios",
-								dataField: "StrMailEnvio",
-								hidingPriority: 8
-							}
-							,
-							{
-								caption: "Correo de Recepción de Pagos",
-								dataField: "StrMailPagos",
-								hidingPriority: 9
-							}
-
-
-
-
-
-						   //,
-						   //{
-						   //    dataField: "Habilitacion"
-						   //}                   
+						   }
+						  						  
 					   ],
 					filterRow: {
 						visible: true

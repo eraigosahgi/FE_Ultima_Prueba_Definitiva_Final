@@ -6,8 +6,8 @@
 <head runat="server">
 	<title></title>
 
-	<script src="../../Scripts/config.js?vjs201919"></script>
-	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201919"></script>
+	<script src="../../Scripts/config.js?vjs201921"></script>
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201921"></script>
 
 	<style type="text/css">
 		#outlook a {
@@ -129,10 +129,6 @@
 																	</tr>
 
 																	<tr>
-																		<td colspan="3" style="background-color: #efefef; vertical-align: top">Correo de Recepción Documentos:</td>
-																		<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrMailRecepcion}}</td>
-																	</tr>
-																	<tr>
 																		<td colspan="3" style="background-color: #efefef; vertical-align: top">Perfil:</td>
 																		<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{Perfil}}</td>
 																	</tr>
@@ -178,27 +174,62 @@
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Correo Administrativo:</td>
-																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{Email}}</td>
+																								<td colspan="6" style="background-color: #ffffff; vertical-align: top">{{Email}}</td>
+																								<td colspan="1" style="background-color: #ffffff; vertical-align: top">
+																									<div class="col-md-1" style="z-index: 9; margin-top: 6px;">
+																										<i id="Html_ModalProc_Email" class="icon-cross2 text-danger-400" title="En proceso de Registro"></i>
+																									</div>
+																								</td>
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Correo Envío:</td>
-																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrMailEnvio}}</td>
+																								<td colspan="6" style="background-color: #ffffff; vertical-align: top">{{StrMailEnvio}}</td>
+																								<td colspan="1" style="background-color: #ffffff; vertical-align: top">
+																									<div class="col-md-1" style="z-index: 9; margin-top: 6px;">
+																										<i id="Html_ModalProc_MailEnvio" class="icon-cross2 text-danger-400" title="En proceso de Registro"></i>
+																									</div>
+																								</td>
 																							</tr>
 																							<tr>
-																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Correo Pagos:</td>
-																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrMailPagos}}</td>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Correo de Recepción:</td>
+																								<td colspan="6" style="background-color: #ffffff; vertical-align: top">{{StrMailRecepcion}}</td>
+																								<td colspan="1" style="background-color: #ffffff; vertical-align: top">
+																									<div class="col-md-1" style="z-index: 9; margin-top: 6px;">
+																										<i id="Html_ModalProc_MailRecepcion" class="icon-cross2 text-danger-400" title="En proceso de Registro"></i>
+																									</div>
+																								</td>
 																							</tr>
+
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Correo Acuse:</td>
-																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrMailAcuse}}</td>
+																								<td colspan="6" style="background-color: #ffffff; vertical-align: top">{{StrMailAcuse}}</td>
+																								<td colspan="1" style="background-color: #ffffff; vertical-align: top">
+																									<div class="col-md-1" style="z-index: 9; margin-top: 6px;">
+																										<i id="Html_ModalProc_MailAcuse" class="icon-cross2 text-danger-400" title="En proceso de Registro"></i>
+																									</div>
+																								</td>
 																							</tr>
+
+																							<tr>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Correo Pagos:</td>
+																								<td colspan="6" style="background-color: #ffffff; vertical-align: top">{{StrMailPagos}}</td>
+																								<td colspan="1" style="background-color: #ffffff; vertical-align: top">
+																									<div class="col-md-1" style="z-index: 9; margin-top: 6px;">
+																										<i id="Html_ModalProc_MailPagos" class="icon-cross2 text-danger-400" title="En proceso de Registro"></i>
+																									</div>
+																								</td>
+																							</tr>
+
+																							
+																							
+																							
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Empresa Asociada:</td>
-																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaAsociada}}</td>																								
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaAsociada}}</td>
 																							</tr>
 																							<tr>
-																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Empresa Descuenta Planes:</td>																								
-																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaDescuenta}}</td>																								
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Empresa Descuenta Planes:</td>
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{StrEmpresaDescuenta}}</td>
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Post-Pago Aut.:</td>
@@ -219,7 +250,18 @@
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Habilitación:</td>
 																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{Habilitacion}}</td>
 																							</tr>
-
+																							<tr>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">versión:</td>
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{Version}}</td>
+																							</tr>
+																							<tr>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Firma:</td>
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{Firma}}</td>
+																							</tr>
+																							<tr data-ng-show="MuestraFechaVenc">
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Fecha Vence:</td>
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{FechaVenc}}</td>
+																							</tr>
 																						</tbody>
 																					</table>
 																				</div>
