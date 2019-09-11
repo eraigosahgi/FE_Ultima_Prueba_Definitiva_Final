@@ -15,6 +15,7 @@ using FirmaXadesNet.Utils;
 using LibreriaGlobalHGInet.Objetos;
 using System.Collections.Generic;
 using System.Linq;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetFirmaDigital
 {
@@ -34,7 +35,7 @@ namespace HGInetFirmaDigital
 		/// <param name="datos">Archivos XML para firmar</param>
 		/// <param name="firma_proveedor">indica si firma el proveedor tecnológico (true) o el obligado(false)</param>
 		/// <returns>Archivos Xml procesados</returns>  
-		public static FacturaE_Documento FirmarDocumentos(string certificado_ruta, string certificado_serial, string certificado_clave, EnumCertificadoras empresa_certificadora, FacturaE_Documento datos, bool firma_proveedor)
+		public static FacturaE_Documento FirmarDocumentos(string NitCertificado, string certificado_ruta, string certificado_serial, string certificado_clave, EnumCertificadoras empresa_certificadora, FacturaE_Documento datos, bool firma_proveedor)
 		{
 			try
 			{
@@ -47,11 +48,11 @@ namespace HGInetFirmaDigital
 					{
 						//if (string.IsNullOrWhiteSpace(certificado_serial))
 						//	throw new Exception("El serial del certificado digital es inválido.");
-						datos = Firmar.FirmarXAdesAlmacen(certificado_serial, certificado_clave, empresa_certificadora,datos);
+						datos = Firmar.FirmarXAdesAlmacen(certificado_serial, certificado_clave, empresa_certificadora, datos);
 					}
 					// firmado de archivos XML desde un certificado físico
 					else
-						datos = Firmar.FirmarXAdesFisico_v2(certificado_ruta, certificado_clave, empresa_certificadora, datos, firma_proveedor);
+						datos = Firmar.FirmarXAdesFisico_v2(NitCertificado, certificado_ruta, certificado_clave, empresa_certificadora, datos, firma_proveedor);
 				}
 				else
 				{
@@ -335,10 +336,14 @@ namespace HGInetFirmaDigital
 		/// <param name="firma_proveedor">indica si firma el proveedor tecnológico (true) o el obligado(false)</param>
 		/// <returns>Archivos Xml procesados</returns>
 		[AutoComplete(true)]
-		protected FacturaE_Documento FirmarXAdesFisico_v2(string RutaCertificado, string ClaveCertificado, EnumCertificadoras EmpresaCertificadora, FacturaE_Documento datos, bool firma_proveedor)
+		protected FacturaE_Documento FirmarXAdesFisico_v2(string NitCertificado, string RutaCertificado, string ClaveCertificado, EnumCertificadoras EmpresaCertificadora, FacturaE_Documento datos, bool firma_proveedor)
 		{
 			X509Certificate2 MontCertificat = null;
 			SignatureParameters parametros = null;
+
+			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
+			MensajeAccion log_accion = MensajeAccion.lectura;
+
 			try
 			{
 				if (!Archivo.ValidarExistencia(RutaCertificado))
@@ -346,8 +351,24 @@ namespace HGInetFirmaDigital
 					throw new ApplicationException(string.Format("No se encuentra el certificado en la ruta {0}", RutaCertificado));
 				}
 
+				log_categoria = MensajeCategoria.Certificado;
+				log_accion = MensajeAccion.consulta;
+
+				//"E:/certificadrdb/Certificado_Sunat_PFX_REPDORABEATRIZ.pfx";
+				MontCertificat = new X509Certificate2(RutaCertificado, ClaveCertificado);
+
+				if (!MontCertificat.Subject.Contains(NitCertificado))
+					throw new ApplicationException(string.Format("Certificado digital {0} no corresponde a  la identificación {1}", Path.GetFileNameWithoutExtension(RutaCertificado).Substring(0, 8), NitCertificado));
+
+				if (MontCertificat.NotAfter < Fecha.GetFecha())
+					throw new ApplicationException(string.Format("Certificado digital {0} con fecha de vigencia {1}, se encuentra vencido", Path.GetFileNameWithoutExtension(RutaCertificado).Substring(0, 8), MontCertificat.NotAfter));
+
 				XadesService xadesService = new XadesService();
 				parametros = new SignatureParameters();
+
+				parametros.cNombreCertificado = RutaCertificado;
+				parametros.cClaveCertificado = ClaveCertificado;
+				parametros.cdesdealmacen = "NO";
 
 				parametros.SignatureMethod = SignatureMethod.RSAwithSHA256;
 				parametros.DigestMethod = DigestMethod.SHA256;
@@ -358,7 +379,7 @@ namespace HGInetFirmaDigital
 					parametros.SignerRole.ClaimedRoles.Add("third party");
 				else
 					parametros.SignerRole.ClaimedRoles.Add("supplier");
-					
+
 				parametros.DatoIssuername = "";
 				parametros.DatoIssuername1 = "";
 				parametros.DatoIssuername0 = "";
@@ -440,21 +461,21 @@ namespace HGInetFirmaDigital
 				parametros.SignaturePackaging = SignaturePackaging.ENVELOPED;
 				parametros.InputMimeType = "text/xml";
 
-				//"E:/certificadrdb/Certificado_Sunat_PFX_REPDORABEATRIZ.pfx";
-				MontCertificat = new X509Certificate2(RutaCertificado, ClaveCertificado);
-
-				parametros.cNombreCertificado = RutaCertificado;
-				parametros.cClaveCertificado = ClaveCertificado;
-				parametros.cdesdealmacen = "NO";	
-
 			}
 			catch (Exception excepcion)
 			{
 
 				string msg = string.Format("Error HGInet Firmado al leer el certificado {1} de {3} clave:{2} - Excepción: {0}", excepcion.Message, RutaCertificado, ClaveCertificado, Enumeracion.GetDescription(EmpresaCertificadora));
 
+				if (log_accion == MensajeAccion.consulta)
+				{
+					msg = string.Format("Error al firmar el documento electrónico - Detalle: {0}", excepcion.Message);
+				}
+
 				if (excepcion.InnerException != null)
 					msg += " Inner: " + excepcion.InnerException.Message;
+
+				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
 
 				throw new ApplicationException(msg, excepcion);
 			}

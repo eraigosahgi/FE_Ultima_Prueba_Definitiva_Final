@@ -123,6 +123,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string ruta_certificado = string.Empty;
 				string certificado_clave = string.Empty;
 				string certificado_serial = string.Empty;
+				string certificado_nit = string.Empty;
 				
 				// obtiene la empresa certificadora
 				EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
@@ -139,12 +140,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						empresa_certificadora = EnumCertificadoras.Gse;
 
 					certificado_clave = certificado.Clave;
+					certificado_nit = Constantes.NitResolucionconPrefijo;
 
 					ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
 				}
 				else
 				{
 					certificado_clave = empresa.StrCertClave;
+					certificado_nit = empresa.StrIdentificacion;
 
 					empresa_certificadora = Enumeracion.GetEnumObjectByValue<HGInetFirmaDigital.EnumCertificadoras>((int)empresa.IntCertProveedor);
 
@@ -154,7 +157,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				
 				// genera la firma del documento XML
-				documento_result = Ctl_Firma.Generar(ruta_certificado, certificado_serial, certificado_clave, empresa_certificadora, documento_result, firma_proveedor);
+				documento_result = Ctl_Firma.Generar(certificado_nit, ruta_certificado, certificado_serial, certificado_clave, empresa_certificadora, documento_result, firma_proveedor);
 
 				// ruta física del xml
 				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());

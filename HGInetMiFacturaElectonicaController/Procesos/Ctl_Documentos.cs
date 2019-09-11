@@ -952,7 +952,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (Docdet.ValorUnitario == 0 && Docdet.ProductoGratis == false)
 							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
 
-						if (Docdet.ProductoGratis == true && Docdet.ProductoGratis == false)
+						if (Docdet.ProductoGratis == true)
 						{
 							ListaCodigoPrecioReferencia list_precioref = new ListaCodigoPrecioReferencia();
 							ListaItem precioref = list_precioref.Items.Where(d => d.Codigo.Equals(Docdet.ProductoGratisPrecioRef)).FirstOrDefault();

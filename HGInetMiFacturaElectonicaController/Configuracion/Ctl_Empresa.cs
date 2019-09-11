@@ -47,6 +47,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			if (datos != null)
 			{
+				if (datos.IntIdEstado == 2)
+					throw new ApplicationException(string.Format("El Facturador con la identificación {0} no se encuentra activo.", identificacion_obligado));
+
+				if (datos.IntIdEstado == 3 && datos.IntVersionDian == 2)
+					throw new ApplicationException(string.Format("El Facturador con la identificación {0} no ha confirmado sus correos.", identificacion_obligado));
+
 
 				string datakey_construido = datos.StrSerial.ToString() + datos.StrIdentificacion.ToString();
 				string datakey_encriptado_Sha1 = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
