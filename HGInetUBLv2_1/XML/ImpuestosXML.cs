@@ -70,8 +70,8 @@ namespace HGInetUBLv2_1
 				}
 
 				//Toma el impuesto al consumo de los productos que esten el detalle
-				var impuesto_consumo = documentoDetalle.Select(_consumo => new
-					{ _consumo.ImpoConsumoPorcentaje, TipoImpuestos.Consumo, _consumo.ValorImpuestoConsumo }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje }).Select(_consumo => _consumo.First());
+				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0).ToList().Select(_consumo => new
+					{ _consumo.ImpoConsumoPorcentaje, TipoImpuestos.Consumo, _consumo.ValorImpuestoConsumo }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje }).Select(_consumo => _consumo.First()).ToList();
 				decimal BaseImponibleImpConsumo = 0;
 				decimal BaseImponibleBolsa = 0;
 

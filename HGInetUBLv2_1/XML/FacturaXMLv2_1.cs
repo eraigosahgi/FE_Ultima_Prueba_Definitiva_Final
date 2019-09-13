@@ -1747,6 +1747,9 @@ namespace HGInetUBLv2_1
 						Precio.AlternativeConditionPrice[0] = PriceG;
 						InvoiceLineType1.PricingReference = Precio;
 
+						if (InvoiceLineType1.LineExtensionAmount.Value > 0)
+							InvoiceLineType1.LineExtensionAmount.Value = 0.00M;
+
 					}
 
 					#endregion

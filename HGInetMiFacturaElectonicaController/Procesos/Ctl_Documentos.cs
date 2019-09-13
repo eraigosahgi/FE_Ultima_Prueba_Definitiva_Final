@@ -682,13 +682,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 
 						}
-						else if (documento.Anticipos.Count == 0 && documento.ValorAnticipo == 0)
+						else if (documento.Anticipos.Count >= 0 && documento.ValorAnticipo == 0)
 						{
-							documento.ValorAnticipo = Convert.ToDecimal(0.00M);
-
-							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorAnticipo).Replace(",", ".")))
+							List<Anticipo> list_ant = documento.Anticipos;
+							if (!list_ant.Sum(v1 => v1.Valor).Equals(documento.ValorAnticipo))
+							{
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
+							}
+							else
+							{
+								documento.ValorAnticipo = Convert.ToDecimal(0.00M);
 
+								if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorAnticipo).Replace(",", ".")))
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Anticipo", documento.ValorAnticipo));
+
+							}
 						}
 						else
 						{
@@ -744,13 +752,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								}
 							}
 						}
-						else if (documento.Cargos.Count > 0 && documento.ValorCargo == 0)
+						else if (documento.Cargos.Count >= 0 && documento.ValorCargo == 0)
 						{
-							documento.ValorCargo = Convert.ToDecimal(0.00M);
-
-							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorCargo).Replace(",", ".")))
+							List<Cargo> list_cargo = documento.Cargos;
+							if (!list_cargo.Sum(c => c.Valor).Equals(documento.ValorCargo))
+							{
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
+							}
+							else
+							{
+								documento.ValorCargo = Convert.ToDecimal(0.00M);
 
+								if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorCargo).Replace(",", ".")))
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Cargo", documento.ValorCargo));
+							}
 						}
 						else
 						{
@@ -809,19 +824,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								}
 							}
 						}
-						else if (documento.Descuentos.Count == 0 && documento.ValorDescuento == 0)
+						else if (documento.Descuentos.Count >= 0 && documento.ValorDescuento == 0)
 						{
-							documento.ValorDescuento = Convert.ToDecimal(0.00M);
+							List<Descuento> list_descuento = documento.Descuentos;
+							if (!list_descuento.Sum(v => v.Valor).Equals(documento.ValorDescuento))
+							{
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento",documento.ValorDescuento));
+							}
+							else
+							{
+								documento.ValorDescuento = Convert.ToDecimal(0.00M);
 
-							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
-						}
-						else if (documento.Descuentos.Count > 0 && documento.ValorDescuento == 0)
-						{
-							documento.ValorDescuento = Convert.ToDecimal(0.00M);
-
-							if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
+								if (!Texto.ValidarExpresion(TipoExpresion.Decimal, Convert.ToString(documento.ValorDescuento).Replace(",", ".")))
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
+							}
 						}
 						else
 						{
