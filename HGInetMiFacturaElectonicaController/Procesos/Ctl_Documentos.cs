@@ -631,7 +631,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (detalle.Sum(v => (v.ValorSubtotal)) != documento.ValorSubtotal)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", documento.ValorSubtotal));
 
-					if (decimal.Round(detalle.Sum(v => (v.IvaValor)), MidpointRounding.AwayFromZero) != decimal.Round(documento.ValorIva, MidpointRounding.AwayFromZero))
+					if (decimal.Round(detalle.Sum(v => (v.IvaValor))) != decimal.Round(documento.ValorIva))
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "IVA", documento.ValorIva));
 
 					if ((detalle.Sum(v => (v.ReteFuenteValor)) != documento.ValorReteFuente) && autoretenedor == true)

@@ -1182,11 +1182,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
 				obj_documento.UrlAnexo = respuesta.StrUrlAnexo;
 
-				Ctl_DocumentosAudit clase_audit = new Ctl_DocumentosAudit();
-				List<TblAuditDocumentos> datos_auditoria = clase_audit.Obtener(respuesta.StrIdSeguridad.ToString(), respuesta.TblEmpresasFacturador.StrIdentificacion);
+				//Ctl_DocumentosAudit clase_audit = new Ctl_DocumentosAudit();
+				//List<TblAuditDocumentos> datos_auditoria = clase_audit.Obtener(respuesta.StrIdSeguridad.ToString(), respuesta.TblEmpresasFacturador.StrIdentificacion);
 
-				if (datos_auditoria.Count > 0)
-					obj_documento.UrlAuditoria = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", respuesta.StrIdSeguridad.ToString()));
+				//if (datos_auditoria.Count > 0)
+				obj_documento.UrlAuditoria = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", respuesta.StrIdSeguridad.ToString()));
 
 				obj_documento.IdEstado = respuesta.IdCategoriaEstado;
 				obj_documento.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.ParseToEnum<CategoriaEstado>(respuesta.IdCategoriaEstado));
