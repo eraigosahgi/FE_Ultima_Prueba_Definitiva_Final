@@ -1272,11 +1272,17 @@ namespace HGInetUBLv2_1
 						//Base Imponible sobre la que se calcula el valor del tributo
 						//----Se debe Solicitar la base con la que calculo el impuesto
 						// <cbc:TaxAmount>
-						TaxSubtotalIva.TaxableAmount = new TaxableAmountType()
+						TaxSubtotalIva.TaxableAmount = new TaxableAmountType();
+						TaxSubtotalIva.TaxableAmount.currencyID = moneda_detalle.ToString();
+						if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0)
 						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorSubtotal
-						};
+							TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 2, MidpointRounding.AwayFromZero);
+						}
+						else
+						{
+							TaxSubtotalIva.TaxableAmount.Value = DocDet.ValorSubtotal;
+						}
+
 
 						// El monto de este subtotal fiscal.
 						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible

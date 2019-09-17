@@ -60,6 +60,20 @@ namespace HGInetUBLv2_1
 						imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IvaValor, 2, MidpointRounding.AwayFromZero);
 					}
 
+					//Validacion de muestras
+					List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje && docDet.ProductoGratis.Equals(true) && docDet.ValorImpuestoConsumo.Equals(0)).ToList();
+					decimal BaseimponibleMuestra = 0;
+					foreach (var DocMues in muestra)
+					{
+						BaseimponibleMuestra = decimal.Round(BaseimponibleMuestra + ((DocMues.Cantidad * DocMues.ValorUnitario) - DocMues.DescuentoValor), 2, MidpointRounding.AwayFromZero);
+					}
+
+					if (BaseimponibleMuestra > 0)
+					{
+						BaseImponibleImpuesto += BaseimponibleMuestra;
+						imp_doc.BaseImponible += BaseimponibleMuestra;
+					}
+
 					decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 
 					if (imp_cal != imp_doc.ValorImpuesto)

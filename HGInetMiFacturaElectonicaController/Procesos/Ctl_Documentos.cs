@@ -970,13 +970,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (Docdet.ProductoGratis == true)
 						{
+							if (Docdet.ValorUnitario == 0 && Docdet.ValorImpuestoConsumo == 0)
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Valor Unitario", Docdet.ValorUnitario));
+
+							if (Docdet.ValorSubtotal > 0)
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del producto {2} no está bien formado", "Valor Subtotal", Docdet.ValorSubtotal,Docdet.ProductoCodigo));
+
 							ListaCodigoPrecioReferencia list_precioref = new ListaCodigoPrecioReferencia();
 							ListaItem precioref = list_precioref.Items.Where(d => d.Codigo.Equals(Docdet.ProductoGratisPrecioRef)).FirstOrDefault();
 							if (precioref == null)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} para informar muestra y/o regalo del detalle no está bien formado", "PrecioReferencia", Docdet.ProductoGratisPrecioRef));
 						}
 
-						if (decimal.Round((Docdet.Cantidad * Docdet.ValorUnitario)- Docdet.DescuentoValor, 2, MidpointRounding.AwayFromZero) != Docdet.ValorSubtotal)
+						if ((decimal.Round((Docdet.Cantidad * Docdet.ValorUnitario)- Docdet.DescuentoValor, 2, MidpointRounding.AwayFromZero) != Docdet.ValorSubtotal) && Docdet.ProductoGratis == false)
 							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "SubTotal", Docdet.ValorSubtotal));
 
 						if (Docdet.CalculaIVA == 0)
@@ -984,7 +990,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//Se redondea en el valor medio hacia arriba ej: 121.5 redondeado = 122
 							//if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), 2) == Docdet.IvaValor)
 							//decimal iva_cal = decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)),2, MidpointRounding.AwayFromZero);
-							if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero) == Docdet.IvaValor)
+							if ((decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero) == Docdet.IvaValor) && Docdet.ProductoGratis == false)
 							{
 								if (Docdet.IvaPorcentaje == 0)
 								{
@@ -995,6 +1001,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 								if (iva == null)
 									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "IvaPorcentaje", Docdet.IvaPorcentaje));
+							}
+							else if (Docdet.ProductoGratis == true)
+							{
+								if (Docdet.IvaPorcentaje == 0)
+								{
+									Docdet.IvaPorcentaje = 0.00M;
+								}
+								ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
+								ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(Docdet.IvaPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+
+								if (iva == null)
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado para producto gratis o de muestra", "IvaPorcentaje", Docdet.IvaPorcentaje));
+
+								//Calculo el valor del IVA para los regalos o muestras para validarlo con el que envian
+								if (decimal.Round(((Docdet.Cantidad * Docdet.ValorUnitario) - Docdet.DescuentoValor) * (Docdet.IvaPorcentaje / 100), 2, MidpointRounding.AwayFromZero) != Docdet.IvaValor)
+								{
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "Iva", Docdet.IvaValor));
+								}
 							}
 							else
 							{
