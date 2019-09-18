@@ -148,6 +148,7 @@
           <Property Name="StrComercioIdRuta" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrCodigoServicio" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrComercioClave" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IntPasarela" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -884,6 +885,7 @@
           <Property Name="StrCodigoServicio" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrComercioClave" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasPasarela" ToRole="TblEmpresasResoluciones" />
+          <Property Name="IntPasarela" Type="Int16" Nullable="false" />
         </EntityType>
         <EntityType Name="TblPagosElectronicos">
           <Key>
@@ -1443,6 +1445,7 @@
           <EntitySetMapping Name="TblEmpresasPasarela">
             <EntityTypeMapping TypeName="Modelo.TblEmpresasPasarela">
               <MappingFragment StoreEntitySet="TblEmpresasPasarela">
+                <ScalarProperty Name="IntPasarela" ColumnName="IntPasarela" />
                 <ScalarProperty Name="StrComercioClave" ColumnName="StrComercioClave" />
                 <ScalarProperty Name="StrCodigoServicio" ColumnName="StrCodigoServicio" />
                 <ScalarProperty Name="StrComercioIdRuta" ColumnName="StrComercioIdRuta" />

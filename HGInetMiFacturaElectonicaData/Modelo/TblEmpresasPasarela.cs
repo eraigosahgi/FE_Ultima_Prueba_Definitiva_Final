@@ -25,6 +25,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrComercioIdRuta { get; set; }
         public string StrCodigoServicio { get; set; }
         public string StrComercioClave { get; set; }
+        public short IntPasarela { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }
