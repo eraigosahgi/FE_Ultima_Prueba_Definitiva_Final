@@ -1,0 +1,3 @@
+ALTER TABLE TblDocumentos ADD
+	StrFormato varchar(MAX)  NULL
+GO

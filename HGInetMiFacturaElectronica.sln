@@ -253,6 +253,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso500630", "Caso500630", 
 		Documentacion\Liberaciones\Caso500630\PasarelaTblEmpresasPasarela.txt = Documentacion\Liberaciones\Caso500630\PasarelaTblEmpresasPasarela.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CambioFormato", "CambioFormato", "{0A1CC09D-12DB-46AF-A9F8-86614F0DC5AA}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\CambioFormato\StrFormato-TblDocumentos.txt = Documentacion\Liberaciones\CambioFormato\StrFormato-TblDocumentos.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -410,5 +415,6 @@ Global
 		{906F82DF-E534-4F42-AC8F-1F24D871EE46} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{30AF7E6A-ECD0-41E9-B5AD-5F47BAC425D1} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{CC2BBBB3-4589-4AF8-A0E6-3245D3E51F2D} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{0A1CC09D-12DB-46AF-A9F8-86614F0DC5AA} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal

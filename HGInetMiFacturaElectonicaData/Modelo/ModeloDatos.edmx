@@ -89,6 +89,7 @@
           <Property Name="IntMensajeEnvio" Type="smallint" Nullable="false" />
           <Property Name="IntVersionDian" Type="smallint" Nullable="false" />
           <Property Name="StrIdRadicadoDian" Type="uniqueidentifier" />
+          <Property Name="StrFormato" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -1161,6 +1162,7 @@
           <Property Name="StrIdRadicadoDian" Type="Guid" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblDocumentos" ToRole="TblEmpresas" />
+          <Property Name="StrFormato" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Type="Modelo.TblConfiguracionInteroperabilidad" Role="TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
@@ -1615,6 +1617,7 @@
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
+                <ScalarProperty Name="StrFormato" ColumnName="StrFormato" />
                 <ScalarProperty Name="StrIdRadicadoDian" ColumnName="StrIdRadicadoDian" />
                 <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
                 <ScalarProperty Name="IntMensajeEnvio" ColumnName="IntMensajeEnvio" />
