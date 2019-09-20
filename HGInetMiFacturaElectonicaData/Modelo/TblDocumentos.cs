@@ -60,6 +60,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntMensajeEnvio { get; set; }
         public short IntVersionDian { get; set; }
         public Nullable<System.Guid> StrIdRadicadoDian { get; set; }
+        public string StrFormato { get; set; }
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }
