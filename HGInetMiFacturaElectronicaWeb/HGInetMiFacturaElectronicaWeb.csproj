@@ -2796,6 +2796,7 @@
     <Content Include="Views\Pages\ModalDetallePlan.html" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
+    <Content Include="Views\Pages\Partials\LoadingRegistros.html" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />
@@ -3384,7 +3385,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61434/</IISUrl>
+          <IISUrl>http://localhost:61437/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

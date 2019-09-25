@@ -140,12 +140,12 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 				if (datos_pago != null)
 				{
-					if (datos_pago.IntPagoEstado != 888)
+					if (datos_pago.IntPagoEstado != EstadoPago.Pendiente.GetHashCode())
 					{
 						datos_registro.StrCodigoBanco = datos_pago.StrPagoCodBanco;
 						datos_registro.StrCodigoFranquicia = datos_pago.StrPagoCodFranquicia;
 						datos_registro.IntClicloTransaccion = datos_pago.IntPagoClicloTransaccion;
-						datos_registro.IntCodigoServicio = Convert.ToInt32(datos_pago.StrCodigoServicio);
+						//datos_registro.IntCodigoServicio = Convert.ToInt32(datos_pago.StrCodigoServicio);
 						datos_registro.IntEstadoPago = datos_pago.IntPagoEstado;
 						datos_registro.IntFormaPago = datos_pago.IntPagoFormaPago;
 						datos_registro.StrTicketID = datos_pago.StrPagoTicketID;
@@ -619,6 +619,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 								ObjPago.StrComercioClave = datos_pasarela.StrComercioClave;
 								ObjPago.StrComercioIdRuta = datos_pasarela.StrComercioIdRuta;
 								ObjPago.StrCodigoServicio = datos_pasarela.StrCodigoServicio;
+								ObjPago.IntPasarela = datos_pasarela.IntPasarela;
 							}
 							//Asigna valores a prefijo y documento para la auditoria
 							try
@@ -663,6 +664,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						ObjPago.StrComercioClave = pasarela.ClaveComercio;
 						ObjPago.StrComercioIdRuta = pasarela.RutaComercio;
 						ObjPago.StrCodigoServicio = pasarela.CodigoServicio;
+						ObjPago.IntPasarela = 1;//Pasarela por defecto es 1 Zona de pagos
 
 						//Obtiene el plan de transacciones.
 						Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();

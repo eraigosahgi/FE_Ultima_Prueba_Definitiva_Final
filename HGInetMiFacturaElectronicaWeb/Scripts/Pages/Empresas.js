@@ -51,7 +51,7 @@ Datos_proveedores = "";
 
 var ModalDetalleEmpresasApp = angular.module('ModalDetalleEmpresasApp', []);
 
-var EmpresasApp = angular.module('EmpresasApp', ['ModalDetalleEmpresasApp','dx', 'AppSrvFiltro', 'AppMaestrosEnum', 'AppSrvEmpresas']);
+var EmpresasApp = angular.module('EmpresasApp', ['ModalDetalleEmpresasApp', 'dx', 'AppSrvFiltro', 'AppMaestrosEnum', 'AppSrvEmpresas']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
 EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location, SrvFiltro, SrvMaestrosEnum, SrvEmpresas) {
 
@@ -823,7 +823,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 							//Coloco como NO requerida la clave del certificado						
 							//Se coloca dentro de try porque este campo no existe cuando la empresa es nueva
 							$("#VenceCert").dxTextBox({ validationRules: [] });
-						} catch (e) {}
+						} catch (e) { }
 
 					} else {
 						$('#PanelFirmaFacturador').show();
@@ -1629,19 +1629,29 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 
-	
+
 
 });
 
 //Controlador para gestionar la consulta de empresas
-EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http,$rootScope, $location) {
+EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $rootScope, $location) {
 
+	var Empresas = [];
+
+
+	var AlmacenEmpresas = new DevExpress.data.ArrayStore({
+		key: "Identificacion",
+		data: Empresas
+	});
+
+	var estado;
 
 	$scope.Admin = false;
 	consultar();
 	function consultar() {
-		$("#wait").show();
+		$('#wait').hide();
 		$http.get('/api/DatosSesion/').then(function (response) {
+			$('#wait').hide();
 			if (response.data[0].Admin == false && response.data[0].Integrador == false) {
 				window.location.assign("../Pages/GestionEmpresas.aspx?IdSeguridad=" + response.data[0].IdSeguridad);
 			}
@@ -1651,10 +1661,48 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 			if (tipo) {
 				$scope.Admin = true;
 			};
-			$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador).then(function (response) {
-				$('#wait').hide();				
-				$("#gridEmpresas").dxDataGrid({					
-					dataSource: response.data,
+			
+			$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Todas=false').then(function (response) {
+				
+				$('#waitRegistros').show();
+				//*******Consulta de los primeros 20 registros
+				Empresas = [];
+				AlmacenEmpresas = new DevExpress.data.ArrayStore({
+					key: "Identificacion",
+					data: Empresas
+				});
+				response.data.forEach(function (d, indice, array) {
+					Empresas = {
+						Asociado: d.Asociado,
+						Email: d.Email,
+						EmpresaDescuento: d.EmpresaDescuento,
+						Estado: d.Estado,
+						Habilitacion: d.Habilitacion,
+						HorasAcuse: d.HorasAcuse,
+						IdSeguridad: d.IdSeguridad,
+						Identificacion: d.Identificacion,
+						NotificacionMail: d.NotificacionMail,
+						Nusuaurios: d.Nusuaurios,
+						Perfil: d.Perfil,
+						Postpago: d.Postpago,
+						RazonSocial: d.RazonSocial,
+						Serial: d.Serial,
+						StrMailAcuse: d.StrMailAcuse,
+						StrMailEnvio: d.StrMailEnvio,
+						StrMailPagos: d.StrMailPagos,
+						StrMailRecepcion: d.StrMailPagos
+					}
+
+					AlmacenEmpresas.push([{ type: "insert", data: Empresas }]);
+
+				});
+
+				
+				$("#gridEmpresas").dxDataGrid({
+					dataSource: {
+						store: AlmacenEmpresas,
+						reshapeOnPush: true
+					},
 
 					paging: {
 						pageSize: 20
@@ -1709,10 +1757,10 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 						   		$("<div title='Detalle : " + options.data.RazonSocial + "' >")
 						   		$("<div style='text-align:center'>")
 									.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
-									
 
-														   		
-						   		
+
+
+
 									.append(
 										$("<i " + ver + "></i>").dxButton({
 											onClick: function () {
@@ -1755,17 +1803,54 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 									.appendTo(container);
 						   	}
 						   }
-						  						  
+
 					   ],
 					filterRow: {
 						visible: true
 					}
 				});
 
+
+				
 			}, function errorCallback(response) {
 				$('#wait').hide();
 				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 			});
+
+
+			//*************************************************************************
+			$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Todas=true').then(function (response) {
+
+				//*******Consulta todas las empresas					
+				response.data.forEach(function (d, indice, array) {
+					Empresas = {
+						Asociado: d.Asociado,
+						Email: d.Email,
+						EmpresaDescuento: d.EmpresaDescuento,
+						Estado: d.Estado,
+						Habilitacion: d.Habilitacion,
+						HorasAcuse: d.HorasAcuse,
+						IdSeguridad: d.IdSeguridad,
+						Identificacion: d.Identificacion,
+						NotificacionMail: d.NotificacionMail,
+						Nusuaurios: d.Nusuaurios,
+						Perfil: d.Perfil,
+						Postpago: d.Postpago,
+						RazonSocial: d.RazonSocial,
+						Serial: d.Serial,
+						StrMailAcuse: d.StrMailAcuse,
+						StrMailEnvio: d.StrMailEnvio,
+						StrMailPagos: d.StrMailPagos,
+						StrMailRecepcion: d.StrMailPagos
+					}
+
+					AlmacenEmpresas.push([{ type: "insert", data: Empresas }]);
+
+				});
+				$('#waitRegistros').hide();
+			});
+
+			//*************************************************************************
 
 
 		}, function errorCallback(response) {

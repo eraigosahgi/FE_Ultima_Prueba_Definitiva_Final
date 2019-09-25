@@ -19,6 +19,7 @@ using LibreriaGlobalHGInet.Enumerables;
 using System.Security.Cryptography.X509Certificates;
 using HGInetMiFacturaElectonicaController.Properties;
 using LibreriaGlobalHGInet.General;
+using HGInetMiFacturaElectonicaData.Objetos;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -347,7 +348,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						Ctl_Usuario Usuario = new Ctl_Usuario();
 						UsuarioBd = Usuario.Crear(EmpresaActualiza);
 
-						clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, UsuarioBd);						
+						clase_usuario.ValidarPermisosUsuario(EmpresaActualiza, UsuarioBd);
 					}
 					catch (Exception excepcion)
 					{
@@ -559,7 +560,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						}
 					}
 					//Correo actualizado exitosamente pero la empresa aun no se ha activado
-					this.Actualizar(Empresa);					
+					this.Actualizar(Empresa);
 					Result.Codigo = 1;
 					Result.Descripcion = string.Format("Correo: {0} confirmado exitosamente ", Mail);
 					return Result;
@@ -760,6 +761,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			return datos;
 		}
+
+
+
+
 
 		/// <summary>
 		/// Obtiene las empresas facturadoras
@@ -980,6 +985,115 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			public string email { get; set; }
 		}
 		#endregion
+
+
+
+		#region Empresas con paginación
+		/// <summary>
+		/// Obtiene las Primeras 20 empresas
+		/// </summary>        
+		/// <returns></returns>
+		public List<ObjEmpresa> Pag_ObtenerPrimeras()
+		{
+			List<ObjEmpresa> datos = (from d in context.TblEmpresas
+									  select new ObjEmpresa
+									  {
+										  Identificacion = d.StrIdentificacion,
+										  RazonSocial = d.StrRazonSocial,
+										  Email = d.StrMailAdmin,
+										  Serial = d.StrSerial,
+										  Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
+										  Habilitacion = d.IntHabilitacion.ToString(),
+										  IdSeguridad = d.StrIdSeguridad,
+										  Asociado = d.StrEmpresaAsociada,
+										  EmpresaDescuento = d.StrEmpresaDescuento,
+										  Estado = d.IntIdEstado,
+										  Postpago = (d.IntCobroPostPago == 1) ? "SI" : "NO",
+										  Nusuaurios = d.IntNumUsuarios,
+										  HorasAcuse = (d.IntAcuseTacito > 0) ? d.IntAcuseTacito.ToString() : "NO",
+										  NotificacionMail = (d.IntEnvioMailRecepcion) ? "SI" : "NO",
+										  StrMailEnvio = d.StrMailEnvio,
+										  StrMailPagos = d.StrMailPagos,
+										  StrMailRecepcion = d.StrMailRecepcion,
+										  StrMailAcuse = d.StrMailAcuse
+									  }
+									   ).Take(20).ToList();
+
+
+			return datos;
+		}
+
+
+		/// <summary>
+		/// Obtiene Todas las empresas
+		/// </summary>        
+		/// <returns></returns>
+		public List<ObjEmpresa> Pag_ObtenerTodas()
+		{
+			List<ObjEmpresa> datos = (from d in context.TblEmpresas
+									  select new ObjEmpresa
+									  {
+										  Identificacion = d.StrIdentificacion,
+										  RazonSocial = d.StrRazonSocial,
+										  Email = d.StrMailAdmin,
+										  Serial = d.StrSerial,
+										  Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
+										  Habilitacion = d.IntHabilitacion.ToString(),
+										  IdSeguridad = d.StrIdSeguridad,
+										  Asociado = d.StrEmpresaAsociada,
+										  EmpresaDescuento = d.StrEmpresaDescuento,
+										  Estado = d.IntIdEstado,
+										  Postpago = (d.IntCobroPostPago == 1) ? "SI" : "NO",
+										  Nusuaurios = d.IntNumUsuarios,
+										  HorasAcuse = (d.IntAcuseTacito > 0) ? d.IntAcuseTacito.ToString() : "NO",
+										  NotificacionMail = (d.IntEnvioMailRecepcion) ? "SI" : "NO",
+										  StrMailEnvio = d.StrMailEnvio,
+										  StrMailPagos = d.StrMailPagos,
+										  StrMailRecepcion = d.StrMailRecepcion,
+										  StrMailAcuse = d.StrMailAcuse
+									  }).ToList();
+
+			return datos;
+		}
+
+		/// <summary>
+		/// Obtiene todas las empresa asociadas al facturador
+		/// </summary>
+		/// <param name="identificacion">Identificacion de Obligado o Adquiriente</param>
+		/// <returns></returns>
+		public List<ObjEmpresa> Pag_ObtenerAsociadas(string identificacion)
+		{
+
+			List<ObjEmpresa> datos = (from d in context.TblEmpresas
+									  where d.StrIdentificacion.Equals(identificacion) || d.StrEmpresaAsociada.Equals(identificacion)
+									  select new ObjEmpresa
+									  {
+										  Identificacion = d.StrIdentificacion,
+										  RazonSocial = d.StrRazonSocial,
+										  Email = d.StrMailAdmin,
+										  Serial = d.StrSerial,
+										  Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
+										  Habilitacion = d.IntHabilitacion.ToString(),
+										  IdSeguridad = d.StrIdSeguridad,
+										  Asociado = d.StrEmpresaAsociada,
+										  EmpresaDescuento = d.StrEmpresaDescuento,
+										  Estado = d.IntIdEstado,
+										  Postpago = (d.IntCobroPostPago == 1) ? "SI" : "NO",
+										  Nusuaurios = d.IntNumUsuarios,
+										  HorasAcuse = (d.IntAcuseTacito > 0) ? d.IntAcuseTacito.ToString() : "NO",
+										  NotificacionMail = (d.IntEnvioMailRecepcion) ? "SI" : "NO",
+										  StrMailEnvio = d.StrMailEnvio,
+										  StrMailPagos = d.StrMailPagos,
+										  StrMailRecepcion = d.StrMailRecepcion,
+										  StrMailAcuse = d.StrMailAcuse
+									  }).ToList();
+
+			return datos;
+		}
+		#endregion
+
+
+
 
 	}
 }

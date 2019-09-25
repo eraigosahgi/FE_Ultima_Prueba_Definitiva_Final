@@ -5,6 +5,7 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.Objetos;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Enumerables;
 using LibreriaGlobalHGInet.Funciones;
@@ -74,7 +75,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("api/ObtenerEmpresas")]
-		public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa)
+		public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa,bool Todas)
 		{
 			Sesion.ValidarSesion();
 
@@ -82,55 +83,37 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			TblEmpresas empresa = new TblEmpresas();
 
-			List<TblEmpresas> datos = new List<TblEmpresas>();
+			List<ObjEmpresa> datos = new List<ObjEmpresa>();
 
 			empresa = CtEmpresa.Obtener(IdentificacionEmpresa);
 
 
 			if (empresa.IntAdministrador)
 			{
-				datos = CtEmpresa.ObtenerTodas();
+				if (Todas)
+				{					
+					datos = CtEmpresa.Pag_ObtenerTodas();
+				}
+				else
+				{
+					datos = CtEmpresa.Pag_ObtenerPrimeras();
+				}
+				
 			}
 			else
 			{
 				if (empresa.IntIntegrador)
 				{
-					datos = CtEmpresa.ObtenerAsociadas(IdentificacionEmpresa);
-				}
-				else
-				{
-					datos = CtEmpresa.Obtener(empresa.StrIdSeguridad);
-				}
+					datos = CtEmpresa.Pag_ObtenerAsociadas(IdentificacionEmpresa);
+				}				
 			}
 
 			if (datos == null)
 			{
 				return NotFound();
-			}
+			}			
 
-			var retorno = datos.Select(d => new
-			{
-				Identificacion = d.StrIdentificacion,
-				RazonSocial = d.StrRazonSocial,
-				Email = d.StrMailAdmin,
-				Serial = d.StrSerial,
-				Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
-				Habilitacion = d.IntHabilitacion,
-				IdSeguridad = d.StrIdSeguridad,
-				Asociado = d.StrEmpresaAsociada,
-				EmpresaDescuento = d.StrEmpresaDescuento,
-				Estado = d.IntIdEstado,
-				Postpago = (d.IntCobroPostPago == 1) ? "SI" : "NO",
-				Nusuaurios = d.IntNumUsuarios,
-				HorasAcuse = (d.IntAcuseTacito > 0) ? d.IntAcuseTacito.ToString() : "NO",
-				NotificacionMail = (d.IntEnvioMailRecepcion) ? "SI" : "NO",
-				d.StrMailEnvio,
-				d.StrMailPagos,
-				d.StrMailRecepcion,
-				d.StrMailAcuse
-			});
-
-			return Ok(retorno);
+			return Ok(datos);
 		}
 
 		/// <summary>
