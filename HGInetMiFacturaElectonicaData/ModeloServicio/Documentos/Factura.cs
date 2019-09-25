@@ -243,6 +243,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public List<Anticipo> Anticipos { get; set; }
 
+		/// <summary>
+		/// Tipo Operacion del documento ( 0 - Factura, 1 - Contingencia, 2 - Exportacion)
+		/// </summary>
+		public int TipoOperacion { get; set; }
+
+		/// <summary>
+		/// Lista de documentos de referencia adicionales
+		/// </summary>
+		public List<ReferenciaAdicional> DocumentosReferencia { get; set; }
 
 
 		#endregion

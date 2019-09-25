@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 using ListaTipoMoneda = HGInetUBLv2_1.DianListas.ListaTipoMoneda;
 
@@ -273,7 +274,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//valida si el Documento ya existe en Base de Datos
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
-				
+
 				TblDocumentos documento_bd = new TblDocumentos();
 
 				if (numero_documento != null)
@@ -317,7 +318,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 					}
 				}
-				
+
 
 				TblEmpresasResoluciones resolucion = null;
 				try
@@ -412,7 +413,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 					//Si el estado es menor a firmado, la respuesta del estado siempre
-					if (item_respuesta.IdProceso < (short) ProcesoEstado.FirmaXml.GetHashCode())
+					if (item_respuesta.IdProceso < (short)ProcesoEstado.FirmaXml.GetHashCode())
 					{
 						item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
 						item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
@@ -545,6 +546,31 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException(string.Format("El Medio de Pago '{0}' no es válido según Estandar DIAN", documento.TerminoPago));
 				}
 
+				//Valida si es contingencia que llegue el documento referenciado
+				if (documento.TipoOperacion.Equals(1))
+				{
+					if (documento.DocumentosReferencia != null)
+					{
+						bool contingencia = documento.DocumentosReferencia.Exists(d => d.CodigoReferencia.Equals("FTC"));
+						if (contingencia == false)
+							throw new ApplicationException("El tipo de documento referenciado para el documento de contingencia no es válido según Estandar DIAN");
+					}
+					else
+					{
+						throw new ApplicationException("No se encontró documento referenciado para el documento de contingencia");
+					}		
+				}
+
+				if (documento.DocumentosReferencia != null)
+				{
+					foreach (ReferenciaAdicional item in documento.DocumentosReferencia)
+					{
+						ListaTipoReferenciaAdicional list_refAd = new ListaTipoReferenciaAdicional();
+						ListaItem refad = list_refAd.Items.Where(d => d.Codigo.Equals(item.CodigoReferencia)).FirstOrDefault();
+						if (refad == null)
+							throw new ApplicationException(string.Format("El tipo de documento referenciado '{0}' no es válido según Estandar DIAN", item.CodigoReferencia));	
+					}
+				}
 			}
 
 			if (documento.FechaVence.Date < documento.Fecha.Date)

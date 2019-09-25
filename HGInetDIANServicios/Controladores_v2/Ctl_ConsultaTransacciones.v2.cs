@@ -55,50 +55,55 @@ namespace HGInetDIANServicios
 
 					if (resultado != null)
 					{
-					
+
 						if (string.IsNullOrEmpty(xml_archivo))
 							xml_archivo = string.Format("{0}", TrackId);
-							
+
 						//Guardo la respuesta en XML
 						foreach (var respuesta in resultado)
 						{
-							if (!string.IsNullOrEmpty(respuesta.XmlFileName))
+
+							if (respuesta.StatusCode.Equals("0") || respuesta.StatusCode.Equals("00") || respuesta.StatusCode.Equals("99"))
 							{
-								if(string.IsNullOrEmpty(xml_archivo))
-									xml_archivo = string.Format("{0}", respuesta.XmlFileName);
-								
-								FileStream fs = null;
-
-								try
+								if (respuesta.XmlBase64Bytes != null)
 								{
-									//Guardo el Base64 de la Respuesta 
-									using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo), FileMode.Create, FileAccess.ReadWrite))
+									//if(string.IsNullOrEmpty(xml_archivo))
+									//	xml_archivo = string.Format("{0}", respuesta.XmlFileName);
+
+									FileStream fs = null;
+
+									try
 									{
-										BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
-										bw.Write(respuesta.XmlBase64Bytes);
-										bw.Close();
-										fs.Close();
-									}
-									
-									xml_archivo = string.Format("{0}-WS", xml_archivo);
+										//Guardo el Base64 de la Respuesta 
+										using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo),
+											FileMode.Create, FileAccess.ReadWrite))
+										{
+											BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+											bw.Write(respuesta.XmlBase64Bytes);
+											bw.Close();
+											fs.Close();
+										}
 
-								}
-								catch (Exception excepcion)
-								{
-									respuesta.StatusCode = "94";
-									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion
-										.ConvertirLista(string.Format(
-											"No se guardo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}",
-											TrackId)).ToArray();
-									respuesta.IsValid = false;
-									log_categoria = MensajeCategoria.ServicioDian;
-									log_accion = MensajeAccion.consulta;
-									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
-								}
-								finally
-								{
-									if (fs != null)
-										fs.Close();
+										xml_archivo = string.Format("{0}-WS", xml_archivo);
+
+									}
+									catch (Exception excepcion)
+									{
+										respuesta.StatusCode = "94";
+										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion
+											.ConvertirLista(string.Format(
+												"No se guardo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}",
+												TrackId)).ToArray();
+										respuesta.IsValid = false;
+										log_categoria = MensajeCategoria.ServicioDian;
+										log_accion = MensajeAccion.consulta;
+										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+									}
+									finally
+									{
+										if (fs != null)
+											fs.Close();
+									}
 								}
 							}
 							else
@@ -109,7 +114,7 @@ namespace HGInetDIANServicios
 							}
 
 						}
-						
+
 						// Guarda resultado del servicio web de consulta de la DIAN por TrackId
 						TextWriter writer = null;
 						try
@@ -129,7 +134,7 @@ namespace HGInetDIANServicios
 							if (writer != null)
 								writer.Close();
 						}
-						
+
 
 
 					}
@@ -177,7 +182,7 @@ namespace HGInetDIANServicios
 				resultado.RecepcionDocumento = ValidacionRespuestaDian.Pendiente;
 				resultado.Mensaje = "";
 
-				DianWSValidacionPrevia.DianResponse doc_valido = documento.Where(d => d.IsValid == true && d.StatusCode == "0").FirstOrDefault();
+				DianWSValidacionPrevia.DianResponse doc_valido = documento.Where(d => d.IsValid == true && (d.StatusCode == "0" || d.StatusCode == "00")).FirstOrDefault();
 
 				if (doc_valido != null)
 				{

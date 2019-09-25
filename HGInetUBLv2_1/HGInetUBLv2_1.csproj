@@ -1267,6 +1267,7 @@
     <Compile Include="Definitions\SignatureAggregateComponents\TextType2.cs" />
     <Compile Include="Definitions\SignatureBasicComponents\ReferencedSignatureIDType.cs" />
     <Compile Include="Dian\ListaValores\CodigoPostal.cs" />
+    <Compile Include="Dian\ListaValores\TipoReferenciaAdicional.cs" />
     <Compile Include="Dian\Structures\AdditionalMonetaryTotal.cs" />
     <Compile Include="Dian\Structures\AuthorizationProvider.cs" />
     <Compile Include="Dian\Structures\AuthrorizedInvoices.cs" />

@@ -18,6 +18,7 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
 using HGInetUBLv2_1.DianListas;
+using LibreriaGlobalHGInet.HgiNet;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -419,6 +420,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (Facturador.IntVersionDian == 2)
 			{
+				//Validacion del digito de verificacion enviado
+				short tercero_dv = FuncionesIdentificacion.Dv(tercero.Identificacion);
+
+				if (!tercero_dv.Equals(tercero.IdentificacionDv))
+					throw new ArgumentException(string.Format("El digito de verificacion {0} no esta bien calculado del {1}", tercero.IdentificacionDv, tipo));
 
 				ListaTipoIdFiscal list_tipoId = new ListaTipoIdFiscal();
 				ListaItem identi = list_tipoId.Items.Where(d => d.Codigo.Equals(tercero.TipoIdentificacion.ToString())).FirstOrDefault();
@@ -622,7 +628,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (resp.Contains("O-15") == true)
 						autoretenedor = true;
 
-					if (documento.ValorSubtotal > documento.Total)
+					if (decimal.Round(documento.ValorSubtotal) > documento.Total)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Subtotal", documento.ValorSubtotal));
 
 					//Validacion Del valor bruto con respecto al detalle
@@ -852,7 +858,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					//Validacion del Valor Neto
-					if (decimal.Round(documento.Total - documento.ValorReteFuente - documento.ValorReteIva - documento.ValorReteIca, MidpointRounding.AwayFromZero) != decimal.Round(documento.Neto, MidpointRounding.AwayFromZero))
+					if (decimal.Round(documento.Total - documento.ValorReteFuente - documento.ValorReteIva - documento.ValorReteIca, MidpointRounding.AwayFromZero) != decimal.Round(documento.Neto, MidpointRounding.AwayFromZero) && autoretenedor == false)
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Neto", documento.Neto));
 					}
