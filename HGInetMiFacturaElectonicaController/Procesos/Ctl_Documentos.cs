@@ -423,7 +423,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Validacion del digito de verificacion enviado
 				short tercero_dv = FuncionesIdentificacion.Dv(tercero.Identificacion);
 
-				if (!tercero_dv.Equals(tercero.IdentificacionDv))
+				if (tercero_dv != tercero.IdentificacionDv)
 					throw new ArgumentException(string.Format("El digito de verificacion {0} no esta bien calculado del {1}", tercero.IdentificacionDv, tipo));
 
 				ListaTipoIdFiscal list_tipoId = new ListaTipoIdFiscal();
