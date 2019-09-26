@@ -105,6 +105,12 @@ namespace HGInetDIANServicios
 											fs.Close();
 									}
 								}
+								else if (respuesta.StatusDescription.Equals("En proceso de validación"))
+								{
+									respuesta.StatusCode = "94";
+									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}", TrackId)).ToArray();
+									respuesta.IsValid = false;
+								}
 							}
 							else
 							{
