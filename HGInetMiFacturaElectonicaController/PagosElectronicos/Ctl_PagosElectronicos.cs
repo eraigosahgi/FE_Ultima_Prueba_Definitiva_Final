@@ -550,7 +550,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				ObjPago.StrAuthToken = "";
 
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-				ObjPago.StrRutaSync = plataforma.RutaPublica.ToString() + "/Api/SrcActualizaEstado";
+				ObjPago.StrRutaSync = plataforma.RutaPublica.ToString() + "/Api/SrcActualizaEstadoP";
 
 				ObjPago.StrRutaDestino = "";
 

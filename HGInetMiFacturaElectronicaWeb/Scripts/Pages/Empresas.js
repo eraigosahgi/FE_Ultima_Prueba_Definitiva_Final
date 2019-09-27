@@ -651,10 +651,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				$("#Habilitacion").dxRadioGroup({
 					searchEnabled: true,
 					caption: 'Habilitación',
-					dataSource: new DevExpress.data.ArrayStore({
-						data: TiposHabilitacion,
-						key: "ID"
-					}),
+					dataSource: TiposHabilitacion,
 					displayExpr: "Texto",
 					Enabled: true,
 					onValueChanged: function (data) {
@@ -803,10 +800,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			$("#CerFirma").dxRadioGroup({
 				searchEnabled: true,
 				caption: 'Firma',
-				dataSource: new DevExpress.data.ArrayStore({
-					data: TiposCertFirma,
-					key: "ID"
-				}),
+				dataSource: TiposCertFirma,
 				displayExpr: "Texto",
 				Enabled: true,
 				onValueChanged: function (data) {
@@ -1441,7 +1435,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#txtUsuarios").dxNumberBox({ value: Datos_Numero_usuarios });
 
 					if (Datos_Obligado == 1) {
-						$("#Facturador").dxCheckBox({ value: 1 });
+						$("#Facturador").dxCheckBox({ value: 1 });						
 						$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
 					}
 
@@ -1462,7 +1456,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					}
 
 					//Certificado
-					try {
+					try {						
 						$("#CerFirma").dxRadioGroup({ value: TiposCertFirma[BuscarID(TiposCertFirma, Datos_CertFirma)] });
 					} catch (e) { }
 					try {

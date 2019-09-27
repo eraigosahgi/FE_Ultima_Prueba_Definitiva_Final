@@ -1238,7 +1238,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception excepcion)
 			{
-
+				LogExcepcion.Guardar(excepcion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
@@ -1288,6 +1288,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception ex)
 			{
+				LogExcepcion.Guardar(ex);
 				return Conflict();
 			}
 		}
@@ -1334,8 +1335,55 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				return Ok(true);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				LogExcepcion.Guardar(ex);
+				return Ok(false);
+			}
+		}
+
+
+		[HttpPost]
+		[Route("Api/SrcActualizaEstadoP")]
+		public IHttpActionResult SrcActualizaEstadoP()
+		{
+			try
+			{
+				System.Net.Http.Headers.HttpRequestHeaders headers = this.Request.Headers;
+				string Pago = string.Empty;
+				string CodValidacion = string.Empty;
+				string ContrasenaActual = string.Empty;
+
+				if (headers.Contains("Pago"))
+				{
+					Pago = headers.GetValues("Pago").First();
+				}
+
+				if (headers.Contains("CodValidacion"))
+				{
+					CodValidacion = headers.GetValues("CodValidacion").First();
+				}
+
+				var ConfigPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
+
+				string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.IntComercioId + "-" + ConfigPago.IntValor.ToString("0.##"));
+
+				if (CodValidacion != CifradoSecundario)
+				{
+					return Ok(false);
+				}
+
+				var ObjetoPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
+
+				Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
+
+				var Detalle = pago.ActualizarPago(ObjetoPago);
+
+				return Ok(true);
+			}
+			catch (Exception ex)
+			{
+				LogExcepcion.Guardar(ex);
 				return Ok(false);
 			}
 		}

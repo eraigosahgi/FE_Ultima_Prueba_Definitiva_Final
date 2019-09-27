@@ -103,10 +103,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				searchEnabled: true,
 				caption: 'TipoProceso',
 				layout: "horizontal",
-				dataSource: new DevExpress.data.ArrayStore({
-					data: TiposProceso,
-					key: "ID"
-				}),
+				dataSource: TiposProceso,
 				displayExpr: "Descripcion",
 				Enabled: true,
 				onValueChanged: function (data) {
@@ -141,7 +138,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             	}]
             });
 
-
+			
 
 			if (StrIdSeguridad != '' && StrIdSeguridad != null) {
 				Consultar(StrIdSeguridad);
@@ -255,10 +252,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			searchEnabled: true,
 			caption: 'EstadoPlan',
 			layout: "horizontal",
-			dataSource: new DevExpress.data.ArrayStore({
-				data: EstadosPlanes,
-				key: "ID"
-			}),
+			dataSource: EstadosPlanes,
 			displayExpr: "Texto",
 			Enabled: true,
 			onValueChanged: function (data) {
@@ -457,7 +451,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				Datos_DocRef = response.data[0].DocRef;
 				Datos_Meses_Vence = response.data[0].MesesVence;
 
-				if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2 || Datos_TiposProceso == 3) {
+				if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2 || Datos_TiposProceso == 3) {					
 					$("#TipoProceso").dxRadioGroup({ value: TiposProceso[BuscarID(TiposProceso, Datos_TiposProceso)] });
 				}
 
@@ -513,6 +507,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					$scope.FechaInicio = "";
 				}
 
+				
+
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 7000);
 			}
@@ -567,9 +563,11 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 		$("#wait").show();
 		$http.get('/api/PlanesTransacciones?Identificacion=' + codigo_facturador).then(function (response) {
 			$("#wait").hide();
+			console.log(response.data);
 			try {
 				$("#grid").dxDataGrid({
 					dataSource: response.data,
+					keyExpr: "id",
 					paging: {
 						pageSize: 20
 
