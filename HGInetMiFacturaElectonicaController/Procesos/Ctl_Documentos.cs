@@ -852,13 +852,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					//Validacion del total
-					if (decimal.Floor(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo) != decimal.Floor(documento.Total))
+					if (decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo, MidpointRounding.AwayFromZero) != decimal.Round(documento.Total, MidpointRounding.AwayFromZero))
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Total", documento.Total));
 					}
 
 					//Validacion del Valor Neto
-					if (decimal.Floor(documento.Total - documento.ValorReteFuente - documento.ValorReteIva - documento.ValorReteIca) != decimal.Floor(documento.Neto) && autoretenedor == false)
+					if (decimal.Round(documento.Total - documento.ValorReteFuente - documento.ValorReteIva - documento.ValorReteIca, MidpointRounding.AwayFromZero) != decimal.Round(documento.Neto, MidpointRounding.AwayFromZero) && autoretenedor == false)
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Neto", documento.Neto));
 					}
