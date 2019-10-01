@@ -4,10 +4,24 @@ var email_destino = "";
 var id_seguridad = "*";
 var UsuarioSession = "";
 var Procedencia = [];
+
+//Desde hasta en la consulta de la grid
+var Desde = 0;
+var Hasta = 20;
+var CantRegCargados = 0;
+
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var AudAdminApp = angular.module('AudAdminApp', ['dx', 'AppMaestrosEnum', 'AppSrvAuditoria', 'ModalEmpresasApp', 'AppSrvFiltro']);
 AudAdminApp.controller('AudAdminController', function AudAdminController($scope, $http, $location, SrvMaestrosEnum, SrvAuditoria, $rootScope, SrvFiltro) {
+
+	var Auditoria = [];
+	var AlmacenAuditoria = new DevExpress.data.ArrayStore({
+		key: "Firma",
+		data: Auditoria
+	});
+
+
 
 	var now = new Date();
 	var Estado;
@@ -24,7 +38,7 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
            cod_facturador = "*",
             tipo_filtro_fecha = 1;
 
-	SrvFiltro.ObtenerFiltro('Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', false,7).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ConsultarBolsaAdmin', 'ID', 'Texto', false, 7).then(function (Datos) {
 		$scope.Facturador = Datos;
 	});
 
@@ -246,11 +260,24 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
 		var cod_facturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? "*" : txt_hgi_Facturador;
-		SrvAuditoria.ConsultaAuditoria(fecha_inicio, fecha_fin, cod_facturador, numero_documento, estado_dian, proceso_doc, tipo_registro, procedencia_proceso).then(function (response) {
-			
-			$("#gridDocumentos").dxDataGrid({			
-				dataSource: response,				
-				keyExpr: "StrIdSeguridad",
+		SrvAuditoria.ConsultaAuditoria(fecha_inicio, fecha_fin, cod_facturador, numero_documento, estado_dian, proceso_doc, tipo_registro, procedencia_proceso, Desde, Hasta).then(function (data) {
+			$('#wait').hide();
+			$('#waitRegistros').show();
+
+			Auditoria = [];
+			AlmacenAuditoria = new DevExpress.data.ArrayStore({
+				key: "Firma",
+				data: Auditoria
+			});
+
+			cargarAuditoria(data);
+
+			$("#gridDocumentos").dxDataGrid({
+				dataSource: {
+					store: AlmacenAuditoria,
+					reshapeOnPush: true
+				},
+				keyExpr: "Firma",
 				paging: {
 					pageSize: 20
 				},
@@ -434,12 +461,59 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 
 			});
 
+
+			//*************************************************************************				
+			CantRegCargados = AlmacenAuditoria._array.length;
+			CargarAsyn();
+			function CargarAsyn() {
+				SrvAuditoria.ConsultaAuditoria(fecha_inicio, fecha_fin, cod_facturador, numero_documento, estado_dian, proceso_doc, tipo_registro, procedencia_proceso, CantRegCargados, CantidadRegAuditoriaAdmin).then(function (data) {
+
+					CantRegCargados += data.length;															
+					if (data.length > 0) {
+						cargarAuditoria(data);
+						CargarAsyn();
+					} else {
+						$('#waitRegistros').hide();
+					}
+
+				});
+			}
+			//*************************************************************************
+
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
 
+	}
 
+
+	function cargarAuditoria(data) {
+
+		data.forEach(function (d, indice, array) {
+			Auditoria = {
+				Firma : d.Firma,
+				StrIdSeguridad: d.StrIdSeguridad,
+				DatFecha: d.DatFecha,
+				StrObligado: d.StrObligado,
+				IntIdEstado: d.IntIdEstado,
+				StrDesEstado: d.StrDesEstado,
+				IntIdProceso: d.IntIdProceso,
+				StrDesProceso: d.StrDesProceso,
+				IntTipoRegistro: d.IntTipoRegistro,
+				StrDescTipoReg: d.StrDescTipoReg,
+				IntIdProcesadoPor: d.IntIdProcesadoPor,
+				StrMensaje: d.StrMensaje,
+				StrResultadoProceso: d.StrResultadoProceso,
+				StrDescProcePor: d.StrDescProcePor,
+				StrDesProcesadoPor: d.StrDesProcesadoPor,
+				StrRealizadoPor: d.StrRealizadoPor,
+				StrNumero: d.StrNumero
+			}
+
+			AlmacenAuditoria.push([{ type: "insert", data: Auditoria }]);
+
+		});
 	}
 
 });

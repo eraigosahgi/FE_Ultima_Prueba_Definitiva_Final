@@ -139,7 +139,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/ConsultaAuditoria")]
-		public IHttpActionResult ConsultaAuditoria(DateTime fecha_inicio, DateTime fecha_fin, string identificacion_obligado, string estado, string proceso, string tipo_registro, string procedencia, string numero_documento)
+		public IHttpActionResult ConsultaAuditoria(DateTime fecha_inicio, DateTime fecha_fin, string identificacion_obligado, string estado, string proceso, string tipo_registro, string procedencia, string numero_documento,int Desde, int Hasta)
 		{
 			try
 			{
@@ -150,7 +150,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
 
 				//Realiza la consulta de los datos en la base de datos.
-				List<TblAuditDocumentos> datos_audit = clase_audit_doc.Obtener(numero_documento, identificacion_obligado, fecha_inicio, fecha_fin, estado, proceso, tipo_registro, procedencia).OrderByDescending(x => x.DatFecha).ToList();
+				List<TblAuditDocumentos> datos_audit = clase_audit_doc.Obtener(numero_documento, identificacion_obligado, fecha_inicio, fecha_fin, estado, proceso, tipo_registro, procedencia, Desde, Hasta);
 
 				if (datos_audit.Count == 0)
 				{
@@ -160,6 +160,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var datos_retorno = datos_audit.Select(d => new
 				{
+					Firma = d.Id,
 					StrIdSeguridad = ((d.StrIdSeguridad != null)) ? d.StrIdSeguridad : "",
 					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
 					StrObligado = (string.IsNullOrEmpty(d.StrObligado) ? null : d.StrObligado),

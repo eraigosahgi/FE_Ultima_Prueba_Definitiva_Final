@@ -1,4 +1,10 @@
 ﻿
+var CantidadRegEmpresa = 100;
+var CantidadRegDocumentosAdmin = 5;
+var CantidadRegAuditoriaAdmin = 100;
+
+
+
 function ColocarEstado(Estado, Descripcion) {
 	return "<span " + ((Estado == '400') ? " class='badge badge-FallidoDIAN'  title='" + Descripcion + "'" : (Estado == '300') ? " class='badge badge-ValidadoDIAN'  title='" + Descripcion + "'" : (Estado == '200') ? " class='badge badge-envioDian'   title='" + Descripcion + "'" : " class='badge badge-RecibidoPlataforma'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
 }

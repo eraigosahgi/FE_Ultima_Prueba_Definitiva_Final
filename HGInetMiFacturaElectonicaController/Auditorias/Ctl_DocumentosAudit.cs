@@ -205,7 +205,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="procedencia">Indica la procedencia de la Auditoria: 1 - Plataforma, 2 - Usuario, 3 - Sonda, 4 - DIAN, 5 - Mail, 6 - Sms</param>
 		/// <param name="tipo_registro">Indica que tipo de registro se hizo: 1 - Proceso, 2 - Creacion, 3 - Actualizacion</param>
 		/// <returns></returns>
-		public List<TblAuditDocumentos> Obtener(string numero_documento, string identificacion_obligado, DateTime fecha_inicio, DateTime fecha_fin, string estado, string proceso, string tipo_registro, string procedencia)
+		public List<TblAuditDocumentos> Obtener(string numero_documento, string identificacion_obligado, DateTime fecha_inicio, DateTime fecha_fin, string estado, string proceso, string tipo_registro, string procedencia,int Desde, int Hasta)
 		{
 			try
 			{
@@ -252,9 +252,9 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 															&& (ListProceso.Contains(x.IntIdProceso) || proceso.Equals("*"))
 															&& (ListTipoReg.Contains(x.IntTipoRegistro) || tipo_registro.Equals("*"))
 															&& (ListProcedencia.Contains(x.IntIdProcesadoPor) || procedencia.Equals("*"))
-															);
+															).OrderByDescending(x => x.DatFecha).Skip(Desde).Take(Hasta).ToList();
 
-				return registros_audit;
+			return registros_audit;
 			}
 			catch (Exception excepcion)
 			{

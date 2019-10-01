@@ -900,6 +900,24 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return datos;
 		}
 
+		/// <summary>
+		/// Obtiene todos los adquirientes de tblempresas que sean adquirientes
+		/// </summary>
+		/// <returns></returns>
+		public object ObtenerTodosAdquirientes()
+		{
+
+			var datos = (from item in context.TblEmpresas
+						 where item.IntAdquiriente == true						 
+						 select new
+						 {
+							 ID = item.StrIdentificacion,
+							 Texto = item.StrRazonSocial							 
+						 }).OrderBy(x => x.Texto).ToList();
+
+			return datos;
+		}
+
 		#endregion
 
 
@@ -993,7 +1011,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Obtiene las Primeras 20 empresas
 		/// </summary>        
 		/// <returns></returns>
-		public List<ObjEmpresa> Pag_ObtenerPrimeras()
+		public List<ObjEmpresa> Pag_ObtenerEmpresas(int Desde, int Hasta)
 		{
 			List<ObjEmpresa> datos = (from d in context.TblEmpresas
 									  select new ObjEmpresa
@@ -1016,9 +1034,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 										  StrMailPagos = d.StrMailPagos,
 										  StrMailRecepcion = d.StrMailRecepcion,
 										  StrMailAcuse = d.StrMailAcuse
-									  }
-									   ).Take(20).ToList();
-
+									  }).OrderBy(x => x.Identificacion).Skip(Desde).Take(Hasta).ToList();
 
 			return datos;
 		}

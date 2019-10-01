@@ -3,12 +3,12 @@ var myInterceptor = function ($q) {
     return {
         //Inicia Proceso
         request: function (config) {
-            $('#wait').show();
+          //  $('#wait').show();
             return config;
         },
         //Termina correctamente
         response: function (result) {
-            $('#wait').hide();
+            //$('#wait').hide();
             return result;
         },
         //Error en el proceso
@@ -23,4 +23,20 @@ var myInterceptor = function ($q) {
             return $q.reject(rejection);
         }
     }
+}
+
+
+var InterceptorEmpty = function ($q) {
+	return {
+		//Inicia Proceso
+		request: function (config) {
+			$('#wait').hide();
+			return config;
+		},
+		//Termina correctamente
+		response: function (result) {
+			$('#wait').hide();
+			return result;
+		}
+	}
 }

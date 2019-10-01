@@ -600,7 +600,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento, int tipo_fecha)
+		public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento, int tipo_fecha,int Desde, int Hasta)
 		{
 
 			List<string> LstEstado = null;
@@ -660,7 +660,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							//-----------
 							&& (datos.IntDocTipo.Equals(TipoDocumento) || TipoDocumento == 0)
 							  orderby datos.IntNumero descending
-							  select datos).ToList();
+							  select datos).OrderByDescending(x=>x.DatFechaDocumento).Skip(Desde).Take(Hasta).ToList();
 			}
 			else
 			{
@@ -669,7 +669,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
 							  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
 							  where listaDocumetos.Contains(datos.IntNumero)
-							  select datos).ToList();
+							  select datos).OrderByDescending(x => x.DatFechaDocumento).Skip(Desde).Take(Hasta).ToList();
 			}
 
 			return documentos;
@@ -1777,7 +1777,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				DateTime fecha_inicio = new DateTime(2017, 12, 31);
 				DateTime fecha_fin = Fecha.GetFecha();
 
-				List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_inicio, fecha_fin, 0, 2);
+				List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_inicio, fecha_fin, 0, 2,1,1);
 
 				foreach (var item in datos)
 				{

@@ -3,13 +3,28 @@ var email_destino = "";
 var id_seguridad = "*";
 var items_recibo = [];
 var UsuarioSession = "";
+
+//Desde hasta en la consulta de la grid
+var Desde = 0;
+var Hasta = 20;
+var CantRegCargados = 0;
+//*********************************
+
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 
 var App = angular.module('App', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'ModalEmpresasApp', 'AppSrvFiltro']);
 App.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope, SrvFiltro) {
 	//Google Analytics
 	ga('send', 'event', 'Pages_DocumentosAdmin', 'Consulta', 'Consulta Documentos');
-	
+
+	//Declaramos el array
+	var Documentos = [];
+	var AlmacenDocumentos = new DevExpress.data.ArrayStore({
+		key: "NumeroDocumento",
+		data: Documentos
+	});
+	//****************
+
 	var now = new Date();
 	var Estado;
 
@@ -44,7 +59,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		$scope.Facturador = Datos;
 	});
 
-	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false, 10).then(function (Datos) {
+	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerTodosAdquirientes', 'ID', 'Texto', false, 10).then(function (Datos) {
 		$scope.Adquiriente = Datos;
 	});
 
@@ -193,26 +208,26 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultar2();
+			consultar();
 		}
 	};
 
 
-	function consultar2() {
-		$('#Total').text("");
-		if (fecha_inicio == "")
-			fecha_inicio = now.toISOString();
+	//function consultar2() {
+	//	$('#Total').text("");
+	//	if (fecha_inicio == "")
+	//		fecha_inicio = now.toISOString();
 
-		if (fecha_fin == "")
-			fecha_fin = now.toISOString();
-		var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
-		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
-		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
-			$("#gridDocumentos").dxDataGrid({
-				dataSource: data
-			});
-		});
-	}
+	//	if (fecha_fin == "")
+	//		fecha_fin = now.toISOString();
+	//	var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+	//	var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
+	//	SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
+	//		$("#gridDocumentos").dxDataGrid({
+	//			dataSource: data
+	//		});
+	//	});
+	//}
 
 
 
@@ -229,9 +244,21 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 		var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
 		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
-		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
+		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha, Desde, Hasta).then(function (data) {
+			$('#waitRegistros').show();
+			Documentos = [];
+			AlmacenDocumentos = new DevExpress.data.ArrayStore({
+				key: "NumeroDocumento",
+				data: Documentos
+			});
+
+			cargarDocumentos(data);
+
 			$("#gridDocumentos").dxDataGrid({
-				dataSource: data,
+				dataSource: {
+					store: AlmacenDocumentos,
+					reshapeOnPush: true
+				},
 				keyExpr: "NumeroDocumento",
 				paging: {
 					pageSize: 20
@@ -427,73 +454,25 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  	dataField: "MotivoRechazo",
 					  },
 					{
-					caption: "Estado Email",
-					cssClass: "hidden-xs col-md-1",
-					dataField: "EstadoEnvioMail",
-					cellTemplate: function (container, options) {
+						caption: "Estado Email",
+						cssClass: "hidden-xs col-md-1",
+						dataField: "EstadoEnvioMail",
+						cellTemplate: function (container, options) {
 
-						$("<a>")
-							.append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail, options.data.StrIdSeguridad)))
-							.appendTo(container);
+							$("<a>")
+								.append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail, options.data.StrIdSeguridad)))
+								.appendTo(container);
 						}
 					}
 				],
-
-				//**************************************************************
+				
 				masterDetail: {
 					enabled: true,
-					template: function (container, options) {
-						//var visible_zip = "";
-
-						//var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
-
-						//var visible_xml = "style='pointer-events:auto;cursor: not-allowed;'";
-
-						//var visible_xml_acuse = "style='pointer-events:auto;cursor: not-allowed;'";
-
-						//var visible_acuse = "   title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";
-
-						//var visible_Servicio_DIAN = "style='pointer-events:auto;cursor: not-allowed;'";
-
-						//if (options.data.Pdf)
-						//	visible_pdf = "href='" + options.data.Pdf + "' title='ver PDF' style='pointer-events:auto;cursor: pointer;'";
-						//else
-						//	visible_pdf = "#";
-
-						//if (options.data.Xml)
-						//	visible_xml = "href='" + options.data.Xml + "' class='icon-file-xml' title='ver XML' style='pointer-events:auto;cursor: pointer;'";
-						//else
-						//	visible_xml = "#";
-
-						//if (options.data.EstadoAcuse == 'Aprobado' || options.data.EstadoAcuse == 'Rechazado' || options.data.EstadoAcuse == 'Aprobado Tácito')
-						//	visible_acuse = "href='" + options.data.RutaAcuse + "' class='icon-file-eye2'  title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
-						//else
-						//	visible_acuse = "#";
-
-						//if (options.data.XmlAcuse != null)
-						//	visible_xml_acuse = "href='" + options.data.XmlAcuse + "' class='icon-file-xml' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
-						//else
-						//	visible_xml_acuse = "#";
-
-
-						//if (options.data.zip)
-						//	visible_zip = "href='" + options.data.zip + "' class='icon-file-zip' title='ver anexo' style='pointer-events:auto;cursor: pointer'";
-						//else
-						//	visible_zip = "#";
-
-						//if (options.data.RutaServDian)
-						//	visible_Servicio_DIAN = "class='icon-file-xml' href='" + options.data.RutaServDian + "' title='ver XML' style='pointer-events:auto;cursor: pointer;'";
-						//else
-						//	visible_Servicio_DIAN = "#";
-
-						//container.append($("<td aria-selected='false' role='gridcell' aria-colindex='1' class='dx-cell-focus-disabled dx-master-detail-cell' colspan='6' style='text-align: center;'><div class='master-detail-caption'>Lista de Archivos:</div><div class='dx-widget dx-visibility-change-handler' role='presentation'><div class='dx-datagrid dx-gridbase-container dx-datagrid-borders' role='grid' aria-label='Data grid' aria-rowcount='1' aria-colcount='4'><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-datagrid-headers dx-datagrid-nowrap' role='presentation' style='padding-right: 0px;'><div class='dx-datagrid-content dx-datagrid-scroll-container' role='presentation'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation'><colgroup><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody class=''><tr class='dx-row dx-column-lines dx-header-row' role='row'><td aria-selected='false' role='columnheader' aria-colindex='1' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>PDF Documento</div></td><td aria-selected='false' role='columnheader' aria-colindex='2' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>XML Documento</div></td><td aria-selected='false' role='columnheader' aria-colindex='3' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>XML Acuse</div></td><td aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Ver Acuse</div></td><td aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Anexo</div></td><td aria-selected='false' role='columnheader' aria-colindex='5' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Respuesta DIAN</div></td><td aria-selected='false' role='columnheader' aria-colindex='5' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Auditoría</div></td></tr></tbody></table></div></div><div class='dx-datagrid-rowsview dx-datagrid-nowrap dx-scrollable dx-visibility-change-handler dx-scrollable-both dx-scrollable-simulated dx-scrollable-customizable-scrollbars' role='presentation'><div class='dx-scrollable-wrapper'><div class='dx-scrollable-container'><div class='dx-scrollable-content' style='center: 0px; top: 0px; transform: none;'><div class='dx-datagrid-content'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation' style='table-layout: fixed;'><colgroup style=''><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody><tr class='dx-row dx-data-row dx-column-lines' role='row' aria-rowindex='1' aria-selected='false'><td aria-selected='false' role='gridcell' aria-colindex='1' tabindex='0' style='text-align: center;'> <div> <a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "></a></div> </td><td aria-selected='false' role='gridcell' aria-colindex='2' style='text-align: center;'><div> <a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='3' style='text-align: center;'><div> <a target='_blank'  " + visible_xml_acuse + "></a></div> </td><td aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank'   " + visible_acuse + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank' " + visible_zip + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='5' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank' " + visible_Servicio_DIAN + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='1' tabindex='0' style='text-align: center;'><div><a style='margin-left:5%;' class='icon-file-eye' onClick=ConsultarAuditoria('" + options.data.StrIdSeguridad + "','" + options.data.IdFacturador + "','" + options.data.NumeroDocumento + "') target='_blank' data-toggle='modal' data-target='#modal_audit_documento' title='ver Auditoría'></a></div></td></tr><tr class='dx-row dx-column-lines dx-freespace-row' role='row' style='height: 0px; display: none;'><td style='text-align: center;'></td><td style='text-align: center;'></td><td style='text-align: center;'></td><td style='text-align: center;'></td></tr></tbody></table></div></div><div class='dx-scrollable-scrollbar dx-widget dx-scrollbar-horizontal dx-scrollbar-hoverable' style='display: none;'><div class='dx-scrollable-scroll dx-state-invisible' style='width: 831px; transform: translate(0px, 0px);'><div class='dx-scrollable-scroll-content'></div></div></div><div class='dx-scrollable-scrollbar dx-widget dx-scrollbar-vertical dx-scrollbar-hoverable' style='display: none;'><div class='dx-scrollable-scroll dx-state-invisible' style='height: 35px; transform: translate(0px, 0px);'><div class='dx-scrollable-scroll-content'></div></div></div></div></div><span class='dx-datagrid-nodata dx-hidden'></span></div><div class='dx-hidden' style='padding-right: 0px;'></div><div></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-datagrid-drag-header dx-datagrid-text-content dx-widget' style='display: none;'></div><div class='dx-context-menu dx-has-context-menu dx-widget dx-visibility-change-handler dx-collection dx-datagrid'></div><div class='dx-header-filter-menu'></div><div></div></div></div></td>"
-						//));
-
+					template: function (container, options) {						
 						container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdFacturador, options.data.NumeroDocumento));
 					}
 				},
-				//****************************************************************
-
+				
 				summary: {
 					groupItems: [{
 						column: "IntVlrTotal",
@@ -583,6 +562,23 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 			});
 
+			//*************************************************************************				
+			CantRegCargados = AlmacenDocumentos._array.length;
+			CargarAsyn();
+			function CargarAsyn() {
+				SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha, CantRegCargados, CantidadRegDocumentosAdmin).then(function (data) {
+					CantRegCargados += data.length;									
+					if (data.length > 0) {
+						cargarDocumentos(data);
+						CargarAsyn();
+					} else {
+						$('#waitRegistros').hide();
+					}
+
+				});
+			}
+			//*************************************************************************
+
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
@@ -592,9 +588,46 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 	}
 
 
-	//ConsultarAuditoria = function (IdSeguridad, IdFacturador, NumeroDocumento) {
-	//	$rootScope.ConsultarAuditDoc(IdSeguridad, IdFacturador, NumeroDocumento);
-	//};
+	//Carga las empresas al array
+	function cargarDocumentos(data) {
+		data.forEach(function (d, indice, array) {
+			Documentos = {
+				IdFacturador: d.IdFacturador,
+				Facturador: d.Facturador,
+				NumeroDocumento: d.NumeroDocumento,
+				DatFechaDocumento: d.DatFechaDocumento,
+				DatFechaVencDocumento: d.DatFechaVencDocumento,
+				IntVlrTotal: d.IntVlrTotal,
+				IntSubTotal: d.IntSubTotal,
+				IntNeto: d.IntNeto,
+				EstadoFactura: d.EstadoFactura,
+				EstadoCategoria: d.EstadoCategoria,
+				EstadoAcuse: d.EstadoAcuse,
+				MotivoRechazo: d.MotivoRechazo,
+				StrAdquirienteMvoRechazo: d.StrAdquirienteMvoRechazo,
+				IdentificacionAdquiriente: d.IdentificacionAdquiriente,
+				NombreAdquiriente: d.NombreAdquiriente,
+				MailAdquiriente: d.MailAdquiriente,
+				Xml: d.Xml,
+				Pdf: d.Pdf,
+				StrIdSeguridad: d.StrIdSeguridad,
+				RutaAcuse: d.RutaAcuse,
+				tipodoc: d.tipodoc,
+				zip: d.zip,
+				RutaServDian: d.RutaServDian,
+				XmlAcuse: d.XmlAcuse,				
+				IntAdquirienteRecibo: d.IntAdquirienteRecibo,
+				Estado: d.Estado,
+				EstadoEnvioMail: d.EstadoEnvioMail,
+				MensajeEnvio: d.MensajeEnvio,
+				EnvioMail: d.EnvioMail,
+			}
+
+			AlmacenDocumentos.push([{ type: "insert", data: Documentos }]);
+
+		});
+	}
+
 
 });
 
@@ -699,157 +732,6 @@ App.controller('EnvioEmailController', function EnvioEmailController($scope, $ht
 
 
 })
-////Controlador para gestionar la consulta de Auditoría de Documento 
-//.controller('ModalAuditDocumentoController', function ModalAuditDocumentoController($http, $scope, $location, $rootScope) {
-
-//	$rootScope.ConsultarAuditDoc = function (IdSeguridad, IdFacturador, NumeroDocumento) {
-
-//		$http.get('/api/AuditoriaDocumento?id_seguridad_doc=' + IdSeguridad).then(function (response) {
-
-//			$scope.IdSeguridad = IdSeguridad;
-//			$scope.NumeroDocumento = NumeroDocumento;
-//			$scope.Obligado = IdFacturador;
-
-//			$("#gridAuditDocumento").dxDataGrid({
-//				dataSource: response.data,
-//				allowColumnResizing: true,
-//				allowColumnReordering: true,
-//				paging: {
-//					pageSize: 10
-//				},
-//				pager: {
-//					showPageSizeSelector: true,
-//					allowedPageSizes: [5, 10, 20],
-//					showInfo: true
-//				}, loadPanel: {
-//					enabled: true
-//				},
-//				columns: [{
-//					caption: "Fecha",
-//					dataField: "DatFecha",
-//					cssClass: "col-md-2",
-//				}, {
-//					caption: "Estado",
-//					dataField: "StrDesEstado",
-//					cssClass: "col-md-2"
-//				}, {
-//					caption: "Proceso",
-//					dataField: "StrDesProceso",
-//					cssClass: "col-md-2"
-//				}, {
-//					caption: "Procesado Por",
-//					dataField: "StrDesProcesadoPor",
-//					cssClass: "col-md-2"
-//				}, {
-//					caption: "Realizado Por",
-//					dataField: "StrDesRealizadoPor",
-//					cssClass: "col-md-2"
-//				}
-//				],
-//				masterDetail: {
-//					enabled: true,
-//					template: function (container, options) {
-
-//						container.append($('<h4 class="form-control">MENSAJE:</h4><p style="width:10%"> ' + options.data.StrMensaje + '</p><br/>'));
-
-//						if (options.data.IntIdProceso == 8 || options.data.IntIdProceso == 10) {
-
-//							if (options.data.StrResultadoProceso)
-//								container.append($('<h4 class="form-control">RESPUESTA:</h4><span><p style="width:10%"> ' + options.data.StrResultadoProceso + '</p></span>'));
-
-//							if (options.data.StrResultadoProceso) {
-//								$http.get('/api/DetallesRespuesta?id_proceso=' + options.data.IntIdProceso + '&respuesta=' + options.data.StrResultadoProceso).then(function (response) {
-
-//									if (response.data != null) {
-//										container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4></br><label><b>Fecha Envío: </b> ' + response.data.Recibido + '</label></br><label><b>ID Remitente : </b> '
-//										+ response.data.IdRemitente + '</label></br><label><b>ID Contacto : </b> ' + response.data.IdContacto + '</label></br><label><b>Cantidad Adjuntos: </b> '
-//										+ response.data.Adjuntos + '</label></br><div id="json"></div>'));
-
-//										$("#json").dxDataGrid({
-//											dataSource: response.data.Seguimiento,
-//											allowColumnResizing: true,
-//											allowColumnReordering: true,
-//											paging: {
-//												pageSize: 10
-//											},
-//											pager: {
-//												showPageSizeSelector: true,
-//												allowedPageSizes: [5, 10, 20],
-//												showInfo: true
-//											}, loadPanel: {
-//												enabled: true
-//											},
-//											columns: [{
-//												caption: "Fecha Proceso",
-//												dataField: "FechaEvento",
-//												dataType: "date",
-//												format: "yyyy-MM-dd HH:mm:ss",
-//											},
-//											{
-//												dataField: "Tipo Proceso",
-//												caption: "TipoEvento",
-//												cellTemplate: function (container, options) {
-//													$("<div>").append($(ControlTipoEventoMail(options.data.TipoEvento))).appendTo(container);
-//												}
-//											},
-//											]
-//										}, function (response) {
-//											$('#wait').hide();
-//											DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-//										});
-//									}
-//								});
-//							}
-//						} else {
-//							var cadena_inicio = options.data.StrResultadoProceso.substring(0, 4);
-
-//							//Valida si el mensaje de respuesta inicia con http y lo añade como link.
-//							if (cadena_inicio == "http") {
-//								container.append($('<h4 class="form-control">RESPUESTA:</h4><pre><a style="margin-left:5%;" target="_blank" href="' + options.data.StrResultadoProceso + '">' + options.data.StrResultadoProceso + '</a></pre>'));
-//							}
-//								//Valida si la cadena inicia con {
-//							else if (options.data.StrResultadoProceso.substring(0, 1) == "{") {
-//								container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4>'));
-
-//								var datos = angular.fromJson(options.data.StrResultadoProceso)
-
-//								var code_html = "";
-//								//Recorre una cadena json y la carga en código html propiedad por propiedad.
-//								for (var prop in datos) {
-
-//									code_html = code_html + '<label><b>' + prop + ':</b></label>';
-
-//									cadena_inicio = datos[prop].toString().substring(0, 4)
-
-//									//Valida si el valor de la propiedad es una ruta.
-//									if (cadena_inicio == "http")
-//										code_html = code_html + '<a style="margin-left:5%;" target="_blank" href="' + datos[prop] + '">' + datos[prop] + '</a></br>';
-//									else
-//										code_html = code_html + '<label>' + datos[prop] + '</label></br>';
-//								}
-
-//								container.append($('<pre>' + code_html + '</pre>'));
-
-//							}
-//							else if (options.data.StrResultadoProceso) {
-//								container.append($('<h4 class="form-control">RESPUESTA:</h4><span><p style="width:10%"> ' + options.data.StrResultadoProceso + '</p></span>'));
-//							}
-
-//						}
-//					}
-//				},
-//				filterRow: {
-//					visible: true
-//				}
-//			});
-//		}, function (response) {
-//			$('#wait').hide();
-//			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-//		});
-
-//	}
-
-//});
 
 var items_Tipo =
     [

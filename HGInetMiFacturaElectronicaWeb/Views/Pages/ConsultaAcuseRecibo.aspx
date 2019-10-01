@@ -4,12 +4,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/config.js?vjs201921"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201921"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201921"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201921"></script>
-	<script src="../../Scripts/Pages/ConsultaAcuse.js?vjs201921"></script>
-	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201921"></script>
+	<script src="../../Scripts/config.js?vjs201922"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201922"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201922"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201922"></script>
+	<script src="../../Scripts/Pages/ConsultaAcuse.js?vjs201922"></script>
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201922"></script>
 
 	<!-- CONTENEDOR PRINCIPAL -->
 	<div data-ng-app="App" data-ng-controller="AcuseConsultaController">

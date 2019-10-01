@@ -75,7 +75,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("api/ObtenerEmpresas")]
-		public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa,bool Todas)
+		public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa, int Desde, int Hasta)
 		{
 			Sesion.ValidarSesion();
 
@@ -90,28 +90,20 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			if (empresa.IntAdministrador)
 			{
-				if (Todas)
-				{					
-					datos = CtEmpresa.Pag_ObtenerTodas();
-				}
-				else
-				{
-					datos = CtEmpresa.Pag_ObtenerPrimeras();
-				}
-				
+				datos = CtEmpresa.Pag_ObtenerEmpresas(Desde,Hasta);
 			}
 			else
 			{
 				if (empresa.IntIntegrador)
 				{
 					datos = CtEmpresa.Pag_ObtenerAsociadas(IdentificacionEmpresa);
-				}				
+				}
 			}
 
 			if (datos == null)
 			{
 				return NotFound();
-			}			
+			}
 
 			return Ok(datos);
 		}
@@ -268,7 +260,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 				//Generamos formato al resultado
 				var Resultado = new { Descripcion = datos.Propietario, FechaVencimiento = Convert.ToDateTime(datos.Fechavenc).ToString(Fecha.formato_fecha_hginet), Serial = datos.Serial, Emisor = datos.Certificadora };
-				
+
 				return Ok(Resultado);
 			}
 			catch (Exception excepcion)
@@ -335,7 +327,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntMailRecepcionVerificado = ObjEmpresa.IntMailRecepcionVerificado;
 				Empresa.IntMailAcuseVerificado = ObjEmpresa.IntMailAcuseVerificado;
 				Empresa.IntMailPagosVerificado = ObjEmpresa.IntMailPagosVerificado;
-				
+
 				//Lista de correos 
 				List<ObjVerificacionEmail> ListaEmailRegistro = new List<ObjVerificacionEmail>();
 
@@ -346,7 +338,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					//Si esta en esta de registro, entonces guardo el email en la lista de email de registro para enviar los emails de verificación
 					if (ObjEmpresa.IntMailAdminVerificado == EstadoVerificacionEmail.Registro.GetHashCode())
 					{
-						ListaEmailRegistro.Add(new ObjVerificacionEmail  { email= Empresa.StrMailAdmin });
+						ListaEmailRegistro.Add(new ObjVerificacionEmail { email = Empresa.StrMailAdmin });
 					}
 					//Aqui asigno el estado de verificación
 					Empresa.IntMailAdminVerificado = (short)EstadoVerificacionEmail.Verificacion.GetHashCode();
@@ -392,7 +384,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (string.IsNullOrEmpty(Empresa.StrMailEnvio))
 				{
 					Empresa.IntMailEnvioVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-				} 
+				}
 				#endregion
 
 				#region Correo de Acuse
@@ -430,7 +422,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (string.IsNullOrEmpty(Empresa.StrMailPagos))
 				{
 					Empresa.IntMailPagosVerificado = (short)EstadoVerificacionEmail.Registro.GetHashCode();
-				} 
+				}
 				#endregion
 
 				#endregion
@@ -578,7 +570,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		#region Filtros
 		/// <summary>
-		/// Obtiene la lista de Habilitacion según el ambiente 
+		/// Obtiene los adquirientes del facturador
 		/// </summary>        
 		/// <returns></returns>
 		[HttpGet]
@@ -591,6 +583,30 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Empresa controlador = new Ctl_Empresa();
 				var lista = controlador.ObtenerAdquirientes(Facturador);
+
+
+				return Ok(lista);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		/// <summary>
+		/// Obtiene Todos los adquirientes de la tabla tblempresas
+		/// </summary>        
+		/// <returns></returns>
+		[HttpGet]
+		[Route("api/ObtenerTodosAdquirientes")]
+		public IHttpActionResult ObtenerTodosAdquirientes()
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_Empresa controlador = new Ctl_Empresa();
+				var lista = controlador.ObtenerTodosAdquirientes();
 
 
 				return Ok(lista);

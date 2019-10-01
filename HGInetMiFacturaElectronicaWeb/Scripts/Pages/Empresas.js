@@ -48,6 +48,10 @@ id_seguridad = "",
 Datos_ClaveCert = "",
 Datos_Serial = "",
 Datos_proveedores = "";
+//Desde hasta en la consulta de la grid
+var Desde = 0;
+var Hasta = 20;
+var CantRegCargados = 0;
 
 var ModalDetalleEmpresasApp = angular.module('ModalDetalleEmpresasApp', []);
 
@@ -1435,7 +1439,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#txtUsuarios").dxNumberBox({ value: Datos_Numero_usuarios });
 
 					if (Datos_Obligado == 1) {
-						$("#Facturador").dxCheckBox({ value: 1 });						
+						$("#Facturador").dxCheckBox({ value: 1 });
 						$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
 					}
 
@@ -1456,7 +1460,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					}
 
 					//Certificado
-					try {						
+					try {
 						$("#CerFirma").dxRadioGroup({ value: TiposCertFirma[BuscarID(TiposCertFirma, Datos_CertFirma)] });
 					} catch (e) { }
 					try {
@@ -1628,7 +1632,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 });
 
 //Controlador para gestionar la consulta de empresas
-EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $rootScope, $location) {
+EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $rootScope, $location, SrvEmpresas) {
 
 	var Empresas = [];
 
@@ -1655,9 +1659,16 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 			if (tipo) {
 				$scope.Admin = true;
 			};
-			
-			$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Todas=false').then(function (response) {
-				
+
+
+
+			//	console.log(data);
+			//});
+			//$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Todas=false').then(function (response) {
+
+
+			SrvEmpresas.ObtenerEmpresas(codigo_facturador, Desde, Hasta).then(function (data) {
+				$('#wait').hide();
 				$('#waitRegistros').show();
 				//*******Consulta de los primeros 20 registros
 				Empresas = [];
@@ -1665,33 +1676,9 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 					key: "Identificacion",
 					data: Empresas
 				});
-				response.data.forEach(function (d, indice, array) {
-					Empresas = {
-						Asociado: d.Asociado,
-						Email: d.Email,
-						EmpresaDescuento: d.EmpresaDescuento,
-						Estado: d.Estado,
-						Habilitacion: d.Habilitacion,
-						HorasAcuse: d.HorasAcuse,
-						IdSeguridad: d.IdSeguridad,
-						Identificacion: d.Identificacion,
-						NotificacionMail: d.NotificacionMail,
-						Nusuaurios: d.Nusuaurios,
-						Perfil: d.Perfil,
-						Postpago: d.Postpago,
-						RazonSocial: d.RazonSocial,
-						Serial: d.Serial,
-						StrMailAcuse: d.StrMailAcuse,
-						StrMailEnvio: d.StrMailEnvio,
-						StrMailPagos: d.StrMailPagos,
-						StrMailRecepcion: d.StrMailPagos
-					}
 
-					AlmacenEmpresas.push([{ type: "insert", data: Empresas }]);
+				cargarEmpresas(data);
 
-				});
-
-				
 				$("#gridEmpresas").dxDataGrid({
 					dataSource: {
 						store: AlmacenEmpresas,
@@ -1803,48 +1790,34 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 						visible: true
 					}
 				});
-
-
 				
+				//*************************************************************************				
+				CantRegCargados = AlmacenEmpresas._array.length;
+				CargarAsyn();
+				function CargarAsyn() {
+					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa).then(function (data) {
+
+						CantRegCargados += data.length;											
+						if (data.length > 0) {
+							cargarEmpresas(data);
+							CargarAsyn();
+						} else {
+							$('#waitRegistros').hide();
+						}
+
+					});
+				}				
+				//*************************************************************************
+
+
 			}, function errorCallback(response) {
 				$('#wait').hide();
 				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 			});
 
 
-			//*************************************************************************
-			$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Todas=true').then(function (response) {
 
-				//*******Consulta todas las empresas					
-				response.data.forEach(function (d, indice, array) {
-					Empresas = {
-						Asociado: d.Asociado,
-						Email: d.Email,
-						EmpresaDescuento: d.EmpresaDescuento,
-						Estado: d.Estado,
-						Habilitacion: d.Habilitacion,
-						HorasAcuse: d.HorasAcuse,
-						IdSeguridad: d.IdSeguridad,
-						Identificacion: d.Identificacion,
-						NotificacionMail: d.NotificacionMail,
-						Nusuaurios: d.Nusuaurios,
-						Perfil: d.Perfil,
-						Postpago: d.Postpago,
-						RazonSocial: d.RazonSocial,
-						Serial: d.Serial,
-						StrMailAcuse: d.StrMailAcuse,
-						StrMailEnvio: d.StrMailEnvio,
-						StrMailPagos: d.StrMailPagos,
-						StrMailRecepcion: d.StrMailPagos
-					}
 
-					AlmacenEmpresas.push([{ type: "insert", data: Empresas }]);
-
-				});
-				$('#waitRegistros').hide();
-			});
-
-			//*************************************************************************
 
 
 		}, function errorCallback(response) {
@@ -1853,7 +1826,43 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 		});
 	}
 
+
+	//Carga las empresas al array
+	function cargarEmpresas(data) {
+		data.forEach(function (d, indice, array) {
+			Empresas = {
+				Asociado: d.Asociado,
+				Email: d.Email,
+				EmpresaDescuento: d.EmpresaDescuento,
+				Estado: d.Estado,
+				Habilitacion: d.Habilitacion,
+				HorasAcuse: d.HorasAcuse,
+				IdSeguridad: d.IdSeguridad,
+				Identificacion: d.Identificacion,
+				NotificacionMail: d.NotificacionMail,
+				Nusuaurios: d.Nusuaurios,
+				Perfil: d.Perfil,
+				Postpago: d.Postpago,
+				RazonSocial: d.RazonSocial,
+				Serial: d.Serial,
+				StrMailAcuse: d.StrMailAcuse,
+				StrMailEnvio: d.StrMailEnvio,
+				StrMailPagos: d.StrMailPagos,
+				StrMailRecepcion: d.StrMailPagos
+			}
+
+			AlmacenEmpresas.push([{ type: "insert", data: Empresas }]);
+
+		});
+	}
+
 });
+
+
+
+
+
+
 
 //Esta funcion es para ir a la pagina de consulta
 function IrAConsulta() {
