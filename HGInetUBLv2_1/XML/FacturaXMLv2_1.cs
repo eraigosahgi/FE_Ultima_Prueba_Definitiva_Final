@@ -207,7 +207,15 @@ namespace HGInetUBLv2_1
 				#region facturaXML.InvoiceTypeCode - Tipo de Documento
 				/*Indicar si es una facturaXML de venta o una facturaXML cambiaria de compraventa*/
 				InvoiceTypeCodeType InvoiceTypeCode = new InvoiceTypeCodeType();
-				InvoiceTypeCode.Value = "01"; /*** QUEMADO ***/
+				if (documento.TipoOperacion == 0)
+				{
+					InvoiceTypeCode.Value = "01"; /*** QUEMADO ***/
+				}
+				else
+				{
+					InvoiceTypeCode.Value = "03";
+				}
+
 				facturaXML.InvoiceTypeCode = InvoiceTypeCode;
 				#endregion
 
@@ -304,12 +312,26 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
-				#region facturaXML.ReceiptDocumentReference
-				facturaXML.ReceiptDocumentReference = new DocumentReferenceType[1];
-				DocumentReferenceType ReceiptDocument = new DocumentReferenceType();
-				ReceiptDocument.ID = new IDType();
-				ReceiptDocument.ID.Value = (string.IsNullOrEmpty(documento.DocumentoRef)) ? string.Empty : documento.DocumentoRef.ToString();
-				facturaXML.ReceiptDocumentReference[0] = ReceiptDocument;
+				//Referencia Adicional si se utiliza y cuando es contingencia
+				#region facturaXML.AdditionalDocumentReference
+
+				if (documento.DocumentosReferencia != null)
+				{
+					List<DocumentReferenceType> AdditionalDocument = new List<DocumentReferenceType>();
+					foreach (var item in documento.DocumentosReferencia)
+					{
+						DocumentReferenceType ReceiptDocument = new DocumentReferenceType();
+						ReceiptDocument.ID = new IDType();
+						ReceiptDocument.ID.Value = item.Documento;
+						ReceiptDocument.IssueDate = new IssueDateType();
+						ReceiptDocument.IssueDate.Value = item.FechaReferencia;
+						ReceiptDocument.DocumentTypeCode = new DocumentTypeCodeType();
+						ReceiptDocument.DocumentTypeCode.Value = item.CodigoReferencia;
+						AdditionalDocument.Add(ReceiptDocument);
+					}
+					facturaXML.AdditionalDocumentReference = AdditionalDocument.ToArray();
+				}
+
 				#endregion
 
 				/*** QUEMADO ***/
@@ -433,9 +455,19 @@ namespace HGInetUBLv2_1
 				/*** QUEMADO ***/
 				UUIDType UUID = new UUIDType();
 				//-----Se agrega Ambiente al cual se va enviar el documento
-				string CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value);//resolucion.ClaveTecnicaDIAN
+				string CUFE = string.Empty;
+				if (facturaXML.InvoiceTypeCode.Equals("01"))
+				{
+					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value);//resolucion.ClaveTecnicaDIAN
+					UUID.schemeName = "CUFE-SHA384";
+				}
+				else
+				{
+					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value);
+					UUID.schemeName = "CUDE-SHA384";
+				}
+				
 				UUID.Value = CUFE;
-				UUID.schemeName = "CUFE-SHA384";
 				UUID.schemeID = facturaXML.ProfileExecutionID.Value; //"2";
 				facturaXML.UUID = UUID;
 
@@ -536,7 +568,7 @@ namespace HGInetUBLv2_1
 		/// Calcula el codigo CUFE
 		/// </summary>
 		/// <param name="factura">Objeto de tipo InvoiceType que contiene la informacion de la factura</param>
-		/// <param name="clave_tecnica">Clave técnica de la resolución</param>
+		/// <param name="clave_tecnica">Clave técnica de la resolución ó Pin del Sw cuando es contingencia</param>
 		/// <param name="ambiente">Número de identificación del ambiente utilizado por el Obligado para emitir la factura Seccion 6.1.1 (1=AmbienteProduccion , 2: AmbientePruebas)</param>
 		/// <returns>Texto con la encriptación del CUFE</returns>        
 		public static string CalcularCUFE(InvoiceType factura, string clave_tecnica, string ambiente)

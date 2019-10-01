@@ -72,14 +72,13 @@ namespace HGInetUBLv2_1
 				#region Prefijo y rangos resolución
 				AuthrorizedInvoices AuthorizedInvoices = new AuthrorizedInvoices();
 
-				if (string.IsNullOrEmpty(extension.Prefijo))
+				if (!string.IsNullOrEmpty(extension.Prefijo))
 				{
-					extension.Prefijo = string.Empty;
+					//extension.Prefijo = string.Empty;
+					TextType Prefix = new TextType();
+					Prefix.Value = extension.Prefijo;
+					AuthorizedInvoices.Prefix = Prefix.Value.ToString();
 				}
-
-				TextType Prefix = new TextType();
-				Prefix.Value = extension.Prefijo;
-				AuthorizedInvoices.Prefix = Prefix.Value.ToString();
 
 				AuthorizedInvoices.From = extension.RangoIni;
 				AuthorizedInvoices.To = extension.RangoFin;

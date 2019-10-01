@@ -188,8 +188,11 @@ namespace HGInetUBLv2_1
 
 				//Prefijo de la facturación usada para el punto de venta
 				//---Validar---obligatorio para el obligado ocurrencia 1..1
-				PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
-				PartyLegalEntity.CorporateRegistrationScheme.ID.Value = prefijo; //"SETP";
+				if (!string.IsNullOrEmpty(prefijo))
+				{
+					PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
+					PartyLegalEntity.CorporateRegistrationScheme.ID.Value = prefijo; //"SETP";
+				}
 
 				//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
 				//---Validar--ocurrencia 0..1
