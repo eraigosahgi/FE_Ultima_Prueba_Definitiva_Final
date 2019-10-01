@@ -628,7 +628,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (resp.Contains("O-15") == true)
 						autoretenedor = true;
 
-					if (decimal.Round(documento.ValorSubtotal) > documento.Total)
+					if (decimal.Floor(documento.ValorSubtotal) > documento.Total)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Subtotal", documento.ValorSubtotal));
 
 					//Validacion Del valor bruto con respecto al detalle
@@ -637,7 +637,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (detalle.Sum(v => (v.ValorSubtotal)) != documento.ValorSubtotal)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Subtotal", documento.ValorSubtotal));
 
-					if (decimal.Round(detalle.Sum(v => (v.IvaValor))) != decimal.Round(documento.ValorIva))
+					if (decimal.Floor(detalle.Sum(v => (v.IvaValor))) != decimal.Floor(documento.ValorIva))
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "IVA", documento.ValorIva));
 
 					if ((detalle.Sum(v => (v.ReteFuenteValor)) != documento.ValorReteFuente) && autoretenedor == true)
@@ -852,13 +852,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					//Validacion del total
-					if (decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo,MidpointRounding.AwayFromZero) != decimal.Round(documento.Total, MidpointRounding.AwayFromZero))
+					if (decimal.Floor(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo) != decimal.Floor(documento.Total))
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Total", documento.Total));
 					}
 
 					//Validacion del Valor Neto
-					if (decimal.Round(documento.Total - documento.ValorReteFuente - documento.ValorReteIva - documento.ValorReteIca, MidpointRounding.AwayFromZero) != decimal.Round(documento.Neto, MidpointRounding.AwayFromZero) && autoretenedor == false)
+					if (decimal.Floor(documento.Total - documento.ValorReteFuente - documento.ValorReteIva - documento.ValorReteIca) != decimal.Floor(documento.Neto) && autoretenedor == false)
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Neto", documento.Neto));
 					}

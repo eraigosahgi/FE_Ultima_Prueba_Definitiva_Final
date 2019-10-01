@@ -14,7 +14,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio.Documentos
 		/// <summary>
 		/// Prefijo y Número del documento referenciado
 		/// </summary>
-		public int Documento { get; set; }
+		public string Documento { get; set; }
 
 		/// <summary>
 		/// Identificador del tipo de documento de referencia segun Listado de la DIAN
