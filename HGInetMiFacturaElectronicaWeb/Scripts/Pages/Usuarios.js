@@ -1,18 +1,16 @@
 ﻿DevExpress.localization.locale(navigator.language);
 var opc_pagina = "1331";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
-
-var ConsultaUsuarioApp = angular.module('ConsultaUsuarioApp', ['dx', 'ModalEmpresasApp']);
-
+var ConsultaUsuarioApp = angular.module('ConsultaUsuarioApp', ['dx', 'ModalEmpresasApp', 'AppSrvUsuario']);
 var OpcionesUsuario = [];
-
 var PermisosUsuario = [];
-
 var ValidacionHP = false;
+//Desde hasta en la consulta de la grid
+var Desde = 0;
+var Hasta = 20;
+var CantRegCargados = 0;
 
-
-ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsuarioController($scope, $http, $location) {
-
+ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsuarioController($scope, $http, $location, SrvUsuario) {
 
 	var codigo_usuario = "",
         codigo_facturador = "";
@@ -32,10 +30,24 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 		//ControladorApi: /Api/Usuario/
 		//Datos GET: string codigo_usuario, string codigo_empresa
 		$('#wait').show();
-		$http.get('/api/Usuario?codigo_usuario=' + "*" + '&codigo_empresa=' + codigo_facturador).then(function (response) {
+		//$http.get('/api/Usuario?codigo_usuario=' + "*" + '&codigo_empresa=' + codigo_facturador).then(function (response) {
+		SrvUsuario.ObtenerConPag(codigo_facturador, Desde, Hasta).then(function (data) {
 			$('#wait').hide();
+			$('#waitRegistros').show();
+			//*******Consulta de los primeros 20 registros
+			Usuarios = [];
+			AlmacenUsuarios = new DevExpress.data.ArrayStore({
+				key: "Identificacion",
+				data: Usuarios
+			});
+
+			cargarUsuarios(data);
+
 			$("#gridUsuarios").dxDataGrid({
-				dataSource: response.data,
+				dataSource: {
+					store: AlmacenUsuarios,
+					reshapeOnPush: true
+				},
 				paging: {
 					pageSize: 20
 				},
@@ -171,11 +183,42 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 					visible: true
 				},
 			});
+
+
+			//*************************************************************************				
+			CantRegCargados = AlmacenUsuarios._array.length;
+			CargarAsyn();
+			function CargarAsyn() {
+				SrvUsuario.ObtenerConPag(codigo_facturador, CantRegCargados, CantidadRegUsuarios).then(function (data) {
+
+					CantRegCargados += data.length;
+					if (data.length > 0) {
+						cargarUsuarios(data);
+						CargarAsyn();
+					} else {
+						$('#waitRegistros').hide();
+					}
+
+				});
+			}
+			//*************************************************************************
+
 		}), function errorCallback(response) {
 			$('#wait').hide();
 			Mensaje(response.data.ExceptionMessage, "error");
 		};
 	}
+
+	//Carga los Usuarios al array
+	function cargarUsuarios(data) {
+		if (data != "") {
+			data.forEach(function (d) {
+				Usuarios = d;
+				AlmacenUsuarios.push([{ type: "insert", data: Usuarios }]);
+			});
+		}
+	}
+
 });
 
 
@@ -969,7 +1012,7 @@ function IncluirItem(e, opcion, codigo) {
 	//Valida la existencia de la opcion en el array.
 	if (item_array.length == 0) {
 		//añade el objeto en el array por primera vez.
-		if ((e.previousValue === 1 || e.previousValue === 0) || e.value===1) {
+		if ((e.previousValue === 1 || e.previousValue === 0) || e.value === 1) {
 			OpcionesUsuario.push(IncluirItemArray(codigo, opcion, e.value));
 		}
 	} else {

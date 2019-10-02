@@ -465,14 +465,14 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						}
 					}
 				],
-				
+
 				masterDetail: {
 					enabled: true,
-					template: function (container, options) {						
+					template: function (container, options) {
 						container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdFacturador, options.data.NumeroDocumento));
 					}
 				},
-				
+
 				summary: {
 					groupItems: [{
 						column: "IntVlrTotal",
@@ -567,7 +567,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			CargarAsyn();
 			function CargarAsyn() {
 				SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha, CantRegCargados, CantidadRegDocumentosAdmin).then(function (data) {
-					CantRegCargados += data.length;									
+					CantRegCargados += data.length;
 					if (data.length > 0) {
 						cargarDocumentos(data);
 						CargarAsyn();
@@ -590,42 +590,12 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 	//Carga las empresas al array
 	function cargarDocumentos(data) {
-		data.forEach(function (d, indice, array) {
-			Documentos = {
-				IdFacturador: d.IdFacturador,
-				Facturador: d.Facturador,
-				NumeroDocumento: d.NumeroDocumento,
-				DatFechaDocumento: d.DatFechaDocumento,
-				DatFechaVencDocumento: d.DatFechaVencDocumento,
-				IntVlrTotal: d.IntVlrTotal,
-				IntSubTotal: d.IntSubTotal,
-				IntNeto: d.IntNeto,
-				EstadoFactura: d.EstadoFactura,
-				EstadoCategoria: d.EstadoCategoria,
-				EstadoAcuse: d.EstadoAcuse,
-				MotivoRechazo: d.MotivoRechazo,
-				StrAdquirienteMvoRechazo: d.StrAdquirienteMvoRechazo,
-				IdentificacionAdquiriente: d.IdentificacionAdquiriente,
-				NombreAdquiriente: d.NombreAdquiriente,
-				MailAdquiriente: d.MailAdquiriente,
-				Xml: d.Xml,
-				Pdf: d.Pdf,
-				StrIdSeguridad: d.StrIdSeguridad,
-				RutaAcuse: d.RutaAcuse,
-				tipodoc: d.tipodoc,
-				zip: d.zip,
-				RutaServDian: d.RutaServDian,
-				XmlAcuse: d.XmlAcuse,				
-				IntAdquirienteRecibo: d.IntAdquirienteRecibo,
-				Estado: d.Estado,
-				EstadoEnvioMail: d.EstadoEnvioMail,
-				MensajeEnvio: d.MensajeEnvio,
-				EnvioMail: d.EnvioMail,
-			}
-
-			AlmacenDocumentos.push([{ type: "insert", data: Documentos }]);
-
-		});
+		if (data != "") {
+			data.forEach(function (d) {
+				Documentos = d;
+				AlmacenDocumentos.push([{ type: "insert", data: Documentos }]);
+			});
+		}
 	}
 
 

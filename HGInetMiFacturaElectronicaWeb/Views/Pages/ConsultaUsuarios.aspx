@@ -3,7 +3,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-    
+
+	<script src="../../Scripts/Services/SrvUsuario.js"></script>
     <script src="../../Scripts/Pages/Usuarios.js?vjs201922"></script>
     
     <div data-ng-app="ConsultaUsuarioApp" data-ng-controller="ConsultaUsuarioController">
@@ -29,6 +30,8 @@
                     <div class="demo-container">
                         <div id="gridUsuarios"></div>
                     </div>
+					<%--Loading de cargar Usuarios--%>
+					<div data-ng-include="'Partials/LoadingRegistros.Html'"></div>
                 </div>
             </div>
         </div>

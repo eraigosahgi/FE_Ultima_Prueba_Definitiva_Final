@@ -468,7 +468,7 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 			function CargarAsyn() {
 				SrvAuditoria.ConsultaAuditoria(fecha_inicio, fecha_fin, cod_facturador, numero_documento, estado_dian, proceso_doc, tipo_registro, procedencia_proceso, CantRegCargados, CantidadRegAuditoriaAdmin).then(function (data) {
 
-					CantRegCargados += data.length;															
+					CantRegCargados += data.length;
 					if (data.length > 0) {
 						cargarAuditoria(data);
 						CargarAsyn();
@@ -489,31 +489,12 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 
 
 	function cargarAuditoria(data) {
-
-		data.forEach(function (d, indice, array) {
-			Auditoria = {
-				Firma : d.Firma,
-				StrIdSeguridad: d.StrIdSeguridad,
-				DatFecha: d.DatFecha,
-				StrObligado: d.StrObligado,
-				IntIdEstado: d.IntIdEstado,
-				StrDesEstado: d.StrDesEstado,
-				IntIdProceso: d.IntIdProceso,
-				StrDesProceso: d.StrDesProceso,
-				IntTipoRegistro: d.IntTipoRegistro,
-				StrDescTipoReg: d.StrDescTipoReg,
-				IntIdProcesadoPor: d.IntIdProcesadoPor,
-				StrMensaje: d.StrMensaje,
-				StrResultadoProceso: d.StrResultadoProceso,
-				StrDescProcePor: d.StrDescProcePor,
-				StrDesProcesadoPor: d.StrDesProcesadoPor,
-				StrRealizadoPor: d.StrRealizadoPor,
-				StrNumero: d.StrNumero
-			}
-
-			AlmacenAuditoria.push([{ type: "insert", data: Auditoria }]);
-
-		});
+		if (data != "") {
+			data.forEach(function (d) {
+				Auditoria = d;
+				AlmacenAuditoria.push([{ type: "insert", data: Auditoria }]);
+			});
+		}
 	}
 
 });

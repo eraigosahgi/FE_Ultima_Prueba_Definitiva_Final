@@ -1790,14 +1790,14 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 						visible: true
 					}
 				});
-				
+
 				//*************************************************************************				
 				CantRegCargados = AlmacenEmpresas._array.length;
 				CargarAsyn();
 				function CargarAsyn() {
 					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa).then(function (data) {
 
-						CantRegCargados += data.length;											
+						CantRegCargados += data.length;
 						if (data.length > 0) {
 							cargarEmpresas(data);
 							CargarAsyn();
@@ -1806,7 +1806,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 						}
 
 					});
-				}				
+				}
 				//*************************************************************************
 
 
@@ -1829,31 +1829,12 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 
 	//Carga las empresas al array
 	function cargarEmpresas(data) {
-		data.forEach(function (d, indice, array) {
-			Empresas = {
-				Asociado: d.Asociado,
-				Email: d.Email,
-				EmpresaDescuento: d.EmpresaDescuento,
-				Estado: d.Estado,
-				Habilitacion: d.Habilitacion,
-				HorasAcuse: d.HorasAcuse,
-				IdSeguridad: d.IdSeguridad,
-				Identificacion: d.Identificacion,
-				NotificacionMail: d.NotificacionMail,
-				Nusuaurios: d.Nusuaurios,
-				Perfil: d.Perfil,
-				Postpago: d.Postpago,
-				RazonSocial: d.RazonSocial,
-				Serial: d.Serial,
-				StrMailAcuse: d.StrMailAcuse,
-				StrMailEnvio: d.StrMailEnvio,
-				StrMailPagos: d.StrMailPagos,
-				StrMailRecepcion: d.StrMailPagos
-			}
-
-			AlmacenEmpresas.push([{ type: "insert", data: Empresas }]);
-
-		});
+		if (data != "") {
+			data.forEach(function (d) {
+				Empresas = d;
+				AlmacenEmpresas.push([{ type: "insert", data: Empresas }]);
+			});
+		}
 	}
 
 });

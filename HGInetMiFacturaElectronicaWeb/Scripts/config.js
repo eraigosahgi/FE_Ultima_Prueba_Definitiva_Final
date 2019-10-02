@@ -1,7 +1,8 @@
 ﻿
-var CantidadRegEmpresa = 100;
-var CantidadRegDocumentosAdmin = 5;
+var CantidadRegEmpresa = 2000;
+var CantidadRegDocumentosAdmin = 100;
 var CantidadRegAuditoriaAdmin = 100;
+var CantidadRegUsuarios = 2000;
 
 
 

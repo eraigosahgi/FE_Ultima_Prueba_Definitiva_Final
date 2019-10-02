@@ -23,6 +23,17 @@ var AppSrvUsuario = angular.module('AppSrvUsuario', ['dx'])
             return $q.reject(response.data);
         });
     }
+	///Obtiene los usuarios con Paginación
+    this.ObtenerConPag = function (codigo_facturador, Desde, Hasta) {
+
+    	return $http.get('/api/Usuario?codigo_usuario=' + "*" + '&codigo_empresa=' + codigo_facturador + '&Desde=' + Desde + '&Hasta=' + Hasta).then(function (response) {
+    		return response.data;
+    	}, function (response) {
+    		DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+    		return $q.reject(response.data);
+    	});
+    }
+
 });
 
 

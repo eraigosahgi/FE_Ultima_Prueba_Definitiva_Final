@@ -35,9 +35,8 @@
 					<div class="demo-container">
 						<div id="gridEmpresas"></div>
 					</div>
-
+					<%--Loading de cargar Empresas--%>
 					<div data-ng-include="'Partials/LoadingRegistros.Html'"></div>
-
 				</div>
 
 			</div>

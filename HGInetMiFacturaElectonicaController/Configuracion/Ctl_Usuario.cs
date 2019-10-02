@@ -595,7 +595,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="codigo_usuario">Codigo de Usuario</param>
 		/// <param name="codigo_empresa">Codigo de empresa</param>
 		/// <returns></returns>
-		public List<ObjUsuario> ConsultaUsuarios(string codigo_usuario, string codigo_empresa)
+		public List<ObjUsuario> ConsultaUsuarios(string codigo_usuario, string codigo_empresa,int Desde, int Hasta)
 		{
 			try
 			{
@@ -622,8 +622,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 									 Telefono = d.StrTelefono,
 									 Usuario = d.StrUsuario,
 									 RazonSocial = d.TblEmpresas.StrRazonSocial
-
-								 }).ToList();
+								 }).OrderBy(x => x.RazonSocial).Skip(Desde).Take(Hasta).ToList();
 
 
 				return respuesta;

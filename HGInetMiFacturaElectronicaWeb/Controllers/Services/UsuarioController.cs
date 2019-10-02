@@ -184,7 +184,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		///// </summary>
 		///// <param name="codigo_usuario"></param>
 		///// <returns></returns>
-		public IHttpActionResult Get(string codigo_usuario, string codigo_empresa)
+		public IHttpActionResult Get(string codigo_usuario, string codigo_empresa,int Desde, int Hasta)
 		{
 			try
 			{
@@ -207,7 +207,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (datosempresa.IntAdministrador)
 				{
 					codigo_empresa = "*";
-					datos = ctl_usuario.ConsultaUsuarios(codigo_usuario, codigo_empresa);
+					datos = ctl_usuario.ConsultaUsuarios(codigo_usuario, codigo_empresa, Desde, Hasta);
 				}
 
 				else
@@ -218,7 +218,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					}
 					else
 					{
-						datos = ctl_usuario.ConsultaUsuarios(codigo_usuario, codigo_empresa);
+						datos = ctl_usuario.ConsultaUsuarios(codigo_usuario, codigo_empresa, Desde, Hasta);
 					}
 				}
 			
