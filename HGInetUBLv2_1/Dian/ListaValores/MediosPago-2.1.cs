@@ -93,7 +93,7 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("95", "Giro formato abierto", "Giro formato abierto"),
 			new ListaItem("96", "Método de pago solicitado no usuado", "Método de pago solicitado no usuado"),
 			new ListaItem("97", "Clearing entre partners", "Clearing entre partners"),
-			new ListaItem("ZZZ", "Acuerdo mutuo", "Acuerdo mutuo"),
+			new ListaItem("0", "Acuerdo mutuo", "Acuerdo mutuo"),
 
 		};
 

@@ -333,18 +333,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//Regex isnumber = new Regex("[^0-9]");
 			if (!string.IsNullOrEmpty(tercero.Identificacion))
 			{
-				if (!Texto.ValidarExpresion(TipoExpresion.Numero, tercero.Identificacion) && !Texto.ValidarExpresion(TipoExpresion.Alfanumerico, tercero.Identificacion))
-					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener caracteres especiales", "Identificacion", tipo));
+				if (tercero.TipoIdentificacion.Equals(31))
+				{
+					if (!Texto.ValidarExpresion(TipoExpresion.Numero, tercero.Identificacion) && !Texto.ValidarExpresion(TipoExpresion.Alfanumerico, tercero.Identificacion))
+						throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener caracteres especiales", "Identificacion",tipo));
 
-				// valida los ceros al inicio de la identificación
-				if (!Texto.ValidarExpresion(TipoExpresion.NumeroNotStartZero, tercero.Identificacion))
-					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener ceros al inicio", "Identificacion", tipo));
+					// valida los ceros al inicio de la identificación
+					if (!Texto.ValidarExpresion(TipoExpresion.NumeroNotStartZero, tercero.Identificacion))
+						throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener ceros al inicio", "Identificacion", tipo));
+				}
 			}
 			else
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Identificacion", tipo).Replace("de tipo", "del"));
 
 
-			if ((tercero.IdentificacionDv < 0) || (tercero.IdentificacionDv > 9))
+			if ((tercero.IdentificacionDv < 0) || (tercero.IdentificacionDv > 9) && tipo.Equals("Obligado"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "IdentificacionDv", tipo).Replace("de tipo", "del"));
 
 			if (string.IsNullOrEmpty(tercero.CodigoPais))
@@ -420,16 +423,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (Facturador.IntVersionDian == 2)
 			{
-				//Validacion del digito de verificacion enviado
-				short tercero_dv = FuncionesIdentificacion.Dv(tercero.Identificacion);
-
-				if (tercero_dv != tercero.IdentificacionDv)
-					throw new ArgumentException(string.Format("El digito de verificacion {0} no esta bien calculado del {1}", tercero.IdentificacionDv, tipo));
-
 				ListaTipoIdFiscal list_tipoId = new ListaTipoIdFiscal();
 				ListaItem identi = list_tipoId.Items.Where(d => d.Codigo.Equals(tercero.TipoIdentificacion.ToString())).FirstOrDefault();
 				if (identi == null)
 					throw new ArgumentException(string.Format("El Tipo de Identificacion {0} no esta bien formado del {1}", tercero.TipoIdentificacion, tipo));
+
+				if (tipo.Equals("Obligado") && !identi.Codigo.Equals("31"))
+					throw new ArgumentException(string.Format("El Tipo de Identificacion {0} para el {1} a facturar no es correcto", tercero.TipoIdentificacion, tipo));
+
+				if (identi.Codigo.Equals("31"))
+				{
+					//Validacion del digito de verificacion enviado
+					short tercero_dv = FuncionesIdentificacion.Dv(tercero.Identificacion);
+
+					if (tercero_dv != tercero.IdentificacionDv)
+						throw new ArgumentException(string.Format("El digito de verificacion {0} no esta bien calculado del {1}", tercero.IdentificacionDv, tipo));
+				}
 
 				ListaTipoRegimen list_fiscal = new ListaTipoRegimen();
 				ListaItem regimenfiscal = list_fiscal.Items.Where(d => d.Codigo.Equals(tercero.RegimenFiscal)).FirstOrDefault();
@@ -485,6 +494,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 					{
 						//--Se quitan estas responsabilidades por que no aparecen en el listado
+						/*
 						if (tercero.Responsabilidades.Contains("O-48"))
 						{
 							int id = tercero.Responsabilidades.IndexOf("O-48");
@@ -495,7 +505,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							int id = tercero.Responsabilidades.IndexOf("O-49");
 							tercero.Responsabilidades.RemoveAt(id);
-						}
+						}*/
 
 						List<string> responsabilidades = new List<string>();
 						foreach (string item in tercero.Responsabilidades)

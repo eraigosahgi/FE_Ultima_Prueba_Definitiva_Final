@@ -111,14 +111,17 @@ namespace HGInetUBLv2_1
 				if (documento.FormaPago == 0)
 					documento.FormaPago = 1;
 
-				//Valida que el termino de pago no este en 0 y lo pone por defecto en 10 - Efectivo
+				//Valida que el termino de pago si esta en 0 y lo pone ZZZ - Acuerdo mutuo
+				string termino_pago = string.Empty;
 				if (documento.TerminoPago == 0)
-					documento.TerminoPago = 10;
+					termino_pago = "ZZZ";
+				else
+					termino_pago = documento.TerminoPago.ToString();
 
 				List<PaymentMeansType> PaymentMeans = new List<PaymentMeansType>();
 				PaymentMeansType PaymentMean = new PaymentMeansType();
 				PaymentMeansCodeType MeansCode = new PaymentMeansCodeType();
-				MeansCode.Value = documento.TerminoPago.ToString();
+				MeansCode.Value = termino_pago;
 
 				//MeansCode.name = Ctl_Enumeracion.ObtenerMedioPago(documento.FormaPago);
 				PaymentMean.ID = new IDType();
@@ -456,7 +459,7 @@ namespace HGInetUBLv2_1
 				UUIDType UUID = new UUIDType();
 				//-----Se agrega Ambiente al cual se va enviar el documento
 				string CUFE = string.Empty;
-				if (facturaXML.InvoiceTypeCode.Equals("01"))
+				if (facturaXML.InvoiceTypeCode.Value.Equals("01"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";

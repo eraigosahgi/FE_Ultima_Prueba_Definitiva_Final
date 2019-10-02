@@ -111,7 +111,7 @@ namespace HGInetUBLv2_1
 				List<PaymentMeansType> PaymentMeans = new List<PaymentMeansType>();
 				PaymentMeansType PaymentMean = new PaymentMeansType();
 				PaymentMeansCodeType MeansCode = new PaymentMeansCodeType();
-				MeansCode.Value = "10";
+				MeansCode.Value = "ZZZ";
 				PaymentMean.ID = new IDType();
 				PaymentMean.ID.Value = "1";
 				PaymentMean.PaymentID = new PaymentIDType[1];
