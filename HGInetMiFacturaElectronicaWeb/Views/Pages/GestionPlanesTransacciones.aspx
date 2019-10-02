@@ -4,10 +4,10 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201922"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201922"></script>
-	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs201922"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201922"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201923"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201923"></script>
+	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs201923"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201923"></script>
 
 	<div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController" data-ng-init="consumido=false" data-ng-cloak>
 

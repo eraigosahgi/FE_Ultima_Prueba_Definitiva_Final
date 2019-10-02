@@ -20,7 +20,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 	//Declaramos el array
 	var Documentos = [];
 	var AlmacenDocumentos = new DevExpress.data.ArrayStore({
-		key: "NumeroDocumento",
+		key: "StrIdSeguridad",
 		data: Documentos
 	});
 	//****************
@@ -212,27 +212,6 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		}
 	};
 
-
-	//function consultar2() {
-	//	$('#Total').text("");
-	//	if (fecha_inicio == "")
-	//		fecha_inicio = now.toISOString();
-
-	//	if (fecha_fin == "")
-	//		fecha_fin = now.toISOString();
-	//	var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
-	//	var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
-	//	SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha).then(function (data) {
-	//		$("#gridDocumentos").dxDataGrid({
-	//			dataSource: data
-	//		});
-	//	});
-	//}
-
-
-
-
-
 	function consultar() {
 		$('#Total').text("");
 		if (fecha_inicio == "")
@@ -248,7 +227,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			$('#waitRegistros').show();
 			Documentos = [];
 			AlmacenDocumentos = new DevExpress.data.ArrayStore({
-				key: "NumeroDocumento",
+				key: "StrIdSeguridad",
 				data: Documentos
 			});
 
@@ -259,7 +238,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					store: AlmacenDocumentos,
 					reshapeOnPush: true
 				},
-				keyExpr: "NumeroDocumento",
+				keyExpr: "StrIdSeguridad",
 				paging: {
 					pageSize: 20
 				},
