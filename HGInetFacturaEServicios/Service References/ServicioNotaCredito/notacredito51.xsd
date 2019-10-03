@@ -41,4 +41,18 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Descuento" nillable="true" type="tns:Descuento" />
+  <xs:complexType name="ArrayOfReferenciaAdicional">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ReferenciaAdicional" nillable="true" type="tns:ReferenciaAdicional" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfReferenciaAdicional" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
+  <xs:complexType name="ReferenciaAdicional">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CodigoReferencia" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Documento" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FechaReferencia" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReferenciaAdicional" nillable="true" type="tns:ReferenciaAdicional" />
 </xs:schema>
