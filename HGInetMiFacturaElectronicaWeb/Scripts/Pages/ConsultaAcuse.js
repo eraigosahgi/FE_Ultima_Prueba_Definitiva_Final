@@ -132,7 +132,8 @@ App.controller('AcuseConsultaController', function AcuseConsultaController($scop
                 dataSource: response.data,
                 paging: {
                     pageSize: 20
-                },
+                },            	
+                keyExpr: "StrIdSeguridad",
                 pager: {
                     showPageSizeSelector: true,
                     allowedPageSizes: [5, 10, 20],

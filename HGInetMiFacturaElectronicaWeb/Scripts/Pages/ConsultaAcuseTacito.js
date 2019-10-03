@@ -61,7 +61,8 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
         var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
         SrvDocumento.ObtenerDocumentosTacito(codigo_Facturador_consulta, codigo_adquiriente, numero_documento).then(function (data) {            
             $("#gridDocumentos").dxDataGrid({
-                dataSource: data,
+            	dataSource: data,            	
+            	keyExpr: "StrIdSeguridad",
                 paging: {
                     pageSize: 20
                 },

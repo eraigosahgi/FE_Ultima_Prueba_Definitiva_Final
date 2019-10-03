@@ -88,11 +88,11 @@
 	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
 
 	<!-- JS AcuseRecibo -->
-	<script src="../../Scripts/WebConfig.js?vjs201923"></script>
-	<script src="../../Scripts/config.js?vjs201923"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201923"></script>
-	<script src="../../Scripts/config.js?vjs201923"></script>
-	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs201923"></script>
+	<script src="../../Scripts/WebConfig.js?vjs201924"></script>
+	<script src="../../Scripts/config.js?vjs201924"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201924"></script>
+	<script src="../../Scripts/config.js?vjs201924"></script>
+	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs201924"></script>
 
 </head>
 

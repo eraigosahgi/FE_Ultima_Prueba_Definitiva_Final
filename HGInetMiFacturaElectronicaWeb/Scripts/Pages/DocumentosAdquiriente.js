@@ -136,12 +136,8 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
 				dataSource: response.data,
 				paging: {
 					pageSize: 20
-				},
-				/* stateStoring: {
-					 enabled: true,
-					 type: "localStorage",
-					 storageKey: "storage"
-				 },*/
+				},				
+				keyExpr: "StrIdSeguridad",
 				pager: {
 					showPageSizeSelector: true,
 					allowedPageSizes: [5, 10, 20],

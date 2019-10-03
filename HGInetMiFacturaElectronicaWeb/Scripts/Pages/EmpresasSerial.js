@@ -15,8 +15,8 @@ angular.module("appsrvusuario", [])
             $("#wait").hide();
 
             $("#gridEmpresas").dxDataGrid({
-                dataSource: response.data,
-
+                dataSource: response.data,            	
+                keyExpr: "Identificacion",
                 paging: {
                     pageSize: 20
                 },

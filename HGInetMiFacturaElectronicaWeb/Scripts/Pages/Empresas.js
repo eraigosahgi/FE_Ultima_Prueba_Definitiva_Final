@@ -1684,7 +1684,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 						store: AlmacenEmpresas,
 						reshapeOnPush: true
 					},
-
+					keyExpr: "Identificacion",
 					paging: {
 						pageSize: 20
 					},

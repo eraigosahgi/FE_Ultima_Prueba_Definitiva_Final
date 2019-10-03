@@ -225,6 +225,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			try {
 				$("#grid").dxDataGrid({
 					dataSource: response.data,
+					keyExpr: "id",
 					paging: {
 						pageSize: 20
 

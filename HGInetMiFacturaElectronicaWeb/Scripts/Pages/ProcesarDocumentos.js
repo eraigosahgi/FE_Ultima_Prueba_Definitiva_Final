@@ -216,6 +216,7 @@ App.controller('ProcesarDocumentosController', function DocAdquirienteController
 				paging: {
 					pageSize: 20
 				},
+				keyExpr:"IdSeguridad",
 				pager: {
 					showPageSizeSelector: true,
 					allowedPageSizes: [5, 10, 20],

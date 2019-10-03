@@ -7,7 +7,7 @@
 	<title></title>
 </head>
 <body>
-	<script src="../../Scripts/Pages/ModalConsultaProveedores.js?vjs201923"></script>
+	<script src="../../Scripts/Pages/ModalConsultaProveedores.js?vjs201924"></script>
 	<form>
 		<div id="modal_Buscar_proveedores" class="modal fade" style="display: none;">
 			<div class="modal-dialog">
