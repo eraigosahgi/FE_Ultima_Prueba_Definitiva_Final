@@ -4,6 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
+	<script src="../../Scripts/Services/SrvUsuario.js?vjs201924"></script>
     <script src="../../Scripts/Pages/Usuarios.js?vjs201924"></script>
     <script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201924"></script>
 
