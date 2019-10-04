@@ -542,9 +542,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//Valida totales del objeto
 			ValidarTotales(null, documento, null, TipoDocumento.NotaCredito, facturador);
 
-			//Valida que envien el titulo del documento y si es vacio lo llena
-			if (string.IsNullOrEmpty(documento.DocumentoFormato.Titulo) || documento.DocumentoFormato.Titulo == null)
-				documento.DocumentoFormato.Titulo = Enumeracion.GetDescription(TipoDocumento.NotaCredito).ToUpper();
+			if (facturador.IntHabilitacion > 0)
+			{
+				if (documento.DocumentoFormato != null)
+				{
+					//Valida que envien el titulo del documento y si es vacio lo llena
+					if (string.IsNullOrEmpty(documento.DocumentoFormato.Titulo) || documento.DocumentoFormato.Titulo == null)
+						documento.DocumentoFormato.Titulo = Enumeracion.GetDescription(TipoDocumento.NotaCredito).ToUpper();
+				}
+				else
+					throw new ApplicationException("No se encontró información del Formato");
+			}
 
 			return documento;
 		}
