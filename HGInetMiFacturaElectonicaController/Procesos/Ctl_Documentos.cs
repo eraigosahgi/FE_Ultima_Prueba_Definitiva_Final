@@ -439,12 +439,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (tercero_dv != tercero.IdentificacionDv)
 						throw new ArgumentException(string.Format("El digito de verificacion {0} no esta bien calculado del {1}", tercero.IdentificacionDv, tipo));
 				}
-
+				/*
 				ListaTipoRegimen list_fiscal = new ListaTipoRegimen();
 				ListaItem regimenfiscal = list_fiscal.Items.Where(d => d.Codigo.Equals(tercero.RegimenFiscal)).FirstOrDefault();
 				if (regimenfiscal == null)
-					throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.TipoIdentificacion, tipo));
-
+					throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.RegimenFiscal, tipo));
+				*/
 				ListaPaises list_paises = new ListaPaises();
 				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.CodigoPais)).FirstOrDefault();
 				if (pais == null)
@@ -481,6 +481,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (tipoimp == null)
 					throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
 
+				if (string.IsNullOrEmpty(tercero.RegimenFiscal))
+					throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.RegimenFiscal, tipo));
+
+				bool validar_regimen = false;
+				bool regimen_validado = false;
+				if (!(tercero.RegimenFiscal.Equals("48") || tercero.RegimenFiscal.Equals("49")))
+					validar_regimen = true;
+
 				if ((tercero.Responsabilidades == null || !tercero.Responsabilidades.Any()) && tipo.Equals("Obligado"))
 				{
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Responsabilidades", tipo).Replace("de tipo", "del"));
@@ -493,19 +501,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					else
 					{
-						//--Se quitan estas responsabilidades por que no aparecen en el listado
-						/*
-						if (tercero.Responsabilidades.Contains("O-48"))
+						if (validar_regimen == true)
 						{
-							int id = tercero.Responsabilidades.IndexOf("O-48");
-							tercero.Responsabilidades.RemoveAt(id);
+							if (tercero.Responsabilidades.Contains("O-16") || tercero.Responsabilidades.Contains("O-49"))
+							{
+								tercero.RegimenFiscal = "49";
+								regimen_validado = true;
+							}
+							else if (tercero.Responsabilidades.Contains("O-48"))
+							{
+								tercero.RegimenFiscal = "48";
+								regimen_validado = true;
+							}
+							else if (tipo.Equals("Obligado"))
+							{
+								tercero.RegimenFiscal = "48";
+								regimen_validado = true;
+							}
 						}
 
-						if (tercero.Responsabilidades.Contains("O-49"))
-						{
-							int id = tercero.Responsabilidades.IndexOf("O-49");
-							tercero.Responsabilidades.RemoveAt(id);
-						}*/
 
 						List<string> responsabilidades = new List<string>();
 						foreach (string item in tercero.Responsabilidades)
@@ -524,6 +538,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						tercero.Responsabilidades = responsabilidades;
 
+					}
+
+				}
+
+				if (regimen_validado == false && !tipo.Equals("Obligado"))
+				{
+					if (tercero.TipoPersona.Equals(1))
+					{
+						tercero.RegimenFiscal = "48";
+					}
+					else
+					{
+						tercero.RegimenFiscal = "49";
 					}
 
 				}
