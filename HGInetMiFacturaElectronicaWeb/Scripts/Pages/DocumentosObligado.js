@@ -246,7 +246,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
-				keyExpr: "NumeroDocumento",
+				keyExpr: "StrIdSeguridad",
 				paging: {
 					pageSize: 20
 				}
