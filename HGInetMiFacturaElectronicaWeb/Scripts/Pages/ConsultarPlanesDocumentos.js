@@ -444,9 +444,10 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
                     , totalItems: [{
                     	column: "Valor",
-                    	displayFormat: "{0}",
-                    	valueFormat: "currency",
-                    	summaryType: "sum"
+                    	summaryType: "sum",                    	
+                    	customizeText: function (data) {
+                    		return fNumber.go(data.value).replace("$-", "-$");
+                    	}
                     }, {
                     	column: "TCompra",
                     	summaryType: "sum",

@@ -409,13 +409,21 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 						valueFormat: "currency"
 					}]
                     , totalItems: [{
-                    	name: "Suma",
-                    	showInColumn: "PagoFactura",
+                    	name: "Suma",                    	
                     	displayFormat: "{0}",
                     	valueFormat: "currency",
                     	summaryType: "custom"
 
                     },
+					{
+						column: "PagoFactura",
+						showInColumn: "PagoFactura",
+						summaryType: "sum",
+						customizeText: function (data) {
+							return fNumber.go(data.value).replace("$-", "-$");
+						}
+
+					},
                     {
                     	showInColumn: "DatFechaVencDocumento",
                     	displayFormat: "Total : ",
@@ -792,13 +800,21 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 						valueFormat: "currency"
 					}]
                     , totalItems: [{
-                    	name: "Suma",
-                    	showInColumn: "PagoFactura",
+                    	name: "Suma",                    	
                     	displayFormat: "{0}",
                     	valueFormat: "currency",
                     	summaryType: "custom"
 
                     },
+					{
+						column: "PagoFactura",
+						showInColumn: "PagoFactura",
+						summaryType: "sum",
+						customizeText: function (data) {
+							return fNumber.go(data.value).replace("$-", "-$");
+						}
+
+					},
                     {
                     	showInColumn: "DatFechaVencDocumento",
                     	displayFormat: "Total : ",
