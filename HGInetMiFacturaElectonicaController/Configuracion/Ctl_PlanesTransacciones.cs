@@ -97,7 +97,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.DatFechaVencimiento = datos_plan.DatFechaVencimiento;
 			Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaVencimiento;
 
-			if (Ptransaccion.IntMesesVence > 0 && Ptransaccion.DatFechaInicio!=null)
+			if (Ptransaccion.IntMesesVence > 0 && Ptransaccion.DatFechaInicio != null)
 			{
 				Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaInicio.Value.AddMonths(Ptransaccion.IntMesesVence);
 			}
@@ -369,12 +369,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 										  select datos.StrEmpresaDescuento).FirstOrDefault())
 									 select lista.StrIdentificacion).ToList();
 
-			//var ListaFacturadores = (from lista in context.TblEmpresas
-			//						 where lista.StrEmpresaAsociada.Equals(
-			//							 (from datos in context.TblEmpresas
-			//							  where datos.StrIdentificacion.Equals(identificacion)
-			//							  select datos.StrEmpresaAsociada).FirstOrDefault())
-			//						 select lista.StrIdentificacion).ToList();
 
 
 			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones
@@ -443,6 +437,70 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 		/// <summary>
+		/// Retorna Documentos Disponibles
+		/// </summary>
+		/// <param name="identificacion"></param>
+		/// <returns></returns>
+		public dynamic obtenerSaldoDisponibles(string identificacion)
+		{
+
+			int tipoplan = (int)TipoCompra.PostPago.GetHashCode();
+			int estadoplan = (int)EstadoPlan.Habilitado.GetHashCode();
+
+			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();
+			DateTime Fecha_Actual = Fecha.GetFecha();
+
+
+			var Plan = (from planes in context.TblPlanesTransacciones
+						where planes.IntTipoProceso != tipoplan && planes.IntEstado == estadoplan
+						&& planes.StrEmpresaFacturador.Equals(identificacion)
+						group planes by new { planes.StrEmpresaFacturador } into saldo_Facturador
+
+						select new
+						{
+							Identificacion = saldo_Facturador.FirstOrDefault().StrEmpresaFacturador,
+							Planes = saldo_Facturador.Count(),
+							TProcesadas = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
+							TCompra = saldo_Facturador.Sum(x => x.IntNumTransaccCompra),
+						}).Select(item => new
+						{
+							item.Identificacion,
+							item.Planes,
+							item.TProcesadas,
+							item.TCompra,
+							TDisponible = (item.TCompra - item.TProcesadas),
+							Porcentaje = Math.Round(((float)item.TProcesadas / (float)item.TCompra) * 100, 2),
+						    Tipo = 1
+						}).FirstOrDefault();
+
+			if (Plan == null)
+			{
+				var PlanesPostPago = (from planes in context.TblPlanesTransacciones
+								 where planes.IntTipoProceso == tipoplan && planes.IntEstado == estadoplan
+								 && planes.StrEmpresaFacturador.Equals(identificacion)
+								 group planes by new { planes.StrEmpresaFacturador } into saldo_Facturador
+
+								 select new
+								 {
+									 Identificacion = saldo_Facturador.FirstOrDefault().StrEmpresaFacturador,
+									 Planes = saldo_Facturador.Count(),
+									 TProcesadas = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
+									 TDisponible = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
+									 TCompra = saldo_Facturador.Sum(x => x.IntNumTransaccCompra),
+									 Porcentaje = 100,
+									 Tipo = 3
+								 }).FirstOrDefault();
+
+				return PlanesPostPago;
+			}
+
+			return Plan;
+		}
+
+
+
+
+		/// <summary>
 		/// Actualiza el campo IntNumTransaccProceso para indicar cuantos documentos estan reservados para procesar
 		/// </summary>
 		/// <param name="idseguridad">id de seguridad del plan</param>
@@ -476,7 +534,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 			//Validamos si el plan ya ha procesado algun documento para colocarle la fecha de inicio y la fecha de vencimiento
-			if (PlanesTransacciones.IntNumTransaccProcesadas == 0 && planenproceso.procesado>0)
+			if (PlanesTransacciones.IntNumTransaccProcesadas == 0 && planenproceso.procesado > 0)
 			{
 				PlanesTransacciones.DatFechaInicio = Fecha.GetFecha();
 
@@ -487,7 +545,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					PlanesTransacciones.DatFechaVencimiento = Fecha.GetFecha().AddMonths(PlanesTransacciones.IntMesesVence);
 				}
 
-			}			
+			}
 
 			//Se debe Sumar el procesado del objeto a la cantidad de documentos procesados en la tabla             
 			PlanesTransacciones.IntNumTransaccProcesadas = PlanesTransacciones.IntNumTransaccProcesadas + planenproceso.procesado;
@@ -515,7 +573,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 
 
-			
+
 
 			PlanesTransacciones = this.Edit(PlanesTransacciones);
 			///Validación de alertas y notificaciones

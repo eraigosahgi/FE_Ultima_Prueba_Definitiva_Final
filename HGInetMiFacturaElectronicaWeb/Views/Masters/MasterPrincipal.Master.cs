@@ -4,6 +4,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,10 +32,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 			{
 				if (!Page.IsPostBack)
 				{
+
 					// obtiene los datos de la sesión para mostrarlos
 					if (Sesion.DatosEmpresa != null && Sesion.DatosUsuario != null)
 					{
-											
+
 						// carga los datos de la empresa en la página master
 						TblEmpresas datos_empresa = Sesion.DatosEmpresa;
 						LblNombreEmpresa.InnerText = datos_empresa.StrRazonSocial;
@@ -98,19 +100,56 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 						{
 							Hdf_Perfil.Value = (datos_empresa.IntAdquiriente && datos_empresa.IntObligado) ? "Facturador y Adquiriente" : datos_empresa.IntAdquiriente ? "Adquiriente" : datos_empresa.IntObligado ? "Facturador" : "";
 						}
+					}
 
+					if (Hdf_Perfil.Value != "Adquiriente")
+					{
+						//Busco documentos disponibles
+						Ctl_PlanesTransacciones CtrPlanes = new Ctl_PlanesTransacciones();
+						var Planes = CtrPlanes.obtenerSaldoDisponibles(Hdf_Facturador.Value);
+						ObjPlanes ObjPlan = new ObjPlanes();
+						string Datos = JsonConvert.SerializeObject(Planes);
+						ObjPlan = JsonConvert.DeserializeObject<ObjPlanes>(Datos);
+						if (ObjPlan.Identificacion != null)
+						{
+							SpTotalDocumentos.Text = ObjPlan.TDisponible;
+
+						}
+						else
+						{
+							SpTotalDocumentos.Text = "0";
+							SpTotalDocumentos.CssClass = "badge badge-pill bg-danger-400 ml-auto ml-md-0";
+						}
+
+						
+						NroDocumentos.Visible = true;
+						if (ObjPlan.Tipo != TipoCompra.PostPago.GetHashCode() && ObjPlan.Identificacion != null)
+						{
+							divDatosPlan.Visible = true;
+							lblDisponibles.InnerText = string.Format("Disponibles:{0}", ObjPlan.TDisponible);
+							lblComprados.InnerText = string.Format("Comprados:{0}", ObjPlan.TCompra);
+							lblProcesados.InnerText = string.Format("Procesados:{0}", ObjPlan.TProcesadas);
+							Hdf_Porcentaje.Value = Convert.ToInt32(ObjPlan.Porcentaje ).ToString();
+							lblPorcentaje.InnerText = string.Format("{0}%", ObjPlan.Porcentaje);
+						}
+						else
+						{
+							divDatosPlan.Visible = false;
+							lblDisponibles.InnerText = string.Empty;
+							lblComprados.InnerText = string.Empty;
+							lblProcesados.InnerText = string.Empty;
+						}
+					}
+					else
+					{
+						divDatosPlan.Visible = false;
+						NroDocumentos.Visible = false;
 					}
 				}
 			}
-			catch (Exception excepcion)
+			catch (Exception)
 			{
-
-				
-
-				//Controla la session enviando la url a la pagina inicial para iniciar nuevamente la session
-				//PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-				//string script = @"<script type='text/javascript'>control_session('" + plataforma.RutaPublica + "');</script>";
-				//ScriptManager.RegisterStartupScript(this, typeof(Page), "control_session", script, false);
+			
 			}
 		}
 
@@ -366,7 +405,18 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 	#endregion
 
 
-
-
+	/// <summary>
+	/// Objeto para almacenar los documentos disponibles del facturador
+	/// </summary>
+	public class ObjPlanes
+	{
+		public string Identificacion { get; set; }
+		public int Planes { get; set; }
+		public double TProcesadas { get; set; }
+		public double TCompra { get; set; }
+		public string TDisponible { get; set; }
+		public decimal Porcentaje { get; set; }
+		public int Tipo { get; set; }
+	}
 
 }

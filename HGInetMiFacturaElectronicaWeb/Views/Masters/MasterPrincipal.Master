@@ -83,7 +83,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script>
 	<%--<script src="../../Scripts/devall.js"></script>--%>
 	<script src="https://cdn3.devexpress.com/jslib/19.1.6/js/dx.all.js"></script>
-	<script src="https://unpkg.com/devextreme-intl/dist/devextreme-intl.min.js"></script>    
+	<script src="https://unpkg.com/devextreme-intl/dist/devextreme-intl.min.js"></script>
 	<script src="https://cdn3.devexpress.com/jslib/19.1.6/js/localization/dx.messages.es.js"></script>
 	<%--<script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>--%>
 
@@ -149,6 +149,10 @@
 			setTimeout(IrAPaginaPrincipal, 3000);
 		}
 
+		///Crea el grafico de porcentaje de documentos disponibles o usados en caso del postpago
+		function CargarPorcentaje(Porcentaje) {
+			$('.Hgi_plan').dxBullet(CrearGrafico(Porcentaje, 'Consumo Actual ', ' %', nivelPlanes(Porcentaje, 1)))
+		}
 
 
 		function inicio() {
@@ -186,6 +190,7 @@
 		<input type="hidden" id="Hdf_RutaPlataformaServicios" runat="server" />
 		<input type="hidden" id="Hdf_Facturador" runat="server" />
 		<input type="hidden" id="Hdf_Perfil" runat="server" />
+		<input type="hidden" id="Hdf_Porcentaje" runat="server" />
 
 
 		<!-- Barra de Navegación Principal -->
@@ -242,7 +247,7 @@
 					<li><a href="/Views/Pages/Inicio.aspx" class="icon-home2"></a></li>
 				</ul>
 
-				<div class="navbar-right navbar-collapse collapse" id="Div2">
+				<div class="navbar-right navbar-collapse collapse" id="Div2" style="margin-top: 5px;">
 					<ul class="nav navbar-nav">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -250,7 +255,17 @@
 							</a>
 
 						</li>
-						<li class="dropdown">
+
+						<li class="dropdown" runat="server" id="NroDocumentos">
+							<a href="#" class="navbar-nav-link dropdown-toggle caret-0" data-toggle="dropdown" aria-expanded="true">
+								<i class="icon-folder" title="Documentos Disponibles"></i>
+								<span class="d-md-none ml-2" title="Actualizar"></span>
+								<asp:Label CssClass="badge badge-pill bg-success-400 ml-auto ml-md-0" ID="SpTotalDocumentos" runat="server" Text="Label"></asp:Label>
+							</a>
+						</li>
+						
+						<li class="dropdown" onclick="setTimeout(CargarPorcentaje(Hdf_Porcentaje.value), 3000);">
+
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								<i class="icon-user"></i>
 							</a>
@@ -260,7 +275,7 @@
 									<asp:Label runat="server">Información de Usuario</asp:Label>
 								</div>
 
-								<ul class="media-list dropdown-content-body width-350">
+								<ul class="media-list dropdown-content-body width-400">
 									<li class="media">
 										<div class="media-body">
 											<i id="icono_usuario" class="icon-vcard position-left" title="Usuario"></i>
@@ -272,6 +287,35 @@
 											<div runat="server" id="EmailUsuario">
 												<i class="icon-envelop5 position-left" title="Email"></i>
 												<label runat="server" id="lblEmailUsuario">E-mail de Usuario</label>
+											</div>
+
+											<div runat="server" id="divDatosPlan">
+												<div class="col-md-12">
+													<div class="col-md-3">
+														<label runat="server" id="Label1" style="margin-left: -20px; margin-top: 5px;">Consumo:</label>
+													</div>
+													<div class="col-md-8" style="width: 50px; margin-left: -30px">
+														<div runat="server" id="Div1">
+															<div class="bullet Hgi_plan"></div>
+														</div>
+
+													</div>
+													<div class="col-md-1" style="margin-top: 5px; left: 27%;">
+														<label style="color: white;" runat="server" id="lblPorcentaje">0%</label>
+													</div>
+												</div>
+
+												<div class="col-md-12" style="margin-left: -20px; margin-right: -20px">
+													<div class="col-md-4">
+														<label runat="server" id="lblComprados"></label>
+													</div>
+													<div class="col-md-4">
+														<label runat="server" id="lblProcesados"></label>
+													</div>
+													<div class="col-md-4">
+														<label runat="server" id="lblDisponibles"></label>
+													</div>
+												</div>
 											</div>
 										</div>
 									</li>
@@ -355,7 +399,7 @@
 
 							<div class="heading-elements">
 								<div class="heading-btn-group">
-								<a id="a_manuales_plataforma" class="btn btn-link btn-float text-size-small has-text" data-toggle="modal" data-target="#modal_manuales"><i class="icon-info22"></i><span>Manuales</span></a>
+									<a id="a_manuales_plataforma" class="btn btn-link btn-float text-size-small has-text" data-toggle="modal" data-target="#modal_manuales"><i class="icon-info22"></i><span>Manuales</span></a>
 									<a id="a_info_acerca" class="btn btn-link btn-float text-size-small has-text" data-toggle="modal" data-target="#modal_default"><i class="icon-info22"></i><span>Acerca de..</span></a>
 								</div>
 							</div>
@@ -527,7 +571,7 @@
 
 	</form>
 	<script>
-		
+
 		try {
 			(function (i, s, o, g, r, a, m) {
 				i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
