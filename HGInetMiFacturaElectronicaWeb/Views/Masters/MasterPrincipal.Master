@@ -159,9 +159,68 @@
 			window.location.assign("/Views/Pages/Inicio.aspx");
 		}
 
+
 		function popup(ruta_archivo) {
 			window.open(ruta_archivo, "ventana1", "width=700,height=850,scrollbars=NO")
 		}
+
+
+		//Obtiene los datos de la session para luego consultar los documentos disponibles
+		$.ajax({
+			url: '/api/SesionDatosUsuario/',
+			success: function (respuesta) {
+				$.ajax({
+					url: '/api/ObtenerSaldo?Facturador=' + respuesta[0].IdentificacionEmpresa,
+					success: function (respuesta) {
+						$('#SpTotalDocumentos').text(respuesta.TDisponible);
+
+						//Factrurador
+						if (respuesta.Facturador) {
+							$('#DocumentosFacturador').show();
+							//Facturador Sin Documentos
+							if (respuesta.Planes == 0) {
+								$('#DivSaldos').hide();
+							} else {
+								//Diferente de postPago
+								if (respuesta.Tipo != 3) {
+									setTimeout(CargarPorcentaje(respuesta.Porcentaje), 3000);
+									$('#lblComprados').text("Adquidiros: " + respuesta.TCompra);
+									$('#lblProcesados').text("Procesados: " + respuesta.TProcesadas);
+									$('#lblDisponibles').text("Disponibles: " + respuesta.TDisponible);
+									$('#lblPorcentaje').text(respuesta.Porcentaje);
+									$('#lblPlanpostpago').text("");
+								} else {
+									//Plan postPago
+									$('#lblPlanpostpago').text("Plan PostPago: " + respuesta.TDisponible + " Documentos");
+									$('#lblComprados').text("");
+									$('#lblProcesados').text("");
+									$('#lblDisponibles').text("");
+									$('#lblPorcentaje').text("");
+								}
+							}
+						} else {
+							//Adquiriente
+							$('#DocumentosFacturador').hide();
+						}
+
+					},
+					error: function () {
+						console.log("No se ha podido obtener la información");
+					}
+				});
+			},
+			error: function () {
+				console.log("No se ha podido obtener la información");
+			}
+		});
+
+
+
+
+
+
+
+
 
 	</script>
 	<script type="text/javascript" async="" src="https://www.google-analytics.com/ga.js"></script>
@@ -256,14 +315,59 @@
 
 						</li>
 
-						<li class="dropdown" runat="server" id="NroDocumentos">
+						<li class="dropdown" id="DocumentosFacturador">
+
 							<a href="#" class="navbar-nav-link dropdown-toggle caret-0" data-toggle="dropdown" aria-expanded="true">
-								<i class="icon-folder" title="Documentos Disponibles"></i>
+								<i class="icon-file-empty" title="Documentos Disponibles"></i>
 								<span class="d-md-none ml-2" title="Actualizar"></span>
-								<asp:Label CssClass="badge badge-pill bg-success-400 ml-auto ml-md-0" ID="SpTotalDocumentos" runat="server" Text="Label"></asp:Label>
+								<span id="SpTotalDocumentos" class="badge badge-pill bg-success-400 ml-auto ml-md-0"></span>
+
 							</a>
+
+							<div class="dropdown-menu dropdown-content" id="DivSaldos">
+								<div class="dropdown-content-heading">
+									<asp:Label runat="server">Saldo de Documentos</asp:Label>
+								</div>
+
+								<ul class="media-list dropdown-content-body width-400">
+									<li class="media">
+										<div class="media-body">
+
+
+											<div runat="server" id="divDatosPlan">
+												<div class="col-md-12">
+													<div class="col-md-12" style="width: 50px;">
+														<div runat="server" id="Div1">
+															<div class="bullet Hgi_plan"></div>
+														</div>
+
+													</div>
+													<label id="lblPlanpostpago"></label>
+													<div class="col-md-1" style="margin-top: 5px; left: 27%;">
+
+														<label style="color: white;" runat="server" id="lblPorcentaje">0%</label>
+													</div>
+												</div>
+
+												<div class="col-md-12">
+													<div class="col-md-4">
+														<label id="lblComprados"></label>
+													</div>
+													<div class="col-md-4">
+														<label id="lblProcesados"></label>
+													</div>
+													<div class="col-md-4">
+														<label id="lblDisponibles"></label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
 						</li>
-						
+
+
 						<li class="dropdown" onclick="setTimeout(CargarPorcentaje(Hdf_Porcentaje.value), 3000);">
 
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -289,34 +393,7 @@
 												<label runat="server" id="lblEmailUsuario">E-mail de Usuario</label>
 											</div>
 
-											<div runat="server" id="divDatosPlan">
-												<div class="col-md-12">
-													<div class="col-md-3">
-														<label runat="server" id="Label1" style="margin-left: -20px; margin-top: 5px;">Consumo:</label>
-													</div>
-													<div class="col-md-8" style="width: 50px; margin-left: -30px">
-														<div runat="server" id="Div1">
-															<div class="bullet Hgi_plan"></div>
-														</div>
 
-													</div>
-													<div class="col-md-1" style="margin-top: 5px; left: 27%;">
-														<label style="color: white;" runat="server" id="lblPorcentaje">0%</label>
-													</div>
-												</div>
-
-												<div class="col-md-12" style="margin-left: -20px; margin-right: -20px">
-													<div class="col-md-4">
-														<label runat="server" id="lblComprados"></label>
-													</div>
-													<div class="col-md-4">
-														<label runat="server" id="lblProcesados"></label>
-													</div>
-													<div class="col-md-4">
-														<label runat="server" id="lblDisponibles"></label>
-													</div>
-												</div>
-											</div>
 										</div>
 									</li>
 								</ul>

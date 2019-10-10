@@ -102,54 +102,12 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 						}
 					}
 
-					if (Hdf_Perfil.Value != "Adquiriente")
-					{
-						//Busco documentos disponibles
-						Ctl_PlanesTransacciones CtrPlanes = new Ctl_PlanesTransacciones();
-						var Planes = CtrPlanes.obtenerSaldoDisponibles(Hdf_Facturador.Value);
-						ObjPlanes ObjPlan = new ObjPlanes();
-						string Datos = JsonConvert.SerializeObject(Planes);
-						ObjPlan = JsonConvert.DeserializeObject<ObjPlanes>(Datos);
-						if (ObjPlan.Identificacion != null)
-						{
-							SpTotalDocumentos.Text = ObjPlan.TDisponible;
 
-						}
-						else
-						{
-							SpTotalDocumentos.Text = "0";
-							SpTotalDocumentos.CssClass = "badge badge-pill bg-danger-400 ml-auto ml-md-0";
-						}
-
-						
-						NroDocumentos.Visible = true;
-						if (ObjPlan.Tipo != TipoCompra.PostPago.GetHashCode() && ObjPlan.Identificacion != null)
-						{
-							divDatosPlan.Visible = true;
-							lblDisponibles.InnerText = string.Format("Disponibles:{0}", ObjPlan.TDisponible);
-							lblComprados.InnerText = string.Format("Comprados:{0}", ObjPlan.TCompra);
-							lblProcesados.InnerText = string.Format("Procesados:{0}", ObjPlan.TProcesadas);
-							Hdf_Porcentaje.Value = Convert.ToInt32(ObjPlan.Porcentaje ).ToString();
-							lblPorcentaje.InnerText = string.Format("{0}%", ObjPlan.Porcentaje);
-						}
-						else
-						{
-							divDatosPlan.Visible = false;
-							lblDisponibles.InnerText = string.Empty;
-							lblComprados.InnerText = string.Empty;
-							lblProcesados.InnerText = string.Empty;
-						}
-					}
-					else
-					{
-						divDatosPlan.Visible = false;
-						NroDocumentos.Visible = false;
-					}
 				}
 			}
 			catch (Exception)
 			{
-			
+
 			}
 		}
 

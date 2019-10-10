@@ -177,8 +177,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					CodigoEstado = d.IntEstado,
 					Facturador = d.StrEmpresaFacturador,
 					CodCompra = d.IntTipoProceso,
-					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100):0
-			});
+					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0
+				});
 
 				return Ok(retorno);
 			}
@@ -303,7 +303,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FechaVence = d.DatFechaVencimiento,
 					MesesVence = d.IntMesesVence,
 					DocRef = d.DocumentoRef,
-					FechaInicio = (d.DatFechaInicio==null)? "": d.DatFechaInicio.Value.ToString(Fecha.formato_fecha_hginet)
+					FechaInicio = (d.DatFechaInicio == null) ? "" : d.DatFechaInicio.Value.ToString(Fecha.formato_fecha_hginet)
 				});
 
 				return Ok(retorno);
@@ -329,7 +329,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="StrEmpresaFacturador"></param>
 		/// <param name="Tipo"></param>
 		/// <returns></returns>
-		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence,[FromUri] short MesesVence,[FromUri] string DocRef)
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri] short MesesVence, [FromUri] string DocRef)
 		{
 			try
 			{
@@ -402,12 +402,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				ObjPTransacciones.StrObservaciones = StrObservaciones;
 				ObjPTransacciones.StrEmpresaFacturador = StrEmpresaFacturador.Trim();
 				ObjPTransacciones.StrIdSeguridad = StrIdSeguridad;
-				ObjPTransacciones.DocumentoRef = (!string.IsNullOrEmpty(DocRef))? DocRef.Trim():string.Empty;
+				ObjPTransacciones.DocumentoRef = (!string.IsNullOrEmpty(DocRef)) ? DocRef.Trim() : string.Empty;
 				if (Vence)
 				{
 					ObjPTransacciones.IntMesesVence = MesesVence;
 				}
-				
+
 				//if (Vence && MesesVence > 0)
 				//{
 				//	ObjPTransacciones.DatFechaVencimiento = DateTime.Now.AddMonths(MesesVence);
@@ -422,6 +422,53 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+
+		/// <summary>
+		/// Obtiene los datos del saldo de los planes
+		/// </summary>
+		/// <param name="Facturador"></param>
+		/// <returns>Rotorna un objeto anonimo con los datos del saldo</returns>
+		[HttpGet]
+		[Route("api/ObtenerSaldo")]
+		public IHttpActionResult ObtnerSaldo(string Facturador)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				//Busco documentos disponibles
+				Ctl_PlanesTransacciones CtrPlanes = new Ctl_PlanesTransacciones();
+				var Planes = CtrPlanes.obtenerSaldoDisponibles(Facturador);
+
+				var IntObligado = Sesion.DatosEmpresa.IntObligado;
+				//Sin saldo
+				if (Planes == null)
+				{
+					//Facturador sin Saldo
+					if (IntObligado)
+					{
+						Planes = new { Facturador = IntObligado, Planes = 0, TProcesadas = 0, TCompra = 0, TDisponible = 0, Porcentaje = 0 };
+					}
+					else
+					{
+						//Adquiriente
+						Planes = new { Facturador = IntObligado };
+					}
+
+				}
+
+				return Ok(Planes);
+			}
+			catch (Exception)
+			{
+				return Ok();				
+			}
+
+		}
+
+
+
 
 	}
 }

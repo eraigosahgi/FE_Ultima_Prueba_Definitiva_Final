@@ -462,6 +462,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							Planes = saldo_Facturador.Count(),
 							TProcesadas = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
 							TCompra = saldo_Facturador.Sum(x => x.IntNumTransaccCompra),
+							Facturador = saldo_Facturador.FirstOrDefault().TblEmpresas.IntObligado
 						}).Select(item => new
 						{
 							item.Identificacion,
@@ -470,7 +471,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							item.TCompra,
 							TDisponible = (item.TCompra - item.TProcesadas),
 							Porcentaje = Math.Round(((float)item.TProcesadas / (float)item.TCompra) * 100, 2),
-						    Tipo = 1
+						    Tipo = 1,
+							item.Facturador
 						}).FirstOrDefault();
 
 			if (Plan == null)
@@ -488,7 +490,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 									 TDisponible = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
 									 TCompra = saldo_Facturador.Sum(x => x.IntNumTransaccCompra),
 									 Porcentaje = 100,
-									 Tipo = 3
+									 Tipo = 3,
+									 Facturador = saldo_Facturador.FirstOrDefault().TblEmpresas.IntObligado
 								 }).FirstOrDefault();
 
 				return PlanesPostPago;
