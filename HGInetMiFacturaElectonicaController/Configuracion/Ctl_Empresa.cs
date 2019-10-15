@@ -719,6 +719,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			tbl_empresa.StrTelefono = empresa.Telefono;
 			tbl_empresa.StrEmpresaAsociada = empresa.Identificacion;
 			tbl_empresa.StrEmpresaDescuento = empresa.Identificacion;
+			tbl_empresa.IntAcuseTacito = 0;
 
 			tbl_empresa.StrMailAcuse = String.Empty;
 			tbl_empresa.StrMailEnvio = String.Empty;
