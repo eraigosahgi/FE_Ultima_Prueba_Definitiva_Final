@@ -71,9 +71,9 @@
       <Project>{e87c13d9-aef2-442c-b377-7a5d7290502a}</Project>
       <Name>HGInetDIANServicios</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HGInetFacturaEServicios\HGInetFacturaEServicios.csproj">
-      <Project>{ee6399c8-f3c3-4537-b048-dbf0ad505f4d}</Project>
-      <Name>HGInetFacturaEServicios</Name>
+    <ProjectReference Include="..\HGInetFeAPI\HGInetFeAPI.csproj">
+      <Project>{fb700ae3-33ea-4a54-b9b9-cc70e7b502d7}</Project>
+      <Name>HGInetFeAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaController\HGInetMiFacturaElectonicaController.csproj">
       <Project>{29cb08f8-08ea-40ae-afd6-7a2a6c0d13d0}</Project>

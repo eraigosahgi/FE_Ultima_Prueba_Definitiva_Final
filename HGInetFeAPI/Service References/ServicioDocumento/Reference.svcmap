@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="5cd8354b-94ec-4e5b-a5f2-c679ee118e4d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="documentos.xsd" MetadataType="Schema" ID="6e33f378-91f0-420a-ab11-ff330a92520b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?xsd=xsd0" />
+    <MetadataFile FileName="documentos.wsdl" MetadataType="Wsdl" ID="7b695dbe-91b5-4e09-ae53-9a8b582afd50" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?wsdl" />
+    <MetadataFile FileName="documentos1.xsd" MetadataType="Schema" ID="bd179860-177f-444e-abfa-7c7aeebf6206" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?xsd=xsd2" />
+    <MetadataFile FileName="documentos.disco" MetadataType="Disco" ID="9aed0b65-f8c0-4692-a8ee-146e2a3ca7d8" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?disco" />
+    <MetadataFile FileName="documentos2.xsd" MetadataType="Schema" ID="c2e97736-8a37-4c30-b691-25544d647291" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?xsd=xsd1" />
+    <MetadataFile FileName="documentos3.xsd" MetadataType="Schema" ID="00adfb32-e6f2-482a-a377-b9f1981b5715" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?xsd=xsd3" />
+    <MetadataFile FileName="documentos1.wsdl" MetadataType="Wsdl" ID="d9c1ff12-8dd8-42b0-a34f-100292c73f72" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?wsdl=wsdl0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

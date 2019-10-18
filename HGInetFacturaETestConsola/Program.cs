@@ -1,5 +1,4 @@
 ﻿using HGInetDIANServicios;
-using HGInetFacturaEServicios;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
@@ -40,9 +39,9 @@ namespace HGInetFacturaETestConsola
 				//Convierto XML-UBL en Objeto
 				factura = FacturaXML.Convertir(objeto,null);
 
-				List<HGInetFacturaEServicios.ServicioFactura.Factura> list_factura = new List<HGInetFacturaEServicios.ServicioFactura.Factura>();
+				List<HGInetFeAPI.ServicioFactura.Factura> list_factura = new List<HGInetFeAPI.ServicioFactura.Factura>();
 
-				HGInetFacturaEServicios.ServicioFactura.Factura factura_envio = new HGInetFacturaEServicios.ServicioFactura.Factura();
+				HGInetFeAPI.ServicioFactura.Factura factura_envio = new HGInetFeAPI.ServicioFactura.Factura();
 
 				documento_obj = factura;
 
@@ -51,7 +50,7 @@ namespace HGInetFacturaETestConsola
 				list_factura.Add(factura_envio);
 
 				//Ejecuto libreria de servicios para el envio de documentos
-				HGInetFacturaEServicios.Ctl_Factura.Enviar("http://habilitacion.mifacturaenlinea.com.co", "4C2B77AFA43D621B091EF6802", "811021438", list_factura);
+				HGInetFeAPI.Ctl_Factura.Enviar("http://habilitacion.mifacturaenlinea.com.co", "4C2B77AFA43D621B091EF6802", "811021438", list_factura);
 
 				// cerrar la lectura del archivo xml
 				xml_reader.Close();
@@ -93,7 +92,7 @@ namespace HGInetFacturaETestConsola
 
 
 
-				List<HGInetFacturaEServicios.ServicioResolucion.Resolucion> resoluciones = HGInetFacturaEServicios.Ctl_Resolucion.Obtener("http://localhost:61499/", "CE61061C-9AD2-4942-97F5-A48206F2680D", "811021438");
+				List<HGInetFeAPI.ServicioResolucion.Resolucion> resoluciones = HGInetFeAPI.Ctl_Resolucion.Obtener("http://localhost:61499/", "CE61061C-9AD2-4942-97F5-A48206F2680D", "811021438");
 
 
 
@@ -189,17 +188,18 @@ namespace HGInetFacturaETestConsola
 
 		}
 
+		/*
 		public static void PruebaCufe()
 		{
 			try
 			{
 
-				string cufe = HGInetFacturaEServicios.Ctl_Factura.CalcularCUFE("dd85db55545bd6566f36b0fd3be9fd8555c36e", "PRE", "990000402", new DateTime(2018, 4, 23), "811021438", "13", "1020395355", 47500.00M, 39916.00M, 7584.00M, 0.00M, 0.00M);
+				string cufe = HGInetFeAPI.Ctl_Factura.CalcularCUFE("dd85db55545bd6566f36b0fd3be9fd8555c36e", "PRE", "990000402", new DateTime(2018, 4, 23), "811021438", "13", "1020395355", 47500.00M, 39916.00M, 7584.00M, 0.00M, 0.00M);
 
 				System.Diagnostics.Debug.WriteLine("CUFE GENERADO : " + cufe);
 
 
-				string cufeNC = HGInetFacturaEServicios.Ctl_NotaCredito.CalcularCUFE("5790af0483698d226240b7c4abafd49eb0dc8d480f6a7e44dfe4a523fed2129a", "PRE", "3d03ae717f28dab49c7588ffa4ef006f776ac468", "602", new DateTime(2018, 4, 23), "811021438", "13", "79758318", 687196.00M, 607870.00M, 109720.00M, 0.00M, 0.00M);
+				string cufeNC = HGInetFeAPI.Ctl_NotaCredito.CalcularCUFE("5790af0483698d226240b7c4abafd49eb0dc8d480f6a7e44dfe4a523fed2129a", "PRE", "3d03ae717f28dab49c7588ffa4ef006f776ac468", "602", new DateTime(2018, 4, 23), "811021438", "13", "79758318", 687196.00M, 607870.00M, 109720.00M, 0.00M, 0.00M);
 
 				System.Diagnostics.Debug.WriteLine("cufeNC GENERADO : " + cufeNC);
 
@@ -210,15 +210,15 @@ namespace HGInetFacturaETestConsola
 			}
 
 		}
-
+		*/
 
 		public static void test1()
 		{
 
 
-			//HGInetFacturaEServicios.ServicioFactura.Factura factura = new HGInetFacturaEServicios.ServicioFactura.Factura();
+			//HGInetFeAPI.ServicioFactura.Factura factura = new HGInetFeAPI.ServicioFactura.Factura();
 
-			HGInetFacturaEServicios.Ctl_Factura.Test("http://habilitacion.mifacturaenlinea.com.co");
+			HGInetFeAPI.Ctl_Factura.Test("http://habilitacion.mifacturaenlinea.com.co");
 
 
 			Regex isnumber = new Regex(@"^(0|([1-9][0-9]*))(\.\d\d$)$");

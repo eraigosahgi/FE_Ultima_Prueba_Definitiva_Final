@@ -18,11 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetUtilidadAzure", "HGIn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectonicaController", "HGInetMiFacturaElectonicaController\HGInetMiFacturaElectonicaController.csproj", "{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFacturaEServicios", "HGInetFacturaEServicios\HGInetFacturaEServicios.csproj", "{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491} = {AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentacion", "Documentacion", "{2088ABAD-E463-4F38-8668-C410072AC57F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ManualTecnico", "ManualTecnico", "{EFD98A42-3E60-459D-9574-8270FBFAC35E}"
@@ -258,6 +253,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CambioFormato", "CambioForm
 		Documentacion\Liberaciones\CambioFormato\StrFormato-TblDocumentos.txt = Documentacion\Liberaciones\CambioFormato\StrFormato-TblDocumentos.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFeAPI", "HGInetFeAPI\HGInetFeAPI.csproj", "{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -318,14 +315,6 @@ Global
 		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Release|x86.ActiveCfg = Release|Any CPU
 		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Release|x86.Build.0 = Release|Any CPU
-		{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}.Debug|x86.Build.0 = Debug|Any CPU
-		{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}.Release|x86.ActiveCfg = Release|Any CPU
-		{EE6399C8-F3C3-4537-B048-DBF0AD505F4D}.Release|x86.Build.0 = Release|Any CPU
 		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -382,6 +371,14 @@ Global
 		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Release|x86.ActiveCfg = Release|Any CPU
 		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Release|x86.Build.0 = Release|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Debug|x86.Build.0 = Debug|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
