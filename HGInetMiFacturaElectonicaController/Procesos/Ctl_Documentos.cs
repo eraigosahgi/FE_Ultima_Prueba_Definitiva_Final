@@ -482,16 +482,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
 
 				if (string.IsNullOrEmpty(tercero.RegimenFiscal))
-					throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.RegimenFiscal, tipo));
+					tercero.RegimenFiscal = "48";
+				//	throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.RegimenFiscal, tipo));
 
 				bool validar_regimen = false;
 				bool regimen_validado = false;
 				if (!(tercero.RegimenFiscal.Equals("48") || tercero.RegimenFiscal.Equals("49")))
 					validar_regimen = true;
 
-				if ((tercero.Responsabilidades == null || !tercero.Responsabilidades.Any()) && tipo.Equals("Obligado"))
+
+				if (tercero.Responsabilidades == null && tipo.Equals("Obligado"))
 				{
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Responsabilidades", tipo).Replace("de tipo", "del"));
+				}
+				else if (tercero.Responsabilidades.Count == 1 && String.IsNullOrWhiteSpace(tercero.Responsabilidades[0]))
+				{
+					if (tipo.Equals("Obligado"))
+						throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Responsabilidades", tipo).Replace("de tipo", "del"));
 				}
 				else
 				{
@@ -665,8 +672,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (resp.Contains("O-15") == true)
 						autoretenedor = true;
 
-					if (decimal.Floor(documento.ValorSubtotal) > documento.Total)
-						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Subtotal", documento.ValorSubtotal));
+					//if (decimal.Floor(documento.ValorSubtotal) > documento.Total)
+					//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Subtotal", documento.ValorSubtotal));
 
 					//Validacion Del valor bruto con respecto al detalle
 					List<DocumentoDetalle> detalle = new List<DocumentoDetalle>();
@@ -846,29 +853,31 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							List<Descuento> list_descuento = documento.Descuentos;
 							if (!list_descuento.Sum(v => v.Valor).Equals(documento.ValorDescuento))
 							{
-								throw new ApplicationException(string.Format(
-									"El campo {0} con valor {1} del encabezado no está bien formado", "Descuento",
-									documento.ValorDescuento));
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento",documento.ValorDescuento));
 							}
 							else
 							{
-								Descuento descuento = new Descuento();
-								descuento = list_descuento.Where(d => string.IsNullOrEmpty(d.Codigo)).FirstOrDefault();
-								if (descuento != null)
+								foreach (Descuento item in list_descuento)
 								{
-									throw new ApplicationException("El Código del campo Descuento no está bien formado");
-								}
+									
+									if (string.IsNullOrEmpty(item.Codigo))
+									{
+										throw new ApplicationException("El Código del campo Descuento no está bien formado");
+									}
+									ListaCodigoDescuento list_razon_desc = new ListaCodigoDescuento();
+									ListaItem razon_desc = list_razon_desc.Items.Where(d => d.Codigo.Equals(item.Codigo)).FirstOrDefault();
+									if(razon_desc == null)
+										throw new ApplicationException("El Código del campo Descuento no está bien formado");
 
-								descuento = list_descuento.Where(d => d.Porcentaje > 100).FirstOrDefault();
-								if (descuento != null)
-								{
-									throw new ApplicationException("El porcentaje del campo Descuento no puede ser mayor a 100");
-								}
+									if (item.Porcentaje > 100)
+									{
+										throw new ApplicationException("El porcentaje del campo Descuento no puede ser mayor a 100");
+									}
 
-								descuento = list_descuento.Where(d => d.Valor > documento.ValorSubtotal).FirstOrDefault();
-								if (descuento != null)
-								{
-									throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+									if (item.Valor > documento.ValorSubtotal)
+									{
+										throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+									}
 								}
 							}
 						}
@@ -891,6 +900,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "Descuento", documento.ValorDescuento));
 						}
+					}
+
+					if (documento.ValorDescuento == 0)
+					{
+						if (decimal.Floor(documento.ValorSubtotal) > documento.Total)
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento","Subtotal", documento.ValorSubtotal));
 					}
 
 					//Validacion del total
@@ -1040,10 +1055,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//decimal iva_cal = decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)),2, MidpointRounding.AwayFromZero);
 							if ((decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero) == Docdet.IvaValor) && Docdet.ProductoGratis == false)
 							{
-								if (Docdet.IvaPorcentaje == 0)
-								{
-									Docdet.IvaPorcentaje = 0.00M;
-								}
+								Docdet.IvaPorcentaje += 0.00M;
 								ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
 								ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(Docdet.IvaPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 
@@ -1052,10 +1064,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							else if (Docdet.ProductoGratis == true)
 							{
-								if (Docdet.IvaPorcentaje == 0)
-								{
-									Docdet.IvaPorcentaje = 0.00M;
-								}
+
+								Docdet.IvaPorcentaje += 0.00M;
+
 								ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
 								ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(Docdet.IvaPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 

@@ -18,6 +18,10 @@ using System.Text;
 using System.Threading.Tasks;
 using HGInetUBLv2_1.DianListas;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
+using System.Xml.Serialization;
+using System.IO;
+using System.Xml;
+using Newtonsoft.Json;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -336,13 +340,33 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					//valida si el Documento afectado ya existe en Base de Datos
 					List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
-					DocumentoRespuesta doc_resp = doc_ref.Find(d => d.Cufe.Equals(item.CufeFactura));
-					if (doc_resp != null)
+					if (doc_ref != null)
 					{
-						//Si el documento afectado es diferente a la version de la empresa emisora se cambia para que ese documento lo procese en la version del documento afectado 
-						if (doc_resp.IdVersionDian != facturador_electronico.IntVersionDian)
-							facturadorelec_proceso.IntVersionDian = (short)doc_resp.IdVersionDian;
-						//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
+						DocumentoRespuesta doc_resp = doc_ref.Where(d => d.Cufe.Equals(item.CufeFactura)).FirstOrDefault();
+						if (doc_resp != null)
+						{
+							//Si el documento afectado es diferente a la version de la empresa emisora se cambia para que ese documento lo procese en la version del documento afectado 
+							if (doc_resp.IdVersionDian != facturador_electronico.IntVersionDian)
+								facturadorelec_proceso.IntVersionDian = (short)doc_resp.IdVersionDian;
+							//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
+						}
+						else
+						{
+							doc_resp = doc_ref.Where(d => d.Identificacion.Equals(item.DatosAdquiriente.Identificacion)).FirstOrDefault();
+							if (doc_resp != null)
+							{
+								//Si el documento afectado es diferente a la version de la empresa emisora se cambia para que ese documento lo procese en la version del documento afectado 
+								if (doc_resp.IdVersionDian != facturador_electronico.IntVersionDian)
+								{
+									facturadorelec_proceso.IntVersionDian = (short)doc_resp.IdVersionDian;
+									item.CufeFactura = doc_resp.Cufe;
+								}
+
+								//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
+							}
+							else
+								throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
+						} 
 					}
 					else
 					{
