@@ -640,11 +640,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				// convierte el contenido de texto a xml
 				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+				Factura documento_obj = new Factura();
 				// convierte el objeto de acuerdo con el tipo de documento
 				XmlSerializer serializacion = null;
-				serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
-				HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
-				Factura documento_obj = FacturaXML.Convertir(conversion, datos_doc_bd);
+				if (datos_doc_bd.IntVersionDian == 1)
+				{
+					serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
+					HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType) serializacion.Deserialize(xml_reader);
+					documento_obj = FacturaXML.Convertir(conversion, datos_doc_bd);
+				}
+				else
+				{
+					serializacion = new XmlSerializer(typeof(InvoiceType));
+					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+					documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, datos_doc_bd);
+				}
+
 				report.DataSource = documento_obj;
 
 				string nombre_archivo = NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), datos_formato.StrEmpresa, TipoDocumento.Factura, documento_obj.Prefijo);

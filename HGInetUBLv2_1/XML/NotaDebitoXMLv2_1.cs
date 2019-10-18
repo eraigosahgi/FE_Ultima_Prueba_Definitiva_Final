@@ -337,7 +337,7 @@ namespace HGInetUBLv2_1
 				string CUFE = CalcularCUFE(nota_debito, resolucion.PinSoftware, documento.CufeFactura,nota_debito.ProfileExecutionID.Value);
 				UUID.Value = CUFE;
 				UUID.schemeName = "CUDE-SHA384";
-				UUID.schemeID = "2";
+				UUID.schemeID = nota_debito.ProfileExecutionID.Value;
 				nota_debito.UUID = UUID;
 
 				#endregion
