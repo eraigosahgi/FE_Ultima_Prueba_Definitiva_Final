@@ -8,6 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using HGInetDIANServicios.DianWSValidacionPrevia;
 
 namespace HGInetDIANServicios
 {
@@ -53,7 +54,7 @@ namespace HGInetDIANServicios
 
 					resultado = webServiceHab.GetStatusZip(TrackId).ToList();
 
-					if (resultado != null)
+					if (resultado != null && resultado[0] != null)
 					{
 
 						if (string.IsNullOrEmpty(xml_archivo))
@@ -148,7 +149,18 @@ namespace HGInetDIANServicios
 					{
 						log_categoria = MensajeCategoria.ServicioDian;
 						log_accion = MensajeAccion.consulta;
-						throw new ApplicationException("No se obtuvo respuesta de la Plataforma de la DIAN");
+						if (resultado[0] == null)
+						{
+							DianResponse respuesta = new DianResponse();
+							respuesta.StatusCode = "94";
+							respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}",TrackId)).ToArray();
+							respuesta.IsValid = false;
+							resultado[0]=respuesta;
+						}
+						else
+						{
+							throw new ApplicationException("No se obtuvo respuesta de la Plataforma de la DIAN");
+						}
 					}
 
 				}

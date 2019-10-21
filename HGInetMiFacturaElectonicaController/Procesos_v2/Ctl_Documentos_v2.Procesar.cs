@@ -322,7 +322,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_tmp.Actualizar(documento);*/
 						//ValidarRespuesta(respuesta);
 
+						//Se actualiza respuesta
 						respuesta.Error = new LibreriaGlobalHGInet.Error.Error(respuesta.EstadoDian.Descripcion, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
+						respuesta.FechaUltimoProceso = Fecha.GetFecha();
+						respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
+
+						//Actualiza Documento en Base de Datos
+						documento.DatFechaActualizaEstado = Fecha.GetFecha();
+						documento.IntIdEstado = (short)respuesta.IdProceso;
+
+						//Actualizo el estado del documento para enviar al proveedor receptor
+						Ctl_Documento documento_tmp = new Ctl_Documento();
+						documento_tmp.Actualizar(documento);
+
+						//Actualiza la categoria con el nuevo estado
+						respuesta.IdEstado = documento.IdCategoriaEstado;
+						respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
 
 					}
 				}

@@ -274,7 +274,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result);
 							//Se valida si esta es la respuesta por que es un error de la DIAN pero se debe enviar el correo al adquiriente
-							if (acuse.Response.Equals(100))
+							if (acuse.Response.Equals(100) && (documento.IntEnvioMail == null || documento.IntEnvioMail == false))
 							{
 								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
 								Ctl_Documento documento_tmp = new Ctl_Documento();
