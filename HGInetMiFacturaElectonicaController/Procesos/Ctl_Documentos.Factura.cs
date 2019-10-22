@@ -560,6 +560,27 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException("No se encontró documento referenciado para el documento de contingencia");
 					}		
 				}
+				else if (documento.TipoOperacion.Equals(2))//Valida que si es Exportacion llegue los campos MARCA y MODELO, por el momento se llenan si no llega
+				{
+					if (documento.Trm != null)
+					{
+						if (string.IsNullOrEmpty(documento.Trm.Moneda))
+							throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Trm-Moneda", "string"));
+
+						if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Trm.Moneda))
+							throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Trm-Moneda", documento.Trm.Moneda));
+
+						if (documento.Trm.FechaTrm == DateTime.MinValue)
+							throw new ArgumentException(string.Format("La {0} registrada con valor {1} no es valida", "FechaTrm", documento.Trm.FechaTrm));
+
+						if (documento.Trm.Valor <= 0)
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} para informar como tasa de cambio en una exportación no es valido", "Trm-Valor", documento.Trm.Valor));
+					}
+					else
+					{
+						throw new ApplicationException("No se encontró Tasa de Cambio para el documento de exportación");
+					}
+				}
 
 				if (documento.DocumentosReferencia != null)
 				{

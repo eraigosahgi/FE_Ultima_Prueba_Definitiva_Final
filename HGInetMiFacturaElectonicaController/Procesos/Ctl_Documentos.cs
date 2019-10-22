@@ -922,7 +922,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Se valida el detalle del documento
-				ValidarDetalleDocumento(documento.DocumentoDetalles, facturador,autoretenedor);
+				ValidarDetalleDocumento(documento.DocumentoDetalles, facturador,autoretenedor, documento.TipoOperacion);
 
 			}
 		}
@@ -932,7 +932,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// </summary>
 		/// <param name="documentoDetalle"></param>
 		/// <returns></returns>
-		public static void ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle, TblEmpresas facturador, bool autorretenedor)
+		public static void ValidarDetalleDocumento(List<DocumentoDetalle> documentoDetalle, TblEmpresas facturador, bool autorretenedor, int tipo_operacion)
 		{
 
 			if (documentoDetalle == null || !documentoDetalle.Any())
@@ -1148,6 +1148,45 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							ValidarTercero(Docdet.DatosMandatario, "Mandatario", facturador);
 
 						}
+
+
+						#region Campos Adicionales
+						
+						bool llenar_marca = false;
+						bool llenar_modelo = false;
+						if (Docdet.CamposAdicionales != null)
+						{
+							bool marca = Docdet.CamposAdicionales.Exists(d => d.Descripcion.Equals("MARCA") && !string.IsNullOrEmpty(d.Valor));
+							if (marca == false)
+								llenar_marca = true;
+							bool modelo = Docdet.CamposAdicionales.Exists(d => d.Descripcion.Equals("MODELO") && !string.IsNullOrEmpty(d.Valor));
+							if (modelo == false)
+								llenar_modelo = true;
+						}
+						else if (tipo_operacion == 2)//Si es exportacion debe llevar estos valores segun Anexo de la DIAN
+						{
+							llenar_marca = true;
+							llenar_modelo = true;
+							Docdet.CamposAdicionales = new List<CampoValor>();
+						}
+
+						if (llenar_marca == true)
+						{
+							CampoValor valorMar = new CampoValor();
+							valorMar.Descripcion = "MARCA";
+							valorMar.Valor = "0";
+							Docdet.CamposAdicionales.Add(valorMar);
+						}
+
+						if (llenar_modelo == true)
+						{
+							CampoValor valorMod = new CampoValor();
+							valorMod.Descripcion = "MODELO";
+							valorMod.Valor = "0";
+							Docdet.CamposAdicionales.Add(valorMod);
+						}
+
+						#endregion
 
 					}
 				}
