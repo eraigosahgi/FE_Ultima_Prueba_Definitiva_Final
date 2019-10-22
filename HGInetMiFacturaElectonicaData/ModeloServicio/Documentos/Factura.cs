@@ -253,6 +253,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public List<ReferenciaAdicional> DocumentosReferencia { get; set; }
 
+		/// <summary>
+		/// Tasa de cambio de moneda extranjera
+		/// </summary>
+		public TasaCambio Trm { get; set; }
+
+		/// <summary>
+		/// Tasa de cambio de moneda extranjera para PDF
+		/// </summary>
+		public TasaCambio TrmAlternativa { get; set; }
+
+		/// <summary>
+		/// Campos Adicionales requeridos para informar en el XMl respecto al encabezado segun estandar
+		/// </summary>
+		public List<CampoValor> CamposAdicionales { get; set; }
+
 
 		#endregion
 

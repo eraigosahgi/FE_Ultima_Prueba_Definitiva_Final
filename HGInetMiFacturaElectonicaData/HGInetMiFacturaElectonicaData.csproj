@@ -117,6 +117,7 @@
     <Compile Include="ModeloAuditoria\Objetos\TblSeguimientoAlertas.cs" />
     <Compile Include="ModeloServicio\Documentos\Acuse.cs" />
     <Compile Include="ModeloServicio\Documentos\Anticipo.cs" />
+    <Compile Include="ModeloServicio\Documentos\CampoValor.cs" />
     <Compile Include="ModeloServicio\Documentos\Cargo.cs" />
     <Compile Include="ModeloServicio\Documentos\Cuota.cs" />
     <Compile Include="ModeloServicio\Documentos\Descuento.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="ModeloServicio\Documentos\NotaCredito.cs" />
     <Compile Include="ModeloServicio\Documentos\NotaDebito.cs" />
     <Compile Include="ModeloServicio\Documentos\ReferenciaAdicional.cs" />
+    <Compile Include="ModeloServicio\Documentos\TasaCambio.cs" />
     <Compile Include="ModeloServicio\General\AIU.cs" />
     <Compile Include="ModeloServicio\General\Anexo.cs" />
     <Compile Include="ModeloServicio\General\DestinatarioEmail.cs" />

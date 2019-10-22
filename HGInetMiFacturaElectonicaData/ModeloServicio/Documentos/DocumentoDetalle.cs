@@ -158,6 +158,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string ProductoGratisPrecioRef { get; set; }
 
+		/// <summary>
+		/// Campos Adicionales requeridos para informar en el XMl respecto al detalle segun estandar
+		/// </summary>
+		public List<CampoValor> CamposAdicionales { get; set; }
+
 		#endregion
 
 
