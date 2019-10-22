@@ -214,9 +214,13 @@ namespace HGInetUBLv2_1
 				{
 					InvoiceTypeCode.Value = "01"; /*** QUEMADO ***/
 				}
-				else
+				else if (documento.TipoOperacion == 1)//Contingencia
 				{
 					InvoiceTypeCode.Value = "03";
+				}
+				else//Exportacion
+				{
+					InvoiceTypeCode.Value = "02";
 				}
 
 				facturaXML.InvoiceTypeCode = InvoiceTypeCode;
@@ -410,19 +414,19 @@ namespace HGInetUBLv2_1
 				//---Valor debe ser 1.00 si es pesos colombianos
 				//*cbc: SourceCurrencyBaseRate[0..1] En el caso de una moneda de origen con denominaciones de pequeño valor, la unidad base.
 				PaymentExchangeRate.SourceCurrencyBaseRate = new SourceCurrencyBaseRateType();
-				PaymentExchangeRate.SourceCurrencyBaseRate.Value = 1.0M;
+				PaymentExchangeRate.SourceCurrencyBaseRate.Value = 1.00M;
 				//* cbc: TargetCurrencyCode [1..1] La moneda de destino para este tipo de cambio; La moneda a la que se realiza el cambio.
 				PaymentExchangeRate.TargetCurrencyCode = new TargetCurrencyCodeType();
-				PaymentExchangeRate.TargetCurrencyCode.Value = documento.Moneda;
+				PaymentExchangeRate.TargetCurrencyCode.Value = (documento.Trm != null ? documento.Trm.Moneda : documento.Moneda);//documento.Moneda;
 				//* cbc: TargetCurrencyBaseRate [0..1] En el caso de una moneda de destino con denominaciones de valor pequeño, la base de la unidad.
 				PaymentExchangeRate.TargetCurrencyBaseRate = new TargetCurrencyBaseRateType();
-				PaymentExchangeRate.TargetCurrencyBaseRate.Value = 1.0M;
+				PaymentExchangeRate.TargetCurrencyBaseRate.Value = 1.00M;
 				//* cbc: CalculationRate [0..1] El factor aplicado a la moneda de origen para calcular la moneda de destino.
 				PaymentExchangeRate.CalculationRate = new CalculationRateType();
-				PaymentExchangeRate.CalculationRate.Value = 1.0M;
+				PaymentExchangeRate.CalculationRate.Value = (documento.Trm != null ? documento.Trm.Valor+0.00M : 1.00M);//1.0M;
 				//* cbc: Fecha [0..1] La fecha en que se estableció el tipo de cambio.
 				PaymentExchangeRate.Date = new DateType1();
-				PaymentExchangeRate.Date.Value = Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet));
+				PaymentExchangeRate.Date.Value = ((documento.Trm != null) ? Convert.ToDateTime(documento.Trm.FechaTrm.ToString(Fecha.formato_fecha_hginet)) : Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet)));
 				facturaXML.PaymentExchangeRate = PaymentExchangeRate;
 				#endregion
 
@@ -459,7 +463,7 @@ namespace HGInetUBLv2_1
 				UUIDType UUID = new UUIDType();
 				//-----Se agrega Ambiente al cual se va enviar el documento
 				string CUFE = string.Empty;
-				if (facturaXML.InvoiceTypeCode.Value.Equals("01"))
+				if (facturaXML.InvoiceTypeCode.Value.Equals("01") || facturaXML.InvoiceTypeCode.Value.Equals("02"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";
@@ -1730,6 +1734,35 @@ namespace HGInetUBLv2_1
 					Item.OriginAddress = Address;
 					#endregion
 
+
+					#region Campos Adicionales
+
+					if (DocDet.CamposAdicionales != null)
+					{
+						CampoValor marca = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MARCA")).FirstOrDefault();
+
+						if (marca != null)
+						{
+							BrandNameType[] BrandName = new BrandNameType[1];
+							BrandNameType Brand = new BrandNameType();
+							Brand.Value = marca.Valor;
+							BrandName[0] = Brand;
+							Item.BrandName = BrandName;
+						}
+
+						CampoValor modelo = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MODELO")).FirstOrDefault();
+
+						if (modelo != null)
+						{
+							ModelNameType[] ModelName = new ModelNameType[1];
+							ModelNameType Model = new ModelNameType();
+							Model.Value = modelo.Valor;
+							ModelName[0] = Model;
+							Item.ModelName = ModelName;
+						}
+					}
+
+					#endregion
 
 					ItemPropertyType[] Property = new ItemPropertyType[1];
 					ItemPropertyType Oculto = new ItemPropertyType();

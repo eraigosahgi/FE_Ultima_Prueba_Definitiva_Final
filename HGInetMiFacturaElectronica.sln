@@ -254,6 +254,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CambioFormato", "CambioForm
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFeAPI", "HGInetFeAPI\HGInetFeAPI.csproj", "{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491} = {AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
