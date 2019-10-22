@@ -14,6 +14,7 @@
     <xs:sequence>
       <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="Anticipos" nillable="true" type="q1:ArrayOfAnticipo" />
       <xs:element minOccurs="0" name="ArchivoAnexos" nillable="true" type="tns:Anexo" />
+      <xs:element minOccurs="0" name="CamposAdicionales" nillable="true" type="tns:ArrayOfCampoValor" />
       <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="Cargos" nillable="true" type="q2:ArrayOfCargo" />
       <xs:element minOccurs="0" name="CodigoRegistro" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Cufe" nillable="true" type="xs:string" />
@@ -43,6 +44,8 @@
       <xs:element minOccurs="0" name="TerminoPago" type="xs:int" />
       <xs:element minOccurs="0" name="TipoOperacion" type="xs:int" />
       <xs:element minOccurs="0" name="Total" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Trm" nillable="true" type="tns:TasaCambio" />
+      <xs:element minOccurs="0" name="TrmAlternativa" nillable="true" type="tns:TasaCambio" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorAnticipo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorCargo" type="xs:decimal" />
@@ -66,6 +69,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Anexo" nillable="true" type="tns:Anexo" />
+  <xs:complexType name="ArrayOfCampoValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CampoValor" nillable="true" type="tns:CampoValor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCampoValor" nillable="true" type="tns:ArrayOfCampoValor" />
+  <xs:complexType name="CampoValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Descripcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Valor" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CampoValor" nillable="true" type="tns:CampoValor" />
   <xs:complexType name="ArrayOfCuota">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="Cuota" nillable="true" type="tns:Cuota" />
@@ -121,6 +137,7 @@
       <xs:element minOccurs="0" name="Aiu" type="xs:int" />
       <xs:element minOccurs="0" name="Bodega" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CalculaIVA" type="xs:int" />
+      <xs:element minOccurs="0" name="CamposAdicionales" nillable="true" type="tns:ArrayOfCampoValor" />
       <xs:element minOccurs="0" name="Cantidad" type="xs:decimal" />
       <xs:element minOccurs="0" name="Codigo" type="xs:int" />
       <xs:element minOccurs="0" name="DatosMandatario" nillable="true" type="tns:Tercero" />
@@ -170,6 +187,14 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="FormatoCampo" nillable="true" type="tns:FormatoCampo" />
+  <xs:complexType name="TasaCambio">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FechaTrm" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TasaCambio" nillable="true" type="tns:TasaCambio" />
   <xs:complexType name="ArrayOfDocumentoRespuesta">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentoRespuesta" nillable="true" type="tns:DocumentoRespuesta" />

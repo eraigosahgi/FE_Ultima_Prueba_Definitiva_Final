@@ -1539,6 +1539,9 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private int CalculaIVAField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.CampoValor> CamposAdicionalesField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal CantidadField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1652,6 +1655,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((this.CalculaIVAField.Equals(value) != true)) {
                     this.CalculaIVAField = value;
                     this.RaisePropertyChanged("CalculaIVA");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.CampoValor> CamposAdicionales {
+            get {
+                return this.CamposAdicionalesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CamposAdicionalesField, value) != true)) {
+                    this.CamposAdicionalesField = value;
+                    this.RaisePropertyChanged("CamposAdicionales");
                 }
             }
         }
@@ -2029,6 +2045,68 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((this.FechaReferenciaField.Equals(value) != true)) {
                     this.FechaReferenciaField = value;
                     this.RaisePropertyChanged("FechaReferencia");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="CampoValor", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class CampoValor : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Descripcion {
+            get {
+                return this.DescripcionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionField, value) != true)) {
+                    this.DescripcionField = value;
+                    this.RaisePropertyChanged("Descripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ValorField, value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
                 }
             }
         }

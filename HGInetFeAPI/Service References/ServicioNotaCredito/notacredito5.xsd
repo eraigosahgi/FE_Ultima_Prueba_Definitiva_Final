@@ -105,6 +105,7 @@
       <xs:element minOccurs="0" name="Aiu" type="xs:int" />
       <xs:element minOccurs="0" name="Bodega" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CalculaIVA" type="xs:int" />
+      <xs:element minOccurs="0" name="CamposAdicionales" nillable="true" type="tns:ArrayOfCampoValor" />
       <xs:element minOccurs="0" name="Cantidad" type="xs:decimal" />
       <xs:element minOccurs="0" name="Codigo" type="xs:int" />
       <xs:element minOccurs="0" name="DatosMandatario" nillable="true" type="tns:Tercero" />
@@ -131,6 +132,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="DocumentoDetalle" nillable="true" type="tns:DocumentoDetalle" />
+  <xs:complexType name="ArrayOfCampoValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CampoValor" nillable="true" type="tns:CampoValor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCampoValor" nillable="true" type="tns:ArrayOfCampoValor" />
+  <xs:complexType name="CampoValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Descripcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Valor" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CampoValor" nillable="true" type="tns:CampoValor" />
   <xs:complexType name="Formato">
     <xs:sequence>
       <xs:element minOccurs="0" name="ArchivoPdf" nillable="true" type="xs:string" />

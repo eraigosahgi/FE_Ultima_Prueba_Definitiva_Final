@@ -30,6 +30,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private HGInetFeAPI.ServicioFactura.Anexo ArchivoAnexosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.CampoValor> CamposAdicionalesField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.Cargo> CargosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -117,6 +120,12 @@ namespace HGInetFeAPI.ServicioFactura {
         private decimal TotalField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioFactura.TasaCambio TrmField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioFactura.TasaCambio TrmAlternativaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -184,6 +193,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.ArchivoAnexosField, value) != true)) {
                     this.ArchivoAnexosField = value;
                     this.RaisePropertyChanged("ArchivoAnexos");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.CampoValor> CamposAdicionales {
+            get {
+                return this.CamposAdicionalesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CamposAdicionalesField, value) != true)) {
+                    this.CamposAdicionalesField = value;
+                    this.RaisePropertyChanged("CamposAdicionales");
                 }
             }
         }
@@ -561,6 +583,32 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.TotalField.Equals(value) != true)) {
                     this.TotalField = value;
                     this.RaisePropertyChanged("Total");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioFactura.TasaCambio Trm {
+            get {
+                return this.TrmField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TrmField, value) != true)) {
+                    this.TrmField = value;
+                    this.RaisePropertyChanged("Trm");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioFactura.TasaCambio TrmAlternativa {
+            get {
+                return this.TrmAlternativaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TrmAlternativaField, value) != true)) {
+                    this.TrmAlternativaField = value;
+                    this.RaisePropertyChanged("TrmAlternativa");
                 }
             }
         }
@@ -1335,6 +1383,84 @@ namespace HGInetFeAPI.ServicioFactura {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TasaCambio", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class TasaCambio : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaTrmField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MonedaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaTrm {
+            get {
+                return this.FechaTrmField;
+            }
+            set {
+                if ((this.FechaTrmField.Equals(value) != true)) {
+                    this.FechaTrmField = value;
+                    this.RaisePropertyChanged("FechaTrm");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Moneda {
+            get {
+                return this.MonedaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MonedaField, value) != true)) {
+                    this.MonedaField = value;
+                    this.RaisePropertyChanged("Moneda");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((this.ValorField.Equals(value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Anticipo", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
         "cio.Documentos")]
     [System.SerializableAttribute()]
@@ -1379,6 +1505,68 @@ namespace HGInetFeAPI.ServicioFactura {
             }
             set {
                 if ((this.ValorField.Equals(value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="CampoValor", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class CampoValor : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Descripcion {
+            get {
+                return this.DescripcionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionField, value) != true)) {
+                    this.DescripcionField = value;
+                    this.RaisePropertyChanged("Descripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ValorField, value) != true)) {
                     this.ValorField = value;
                     this.RaisePropertyChanged("Valor");
                 }
@@ -1649,6 +1837,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private int CalculaIVAField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.CampoValor> CamposAdicionalesField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal CantidadField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1762,6 +1953,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.CalculaIVAField.Equals(value) != true)) {
                     this.CalculaIVAField = value;
                     this.RaisePropertyChanged("CalculaIVA");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.CampoValor> CamposAdicionales {
+            get {
+                return this.CamposAdicionalesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CamposAdicionalesField, value) != true)) {
+                    this.CamposAdicionalesField = value;
+                    this.RaisePropertyChanged("CamposAdicionales");
                 }
             }
         }
