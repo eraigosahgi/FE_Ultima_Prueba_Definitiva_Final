@@ -134,11 +134,11 @@ namespace HGInetUBLv2_1
 								Cuota cuota = new Cuota();
 								cuota.Codigo = Convert.ToInt16(factura_ubl.PaymentTerms[i].ID.Value);
 								cuota.Valor = factura_ubl.PaymentTerms[i].Amount.Value;
-								cuota.FechaVence = factura_ubl.PaymentTerms[i].SettlementPeriod.EndDate.Value;
+								cuota.FechaVence = factura_ubl.PaymentTerms[i].PaymentDueDate.Value;
 								cuotas.Add(cuota);
 							}
 							factura_obj.Cuotas = cuotas;
-							factura_obj.TerminoPago = 3;
+							//factura_obj.TerminoPago = 3;
 						}
 						else
 						{
