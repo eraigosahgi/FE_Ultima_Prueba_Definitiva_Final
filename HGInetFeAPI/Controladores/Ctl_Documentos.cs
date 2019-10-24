@@ -39,12 +39,15 @@ namespace HGInetFeAPI
 
 			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
 
-			// conexión cliente para el servicio web
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = new ServicioDocumento.ServicioDocumentosClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
@@ -66,7 +69,6 @@ namespace HGInetFeAPI
 					return result;
 				else
 					throw new Exception("Error al obtener los datos con los parámetros indicados.");
-
 			}
 			catch (FaultException excepcion)
 			{
@@ -111,13 +113,16 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
 			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
-
-			// conexión cliente para el servicio web
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = new ServicioDocumento.ServicioDocumentosClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
@@ -186,13 +191,16 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
 			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
-
-			// conexión cliente para el servicio web
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = new ServicioDocumento.ServicioDocumentosClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
@@ -260,21 +268,23 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
 			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
-
-			// conexión cliente para el servicio web
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = new ServicioDocumento.ServicioDocumentosClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 				foreach (ServicioDocumento.DocumentoArchivo item in documentos_envio)
 				{	item.DataKey = dataKey;
 				}
-
-
+				
 				// datos para la petición
 				ServicioDocumento.RecepcionRequest peticion = new ServicioDocumento.RecepcionRequest()
 				{
@@ -321,13 +331,16 @@ namespace HGInetFeAPI
 		public static string Test(string UrlWs)
 		{   // valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
-
-			// conexión cliente para el servicio web
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = new ServicioDocumento.ServicioDocumentosClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// datos para la petición
 				ServicioDocumento.TestRequest peticion = new ServicioDocumento.TestRequest();
 

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.ServiceModel;
 using System.Text;
+using System.Xml;
 
 namespace HGInetFeAPI
 {
@@ -72,6 +74,89 @@ namespace HGInetFeAPI
                 return binding;
             }
         }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public static BasicHttpBinding ObtenerBinding(string url)
+		{
+			try
+			{
+				/*
+
+				<system.serviceModel>
+				<bindings>
+				  <basicHttpBinding>
+					<binding name="soapBinding" closeTimeout="00:10:00" openTimeout="00:10:00"
+							 receiveTimeout="00:10:00" sendTimeout="00:10:00" bypassProxyOnLocal="false"
+							 maxBufferPoolSize="2147483647" maxReceivedMessageSize="2147483647"
+							 transferMode="Streamed" useDefaultWebProxy="true" messageEncoding="Text">
+					  <readerQuotas maxDepth="64" maxStringContentLength="2147483647"
+								 maxArrayLength="2147483647" maxBytesPerRead="4096" maxNameTableCharCount="16384" />
+					</binding>
+
+					<binding name="Soaphttps" closeTimeout="00:10:00" openTimeout="00:10:00"
+											 receiveTimeout="00:10:00" sendTimeout="00:10:00" bypassProxyOnLocal="false"
+											 maxBufferPoolSize="2147483647" maxReceivedMessageSize="2147483647"
+											 transferMode="Streamed" useDefaultWebProxy="true" messageEncoding="Text">
+					  <readerQuotas maxDepth="64" maxStringContentLength="2147483647"
+								 maxArrayLength="2147483647" maxBytesPerRead="4096" maxNameTableCharCount="16384" />
+					  <security mode="Transport" />
+					</binding>
+
+				  </basicHttpBinding>
+				</bindings>
+
+				*/
+				
+				BasicHttpBinding basic_http_binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+
+				basic_http_binding.Name = "SoapHttpBinding";
+
+				// Obtiene o establece el intervalo de tiempo proporcionado para que una conexión se cierre antes de que el transporte genere una excepción.
+				basic_http_binding.CloseTimeout = new TimeSpan(0, 10, 0);
+
+				// Obtiene o establece el intervalo de tiempo proporcionado para que una conexión se abra antes de que el transporte genere una excepción.
+				basic_http_binding.OpenTimeout = new TimeSpan(0, 1, 0);
+
+				// Obtiene o establece el intervalo de tiempo que una conexión puede permanecer inactiva, durante el cual no se recibe ningún mensaje de la aplicación, antes de interrumpir la conexión.
+				basic_http_binding.ReceiveTimeout = new TimeSpan(0, 10, 0);
+
+				// Obtiene o establece el intervalo de tiempo proporcionado para que una operación de escritura se complete antes de que el transporte genere una excepción.
+				basic_http_binding.SendTimeout = new TimeSpan(0, 10, 0);
+				
+				basic_http_binding.BypassProxyOnLocal = false;				
+				basic_http_binding.MaxBufferPoolSize = 2147483647;
+				basic_http_binding.MaxReceivedMessageSize = 2147483647;
+				basic_http_binding.TransferMode = TransferMode.Streamed;
+				basic_http_binding.UseDefaultWebProxy = true;
+				basic_http_binding.MessageEncoding = WSMessageEncoding.Text;
+				basic_http_binding.ReaderQuotas = new XmlDictionaryReaderQuotas()
+				{
+					MaxDepth = 64,
+					MaxStringContentLength = 2147483647,
+					MaxArrayLength = 2147483647,
+					MaxBytesPerRead = 4096,
+					MaxNameTableCharCount = 16384
+				};
+				
+				// conexión segura https
+				if (url.Contains("https://"))
+				{
+					basic_http_binding.Security.Mode = BasicHttpSecurityMode.Transport;
+					basic_http_binding.Name = "SoapHttpsBinding";
+				}
+				
+				return basic_http_binding;
+			}
+			catch (Exception excepcion)
+			{
+				throw excepcion;
+			}
+		}
+
 
 	}
 }
