@@ -36,13 +36,16 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
 			List<ServicioNotaCredito.NotaCredito> datos = new List<ServicioNotaCredito.NotaCredito>();
-
-			// conexión cliente para el servicio web
-			ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
@@ -128,12 +131,15 @@ namespace HGInetFeAPI
 
 			List<ServicioNotaCredito.NotaCreditoConsulta> datos = new List<ServicioNotaCredito.NotaCreditoConsulta>();
 
-			// conexión cliente para el servicio web
-			ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
@@ -205,14 +211,17 @@ namespace HGInetFeAPI
 
             List<ServicioNotaCredito.NotaCreditoConsulta> datos = new List<ServicioNotaCredito.NotaCreditoConsulta>();
 
-            // conexión cliente para el servicio web
-            ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient();
-            cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = null;
 
-            try
-            {
-                // configura la cadena de autenticación para la ejecución del servicio web en SHA1
-                string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+			try
+			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
                 // datos para la petición
                 ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest peticion = new ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest()
@@ -263,12 +272,15 @@ namespace HGInetFeAPI
 		{   // valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
-			// conexión cliente para el servicio web
-			ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// datos para la petición
 				ServicioNotaCredito.TestRequest peticion = new ServicioNotaCredito.TestRequest();
 

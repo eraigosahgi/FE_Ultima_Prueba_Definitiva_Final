@@ -36,13 +36,16 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
 			List<ServicioResolucion.Resolucion> datos = new List<ServicioResolucion.Resolucion>();
-
-			// conexión cliente para el servicio web
-			ServicioResolucion.ServicioResolucionClient cliente_ws = new ServicioResolucion.ServicioResolucionClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioResolucion.ServicioResolucionClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioResolucion.ServicioResolucionClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 

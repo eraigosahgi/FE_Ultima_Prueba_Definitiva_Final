@@ -40,13 +40,16 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
 			List<ServicioFactura.Factura> datos = new List<ServicioFactura.Factura>();
-
-			// conexión cliente para el servicio web
-			ServicioReenvioDocumento.ServicioReenvioDocumentoClient cliente_ws = new ServicioReenvioDocumento.ServicioReenvioDocumentoClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioReenvioDocumento.ServicioReenvioDocumentoClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioReenvioDocumento.ServicioReenvioDocumentoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 

@@ -23,13 +23,16 @@ namespace HGInetFeAPI
 		public static string Test(string UrlWs)
 		{   // valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
-
-			// conexión cliente para el servicio web
-			ServicioAcuseRecibo.ServicioAcuseReciboClient cliente_ws = new ServicioAcuseRecibo.ServicioAcuseReciboClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+						
+			ServicioAcuseRecibo.ServicioAcuseReciboClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioAcuseRecibo.ServicioAcuseReciboClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// datos para la petición
 				ServicioAcuseRecibo.TestRequest peticion = new ServicioAcuseRecibo.TestRequest();
 

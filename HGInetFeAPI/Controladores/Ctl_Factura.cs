@@ -37,12 +37,15 @@ namespace HGInetFeAPI
 
 			List<ServicioFactura.Factura> datos = new List<ServicioFactura.Factura>();
 
-			// conexión cliente para el servicio web
-			ServicioFactura.ServicioFacturaClient cliente_ws = new ServicioFactura.ServicioFacturaClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			ServicioFactura.ServicioFacturaClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
@@ -136,13 +139,16 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Fecha final debe ser mayor o igual que la fecha inicial.");
 
 			List<ServicioFactura.FacturaConsulta> datos = new List<ServicioFactura.FacturaConsulta>();
-
-			// conexión cliente para el servicio web
-			ServicioFactura.ServicioFacturaClient cliente_ws = new ServicioFactura.ServicioFacturaClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioFactura.ServicioFacturaClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
@@ -213,13 +219,16 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Parámetro CodigosDocumentos de tipo string inválido.");
 
 			List<ServicioFactura.FacturaConsulta> datos = new List<ServicioFactura.FacturaConsulta>();
-
-			// conexión cliente para el servicio web
-			ServicioFactura.ServicioFacturaClient cliente_ws = new ServicioFactura.ServicioFacturaClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			
+			ServicioFactura.ServicioFacturaClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
@@ -272,12 +281,15 @@ namespace HGInetFeAPI
 		{   // valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
-			// conexión cliente para el servicio web
-			ServicioFactura.ServicioFacturaClient cliente_ws = new ServicioFactura.ServicioFacturaClient();
-			cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+			ServicioFactura.ServicioFacturaClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// datos para la petición
 				ServicioFactura.TestRequest peticion = new ServicioFactura.TestRequest();
 
