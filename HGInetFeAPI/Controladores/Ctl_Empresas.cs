@@ -26,12 +26,15 @@ namespace HGInetFeAPI
 
 			List<ServicioEmpresas.Empresa> datos = new List<ServicioEmpresas.Empresa>();
 
-			// conexión cliente para el servicio web
-			ServicioEmpresas.ServicioEmpresasClient cliente_ws = new ServicioEmpresas.ServicioEmpresasClient();
-			cliente_ws.Endpoint.Address = new EndpointAddress(UrlWs);
+			ServicioEmpresas.ServicioEmpresasClient cliente_ws = null;
 
 			try
 			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioEmpresas.ServicioEmpresasClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
 				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
