@@ -433,8 +433,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  	dataField: "MotivoRechazo",
 					  },
 					{
-						caption: "Estado Email",
-						cssClass: "hidden-xs col-md-1",
+						caption: "Estado Email",						
 						dataField: "EstadoEnvioMail",
 						cellTemplate: function (container, options) {
 

@@ -179,7 +179,12 @@
 							$('#DocumentosFacturador').show();
 							//Facturador Sin Documentos
 							if (respuesta.Planes == 0) {
-								$('#DivSaldos').hide();
+								//Facturador sin documentos electronicos
+								$('#lblPlanpostpago').text("No cuenta con documentos");
+								$('#lblComprados').text("");
+								$('#lblProcesados').text("");
+								$('#lblDisponibles').text("");
+								$('#lblPorcentaje').text("");
 							} else {
 								//Diferente de postPago
 								if (respuesta.Tipo != 3) {
