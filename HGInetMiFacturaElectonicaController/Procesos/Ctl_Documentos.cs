@@ -1129,7 +1129,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if ((Docdet.ValorImpuestoConsumo > 0) && Docdet.ProductoGratis == false)
 						{
-							if (decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje * 100), 2, MidpointRounding.AwayFromZero) == Docdet.ValorImpuestoConsumo)
+							if (decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje / 100), 2, MidpointRounding.AwayFromZero) == Docdet.ValorImpuestoConsumo)
 							{
 								ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
 								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
@@ -1138,7 +1138,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							else
 							{
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ValorImpuestoConsumo", Docdet.ValorImpuestoConsumo));
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado", "ValorImpuestoConsumo", Docdet.ValorImpuestoConsumo));
 							}
 
 						}
