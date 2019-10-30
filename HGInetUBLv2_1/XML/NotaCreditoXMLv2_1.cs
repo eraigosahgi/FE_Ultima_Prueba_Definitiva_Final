@@ -462,7 +462,7 @@ namespace HGInetUBLv2_1
 						{
 							ValImp1 += nota_credito.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
 						}
-						else if (codigo_impuesto.Equals("04"))
+						else if (codigo_impuesto.Equals("02"))
 						{
 							ValImp2 += nota_credito.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
 						}

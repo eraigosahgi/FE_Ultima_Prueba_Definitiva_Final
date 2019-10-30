@@ -113,7 +113,7 @@ namespace HGInetUBLv2_1
 								ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(item.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 								imp_doc.Nombre = inc.Nombre;
 
-								imp_doc.Porcentaje = decimal.Round(item.ValorImpuestoConsumo, 2, MidpointRounding.AwayFromZero);
+								imp_doc.Porcentaje = decimal.Round(item.ImpoConsumoPorcentaje, 2, MidpointRounding.AwayFromZero);
 								imp_doc.TipoImpuesto = item.Consumo;
 								imp_doc.BaseImponible = BaseImponibleImpConsumo;
 								foreach (var docDet in doc_)
