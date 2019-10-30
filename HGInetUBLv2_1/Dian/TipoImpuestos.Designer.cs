@@ -61,7 +61,7 @@ namespace HGInetUBLv2_1.Dian {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 02.
+        ///   Busca una cadena traducida similar a 04.
         /// </summary>
         internal static string Consumo {
             get {

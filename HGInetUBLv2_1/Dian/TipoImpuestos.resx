@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Consumo" xml:space="preserve">
-    <value>02</value>
+    <value>04</value>
     <comment>Impuestos AL CONSUMO registrado en la Factura</comment>
   </data>
   <data name="Ica" xml:space="preserve">

@@ -731,7 +731,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								}
 							}
 
-							if (documento.ValorAnticipo > documento.Total)
+							if (documento.ValorAnticipo > documento.ValorSubtotal)
 							{
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Anticipo", documento.ValorAnticipo));
 							}
@@ -902,11 +902,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 					}
 
-					if (documento.ValorDescuento == 0)
-					{
-						if (decimal.Floor(documento.ValorSubtotal) > documento.Total)
-							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento","Subtotal", documento.ValorSubtotal));
-					}
+					
 
 					//Validacion del total
 					if (decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo, MidpointRounding.AwayFromZero) != decimal.Round(documento.Total, MidpointRounding.AwayFromZero))

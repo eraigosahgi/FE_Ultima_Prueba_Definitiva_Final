@@ -665,7 +665,7 @@ namespace HGInetUBLv2_1
 							{
 								ValImp1 += factura.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
 							}
-							else if (codigo_impuesto.Equals("02"))
+							else if (codigo_impuesto.Equals("04"))
 							{
 								ValImp2 += factura.TaxTotal[i].TaxSubtotal[j].TaxAmount.Value;
 							}
