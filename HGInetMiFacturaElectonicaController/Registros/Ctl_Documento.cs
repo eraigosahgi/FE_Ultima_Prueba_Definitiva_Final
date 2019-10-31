@@ -957,7 +957,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.IntValorNeto = documento_obj.Neto;
 				tbl_documento.IntVersionDian = empresa.IntVersionDian;
 				//validacion si es un formato de integrador para guardar los campos predeterminados
-				if (documento_obj.DocumentoFormato.Codigo > 0 && string.IsNullOrEmpty(documento_obj.DocumentoFormato.ArchivoPdf) && empresa.IntVersionDian == 2)
+				if (documento_obj.DocumentoFormato.Codigo > 0 && empresa.IntVersionDian == 2)
 				{
 					if (documento_obj.DocumentoFormato != null)
 					{

@@ -21,7 +21,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 	public class Ctl_DocumentoDian
 	{
 
-		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblEmpresas empresa, string IdSetDian)
+		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string IdSetDian)
 		{
 
 			string IdSoftware = null;
@@ -168,7 +168,27 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 					case 2:
 						acuse = new AcuseRecibo();
-						acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado, certificado.Clave, clave, UrlServicioWeb, ambiente_dian);
+						if (ambiente_dian.Equals("2"))
+						{
+							acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado,
+								certificado.Clave, clave, UrlServicioWeb, ambiente_dian);
+						}
+						else
+						{
+								List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> respuesta_dian = null;
+
+								//Envio el documento y guardo la respuesta en archivo y en objeto respuesta_dian
+								acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreXml, documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), ruta_certificado,certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian);
+
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
+								respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
+
+								//Se procesa la respuesta entregada
+								ConsultaDocumento consulta_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(respuesta_dian);
+
+								//Se valida respuesta para indicar el estado de las validaciones que se le hicieron al documento
+								HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.ValidarRespuestaConsulta(consulta_doc, documentoBd, empresa, respuesta, "");
+						}
 						break;
 
 					default:
@@ -184,6 +204,6 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 				throw excepcion;
 			}
 		}
-
+		
 	}
 }

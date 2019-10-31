@@ -51,7 +51,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			try
 			{
 
-				acuse = Ctl_DocumentoDian.Enviar(documento_result, empresa, IdSetDian);
+				acuse = Ctl_DocumentoDian.Enviar(documento_result, documentoBd, empresa, ref respuesta, IdSetDian);
 
 				if (acuse.Response.Equals(200))
 				{
@@ -93,7 +93,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception e) { }
 
 					}
-					else
+					else if (acuse.Response != 201)
 					{
 						log_categoria = MensajeCategoria.Servicio;
 						log_accion = MensajeAccion.alarma;
@@ -195,7 +195,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="empresa">Obligado a facturar</param>
 		/// <param name="respuesta">Objeto de respuesta</param>
 		/// <returns>Segun la respuesta de la DIAN cambia el estado del documento</returns>
-		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "")
+		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "", List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> respuesta_dian = null)
 		{
 
 			DateTime fecha_actual = Fecha.GetFecha();
@@ -301,6 +301,41 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					HGInetDIANServicios.DianResultadoTransacciones.DocumentosRecibidos resultado = Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), IdSoftware, clave, documentoBd.IntDocTipo, documentoBd.StrPrefijo, documentoBd.IntNumero.ToString(), obligado_identificacion, documentoBd.DatFechaDocumento, documentoBd.StrCufe, url_ws_consulta, ruta_xml);
 					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
 				}
+				
+				// proceso para validar la respuesta de la DIAN
+				respuesta = ValidarRespuestaConsulta(resultado_doc, documentoBd, empresa, respuesta, archivo_xml);
+
+				return respuesta;
+			}
+
+			catch (Exception excepcion)
+			{
+				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la consulta del estado del documento en la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				LogExcepcion.Guardar(excepcion);
+				throw excepcion;
+			}
+			
+		}
+
+		/// <summary>
+		/// Proceso para validar la respuesta de la DIAN
+		/// </summary>
+		/// <param name="resultado_doc"></param>
+		/// <param name="documentoBd"></param>
+		/// <param name="empresa"></param>
+		/// <param name="respuesta"></param>
+		/// <param name="archivo_xml"></param>
+		/// <returns></returns>
+		public static DocumentoRespuesta ValidarRespuestaConsulta(ConsultaDocumento resultado_doc, TblDocumentos documentoBd, TblEmpresas empresa, DocumentoRespuesta respuesta, string archivo_xml)
+		{
+
+			DateTime fecha_actual = Fecha.GetFecha();
+			Ctl_Documento documento_tmp = new Ctl_Documento();
+
+
+			try
+			{
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				// url pública del xml de respuesta de la DIAN 
 				string url_ppal_respuesta = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());

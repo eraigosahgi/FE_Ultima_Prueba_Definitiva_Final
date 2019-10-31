@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -654,6 +655,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					serializacion = new XmlSerializer(typeof(InvoiceType));
 					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
 					documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, datos_doc_bd);
+					if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+						documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
 				}
 
 				report.DataSource = documento_obj;
