@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using HGInetDIANServicios.DianWSValidacionPrevia;
@@ -163,22 +164,107 @@ namespace HGInetDIANServicios
 						acuse_recibo.Version = "2";
 						acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
 
+						string archivo = "", carpeta = "";
+
 						//Ejecución de produccion DIAN Enviando archivo ZIP	
-						respuesta = webServiceHab.SendBillSync(nombre_archivo, bytes);
+						try
+						{
+							respuesta = webServiceHab.SendBillSync(nombre_archivo, bytes);
+
+							log_categoria = MensajeCategoria.Archivos;
+							log_accion = MensajeAccion.creacion;
+
+							carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
+
+							archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+
+							// almacena el mensaje de respuesta del servicio web
+							archivo = Xml.GuardarObjeto(respuesta, carpeta, archivo);
+
+						}
+						catch (Exception excepcion)
+						{
+							string msg_custom = string.Format("Error Exec WS => Carpeta: {0} - Archivo: {1}", carpeta, archivo);
+
+							RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+						}
+						finally
+						{
+							try
+							{
+
+								if (webServiceHab != null)
+									if (webServiceHab.State != CommunicationState.Closed)
+										webServiceHab.Close();
+							}
+							catch (Exception excepcion)
+							{
+								string msg_custom = string.Format("Error Close WS Envio => Carpeta: {0} - Archivo: {1}", carpeta, archivo);
+
+								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+							}
+
+						}
 
 						acuse_recibo.ResponseDateTime = Fecha.GetFecha();
 
-
+						log_accion = MensajeAccion.lectura;
 						if (respuesta != null)
 						{
 							//se valida si ya se envio para consultarlo con el cufe que retorna
-							if (respuesta.ErrorMessage.FirstOrDefault().Equals("Regla: 90, Rechazo: Documento procesado anteriormente."))
+							try
 							{
-								respuesta = webServiceHab.GetStatus(respuesta.XmlDocumentKey);
+								if (respuesta.ErrorMessage != null)
+								{
+									if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())))
+									{
+										if (respuesta.ErrorMessage.FirstOrDefault().Equals("Regla: 90, Rechazo: Documento procesado anteriormente."))
+										{
+											respuesta.StatusCode = "94";
+
+											webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
+											webServiceHab.Endpoint.Address =
+												new System.ServiceModel.EndpointAddress(ruta_servicio_web);
+											webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
+
+											string key = respuesta.XmlDocumentKey;
+
+											DianWSValidacionPrevia.DianResponse respuesta_consulta = webServiceHab.GetStatus(key);
+
+											respuesta = respuesta_consulta;
+
+											// almacena el mensaje de respuesta de la consulta del servicio web
+											archivo = Xml.GuardarObjeto(respuesta, carpeta, archivo);
+										}
+									}
+								}
+							}
+							catch (Exception excepcion)
+							{
+								string msg_custom = string.Format("[0] - Error conversion mensaje respuesta DIAN {0}, CUFE: {1}", nombre_archivo, respuesta.XmlDocumentKey);
+								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+							}
+							finally
+							{
+								try
+								{
+									if (webServiceHab != null)
+										if (webServiceHab.State != CommunicationState.Closed)
+											webServiceHab.Close();
+								}
+								catch (Exception excepcion)
+								{
+									string msg_custom = string.Format("Error Close WS Consulta => Carpeta: {0} - Archivo: {1}", carpeta, archivo);
+
+									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+								}
 							}
 
+							log_accion = MensajeAccion.cargando;
 							respuesta_dian.Add(respuesta);
 
+							log_accion = MensajeAccion.creacion;
 							if (respuesta.StatusCode.Equals("0") || respuesta.StatusCode.Equals("00") || respuesta.StatusCode.Equals("99"))
 							{
 								if (respuesta.XmlBase64Bytes != null)
@@ -205,57 +291,114 @@ namespace HGInetDIANServicios
 										respuesta.StatusCode = "94";
 										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se guardo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
 										respuesta.IsValid = false;
-										log_categoria = MensajeCategoria.ServicioDian;
-										log_accion = MensajeAccion.consulta;
-										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error,
-											log_accion);
+
+
+										string msg_custom = string.Format("Error FileB64 => Carpeta: {0} - Archivo: {1}", ruta_xml, nombre_archivo);
+
+										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
 									}
 									finally
 									{
 										if (fs != null)
 											fs.Close();
 									}
+									log_categoria = MensajeCategoria.ServicioDian;
+									log_accion = MensajeAccion.consulta;
 								}
 								else if (respuesta.StatusDescription.Equals("En proceso de validación"))
 								{
-									respuesta.StatusCode = "94";
-									if (respuesta.ErrorMessage == null)
-										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
-									respuesta.IsValid = false;
+									try
+									{
+										respuesta.StatusCode = "94";
+										respuesta.IsValid = false;
+
+										if (respuesta.ErrorMessage == null)
+											respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
+
+									}
+									catch (Exception excepcion)
+									{
+										string msg_custom = string.Format("[1] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+									}
 								}
 								else
 								{
-									respuesta.StatusCode = "99";
-									if (respuesta.ErrorMessage == null)
-										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
-									respuesta.IsValid = false;
+									try
+									{
+										respuesta.StatusCode = "99";
+										respuesta.IsValid = false;
+
+										if (respuesta.ErrorMessage == null)
+											respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
+
+									}
+									catch (Exception excepcion)
+									{
+										string msg_custom = string.Format("[2] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+									}
 								}
 
 								if (respuesta.ErrorMessage != null)
 								{
-									acuse_recibo.MessagesFieldV2 = new HGInetDIANServicios.DianWSValidacionPrevia.XmlParamsResponseTrackId[1];
-									acuse_recibo.MessagesFieldV2[0] = new DianWSValidacionPrevia.XmlParamsResponseTrackId();
-									acuse_recibo.MessagesFieldV2[0].ProcessedMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(respuesta.ErrorMessage.ToList(), ",");
+									try
+									{
+										acuse_recibo.MessagesFieldV2 = new HGInetDIANServicios.DianWSValidacionPrevia.XmlParamsResponseTrackId[1];
+										acuse_recibo.MessagesFieldV2[0] = new DianWSValidacionPrevia.XmlParamsResponseTrackId();
+										acuse_recibo.MessagesFieldV2[0].ProcessedMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(respuesta.ErrorMessage.ToList(), ",");
+									}
+									catch (Exception excepcion)
+									{
+										string msg_custom = string.Format("[3] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+										acuse_recibo.MessagesFieldV2[0].ProcessedMessage = String.Empty;
+
+									}
 								}
 							}
 							else
 							{
-								respuesta.StatusCode = "94";
-								if (respuesta.ErrorMessage == null)
-									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
-								respuesta.IsValid = false;
+								try
+								{
+									respuesta.StatusCode = "94";
+									respuesta.IsValid = false;
+									if (respuesta.ErrorMessage == null)
+										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
+
+								}
+								catch (Exception excepcion)
+								{
+									string msg_custom = string.Format("[4] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+								}
 							}
 						}
 						else
 						{
-							log_categoria = MensajeCategoria.ServicioDian;
-							log_accion = MensajeAccion.consulta;
+							try
+							{
 
-							respuesta = new DianResponse();
-							respuesta.StatusCode = "94";
-							respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma").ToArray();
-							respuesta.IsValid = false;
-							respuesta_dian.Add(respuesta);
+								log_categoria = MensajeCategoria.ServicioDian;
+								log_accion = MensajeAccion.consulta;
+
+								respuesta = new DianResponse();
+								respuesta.StatusCode = "94";
+								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma").ToArray();
+								respuesta.IsValid = false;
+								respuesta_dian.Add(respuesta);
+							}
+							catch (Exception excepcion)
+							{
+								string msg_custom = string.Format("[5] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+							}
 
 
 						}
@@ -263,41 +406,29 @@ namespace HGInetDIANServicios
 				}
 				catch (Exception excepcion)
 				{
-					RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+					string msg_custom = string.Format("Error Validaciones Estado {0}", nombre_archivo);
+
+
+					RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 					throw excepcion;
 				}
 
-				try
+				if (!respuesta.StatusCode.Equals("94"))
 				{
-					if (!respuesta.StatusCode.Equals("94"))
-					{
-						acuse_recibo.Response = 201;
-						acuse_recibo.Comments = "Documento Electrónico recibido exitosamente";
-					}
-
-					log_categoria = MensajeCategoria.Archivos;
-					log_accion = MensajeAccion.creacion;
-
-					string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
-
-					string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
-
-					// almacena el mensaje de respuesta del servicio web
-					archivo = Xml.GuardarObjeto(respuesta, carpeta, archivo);
-
+					acuse_recibo.Response = 201;
+					acuse_recibo.Comments = "Documento Electrónico recibido exitosamente";
 				}
-				catch (Exception excepcion)
-				{
-					RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
-				}
-
 
 				return acuse_recibo;
 
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+
+				string msg_custom = string.Format("Error Principal {0}", nombre_archivo);
+
+
+				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
