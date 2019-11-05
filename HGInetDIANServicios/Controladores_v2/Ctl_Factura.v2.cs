@@ -273,7 +273,8 @@ namespace HGInetDIANServicios
 
 									try
 									{
-										//Guardo el Base64 de la Respuesta 
+										//Guardo el Base64 de la Respuesta
+										Directorio.CrearDirectorio(ruta_xml);
 										using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, nombre_archivo),
 											FileMode.Create, FileAccess.ReadWrite))
 										{
