@@ -65,7 +65,8 @@ namespace HGInetUBLv2_1
 					decimal BaseimponibleMuestra = 0;
 					foreach (var DocMues in muestra)
 					{
-						BaseimponibleMuestra = decimal.Round(BaseimponibleMuestra + ((DocMues.Cantidad * DocMues.ValorUnitario) - DocMues.DescuentoValor), 2, MidpointRounding.AwayFromZero);
+						if (DocMues.IvaPorcentaje > 0)
+							BaseimponibleMuestra = decimal.Round(BaseimponibleMuestra + ((DocMues.Cantidad * DocMues.ValorUnitario) - DocMues.DescuentoValor), 2, MidpointRounding.AwayFromZero);
 					}
 
 					if (BaseimponibleMuestra > 0)
