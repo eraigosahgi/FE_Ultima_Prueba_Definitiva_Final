@@ -187,7 +187,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 								ConsultaDocumento consulta_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(respuesta_dian);
 
 								//Se valida respuesta para indicar el estado de las validaciones que se le hicieron al documento
-								HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.ValidarRespuestaConsulta(consulta_doc, documentoBd, empresa, respuesta, "");
+								HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.ValidarRespuestaConsulta(consulta_doc, documentoBd, empresa, respuesta, string.Format("{0}.xml",documento.NombreXml));
 						}
 						break;
 
