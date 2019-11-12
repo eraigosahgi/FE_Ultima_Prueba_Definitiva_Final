@@ -8,6 +8,7 @@ using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,8 +79,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
                     catch (Exception excepcion)
                     {
                         ProcesoEstado proceso_estado = Enumeracion.ParseToEnum<ProcesoEstado>((int)item.IntIdEstado);
-                        LogExcepcion.Guardar(excepcion);
-                        objeto = new NotaCreditoConsulta
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
+						objeto = new NotaCreditoConsulta
                         {
                             Aceptacion = item.IntAdquirienteRecibo,
                             CodigoRegistro = item.StrObligadoIdRegistro.ToString(),
@@ -169,8 +170,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
                     {
 
                         ProcesoEstado proceso_estado = Enumeracion.ParseToEnum<ProcesoEstado>((int)item.IntIdEstado);
-                        LogExcepcion.Guardar(excepcion);
-                        objeto = new NotaCreditoConsulta
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
+						objeto = new NotaCreditoConsulta
                         {
                             Aceptacion = item.IntAdquirienteRecibo,
                             CodigoRegistro = item.StrObligadoIdRegistro.ToString(),

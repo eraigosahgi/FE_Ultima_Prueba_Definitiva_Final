@@ -3,6 +3,7 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
             }
             catch (Exception ex)
             {
-
-                lblResultado.Text = string.Format("Error en el proceso: {0} ", ex.Message);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+				lblResultado.Text = string.Format("Error en el proceso: {0} ", ex.Message);
             }
         }
 

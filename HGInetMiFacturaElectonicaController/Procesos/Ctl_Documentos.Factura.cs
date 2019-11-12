@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 using ListaTipoMoneda = HGInetUBLv2_1.DianListas.ListaTipoMoneda;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -199,10 +200,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Planestransacciones.ConciliarPlanProceso(plan);
 					}
 				}
-				catch (Exception)
-				{ }
+				catch (Exception exep)
+				{
+					RegistroLog.EscribirLog(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+				}
 				////Planes y transacciones
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(ex.Message);
 
 			}
@@ -369,13 +372,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				mensaje = string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message);
 
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 
 				try
 				{
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
-				catch (Exception) { }
+				catch (Exception ex) {
+					RegistroLog.EscribirLog(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
+				}
 
 
 				if (!doc_existe)

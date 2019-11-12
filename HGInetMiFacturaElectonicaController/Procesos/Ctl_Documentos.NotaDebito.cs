@@ -12,6 +12,7 @@ using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -171,9 +172,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 				}
 				catch (Exception)
-				{ }
+				{
+					RegistroLog.EscribirLog(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
+				}
 				////Planes y transacciones
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(ex.Message);
 			}
 		}
@@ -397,8 +400,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
-				catch (Exception) { }
-				LogExcepcion.Guardar(excepcion);
+				catch (Exception ex)
+				{
+					RegistroLog.EscribirLog(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
+				}
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				if (!doc_existe)
 				{
 					item_respuesta = new DocumentoRespuesta()

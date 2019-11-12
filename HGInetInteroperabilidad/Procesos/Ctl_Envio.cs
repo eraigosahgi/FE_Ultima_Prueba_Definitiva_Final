@@ -13,6 +13,7 @@ using HGInetUBL;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.RegistroLog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -273,8 +274,8 @@ namespace HGInetInteroperabilidad.Procesos
                         catch (Exception excepcion)
                         {
                             errorGenerico = excepcion.Message.ToString();
-                            LogExcepcion.Guardar(excepcion);
-                        }
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+						}
 
                     }
 
@@ -305,11 +306,11 @@ namespace HGInetInteroperabilidad.Procesos
                         catch (Exception excepcion)
                         {
                             errorGenerico = excepcion.Message.ToString();
-                            LogExcepcion.Guardar(excepcion);
-                            if (!ArchivoEnviado)
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
+							if (!ArchivoEnviado)
                             {
-                                throw new ApplicationException(string.Format("Problemas con el FTP : {0}", excepcion));
-                            }
+                                throw new ApplicationException(string.Format("Problemas con el FTP : {0}", excepcion));								
+							}
                         }
 
                         //Aqui elimino el archivo Zip si todo esta OK
@@ -320,8 +321,8 @@ namespace HGInetInteroperabilidad.Procesos
                         catch (Exception excepcion)
                         {
                             errorGenerico = excepcion.Message.ToString();
-                            LogExcepcion.Guardar(excepcion);
-                        }
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
+						}
 
                         //Aqui se debe hacer peticion webapi
                         //HttpWebResponse RespuestaRegistroApi = Ctl_ClienteWebApi.Inter_Registrar(jsonListaFacturas, Token, ProveedorDoc.TblConfiguracionInteroperabilidadReceptor.StrUrlApi);
@@ -398,8 +399,8 @@ namespace HGInetInteroperabilidad.Procesos
                                             catch (Exception excepcion)
                                             {
                                                 errorGenerico = excepcion.Message.ToString();
-                                                LogExcepcion.Guardar(excepcion);
-                                            }
+												RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
+											}
                                         }
                                         else
                                         {
@@ -432,14 +433,14 @@ namespace HGInetInteroperabilidad.Procesos
                                     else
                                     {
                                         //Si en algun documento no me llega el nombre, genero un error para guardarlo en el log y continuo
-                                        throw new ApplicationException(string.Format("la respuesta no tiene nombre de archivo : {0}", Detalle.mensaje));
-                                    }
+                                        throw new ApplicationException(string.Format("la respuesta no tiene nombre de archivo : {0}", Detalle.mensaje));										
+									}
                                 }
                                 catch (Exception excepcion)
                                 {
                                     errorGenerico = excepcion.Message.ToString();
-                                    LogExcepcion.Guardar(excepcion);
-                                }
+									RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
+								}
                             }
                         }
                         else
@@ -475,8 +476,8 @@ namespace HGInetInteroperabilidad.Procesos
                 catch (Exception excepcion)
                 {
                     errorGenerico = excepcion.Message.ToString();
-                    LogExcepcion.Guardar(excepcion);
-                }
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
+				}
             }
 
             List<RespuestaRegistro> Datos = new List<RespuestaRegistro>();
@@ -814,8 +815,8 @@ namespace HGInetInteroperabilidad.Procesos
                     }
                     catch (Exception excepcion)
                     {
-                        LogExcepcion.Guardar(excepcion);
-                    }
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+					}
                 }
             }
             return lista_respuesta;

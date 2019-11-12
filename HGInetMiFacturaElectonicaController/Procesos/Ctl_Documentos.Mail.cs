@@ -10,6 +10,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío de la Bienvenida al Adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 			}
 
 			//Se agrega esto para guardar correctamente el estado en la Auditoria
@@ -73,7 +74,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 				documentoBd.IntEnvioMail = (documentoBd.IntEnvioMail == null) ? documentoBd.IntEnvioMail : false;
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 			}
 
 			try
@@ -106,7 +107,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					respuesta.FechaUltimoProceso = Fecha.GetFecha();
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error actualizando estados despues del Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-					LogExcepcion.Guardar(excepcion);
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 				}
 

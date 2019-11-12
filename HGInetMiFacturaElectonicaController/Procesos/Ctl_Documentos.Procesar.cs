@@ -7,6 +7,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -79,13 +80,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 		}
 
-        /// <summary>
-        /// Continúa el procesamiento de un documento registrado en la base de datos de acuerdo con el estado actual del mismo
-        /// </summary>
-        /// <param name="documento">datos del documento en base de datos</param>
-        /// <param name="consulta_documento">indica si antes de enviar el documento a la DIAN se debe consultar</param>
-        /// <returns>datos de resultado para el documento</returns>
-        public static DocumentoRespuesta Procesar(TblDocumentos documento, bool consulta_documento)
+		/// <summary>
+		/// Continúa el procesamiento de un documento registrado en la base de datos de acuerdo con el estado actual del mismo
+		/// </summary>
+		/// <param name="documento">datos del documento en base de datos</param>
+		/// <param name="consulta_documento">indica si antes de enviar el documento a la DIAN se debe consultar</param>
+		/// <returns>datos de resultado para el documento</returns>
+		public static DocumentoRespuesta Procesar(TblDocumentos documento, bool consulta_documento)
 		{
 
 			// representación de datos en objeto
@@ -133,7 +134,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
 				UrlPdf = documento.StrUrlArchivoPdf,
 				UrlXmlUbl = documento.StrUrlArchivoUbl,
-                IdPlan = Guid.Parse(documento.StrIdPlanTransaccion.ToString()),
+				IdPlan = Guid.Parse(documento.StrIdPlanTransaccion.ToString()),
 				IdentificacionObligado = documento.StrEmpresaFacturador
 			};
 
@@ -245,7 +246,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (respuesta.IdProceso < ProcesoEstado.FirmaXml.GetHashCode())
 				{
 					respuesta = UblFirmar(empresa, documento, ref respuesta, ref documento_result);
-					ValidarRespuesta(respuesta,respuesta.UrlXmlUbl);
+					ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 				}
 
 				// comprime el archivo xml firmado
@@ -330,7 +331,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						if ((documento.StrProveedorReceptor == null) || documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 						{
-							if (documento.IntEnvioMail == null || documento.IntEnvioMail == false) 
+							if (documento.IntEnvioMail == null || documento.IntEnvioMail == false)
 							{
 								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
 								Ctl_Documento documento_tmp = new Ctl_Documento();
@@ -354,7 +355,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Actualiza la categoria con el nuevo estado
 								respuesta.IdEstado = documento.IdCategoriaEstado;
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
-								ValidarRespuesta(respuesta, respuesta.DescripcionEstado,null,false);
+								ValidarRespuesta(respuesta, respuesta.DescripcionEstado, null, false);
 							}
 
 						}
@@ -379,7 +380,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
 						}
 					}
-					else if((respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode()) && (documento.IntEnvioMail == null || documento.IntEnvioMail == false))
+					else if ((respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode()) && (documento.IntEnvioMail == null || documento.IntEnvioMail == false))
 					{
 						respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
 						Ctl_Documento documento_tmp = new Ctl_Documento();
@@ -423,7 +424,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException);
 				//valida si el documento ya fue enviado
-				if((documento.IntEnvioMail == null || documento.IntEnvioMail == false) && empresa.IntEnvioMailRecepcion == true)
+				if ((documento.IntEnvioMail == null || documento.IntEnvioMail == false) && empresa.IntEnvioMailRecepcion == true)
 				{
 					respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
 					Ctl_Documento documento_tmp = new Ctl_Documento();
@@ -431,7 +432,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento_tmp.Actualizar(documento);
 
 				}
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 				// no se controla excepción
 			}
 

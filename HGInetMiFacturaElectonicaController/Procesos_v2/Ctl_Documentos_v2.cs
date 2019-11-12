@@ -284,8 +284,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-							RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
-							LogExcepcion.Guardar(excepcion);
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);							
 							throw excepcion;
 						}
 
@@ -309,8 +308,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al guardar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-							RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
-							LogExcepcion.Guardar(excepcion);
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);							
 							throw excepcion;
 						}
 
@@ -415,7 +413,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception excepcion)
 				{
-					LogExcepcion.Guardar(excepcion);
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 					// no se controla excepción
 				}
 

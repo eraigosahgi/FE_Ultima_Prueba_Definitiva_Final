@@ -16,7 +16,6 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 
 			var Tarea1 = ctl_documento.SondaCampoSubtotal();
 			lblResultado.Text = string.Format("Termino");
-
 		}
 	}
 }

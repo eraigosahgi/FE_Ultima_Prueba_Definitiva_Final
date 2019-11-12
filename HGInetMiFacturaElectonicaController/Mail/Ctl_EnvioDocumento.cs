@@ -10,6 +10,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.Properties;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,10 +116,9 @@ namespace HGInetMiFacturaElectonicaController
 
 						}
 						catch (Exception excepcion)
-						{
-							LogExcepcion.Guardar(excepcion);
+						{							
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 							item_respuesta.Mensaje = string.Format("Error al enviar el documento. Detalle: {0}", excepcion.Message);
-
 						}
 						respuesta.Add(item_respuesta);
 					}
@@ -133,7 +133,7 @@ namespace HGInetMiFacturaElectonicaController
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(ex.Message);
 			}
 

@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 		{
 			try
 			{
-				//http://localhost:61433/Views/Pages/SondaCrearPlanes.aspx?Facturador=811021438&Usuario=811021438&Notifica=false
+								
 				string Facturador = Request.QueryString["Facturador"];
 
 				string Usuario = Request.QueryString["Usuario"];
@@ -31,6 +32,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			}
 			catch (Exception ex)
 			{
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion);
 				lblResultado.Text = string.Format("El proceso genero un error {0}", ex.Message);
 			}
 		}

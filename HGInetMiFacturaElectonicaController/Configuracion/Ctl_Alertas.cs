@@ -6,6 +6,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -225,7 +226,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.alarma);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -311,7 +312,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.alarma);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -349,8 +350,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					List<NotificacionAlertaporVencer> ListaNotificacion = new List<NotificacionAlertaporVencer>();
 					NotificacionAlertaporVencer Notificacion = new NotificacionAlertaporVencer();
 					//Si se cumple la condición de evaluación, entonces se hace una consulta en el historico de alertas
+
+
 					foreach (var Plan in Planes)
 					{
+						//Parallel.ForEach<TblPlanesTransacciones>(Planes, Plan =>
+						//{
 						//para validar si ya se le envio la notificación y no repetir la misma notificación.					
 						TblSeguimientoAlertas HistAlerta = _AlertasHist.Obtener(Plan.StrEmpresaFacturador, Alertas.IntIdAlerta, Plan.StrIdSeguridad);
 						//Si no se le ha notificado
@@ -420,7 +425,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.alarma);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -732,7 +737,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);				
 				return Listanotificacion;
 			}
 		}
@@ -749,7 +754,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.alarma);				
 			}
 		}
 
@@ -769,7 +774,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.alarma);
 			}
 		}
 
@@ -861,8 +866,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 			}
 		}
 

@@ -1,5 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,9 +62,9 @@ namespace HGInetUBL
 
             }
             catch (Exception ex)
-            {
-                LogExcepcion.Guardar(ex);
-                throw new ApplicationException(ex.Message, ex.InnerException);
+            {                
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
+				throw new ApplicationException(ex.Message, ex.InnerException);
             }
 
 

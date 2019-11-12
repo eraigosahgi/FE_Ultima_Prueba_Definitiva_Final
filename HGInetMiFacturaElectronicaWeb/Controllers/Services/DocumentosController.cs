@@ -16,6 +16,7 @@ using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.ObjetosComunes.PagosEnLinea;
 using LibreriaGlobalHGInet.Peticiones;
+using LibreriaGlobalHGInet.RegistroLog;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -556,7 +557,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					}
 					catch (Exception ex)
 					{
-						LogExcepcion.Guardar(ex);
+						RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);						
 					}
 				}
 
@@ -1237,8 +1238,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				return Ok(retorno);
 			}
 			catch (Exception excepcion)
-			{
-				LogExcepcion.Guardar(excepcion);
+			{				
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
@@ -1288,7 +1289,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);				
 				return Conflict();
 			}
 		}
@@ -1337,7 +1338,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);				
 				return Ok(false);
 			}
 		}
@@ -1383,7 +1384,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 				return Ok(false);
 			}
 		}

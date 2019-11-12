@@ -22,6 +22,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
 using Newtonsoft.Json;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -175,7 +176,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				catch (Exception)
 				{ }
 				////Planes y transacciones
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(ex.Message);
 
 			}
@@ -403,8 +404,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_act, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
-				catch (Exception) { }
-				LogExcepcion.Guardar(excepcion);
+				catch (Exception ex) {
+					RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
+				}
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				if (!doc_existe)
 				{
 					item_respuesta = new DocumentoRespuesta()

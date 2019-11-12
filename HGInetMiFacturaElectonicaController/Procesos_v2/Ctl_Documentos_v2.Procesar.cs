@@ -7,6 +7,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -385,7 +386,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento_tmp.Actualizar(documento);
 
 				}*/
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				// no se controla excepción
 			}
 

@@ -14,6 +14,7 @@ using System.Configuration;
 using System.IO;
 using System.Text;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetMiFacturaElectronicaWeb
 {
@@ -103,7 +104,8 @@ namespace HGInetMiFacturaElectronicaWeb
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(new Exception(string.Format("Error al procesar la peticion {0}", excepcion), excepcion));
+				//LogExcepcion.Guardar(new Exception(string.Format("Error al procesar la peticion {0}", excepcion), excepcion));
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 			}
 		}
 

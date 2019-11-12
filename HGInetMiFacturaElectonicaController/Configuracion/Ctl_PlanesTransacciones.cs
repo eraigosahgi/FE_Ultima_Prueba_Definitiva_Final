@@ -8,9 +8,12 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Linq.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +23,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 	public class Ctl_PlanesTransacciones : BaseObject<TblPlanesTransacciones>
 	{
 
+		
+
 		/// <summary>
 		/// Crea los planes transacciones
 		/// </summary>
@@ -28,46 +33,54 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblPlanesTransacciones Crear(TblPlanesTransacciones datos_plan, bool Envia_email = true)
 		{
-			datos_plan.DatFecha = Fecha.GetFecha();
-			datos_plan.StrIdSeguridad = Guid.NewGuid();
-
-			datos_plan = this.Add(datos_plan);
-
-			Ctl_Empresa empresa = new Ctl_Empresa();
-
-			TblEmpresas facturador = empresa.Obtener(datos_plan.StrEmpresaFacturador);
-
 			try
 			{
-				if (Envia_email && datos_plan.IntEstado == EstadoPlan.Habilitado.GetHashCode())
+				datos_plan.DatFecha = Fecha.GetFecha();
+				datos_plan.StrIdSeguridad = Guid.NewGuid();
+
+				datos_plan = this.Add(datos_plan);
+
+				Ctl_Empresa empresa = new Ctl_Empresa();
+
+				TblEmpresas facturador = empresa.Obtener(datos_plan.StrEmpresaFacturador);
+
+				try
 				{
-					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+					if (Envia_email && datos_plan.IntEstado == EstadoPlan.Habilitado.GetHashCode())
+					{
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 
-					email.EnviaNotificacionRecarga(facturador.StrIdentificacion, facturador.StrMailAdmin, datos_plan);
+						email.EnviaNotificacionRecarga(facturador.StrIdentificacion, facturador.StrMailAdmin, datos_plan);
+					}
 				}
-			}
-			catch (Exception excepcion)
-			{
-				LogExcepcion.Guardar(excepcion);
-			}
-
-			///Se hace ejecución de reinicio de alertas de porcentaje.
-			///Basicamente se cambia de estatus dicha alerta en mongodb para que el proceso de consumo pueda ir nuevamente a consultar si ya se notifico.
-			///No se coloca en el editar ya que este no permite editar cantidad de documentos.
-			try
-			{
-				if (datos_plan.IntEstado == EstadoPlan.Habilitado.GetHashCode())
+				catch (Exception excepcion)
 				{
-					Ctl_AlertasHistAudit _AlertasHist = new Ctl_AlertasHistAudit();
-					_AlertasHist.ReiniciarAlertaPorcentaje(facturador.StrIdSeguridad);
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
 				}
-			}
-			catch (Exception excepcion)
-			{
-				LogExcepcion.Guardar(excepcion);
-			}
 
-			return datos_plan;
+				///Se hace ejecución de reinicio de alertas de porcentaje.
+				///Basicamente se cambia de estatus dicha alerta en mongodb para que el proceso de consumo pueda ir nuevamente a consultar si ya se notifico.
+				///No se coloca en el editar ya que este no permite editar cantidad de documentos.
+				try
+				{
+					if (datos_plan.IntEstado == EstadoPlan.Habilitado.GetHashCode())
+					{
+						Ctl_AlertasHistAudit _AlertasHist = new Ctl_AlertasHistAudit();
+						_AlertasHist.ReiniciarAlertaPorcentaje(facturador.StrIdSeguridad);
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
+				}
+
+				return datos_plan;
+			}
+			catch (Exception ex)
+			{
+				RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
+				throw;
+			}
 		}
 
 
@@ -471,28 +484,28 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							item.TCompra,
 							TDisponible = (item.TCompra - item.TProcesadas),
 							Porcentaje = Math.Round(((float)item.TProcesadas / (float)item.TCompra) * 100, 2),
-						    Tipo = 1,
+							Tipo = 1,
 							item.Facturador
 						}).FirstOrDefault();
 
 			if (Plan == null)
 			{
 				var PlanesPostPago = (from planes in context.TblPlanesTransacciones
-								 where planes.IntTipoProceso == tipoplan && planes.IntEstado == estadoplan
-								 && planes.StrEmpresaFacturador.Equals(identificacion)
-								 group planes by new { planes.StrEmpresaFacturador } into saldo_Facturador
+									  where planes.IntTipoProceso == tipoplan && planes.IntEstado == estadoplan
+									  && planes.StrEmpresaFacturador.Equals(identificacion)
+									  group planes by new { planes.StrEmpresaFacturador } into saldo_Facturador
 
-								 select new
-								 {
-									 Identificacion = saldo_Facturador.FirstOrDefault().StrEmpresaFacturador,
-									 Planes = saldo_Facturador.Count(),
-									 TProcesadas = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
-									 TDisponible = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
-									 TCompra = saldo_Facturador.Sum(x => x.IntNumTransaccCompra),
-									 Porcentaje = 100,
-									 Tipo = 3,
-									 Facturador = saldo_Facturador.FirstOrDefault().TblEmpresas.IntObligado
-								 }).FirstOrDefault();
+									  select new
+									  {
+										  Identificacion = saldo_Facturador.FirstOrDefault().StrEmpresaFacturador,
+										  Planes = saldo_Facturador.Count(),
+										  TProcesadas = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
+										  TDisponible = saldo_Facturador.Sum(x => x.IntNumTransaccProcesadas),
+										  TCompra = saldo_Facturador.Sum(x => x.IntNumTransaccCompra),
+										  Porcentaje = 100,
+										  Tipo = 3,
+										  Facturador = saldo_Facturador.FirstOrDefault().TblEmpresas.IntObligado
+									  }).FirstOrDefault();
 
 				return PlanesPostPago;
 			}
@@ -587,7 +600,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
 
 			return PlanesTransacciones;
@@ -650,7 +663,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion);
 			}
 		}
 
@@ -670,6 +683,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						TblPlanesTransacciones plan = new TblPlanesTransacciones();
 						foreach (var item in listaempresas)
 						{
+
 							if (CerrarplanesPostpago(item.StrIdentificacion))
 							{
 								plan = new TblPlanesTransacciones();
@@ -697,7 +711,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion);
 			}
 		}
 		/// <summary>
@@ -739,7 +753,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 				return true;
 			}
 		}
@@ -767,7 +781,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
 		}
 
@@ -872,7 +886,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						}
 						catch (Exception excepcion)
 						{
-							LogExcepcion.Guardar(excepcion);
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 						}
 
 					}
@@ -881,7 +895,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
 		}
 

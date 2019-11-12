@@ -3,6 +3,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBLv2_1.Dian;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -299,7 +300,7 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
 				throw new ApplicationException(ex.Message, ex.InnerException);
 			}
 		}

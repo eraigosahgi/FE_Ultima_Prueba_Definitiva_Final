@@ -12,6 +12,7 @@ using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -111,7 +112,7 @@ namespace HGInetInteroperabilidad.Procesos
 						catch (Exception excepcion)
 						{
 
-							LogExcepcion.Guardar(excepcion);
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 							item_respuesta.nombreDocumento = objeto.nombre;
 							item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 							item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.nombre);
@@ -157,7 +158,7 @@ namespace HGInetInteroperabilidad.Procesos
 							catch (Exception excepcion)
 							{
 
-								LogExcepcion.Guardar(excepcion);
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 								item_respuesta.nombreDocumento = objeto.nombre;
 								item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 								item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.nombre);
@@ -190,7 +191,7 @@ namespace HGInetInteroperabilidad.Procesos
 							catch (Exception excepcion)
 							{
 
-								LogExcepcion.Guardar(excepcion);
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 								item_respuesta.nombreDocumento = objeto.nombre;
 								item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 								item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.nombre);
@@ -226,7 +227,7 @@ namespace HGInetInteroperabilidad.Procesos
 									catch (Exception excepcion)
 									{
 
-										LogExcepcion.Guardar(excepcion);
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 										item_respuesta.nombreDocumento = objeto.nombre;
 										item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 										item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.representacionGraficas);
@@ -272,7 +273,7 @@ namespace HGInetInteroperabilidad.Procesos
 									catch (Exception excepcion)
 									{
 
-										LogExcepcion.Guardar(excepcion);
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 										item_respuesta.nombreDocumento = objeto.nombre;
 										item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 										item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.adjuntos);
@@ -291,7 +292,7 @@ namespace HGInetInteroperabilidad.Procesos
 							catch (Exception excepcion)
 							{
 
-								LogExcepcion.Guardar(excepcion);
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 								item_respuesta.nombreDocumento = objeto.nombre;
 								item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 								item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), objeto.nombre);
@@ -311,7 +312,7 @@ namespace HGInetInteroperabilidad.Procesos
 							catch (Exception excepcion)
 							{
 
-								LogExcepcion.Guardar(excepcion);
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 								item_respuesta.nombreDocumento = objeto.nombre;
 								item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 								item_respuesta.mensaje = string.Format("{0} en el ZIP {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), datos.nombre);
@@ -328,7 +329,7 @@ namespace HGInetInteroperabilidad.Procesos
 							}
 							catch (Exception excepcion)
 							{
-								LogExcepcion.Guardar(excepcion);
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 							}
 						}
 
@@ -341,7 +342,7 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					catch (Exception ex)
 					{
-						LogExcepcion.Guardar(ex);
+						RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 
 					}
 
@@ -363,7 +364,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 
 			}
 
@@ -399,7 +400,7 @@ namespace HGInetInteroperabilidad.Procesos
 				catch (Exception excepcion)
 				{
 
-					LogExcepcion.Guardar(excepcion);
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 					item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 					item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), documento_obj.Documento);
 					throw new ApplicationException(string.Format("Error al obtener el documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
@@ -424,7 +425,7 @@ namespace HGInetInteroperabilidad.Procesos
 					catch (Exception excepcion)
 					{
 
-						LogExcepcion.Guardar(excepcion);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 						item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 						item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), documento_obj.Documento);
 						throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
@@ -470,7 +471,7 @@ namespace HGInetInteroperabilidad.Procesos
 					catch (Exception excepcion)
 					{
 
-						LogExcepcion.Guardar(excepcion);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 						item_respuesta.codigoError = RespuestaInterOperabilidad.ErrorInternoReceptor.GetHashCode().ToString();
 						item_respuesta.mensaje = string.Format("{0} en el documento {1}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.RespuestaInterOperabilidad>(Convert.ToInt16(item_respuesta.codigoError))), documento_obj.Documento);
 						throw new ApplicationException(string.Format("Error al actualizar el documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
@@ -480,7 +481,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
 
 			return item_respuesta;
@@ -550,7 +551,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.consulta);
 				throw new ApplicationException(ex.Message, ex.InnerException);
 			}
 
@@ -578,7 +579,7 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 				catch (Exception ex)
 				{
-					LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Facturador Emisor {0} ", ex), ex));
+					RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				}
 
 				if (facturador_emisor == null)
@@ -613,7 +614,8 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 				catch (Exception ex)
 				{
-					LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Resolución {0}", ex), ex));
+					//LogExcepcion.Guardar(new Exception(string.Format("Error al Obtener Resolución {0}", ex), ex));
+					RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.consulta);
 				}
 
 				if (resolucion == null)
@@ -625,7 +627,8 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					catch (Exception ex)
 					{
-						LogExcepcion.Guardar(new Exception(string.Format("Error al guardar Resolución {0}", ex), ex));
+						//LogExcepcion.Guardar(new Exception(string.Format("Error al guardar Resolución {0}", ex), ex));
+						RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 					}
 
 					// crea el registro en base de datos
@@ -642,7 +645,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -726,7 +729,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -778,7 +781,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 

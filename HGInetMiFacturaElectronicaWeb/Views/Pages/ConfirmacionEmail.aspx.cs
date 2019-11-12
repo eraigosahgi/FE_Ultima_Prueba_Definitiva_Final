@@ -1,5 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			catch (Exception excepcion)
 			{
 				imgFallido.Visible = true;
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 				lblResultado.InnerText = string.Format("Error : {0}", excepcion.Message);
 			}
 

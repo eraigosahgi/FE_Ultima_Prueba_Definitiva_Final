@@ -7,6 +7,7 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -106,7 +107,7 @@ namespace HGInetInteroperabilidad.Configuracion
 					}
 					catch (Exception excepcion)
 					{
-						LogExcepcion.Guardar(excepcion);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 						datos_respuesta.timeStamp = Fecha.FechaUtc(DateTime.Now);
 						datos_respuesta.trackingIds = null;
 						datos_respuesta.mensajeGlobal = string.Format("{2}|Error al descomprimir {0} {1}", datos.nombre, Enumeracion.GetDescription(RespuestaInterOperabilidad.ErrorInternoReceptor), RespuestaInterOperabilidad.ErrorInternoReceptor);
@@ -122,7 +123,7 @@ namespace HGInetInteroperabilidad.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 
 			}
 

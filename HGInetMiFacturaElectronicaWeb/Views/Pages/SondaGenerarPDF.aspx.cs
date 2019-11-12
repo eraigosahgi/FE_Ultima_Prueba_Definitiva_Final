@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController.Registros;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			}
 			catch (Exception ex)
 			{
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion);
 				lblResultado.Text = string.Format("El proceso genero un error {0}", ex.Message);
 			}
 

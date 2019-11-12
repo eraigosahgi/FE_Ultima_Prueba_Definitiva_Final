@@ -311,7 +311,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la consulta del estado del documento en la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion);
 				throw excepcion;
 			}
 			
@@ -443,7 +443,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la consulta del estado del documento en la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion);
 				throw excepcion;
 			}
 
@@ -710,7 +710,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				catch (Exception excepcion)
 				{
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la serializacion del documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-					LogExcepcion.Guardar(excepcion);
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion);
 					throw excepcion;
 				}
 				try
@@ -746,7 +746,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				catch (Exception excepcion)
 				{
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error guardando archivo fisico con cambios en el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-					LogExcepcion.Guardar(excepcion);
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion);
 					throw excepcion;
 				}
 
@@ -754,7 +754,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error agregando datos del Proveedor Tecnologico en el documento enviado. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion);
 				throw excepcion;
 			}
 

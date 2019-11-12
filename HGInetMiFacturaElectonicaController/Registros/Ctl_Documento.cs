@@ -31,6 +31,7 @@ using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using Newtonsoft.Json;
 using static LibreriaGlobalHGInet.Funciones.Fecha;
 using Guid = System.Guid;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -600,7 +601,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento, int tipo_fecha,int Desde, int Hasta)
+		public List<TblDocumentos> ObtenerAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento, int tipo_fecha, int Desde, int Hasta)
 		{
 
 			List<string> LstEstado = null;
@@ -660,7 +661,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							//-----------
 							&& (datos.IntDocTipo.Equals(TipoDocumento) || TipoDocumento == 0)
 							  orderby datos.IntNumero descending
-							  select datos).OrderByDescending(x=>x.DatFechaDocumento).Skip(Desde).Take(Hasta).ToList();
+							  select datos).OrderByDescending(x => x.DatFechaDocumento).Skip(Desde).Take(Hasta).ToList();
 			}
 			else
 			{
@@ -1560,7 +1561,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
 		}
 
@@ -1596,7 +1597,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion);
+
 			}
 		}
 
@@ -1612,7 +1614,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				await Task.Factory.StartNew(() =>
 					{
 
-
+						List<string> lista = Coleccion.ConvertirLista(ListaDoc, ',');
 						foreach (string Idseg in Coleccion.ConvertirLista(ListaDoc, ','))
 						{
 
@@ -1700,7 +1702,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 									documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, documento);
 
-									
+
 								}
 								else if (documento.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
 								{
@@ -1709,7 +1711,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
 
 									documento_obj = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, documento);
-							
+
 								}
 								else if (documento.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
 								{
@@ -1747,7 +1749,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion);
 			}
 		}
 
@@ -1764,7 +1766,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
 
 		}
@@ -1777,7 +1779,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				DateTime fecha_inicio = new DateTime(2017, 12, 31);
 				DateTime fecha_fin = Fecha.GetFecha();
 
-				List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_inicio, fecha_fin, 0, 2,1,1);
+				List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_inicio, fecha_fin, 0, 2, 1, 1);
+
 
 				foreach (var item in datos)
 				{
@@ -1804,8 +1807,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 					catch (Exception excepcion)
 					{
-						LogExcepcion.Guardar(excepcion);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 					}
+
 
 				}
 
@@ -1827,9 +1831,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
 		}
+
 		/// <summary>
 		/// Sonda de acuse tacito
 		/// </summary>
@@ -1839,16 +1844,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			await Task.Factory.StartNew(() =>
 			{
 				List<TblDocumentos> datos = ObtenerAcuseTacito("*", "*", "*");
+
 				foreach (var item in datos)
 				{
 					try
 					{
-						//Se quitan las observaciones del acuse tácito
-						var documento = ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), string.Empty);
+						ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), string.Empty);
 					}
 					catch (Exception excepcion)
 					{
-						LogExcepcion.Guardar(excepcion);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 					}
 				}
 
@@ -1893,7 +1898,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
 		}
 
@@ -1932,13 +1937,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						}
 						catch (Exception excepcion)
 						{
-							LogExcepcion.Guardar(excepcion);
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 						}
 					}
 				}
 				catch (Exception excepcion)
 				{
-					LogExcepcion.Guardar(excepcion);
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 				}
 
 			});
@@ -1998,7 +2003,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio);
 			}
 
 		}
@@ -2017,6 +2022,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				foreach (TblDocumentos item in datos)
 				{
+
 					try
 					{
 
@@ -2125,7 +2131,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 					catch (Exception excepcion)
 					{
-						LogExcepcion.Guardar(excepcion);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+
 					}
 
 				}

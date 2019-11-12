@@ -7,6 +7,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,7 +146,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
 				CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
-				
+
 				// información del certificado digital
 				string ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
 
@@ -200,7 +201,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
 			}
 		}
 
@@ -216,7 +217,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				Ctl_EmpresaResolucion ctl_facturador = new Ctl_EmpresaResolucion();
 				var facturador = ctl_facturador.ObtenerTodas().GroupBy(d => d.StrEmpresa).Select(g => g.First()).ToList();
 
-
 				foreach (var item in facturador)
 				{
 					try
@@ -225,8 +225,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					catch (Exception excepcion)
 					{
-						LogExcepcion.Guardar(excepcion);
-
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
 					}
 				}
 

@@ -20,6 +20,7 @@ using System.Security.Cryptography.X509Certificates;
 using HGInetMiFacturaElectonicaController.Properties;
 using LibreriaGlobalHGInet.General;
 using HGInetMiFacturaElectonicaData.Objetos;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -352,7 +353,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 					catch (Exception excepcion)
 					{
-						LogExcepcion.Guardar(excepcion);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 						throw new ApplicationException(string.Format("Error al crear usuario generico de la empresa o sus permisos : {0}", excepcion.Message), excepcion);
 					}
 
@@ -399,34 +400,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				#endregion
 
-				//#region Envio de correo con serial de activación
-				//try
-				//{
-				//	//Esta variable se activa solo si la empresa autenticada es administradora y el serial de activación paso de null a tener un valor real
-				//	if (EnviaCorreoSerial)
-				//	{
-				//		Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
-				//		List<MensajeEnvio> Enviarmail = Email.EnviaSerial(EmpresaActualiza.StrIdentificacion, EmpresaActualiza.StrMailAdmin);
-				//	}
-				//}
-				//catch (Exception excepcion)
-				//{
-				//	LogExcepcion.Guardar(excepcion);
-				//	throw new ApplicationException(string.Format("Error en el envio de correo con el serial : {0}", excepcion.Message), excepcion);
-				//}
-				//#endregion
-
-
-
-
-
-
-
+				
 				return EmpresaActualiza;
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 
@@ -454,7 +433,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 					catch (Exception excepcion)
 					{
-						LogExcepcion.Guardar(excepcion);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 					}
 				}
 			});
@@ -641,7 +620,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 
@@ -844,7 +823,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
 				throw new ApplicationException(string.Format("Error en la lectura del certificado: {0}", excepcion.Message), excepcion);
 			}
 		}
@@ -969,7 +948,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				LogExcepcion.Guardar(excepcion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
 				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 		}

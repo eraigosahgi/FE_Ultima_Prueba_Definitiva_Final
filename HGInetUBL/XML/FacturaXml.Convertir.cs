@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using HGInetMiFacturaElectonicaData.Modelo;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetUBL
 {
@@ -421,8 +422,8 @@ namespace HGInetUBL
 				return factura_obj;
 			}
 			catch (Exception ex)
-			{
-				LogExcepcion.Guardar(ex);
+			{				
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.ninguna);
 				throw new ApplicationException(ex.Message, ex.InnerException);
 			}
 		}

@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HGInetMiFacturaElectonicaData.Modelo;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetUBL
 {
@@ -331,7 +332,7 @@ namespace HGInetUBL
 			}
 			catch (Exception ex)
 			{
-				LogExcepcion.Guardar(ex);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
 				throw new ApplicationException(ex.Message, ex.InnerException);
 			}
 		}
