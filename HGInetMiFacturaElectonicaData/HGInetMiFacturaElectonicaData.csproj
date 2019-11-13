@@ -138,6 +138,7 @@
     <Compile Include="ModeloServicio\General\ListadosV2.cs" />
     <Compile Include="ModeloServicio\General\Tercero.cs" />
     <Compile Include="ModeloServicio\Documentos\EnvioDocumento.cs" />
+    <Compile Include="ModeloServicio\Respuestas\DocumentoCufe.cs" />
     <Compile Include="ModeloServicio\Respuestas\FacturaConsulta.cs" />
     <Compile Include="ModeloServicio\Respuestas\DocumentoRespuesta.cs" />
     <Compile Include="ModeloServicio\Respuestas\NotaCreditoConsulta.cs" />

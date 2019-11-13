@@ -148,5 +148,37 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
             }
         }
-    }
+
+		/// <summary>
+		/// Obtiene los documentos por Código de Registro
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+		/// <param name="Identificacion">identificación obligado</param>
+		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota débito - 3: nota crédito</param>
+		/// <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
+		/// <returns></returns>
+		public List<DocumentoCufe> ObtenerCufe(string DataKey, string Identificacion, List<DocumentoCufe> Documentos)
+		{
+			try
+			{
+				List<DocumentoCufe> respuesta = new List<DocumentoCufe>();
+
+				//Válida que la key sea correcta.
+				Peticion.Validar(DataKey, Identificacion);
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				//Obtiene los datos
+				respuesta = ctl_documento.ObtenerCufe(DataKey, Identificacion, Documentos);
+
+				return respuesta;
+
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+	}
 }

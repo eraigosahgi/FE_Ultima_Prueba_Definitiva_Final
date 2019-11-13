@@ -32,6 +32,7 @@ using Newtonsoft.Json;
 using static LibreriaGlobalHGInet.Funciones.Fecha;
 using Guid = System.Guid;
 using LibreriaGlobalHGInet.RegistroLog;
+using LibreriaGlobalHGInet.HgiNet.Controladores;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -745,6 +746,104 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				throw;
 			}
 		}
+
+		/// <summary>
+		/// Calcula el CUFE o CUDE y QR de los documentos electrónicos para la representación gráfica
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+		/// <param name="Identificacion">identificación obligado</param>
+		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota débito - 3: nota crédito</param>
+		/// <param name="Documentos">información básica de documentos electrónicos para cálculo</param>
+		/// <returns>Información calculada de CUFE/CUDE y QR</returns>
+		public List<DocumentoCufe> ObtenerCufe(string DataKey, string Identificacion, List<DocumentoCufe> Documentos)
+		{
+			try
+			{
+				//Valida que los parametros sean correctos.
+				if (string.IsNullOrWhiteSpace(Identificacion))
+					throw new ApplicationException("Número de identificación del obligado inválido.");
+				if (Documentos == null || Documentos.Count == 0)
+					throw new ApplicationException("No se encontraron documentos para calcular.");
+
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
+				string ambiente_dian = string.Empty;
+
+				if (plataforma_datos.RutaPublica.Contains("app"))
+					ambiente_dian = "1";
+				else
+					ambiente_dian = "2";
+					
+				//Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
+				foreach (DocumentoCufe item in Documentos)
+				{
+					try
+					{	
+						// valida la versión del documento electrónico
+						if (item.IdVersionDian != 2)
+							throw new ApplicationException(string.Format("No se encuentra disponible el cálculo para la versión {0} indicada.", item.IdVersionDian));
+
+						string FecFac = TimeZoneInfo.ConvertTimeToUtc(item.Fecha).ToString("yyyy-MM-ddHH:mm:sszz:ss");
+						
+						switch (item.DocumentoTipo)
+						{
+							// Factura
+							case 1:
+
+								if(item.IdVersionDian == 2)
+									item.Cufe = Ctl_CalculoCufe.CufeFacturaV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, Identificacion, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
+
+								break;
+							
+							// Nota Crédito
+							case 2:
+								if (item.IdVersionDian == 2)
+									item.Cufe = Ctl_CalculoCufe.CufeNotaCreditoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, Identificacion, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
+
+								break;
+
+							// Nota Débito
+							case 3:
+								if (item.IdVersionDian == 2)
+									item.Cufe = Ctl_CalculoCufe.CufeNotaDebitoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, Identificacion, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
+
+								break;
+
+							default:
+								throw new ApplicationException("No se encuentra disponible el documento electrónica");
+								break;
+						}
+
+						// obtiene el código QR
+						item.QR = Ctl_CalculoCufe.ObtenerQR(item.DocumentoTipo, item.Prefijo, item.Documento, item.Fecha, Identificacion, item.IdentificacionAdquiriente, item.ValorSubtotal, item.ValorIva, item.ValorImpuestoConsumo, item.Total, item.Cufe);
+						
+
+					}
+					catch (Exception excepcion)
+					{
+						item.Cufe = "";
+						item.QR = "";
+
+						item.Error = new Error()
+						{
+							Codigo = CodigoError.VALIDACION,
+							Fecha = Fecha.GetFecha(),
+							Mensaje = string.Format("Error en el cálculo. Detalle: {0}", excepcion.Message)
+						};
+
+					}
+				}
+
+				return Documentos;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
 
 		#endregion
 
