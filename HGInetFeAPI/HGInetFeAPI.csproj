@@ -112,18 +112,18 @@
     <None Include="Service References\ServicioAcuseRecibo\HGInetFeAPI.ServicioAcuseRecibo.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos.wsdl" />
-    <None Include="Service References\ServicioDocumento\documentos.xsd">
+    <None Include="Service References\ServicioDocumento\documentos2.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos21.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos1.wsdl" />
-    <None Include="Service References\ServicioDocumento\documentos1.xsd">
+    <None Include="Service References\ServicioDocumento\documentos41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos2.xsd">
+    <None Include="Service References\ServicioDocumento\documentos42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos3.xsd">
+    <None Include="Service References\ServicioDocumento\documentos43.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse.datasource">
@@ -133,6 +133,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.RecepcionResponse.datasource">
@@ -312,9 +315,6 @@
     <WCFMetadataStorage Include="Service References\ServicioResolucion\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioDocumento\documentos.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioDocumento\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -430,6 +430,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioDocumento\documentos1.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
