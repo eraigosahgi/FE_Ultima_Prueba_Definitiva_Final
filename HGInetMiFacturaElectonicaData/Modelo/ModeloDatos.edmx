@@ -147,8 +147,8 @@
           <Property Name="StrEmpresa" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="IntComercioId" Type="int" Nullable="false" />
           <Property Name="StrComercioIdRuta" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="StrCodigoServicio" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="StrComercioClave" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrCodigoServicio" Type="varchar" MaxLength="256" />
+          <Property Name="StrComercioClave" Type="varchar" MaxLength="256" />
           <Property Name="IntPasarela" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
@@ -883,8 +883,8 @@
           <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntComercioId" Type="Int32" Nullable="false" />
           <Property Name="StrComercioIdRuta" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrCodigoServicio" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrComercioClave" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrCodigoServicio" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="StrComercioClave" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresasPasarela" FromRole="TblEmpresasPasarela" ToRole="TblEmpresasResoluciones" />
           <Property Name="IntPasarela" Type="Int16" Nullable="false" />
         </EntityType>

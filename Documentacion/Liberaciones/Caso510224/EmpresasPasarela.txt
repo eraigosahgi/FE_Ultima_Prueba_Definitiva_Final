@@ -1,0 +1,7 @@
+ALTER TABLE TblEmpresasPasarela ALTER COLUMN 
+StrCodigoServicio varchar(256);  
+GO 
+
+ALTER TABLE TblEmpresasPasarela ALTER COLUMN 
+StrComercioClave varchar(256);  
+GO 
