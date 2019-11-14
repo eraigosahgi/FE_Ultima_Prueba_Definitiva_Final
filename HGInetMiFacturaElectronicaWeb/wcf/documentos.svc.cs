@@ -150,14 +150,14 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
         }
 
 		/// <summary>
-		/// Obtiene los documentos por Código de Registro
+		/// Calcula el CUFE o CUDE y QR para la representación gráfica del documento electrónico
 		/// </summary>
 		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
 		/// <param name="Identificacion">identificación obligado</param>
 		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota débito - 3: nota crédito</param>
 		/// <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
 		/// <returns></returns>
-		public List<DocumentoCufe> ObtenerCufe(string DataKey, string Identificacion, List<DocumentoCufe> Documentos)
+		public List<DocumentoCufe> ObtenerCufe(string DataKey, string Identificacion, List<DocumentoCufe> documentos)
 		{
 			try
 			{
@@ -169,7 +169,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
 				//Obtiene los datos
-				respuesta = ctl_documento.ObtenerCufe(DataKey, Identificacion, Documentos);
+				respuesta = ctl_documento.ObtenerCufe(DataKey, Identificacion, documentos);
 
 				return respuesta;
 
