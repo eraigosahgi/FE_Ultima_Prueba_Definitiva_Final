@@ -23,6 +23,80 @@ namespace HGInetFacturaETestConsola
 		{
 			try
 			{
+				HGInetFeAPI.ServicioDocumento.DocumentoCufe doc1 = new HGInetFeAPI.ServicioDocumento.DocumentoCufe()
+				{
+					ClaveTecnica = "",
+					Cufe = "",
+					DataKey = "",
+					Documento = 0,
+					Error = null,
+					DocumentoTipo = 1,
+					Fecha = new DateTime(),
+					IdentificacionAdquiriente = "",
+					IdentificacionObligado = "",
+					IdVersionDian = 2,
+					Prefijo = "",
+					QR = "",
+					Total = 0,
+					ValorIca = 0,
+					ValorImpuestoConsumo = 0,
+					ValorIva = 0,
+					ValorSubtotal = 0
+				};
+
+				HGInetFeAPI.ServicioDocumento.DocumentoCufe doc2 = new HGInetFeAPI.ServicioDocumento.DocumentoCufe()
+				{
+					ClaveTecnica = "",
+					Cufe = "",
+					DataKey = "",
+					Documento = 0,
+					Error = null,
+					DocumentoTipo = 1,
+					Fecha = new DateTime(),
+					IdentificacionAdquiriente = "",
+					IdentificacionObligado = "",
+					IdVersionDian = 2,
+					Prefijo = "",
+					QR = "",
+					Total = 0,
+					ValorIca = 0,
+					ValorImpuestoConsumo = 0,
+					ValorIva = 0,
+					ValorSubtotal = 0
+				};
+
+				HGInetFeAPI.ServicioDocumento.DocumentoCufe doc3 = new HGInetFeAPI.ServicioDocumento.DocumentoCufe()
+				{
+					ClaveTecnica = "",
+					Cufe = "",
+					DataKey = "",
+					Documento = 0,
+					Error = null,
+					DocumentoTipo = 1,
+					Fecha = new DateTime(),
+					IdentificacionAdquiriente = "",
+					IdentificacionObligado = "",
+					IdVersionDian = 2,
+					Prefijo = "",
+					QR = "",
+					Total = 0,
+					ValorIca = 0,
+					ValorImpuestoConsumo = 0,
+					ValorIva = 0,
+					ValorSubtotal = 0
+				};
+
+				List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> docs = new List<HGInetFeAPI.ServicioDocumento.DocumentoCufe>();
+				docs.Add(doc1);
+				docs.Add(doc2);
+				docs.Add(doc3);
+
+				HGInetFeAPI.Ctl_Documentos.CalcularCufe("url", "serial", "nit", docs);
+
+
+			/*
+
+
 				//Se lee un xml de una ruta
 				FileStream xml_reader = new FileStream(@"E:\Desarrollo\jzea\Pruebas\face_f0811021438003B023973.xml", FileMode.Open);
 
@@ -179,7 +253,7 @@ namespace HGInetFacturaETestConsola
 				ConsultaDocumento resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
 
 				//PruebaCufe();
-
+				*/
 			}
 			catch (Exception excepcion)
 			{
