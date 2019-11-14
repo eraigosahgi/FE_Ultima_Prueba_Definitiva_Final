@@ -755,16 +755,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota débito - 3: nota crédito</param>
 		/// <param name="Documentos">información básica de documentos electrónicos para cálculo</param>
 		/// <returns>Información calculada de CUFE/CUDE y QR</returns>
-		public List<DocumentoCufe> ObtenerCufe(string DataKey, string Identificacion, List<DocumentoCufe> Documentos)
+		public List<DocumentoCufe> ObtenerCufe(List<DocumentoCufe> documentos)
 		{
 			try
 			{
 				//Valida que los parametros sean correctos.
-				if (string.IsNullOrWhiteSpace(Identificacion))
-					throw new ApplicationException("Número de identificación del obligado inválido.");
-				if (Documentos == null || Documentos.Count == 0)
+				if (documentos == null || documentos.Count == 0)
 					throw new ApplicationException("No se encontraron documentos para calcular.");
 
+				Ctl_Empresa Peticion = new Ctl_Empresa();
+
+				//Válida que la key sea correcta.
+				TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().IdentificacionObligado);
+
+				if (!facturador_electronico.IntObligado)
+					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
+					
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
@@ -776,7 +782,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					ambiente_dian = "2";
 					
 				//Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
-				foreach (DocumentoCufe item in Documentos)
+				foreach (DocumentoCufe item in documentos)
 				{
 					try
 					{	
@@ -792,21 +798,21 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							case 1:
 
 								if(item.IdVersionDian == 2)
-									item.Cufe = Ctl_CalculoCufe.CufeFacturaV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, Identificacion, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
+									item.Cufe = Ctl_CalculoCufe.CufeFacturaV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
 
 								break;
 							
 							// Nota Crédito
 							case 2:
 								if (item.IdVersionDian == 2)
-									item.Cufe = Ctl_CalculoCufe.CufeNotaCreditoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, Identificacion, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
+									item.Cufe = Ctl_CalculoCufe.CufeNotaCreditoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
 
 								break;
 
 							// Nota Débito
 							case 3:
 								if (item.IdVersionDian == 2)
-									item.Cufe = Ctl_CalculoCufe.CufeNotaDebitoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, Identificacion, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
+									item.Cufe = Ctl_CalculoCufe.CufeNotaDebitoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
 
 								break;
 
@@ -816,7 +822,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						}
 
 						// obtiene el código QR
-						item.QR = Ctl_CalculoCufe.ObtenerQR(item.DocumentoTipo, item.Prefijo, item.Documento, item.Fecha, Identificacion, item.IdentificacionAdquiriente, item.ValorSubtotal, item.ValorIva, item.ValorImpuestoConsumo, item.Total, item.Cufe);
+						item.QR = Ctl_CalculoCufe.ObtenerQR(item.DocumentoTipo, item.Prefijo, item.Documento, item.Fecha, item.IdentificacionObligado, item.IdentificacionAdquiriente, item.ValorSubtotal, item.ValorIva, item.ValorImpuestoConsumo, item.Total, item.Cufe);
 						
 
 					}
@@ -835,7 +841,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 				}
 
-				return Documentos;
+				return documentos;
 			}
 			catch (Exception exec)
 			{

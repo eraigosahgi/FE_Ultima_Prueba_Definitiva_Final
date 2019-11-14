@@ -11,6 +11,18 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 	public class DocumentoCufe
 	{
 		/// <summary>
+		/// Código de seguridad (autenticación)
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		public string DataKey { get; set; }
+
+		/// <summary>
+		/// Número de identificación del obligado.
+		/// </summary>
+		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+		public string IdentificacionObligado { get; set; }
+
+		/// <summary>
 		/// Indica el tipo de Documento(1: factura - 2: nota débito - 3: nota crédito)
 		/// </summary>
 		[Range(typeof(int), "0", "3", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
