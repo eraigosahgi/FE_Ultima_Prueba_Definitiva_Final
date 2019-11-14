@@ -157,21 +157,16 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		/// <param name="TipoDocumento">tipo documento 1: factura - 2: nota débito - 3: nota crédito</param>
 		/// <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
 		/// <returns></returns>
-		public List<DocumentoCufe> ObtenerCufe(string DataKey, string Identificacion, List<DocumentoCufe> documentos)
+		public List<DocumentoCufe> ObtenerCufe(List<DocumentoCufe> documentos_cufe)
 		{
 			try
 			{
-				List<DocumentoCufe> respuesta = new List<DocumentoCufe>();
-
-				//Válida que la key sea correcta.
-				Peticion.Validar(DataKey, Identificacion);
-
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
 				//Obtiene los datos
-				respuesta = ctl_documento.ObtenerCufe(DataKey, Identificacion, documentos);
+				documentos_cufe = ctl_documento.ObtenerCufe(documentos_cufe);
 
-				return respuesta;
+				return documentos_cufe;
 
 			}
 			catch (Exception exec)

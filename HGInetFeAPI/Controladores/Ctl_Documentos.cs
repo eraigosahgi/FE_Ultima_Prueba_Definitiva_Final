@@ -324,6 +324,85 @@ namespace HGInetFeAPI
 
 
 		/// <summary>
+		/// Obtiene el CUFE o CUDE y QR del documento electrónico
+		/// Manual Técnico: 6.1.4 Metodo Web: Obtener Cufe
+		/// </summary>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
+		/// <param name="documentos_cufe">información de documentos electrónicos para el cálculo del CUFE</param>
+		/// <returns>respuesta del proceso de los documentos</returns>
+		public static List<ServicioDocumento.DocumentoCufe> CalcularCufe(string UrlWs, string Serial, string Identificacion, List<ServicioDocumento.DocumentoCufe> documentos_cufe)
+		{
+			// valida la URL del servicio web
+			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			// valida el parámetro Serial
+			if (string.IsNullOrEmpty(Serial))
+				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
+
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(Identificacion))
+				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
+
+			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+
+			try
+			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+				foreach (ServicioDocumento.DocumentoCufe item in documentos_cufe)
+				{
+					item.DataKey = dataKey;
+				}
+
+				// datos para la petición
+				ServicioDocumento.ObtenerCufeRequest peticion = new ServicioDocumento.ObtenerCufeRequest()
+				{
+					documentos_cufe = documentos_cufe
+				};
+
+				// ejecución del servicio web
+				ServicioDocumento.ObtenerCufeResponse respuesta = cliente_ws.ObtenerCufe(peticion);
+
+				// resultado del servicio web
+				List<ServicioDocumento.DocumentoCufe> result = respuesta.ObtenerCufeResult;
+
+				if (respuesta != null)
+					return result.ToList();
+				else
+					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			}
+			catch (FaultException excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion);
+			}
+			catch (CommunicationException excepcion)
+			{
+				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			}
+			catch (Exception excepcion)
+			{
+				throw excepcion;
+			}
+			finally
+			{
+				if (cliente_ws != null)
+					cliente_ws.Abort();
+			}
+		}
+
+
+		/// <summary>
 		/// Prueba del servicio web de la plataforma de Facturación Electrónica
 		/// </summary>
 		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>

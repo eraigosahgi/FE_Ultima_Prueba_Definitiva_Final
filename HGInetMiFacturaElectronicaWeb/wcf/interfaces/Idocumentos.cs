@@ -42,8 +42,8 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 		[OperationContract(Name = "ObtenerCufe")]
 		[FaultContract(typeof(Error), Action = "ObtenerCufe", Name = "Error")]
-		[WebInvoke(Method = "GET")]
-		List<DocumentoCufe> ObtenerCufe(string DataKey, string Identificacion, List<DocumentoCufe> documentos);
+		[WebInvoke(Method = "POST")]
+		List<DocumentoCufe> ObtenerCufe(List<DocumentoCufe> documentos_cufe);
 
 	}
 }

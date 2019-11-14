@@ -916,6 +916,308 @@ namespace HGInetFeAPI.ServicioDocumento {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DocumentoCufe", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class DocumentoCufe : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ClaveTecnicaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CufeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DataKeyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private long DocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int DocumentoTipoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioDocumento.Error ErrorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdVersionDianField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionAdquirienteField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionObligadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PrefijoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string QRField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal TotalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorIcaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorImpuestoConsumoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorIvaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorSubtotalField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ClaveTecnica {
+            get {
+                return this.ClaveTecnicaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ClaveTecnicaField, value) != true)) {
+                    this.ClaveTecnicaField = value;
+                    this.RaisePropertyChanged("ClaveTecnica");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Cufe {
+            get {
+                return this.CufeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CufeField, value) != true)) {
+                    this.CufeField = value;
+                    this.RaisePropertyChanged("Cufe");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DataKey {
+            get {
+                return this.DataKeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DataKeyField, value) != true)) {
+                    this.DataKeyField = value;
+                    this.RaisePropertyChanged("DataKey");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public long Documento {
+            get {
+                return this.DocumentoField;
+            }
+            set {
+                if ((this.DocumentoField.Equals(value) != true)) {
+                    this.DocumentoField = value;
+                    this.RaisePropertyChanged("Documento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int DocumentoTipo {
+            get {
+                return this.DocumentoTipoField;
+            }
+            set {
+                if ((this.DocumentoTipoField.Equals(value) != true)) {
+                    this.DocumentoTipoField = value;
+                    this.RaisePropertyChanged("DocumentoTipo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioDocumento.Error Error {
+            get {
+                return this.ErrorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ErrorField, value) != true)) {
+                    this.ErrorField = value;
+                    this.RaisePropertyChanged("Error");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Fecha {
+            get {
+                return this.FechaField;
+            }
+            set {
+                if ((this.FechaField.Equals(value) != true)) {
+                    this.FechaField = value;
+                    this.RaisePropertyChanged("Fecha");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdVersionDian {
+            get {
+                return this.IdVersionDianField;
+            }
+            set {
+                if ((this.IdVersionDianField.Equals(value) != true)) {
+                    this.IdVersionDianField = value;
+                    this.RaisePropertyChanged("IdVersionDian");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionAdquiriente {
+            get {
+                return this.IdentificacionAdquirienteField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionAdquirienteField, value) != true)) {
+                    this.IdentificacionAdquirienteField = value;
+                    this.RaisePropertyChanged("IdentificacionAdquiriente");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionObligado {
+            get {
+                return this.IdentificacionObligadoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionObligadoField, value) != true)) {
+                    this.IdentificacionObligadoField = value;
+                    this.RaisePropertyChanged("IdentificacionObligado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Prefijo {
+            get {
+                return this.PrefijoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PrefijoField, value) != true)) {
+                    this.PrefijoField = value;
+                    this.RaisePropertyChanged("Prefijo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string QR {
+            get {
+                return this.QRField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.QRField, value) != true)) {
+                    this.QRField = value;
+                    this.RaisePropertyChanged("QR");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Total {
+            get {
+                return this.TotalField;
+            }
+            set {
+                if ((this.TotalField.Equals(value) != true)) {
+                    this.TotalField = value;
+                    this.RaisePropertyChanged("Total");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorIca {
+            get {
+                return this.ValorIcaField;
+            }
+            set {
+                if ((this.ValorIcaField.Equals(value) != true)) {
+                    this.ValorIcaField = value;
+                    this.RaisePropertyChanged("ValorIca");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorImpuestoConsumo {
+            get {
+                return this.ValorImpuestoConsumoField;
+            }
+            set {
+                if ((this.ValorImpuestoConsumoField.Equals(value) != true)) {
+                    this.ValorImpuestoConsumoField = value;
+                    this.RaisePropertyChanged("ValorImpuestoConsumo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorIva {
+            get {
+                return this.ValorIvaField;
+            }
+            set {
+                if ((this.ValorIvaField.Equals(value) != true)) {
+                    this.ValorIvaField = value;
+                    this.RaisePropertyChanged("ValorIva");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorSubtotal {
+            get {
+                return this.ValorSubtotalField;
+            }
+            set {
+                if ((this.ValorSubtotalField.Equals(value) != true)) {
+                    this.ValorSubtotalField = value;
+                    this.RaisePropertyChanged("ValorSubtotal");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", ConfigurationName="ServicioDocumento.ServicioDocumentos")]
     public interface ServicioDocumentos {
@@ -963,6 +1265,13 @@ namespace HGInetFeAPI.ServicioDocumento {
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/RecepcionResponse")]
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.RecepcionResponse> RecepcionAsync(HGInetFeAPI.ServicioDocumento.RecepcionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufe", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufeResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ObtenerCufe", Name="Error")]
+        HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse ObtenerCufe(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufe", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufeResponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse> ObtenerCufeAsync(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -1158,6 +1467,38 @@ namespace HGInetFeAPI.ServicioDocumento {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ObtenerCufe", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ObtenerCufeRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> documentos_cufe;
+        
+        public ObtenerCufeRequest() {
+        }
+        
+        public ObtenerCufeRequest(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> documentos_cufe) {
+            this.documentos_cufe = documentos_cufe;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ObtenerCufeResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ObtenerCufeResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> ObtenerCufeResult;
+        
+        public ObtenerCufeResponse() {
+        }
+        
+        public ObtenerCufeResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> ObtenerCufeResult) {
+            this.ObtenerCufeResult = ObtenerCufeResult;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface ServicioDocumentosChannel : HGInetFeAPI.ServicioDocumento.ServicioDocumentos, System.ServiceModel.IClientChannel {
     }
@@ -1223,6 +1564,14 @@ namespace HGInetFeAPI.ServicioDocumento {
         
         public System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.RecepcionResponse> RecepcionAsync(HGInetFeAPI.ServicioDocumento.RecepcionRequest request) {
             return base.Channel.RecepcionAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse ObtenerCufe(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request) {
+            return base.Channel.ObtenerCufe(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse> ObtenerCufeAsync(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request) {
+            return base.Channel.ObtenerCufeAsync(request);
         }
     }
 }
