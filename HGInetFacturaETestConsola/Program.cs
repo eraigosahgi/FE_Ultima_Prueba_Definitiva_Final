@@ -25,44 +25,44 @@ namespace HGInetFacturaETestConsola
 			{
 				HGInetFeAPI.ServicioDocumento.DocumentoCufe doc1 = new HGInetFeAPI.ServicioDocumento.DocumentoCufe()
 				{
-					ClaveTecnica = "",
+					ClaveTecnica = "fc8eac422eba16e22ffd8c6f94b3f40a6e38162c",
 					Cufe = "",
-					DataKey = "",
-					Documento = 0,
+					DataKey = "1f7b1195b440ddd2e91989192b7bd239a107d898",
+					Documento = 990001019,
 					Error = null,
 					DocumentoTipo = 1,
-					Fecha = new DateTime(),
-					IdentificacionAdquiriente = "",
-					IdentificacionObligado = "",
+					Fecha = new DateTime(2019,11,12,12,19,03),
+					IdentificacionAdquiriente = "1020395355",
+					IdentificacionObligado = "811021438",
 					IdVersionDian = 2,
-					Prefijo = "",
+					Prefijo = "SETP",
 					QR = "",
-					Total = 0,
+					Total = 17278164.00M,
 					ValorIca = 0,
 					ValorImpuestoConsumo = 0,
-					ValorIva = 0,
-					ValorSubtotal = 0
+					ValorIva = 322164.00M,
+					ValorSubtotal = 16956000.00M
 				};
 
 				HGInetFeAPI.ServicioDocumento.DocumentoCufe doc2 = new HGInetFeAPI.ServicioDocumento.DocumentoCufe()
 				{
 					ClaveTecnica = "",
 					Cufe = "",
-					DataKey = "",
-					Documento = 0,
+					DataKey = "1f7b1195b440ddd2e91989192b7bd239a107d898",
+					Documento = 99123,
 					Error = null,
-					DocumentoTipo = 1,
-					Fecha = new DateTime(),
-					IdentificacionAdquiriente = "",
-					IdentificacionObligado = "",
+					DocumentoTipo = 3,
+					Fecha = new DateTime(2019, 11, 15, 10, 55, 45),
+					IdentificacionAdquiriente = "1020395355",
+					IdentificacionObligado = "811021438",
 					IdVersionDian = 2,
 					Prefijo = "",
 					QR = "",
-					Total = 0,
+					Total = 10710.00M,
 					ValorIca = 0,
 					ValorImpuestoConsumo = 0,
-					ValorIva = 0,
-					ValorSubtotal = 0
+					ValorIva = 1710.00M,
+					ValorSubtotal = 9000.00M
 				};
 
 				HGInetFeAPI.ServicioDocumento.DocumentoCufe doc3 = new HGInetFeAPI.ServicioDocumento.DocumentoCufe()
@@ -91,7 +91,7 @@ namespace HGInetFacturaETestConsola
 				docs.Add(doc2);
 				docs.Add(doc3);
 
-				HGInetFeAPI.Ctl_Documentos.CalcularCufe("url", "serial", "nit", docs);
+				HGInetFeAPI.Ctl_Documentos.CalcularCufe("http://localhost:61428/", "67452AD7-9056-426F-9AD8-BB275D9ABB17", "811021438", docs);
 
 
 			/*
