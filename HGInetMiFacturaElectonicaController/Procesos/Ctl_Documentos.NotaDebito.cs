@@ -37,12 +37,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			List<ObjPlanEnProceso> ListaPlanes = new List<ObjPlanEnProceso>();
 			List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
+			ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
+			string proceso_txt = Enumeracion.GetDescription(proceso_actual);
+			CategoriaEstado estado = Enumeracion.GetEnumObjectByValue<CategoriaEstado>(Ctl_Documento.ObtenerCategoria(proceso_actual.GetHashCode()));
+			DateTime fecha_actual = Fecha.GetFecha();
+
+			TblEmpresas facturador_electronico = null;
+
+			// genera un id único de la plataforma
+			Guid id_peticion = Guid.NewGuid();
+
+
 			try
 			{
 				Ctl_Empresa Peticion = new Ctl_Empresa();
 
 				//Válida que la key sea correcta.
-				TblEmpresas facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().DatosObligado.Identificacion);
+				facturador_electronico = Peticion.Validar(documentos.FirstOrDefault().DataKey, documentos.FirstOrDefault().DatosObligado.Identificacion);
 
 				if (!facturador_electronico.IntObligado)
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
@@ -51,12 +62,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(documentos[0].DatosObligado.Identificacion, documentos.Count());
 
 				if (ListaPlanes == null)
+				{
+					///Validación de alertas y notificaciones
+					try
+					{
+						Ctl_Alertas controlador = new Ctl_Alertas();
+						controlador.alertaSinSaldo(facturador_electronico.StrIdentificacion);
+					}
+					catch (Exception excepcion)
+					{
+						LogExcepcion.Guardar(excepcion);
+					}
 					throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
-
-				// genera un id único de la plataforma
-				Guid id_peticion = Guid.NewGuid();
-
-				DateTime fecha_actual = Fecha.GetFecha();
+				}
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 
@@ -158,7 +176,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Ctl_Sms.EnviarSms(respuesta, id_peticion, facturador_electronico, documentos);
 				}
 
-				return respuesta;
+				
 			}
 			catch (Exception ex)
 			{
@@ -175,10 +193,46 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					RegistroLog.EscribirLog(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
 				}
-				////Planes y transacciones
+
+				string mensaje = ex.Message;
+				Parallel.ForEach<NotaDebito>(documentos, item =>
+				{
+					DocumentoRespuesta item_respuesta = new DocumentoRespuesta()
+					{
+						Aceptacion = 0,
+						CodigoRegistro = item.CodigoRegistro,
+						Cufe = "",
+						DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+						DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido),
+						DocumentoTipo = TipoDocumento.NotaDebito.GetHashCode(),
+						Documento = item.Documento,
+						Error = new LibreriaGlobalHGInet.Error.Error(mensaje, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, ex.InnerException),
+						EstadoDian = null,
+						FechaRecepcion = fecha_actual,
+						FechaUltimoProceso = fecha_actual,
+						IdDocumento = "",
+						Identificacion = "",
+						IdProceso = proceso_actual.GetHashCode(),
+						MotivoRechazo = "",
+						NumeroResolucion = item.NumeroResolucion,
+						Prefijo = item.Prefijo,
+						ProcesoFinalizado = (proceso_actual == ProcesoEstado.Finalizacion || proceso_actual == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
+						UrlPdf = "",
+						UrlXmlUbl = "",
+						IdEstado = estado.GetHashCode(),
+						IdPeticion = id_peticion,
+						IdentificacionObligado = (item.DatosObligado != null) ? item.DatosObligado.Identificacion : "",
+						DescuentaSaldo = false,
+						IdVersionDian = (facturador_electronico != null) ? facturador_electronico.IntVersionDian : 0
+					};
+					respuesta.Add(item_respuesta);
+				});
+
 				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-				throw new ApplicationException(ex.Message);
+				//throw new ApplicationException(ex.Message);
 			}
+
+			return respuesta;
 		}
 
 
