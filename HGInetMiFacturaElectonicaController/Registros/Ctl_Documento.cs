@@ -790,30 +790,43 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (item.IdVersionDian != 2)
 							throw new ApplicationException(string.Format("No se encuentra disponible el cálculo para la versión {0} indicada.", item.IdVersionDian));
 
-						string FecFac = TimeZoneInfo.ConvertTimeToUtc(item.Fecha).ToString("yyyy-MM-ddHH:mm:sszz:ss");
-						
+						string FecFac = string.Format("{0}{1}", item.Fecha.ToString(Fecha.formato_fecha_hginet), item.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona));
+
 						switch (item.DocumentoTipo)
 						{
 							// Factura
 							case 1:
 
 								if(item.IdVersionDian == 2)
-									item.Cufe = Ctl_CalculoCufe.CufeFacturaV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
+									item.Cufe = Ctl_CalculoCufe.CufeFacturaV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
 
 								break;
 							
 							// Nota Crédito
-							case 2:
+							case 3:
 								if (item.IdVersionDian == 2)
-									item.Cufe = Ctl_CalculoCufe.CufeNotaCreditoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
-
+									{
+										//Para las notas no se usa clave tecnica si no el pin del software
+										DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+										item.ClaveTecnica = data_dian.Pin;
+										if (ambiente_dian.Equals("2") && facturador_electronico.StrIdentificacion.Equals("811021438"))
+										{
+											DianProveedor data_dian_hab = HgiConfiguracion.GetConfiguration().DianProveedor;
+											item.ClaveTecnica = data_dian_hab.Pin;
+										}
+										item.Cufe = Ctl_CalculoCufe.CufeNotaCreditoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
+									}
 								break;
 
 							// Nota Débito
-							case 3:
+							case 2:
 								if (item.IdVersionDian == 2)
-									item.Cufe = Ctl_CalculoCufe.CufeNotaDebitoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), false);
-
+									{
+										//Para las notas no se usa clave tecnica si no el pin del software
+										DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+										item.ClaveTecnica = data_dian.Pin;
+										item.Cufe = Ctl_CalculoCufe.CufeNotaDebitoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
+									}
 								break;
 
 							default:
