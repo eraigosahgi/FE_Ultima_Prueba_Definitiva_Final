@@ -41,7 +41,7 @@ namespace HGInetUBLv2_1
 					decimal porcentaje = item.IvaPorcentaje;
 
 					List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
-					BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
+					BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.BaseImpuestoIva), 2, MidpointRounding.AwayFromZero);
 
 					//imp_doc.Codigo = item.IntIva;
 					//-------Hay que hacer Enumerable

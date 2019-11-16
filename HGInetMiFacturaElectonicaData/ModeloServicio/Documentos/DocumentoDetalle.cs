@@ -163,6 +163,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public List<CampoValor> CamposAdicionales { get; set; }
 
+		/// <summary>
+		/// Valor de la Base del Impuesto al Consumo del detalle
+		/// </summary>
+		public decimal BaseImpuestoIva { get; set; }
+
 		#endregion
 
 

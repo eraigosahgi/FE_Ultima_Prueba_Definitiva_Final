@@ -452,10 +452,12 @@ namespace HGInetUBLv2_1
 
 				decimal subtotal = 0.00M;
 				subtotal = facturaXML.InvoiceLine.Sum(s => s.LineExtensionAmount.Value);
-				
+
+				decimal base_impuesto = facturaXML.InvoiceLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Sum(v => v.TaxableAmount.Value)));
+
 				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
 
-				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
+				facturaXML.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos, base_impuesto);
 
 				#endregion
 
@@ -1319,7 +1321,7 @@ namespace HGInetUBLv2_1
 						}
 						else
 						{
-							TaxSubtotalIva.TaxableAmount.Value = DocDet.ValorSubtotal;
+							TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
 						}
 
 

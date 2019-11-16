@@ -16,7 +16,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="documento">datos del documento</param>
 		/// <returns>MonetaryTotalType1</returns>
-		public static MonetaryTotalType ObtenerTotales(object documento_obj, decimal subtotal, decimal impuesto)
+		public static MonetaryTotalType ObtenerTotales(object documento_obj, decimal subtotal, decimal impuesto, decimal base_impuestos)
 		{
 			try
 			{
@@ -93,7 +93,7 @@ namespace HGInetUBLv2_1
 				//Subtotal de la factura incluyendo los productos que son regalo.
 				TaxExclusiveAmountType TaxExclusiveAmount = new TaxExclusiveAmountType();
 				TaxExclusiveAmount.currencyID = moneda_documento.ToString();
-				TaxExclusiveAmount.Value = decimal.Round(documento.ValorSubtotal, 2);//decimal.Round(subtotal, 2);//
+				TaxExclusiveAmount.Value = decimal.Round(base_impuestos, 2);//decimal.Round(subtotal, 2);//
 				LegalMonetaryTotal.TaxExclusiveAmount = TaxExclusiveAmount;
 
 				#endregion

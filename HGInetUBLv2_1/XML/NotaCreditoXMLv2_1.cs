@@ -294,9 +294,10 @@ namespace HGInetUBLv2_1
 				impuestos, etc*/
 
 				decimal subtotal = nota_credito.CreditNoteLine.Sum(s => s.LineExtensionAmount.Value);
+				decimal base_impuesto = nota_credito.CreditNoteLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Sum(v => v.TaxableAmount.Value)));
 				decimal impuestos = nota_credito.TaxTotal.Sum(i => i.TaxAmount.Value);
 
-				nota_credito.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos);
+				nota_credito.LegalMonetaryTotal = TotalesXML.ObtenerTotales(documento,subtotal,impuestos, base_impuesto);
 				#endregion
 
 				
@@ -987,6 +988,23 @@ namespace HGInetUBLv2_1
 					Property[0] = Oculto;
 					Item.AdditionalItemProperty = Property;
 
+					if (DocDet.DatosMandatario != null)
+					{
+
+						PartyType Mandantario = new PartyType();
+						Mandantario.PowerOfAttorney = new PowerOfAttorneyType[1];
+						PowerOfAttorneyType power = new PowerOfAttorneyType();
+						power.AgentParty = new PartyType();
+						power.AgentParty.PartyIdentification = new PartyIdentificationType[1];
+						power.AgentParty.PartyIdentification[0].ID = new IDType();
+						power.AgentParty.PartyIdentification[0].ID.Value = DocDet.DatosMandatario.Identificacion;
+						power.AgentParty.PartyIdentification[0].ID.schemeAgencyID = "195";
+						power.AgentParty.PartyIdentification[0].ID.schemeID = DocDet.DatosMandatario.IdentificacionDv.ToString();
+						power.AgentParty.PartyIdentification[0].ID.schemeName = DocDet.DatosMandatario.TipoIdentificacion.ToString();
+						Mandantario.PowerOfAttorney[0] = power;
+
+						Item.InformationContentProviderParty = Mandantario;
+					}
 
 					CreditNoteLine.Item = Item;
 					#endregion
