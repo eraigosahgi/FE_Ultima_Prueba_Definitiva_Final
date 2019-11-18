@@ -136,8 +136,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						TblDocumentos documentoBd = Ctl_Documento.Convertir(respuesta, documento_obj, resolucion, empresa, tipo_doc);
 						documentoBd.StrIdPlanTransaccion = documento_obj.IdPlan;
 
+						string cadena_cufe = String.Empty;
+
 						// genera el xml en ubl
-						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
+						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result, ref cadena_cufe);
 						ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 						// Establece la versión de la DIAN segun el Facturador

@@ -26,7 +26,7 @@ namespace HGInetUBLv2_1
 		/// <param name="resolucion">Objeto de tipo Extension DIAN </param>
 		/// <param name="tipo">Indica el tipo de documento</param>
 		/// <returns>Ruta donde se guardo el archivo XML</returns>  
-		public static FacturaE_Documento CrearDocumento(Guid id_documento, NotaDebito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo, string ambiente_dian)
+		public static FacturaE_Documento CrearDocumento(Guid id_documento, NotaDebito documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo, string ambiente_dian, ref string cadena_cufe)
 		{
 			try
 			{
@@ -335,7 +335,7 @@ namespace HGInetUBLv2_1
 
 				UUIDType UUID = new UUIDType();
 				//-----Se agrega Ambiente al cual se va enviar el documento
-				string CUFE = CalcularCUFE(nota_debito, resolucion.PinSoftware, documento.CufeFactura,nota_debito.ProfileExecutionID.Value);
+				string CUFE = CalcularCUFE(nota_debito, resolucion.PinSoftware, documento.CufeFactura,nota_debito.ProfileExecutionID.Value, ref cadena_cufe);
 				UUID.Value = CUFE;
 				UUID.schemeName = "CUDE-SHA384";
 				UUID.schemeID = nota_debito.ProfileExecutionID.Value;
@@ -398,7 +398,7 @@ namespace HGInetUBLv2_1
 		/// <param name="cufe_factura">Identificador de la factura Afectada</param>
 		/// <param name="ambiente">Número de identificación del ambiente utilizado por el Obligado para emitir la factura Seccion 6.1.1 (1=AmbienteProduccion , 2: AmbientePruebas)</param>
 		/// <returns></returns>
-		public static string CalcularCUFE(DebitNoteType nota_debito, string pin_software, string cufe_factura,string ambiente)
+		public static string CalcularCUFE(DebitNoteType nota_debito, string pin_software, string cufe_factura,string ambiente, ref string cadena_cufe)
 		{
 			try
 			{
@@ -510,20 +510,20 @@ namespace HGInetUBLv2_1
 					NumAdq = nota_debito.AccountingCustomerParty.Party.PartyTaxScheme[contador_adquiriente].CompanyID.Value;
 				}
 
-				string cufe = NumCr
-							  + FecCr
-							  + ValCr.Replace(",", ".")
-							  + CodImp1
-							  + ValImp1.ToString().Replace(",", ".")
-							  + CodImp2
-							  + ValImp2.ToString().Replace(",", ".")
-							  + CodImp3
-							  + ValImp3.ToString().Replace(",", ".")
-							  + ValImp.Replace(",", ".")
-							  + NitOFE
-							  + NumAdq
-							  + pin_software
-							  + ambiente
+				cadena_cufe = "NumDoc: " + NumCr + ", "
+				              + "FechaDoc: " + FecCr + ", "
+				              + "SubtotalDoc:" + ValCr.Replace(",", ".") + ", "
+				              + "CodImp1: " + CodImp1 + ", "
+				              + "ValImp1: " + ValImp1.ToString().Replace(",", ".") + ", "
+				              + "CodImp2: " + CodImp2 + ", "
+				              + "ValImp2: " + ValImp2.ToString().Replace(",", ".") + ", "
+				              + "CodImp3: " + CodImp3 + ", "
+				              + "ValImp3: " + ValImp3.ToString().Replace(",", ".") + ", "
+				              + "TotalDoc: " + ValImp.Replace(",", ".") + ", "
+				              + "NitObligado: " + NitOFE + ", "
+				              + "NitAdquiriente: " + NumAdq + ", "
+				              + "PinSW " + pin_software + ", "
+				              + "Ambiente: " + ambiente + ", "
 					;
 
 				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaDebitoV2(pin_software, String.Empty, NumCr, FecCr, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr), ValImp1, ValImp2, ValImp3, false);

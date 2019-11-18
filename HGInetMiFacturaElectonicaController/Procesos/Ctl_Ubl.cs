@@ -22,7 +22,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="documento">datos del documento</param>
 		/// <param name="pruebas">indica si el documento es de pruebas (true)</param>
 		/// <returns>datos del documento</returns>
-		public static FacturaE_Documento Generar(Guid id_documento, Factura documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
+		public static FacturaE_Documento Generar(Guid id_documento, Factura documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion, ref string cadena_cufe)
 		{
 
 			// resolución del documento
@@ -122,7 +122,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 						ambiente_dian = "2";
 
-					resultado = HGInetUBLv2_1.FacturaXMLv2_1.CrearDocumento(id_documento, documento, extension_documento, ambiente_dian);
+					resultado = HGInetUBLv2_1.FacturaXMLv2_1.CrearDocumento(id_documento, documento, extension_documento, ambiente_dian, ref cadena_cufe);
 					break;
 
 				default:
@@ -147,7 +147,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="documento">datos del documento</param>
 		/// <param name="pruebas">indica si el documento es de pruebas (true)</param>
 		/// <returns>datos del documento</returns>
-		public static FacturaE_Documento Generar(Guid id_seguridad, NotaCredito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
+		public static FacturaE_Documento Generar(Guid id_seguridad, NotaCredito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion, ref string cadena_cufe)
 		{
 			// resolución del documento
 			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
@@ -240,7 +240,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 						ambiente_dian = "2";
 
-					resultado = HGInetUBLv2_1.NotaCreditoXMLv2_1.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc, ambiente_dian);
+					resultado = HGInetUBLv2_1.NotaCreditoXMLv2_1.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
 					break;
 
 				default:
@@ -265,7 +265,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="documento">datos del documento</param>
 		/// <param name="pruebas">indica si el documento es de pruebas (true)</param>
 		/// <returns>datos del documento</returns>
-		public static FacturaE_Documento Generar(Guid id_documento, NotaDebito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion)
+		public static FacturaE_Documento Generar(Guid id_documento, NotaDebito documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion, ref string cadena_cufe)
 		{
 			// resolución del documento
 			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
@@ -359,7 +359,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 						ambiente_dian = "2";
 
-					resultado = HGInetUBLv2_1.NotaDebitoXML2_1.CrearDocumento(id_documento, documento, extension_documento, tipo_doc, ambiente_dian);
+					resultado = HGInetUBLv2_1.NotaDebitoXML2_1.CrearDocumento(id_documento, documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
 					break;
 
 				default:

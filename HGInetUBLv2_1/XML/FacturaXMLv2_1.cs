@@ -27,7 +27,7 @@ namespace HGInetUBLv2_1
 		/// <param name="documento">Objeto de tipo TblDocumentos que contiene la informacion de la factura</param>
 		/// <param name="resolucion">Objeto que contiene los parametros de la DIAN</param>
 		/// <returns>información del documento procesado</returns>
-		public static FacturaE_Documento CrearDocumento(Guid id_documento, Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, string ambiente)
+		public static FacturaE_Documento CrearDocumento(Guid id_documento, Factura documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, string ambiente, ref string cadena_cufe)
 		{
 			TipoDocumento tipo = TipoDocumento.Factura;
 
@@ -467,12 +467,12 @@ namespace HGInetUBLv2_1
 				string CUFE = string.Empty;
 				if (facturaXML.InvoiceTypeCode.Value.Equals("01") || facturaXML.InvoiceTypeCode.Value.Equals("02"))
 				{
-					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value);//resolucion.ClaveTecnicaDIAN
+					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";
 				}
 				else
 				{
-					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value);
+					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);
 					UUID.schemeName = "CUDE-SHA384";
 				}
 				
@@ -580,7 +580,7 @@ namespace HGInetUBLv2_1
 		/// <param name="clave_tecnica">Clave técnica de la resolución ó Pin del Sw cuando es contingencia</param>
 		/// <param name="ambiente">Número de identificación del ambiente utilizado por el Obligado para emitir la factura Seccion 6.1.1 (1=AmbienteProduccion , 2: AmbientePruebas)</param>
 		/// <returns>Texto con la encriptación del CUFE</returns>        
-		public static string CalcularCUFE(InvoiceType factura, string clave_tecnica, string ambiente)
+		public static string CalcularCUFE(InvoiceType factura, string clave_tecnica, string ambiente, ref string cadena_cufe)
 		{
 			try
 			{
@@ -697,20 +697,20 @@ namespace HGInetUBLv2_1
 					NumAdq = factura.AccountingCustomerParty.Party.PartyTaxScheme[contador_adquiriente].CompanyID.Value;
 				}
 
-				string cufe = NumFac
-					+ FecFac
-					+ ValFac.Replace(",", ".")
-					+ CodImp1
-					+ ValImp1.ToString().Replace(",", ".")
-					+ CodImp2
-					+ ValImp2.ToString().Replace(",", ".")
-					+ CodImp3
-					+ ValImp3.ToString().Replace(",", ".")
-					+ ValImp.Replace(",", ".")
-					+ NitOFE
-					+ NumAdq
-					+ clave_tecnica
-					+ ambiente
+				cadena_cufe = "NumDoc: "+ NumFac + ", "
+					+ "FechaDoc: "+FecFac + ", "
+					+ "SubtotalDoc:"+ValFac.Replace(",", ".") + ", "
+					+ "CodImp1: "+CodImp1 + ", "
+					+ "ValImp1: "+ValImp1.ToString().Replace(",", ".") + ", "
+					+ "CodImp2: "+CodImp2 + ", "
+					+ "ValImp2: " +ValImp2.ToString().Replace(",", ".") + ", "
+					+ "CodImp3: " +CodImp3 + ", "
+					+ "ValImp3: " +ValImp3.ToString().Replace(",", ".") + ", "
+					+ "TotalDoc: "+ValImp.Replace(",", ".") + ", "
+					+ "NitObligado: "+NitOFE + ", "
+					+ "NitAdquiriente: "+NumAdq + ", "
+					+ "Clave o Pin: "+clave_tecnica + ", "
+					+ "Ambiente: "+ambiente + ", "
 				;
 
 				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac, FecFac, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);

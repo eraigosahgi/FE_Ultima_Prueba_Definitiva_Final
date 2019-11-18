@@ -28,8 +28,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <param name="empresa">información del facturador electrónico en base de datos</param>
         /// <param name="respuesta">datos de respuesta del documento</param>
         /// <param name="documento_result">información del proceso interno del documento</param>
+        /// <param name="cadena_cufe">Se guarda el la cadena de informacion con que se calcula el CUFE</param>
         /// <returns>información adicional de respuesta del documento</returns>
-        public static DocumentoRespuesta UblGenerar(object documento_obj, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result)
+        public static DocumentoRespuesta UblGenerar(object documento_obj, TipoDocumento tipo_doc, TblEmpresasResoluciones resolucion, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result, ref string cadena_cufe)
         {   
             try
             {
@@ -40,11 +41,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//Genera Ubl
 				if (tipo_doc == TipoDocumento.Factura)
-                    documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (Factura)documento_obj, tipo_doc, empresa, resolucion);
+                    documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (Factura)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
                 else if (tipo_doc == TipoDocumento.NotaCredito)
-                    documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaCredito)documento_obj, tipo_doc, empresa, resolucion);
+                    documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaCredito)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
 				else if (tipo_doc == TipoDocumento.NotaDebito)
-					documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaDebito)documento_obj, tipo_doc, empresa, resolucion);
+					documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaDebito)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
 
 			}
 			catch (Exception excepcion)

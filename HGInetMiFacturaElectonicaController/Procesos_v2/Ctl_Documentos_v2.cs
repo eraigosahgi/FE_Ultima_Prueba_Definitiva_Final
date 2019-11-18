@@ -151,9 +151,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documentoBd.StrIdPlanTransaccion = documento_ex.StrIdPlanTransaccion;
 						}
 
+						if ((documento_obj.DocumentoFormato.Codigo == -1 || documento_obj.DocumentoFormato.Codigo == 99) && (string.IsNullOrEmpty(documento_obj.Cufe)))
+						{
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error("No se encontró CUFE, generar y enviar de nuevo el documento", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+							throw new ApplicationException("No se encontró CUFE, generar y enviar de nuevo el documento");
+						}
+
+						if ((documento_obj.DocumentoFormato.Codigo == -1 || documento_obj.DocumentoFormato.Codigo == 99) && (string.IsNullOrEmpty(documento_obj.DocumentoFormato.ArchivoPdf)))
+						{
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error("No se encontró Formato de impresión, generar y enviar de nuevo el documento", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+							throw new ApplicationException("No se encontró CUFE, generar y enviar de nuevo el documento");
+						}
+
+						string cadena_cufe = String.Empty;
 
 						// genera el xml en ubl
-						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result);
+						respuesta = UblGenerar(documento_obj, tipo_doc, resolucion, documentoBd, empresa, ref respuesta, ref documento_result, ref cadena_cufe);
 						if (respuesta.Error != null && documento_existente == true)
 						{
 							//Se actualiza el estado del documento en BD para que lo envien de nuevo
@@ -186,6 +199,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error("Por favor regrabar el documento y enviar de nuevo el documento", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 							throw new ApplicationException("Por favor regrabar el documento y enviar de nuevo el documento");
+						}
+						else if (documento_obj.DocumentoFormato.Codigo == 99)
+						{
+							if (!string.IsNullOrEmpty(documento_obj.Cufe))
+							{
+								if (documento_obj.Cufe != documento_result.CUFE)
+								{
+									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Validar calculo del CUFE respecto al calculo de la plataforma que lo hace con los valores: {0} y luego de validar enviar de nuevo el documento",cadena_cufe), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+									throw new ApplicationException(string.Format("Validar calculo del CUFE respecto al calculo de la plataforma que lo hace con los valores: {0} y luego de validar enviar de nuevo el documento", cadena_cufe));
+								}
+							}
+							else
+							{
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error("No se encontró CUFE, generar y enviar de nuevo el documento", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+								throw new ApplicationException("No se encontró CUFE, generar y enviar de nuevo el documento");
+							}
+
 						}
 
 						//Asignación de Cufe a documento_obj 
