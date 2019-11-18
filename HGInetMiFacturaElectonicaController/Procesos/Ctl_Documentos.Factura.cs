@@ -133,9 +133,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*");
 
-					if (lista_resolucion == null || lista_resolucion.Count < 1)
+
+					List<string> resoluciones_docs = documentos.Select(_res => _res.NumeroResolucion).Distinct().ToList();
+
+					List<string> resoluciones_bd = lista_resolucion.Select(_res => _res.StrNumResolucion).Distinct().ToList<string>();
+
+					//Valida si hay items de una lista que no esten en otra
+					List<string> resol = resoluciones_docs.Except(resoluciones_bd, StringComparer.OrdinalIgnoreCase).ToList();
+
+					if (resol != null || resol.Count > 0)
 					{
 						// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
+						lista_resolucion = new List<TblEmpresasResoluciones>();
 						lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, facturador_electronico);
 					}
 
@@ -378,21 +387,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				TblEmpresasResoluciones resolucion = null;
 
+				
+				//resolucion = Obtenerresolucion(lista_resolucion, item.NumeroResolucion, item.Prefijo, id_peticion, facturador_electronico);
 				// filtra la resolución del documento
-				resolucion = Obtenerresolucion(lista_resolucion, item.NumeroResolucion, item.Prefijo, id_peticion, facturador_electronico);
-
-				/*try
+				try
 				{
-					//resolucion = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion)
-					//														&& _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
-					//														&& _resolucion_doc.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
+					resolucion = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion)
+																			&& _resolucion_doc.StrPrefijo.Equals(item.Prefijo)
+																			&& _resolucion_doc.StrNumResolucion.Equals(item.NumeroResolucion)).FirstOrDefault();
 				}
 				catch (Exception excepcion)
 				{
 					mensaje = string.Format("No se encontró la resolución '{0}' para el Facturador Electrónico '{1}'", item.NumeroResolucion, facturador_electronico.StrIdentificacion);
 
 					throw new ApplicationException(mensaje);
-				}*/
+				}
 
 				if (resolucion == null)
 				{
@@ -699,7 +708,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="id_peticion">peticion con la que se esta haciendo el proceso</param>
 		/// <param name="facturador_electronico">objeto de informacion del Obligado</param>
 		/// <returns></returns>
-		public static TblEmpresasResoluciones Obtenerresolucion(List<TblEmpresasResoluciones> lista_resolucion, string numeroResolucion, string prefijo, Guid id_peticion, TblEmpresas facturador_electronico)
+		/*public static TblEmpresasResoluciones Obtenerresolucion(List<TblEmpresasResoluciones> lista_resolucion, string numeroResolucion, string prefijo, Guid id_peticion, TblEmpresas facturador_electronico)
 		{
 
 			TblEmpresasResoluciones resolucion = null;
@@ -735,7 +744,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			return resolucion;
 
-		}
+		}*/
 
 	}
 }
