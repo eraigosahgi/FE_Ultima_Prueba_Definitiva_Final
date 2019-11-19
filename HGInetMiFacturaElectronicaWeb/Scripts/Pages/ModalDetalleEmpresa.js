@@ -14,7 +14,8 @@ ModalDetalleEmpresasApp.controller('EmpresasModalController', function EmpresasM
 	$rootScope.ConsultaDetalleEmpresa = function (idseguridadEmpresa) {
 	
 	
-		$http.get('/api/Empresas?IdSeguridad=' + idseguridadEmpresa).then(function (response) {			
+		$http.get('/api/Empresas?IdSeguridad=' + idseguridadEmpresa).then(function (response) {
+			
 			$('#modal_detalle_empresa').modal('show');
 			$scope.Nit = response.data[0].Identificacion;			
 			$scope.RazonSocial = response.data[0].RazonSocial;			
@@ -22,7 +23,7 @@ ModalDetalleEmpresasApp.controller('EmpresasModalController', function EmpresasM
 			$scope.obligado = (response.data[0].intObligado) ? "SI" : "NO";
 			$scope.Habilitacion = BuscarDescripcion(EnumHabilitacion, response.data[0].Habilitacion);
 			$scope.IdSeguridad = response.data[0].IdSeguridad;
-			$scope.Estado = (response.data[0].Estado==1)?"ACTIVO":"INACTIVO";
+			$scope.Estado = (response.data[0].Estado==1)?"ACTIVO": (response.data[0].Estado==2)? "INACTIVO":(response.data[0].Estado==3)? "EN PROCESO DE REGISTRO":"";
 			$scope.Email = response.data[0].Email;
 			$scope.StrMailEnvio = response.data[0].StrMailEnvio;
 			$scope.StrMailPagos = response.data[0].StrMailPagos;

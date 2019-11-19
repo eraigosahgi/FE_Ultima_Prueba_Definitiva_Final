@@ -189,7 +189,7 @@
 								//Diferente de postPago
 								if (respuesta.Tipo != 3) {
 									setTimeout(CargarPorcentaje(respuesta.Porcentaje), 3000);
-									$('#lblComprados').text("Adquidiros: " + respuesta.TCompra);
+									$('#lblComprados').text("Adquiridos: " + respuesta.TCompra);
 									$('#lblProcesados').text("Procesados: " + respuesta.TProcesadas);
 									$('#lblDisponibles').text("Disponibles: " + respuesta.TDisponible);
 									$('#lblPorcentaje').text(respuesta.Porcentaje);
