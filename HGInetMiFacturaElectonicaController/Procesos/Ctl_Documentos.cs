@@ -476,7 +476,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
 					ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
 					if (codpostal == null)
-						throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoTributo, tipo));
+						throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoPostal, tipo));
 				}
 
 				ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
