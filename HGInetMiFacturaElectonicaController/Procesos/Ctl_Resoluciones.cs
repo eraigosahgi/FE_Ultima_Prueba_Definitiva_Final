@@ -79,11 +79,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			resolucion_dian.RangoFacturacion = new RangoFacturacion[1];
 
 			resolucion_dian.RangoFacturacion[0] = new RangoFacturacion();
-			resolucion_dian.RangoFacturacion[0].ClaveTecnica = datos_resolucion.ClaveTecnica;
+			resolucion_dian.RangoFacturacion[0].ClaveTecnica = datos_resolucion.ClaveTecnica.Trim();
 			resolucion_dian.RangoFacturacion[0].FechaResolucion = datos_resolucion.FechaResolucion;
 			resolucion_dian.RangoFacturacion[0].FechaVigenciaDesde = datos_resolucion.FechaVigenciaInicial;
 			resolucion_dian.RangoFacturacion[0].FechaVigenciaHasta = datos_resolucion.FechaVigenciaFinal;
-			resolucion_dian.RangoFacturacion[0].NumeroResolucion = Convert.ToInt64(datos_resolucion.NumeroResolucion);
+			resolucion_dian.RangoFacturacion[0].NumeroResolucion = Convert.ToInt64(datos_resolucion.NumeroResolucion.Trim());
 			resolucion_dian.RangoFacturacion[0].Prefijo = datos_resolucion.Prefijo;
 			resolucion_dian.RangoFacturacion[0].RangoFinal = datos_resolucion.RangoFinal;
 			resolucion_dian.RangoFacturacion[0].RangoInicial = datos_resolucion.RangoInicial;
@@ -92,7 +92,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				// crea o actualiza las resoluciones obtenidas en la base de datos
 				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
-				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.Crear(resolucion_dian, obligado, datos_resolucion.SetIdDian);
+				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.Crear(resolucion_dian, obligado, datos_resolucion.SetIdDian.Trim());
 
 				if (resoluciones_bd != null)
 				{
