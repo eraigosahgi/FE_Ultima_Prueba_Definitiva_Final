@@ -100,6 +100,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del archivo Anexo. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				respuesta.IdEstado = CategoriaEstado.NoRecibido.GetHashCode();
+				respuesta.DescripcionEstado = LibreriaGlobalHGInet.Funciones.Enumeracion.GetDescription(CategoriaEstado.NoRecibido);
+				respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
+				respuesta.DescripcionProceso = LibreriaGlobalHGInet.Funciones.Enumeracion.GetDescription(ProcesoEstado.Validacion);
 			}
 
 			return respuesta;
