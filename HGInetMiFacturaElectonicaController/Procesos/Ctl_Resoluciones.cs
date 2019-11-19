@@ -5,6 +5,8 @@ using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using LibreriaGlobalHGInet.Enumerables;
+using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.RegistroLog;
@@ -69,6 +71,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <returns>resolución creada</returns>
 		public static List<Resolucion> CrearHabilitacion(Resolucion datos_resolucion, string obligado)
 		{
+
+			if (Texto.ValidarExpresion(TipoExpresion.EspaciosEnBlanco, datos_resolucion.ClaveTecnica))
+				throw new ArgumentException(string.Format("El parámetro {0} con valor {1} no puede contener espacios al inicio o al final", "ClaveTecnica", datos_resolucion.ClaveTecnica));
+
+			if (Texto.ValidarExpresion(TipoExpresion.EspaciosEnBlanco, datos_resolucion.NumeroResolucion))
+				throw new ArgumentException(string.Format("El parámetro {0} con valor {1} no puede contener espacios al inicio o al final", "NumeroResolucion", datos_resolucion.NumeroResolucion));
+
+			if (Texto.ValidarExpresion(TipoExpresion.EspaciosEnBlanco, datos_resolucion.SetIdDian))
+				throw new ArgumentException(string.Format("El parámetro {0} con valor {1} no puede contener espacios al inicio o al final", "SetIdDian", datos_resolucion.SetIdDian));
+
+
 			//obtiene los datos de la empresa 
 			Ctl_Empresa Peticion = new Ctl_Empresa();
 			TblEmpresas facturador_electronico = Peticion.Obtener(obligado);
@@ -79,11 +92,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			resolucion_dian.RangoFacturacion = new RangoFacturacion[1];
 
 			resolucion_dian.RangoFacturacion[0] = new RangoFacturacion();
-			resolucion_dian.RangoFacturacion[0].ClaveTecnica = datos_resolucion.ClaveTecnica.Trim();
+			resolucion_dian.RangoFacturacion[0].ClaveTecnica = datos_resolucion.ClaveTecnica;
 			resolucion_dian.RangoFacturacion[0].FechaResolucion = datos_resolucion.FechaResolucion;
 			resolucion_dian.RangoFacturacion[0].FechaVigenciaDesde = datos_resolucion.FechaVigenciaInicial;
 			resolucion_dian.RangoFacturacion[0].FechaVigenciaHasta = datos_resolucion.FechaVigenciaFinal;
-			resolucion_dian.RangoFacturacion[0].NumeroResolucion = Convert.ToInt64(datos_resolucion.NumeroResolucion.Trim());
+			resolucion_dian.RangoFacturacion[0].NumeroResolucion = Convert.ToInt64(datos_resolucion.NumeroResolucion);
 			resolucion_dian.RangoFacturacion[0].Prefijo = datos_resolucion.Prefijo;
 			resolucion_dian.RangoFacturacion[0].RangoFinal = datos_resolucion.RangoFinal;
 			resolucion_dian.RangoFacturacion[0].RangoInicial = datos_resolucion.RangoInicial;
@@ -92,7 +105,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				// crea o actualiza las resoluciones obtenidas en la base de datos
 				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
-				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.Crear(resolucion_dian, obligado, datos_resolucion.SetIdDian.Trim());
+				List<TblEmpresasResoluciones> resoluciones_bd = empresa_resolucion.Crear(resolucion_dian, obligado, datos_resolucion.SetIdDian);
 
 				if (resoluciones_bd != null)
 				{
