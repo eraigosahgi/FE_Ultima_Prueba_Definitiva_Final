@@ -574,6 +574,25 @@ namespace HGInetMiFacturaElectonicaController
 							archivos.Add(adjunto);
 						}
 
+						//Proceso para agregar la respuesta de la DIAN
+						try
+						{
+							byte[] bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl.Replace(LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian));
+							string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
+							string nombre_xml_app = Path.GetFileName(documento.StrUrlArchivoUbl);
+
+							if (!string.IsNullOrEmpty(ruta_fisica_appl))
+							{
+								Adjunto adjunto = new Adjunto();
+								adjunto.ContenidoB64 = ruta_fisica_appl;
+								adjunto.Nombre = "ApplicationResponse.xml";
+								archivos.Add(adjunto);
+							}
+						}
+						catch (Exception)
+						{
+						}
+
 						//Proceso para los anexos
 						if (documento.StrUrlAnexo != null)
 						{
