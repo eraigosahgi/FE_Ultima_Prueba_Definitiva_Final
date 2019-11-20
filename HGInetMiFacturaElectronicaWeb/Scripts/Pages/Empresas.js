@@ -104,8 +104,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	   	closeOnOutsideClick: true
 	   };
 
-	var showInfo = function (data) {
-		console.log(data);
+	var showInfo = function (data) {		
 		Certificado = data;
 		if (popup) {
 			$(".popup").remove();
@@ -1256,6 +1255,40 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		}
 
 
+		//$(function () {
+		//	var fileUploader = $("#file-uploader").dxFileUploader({
+		//		multiple: false,
+		//		accept: "pfx",
+		//		value: [],
+		//		uploadMode: "instantly",
+		//		uploadUrl: "/api/SubirArchivo",
+		//		onValueChanged: function (e) {
+		//			var files = e.value;
+		//			if (files.length > 0) {
+		//				$("#selected-files .selected-item").remove();
+		//				$.each(files, function (i, file) {
+		//					var $selectedItem = $("<div />").addClass("selected-item");
+		//					$selectedItem.append(
+		//						$("<span />").html("Name: " + file.name + "<br/>"),
+		//						$("<span />").html("Size " + file.size + " bytes" + "<br/>"),
+		//						$("<span />").html("Type " + file.type + "<br/>"),
+		//						$("<span />").html("Last Modified Date: " + file.lastModifiedDate)
+		//					);
+		//					$selectedItem.appendTo($("#selected-files"));
+		//				});
+		//				$("#selected-files").show();
+		//			}
+		//			else
+		//				$("#selected-files").hide();
+		//		}
+		//	}).dxFileUploader("instance");
+
+
+		//});
+
+
+
+
 		$("#form1").on("submit", function (e) {
 			guardarEmpresa();
 			e.preventDefault();
@@ -1264,7 +1297,24 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		$("#button").dxButton({
 			text: "Guardar",
 			type: "default",
-			useSubmitBehavior: true
+			onClick: function (e) {
+				//Validamos si es administrador
+				if ($scope.Admin && (Datos_CertFirma == "1" || Datos_CertFirma == 1)) {
+					//Si es administrador, validamos si la clave del certificado es correcta
+					SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+						//Si la clave es correcta, habilitamos el viaje del formulario al servidor
+						$("#button").dxButton({ useSubmitBehavior: true });
+						$("#button").click();
+					}, function (response) {
+						//Si no es correcta la clave, debe salir un mensaje del interceptor indicando el error, e imprimimos en consola el error.
+						console.log(response);
+					});
+				} else {
+					//Si no es administrador, no validamos esos datos y simplemente habilitamos el viaje de los datos del formulario, al servidor
+					$("#button").dxButton({ useSubmitBehavior: true });
+					$("#button").click();
+				}
+			}
 		});
 
 	};
@@ -1793,10 +1843,10 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 
 				//*************************************************************************				
 				CantRegCargados = AlmacenEmpresas._array.length;
+
 				CargarAsyn();
 				function CargarAsyn() {
-					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa).then(function (data) {
-
+					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa).then(function (data) {						
 						CantRegCargados += data.length;
 						if (data.length > 0) {
 							cargarEmpresas(data);

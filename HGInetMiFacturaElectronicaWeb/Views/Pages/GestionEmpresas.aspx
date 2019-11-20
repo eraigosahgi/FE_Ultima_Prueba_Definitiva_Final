@@ -5,12 +5,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201924"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201924"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201925"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>	
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201924"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs201924"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201924"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs201925"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201925"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController" class="col-md-12">
 		<%--Panel información General--%>
@@ -394,8 +393,10 @@
 	</div>
 	<%--Panel Botones--%>
 	<div class="col-lg-12 text-right" style="z-index: 0; margin-left: -10px;">
+		 <div id="file-uploader"></div>
 		<a id="btncancelar" class="btn btn-default" style="text-transform: initial !important; margin-right: 1%" href="/Views/Pages/ConsultaEmpresas.aspx" style="font-size: 14px; text-align: center;">Cancelar</a>
 		<div id="button"></div>
 	</div>
+
 
 </asp:Content>

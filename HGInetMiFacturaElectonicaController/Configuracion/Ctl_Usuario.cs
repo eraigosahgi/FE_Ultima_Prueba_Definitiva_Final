@@ -84,6 +84,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (datos_empresa.IntAdquiriente)
 					opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Adquiriente));
 
+				//Obtiene permisos del Integrador.
+				if (datos_empresa.IntIntegrador)
+					opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Integrador));
+
 				List<TblOpcionesUsuario> opciones_usuario = new List<TblOpcionesUsuario>();
 
 				//Añade las opciones TblOpcionesPerfil en una lista de tipo TblOpcionesUsuario.
@@ -638,7 +642,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="codigo_usuario"></param>
 		/// <returns></returns>
-		public List<ObjUsuario> ObtenerListaUsuarios(string codigo_usuario, string codigo_empresa)
+		public List<ObjUsuario> ObtenerListaUsuarios(string codigo_usuario, string codigo_empresa, int Desde, int Hasta)
 		{
 			try
 			{
@@ -666,9 +670,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 												  Usuario = d.StrUsuario,
 												  RazonSocial = d.TblEmpresas.StrRazonSocial
 
-											  }).ToList();
-				
-								
+											  }).OrderBy(x => x.RazonSocial).Skip(Desde).Take(Hasta).ToList();
+
+
 				return respuesta;
 			}
 			catch (Exception excepcion)

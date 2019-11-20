@@ -214,7 +214,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					if (datosempresa.IntIntegrador)
 					{
-						datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario, codigo_empresa);
+						datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario, codigo_empresa, Desde, Hasta);
 					}
 					else
 					{

@@ -16,10 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Web;
 using System.Web.Http;
 using System.Xml;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_Empresa;
@@ -90,13 +92,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			if (empresa.IntAdministrador)
 			{
-				datos = CtEmpresa.Pag_ObtenerEmpresas(Desde,Hasta);
+				datos = CtEmpresa.Pag_ObtenerEmpresas(Desde, Hasta);
 			}
 			else
 			{
 				if (empresa.IntIntegrador)
 				{
-					datos = CtEmpresa.Pag_ObtenerAsociadas(IdentificacionEmpresa);
+					datos = CtEmpresa.Pag_ObtenerAsociadas(IdentificacionEmpresa, Desde, Hasta);
 				}
 			}
 
@@ -128,16 +130,19 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 			List<TblEmpresas> datos = new List<TblEmpresas>();
-
+			bool ConsultaAdmin = false;
 			if (empresa.IntAdministrador)
 			{
 				datos = ctl_empresa.ObtenerFacturadores();
+				ConsultaAdmin = true;
 			}
 			else
 			{
+				ConsultaAdmin = false;
 				if (empresa.IntIntegrador)
 				{
 					datos = ctl_empresa.ObtenerAsociadas(empresa.StrIdentificacion);
+
 				}
 				else
 				{
@@ -159,7 +164,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Perfil = d.IntAdquiriente && d.IntObligado ? "Facturador y Adquiriente" : d.IntAdquiriente ? "Adquiriente" : d.IntObligado ? "Facturador" : "",
 				Habilitacion = d.IntHabilitacion,
 				IdSeguridad = d.StrIdSeguridad,
-				Resolucion = d.StrResolucionDian
+				Resolucion = d.StrResolucionDian,
+				ConsultaAdmin = ConsultaAdmin
 			});
 
 			return Ok(retorno);

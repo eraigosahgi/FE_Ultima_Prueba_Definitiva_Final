@@ -36,7 +36,7 @@
 		return $http.get('/api/ObtenerInfCert?IdSeguridad=' + IdSeguridad + '&Clave=' + Clave).then(function (response) {
 			return response.data;
 		}, function (response) {
-			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);
 			return $q.reject(response.data);
 		});
 	}

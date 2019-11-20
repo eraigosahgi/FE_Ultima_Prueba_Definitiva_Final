@@ -1057,7 +1057,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="identificacion">Identificacion de Obligado o Adquiriente</param>
 		/// <returns></returns>
-		public List<ObjEmpresa> Pag_ObtenerAsociadas(string identificacion)
+		public List<ObjEmpresa> Pag_ObtenerAsociadas(string identificacion,int Desde,int Hasta)
 		{
 
 			List<ObjEmpresa> datos = (from d in context.TblEmpresas
@@ -1082,7 +1082,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 										  StrMailPagos = d.StrMailPagos,
 										  StrMailRecepcion = d.StrMailRecepcion,
 										  StrMailAcuse = d.StrMailAcuse
-									  }).ToList();
+									  }).OrderBy(x => x.Identificacion).Skip(Desde).Take(Hasta).ToList();
 
 			return datos;
 		}
