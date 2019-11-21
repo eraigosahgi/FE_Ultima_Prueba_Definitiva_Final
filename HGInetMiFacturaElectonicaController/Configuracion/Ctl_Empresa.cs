@@ -40,7 +40,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 
-		public CertificadoDigital GuardarCertificadoDigital(HttpPostedFile Archivo, System.Guid IdSeguridad, string clave)
+		public CertificadoDigital GuardarCertificadoDigital(HttpPostedFile File, System.Guid IdSeguridad, string clave)
 		{
 			string carpeta_certificado = string.Empty;
 
@@ -50,10 +50,20 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				//Ruta temporal para crear el archivo y validarlo
 				carpeta_certificado = string.Format("{0}\\{1}\\Temp\\{2}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, IdSeguridad);
 				//Validamos que 
-				if (Archivo != null && Archivo.ContentLength > 0)
+				if (File != null && File.ContentLength > 0)
 				{
+					string RutaDirectorio = carpeta_certificado.Replace(string.Format(@"\{0}.pfx", IdSeguridad), "");
 					//Guardamos el archivo en la ruta temporal
-					Archivo.SaveAs(carpeta_certificado);
+					if (Directorio.ValidarExistenciaArchivo(RutaDirectorio))
+					{
+						File.SaveAs(carpeta_certificado);
+					}else
+					{
+						
+						Directorio.CrearDirectorio(RutaDirectorio);
+						File.SaveAs(carpeta_certificado);
+					}
+										
 				}
 				else
 				{
@@ -69,11 +79,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Datos.Serial = Certificado.SerialNumber;
 				Datos.Certificadora = Certificado.Issuer;
 				//Elimino el archivo Temporal
-				File.Delete(carpeta_certificado);
+				System.IO.File.Delete(carpeta_certificado);
 				//Copiamos el archivo en la ruta que debe estar
 				carpeta_certificado = string.Format("{0}\\{1}\\{2}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, IdSeguridad);
 				//Guardamos el archivo
-				Archivo.SaveAs(carpeta_certificado);
+				File.SaveAs(carpeta_certificado);
 				//Leemos el archivo para garantizar que si esta copiado en la ruta original
 				Certificado = new X509Certificate2(carpeta_certificado, clave);
 				Datos = new CertificadoDigital();
