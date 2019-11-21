@@ -177,9 +177,6 @@
     <Compile Include="Modelo\TblEmpresas.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
-    <Compile Include="Modelo\TblEmpresasPasarela.cs">
-      <DependentUpon>ModeloDatos.tt</DependentUpon>
-    </Compile>
     <Compile Include="Modelo\TblEmpresasResoluciones.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
