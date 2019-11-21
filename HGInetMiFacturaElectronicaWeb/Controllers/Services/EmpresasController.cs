@@ -30,6 +30,40 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
 	public class EmpresasController : ApiController
 	{
+		/// <summary>
+		/// Recibe certificado digital para almacenarlo
+		/// </summary>
+		/// <param name="StrIdSeguridad">Id de seguridad de la empresa</param>
+		/// <param name="Clave">Clave del certificado</param>
+		/// <returns>Indica si se guardo con exito</returns>
+		[HttpPost]
+		[Route("api/SubirArchivo")]
+		public IHttpActionResult SubirArchivo(System.Guid StrIdSeguridad,string Clave)
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(Clave) ||Clave.Equals("null") )
+				{
+					throw new ApplicationException("Debe ingresar la clave del certificado Digital");
+				}
+
+				var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+				CertificadoDigital datos = new CertificadoDigital();
+				if (file != null && file.ContentLength > 0)
+				{
+					Ctl_Empresa Controlador = new Ctl_Empresa();
+					datos =Controlador.GuardarCertificadoDigital(file, StrIdSeguridad, Clave);
+				}
+
+				var Resultado = new { Descripcion = datos.Propietario, FechaVencimiento = Convert.ToDateTime(datos.Fechavenc).ToString(Fecha.formato_fecha_hginet), Serial = datos.Serial, Emisor = datos.Certificadora };
+
+				return Ok(Resultado);				
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 		/// <summary>
 		/// Obtiene la lista de empresas

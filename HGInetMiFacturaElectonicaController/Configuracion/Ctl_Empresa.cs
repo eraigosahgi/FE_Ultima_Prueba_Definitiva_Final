@@ -21,6 +21,8 @@ using HGInetMiFacturaElectonicaController.Properties;
 using LibreriaGlobalHGInet.General;
 using HGInetMiFacturaElectonicaData.Objetos;
 using LibreriaGlobalHGInet.RegistroLog;
+using System.Web;
+using System.IO;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -33,6 +35,62 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		public Ctl_Empresa(string servidor, string basedatos, string usuario, string clave) : base(servidor, basedatos, usuario, clave) { }
 		#endregion
+
+
+
+
+
+		public CertificadoDigital GuardarCertificadoDigital(HttpPostedFile Archivo, System.Guid IdSeguridad, string clave)
+		{
+			string carpeta_certificado = string.Empty;
+
+			try
+			{
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+				//Ruta temporal para crear el archivo y validarlo
+				carpeta_certificado = string.Format("{0}\\{1}\\Temp\\{2}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, IdSeguridad);
+				//Validamos que 
+				if (Archivo != null && Archivo.ContentLength > 0)
+				{
+					//Guardamos el archivo en la ruta temporal
+					Archivo.SaveAs(carpeta_certificado);
+				}
+				else
+				{
+					//Generamos excepción si no tenemos datos en el archivo
+					throw new ApplicationException(string.Format("Error al guardar el certificado: {0}", "El archivo no contiene información"));
+				}
+
+				//Validamos si el certificado esta correcto con respecto a la clave 
+				X509Certificate2 Certificado = new X509Certificate2(carpeta_certificado, clave);
+				CertificadoDigital Datos = new CertificadoDigital();
+				Datos.Fechavenc = Certificado.NotAfter;
+				Datos.Propietario = Certificado.FriendlyName;
+				Datos.Serial = Certificado.SerialNumber;
+				Datos.Certificadora = Certificado.Issuer;
+				//Elimino el archivo Temporal
+				File.Delete(carpeta_certificado);
+				//Copiamos el archivo en la ruta que debe estar
+				carpeta_certificado = string.Format("{0}\\{1}\\{2}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, IdSeguridad);
+				//Guardamos el archivo
+				Archivo.SaveAs(carpeta_certificado);
+				//Leemos el archivo para garantizar que si esta copiado en la ruta original
+				Certificado = new X509Certificate2(carpeta_certificado, clave);
+				Datos = new CertificadoDigital();
+				Datos.Fechavenc = Certificado.NotAfter;
+				Datos.Propietario = Certificado.FriendlyName;
+				Datos.Serial = Certificado.SerialNumber;
+				Datos.Certificadora = Certificado.Issuer;
+				//Retornamos los datos para mostrarlos al usuario
+				return Datos;
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
+				throw new ApplicationException(string.Format("Error al guardar el certificado: {0}", excepcion.Message), excepcion);
+			}
+		}
+
 
 		/// <summary>
 		/// Valida Autenticacion del Datakey respecto a los campos enviados 
@@ -400,7 +458,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				#endregion
 
-				
+
 				return EmpresaActualiza;
 			}
 			catch (Exception excepcion)
@@ -888,11 +946,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 
 			var datos = (from item in context.TblEmpresas
-						 where item.IntAdquiriente == true						 
+						 where item.IntAdquiriente == true
 						 select new
 						 {
 							 ID = item.StrIdentificacion,
-							 Texto = item.StrRazonSocial							 
+							 Texto = item.StrRazonSocial
 						 }).OrderBy(x => x.Texto).ToList();
 
 			return datos;
@@ -1057,7 +1115,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="identificacion">Identificacion de Obligado o Adquiriente</param>
 		/// <returns></returns>
-		public List<ObjEmpresa> Pag_ObtenerAsociadas(string identificacion,int Desde,int Hasta)
+		public List<ObjEmpresa> Pag_ObtenerAsociadas(string identificacion, int Desde, int Hasta)
 		{
 
 			List<ObjEmpresa> datos = (from d in context.TblEmpresas

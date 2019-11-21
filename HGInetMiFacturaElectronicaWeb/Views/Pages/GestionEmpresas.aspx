@@ -6,7 +6,7 @@
 
 
 	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201925"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>	
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201924"></script>
 	<script src="../../Scripts/Pages/Empresas.js?vjs201925"></script>
 	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201925"></script>
@@ -319,7 +319,7 @@
 										</div>
 									</div>
 
-									<div class="col-md-12" id="PanelFirmaFacturador">
+									<div class="col-md-12" id="PanelFirmaFacturador" data-ng-show="id_seguridad != ''">
 										<div class="col-md-6">
 
 											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%;">Proveedor del Certificado:<strom style="color: red;">*</strom></label>
@@ -354,14 +354,16 @@
 
 										</div>
 
-										<div class="col-md-6" style="margin-top: 0px;">
-											<div class="file-uploader-block" style="float: right; display: none">
-												<div id="Certificado"></div>
+										<div class="col-md-6" style="margin-top: 0px;" data-ng-show="id_seguridad != ''">
+											<div class="col-md-12" style="margin-top: 0px;">
+												<div class="file-uploader-block" style="float: right;">
+													<div id="Certificado"></div>
+												</div>
 											</div>
 										</div>
 
+										<div class="col-md-5" style="margin-top: 5px;" data-ng-show="id_seguridad != ''">
 
-										<div class="col-md-5" style="margin-top: 0px;" data-ng-show="id_seguridad != ''">
 											<div id="popup">
 												<div class="popup"></div>
 											</div>
@@ -393,7 +395,7 @@
 	</div>
 	<%--Panel Botones--%>
 	<div class="col-lg-12 text-right" style="z-index: 0; margin-left: -10px;">
-		 <div id="file-uploader"></div>
+		<div id="file-uploader"></div>
 		<a id="btncancelar" class="btn btn-default" style="text-transform: initial !important; margin-right: 1%" href="/Views/Pages/ConsultaEmpresas.aspx" style="font-size: 14px; text-align: center;">Cancelar</a>
 		<div id="button"></div>
 	</div>

@@ -104,7 +104,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	   	closeOnOutsideClick: true
 	   };
 
-	var showInfo = function (data) {		
+	var showInfo = function (data) {
 		Certificado = data;
 		if (popup) {
 			$(".popup").remove();
@@ -857,15 +857,29 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					type: "required",
 					message: "Debe indicar quien firma con el certificado"
 				}]
-			})
-			;
+			});
+
 
 			$("#Certificado").dxFileUploader({
-				multiple: true,
-				uploadMode: "useButtons",
-				//uploadUrl: "https://js.devexpress.com/Content/Services/upload.aspx",
-				//maxFileSize: 4000000
-			});
+				multiple: false,
+				allowedFileExtensions: [".pfx"],
+				uploadMode: "instantly",
+				uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert,
+				//onValueChanged: function (e) {
+				//	console.log(e);
+				//	var files = e.value;
+				//	if (files.length > 0) {
+				//		SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+				//			Datos_FechaCert = data.FechaVencimiento;
+				//			$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+				//			showInfo(data);
+				//		});
+				//	}
+				//	else
+				//		$("#selected-files").hide();
+				//}
+			}
+			);
 
 
 			$("#Hgi_Responsable").dxCheckBox({
@@ -889,6 +903,23 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				showClearButton: true,
 				onValueChanged: function (data) {
 					Datos_ClaveCert = data.value;
+					$("#Certificado").dxFileUploader({
+						multiple: false,
+						allowedFileExtensions: [".pfx"],
+						uploadMode: "instantly",
+						uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert,
+						onUploaded: function (e) {
+							SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+								Datos_FechaCert = data.FechaVencimiento;
+								$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+								showInfo(data);
+							});
+						}
+						,
+						onUploadError: function (e) {
+							DevExpress.ui.notify("Error al guardar el certificado, verifique la clave", 'error', 6000);
+						}
+					});
 				}
 			});
 
@@ -1255,40 +1286,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		}
 
 
-		//$(function () {
-		//	var fileUploader = $("#file-uploader").dxFileUploader({
-		//		multiple: false,
-		//		accept: "pfx",
-		//		value: [],
-		//		uploadMode: "instantly",
-		//		uploadUrl: "/api/SubirArchivo",
-		//		onValueChanged: function (e) {
-		//			var files = e.value;
-		//			if (files.length > 0) {
-		//				$("#selected-files .selected-item").remove();
-		//				$.each(files, function (i, file) {
-		//					var $selectedItem = $("<div />").addClass("selected-item");
-		//					$selectedItem.append(
-		//						$("<span />").html("Name: " + file.name + "<br/>"),
-		//						$("<span />").html("Size " + file.size + " bytes" + "<br/>"),
-		//						$("<span />").html("Type " + file.type + "<br/>"),
-		//						$("<span />").html("Last Modified Date: " + file.lastModifiedDate)
-		//					);
-		//					$selectedItem.appendTo($("#selected-files"));
-		//				});
-		//				$("#selected-files").show();
-		//			}
-		//			else
-		//				$("#selected-files").hide();
-		//		}
-		//	}).dxFileUploader("instance");
-
-
-		//});
-
-
-
-
 		$("#form1").on("submit", function (e) {
 			guardarEmpresa();
 			e.preventDefault();
@@ -1389,6 +1386,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		return true;
 	}
 
+
+	//Si es una nueva empresa, por defecto debe tener 
+	if (id_seguridad == '' || id_seguridad == undefined) {
+		$("#CerFirma").dxRadioGroup({ value: TiposCertFirma[BuscarID(TiposCertFirma, 0)] });
+		$("#CerFirma").dxRadioGroup({ readOnly: true });
+
+	}
 
 
 
@@ -1846,7 +1850,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 
 				CargarAsyn();
 				function CargarAsyn() {
-					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa).then(function (data) {						
+					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa).then(function (data) {
 						CantRegCargados += data.length;
 						if (data.length > 0) {
 							cargarEmpresas(data);
