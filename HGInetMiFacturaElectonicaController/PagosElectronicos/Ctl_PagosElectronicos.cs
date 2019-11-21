@@ -606,7 +606,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						//Valida que la resolución no sea null.
 						if (datos_resolucion != null)
 						{
-							if (datos_resolucion.IntComercioId.Value <= 0)
+							/*if (datos_resolucion.IntComercioId.Value <= 0)
 								throw new ApplicationException(string.Format("La Resuloción N.{0} para el Facturador {1}, no tiene configurado un comercio.", datos_documento.StrNumResolucion, datos_documento.StrEmpresaFacturador));
 
 							//Obtiene los datos de la pasarela.
@@ -620,7 +620,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 								ObjPago.StrComercioIdRuta = datos_pasarela.StrComercioIdRuta;
 								ObjPago.StrCodigoServicio = datos_pasarela.StrCodigoServicio;
 								ObjPago.IntPasarela = datos_pasarela.IntPasarela;
-							}
+							}*/
 							//Asigna valores a prefijo y documento para la auditoria
 							try
 							{
