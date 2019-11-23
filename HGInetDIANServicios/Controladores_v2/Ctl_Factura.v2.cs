@@ -231,10 +231,15 @@ namespace HGInetDIANServicios
 
 											DianWSValidacionPrevia.DianResponse respuesta_consulta = webServiceHab.GetStatus(key);
 
-											respuesta = respuesta_consulta;
+											if (respuesta_consulta.XmlBase64Bytes == null && respuesta.XmlBase64Bytes != null)
+												respuesta_consulta.XmlBase64Bytes = respuesta.XmlBase64Bytes;
+
+												respuesta = respuesta_consulta;
+
+											string nom_archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
 
 											// almacena el mensaje de respuesta de la consulta del servicio web
-											archivo = Xml.GuardarObjeto(respuesta, carpeta, archivo);
+											archivo = Xml.GuardarObjeto(respuesta, carpeta, nom_archivo);
 										}
 									}
 								}
