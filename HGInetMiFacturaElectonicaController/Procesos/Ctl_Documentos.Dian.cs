@@ -293,7 +293,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					string xml_archivo = Path.GetFileNameWithoutExtension(archivo_xml);
 
 					// Consulta del documento con validación previa
-					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta, xml_archivo);
+					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = null;
+					
+					//Depende del ambiente se consulta diferente en la DIAN
+					if (empresa.IntVersionDian < Habilitacion.Produccion.GetHashCode())
+					{
+						resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta, xml_archivo);
+					}
+					else
+					{
+						resultado = Ctl_ConsultaTransacciones.Consultar_v2(String.Empty, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta, xml_archivo, documentoBd.StrCufe);
+					}
+					
 					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(resultado);
 				}
 				else

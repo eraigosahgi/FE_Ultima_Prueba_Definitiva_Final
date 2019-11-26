@@ -1096,7 +1096,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Convierte un objeto de tipo de base de datos a objeto de servicio. 
 		/// </summary>
 		/// <param name="objetoBd"></param>
-		/// <param name="tipo_doc"></param>
+		/// <param name="reenvio">Si es para reenviar correo valida existencia de la Respuesta de la DIAN</param>
 		/// <returns></returns>
 		public static object ConvertirServicio(TblDocumentos objetoBd, bool reenvio = false)
 		{
@@ -1244,7 +1244,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					DocumentoRespuesta consulta_dian = new DocumentoRespuesta();
 
-					consulta_dian = Ctl_Documentos.Consultar(objetoBd, objetoBd.TblEmpresasFacturador, ref consulta_dian);
+					string id_validacion_previa = String.Empty;
+
+					if (objetoBd.StrIdRadicadoDian != null)
+						id_validacion_previa = objetoBd.StrIdRadicadoDian.ToString();
+
+					consulta_dian = Ctl_Documentos.Consultar(objetoBd, objetoBd.TblEmpresasFacturador, ref consulta_dian, id_validacion_previa);
 
 					ruta_xml = consulta_dian.EstadoDian.UrlXmlRespuesta;
 
@@ -2256,6 +2261,106 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 
 			});
+		}
+
+
+		/// <summary>
+		/// Proceso para generar el documento UBL2.1 Attach para enviar por correo al adquiriente con la respuesta de la DIAN
+		/// </summary>
+		/// <param name="documento">Objeto tipo servicio del documento Electronico enviado</param>
+		/// <param name="doc">Objeto BD del documento</param>
+		/// <param name="facturador">Informacion del Facturador(Tbl)</param>
+		/// <returns></returns>
+		public static bool ConvertirAttachedDoc(object documento, TblDocumentos doc, TblEmpresas facturador)
+		{
+
+			bool doc_creado = false;
+			try
+			{
+				var documento_obj = (dynamic)null;
+
+				if (documento == null)
+				{
+					var documento_ser = (dynamic)null;
+					documento_ser = ConvertirServicio(doc, false);
+					if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+					{
+						documento_obj = documento_ser.DatosFactura;
+					}
+					else if(doc.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+					{
+						documento_obj = documento_ser.DatosNotaCredito;
+					}
+					else if (doc.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+					{
+						documento_obj = documento_ser.DatosNotaDebito;
+					}
+				}
+				else
+				{
+					documento_obj = documento;
+				}
+
+				
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
+				string ambiente_dian = string.Empty;
+
+				if (plataforma_datos.RutaPublica.Contains("app"))
+					ambiente_dian = "1";
+				else
+					ambiente_dian = "2";
+
+				TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(doc.IntDocTipo);
+
+				string nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
+
+				// ruta física del xml
+				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador.StrIdSeguridad.ToString());
+				carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+
+				//Convierte el objeto en archivo XML-UBL
+				FacturaE_Documento resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad, documento_obj.DatosObligado, documento_obj.DatosAdquiriente, ambiente_dian, doc);
+				resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
+				resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
+				resultado.IdSeguridadPeticion = new Guid();
+				resultado.DocumentoTipo = TipoDocumento.Attached;
+				resultado.NombreXml = nombre_archivo.Replace("face", "attach");
+
+				// nombre del xml
+				string archivo_xml = string.Format(@"{0}.xml", resultado.NombreXml);
+
+				// ruta del xml
+				string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
+
+				// elimina el archivo xml si existe
+				if (Archivo.ValidarExistencia(ruta_xml))
+					Archivo.Borrar(ruta_xml);
+
+				// almacena el archivo xml
+				string ruta_save = Xml.Guardar(resultado.DocumentoXml, carpeta_xml, archivo_xml);
+
+				// asigna la ruta del directorio para los archivos
+				resultado.RutaArchivosProceso = carpeta_xml;
+
+				//resultado = Ctl_Ubl.Almacenar(resultado);
+
+				// url pública del xml
+				//string url_ppal = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, resultado.IdSeguridadTercero.ToString());
+				//resultado.RutaArchivosProceso = string.Format(@"{0}/{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse, resultado.NombreXml);
+				doc_creado = true;
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
+				
+				throw excepcion;
+			}
+
+			return doc_creado;
+
 		}
 
 	}

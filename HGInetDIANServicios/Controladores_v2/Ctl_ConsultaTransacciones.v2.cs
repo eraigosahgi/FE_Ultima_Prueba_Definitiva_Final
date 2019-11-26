@@ -24,7 +24,7 @@ namespace HGInetDIANServicios
 		/// <param name="ruta_servicio_web">Ruta del Sw de la DIAN</param>
 		/// <param name="xml_archivo">Nombre con el que se guarda el documento</param>
 		/// <returns></returns>
-		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string xml_archivo = "")
+		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string xml_archivo = "", string cufe = "")
 		{
 
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
@@ -51,10 +51,25 @@ namespace HGInetDIANServicios
 
 				if (!string.IsNullOrEmpty(TrackId))
 				{
-
 					resultado = webServiceHab.GetStatusZip(TrackId).ToList();
+				}
+				else
+				{
+					if (!string.IsNullOrEmpty(cufe))
+					{
+						DianResponse consulta = webServiceHab.GetStatus(cufe);
+						resultado = new List<DianResponse>();
+						resultado.Add(consulta);
+					}
+					else
+					{
+						log_categoria = MensajeCategoria.ServicioDian;
+						log_accion = MensajeAccion.ninguna;
+						throw new ApplicationException("No se encontro trackid");	
+					}
+				}
 
-					if (resultado != null && resultado[0] != null)
+				if (resultado != null && resultado[0] != null)
 					{
 
 						if (string.IsNullOrEmpty(xml_archivo))
@@ -168,13 +183,6 @@ namespace HGInetDIANServicios
 						}
 					}
 
-				}
-				else
-				{
-					log_categoria = MensajeCategoria.ServicioDian;
-					log_accion = MensajeAccion.ninguna;
-					throw new ApplicationException("No se encontro trackid");
-				}
 
 				return resultado;
 

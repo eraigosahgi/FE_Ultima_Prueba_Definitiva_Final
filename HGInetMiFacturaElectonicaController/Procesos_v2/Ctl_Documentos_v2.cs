@@ -197,8 +197,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//Validacion de Cufe a documento_obj VS el calculado en Plataforma 
 						if ((documento_obj.DocumentoFormato.Codigo == -1) && (!string.IsNullOrEmpty(documento_obj.Cufe)) && (documento_obj.Cufe != documento_result.CUFE))
 						{
-							respuesta.Error = new LibreriaGlobalHGInet.Error.Error("Por favor regrabar el documento y enviar de nuevo el documento", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
-							throw new ApplicationException("Por favor regrabar el documento y enviar de nuevo el documento");
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Calculo del CUFE respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+							throw new ApplicationException(string.Format("Calculo del CUFE respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE));
 						}
 						else if (documento_obj.DocumentoFormato.Codigo == 99)
 						{
@@ -206,8 +206,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							{
 								if (documento_obj.Cufe != documento_result.CUFE)
 								{
-									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Validar calculo del CUFE respecto al calculo de la plataforma que lo hace con los valores: {0} y luego de validar enviar de nuevo el documento",cadena_cufe), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
-									throw new ApplicationException(string.Format("Validar calculo del CUFE respecto al calculo de la plataforma que lo hace con los valores: {0} y luego de validar enviar de nuevo el documento", cadena_cufe));
+									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Calculo del CUFE respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+									throw new ApplicationException(string.Format("Calculo del CUFE respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE));
 								}
 							}
 							else
@@ -381,6 +381,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						// envía el mail de documentos al adquiriente
 						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 						{
+							//Crea el attached para poder ser enviado en el correo con los demas archivos.
+							try
+							{
+								bool attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documentoBd, empresa);
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Alertas alerta = new Ctl_Alertas();
+								alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(excepcion.Message), 1, false);
+							}
 
 							if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 							{

@@ -14,6 +14,7 @@ using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
+using LibreriaGlobalHGInet.Mail;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
@@ -574,23 +575,46 @@ namespace HGInetMiFacturaElectonicaController
 							archivos.Add(adjunto);
 						}
 
-						//Proceso para agregar la respuesta de la DIAN
-						try
-						{
-							byte[] bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl.Replace(LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian));
-							string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
-							string nombre_xml_app = Path.GetFileName(documento.StrUrlArchivoUbl);
+						// ruta física del xml
+						string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
+						carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
-							if (!string.IsNullOrEmpty(ruta_fisica_appl))
-							{
-								Adjunto adjunto = new Adjunto();
-								adjunto.ContenidoB64 = ruta_fisica_appl;
-								adjunto.Nombre = "ApplicationResponse.xml";
-								archivos.Add(adjunto);
-							}
-						}
-						catch (Exception)
+						string nombre_archivo = nombre_xml.Replace("face", "attach");
+
+						bool archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo));
+
+						bool attached = false;
+
+						if (archivo_attach == false && documento.IntVersionDian == 2)
 						{
+							attached = Ctl_Documento.ConvertirAttachedDoc(null, documento, empresa_obligado);
+						}
+						else if (documento.IntVersionDian == 2)
+						{
+							attached = true;
+						}
+
+						if (attached == true && documento.IntVersionDian == 2)
+						{
+
+							//Proceso para agregar la respuesta de la DIAN
+							try
+							{
+								byte[] bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl.Replace("face", "attach"));
+								string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
+								string nombre_xml_app = nombre_archivo;
+
+								if (!string.IsNullOrEmpty(ruta_fisica_appl))
+								{
+									Adjunto adjunto = new Adjunto();
+									adjunto.ContenidoB64 = ruta_fisica_appl;
+									adjunto.Nombre = nombre_xml_app;
+									archivos.Add(adjunto);
+								}
+							}
+							catch (Exception)
+							{
+							}
 						}
 
 						//Proceso para los anexos
