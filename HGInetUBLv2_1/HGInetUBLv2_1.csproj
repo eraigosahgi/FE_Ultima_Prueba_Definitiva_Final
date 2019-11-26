@@ -1387,6 +1387,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>NombreArchivos.resx</DependentUpon>
     </Compile>
+    <Compile Include="XML\AttachedDocument.cs" />
     <Compile Include="XML\ConvertirXML.cs" />
     <Compile Include="XML\DocumentoImpuestos.cs" />
     <Compile Include="XML\ExtensionDian.cs" />
@@ -1417,6 +1418,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HGInetDIANServicios\HGInetDIANServicios.csproj">
+      <Project>{E87C13D9-AEF2-442C-B377-7A5D7290502A}</Project>
+      <Name>HGInetDIANServicios</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
       <Name>HGInetMiFacturaElectonicaData</Name>

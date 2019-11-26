@@ -51,6 +51,11 @@ namespace HGInetUBLv2_1
 					documento_obj = (DebitNoteType)documento;
 					texto_xml = Xml.Convertir<DebitNoteType>(documento_obj, namespaces_xml);
 				}
+				else if (tipo_doc == TipoDocumento.Attached)
+				{
+					documento_obj = (AttachedDocumentType)documento;
+					texto_xml = Xml.Convertir<AttachedDocumentType>(documento_obj, namespaces_xml);
+				}
 
 				return texto_xml;
 			}
