@@ -482,7 +482,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
 				ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(tercero.CodigoTributo)).FirstOrDefault();
 				if (tipoimp == null)
-					throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
+				{
+					tercero.CodigoTributo = "ZZ";
+					//throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
+				}
 
 				if (string.IsNullOrEmpty(tercero.RegimenFiscal))
 					tercero.RegimenFiscal = "48";
