@@ -86,7 +86,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
 					RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
-					//poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId != null) ? (d.IntIdEstado != 90) ? 1 : 0 : 0,
+					poseeIdComercio = (d.TblEmpresasResoluciones.StrComercioConfigId != null) ? (d.IntIdEstado != 90) ? 1 : 0 : 0,
 					FacturaCenlada = d.IntIdEstado,
 					PagosParciales = (d.TblEmpresasResoluciones.IntPermiteParciales == null) ? 0 : (d.TblEmpresasResoluciones?.IntPermiteParciales == true) ? 1 : 0,
 					Telefono = d.TblEmpresasFacturador.StrTelefono,
@@ -1276,7 +1276,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				else
 				{
 					//Si vienes datos para actualizar se hace un cifrado para validar la llave de encriptacion
-					string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.IntComercioId + "-" + ConfigPago.IntValor.ToString("0.##"));
+					string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
 					if (ConfigPago.StrAuthIdEmpresa != CifradoSecundario)
 					{
 						return Conflict();
@@ -1321,7 +1321,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var ConfigPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
 
-				string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.IntComercioId + "-" + ConfigPago.IntValor.ToString("0.##"));
+				string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
 
 				if (CodValidacion != CifradoSecundario)
 				{
@@ -1367,7 +1367,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var ConfigPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
 
-				string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.IntComercioId + "-" + ConfigPago.IntValor.ToString("0.##"));
+				string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
 
 				if (CodValidacion != CifradoSecundario)
 				{

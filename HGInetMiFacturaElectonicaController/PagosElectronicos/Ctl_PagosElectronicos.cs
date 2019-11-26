@@ -602,10 +602,14 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						//consulta la resolución para obtener el comercio que tiene asociado.
 						Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
 						TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
-
+						
 						//Valida que la resolución no sea null.
 						if (datos_resolucion != null)
 						{
+
+							ObjPago.StrIdSeguridadComercio = datos_resolucion.StrComercioConfigId;
+							ObjPago.StrAuthToken = datos_resolucion.StrEmpresa;
+
 							/*if (datos_resolucion.IntComercioId.Value <= 0)
 								throw new ApplicationException(string.Format("La Resuloción N.{0} para el Facturador {1}, no tiene configurado un comercio.", datos_documento.StrNumResolucion, datos_documento.StrEmpresaFacturador));
 
@@ -657,15 +661,15 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					}
 					else
 					{
-						PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
+						//PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
 
-						//Datos de la pasarela electrónica.
-						ObjPago.IntComercioId = Convert.ToInt32(pasarela.IdComercio);
-						ObjPago.StrComercioClave = pasarela.ClaveComercio;
-						ObjPago.StrComercioIdRuta = pasarela.RutaComercio;
-						ObjPago.StrCodigoServicio = pasarela.CodigoServicio;
-						ObjPago.IntPasarela = 1;//Pasarela por defecto es 1 Zona de pagos
-
+						////Datos de la pasarela electrónica.
+						//ObjPago.IntComercioId = Convert.ToInt32(pasarela.IdComercio);
+						//ObjPago.StrComercioClave = pasarela.ClaveComercio;
+						//ObjPago.StrComercioIdRuta = pasarela.RutaComercio;
+						//ObjPago.StrCodigoServicio = pasarela.CodigoServicio;
+						//ObjPago.IntPasarela = 1;//Pasarela por defecto es 1 Zona de pagos
+						
 						//Obtiene el plan de transacciones.
 						Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 						TblPlanesTransacciones datos_plan = clase_planes.ObtenerIdSeguridad(id_seguridad);
@@ -708,7 +712,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					ObjPago.StrClienteEmail = datos_empresa.StrMailAdmin;
 
 					//Encriptar datos de seguridad secundaria                    
-					ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-" + ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ObjPago.IntComercioId + "-" + ObjPago.IntValor.ToString("0.##"));
+					ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-" + ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ObjPago.StrIdSeguridadComercio.ToString() + "-" + ObjPago.IntValor.ToString("0.##"));
 
 					//Registro el Pago Local                    
 					TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago));
