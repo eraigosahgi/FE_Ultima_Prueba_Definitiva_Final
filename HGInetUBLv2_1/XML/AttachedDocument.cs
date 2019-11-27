@@ -154,25 +154,31 @@ namespace HGInetUBLv2_1
 				ResultOfVerification.ValidatorID.Value = "Unidad Especial Dirección de Impuestos y Aduanas Nacionales";
 
 				string contenido_resp = String.Empty;
+				XmlReader xml_reader = null;
+				XmlSerializer serializacion = null;
+				List<DianResponse> respuesta = null;
 
 				if (ambiente.Equals("2"))
 				{
 					string ruta = documentoBd.StrUrlArchivoUbl.Replace("FacturaEDian", "FacturaEConsultaDian");
 					ruta = ruta.Replace(".xml", "-WS.xml");
 					contenido_resp = Archivo.ObtenerContenido(ruta);
+					// convierte el contenido de texto a xml
+					xml_reader = XmlReader.Create(new StringReader(contenido_resp));
+					// convierte el objeto de acuerdo con el tipo de documento
+					serializacion = new XmlSerializer(typeof(List<DianResponse>));
+					respuesta = (List<DianResponse>)serializacion.Deserialize(xml_reader);
 				}
 				else
 				{
 					contenido_resp = Archivo.ObtenerContenido(documentoBd.StrUrlArchivoUbl.Replace("face", "ws"));
+					xml_reader = XmlReader.Create(new StringReader(contenido_resp));
+					serializacion = new XmlSerializer(typeof(DianResponse));
+					// convierte el objeto de acuerdo con el tipo de documento
+					DianResponse resp_prod = (DianResponse)serializacion.Deserialize(xml_reader);
+					respuesta = new List<DianResponse>();
+					respuesta.Add(resp_prod);
 				}
-
-				// convierte el contenido de texto a xml
-				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_resp));
-
-				// convierte el objeto de acuerdo con el tipo de documento
-				XmlSerializer serializacion = new XmlSerializer(typeof(List<DianResponse>));
-
-				List<DianResponse> respuesta = (List<DianResponse>)serializacion.Deserialize(xml_reader);
 
 				ResultOfVerification.ValidationResultCode = new ValidationResultCodeType();
 				ResultOfVerification.ValidationResultCode.Value = respuesta[0].StatusCode;
