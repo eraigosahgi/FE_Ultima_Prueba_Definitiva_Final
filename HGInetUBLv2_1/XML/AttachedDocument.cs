@@ -66,7 +66,7 @@ namespace HGInetUBLv2_1
 				#region Hora Generacion del Attached
 				//----Se debe enviar la hora de emision con -5 horas
 				IssueTimeType IssueTime = new IssueTimeType();
-				IssueTime.Value = IssueDate.Value.AddHours(5).AddMinutes(1).ToString(Fecha.formato_hora_zona);//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
+				IssueTime.Value = documentoBd.DatFechaIngreso.AddHours(5).AddMinutes(2).ToString(Fecha.formato_hora_zona);//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
 				attached.IssueTime = IssueTime;
 				#endregion
 
@@ -187,7 +187,7 @@ namespace HGInetUBLv2_1
 				ResultOfVerification.ValidationDate.Value = Convert.ToDateTime(documentoBd.DatFechaIngreso.ToString(Fecha.formato_fecha_hginet));//Convert.ToDateTime(creacion_respuesta.ToString(Fecha.formato_fecha_hginet));
 
 				ResultOfVerification.ValidationTime = new ValidationTimeType();
-				ResultOfVerification.ValidationTime.Value = documentoBd.DatFechaIngreso.AddMinutes(1).ToString(Fecha.formato_hora_zona);//creacion_respuesta.AddHours(5).ToString(Fecha.formato_hora_zona);
+				ResultOfVerification.ValidationTime.Value = documentoBd.DatFechaIngreso.AddHours(5).AddMinutes(1).ToString(Fecha.formato_hora_zona);//creacion_respuesta.AddHours(5).ToString(Fecha.formato_hora_zona);
 
 				LineReference.DocumentReference.ResultOfVerification = ResultOfVerification;
 
