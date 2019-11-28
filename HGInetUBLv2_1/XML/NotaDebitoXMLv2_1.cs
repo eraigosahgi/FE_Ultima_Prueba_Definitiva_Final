@@ -307,7 +307,15 @@ namespace HGInetUBLv2_1
 				impuestos, etc*/
 
 				decimal subtotal = nota_debito.DebitNoteLine.Sum(s => s.LineExtensionAmount.Value);
-				decimal base_impuesto = nota_debito.DebitNoteLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Sum(v => v.TaxableAmount.Value)));
+				decimal base_impuesto = 0.00M;
+				if (documento.DocumentoDetalles.Sum(b => b.BaseImpuestoIva) == documento.DocumentoDetalles.Sum(s => s.ValorSubtotal))
+				{
+					base_impuesto = subtotal;
+				}
+				else
+				{
+					base_impuesto = nota_debito.DebitNoteLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Sum(v => v.TaxableAmount.Value)));
+				}
 				decimal impuestos = nota_debito.TaxTotal.Sum(i => i.TaxAmount.Value);
 
 				nota_debito.RequestedMonetaryTotal = TotalesXML.ObtenerTotales(documento, subtotal, impuestos, base_impuesto);
@@ -646,7 +654,7 @@ namespace HGInetUBLv2_1
 					// <cac:TaxTotal>
 					List<TaxTotalType> TaxesTotal = new List<TaxTotalType>();
 
-					if (DocDet.IvaValor >= 0)
+					if (DocDet.IvaValor >= 0 && DocDet.ValorImpuestoConsumo == 0)
 					{
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();

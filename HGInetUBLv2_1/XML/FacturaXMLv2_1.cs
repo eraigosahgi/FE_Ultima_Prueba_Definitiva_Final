@@ -453,7 +453,17 @@ namespace HGInetUBLv2_1
 				decimal subtotal = 0.00M;
 				subtotal = facturaXML.InvoiceLine.Sum(s => s.LineExtensionAmount.Value);
 
-				decimal base_impuesto = facturaXML.InvoiceLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Sum(v => v.TaxableAmount.Value)));
+				decimal base_impuesto = 0.00M;
+
+				//Se valida si tiene una base diferente por si el mismo item tiene dos impuestos diferentes
+				if (documento.DocumentoDetalles.Sum(b => b.BaseImpuestoIva) == documento.DocumentoDetalles.Sum(s => s.ValorSubtotal))
+				{
+					base_impuesto = subtotal;
+				}
+				else
+				{
+					base_impuesto = facturaXML.InvoiceLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Sum(v => v.TaxableAmount.Value)));
+				}
 
 				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
 
@@ -1277,7 +1287,7 @@ namespace HGInetUBLv2_1
 					// <cac:TaxTotal>
 					List<TaxTotalType> TaxesTotal = new List<TaxTotalType>();
 
-					if (DocDet.IvaValor >= 0)
+					if (DocDet.IvaValor >= 0 && DocDet.ValorImpuestoConsumo == 0)
 					{
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();
