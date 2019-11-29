@@ -4,9 +4,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>
-    <script src="../../Scripts/Services/SrvProveedor.js?vjs201924"></script>
-    <script src="../../Scripts/Pages/Proveedores.js?vjs201924"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs201926"></script>
+    <script src="../../Scripts/Services/SrvProveedor.js?vjs201926"></script>
+    <script src="../../Scripts/Pages/Proveedores.js?vjs201926"></script>
 
     <div data-ng-app="ProveedoresApp" data-ng-controller="GestionProveedoresController">
         <div class="col-md-12">

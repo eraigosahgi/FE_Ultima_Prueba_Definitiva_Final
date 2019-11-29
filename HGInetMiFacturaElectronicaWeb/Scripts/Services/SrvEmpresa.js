@@ -41,8 +41,8 @@
 		});
 	}
 
-	this.ObtenerEmpresas = function (codigo_facturador,Desde, Hasta) {
-		return $http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Desde=' + Desde + '&Hasta=' + Hasta).then(function (response) {
+	this.ObtenerEmpresas = function (codigo_facturador,Desde, Hasta,Tipo) {
+		return $http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Desde=' + Desde + '&Hasta=' + Hasta + '&Tipo=' + Tipo).then(function (response) {
 			return response.data;
 		}, function (response) {
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);

@@ -5,11 +5,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201925"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201924"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs201925"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201925"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201926"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201926"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201926"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs201926"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201926"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController" class="col-md-12">
 		<%--Panel información General--%>
@@ -176,7 +176,6 @@
 				<div class="panel-heading">
 					<h6 class="panel-title">Plataforma  {{id_seguridad}}</h6>
 				</div>
-
 				<div class="panel-body">
 					<div class="col-lg-12">
 						<div class="row">
@@ -211,10 +210,21 @@
 								</div>
 
 								<div class="col-md-12 text-left" style="z-index: 8;">
-									<label style="margin-top: 16px; padding-top: 1%;">Serial:</label>
+									<label style="margin-top: 16px; padding-top: 1%;">
+										Serial:
+
+									</label>
 									<div id="txtSerial"></div>
-									<%--<div id="tooltip_txtobservaciones">Se pueden especificar observaciones adicionales</div>--%>
 								</div>
+
+								<div class="col-md-12 text-left" style="z-index: 8;">
+									<label style="margin-top: 16px; padding-top: 1%;">
+										Serial Cluod Services:
+
+									</label>
+									<div id="txtSerialCloud"></div>
+								</div>
+
 
 
 							</div>
@@ -281,6 +291,13 @@
 									</div>
 								</div>
 
+								<div class="col-md-12  text-center" style="z-index: 9;">
+									<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Debug:</label>
+									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
+										<div id="debug"></div>
+										<div id="tooltip_debug">Indica si a la empresa se le puede hacer seguimiento de pruebas</div>
+									</div>
+								</div>
 
 
 							</div>
@@ -290,15 +307,16 @@
 					</div>
 
 				</div>
+			</div>
+		</div>
 
-
-
-
-
+		<div class="col-md-12" id="PanelCertificado" data-ng-show="ReponsableFacturadorCertificado || Admin" >
+			<div class="panel panel-white">
+				<div class="panel-heading">
+					<h6 class="panel-title">Certificado</h6>
+				</div>
 				<div class="panel panel-white">
-					<div class="panel-heading">
-						<h6 class="panel-title">Certificado</h6>
-					</div>
+					
 
 					<div class="panel-body">
 						<div class="col-lg-12">
@@ -309,7 +327,7 @@
 
 
 
-									<div class="col-md-6">
+									<div class="col-md-6" data-ng-show="Admin">
 										<div class="col-md-12" style="margin: 0px; margin-bottom: 1%">
 											<div class="dx-field-label" style="font-size: 14px;" id="idCerFirma">Firma:<strom style="color: red;">*</strom></div>
 											<div class="dx-field-value">
@@ -322,7 +340,7 @@
 									<div class="col-md-12" id="PanelFirmaFacturador" data-ng-show="id_seguridad != ''">
 										<div class="col-md-6">
 
-											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%;">Proveedor del Certificado:<strom style="color: red;">*</strom></label>
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%;" >Proveedor del Certificado:<strom style="color: red;">*</strom></label>
 											<div id="cboProveedor"></div>
 
 
@@ -332,7 +350,7 @@
 											<div id="ClaveCert"></div>
 
 
-											<div class="col-md-12" style="margin-left: -20px; margin-top: 10px;">
+											<div class="col-md-12" style="margin-left: -20px; margin-top: 10px;" data-ng-show="Admin">
 												<div class="col-md-1">
 													<div class="col-md-12" style="margin-top: 5%; margin-left: -10px">
 														<div id="Hgi_Responsable"></div>
@@ -385,13 +403,9 @@
 						</div>
 					</div>
 				</div>
-
-
-
 			</div>
-
-
 		</div>
+
 	</div>
 	<%--Panel Botones--%>
 	<div class="col-lg-12 text-right" style="z-index: 0; margin-left: -10px;">

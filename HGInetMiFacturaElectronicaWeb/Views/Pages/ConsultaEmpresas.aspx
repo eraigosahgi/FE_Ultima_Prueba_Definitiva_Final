@@ -4,14 +4,44 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/config.js?vjs201924"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201924"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201924"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201924"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs201924"></script>
-	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201924"></script>
+	<script src="../../Scripts/config.js?vjs201926"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201926"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201926"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201926"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201926"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs201926"></script>
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201926"></script>
 	<div data-ng-app="EmpresasApp" data-ng-controller="ConsultaEmpresasController" data-ng-init="Admin=false">
+
+		
+		<div class="col-md-12" data-ng-show="Admin">
+			<div class="panel panel-white">
+				<div class="panel-heading">
+					<h6 class="panel-title">Filtros de Búsqueda<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
+					<div class="heading-elements">
+						<ul class="icons-list">
+							<li><a data-action="collapse"></a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="panel-body">
+
+					<div class="col-md-4" style="margin-top: 1%">
+						<i class="icon-file-text"></i>
+						<label>Tipo:</label>
+						<div data-dx-select-box="filtros.TipoTercero"></div>
+					</div>
+					
+					<div class="col-md-2 text-right" style="margin-top: -5px">
+						<br />
+						<br />
+						<div data-dx-button="ButtonOptionsConsultar"></div>
+					</div>
+
+				</div>
+			</div>
+		</div>
 
 		<div class="col-md-12">
 			<div class="panel panel-white">

@@ -111,7 +111,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("api/ObtenerEmpresas")]
-		public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa, int Desde, int Hasta)
+		public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa, int Desde, int Hasta,int Tipo)
 		{
 			Sesion.ValidarSesion();
 
@@ -126,7 +126,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			if (empresa.IntAdministrador)
 			{
-				datos = CtEmpresa.Pag_ObtenerEmpresas(Desde, Hasta);
+				datos = CtEmpresa.Pag_ObtenerEmpresas(Desde, Hasta,Tipo);
 			}
 			else
 			{
@@ -268,7 +268,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				IntCertResponsableHGI = d.IntCertResponsableHGI,
 				IntCertNotificar = d.IntCertNotificar,
 				StrCertClave = d.StrCertClave,
-				DatCertVence = Convert.ToDateTime(d.DatCertVence).ToString(Fecha.formato_fecha_hginet)
+				DatCertVence = Convert.ToDateTime(d.DatCertVence).ToString(Fecha.formato_fecha_hginet),
+				SerialCloudServices = d.StrSerialCloudServices,
+				Debug= d.IntDebug
 
 			});
 
@@ -342,6 +344,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntEnvioMailRecepcion = ObjEmpresa.IntEnvioMailRecepcion;
 				Empresa.IntVersionDian = ObjEmpresa.IntVersionDian;
 				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(ObjEmpresa.StrEmpresaDescuento) ? ObjEmpresa.StrIdentificacion.Trim() : ObjEmpresa.StrEmpresaDescuento.Trim());
+				Empresa.StrSerialCloudServices = ObjEmpresa.StrSerialCloudServices;
+				Empresa.IntDebug = ObjEmpresa.IntDebug;
 
 				#region Certificado
 				Empresa.IntCertFirma = ObjEmpresa.IntCertFirma;

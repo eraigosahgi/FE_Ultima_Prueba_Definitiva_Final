@@ -3,11 +3,11 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/Loading.js?vjs201924"></script>
-	<script src="../../Scripts/Services/SrvPermisos.js?vjs201924"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>
-	<script src="../../Scripts/Services/SrvAlertas.js?vjs201924"></script>
-	<script src="../../../Scripts/Pages/Alertas.js?vjs201924"></script>
+	<script src="../../Scripts/Services/Loading.js?vjs201926"></script>
+	<script src="../../Scripts/Services/SrvPermisos.js?vjs201926"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201926"></script>
+	<script src="../../Scripts/Services/SrvAlertas.js?vjs201926"></script>
+	<script src="../../../Scripts/Pages/Alertas.js?vjs201926"></script>
 	
     <div data-ng-app="AlertasApp" data-ng-controller="AlertasController" >
     

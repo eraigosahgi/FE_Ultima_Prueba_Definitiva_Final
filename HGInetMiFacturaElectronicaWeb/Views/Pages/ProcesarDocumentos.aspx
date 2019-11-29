@@ -4,12 +4,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 	<!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201924"></script>
-	<script src="../../Scripts/Services/SrvUsuario.js?vjs201924"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201924"></script>
-	<script src="../../Scripts/Pages/ProcesarDocumentos.js?vjs201924"></script>
-	<script src="../../Scripts/Services/Loading.js?vjs201924"></script>
-	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201924"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs201926"></script>
+	<script src="../../Scripts/Services/SrvUsuario.js?vjs201926"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201926"></script>
+	<script src="../../Scripts/Pages/ProcesarDocumentos.js?vjs201926"></script>
+	<script src="../../Scripts/Services/Loading.js?vjs201926"></script>
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs201926"></script>
 
 	<!-- CONTENEDOR PRINCIPAL -->
 	<div data-ng-app="App" data-ng-controller="ProcesarDocumentosController" data-ng-init="total=0">

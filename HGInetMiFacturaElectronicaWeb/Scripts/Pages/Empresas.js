@@ -34,6 +34,7 @@ fecha_fin = "",
 Habilitacion = "",
 Datos_estado = "",
 Datos_postpago = 0,
+Datos_debug = 0,
 Datos_Email_Recepcion = "",
 Datos_Email_Acuse = "",
 Datos_Email_Envio = "",
@@ -47,6 +48,7 @@ Datos_FechaCert = "",
 id_seguridad = "",
 Datos_ClaveCert = "",
 Datos_Serial = "",
+Datos_Serial_Cloud = "",
 Datos_proveedores = "";
 //Desde hasta en la consulta de la grid
 var Desde = 0;
@@ -498,6 +500,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		//****************En caso de Ser Administrador, muestro estos puntos********************************************************
 		if ($scope.Admin) {
+
 			$("#Integradora").dxCheckBox({
 				name: "Empresa_Integradora",
 				text: "Integrador",
@@ -519,7 +522,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					}
 				}
 			});
-
 
 			$("#cboestado").dxSelectBox({
 				placeholder: "Estado",
@@ -603,6 +605,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						}]
 					});
 
+
+
+
 					//Validar cuando cambia de Activo a Registro******************************************************
 
 				}
@@ -619,6 +624,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					Datos_postpago = (data.value == true) ? 1 : 0;
 				}
 			});
+
+			$("#debug").dxCheckBox({
+				name: "debug",
+				onValueChanged: function (data) {
+					Datos_debug = (data.value == true) ? 1 : 0;
+				}
+			});
+
 
 			$("#txtUsuarios").dxNumberBox({
 				value: Datos_Numero_usuarios,
@@ -647,51 +660,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					message: "Debe indicar la versión DIAN"
 				}]
 			});
-
-
-			$http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {
-				TiposHabilitacion = response.data;
-				$("#Habilitacion").dxRadioGroup({
-					searchEnabled: true,
-					caption: 'Habilitación',
-					dataSource: TiposHabilitacion,
-					displayExpr: "Texto",
-					Enabled: true,
-					onValueChanged: function (data) {
-						Datos_Habilitacion = data.value.ID;
-					}
-				}).dxValidator({
-					validationRules: [{
-						type: "required",
-						message: "Debe indicar el tipo de Habilitacion"
-					}]
-				});
-
-				//*********************************
-				SrvMaestrosEnum.ObtenerEnum(9, 'publico').then(function (data) {
-					Lista_Proveedores_Firma = data;
-					$("#cboProveedor").dxSelectBox({
-						placeholder: "Proveedor del Certificado",
-						displayExpr: "Descripcion",
-						dataSource: data,
-						onValueChanged: function (data) {
-							Datos_proveedores = data.value.ID;
-						}
-					})
-					/*.dxValidator({
-						validationRules: [{
-							type: "required",
-							message: "Debe seleccionar el Proveedor del Certificado"
-						}]
-					})*/
-					;
-
-					if (id_seguridad) { consultar(); }
-				});
-
-				//*********************************
-			});
-
 
 			$("#txtobservaciones").dxTextArea({
 				height: "100px",
@@ -726,6 +694,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					message: "Debe indicar el Serial"
 				}]
 			});
+
+
+			$("#txtSerialCloud").dxTextBox({
+
+				onValueChanged: function (data) {
+					Datos_Serial_Cloud = data.value;
+				}
+			})
 
 
 			$("#Facturador").dxCheckBox({
@@ -796,141 +772,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 			});
 
-
+			//****************En caso de Ser Administración o Integrador, muestro estos puntos
 
 
 			//***********************Datos del Cerificado
-			$("#CerFirma").dxRadioGroup({
-				searchEnabled: true,
-				caption: 'Firma',
-				dataSource: TiposCertFirma,
-				displayExpr: "Texto",
-				Enabled: true,
-				onValueChanged: function (data) {
-					Datos_CertFirma = data.value.ID;
-
-					if (Datos_CertFirma == 0) {
-						$('#PanelFirmaFacturador').hide();
-						//Coloco como NO requerido el proveedor del certificado
-						$("#cboProveedor").dxValidator({ validationRules: [] });
-						//Coloco como NO requerida la clave del certificado						
-						$("#ClaveCert").dxValidator({ validationRules: [] });
-
-						try {
-							//Coloco como NO requerida la clave del certificado						
-							//Se coloca dentro de try porque este campo no existe cuando la empresa es nueva
-							$("#VenceCert").dxTextBox({ validationRules: [] });
-						} catch (e) { }
-
-					} else {
-						$('#PanelFirmaFacturador').show();
-						//Coloco como requerido el proveedor del certificado
-						$("#cboProveedor").dxValidator({
-							validationRules: [{
-								type: "required",
-								message: "Debe seleccionar el proveedor del certificado"
-							}]
-						});
-						//Coloco como requerida la clave del certificado
-						$("#ClaveCert").dxValidator({
-							validationRules: [{
-								type: "required",
-								message: "Debe ingresar la clave del certificado"
-							}]
-						});
-
-						if (id_seguridad != "") {
-							$("#VenceCert").dxTextBox(
-							{
-								validationRules: [{
-									type: "required",
-									message: "Debe consultar los datos del certificado para obtener la fecha de vencimiento"
-								}]
-							});
-						}
-
-					}
-				}
-			})
-			.dxValidator({
-				validationRules: [{
-					type: "required",
-					message: "Debe indicar quien firma con el certificado"
-				}]
-			});
-
-
-			$("#Certificado").dxFileUploader({
-				multiple: false,
-				allowedFileExtensions: [".pfx"],
-				uploadMode: "instantly",
-				uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert,
-				//onValueChanged: function (e) {
-				//	console.log(e);
-				//	var files = e.value;
-				//	if (files.length > 0) {
-				//		SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
-				//			Datos_FechaCert = data.FechaVencimiento;
-				//			$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
-				//			showInfo(data);
-				//		});
-				//	}
-				//	else
-				//		$("#selected-files").hide();
-				//}
-			}
-			);
-
-
-			$("#Hgi_Responsable").dxCheckBox({
-				name: "Hgi_Responsable",
-				onValueChanged: function (data) {
-					Datos_Hgi_Responsable = data.value;
-				}
-			});
-
-			$("#Hgi_Notifica").dxCheckBox({
-				name: "Hgi_Notifica",
-				onValueChanged: function (data) {
-					Datos_Hgi_Notifica = data.value;
-				}
-			});
-
-
-			$("#ClaveCert").dxTextBox({
-				mode: "password",
-				placeholder: "Contraseña",
-				showClearButton: true,
-				onValueChanged: function (data) {
-					Datos_ClaveCert = data.value;
-					$("#Certificado").dxFileUploader({
-						multiple: false,
-						allowedFileExtensions: [".pfx"],
-						uploadMode: "instantly",
-						uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert,
-						onUploaded: function (e) {
-							SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
-								Datos_FechaCert = data.FechaVencimiento;
-								$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
-								showInfo(data);
-							});
-						}
-						,
-						onUploadError: function (e) {
-							DevExpress.ui.notify("Error al guardar el certificado, verifique la clave", 'error', 6000);
-						}
-					});
-				}
-			});
-
-			$("#VenceCert").dxTextBox({
-				placeholder: "Fecha de vencimiento",
-				readOnly: true,
-				onValueChanged: function (data) {
-					Datos_FechaCert = data.value;
-				}
-			});
-
+			//Certificado Digital
 
 		} else {
 			//Aqui consultamos el registro de empresa como Facturador común o integrador
@@ -941,7 +787,213 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				$("#txtRasonSocial").dxTextBox({ readOnly: true });
 			}
 		}
-		//****************En caso de Ser Administración o Integrador, muestro estos puntos
+
+		$http.get('/api/empresas?tipo=' + Habilitacion).then(function (response) {
+			TiposHabilitacion = response.data;
+			$("#Habilitacion").dxRadioGroup({
+				searchEnabled: true,
+				caption: 'Habilitación',
+				dataSource: TiposHabilitacion,
+				displayExpr: "Texto",
+				Enabled: true,
+				onValueChanged: function (data) {
+					Datos_Habilitacion = data.value.ID;
+				}
+			});
+
+			//*********************************
+			SrvMaestrosEnum.ObtenerEnum(9, 'publico').then(function (data) {
+				Lista_Proveedores_Firma = data;
+				$("#cboProveedor").dxSelectBox({
+					placeholder: "Proveedor del Certificado",
+					displayExpr: "Descripcion",
+					dataSource: data,
+					onValueChanged: function (data) {
+						Datos_proveedores = data.value.ID;
+					}
+				})
+				/*.dxValidator({
+					validationRules: [{
+						type: "required",
+						message: "Debe seleccionar el Proveedor del Certificado"
+					}]
+				})*/
+				;
+
+				if (id_seguridad) { consultar(); }
+			});
+			//*********************************
+
+		});
+
+
+
+
+		if ($scope.Admin) {
+			$("#Habilitacion").dxRadioGroup().dxValidator({
+				validationRules: [{
+					type: "required",
+					message: "Debe indicar el tipo de Habilitacion"
+				}]
+			});
+		}
+
+
+
+
+		$("#CerFirma").dxRadioGroup({
+			searchEnabled: true,
+			caption: 'Firma',
+			dataSource: TiposCertFirma,
+			displayExpr: "Texto",
+			Enabled: true,
+			onValueChanged: function (data) {
+				Datos_CertFirma = data.value.ID;
+
+				if (Datos_CertFirma == 0) {
+					$('#PanelFirmaFacturador').hide();
+					//Coloco como NO requerido el proveedor del certificado
+					$("#cboProveedor").dxValidator({ validationRules: [] });
+					//Coloco como NO requerida la clave del certificado						
+					$("#ClaveCert").dxValidator({ validationRules: [] });
+
+					try {
+						//Coloco como NO requerida la clave del certificado						
+						//Se coloca dentro de try porque este campo no existe cuando la empresa es nueva
+						$("#VenceCert").dxTextBox({ validationRules: [] });
+					} catch (e) { }
+
+				} else {
+					$('#PanelFirmaFacturador').show();
+					//Coloco como requerido el proveedor del certificado
+					//$("#cboProveedor").dxValidator({
+					//	validationRules: [{
+					//		type: "required",
+					//		message: "Debe seleccionar el proveedor del certificado"
+					//	}]
+					//});
+					////Coloco como requerida la clave del certificado
+					//$("#ClaveCert").dxValidator({
+					//	validationRules: [{
+					//		type: "required",
+					//		message: "Debe ingresar la clave del certificado"
+					//	}]
+					//});
+
+					//if (id_seguridad != "") {
+					//	$("#VenceCert").dxTextBox(
+					//	{
+					//		validationRules: [{
+					//			type: "required",
+					//			message: "Debe consultar los datos del certificado para obtener la fecha de vencimiento"
+					//		}]
+					//	});
+					//}
+
+				}
+			}
+		});
+		//.dxValidator({
+		//	validationRules: [{
+		//		type: "required",
+		//		message: "Debe indicar quien firma con el certificado"
+		//	}]
+		//});
+
+
+		$("#Certificado").dxFileUploader({
+			multiple: false,
+			allowedFileExtensions: [".pfx"],
+			uploadMode: "instantly",
+			readyToUploadMessage: "Certificado Digital subido exitosamente",
+			uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert,
+			//onValueChanged: function (e) {
+			//	console.log(e);
+			//	var files = e.value;
+			//	if (files.length > 0) {
+			//		SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+			//			Datos_FechaCert = data.FechaVencimiento;
+			//			$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+			//			showInfo(data);
+			//		});
+			//	}
+			//	else
+			//		$("#selected-files").hide();
+			//}
+		}
+		);
+
+
+		$("#Hgi_Responsable").dxCheckBox({
+			name: "Hgi_Responsable",
+			onValueChanged: function (data) {
+				Datos_Hgi_Responsable = data.value;
+			}
+		});
+
+		$("#Hgi_Notifica").dxCheckBox({
+			name: "Hgi_Notifica",
+			onValueChanged: function (data) {
+				Datos_Hgi_Notifica = data.value;
+			}
+		});
+
+
+		$("#ClaveCert").dxTextBox({
+			mode: "password",
+			placeholder: "Contraseña",
+			showClearButton: true,
+			onValueChanged: function (data) {
+				Datos_ClaveCert = data.value;
+				$("#Certificado").dxFileUploader({
+					multiple: false,
+					allowedFileExtensions: [".pfx"],
+					uploadMode: "instantly",
+					selectButtonText: "Seleccione el Certificado Digital",
+					uploadedMessage: "Certificado guardado exitosamente",
+					uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert,
+					onUploaded: function (e) {
+						SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+							Datos_FechaCert = data.FechaVencimiento;
+							$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+							showInfo(data);
+							//Se valida si la empresa no es administradora ya que entonces se coloca como responsable la empresa que sube el certificado y no hgi
+							if (!$scope.Admin) {
+								Datos_Hgi_Responsable = false;
+								Datos_Hgi_Notifica = true;
+								Datos_CertFirma = 1;
+							}
+						});
+					}
+					,
+					onUploadError: function (e) {
+						DevExpress.ui.notify("Error al guardar el certificado, verifique la clave", 'error', 6000);
+					}
+				});
+				//Si se coloco una clave en el certificado, entonces 
+				//if (Datos_ClaveCert != undefined && Datos_ClaveCert != "") {
+				//	$("#cboProveedor").dxValidator({
+				//		validationRules: [{
+				//			type: "required",
+				//			message: "Debe seleccionar el proveedor del certificado"
+				//		}]
+				//	});
+				//} else {
+				//	$("#cboProveedor").dxValidator({});
+				//}
+			}
+		});
+
+		$("#VenceCert").dxTextBox({
+			placeholder: "Fecha de vencimiento",
+			readOnly: true,
+			onValueChanged: function (data) {
+				Datos_FechaCert = data.value;
+			}
+		});
+
+
+
 
 
 		/////////////////////////////////////Tooltip
@@ -1186,6 +1238,20 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 
 
+		$("#tooltip_debug").dxPopover({
+			target: "#debug",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
 		$("#tooltip_EmpresaAsociada").dxPopover({
 			target: "#EmpresaAsociada",
 			showEvent: {
@@ -1296,16 +1362,25 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			type: "default",
 			onClick: function (e) {
 				//Validamos si es administrador
-				if ($scope.Admin && (Datos_CertFirma == "1" || Datos_CertFirma == 1)) {
-					//Si es administrador, validamos si la clave del certificado es correcta
-					SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
-						//Si la clave es correcta, habilitamos el viaje del formulario al servidor
+				if (Datos_CertFirma == "1" || Datos_CertFirma == 1) {
+					if (Datos_ClaveCert != undefined && Datos_ClaveCert != "") {
+						//Si es administrador, validamos si la clave del certificado es correcta
+						if (Datos_proveedores != undefined && Datos_proveedores != "") {
+							SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+								//Si la clave es correcta, habilitamos el viaje del formulario al servidor
+								$("#button").dxButton({ useSubmitBehavior: true });
+								$("#button").click();
+							}, function (response) {
+								//Si no es correcta la clave, debe salir un mensaje del interceptor indicando el error, e imprimimos en consola el error.
+								console.log(response);
+							});
+						} else {
+							DevExpress.ui.notify('Debe seleccionar el proveedor del certificado', 'error', 7000);
+						}
+					} else {
 						$("#button").dxButton({ useSubmitBehavior: true });
 						$("#button").click();
-					}, function (response) {
-						//Si no es correcta la clave, debe salir un mensaje del interceptor indicando el error, e imprimimos en consola el error.
-						console.log(response);
-					});
+					}
 				} else {
 					//Si no es administrador, no validamos esos datos y simplemente habilitamos el viaje de los datos del formulario, al servidor
 					$("#button").dxButton({ useSubmitBehavior: true });
@@ -1426,6 +1501,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_telefono = response.data[0].telefono;
 				Datos_VersionDIAN = response.data[0].VersionDIAN;
 
+				Datos_Serial_Cloud = response.data[0].SerialCloudServices;
+				Datos_debug = response.data[0].Debug;
+
 				//Certificado				
 				Datos_CertFirma = response.data[0].IntCertFirma;
 				Datos_proveedores = response.data[0].IntCertProveedor;
@@ -1513,27 +1591,48 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						$("#postpagoaut").dxCheckBox({ value: true });
 					}
 
+
+					//Serial Cloud
+					try {
+						$("#txtSerialCloud").dxTextBox({ value: Datos_Serial_Cloud });
+					} catch (e) { }
+
+
+					try {
+						if (Datos_debug == 1) {
+							$("#debug").dxCheckBox({ value: true });
+						}
+					} catch (e) { }
+
+
 					//Certificado
 					try {
 						$("#CerFirma").dxRadioGroup({ value: TiposCertFirma[BuscarID(TiposCertFirma, Datos_CertFirma)] });
 					} catch (e) { }
-					try {
-						$("#cboProveedor").dxSelectBox({ value: Lista_Proveedores_Firma[BuscarID(Lista_Proveedores_Firma, Datos_proveedores)] });
-					} catch (e) { }
-					try {
-						$("#ClaveCert").dxTextBox({ value: Datos_ClaveCert });
-					} catch (e) { }
-					try {
-						$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
-					} catch (e) { }
+
 					try {
 						$("#Hgi_Notifica").dxCheckBox({ value: Datos_Hgi_Notifica });
 					} catch (e) { }
 					try {
 						$("#Hgi_Responsable").dxCheckBox({ value: Datos_Hgi_Responsable });
 					} catch (e) { }
-					//Certificado
 				}
+
+
+				if (Datos_CertFirma == "1") {
+					$scope.ReponsableFacturadorCertificado = true;
+				}
+
+				try {
+					$("#cboProveedor").dxSelectBox({ value: Lista_Proveedores_Firma[BuscarID(Lista_Proveedores_Firma, Datos_proveedores)] });
+				} catch (e) { }
+				try {
+					$("#ClaveCert").dxTextBox({ value: Datos_ClaveCert });
+				} catch (e) { }
+				try {
+					$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+				} catch (e) { }
+
 
 				$("#txtEmail").dxTextBox({ value: Datos_Email });
 				$("#txtMailEnvio").dxTextBox({ value: Datos_Email_Envio });
@@ -1661,7 +1760,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntCertResponsableHGI: Datos_Hgi_Responsable,
 				IntCertNotificar: Datos_Hgi_Notifica,
 				StrCertClave: Datos_ClaveCert,
-				DatCertVence: Datos_FechaCert
+				DatCertVence: Datos_FechaCert,
+				StrSerialCloudServices: Datos_Serial_Cloud,
+				IntDebug: Datos_debug
 			});
 			var tipo = Datos_Tipo;
 
@@ -1686,7 +1787,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 });
 
 //Controlador para gestionar la consulta de empresas
-EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $rootScope, $location, SrvEmpresas) {
+EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasController($scope, $http, $rootScope, $location, SrvEmpresas, SrvFiltro) {
 
 	var Empresas = [];
 
@@ -1697,8 +1798,28 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 	});
 
 	var estado;
+	var Item_TipoTercero = 0;
 
 	$scope.Admin = false;
+
+	$scope.filtros =
+    {
+    	TipoTercero: {
+    		searchEnabled: true,
+    		//Carga la data del control
+    		dataSource: new DevExpress.data.ArrayStore({
+    			data: items_TipoTercero,
+    			key: "ID"
+    		}),
+    		displayExpr: "Texto",
+    		Enabled: true,
+    		placeholder: "Facturador",
+    		onValueChanged: function (data) {
+    			Item_TipoTercero = data.value.ID;
+    		}
+    	}
+    }
+
 	consultar();
 	function consultar() {
 		$('#wait').hide();
@@ -1721,7 +1842,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 			//$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Todas=false').then(function (response) {
 
 
-			SrvEmpresas.ObtenerEmpresas(codigo_facturador, Desde, Hasta).then(function (data) {
+			SrvEmpresas.ObtenerEmpresas(codigo_facturador, Desde, Hasta, Item_TipoTercero).then(function (data) {
 				$('#wait').hide();
 				$('#waitRegistros').show();
 				//*******Consulta de los primeros 20 registros
@@ -1850,7 +1971,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 
 				CargarAsyn();
 				function CargarAsyn() {
-					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa).then(function (data) {
+					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa, Item_TipoTercero).then(function (data) {
 						CantRegCargados += data.length;
 						if (data.length > 0) {
 							cargarEmpresas(data);
@@ -1879,6 +2000,16 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
 	}
+
+
+	//Boton Consultar
+	$scope.ButtonOptionsConsultar = {
+		text: 'Consultar',
+		type: 'default',
+		onClick: function (e) {
+			consultar();
+		}
+	};
 
 
 	//Carga las empresas al array
@@ -1943,13 +2074,21 @@ var TiposEstado =
 
 var VersionDIAN =
 [
-{ ID: "1", Texto: 'Versión 1' },
-{ ID: "2", Texto: 'Versión Validación Previa' }
+	{ ID: "1", Texto: 'Versión 1' },
+	{ ID: "2", Texto: 'Versión Validación Previa' }
 ];
 
 
 var TiposCertFirma =
 [
-{ ID: "0", Texto: 'HGI SAS' },
-{ ID: "1", Texto: 'FACTURADOR' }
+	{ ID: "0", Texto: 'HGI SAS' },
+	{ ID: "1", Texto: 'FACTURADOR' }
+];
+
+
+var items_TipoTercero =
+[
+	{ ID: "2", Texto: 'TODOS' },
+	{ ID: "0", Texto: 'FACTURADOR' },
+	{ ID: "1", Texto: 'ADQUIRIENTE' }
 ];

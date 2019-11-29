@@ -57,13 +57,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					if (Directorio.ValidarExistenciaArchivo(RutaDirectorio))
 					{
 						File.SaveAs(carpeta_certificado);
-					}else
+					}
+					else
 					{
-						
+
 						Directorio.CrearDirectorio(RutaDirectorio);
 						File.SaveAs(carpeta_certificado);
 					}
-										
+
 				}
 				else
 				{
@@ -123,6 +124,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (datos.IntIdEstado == 3 && datos.IntVersionDian == 2)
 					throw new ApplicationException(string.Format("El Facturador con la identificación {0} no ha confirmado sus correos.", identificacion_obligado));
 
+				//Validación debug versión 1
+				//Fecha.GetFecha()
+				if (DateTime.Now > Convert.ToDateTime("2019-12-02 00:00") && (datos.IntVersionDian==1 && datos.IntDebug==false))
+				{
+					throw new ApplicationException(string.Format("Según la normatividad, el documento debe enviarse a la DIAN por la plataforma de validación previa, por favor verifique su habilitación en la plataforma"));
+				}
 
 				string datakey_construido = datos.StrSerial.ToString() + datos.StrIdentificacion.ToString();
 				string datakey_encriptado_Sha1 = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
@@ -335,6 +342,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
 					EmpresaActualiza.IntTimeout = empresa.IntTimeout;
 
+					EmpresaActualiza.IntDebug = empresa.IntDebug;
+					EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
+
 					#region Certificado
 					EmpresaActualiza.IntCertFirma = empresa.IntCertFirma;
 					EmpresaActualiza.IntCertProveedor = empresa.IntCertProveedor;
@@ -346,6 +356,32 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				}
 
+				//Si firma el Facturador
+				if (empresa.IntCertFirma == 1)
+				{
+					EmpresaActualiza.IntCertProveedor = empresa.IntCertProveedor;
+					EmpresaActualiza.StrCertClave = empresa.StrCertClave;
+					//Si la fecha de vencimiento esta null y la clave es distinta de null, entonces buscamos la fecha de vencimiento del certificado.
+					if (empresa.DatCertVence == null && !string.IsNullOrEmpty(empresa.StrCertClave))
+					{
+						try
+						{
+							//Buscamos la fecha de vencimiento del certificado
+							var datos = ObtenerInfCert(EmpresaActualiza.StrIdSeguridad, empresa.StrCertClave);
+							EmpresaActualiza.DatCertVence = datos.Fechavenc;
+						}
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
+						}
+					}
+					else
+					{
+						//Si no es null, entonces guardamos la fecha de vencimiento.
+						EmpresaActualiza.DatCertVence = empresa.DatCertVence;
+					}
+
+				}
 
 				EmpresaActualiza.IntAcuseTacito = empresa.IntAcuseTacito;
 
@@ -1059,9 +1095,35 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Obtiene las Primeras 20 empresas
 		/// </summary>        
 		/// <returns></returns>
-		public List<ObjEmpresa> Pag_ObtenerEmpresas(int Desde, int Hasta)
+		public List<ObjEmpresa> Pag_ObtenerEmpresas(int Desde, int Hasta,int Tipo)
 		{
+
+			bool Obligado = false;
+			string strObligado = "";
+			bool Adquiriente=false;
+			string StrAdquiriente = "";
+			//Facturador
+			if (Tipo ==0)
+			{
+				Obligado = true;
+				StrAdquiriente = "*";
+			}
+			//Adquiriente
+			if (Tipo == 1)
+			{
+				Adquiriente = true;
+				strObligado = "*";				
+			}
+			//Todos
+			if (Tipo == 2)
+			{				
+				strObligado = "*";
+				StrAdquiriente = "*";
+			}
+
 			List<ObjEmpresa> datos = (from d in context.TblEmpresas
+									  where (d.IntObligado== Obligado || strObligado.Equals("*"))
+									  && (d.IntAdquiriente == Adquiriente || StrAdquiriente.Equals("*"))
 									  select new ObjEmpresa
 									  {
 										  Identificacion = d.StrIdentificacion,

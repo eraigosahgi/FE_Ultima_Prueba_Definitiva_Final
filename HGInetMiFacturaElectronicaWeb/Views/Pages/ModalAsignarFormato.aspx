@@ -8,7 +8,7 @@
 </head>
 <body>
 
-	<script src="../../Scripts/Pages/ModalAsignarFormato.js?vjs201924"></script>
+	<script src="../../Scripts/Pages/ModalAsignarFormato.js?vjs201926"></script>
 
 	<form id="FormularioFormato">
 		<div id="modal_asignar_formato" class="modal fade" style="display: none;">
