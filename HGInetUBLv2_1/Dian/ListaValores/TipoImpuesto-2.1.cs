@@ -20,9 +20,20 @@ namespace HGInetUBLv2_1.DianListas
 		public List<ListaItem> Items = new List<ListaItem>()
 		{
 			new ListaItem("01", "IVA", "IVA"),
+			new ListaItem("02", "IC", "IC"),
+			new ListaItem("03", "ICA", "ICA"),
 			new ListaItem("04", "INC", "INC"),
-			new ListaItem("22", "INC Bolsas ", "INC Bolsas "),
-			new ListaItem("ZA", "IVA e INC", "IVA e INC"),
+			new ListaItem("05", "ReteIVA", "ReteIVA"),
+			new ListaItem("06", "ReteFuente", "ReteFuente"),
+			new ListaItem("07", "ReteICA", "ReteICA"),
+			new ListaItem("08", "ReteCREE", "ReteCREE"),
+			new ListaItem("20", "FtoHorticultura", "FtoHorticultura"),
+			new ListaItem("21", "Timbre", "Timbre"),
+			new ListaItem("22", "Bolsas", "Bolsas"),
+			new ListaItem("23", "INCarbono", "INCarbono"),
+			new ListaItem("24", "INCombustibles", "INCombustibles"),
+			new ListaItem("25", "Sobretasa Combustibles", "Sobretasa Combustibles"),
+			new ListaItem("26", "Sordicom", "Sordicom"),
 			new ListaItem("ZZ", "No aplica", "No aplica"),
 
 		};

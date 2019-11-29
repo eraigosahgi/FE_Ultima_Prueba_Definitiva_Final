@@ -14,6 +14,7 @@ using LibreriaGlobalHGInet.HgiNet.Controladores;
 using HGInetUBLv2_1.DianListas;
 using HGInetMiFacturaElectonicaData;
 using HGInetUBLv2_1.XML;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetUBLv2_1
 {
@@ -576,6 +577,7 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
@@ -1206,77 +1208,95 @@ namespace HGInetUBLv2_1
 					// http://www.datypic.com/sc/ubl21/e-cac_InvoiceLine.html
 					InvoiceLineType InvoiceLineType1 = new InvoiceLineType();
 
-
-					#region Id producto definido por la Dian (Contador de productos iniciando desde 1)
-					// <cbc:ID>
-					IDType ID = new IDType();
-					ID.Value = contadorProducto.ToString();
-					InvoiceLineType1.ID = ID;
-					#endregion
-
-
-					#region Cantidad producto
-					// <cbc:InvoicedQuantity>
-					InvoicedQuantityType InvoicedQuantity = new InvoicedQuantityType();
-					InvoicedQuantity.Value = decimal.Round(DocDet.Cantidad, 6);
-
-					// Unidad de medida Ver lista de valores posibles en 6.3.6(Defecto codigo - 94)
-					ListaUnidadesMedida list_unidad = new ListaUnidadesMedida();
-					ListaItem unidad = list_unidad.Items.Where(d => d.Codigo.Equals(DocDet.UnidadCodigo)).FirstOrDefault();
-
-					InvoicedQuantity.unitCode = unidad.Codigo;
-					InvoiceLineType1.InvoicedQuantity = InvoicedQuantity;
-					#endregion
+						#region Id producto definido por la Dian (Contador de productos iniciando desde 1)
+						// <cbc:ID>
+						IDType ID = new IDType();
+						ID.Value = contadorProducto.ToString();
+						InvoiceLineType1.ID = ID;
+						#endregion
 
 
-					#region Valor Total
-					// <cbc:LineExtensionAmount>
-					LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
-					LineExtensionAmount.currencyID = moneda_detalle.ToString();
-					LineExtensionAmount.Value = decimal.Round(DocDet.ValorSubtotal, 2);
-					InvoiceLineType1.LineExtensionAmount = LineExtensionAmount;
-					#endregion
+						#region Cantidad producto
+						// <cbc:InvoicedQuantity>
+						InvoicedQuantityType InvoicedQuantity = new InvoicedQuantityType();
+
+						try
+						{
+						InvoicedQuantity.Value = decimal.Round(DocDet.Cantidad, 6);
+
+						// Unidad de medida Ver lista de valores posibles en 6.3.6(Defecto codigo - 94)
+						ListaUnidadesMedida list_unidad = new ListaUnidadesMedida();
+						ListaItem unidad = list_unidad.Items.Where(d => d.Codigo.Equals(DocDet.UnidadCodigo)).FirstOrDefault();
+
+						InvoicedQuantity.unitCode = unidad.Codigo;
+						InvoiceLineType1.InvoicedQuantity = InvoicedQuantity;
+						#endregion
+
+
+						#region Valor Total
+						// <cbc:LineExtensionAmount>
+						LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
+						LineExtensionAmount.currencyID = moneda_detalle.ToString();
+						LineExtensionAmount.Value = decimal.Round(DocDet.ValorSubtotal, 2);
+						InvoiceLineType1.LineExtensionAmount = LineExtensionAmount;
+						#endregion
+					}
+					catch (Exception excepcion)
+					{
+
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.creacion, "Inicio");
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+					}
 
 
 					#region Cargo adicional -- Hacer cambio para que llene la informacion segun los descuentos o cargos que tenga las lineas
 					// <cac:AllowanceCharge>
-					if (DocDet.DescuentoValor > 0)
+					try
 					{
-						AllowanceChargeType[] AllowanceCharges = new AllowanceChargeType[1];
-						AllowanceChargeType AllowanceCharge = new AllowanceChargeType();
-						AllowanceCharge.BaseAmount = new BaseAmountType();
-						AllowanceCharge.BaseAmount.currencyID = moneda_detalle.ToString();
-						if (DocDet.DescuentoPorcentaje > 0)
+						if (DocDet.DescuentoValor > 0)
 						{
-							decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
-							AllowanceCharge.BaseAmount.Value = decimal.Round(valorTotal, 2);
+							AllowanceChargeType[] AllowanceCharges = new AllowanceChargeType[1];
+							AllowanceChargeType AllowanceCharge = new AllowanceChargeType();
+							AllowanceCharge.BaseAmount = new BaseAmountType();
+							AllowanceCharge.BaseAmount.currencyID = moneda_detalle.ToString();
+							if (DocDet.DescuentoPorcentaje > 0)
+							{
+								decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
+								AllowanceCharge.BaseAmount.Value = decimal.Round(valorTotal, 2);
+							}
+							else
+							{
+								AllowanceCharge.BaseAmount.Value = 0.00M;
+							}
+
+							decimal desc_cal = decimal.Round((AllowanceCharge.BaseAmount.Value * (DocDet.DescuentoPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
+							if ((AllowanceCharge.BaseAmount.Value - desc_cal) != DocDet.ValorSubtotal)
+								DocDet.ValorSubtotal = AllowanceCharge.BaseAmount.Value - desc_cal;
+
+							AllowanceCharge.ChargeIndicator = new ChargeIndicatorType();
+							AllowanceCharge.ChargeIndicator.Value = false;
+							AllowanceCharge.AllowanceChargeReasonCode = new AllowanceChargeReasonCodeType();
+							AllowanceCharge.AllowanceChargeReasonCode.Value = "11"; /*** QUEMADO ***/
+							AllowanceChargeReasonType[] AllowanceChargeReasonType = new AllowanceChargeReasonType[1];
+							AllowanceChargeReasonType AllowanceChargeReason = new AllowanceChargeReasonType();
+							AllowanceChargeReason.Value = "Descuento comercial"; /*** QUEMADO ***/
+							AllowanceChargeReasonType[0] = AllowanceChargeReason;
+							AllowanceCharge.AllowanceChargeReason = AllowanceChargeReasonType;
+							AllowanceCharge.MultiplierFactorNumeric = new MultiplierFactorNumericType();
+							AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 6);
+							AllowanceCharge.Amount = new AmountType2();
+							AllowanceCharge.Amount.currencyID = moneda_detalle.ToString();
+							AllowanceCharge.Amount.Value = decimal.Round(desc_cal, 2);
+							AllowanceCharges[0] = AllowanceCharge;
+
+							InvoiceLineType1.AllowanceCharge = AllowanceCharges;
 						}
-						else
-						{
-							AllowanceCharge.BaseAmount.Value = 0.00M;
-						}
+					}
+					catch (Exception excepcion)
+					{
 
-						decimal desc_cal = decimal.Round((AllowanceCharge.BaseAmount.Value * (DocDet.DescuentoPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
-						if ((AllowanceCharge.BaseAmount.Value - desc_cal) != DocDet.ValorSubtotal)
-							DocDet.ValorSubtotal = AllowanceCharge.BaseAmount.Value - desc_cal;
-
-						AllowanceCharge.ChargeIndicator = new ChargeIndicatorType();
-						AllowanceCharge.ChargeIndicator.Value = false;
-						AllowanceCharge.AllowanceChargeReasonCode = new AllowanceChargeReasonCodeType();
-						AllowanceCharge.AllowanceChargeReasonCode.Value = "11"; /*** QUEMADO ***/
-						AllowanceChargeReasonType[] AllowanceChargeReasonType = new AllowanceChargeReasonType[1];
-						AllowanceChargeReasonType AllowanceChargeReason = new AllowanceChargeReasonType();
-						AllowanceChargeReason.Value = "Descuento comercial"; /*** QUEMADO ***/
-						AllowanceChargeReasonType[0] = AllowanceChargeReason;
-						AllowanceCharge.AllowanceChargeReason = AllowanceChargeReasonType;
-						AllowanceCharge.MultiplierFactorNumeric = new MultiplierFactorNumericType();
-						AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 6);
-						AllowanceCharge.Amount = new AmountType2();
-						AllowanceCharge.Amount.currencyID = moneda_detalle.ToString();
-						AllowanceCharge.Amount.Value = decimal.Round(desc_cal, 2);
-						AllowanceCharges[0] = AllowanceCharge;
-
-						InvoiceLineType1.AllowanceCharge = AllowanceCharges;
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.creacion, "AllowanceCharge");
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
 
 					#endregion
@@ -1286,265 +1306,283 @@ namespace HGInetUBLv2_1
 
 					// <cac:TaxTotal>
 					List<TaxTotalType> TaxesTotal = new List<TaxTotalType>();
-
-					if (DocDet.IvaValor >= 0 && DocDet.ValorImpuestoConsumo == 0)
+					try
 					{
-						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
-						TaxTotalType TaxTotal = new TaxTotalType();
-
-						//if (decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero) != DocDet.IvaValor)
-						//DocDet.IvaValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
-
-						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
-						// <cbc:TaxAmount>
-						TaxTotal.TaxAmount = new TaxAmountType()
+						
+						if (DocDet.IvaValor >= 0 && DocDet.ValorImpuestoConsumo == 0)
 						{
-							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round(DocDet.IvaValor, 2)
-						};
+							//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+							TaxTotalType TaxTotal = new TaxTotalType();
 
-						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
-						// <cbc:TaxEvidenceIndicator>
-						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
-						{
-							Value = false
-						};
+							//if (decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero) != DocDet.IvaValor)
+							//DocDet.IvaValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
 
-						// Debe ser informado un grupo de estos para cada tarifa. 
-						// <cac:TaxSubtotal>
-						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+							// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+							// <cbc:TaxAmount>
+							TaxTotal.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = decimal.Round(DocDet.IvaValor, 2)
+							};
+
+							// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+							// <cbc:TaxEvidenceIndicator>
+							TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+							{
+								Value = false
+							};
+
+							// Debe ser informado un grupo de estos para cada tarifa. 
+							// <cac:TaxSubtotal>
+							TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
 
 
-						#region impuesto: IVA 
+							#region impuesto: IVA 
 
-						TaxSubtotalType TaxSubtotalIva = new TaxSubtotalType();
+							TaxSubtotalType TaxSubtotalIva = new TaxSubtotalType();
 
-						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
-						//Base Imponible sobre la que se calcula el valor del tributo
-						//----Se debe Solicitar la base con la que calculo el impuesto
-						// <cbc:TaxAmount>
-						TaxSubtotalIva.TaxableAmount = new TaxableAmountType();
-						TaxSubtotalIva.TaxableAmount.currencyID = moneda_detalle.ToString();
-						if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0 && DocDet.IvaPorcentaje > 0)
-						{
-							TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 2, MidpointRounding.AwayFromZero);
+							// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+							//Base Imponible sobre la que se calcula el valor del tributo
+							//----Se debe Solicitar la base con la que calculo el impuesto
+							// <cbc:TaxAmount>
+							TaxSubtotalIva.TaxableAmount = new TaxableAmountType();
+							TaxSubtotalIva.TaxableAmount.currencyID = moneda_detalle.ToString();
+							if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0 && DocDet.IvaPorcentaje > 0)
+							{
+								TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 2, MidpointRounding.AwayFromZero);
+							}
+							else
+							{
+								TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
+							}
+
+
+							// El monto de este subtotal fiscal.
+							//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+							// <cbc:TaxAmount>
+							TaxSubtotalIva.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = DocDet.IvaValor
+							};
+
+							// categoría de impuestos aplicable a este subtotal.
+							//Grupo de informaciones sobre el tributo 
+							// <cac:TaxCategory>
+							TaxCategoryType TaxCategoryIva = new TaxCategoryType();
+
+							// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+							//Tarifa del tributo
+							// <cbc:Percent>
+							if (DocDet.CalculaIVA > 0 && DocDet.IvaPorcentaje > 0)
+								DocDet.IvaPorcentaje = 0.00M;
+							TaxCategoryIva.Percent = new PercentType1()
+							{
+								Value = decimal.Round((DocDet.IvaPorcentaje), 2)
+							};
+
+							// <cac:TaxScheme>
+							//Grupo de informaciones específicas sobre el tributo
+							TaxSchemeType TaxSchemeIva = new TaxSchemeType();
+							//Identificador del tributo
+							TaxSchemeIva.ID = new IDType(); /*** QUEMADO ***/
+							TaxSchemeIva.ID.Value = "01";//TipoImpuestos.Iva,
+														 //Nombre del tributo
+							TaxSchemeIva.Name = new NameType1();
+							TaxSchemeIva.Name.Value = "IVA";/*** QUEMADO ***/
+
+							TaxCategoryIva.TaxScheme = TaxSchemeIva;
+							TaxSubtotalIva.TaxCategory = TaxCategoryIva;
+							TaxesSubtotal[0] = TaxSubtotalIva;
+							TaxTotal.TaxSubtotal = TaxesSubtotal;
+							TaxesTotal.Add(TaxTotal);
+
+							#endregion
 						}
-						else
-						{
-							TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
-						}
+					}
+					catch (Exception excepcion)
+					{
 
-
-						// El monto de este subtotal fiscal.
-						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
-						// <cbc:TaxAmount>
-						TaxSubtotalIva.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.IvaValor
-						};
-
-						// categoría de impuestos aplicable a este subtotal.
-						//Grupo de informaciones sobre el tributo 
-						// <cac:TaxCategory>
-						TaxCategoryType TaxCategoryIva = new TaxCategoryType();
-
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						if (DocDet.CalculaIVA > 0 && DocDet.IvaPorcentaje > 0)
-							DocDet.IvaPorcentaje = 0.00M;
-						TaxCategoryIva.Percent = new PercentType1()
-						{
-							Value = decimal.Round((DocDet.IvaPorcentaje), 2)
-						};
-
-						// <cac:TaxScheme>
-						//Grupo de informaciones específicas sobre el tributo
-						TaxSchemeType TaxSchemeIva = new TaxSchemeType();
-						//Identificador del tributo
-						TaxSchemeIva.ID = new IDType(); /*** QUEMADO ***/
-						TaxSchemeIva.ID.Value = "01";//TipoImpuestos.Iva,
-													 //Nombre del tributo
-						TaxSchemeIva.Name = new NameType1();
-						TaxSchemeIva.Name.Value = "IVA";/*** QUEMADO ***/
-
-						TaxCategoryIva.TaxScheme = TaxSchemeIva;
-						TaxSubtotalIva.TaxCategory = TaxCategoryIva;
-						TaxesSubtotal[0] = TaxSubtotalIva;
-						TaxTotal.TaxSubtotal = TaxesSubtotal;
-						TaxesTotal.Add(TaxTotal);
-
-						#endregion
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.creacion, "TaxTotal");
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
 
 					#region impuesto: Consumo
 
-					if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == false)
+					try
 					{
-
-
-						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
-						TaxTotalType TaxTotal = new TaxTotalType();
-
-						//if (decimal.Round((DocDet.ValorSubtotal * (DocDet.ImpoConsumoPorcentaje * 100)), 2) != DocDet.ValorImpuestoConsumo)
-						//	DocDet.ValorImpuestoConsumo = decimal.Round((DocDet.ValorSubtotal * (DocDet.ImpoConsumoPorcentaje * 100)), 2);
-
-						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
-						// <cbc:TaxAmount>
-						TaxTotal.TaxAmount = new TaxAmountType()
+						if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == false)
 						{
-							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round(DocDet.ValorImpuestoConsumo, 2)
-						};
 
-						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
-						// <cbc:TaxEvidenceIndicator>
-						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+
+							//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+							TaxTotalType TaxTotal = new TaxTotalType();
+
+							//if (decimal.Round((DocDet.ValorSubtotal * (DocDet.ImpoConsumoPorcentaje * 100)), 2) != DocDet.ValorImpuestoConsumo)
+							//	DocDet.ValorImpuestoConsumo = decimal.Round((DocDet.ValorSubtotal * (DocDet.ImpoConsumoPorcentaje * 100)), 2);
+
+							// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+							// <cbc:TaxAmount>
+							TaxTotal.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = decimal.Round(DocDet.ValorImpuestoConsumo, 2)
+							};
+
+							// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+							// <cbc:TaxEvidenceIndicator>
+							TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+							{
+								Value = false
+							};
+
+							// Debe ser informado un grupo de estos para cada tarifa. 
+							// <cac:TaxSubtotal>
+							TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+
+							TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
+
+							// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+							//Base Imponible sobre la que se calcula el valor del tributo
+							//----Se debe Solicitar la base con la que calculo el impuesto
+							TaxSubtotalConsumo.TaxableAmount = new TaxableAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = DocDet.ValorSubtotal
+							};
+
+							// El monto de este subtotal fiscal.
+							//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+							// <cbc:TaxAmount>
+							TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = DocDet.ValorImpuestoConsumo
+							};
+
+							// categoría de impuestos aplicable a este subtotal.
+							//Grupo de informaciones sobre el tributo 
+							// <cac:TaxCategory>
+							TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
+
+							// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+							//Tarifa del tributo
+							// <cbc:Percent>
+							TaxCategoryConsumo.Percent = new PercentType1()
+							{
+								Value = decimal.Round((DocDet.ImpoConsumoPorcentaje), 2)
+							};
+
+							// <cac:TaxScheme>
+							//Grupo de informaciones específicas sobre el tributo
+							TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
+							ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
+							ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals("04")).FirstOrDefault();
+							//Identificador del tributo
+							TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
+							TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"04";//TipoImpuestos.Consumo,
+																	   //Nombre del tributo
+							TaxSchemeConsumo.Name = new NameType1();
+							TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"INC"; /*** QUEMADO ***/
+
+							TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
+							TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
+							TaxesSubtotal[0] = TaxSubtotalConsumo;
+							TaxTotal.TaxSubtotal = TaxesSubtotal;
+							TaxesTotal.Add(TaxTotal);
+						}
+						else if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == true)
 						{
-							Value = false
-						};
+							//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+							TaxTotalType TaxTotal = new TaxTotalType();
 
-						// Debe ser informado un grupo de estos para cada tarifa. 
-						// <cac:TaxSubtotal>
-						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+							// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+							// <cbc:TaxAmount>
+							TaxTotal.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = decimal.Round(DocDet.ValorImpuestoConsumo, 2)
+							};
 
-						TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
+							// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+							// <cbc:TaxEvidenceIndicator>
+							TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+							{
+								Value = false
+							};
 
-						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
-						//Base Imponible sobre la que se calcula el valor del tributo
-						//----Se debe Solicitar la base con la que calculo el impuesto
-						TaxSubtotalConsumo.TaxableAmount = new TaxableAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorSubtotal
-						};
+							// Debe ser informado un grupo de estos para cada tarifa. 
+							// <cac:TaxSubtotal>
+							TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
 
-						// El monto de este subtotal fiscal.
-						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
-						// <cbc:TaxAmount>
-						TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorImpuestoConsumo
-						};
+							TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
 
-						// categoría de impuestos aplicable a este subtotal.
-						//Grupo de informaciones sobre el tributo 
-						// <cac:TaxCategory>
-						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
+							// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+							//Base Imponible sobre la que se calcula el valor del tributo
+							//----Se debe Solicitar la base con la que calculo el impuesto
+							TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
+							{
+								unitCode = InvoicedQuantity.unitCode,
+								Value = decimal.Round(DocDet.Cantidad, 6)
+							};
 
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						TaxCategoryConsumo.Percent = new PercentType1()
-						{
-							Value = decimal.Round((DocDet.ImpoConsumoPorcentaje), 2)
-						};
+							// El monto de este subtotal fiscal.
+							//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+							// <cbc:TaxAmount>
+							TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = DocDet.ValorImpuestoConsumo
+							};
 
-						// <cac:TaxScheme>
-						//Grupo de informaciones específicas sobre el tributo
-						TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
-						ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
-						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals("04")).FirstOrDefault();
-						//Identificador del tributo
-						TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
-						TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"04";//TipoImpuestos.Consumo,
-																   //Nombre del tributo
-						TaxSchemeConsumo.Name = new NameType1();
-						TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"INC"; /*** QUEMADO ***/
+							// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+							//Tarifa del tributo
+							// <cbc:Percent>
+							TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2)
+							};
 
-						TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
-						TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
-						TaxesSubtotal[0] = TaxSubtotalConsumo;
-						TaxTotal.TaxSubtotal = TaxesSubtotal;
-						TaxesTotal.Add(TaxTotal);
+							// categoría de impuestos aplicable a este subtotal.
+							//Grupo de informaciones sobre el tributo 
+							// <cac:TaxCategory>
+							TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
+
+							// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+							//Tarifa del tributo
+							// <cbc:Percent>
+							//TaxCategoryConsumo.PerUnitAmount = new PerUnitAmountType()
+							//{
+							//	currencyID = moneda_detalle.ToString(),
+							//	Value = decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2)
+							//};
+
+							// <cac:TaxScheme>
+							//Grupo de informaciones específicas sobre el tributo
+							TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
+							ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
+							ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals("22")).FirstOrDefault();
+							//Identificador del tributo
+							TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
+							TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"22";//TipoImpuestos.Consumo,
+																	   //Nombre del tributo
+							TaxSchemeConsumo.Name = new NameType1();
+							TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"Bolsas"; /*** QUEMADO ***/
+
+							TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
+							TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
+							TaxesSubtotal[0] = TaxSubtotalConsumo;
+							TaxTotal.TaxSubtotal = TaxesSubtotal;
+							TaxesTotal.Add(TaxTotal);
+
+						}
 					}
-					else if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == true)
+					catch (Exception excepcion)
 					{
-						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
-						TaxTotalType TaxTotal = new TaxTotalType();
 
-						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
-						// <cbc:TaxAmount>
-						TaxTotal.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round(DocDet.ValorImpuestoConsumo, 2)
-						};
-
-						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
-						// <cbc:TaxEvidenceIndicator>
-						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
-						{
-							Value = false
-						};
-
-						// Debe ser informado un grupo de estos para cada tarifa. 
-						// <cac:TaxSubtotal>
-						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
-
-						TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
-
-						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
-						//Base Imponible sobre la que se calcula el valor del tributo
-						//----Se debe Solicitar la base con la que calculo el impuesto
-						TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
-						{
-							unitCode = InvoicedQuantity.unitCode,
-							Value = decimal.Round(DocDet.Cantidad, 6)
-						};
-
-						// El monto de este subtotal fiscal.
-						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
-						// <cbc:TaxAmount>
-						TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorImpuestoConsumo
-						};
-
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2)
-						};
-
-						// categoría de impuestos aplicable a este subtotal.
-						//Grupo de informaciones sobre el tributo 
-						// <cac:TaxCategory>
-						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
-
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						//TaxCategoryConsumo.PerUnitAmount = new PerUnitAmountType()
-						//{
-						//	currencyID = moneda_detalle.ToString(),
-						//	Value = decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2)
-						//};
-
-						// <cac:TaxScheme>
-						//Grupo de informaciones específicas sobre el tributo
-						TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
-						ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
-						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals("22")).FirstOrDefault();
-						//Identificador del tributo
-						TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
-						TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"22";//TipoImpuestos.Consumo,
-																   //Nombre del tributo
-						TaxSchemeConsumo.Name = new NameType1();
-						TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"Bolsas"; /*** QUEMADO ***/
-
-						TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
-						TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
-						TaxesSubtotal[0] = TaxSubtotalConsumo;
-						TaxTotal.TaxSubtotal = TaxesSubtotal;
-						TaxesTotal.Add(TaxTotal);
-
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.creacion, "ImptoConsumo");
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
 
 					#endregion
@@ -1604,89 +1642,105 @@ namespace HGInetUBLv2_1
 					TaxesTotal[0] = TaxTotal;*/
 					#endregion
 
-					if (DocDet.ReteFuenteValor > 0 && Autoretenedor == true)
+					try
+					{
+						if (DocDet.ReteFuenteValor > 0 && Autoretenedor == true)
+						{
+
+							List<TaxTotalType> TaxesTotalRete = new List<TaxTotalType>();
+
+							//if (decimal.Round((DocDet.ValorSubtotal * (DocDet.ReteFuentePorcentaje / 100)), 0) != DocDet.ReteFuenteValor)
+							//	DocDet.ReteFuenteValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.ReteFuentePorcentaje / 100)), 2);
+
+							//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+							TaxTotalType TaxTotal = new TaxTotalType();
+
+							// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+							// <cbc:TaxAmount>
+							TaxTotal.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = decimal.Round(DocDet.ReteFuenteValor, 2)
+							};
+
+							// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+							// <cbc:TaxEvidenceIndicator>
+							TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+							{
+								Value = false
+							};
+
+							// Debe ser informado un grupo de estos para cada tarifa. 
+							// <cac:TaxSubtotal>
+							TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+
+							TaxSubtotalType TaxSubtotalRete = new TaxSubtotalType();
+
+							// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+							//Base Imponible sobre la que se calcula el valor del tributo
+							//----Se debe Solicitar la base con la que calculo el impuesto
+							// <cbc:TaxAmount>
+							TaxSubtotalRete.TaxableAmount = new TaxableAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = DocDet.ValorSubtotal
+							};
+
+							// El monto de este subtotal fiscal.
+							//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+							// <cbc:TaxAmount>
+							TaxSubtotalRete.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = DocDet.ReteFuenteValor
+							};
+
+							// categoría de impuestos aplicable a este subtotal.
+							//Grupo de informaciones sobre el tributo 
+							// <cac:TaxCategory>
+							TaxCategoryType TaxCategoryRete = new TaxCategoryType();
+
+							// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+							//Tarifa del tributo
+							// <cbc:Percent>
+							TaxCategoryRete.Percent = new PercentType1()
+							{
+								Value = decimal.Round((DocDet.ReteFuentePorcentaje), 2)
+							};
+
+							// <cac:TaxScheme>
+							//Grupo de informaciones específicas sobre el tributo
+							TaxSchemeType TaxSchemeIva = new TaxSchemeType();
+							//Identificador del tributo
+							ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
+
+
+							ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals("06")).FirstOrDefault();
+
+							if (tipoimp != null)
+							{
+								TaxSchemeIva.ID = new IDType(); /*** QUEMADO ***/
+								TaxSchemeIva.ID.Value = tipoimp.Codigo; //"01";//TipoImpuestos.Iva,
+								//Nombre del tributo
+								TaxSchemeIva.Name = new NameType1();
+								TaxSchemeIva.Name.Value = tipoimp.Nombre; //"IVA";/*** QUEMADO ***/
+
+								TaxCategoryRete.TaxScheme = TaxSchemeIva;
+							}
+
+							TaxSubtotalRete.TaxCategory = TaxCategoryRete;
+							TaxesSubtotal[0] = TaxSubtotalRete;
+							TaxTotal.TaxSubtotal = TaxesSubtotal;
+							TaxesTotalRete.Add(TaxTotal);
+
+							InvoiceLineType1.WithholdingTaxTotal = TaxesTotalRete.ToArray();
+						}
+					}
+					catch (Exception excepcion)
 					{
 
-						List<TaxTotalType> TaxesTotalRete = new List<TaxTotalType>();
-
-						//if (decimal.Round((DocDet.ValorSubtotal * (DocDet.ReteFuentePorcentaje / 100)), 0) != DocDet.ReteFuenteValor)
-						//	DocDet.ReteFuenteValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.ReteFuentePorcentaje / 100)), 2);
-
-						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
-						TaxTotalType TaxTotal = new TaxTotalType();
-
-						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
-						// <cbc:TaxAmount>
-						TaxTotal.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round(DocDet.ReteFuenteValor, 2)
-						};
-
-						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
-						// <cbc:TaxEvidenceIndicator>
-						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
-						{
-							Value = false
-						};
-
-						// Debe ser informado un grupo de estos para cada tarifa. 
-						// <cac:TaxSubtotal>
-						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
-
-						TaxSubtotalType TaxSubtotalRete = new TaxSubtotalType();
-
-						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
-						//Base Imponible sobre la que se calcula el valor del tributo
-						//----Se debe Solicitar la base con la que calculo el impuesto
-						// <cbc:TaxAmount>
-						TaxSubtotalRete.TaxableAmount = new TaxableAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorSubtotal
-						};
-
-						// El monto de este subtotal fiscal.
-						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
-						// <cbc:TaxAmount>
-						TaxSubtotalRete.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ReteFuenteValor
-						};
-
-						// categoría de impuestos aplicable a este subtotal.
-						//Grupo de informaciones sobre el tributo 
-						// <cac:TaxCategory>
-						TaxCategoryType TaxCategoryRete = new TaxCategoryType();
-
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						TaxCategoryRete.Percent = new PercentType1()
-						{
-							Value = decimal.Round((DocDet.ReteFuentePorcentaje), 2)
-						};
-
-						// <cac:TaxScheme>
-						//Grupo de informaciones específicas sobre el tributo
-						TaxSchemeType TaxSchemeIva = new TaxSchemeType();
-						//Identificador del tributo
-						ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
-						ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals("06")).FirstOrDefault();
-						TaxSchemeIva.ID = new IDType(); /*** QUEMADO ***/
-						TaxSchemeIva.ID.Value = tipoimp.Codigo;//"01";//TipoImpuestos.Iva,
-															   //Nombre del tributo
-						TaxSchemeIva.Name = new NameType1();
-						TaxSchemeIva.Name.Value = tipoimp.Nombre; //"IVA";/*** QUEMADO ***/
-
-						TaxCategoryRete.TaxScheme = TaxSchemeIva;
-						TaxSubtotalRete.TaxCategory = TaxCategoryRete;
-						TaxesSubtotal[0] = TaxSubtotalRete;
-						TaxTotal.TaxSubtotal = TaxesSubtotal;
-						TaxesTotalRete.Add(TaxTotal);
-
-						InvoiceLineType1.WithholdingTaxTotal = TaxesTotalRete.ToArray();
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.creacion, "ReteFte");
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
 
 					InvoiceLineType1.TaxTotal = TaxesTotal.ToArray();
@@ -1696,178 +1750,198 @@ namespace HGInetUBLv2_1
 
 					#region Datos producto
 					// <fe:Item>
-					ItemType Item = new ItemType();
 
-					#region Nombre producto
-					// <cbc:Description>
-					DescriptionType[] Descriptions = new DescriptionType[1];
-					DescriptionType Description = new DescriptionType();
-					Description.Value = DocDet.ProductoNombre;
-					Descriptions[0] = Description;
-					Item.Description = Descriptions;
-					#endregion
-
-					#region Descripcion producto
-					//
-					List<AdditionalInformationType> AdditionalInformation = new List<AdditionalInformationType>();
-					AdditionalInformationType Additional = new AdditionalInformationType();
-					Additional.Value = DocDet.ProductoDescripcion;
-					AdditionalInformation.Add(Additional);
-					Item.AdditionalInformation = AdditionalInformation.ToArray();
-					#endregion
-
-					#region Id producto definido por la Empresa
-					// <cac:CatalogueItemIdentification>
-					ItemIdentificationType SellersItemIdentification = new ItemIdentificationType();
-					IDType IDItem = new IDType();
-					IDItem.Value = DocDet.ProductoCodigo;
-					SellersItemIdentification.ID = IDItem;
-					Item.SellersItemIdentification = SellersItemIdentification;
-
-					// <cac:StandardItemIdentification>
-					ItemIdentificationType StandardItemIdentification = new ItemIdentificationType();
-					IDType IDItemStandard = new IDType();
-					//---Validar que no venag null
-					IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
-					// -- 6.3.5. Productos: @schemeID, @schemeName, @schemeAgencyID 
-					IDItemStandard.schemeID = "999";
-					StandardItemIdentification.ID = IDItemStandard;
-					Item.StandardItemIdentification = StandardItemIdentification;
-					#endregion
-
-					#region Bodega del producto
-					AddressType[] Address = new AddressType[1];
-					AddressType Origen = new AddressType();
-					IDType IDItemOrigen = new IDType();
-					//---Validar que no venag null
-					IDItemOrigen.Value = (string.IsNullOrEmpty(DocDet.Bodega)) ? string.Empty : DocDet.Bodega;//DocDet.Bodega;
-					Origen.ID = IDItemOrigen;
-					Address[0] = Origen;
-					Item.OriginAddress = Address;
-					#endregion
-
-
-					#region Campos Adicionales
-
-					if (DocDet.CamposAdicionales != null)
+					try
 					{
-						CampoValor marca = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MARCA")).FirstOrDefault();
+						ItemType Item = new ItemType();
 
-						if (marca != null)
+						#region Nombre producto
+						// <cbc:Description>
+						DescriptionType[] Descriptions = new DescriptionType[1];
+						DescriptionType Description = new DescriptionType();
+						Description.Value = DocDet.ProductoNombre;
+						Descriptions[0] = Description;
+						Item.Description = Descriptions;
+						#endregion
+
+						#region Descripcion producto
+						//
+						List<AdditionalInformationType> AdditionalInformation = new List<AdditionalInformationType>();
+						AdditionalInformationType Additional = new AdditionalInformationType();
+						Additional.Value = DocDet.ProductoDescripcion;
+						AdditionalInformation.Add(Additional);
+						Item.AdditionalInformation = AdditionalInformation.ToArray();
+						#endregion
+
+						#region Id producto definido por la Empresa
+						// <cac:CatalogueItemIdentification>
+						ItemIdentificationType SellersItemIdentification = new ItemIdentificationType();
+						IDType IDItem = new IDType();
+						IDItem.Value = DocDet.ProductoCodigo;
+						SellersItemIdentification.ID = IDItem;
+						Item.SellersItemIdentification = SellersItemIdentification;
+
+						// <cac:StandardItemIdentification>
+						ItemIdentificationType StandardItemIdentification = new ItemIdentificationType();
+						IDType IDItemStandard = new IDType();
+						//---Validar que no venag null
+						IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
+						// -- 6.3.5. Productos: @schemeID, @schemeName, @schemeAgencyID 
+						IDItemStandard.schemeID = "999";
+						StandardItemIdentification.ID = IDItemStandard;
+						Item.StandardItemIdentification = StandardItemIdentification;
+						#endregion
+
+						#region Bodega del producto
+						AddressType[] Address = new AddressType[1];
+						AddressType Origen = new AddressType();
+						IDType IDItemOrigen = new IDType();
+						//---Validar que no venag null
+						IDItemOrigen.Value = (string.IsNullOrEmpty(DocDet.Bodega)) ? string.Empty : DocDet.Bodega;//DocDet.Bodega;
+						Origen.ID = IDItemOrigen;
+						Address[0] = Origen;
+						Item.OriginAddress = Address;
+						#endregion
+
+
+						#region Campos Adicionales
+
+						if (DocDet.CamposAdicionales != null)
 						{
-							BrandNameType[] BrandName = new BrandNameType[1];
-							BrandNameType Brand = new BrandNameType();
-							Brand.Value = marca.Valor;
-							BrandName[0] = Brand;
-							Item.BrandName = BrandName;
+							CampoValor marca = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MARCA")).FirstOrDefault();
+
+							if (marca != null)
+							{
+								BrandNameType[] BrandName = new BrandNameType[1];
+								BrandNameType Brand = new BrandNameType();
+								Brand.Value = marca.Valor;
+								BrandName[0] = Brand;
+								Item.BrandName = BrandName;
+							}
+
+							CampoValor modelo = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MODELO")).FirstOrDefault();
+
+							if (modelo != null)
+							{
+								ModelNameType[] ModelName = new ModelNameType[1];
+								ModelNameType Model = new ModelNameType();
+								Model.Value = modelo.Valor;
+								ModelName[0] = Model;
+								Item.ModelName = ModelName;
+							}
 						}
 
-						CampoValor modelo = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MODELO")).FirstOrDefault();
+						#endregion
 
-						if (modelo != null)
+						ItemPropertyType[] Property = new ItemPropertyType[1];
+						ItemPropertyType Oculto = new ItemPropertyType();
+						Oculto.Name = new NameType1();
+						Oculto.Name.Value = "Item Oculto para Impresion"; /*** QUEMADO ***/
+						Oculto.Value = new ValueType();
+						Oculto.Value.Value = DocDet.OcultarItem.ToString();
+						Property[0] = Oculto;
+						Item.AdditionalItemProperty = Property;
+
+						if (DocDet.DatosMandatario != null)
 						{
-							ModelNameType[] ModelName = new ModelNameType[1];
-							ModelNameType Model = new ModelNameType();
-							Model.Value = modelo.Valor;
-							ModelName[0] = Model;
-							Item.ModelName = ModelName;
+
+							PartyType Mandantario = new PartyType();
+							Mandantario.PowerOfAttorney = new PowerOfAttorneyType[1];
+							PowerOfAttorneyType power = new PowerOfAttorneyType();
+							power.AgentParty = new PartyType();
+							power.AgentParty.PartyIdentification = new PartyIdentificationType[1];
+							power.AgentParty.PartyIdentification[0].ID = new IDType();
+							power.AgentParty.PartyIdentification[0].ID.Value = DocDet.DatosMandatario.Identificacion;
+							power.AgentParty.PartyIdentification[0].ID.schemeAgencyID = "195";
+							power.AgentParty.PartyIdentification[0].ID.schemeID = DocDet.DatosMandatario.IdentificacionDv.ToString();
+							power.AgentParty.PartyIdentification[0].ID.schemeName = DocDet.DatosMandatario.TipoIdentificacion.ToString();
+							Mandantario.PowerOfAttorney[0] = power;
+
+							Item.InformationContentProviderParty = Mandantario;
 						}
+
+
+						#region Producto gratuito 
+						// indica que la línea de factura es gratuita (verdadera) o no (falsa)
+						// <cbc:FreeOfChargeIndicator>
+						FreeOfChargeIndicatorType FreeOfChargeIndicator = new FreeOfChargeIndicatorType();
+						FreeOfChargeIndicator.Value = DocDet.ProductoGratis;
+						InvoiceLineType1.FreeOfChargeIndicator = FreeOfChargeIndicator;
+
+						if (DocDet.ProductoGratis == true)
+						{
+							PricingReferenceType Precio = new PricingReferenceType();
+							Precio.AlternativeConditionPrice = new PriceType[1];
+
+							// <fe:Price>
+							PriceType PriceG = new PriceType();
+
+							// <cbc:PriceAmount>
+							PriceAmountType PriceAmountP = new PriceAmountType();
+							PriceAmountP.currencyID = moneda_detalle.ToString();
+							PriceAmountP.Value = decimal.Round((decimal.Round(DocDet.ValorUnitario, 2) > 0) ? decimal.Round(DocDet.ValorUnitario, 2) : (decimal.Round(DocDet.ValorImpuestoConsumo, 2) / decimal.Round(DocDet.Cantidad, 2)), 2);
+							PriceG.PriceAmount = PriceAmountP;
+
+							//Código del tipo de precio informado ista de valores posibles en 6.3.10 
+							PriceTypeCodeType PriceTypeCode = new PriceTypeCodeType();
+							PriceTypeCode.Value = DocDet.ProductoGratisPrecioRef;
+							PriceG.PriceTypeCode = PriceTypeCode;
+
+							Precio.AlternativeConditionPrice[0] = PriceG;
+							InvoiceLineType1.PricingReference = Precio;
+
+							if (InvoiceLineType1.LineExtensionAmount.Value > 0)
+								InvoiceLineType1.LineExtensionAmount.Value = 0.00M;
+
+						}
+
+						#endregion
+
+						InvoiceLineType1.Item = Item;
 					}
-
-					#endregion
-
-					ItemPropertyType[] Property = new ItemPropertyType[1];
-					ItemPropertyType Oculto = new ItemPropertyType();
-					Oculto.Name = new NameType1();
-					Oculto.Name.Value = "Item Oculto para Impresion"; /*** QUEMADO ***/
-					Oculto.Value = new ValueType();
-					Oculto.Value.Value = DocDet.OcultarItem.ToString();
-					Property[0] = Oculto;
-					Item.AdditionalItemProperty = Property;
-
-					if (DocDet.DatosMandatario != null)
+					catch (Exception excepcion)
 					{
 
-						PartyType Mandantario = new PartyType();
-						Mandantario.PowerOfAttorney = new PowerOfAttorneyType[1];
-						PowerOfAttorneyType power = new PowerOfAttorneyType();
-						power.AgentParty = new PartyType();
-						power.AgentParty.PartyIdentification = new PartyIdentificationType[1];
-						power.AgentParty.PartyIdentification[0].ID = new IDType();
-						power.AgentParty.PartyIdentification[0].ID.Value = DocDet.DatosMandatario.Identificacion;
-						power.AgentParty.PartyIdentification[0].ID.schemeAgencyID = "195";
-						power.AgentParty.PartyIdentification[0].ID.schemeID = DocDet.DatosMandatario.IdentificacionDv.ToString();
-						power.AgentParty.PartyIdentification[0].ID.schemeName = DocDet.DatosMandatario.TipoIdentificacion.ToString();
-						Mandantario.PowerOfAttorney[0] = power;
-
-						Item.InformationContentProviderParty = Mandantario;
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.creacion, "Item");
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
-
-
-					#region Producto gratuito 
-					// indica que la línea de factura es gratuita (verdadera) o no (falsa)
-					// <cbc:FreeOfChargeIndicator>
-					FreeOfChargeIndicatorType FreeOfChargeIndicator = new FreeOfChargeIndicatorType();
-					FreeOfChargeIndicator.Value = DocDet.ProductoGratis;
-					InvoiceLineType1.FreeOfChargeIndicator = FreeOfChargeIndicator;
-
-					if (DocDet.ProductoGratis == true)
-					{
-						PricingReferenceType Precio = new PricingReferenceType();
-						Precio.AlternativeConditionPrice = new PriceType[1];
-
-						// <fe:Price>
-						PriceType PriceG = new PriceType();
-
-						// <cbc:PriceAmount>
-						PriceAmountType PriceAmountP = new PriceAmountType();
-						PriceAmountP.currencyID = moneda_detalle.ToString();
-						PriceAmountP.Value = decimal.Round((decimal.Round(DocDet.ValorUnitario, 2) > 0) ? decimal.Round(DocDet.ValorUnitario, 2) : (decimal.Round(DocDet.ValorImpuestoConsumo,2) / decimal.Round(DocDet.Cantidad,2)), 2);
-						PriceG.PriceAmount = PriceAmountP;
-
-						//Código del tipo de precio informado ista de valores posibles en 6.3.10 
-						PriceTypeCodeType PriceTypeCode = new PriceTypeCodeType();
-						PriceTypeCode.Value = DocDet.ProductoGratisPrecioRef;
-						PriceG.PriceTypeCode = PriceTypeCode;
-
-						Precio.AlternativeConditionPrice[0] = PriceG;
-						InvoiceLineType1.PricingReference = Precio;
-
-						if (InvoiceLineType1.LineExtensionAmount.Value > 0)
-							InvoiceLineType1.LineExtensionAmount.Value = 0.00M;
-
-					}
-
-					#endregion
-
-					InvoiceLineType1.Item = Item;
 					#endregion
 
 					#region Valor Unitario producto
 					// <fe:Price>
-					PriceType Price = new PriceType();
 
-					// <cbc:PriceAmount>
-
-					PriceAmountType PriceAmount = new PriceAmountType();
-					PriceAmount.currencyID = moneda_detalle.ToString();
-					if (DocDet.ProductoGratis == false)
+					try
 					{
-						PriceAmount.Value = decimal.Round(DocDet.ValorUnitario, 2);
+						PriceType Price = new PriceType();
+
+						// <cbc:PriceAmount>
+
+						PriceAmountType PriceAmount = new PriceAmountType();
+						PriceAmount.currencyID = moneda_detalle.ToString();
+						if (DocDet.ProductoGratis == false)
+						{
+							PriceAmount.Value = decimal.Round(DocDet.ValorUnitario, 2);
+						}
+						else
+						{
+							PriceAmount.Value = decimal.Round(0, 2);
+						}
+						Price.PriceAmount = PriceAmount;
+						//---Segun la base de la unidad utilizada
+						BaseQuantityType BaseQuantity = new BaseQuantityType();
+						BaseQuantity.unitCode = InvoicedQuantity.unitCode;
+						BaseQuantity.Value = decimal.Round(DocDet.Cantidad, 6);
+						Price.BaseQuantity = BaseQuantity;
+
+
+						InvoiceLineType1.Price = Price;
 					}
-					else
+					catch (Exception excepcion)
 					{
-						PriceAmount.Value = decimal.Round(0, 2);
+
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.creacion, "Price");
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
-					Price.PriceAmount = PriceAmount;
-					//---Segun la base de la unidad utilizada
-					BaseQuantityType BaseQuantity = new BaseQuantityType();
-					BaseQuantity.unitCode = InvoicedQuantity.unitCode;
-					BaseQuantity.Value = decimal.Round(DocDet.Cantidad, 6);
-					Price.BaseQuantity = BaseQuantity;
-
-
-					InvoiceLineType1.Price = Price;
 					#endregion
 
 
@@ -1881,6 +1955,7 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
