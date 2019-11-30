@@ -471,8 +471,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 						tercero.Departamento = departamento.Nombre;
 
-					if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
-						throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
+					//if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
+					//	throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
 					ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
 					ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
 					if (codpostal == null)
