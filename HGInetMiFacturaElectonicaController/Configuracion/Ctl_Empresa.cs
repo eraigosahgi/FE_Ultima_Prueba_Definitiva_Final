@@ -126,7 +126,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				//Validación debug versión 1
 				//Fecha.GetFecha()
-				if (DateTime.Now > Convert.ToDateTime("2019-12-02 00:00") && (datos.IntVersionDian==1 && datos.IntDebug==false))
+				if (Fecha.GetFecha() > Convert.ToDateTime("2019-12-02 00:00") && (datos.IntVersionDian==1 && datos.IntDebug != true))
 				{
 					throw new ApplicationException(string.Format("Según la normatividad, el documento debe enviarse a la DIAN por la plataforma de validación previa, por favor verifique su habilitación en la plataforma"));
 				}
