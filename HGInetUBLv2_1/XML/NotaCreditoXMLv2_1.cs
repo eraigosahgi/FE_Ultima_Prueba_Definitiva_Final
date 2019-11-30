@@ -54,10 +54,9 @@ namespace HGInetUBLv2_1
 
 				#region nota_credito.CustomizationID //
 
-				nota_credito.CustomizationID = new CustomizationIDType()
-				{
-					Value = "05"//documento.Prefijo
-				};
+				nota_credito.CustomizationID = new CustomizationIDType();
+				nota_credito.CustomizationID.Value = documento.TipoOperacion.ToString();
+				
 				#endregion
 
 				#region nota_credito.ProfileID //Versión del documento DIAN_UBL.xsd publicado por la DIAN

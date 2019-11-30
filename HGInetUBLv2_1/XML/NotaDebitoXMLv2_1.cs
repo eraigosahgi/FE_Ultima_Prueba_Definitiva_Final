@@ -50,10 +50,8 @@ namespace HGInetUBLv2_1
 
 				#region nota_debito.CustomizationID //
 
-				nota_debito.CustomizationID = new CustomizationIDType()
-				{
-					Value = "05"//documento.Prefijo
-				};
+				nota_debito.CustomizationID = new CustomizationIDType();
+				nota_debito.CustomizationID.Value = documento.TipoOperacion.ToString();
 
 				#endregion
 

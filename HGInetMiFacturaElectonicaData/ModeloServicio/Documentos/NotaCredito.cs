@@ -234,10 +234,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public List<Anticipo> Anticipos { get; set; }
 
-        /// <summary>
-        /// Tipo Operacion del documento ( 0 - Nota Credito, 1 - Contingencia, 2 - Exportacion)
-        /// </summary>
-        public int TipoOperacion { get; set; }
+		/// <summary>
+		/// Tipo Operacion del documento ( 20 - referencia una factura electrónica, 22 - sin referencia a facturas, 23 - facturación electrónica V1 (Decreto 2242) )
+		/// </summary>
+		public int TipoOperacion { get; set; }
 
         /// <summary>
         /// Lista de documentos de referencia adicionales

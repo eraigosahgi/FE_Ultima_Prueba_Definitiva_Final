@@ -392,6 +392,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Se valida en V2 que la factura afectada exista y en que version esta
 				if (facturador_electronico.IntVersionDian == 2)
 				{
+					//aplicarán el conjunto de validaciones correspondiente
+					if (item.TipoOperacion == 0)
+						item.TipoOperacion = 30;
 
 					//valida si el Documento afectado ya existe en Base de Datos
 					List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
@@ -400,30 +403,51 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						DocumentoRespuesta doc_resp = doc_ref.Where(d => d.Cufe.Equals(item.CufeFactura)).FirstOrDefault();
 						if (doc_resp != null)
 						{
-							//Si el documento afectado es diferente a la version de la empresa emisora se cambia para que ese documento lo procese en la version del documento afectado 
-							if (doc_resp.IdVersionDian != facturador_electronico.IntVersionDian)
-								facturadorelec_proceso.IntVersionDian = (short)doc_resp.IdVersionDian;
+							//Si el documento afectado es diferente a la version de la empresa emisora se cambia el tìpo de operacion
+							if (doc_resp.IdVersionDian == 1)
+								item.TipoOperacion = 33;
+							//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
 						}
 						else
 						{
 							doc_resp = doc_ref.Where(d => d.Identificacion.Equals(item.DatosAdquiriente.Identificacion)).FirstOrDefault();
 							if (doc_resp != null)
 							{
-								//Si el documento afectado es diferente a la version de la empresa emisora se cambia para que ese documento lo procese en la version del documento afectado 
-								if (doc_resp.IdVersionDian != facturador_electronico.IntVersionDian)
+								//Si el documento afectado es diferente a la version de la empresa emisora se cambia el tìpo de operacion
+								if (doc_resp.IdVersionDian == 1)
 								{
-									facturadorelec_proceso.IntVersionDian = (short)doc_resp.IdVersionDian;
+									item.TipoOperacion = 33;
 									item.CufeFactura = doc_resp.Cufe;
 								}
+
+								//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
 							}
 							else
-								throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
+							{
+								//si el documento afectado no existe en BD pero lo envian con CUFE cambio el tipo de operacion
+								if (!string.IsNullOrEmpty(item.CufeFactura))
+								{
+									item.TipoOperacion = 33;
+								}
+
+								//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
+								item.TipoOperacion = 32;
+							}
+
+							//throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
 						}
 					}
 					else
 					{
-						throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
+						if (!string.IsNullOrEmpty(item.CufeFactura))
+						{
+							item.TipoOperacion = 33;
+						}
+
+						item.TipoOperacion = 32;
+						//throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
 					}
+
 				}
 
 				try
@@ -552,7 +576,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (documento.FechaFactura == null)
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
 
-			if (string.IsNullOrEmpty(documento.CufeFactura))
+			if (string.IsNullOrEmpty(documento.CufeFactura) && documento.TipoOperacion == 30)
 				throw new ArgumentException("El Cufe de la Factura afectada no esta bien formado");
 
 			//valida resolucion

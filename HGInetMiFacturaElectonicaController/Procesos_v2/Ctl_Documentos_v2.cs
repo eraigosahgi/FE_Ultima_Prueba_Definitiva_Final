@@ -197,8 +197,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//Validacion de Cufe a documento_obj VS el calculado en Plataforma 
 						if ((documento_obj.DocumentoFormato.Codigo == -1) && (!string.IsNullOrEmpty(documento_obj.Cufe)) && (documento_obj.Cufe != documento_result.CUFE))
 						{
-							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Calculo del CUFE no es correcto respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
-							throw new ApplicationException(string.Format("Calculo del CUFE no es correcto respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE));
+							//Se agrega validacion para detectar si es una nota generada de version diferente
+							bool Valida_nota = true;
+
+							if (tipo_doc == TipoDocumento.NotaCredito && documento_obj.TipoOperacion > 20)
+								Valida_nota = false;
+
+							if (tipo_doc == TipoDocumento.NotaDebito && documento_obj.TipoOperacion > 30)
+								Valida_nota = false;
+
+							if (Valida_nota == true)
+							{
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Calculo del CUFE no es correcto respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+								throw new ApplicationException(string.Format("Calculo del CUFE no es correcto respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE));
+							}
+							
 						}
 						else if (documento_obj.DocumentoFormato.Codigo == 99)
 						{
