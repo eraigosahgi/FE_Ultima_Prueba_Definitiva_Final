@@ -23,7 +23,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 	public class Ctl_PlanesTransacciones : BaseObject<TblPlanesTransacciones>
 	{
 
-		
+
 
 		/// <summary>
 		/// Crea los planes transacciones
@@ -683,28 +683,35 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						TblPlanesTransacciones plan = new TblPlanesTransacciones();
 						foreach (var item in listaempresas)
 						{
-
-							if (CerrarplanesPostpago(item.StrIdentificacion))
+							try
 							{
-								plan = new TblPlanesTransacciones();
-								//Se suma un mes al primer dia del mes
-								DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month + 1, 1);
-								//Se resta un dia para que nos de el ultimo dia del mes
-								DateTime FechaVenc = Fecha1.AddDays(-1);
-								//Se coloca la ultima hora y minuto del dia para que pueda seguir enviando documentos el ultimo dias del plan.
-								FechaVenc = new DateTime(FechaVenc.Year, FechaVenc.Month, FechaVenc.Day, 23, 59, 00, 000);
-								plan.DatFecha = Fecha.GetFecha();
-								plan.DatFechaVencimiento = FechaVenc;
-								plan.IntEstado = EstadoPlan.Habilitado.GetHashCode();
-								plan.IntTipoProceso = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
-								plan.StrEmpresaFacturador = item.StrIdentificacion;
-								plan.StrIdSeguridad = Guid.NewGuid();
-								plan.StrEmpresaUsuario = EmpresaCrea;
-								plan.StrUsuario = UsuarioCrea;
-								string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
-								string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
-								plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
-								Crear(plan, Notifica);
+								if (CerrarplanesPostpago(item.StrIdentificacion))
+								{
+									plan = new TblPlanesTransacciones();
+									//Se suma un mes al primer dia del mes
+									DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year , Fecha.GetFecha().Month, 1).AddMonths(1);
+									
+									//Se resta un dia para que nos de el ultimo dia del mes
+									DateTime FechaVenc = Fecha1.AddDays(-1);
+									//Se coloca la ultima hora y minuto del dia para que pueda seguir enviando documentos el ultimo dias del plan.
+									FechaVenc = new DateTime(FechaVenc.Year, FechaVenc.Month, FechaVenc.Day, 23, 59, 00, 000);
+									plan.DatFecha = Fecha.GetFecha();
+									plan.DatFechaVencimiento = FechaVenc;
+									plan.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+									plan.IntTipoProceso = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
+									plan.StrEmpresaFacturador = item.StrIdentificacion;
+									plan.StrIdSeguridad = Guid.NewGuid();
+									plan.StrEmpresaUsuario = EmpresaCrea;
+									plan.StrUsuario = UsuarioCrea;
+									string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
+									string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+									plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
+									Crear(plan, Notifica);
+								}
+							}
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion);
 							}
 						}
 					});
