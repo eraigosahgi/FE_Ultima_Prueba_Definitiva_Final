@@ -265,7 +265,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				});
 
 				////Planes y transacciones
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, documentos.FirstOrDefault().DatosObligado.Identificacion);
 				//throw new ApplicationException(ex.Message);
 
 			}
