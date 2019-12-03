@@ -1003,6 +1003,7 @@ namespace HGInetUBLv2_1
 						PowerOfAttorneyType power = new PowerOfAttorneyType();
 						power.AgentParty = new PartyType();
 						power.AgentParty.PartyIdentification = new PartyIdentificationType[1];
+						power.AgentParty.PartyIdentification[0] = new PartyIdentificationType();
 						power.AgentParty.PartyIdentification[0].ID = new IDType();
 						power.AgentParty.PartyIdentification[0].ID.Value = DocDet.DatosMandatario.Identificacion;
 						power.AgentParty.PartyIdentification[0].ID.schemeAgencyID = "195";

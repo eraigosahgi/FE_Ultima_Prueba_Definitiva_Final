@@ -1031,6 +1031,25 @@ namespace HGInetUBLv2_1
 					Property[0] = Oculto;
 					Item.AdditionalItemProperty = Property;
 
+					if (DocDet.DatosMandatario != null)
+					{
+
+						PartyType Mandantario = new PartyType();
+						Mandantario.PowerOfAttorney = new PowerOfAttorneyType[1];
+						PowerOfAttorneyType power = new PowerOfAttorneyType();
+						power.AgentParty = new PartyType();
+						power.AgentParty.PartyIdentification = new PartyIdentificationType[1];
+						power.AgentParty.PartyIdentification[0] = new PartyIdentificationType();
+						power.AgentParty.PartyIdentification[0].ID = new IDType();
+						power.AgentParty.PartyIdentification[0].ID.Value = DocDet.DatosMandatario.Identificacion;
+						power.AgentParty.PartyIdentification[0].ID.schemeAgencyID = "195";
+						power.AgentParty.PartyIdentification[0].ID.schemeID = DocDet.DatosMandatario.IdentificacionDv.ToString();
+						power.AgentParty.PartyIdentification[0].ID.schemeName = DocDet.DatosMandatario.TipoIdentificacion.ToString();
+						Mandantario.PowerOfAttorney[0] = power;
+
+						Item.InformationContentProviderParty = Mandantario;
+					}
+
 					DebitNoteLine.Item = Item;
 
 					#endregion
