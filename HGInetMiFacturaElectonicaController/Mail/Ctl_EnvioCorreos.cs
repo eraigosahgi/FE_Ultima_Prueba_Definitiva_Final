@@ -520,8 +520,8 @@ namespace HGInetMiFacturaElectonicaController
 
 						bool IdPago = false;
 
-						/*if (documento.TblEmpresasResoluciones != null)
-							IdPago = (documento.TblEmpresasResoluciones.IntComercioId == null) ? false : (documento.TblEmpresasResoluciones.IntComercioId > 0) ? true : false;*/
+						if (documento.TblEmpresasResoluciones != null)
+							IdPago = (documento.TblEmpresasResoluciones.StrComercioConfigId == null) ? false : true;
 
 						if (doc_tipo == TipoDocumento.Factura && IdPago)
 						{
