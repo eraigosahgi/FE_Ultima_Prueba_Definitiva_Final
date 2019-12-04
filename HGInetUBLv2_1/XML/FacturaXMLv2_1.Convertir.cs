@@ -431,35 +431,37 @@ namespace HGInetUBLv2_1
 					}
 					factura_obj.DocumentoDetalles = list_detalle;
 					#endregion
-				}
 
-				#region Totales
-				factura_obj.ValorSubtotal = factura_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
-				factura_obj.Valor = factura_obj.ValorSubtotal + factura_obj.DocumentoDetalles.Sum(b => b.DescuentoValor);
-				if (factura_ubl.LegalMonetaryTotal.AllowanceTotalAmount != null)
-					factura_obj.ValorDescuento = factura_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
-				if (factura_ubl.LegalMonetaryTotal.ChargeTotalAmount != null)
-					factura_obj.ValorCargo = factura_ubl.LegalMonetaryTotal.ChargeTotalAmount.Value;
-				if (factura_ubl.LegalMonetaryTotal.PrepaidAmount != null)
-					factura_obj.ValorAnticipo = factura_ubl.LegalMonetaryTotal.PrepaidAmount.Value;
-				factura_obj.ValorIva = factura_ubl.LegalMonetaryTotal.TaxInclusiveAmount.Value - factura_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
-				factura_obj.Total = factura_ubl.LegalMonetaryTotal.PayableAmount.Value;
 
-				//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
-				if (documento_bd != null)
-				{
-					if (documento_bd.IntValorNeto == 0)
+					#region Totales
+				
+					factura_obj.ValorSubtotal = factura_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
+					factura_obj.Valor = factura_obj.ValorSubtotal + factura_obj.DocumentoDetalles.Sum(b => b.DescuentoValor);
+					if (factura_ubl.LegalMonetaryTotal.AllowanceTotalAmount != null)
+						factura_obj.ValorDescuento = factura_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
+					if (factura_ubl.LegalMonetaryTotal.ChargeTotalAmount != null)
+						factura_obj.ValorCargo = factura_ubl.LegalMonetaryTotal.ChargeTotalAmount.Value;
+					if (factura_ubl.LegalMonetaryTotal.PrepaidAmount != null)
+						factura_obj.ValorAnticipo = factura_ubl.LegalMonetaryTotal.PrepaidAmount.Value;
+					factura_obj.ValorIva = factura_ubl.LegalMonetaryTotal.TaxInclusiveAmount.Value - factura_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
+					factura_obj.Total = factura_ubl.LegalMonetaryTotal.PayableAmount.Value;
+
+					//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
+					if (documento_bd != null)
 					{
-						factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
+						if (documento_bd.IntValorNeto == 0)
+						{
+							factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
+						}
+						else
+						{
+							factura_obj.Neto = documento_bd.IntValorNeto;
+						}
 					}
 					else
 					{
-						factura_obj.Neto = documento_bd.IntValorNeto;
-					}
-				}
-				else
-				{
-					factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
+						factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
+					} 
 				}
 
 				#endregion

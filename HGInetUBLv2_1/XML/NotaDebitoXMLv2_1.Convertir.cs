@@ -255,39 +255,41 @@ namespace HGInetUBLv2_1
 
 					}
 
-				}
-				nota_debito_obj.DocumentoDetalles = list_detalle;
-				#endregion
+		
+					nota_debito_obj.DocumentoDetalles = list_detalle;
+					#endregion
 
-				#region Totales
-				nota_debito_obj.ValorSubtotal = nota_debito_ubl.RequestedMonetaryTotal.LineExtensionAmount.Value;
-				nota_debito_obj.Valor = nota_debito_obj.ValorSubtotal + nota_debito_obj.DocumentoDetalles.Sum(b => b.DescuentoValor);
-				if (nota_debito_ubl.RequestedMonetaryTotal.AllowanceTotalAmount != null)
-					nota_debito_obj.ValorDescuento = nota_debito_ubl.RequestedMonetaryTotal.AllowanceTotalAmount.Value;
-				if (nota_debito_ubl.RequestedMonetaryTotal.ChargeTotalAmount != null)
-					nota_debito_obj.ValorCargo = nota_debito_ubl.RequestedMonetaryTotal.ChargeTotalAmount.Value;
-				if (nota_debito_ubl.RequestedMonetaryTotal.PrepaidAmount != null)
-					nota_debito_obj.ValorAnticipo = nota_debito_ubl.RequestedMonetaryTotal.PrepaidAmount.Value;
-				nota_debito_obj.ValorIva = nota_debito_ubl.RequestedMonetaryTotal.TaxInclusiveAmount.Value - nota_debito_ubl.RequestedMonetaryTotal.LineExtensionAmount.Value;
-				nota_debito_obj.Total = nota_debito_ubl.RequestedMonetaryTotal.PayableAmount.Value;
+					#region Totales
 
-				//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
-				if (documento_bd != null)
-				{
-					if (documento_bd.IntValorNeto == 0)
+					nota_debito_obj.ValorSubtotal = nota_debito_ubl.RequestedMonetaryTotal.LineExtensionAmount.Value;
+					nota_debito_obj.Valor = nota_debito_obj.ValorSubtotal + nota_debito_obj.DocumentoDetalles.Sum(b => b.DescuentoValor);
+					if (nota_debito_ubl.RequestedMonetaryTotal.AllowanceTotalAmount != null)
+						nota_debito_obj.ValorDescuento = nota_debito_ubl.RequestedMonetaryTotal.AllowanceTotalAmount.Value;
+					if (nota_debito_ubl.RequestedMonetaryTotal.ChargeTotalAmount != null)
+						nota_debito_obj.ValorCargo = nota_debito_ubl.RequestedMonetaryTotal.ChargeTotalAmount.Value;
+					if (nota_debito_ubl.RequestedMonetaryTotal.PrepaidAmount != null)
+						nota_debito_obj.ValorAnticipo = nota_debito_ubl.RequestedMonetaryTotal.PrepaidAmount.Value;
+					nota_debito_obj.ValorIva = nota_debito_ubl.RequestedMonetaryTotal.TaxInclusiveAmount.Value - nota_debito_ubl.RequestedMonetaryTotal.LineExtensionAmount.Value;
+					nota_debito_obj.Total = nota_debito_ubl.RequestedMonetaryTotal.PayableAmount.Value;
+
+					//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
+					if (documento_bd != null)
 					{
-						nota_debito_obj.Neto = (nota_debito_obj.Total - (nota_debito_obj.ValorReteFuente + nota_debito_obj.ValorReteIca + nota_debito_obj.ValorReteIva));
+						if (documento_bd.IntValorNeto == 0)
+						{
+							nota_debito_obj.Neto = (nota_debito_obj.Total - (nota_debito_obj.ValorReteFuente + nota_debito_obj.ValorReteIca + nota_debito_obj.ValorReteIva));
+						}
+						else
+						{
+							nota_debito_obj.Neto = documento_bd.IntValorNeto;
+						}
 					}
 					else
 					{
-						nota_debito_obj.Neto = documento_bd.IntValorNeto;
+						nota_debito_obj.Neto = (nota_debito_obj.Total - (nota_debito_obj.ValorReteFuente + nota_debito_obj.ValorReteIca + nota_debito_obj.ValorReteIva));
 					}
+					#endregion 
 				}
-				else
-				{
-					nota_debito_obj.Neto = (nota_debito_obj.Total - (nota_debito_obj.ValorReteFuente + nota_debito_obj.ValorReteIca + nota_debito_obj.ValorReteIva));
-				}
-				#endregion
 
 
 				return nota_debito_obj;

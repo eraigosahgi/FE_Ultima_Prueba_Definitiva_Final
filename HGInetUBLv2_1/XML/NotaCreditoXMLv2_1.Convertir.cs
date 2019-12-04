@@ -261,39 +261,41 @@ namespace HGInetUBLv2_1
 
 					}
 
-				}
-				nota_credito_obj.DocumentoDetalles = list_detalle;
-				#endregion
+				
+					nota_credito_obj.DocumentoDetalles = list_detalle;
+					#endregion
 
-				#region Totales
-				nota_credito_obj.ValorSubtotal = nota_credito_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
-				nota_credito_obj.Valor = nota_credito_obj.ValorSubtotal + nota_credito_obj.DocumentoDetalles.Sum(b => b.DescuentoValor);
-				if (nota_credito_ubl.LegalMonetaryTotal.AllowanceTotalAmount != null)
-					nota_credito_obj.ValorDescuento = nota_credito_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
-				if (nota_credito_ubl.LegalMonetaryTotal.ChargeTotalAmount != null)
-					nota_credito_obj.ValorCargo = nota_credito_ubl.LegalMonetaryTotal.ChargeTotalAmount.Value;
-				if (nota_credito_ubl.LegalMonetaryTotal.PrepaidAmount != null)
-					nota_credito_obj.ValorAnticipo = nota_credito_ubl.LegalMonetaryTotal.PrepaidAmount.Value;
-				nota_credito_obj.ValorIva = nota_credito_ubl.LegalMonetaryTotal.TaxInclusiveAmount.Value - nota_credito_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
-				nota_credito_obj.Total = nota_credito_ubl.LegalMonetaryTotal.PayableAmount.Value;
+				
+					#region Totales
+					nota_credito_obj.ValorSubtotal = nota_credito_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
+					nota_credito_obj.Valor = nota_credito_obj.ValorSubtotal + nota_credito_obj.DocumentoDetalles.Sum(b => b.DescuentoValor);
+					if (nota_credito_ubl.LegalMonetaryTotal.AllowanceTotalAmount != null)
+						nota_credito_obj.ValorDescuento = nota_credito_ubl.LegalMonetaryTotal.AllowanceTotalAmount.Value;
+					if (nota_credito_ubl.LegalMonetaryTotal.ChargeTotalAmount != null)
+						nota_credito_obj.ValorCargo = nota_credito_ubl.LegalMonetaryTotal.ChargeTotalAmount.Value;
+					if (nota_credito_ubl.LegalMonetaryTotal.PrepaidAmount != null)
+						nota_credito_obj.ValorAnticipo = nota_credito_ubl.LegalMonetaryTotal.PrepaidAmount.Value;
+					nota_credito_obj.ValorIva = nota_credito_ubl.LegalMonetaryTotal.TaxInclusiveAmount.Value - nota_credito_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
+					nota_credito_obj.Total = nota_credito_ubl.LegalMonetaryTotal.PayableAmount.Value;
 
-				//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
-				if (documento_bd != null)
-				{
-					if (documento_bd.IntValorNeto == 0)
+					//Se agrega validacion si ya se habia guardado el neto en Bd para utilizarlo o si no que sea el calculado
+					if (documento_bd != null)
 					{
-						nota_credito_obj.Neto = (nota_credito_obj.Total - (nota_credito_obj.ValorReteFuente + nota_credito_obj.ValorReteIca + nota_credito_obj.ValorReteIva));
+						if (documento_bd.IntValorNeto == 0)
+						{
+							nota_credito_obj.Neto = (nota_credito_obj.Total - (nota_credito_obj.ValorReteFuente + nota_credito_obj.ValorReteIca + nota_credito_obj.ValorReteIva));
+						}
+						else
+						{
+							nota_credito_obj.Neto = documento_bd.IntValorNeto;
+						}
 					}
 					else
 					{
-						nota_credito_obj.Neto = documento_bd.IntValorNeto;
+						nota_credito_obj.Neto = (nota_credito_obj.Total - (nota_credito_obj.ValorReteFuente + nota_credito_obj.ValorReteIca + nota_credito_obj.ValorReteIva));
 					}
+					#endregion 
 				}
-				else
-				{
-					nota_credito_obj.Neto = (nota_credito_obj.Total - (nota_credito_obj.ValorReteFuente + nota_credito_obj.ValorReteIca + nota_credito_obj.ValorReteIva));
-				}
-				#endregion
 
 
 				return nota_credito_obj;
