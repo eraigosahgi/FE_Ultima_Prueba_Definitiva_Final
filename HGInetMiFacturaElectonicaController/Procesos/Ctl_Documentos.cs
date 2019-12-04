@@ -723,25 +723,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (documento.Anticipos.Count > 0 && documento.ValorAnticipo != 0)
 						{
 							List<Anticipo> list_ant = documento.Anticipos;
+							Anticipo anticipo = new Anticipo();
 							if (!list_ant.Sum(v => v.Valor).Equals(documento.ValorAnticipo))
 							{
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria de los Anticipos con valor {2}", "ValorAnticipo", documento.ValorAnticipo, list_ant.Sum(v => v.Valor)));
 							}
 							else
 							{
-								Anticipo anticipo = new Anticipo();
 								anticipo = list_ant.Where(d => string.IsNullOrEmpty(d.Codigo)).FirstOrDefault();
 								if (anticipo != null)
 								{
 									throw new ApplicationException(string.Format("El identificador del {0} no está bien formado", "Anticipo"));
 								}
-							}
 
-							if (documento.ValorAnticipo > documento.ValorSubtotal)
-							{
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "ValorAnticipo", documento.ValorAnticipo));
+								anticipo = list_ant.Where(c => c.Valor > documento.ValorSubtotal).FirstOrDefault();
+								if (anticipo != null)
+								{
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "ValorAnticipo", anticipo.Valor));
+								}
 							}
-
 						}
 						else if (documento.Anticipos.Count >= 0 && documento.ValorAnticipo == 0)
 						{
@@ -806,7 +806,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									throw new ApplicationException("El porcentaje del campo Cargo no puede ser mayor a 100");
 								}
 
-								cargo = list_cargo.Find(d => d.Valor > documento.ValorSubtotal);
+								cargo = list_cargo.Where(d => d.Valor > documento.ValorSubtotal).FirstOrDefault();
 								if (cargo != null)
 								{
 									throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
@@ -882,7 +882,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 									if (item.Valor > documento.ValorSubtotal)
 									{
-										throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+										throw new ApplicationException("El Valor del campo Descuento no puede ser mayor al Subtotal del documento");
 									}
 								}
 							}
