@@ -318,7 +318,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
 								string msg_excepcion = Excepcion.Mensaje(excepcion);
 
-								if (!msg_excepcion.ToLowerInvariant().Contains("insert duplicate key") || !msg_excepcion.ToLowerInvariant().Contains("insertar una clave duplicada"))
+								if (!msg_excepcion.ToLowerInvariant().Contains("insert duplicate key") && !msg_excepcion.ToLowerInvariant().Contains("insertar una clave duplicada"))
 									throw excepcion;
 								else
 									adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);

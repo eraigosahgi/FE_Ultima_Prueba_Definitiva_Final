@@ -161,7 +161,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					string msg_excepcion = Excepcion.Mensaje(excepcion);
 
-					if (!msg_excepcion.ToLowerInvariant().Contains("insert duplicate key") || !msg_excepcion.ToLowerInvariant().Contains("insertar una clave duplicada"))
+					if (!msg_excepcion.ToLowerInvariant().Contains("insert duplicate key") && !msg_excepcion.ToLowerInvariant().Contains("insertar una clave duplicada"))
 						throw excepcion;
 					else
 						adquiriente_nuevo = false;
