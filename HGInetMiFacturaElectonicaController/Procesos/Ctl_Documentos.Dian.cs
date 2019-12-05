@@ -384,9 +384,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							estado = CategoriaEstado.FallidoDian.GetHashCode();
 						}
 
-						//Si la respuesta es de V2 y llego con errores alerto para validar
-						if (list_errormsg != null)
+						//Se agrega validacion para que no notifique si salen estas dos reglas, son de la DIAN y no la arreglan aun
+						bool alert = true;
+						if ((list_errormsg.Count == 1) && ((resultado_doc.Mensaje.Contains("FAB10b")) || (resultado_doc.Mensaje.Contains("FAJ39"))))
 						{
+							alert = false;
+						}
+
+						//Si la respuesta es de V2 y llego con errores alerto para validar
+						if ((list_errormsg != null) && (alert == true)) 
+						{
+
 							MensajeCategoria log_categoria = MensajeCategoria.Servicio;
 							MensajeAccion log_accion = MensajeAccion.alarma;
 							try
