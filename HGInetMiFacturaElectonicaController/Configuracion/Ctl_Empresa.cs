@@ -131,6 +131,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					throw new ApplicationException(string.Format("Según la normatividad, el documento debe enviarse a la DIAN por la plataforma de validación previa, por favor verifique su habilitación en la plataforma"));
 				}
 
+				if (datos.IntCertFirma == 1 && string.IsNullOrEmpty(datos.StrCertClave))
+				{
+					throw new ApplicationException(string.Format("El Facturador con la identificación {0} no cuenta con un certificado digital.", identificacion_obligado));
+				}
+
 				string datakey_construido = datos.StrSerial.ToString() + datos.StrIdentificacion.ToString();
 				string datakey_encriptado_Sha1 = LibreriaGlobalHGInet.General.Encriptar.Encriptar_SHA1(datakey_construido);
 
