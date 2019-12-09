@@ -1,7 +1,4 @@
-﻿using HGInetMiFacturaElectonicaData.Enumerables;
-using HGInetMiFacturaElectronicaAudit.Controladores;
-using HGInetMiFacturaElectronicaAudit.Modelo;
-using LibreriaGlobalHGInet.Funciones;
+﻿using HGInetMiFacturaElectronicaAudit.Modelo;
 using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
@@ -9,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HGInetMiFacturaElectonicaController.Auditorias
+namespace HGInetMiFacturaElectronicaAudit.Controladores
 {
-	public class Ctl_FormatosAudit
+	
+	public class Srv_FormatosAudit
 	{
+		FEHGIAuditoria db = new FEHGIAuditoria();
 
 		/// <summary>
 		/// Inserta el regeistro de auditoria en la base de datos.
@@ -22,11 +21,10 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		public TblAuditFormatos Crear(TblAuditFormatos datos)
 		{
 			try
-			{
-				Srv_FormatosAudit Srv = new Srv_FormatosAudit();
-
-				Srv.Crear(datos);
-
+			{				
+				db.Set<TblAuditFormatos>().Add(datos);
+				db.SaveChanges();
+			
 				return datos;
 			}
 			catch (Exception excepcion)
@@ -36,44 +34,6 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			}
 		}
 
-
-		/// <summary>
-		/// Realiza la construcción e inserción de datos.
-		/// </summary>
-		/// <param name="codigo_formato"></param>
-		/// <param name="identificacion_empresa"></param>
-		/// <param name="id_seguridad_formato"></param>
-		/// <param name="tipo_proceso"></param>
-		/// <param name="id_seguridad_usuario"></param>
-		/// <param name="observaciones"></param>
-		/// <returns></returns>
-		public TblAuditFormatos Crear(int codigo_formato, string identificacion_empresa, Guid id_seguridad_formato, TiposProceso tipo_proceso, Guid id_seguridad_usuario, string observaciones)
-		{
-			try
-			{
-				//Constuye el objeto para crear.
-				TblAuditFormatos datos = new TblAuditFormatos()
-				{
-					Id = Guid.NewGuid(),
-					IntCodigoFormato = codigo_formato,
-					StrEmpresa = identificacion_empresa,
-					StrIdSeguridad = id_seguridad_formato,
-					IntTipoProceso = tipo_proceso.GetHashCode(),
-					StrUsuarioProceso = id_seguridad_usuario.ToString(),
-					DatFechaProceso = Fecha.GetFecha(),
-					StrObservaciones = observaciones
-				};
-
-				datos = Crear(datos);
-
-				return datos;
-			}
-			catch (Exception excepcion)
-			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
 
 		/// <summary>
 		/// Obtiene los datos de la auditoría por código de formato y empresa
@@ -85,8 +45,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		{
 			try
 			{
-				Srv_FormatosAudit Srv = new Srv_FormatosAudit();
-				List<TblAuditFormatos> registros_audit = Srv.Obtener(codigo_formato, identificacion_empresa);
+				List<TblAuditFormatos> registros_audit = db.TblAuditFormatos.Where(x => x.IntCodigoFormato == codigo_formato && x.StrEmpresa.Equals(identificacion_empresa)).ToList();
 
 				return registros_audit.OrderByDescending(x => x.DatFechaProceso).ToList();
 			}
@@ -109,8 +68,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		{
 			try
 			{
-				Srv_FormatosAudit Srv = new Srv_FormatosAudit();
-				List<TblAuditFormatos> registros_audit = Srv.Obtener(codigo_formato, identificacion_empresa, tipo_proceso);
+				List<TblAuditFormatos> registros_audit = db.TblAuditFormatos.Where(x => x.IntCodigoFormato == codigo_formato && x.StrEmpresa.Equals(identificacion_empresa) && x.IntTipoProceso == tipo_proceso).ToList();
 
 				return registros_audit.OrderByDescending(x => x.DatFechaProceso).ToList();
 			}
@@ -120,6 +78,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
 
 
 	}

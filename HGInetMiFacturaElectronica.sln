@@ -270,6 +270,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso511728", "Caso511728", 
 		Documentacion\Liberaciones\Caso511728\CambiosPagosEnLinea.txt = Documentacion\Liberaciones\Caso511728\CambiosPagosEnLinea.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectronicaAudit", "HGInetMiFacturaElectronicaAudit\HGInetMiFacturaElectronicaAudit.csproj", "{B044D0CE-3B14-4D09-B22B-6183269E6ACF}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -394,6 +396,14 @@ Global
 		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|x86.Build.0 = Release|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Debug|x86.Build.0 = Debug|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|x86.ActiveCfg = Release|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

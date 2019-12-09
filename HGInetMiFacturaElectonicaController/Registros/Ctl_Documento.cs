@@ -350,6 +350,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
 							 orderby datos.IntNumero descending
 							 select datos).ToList();
+
+			
 			}
 			else
 			{
@@ -770,7 +772,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				if (!facturador_electronico.IntObligado)
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
-					
+
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
@@ -780,12 +782,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					ambiente_dian = "1";
 				else
 					ambiente_dian = "2";
-					
+
 				//Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
 				foreach (DocumentoCufe item in documentos)
 				{
 					try
-					{	
+					{
 						// valida la versión del documento electrónico
 						if (item.IdVersionDian != 2)
 							throw new ApplicationException(string.Format("No se encuentra disponible el cálculo para la versión {0} indicada.", item.IdVersionDian));
@@ -797,36 +799,36 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							// Factura
 							case 1:
 
-								if(item.IdVersionDian == 2)
+								if (item.IdVersionDian == 2)
 									item.Cufe = Ctl_CalculoCufe.CufeFacturaV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
 
 								break;
-							
+
 							// Nota Crédito
 							case 3:
 								if (item.IdVersionDian == 2)
+								{
+									//Para las notas no se usa clave tecnica si no el pin del software
+									DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+									item.ClaveTecnica = data_dian.Pin;
+									if (ambiente_dian.Equals("2") && facturador_electronico.StrIdentificacion.Equals("811021438"))
 									{
-										//Para las notas no se usa clave tecnica si no el pin del software
-										DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
-										item.ClaveTecnica = data_dian.Pin;
-										if (ambiente_dian.Equals("2") && facturador_electronico.StrIdentificacion.Equals("811021438"))
-										{
-											DianProveedor data_dian_hab = HgiConfiguracion.GetConfiguration().DianProveedor;
-											item.ClaveTecnica = data_dian_hab.Pin;
-										}
-										item.Cufe = Ctl_CalculoCufe.CufeNotaCreditoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
+										DianProveedor data_dian_hab = HgiConfiguracion.GetConfiguration().DianProveedor;
+										item.ClaveTecnica = data_dian_hab.Pin;
 									}
+									item.Cufe = Ctl_CalculoCufe.CufeNotaCreditoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
+								}
 								break;
 
 							// Nota Débito
 							case 2:
 								if (item.IdVersionDian == 2)
-									{
-										//Para las notas no se usa clave tecnica si no el pin del software
-										DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
-										item.ClaveTecnica = data_dian.Pin;
-										item.Cufe = Ctl_CalculoCufe.CufeNotaDebitoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
-									}
+								{
+									//Para las notas no se usa clave tecnica si no el pin del software
+									DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+									item.ClaveTecnica = data_dian.Pin;
+									item.Cufe = Ctl_CalculoCufe.CufeNotaDebitoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
+								}
 								break;
 
 							default:
@@ -836,7 +838,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						// obtiene el código QR
 						item.QR = Ctl_CalculoCufe.ObtenerQR(item.DocumentoTipo, item.Prefijo, item.Documento, item.Fecha, item.IdentificacionObligado, item.IdentificacionAdquiriente, item.ValorSubtotal, item.ValorIva, item.ValorImpuestoConsumo, item.Total, item.Cufe);
-						
+
 
 					}
 					catch (Exception excepcion)
@@ -2287,7 +2289,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					{
 						documento_obj = documento_ser.DatosFactura;
 					}
-					else if(doc.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+					else if (doc.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
 					{
 						documento_obj = documento_ser.DatosNotaCredito;
 					}
@@ -2301,7 +2303,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					documento_obj = documento;
 				}
 
-				
+
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
@@ -2355,7 +2357,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			catch (Exception excepcion)
 			{
 				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
-				
+
 				throw excepcion;
 			}
 

@@ -4,7 +4,8 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
-using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
+using HGInetMiFacturaElectronicaAudit.Controladores;
+using HGInetMiFacturaElectronicaAudit.Modelo;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
@@ -20,11 +21,11 @@ using System.Threading.Tasks;
 namespace HGInetMiFacturaElectonicaController.Auditorias
 {
 
-	public class Ctl_DocumentosAudit : MongoDBContext<TblAuditDocumentos>
+	public class Ctl_DocumentosAudit //: MongoDBContext<TblAuditDocumentos>
 	{
 		#region Constructores 
 
-		public Ctl_DocumentosAudit() : base(new ModeloAutenticacion(Motores.MongoDB)) { }
+		//public Ctl_DocumentosAudit() : base(new ModeloAutenticacion(Motores.MongoDB)) { }
 
 		#endregion
 
@@ -34,15 +35,13 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// </summary>
 		/// <param name="datos">datos del registro.</param>
 		/// <returns></returns>
-		private TblAuditDocumentos Crear(TblAuditDocumentos datos)
+		public TblAuditDocumentos Crear(TblAuditDocumentos datos)
 		{
 			try
 			{
-				var data = this.Insert(datos);
-
-				if (data.Exception != null)
-					throw new ApplicationException(data.Exception.Message, data.Exception.InnerException);
-
+				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
+				var data = Srv.Crear(datos);
+			
 				return datos;
 			}
 			catch (Exception excepcion)
@@ -71,9 +70,10 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		{
 			try
 			{
-				TblAuditDocumentos datos = new HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos.TblAuditDocumentos()
+				TblAuditDocumentos datos = new TblAuditDocumentos()
 				{
-					StrIdSeguridad = id_seguridad_doc.ToString(),
+					Id = Guid.NewGuid(),
+					StrIdSeguridad = id_seguridad_doc,
 					StrIdPeticion = id_peticion.ToString(),
 					DatFecha = Fecha.GetFecha(),
 					StrObligado = facturador,
@@ -119,14 +119,15 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			{
 				List<TblAuditDocumentos> respuesta_auditoria = new List<TblAuditDocumentos>();
 
-				TblAuditDocumentos datos = new HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos.TblAuditDocumentos();
+				TblAuditDocumentos datos = new TblAuditDocumentos();
 
 				foreach (var item in respuestas_email)
 				{
 					foreach (var data in item.Data)
 					{
-						datos = new HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos.TblAuditDocumentos();
-						datos.StrIdSeguridad = id_seguridad_doc.ToString();
+						datos = new TblAuditDocumentos();
+						datos.Id = Guid.NewGuid();
+						datos.StrIdSeguridad = id_seguridad_doc;
 						datos.StrIdPeticion = id_peticion.ToString();
 						datos.DatFecha = Fecha.GetFecha();
 						datos.StrObligado = facturador;
@@ -161,7 +162,8 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		{
 			try
 			{
-				List<TblAuditDocumentos> registros_audit = this.GetAllToList;
+				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
+				List<TblAuditDocumentos> registros_audit = Srv.ObtenerTodos();
 
 				return registros_audit;
 			}
@@ -181,7 +183,8 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		{
 			try
 			{
-				List<TblAuditDocumentos> registros_audit = this.GetFilter(x => (x.StrIdSeguridad.Equals(id_seguridad_doc) || id_seguridad_doc.Equals("*")) && (x.StrObligado.Equals(identificacion_obligado) || identificacion_obligado.Equals("*")));
+				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
+				List<TblAuditDocumentos> registros_audit = Srv.Obtener(id_seguridad_doc, identificacion_obligado);
 
 				return registros_audit;
 			}
@@ -209,58 +212,29 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		{
 			try
 			{
+				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
 
-				fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
-
-				if (string.IsNullOrEmpty(numero_documento))
-					numero_documento = "*";
-
-				if (string.IsNullOrEmpty(identificacion_obligado))
-					identificacion_obligado = "*";
-
-				List<int> ListIntEstado = new List<int>();
-				if (string.IsNullOrEmpty(estado))
-					estado = "*";
-
-				else if (estado != "*")
-					ListIntEstado = Coleccion.ConvertirStringInt(estado);
-
-				List<int> ListProceso = new List<int>();
-				if (string.IsNullOrEmpty(proceso))
-					proceso = "*";
-				else if (proceso != "*")
-					ListProceso = Coleccion.ConvertirStringInt(proceso);
-
-				List<int> ListProcedencia = new List<int>();
-				if (string.IsNullOrEmpty(procedencia))
-					procedencia = "*";
-				else if (procedencia != "*")
-					ListProcedencia = Coleccion.ConvertirStringInt(procedencia);
-
-				List<int> ListTipoReg = new List<int>();
-				if (string.IsNullOrEmpty(tipo_registro))
-					tipo_registro = "*";
-				else if(tipo_registro != "*")
-					ListTipoReg = Coleccion.ConvertirStringInt(tipo_registro);
-				
-
-
-				List<TblAuditDocumentos> registros_audit = this.GetFilter(x => (x.StrNumero.Equals(numero_documento) || numero_documento.Equals("*"))
-															&& (x.StrObligado.Equals(identificacion_obligado) || identificacion_obligado.Equals("*"))
-															&& (x.DatFecha >= fecha_inicio.Date && x.DatFecha <= fecha_fin)
-															&& (ListIntEstado.Contains(x.IntIdEstado) || estado.Equals("*"))
-															&& (ListProceso.Contains(x.IntIdProceso) || proceso.Equals("*"))
-															&& (ListTipoReg.Contains(x.IntTipoRegistro) || tipo_registro.Equals("*"))
-															&& (ListProcedencia.Contains(x.IntIdProcesadoPor) || procedencia.Equals("*"))
-															).OrderByDescending(x => x.DatFecha).Skip(Desde).Take(Hasta).ToList();
-
-			return registros_audit;
+				List<TblAuditDocumentos> registros_audit = Srv.Obtener(numero_documento,  identificacion_obligado, fecha_inicio,fecha_fin, estado, proceso,tipo_registro, procedencia,  Desde,Hasta);
+				return registros_audit;
 			}
 			catch (Exception excepcion)
 			{
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+
+		//public List<TblAuditDocumentos> Obtener(DateTime fecha_inicio, DateTime fecha_fin)
+		//{
+
+		//	Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
+		//	List<TblAuditDocumentos> registros_audit = this.GetFilter(x=> x.DatFecha >= fecha_fin).ToList();
+
+		//	return registros_audit;
+
+		//}
+
+
 
 
 		#region Sonda de Email
@@ -273,7 +247,10 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		{
 			try
 			{
-				List<TblAuditDocumentos> ListaEmail = this.GetFilter(x => (x.StrIdSeguridad.Equals(IdSeguridad)) && (x.IntIdProceso.Equals(8))).OrderBy(x=> x.DatFecha).ToList();				
+
+				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
+
+				List<TblAuditDocumentos> ListaEmail = Srv.ObtenerDocumentoMail(IdSeguridad).ToList();				
 				MensajeResumen datos_retorno = new MensajeResumen();
 
 				MensajeValidarEmail MailPlataforma = new MensajeValidarEmail();
@@ -333,12 +310,13 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// </summary>
 		/// <param name="IdSeguridad">identificador unico del documento en la plataforma</param>
 		/// <returns></returns>
-		public List<TblAuditDocumentos> ObtenerDocumentoMail(string IdSeguridad)
+		public List<TblAuditDocumentos> ObtenerDocumentoMail(Guid IdSeguridad)
 		{
 
 			try
 			{
-				List<TblAuditDocumentos> ListaEmail = this.GetFilter(x => (x.StrIdSeguridad.Equals(IdSeguridad)) && (x.IntIdProceso.Equals(8))).OrderBy(x => x.DatFecha).ToList();
+				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
+				List<TblAuditDocumentos> ListaEmail = Srv.ObtenerDocumentoMail(IdSeguridad).ToList();
 
 				return ListaEmail;
 			}
@@ -347,9 +325,5 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
-
-
-
-
 	}
 }

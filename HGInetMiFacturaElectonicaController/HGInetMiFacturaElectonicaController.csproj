@@ -104,6 +104,9 @@
     <Compile Include="Auditorias\Ctl_AlertasHistAudit.cs" />
     <Compile Include="Auditorias\Ctl_DocumentosAudit.cs" />
     <Compile Include="Auditorias\Ctl_FormatosAudit.cs" />
+    <Compile Include="Auditorias\MigracionAuditoria\Ctl_AuditoriaDocumentos.cs" />
+    <Compile Include="Auditorias\MigracionAuditoria\Ctl_AuditoriaFormatos.cs" />
+    <Compile Include="Auditorias\MigracionAuditoria\Ctl_AuditoriaNotificaciones.cs" />
     <Compile Include="Configuracion\Ctl_Alertas.cs" />
     <Compile Include="Configuracion\Ctl_ConfiguracionInteroperabilidad.cs" />
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
@@ -176,6 +179,10 @@
     <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
       <Name>HGInetMiFacturaElectonicaData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetMiFacturaElectronicaAudit\HGInetMiFacturaElectronicaAudit.csproj">
+      <Project>{B044D0CE-3B14-4D09-B22B-6183269E6ACF}</Project>
+      <Name>HGInetMiFacturaElectronicaAudit</Name>
     </ProjectReference>
     <ProjectReference Include="..\HGInetUBLv2_1\HGInetUBLv2_1.csproj">
       <Project>{3782ec8b-12e6-44c9-a31b-9eb4ec7755ac}</Project>

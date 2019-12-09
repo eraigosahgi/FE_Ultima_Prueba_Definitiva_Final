@@ -5,7 +5,7 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
-using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
+using HGInetMiFacturaElectronicaAudit.Modelo;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Objetos;
@@ -54,7 +54,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					StrIdSeguridad = d.StrIdSeguridad,
 					StrIdPeticion = d.StrIdPeticion,
-					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
+					DatFecha = d.DatFecha.ToString("yyyy-MM-dd HH:mm:ss.fff"),
 					StrObligado = d.StrObligado,
 					IntIdEstado = d.IntIdEstado,
 					StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(d.IntIdEstado)),
@@ -161,8 +161,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				var datos_retorno = datos_audit.Select(d => new
 				{
 					Firma = d.Id,
-					StrIdSeguridad = ((d.StrIdSeguridad != null)) ? d.StrIdSeguridad : "",
-					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
+					StrIdSeguridad = ((d.StrIdSeguridad != null)) ? d.StrIdSeguridad.ToString() : "",
+					DatFecha = d.DatFecha.ToString("yyyy-MM-dd HH:mm:ss.fff"),
 					StrObligado = (string.IsNullOrEmpty(d.StrObligado) ? null : d.StrObligado),
 					IntIdEstado = d.IntIdEstado,
 					StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(d.IntIdEstado)),
@@ -203,7 +203,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Sesion.ValidarSesion();
 
-				Ctl_FormatosAudit clase_audit_doc = new Ctl_FormatosAudit();
+				HGInetMiFacturaElectonicaController.Auditorias.Ctl_FormatosAudit clase_audit_doc = new HGInetMiFacturaElectonicaController.Auditorias.Ctl_FormatosAudit();
 
 				//Realiza la consulta de los datos en la base de datos.
 				List<TblAuditFormatos> datos_audit = clase_audit_doc.Obtener(codigo_formato, identificacion_empresa);
@@ -215,7 +215,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var datos_retorno = datos_audit.Select(d => new
 				{
-					DatFechaProceso = d.DatFechaProceso.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
+					DatFechaProceso = d.DatFechaProceso.ToString("yyyy-MM-dd HH:mm:ss.fff"),
 					d.IntCodigoFormato,
 					d.IntTipoProceso,
 					StrProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(d.IntTipoProceso)),
@@ -227,6 +227,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}).ToList();
 
 				return Ok(datos_retorno);
+				
 			}
 			catch (Exception excepcion)
 			{
@@ -251,7 +252,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
 
 				//Realiza la consulta de los datos en la base de datos.
-				List<TblAuditDocumentos> ListaEmail = clase_audit_doc.ObtenerDocumentoMail(id_seguridad_doc);
+				List<TblAuditDocumentos> ListaEmail = clase_audit_doc.ObtenerDocumentoMail(Guid.Parse(id_seguridad_doc));
 
 				if (ListaEmail == null)
 				{
@@ -267,7 +268,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					StrIdSeguridad = d.StrIdSeguridad,
 					StrIdPeticion = d.StrIdPeticion,
-					DatFecha = d.DatFecha.AddHours(-5).ToString("yyyy-MM-dd HH:mm:ss.fff"),
+					DatFecha = d.DatFecha.ToString("yyyy-MM-dd HH:mm:ss.fff"),
 					StrObligado = d.StrObligado,
 					IntIdEstado = d.IntIdEstado,
 					StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(d.IntIdEstado)),

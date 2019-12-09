@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HGIAuditoriaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="TblAuditDocumentos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StrIdPeticion" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DatFecha" Type="datetime" Nullable="false" />
+          <Property Name="StrObligado" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IntIdEstado" Type="int" Nullable="false" />
+          <Property Name="IntIdProceso" Type="int" Nullable="false" />
+          <Property Name="IntTipoRegistro" Type="int" Nullable="false" />
+          <Property Name="IntIdProcesadoPor" Type="int" Nullable="false" />
+          <Property Name="StrRealizadoPor" Type="nvarchar" MaxLength="50" />
+          <Property Name="StrMensaje" Type="nvarchar(max)" />
+          <Property Name="StrResultadoProceso" Type="nvarchar(max)" />
+          <Property Name="StrPrefijo" Type="nvarchar" MaxLength="50" />
+          <Property Name="StrNumero" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TblAuditFormatos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IntCodigoFormato" Type="int" Nullable="false" />
+          <Property Name="StrEmpresa" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IntTipoProceso" Type="int" Nullable="false" />
+          <Property Name="StrUsuarioProceso" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DatFechaProceso" Type="datetime" Nullable="false" />
+          <Property Name="StrObservaciones" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="TblSeguimientoAlertas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DatFecha" Type="datetime" Nullable="false" />
+          <Property Name="IntIdTipo" Type="int" Nullable="false" />
+          <Property Name="IntIdAlerta" Type="int" Nullable="false" />
+          <Property Name="StrIdSeguridadEmpresa" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StrIdentificacion" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IntIdEstado" Type="int" Nullable="false" />
+          <Property Name="StrMensaje" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="StrResultadoProceso" Type="nvarchar(max)" />
+          <Property Name="StrIdSeguridadPlan" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="HGIAuditoriaModelStoreContainer">
+          <EntitySet Name="TblAuditDocumentos" EntityType="Self.TblAuditDocumentos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblAuditFormatos" EntityType="Self.TblAuditFormatos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblSeguimientoAlertas" EntityType="Self.TblSeguimientoAlertas" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HGIAuditoriaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="FEHGIAuditoria" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="TblSeguimientoAlertas" EntityType="HGIAuditoriaModel.TblSeguimientoAlertas" />
+          <EntitySet Name="TblAuditDocumentos" EntityType="HGIAuditoriaModel.TblAuditDocumentos" />
+          <EntitySet Name="TblAuditFormatos" EntityType="HGIAuditoriaModel.TblAuditFormatos" />
+        </EntityContainer>
+        <EntityType Name="TblSeguimientoAlertas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IntIdTipo" Type="Int32" Nullable="false" />
+          <Property Name="IntIdAlerta" Type="Int32" Nullable="false" />
+          <Property Name="StrIdSeguridadEmpresa" Type="Guid" Nullable="false" />
+          <Property Name="StrIdentificacion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IntIdEstado" Type="Int32" Nullable="false" />
+          <Property Name="StrMensaje" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrResultadoProceso" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrIdSeguridadPlan" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TblAuditDocumentos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <Property Name="StrIdPeticion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StrObligado" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IntIdEstado" Type="Int32" Nullable="false" />
+          <Property Name="IntIdProceso" Type="Int32" Nullable="false" />
+          <Property Name="IntTipoRegistro" Type="Int32" Nullable="false" />
+          <Property Name="IntIdProcesadoPor" Type="Int32" Nullable="false" />
+          <Property Name="StrRealizadoPor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StrMensaje" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrResultadoProceso" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrPrefijo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StrNumero" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TblAuditFormatos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="IntCodigoFormato" Type="Int32" Nullable="false" />
+          <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <Property Name="IntTipoProceso" Type="Int32" Nullable="false" />
+          <Property Name="StrUsuarioProceso" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DatFechaProceso" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StrObservaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HGIAuditoriaModelStoreContainer" CdmEntityContainer="FEHGIAuditoria">
+          <EntitySetMapping Name="TblSeguimientoAlertas">
+            <EntityTypeMapping TypeName="HGIAuditoriaModel.TblSeguimientoAlertas">
+              <MappingFragment StoreEntitySet="TblSeguimientoAlertas">
+                <ScalarProperty Name="StrIdSeguridadPlan" ColumnName="StrIdSeguridadPlan" />
+                <ScalarProperty Name="StrResultadoProceso" ColumnName="StrResultadoProceso" />
+                <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
+                <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+                <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+                <ScalarProperty Name="StrIdSeguridadEmpresa" ColumnName="StrIdSeguridadEmpresa" />
+                <ScalarProperty Name="IntIdAlerta" ColumnName="IntIdAlerta" />
+                <ScalarProperty Name="IntIdTipo" ColumnName="IntIdTipo" />
+                <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblAuditDocumentos">
+            <EntityTypeMapping TypeName="HGIAuditoriaModel.TblAuditDocumentos">
+              <MappingFragment StoreEntitySet="TblAuditDocumentos">
+                <ScalarProperty Name="StrNumero" ColumnName="StrNumero" />
+                <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+                <ScalarProperty Name="StrResultadoProceso" ColumnName="StrResultadoProceso" />
+                <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
+                <ScalarProperty Name="StrRealizadoPor" ColumnName="StrRealizadoPor" />
+                <ScalarProperty Name="IntIdProcesadoPor" ColumnName="IntIdProcesadoPor" />
+                <ScalarProperty Name="IntTipoRegistro" ColumnName="IntTipoRegistro" />
+                <ScalarProperty Name="IntIdProceso" ColumnName="IntIdProceso" />
+                <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+                <ScalarProperty Name="StrObligado" ColumnName="StrObligado" />
+                <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+                <ScalarProperty Name="StrIdPeticion" ColumnName="StrIdPeticion" />
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblAuditFormatos">
+            <EntityTypeMapping TypeName="HGIAuditoriaModel.TblAuditFormatos">
+              <MappingFragment StoreEntitySet="TblAuditFormatos">
+                <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+                <ScalarProperty Name="DatFechaProceso" ColumnName="DatFechaProceso" />
+                <ScalarProperty Name="StrUsuarioProceso" ColumnName="StrUsuarioProceso" />
+                <ScalarProperty Name="IntTipoProceso" ColumnName="IntTipoProceso" />
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+                <ScalarProperty Name="IntCodigoFormato" ColumnName="IntCodigoFormato" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

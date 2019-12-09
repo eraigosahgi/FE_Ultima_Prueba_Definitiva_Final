@@ -2809,6 +2809,7 @@
     <Content Include="Views\Pages\ProcesarInteroperabilidad.aspx" />
     <Content Include="Views\Pages\Sonda.aspx" />
     <Content Include="Views\Pages\SondaAcuseTacito.aspx" />
+    <Content Include="Views\Pages\SondaAuditoria.aspx" />
     <Content Include="Views\Pages\SondaCampoSubtotal.aspx" />
     <Content Include="Views\Pages\SondaConciliaPlanes.aspx" />
     <Content Include="Views\Pages\SondaCrearPlanes.aspx" />
@@ -3212,6 +3213,13 @@
     <Compile Include="Views\Pages\SondaAcuseTacito.aspx.designer.cs">
       <DependentUpon>SondaAcuseTacito.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\SondaAuditoria.aspx.cs">
+      <DependentUpon>SondaAuditoria.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaAuditoria.aspx.designer.cs">
+      <DependentUpon>SondaAuditoria.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\SondaCampoSubtotal.aspx.cs">
       <DependentUpon>SondaCampoSubtotal.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3346,6 +3354,10 @@
     <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
       <Name>HGInetMiFacturaElectonicaData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetMiFacturaElectronicaAudit\HGInetMiFacturaElectronicaAudit.csproj">
+      <Project>{b044d0ce-3b14-4d09-b22b-6183269e6acf}</Project>
+      <Name>HGInetMiFacturaElectronicaAudit</Name>
     </ProjectReference>
     <ProjectReference Include="..\HGInetUBL\HGInetUBL.csproj">
       <Project>{E571F23F-B598-4DB1-893B-D94EC0354775}</Project>

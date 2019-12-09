@@ -378,7 +378,7 @@ namespace HGInetMiFacturaElectonicaController
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
-
+			TblEmpresas empresa_obligado = new TblEmpresas();
 			try
 			{
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -389,7 +389,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				// obtiene los datos del facturador electrónico
 				Ctl_Empresa facturador_electronico = new Ctl_Empresa();
-				TblEmpresas empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
+				empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
 
 				if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
@@ -675,7 +675,7 @@ namespace HGInetMiFacturaElectonicaController
 				try
 				{
 					int estado_doc = Ctl_Documento.ObtenerCategoria(documento.IntIdEstado);
-					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrObligadoIdRegistro, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible el envio del documento, favor validar con el Adquiriente ó hacer el reenvío del documento desde nuestra Plataforma ", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
+					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, empresa_obligado.StrIdentificacion, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible el envio del documento, favor validar con el Adquiriente ó hacer el reenvío del documento desde nuestra Plataforma ", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
 				}
 				catch (Exception) { throw; }
 

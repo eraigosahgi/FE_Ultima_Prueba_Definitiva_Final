@@ -3,7 +3,7 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
-using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
+using HGInetMiFacturaElectronicaAudit.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.RegistroLog;
