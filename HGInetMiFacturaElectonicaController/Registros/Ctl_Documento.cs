@@ -1021,7 +1021,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			FacturaE_Documento resultado = HGInetUBLv2_1.AcuseReciboXMLv2_1.CrearDocumento(doc_acuse, proveedor_receptor, proveedor_emisor, ambiente_dian, PinSoftware, doc.StrCufe);
 			resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
 			resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
-			resultado.IdSeguridadPeticion = new Guid(doc_acuse.IdAcuse);
+			resultado.IdSeguridadPeticion = Guid.NewGuid();
 			resultado.DocumentoTipo = TipoDocumento.AcuseRecibo;
 			resultado.VersionDian = facturador.IntVersionDian;
 
