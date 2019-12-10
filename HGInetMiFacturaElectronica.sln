@@ -272,6 +272,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso511728", "Caso511728", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectronicaAudit", "HGInetMiFacturaElectronicaAudit\HGInetMiFacturaElectronicaAudit.csproj", "{B044D0CE-3B14-4D09-B22B-6183269E6ACF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auditoria", "Auditoria", "{B8068B7D-C1D3-4F1A-90D2-132DD573D4AE}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Auditoria\20191210-Tablas Auditoria.txt = Documentacion\Liberaciones\Auditoria\20191210-Tablas Auditoria.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -440,5 +445,6 @@ Global
 		{0A1CC09D-12DB-46AF-A9F8-86614F0DC5AA} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{A62A61A7-CEF6-48AC-905F-4C45723BE7B6} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{BF7BD325-A511-4119-9FE2-1CDD60C12F48} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{B8068B7D-C1D3-4F1A-90D2-132DD573D4AE} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal
