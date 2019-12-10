@@ -104,6 +104,7 @@
     <Compile Include="Auditorias\Ctl_AlertasHistAudit.cs" />
     <Compile Include="Auditorias\Ctl_DocumentosAudit.cs" />
     <Compile Include="Auditorias\Ctl_FormatosAudit.cs" />
+    <Compile Include="Auditorias\Ctl_Log.cs" />
     <Compile Include="Auditorias\MigracionAuditoria\Ctl_AuditoriaDocumentos.cs" />
     <Compile Include="Auditorias\MigracionAuditoria\Ctl_AuditoriaFormatos.cs" />
     <Compile Include="Auditorias\MigracionAuditoria\Ctl_AuditoriaNotificaciones.cs" />

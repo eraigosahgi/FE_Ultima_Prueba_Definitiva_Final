@@ -28,5 +28,6 @@ namespace HGInetMiFacturaElectronicaAudit.Modelo
         public virtual DbSet<TblSeguimientoAlertas> TblSeguimientoAlertas { get; set; }
         public virtual DbSet<TblAuditDocumentos> TblAuditDocumentos { get; set; }
         public virtual DbSet<TblAuditFormatos> TblAuditFormatos { get; set; }
+        public virtual DbSet<TblLog> TblLog { get; set; }
     }
 }

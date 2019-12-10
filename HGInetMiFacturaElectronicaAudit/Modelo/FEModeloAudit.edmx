@@ -37,6 +37,27 @@
           <Property Name="DatFechaProceso" Type="datetime" Nullable="false" />
           <Property Name="StrObservaciones" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="TblLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DatFecha" Type="datetime" Nullable="false" />
+          <Property Name="IntCategoria" Type="int" Nullable="false" />
+          <Property Name="StrCategoria" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IntTipo" Type="int" Nullable="false" />
+          <Property Name="StrTipo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IntAccion" Type="int" Nullable="false" />
+          <Property Name="StrAccion" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrMensaje" Type="nvarchar(max)" />
+          <Property Name="StrExcepcion" Type="nvarchar(max)" />
+          <Property Name="Strerror_custom" Type="nvarchar(max)" />
+          <Property Name="StrLinea" Type="int" />
+          <Property Name="StrArchivo" Type="nvarchar(max)" />
+          <Property Name="StrClase" Type="nvarchar(max)" />
+          <Property Name="StrMetodo" Type="nvarchar(max)" />
+          <Property Name="StrModulo" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="TblSeguimientoAlertas">
           <Key>
             <PropertyRef Name="Id" />
@@ -55,6 +76,7 @@
         <EntityContainer Name="HGIAuditoriaModelStoreContainer">
           <EntitySet Name="TblAuditDocumentos" EntityType="Self.TblAuditDocumentos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblAuditFormatos" EntityType="Self.TblAuditFormatos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblLog" EntityType="Self.TblLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblSeguimientoAlertas" EntityType="Self.TblSeguimientoAlertas" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -65,6 +87,7 @@
           <EntitySet Name="TblSeguimientoAlertas" EntityType="HGIAuditoriaModel.TblSeguimientoAlertas" />
           <EntitySet Name="TblAuditDocumentos" EntityType="HGIAuditoriaModel.TblAuditDocumentos" />
           <EntitySet Name="TblAuditFormatos" EntityType="HGIAuditoriaModel.TblAuditFormatos" />
+          <EntitySet Name="TblLog" EntityType="HGIAuditoriaModel.TblLog" />
         </EntityContainer>
         <EntityType Name="TblSeguimientoAlertas">
           <Key>
@@ -112,6 +135,27 @@
           <Property Name="StrUsuarioProceso" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DatFechaProceso" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="StrObservaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TblLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IntCategoria" Type="Int32" Nullable="false" />
+          <Property Name="StrCategoria" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IntTipo" Type="Int32" Nullable="false" />
+          <Property Name="StrTipo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IntAccion" Type="Int32" Nullable="false" />
+          <Property Name="StrAccion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StrMensaje" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrExcepcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Strerror_custom" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrLinea" Type="Int32" />
+          <Property Name="StrArchivo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrClase" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrMetodo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StrModulo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -165,6 +209,28 @@
                 <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
                 <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
                 <ScalarProperty Name="IntCodigoFormato" ColumnName="IntCodigoFormato" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblLog">
+            <EntityTypeMapping TypeName="HGIAuditoriaModel.TblLog">
+              <MappingFragment StoreEntitySet="TblLog">
+                <ScalarProperty Name="StrModulo" ColumnName="StrModulo" />
+                <ScalarProperty Name="StrMetodo" ColumnName="StrMetodo" />
+                <ScalarProperty Name="StrClase" ColumnName="StrClase" />
+                <ScalarProperty Name="StrArchivo" ColumnName="StrArchivo" />
+                <ScalarProperty Name="StrLinea" ColumnName="StrLinea" />
+                <ScalarProperty Name="Strerror_custom" ColumnName="Strerror_custom" />
+                <ScalarProperty Name="StrExcepcion" ColumnName="StrExcepcion" />
+                <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
+                <ScalarProperty Name="StrAccion" ColumnName="StrAccion" />
+                <ScalarProperty Name="IntAccion" ColumnName="IntAccion" />
+                <ScalarProperty Name="StrTipo" ColumnName="StrTipo" />
+                <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+                <ScalarProperty Name="StrCategoria" ColumnName="StrCategoria" />
+                <ScalarProperty Name="IntCategoria" ColumnName="IntCategoria" />
+                <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
