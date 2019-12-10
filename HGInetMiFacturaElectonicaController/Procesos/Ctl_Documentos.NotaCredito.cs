@@ -193,7 +193,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception exep)
 				{
-					RegistroLog.EscribirLog(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+					Ctl_Log.Guardar(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 				}
 
 				string mensaje = ex.Message;
@@ -230,7 +230,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.Add(item_respuesta);
 				});
 
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				//throw new ApplicationException(ex.Message);
 
 			}
@@ -480,9 +480,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_act, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
 				catch (Exception ex) {
-					RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
+					Ctl_Log.Guardar(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
 				}
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				if (!doc_existe)
 				{
 					item_respuesta = new DocumentoRespuesta()

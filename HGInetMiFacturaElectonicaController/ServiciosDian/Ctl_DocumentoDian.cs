@@ -15,6 +15,7 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetFirmaDigital;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.RegistroLog;
+using HGInetMiFacturaElectonicaController.Auditorias;
 
 namespace HGInetMiFacturaElectonicaController.ServiciosDian
 {
@@ -200,7 +201,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+				Ctl_Log.Guardar(excepcion, log_categoria, MensajeTipo.Error, log_accion);
 				throw excepcion;
 			}
 		}

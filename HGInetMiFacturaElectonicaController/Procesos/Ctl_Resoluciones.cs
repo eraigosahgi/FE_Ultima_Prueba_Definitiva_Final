@@ -1,5 +1,6 @@
 ﻿using HGInetDIANServicios;
 using HGInetDIANServicios.DianResolucion;
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
@@ -214,7 +215,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
 			}
 		}
 
@@ -238,7 +239,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					catch (Exception excepcion)
 					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
 					}
 				}
 

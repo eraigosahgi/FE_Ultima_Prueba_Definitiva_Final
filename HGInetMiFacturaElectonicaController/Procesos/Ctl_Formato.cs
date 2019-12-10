@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Properties;
+﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.General;
@@ -53,7 +54,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             }
             catch (Exception excepcion)
             {
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 				throw excepcion;
             }
         }
@@ -102,7 +103,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             }
             catch (Exception excepcion)
             {
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 				throw excepcion;
             }
 

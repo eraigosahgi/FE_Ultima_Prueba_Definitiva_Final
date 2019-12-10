@@ -31,7 +31,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -70,7 +70,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -92,7 +92,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.consulta);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.consulta);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -116,7 +116,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.consulta);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.consulta);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}

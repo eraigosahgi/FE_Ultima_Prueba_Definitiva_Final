@@ -191,7 +191,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception)
 				{
-					RegistroLog.EscribirLog(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
+					Ctl_Log.Guardar(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
 				}
 
 				string mensaje = ex.Message;
@@ -228,7 +228,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.Add(item_respuesta);
 				});
 
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				//throw new ApplicationException(ex.Message);
 			}
 
@@ -480,9 +480,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception ex)
 				{
-					RegistroLog.EscribirLog(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
+					Ctl_Log.Guardar(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
 				}
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				if (!doc_existe)
 				{
 					item_respuesta = new DocumentoRespuesta()

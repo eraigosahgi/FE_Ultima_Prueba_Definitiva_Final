@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Configuracion;
+﻿using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
@@ -117,7 +118,7 @@ namespace HGInetMiFacturaElectonicaController
 						}
 						catch (Exception excepcion)
 						{							
-							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 							item_respuesta.Mensaje = string.Format("Error al enviar el documento. Detalle: {0}", excepcion.Message);
 						}
 						respuesta.Add(item_respuesta);
@@ -133,7 +134,7 @@ namespace HGInetMiFacturaElectonicaController
 			}
 			catch (Exception ex)
 			{
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(ex.Message);
 			}
 

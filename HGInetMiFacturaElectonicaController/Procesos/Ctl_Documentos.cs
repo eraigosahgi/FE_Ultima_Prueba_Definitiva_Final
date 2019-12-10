@@ -217,7 +217,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 							throw excepcion;
 						}
 
@@ -232,7 +232,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al guardar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 							throw excepcion;
 						}
 
@@ -310,7 +310,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception excepcion)
 				{
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 					// no se controla excepción
 				}
 
@@ -1208,7 +1208,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception ex)
 				{
-					RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.consulta);
+					Ctl_Log.Guardar(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.consulta);
 					throw ex;
 				}
 			}
@@ -1325,7 +1325,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						ApplicationException exTMP = new ApplicationException(string.Format("DataRes: {0}", lista_resolucion.FirstOrDefault().StrIdSeguridad));
 
-						RegistroLog.EscribirLog(exTMP, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+						Ctl_Log.Guardar(exTMP, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 
 						// filtra la resolución del documento
 						resolucion = lista_resolucion.Where(_resolucion => _resolucion.StrNumResolucion.Equals(objeto.NumeroResolucion) && _resolucion.StrPrefijo.Equals(objeto.Prefijo)).FirstOrDefault();
@@ -1343,7 +1343,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 
 					ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 					if (!doc_existe)
 					{
 						item_respuesta = new DocumentoRespuesta()

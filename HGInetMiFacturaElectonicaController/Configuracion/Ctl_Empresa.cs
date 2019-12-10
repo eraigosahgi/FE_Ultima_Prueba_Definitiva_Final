@@ -23,6 +23,7 @@ using HGInetMiFacturaElectonicaData.Objetos;
 using LibreriaGlobalHGInet.RegistroLog;
 using System.Web;
 using System.IO;
+using HGInetMiFacturaElectonicaController.Auditorias;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -97,7 +98,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
 				throw new ApplicationException(string.Format("Error al guardar el certificado: {0}", excepcion.Message), excepcion);
 			}
 		}
@@ -377,7 +378,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						}
 						catch (Exception excepcion)
 						{
-							RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 						}
 					}
 					else
@@ -462,7 +463,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 					catch (Exception excepcion)
 					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 						throw new ApplicationException(string.Format("Error al crear usuario generico de la empresa o sus permisos : {0}", excepcion.Message), excepcion);
 					}
 
@@ -514,7 +515,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 
@@ -542,7 +543,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 					catch (Exception excepcion)
 					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 					}
 				}
 			});
@@ -729,7 +730,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
 				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 
@@ -933,7 +934,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
 				throw new ApplicationException(string.Format("Error en la lectura del certificado: {0}", excepcion.Message), excepcion);
 			}
 		}
@@ -1058,7 +1059,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
 				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
 			}
 		}

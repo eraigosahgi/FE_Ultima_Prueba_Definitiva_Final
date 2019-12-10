@@ -1,4 +1,5 @@
 ﻿using HGInetDIANServicios;
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -39,7 +40,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			catch (Exception excepcion)
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío de la Bienvenida al Adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 			}
 
 			//Se agrega esto para guardar correctamente el estado en la Auditoria
@@ -74,7 +75,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 				documentoBd.IntEnvioMail = (documentoBd.IntEnvioMail == null) ? documentoBd.IntEnvioMail : false;
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 			}
 
 			try
@@ -107,7 +108,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					respuesta.FechaUltimoProceso = Fecha.GetFecha();
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error actualizando estados despues del Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 				}
 

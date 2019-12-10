@@ -1,4 +1,5 @@
 ﻿using HGInetDIANServicios;
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -386,7 +387,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento_tmp.Actualizar(documento);
 
 				}*/
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				// no se controla excepción
 			}
 
