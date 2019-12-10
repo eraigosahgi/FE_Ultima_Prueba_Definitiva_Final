@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectronicaAudit.Modelo;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,22 @@ namespace HGInetMiFacturaElectronicaAudit.Controladores
 	{
 		FEHGIAuditoria db = new FEHGIAuditoria();
 
-		
+
+		public TblLog Guardar(TblLog Log)
+		{
+			try
+			{
+				db.Set<TblLog>().Add(Log);
+				db.SaveChanges();
+
+				return Log;
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 	}
 }
