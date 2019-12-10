@@ -312,7 +312,7 @@ namespace HGInetUBLv2_1
 				}
 				else
 				{
-					base_impuesto = nota_debito.DebitNoteLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Sum(v => v.TaxableAmount.Value)));
+					base_impuesto = nota_debito.DebitNoteLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Where(k => k.TaxableAmount != null).Sum(v => v.TaxableAmount.Value)));
 				}
 				decimal impuestos = nota_debito.TaxTotal.Sum(i => i.TaxAmount.Value);
 
@@ -685,11 +685,16 @@ namespace HGInetUBLv2_1
 						//Base Imponible sobre la que se calcula el valor del tributo
 						//----Se debe Solicitar la base con la que calculo el impuesto
 						// <cbc:TaxAmount>
-						TaxSubtotalIva.TaxableAmount = new TaxableAmountType()
+						TaxSubtotalIva.TaxableAmount = new TaxableAmountType();
+						TaxSubtotalIva.TaxableAmount.currencyID = moneda_detalle.ToString();
+						if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0 && DocDet.IvaPorcentaje > 0)
 						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorSubtotal
-						};
+							TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 2, MidpointRounding.AwayFromZero);
+						}
+						else
+						{
+							TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
+						}
 
 						// El monto de este subtotal fiscal.
 						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible

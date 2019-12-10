@@ -463,7 +463,7 @@ namespace HGInetUBLv2_1
 				}
 				else
 				{
-					base_impuesto = facturaXML.InvoiceLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Sum(v => v.TaxableAmount.Value)));
+					base_impuesto = facturaXML.InvoiceLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Where(k => k.TaxableAmount != null).Sum(v => v.TaxableAmount.Value)));
 				}
 
 				decimal impuestos = facturaXML.TaxTotal.Sum(i => i.TaxAmount.Value);
