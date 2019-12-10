@@ -537,7 +537,15 @@ namespace HGInetFirmaDigital
 						{
 							parametros.SignatureDestination.Namespaces.Add("nsDocument", documentoXml.DocumentElement.NamespaceURI);
 
-							parametros.SignatureDestination.XPathExpression = string.Format("/nsDocument:{0}/ext:UBLExtensions/ext:UBLExtension[2]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
+							if (archivo.DocumentoTipo != TipoDocumento.AcuseRecibo)
+							{
+								parametros.SignatureDestination.XPathExpression = string.Format("/nsDocument:{0}/ext:UBLExtensions/ext:UBLExtension[2]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
+							}
+							else
+							{
+								parametros.SignatureDestination.XPathExpression = string.Format("/nsDocument:{0}/ext:UBLExtensions/ext:UBLExtension[1]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
+							}
+							
 						}
 
 						// lee el certificado digital para firmar

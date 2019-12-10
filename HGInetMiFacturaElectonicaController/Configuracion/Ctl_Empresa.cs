@@ -835,6 +835,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			empresa_obj.RazonSocial = empresa.StrRazonSocial;
 			empresa_obj.Email = empresa.StrMailAdmin;
 			empresa_obj.Telefono = empresa.StrTelefono;
+			empresa_obj.CodigoTributo = "01";
 
 			return empresa_obj;
 		}

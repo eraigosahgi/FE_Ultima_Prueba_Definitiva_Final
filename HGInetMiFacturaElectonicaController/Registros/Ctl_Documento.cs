@@ -33,6 +33,7 @@ using static LibreriaGlobalHGInet.Funciones.Fecha;
 using Guid = System.Guid;
 using LibreriaGlobalHGInet.RegistroLog;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
+using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -348,6 +349,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										&& ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
 										&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
 										&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
+										&& (datos.IdCategoriaEstado == Categoria)
 							 orderby datos.IntNumero descending
 							 select datos).ToList();
 
@@ -982,27 +984,53 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			//Crea el Acuse
 			Acuse doc_acuse = new Acuse();
-			doc_acuse.IdAcuse = Guid.NewGuid().ToString();
+			doc_acuse.IdAcuse = "1";
 			doc_acuse.IdSeguridad = doc.StrIdSeguridad.ToString();
 			doc_acuse.Documento = doc.IntNumero;
 			doc_acuse.Prefijo = doc.StrPrefijo;
 			doc_acuse.MvoRespuesta = motivo_rechazo;
 			doc_acuse.Fecha = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
-			doc_acuse.CodigoRespuesta = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.ResponseCode>(estado));
-			doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.Enumerables.DocumentType>(doc.IntDocTipo));
+			doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
+			doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.DocumentTypeV2>(doc.IntDocTipo));
 			doc_acuse.DatosAdquiriente = Ctl_Empresa.Convertir(adquiriente);
 			doc_acuse.DatosObligado = Ctl_Empresa.Convertir(facturador);
 
+			//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
+			string ambiente_dian = string.Empty;
+
+			if (plataforma_datos.RutaPublica.Contains("app"))
+				ambiente_dian = "1";
+			else
+				ambiente_dian = "2";
+
+			// obtiene los datos del proveedor tecnológico de la DIAN
+			DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+
+			//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
+			DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
+
+			string PinSoftware = data_dian.Pin;
+
+			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
+			if (ambiente_dian.Equals("2") && facturador.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor))
+			{
+				PinSoftware = data_dian_habilitacion.Pin;
+			}
+
 			//Convierte el objeto en archivo XML-UBL
-			FacturaE_Documento resultado = HGInetUBL.AcuseReciboXML.CrearDocumento(doc_acuse, proveedor_receptor, proveedor_emisor, Enumeracion.GetEnumObjectByValue<TipoDocumento>(doc.IntDocTipo));
+			FacturaE_Documento resultado = HGInetUBLv2_1.AcuseReciboXMLv2_1.CrearDocumento(doc_acuse, proveedor_receptor, proveedor_emisor, ambiente_dian, PinSoftware, doc.StrCufe);
 			resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
 			resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
 			resultado.IdSeguridadPeticion = new Guid(doc_acuse.IdAcuse);
 			resultado.DocumentoTipo = TipoDocumento.AcuseRecibo;
+			resultado.VersionDian = facturador.IntVersionDian;
+
+			// valida el nodo de ExtensionContent
+			resultado.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(resultado.DocumentoXml);
 
 			// ruta física del xml
 			string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, resultado.IdSeguridadTercero.ToString());
-			carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlAcuse);
+			carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
 
 			// nombre del xml
 			string archivo_xml = string.Format(@"{0}.xml", resultado.NombreXml);
@@ -1016,9 +1044,38 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			// almacena el archivo xml
 			string ruta_save = Xml.Guardar(resultado.DocumentoXml, carpeta_xml, archivo_xml);
+			
 
 			// asigna la ruta del directorio para los archivos
 			resultado.RutaArchivosProceso = carpeta_xml;
+			resultado.RutaArchivosEnvio = carpeta_xml.Replace("XmlFacturaE", "XmlAcuse");
+
+			//Proceso para firmar Acuse
+			DocumentoRespuesta respuesta = new DocumentoRespuesta();
+
+			TblEmpresas empresa_firma = new TblEmpresas();
+
+			//Valida si el adquiriente del documento tiene certificado con nosotros para firmar el acuse con ese certificado
+			if (adquiriente.IntCertFirma > 0)
+			{
+				empresa_firma = adquiriente;
+			}
+			else
+			{
+				empresa_firma = proveedor_emisor;
+				empresa_firma.IntCertFirma = 0;
+			}
+
+			respuesta = Ctl_Documentos.UblFirmar(empresa_firma, doc, ref respuesta, ref resultado);
+
+			//Se elimina el Acuse generado sin Firmar
+			if (Archivo.ValidarExistencia(ruta_xml))
+				Archivo.Borrar(ruta_xml);
+
+			//Se mueve el Acuse Firmado a la Carpeta que se muestra en plataforma
+			Archivo.Mover(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml), resultado.RutaArchivosProceso, archivo_xml);
+			if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}",resultado.RutaArchivosEnvio, archivo_xml)))
+				Archivo.Borrar(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml));
 
 			//resultado = Ctl_Ubl.Almacenar(resultado);
 

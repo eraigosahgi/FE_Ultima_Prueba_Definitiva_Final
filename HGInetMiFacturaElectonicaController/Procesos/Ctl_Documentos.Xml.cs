@@ -161,22 +161,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// genera la firma del documento XML
 				documento_result = Ctl_Firma.Generar(certificado_nit, ruta_certificado, certificado_serial, certificado_clave, empresa_certificadora, documento_result, firma_proveedor);
 
-				// ruta física del xml
-				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
-				carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+				if (documento_result.DocumentoTipo != TipoDocumento.AcuseRecibo)
+				{
+					// ruta física del xml
+					string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica,Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+					carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml,LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
 
-				// url pública del xml
-				string url_ppal = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
-				respuesta.UrlXmlUbl = string.Format(@"{0}/{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
+					// url pública del xml
+					string url_ppal = string.Format("{0}/{1}/{2}", plataforma_datos.RutaDmsPublica,Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+					respuesta.UrlXmlUbl = string.Format(@"{0}/{1}/{2}.xml", url_ppal,LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, documento_result.NombreXml);
 
-				//Actualiza Documento en Base de Datos
-				documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
-				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-                documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-				documentoBd.IdCategoriaEstado = respuesta.IdEstado;
+					//Actualiza Documento en Base de Datos
+					documentoBd.StrUrlArchivoUbl = respuesta.UrlXmlUbl;
+					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+					documentoBd.IdCategoriaEstado = respuesta.IdEstado;
 
-				Ctl_Documento documento_tmp = new Ctl_Documento();
-                documentoBd = documento_tmp.Actualizar(documentoBd);
+					Ctl_Documento documento_tmp = new Ctl_Documento();
+					documentoBd = documento_tmp.Actualizar(documentoBd);
+				}
             }
             catch (Exception excepcion)
             {

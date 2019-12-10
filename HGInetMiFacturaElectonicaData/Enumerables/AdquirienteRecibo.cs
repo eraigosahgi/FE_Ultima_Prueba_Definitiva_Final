@@ -44,4 +44,33 @@ namespace HGInetMiFacturaElectonicaData
 
 
 	}
+
+	/// <summary>
+	/// 6.5.  Registro de evento: ApplicationResponse Anexo V1.8 de la DIAN
+	/// </summary>
+	public enum CodigoResponseV2
+    {
+	    
+		Pendiente = 0,
+	    
+	    [Description("Aceptación Expresa de Documento")]
+	    [AmbientValue("033")]
+		Expresa = 1,
+
+	    [Description("Rechazo de Documento")]
+	    [AmbientValue("031")]
+		Rechazado = 2,
+
+	    [Description("Aceptación Expresa de Documento")]
+	    [AmbientValue("033")]
+		AprobadoTacito = 3,
+
+		[Description("Acuse de Recibo")]
+		[AmbientValue("030")]
+		Recibido = 4,
+
+		[Description("Recepción de los Bienes y/o Servicios")]
+		[AmbientValue("032")]
+		Aceptado = 5
+	}
 }

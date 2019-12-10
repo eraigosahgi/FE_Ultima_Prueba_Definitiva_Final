@@ -21,7 +21,8 @@ namespace HGInetUBLv2_1.DianListas
 		{
 			new ListaItem("01", "Factura de Venta Nacional", "Factura de Venta Nacional"),
 			new ListaItem("02", "Factura de Exportación ", "Factura de Exportación "),
-			new ListaItem("03", "Factura de Contingencia", "Factura de Contingencia"),
+			new ListaItem("03", "Factura por Contingencia Facturador", "Factura por Contingencia Facturador"),
+			new ListaItem("04", "Factura por Contingencia DIAN", "Factura por Contingencia DIAN"),
 			new ListaItem("91", "Nota Crédito", "Nota Crédito"),
 			new ListaItem("92", "Nota Débito", "Nota Débito"),
 

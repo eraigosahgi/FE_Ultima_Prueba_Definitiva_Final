@@ -1353,7 +1353,6 @@
     <Compile Include="Dian\ListaValores\TipoResponsabilidad-2.1.cs" />
     <Compile Include="Dian\ListaValores\UnidadesMedida-2.1.cs" />
     <Compile Include="Dian\Structures\AddressType1.cs" />
-    <Compile Include="Dian\Structures\ApplicationResponseType.cs" />
     <Compile Include="Dian\Structures\CurrencyCodeContentType.cs" />
     <Compile Include="Dian\Structures\CustomerPartyType1.cs" />
     <Compile Include="Dian\Structures\DeliveryTermsType1.cs" />
@@ -1387,6 +1386,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>NombreArchivos.resx</DependentUpon>
     </Compile>
+    <Compile Include="Recursos\VersionesDIANv2_1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VersionesDIANv2_1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="XML\AcuseReciboXMLv2_1.cs" />
     <Compile Include="XML\AttachedDocument.cs" />
     <Compile Include="XML\ConvertirXML.cs" />
     <Compile Include="XML\DocumentoImpuestos.cs" />
@@ -1415,6 +1420,10 @@
     <EmbeddedResource Include="Recursos\NombreArchivos.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NombreArchivos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Recursos\VersionesDIANv2_1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>VersionesDIANv2_1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
