@@ -550,7 +550,7 @@ namespace HGInetUBLv2_1
 					//Crear Enumerable para que lea segun la moneda
 					CurrencyCodeContentType moneda_detalle = Ctl_Enumeracion.ObtenerMoneda(moneda);
 
-					decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
+					
 					CreditNoteLineType CreditNoteLine = new CreditNoteLineType();
 
 					#region Id producto definido por la Dian (Contador de productos iniciando desde 1)

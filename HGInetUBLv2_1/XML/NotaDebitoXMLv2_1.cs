@@ -568,7 +568,6 @@ namespace HGInetUBLv2_1
 					//Crear Enumerable para que lea segun la moneda
 					CurrencyCodeContentType moneda_detalle = Ctl_Enumeracion.ObtenerMoneda(moneda);
 
-					decimal valorTotal = DocDet.Cantidad * DocDet.ValorUnitario;
 					DebitNoteLineType DebitNoteLine = new DebitNoteLineType();
 
 					#region Id producto definido por la Dian (Contador de productos iniciando desde 1)
@@ -603,7 +602,7 @@ namespace HGInetUBLv2_1
 					LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
 					LineExtensionAmount.currencyID =
 						moneda_detalle.ToString(); //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-					LineExtensionAmount.Value = decimal.Round(valorTotal, 2);
+					LineExtensionAmount.Value = decimal.Round(DocDet.ValorSubtotal, 2);
 					DebitNoteLine.LineExtensionAmount = LineExtensionAmount;
 
 					#endregion
