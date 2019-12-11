@@ -123,7 +123,7 @@ namespace HGInetUBLv2_1
 				//Anticipo Total: Suma de todos los pagos anticipados
 				PrepaidAmountType PrepaidAmount = new PrepaidAmountType();
 				PrepaidAmount.currencyID = moneda_documento.ToString();
-				PrepaidAmount.Value = decimal.Round(documento.ValorAnticipo);
+				PrepaidAmount.Value = decimal.Round(documento.ValorAnticipo, 2);
 				LegalMonetaryTotal.PrepaidAmount = PrepaidAmount;
 
 				//Cargos: Suma de todos los cargos aplicados al total de la factura
