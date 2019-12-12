@@ -35,6 +35,29 @@ namespace HGInetMiFacturaElectonicaController.Auditorias.MigracionAuditoria
 			}
 		}
 
+
+
+
+		/// <summary>
+		/// Obtiene los registros por id de seguridad del documento e identificación del obligado
+		/// </summary>
+		/// <param name="id_seguridad_doc">ID de seguridad del documento</param>
+		/// <param name="identificacion_obligado">Número de identificación del obligado.</param>
+		/// <returns></returns>
+		public List<TblAuditDocumentos> Obtener(string id_seguridad_doc, string identificacion_obligado)
+		{
+			try
+			{
+				List<TblAuditDocumentos> registros_audit = this.GetFilter(x => (x.StrIdSeguridad.Equals(id_seguridad_doc) || id_seguridad_doc.Equals("*")) && (x.StrObligado.Equals(identificacion_obligado) || identificacion_obligado.Equals("*")));
+
+				return registros_audit;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 	}
 }
 	

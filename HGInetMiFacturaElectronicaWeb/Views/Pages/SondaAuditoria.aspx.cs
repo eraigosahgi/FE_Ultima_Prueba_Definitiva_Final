@@ -1,4 +1,5 @@
-﻿using LibreriaGlobalHGInet.RegistroLog;
+﻿using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,13 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 		{
 			try
 			{
+
+				//lblResultado.Text = string.Empty;
+				Gif.Visible = true;
+				DateTime HoraEjecucion = Fecha.GetFecha();
+
+				lblResultado.Text += string.Format("{0}{1} Fecha Inicio: {2} -- Fecha Fin: {3}", System.Environment.NewLine,System.Environment.NewLine,TxtFechaInicio.Text.ToString(),TxtFechaFin.Text.ToString());				
+
 				//Controlador Auditoria mongoDB
 				HGInetMiFacturaElectonicaController.Auditorias.MigracionAuditoria.Ctl_AuditoriaDocumentos ControladorSonda = new HGInetMiFacturaElectonicaController.Auditorias.MigracionAuditoria.Ctl_AuditoriaDocumentos();
 
@@ -33,6 +41,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 				HGInetMiFacturaElectronicaAudit.Modelo.TblAuditDocumentos Objeto = new HGInetMiFacturaElectronicaAudit.Modelo.TblAuditDocumentos();
 
 				Cantidad = 0;
+				Datos.Count();
+				
 				foreach (var item in Datos)
 				{
 
@@ -67,12 +77,18 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 					}
 
 				}
-				lblResultado.Text += string.Format("Proceso finalizado, Cantidad de registros:{0}", Cantidad);
+				lblResultado.Text += string.Format("{0}Cantidad de registros:{1}", System.Environment.NewLine, Cantidad);
+				lblResultado.Text += string.Concat(System.Environment.NewLine, "Hora Inicio de Ejecución:  ", HoraEjecucion.ToString(Fecha.formato_fecha_hora_completa));
+				lblResultado.Text += string.Concat(System.Environment.NewLine, "Hora Fin de la Ejecución:  ", Fecha.GetFecha().ToString(Fecha.formato_fecha_hora_completa), System.Environment.NewLine);
+				lblResultado.Text += string.Concat("Tiempo: ", Fecha.GetFecha().Subtract(HoraEjecucion).ToString(), System.Environment.NewLine, System.Environment.NewLine);
+
+				Gif.Visible = false;
 			}
 			catch (Exception excepcion)
 			{
 				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.consulta);
 				lblResultado.Text += excepcion.Message;
+				Gif.Visible = false;
 			}
 		}
 

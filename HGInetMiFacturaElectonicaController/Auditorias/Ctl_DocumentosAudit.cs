@@ -1,4 +1,5 @@
 ﻿using HGInetEmailServicios.ServicioEnvio;
+using HGInetMiFacturaElectonicaController.Auditorias.MigracionAuditoria;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -41,7 +42,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			{
 				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
 				var data = Srv.Crear(datos);
-			
+
 				return datos;
 			}
 			catch (Exception excepcion)
@@ -66,7 +67,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="mensaje">mensaje.</param>
 		/// <param name="resultado_proceso">Código Dian, Id Mailjet...entre otros</param>
 		/// <returns></returns>
-		public TblAuditDocumentos Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso, string prefijo, string numero,int estado = 0)
+		public TblAuditDocumentos Crear(Guid id_seguridad_doc, Guid id_peticion, string facturador, ProcesoEstado proceso, TipoRegistro tipo_registro, Procedencia procesado_por, string realizado_por, string mensaje, string resultado_proceso, string prefijo, string numero, int estado = 0)
 		{
 			try
 			{
@@ -77,7 +78,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 					StrIdPeticion = id_peticion.ToString(),
 					DatFecha = Fecha.GetFecha(),
 					StrObligado = facturador,
-					IntIdEstado = (estado == 0) ? Ctl_Documento.ObtenerCategoria(proceso.GetHashCode()): estado,
+					IntIdEstado = (estado == 0) ? Ctl_Documento.ObtenerCategoria(proceso.GetHashCode()) : estado,
 					IntIdProceso = proceso.GetHashCode(),
 					IntTipoRegistro = tipo_registro.GetHashCode(),
 					IntIdProcesadoPor = procesado_por.GetHashCode(),
@@ -184,13 +185,55 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			try
 			{
 				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
-				List<TblAuditDocumentos> registros_audit = Srv.Obtener(id_seguridad_doc, identificacion_obligado);
+				List<TblAuditDocumentos> registros_audit = new List<TblAuditDocumentos>();
+				registros_audit = Srv.Obtener(id_seguridad_doc, identificacion_obligado);
+
+				//Proceso para validar si no existen datos de auditoria en sql server, busque información en mongoDB
+				if (registros_audit.Count() < 1)
+				{
+					registros_audit = ObtenerdeMongo(id_seguridad_doc, identificacion_obligado);
+				}
 
 				return registros_audit;
 			}
 			catch (Exception excepcion)
 			{
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		public List<TblAuditDocumentos> ObtenerdeMongo(string id_seguridad_doc, string identificacion_obligado)
+		{
+			try
+			{
+				List<TblAuditDocumentos> registros_audit = new List<TblAuditDocumentos>();
+				Ctl_AuditoriaDocumentos CtlmongoDB = new Ctl_AuditoriaDocumentos();
+				var datos = CtlmongoDB.Obtener(id_seguridad_doc, identificacion_obligado);
+				foreach (var item in datos)
+				{
+					TblAuditDocumentos registroAudit = new TblAuditDocumentos();
+					registroAudit.DatFecha = item.DatFecha;
+					registroAudit.Id = Guid.NewGuid();
+					registroAudit.IntIdEstado = item.IntIdEstado;
+					registroAudit.IntIdProcesadoPor = item.IntIdProcesadoPor;
+					registroAudit.IntIdProceso = item.IntIdProceso;
+					registroAudit.IntTipoRegistro = item.IntTipoRegistro;
+					registroAudit.StrIdPeticion = item.StrIdPeticion;
+					registroAudit.StrIdSeguridad = Guid.Parse(item.StrIdSeguridad);
+					registroAudit.StrMensaje = item.StrMensaje;
+					registroAudit.StrNumero = item.StrNumero;
+					registroAudit.StrObligado = item.StrObligado;
+					registroAudit.StrPrefijo = item.StrPrefijo;
+					registroAudit.StrRealizadoPor = item.StrRealizadoPor;
+					registroAudit.StrResultadoProceso = item.StrResultadoProceso;
+					registros_audit.Add(registroAudit);
+				}
+				return registros_audit;
+			}
+			catch (Exception)
+			{
+				//Ctl_Log.Guardar();
+				throw;
 			}
 		}
 
@@ -208,13 +251,13 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 		/// <param name="procedencia">Indica la procedencia de la Auditoria: 1 - Plataforma, 2 - Usuario, 3 - Sonda, 4 - DIAN, 5 - Mail, 6 - Sms</param>
 		/// <param name="tipo_registro">Indica que tipo de registro se hizo: 1 - Proceso, 2 - Creacion, 3 - Actualizacion</param>
 		/// <returns></returns>
-		public List<TblAuditDocumentos> Obtener(string numero_documento, string identificacion_obligado, DateTime fecha_inicio, DateTime fecha_fin, string estado, string proceso, string tipo_registro, string procedencia,int Desde, int Hasta)
+		public List<TblAuditDocumentos> Obtener(string numero_documento, string identificacion_obligado, DateTime fecha_inicio, DateTime fecha_fin, string estado, string proceso, string tipo_registro, string procedencia, int Desde, int Hasta)
 		{
 			try
 			{
 				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
 
-				List<TblAuditDocumentos> registros_audit = Srv.Obtener(numero_documento,  identificacion_obligado, fecha_inicio,fecha_fin, estado, proceso,tipo_registro, procedencia,  Desde,Hasta);
+				List<TblAuditDocumentos> registros_audit = Srv.Obtener(numero_documento, identificacion_obligado, fecha_inicio, fecha_fin, estado, proceso, tipo_registro, procedencia, Desde, Hasta);
 				return registros_audit;
 			}
 			catch (Exception excepcion)
@@ -250,7 +293,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 
 				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
 
-				List<TblAuditDocumentos> ListaEmail = Srv.ObtenerDocumentoMail(IdSeguridad).ToList();				
+				List<TblAuditDocumentos> ListaEmail = Srv.ObtenerDocumentoMail(IdSeguridad).ToList();
 				MensajeResumen datos_retorno = new MensajeResumen();
 
 				MensajeValidarEmail MailPlataforma = new MensajeValidarEmail();
@@ -259,17 +302,18 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 				foreach (TblAuditDocumentos Email in ListaEmail)
 				{
 					try
-						{
-						if (Email.StrResultadoProceso.Contains("MessageID") )
+					{
+						if (Email.StrResultadoProceso.Contains("MessageID"))
 						{
 							email = new Ctl_EnvioCorreos();
 							Email.StrResultadoProceso = Email.StrResultadoProceso.Replace("[", "").Replace("]", "");
 							dynamic datos = JsonConvert.DeserializeObject(Email.StrResultadoProceso);
-							
+
 							datos_retorno = email.ConsultarCorreo((long)datos.MessageID);
 							//Si ya tengo una respuesta se la asigno a este 
-							if(MailPlataforma.EmailEnviado == null && datos_retorno.Estado !=null) {							
-								MailPlataforma.EmailEnviado = (string)datos.Email; 
+							if (MailPlataforma.EmailEnviado == null && datos_retorno.Estado != null)
+							{
+								MailPlataforma.EmailEnviado = (string)datos.Email;
 								MailPlataforma.Estado = datos_retorno.Estado;
 								MailPlataforma.IdResultado = datos_retorno.IdResultado;
 								MailPlataforma.Recibido = datos_retorno.Recibido;
@@ -288,12 +332,12 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 								{
 									return MailPlataforma;
 								}
-							}	
+							}
 						}
 					}
 					catch (Exception)
-					{}
-				}				
+					{ }
+				}
 
 				return MailPlataforma;
 			}

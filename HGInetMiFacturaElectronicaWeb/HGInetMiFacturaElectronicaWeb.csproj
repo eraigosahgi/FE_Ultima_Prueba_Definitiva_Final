@@ -1939,6 +1939,7 @@
     <Content Include="Scripts\Pages\ProcesarInteroperabilidad.js" />
     <Content Include="Scripts\Pages\Proveedores.js" />
     <Content Include="Scripts\Pages\ReportDesignerWeb.js" />
+    <Content Include="Scripts\Pages\Resoluciones.js" />
     <Content Include="Scripts\Pages\Usuarios.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
@@ -1953,6 +1954,7 @@
     <Content Include="Scripts\Services\SrvPermisos.js" />
     <Content Include="Scripts\Services\SrvPlanes.js" />
     <Content Include="Scripts\Services\SrvProveedor.js" />
+    <Content Include="Scripts\Services\SrvResoluciones.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
     <Content Include="Scripts\WebConfig.js" />
     <Content Include="Views\Demos\Demo.aspx" />
@@ -2769,6 +2771,7 @@
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConfirmacionEmail.aspx" />
+    <Content Include="Views\Pages\ConsultaResoluciones.aspx" />
     <Content Include="Views\Pages\GestionAlertas.aspx" />
     <Content Include="Views\Pages\ConfigurarPlanes.aspx" />
     <Content Include="Views\Pages\AuditoriaDocumento.aspx" />
@@ -2953,6 +2956,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConfirmacionEmail.aspx.designer.cs">
       <DependentUpon>ConfirmacionEmail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaResoluciones.aspx.cs">
+      <DependentUpon>ConsultaResoluciones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaResoluciones.aspx.designer.cs">
+      <DependentUpon>ConsultaResoluciones.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\GestionAlertas.aspx.cs">
       <DependentUpon>GestionAlertas.aspx</DependentUpon>
