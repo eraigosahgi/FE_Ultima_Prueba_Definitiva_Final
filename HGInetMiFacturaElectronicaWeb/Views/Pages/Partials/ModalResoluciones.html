@@ -1,0 +1,78 @@
+﻿
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+	<title></title>
+</head>
+<body>
+
+
+	<form id="form1">
+		<div id="modal_Resoluciones" class="modal fade" style="display: none;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div id="EncabezadoModal" class="modal-header">
+						<button type="button" id="cerrrarModal" class="close" data-dismiss="modal">×</button>
+						<h5 style="margin-bottom: 10px;" class="modal-title">Modulo de Actualización</h5>
+					</div>
+					<div>
+
+
+
+						<div class="panel panel-white">
+							<div class="col-md-12">
+								<label>Lista de Comercios:</label>
+							</div>
+							<div class="col-md-12">
+								<div id="lstComercios"></div>
+							</div>
+
+							<div class="col-md-12">
+								<label>Id de Comercio:</label>
+							</div>
+							<div class="col-md-12">
+								<div id="IddeComercio"></div>
+							</div>
+
+							<div class="col-md-12">
+								<label>Descripción del Comercio:</label>
+							</div>
+							<div class="col-md-12">
+								<div id="DescripcionComercio"></div>
+							</div>
+
+							<div class="col-md-12" style="margin-top:20px">
+								<div class="col-md-6">
+									<label>Permite Pagos Parciales:</label>
+								</div>
+								<div class="col-md-6">
+									<div id="PermiteParciales"></div>
+								</div>
+							</div>
+
+
+						</div>
+
+						<div class="dx-fieldset">
+							<div id="summary"></div>
+						</div>
+						<div id="divsombra" class="modal-footer">
+							<input id="btncancelar" type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar" style="margin: 1%;" />
+							<!--data-ng-if="Visibilidad"-->
+							<div id="buttonGuardar" style="margin: 1%;"></div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</form>
+
+
+
+</body>
+</html>

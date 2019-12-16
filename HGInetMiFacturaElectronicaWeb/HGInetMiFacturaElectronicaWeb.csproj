@@ -2800,6 +2800,7 @@
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
     <Content Include="Views\Pages\Partials\LoadingRegistros.html" />
+    <Content Include="Views\Pages\Partials\ModalResoluciones.html" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
     <Content Include="Views\Pages\DocumentosObligado.aspx" />

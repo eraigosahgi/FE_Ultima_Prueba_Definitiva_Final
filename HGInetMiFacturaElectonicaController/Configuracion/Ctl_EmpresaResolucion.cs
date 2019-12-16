@@ -9,6 +9,11 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetDIANServicios.DianResolucion;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.Peticiones;
+using LibreriaGlobalHGInet.ObjetosComunes.PagosEnLinea;
+using HGInetMiFacturaElectonicaController.Auditorias;
+using LibreriaGlobalHGInet.RegistroLog;
+using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -33,18 +38,43 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns>datos de la resolución</returns>
 		public List<TblEmpresasResoluciones> Obtener(string documento_empresa, string numero_resolucion, string prefijo, string clave_tecnica)
 		{
+			var Factura = TipoDocumento.Factura.GetHashCode();
 
 			var datos = (from item in context.TblEmpresasResoluciones
 						 where (item.StrNumResolucion.Equals(numero_resolucion) || numero_resolucion.Equals("*"))
-						 && item.TblEmpresas.StrIdentificacion.Equals(documento_empresa)
-			             && (item.StrClaveTecnica.Equals(clave_tecnica) || clave_tecnica.Equals("*"))
+						 && (item.TblEmpresas.StrIdentificacion.Equals(documento_empresa) || documento_empresa.Equals("*"))
+						 && (item.StrClaveTecnica.Equals(clave_tecnica) || clave_tecnica.Equals("*"))
+						 && item.IntTipoDoc == Factura
 						 select item).ToList();
 
 			return datos;
 
 		}
 
+		/// <summary>
+		/// Obtiene las resoluciones de las empresas asociadas
+		/// </summary>
+		/// <param name="documento_empresa"></param>
+		/// <param name="numero_resolucion"></param>
+		/// <param name="prefijo"></param>
+		/// <param name="clave_tecnica"></param>
+		/// <returns></returns>
+		public List<TblEmpresasResoluciones> ObtenerAsociadas(string documento_empresa, string numero_resolucion, string prefijo, string clave_tecnica)
+		{
+			var Factura = TipoDocumento.Factura.GetHashCode();
 
+			var datos = (from item in context.TblEmpresasResoluciones
+						 where item.IntTipoDoc == Factura
+						 && (item.StrEmpresa.Equals(documento_empresa) || item.TblEmpresas.StrEmpresaAsociada.Equals(documento_empresa))
+						 && (item.StrNumResolucion.Equals(numero_resolucion) || numero_resolucion.Equals("*"))
+						 //&& (item.TblEmpresas.StrIdentificacion.Equals(documento_empresa) || documento_empresa.Equals("*"))
+						 //&& (item.StrClaveTecnica.Equals(clave_tecnica) || clave_tecnica.Equals("*"))
+						
+						 select item).ToList();
+
+			return datos;
+
+		}
 
 
 
@@ -172,6 +202,37 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 		#endregion
 
+		#region Editar
+		/// <summary>
+		/// Actualiza la configuración de pago de una resolución
+		/// </summary>
+		/// <param name="Stridseguridad">id de seguridad de la resolución</param>
+		/// <param name="Permitepagosparciales">Permite pagos parciales</param>
+		/// <param name="IdComercio">Guid del id de comercio</param>
+		/// <param name="DescripcionComercio">Descripción de la configuración</param>
+		/// <returns>TblEmpresasResoluciones</returns>
+		public TblEmpresasResoluciones EditarConfigPago(Guid Stridseguridad, bool Permitepagosparciales, Guid IdComercio, string DescripcionComercio)
+		{
+			try
+			{
+				TblEmpresasResoluciones tbl = context.TblEmpresasResoluciones.Where(x => x.StrIdSeguridad == Stridseguridad).FirstOrDefault();
+
+				tbl.IntPermiteParciales = Permitepagosparciales;
+				tbl.StrComercioConfigId = IdComercio;
+				tbl.StrComercioConfigDescrip = DescripcionComercio;
+
+				this.Edit(tbl);
+
+				return tbl;
+			}
+			catch (Exception e)
+			{
+				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion, "");
+				throw;
+			}
+		} 
+		#endregion
+
 		#region Convertir
 		/// <summary>
 		/// Convierte un Objeto de servicio en un Objeto de Base de Datos
@@ -263,6 +324,37 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return resolucion_respuesta;
 
 		}
+		#endregion
+
+		#region Plataforma de Servicios
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Tercero"></param>
+		/// <param name="Serial"></param>
+		/// <returns></returns>
+		public List<ConfigPasarelas> ObtenerComercios(string Tercero, string Serial)
+		{
+
+			PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+			var url = plataforma.RutaHginetMail;
+
+			ClienteRest<List<ConfigPasarelas>> cliente = new ClienteRest<List<ConfigPasarelas>>(string.Format("{0}Api/ObtenerConfigPasarelas?Tercero={1}&Serial={2}", url, Tercero, Serial), TipoContenido.Applicationjson.GetHashCode(), "");
+			try
+			{
+				List<ConfigPasarelas> data = cliente.GET();
+
+				return data;
+				//if (data != null)
+				//	respuesta.Add(data);
+			}
+			catch (Exception ex)
+			{
+				var cod = cliente.CodHttp;
+				throw;
+			}
+
+		} 
 		#endregion
 
 	}

@@ -13,6 +13,7 @@ using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.Objetos;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using LibreriaGlobalHGInet.RegistroLog;
+using HGInetMiFacturaElectonicaData.Objetos;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
@@ -93,7 +94,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("Api/ObtenerResoluciones")]
-		public IHttpActionResult ObtenerResoluciones(string codigo_facturador)
+		public IHttpActionResult ObtenerResoluciones(string codigo_facturador, string codigo_Resolucion)
 		{
 			try
 			{
@@ -101,7 +102,34 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_EmpresaResolucion Resolucion = new Ctl_EmpresaResolucion();
 
-				List<TblEmpresasResoluciones> datos = Resolucion.Obtener(codigo_facturador, "*", "*", "*");
+				Ctl_Empresa CtEmpresa = new Ctl_Empresa();
+
+				TblEmpresas empresa = new TblEmpresas();
+
+
+				empresa = CtEmpresa.Obtener(codigo_facturador);
+
+				List<TblEmpresasResoluciones> datos = new List<TblEmpresasResoluciones>();
+
+				if (empresa.IntAdministrador)
+				{					
+					datos = Resolucion.Obtener("*", codigo_Resolucion, "*", "*");
+				}
+				else
+				{
+					if (empresa.IntIntegrador)
+					{
+						datos = Resolucion.ObtenerAsociadas(codigo_facturador, codigo_Resolucion, "*", "*");
+					}
+					else
+					{
+						datos = Resolucion.Obtener(codigo_facturador, codigo_Resolucion, "*", "*");
+					}
+				}
+
+
+
+				//List<TblEmpresasResoluciones> datos = Resolucion.Obtener(codigo_facturador, "*", "*", "*");
 
 				var retorno = datos.Select(d => new
 				{
@@ -124,7 +152,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					IdSetDian = d.StrIdSetDian,
 					VersionDian = d.IntVersionDian,
 					ComercioConfigId = d.StrComercioConfigId,
-					ComercioConfigDescrip = d.StrComercioConfigDescrip
+					ComercioConfigDescrip = d.StrComercioConfigDescrip,
+					SerialCloud = d.TblEmpresas.StrSerialCloudServices
 				});
 
 				return Ok(retorno);
@@ -137,6 +166,67 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		}
 
 
+		#endregion
+
+
+		[HttpGet]
+		[Route("Api/EditarConfigPago")]
+		public IHttpActionResult EditarConfigPago(string Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_EmpresaResolucion Controlador = new Ctl_EmpresaResolucion();
+
+				if (string.IsNullOrEmpty(IdComercio))
+				{
+					throw new ApplicationException("Id de comercio Invalido");
+				}
+
+				var Datos = Controlador.EditarConfigPago(Guid.Parse(Stridseguridad), Permitepagosparciales, Guid.Parse(IdComercio), DescripcionComercio);
+
+				return Ok();
+
+			}
+			catch (Exception e)
+			{
+				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
+				throw;
+			}
+
+
+		}
+
+
+
+
+
+		#region Comercios de Pago
+
+		[HttpGet]
+		[Route("Api/ObtenerComercios")]
+		public IHttpActionResult ObtenerComercios(string codigo_facturador, string serial_cloudservices)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_EmpresaResolucion Controlador = new Ctl_EmpresaResolucion();
+
+				var Datos = Controlador.ObtenerComercios(codigo_facturador, serial_cloudservices);
+
+				return Ok(Datos);
+
+			}
+			catch (Exception e)
+			{
+				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
+				throw;
+			}
+
+
+		}
 		#endregion
 	}
 }

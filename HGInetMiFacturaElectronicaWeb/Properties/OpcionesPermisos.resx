@@ -186,4 +186,7 @@
   <data name="Usuarios" xml:space="preserve">
     <value>1331</value>
   </data>
+  <data name="ConsultaResoluciones" xml:space="preserve">
+    <value>1337</value>
+  </data>
 </root>

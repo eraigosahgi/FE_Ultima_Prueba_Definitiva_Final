@@ -169,6 +169,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1337.
+        /// </summary>
+        internal static string ConsultaResoluciones {
+            get {
+                return ResourceManager.GetString("ConsultaResoluciones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1345.
         /// </summary>
         internal static string ConsultarPlanesAdmin {
