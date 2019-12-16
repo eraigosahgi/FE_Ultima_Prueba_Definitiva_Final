@@ -187,13 +187,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
 				List<TblAuditDocumentos> registros_audit = new List<TblAuditDocumentos>();
 				registros_audit = Srv.Obtener(id_seguridad_doc, identificacion_obligado);
-
-				//Proceso para validar si no existen datos de auditoria en sql server, busque información en mongoDB
-				if (registros_audit.Count() < 1)
-				{
-					registros_audit = ObtenerdeMongo(id_seguridad_doc, identificacion_obligado);
-				}
-
+			
 				return registros_audit;
 			}
 			catch (Exception excepcion)
