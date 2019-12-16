@@ -1059,23 +1059,27 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			if (adquiriente.IntCertFirma > 0)
 			{
 				empresa_firma = adquiriente;
+				respuesta = Ctl_Documentos.UblFirmar(empresa_firma, doc, ref respuesta, ref resultado);
+
+				//Se mueve el Acuse Firmado a la Carpeta que se muestra en plataforma
+				Archivo.Mover(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml), resultado.RutaArchivosProceso, archivo_xml);
+				if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml)))
+					Archivo.Borrar(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml));
 			}
 			else
 			{
-				empresa_firma = proveedor_emisor;
-				empresa_firma.IntCertFirma = 0;
+				//Se mueve el Acuse sin Firmar a la Carpeta que se muestra en plataforma
+				Archivo.Mover(ruta_xml, resultado.RutaArchivosEnvio, archivo_xml);
+				
 			}
 
-			respuesta = Ctl_Documentos.UblFirmar(empresa_firma, doc, ref respuesta, ref resultado);
+			
 
-			//Se elimina el Acuse generado sin Firmar
+			//Se elimina el Acuse generado sin Firmar de la carpeta donde se creo
 			if (Archivo.ValidarExistencia(ruta_xml))
 				Archivo.Borrar(ruta_xml);
 
-			//Se mueve el Acuse Firmado a la Carpeta que se muestra en plataforma
-			Archivo.Mover(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml), resultado.RutaArchivosProceso, archivo_xml);
-			if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}",resultado.RutaArchivosEnvio, archivo_xml)))
-				Archivo.Borrar(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml));
+			
 
 			//resultado = Ctl_Ubl.Almacenar(resultado);
 
