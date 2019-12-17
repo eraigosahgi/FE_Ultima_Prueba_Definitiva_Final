@@ -6,10 +6,23 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 
 	$scope.MuestraFiltros = false;
 	$scope.FiltroResolucion = false;
+	$scope.MuestraActualizarGrid = false;
+
 
 	SrvMaestrosEnum.ObtenerSesion().then(function (data) {
 		if (data[0].admin || data[0].Integrador) {
 			$scope.MuestraFiltros = true;
+			//Creamos el botón Consultar Con la DIAN
+			$scope.ButtonActualizar = {
+				icon: "refresh",				
+				onClick: function (e) {
+					SrvResoluciones.ActualizarConDIAN(txt_hgi_Facturador).then(function (data) {
+						consultar(txt_hgi_Facturador);
+					});
+				}
+			};
+		} else {
+			$scope.MuestraActualizarGrid = true;
 		}
 
 		consultar(data[0].Identificacion);
@@ -59,6 +72,10 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 			consultar(txt_hgi_Facturador);
 		}
 	};
+
+
+	
+
 	//Función consultar
 	function consultar(Facturador) {
 
@@ -95,6 +112,24 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 				groupPanel: {
 					allowColumnDragging: true,
 					visible: true
+				},
+				onToolbarPreparing: function (e) {
+					var dataGrid = e.component;
+
+					e.toolbarOptions.items.unshift({
+
+						location: "after",
+						widget: "dxButton",
+						options: {
+							icon: "refresh",
+							visible: $scope.MuestraActualizarGrid,
+							onClick: function () {
+								SrvResoluciones.ActualizarConDIAN(txt_hgi_Facturador).then(function (data) {
+									consultar(txt_hgi_Facturador);
+								});
+							}
+						}
+					})
 				}
 				, columns: [{
 
@@ -114,7 +149,7 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						 		var Datos_Pagos_Parciales = false;
 						 		var Datos_Id_Comercio = "";
 						 		var Datos_Descripcion_Comercio = "";
-								//Servicio para obtener la lista de comercios en plataforma intermedia
+						 		//Servicio para obtener la lista de comercios en plataforma intermedia
 						 		SrvResoluciones.ObtenerComercios(options.data.Empresa, options.data.SerialCloud).then(function (data) {
 						 			var Datos = data;
 
@@ -159,7 +194,7 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						 					Datos_Pagos_Parciales = options.data.PermiteParciales;
 
 						 					var Id = e.value;
-											//Recorremos la lista de configuraciones para sacar la descripción.
+						 					//Recorremos la lista de configuraciones para sacar la descripción.
 						 					for (var i = 0; i < Datos.length; i += 1) {
 						 						if (Id == Datos[i].Valor) {
 						 							//Asignar Descripción
@@ -174,7 +209,7 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						 				text: "Guardar",
 						 				type: "default",
 						 				onClick: function (e) {
-											//Servicio para guardar la configuración
+						 					//Servicio para guardar la configuración
 						 					SrvResoluciones.EditarConfigPago(options.data.IdSeguridad, Datos_Pagos_Parciales, Datos_Id_Comercio, Datos_Descripcion_Comercio).then(function (data) {
 						 						DevExpress.ui.notify("Datos guardados con exito", 'success', 6000);
 						 						//Actualiza los datos en el grid para que no tenga que ir nuevamente a base de datos

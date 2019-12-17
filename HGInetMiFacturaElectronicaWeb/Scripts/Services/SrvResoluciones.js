@@ -13,6 +13,16 @@ var AppSrvResoluciones = angular.module('AppSrvResoluciones', ['dx'])
 			return $q.reject(response.data);
 		});
 	}
+
+	this.ActualizarConDIAN = function (codigo_facturador) {
+
+		return $http.get('/api/ActualizarConDIAN?codigo_facturador=' + codigo_facturador).then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			return $q.reject(response.data);
+		});
+	}
 	,
 	//Obtiene la lista de resoluciones asociadas a un facturador
 	this.ObtenerAsociadas = function (codigo_facturador) {

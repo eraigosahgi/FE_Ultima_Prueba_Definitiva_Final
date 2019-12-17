@@ -33,7 +33,12 @@
 							<div class="col-md-4 ">
 								<div data-hgi-filtro="Facturador"></div>
 							</div>
-							<div class="col-md-6 " data-ng-show="FiltroResolucion">
+
+							<div class="col-md-1 " style="margin-top: 28px; margin-bottom: 1%">
+								<div data-dx-button="ButtonActualizar"></div>
+							</div>
+
+							<div class="col-md-5 " data-ng-show="FiltroResolucion">
 								<label style="margin-top: 5px; margin-bottom: 1%">Resolución:</label>
 								<div id="Listaresolucion" style="margin-left: -10px; margin-bottom: 1%"></div>
 							</div>

@@ -14,6 +14,7 @@ using LibreriaGlobalHGInet.Objetos;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using LibreriaGlobalHGInet.RegistroLog;
 using HGInetMiFacturaElectonicaData.Objetos;
+using HGInetMiFacturaElectonicaController.Procesos;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
@@ -46,13 +47,37 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				return Ok(retorno);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-
+				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
 				throw;
 			}
 		}
 
+
+
+		[HttpGet]
+		[Route("api/ActualizarConDIAN")]
+		public IHttpActionResult ActualizarConDIAN(string codigo_facturador)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+				
+				if (string.IsNullOrEmpty(codigo_facturador))
+				{
+					throw new Exception("Debe seleccionar el Facturador");
+				}
+				var datos = Ctl_Resoluciones.Obtener(codigo_facturador);
+
+				return Ok();
+			}
+			catch (Exception e)
+			{
+				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
+				throw;
+			}
+		}
 
 
 		[HttpGet]
@@ -75,9 +100,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				return Ok(retorno);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-
+				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
 				throw;
 			}
 		}
@@ -108,8 +133,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				return Ok(retorno);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
 				throw;
 			}
 		}
