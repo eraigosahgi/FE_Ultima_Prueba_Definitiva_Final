@@ -268,6 +268,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso511728", "Caso511728", "{BF7BD325-A511-4119-9FE2-1CDD60C12F48}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\Caso511728\CambiosPagosEnLinea.txt = Documentacion\Liberaciones\Caso511728\CambiosPagosEnLinea.txt
+		Documentacion\Liberaciones\Caso511728\Script Nuevo Permiso Resoluciones.txt = Documentacion\Liberaciones\Caso511728\Script Nuevo Permiso Resoluciones.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectronicaAudit", "HGInetMiFacturaElectronicaAudit\HGInetMiFacturaElectronicaAudit.csproj", "{B044D0CE-3B14-4D09-B22B-6183269E6ACF}"

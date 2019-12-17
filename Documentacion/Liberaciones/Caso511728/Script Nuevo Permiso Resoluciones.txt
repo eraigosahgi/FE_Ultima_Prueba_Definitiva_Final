@@ -1,0 +1,21 @@
+
+
+--Menu
+INSERT INTO [dbo].[TblOpciones]         
+(IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad,StrClaseMenu,StrRutaMenu,IntTipo)
+     VALUES (1337,133,'Gestión de Resoluciones',1,1,'c594ea12-ba18-4456-9c50-5bf95a153b2f','icon-file-text','ConsultaResoluciones.aspx',0)
+
+--Admin
+INSERT INTO [dbo].[TblOpcionesPerfil]   
+([IntIdOpcion],[IntIdPerfil],[IntConsultar],[IntAgregar],[IntEditar],[IntEliminar],[IntAnular],[IntGestion])
+     VALUES      (1337,1,1,0,0,0,0,0)
+
+--Facturador
+INSERT INTO [dbo].[TblOpcionesPerfil]   
+([IntIdOpcion],[IntIdPerfil],[IntConsultar],[IntAgregar],[IntEditar],[IntEliminar],[IntAnular],[IntGestion])
+     VALUES      (1337,2,1,0,0,0,0,0)
+
+--Integrador
+INSERT INTO [dbo].[TblOpcionesPerfil]   
+([IntIdOpcion],[IntIdPerfil],[IntConsultar],[IntAgregar],[IntEditar],[IntEliminar],[IntAnular],[IntGestion])
+     VALUES      (1337,4,1,0,0,0,0,0)
