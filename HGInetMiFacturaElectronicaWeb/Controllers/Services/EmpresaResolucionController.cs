@@ -53,6 +53,36 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+
+
+		[HttpGet]
+		[Route("api/ObtenerResolucionesEnum")]
+		public IHttpActionResult ObtenerResolucionesEnum(string codigo_facturador)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_EmpresaResolucion Resolucion = new Ctl_EmpresaResolucion();
+
+				List<TblEmpresasResoluciones> datos = Resolucion.ObtenerResolucionesPorTipo(codigo_facturador, TipoDocumento.Factura.GetHashCode());
+
+				var retorno = datos.Select(d => new
+				{
+					ID = d.StrNumResolucion,
+					Descripcion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntTipoDoc)) + "-" + ((d.StrPrefijo == null) ? "S / PREFIJO" : (!d.StrPrefijo.Equals("")) ? d.StrPrefijo : "S/PREFIJO") + ((d.IntTipoDoc == 1) ? "-" + d.StrNumResolucion : "")
+				});
+
+				return Ok(retorno);
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+
 		/// <summary>
 		/// Obtiene la lista de resoluciones con prefijo para una empresa espeficifa
 		/// </summary>
@@ -112,8 +142,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				List<TblEmpresasResoluciones> datos = new List<TblEmpresasResoluciones>();
 
 				if (empresa.IntAdministrador)
-				{					
-					datos = Resolucion.Obtener("*", codigo_Resolucion, "*", "*");
+				{
+
+
+					if (codigo_Resolucion != "*")
+					{
+						datos = Resolucion.Obtener(codigo_facturador, codigo_Resolucion, "*", "*");
+					}
+					else
+					{
+						datos = Resolucion.Obtener("*", codigo_Resolucion, "*", "*");
+					}
 				}
 				else
 				{

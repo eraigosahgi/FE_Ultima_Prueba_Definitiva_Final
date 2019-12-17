@@ -69,7 +69,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						 && (item.StrNumResolucion.Equals(numero_resolucion) || numero_resolucion.Equals("*"))
 						 //&& (item.TblEmpresas.StrIdentificacion.Equals(documento_empresa) || documento_empresa.Equals("*"))
 						 //&& (item.StrClaveTecnica.Equals(clave_tecnica) || clave_tecnica.Equals("*"))
-						
+
 						 select item).ToList();
 
 			return datos;
@@ -130,6 +130,25 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		}
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="documento_empresa"></param>
+		/// <param name="numero_resolucion"></param>
+		/// <returns></returns>
+		public List<TblEmpresasResoluciones> ObtenerResolucionesPorTipo(string documento_empresa, int Tipo)
+		{
+
+			List<TblEmpresasResoluciones> datos = (from item in context.TblEmpresasResoluciones
+												   where item.IntTipoDoc == Tipo
+												   && item.TblEmpresas.StrIdentificacion.Equals(documento_empresa)
+												   orderby item.IntTipoDoc, item.StrNumResolucion, item.StrPrefijo
+												   select item).ToList();
+
+			return datos;
+
+		}
 
 		#endregion
 
@@ -230,7 +249,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion, "");
 				throw;
 			}
-		} 
+		}
 		#endregion
 
 		#region Convertir
@@ -354,7 +373,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				throw;
 			}
 
-		} 
+		}
 		#endregion
 
 	}

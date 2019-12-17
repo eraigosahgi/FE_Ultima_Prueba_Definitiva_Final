@@ -17,7 +17,7 @@ var AppSrvResoluciones = angular.module('AppSrvResoluciones', ['dx'])
 	//Obtiene la lista de resoluciones asociadas a un facturador
 	this.ObtenerAsociadas = function (codigo_facturador) {
 
-		return $http.get('/api/EmpresaResolucion?codigo_facturador=' + codigo_facturador).then(function (response) {
+		return $http.get('/api/ObtenerResolucionesEnum?codigo_facturador=' + codigo_facturador).then(function (response) {
 			return response.data;
 		}, function (response) {
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);

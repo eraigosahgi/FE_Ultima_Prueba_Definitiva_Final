@@ -37,7 +37,6 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 		//Obtiene las resoluciones asociadas para cargarlas en el filtro
 		SrvResoluciones.ObtenerAsociadas(Facturador).then(function (data) {
 			cargarResolucion(JSON.parse(JSON.stringify(data)));
-
 		});
 	}
 
@@ -48,7 +47,7 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 			displayExpr: "Descripcion",
 			dataSource: Lista,
 			onValueChanged: function (data) {
-				Datos_Resolucion = data.value.Descripcion;
+				Datos_Resolucion = data.value.ID;
 			}
 		});
 	}
