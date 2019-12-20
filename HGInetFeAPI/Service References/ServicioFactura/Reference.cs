@@ -57,6 +57,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.Descuento> DescuentosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.ReferenciaAdicional> DespatchDocumentField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private long DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -102,6 +105,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private string NumeroResolucionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.ReferenciaAdicional> OrderReferenceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string PedidoRefField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -109,6 +115,9 @@ namespace HGInetFeAPI.ServicioFactura {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string PrefijoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.ReferenciaAdicional> ReceiptDocumentField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int TerminoPagoField;
@@ -315,6 +324,19 @@ namespace HGInetFeAPI.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.ReferenciaAdicional> DespatchDocument {
+            get {
+                return this.DespatchDocumentField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DespatchDocumentField, value) != true)) {
+                    this.DespatchDocumentField = value;
+                    this.RaisePropertyChanged("DespatchDocument");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public long Documento {
             get {
                 return this.DocumentoField;
@@ -510,6 +532,19 @@ namespace HGInetFeAPI.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.ReferenciaAdicional> OrderReference {
+            get {
+                return this.OrderReferenceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OrderReferenceField, value) != true)) {
+                    this.OrderReferenceField = value;
+                    this.RaisePropertyChanged("OrderReference");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string PedidoRef {
             get {
                 return this.PedidoRefField;
@@ -544,6 +579,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.PrefijoField, value) != true)) {
                     this.PrefijoField = value;
                     this.RaisePropertyChanged("Prefijo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.ReferenciaAdicional> ReceiptDocument {
+            get {
+                return this.ReceiptDocumentField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ReceiptDocumentField, value) != true)) {
+                    this.ReceiptDocumentField = value;
+                    this.RaisePropertyChanged("ReceiptDocument");
                 }
             }
         }
@@ -1819,6 +1867,84 @@ namespace HGInetFeAPI.ServicioFactura {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ReferenciaAdicional", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio.Documentos")]
+    [System.SerializableAttribute()]
+    public partial class ReferenciaAdicional : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoReferenciaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaReferenciaField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoReferencia {
+            get {
+                return this.CodigoReferenciaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoReferenciaField, value) != true)) {
+                    this.CodigoReferenciaField = value;
+                    this.RaisePropertyChanged("CodigoReferencia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Documento {
+            get {
+                return this.DocumentoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DocumentoField, value) != true)) {
+                    this.DocumentoField = value;
+                    this.RaisePropertyChanged("Documento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaReferencia {
+            get {
+                return this.FechaReferenciaField;
+            }
+            set {
+                if ((this.FechaReferenciaField.Equals(value) != true)) {
+                    this.FechaReferenciaField = value;
+                    this.RaisePropertyChanged("FechaReferencia");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DocumentoDetalle", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
         "cio")]
     [System.SerializableAttribute()]
@@ -1829,6 +1955,9 @@ namespace HGInetFeAPI.ServicioFactura {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int AiuField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal BaseImpuestoIvaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string BodegaField;
@@ -1927,6 +2056,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.AiuField.Equals(value) != true)) {
                     this.AiuField = value;
                     this.RaisePropertyChanged("Aiu");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal BaseImpuestoIva {
+            get {
+                return this.BaseImpuestoIvaField;
+            }
+            set {
+                if ((this.BaseImpuestoIvaField.Equals(value) != true)) {
+                    this.BaseImpuestoIvaField = value;
+                    this.RaisePropertyChanged("BaseImpuestoIva");
                 }
             }
         }
@@ -2265,84 +2407,6 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.ValorUnitarioField.Equals(value) != true)) {
                     this.ValorUnitarioField = value;
                     this.RaisePropertyChanged("ValorUnitario");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ReferenciaAdicional", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
-        "cio.Documentos")]
-    [System.SerializableAttribute()]
-    public partial class ReferenciaAdicional : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CodigoReferenciaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DocumentoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime FechaReferenciaField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CodigoReferencia {
-            get {
-                return this.CodigoReferenciaField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CodigoReferenciaField, value) != true)) {
-                    this.CodigoReferenciaField = value;
-                    this.RaisePropertyChanged("CodigoReferencia");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Documento {
-            get {
-                return this.DocumentoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DocumentoField, value) != true)) {
-                    this.DocumentoField = value;
-                    this.RaisePropertyChanged("Documento");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime FechaReferencia {
-            get {
-                return this.FechaReferenciaField;
-            }
-            set {
-                if ((this.FechaReferenciaField.Equals(value) != true)) {
-                    this.FechaReferenciaField = value;
-                    this.RaisePropertyChanged("FechaReferencia");
                 }
             }
         }

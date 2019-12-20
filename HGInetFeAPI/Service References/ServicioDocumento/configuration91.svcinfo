@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="cJcVn7kGU15z1SpImBw62PduhYk=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="88MuO7Cje5X8PUvBCriGtExZ04o=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="soap">
+    <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_ServicioAcuseRecibo1">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap</serializedValue>
+          <serializedValue>BasicHttpBinding_ServicioAcuseRecibo1</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="soap" contract="ServicioDocumento.ServicioDocumentos" bindingType="basicHttpBinding" address="http://localhost:61885/wcf/documentos.svc" bindingConfiguration="soap">
+    <endpoint name="BasicHttpBinding_ServicioAcuseRecibo1" contract="ServicioDocumento.ServicioAcuseRecibo" bindingType="basicHttpBinding" address="http://habilitacion.mifacturaenlinea.com.co/wcf/acuserecibo.svc" bindingConfiguration="BasicHttpBinding_ServicioAcuseRecibo1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:61885/wcf/documentos.svc</serializedValue>
+          <serializedValue>http://habilitacion.mifacturaenlinea.com.co/wcf/acuserecibo.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -124,10 +124,10 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap</serializedValue>
+          <serializedValue>BasicHttpBinding_ServicioAcuseRecibo1</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>ServicioDocumento.ServicioDocumentos</serializedValue>
+          <serializedValue>ServicioDocumento.ServicioAcuseRecibo</serializedValue>
         </property>
         <property path="/headers" isComplexType="true" isExplicitlyDefined="false" clrType="System.ServiceModel.Configuration.AddressHeaderCollectionElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>System.ServiceModel.Configuration.AddressHeaderCollectionElement</serializedValue>
@@ -187,7 +187,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap</serializedValue>
+          <serializedValue>BasicHttpBinding_ServicioAcuseRecibo1</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
