@@ -112,13 +112,34 @@
     <None Include="Service References\ServicioAcuseRecibo\HGInetFeAPI.ServicioAcuseRecibo.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioDocumento\acuserecibo.wsdl" />
-    <None Include="Service References\ServicioDocumento\acuserecibo.xsd">
+    <None Include="Service References\ServicioDocumento\documentos.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\acuserecibo1.wsdl" />
-    <None Include="Service References\ServicioDocumento\acuserecibo1.xsd">
+    <None Include="Service References\ServicioDocumento\documentos1.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos1.xsd">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioDocumento\documentos2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioDocumento\documentos3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -411,7 +432,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioDocumento\acuserecibo.disco" />
+    <None Include="Service References\ServicioDocumento\documentos.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

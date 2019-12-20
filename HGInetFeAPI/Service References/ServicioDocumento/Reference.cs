@@ -9,17 +9,1269 @@
 //------------------------------------------------------------------------------
 
 namespace HGInetFeAPI.ServicioDocumento {
+    using System.Runtime.Serialization;
+    using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DocumentoRespuesta", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class DocumentoRespuesta : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int AceptacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoRegistroField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CufeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionAceptacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionEstadoEnvioMailField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionProcesoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool DescuentaSaldoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private long DocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int DocumentoTipoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioDocumento.Error ErrorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioDocumento.RespuestaDian EstadoDianField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaRecepcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaUltimoProcesoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdDocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdEstadoEnvioMailField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid IdPeticionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid IdPlanField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdProcesoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdVersionDianField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionObligadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MotivoRechazoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NumeroResolucionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PrefijoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int ProcesoFinalizadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlAnexoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlAuditoriaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlPdfField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlXmlUblField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Aceptacion {
+            get {
+                return this.AceptacionField;
+            }
+            set {
+                if ((this.AceptacionField.Equals(value) != true)) {
+                    this.AceptacionField = value;
+                    this.RaisePropertyChanged("Aceptacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoRegistro {
+            get {
+                return this.CodigoRegistroField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoRegistroField, value) != true)) {
+                    this.CodigoRegistroField = value;
+                    this.RaisePropertyChanged("CodigoRegistro");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Cufe {
+            get {
+                return this.CufeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CufeField, value) != true)) {
+                    this.CufeField = value;
+                    this.RaisePropertyChanged("Cufe");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionAceptacion {
+            get {
+                return this.DescripcionAceptacionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionAceptacionField, value) != true)) {
+                    this.DescripcionAceptacionField = value;
+                    this.RaisePropertyChanged("DescripcionAceptacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionEstado {
+            get {
+                return this.DescripcionEstadoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionEstadoField, value) != true)) {
+                    this.DescripcionEstadoField = value;
+                    this.RaisePropertyChanged("DescripcionEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionEstadoEnvioMail {
+            get {
+                return this.DescripcionEstadoEnvioMailField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionEstadoEnvioMailField, value) != true)) {
+                    this.DescripcionEstadoEnvioMailField = value;
+                    this.RaisePropertyChanged("DescripcionEstadoEnvioMail");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DescripcionProceso {
+            get {
+                return this.DescripcionProcesoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionProcesoField, value) != true)) {
+                    this.DescripcionProcesoField = value;
+                    this.RaisePropertyChanged("DescripcionProceso");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool DescuentaSaldo {
+            get {
+                return this.DescuentaSaldoField;
+            }
+            set {
+                if ((this.DescuentaSaldoField.Equals(value) != true)) {
+                    this.DescuentaSaldoField = value;
+                    this.RaisePropertyChanged("DescuentaSaldo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public long Documento {
+            get {
+                return this.DocumentoField;
+            }
+            set {
+                if ((this.DocumentoField.Equals(value) != true)) {
+                    this.DocumentoField = value;
+                    this.RaisePropertyChanged("Documento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int DocumentoTipo {
+            get {
+                return this.DocumentoTipoField;
+            }
+            set {
+                if ((this.DocumentoTipoField.Equals(value) != true)) {
+                    this.DocumentoTipoField = value;
+                    this.RaisePropertyChanged("DocumentoTipo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioDocumento.Error Error {
+            get {
+                return this.ErrorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ErrorField, value) != true)) {
+                    this.ErrorField = value;
+                    this.RaisePropertyChanged("Error");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioDocumento.RespuestaDian EstadoDian {
+            get {
+                return this.EstadoDianField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.EstadoDianField, value) != true)) {
+                    this.EstadoDianField = value;
+                    this.RaisePropertyChanged("EstadoDian");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaRecepcion {
+            get {
+                return this.FechaRecepcionField;
+            }
+            set {
+                if ((this.FechaRecepcionField.Equals(value) != true)) {
+                    this.FechaRecepcionField = value;
+                    this.RaisePropertyChanged("FechaRecepcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaUltimoProceso {
+            get {
+                return this.FechaUltimoProcesoField;
+            }
+            set {
+                if ((this.FechaUltimoProcesoField.Equals(value) != true)) {
+                    this.FechaUltimoProcesoField = value;
+                    this.RaisePropertyChanged("FechaUltimoProceso");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdDocumento {
+            get {
+                return this.IdDocumentoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdDocumentoField, value) != true)) {
+                    this.IdDocumentoField = value;
+                    this.RaisePropertyChanged("IdDocumento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdEstado {
+            get {
+                return this.IdEstadoField;
+            }
+            set {
+                if ((this.IdEstadoField.Equals(value) != true)) {
+                    this.IdEstadoField = value;
+                    this.RaisePropertyChanged("IdEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdEstadoEnvioMail {
+            get {
+                return this.IdEstadoEnvioMailField;
+            }
+            set {
+                if ((this.IdEstadoEnvioMailField.Equals(value) != true)) {
+                    this.IdEstadoEnvioMailField = value;
+                    this.RaisePropertyChanged("IdEstadoEnvioMail");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid IdPeticion {
+            get {
+                return this.IdPeticionField;
+            }
+            set {
+                if ((this.IdPeticionField.Equals(value) != true)) {
+                    this.IdPeticionField = value;
+                    this.RaisePropertyChanged("IdPeticion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid IdPlan {
+            get {
+                return this.IdPlanField;
+            }
+            set {
+                if ((this.IdPlanField.Equals(value) != true)) {
+                    this.IdPlanField = value;
+                    this.RaisePropertyChanged("IdPlan");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdProceso {
+            get {
+                return this.IdProcesoField;
+            }
+            set {
+                if ((this.IdProcesoField.Equals(value) != true)) {
+                    this.IdProcesoField = value;
+                    this.RaisePropertyChanged("IdProceso");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdVersionDian {
+            get {
+                return this.IdVersionDianField;
+            }
+            set {
+                if ((this.IdVersionDianField.Equals(value) != true)) {
+                    this.IdVersionDianField = value;
+                    this.RaisePropertyChanged("IdVersionDian");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Identificacion {
+            get {
+                return this.IdentificacionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionField, value) != true)) {
+                    this.IdentificacionField = value;
+                    this.RaisePropertyChanged("Identificacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionObligado {
+            get {
+                return this.IdentificacionObligadoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionObligadoField, value) != true)) {
+                    this.IdentificacionObligadoField = value;
+                    this.RaisePropertyChanged("IdentificacionObligado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string MotivoRechazo {
+            get {
+                return this.MotivoRechazoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MotivoRechazoField, value) != true)) {
+                    this.MotivoRechazoField = value;
+                    this.RaisePropertyChanged("MotivoRechazo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string NumeroResolucion {
+            get {
+                return this.NumeroResolucionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NumeroResolucionField, value) != true)) {
+                    this.NumeroResolucionField = value;
+                    this.RaisePropertyChanged("NumeroResolucion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Prefijo {
+            get {
+                return this.PrefijoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PrefijoField, value) != true)) {
+                    this.PrefijoField = value;
+                    this.RaisePropertyChanged("Prefijo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ProcesoFinalizado {
+            get {
+                return this.ProcesoFinalizadoField;
+            }
+            set {
+                if ((this.ProcesoFinalizadoField.Equals(value) != true)) {
+                    this.ProcesoFinalizadoField = value;
+                    this.RaisePropertyChanged("ProcesoFinalizado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlAnexo {
+            get {
+                return this.UrlAnexoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlAnexoField, value) != true)) {
+                    this.UrlAnexoField = value;
+                    this.RaisePropertyChanged("UrlAnexo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlAuditoria {
+            get {
+                return this.UrlAuditoriaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlAuditoriaField, value) != true)) {
+                    this.UrlAuditoriaField = value;
+                    this.RaisePropertyChanged("UrlAuditoria");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlPdf {
+            get {
+                return this.UrlPdfField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlPdfField, value) != true)) {
+                    this.UrlPdfField = value;
+                    this.RaisePropertyChanged("UrlPdf");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlXmlUbl {
+            get {
+                return this.UrlXmlUblField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlXmlUblField, value) != true)) {
+                    this.UrlXmlUblField = value;
+                    this.RaisePropertyChanged("UrlXmlUbl");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Error", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
+    [System.SerializableAttribute()]
+    public partial class Error : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioDocumento.CodigoError CodigoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MensajeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioDocumento.CodigoError Codigo {
+            get {
+                return this.CodigoField;
+            }
+            set {
+                if ((this.CodigoField.Equals(value) != true)) {
+                    this.CodigoField = value;
+                    this.RaisePropertyChanged("Codigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Fecha {
+            get {
+                return this.FechaField;
+            }
+            set {
+                if ((this.FechaField.Equals(value) != true)) {
+                    this.FechaField = value;
+                    this.RaisePropertyChanged("Fecha");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Mensaje {
+            get {
+                return this.MensajeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
+                    this.MensajeField = value;
+                    this.RaisePropertyChanged("Mensaje");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="RespuestaDian", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class RespuestaDian : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoRespuestaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int EstadoDocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaConsultaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlXmlRespuestaField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoRespuesta {
+            get {
+                return this.CodigoRespuestaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoRespuestaField, value) != true)) {
+                    this.CodigoRespuestaField = value;
+                    this.RaisePropertyChanged("CodigoRespuesta");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Descripcion {
+            get {
+                return this.DescripcionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescripcionField, value) != true)) {
+                    this.DescripcionField = value;
+                    this.RaisePropertyChanged("Descripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int EstadoDocumento {
+            get {
+                return this.EstadoDocumentoField;
+            }
+            set {
+                if ((this.EstadoDocumentoField.Equals(value) != true)) {
+                    this.EstadoDocumentoField = value;
+                    this.RaisePropertyChanged("EstadoDocumento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaConsulta {
+            get {
+                return this.FechaConsultaField;
+            }
+            set {
+                if ((this.FechaConsultaField.Equals(value) != true)) {
+                    this.FechaConsultaField = value;
+                    this.RaisePropertyChanged("FechaConsulta");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlXmlRespuesta {
+            get {
+                return this.UrlXmlRespuestaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlXmlRespuestaField, value) != true)) {
+                    this.UrlXmlRespuestaField = value;
+                    this.RaisePropertyChanged("UrlXmlRespuesta");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="CodigoError", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
+    public enum CodigoError : int {
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        OK = 0,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_NO_CONTROLADO = 1,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_EN_SERVIDOR = 2,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        VALIDACION = 3,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_AGREGAR = 4,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_EDITAR = 5,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_ELIMINAR = 6,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_LICENCIA = 98,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        NINGUNO = 99,
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DocumentoArchivo", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class DocumentoArchivo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte[] ArchivoXmlUblField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoRegistroField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DataKeyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int DocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NumeroResolucionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PrefijoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int TipoDocumentoField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public byte[] ArchivoXmlUbl {
+            get {
+                return this.ArchivoXmlUblField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ArchivoXmlUblField, value) != true)) {
+                    this.ArchivoXmlUblField = value;
+                    this.RaisePropertyChanged("ArchivoXmlUbl");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoRegistro {
+            get {
+                return this.CodigoRegistroField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoRegistroField, value) != true)) {
+                    this.CodigoRegistroField = value;
+                    this.RaisePropertyChanged("CodigoRegistro");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DataKey {
+            get {
+                return this.DataKeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DataKeyField, value) != true)) {
+                    this.DataKeyField = value;
+                    this.RaisePropertyChanged("DataKey");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Documento {
+            get {
+                return this.DocumentoField;
+            }
+            set {
+                if ((this.DocumentoField.Equals(value) != true)) {
+                    this.DocumentoField = value;
+                    this.RaisePropertyChanged("Documento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Identificacion {
+            get {
+                return this.IdentificacionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionField, value) != true)) {
+                    this.IdentificacionField = value;
+                    this.RaisePropertyChanged("Identificacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string NumeroResolucion {
+            get {
+                return this.NumeroResolucionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NumeroResolucionField, value) != true)) {
+                    this.NumeroResolucionField = value;
+                    this.RaisePropertyChanged("NumeroResolucion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Prefijo {
+            get {
+                return this.PrefijoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PrefijoField, value) != true)) {
+                    this.PrefijoField = value;
+                    this.RaisePropertyChanged("Prefijo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int TipoDocumento {
+            get {
+                return this.TipoDocumentoField;
+            }
+            set {
+                if ((this.TipoDocumentoField.Equals(value) != true)) {
+                    this.TipoDocumentoField = value;
+                    this.RaisePropertyChanged("TipoDocumento");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DocumentoCufe", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class DocumentoCufe : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ClaveTecnicaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CufeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DataKeyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private long DocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int DocumentoTipoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioDocumento.Error ErrorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdVersionDianField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionAdquirienteField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionObligadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PrefijoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string QRField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal TotalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorIcaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorImpuestoConsumoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorIvaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorSubtotalField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ClaveTecnica {
+            get {
+                return this.ClaveTecnicaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ClaveTecnicaField, value) != true)) {
+                    this.ClaveTecnicaField = value;
+                    this.RaisePropertyChanged("ClaveTecnica");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Cufe {
+            get {
+                return this.CufeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CufeField, value) != true)) {
+                    this.CufeField = value;
+                    this.RaisePropertyChanged("Cufe");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DataKey {
+            get {
+                return this.DataKeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DataKeyField, value) != true)) {
+                    this.DataKeyField = value;
+                    this.RaisePropertyChanged("DataKey");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public long Documento {
+            get {
+                return this.DocumentoField;
+            }
+            set {
+                if ((this.DocumentoField.Equals(value) != true)) {
+                    this.DocumentoField = value;
+                    this.RaisePropertyChanged("Documento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int DocumentoTipo {
+            get {
+                return this.DocumentoTipoField;
+            }
+            set {
+                if ((this.DocumentoTipoField.Equals(value) != true)) {
+                    this.DocumentoTipoField = value;
+                    this.RaisePropertyChanged("DocumentoTipo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioDocumento.Error Error {
+            get {
+                return this.ErrorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ErrorField, value) != true)) {
+                    this.ErrorField = value;
+                    this.RaisePropertyChanged("Error");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Fecha {
+            get {
+                return this.FechaField;
+            }
+            set {
+                if ((this.FechaField.Equals(value) != true)) {
+                    this.FechaField = value;
+                    this.RaisePropertyChanged("Fecha");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdVersionDian {
+            get {
+                return this.IdVersionDianField;
+            }
+            set {
+                if ((this.IdVersionDianField.Equals(value) != true)) {
+                    this.IdVersionDianField = value;
+                    this.RaisePropertyChanged("IdVersionDian");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionAdquiriente {
+            get {
+                return this.IdentificacionAdquirienteField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionAdquirienteField, value) != true)) {
+                    this.IdentificacionAdquirienteField = value;
+                    this.RaisePropertyChanged("IdentificacionAdquiriente");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionObligado {
+            get {
+                return this.IdentificacionObligadoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionObligadoField, value) != true)) {
+                    this.IdentificacionObligadoField = value;
+                    this.RaisePropertyChanged("IdentificacionObligado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Prefijo {
+            get {
+                return this.PrefijoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PrefijoField, value) != true)) {
+                    this.PrefijoField = value;
+                    this.RaisePropertyChanged("Prefijo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string QR {
+            get {
+                return this.QRField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.QRField, value) != true)) {
+                    this.QRField = value;
+                    this.RaisePropertyChanged("QR");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Total {
+            get {
+                return this.TotalField;
+            }
+            set {
+                if ((this.TotalField.Equals(value) != true)) {
+                    this.TotalField = value;
+                    this.RaisePropertyChanged("Total");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorIca {
+            get {
+                return this.ValorIcaField;
+            }
+            set {
+                if ((this.ValorIcaField.Equals(value) != true)) {
+                    this.ValorIcaField = value;
+                    this.RaisePropertyChanged("ValorIca");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorImpuestoConsumo {
+            get {
+                return this.ValorImpuestoConsumoField;
+            }
+            set {
+                if ((this.ValorImpuestoConsumoField.Equals(value) != true)) {
+                    this.ValorImpuestoConsumoField = value;
+                    this.RaisePropertyChanged("ValorImpuestoConsumo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorIva {
+            get {
+                return this.ValorIvaField;
+            }
+            set {
+                if ((this.ValorIvaField.Equals(value) != true)) {
+                    this.ValorIvaField = value;
+                    this.RaisePropertyChanged("ValorIva");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorSubtotal {
+            get {
+                return this.ValorSubtotalField;
+            }
+            set {
+                if ((this.ValorSubtotalField.Equals(value) != true)) {
+                    this.ValorSubtotalField = value;
+                    this.RaisePropertyChanged("ValorSubtotal");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", ConfigurationName="ServicioDocumento.ServicioAcuseRecibo")]
-    public interface ServicioAcuseRecibo {
+    [System.ServiceModel.ServiceContractAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", ConfigurationName="ServicioDocumento.ServicioDocumentos")]
+    public interface ServicioDocumentos {
         
-        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioAcuseRecibo/Test", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioAcuseRecibo/TestResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Test", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/TestResponse")]
         HGInetFeAPI.ServicioDocumento.TestResponse Test(HGInetFeAPI.ServicioDocumento.TestRequest request);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioAcuseRecibo/Test", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioAcuseRecibo/TestResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Test", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/TestResponse")]
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.TestResponse> TestAsync(HGInetFeAPI.ServicioDocumento.TestRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumeros", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumerosRespon" +
+            "se")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ConsultaPorNumeros", Name="Error")]
+        HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosResponse ConsultaPorNumeros(HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumeros", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumerosRespon" +
+            "se")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosResponse> ConsultaPorNumerosAsync(HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistr" +
+            "o", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistr" +
+            "oResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ConsultaPorCodigoRegistro", Name="Error")]
+        HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse ConsultaPorCodigoRegistro(HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistr" +
+            "o", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistr" +
+            "oResponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse> ConsultaPorCodigoRegistroAsync(HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaborac" +
+            "ion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaborac" +
+            "ionResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ConsultaPorFechaElaboracion", Name="Error")]
+        HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionResponse ConsultaPorFechaElaboracion(HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaborac" +
+            "ion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaborac" +
+            "ionResponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionResponse> ConsultaPorFechaElaboracionAsync(HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/RecepcionResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="Recepcion", Name="Error")]
+        HGInetFeAPI.ServicioDocumento.RecepcionResponse Recepcion(HGInetFeAPI.ServicioDocumento.RecepcionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/RecepcionResponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.RecepcionResponse> RecepcionAsync(HGInetFeAPI.ServicioDocumento.RecepcionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufe", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufeResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ObtenerCufe", Name="Error")]
+        HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse ObtenerCufe(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufe", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufeResponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse> ObtenerCufeAsync(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -47,30 +1299,230 @@ namespace HGInetFeAPI.ServicioDocumento {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface ServicioAcuseReciboChannel : HGInetFeAPI.ServicioDocumento.ServicioAcuseRecibo, System.ServiceModel.IClientChannel {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultaPorNumeros", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultaPorNumerosRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public string DataKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=1)]
+        public string Identificacion;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
+        public int TipoDocumento;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=3)]
+        public string Numeros;
+        
+        public ConsultaPorNumerosRequest() {
+        }
+        
+        public ConsultaPorNumerosRequest(string DataKey, string Identificacion, int TipoDocumento, string Numeros) {
+            this.DataKey = DataKey;
+            this.Identificacion = Identificacion;
+            this.TipoDocumento = TipoDocumento;
+            this.Numeros = Numeros;
+        }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ServicioAcuseReciboClient : System.ServiceModel.ClientBase<HGInetFeAPI.ServicioDocumento.ServicioAcuseRecibo>, HGInetFeAPI.ServicioDocumento.ServicioAcuseRecibo {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultaPorNumerosResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultaPorNumerosResponse {
         
-        public ServicioAcuseReciboClient() {
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoRespuesta> ConsultaPorNumerosResult;
+        
+        public ConsultaPorNumerosResponse() {
         }
         
-        public ServicioAcuseReciboClient(string endpointConfigurationName) : 
+        public ConsultaPorNumerosResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoRespuesta> ConsultaPorNumerosResult) {
+            this.ConsultaPorNumerosResult = ConsultaPorNumerosResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultaPorCodigoRegistro", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultaPorCodigoRegistroRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public string DataKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=1)]
+        public string Identificacion;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
+        public int TipoDocumento;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=3)]
+        public string CodigosRegistros;
+        
+        public ConsultaPorCodigoRegistroRequest() {
+        }
+        
+        public ConsultaPorCodigoRegistroRequest(string DataKey, string Identificacion, int TipoDocumento, string CodigosRegistros) {
+            this.DataKey = DataKey;
+            this.Identificacion = Identificacion;
+            this.TipoDocumento = TipoDocumento;
+            this.CodigosRegistros = CodigosRegistros;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultaPorCodigoRegistroResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultaPorCodigoRegistroResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoRespuesta> ConsultaPorCodigoRegistroResult;
+        
+        public ConsultaPorCodigoRegistroResponse() {
+        }
+        
+        public ConsultaPorCodigoRegistroResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoRespuesta> ConsultaPorCodigoRegistroResult) {
+            this.ConsultaPorCodigoRegistroResult = ConsultaPorCodigoRegistroResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultaPorFechaElaboracion", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultaPorFechaElaboracionRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public string DataKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=1)]
+        public string Identificacion;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
+        public int TipoDocumento;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=3)]
+        public System.DateTime FechaInicial;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=4)]
+        public System.DateTime FechaFinal;
+        
+        public ConsultaPorFechaElaboracionRequest() {
+        }
+        
+        public ConsultaPorFechaElaboracionRequest(string DataKey, string Identificacion, int TipoDocumento, System.DateTime FechaInicial, System.DateTime FechaFinal) {
+            this.DataKey = DataKey;
+            this.Identificacion = Identificacion;
+            this.TipoDocumento = TipoDocumento;
+            this.FechaInicial = FechaInicial;
+            this.FechaFinal = FechaFinal;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultaPorFechaElaboracionResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultaPorFechaElaboracionResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoRespuesta> ConsultaPorFechaElaboracionResult;
+        
+        public ConsultaPorFechaElaboracionResponse() {
+        }
+        
+        public ConsultaPorFechaElaboracionResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoRespuesta> ConsultaPorFechaElaboracionResult) {
+            this.ConsultaPorFechaElaboracionResult = ConsultaPorFechaElaboracionResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="Recepcion", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class RecepcionRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoArchivo> documentos;
+        
+        public RecepcionRequest() {
+        }
+        
+        public RecepcionRequest(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoArchivo> documentos) {
+            this.documentos = documentos;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="RecepcionResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class RecepcionResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoRespuesta> RecepcionResult;
+        
+        public RecepcionResponse() {
+        }
+        
+        public RecepcionResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoRespuesta> RecepcionResult) {
+            this.RecepcionResult = RecepcionResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ObtenerCufe", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ObtenerCufeRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> documentos_cufe;
+        
+        public ObtenerCufeRequest() {
+        }
+        
+        public ObtenerCufeRequest(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> documentos_cufe) {
+            this.documentos_cufe = documentos_cufe;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ObtenerCufeResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ObtenerCufeResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> ObtenerCufeResult;
+        
+        public ObtenerCufeResponse() {
+        }
+        
+        public ObtenerCufeResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioDocumento.DocumentoCufe> ObtenerCufeResult) {
+            this.ObtenerCufeResult = ObtenerCufeResult;
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface ServicioDocumentosChannel : HGInetFeAPI.ServicioDocumento.ServicioDocumentos, System.ServiceModel.IClientChannel {
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class ServicioDocumentosClient : System.ServiceModel.ClientBase<HGInetFeAPI.ServicioDocumento.ServicioDocumentos>, HGInetFeAPI.ServicioDocumento.ServicioDocumentos {
+        
+        public ServicioDocumentosClient() {
+        }
+        
+        public ServicioDocumentosClient(string endpointConfigurationName) : 
                 base(endpointConfigurationName) {
         }
         
-        public ServicioAcuseReciboClient(string endpointConfigurationName, string remoteAddress) : 
+        public ServicioDocumentosClient(string endpointConfigurationName, string remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public ServicioAcuseReciboClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public ServicioDocumentosClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public ServicioAcuseReciboClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public ServicioDocumentosClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
         }
         
@@ -80,6 +1532,46 @@ namespace HGInetFeAPI.ServicioDocumento {
         
         public System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.TestResponse> TestAsync(HGInetFeAPI.ServicioDocumento.TestRequest request) {
             return base.Channel.TestAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosResponse ConsultaPorNumeros(HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosRequest request) {
+            return base.Channel.ConsultaPorNumeros(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosResponse> ConsultaPorNumerosAsync(HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosRequest request) {
+            return base.Channel.ConsultaPorNumerosAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse ConsultaPorCodigoRegistro(HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroRequest request) {
+            return base.Channel.ConsultaPorCodigoRegistro(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse> ConsultaPorCodigoRegistroAsync(HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroRequest request) {
+            return base.Channel.ConsultaPorCodigoRegistroAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionResponse ConsultaPorFechaElaboracion(HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionRequest request) {
+            return base.Channel.ConsultaPorFechaElaboracion(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionResponse> ConsultaPorFechaElaboracionAsync(HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionRequest request) {
+            return base.Channel.ConsultaPorFechaElaboracionAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioDocumento.RecepcionResponse Recepcion(HGInetFeAPI.ServicioDocumento.RecepcionRequest request) {
+            return base.Channel.Recepcion(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.RecepcionResponse> RecepcionAsync(HGInetFeAPI.ServicioDocumento.RecepcionRequest request) {
+            return base.Channel.RecepcionAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse ObtenerCufe(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request) {
+            return base.Channel.ObtenerCufe(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse> ObtenerCufeAsync(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request) {
+            return base.Channel.ObtenerCufeAsync(request);
         }
     }
 }
