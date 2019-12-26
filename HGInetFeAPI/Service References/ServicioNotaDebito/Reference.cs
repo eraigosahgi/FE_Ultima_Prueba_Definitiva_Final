@@ -102,7 +102,7 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private string NumeroResolucionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.ReferenciaAdicional> OrderReferenceField;
+        private HGInetFeAPI.ServicioNotaDebito.ReferenciaAdicional OrderReferenceField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string PedidoRefField;
@@ -504,7 +504,7 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.ReferenciaAdicional> OrderReference {
+        public HGInetFeAPI.ServicioNotaDebito.ReferenciaAdicional OrderReference {
             get {
                 return this.OrderReferenceField;
             }
@@ -1351,6 +1351,84 @@ namespace HGInetFeAPI.ServicioNotaDebito {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ReferenciaAdicional", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio.Documentos")]
+    [System.SerializableAttribute()]
+    public partial class ReferenciaAdicional : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoReferenciaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaReferenciaField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoReferencia {
+            get {
+                return this.CodigoReferenciaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoReferenciaField, value) != true)) {
+                    this.CodigoReferenciaField = value;
+                    this.RaisePropertyChanged("CodigoReferencia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Documento {
+            get {
+                return this.DocumentoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DocumentoField, value) != true)) {
+                    this.DocumentoField = value;
+                    this.RaisePropertyChanged("Documento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaReferencia {
+            get {
+                return this.FechaReferenciaField;
+            }
+            set {
+                if ((this.FechaReferenciaField.Equals(value) != true)) {
+                    this.FechaReferenciaField = value;
+                    this.RaisePropertyChanged("FechaReferencia");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Anticipo", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
         "cio.Documentos")]
     [System.SerializableAttribute()]
@@ -1553,84 +1631,6 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((this.ValorField.Equals(value) != true)) {
                     this.ValorField = value;
                     this.RaisePropertyChanged("Valor");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ReferenciaAdicional", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
-        "cio.Documentos")]
-    [System.SerializableAttribute()]
-    public partial class ReferenciaAdicional : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CodigoReferenciaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DocumentoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime FechaReferenciaField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CodigoReferencia {
-            get {
-                return this.CodigoReferenciaField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CodigoReferenciaField, value) != true)) {
-                    this.CodigoReferenciaField = value;
-                    this.RaisePropertyChanged("CodigoReferencia");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Documento {
-            get {
-                return this.DocumentoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DocumentoField, value) != true)) {
-                    this.DocumentoField = value;
-                    this.RaisePropertyChanged("Documento");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime FechaReferencia {
-            get {
-                return this.FechaReferenciaField;
-            }
-            set {
-                if ((this.FechaReferenciaField.Equals(value) != true)) {
-                    this.FechaReferenciaField = value;
-                    this.RaisePropertyChanged("FechaReferencia");
                 }
             }
         }

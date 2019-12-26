@@ -38,7 +38,7 @@
       <xs:element minOccurs="0" name="Nota" nillable="true" type="xs:string" />
       <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Notas" nillable="true" type="q6:ArrayOfstring" />
       <xs:element minOccurs="0" name="NumeroResolucion" nillable="true" type="xs:string" />
-      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="OrderReference" nillable="true" type="q7:ArrayOfReferenciaAdicional" />
+      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="OrderReference" nillable="true" type="q7:ReferenciaAdicional" />
       <xs:element minOccurs="0" name="PedidoRef" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
       <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="ReceiptDocument" nillable="true" type="q8:ArrayOfReferenciaAdicional" />
