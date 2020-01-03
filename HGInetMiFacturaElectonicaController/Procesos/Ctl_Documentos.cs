@@ -908,7 +908,69 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 					}
 
-					
+					if (!string.IsNullOrEmpty(documento.DocumentoRef) || documento.OrderReference != null)
+					{
+						if (documento.OrderReference != null)
+						{
+							if (string.IsNullOrEmpty(documento.OrderReference.Documento))
+								documento.OrderReference.Documento = "0";
+
+						}
+						else if (!string.IsNullOrEmpty(documento.DocumentoRef))
+						{
+							documento.OrderReference = new ReferenciaAdicional();
+						}
+
+						if (!string.IsNullOrEmpty(documento.DocumentoRef))
+						{
+							documento.OrderReference.Documento = documento.DocumentoRef;
+						}
+
+					}
+
+					if (documento.DocumentosReferencia != null)
+					{
+						foreach (ReferenciaAdicional docref in documento.DocumentosReferencia)
+						{
+							ListaTipoReferenciaAdicional list_refAd = new ListaTipoReferenciaAdicional();
+							ListaItem refad = list_refAd.Items.Where(d => d.Codigo.Equals(docref.CodigoReferencia)).FirstOrDefault();
+							if (refad == null)
+								throw new ApplicationException(string.Format("El tipo de documento referenciado '{0}' no es válido según Estandar DIAN", docref.CodigoReferencia));
+						}
+					}
+
+					if (!string.IsNullOrEmpty(documento.PedidoRef) || documento.DespatchDocument != null)
+					{
+						if (documento.DespatchDocument != null)
+						{
+							foreach (ReferenciaAdicional docref in documento.DespatchDocument)
+							{
+								if (string.IsNullOrEmpty(docref.Documento))
+									docref.Documento = "0";
+							}
+						}
+						else if (!string.IsNullOrEmpty(documento.PedidoRef))
+						{
+							documento.DespatchDocument = new List<ReferenciaAdicional>();
+						}
+
+						if (!string.IsNullOrEmpty(documento.PedidoRef))
+						{
+							ReferenciaAdicional doc = new ReferenciaAdicional();
+							doc.Documento = documento.PedidoRef;
+							documento.DespatchDocument.Add(doc);
+						}
+
+					}
+
+					if (documento.ReceiptDocument != null)
+					{
+						foreach (ReferenciaAdicional docref in documento.ReceiptDocument)
+						{
+							if (string.IsNullOrEmpty(docref.Documento))
+								docref.Documento = "0";
+						}
+					}
 
 					//Validacion del total
 					decimal total_calculado = decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo,MidpointRounding.AwayFromZero);
@@ -1172,12 +1234,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						bool llenar_modelo = false;
 						if (Docdet.CamposAdicionales != null)
 						{
-							bool marca = Docdet.CamposAdicionales.Exists(d => d.Descripcion.Equals("MARCA") && !string.IsNullOrEmpty(d.Valor));
-							if (marca == false)
+							bool marca = Docdet.CamposAdicionales.Exists(d => d.Descripcion.Equals("MARCA") && string.IsNullOrEmpty(d.Valor));
+							if (marca == false && tipo_operacion == 2)
 								llenar_marca = true;
-							bool modelo = Docdet.CamposAdicionales.Exists(d => d.Descripcion.Equals("MODELO") && !string.IsNullOrEmpty(d.Valor));
-							if (modelo == false)
+							bool modelo = Docdet.CamposAdicionales.Exists(d => d.Descripcion.Equals("MODELO") && string.IsNullOrEmpty(d.Valor));
+							if (modelo == false && tipo_operacion == 2)
 								llenar_modelo = true;
+							
+							//Valida que los campos Adicioanles en Valor no este vacio
+							CampoValor campo = Docdet.CamposAdicionales.Where(c => string.IsNullOrEmpty(c.Valor)).FirstOrDefault();
+							if (campo != null)
+								throw new ApplicationException(string.Format("El valor del campo {0} de los Campos Adicionales del detalle no puede estar vacio", campo.Descripcion));
 						}
 						else if (tipo_operacion == 2)//Si es exportacion debe llevar estos valores segun Anexo de la DIAN
 						{

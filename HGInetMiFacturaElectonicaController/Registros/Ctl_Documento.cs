@@ -839,7 +839,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						}
 
 						// obtiene el código QR
-						item.QR = Ctl_CalculoCufe.ObtenerQR(item.DocumentoTipo, item.Prefijo, item.Documento, item.Fecha, item.IdentificacionObligado, item.IdentificacionAdquiriente, item.ValorSubtotal, item.ValorIva, item.ValorImpuestoConsumo, item.Total, item.Cufe);
+						string ruta_validar_doc = String.Empty;
+
+						if (ambiente_dian.Equals("2"))
+						{
+							ruta_validar_doc = string.Format("{0}{1}", Constantes.RutaPaginaQRHabilitacionDIAN,item.Cufe);
+						}
+						else
+						{
+							ruta_validar_doc = string.Format("{0}{1}", Constantes.RutaPaginaQRProduccionDIAN, item.Cufe);
+						}
+
+						item.QR = Ctl_CalculoCufe.ObtenerQR(item.DocumentoTipo, item.Prefijo, item.Documento, item.Fecha, item.IdentificacionObligado, item.IdentificacionAdquiriente, item.ValorSubtotal, item.ValorIva, item.ValorImpuestoConsumo, item.Total, item.Cufe, ruta_validar_doc);
 
 
 					}
@@ -1060,26 +1071,24 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				empresa_firma = adquiriente;
 				respuesta = Ctl_Documentos.UblFirmar(empresa_firma, doc, ref respuesta, ref resultado);
-
-				//Se mueve el Acuse Firmado a la Carpeta que se muestra en plataforma
-				Archivo.Mover(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml), resultado.RutaArchivosProceso, archivo_xml);
-				if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml)))
-					Archivo.Borrar(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml));
 			}
 			else
 			{
+				//Si existe lo elimine para que mueva el que se esta generando actualmente.
+				if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml)))
+					Archivo.Borrar(string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml));
 				//Se mueve el Acuse sin Firmar a la Carpeta que se muestra en plataforma
 				Archivo.Mover(ruta_xml, resultado.RutaArchivosEnvio, archivo_xml);
-				
+
 			}
 
-			
+
 
 			//Se elimina el Acuse generado sin Firmar de la carpeta donde se creo
 			if (Archivo.ValidarExistencia(ruta_xml))
 				Archivo.Borrar(ruta_xml);
 
-			
+
 
 			//resultado = Ctl_Ubl.Almacenar(resultado);
 

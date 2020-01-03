@@ -244,15 +244,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public List<ReferenciaAdicional> DocumentosReferencia { get; set; }
 
-        /// <summary>
-        /// Lista de documentos de referencia adicionales (OrderReference)
-        /// </summary>
-        public List<ReferenciaAdicional> OrderReference { get; set; }
+		/// <summary>
+		/// documento de referencia adicionales (OrderReference)
+		/// </summary>
+		public ReferenciaAdicional OrderReference { get; set; }
 
-        /// <summary>
-        /// Lista de documentos de referencia adicionales (DespatchDocumentReference)
-        /// </summary>
-        public List<ReferenciaAdicional> DespatchDocument { get; set; }
+		/// <summary>
+		/// Lista de documentos de referencia adicionales (DespatchDocumentReference)
+		/// </summary>
+		public List<ReferenciaAdicional> DespatchDocument { get; set; }
 
         /// <summary>
         /// Lista de documentos de referencia adicionales (ReceiptDocument)

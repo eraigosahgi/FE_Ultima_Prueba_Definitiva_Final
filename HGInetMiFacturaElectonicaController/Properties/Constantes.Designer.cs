@@ -268,6 +268,24 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=.
+        /// </summary>
+        public static string RutaPaginaQRHabilitacionDIAN {
+            get {
+                return ResourceManager.GetString("RutaPaginaQRHabilitacionDIAN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=.
+        /// </summary>
+        public static string RutaPaginaQRProduccionDIAN {
+            get {
+                return ResourceManager.GetString("RutaPaginaQRProduccionDIAN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_documento_acuse.html.
         /// </summary>
         public static string RutaPlantillaAcuse {

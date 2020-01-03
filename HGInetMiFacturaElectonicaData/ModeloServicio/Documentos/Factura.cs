@@ -271,7 +271,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// <summary>
 		/// Lista de documentos de referencia adicionales (OrderReference)
 		/// </summary>
-		public List<ReferenciaAdicional> OrderReference { get; set; }
+		public ReferenciaAdicional OrderReference { get; set; }
 
 		/// <summary>
 		/// Lista de documentos de referencia adicionales (DespatchDocumentReference)

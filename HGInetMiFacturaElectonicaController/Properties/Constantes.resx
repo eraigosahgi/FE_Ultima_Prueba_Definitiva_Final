@@ -289,4 +289,12 @@
     <value>emails\\plantilla_confirmacion_email.html</value>
     <comment>Ruta de la plantilla Html que contiene la confirmación del email</comment>
   </data>
+  <data name="RutaPaginaQRHabilitacionDIAN" xml:space="preserve">
+    <value>https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=</value>
+    <comment>Pagina que permite consultar el documento enviado en la DIAN enviando el parametro CUFE</comment>
+  </data>
+  <data name="RutaPaginaQRProduccionDIAN" xml:space="preserve">
+    <value>https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=</value>
+    <comment>Pagina que permite consultar el documento enviado en la DIAN enviando el parametro CUFE</comment>
+  </data>
 </root>

@@ -304,19 +304,27 @@ namespace HGInetUBLv2_1
 
 				OrderReferenceType DocOrderReference = new OrderReferenceType();
 				DocOrderReference.ID = new IDType();
-				DocOrderReference.ID.Value = (string.IsNullOrEmpty(documento.DocumentoRef)) ? string.Empty : documento.DocumentoRef.ToString();
+				DocOrderReference.ID.Value = documento.OrderReference.Documento; //(string.IsNullOrEmpty(documento.DocumentoRef)) ? string.Empty : documento.DocumentoRef.ToString();
 				facturaXML.OrderReference = DocOrderReference;
 
 				#endregion
 
 				#region facturaXML.DespatchDocumentReference 
 
-				//Referencia un documento
-				facturaXML.DespatchDocumentReference = new DocumentReferenceType[1];
-				DocumentReferenceType DocumentReference = new DocumentReferenceType();
-				DocumentReference.ID = new IDType();
-				DocumentReference.ID.Value = (string.IsNullOrEmpty(documento.PedidoRef)) ? string.Empty : documento.PedidoRef.ToString();
-				facturaXML.DespatchDocumentReference[0] = DocumentReference;
+				if (documento.DespatchDocument != null)
+				{
+					//Referencia un documento
+					facturaXML.DespatchDocumentReference = new DocumentReferenceType[documento.DespatchDocument.Count];
+					List<DocumentReferenceType> List_DocumentReference = new List<DocumentReferenceType>();
+					foreach (var Despatch in documento.DespatchDocument)
+					{
+						DocumentReferenceType DocumentReference = new DocumentReferenceType();
+						DocumentReference.ID = new IDType();
+						DocumentReference.ID.Value = Despatch.Documento; //(string.IsNullOrEmpty(documento.PedidoRef)) ? string.Empty : documento.PedidoRef.ToString();
+						List_DocumentReference.Add(DocumentReference);
+					}
+					facturaXML.DespatchDocumentReference = List_DocumentReference.ToArray();
+				}
 
 				#endregion
 
@@ -338,6 +346,25 @@ namespace HGInetUBLv2_1
 						AdditionalDocument.Add(ReceiptDocument);
 					}
 					facturaXML.AdditionalDocumentReference = AdditionalDocument.ToArray();
+				}
+
+				#endregion
+
+				#region facturaXML.ReceiptDocument 
+
+				if (documento.ReceiptDocument != null)
+				{
+					//Referencia un documento
+					facturaXML.ReceiptDocumentReference = new DocumentReferenceType[documento.ReceiptDocument.Count];
+					List<DocumentReferenceType> List_DocumentReference = new List<DocumentReferenceType>();
+					foreach (var Receipt in documento.ReceiptDocument)
+					{
+						DocumentReferenceType DocumentReference = new DocumentReferenceType();
+						DocumentReference.ID = new IDType();
+						DocumentReference.ID.Value = Receipt.Documento; //(string.IsNullOrEmpty(documento.PedidoRef)) ? string.Empty : documento.PedidoRef.ToString();
+						List_DocumentReference.Add(DocumentReference);
+					}
+					facturaXML.ReceiptDocumentReference = List_DocumentReference.ToArray();
 				}
 
 				#endregion
@@ -457,7 +484,7 @@ namespace HGInetUBLv2_1
 				decimal base_impuesto = 0.00M;
 
 				//Se valida si tiene una base diferente por si el mismo item tiene dos impuestos diferentes
-				if (documento.DocumentoDetalles.Sum(b => b.BaseImpuestoIva) == documento.DocumentoDetalles.Sum(s => s.ValorSubtotal))
+				if ((documento.DocumentoDetalles.Sum(b => b.BaseImpuestoIva) == documento.DocumentoDetalles.Sum(s => s.ValorSubtotal)) && (documento.DocumentoDetalles.Where(g => g.ProductoGratis == true) == null))
 				{
 					base_impuesto = subtotal;
 				}
@@ -1829,18 +1856,32 @@ namespace HGInetUBLv2_1
 								ModelName[0] = Model;
 								Item.ModelName = ModelName;
 							}
+
+							List<ItemPropertyType> Property = new List<ItemPropertyType>();
+							if (DocDet.OcultarItem == 1)
+							{
+								ItemPropertyType Oculto = new ItemPropertyType();
+								Oculto.Name = new NameType1();
+								Oculto.Name.Value = "Item Oculto para Impresion"; /*** QUEMADO ***/
+								Oculto.Value = new ValueType();
+								Oculto.Value.Value = DocDet.OcultarItem.ToString();
+								Property.Add(Oculto);
+							}
+
+							foreach (CampoValor Campos in DocDet.CamposAdicionales)
+							{
+								ItemPropertyType campo = new ItemPropertyType();
+								campo.Name = new NameType1();
+								campo.Name.Value = Campos.Descripcion;
+								campo.Value = new ValueType();
+								campo.Value.Value = Campos.Valor;
+								Property.Add(campo);
+							}
+							Item.AdditionalItemProperty = Property.ToArray();
 						}
 
 						#endregion
 
-						ItemPropertyType[] Property = new ItemPropertyType[1];
-						ItemPropertyType Oculto = new ItemPropertyType();
-						Oculto.Name = new NameType1();
-						Oculto.Name.Value = "Item Oculto para Impresion"; /*** QUEMADO ***/
-						Oculto.Value = new ValueType();
-						Oculto.Value.Value = DocDet.OcultarItem.ToString();
-						Property[0] = Oculto;
-						Item.AdditionalItemProperty = Property;
 
 						if (DocDet.DatosMandatario != null)
 						{

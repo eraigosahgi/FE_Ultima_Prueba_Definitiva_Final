@@ -219,8 +219,68 @@ namespace HGInetUBLv2_1
 				//Referencia un documento de pedido
 
 				OrderReferenceType DocOrderReference = new OrderReferenceType();
-				DocOrderReference.ID = new IDType() { Value = documento.PedidoRef.ToString() };
+				DocOrderReference.ID = new IDType() { Value = documento.OrderReference.Documento };  //new IDType() { Value = documento.PedidoRef.ToString() };
 				nota_debito.OrderReference = DocOrderReference;
+
+				#endregion
+
+				#region nota_debito.DespatchDocumentReference 
+
+				if (documento.DespatchDocument != null)
+				{
+					//Referencia un documento
+					nota_debito.DespatchDocumentReference = new DocumentReferenceType[documento.DespatchDocument.Count];
+					List<DocumentReferenceType> List_DocumentReference = new List<DocumentReferenceType>();
+					foreach (var Despatch in documento.DespatchDocument)
+					{
+						DocumentReferenceType DReference = new DocumentReferenceType();
+						DReference.ID = new IDType();
+						DReference.ID.Value = Despatch.Documento; //(string.IsNullOrEmpty(documento.PedidoRef)) ? string.Empty : documento.PedidoRef.ToString();
+						List_DocumentReference.Add(DReference);
+					}
+					nota_debito.DespatchDocumentReference = List_DocumentReference.ToArray();
+				}
+
+				#endregion
+
+				//Referencia Adicional si se utiliza y cuando es contingencia
+				#region nota_debito.AdditionalDocumentReference
+
+				if (documento.DocumentosReferencia != null)
+				{
+					List<DocumentReferenceType> AdditionalDocument = new List<DocumentReferenceType>();
+					foreach (var item in documento.DocumentosReferencia)
+					{
+						DocumentReferenceType ReceiptDocument = new DocumentReferenceType();
+						ReceiptDocument.ID = new IDType();
+						ReceiptDocument.ID.Value = item.Documento;
+						ReceiptDocument.IssueDate = new IssueDateType();
+						ReceiptDocument.IssueDate.Value = item.FechaReferencia;
+						ReceiptDocument.DocumentTypeCode = new DocumentTypeCodeType();
+						ReceiptDocument.DocumentTypeCode.Value = item.CodigoReferencia;
+						AdditionalDocument.Add(ReceiptDocument);
+					}
+					nota_debito.AdditionalDocumentReference = AdditionalDocument.ToArray();
+				}
+
+				#endregion
+
+				#region nota_debito.ReceiptDocument 
+
+				if (documento.ReceiptDocument != null)
+				{
+					//Referencia un documento
+					nota_debito.ReceiptDocumentReference = new DocumentReferenceType[documento.ReceiptDocument.Count];
+					List<DocumentReferenceType> List_DocumentReference = new List<DocumentReferenceType>();
+					foreach (var Receipt in documento.ReceiptDocument)
+					{
+						DocumentReferenceType DReference = new DocumentReferenceType();
+						DReference.ID = new IDType();
+						DReference.ID.Value = Receipt.Documento; //(string.IsNullOrEmpty(documento.PedidoRef)) ? string.Empty : documento.PedidoRef.ToString();
+						List_DocumentReference.Add(DReference);
+					}
+					nota_debito.ReceiptDocumentReference = List_DocumentReference.ToArray();
+				}
 
 				#endregion
 
@@ -1026,14 +1086,57 @@ namespace HGInetUBLv2_1
 					#endregion
 
 
-					ItemPropertyType[] Property = new ItemPropertyType[1];
-					ItemPropertyType Oculto = new ItemPropertyType();
-					Oculto.Name = new NameType1();
-					Oculto.Name.Value = "Item Oculto para Impresion";
-					Oculto.Value = new ValueType();
-					Oculto.Value.Value = DocDet.OcultarItem.ToString();
-					Property[0] = Oculto;
-					Item.AdditionalItemProperty = Property;
+					#region Campos Adicionales
+
+					if (DocDet.CamposAdicionales != null)
+					{
+						CampoValor marca = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MARCA")).FirstOrDefault();
+
+						if (marca != null)
+						{
+							BrandNameType[] BrandName = new BrandNameType[1];
+							BrandNameType Brand = new BrandNameType();
+							Brand.Value = marca.Valor;
+							BrandName[0] = Brand;
+							Item.BrandName = BrandName;
+						}
+
+						CampoValor modelo = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MODELO")).FirstOrDefault();
+
+						if (modelo != null)
+						{
+							ModelNameType[] ModelName = new ModelNameType[1];
+							ModelNameType Model = new ModelNameType();
+							Model.Value = modelo.Valor;
+							ModelName[0] = Model;
+							Item.ModelName = ModelName;
+						}
+
+						List<ItemPropertyType> Property = new List<ItemPropertyType>();
+						if (DocDet.OcultarItem == 1)
+						{
+							ItemPropertyType Oculto = new ItemPropertyType();
+							Oculto.Name = new NameType1();
+							Oculto.Name.Value = "Item Oculto para Impresion"; /*** QUEMADO ***/
+							Oculto.Value = new ValueType();
+							Oculto.Value.Value = DocDet.OcultarItem.ToString();
+							Property.Add(Oculto);
+						}
+
+						foreach (CampoValor Campos in DocDet.CamposAdicionales)
+						{
+							ItemPropertyType campo = new ItemPropertyType();
+							campo.Name = new NameType1();
+							campo.Name.Value = Campos.Descripcion;
+							campo.Value = new ValueType();
+							campo.Value.Value = Campos.Valor;
+							Property.Add(campo);
+						}
+						Item.AdditionalItemProperty = Property.ToArray();
+					}
+
+					#endregion
+
 
 					if (DocDet.DatosMandatario != null)
 					{
