@@ -176,7 +176,7 @@ namespace HGInetMiFacturaElectronicaWeb
 			//DATOS TABLA DATOS DE LAS CUOTAS
 			DataTable Cuotas = new DataTable("Cuotas");
 			Cuotas.TableName = "Cuotas";
-			foreach (PropertyInfo info in typeof(DocumentoDetalle).GetProperties())
+			foreach (PropertyInfo info in typeof(Cuota).GetProperties())
 			{
 				Cuotas.Columns.Add(info.Name.ToString());
 			}
@@ -185,8 +185,71 @@ namespace HGInetMiFacturaElectronicaWeb
 
 			DataColumn datos_cuotas = ds.Tables["Cuotas"].Columns["Codigo"];
 			DataRelation relation_cuotas = new DataRelation("Cuotas", principal, datos_cuotas);
-			relation_detalles.Nested = true;
+			relation_cuotas.Nested = true;
 			ds.Tables["Cuotas"].ParentRelations.Add(relation_cuotas);
+
+			//DATOS TABLA DATOS DE ORDERREFERENCE
+			DataTable OrderReference = new DataTable("OrderReference");
+			OrderReference.TableName = "OrderReference";
+			foreach (PropertyInfo info in typeof(ReferenciaAdicional).GetProperties())
+			{
+				OrderReference.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(OrderReference);
+
+			DataColumn datos_orderref = ds.Tables["OrderReference"].Columns["Documento"];
+			DataRelation relation_orderref = new DataRelation("OrderReference", principal, datos_orderref);
+			relation_orderref.Nested = true;
+			ds.Tables["OrderReference"].ParentRelations.Add(relation_orderref);
+
+			//DATOS TABLA DATOS DE DESPATCHREFERENCE
+			DataTable DespatchDocument = new DataTable("DespatchDocument");
+			DespatchDocument.TableName = "DespatchDocument";
+			foreach (PropertyInfo info in typeof(ReferenciaAdicional).GetProperties())
+			{
+				DespatchDocument.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(DespatchDocument);
+
+			DataColumn datos_Despatchref = ds.Tables["DespatchDocument"].Columns["Documento"];
+			DataRelation relation_Despatchref = new DataRelation("DespatchDocument", principal, datos_Despatchref);
+			relation_Despatchref.Nested = true;
+			ds.Tables["DespatchDocument"].ParentRelations.Add(relation_orderref);
+
+
+			//DATOS TABLA DATOS DE RECEIPTREFERENCE
+			DataTable ReceiptDocument = new DataTable("ReceiptDocument");
+			ReceiptDocument.TableName = "ReceiptDocument";
+			foreach (PropertyInfo info in typeof(ReferenciaAdicional).GetProperties())
+			{
+				ReceiptDocument.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(ReceiptDocument);
+
+			DataColumn datos_Receipref = ds.Tables["ReceiptDocument"].Columns["Documento"];
+			DataRelation relation_Receipref = new DataRelation("ReceiptDocument", principal, datos_Receipref);
+			relation_Receipref.Nested = true;
+			ds.Tables["ReceiptDocument"].ParentRelations.Add(relation_Receipref);
+
+
+			//DATOS TABLA DATOS DE RECEIPTREFERENCE
+			DataTable DocumentosReferencia = new DataTable("DocumentosReferencia");
+			DocumentosReferencia.TableName = "DocumentosReferencia";
+			foreach (PropertyInfo info in typeof(ReferenciaAdicional).GetProperties())
+			{
+				DocumentosReferencia.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(DocumentosReferencia);
+
+			DataColumn datos_Aditionalref = ds.Tables["DocumentosReferencia"].Columns["Documento"];
+			DataRelation relation_Aditionalref = new DataRelation("DocumentosReferencia", principal, datos_Aditionalref);
+			relation_Aditionalref.Nested = true;
+			ds.Tables["DocumentosReferencia"].ParentRelations.Add(relation_Aditionalref);
+
 
 			return ds;
 		}

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HGInetMiFacturaElectonicaData.ModeloServicio.Documentos
+namespace HGInetMiFacturaElectonicaData.ModeloServicio
 {
 	/// <summary>
 	/// Permite indicar la referencia a un documento y que tipo de documento es segun listado de la DIAN
