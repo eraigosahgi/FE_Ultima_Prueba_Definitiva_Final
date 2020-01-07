@@ -70,7 +70,7 @@ namespace HGInetMiFacturaElectronicaWeb
 					DtPrincipal.TableName = "NotaDebito";
 					foreach (PropertyInfo info in typeof(NotaDebito).GetProperties())
 					{
-						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1"))
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional))
 						{
 							DtPrincipal.Columns.Add(info.Name.ToString());
 						}
@@ -89,7 +89,7 @@ namespace HGInetMiFacturaElectronicaWeb
 					DtPrincipal.TableName = "NotaCredito";
 					foreach (PropertyInfo info in typeof(NotaCredito).GetProperties())
 					{
-						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1"))
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional))
 						{
 							DtPrincipal.Columns.Add(info.Name.ToString());
 						}
@@ -107,7 +107,7 @@ namespace HGInetMiFacturaElectronicaWeb
 					DtPrincipal.TableName = "Factura";
 					foreach (PropertyInfo info in typeof(Factura).GetProperties())
 					{
-						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1"))
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional))
 						{
 							DtPrincipal.Columns.Add(info.Name.ToString());
 						}
@@ -188,20 +188,22 @@ namespace HGInetMiFacturaElectronicaWeb
 			relation_cuotas.Nested = true;
 			ds.Tables["Cuotas"].ParentRelations.Add(relation_cuotas);
 
+
 			//DATOS TABLA DATOS DE ORDERREFERENCE
-			DataTable OrderReference = new DataTable("OrderReference");
-			OrderReference.TableName = "OrderReference";
+			DataTable Order = new DataTable("OrderReference");
+			Order.TableName = "OrderReference";
 			foreach (PropertyInfo info in typeof(ReferenciaAdicional).GetProperties())
 			{
-				OrderReference.Columns.Add(info.Name.ToString());
+				Order.Columns.Add(info.Name.ToString());
 			}
 
-			ds.Tables.Add(OrderReference);
+			ds.Tables.Add(Order);
 
 			DataColumn datos_orderref = ds.Tables["OrderReference"].Columns["Documento"];
 			DataRelation relation_orderref = new DataRelation("OrderReference", principal, datos_orderref);
 			relation_orderref.Nested = true;
 			ds.Tables["OrderReference"].ParentRelations.Add(relation_orderref);
+
 
 			//DATOS TABLA DATOS DE DESPATCHREFERENCE
 			DataTable DespatchDocument = new DataTable("DespatchDocument");
@@ -216,7 +218,7 @@ namespace HGInetMiFacturaElectronicaWeb
 			DataColumn datos_Despatchref = ds.Tables["DespatchDocument"].Columns["Documento"];
 			DataRelation relation_Despatchref = new DataRelation("DespatchDocument", principal, datos_Despatchref);
 			relation_Despatchref.Nested = true;
-			ds.Tables["DespatchDocument"].ParentRelations.Add(relation_orderref);
+			ds.Tables["DespatchDocument"].ParentRelations.Add(relation_Despatchref);
 
 
 			//DATOS TABLA DATOS DE RECEIPTREFERENCE
