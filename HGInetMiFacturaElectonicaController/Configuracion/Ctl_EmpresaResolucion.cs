@@ -358,7 +358,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 			var url = plataforma.RutaHginetMail;
 
-			ClienteRest<List<ConfigPasarelas>> cliente = new ClienteRest<List<ConfigPasarelas>>(string.Format("{0}Api/ObtenerConfigPasarelas?Tercero={1}&Serial={2}", url, Tercero, Serial), TipoContenido.Applicationjson.GetHashCode(), "");
+			ClienteRest<List<ConfigPasarelas>> cliente = new ClienteRest<List<ConfigPasarelas>>(string.Format("{0}/Api/ObtenerConfigPasarelas?Tercero={1}&Serial={2}", url, Tercero, Serial), TipoContenido.Applicationjson.GetHashCode(), "");
 			try
 			{
 				List<ConfigPasarelas> data = cliente.GET();

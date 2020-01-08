@@ -160,8 +160,11 @@ namespace HGInetUBLv2_1
 				//Documento afectado por la Nota credito
 				ResponseType[] DiscrepancyResponse = new ResponseType[1];
 				ResponseType Reference = new ResponseType();
-				Reference.ReferenceID = new ReferenceIDType();
-				Reference.ReferenceID.Value = documento.DocumentoRef.ToString();
+				if (!string.IsNullOrEmpty(documento.DocumentoRef))
+				{
+					Reference.ReferenceID = new ReferenceIDType();
+					Reference.ReferenceID.Value = documento.DocumentoRef;
+				}
 				Reference.ResponseCode = new ResponseCodeType();
 				Reference.ResponseCode.Value = documento.Concepto;
 				DescriptionType[] DescriptionType = new DescriptionType[1];
@@ -183,7 +186,7 @@ namespace HGInetUBLv2_1
 				#region nota_debito.BillingReference //Referencia Documento (factura)
 
 				//Referencia a un documento afectar
-/*
+				/*
 				DocumentReferenceType[] DocumentReferenceType = new DocumentReferenceType[1];
 				DocumentReferenceType DocumentReference = new DocumentReferenceType();
 				DocumentReference.ID = new IDType();
@@ -196,20 +199,23 @@ namespace HGInetUBLv2_1
 				DocumentReferenceType[0] = DocumentReference;
 				nota_debito.AdditionalDocumentReference = DocumentReferenceType;*/
 
-				
-				nota_debito.BillingReference = new BillingReferenceType[1];
 
-				BillingReferenceType DocReference = new BillingReferenceType();
-				DocumentReferenceType DocumentReference = new DocumentReferenceType();
-				DocumentReference.ID = new IDType();
-				DocumentReference.ID.Value = documento.DocumentoRef.ToString();
-				DocumentReference.UUID = new UUIDType();
-				DocumentReference.UUID.Value = documento.CufeFactura;
-				DocumentReference.IssueDate = new IssueDateType();
-				DocumentReference.IssueDate.Value = documento.FechaFactura;
-				DocReference.InvoiceDocumentReference = DocumentReference;
+				if (!string.IsNullOrEmpty(documento.DocumentoRef) && !string.IsNullOrEmpty(documento.CufeFactura))
+				{
+					nota_debito.BillingReference = new BillingReferenceType[1];
 
-				nota_debito.BillingReference[0] = DocReference;
+					BillingReferenceType DocReference = new BillingReferenceType();
+					DocumentReferenceType DocumentReference = new DocumentReferenceType();
+					DocumentReference.ID = new IDType();
+					DocumentReference.ID.Value = documento.DocumentoRef;
+					DocumentReference.UUID = new UUIDType();
+					DocumentReference.UUID.Value = documento.CufeFactura;
+					DocumentReference.IssueDate = new IssueDateType();
+					DocumentReference.IssueDate.Value = documento.FechaFactura;
+					DocReference.InvoiceDocumentReference = DocumentReference;
+
+					nota_debito.BillingReference[0] = DocReference;
+				}
 
 				#endregion
 
@@ -349,7 +355,7 @@ namespace HGInetUBLv2_1
 				PaymentMean.ID.Value = "1";
 				PaymentMean.PaymentID = new PaymentIDType[1];
 				PaymentIDType Paymentid = new PaymentIDType();
-				Paymentid.Value = documento.DocumentoRef.ToString();
+				Paymentid.Value = (string.IsNullOrEmpty(documento.DocumentoRef)) ? "0" : documento.DocumentoRef;
 				PaymentMean.PaymentID[0] = Paymentid;
 
 				PaymentMean.PaymentMeansCode = MeansCode;

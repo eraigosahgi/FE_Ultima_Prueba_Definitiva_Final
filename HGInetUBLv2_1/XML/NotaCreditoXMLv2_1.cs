@@ -115,7 +115,7 @@ namespace HGInetUBLv2_1
 				PaymentMean.ID.Value = "1";
 				PaymentMean.PaymentID = new PaymentIDType[1];
 				PaymentIDType Paymentid = new PaymentIDType();
-				Paymentid.Value = documento.DocumentoRef.ToString();
+				Paymentid.Value = (string.IsNullOrEmpty(documento.DocumentoRef)) ? "0" : documento.DocumentoRef;
 				PaymentMean.PaymentID[0] = Paymentid;
 
 				PaymentMean.PaymentMeansCode = MeansCode;
@@ -180,8 +180,11 @@ namespace HGInetUBLv2_1
 				//Documento afectado por la Nota credito
 				ResponseType[] DiscrepancyResponse = new ResponseType[1];
 				ResponseType Reference = new ResponseType();
-				Reference.ReferenceID = new ReferenceIDType();
-				Reference.ReferenceID.Value = documento.DocumentoRef.ToString();
+				if (!string.IsNullOrEmpty(documento.DocumentoRef))
+				{
+					Reference.ReferenceID = new ReferenceIDType();
+					Reference.ReferenceID.Value = documento.DocumentoRef;
+				}
 				Reference.ResponseCode = new ResponseCodeType();
 				Reference.ResponseCode.Value = documento.Concepto;
 				DescriptionType[] DescriptionType = new DescriptionType[1];
@@ -212,22 +215,24 @@ namespace HGInetUBLv2_1
 				DocumentReferenceType[0] = DocumentReference;
 				nota_credito.AdditionalDocumentReference = DocumentReferenceType;*/
 
+				if (!string.IsNullOrEmpty(documento.DocumentoRef) && !string.IsNullOrEmpty(documento.CufeFactura))
+				{
+					nota_credito.BillingReference = new BillingReferenceType[1];
+
+					BillingReferenceType DocReference = new BillingReferenceType();
+					DocumentReferenceType DocumentReference = new DocumentReferenceType();
+					DocumentReference.ID = new IDType();
+					DocumentReference.ID.Value = documento.DocumentoRef;
+					DocumentReference.UUID = new UUIDType();
+					DocumentReference.UUID.Value = documento.CufeFactura;
+					DocumentReference.UUID.schemeName = "CUDE-SHA384";
+					DocumentReference.IssueDate = new IssueDateType();
+					DocumentReference.IssueDate.Value = documento.FechaFactura;
+					DocReference.InvoiceDocumentReference = DocumentReference;
+
+					nota_credito.BillingReference[0] = DocReference;
+				}
 				
-				nota_credito.BillingReference = new BillingReferenceType[1];
-
-				BillingReferenceType DocReference = new BillingReferenceType();
-				DocumentReferenceType DocumentReference = new DocumentReferenceType();
-				DocumentReference.ID = new IDType();
-				DocumentReference.ID.Value = documento.DocumentoRef.ToString();
-				DocumentReference.UUID = new UUIDType();
-				DocumentReference.UUID.Value = documento.CufeFactura;
-				DocumentReference.UUID.schemeName = "CUDE-SHA384";
-				DocumentReference.IssueDate = new IssueDateType();
-				DocumentReference.IssueDate.Value = documento.FechaFactura;
-				DocReference.InvoiceDocumentReference = DocumentReference;
-
-				nota_credito.BillingReference[0] = DocReference;
-
 				#endregion
 
 				#region nota_credito.OrderReference //Referencia Documento (orden)

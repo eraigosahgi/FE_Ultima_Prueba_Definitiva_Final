@@ -398,55 +398,63 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (item.TipoOperacion == 0)
 						item.TipoOperacion = 20;
 
-					//valida si el Documento afectado ya existe en Base de Datos
-					List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
-					if (doc_ref != null)
+					//valida si envian documento a afectar
+					if (!string.IsNullOrEmpty(item.DocumentoRef))
 					{
-						DocumentoRespuesta doc_resp = doc_ref.Where(d => d.Cufe.Equals(item.CufeFactura)).FirstOrDefault();
-						if (doc_resp != null)
+						//valida si el Documento afectado ya existe en Base de Datos
+						List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
+						if (doc_ref != null)
 						{
-							//Si el documento afectado es diferente a la version de la empresa emisora se cambia el tìpo de operacion
-							if (doc_resp.IdVersionDian == 1)
-								item.TipoOperacion = 23;
-							//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
-						}
-						else
-						{
-							doc_resp = doc_ref.Where(d => d.Identificacion.Equals(item.DatosAdquiriente.Identificacion)).FirstOrDefault();
+							DocumentoRespuesta doc_resp = doc_ref.Where(d => d.Cufe.Equals(item.CufeFactura)).FirstOrDefault();
 							if (doc_resp != null)
 							{
 								//Si el documento afectado es diferente a la version de la empresa emisora se cambia el tìpo de operacion
 								if (doc_resp.IdVersionDian == 1)
-								{
 									item.TipoOperacion = 23;
-									item.CufeFactura = doc_resp.Cufe;
-								}
-
 								//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
 							}
 							else
 							{
-								//si el documento afectado no existe en BD pero lo envian con CUFE cambio el tipo de operacion
-								if (!string.IsNullOrEmpty(item.CufeFactura))
+								doc_resp = doc_ref.Where(d => d.Identificacion.Equals(item.DatosAdquiriente.Identificacion)).FirstOrDefault();
+								if (doc_resp != null)
 								{
-									item.TipoOperacion = 23;
+									//Si el documento afectado es diferente a la version de la empresa emisora se cambia el tìpo de operacion
+									if (doc_resp.IdVersionDian == 1)
+									{
+										item.TipoOperacion = 23;
+										item.CufeFactura = doc_resp.Cufe;
+									}
+
+									//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
+								}
+								else
+								{
+									//si el documento afectado no existe en BD pero lo envian con CUFE cambio el tipo de operacion
+									if (!string.IsNullOrEmpty(item.CufeFactura))
+									{
+										item.TipoOperacion = 23;
+									}
+
+									//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
+									item.TipoOperacion = 22;
 								}
 
-								//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
-								item.TipoOperacion = 22;
+								//throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
 							}
-								
+						}
+						else
+						{
+							if (!string.IsNullOrEmpty(item.CufeFactura))
+							{
+								item.TipoOperacion = 23;
+							}
+							item.TipoOperacion = 22;
 							//throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
-						} 
+						}
 					}
 					else
 					{
-						if (!string.IsNullOrEmpty(item.CufeFactura))
-						{
-							item.TipoOperacion = 23;
-						}
 						item.TipoOperacion = 22;
-						//throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
 					}
 				}
 
@@ -465,7 +473,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
-					// realiza el proceso de envío a la DIAN del documento en V1
+					// realiza el proceso de envío a la DIAN del documento en V2
 					item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.NotaCredito, resolucion,
 						facturadorelec_proceso, documento_bd);
 				}
@@ -565,7 +573,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Documento", "int").Replace("no puede ser nulo", "no puede ser menor a 0"));
 
 			//Validar que no este vacio
-			if (string.IsNullOrEmpty(documento.DocumentoRef))
+			if (string.IsNullOrEmpty(documento.DocumentoRef) && documento.TipoOperacion == 20)
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "DocumentoRef", "string"));
 
 			//Inicializa la propiedad, no es un campo requerido
@@ -573,7 +581,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				documento.PedidoRef = string.Empty;
 
 			//Validar que no este vacia la fecha del documento de referencia
-			if (documento.FechaFactura == null)
+			if (documento.FechaFactura == null && documento.TipoOperacion == 20)
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "FechaFactura", "DateTime"));
 
 			if (string.IsNullOrEmpty(documento.CufeFactura) && documento.TipoOperacion == 20)
