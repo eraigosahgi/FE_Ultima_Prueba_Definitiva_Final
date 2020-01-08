@@ -233,11 +233,19 @@ namespace HGInetUBLv2_1
 				#region nota_credito.OrderReference //Referencia Documento (orden)
 
 				//Referencia un documento de pedido
+				if (!string.IsNullOrEmpty(documento.PedidoRef) && documento.OrderReference == null)
+				{
+					documento.OrderReference = new ReferenciaAdicional();
+					documento.OrderReference.Documento = documento.PedidoRef;
+				}
 
-				OrderReferenceType DocOrderReference = new OrderReferenceType();
-				DocOrderReference.ID = new IDType() { Value = documento.OrderReference.Documento };  //new IDType() { Value = documento.PedidoRef.ToString() };
-				nota_credito.OrderReference = DocOrderReference;
-
+				if (documento.OrderReference != null)
+				{
+					OrderReferenceType DocOrderReference = new OrderReferenceType();
+					DocOrderReference.ID = new IDType() { Value = documento.OrderReference.Documento };  //new IDType() { Value = documento.PedidoRef.ToString() };
+					nota_credito.OrderReference = DocOrderReference;
+				}
+				
 				#endregion
 
 				#region nota_credito.DespatchDocumentReference 

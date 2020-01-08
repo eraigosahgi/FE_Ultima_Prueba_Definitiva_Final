@@ -300,12 +300,22 @@ namespace HGInetUBLv2_1
 				#region facturaXML.OrderReference 
 
 				//Referencia un documento de pedido
-				facturaXML.OrderReference = new OrderReferenceType();
+				if (!string.IsNullOrEmpty(documento.DocumentoRef) && documento.OrderReference == null)
+				{
+					documento.OrderReference = new ReferenciaAdicional();
+					documento.OrderReference.Documento = documento.DocumentoRef;
+				}
 
-				OrderReferenceType DocOrderReference = new OrderReferenceType();
-				DocOrderReference.ID = new IDType();
-				DocOrderReference.ID.Value = documento.OrderReference.Documento; //(string.IsNullOrEmpty(documento.DocumentoRef)) ? string.Empty : documento.DocumentoRef.ToString();
-				facturaXML.OrderReference = DocOrderReference;
+				if (documento.OrderReference != null)
+				{
+					facturaXML.OrderReference = new OrderReferenceType();
+
+					OrderReferenceType DocOrderReference = new OrderReferenceType();
+					DocOrderReference.ID = new IDType();
+					DocOrderReference.ID.Value = documento.OrderReference.Documento; //(string.IsNullOrEmpty(documento.DocumentoRef)) ? string.Empty : documento.DocumentoRef.ToString();
+					facturaXML.OrderReference = DocOrderReference;
+
+				}
 
 				#endregion
 
