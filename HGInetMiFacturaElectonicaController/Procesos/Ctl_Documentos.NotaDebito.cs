@@ -397,7 +397,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						item.TipoOperacion = 30;
 
 					//valida si envian documento a afectar
-					if (!string.IsNullOrEmpty(item.DocumentoRef))
+					if (!string.IsNullOrEmpty(item.DocumentoRef) && !string.IsNullOrEmpty(item.CufeFactura))
 					{
 						//valida si el Documento afectado ya existe en Base de Datos
 						List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
@@ -422,33 +422,29 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										item.TipoOperacion = 33;
 										item.CufeFactura = doc_resp.Cufe;
 									}
-
-									//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
+									else if (!doc_resp.Cufe.Equals(item.CufeFactura))
+									{
+										item.TipoOperacion = 32;
+									}
 								}
 								else
 								{
-									//si el documento afectado no existe en BD pero lo envian con CUFE cambio el tipo de operacion
-									if (!string.IsNullOrEmpty(item.CufeFactura))
-									{
-										item.TipoOperacion = 33;
-									}
-
 									//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
 									item.TipoOperacion = 32;
 								}
-
-								//throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
 							}
 						}
 						else
 						{
-							if (!string.IsNullOrEmpty(item.CufeFactura))
+							if (!string.IsNullOrEmpty(item.CufeFactura) && !item.CufeFactura.Equals("0"))
 							{
 								item.TipoOperacion = 33;
 							}
-
-							item.TipoOperacion = 32;
-							//throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", item.DocumentoRef));
+							else
+							{
+								//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
+								item.TipoOperacion = 32;
+							}
 						} 
 					}
 					else
