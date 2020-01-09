@@ -1352,7 +1352,7 @@ namespace HGInetFeAPI.ServicioNotaDebito {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ReferenciaAdicional", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
-        "cio.Documentos")]
+        "cio")]
     [System.SerializableAttribute()]
     public partial class ReferenciaAdicional : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
