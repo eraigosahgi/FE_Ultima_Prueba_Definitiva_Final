@@ -687,18 +687,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (detalle.Sum(v => (v.ValorSubtotal)) != documento.ValorSubtotal)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "Subtotal", documento.ValorSubtotal, detalle.Sum(v => (v.ValorSubtotal))));
 
-					if (!Numero.Tolerancia(documento.ValorIva, detalle.Sum(v => (v.IvaValor)),10))
-						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "IVA", documento.ValorIva, detalle.Sum(v => (v.IvaValor))));
+					//if (!Numero.Tolerancia(documento.ValorIva, detalle.Sum(v => (v.IvaValor)),10))
+					if (detalle.Sum(v => (v.IvaValor)) != documento.ValorIva)
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "IVA", documento.ValorIva, detalle.Sum(v => (v.IvaValor))));
 
 					//if (decimal.Floor(detalle.Sum(v => (v.IvaValor))) != decimal.Floor(documento.ValorIva))
 					//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado", "IVA", documento.ValorIva));
 
-					if (!Numero.Tolerancia(documento.ValorReteFuente, detalle.Sum(v => (v.ReteFuenteValor)), 10) && autoretenedor == true)
-						//if ((detalle.Sum(v => (v.ReteFuenteValor)) != documento.ValorReteFuente) && autoretenedor == true)
+					//if (!Numero.Tolerancia(documento.ValorReteFuente, detalle.Sum(v => (v.ReteFuenteValor)), 10) && autoretenedor == true)
+					if ((detalle.Sum(v => (v.ReteFuenteValor)) != documento.ValorReteFuente) && autoretenedor == true)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado,según sumatoria del detalle con valor {2}", "ReteFuente", documento.ValorReteFuente, detalle.Sum(v => (v.ReteFuenteValor))));
 
-					if (!Numero.Tolerancia(documento.ValorImpuestoConsumo, detalle.Sum(v => (v.ValorImpuestoConsumo)), 10))
-						//if (detalle.Sum(v => (v.ValorImpuestoConsumo)) != documento.ValorImpuestoConsumo)
+					//if (!Numero.Tolerancia(documento.ValorImpuestoConsumo, detalle.Sum(v => (v.ValorImpuestoConsumo)), 10))
+					if (detalle.Sum(v => (v.ValorImpuestoConsumo)) != documento.ValorImpuestoConsumo)
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "ImpuestoConsumo", documento.ValorImpuestoConsumo, detalle.Sum(v => (v.ValorImpuestoConsumo))));
 
 					//Validacion del Anticipo calculado con el que es enviado en el documento

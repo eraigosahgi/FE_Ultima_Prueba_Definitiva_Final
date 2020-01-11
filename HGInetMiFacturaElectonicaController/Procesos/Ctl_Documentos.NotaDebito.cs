@@ -474,13 +474,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						// valida la existencia de la carpeta
 						carpeta_debug = Directorio.CrearDirectorio(carpeta_debug);
 
-						string directorio = string.Format("{0}\\{1}", Path.GetFileName(plataforma_datos.RutaDmsFisica), Constantes.CarpetaDocumentosDebug);
-
 						// nombre del archivo
 						string archivo_debug = string.Format(@"{0}-{1}-{2}.json", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento);
 
+						string ruta_archivo = string.Format("{0}\\{1}", carpeta_debug, archivo_debug);
+
 						// almacena el objeto en archivo json
-						Json.GuardarObjetoJson(item, directorio, archivo_debug);
+						File.WriteAllText(ruta_archivo, JsonConvert.SerializeObject(item));
 					}
 					catch (Exception excepcion)
 					{
