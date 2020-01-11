@@ -106,6 +106,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Debug.
+        /// </summary>
+        public static string CarpetaDocumentosDebug {
+            get {
+                return ResourceManager.GetString("CarpetaDocumentosDebug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a facturaelectronica.
         /// </summary>
         public static string CarpetaFacturaElectronica {

@@ -297,4 +297,8 @@
     <value>https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=</value>
     <comment>Pagina que permite consultar el documento enviado en la DIAN enviando el parametro CUFE</comment>
   </data>
+  <data name="CarpetaDocumentosDebug" xml:space="preserve">
+    <value>Debug</value>
+    <comment>Carpeta para guardar las peticiones de documentos electronicos que envian los Facturadores electronicos y se necesitan para validaciones.</comment>
+  </data>
 </root>

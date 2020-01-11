@@ -75,10 +75,10 @@ namespace HGInetUBLv2_1
 						imp_doc.BaseImponible += BaseimponibleMuestra;
 					}
 
-					decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+					//decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 
-					if (imp_cal != imp_doc.ValorImpuesto)
-						imp_doc.ValorImpuesto = imp_cal;
+					//if (imp_cal != imp_doc.ValorImpuesto)
+					//	imp_doc.ValorImpuesto = imp_cal;
 
 					doc_impuestos.Add(imp_doc);
 
@@ -124,10 +124,10 @@ namespace HGInetUBLv2_1
 
 								if (imp_doc.Porcentaje > 0)
 								{
-									decimal imp_cal = decimal.Round(BaseImponibleImpConsumo * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+									//decimal imp_cal = decimal.Round(BaseImponibleImpConsumo * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 
-									if (imp_cal != imp_doc.ValorImpuesto)
-										imp_doc.ValorImpuesto = imp_cal;
+									//if (imp_cal != imp_doc.ValorImpuesto)
+									//	imp_doc.ValorImpuesto = imp_cal;
 
 									doc_impuestos.Add(imp_doc);
 								}
