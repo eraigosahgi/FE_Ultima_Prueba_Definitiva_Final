@@ -13,6 +13,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
 using LibreriaGlobalHGInet.RegistroLog;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
