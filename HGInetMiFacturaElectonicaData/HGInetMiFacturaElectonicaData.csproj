@@ -142,6 +142,7 @@
     <Compile Include="ModeloServicio\Respuestas\DocumentoCufe.cs" />
     <Compile Include="ModeloServicio\Respuestas\FacturaConsulta.cs" />
     <Compile Include="ModeloServicio\Respuestas\DocumentoRespuesta.cs" />
+    <Compile Include="ModeloServicio\Respuestas\ListaFE.cs" />
     <Compile Include="ModeloServicio\Respuestas\NotaCreditoConsulta.cs" />
     <Compile Include="ModeloServicio\Respuestas\NotaDebitoConsulta.cs" />
     <Compile Include="ModeloServicio\Respuestas\NotificacionCorreo.cs" />

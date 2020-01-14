@@ -112,6 +112,7 @@
     <Compile Include="Configuracion\Ctl_ConfiguracionInteroperabilidad.cs" />
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
     <Compile Include="Configuracion\Ctl_Formatos.cs" />
+    <Compile Include="Configuracion\Ctl_ListaFe.cs" />
     <Compile Include="Configuracion\Ctl_OpcionesPerfil.cs" />
     <Compile Include="Configuracion\Ctl_OpcionesUsuario.cs" />
     <Compile Include="Configuracion\Ctl_Permisos.cs" />
