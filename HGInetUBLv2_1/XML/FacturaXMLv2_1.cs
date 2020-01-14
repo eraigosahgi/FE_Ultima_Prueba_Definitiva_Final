@@ -552,17 +552,19 @@ namespace HGInetUBLv2_1
 				*/
 
 				//Informacion del QR
-				string ruta_qr_Dian = "https://muisca.dian.gov.co/WebFacturaelectronica/paginas/VerificarFacturaElectronicaExterno.faces?";
-				string tipo_doc = facturaXML.InvoiceTypeCode.Value;
-				string num_doc = facturaXML.ID.Value;
-				string nit_fac = documento.DatosObligado.Identificacion;
-				string nit_adq = documento.DatosAdquiriente.Identificacion;
-				string cadena_qr = string.Format("{0}TipoDocumento={1}NroDocumento={2}NITFacturador={3}NumIdentAdquiriente={4}Cufe={5}", ruta_qr_Dian, tipo_doc, num_doc, nit_fac, nit_adq, CUFE);
-
+				string ruta_qr_Dian = string.Empty;
+				if (facturaXML.ProfileExecutionID.Value.Equals("2"))
+				{
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=", facturaXML.UUID.Value);
+				}
+				else
+				{
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", facturaXML.UUID.Value);
+				}
 
 				// Extension de la Dian
 				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
-				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value, cadena_qr);
+				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value, ruta_qr_Dian);
 				UBLExtensions.Add(UBLExtensionDian);
 
 				/*
