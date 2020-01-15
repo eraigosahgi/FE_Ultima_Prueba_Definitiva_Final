@@ -49,6 +49,7 @@
     <Compile Include="Controladores\Ctl_Documentos.cs" />
     <Compile Include="Controladores\Ctl_Empresas.cs" />
     <Compile Include="Controladores\Ctl_Factura.cs" />
+    <Compile Include="Controladores\Ctl_ListaFe.cs" />
     <Compile Include="Controladores\Ctl_NotaCredito.cs" />
     <Compile Include="Controladores\Ctl_NotaDebito.cs" />
     <Compile Include="Controladores\Ctl_ReenvioDocumento.cs" />
@@ -71,6 +72,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ServicioFactura\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioListaFe\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -100,7 +106,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ServicioAcuseRecibo\acuserecibo.wsdl" />
     <None Include="Service References\ServicioAcuseRecibo\acuserecibo.xsd">
       <SubType>Designer</SubType>
@@ -195,6 +203,26 @@
     </None>
     <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioListaFe\HGInetFeAPI.ServicioListaFe.ObtenerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioListaFe\HGInetFeAPI.ServicioListaFe.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioListaFe\listaFe.wsdl" />
+    <None Include="Service References\ServicioListaFe\listaFe.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioListaFe\listaFe1.wsdl" />
+    <None Include="Service References\ServicioListaFe\listaFe1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioListaFe\listaFe2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioListaFe\listaFe3.xsd">
+      <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioNotaCredito\HGInetFeAPI.ServicioNotaCredito.ObtenerPorFechasAdquirienteResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -309,6 +337,7 @@
     <WCFMetadataStorage Include="Service References\ServicioDocumento\" />
     <WCFMetadataStorage Include="Service References\ServicioEmpresas\" />
     <WCFMetadataStorage Include="Service References\ServicioFactura\" />
+    <WCFMetadataStorage Include="Service References\ServicioListaFe\" />
     <WCFMetadataStorage Include="Service References\ServicioNotaCredito\" />
     <WCFMetadataStorage Include="Service References\ServicioNotaDebito\" />
     <WCFMetadataStorage Include="Service References\ServicioReenvioDocumento\" />
@@ -433,6 +462,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioDocumento\documentos.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\listaFe.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
