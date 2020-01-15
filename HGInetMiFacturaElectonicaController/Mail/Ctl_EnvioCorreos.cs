@@ -559,7 +559,10 @@ namespace HGInetMiFacturaElectonicaController
 							archivos.Add(adjunto);
 						}
 
+						string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
 
+						//Se comenta el envio del XML segun Anexo solo se debe enviar el AttachedDocument y el PDF
+						/*
 						if (string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
 							throw new ApplicationException("No se encontró ruta de archivo xml");
 
@@ -573,7 +576,7 @@ namespace HGInetMiFacturaElectonicaController
 							adjunto.ContenidoB64 = ruta_fisica_xml;
 							adjunto.Nombre = nombre_xml;
 							archivos.Add(adjunto);
-						}
+						}*/
 
 						// ruta física del xml
 						string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
