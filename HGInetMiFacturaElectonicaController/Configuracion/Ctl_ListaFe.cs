@@ -14,6 +14,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 {
 	public class Ctl_ListaFe
 	{
+		/// <summary>
+		/// Obtiene las listas que se usan para FE
+		/// </summary>
+		/// <param name="codigo_lista">números de codigos para consulta separados por el caracter coma (,) ó enviando el caracter (*) para obtenerlas todas</param>
+		/// <param name="todas">True si son todas las liestas</param>
+		/// <returns>Objeto con las Lista de FE</returns>
 		public List<ListaFE> Obtener(string codigo_lista, bool todas)
 		{
 			try

@@ -21,6 +21,13 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 			return "¡Prueba correcta!";
 		}
 
+		/// <summary>
+		/// Permite Obtener las Listas que se utilizan en la Factura Electronica
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+		/// <param name="Identificacion">identificación obligado</param>
+		/// <param name="CodigoLista">números de codigos para consulta separados por el caracter coma (,) ó enviando el caracter (*) para obtenerlas todas</param>
+		/// <returns>Objeto con las Lista de FE</returns>
 		public List<ListaFE> Obtener(string DataKey, string Identificacion, string CodigoLista)
 		{
 			try

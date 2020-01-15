@@ -11,8 +11,15 @@ namespace HGInetFeAPI
 		// ruta donde se encuentra el servicio web
 		private static string UrlWcf = "wcf/listaFe.svc";
 
-
-		public static List<ServicioListaFe.ListaFE> Obtener(string UrlWs, string Serial, string Identificacion, string CodigoListas)
+		/// <summary>
+		/// Permite Obtener las Listas que se utilizan en la Factura Electronica
+		/// </summary>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
+		/// <param name="CodigoListas">números de codigos para consulta separados por el caracter coma (,) ó enviando el caracter (*) para obtenerlas todas</param>
+		/// <returns>Objeto con las Lista de FE</returns>
+		public static List<ServicioListaFe.ListaFE> Obtener(string UrlWs, string Serial, string Identificacion, string CodigoLista)
 		{
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
@@ -44,7 +51,7 @@ namespace HGInetFeAPI
 				{
 					DataKey = dataKey,
 					Identificacion = Identificacion,
-					CodigoLista = CodigoListas
+					CodigoLista = CodigoLista
 				};
 
 				// ejecución del servicio web
