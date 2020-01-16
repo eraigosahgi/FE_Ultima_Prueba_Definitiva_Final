@@ -385,12 +385,39 @@ namespace HGInetMiFacturaElectonicaController
 
 				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaHtmlDocumentos);
 
-				string asunto = string.Empty;
+				//string asunto = string.Empty;
 
 				// obtiene los datos del facturador electrónico
 				Ctl_Empresa facturador_electronico = new Ctl_Empresa();
 				empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
 
+
+				#region Asunto del correo
+				//9. Entrega y recepción de los documentos electrónicos - Anexo Tecnico V1.8
+				//Asunto: NIT del Facturador Electrónico; Nombre del Facturador Electrónico; Número del Documento Electrónico (campo cbc:ID);
+				//Código del tipo de documento según tabla 13.1.3; Nombre comercial del facturador; 
+
+				string numero_doc = string.Format("{0}{1}", documento.StrPrefijo, documento.IntNumero.ToString());
+
+				// obtiene el tipo de documento
+				TipoDocumento tipo_documento = Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo);
+				string tipodoc_asunto = string.Empty;
+				if (tipo_documento == TipoDocumento.Factura)
+				{
+					tipodoc_asunto = "01";
+				}
+				else if (tipo_documento == TipoDocumento.NotaCredito)
+				{
+					tipodoc_asunto = "91";
+				}
+				else if (tipo_documento == TipoDocumento.NotaDebito)
+				{
+					tipodoc_asunto = "92";
+				}
+
+				string asunto = string.Format("{0};{1};{2};{3}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto);
+
+				/*
 				if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
 					asunto = string.Format("{0} (HABILITACIÓN)", Constantes.AsuntoNotificacionDocumento);
@@ -398,7 +425,8 @@ namespace HGInetMiFacturaElectonicaController
 				else
 				{
 					asunto = Constantes.AsuntoNotificacionDocumento;
-				}
+				} */
+				#endregion
 
 				// envía como email de respuesta facturador electrónico
 				DestinatarioEmail remitente = new DestinatarioEmail();
