@@ -479,11 +479,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoPostal, tipo));
 				}
 
-				ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
+				//Se agrega validacion, se tiene en el listado de la DIAN estas opciones pero presenta notificacion en la rececpion.
+				if (tercero.CodigoTributo.Equals("ZZ") || tercero.CodigoTributo.Equals("ZA"))
+					tercero.CodigoTributo = "01";
+
+				ListaTipoImpuestoTercero list_tipoImp = new ListaTipoImpuestoTercero();
 				ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(tercero.CodigoTributo)).FirstOrDefault();
 				if (tipoimp == null)
 				{
-					tercero.CodigoTributo = "ZZ";
+					tercero.CodigoTributo = "01";
 					//throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
 				}
 

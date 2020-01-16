@@ -18,12 +18,15 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="documentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo TaxTotalType1</returns>
-		public static TaxTotalType[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle, string moneda)
+		public static TaxTotalType[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle, string moneda, string version_erp, int hgi)
 		{
 			try
 			{
 				if (documentoDetalle == null || documentoDetalle.Count == 0)
 					throw new Exception("El detalle del documento es inválido.");
+
+				string version_validar = "Ver. 2020.4";
+				string version_validar_Rev = "Ver. 2020.4 Rev";
 
 				//Toma los impuestos de IVA que tiene el producto en el detalle del documento
 				var impuestos_iva = documentoDetalle.Where(d => d.CalculaIVA == 0).ToList().Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor }).GroupBy(_impuesto => new { _impuesto.IvaPorcentaje }).Select(_impuesto => _impuesto.First()).ToList();
@@ -75,10 +78,14 @@ namespace HGInetUBLv2_1
 						imp_doc.BaseImponible += BaseimponibleMuestra;
 					}
 
-					decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+					if ((!version_erp.Equals(version_validar) && !version_erp.Contains(version_validar_Rev)) && hgi == -1)
+					{
+						decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 
-					if (imp_cal != imp_doc.ValorImpuesto)
-						imp_doc.ValorImpuesto = imp_cal;
+						if (imp_cal != imp_doc.ValorImpuesto)
+							imp_doc.ValorImpuesto = imp_cal;
+
+					}
 
 					doc_impuestos.Add(imp_doc);
 

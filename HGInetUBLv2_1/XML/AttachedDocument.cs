@@ -256,8 +256,12 @@ namespace HGInetUBLv2_1
 			TaxSchemeType TaxScheme = new TaxSchemeType();
 			TaxScheme.ID = new IDType();
 			TaxScheme.ID.Value = empresa.CodigoTributo;
-			ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
+			ListaTipoImpuestoTercero list_tipoImp = new ListaTipoImpuestoTercero();
 			ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(empresa.CodigoTributo)).FirstOrDefault();
+			if (tipoimp == null)
+			{
+				tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals("01")).FirstOrDefault();
+			}
 			TaxScheme.Name = new NameType1();
 			TaxScheme.Name.Value = tipoimp.Nombre;
 			PartyTaxScheme.TaxScheme = TaxScheme;

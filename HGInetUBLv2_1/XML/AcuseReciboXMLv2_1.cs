@@ -256,7 +256,7 @@ namespace HGInetUBLv2_1
                 TaxSchemeType TaxScheme = new TaxSchemeType();
                 TaxScheme.ID = new IDType();
                 TaxScheme.ID.Value = tercero.CodigoTributo;
-                ListaTipoImpuesto list_tipoImp = new ListaTipoImpuesto();
+                ListaTipoImpuestoTercero list_tipoImp = new ListaTipoImpuestoTercero();
                 ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(tercero.CodigoTributo)).FirstOrDefault();
                 TaxScheme.Name = new NameType1();
                 TaxScheme.Name.Value = tipoimp.Nombre; //"IVA";

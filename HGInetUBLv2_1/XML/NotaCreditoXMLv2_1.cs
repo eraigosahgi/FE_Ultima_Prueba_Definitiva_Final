@@ -353,7 +353,7 @@ namespace HGInetUBLv2_1
 				/*Impuesto Retenido: Elemento raíz compuesto utilizado para informar de un impuesto	retenido. 
 			    *Impuesto: Elemento raíz compuesto utilizado para informar de un impuesto.*/
 
-				nota_credito.TaxTotal = ImpuestosXML.ObtenerImpuestos(documento.DocumentoDetalles.ToList(), documento.Moneda);
+				nota_credito.TaxTotal = ImpuestosXML.ObtenerImpuestos(documento.DocumentoDetalles.ToList(), documento.Moneda, documento.VersionAplicativo, documento.DocumentoFormato.Codigo);
 				#endregion
 
 				#region nota_credito.LegalMonetaryTotal //Datos Importes Totales
