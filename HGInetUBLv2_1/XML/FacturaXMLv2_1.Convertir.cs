@@ -75,6 +75,7 @@ namespace HGInetUBLv2_1
 					factura_obj.Documento = Convert.ToInt64(factura_ubl.ID.Value);
 				}
 
+				factura_obj.OrderReference = new ReferenciaAdicional();
 				factura_obj.DocumentoRef = string.Empty;
 
 				//Valida si tiene documento referencia de factura
@@ -82,6 +83,7 @@ namespace HGInetUBLv2_1
 				{
 					if (factura_ubl.OrderReference.ID.Value != null)
 					{
+						factura_obj.OrderReference.Documento = factura_ubl.OrderReference.ID.Value;
 						factura_obj.DocumentoRef = factura_ubl.OrderReference.ID.Value;
 					}
 
@@ -90,11 +92,36 @@ namespace HGInetUBLv2_1
 				//Valida si tiene documento referencia de pedido
 				if (factura_ubl.DespatchDocumentReference != null)
 				{
-					if (factura_ubl.DespatchDocumentReference.FirstOrDefault().ID.Value != null)
+					factura_obj.DespatchDocument = new List<ReferenciaAdicional>();
+					foreach (var item in factura_ubl.DespatchDocumentReference)
+					{
+						ReferenciaAdicional despacho = new ReferenciaAdicional(); 
+						if (item.ID.Value != null)
+						{
+							despacho.Documento = item.ID.Value;
+						}
+						factura_obj.DespatchDocument.Add(despacho);
+					}
+					/*if (factura_ubl.DespatchDocumentReference.FirstOrDefault().ID.Value != null)
 					{
 						factura_obj.PedidoRef = factura_ubl.DespatchDocumentReference.FirstOrDefault().ID.Value;
-					}
+					}*/
 
+				}
+
+				if (factura_ubl.AdditionalDocumentReference != null)
+				{
+					factura_obj.DocumentosReferencia = new List<ReferenciaAdicional>();
+					foreach (var item in factura_ubl.AdditionalDocumentReference)
+					{
+						ReferenciaAdicional adicional = new ReferenciaAdicional();
+						if (item.ID.Value != null)
+						{
+							adicional.Documento = item.ID.Value;
+							adicional.CodigoReferencia = item.DocumentTypeCode.Value;
+						}
+						factura_obj.DocumentosReferencia.Add(adicional);
+					}
 				}
 
 				factura_obj.Cufe = factura_ubl.UUID.Value;

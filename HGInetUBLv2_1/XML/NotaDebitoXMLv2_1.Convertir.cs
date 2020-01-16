@@ -86,12 +86,44 @@ namespace HGInetUBLv2_1
 				}
 
 				nota_debito_obj.PedidoRef = string.Empty;
+				nota_debito_obj.OrderReference = new ReferenciaAdicional();
 				// valida el documento de referencia pedido
 				if (nota_debito_ubl.OrderReference != null)
 				{
 					if (nota_debito_ubl.OrderReference.ID != null && nota_debito_ubl.OrderReference.ID.Value != null)
 					{
 						nota_debito_obj.PedidoRef = nota_debito_ubl.OrderReference.ID.Value;
+						nota_debito_obj.OrderReference.Documento = nota_debito_ubl.OrderReference.ID.Value;
+					}
+				}
+
+				//Valida si tiene documento referencia de despacho
+				if (nota_debito_ubl.DespatchDocumentReference != null)
+				{
+					nota_debito_obj.DespatchDocument = new List<ReferenciaAdicional>();
+					foreach (var item in nota_debito_ubl.DespatchDocumentReference)
+					{
+						ReferenciaAdicional despacho = new ReferenciaAdicional();
+						if (item.ID.Value != null)
+						{
+							despacho.Documento = item.ID.Value;
+						}
+						nota_debito_obj.DespatchDocument.Add(despacho);
+					}
+				}
+
+				if (nota_debito_ubl.AdditionalDocumentReference != null)
+				{
+					nota_debito_obj.DocumentosReferencia = new List<ReferenciaAdicional>();
+					foreach (var item in nota_debito_ubl.AdditionalDocumentReference)
+					{
+						ReferenciaAdicional adicional = new ReferenciaAdicional();
+						if (item.ID.Value != null)
+						{
+							adicional.Documento = item.ID.Value;
+							adicional.CodigoReferencia = item.DocumentTypeCode.Value;
+						}
+						nota_debito_obj.DocumentosReferencia.Add(adicional);
 					}
 				}
 

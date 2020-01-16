@@ -85,15 +85,46 @@ namespace HGInetUBLv2_1
 				}
 
 				nota_credito_obj.PedidoRef = string.Empty;
+				nota_credito_obj.OrderReference = new ReferenciaAdicional();
 				// valida el documento de referencia pedido
 				if (nota_credito_ubl.OrderReference != null)
 				{
 					if (nota_credito_ubl.OrderReference.ID != null && nota_credito_ubl.OrderReference.ID.Value != null)
 					{
 						nota_credito_obj.PedidoRef = nota_credito_ubl.OrderReference.ID.Value;
+						nota_credito_obj.OrderReference.Documento = nota_credito_ubl.OrderReference.ID.Value;
 					}
 				}
 
+				//Valida si tiene documento referencia de despacho
+				if (nota_credito_ubl.DespatchDocumentReference != null)
+				{
+					nota_credito_obj.DespatchDocument = new List<ReferenciaAdicional>();
+					foreach (var item in nota_credito_ubl.DespatchDocumentReference)
+					{
+						ReferenciaAdicional despacho = new ReferenciaAdicional();
+						if (item.ID.Value != null)
+						{
+							despacho.Documento = item.ID.Value;
+						}
+						nota_credito_obj.DespatchDocument.Add(despacho);
+					}
+				}
+
+				if (nota_credito_ubl.AdditionalDocumentReference != null)
+				{
+					nota_credito_obj.DocumentosReferencia = new List<ReferenciaAdicional>();
+					foreach (var item in nota_credito_ubl.AdditionalDocumentReference)
+					{
+						ReferenciaAdicional adicional = new ReferenciaAdicional();
+						if (item.ID.Value != null)
+						{
+							adicional.Documento = item.ID.Value;
+							adicional.CodigoReferencia = item.DocumentTypeCode.Value;
+						}
+						nota_credito_obj.DocumentosReferencia.Add(adicional);
+					}
+				}
 
 				if (!interopeabilidad)
 				{
