@@ -110,6 +110,26 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				}
 
+				if (todas == true || lista_codigo.Contains("9"))
+				{
+					ListaMunicipio lista = new ListaMunicipio();
+					string cod_lista = "9";
+					string Descripcion_lista = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ListasFE>(Convert.ToInt16(cod_lista)));
+
+					Llenar_lista(retorno, lista.Items, cod_lista, Descripcion_lista);
+
+				}
+
+				if (todas == true || lista_codigo.Contains("10"))
+				{
+					ListaDepartamentos lista = new ListaDepartamentos();
+					string cod_lista = "10";
+					string Descripcion_lista = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ListasFE>(Convert.ToInt16(cod_lista)));
+
+					Llenar_lista(retorno, lista.Items, cod_lista, Descripcion_lista);
+
+				}
+
 
 				return retorno;
 			}

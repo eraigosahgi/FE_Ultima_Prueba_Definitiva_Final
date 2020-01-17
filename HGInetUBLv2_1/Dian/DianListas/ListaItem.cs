@@ -47,6 +47,12 @@ namespace HGInetUBLv2_1.DianListas
 
 			[Description("Unidades de Medida")]
 			UnidadMedida = 8,
+
+			[Description("Ciudades")]
+			Ciudad = 9,
+
+			[Description("Departamentos")]
+			Departamento = 10,
 		}
 
 	}
