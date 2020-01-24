@@ -589,22 +589,25 @@ namespace HGInetMiFacturaElectonicaController
 
 						string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
 
-						//Se comenta el envio del XML segun Anexo solo se debe enviar el AttachedDocument y el PDF
-						/*
-						if (string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
-							throw new ApplicationException("No se encontró ruta de archivo xml");
-
-						byte[] bytes_xml = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl);
-						string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
-						string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
-
-						if (!string.IsNullOrEmpty(ruta_fisica_xml))
+						//Se anexa el XML-UBL solo para esta version,si no cumple segun Anexo solo se debe enviar el AttachedDocument y el PDF
+						if (documento.IntVersionDian == 1)
 						{
-							Adjunto adjunto = new Adjunto();
-							adjunto.ContenidoB64 = ruta_fisica_xml;
-							adjunto.Nombre = nombre_xml;
-							archivos.Add(adjunto);
-						}*/
+
+							if (string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
+								throw new ApplicationException("No se encontró ruta de archivo xml");
+
+							byte[] bytes_xml = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl);
+							string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
+							//string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
+
+							if (!string.IsNullOrEmpty(ruta_fisica_xml))
+							{
+								Adjunto adjunto = new Adjunto();
+								adjunto.ContenidoB64 = ruta_fisica_xml;
+								adjunto.Nombre = nombre_xml;
+								archivos.Add(adjunto);
+							}
+						}
 
 						// ruta física del xml
 						string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());

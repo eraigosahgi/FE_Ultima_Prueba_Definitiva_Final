@@ -685,6 +685,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//if (decimal.Floor(documento.ValorSubtotal) > documento.Total)
 					//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no puede ser mayor al Total del documento", "Subtotal", documento.ValorSubtotal));
 
+					if (documento.DocumentoDetalles == null)
+						throw new Exception("El detalle del documento es inválido.");
+
 					//Validacion Del valor bruto con respecto al detalle
 					List<DocumentoDetalle> detalle = new List<DocumentoDetalle>();
 					detalle = documento.DocumentoDetalles;
