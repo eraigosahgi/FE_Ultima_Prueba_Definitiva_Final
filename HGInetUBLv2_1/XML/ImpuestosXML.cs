@@ -95,8 +95,8 @@ namespace HGInetUBLv2_1
 				}
 
 				//Toma el impuesto al consumo de los productos que esten el detalle
-				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0).ToList().Select(_consumo => new
-					{ _consumo.ImpoConsumoPorcentaje, TipoImpuestos.Consumo, _consumo.ValorImpuestoConsumo }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje }).Select(_consumo => _consumo.First()).ToList();
+				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0 || d.Aiu == 4).ToList().Select(_consumo => new
+					{ _consumo.ImpoConsumoPorcentaje, _consumo.ProductoGratis, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.ProductoGratis, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
 				decimal BaseImponibleImpConsumo = 0;
 				decimal BaseImponibleBolsa = 0;
 
@@ -110,29 +110,39 @@ namespace HGInetUBLv2_1
 						if (item.ValorImpuestoConsumo != 0)
 						{
 							DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).ToList();
-							DocumentoDetalle bolsa = doc_.Where(det => det.ProductoGratis == true && det.ValorImpuestoConsumo > 0).FirstOrDefault();
+							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0 && item.ProductoGratis == docDet.ProductoGratis && item.ImpoConsumoPorcentaje == docDet.ImpoConsumoPorcentaje && item.Aiu == docDet.Aiu).ToList();
+							DocumentoDetalle bolsa = doc_.Where(det => (item.ProductoGratis == true || item.Aiu == 4) && det.ValorImpuestoConsumo > 0 && det.ImpoConsumoPorcentaje == item.ImpoConsumoPorcentaje && det.Aiu == 4).FirstOrDefault();
 
 							if (bolsa == null)
 							{
 
-								BaseImponibleImpConsumo = decimal.Round(documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
+								BaseImponibleImpConsumo = decimal.Round(doc_.Where(docDet => docDet.ValorImpuestoConsumo != 0).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
 
 								//imp_doc.Codigo = item.IntImpConsumo.ToString();
 								//imp_doc.Nombre = item.StrDescripcion;
-								ListaTarifaImpuestoINC lista_inc = new ListaTarifaImpuestoINC();
-								ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(item.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
-								imp_doc.Nombre = inc.Nombre;
-
+								if (item.ImpoConsumoPorcentaje == 0 && item.ValorImpuestoConsumo > 0)
+								{
+									imp_doc.Nombre = "IC";
+									imp_doc.TipoImpuesto = "02";
+									imp_doc.Codigo = "94";
+								}
+								else
+								{
+									ListaTarifaImpuestoINC lista_inc = new ListaTarifaImpuestoINC();
+									ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(item.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+									imp_doc.Nombre = inc.Nombre;
+									imp_doc.TipoImpuesto = "04";//item.Consumo;
+								}
+								
 								imp_doc.Porcentaje = decimal.Round(item.ImpoConsumoPorcentaje, 2, MidpointRounding.AwayFromZero);
-								imp_doc.TipoImpuesto = item.Consumo;
+								
 								imp_doc.BaseImponible = BaseImponibleImpConsumo;
 								foreach (var docDet in doc_)
 								{
 									imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2, MidpointRounding.AwayFromZero);
 								}
 
-								if (imp_doc.Porcentaje > 0)
+								if (imp_doc.Porcentaje >= 0 && imp_doc.ValorImpuesto > 0)
 								{
 									//decimal imp_cal = decimal.Round(BaseImponibleImpConsumo * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 
@@ -141,7 +151,7 @@ namespace HGInetUBLv2_1
 
 									doc_impuestos.Add(imp_doc);
 								}
-									
+
 							}
 							else
 							{
@@ -240,16 +250,6 @@ namespace HGInetUBLv2_1
 
 							TaxSubtotalType TaxSubtotal = new TaxSubtotalType();
 
-							#region Base Imponible: Base	Imponible sobre la que se calcula la retención de impuesto
-
-							//Base Imponible = Importe bruto + cargos - descuentos
-							TaxableAmountType TaxableAmount = new TaxableAmountType();
-							TaxableAmount.currencyID = moneda_detalle.ToString();
-							TaxableAmount.Value = decimal.Round(item_sub.BaseImponible, 2);
-							TaxSubtotal.TaxableAmount = TaxableAmount;
-
-							#endregion
-
 							#region Importe Impuesto (detalle): Importe del impuesto retenido
 
 							//Valor total del impuesto retenido
@@ -266,14 +266,54 @@ namespace HGInetUBLv2_1
 							   la lista deberían aparecer los impuestos	estatales o nacionales*/
 							TaxCategoryType TaxCategory = new TaxCategoryType();
 
-							#region Porcentaje: Porcentaje a aplicar
 
-							PercentType1 Percent = new PercentType1();
-							Percent = new PercentType1();
-							Percent.Value = item_sub.Porcentaje;
-							TaxCategory.Percent = Percent;
 
-							#endregion
+							if (item_sub.Porcentaje == 0 && item_sub.ValorImpuesto > 0)
+							{
+
+								//Base Imponible = Importe bruto + cargos - descuentos
+								BaseUnitMeasureType BaseUnitMeasure = new BaseUnitMeasureType();
+								BaseUnitMeasure.unitCode = item_sub.Codigo; //moneda_detalle.ToString();
+								BaseUnitMeasure.Value = documentoDetalle.Where(d => d.ImpoConsumoPorcentaje == 0 && d.ValorImpuestoConsumo > 0 && d.ProductoGratis == false && d.Aiu != 4).Sum(c => c.Cantidad);//1;//decimal.Round(item_sub.BaseImponible, 2);//
+								TaxSubtotal.BaseUnitMeasure = BaseUnitMeasure;
+
+								////Base Imponible = Importe bruto + cargos - descuentos
+								//TaxableAmountType TaxableAmount = new TaxableAmountType();
+								//TaxableAmount.currencyID = moneda_detalle.ToString();
+								//TaxableAmount.Value = BaseUnitMeasure.Value;
+								//TaxSubtotal.TaxableAmount = TaxableAmount;
+
+								PerUnitAmountType Percent_unit = new PerUnitAmountType();
+								Percent_unit.currencyID = moneda_detalle.ToString();
+								//decimal cantidad = documentoDetalle.Where(d => d.ImpoConsumoPorcentaje == 0 && d.ValorImpuestoConsumo > 0 && d.ProductoGratis == false && d.Aiu != 4).Sum(c => c.Cantidad);
+								Percent_unit.Value = decimal.Round(item_sub.ValorImpuesto / BaseUnitMeasure.Value, 2);//decimal.Round(item_sub.ValorImpuesto / cantidad, 2);// 
+								Percent_unit.Value = Percent_unit.Value + 0.00M;
+								TaxSubtotal.PerUnitAmount = Percent_unit;
+							}
+							else
+							{
+
+								#region Base Imponible: Base	Imponible sobre la que se calcula la retención de impuesto
+
+								//Base Imponible = Importe bruto + cargos - descuentos
+								TaxableAmountType TaxableAmount = new TaxableAmountType();
+								TaxableAmount.currencyID = moneda_detalle.ToString();
+								TaxableAmount.Value = decimal.Round(item_sub.BaseImponible, 2);
+								TaxSubtotal.TaxableAmount = TaxableAmount;
+
+								#endregion
+
+								#region Porcentaje: Porcentaje a aplicar
+
+								PercentType1 Percent = new PercentType1();
+								Percent = new PercentType1();
+								Percent.Value = item_sub.Porcentaje;
+								TaxCategory.Percent = Percent;
+
+								#endregion
+							}
+
+
 
 							TaxSchemeType TaxScheme = new TaxSchemeType();
 							IDType IDTaxScheme = new IDType();
@@ -301,7 +341,7 @@ namespace HGInetUBLv2_1
 							//Base Imponible = Importe bruto + cargos - descuentos
 							BaseUnitMeasureType BaseUnitMeasure = new BaseUnitMeasureType();
 							BaseUnitMeasure.unitCode = item_sub.Codigo; //moneda_detalle.ToString();
-							BaseUnitMeasure.Value = decimal.Round(item_sub.BaseImponible, 2);
+							BaseUnitMeasure.Value = decimal.Round(item_sub.BaseImponible, 2);//1.00M;//
 							TaxSubtotal.BaseUnitMeasure = BaseUnitMeasure;
 
 							#endregion
@@ -326,7 +366,10 @@ namespace HGInetUBLv2_1
 
 							PerUnitAmountType Percent = new PerUnitAmountType();
 							Percent.currencyID = moneda_detalle.ToString();
-							Percent.Value = decimal.Round(item_sub.ValorImpuesto / item_sub.BaseImponible, 2);
+							//decimal cantidad = documentoDetalle.Where(d => d.ImpoConsumoPorcentaje == 0 && d.ValorImpuestoConsumo > 0 && d.ProductoGratis == false && d.Aiu == 4).Sum(c => c.Cantidad);
+							Percent.Value = decimal.Round(item_sub.ValorImpuesto / BaseUnitMeasure.Value, 2);//decimal.Round(item_sub.ValorImpuesto / cantidad, 2);// 
+							Percent.Value = Percent.Value + 0.00M;
+							//Percent.Value = decimal.Round(item_sub.ValorImpuesto / item_sub.BaseImponible, 2);
 
 							#endregion
 

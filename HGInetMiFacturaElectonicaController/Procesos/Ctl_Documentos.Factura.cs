@@ -535,11 +535,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (item_respuesta.Error == null)
 				item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
 			//Si el estado es menor a firmado, la respuesta del estado siempre
-			if (item_respuesta.IdProceso < (short)ProcesoEstado.FirmaXml.GetHashCode())
+			if (item_respuesta.IdProceso < (short)ProcesoEstado.FirmaXml.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.Recibido.GetHashCode())
 			{
 				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
 				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
-			}
+			}			
 
 			return item_respuesta;
 

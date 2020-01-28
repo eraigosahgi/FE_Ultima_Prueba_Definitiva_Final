@@ -1091,7 +1091,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							validacion_Aiu = false;
 							List<DocumentoDetalle> lis_detalle = new List<DocumentoDetalle>();
-							lis_detalle = documentoDetalle.Where(v => v.Aiu > 0).ToList();
+							lis_detalle = documentoDetalle.Where(v => v.Aiu > 0 && v.Aiu < 4).ToList();
 							if (lis_detalle != null && lis_detalle.Any())
 							{
 								DocumentoDetalle detalle = new DocumentoDetalle();
@@ -1213,19 +1213,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if ((Docdet.ValorImpuestoConsumo > 0) && Docdet.ProductoGratis == false)
 						{
-							decimal impconsumo_cal = decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje / 100), 2, MidpointRounding.AwayFromZero);
-							if ( impconsumo_cal == Docdet.ValorImpuestoConsumo)
+							if (Docdet.ValorImpuestoConsumo > 0 && Docdet.ImpoConsumoPorcentaje > 0)
 							{
-								ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
-								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
-								if (consumo == null)
-									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ImpoConsumoPorcentaje", Docdet.ImpoConsumoPorcentaje));
+								decimal impconsumo_cal = decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje / 100), 2, MidpointRounding.AwayFromZero);
+								if (impconsumo_cal == Docdet.ValorImpuestoConsumo)
+								{
+									ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
+									ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+									if (consumo == null)
+										throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ImpoConsumoPorcentaje", Docdet.ImpoConsumoPorcentaje));
+								}
+								else
+								{
+									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado, según calculos generados por valor {2}", "ValorImpuestoConsumo", Docdet.ValorImpuestoConsumo, impconsumo_cal));
+								}
 							}
-							else
-							{
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado, según calculos generados por valor {2}", "ValorImpuestoConsumo", Docdet.ValorImpuestoConsumo,impconsumo_cal));
-							}
-
 						}
 
 						if (Docdet.DatosMandatario != null)

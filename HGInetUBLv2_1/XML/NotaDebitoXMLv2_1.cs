@@ -386,7 +386,7 @@ namespace HGInetUBLv2_1
 				}
 				else
 				{
-					base_impuesto = nota_debito.DebitNoteLine.Sum(s => s.TaxTotal.Sum(b => b.TaxSubtotal.Where(k => k.TaxableAmount != null).Sum(v => v.TaxableAmount.Value)));
+					base_impuesto = nota_debito.DebitNoteLine.Sum(s => s.TaxTotal.Take(1).Sum(b => b.TaxSubtotal.Where(k => k.TaxableAmount != null).Sum(v => v.TaxableAmount.Value)));
 				}
 				decimal impuestos = nota_debito.TaxTotal.Sum(i => i.TaxAmount.Value);
 
@@ -658,7 +658,7 @@ namespace HGInetUBLv2_1
 					#region Cantidad producto
 
 					DebitedQuantityType DebitedQuantity = new DebitedQuantityType();
-					DebitedQuantity.Value = decimal.Round(DocDet.Cantidad, 2);
+					DebitedQuantity.Value = DocDet.Cantidad;
 					DebitNoteLine.DebitedQuantity = DebitedQuantity;
 
 					// Unidad de medida Ver lista de valores posibles en 6.3.6(Defecto codigo - 94)
@@ -725,94 +725,118 @@ namespace HGInetUBLv2_1
 					// <cac:TaxTotal>
 					List<TaxTotalType> TaxesTotal = new List<TaxTotalType>();
 
-					if (DocDet.IvaValor >= 0 && DocDet.ValorImpuestoConsumo == 0)
+					if (DocDet.IvaValor >= 0)
 					{
-						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
-						TaxTotalType TaxTotal = new TaxTotalType();
 
-						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
-						// <cbc:TaxAmount>
-						TaxTotal.TaxAmount = new TaxAmountType()
+						bool llenar_iva = false;
+						if (DocDet.ValorImpuestoConsumo == 0 && DocDet.ImpoConsumoPorcentaje == 0 && DocDet.IvaValor > 0)
 						{
-							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round(DocDet.IvaValor, 2)
-						};
-
-						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
-						// <cbc:TaxEvidenceIndicator>
-						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
-						{
-							Value = false
-						};
-
-						// Debe ser informado un grupo de estos para cada tarifa. 
-						// <cac:TaxSubtotal>
-						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
-
-
-						#region impuesto: IVA 
-
-						TaxSubtotalType TaxSubtotalIva = new TaxSubtotalType();
-
-						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
-						//Base Imponible sobre la que se calcula el valor del tributo
-						//----Se debe Solicitar la base con la que calculo el impuesto
-						// <cbc:TaxAmount>
-						TaxSubtotalIva.TaxableAmount = new TaxableAmountType();
-						TaxSubtotalIva.TaxableAmount.currencyID = moneda_detalle.ToString();
-						if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0 && DocDet.IvaPorcentaje > 0)
-						{
-							TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 2, MidpointRounding.AwayFromZero);
+							llenar_iva = true;
 						}
-						else
+						else if (DocDet.ValorImpuestoConsumo == 0 && DocDet.ImpoConsumoPorcentaje == 0 && DocDet.IvaValor == 0)
 						{
-							TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
+							llenar_iva = true;
 						}
 
-						// El monto de este subtotal fiscal.
-						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
-						// <cbc:TaxAmount>
-						TaxSubtotalIva.TaxAmount = new TaxAmountType()
+						if (DocDet.IvaValor > 0 && llenar_iva == false)
 						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.IvaValor
-						};
+							llenar_iva = true;
+						}
 
-						// categoría de impuestos aplicable a este subtotal.
-						//Grupo de informaciones sobre el tributo 
-						// <cac:TaxCategory>
-						TaxCategoryType TaxCategoryIva = new TaxCategoryType();
-
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						TaxCategoryIva.Percent = new PercentType1()
+						if (llenar_iva == true)
 						{
-							Value = decimal.Round((DocDet.IvaPorcentaje), 2)
-						};
+							//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+							TaxTotalType TaxTotal = new TaxTotalType();
 
-						// <cac:TaxScheme>
-						//Grupo de informaciones específicas sobre el tributo
-						TaxSchemeType TaxSchemeIva = new TaxSchemeType();
-						//Identificador del tributo
-						TaxSchemeIva.ID = new IDType();
-						TaxSchemeIva.ID.Value = "01"; //TipoImpuestos.Iva,
-													  //Nombre del tributo
-						TaxSchemeIva.Name = new NameType1();
-						TaxSchemeIva.Name.Value = "IVA";
+							//if (decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero) != DocDet.IvaValor)
+							//DocDet.IvaValor = decimal.Round((DocDet.ValorSubtotal * (DocDet.IvaPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
 
-						TaxCategoryIva.TaxScheme = TaxSchemeIva;
-						TaxSubtotalIva.TaxCategory = TaxCategoryIva;
-						TaxesSubtotal[0] = TaxSubtotalIva;
-						TaxTotal.TaxSubtotal = TaxesSubtotal;
-						TaxesTotal.Add(TaxTotal);
+							// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+							// <cbc:TaxAmount>
+							TaxTotal.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = decimal.Round(DocDet.IvaValor, 2)
+							};
+
+							// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+							// <cbc:TaxEvidenceIndicator>
+							TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+							{
+								Value = false
+							};
+
+							// Debe ser informado un grupo de estos para cada tarifa. 
+							// <cac:TaxSubtotal>
+							TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+
+
+							#region impuesto: IVA 
+
+							TaxSubtotalType TaxSubtotalIva = new TaxSubtotalType();
+
+							// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+							//Base Imponible sobre la que se calcula el valor del tributo
+							//----Se debe Solicitar la base con la que calculo el impuesto
+							// <cbc:TaxAmount>
+							TaxSubtotalIva.TaxableAmount = new TaxableAmountType();
+							TaxSubtotalIva.TaxableAmount.currencyID = moneda_detalle.ToString();
+							if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0 && DocDet.IvaPorcentaje > 0)
+							{
+								TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 2, MidpointRounding.AwayFromZero);
+							}
+							else
+							{
+								TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
+							}
+
+
+							// El monto de este subtotal fiscal.
+							//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+							// <cbc:TaxAmount>
+							TaxSubtotalIva.TaxAmount = new TaxAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = DocDet.IvaValor
+							};
+
+							// categoría de impuestos aplicable a este subtotal.
+							//Grupo de informaciones sobre el tributo 
+							// <cac:TaxCategory>
+							TaxCategoryType TaxCategoryIva = new TaxCategoryType();
+
+							// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+							//Tarifa del tributo
+							// <cbc:Percent>
+							if (DocDet.CalculaIVA > 0 && DocDet.IvaPorcentaje > 0)
+								DocDet.IvaPorcentaje = 0.00M;
+							TaxCategoryIva.Percent = new PercentType1()
+							{
+								Value = decimal.Round((DocDet.IvaPorcentaje), 2)
+							};
+
+							// <cac:TaxScheme>
+							//Grupo de informaciones específicas sobre el tributo
+							TaxSchemeType TaxSchemeIva = new TaxSchemeType();
+							//Identificador del tributo
+							TaxSchemeIva.ID = new IDType(); /*** QUEMADO ***/
+							TaxSchemeIva.ID.Value = "01";//TipoImpuestos.Iva,
+														 //Nombre del tributo
+							TaxSchemeIva.Name = new NameType1();
+							TaxSchemeIva.Name.Value = "IVA";/*** QUEMADO ***/
+
+							TaxCategoryIva.TaxScheme = TaxSchemeIva;
+							TaxSubtotalIva.TaxCategory = TaxCategoryIva;
+							TaxesSubtotal[0] = TaxSubtotalIva;
+							TaxTotal.TaxSubtotal = TaxesSubtotal;
+							TaxesTotal.Add(TaxTotal);
+						}
 
 						#endregion
 					}
 
 					if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == false)
 					{
-
 
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
 						TaxTotalType TaxTotal = new TaxTotalType();
@@ -841,15 +865,6 @@ namespace HGInetUBLv2_1
 
 						TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
 
-						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
-						//Base Imponible sobre la que se calcula el valor del tributo
-						//----Se debe Solicitar la base con la que calculo el impuesto
-						TaxSubtotalConsumo.TaxableAmount = new TaxableAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorSubtotal
-						};
-
 						// El monto de este subtotal fiscal.
 						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
 						// <cbc:TaxAmount>
@@ -864,19 +879,64 @@ namespace HGInetUBLv2_1
 						// <cac:TaxCategory>
 						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
 
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						TaxCategoryConsumo.Percent = new PercentType1()
+						string codigo_impuesto = "04";
+						//
+						if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ImpoConsumoPorcentaje == 0)
 						{
-							Value = decimal.Round((DocDet.ImpoConsumoPorcentaje), 2)
-						};
+							if (DocDet.Aiu != 4)
+							{
+								codigo_impuesto = "02";
+							}
+							else
+							{
+								codigo_impuesto = "22";
+							}
+
+							// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+							//Base Imponible sobre la que se calcula el valor del tributo
+							//----Se debe Solicitar la base con la que calculo el impuesto
+							TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
+							{
+								unitCode = DebitedQuantity.unitCode,
+								Value = DocDet.Cantidad //1.00M//decimal.Round(DocDet.Cantidad, 6)//
+							};
+
+							// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+							//Tarifa del tributo
+							// <cbc:Percent>
+							TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = decimal.Round((DocDet.ValorImpuestoConsumo) / DocDet.Cantidad, 2) + 0.00M
+							};
+
+						}
+						else
+						{
+
+							// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+							//Base Imponible sobre la que se calcula el valor del tributo
+							//----Se debe Solicitar la base con la que calculo el impuesto
+							TaxSubtotalConsumo.TaxableAmount = new TaxableAmountType()
+							{
+								currencyID = moneda_detalle.ToString(),
+								Value = DocDet.ValorSubtotal
+							};
+
+							// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+							//Tarifa del tributo
+							// <cbc:Percent>
+							TaxCategoryConsumo.Percent = new PercentType1()
+							{
+								Value = decimal.Round((DocDet.ImpoConsumoPorcentaje), 2)
+							};
+						}
 
 						// <cac:TaxScheme>
 						//Grupo de informaciones específicas sobre el tributo
 						TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
 						ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
-						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals("04")).FirstOrDefault();
+						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals(codigo_impuesto)).FirstOrDefault();
 						//Identificador del tributo
 						TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
 						TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"04";//TipoImpuestos.Consumo,
@@ -922,7 +982,7 @@ namespace HGInetUBLv2_1
 						TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
 						{
 							unitCode = DebitedQuantity.unitCode,
-							Value = decimal.Round(DocDet.Cantidad, 6)
+							Value = DocDet.Cantidad //1.00M//decimal.Round(DocDet.Cantidad, 6)
 						};
 
 						// El monto de este subtotal fiscal.
@@ -940,7 +1000,7 @@ namespace HGInetUBLv2_1
 						TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
 						{
 							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2)
+							Value = decimal.Round((DocDet.ValorImpuestoConsumo) / DocDet.Cantidad, 2) + 0.00M//decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2) + 0.00M//
 						};
 
 						// categoría de impuestos aplicable a este subtotal.
@@ -948,14 +1008,6 @@ namespace HGInetUBLv2_1
 						// <cac:TaxCategory>
 						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
 
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						//TaxCategoryConsumo.PerUnitAmount = new PerUnitAmountType()
-						//{
-						//	currencyID = moneda_detalle.ToString(),
-						//	Value = decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2)
-						//};
 
 						// <cac:TaxScheme>
 						//Grupo de informaciones específicas sobre el tributo
