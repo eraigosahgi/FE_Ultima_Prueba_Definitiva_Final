@@ -983,13 +983,30 @@ namespace HGInetUBLv2_1
 						//Grupo de informaciones sobre el tributo 
 						// <cac:TaxCategory>
 						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
+						string codigo_impuesto = string.Empty;
+						//
+						if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ImpoConsumoPorcentaje == 0)
+						{
+							if (DocDet.Aiu != 4)
+							{
+								codigo_impuesto = "02";
+							}
+							else
+							{
+								codigo_impuesto = "22";
+							}
+						}
+						else
+						{
+							codigo_impuesto = "04";
+						}
 
 
 						// <cac:TaxScheme>
 						//Grupo de informaciones específicas sobre el tributo
 						TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
 						ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
-						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals("22")).FirstOrDefault();
+						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals(codigo_impuesto)).FirstOrDefault();
 						//Identificador del tributo
 						TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
 						TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"22";//TipoImpuestos.Consumo,

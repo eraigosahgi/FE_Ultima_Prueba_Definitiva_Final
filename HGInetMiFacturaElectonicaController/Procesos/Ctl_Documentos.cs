@@ -1230,6 +1230,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 						}
 
+						//Validacion para detectar el producto bolsa en versiones menores a 2020.4 de HGInetERP
+						if ((Docdet.ValorImpuestoConsumo > 0) && Docdet.ProductoGratis == true && Docdet.ValorUnitario == 0 && Docdet.Aiu == 0)
+						{
+							Docdet.Aiu = 4;
+						}
+
 						if (Docdet.DatosMandatario != null)
 						{
 							ValidarTercero(Docdet.DatosMandatario, "Mandatario", facturador);

@@ -96,7 +96,7 @@ namespace HGInetUBLv2_1
 
 				//Toma el impuesto al consumo de los productos que esten el detalle
 				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0 || d.Aiu == 4).ToList().Select(_consumo => new
-					{ _consumo.ImpoConsumoPorcentaje, _consumo.ProductoGratis, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.ProductoGratis, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
+					{ _consumo.ImpoConsumoPorcentaje, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
 				decimal BaseImponibleImpConsumo = 0;
 				decimal BaseImponibleBolsa = 0;
 
@@ -110,8 +110,8 @@ namespace HGInetUBLv2_1
 						if (item.ValorImpuestoConsumo != 0)
 						{
 							DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0 && item.ProductoGratis == docDet.ProductoGratis && item.ImpoConsumoPorcentaje == docDet.ImpoConsumoPorcentaje && item.Aiu == docDet.Aiu).ToList();
-							DocumentoDetalle bolsa = doc_.Where(det => (item.ProductoGratis == true || item.Aiu == 4) && det.ValorImpuestoConsumo > 0 && det.ImpoConsumoPorcentaje == item.ImpoConsumoPorcentaje && det.Aiu == 4).FirstOrDefault();
+							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0 && item.ImpoConsumoPorcentaje == docDet.ImpoConsumoPorcentaje && item.Aiu == docDet.Aiu).ToList();
+							DocumentoDetalle bolsa = doc_.Where(det => item.Aiu == 4 && det.ValorImpuestoConsumo > 0 && det.ImpoConsumoPorcentaje == item.ImpoConsumoPorcentaje && det.Aiu == 4).FirstOrDefault();
 
 							if (bolsa == null)
 							{
@@ -274,7 +274,7 @@ namespace HGInetUBLv2_1
 								//Base Imponible = Importe bruto + cargos - descuentos
 								BaseUnitMeasureType BaseUnitMeasure = new BaseUnitMeasureType();
 								BaseUnitMeasure.unitCode = item_sub.Codigo; //moneda_detalle.ToString();
-								BaseUnitMeasure.Value = documentoDetalle.Where(d => d.ImpoConsumoPorcentaje == 0 && d.ValorImpuestoConsumo > 0 && d.ProductoGratis == false && d.Aiu != 4).Sum(c => c.Cantidad);//1;//decimal.Round(item_sub.BaseImponible, 2);//
+								BaseUnitMeasure.Value = documentoDetalle.Where(d => d.ImpoConsumoPorcentaje == 0 && d.ValorImpuestoConsumo > 0 && d.Aiu != 4).Sum(c => c.Cantidad);//1;//decimal.Round(item_sub.BaseImponible, 2);//
 								TaxSubtotal.BaseUnitMeasure = BaseUnitMeasure;
 
 								////Base Imponible = Importe bruto + cargos - descuentos
