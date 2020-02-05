@@ -175,7 +175,10 @@ namespace HGInetUBLv2_1
 					}
 				}
 
+				//Se debe hacer validacion es sobre el ICA y no sobre el RETEICA
+				#region ICA
 				//Toma el ReteICA de los productos que esten el detalle
+				/*
 				var impuesto_ica = documentoDetalle.Select(_ica => new { _ica.ReteIcaPorcentaje, TipoImpuestos.Ica, _ica.ReteIcaValor })
 					.GroupBy(_ica => new { _ica.ReteIcaPorcentaje }).Select(_ica => _ica.First());
 				decimal BaseImponibleReteIca = 0;
@@ -210,8 +213,9 @@ namespace HGInetUBLv2_1
 
 					}
 
-				}
-				
+				}*/ 
+				#endregion
+
 				List<TaxTotalType> List_Taxtotal = new List<TaxTotalType>();
 
 				List<string> list_tiposImp = doc_impuestos.Select(_x => _x.TipoImpuesto).Distinct().ToList();
