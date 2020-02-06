@@ -813,11 +813,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									throw new ApplicationException("El porcentaje del campo Cargo no puede ser mayor a 100");
 								}
 
-								cargo = list_cargo.Where(d => d.Valor > documento.ValorSubtotal).FirstOrDefault();
-								if (cargo != null)
-								{
-									throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
-								}
+								//Se quita validacion en el Anexo V1.8 la dejan solo para el descuento y el Anexo esta mal documentado
+								//cargo = list_cargo.Where(d => d.Valor > documento.ValorSubtotal).FirstOrDefault();
+								//if (cargo != null)
+								//{
+								//	throw new ApplicationException("El Valor del campo Cargo no puede ser mayor al Subtotal del documento");
+								//}
 							}
 						}
 						else if (documento.Cargos.Count >= 0 && documento.ValorCargo == 0)
