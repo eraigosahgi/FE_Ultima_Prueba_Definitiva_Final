@@ -412,6 +412,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								if (doc_resp.IdVersionDian == 1)
 									item.TipoOperacion = 33;
 								//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
+								item.DocumentoRef = string.Format("{0}{1}", doc_resp.Prefijo, doc_resp.Documento);
 							}
 							else
 							{
