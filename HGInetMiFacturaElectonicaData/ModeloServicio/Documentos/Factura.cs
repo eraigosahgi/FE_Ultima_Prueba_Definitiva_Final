@@ -215,6 +215,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public int TerminoPago { get; set; }
 
 		/// <summary>
+		/// Descripcion del Medio de Pago segun el codigo recibido - Es llenado por la plataforma para la generacion de Formatos en V2
+		/// </summary>
+		public string TerminoPago_Descripcion { get; set; }
+
+		/// <summary>
 		/// Número de identificación del proveedor tecnológico 
 		/// </summary>
 		public string IdentificacionProveedor { get; set; }

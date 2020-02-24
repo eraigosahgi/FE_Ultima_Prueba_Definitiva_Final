@@ -19,6 +19,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using Telerik.Reporting;
+using HGInetUBLv2_1.DianListas;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -102,6 +103,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					documento_obj.DocumentoDetalles = detalles_formato;
+
+					//Se llena propiedad del medio de pago para poder mostrarla en la representacion grafica
+					ListaMediosPago list_medio = new ListaMediosPago();
+					ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento_obj.TerminoPago.ToString())).FirstOrDefault();
+					documento_obj.Descripcion_TerminoPago = medio.Descripcion;
 
 
 					if (datos_formato != null)
