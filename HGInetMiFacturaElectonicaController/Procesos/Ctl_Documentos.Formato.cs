@@ -107,7 +107,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Se llena propiedad del medio de pago para poder mostrarla en la representacion grafica
 					ListaMediosPago list_medio = new ListaMediosPago();
 					ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento_obj.TerminoPago.ToString())).FirstOrDefault();
-					documento_obj.Descripcion_TerminoPago = medio.Descripcion;
+					documento_obj.TerminoPago_Descripcion = medio.Descripcion;
 
 
 					if (datos_formato != null)
