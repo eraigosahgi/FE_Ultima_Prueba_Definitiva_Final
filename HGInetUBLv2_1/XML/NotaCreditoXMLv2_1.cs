@@ -345,7 +345,7 @@ namespace HGInetUBLv2_1
 
 				#region nota_credito.CreditNoteLine  //Línea de nota_credito
 				//Elemento que agrupa todos los campos de una línea de nota_credito
-				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.CufeFactura, documento.Moneda);
+				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.CufeFactura, documento.Moneda, documento.DatosObligado.Identificacion);
 
 				#endregion
 
@@ -603,7 +603,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo CreditNoteLineType</returns>
-		public static CreditNoteLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string cufefactura, string moneda)
+		public static CreditNoteLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string cufefactura, string moneda, string identificiacion_Obligado)
 		{
 			try
 			{
@@ -1115,6 +1115,19 @@ namespace HGInetUBLv2_1
 					IDType IDItemStandard = new IDType();
 					//---Validar que no venag null
 					IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
+					//Se valida si es FRESCONGELADOS PANETTIERE S.A.
+					if (identificiacion_Obligado.Equals("900038405"))
+					{
+						ListaTipoCodigoProducto list_TipoPro = new ListaTipoCodigoProducto();
+						ListaItem TipoProd = list_TipoPro.Items.Where(d => d.Codigo.Equals("010")).FirstOrDefault();
+						IDItemStandard.schemeID = TipoProd.Codigo;
+						IDItemStandard.schemeName = TipoProd.Descripcion;
+						IDItemStandard.schemeAgencyID = "9";
+					}
+					else
+					{
+						IDItemStandard.schemeID = "999";
+					}
 					StandardItemIdentification.ID = IDItemStandard;
 					Item.StandardItemIdentification = StandardItemIdentification;
 					#endregion
