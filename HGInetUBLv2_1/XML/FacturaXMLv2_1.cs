@@ -474,7 +474,7 @@ namespace HGInetUBLv2_1
 				string resp = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.DatosObligado.Responsabilidades, ";");
 				if (resp.Contains("O-15") == true)
 					autoretenedor = true;
-				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda, autoretenedor);
+				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda, autoretenedor, documento.DatosObligado.Identificacion.ToString());
 				#endregion
 
 				#region	facturaXML.TaxTotal - Impuesto y Impuesto Retenido
@@ -1225,7 +1225,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo InvoiceLineType1</returns>
-		private static InvoiceLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string moneda, bool Autoretenedor)
+		private static InvoiceLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string moneda, bool Autoretenedor, string identificiacion_Obligado)
 		{
 			try
 			{
@@ -1890,8 +1890,21 @@ namespace HGInetUBLv2_1
 						IDType IDItemStandard = new IDType();
 						//---Validar que no venag null
 						IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
-						// -- 6.3.5. Productos: @schemeID, @schemeName, @schemeAgencyID 
-						IDItemStandard.schemeID = "999";
+						// -- 6.3.5. Productos: @schemeID, @schemeName, @schemeAgencyID
+
+						//Se valida si es FRESCONGELADOS PANETTIERE S.A.
+						if (identificiacion_Obligado.Equals("900038405"))
+						{
+							ListaTipoCodigoProducto list_TipoPro = new ListaTipoCodigoProducto();
+							ListaItem TipoProd = list_TipoPro.Items.Where(d => d.Codigo.Equals("010")).FirstOrDefault();
+							IDItemStandard.schemeID = TipoProd.Codigo;
+							IDItemStandard.schemeName = TipoProd.Descripcion;
+							IDItemStandard.schemeAgencyID = "9";
+						}
+						else
+						{
+							IDItemStandard.schemeID = "999";
+						}
 						StandardItemIdentification.ID = IDItemStandard;
 						Item.StandardItemIdentification = StandardItemIdentification;
 						#endregion
