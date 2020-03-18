@@ -357,7 +357,7 @@ namespace HGInetUBLv2_1
 
 						}
 
-						if (factura_ubl.InvoiceLine[i].Item.CatalogueItemIdentification != null)
+						if (factura_ubl.InvoiceLine[i].Item.SellersItemIdentification != null)
 						{
 							detalle.ProductoCodigo = factura_ubl.InvoiceLine[i].Item.SellersItemIdentification.ID.Value;
 						}

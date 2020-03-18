@@ -197,8 +197,8 @@ namespace HGInetUBLv2_1
 
 						DocumentoDetalle detalle = new DocumentoDetalle();
 						detalle.Codigo = Convert.ToInt16(nota_debito_ubl.DebitNoteLine[i].ID.Value);
-						if (nota_debito_ubl.DebitNoteLine[i].Item.CatalogueItemIdentification != null)
-							detalle.ProductoCodigo = nota_debito_ubl.DebitNoteLine[i].Item.CatalogueItemIdentification.ID.Value;
+						if (nota_debito_ubl.DebitNoteLine[i].Item.SellersItemIdentification != null)
+							detalle.ProductoCodigo = nota_debito_ubl.DebitNoteLine[i].Item.SellersItemIdentification.ID.Value;
 						if (nota_debito_ubl.DebitNoteLine[i].Item.StandardItemIdentification != null)
 							detalle.ProductoCodigoEAN = nota_debito_ubl.DebitNoteLine[i].Item.StandardItemIdentification.ID.Value;
 						detalle.ProductoNombre = nota_debito_ubl.DebitNoteLine[i].Item.Description[0].Value;

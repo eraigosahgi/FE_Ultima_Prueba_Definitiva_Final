@@ -1087,17 +1087,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					if (facturador.IntVersionDian == 2)
 					{
-						//Se valida si llega informacion con AIU que tenga como minimo un item con descripcion
+						//Se valida si llega informacion con AIU que tenga un item administracion con descripcion
 						if (validacion_Aiu == true)
 						{
 							validacion_Aiu = false;
-							List<DocumentoDetalle> lis_detalle = new List<DocumentoDetalle>();
-							lis_detalle = documentoDetalle.Where(v => v.Aiu > 0 && v.Aiu < 4).ToList();
-							if (lis_detalle != null && lis_detalle.Any())
+							DocumentoDetalle detalle_aiu = new DocumentoDetalle();
+							detalle_aiu = documentoDetalle.Where(v => v.Aiu == 2).FirstOrDefault();
+							if (detalle_aiu != null)
 							{
-								DocumentoDetalle detalle = new DocumentoDetalle();
-								detalle = lis_detalle.Where(d => !string.IsNullOrEmpty(d.ProductoDescripcion)).FirstOrDefault();
-								if (detalle == null)
+								if (string.IsNullOrEmpty(detalle_aiu.ProductoDescripcion))
 									throw new ApplicationException("No se encontro descripción del contrato AIU en el campo ProductoDescripcion en el detalle del documento");
 							}
 						}
