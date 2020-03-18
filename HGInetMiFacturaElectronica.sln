@@ -279,6 +279,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auditoria", "Auditoria", "{
 		Documentacion\Liberaciones\Auditoria\20191210-Tablas Auditoria.txt = Documentacion\Liberaciones\Auditoria\20191210-Tablas Auditoria.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2020.4", "v2020.4", "{9348B25B-EF5A-421F-B0F2-F3A213E4DA2F}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2020.4\20200318-TblEmpresas-PdfCamposDian.sql = Documentacion\Liberaciones\v2020.4\20200318-TblEmpresas-PdfCamposDian.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -448,5 +453,6 @@ Global
 		{A62A61A7-CEF6-48AC-905F-4C45723BE7B6} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{BF7BD325-A511-4119-9FE2-1CDD60C12F48} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{B8068B7D-C1D3-4F1A-90D2-132DD573D4AE} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{9348B25B-EF5A-421F-B0F2-F3A213E4DA2F} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal
