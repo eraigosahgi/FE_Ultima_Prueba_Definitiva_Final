@@ -71,6 +71,9 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntCertFirma { get; set; }
         public string StrSerialCloudServices { get; set; }
         public Nullable<bool> IntDebug { get; set; }
+        public bool IntPdfCampoDian { get; set; }
+        public decimal IntPdfCampoDianPosX { get; set; }
+        public decimal IntPdfCampoDianPosY { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }

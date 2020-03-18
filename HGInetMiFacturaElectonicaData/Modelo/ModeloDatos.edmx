@@ -140,6 +140,9 @@
           <Property Name="IntCertFirma" Type="smallint" Nullable="false" />
           <Property Name="StrSerialCloudServices" Type="varchar" MaxLength="50" />
           <Property Name="IntDebug" Type="bit" />
+          <Property Name="IntPdfCampoDian" Type="bit" Nullable="false" />
+          <Property Name="IntPdfCampoDianPosX" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="IntPdfCampoDianPosY" Type="decimal" Precision="10" Scale="2" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -1180,6 +1183,9 @@
           <Property Name="StrSerialCloudServices" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntDebug" Type="Boolean" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresasResoluciones" />
+          <Property Name="IntPdfCampoDian" Type="Boolean" Nullable="false" />
+          <Property Name="IntPdfCampoDianPosX" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="IntPdfCampoDianPosY" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1569,6 +1575,9 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntPdfCampoDianPosY" ColumnName="IntPdfCampoDianPosY" />
+                <ScalarProperty Name="IntPdfCampoDianPosX" ColumnName="IntPdfCampoDianPosX" />
+                <ScalarProperty Name="IntPdfCampoDian" ColumnName="IntPdfCampoDian" />
                 <ScalarProperty Name="IntDebug" ColumnName="IntDebug" />
                 <ScalarProperty Name="StrSerialCloudServices" ColumnName="StrSerialCloudServices" />
                 <ScalarProperty Name="IntCertFirma" ColumnName="IntCertFirma" />
