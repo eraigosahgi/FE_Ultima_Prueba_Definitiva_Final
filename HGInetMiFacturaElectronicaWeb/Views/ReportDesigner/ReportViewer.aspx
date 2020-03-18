@@ -13,12 +13,14 @@
 <body>
 
 
+	<asp:Label ID="lblresultado" runat="server" Font-Bold="True" Font-Size="XX-Large"></asp:Label>
+
 	<form runat="server">
 		<dx:ASPxWebDocumentViewer runat="server" ID="ASPxWebDocumentViewerWeb">
 		</dx:ASPxWebDocumentViewer>
 	</form>
 
-
+	
 
 </body>
 </html>
