@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_Alertas;
 
 namespace HGInetMiFacturaElectonicaController
@@ -390,6 +391,53 @@ namespace HGInetMiFacturaElectonicaController
 				// obtiene los datos del facturador electrónico
 				Ctl_Empresa facturador_electronico = new Ctl_Empresa();
 				empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
+
+				#region Fecha de Validacion en PDF
+
+				try
+				{
+
+					// ruta física del xml
+					string carpeta_archivos = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
+					carpeta_archivos = string.Format(@"{0}\{1}", carpeta_archivos, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+
+					// Nombre del archivo Xml 
+					string nombre_archivo = NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
+
+					// ruta del xml
+					string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_archivos, nombre_archivo);
+
+					if (!Archivo.ValidarExistencia(ruta_xml))
+						throw new ApplicationException("No se encontró ruta de archivo de respuesta de la DIAN");
+
+					if (empresa_obligado.IntPdfCampoDian == true)
+					{
+						
+						//Proceso para obtener la fecha y hora de la respuesta de la DIAN
+						//string ruta_archivo = string.Format(@"{0}\{1}.xml", documento_result.RutaArchivosProceso.Replace("XmlFacturaE", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian), documento_result.NombreXml);
+						FileStream xml_reader_serializacion = new FileStream(ruta_xml, FileMode.Open);
+						HGInetUBLv2_1.ApplicationResponseType obj_acuse_serializado = new HGInetUBLv2_1.ApplicationResponseType();
+						XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
+						obj_acuse_serializado = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader_serializacion);
+						string fecha_doc_resp = obj_acuse_serializado.IssueDate.Value.ToString("yyyy-MM-dd");
+						string hora_doc_resp = obj_acuse_serializado.IssueTime.Value.ToString();
+						xml_reader_serializacion.Close();
+
+						// ruta física del archivo PDF 
+						string ruta_pdf = string.Format(@"{0}\{1}.pdf", carpeta_archivos.Replace(LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian), nombre_archivo);
+
+						// texto para generar en el PDF, revisar si ponemos sólo hasta minutos la fecha
+						string texto = "Fecha Validación DIAN: " + fecha_doc_resp + " " + hora_doc_resp;
+
+						// ejecución para poner el texto en el PDF
+						string ruta_pdf_resultado = LibreriaGlobalHGInet.Funciones.Pdf.AgregarTexto(ruta_pdf, "", texto, (float)empresa_obligado.IntPdfCampoDianPosX, (float)empresa_obligado.IntPdfCampoDianPosY, true);
+
+					}
+				}
+				catch (Exception)
+				{ }
+
+				#endregion
 
 
 				#region Asunto del correo
