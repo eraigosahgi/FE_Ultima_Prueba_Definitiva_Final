@@ -412,13 +412,13 @@ namespace HGInetMiFacturaElectonicaController
 
 					if (empresa_obligado.IntPdfCampoDian == true)
 					{
-						
+
 						//Proceso para obtener la fecha y hora de la respuesta de la DIAN
 						//string ruta_archivo = string.Format(@"{0}\{1}.xml", documento_result.RutaArchivosProceso.Replace("XmlFacturaE", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian), documento_result.NombreXml);
 						FileStream xml_reader_serializacion = new FileStream(ruta_xml, FileMode.Open);
 						HGInetUBLv2_1.ApplicationResponseType obj_acuse_serializado = new HGInetUBLv2_1.ApplicationResponseType();
 						XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
-						obj_acuse_serializado = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader_serializacion);
+						obj_acuse_serializado = (HGInetUBLv2_1.ApplicationResponseType) serializacion1.Deserialize(xml_reader_serializacion);
 						string fecha_doc_resp = obj_acuse_serializado.IssueDate.Value.ToString("yyyy-MM-dd");
 						string hora_doc_resp = obj_acuse_serializado.IssueTime.Value.ToString();
 						xml_reader_serializacion.Close();
@@ -430,12 +430,20 @@ namespace HGInetMiFacturaElectonicaController
 						string texto = "Fecha Validación DIAN: " + fecha_doc_resp + " " + hora_doc_resp;
 
 						// ejecución para poner el texto en el PDF
-						string ruta_pdf_resultado = LibreriaGlobalHGInet.Funciones.Pdf.AgregarTexto(ruta_pdf, "", texto, (float)empresa_obligado.IntPdfCampoDianPosX, (float)empresa_obligado.IntPdfCampoDianPosY, true);
-
+						string ruta_pdf_resultado = ruta_pdf.Replace(nombre_archivo,string.Format("{0}_resultado.pdf", nombre_archivo));
+						ruta_pdf_resultado = LibreriaGlobalHGInet.Funciones.Pdf.AgregarTexto(ruta_pdf, ruta_pdf_resultado, texto,(float) empresa_obligado.IntPdfCampoDianPosX, (float) empresa_obligado.IntPdfCampoDianPosY,true);
 					}
+
 				}
-				catch (Exception)
-				{ }
+				catch (Exception excepcion)
+				{
+					Guid peticion = (string.IsNullOrEmpty(id_peticion) ? Guid.Empty : Guid.Parse(id_peticion));
+					int estado_doc = Ctl_Documento.ObtenerCategoria(documento.IntIdEstado);
+					string mensaje = (string.IsNullOrEmpty(id_peticion) ? "Reenvio de Documento" : "Notificación Documento");
+					clase_auditoria = new Ctl_DocumentosAudit();
+					clase_auditoria.Crear(documento.StrIdSeguridad, peticion, documento.StrEmpresaFacturador, ProcesoEstado.EnvioEmailAcuse, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty,excepcion.Message, string.Empty, documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
+					Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio);
+				}
 
 				#endregion
 
