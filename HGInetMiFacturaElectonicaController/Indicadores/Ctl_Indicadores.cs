@@ -284,7 +284,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 										   ValorFacturas = (documento_tipo.Where(x => x.IntDocTipo == 1).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 1).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
 										   ValorNotasDebito = (documento_tipo.Where(x => x.IntDocTipo == 2).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 2).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
 										   ValorNotasCredito = (documento_tipo.Where(x => x.IntDocTipo == 3).Count() > 0) ? (documento_tipo.Where(x => x.IntDocTipo == 3).Select(x => (decimal)x.IntVlrTotal).Sum()) : 0,
-									   }).ToList();
+									   }).OrderBy(x => x.FechaCompleta).ToList();
 				}
 
 				else if (TipoFrecuencia.Hoy.GetHashCode() == tipo_filtro.GetHashCode() || TipoFrecuencia.Fecha.GetHashCode() == tipo_filtro.GetHashCode())
