@@ -6,7 +6,9 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL;
+using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Peticiones;
 using Newtonsoft.Json;
 using System;
@@ -29,10 +31,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 		{
 			try
 			{
-				  
+
 				if (!IsPostBack)
 				{
 
+					string Titulo_Formato = "";
 					////Valido si viene de las plataformas HGI o si viene de la plataforma de pago					
 					//var ObjetoFactura = Request.Params["Documento"];
 					////Valido si viene de las plataformas HGI o si viene de la plataforma de pago
@@ -42,9 +45,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 
 						PeticionVistaPrevia vista_previa = new PeticionVistaPrevia();
 
-						string StrVistaPrevia  = Request.QueryString["Documento"];
+						string StrVistaPrevia = Request.QueryString["Documento"];
 						string ResultadoVistaPrevia = DesEncriptarObjeto(StrVistaPrevia);
-						vista_previa =    JsonConvert.DeserializeObject<PeticionVistaPrevia>(ResultadoVistaPrevia);
+						vista_previa = JsonConvert.DeserializeObject<PeticionVistaPrevia>(ResultadoVistaPrevia);
 
 
 						dynamic Documento;
@@ -53,22 +56,26 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 							case 1:
 								ClienteRest<Factura> clienteFac = new ClienteRest<Factura>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
 								Documento = clienteFac.GET();
+								Titulo_Formato = Enumeracion.GetDescription(TipoDocumento.Factura).ToUpper();
 								break;
-							case 2:								
+							case 2:
 								ClienteRest<NotaDebito> clienteND = new ClienteRest<NotaDebito>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
 								Documento = clienteND.GET();
+								Titulo_Formato = Enumeracion.GetDescription(TipoDocumento.NotaDebito).ToUpper();
 								break;
 							case 3:
 								ClienteRest<NotaCredito> clienteNC = new ClienteRest<NotaCredito>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
 								Documento = clienteNC.GET();
+								Titulo_Formato = Enumeracion.GetDescription(TipoDocumento.NotaCredito).ToUpper();
 								break;
 							default:
 								clienteFac = new ClienteRest<Factura>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
 								Documento = clienteFac.GET();
+								Titulo_Formato = Enumeracion.GetDescription(TipoDocumento.Factura).ToUpper();
 								break;
 						}
 
-												
+
 
 						//OBTIENE FORMATO
 						Ctl_Formatos clase_formatos = new Ctl_Formatos();
@@ -105,6 +112,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 									formato = datos_formato.Formato;
 
 								MemoryStream datos = new MemoryStream(formato);
+
+
+								if (Documento.DocumentoFormato != null)
+								{
+									//Valida que envien el titulo del documento y si es vacio lo llena
+									if (string.IsNullOrEmpty(Documento.DocumentoFormato.Titulo) || Documento.DocumentoFormato.Titulo == null)
+										Documento.DocumentoFormato.Titulo = Titulo_Formato;
+
+								}
 
 								//ASIGNA FORMATO A DISEÑADOR.
 								report.LoadLayoutFromXml(datos);
@@ -164,7 +180,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 			return System.Convert.ToBase64String(plainTextBytes);
 		}
 
-		
+
 
 		public class PeticionVistaPrevia
 		{
