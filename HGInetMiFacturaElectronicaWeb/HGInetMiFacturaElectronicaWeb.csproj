@@ -3404,7 +3404,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Constantes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\OpcionesPermisos.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OpcionesPermisos.Designer.cs</LastGenOutput>
