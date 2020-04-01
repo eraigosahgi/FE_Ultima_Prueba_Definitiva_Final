@@ -103,7 +103,7 @@
 
                                     <div>
                                         <div class="text-center">
-                                            <img src="../../Scripts/Images/LogoPlataforma.PNG" class="img-responsive" style="width: 70%; height: 70%; margin-left: 15%; margin-right: 15%" />
+                                            <img src="../../Scripts/Images/LogoPlataforma.png" class="img-responsive" style="width: 70%; height: 70%; margin-left: 15%; margin-right: 15%" />
                                             <%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
                                             <h5 class="content-group-lg"><small class="display-block">Ingrese los datos de autenticación</small></h5>
                                         </div>
