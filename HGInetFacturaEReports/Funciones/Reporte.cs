@@ -115,7 +115,7 @@ namespace HGInetFacturaEReports
 				pdfOptions.PdfACompatibility = PdfACompatibility.PdfA3b;
 
 				// Especifica las opciones del documento. 
-				pdfOptions.DocumentOptions.Application = "HGInet Factura Electrónica";
+				pdfOptions.DocumentOptions.Application = "HGI Facturación Electrónica";
 				pdfOptions.DocumentOptions.Author = "HGI SAS";
 				pdfOptions.DocumentOptions.Producer = Environment.UserName.ToString();
 				pdfOptions.DocumentOptions.Subject = "Representación Gráfica";

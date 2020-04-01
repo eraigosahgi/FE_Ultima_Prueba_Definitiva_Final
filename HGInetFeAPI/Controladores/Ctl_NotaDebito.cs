@@ -20,8 +20,8 @@ namespace HGInetFeAPI
 		/// Permite enviar los documentos de tipo NotaDebito por el Facturador Electrónico
 		/// Manual Técnico:5.1.3 Metodo Web: Dbear Nota Débito
 		/// </summary>
-		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
-		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGI Facturación Electrónica</param>
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <param name="documentos_envio">documentos de tipo NotaDebito</param>
 		/// <returns>respuesta del proceso de los documentos</returns>
@@ -106,8 +106,8 @@ namespace HGInetFeAPI
         /// <summary>
 		/// Permite obtener los documentos enviados a la plataforma a nombre del Adquiriente
 		/// </summary>
-		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
-		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGI Facturación Electrónica</param>
 		/// <param name="Identificacion">número de identificación del Adquiriente</param>
 		/// <param name="CodigosDocumentos">còdigos de documentos del Facturador Electrónico para consulta separados por el caracter coma (,)</param>
 		/// <returns>Una lista de las Notas Credito generadas a nombre del adquiriente</returns>
@@ -185,8 +185,8 @@ namespace HGInetFeAPI
         /// <summary>
         /// Permite obtener los documentos enviados a la plataforma a nombre del Adquiriente
         /// </summary>
-        /// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
-        /// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+        /// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
+        /// <param name="Serial">serial de licenciamiento para HGI Facturación Electrónica</param>
         /// <param name="Identificacion">número de identificación del Adquiriente</param>
         /// <param name="FechaInicio">fecha inicial de consulta</param>
         /// <param name="FechaFin">fecha final de consulta</param>
@@ -269,7 +269,7 @@ namespace HGInetFeAPI
 		/// <summary>
 		/// Prueba del servicio web de la plataforma de Facturación Electrónica
 		/// </summary>
-		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
 		/// <returns></returns>
 		public static string Test(string UrlWs)
 		{   // valida la URL del servicio web

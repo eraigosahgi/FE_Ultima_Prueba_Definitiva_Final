@@ -18,8 +18,8 @@ namespace HGInetFeAPI
 		/// Permite obtener las resoluciones registradas ante la DIAN por el Facturador Electrónico
 		/// Manual Técnico: 5.3.1 Metodo Web: Consulta de Resolución
 		/// </summary>
-		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
-		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGI Facturación Electrónica</param>
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <returns>datos de las resoluciones</returns>
 		public static List<ServicioResolucion.Resolucion> Obtener(string UrlWs, string Serial, string Identificacion)
@@ -91,8 +91,8 @@ namespace HGInetFeAPI
 		/// Permite obtener las resoluciones registradas en Bd por el Facturador Electrónico
 		/// o Crear una en el Ambiente de Habilitacion
 		/// </summary>
-		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
-		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGI Facturación Electrónica</param>
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <param name="Resolucion">Objeto con la Resolucion Ingresada</param>
 		/// <returns>datos de las resoluciones</returns>
@@ -168,7 +168,7 @@ namespace HGInetFeAPI
 		/// <summary>
 		/// Prueba del servicio web de la plataforma de Facturación Electrónica
 		/// </summary>
-		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
 		/// <returns></returns>
 		public static string Test(string UrlWs)
 		{   // valida la URL del servicio web

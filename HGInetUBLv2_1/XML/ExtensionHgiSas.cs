@@ -26,7 +26,7 @@ namespace HGInetUBLv2_1
             HGInet hgiExtensions = new HGInet()
             {
                 Aplicacion = new DescriptionType()
-                {   Value = "HGInet Factura Electrónica"
+                {   Value = "HGI Facturación Electrónica"
                 },
 
                 ProveedorTecnologico = new DescriptionType()

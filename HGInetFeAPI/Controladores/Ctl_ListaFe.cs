@@ -14,8 +14,8 @@ namespace HGInetFeAPI
 		/// <summary>
 		/// Permite Obtener las Listas que se utilizan en la Factura Electronica
 		/// </summary>
-		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
-		/// <param name="Serial">serial de licenciamiento para HGInet Facturación Electrónica</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGI Facturación Electrónica</param>
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <param name="CodigoListas">números de codigos para consulta separados por el caracter coma (,) ó enviando el caracter (*) para obtenerlas todas</param>
 		/// <returns>Objeto con las Lista de FE</returns>

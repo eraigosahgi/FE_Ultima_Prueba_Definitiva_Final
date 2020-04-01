@@ -18,7 +18,7 @@ namespace HGInetFeAPI
 		/// <summary>
 		/// Prueba del servicio web de la plataforma de Facturación Electrónica
 		/// </summary>
-		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGInet Facturación Electrónica (http)</param>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
 		/// <returns></returns>
 		public static string Test(string UrlWs)
 		{   // valida la URL del servicio web
