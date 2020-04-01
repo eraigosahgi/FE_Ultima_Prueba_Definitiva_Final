@@ -12,7 +12,7 @@
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
 
-	<title>HGInet Factura Electrónica</title>
+	<title>HGI Facturación Electrónica</title>
 
 	<!-- Global stylesheets -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css" />
@@ -255,7 +255,7 @@
 
 					</div>
 					<div class="footer text-muted" style="font-size: 14px; text-align: center;">
-						Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGInet Factura Electrónica</a>
+						Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGI Facturación Electrónica</a>
 					</div>
 
 				</div>

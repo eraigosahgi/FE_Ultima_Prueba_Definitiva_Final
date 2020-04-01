@@ -303,8 +303,8 @@ AutenticacionApp.controller('RestablecerController', function RestController($sc
 $(function () {
 	$("#galleryContainer").dxGallery({
 		dataSource: [
-            "/Scripts/Images/Autenticacion3.jpg",
-            "/Scripts/Images/Autenticacion2.jpg"
+            "/Scripts/Images/Autenticacion4.jpg",
+            "/Scripts/Images/Autenticacion5.jpg"
 		],
 		swipeEnabled: true,
 		showNavButtons: true

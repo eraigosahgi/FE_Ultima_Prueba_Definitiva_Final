@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <title>HGInet Factura Electrónica</title>
+    <title>HGI Facturación Electrónica</title>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- Global stylesheets -->

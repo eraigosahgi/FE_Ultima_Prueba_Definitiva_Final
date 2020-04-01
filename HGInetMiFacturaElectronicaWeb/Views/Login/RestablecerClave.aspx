@@ -8,7 +8,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>HGInet Factura Electrónica</title>
+	<title>HGI Facturación Electrónica</title>
 	<%--Se debe copiar el archivo al proyecto--%>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<!-- Global stylesheets -->
@@ -131,7 +131,7 @@
 
 							<!-- Pie de Página -->
 							<div class="footer text-muted text-center" style="font-size: 13px">
-								Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGInet Factura Electrónica</a>
+								Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGI Facturación Electrónica</a>
 							</div>
 							<!-- /Pie de Página -->
 

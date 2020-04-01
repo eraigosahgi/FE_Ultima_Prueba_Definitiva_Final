@@ -509,7 +509,7 @@
 			</div>
 			<!-- /CONTENIDOS TABS -->
 			<div>
-				<img src="../../Scripts/Images/ImgIndexLogos.PNG" class="img-responsive" data-ng-hide="IndicadoresFacturador || IndicadoresAdquiriente || IndicadoresAdmin " />
+				<img src="../../Scripts/Images/ImgIndexLogos.png" class="img-responsive" data-ng-hide="IndicadoresFacturador || IndicadoresAdquiriente || IndicadoresAdmin " />
 			</div>
 		</div>
 		<!-- /CONTENIDO PANEL-->
