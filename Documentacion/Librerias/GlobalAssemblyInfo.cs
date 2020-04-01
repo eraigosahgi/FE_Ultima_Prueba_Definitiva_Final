@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // asociada con un ensamblado.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HGI SAS")]
-[assembly: AssemblyProduct("HGInet Facturación Electrónica")]
+[assembly: AssemblyProduct("HGI Facturación Electrónica")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("HGInet")]
 [assembly: AssemblyCulture("")]
@@ -22,5 +22,5 @@ using System.Runtime.InteropServices;
 // Puede especificar todos los valores o usar los valores predeterminados de número de compilación y de revisión 
 // mediante el carácter '*', como se muestra a continuación:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2020.3.0.1")]
-[assembly: AssemblyFileVersion("2020.3.0.1")]
+[assembly: AssemblyVersion("2020.4.0.1")]
+[assembly: AssemblyFileVersion("2020.4.0.1")]
