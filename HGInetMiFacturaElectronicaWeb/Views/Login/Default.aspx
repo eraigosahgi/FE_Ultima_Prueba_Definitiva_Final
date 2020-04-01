@@ -130,7 +130,7 @@
                             <!-- /Área de Contenido -->
 
                             <span class="help-block text-center no-margin">
-                                <img src="/../Scripts/Images/Logo.png" style="align-content: center; width: 130px" class="img-responsive center-block" />
+                                <img src="/../Scripts/Images/LogoHGICertificados.png" style="align-content: center; width: 130px" class="img-responsive center-block" />
                                 Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S.</a>
                                 <br />
                             </span>

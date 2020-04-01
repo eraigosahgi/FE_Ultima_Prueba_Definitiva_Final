@@ -80,7 +80,7 @@
 
 							<div class="panel panel-body login-form widget-container" id="divcontenido">
 								<div class="text-center">
-									<img src="../../Scripts/Images/LogoHGInet.PNG" class="img-responsive" />
+									<img src="../../Scripts/Images/LogoHGICertificados.png" class="img-responsive" />
 									<h5 class="content-group-lg">Restablecimiento de Contraseña</h5>
 								</div>
 

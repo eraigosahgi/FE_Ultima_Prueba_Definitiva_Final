@@ -1895,13 +1895,14 @@
     <Content Include="Scripts\Images\Autenticacion1.jpg" />
     <Content Include="Scripts\Images\Autenticacion2.jpg" />
     <Content Include="Scripts\Images\Autenticacion3.jpg" />
+    <Content Include="Scripts\Images\Autenticacion4.jpg" />
+    <Content Include="Scripts\Images\Autenticacion5.jpg" />
     <Content Include="Scripts\Images\FormatoPDF.png" />
-    <Content Include="Scripts\Images\ImgIndex.jpg" />
-    <Content Include="Scripts\Images\ImgIndex.png" />
     <Content Include="Scripts\Images\ImgIndexLogos.png" />
-    <Content Include="Scripts\Images\Logo.png" />
-    <Content Include="Scripts\Images\LogoHGInet.jpg" />
-    <Content Include="Scripts\Images\LogoHGInet.PNG" />
+    <Content Include="Scripts\Images\LogoHGI.png" />
+    <Content Include="Scripts\Images\LogoHGICertificados.png" />
+    <Content Include="Scripts\Images\LogoHGICertificadosTexto.png" />
+    <Content Include="Scripts\Images\LogoHGIErp.png" />
     <Content Include="Scripts\Images\LogoPlataforma.png" />
     <Content Include="Scripts\Images\LogoPSE40x40.png" />
     <Content Include="Scripts\Images\LogoPSE90x90.png" />
@@ -3425,7 +3426,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61428/</IISUrl>
+          <IISUrl>http://localhost:61885/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
