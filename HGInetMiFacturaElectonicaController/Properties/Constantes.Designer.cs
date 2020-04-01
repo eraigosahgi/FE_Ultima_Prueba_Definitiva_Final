@@ -61,7 +61,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Acceso Plataforma HGInet Factura Electrónica.
+        ///   Busca una cadena traducida similar a Acceso Plataforma HGI Facturación Electrónica.
         /// </summary>
         public static string AsuntoEmailBienvenida {
             get {
@@ -70,7 +70,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Serial de activacion HGInet Factura Electrónica.
+        ///   Busca una cadena traducida similar a Serial de activacion HGI Facturación Electrónica.
         /// </summary>
         public static string AsuntoEnviaSerial {
             get {
@@ -178,7 +178,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a HGInet Factura Electrónica.
+        ///   Busca una cadena traducida similar a HGI Facturación Electrónica.
         /// </summary>
         public static string NombreRemitenteEmail {
             get {

@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AsuntoEmailBienvenida" xml:space="preserve">
-    <value>Acceso Plataforma HGInet Factura Electrónica</value>
+    <value>Acceso Plataforma HGI Facturación Electrónica</value>
   </data>
   <data name="AsuntoEnviaSerial" xml:space="preserve">
-    <value>Serial de activacion HGInet Factura Electrónica</value>
+    <value>Serial de activacion HGI Facturación Electrónica</value>
   </data>
   <data name="AsuntoNotificacionDocumento" xml:space="preserve">
     <value>Facturación Electrónica</value>
@@ -155,7 +155,7 @@
     <comment>Nit de pruebas para Resolucion sin Prefijo</comment>
   </data>
   <data name="NombreRemitenteEmail" xml:space="preserve">
-    <value>HGInet Factura Electrónica</value>
+    <value>HGI Facturación Electrónica</value>
     <comment>nombre del remitente.</comment>
   </data>
   <data name="PaginaAcuseRecibo" xml:space="preserve">
