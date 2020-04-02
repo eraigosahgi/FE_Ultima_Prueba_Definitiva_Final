@@ -427,7 +427,7 @@ namespace HGInetMiFacturaElectonicaController
 						string ruta_pdf = string.Format(@"{0}\{1}.pdf", carpeta_archivos.Replace(LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian), nombre_archivo);
 
 						// texto para generar en el PDF, revisar si ponemos sólo hasta minutos la fecha
-						string texto = "Fecha Validación DIAN: " + fecha_doc_resp + " " + hora_doc_resp;
+						string texto = string.Format("Fecha Validación DIAN: {0} {1}  DOCUMENTO ELECTRÓNICO GENERADO POR HGI S.A.S NIT 811021438-4", fecha_doc_resp, hora_doc_resp);
 
 						// ejecución para poner el texto en el PDF
 						string ruta_pdf_resultado = ruta_pdf.Replace(nombre_archivo,string.Format("{0}_resultado.pdf", nombre_archivo));
