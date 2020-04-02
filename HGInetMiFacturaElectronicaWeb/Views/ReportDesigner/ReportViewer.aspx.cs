@@ -49,14 +49,14 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 						string ResultadoVistaPrevia = DesEncriptarObjeto(StrVistaPrevia);
 						vista_previa = JsonConvert.DeserializeObject<PeticionVistaPrevia>(ResultadoVistaPrevia);
 
-
+						
 						dynamic Documento;
 						switch (vista_previa.tipo_documento)
 						{
-							case 1:
-								ClienteRest<Factura> clienteFac = new ClienteRest<Factura>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
-								Documento = clienteFac.GET();
-								Titulo_Formato = Enumeracion.GetDescription(TipoDocumento.Factura).ToUpper();
+							case 1:								
+									ClienteRest<Factura> clienteFac = new ClienteRest<Factura>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
+									Documento = clienteFac.GET();
+									Titulo_Formato = Enumeracion.GetDescription(TipoDocumento.Factura).ToUpper();								
 								break;
 							case 2:
 								ClienteRest<NotaDebito> clienteND = new ClienteRest<NotaDebito>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
@@ -145,7 +145,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 			}
 			catch (Exception ex)
 			{
-				throw new ApplicationException(string.Format("Se ha producido el siguiente error: {0}", ex));
+				//throw new ApplicationException(string.Format("Se ha producido el siguiente error: {0}", ex));
+				lblresultado.Text = string.Format("Se ha producido el siguiente error: {0}", ex.Message);
+				ASPxWebDocumentViewerWeb.Visible = false;
 			}
 		}
 
