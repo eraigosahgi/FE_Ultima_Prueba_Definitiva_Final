@@ -8,7 +8,7 @@
 </head>
 <body>
     
-    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs201926"></script>
+    <script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs2020401"></script>
     <form>
         <div id="modal_Buscar_empresa" class="modal fade" style="display: none; z-index:999999;" >
             <div class="modal-dialog">

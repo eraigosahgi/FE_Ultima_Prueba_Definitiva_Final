@@ -7,9 +7,9 @@
 	<script src="../../Scripts/Services/Loading.js"></script>
 	<script src="../../Scripts/Services/FiltroGenerico.js"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js"></script>
-	<script src="../../Scripts/config.js?vjs201926"></script>
-	<script src="../../Scripts/Services/SrvResoluciones.js?vjs201926"></script>
-	<script src="../../Scripts/Pages/Resoluciones.js?vjs201926"></script>
+	<script src="../../Scripts/config.js?vjs2020401"></script>
+	<script src="../../Scripts/Services/SrvResoluciones.js?vjs2020401"></script>
+	<script src="../../Scripts/Pages/Resoluciones.js?vjs2020401"></script>
 
 	<div data-ng-app="App" id="ConsultaResolucionesController" data-ng-controller="ConsultaResolucionesController">
 

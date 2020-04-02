@@ -4,13 +4,13 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/config.js?vjs201926"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201926"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs201926"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs201926"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs201926"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs201926"></script>
-	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs201926"></script>
+	<script src="../../Scripts/config.js?vjs2020401"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs2020401"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs2020401"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs2020401"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs2020401"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs2020401"></script>
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs2020401"></script>
 	<div data-ng-app="EmpresasApp" data-ng-controller="ConsultaEmpresasController" data-ng-init="Admin=false">
 
 		
