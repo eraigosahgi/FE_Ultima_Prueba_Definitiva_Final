@@ -689,8 +689,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								{
 									plan = new TblPlanesTransacciones();
 									//Se suma un mes al primer dia del mes
-									DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year , Fecha.GetFecha().Month, 1).AddMonths(1);
-									
+									DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(1);
+
 									//Se resta un dia para que nos de el ultimo dia del mes
 									DateTime FechaVenc = Fecha1.AddDays(-1);
 									//Se coloca la ultima hora y minuto del dia para que pueda seguir enviando documentos el ultimo dias del plan.
@@ -792,6 +792,25 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 		}
 
+
+
+		/// <summary>
+		/// Retorna lista de documentos segun el guid de seguridad del plan
+		/// </summary>
+		/// <param name="id_plan">guid de seguridad del plan</param>
+		/// <returns>total documentos</returns>
+		public int CantidadDocumentos(Guid id_plan)
+		{
+			context.Configuration.LazyLoadingEnabled = false;
+
+			return  (from documento in context.TblDocumentos
+									 where documento.StrIdPlanTransaccion== id_plan
+									 select documento.IntNumero).Count();
+			
+		}
+
+
+
 		/// <summary>
 		/// Concilia los planes de la siguiente manera:
 		/// * Cuando existen diferencias entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
@@ -811,6 +830,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					//Obtenemos todos los planes activos				
 					List<TblPlanesTransacciones> planes = new List<TblPlanesTransacciones>();
 					byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());
+
+					context.Configuration.LazyLoadingEnabled = false;
 					planes = (from datos in context.TblPlanesTransacciones
 							  where datos.IntEstado == habilitado
 							  select datos).ToList();
@@ -821,11 +842,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 						try
 						{
+							
 							//Validamos que exista diferencia entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
-							if (item.IntNumTransaccProcesadas != item.TblDocumentos.Count())
+
+							int total_documentos = CantidadDocumentos(item.StrIdSeguridad);
+							if (item.IntNumTransaccProcesadas != total_documentos)
 							{
 								//Asignamos la cantidad de documentos procesados a la cantidad de transacciones procesadas del plan			
-								item.IntNumTransaccProcesadas = item.TblDocumentos.Count();
+								item.IntNumTransaccProcesadas = total_documentos;
 								//Se deja en cero el numero de transacciones en proceso
 								item.IntNumTransaccProceso = 0;
 								//validamos el tipo de plan.
