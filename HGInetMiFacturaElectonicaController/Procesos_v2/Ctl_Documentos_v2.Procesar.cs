@@ -172,7 +172,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Documento = documento_obj,
 					DocumentoXml = txt_xml,
 					RutaArchivosProceso = carpeta_xml,
-					RutaArchivosEnvio = carpeta_zip
+					RutaArchivosEnvio = carpeta_zip,
+					VersionDian = empresa.IntVersionDian
 				};
 
 				// genera el nombre del archivo XML y PDF

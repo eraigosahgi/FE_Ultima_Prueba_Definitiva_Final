@@ -575,6 +575,8 @@ namespace HGInetFirmaDigital
 
 					msg += " - " + excepcion.StackTrace.ToString();
 
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Certificado, MensajeTipo.Error, MensajeAccion.escritura);
+
 					archivo.Excepcion = new ApplicationException(msg, excepcion);
 				}
 			}
