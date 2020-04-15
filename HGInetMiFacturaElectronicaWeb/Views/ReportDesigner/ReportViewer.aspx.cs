@@ -49,14 +49,14 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 						string ResultadoVistaPrevia = DesEncriptarObjeto(StrVistaPrevia);
 						vista_previa = JsonConvert.DeserializeObject<PeticionVistaPrevia>(ResultadoVistaPrevia);
 
-						
+
 						dynamic Documento;
 						switch (vista_previa.tipo_documento)
 						{
-							case 1:								
-									ClienteRest<Factura> clienteFac = new ClienteRest<Factura>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
-									Documento = clienteFac.GET();
-									Titulo_Formato = Enumeracion.GetDescription(TipoDocumento.Factura).ToUpper();								
+							case 1:
+								ClienteRest<Factura> clienteFac = new ClienteRest<Factura>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
+								Documento = clienteFac.GET();
+								Titulo_Formato = Enumeracion.GetDescription(TipoDocumento.Factura).ToUpper();
 								break;
 							case 2:
 								ClienteRest<NotaDebito> clienteND = new ClienteRest<NotaDebito>(string.Format("{0}/api/DocumentosElectronicos/ObtenerDocumentoPI?id_documento={1}&id_transaccion={2}", vista_previa.ruta_servicio, vista_previa.documento, vista_previa.id_transaccion), TipoContenido.Applicationjson.GetHashCode(), vista_previa.token);
@@ -88,16 +88,55 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 						}
 						catch (Exception)
 						{
-							lblresultado.Text = "Asegurese de tener formato asociado";
-							ASPxWebDocumentViewerWeb.Visible = false;
+							//Si ocurre un error obteniendo el formato, entonces buscamos el formato 1 o 2 de HGI.
+							int codigo_formato = 1;
+							switch (vista_previa.tipo_documento)
+							{
+								case 1:
+									codigo_formato = 1;
+									break;
+								case 2:
+									codigo_formato = 2;
+									break;
+								case 3:
+									codigo_formato = 2;
+									break;
+								default:
+									codigo_formato = 1;
+									break;
+							}
+							datos_formato = clase_formatos.ObtenerFormato(codigo_formato, "811021438", TipoFormato.FormatoPDF.GetHashCode());
+							//lblresultado.Text = "Asegurese de tener formato asociado";
+							//ASPxWebDocumentViewerWeb.Visible = false;
 						}
 
 						if (datos_formato == null)
 						{
-							lblresultado.Text = "No tiene Formato asociado";
-							ASPxWebDocumentViewerWeb.Visible = false;
+							//si no obtenemos el formato del cliente, entonces buscamos el formato 1 o 2 de HGI.
+							int codigo_formato = 1;
+							switch (vista_previa.tipo_documento)
+							{
+								case 1:
+									codigo_formato = 1;
+									break;
+								case 2:
+									codigo_formato = 2;
+									break;
+								case 3:
+									codigo_formato = 2;
+									break;
+								default:
+									codigo_formato = 1;
+									break;
+							}
+							datos_formato = clase_formatos.ObtenerFormato(codigo_formato, "811021438", TipoFormato.FormatoPDF.GetHashCode());
+							if (datos_formato == null)
+							{
+								lblresultado.Text = "No tiene Formato asociado y tampoco el formato base";
+								ASPxWebDocumentViewerWeb.Visible = false;
+							}
 						}
-						else
+						if (datos_formato != null)
 						{
 
 
