@@ -82,60 +82,25 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 
 						TblFormatos datos_formato = null;
 
+						TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(vista_previa.tipo_documento);
+
 						try
 						{
-							datos_formato = clase_formatos.ObtenerFormato(Documento.DocumentoFormato.Codigo, Documento.DatosObligado.Identificacion, TipoFormato.FormatoPDF.GetHashCode());
+							datos_formato = clase_formatos.ObtenerFormato(Documento.DocumentoFormato.Codigo, Documento.DatosObligado.Identificacion, TipoFormato.FormatoPDF.GetHashCode(), tipo_doc);
 						}
 						catch (Exception)
 						{
-							//Si ocurre un error obteniendo el formato, entonces buscamos el formato 1 o 2 de HGI.
-							int codigo_formato = 1;
-							switch (vista_previa.tipo_documento)
-							{
-								case 1:
-									codigo_formato = 1;
-									break;
-								case 2:
-									codigo_formato = 2;
-									break;
-								case 3:
-									codigo_formato = 2;
-									break;
-								default:
-									codigo_formato = 1;
-									break;
-							}
-							datos_formato = clase_formatos.ObtenerFormato(codigo_formato, "811021438", TipoFormato.FormatoPDF.GetHashCode());
+							
 							//lblresultado.Text = "Asegurese de tener formato asociado";
 							//ASPxWebDocumentViewerWeb.Visible = false;
 						}
 
-						if (datos_formato == null)
-						{
-							//si no obtenemos el formato del cliente, entonces buscamos el formato 1 o 2 de HGI.
-							int codigo_formato = 1;
-							switch (vista_previa.tipo_documento)
-							{
-								case 1:
-									codigo_formato = 1;
-									break;
-								case 2:
-									codigo_formato = 2;
-									break;
-								case 3:
-									codigo_formato = 2;
-									break;
-								default:
-									codigo_formato = 1;
-									break;
-							}
-							datos_formato = clase_formatos.ObtenerFormato(codigo_formato, "811021438", TipoFormato.FormatoPDF.GetHashCode());
-							if (datos_formato == null)
+						/*if (datos_formato == null)
 							{
 								lblresultado.Text = "No tiene Formato asociado y tampoco el formato base";
 								ASPxWebDocumentViewerWeb.Visible = false;
 							}
-						}
+						}*/
 						if (datos_formato != null)
 						{
 

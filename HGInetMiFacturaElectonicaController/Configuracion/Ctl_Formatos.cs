@@ -383,7 +383,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="identificacion_empresa"></param>
 		/// <param name="tipo_formato"></param>
 		/// <returns></returns>
-		public TblFormatos ObtenerFormato(int id_formato, string identificacion_empresa, int tipo_formato)
+		public TblFormatos ObtenerFormato(int id_formato, string identificacion_empresa, int tipo_formato, TipoDocumento tipo_doc)
 		{
 			try
 			{
@@ -400,6 +400,35 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 												 && (formato.StrEmpresa.Equals(identificacion_empresa) || formato.StrEmpresa.Equals(empresa_dependencia))
 												 && formato.IntEstado != estado_formato
 												 select formato).FirstOrDefault();
+
+				//Si no se obtiene Formato con las Condiciones enviadas, se hace con el formato generico de HGI segun el tipo de documento
+				if (formato_resultado == null)
+				{
+					int codigo_formato = 1;
+					switch (tipo_doc)
+					{
+						case TipoDocumento.Factura:
+							codigo_formato = 1;
+							break;
+						case TipoDocumento.NotaDebito:
+							codigo_formato = 2;
+							break;
+						case TipoDocumento.NotaCredito:
+							codigo_formato = 2;
+							break;
+						default:
+							codigo_formato = 1;
+							break;
+					}
+
+					formato_resultado = (from formato in context.TblFormatos
+										where formato.IntCodigoFormato == codigo_formato
+										&& formato.IntTipo == tipo_formato
+									    && (formato.StrEmpresa.Equals("811021438"))
+									    && formato.IntEstado != estado_formato
+										select formato).FirstOrDefault();
+
+				}
 
 				return formato_resultado;
 			}
@@ -641,22 +670,50 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				// convierte el contenido de texto a xml
 				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
-				Factura documento_obj = new Factura();
+				var documento_obj = (dynamic)null;
 				// convierte el objeto de acuerdo con el tipo de documento
 				XmlSerializer serializacion = null;
 				if (datos_doc_bd.IntVersionDian == 1)
 				{
+					documento_obj = new Factura();
 					serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
 					HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType) serializacion.Deserialize(xml_reader);
 					documento_obj = FacturaXML.Convertir(conversion, datos_doc_bd);
 				}
 				else
 				{
-					serializacion = new XmlSerializer(typeof(InvoiceType));
-					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
-					documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, datos_doc_bd);
-					if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-						documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+
+					TipoDocumento tipo_documento = Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc_bd.IntDocTipo);
+
+
+					if (tipo_documento == TipoDocumento.Factura)
+					{
+						serializacion = new XmlSerializer(typeof(InvoiceType));
+						InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+						documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, datos_doc_bd);
+						if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+							documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+					}
+					else if (tipo_documento == TipoDocumento.NotaCredito)
+					{
+						serializacion = new XmlSerializer(typeof(CreditNoteType));
+						CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+						documento_obj = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, datos_doc_bd);
+						if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+							documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+					}
+					else if (tipo_documento == TipoDocumento.NotaDebito)
+					{
+						serializacion = new XmlSerializer(typeof(DebitNoteType));
+
+						DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+						documento_obj = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, datos_doc_bd);
+						if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+							documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+					}
+
+					
 				}
 
 				report.DataSource = documento_obj;
