@@ -48,7 +48,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				List<ListaFE> respuesta = new List<ListaFE>();
 
 				//Válida que la key sea correcta.
-				Peticion.Validar(DataKey, Identificacion);
+				//Peticion.Validar(DataKey, Identificacion);
 
 				Ctl_ListaFe ctl_lista = new Ctl_ListaFe();
 
