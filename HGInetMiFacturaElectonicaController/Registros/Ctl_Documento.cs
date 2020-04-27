@@ -1206,7 +1206,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
 
-					documento_obj.DatosFactura = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, objetoBd, true);
+					documento_obj.DatosFactura = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, objetoBd, reenvio);
 				}
 
 				documento_obj.DatosFactura.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
@@ -1234,7 +1234,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
 
-					documento_obj.DatosNotaCredito = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, objetoBd, true);
+					documento_obj.DatosNotaCredito = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, objetoBd, reenvio);
 				}
 
 				documento_obj.DatosNotaCredito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
@@ -1261,7 +1261,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
 
-					documento_obj.DatosNotaDebito = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, objetoBd, true);
+					documento_obj.DatosNotaDebito = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, objetoBd, reenvio);
 				}
 
 
