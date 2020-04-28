@@ -26,7 +26,7 @@ namespace HGInetUBLv2_1
 					throw new Exception("El detalle del documento es inválido.");
 
 				string version_validar = "Ver. 2020.4";
-				string version_validar_Rev = "Ver. 2020.4 Rev";
+				string version_validar_Rev = "Ver. 2020.5";
 
 				if (string.IsNullOrEmpty(version_erp))
 					version_erp = version_validar;
@@ -82,7 +82,7 @@ namespace HGInetUBLv2_1
 					}
 
 					//Ajuste del impuesto para Versiones de ERP menores a 2020.4
-					if ((!version_erp.Equals(version_validar) && !version_erp.Contains(version_validar)) && hgi == -1)
+					if ((!version_erp.Equals(version_validar) && !version_erp.Contains(version_validar) && !version_erp.Equals(version_validar_Rev) && !version_erp.Contains(version_validar_Rev)) && hgi == -1)
 					{
 						decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 
