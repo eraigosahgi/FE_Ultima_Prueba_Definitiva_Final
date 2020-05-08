@@ -396,7 +396,23 @@ namespace HGInetUBLv2_1
 
 						if (factura_ubl.InvoiceLine[i].Item.AdditionalItemProperty != null)
 						{
-							detalle.OcultarItem = Convert.ToInt16(factura_ubl.InvoiceLine[i].Item.AdditionalItemProperty[0].Value.Value);
+							detalle.CamposAdicionales = new List<CampoValor>();
+							foreach (ItemPropertyType item in factura_ubl.InvoiceLine[i].Item.AdditionalItemProperty)
+							{
+								if (item.Name.Value.Equals("Item Oculto para Impresion"))
+								{
+									detalle.OcultarItem = Convert.ToInt16(item.Value.Value);
+								}
+								else
+								{
+									CampoValor campo = new CampoValor();
+									campo.Descripcion = item.Name.Value;
+									campo.Valor = item.Value.Value;
+									detalle.CamposAdicionales.Add(campo);
+								}
+
+							}
+
 						}
 
 						if (factura_ubl.InvoiceLine[i].AllowanceCharge != null)

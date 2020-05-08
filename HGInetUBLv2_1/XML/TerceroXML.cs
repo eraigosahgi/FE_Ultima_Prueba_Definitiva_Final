@@ -252,6 +252,14 @@ namespace HGInetUBLv2_1
 				#region Tipo de persona
 				//1-Persona Juridica; 2-Persona Natural
 				AdditionalAccountIDType AdditionalAccountID = new AdditionalAccountIDType();
+				//if (!tercero.Identificacion.Equals("222222222222") && tercero.TipoPersona == 2)
+				//{
+				//	AdditionalAccountID.Value = "1"; //tercero.TipoPersona.ToString();//Tipo de persona (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				//}
+				//else
+				//{
+				//	AdditionalAccountID.Value = tercero.TipoPersona.ToString();//Tipo de persona (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				//}
 				AdditionalAccountID.Value = tercero.TipoPersona.ToString();//Tipo de persona (LISTADO DE VALORES DEFINIDO POR LA DIAN)
 				AccountingCustomerParty.AdditionalAccountID = new AdditionalAccountIDType[1];
 				AccountingCustomerParty.AdditionalAccountID[0] = AdditionalAccountID;
@@ -475,6 +483,22 @@ namespace HGInetUBLv2_1
 					PersonType[] persontype = new PersonType[1];
 					persontype[0] = Person;
 					Party.Person = persontype;
+
+					//if (tercero.Identificacion.Equals("222222222222"))
+					//{
+					//	#region Documento y tipo de documento---Ya esta en PartyTaxScheme no va
+					//	PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
+					//	PartyIdentificationType PartyIdentification = new PartyIdentificationType();
+					//	IDType ID = new IDType();
+					//	ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
+					//	ID.schemeAgencyID = "195";
+					//	ID.schemeID = tercero.TipoIdentificacion.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					//	ID.Value = tercero.Identificacion.ToString();
+					//	PartyIdentification.ID = ID;
+					//	PartyIdentifications[0] = PartyIdentification;
+					//	Party.PartyIdentification = PartyIdentifications;
+					//	#endregion
+					//}
 				}
 				#endregion
 

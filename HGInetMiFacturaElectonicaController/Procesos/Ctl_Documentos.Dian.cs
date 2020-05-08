@@ -386,7 +386,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						//Se agrega validacion para que no notifique si salen estas dos reglas, son de la DIAN y no la arreglan aun
 						bool alert = true;
-						if ((list_errormsg.Count == 1) && ((resultado_doc.Mensaje.Contains("FAB10b")) || (resultado_doc.Mensaje.Contains("FAJ39"))))
+						if ((list_errormsg.Count == 1) && ((resultado_doc.Mensaje.Contains("FAB10b")) || (resultado_doc.Mensaje.Contains("FAJ39")) || (resultado_doc.Mensaje.Contains("FAK61"))))
 						{
 							alert = false;
 						}
