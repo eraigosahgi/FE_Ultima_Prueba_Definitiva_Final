@@ -1241,6 +1241,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						}
 
+						//Valida que no contenga caracteres especiales como saltos de lineas
+						if (Docdet.ProductoNombre.Contains("\u001f") || Docdet.ProductoDescripcion.Contains("\u001f"))
+							throw new ApplicationException(string.Format("El producto de codigo {0} contiene caracteres especiales no permitidos", Docdet.ProductoCodigo));
+						
+
 
 						#region Campos Adicionales
 						
