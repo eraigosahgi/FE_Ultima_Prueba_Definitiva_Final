@@ -1458,8 +1458,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			var respuesta = (from datos in context.TblDocumentos
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (estados.Contains(datos.IntIdEstado.ToString()))
-							 && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual)
-							 && (datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual) && datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) || dias == 0)
+							 && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -50, FechaActual)
+							 && (datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -50, FechaActual) && datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) || dias == 0)
 
 							 orderby datos.DatFechaIngreso descending
 							 select datos).ToList();
