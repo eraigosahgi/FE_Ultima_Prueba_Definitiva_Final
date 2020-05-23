@@ -262,6 +262,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//Si el documento enviado ya existe retorna la informacion que se tiene almacenada
 			bool doc_existe = false;
 
+			if (string.IsNullOrEmpty(item.Prefijo))
+				item.Prefijo = string.Empty;
 
 			//radicado del documento
 			Guid id_radicado = Guid.NewGuid();
