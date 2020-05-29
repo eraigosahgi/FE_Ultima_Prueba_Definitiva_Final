@@ -1945,6 +1945,13 @@
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
     <Content Include="Scripts\Pages\RestablecerClave.js" />
+    <Content Include="Scripts\Scripts-descarga\angular.min.js" />
+    <Content Include="Scripts\Scripts-descarga\devextreme-intl.min.js" />
+    <Content Include="Scripts\Scripts-descarga\dx.all.js" />
+    <Content Include="Scripts\Scripts-descarga\dx.common.css" />
+    <Content Include="Scripts\Scripts-descarga\dx.light.css" />
+    <Content Include="Scripts\Scripts-descarga\dx.messages.es.js" />
+    <Content Include="Scripts\Scripts-descarga\jszip.min.js" />
     <Content Include="Scripts\Services\FiltroGenerico.js" />
     <Content Include="Scripts\Services\Loading.js" />
     <Content Include="Scripts\Services\MaestrosEnum.js" />
