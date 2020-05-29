@@ -41,18 +41,25 @@
 
 
     <!-- Estilos CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />
+    <%--<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" />--%>
+	<link href="../../Scripts/Scripts-descarga/dx.spa.css" rel="stylesheet" />
 
-
+    <%--<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />--%>
+	<link href="../../Scripts/Scripts-descarga/dx.common.css" rel="stylesheet" />
+	<link href="../../Scripts/Scripts-descarga/dx.light.css" rel="stylesheet" />
 
     <!-- DevExtreme -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script>--%>
+	<script src="../../Scripts/Scripts-descarga/jszip.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
-    <script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>
+    <%--<script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>--%>
+	<script src="../../Scripts/Scripts-descarga/dx.all.js"></script>
+
     <script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
+
     <!-- /DevExtreme -->
 
 

@@ -1951,6 +1951,7 @@
     <Content Include="Scripts\Scripts-descarga\dx.common.css" />
     <Content Include="Scripts\Scripts-descarga\dx.light.css" />
     <Content Include="Scripts\Scripts-descarga\dx.messages.es.js" />
+    <Content Include="Scripts\Scripts-descarga\dx.spa.css" />
     <Content Include="Scripts\Scripts-descarga\jszip.min.js" />
     <Content Include="Scripts\Services\FiltroGenerico.js" />
     <Content Include="Scripts\Services\Loading.js" />
