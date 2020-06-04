@@ -640,8 +640,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			else
 			{
-				if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-5).Date || documento.Fecha.Date > Fecha.GetFecha().Date.AddDays(10))
-					throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+				//if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-5).Date || documento.Fecha.Date > Fecha.GetFecha().Date.AddDays(10))
+				//	throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
 
 				ListaConceptoNotaCredito list_concepto = new ListaConceptoNotaCredito();
 				ListaItem concepto = list_concepto.Items.Where(d => d.Codigo.Equals(documento.Concepto)).FirstOrDefault();
