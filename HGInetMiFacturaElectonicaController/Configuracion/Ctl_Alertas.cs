@@ -361,14 +361,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						//Si no se le ha notificado
 						if (HistAlerta == null)
 						{
+
+							string Lista_Correos = string.Empty;
 							string correo = string.Empty;
 							//Evalua el tipo  envio de notificación
 							if (Alertas.IntCliente == true)
 							{
 								List<NotificacionAlertaporVencer> NotificacionIndividual = new List<NotificacionAlertaporVencer>();
 								Notificacion = new NotificacionAlertaporVencer();
-								//Notificacion.adquiridas = Plan.IntNumTransaccCompra;
-								//Notificacion.procesados = Plan.IntNumTransaccProcesadas;
 								Notificacion.tdisponibles = Plan.IntNumTransaccCompra - Plan.IntNumTransaccProcesadas;
 								Notificacion.facturador = Plan.TblEmpresas.StrRazonSocial;
 								Notificacion.identificacion = Plan.StrEmpresaFacturador;
@@ -387,6 +387,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								NotificacionIndividual.Add(Notificacion);
 								//Envia el email al Facturador
 								email.EnviaNotificacionAlertaPorvencer(Plan.TblEmpresas.StrMailAdmin, NotificacionIndividual);
+
+								Lista_Correos = string.Format("Cliente : {0}", Notificacion.email);
+								Notificacion.email = Lista_Correos;
+								////Se guarda la notificación de correo enviada al Cliente
+								//_AlertasHist.Crear(Alertas.IntIdAlerta, Plan.TblEmpresas.StrIdSeguridad, Plan.StrEmpresaFacturador, Newtonsoft.Json.JsonConvert.SerializeObject(Notificacion), (Int32)TipoAlerta.Porvencer.GetHashCode(), Plan.StrIdSeguridad, Notificacion.strMensaje);
+
 							}
 							if (Alertas.IntInterno == true)
 							{
@@ -408,9 +414,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								Notificacion.idseguridadEmpresa = Plan.TblEmpresas.StrIdSeguridad;
 								Notificacion.valorindicador = Plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
 								//
-								ListaNotificacion.Add(Notificacion);
+								ListaNotificacion.Add(Notificacion);								
+								Lista_Correos += string.Format(" Interno : {0}", Notificacion.email);
+								Notificacion.email = Lista_Correos;
 							}
 
+							
 							_AlertasHist = new Ctl_AlertasHistAudit();
 							_AlertasHist.Crear(Alertas.IntIdAlerta, Plan.TblEmpresas.StrIdSeguridad, Plan.StrEmpresaFacturador, Newtonsoft.Json.JsonConvert.SerializeObject(Notificacion), (Int32)TipoAlerta.Porvencer.GetHashCode(), Plan.StrIdSeguridad, Notificacion.strMensaje);
 						}
@@ -737,7 +746,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception ex)
 			{
-				Ctl_Log.Guardar(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);				
+				Ctl_Log.Guardar(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
 				return Listanotificacion;
 			}
 		}
@@ -754,7 +763,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
-				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.alarma);				
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.alarma);
 			}
 		}
 
