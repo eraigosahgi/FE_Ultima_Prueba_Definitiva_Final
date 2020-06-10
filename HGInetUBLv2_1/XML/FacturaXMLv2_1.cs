@@ -54,7 +54,21 @@ namespace HGInetUBLv2_1
 
 				//------se debe enviar el tipo de operacion tabla 6.1.5
 				facturaXML.CustomizationID = new CustomizationIDType();
-				facturaXML.CustomizationID.Value = "05";
+				facturaXML.CustomizationID.Value = "10";
+
+				DocumentoDetalle detalle_aiu = new DocumentoDetalle();
+				detalle_aiu = documento.DocumentoDetalles.Where(v => v.Aiu == 1).FirstOrDefault();
+				if (detalle_aiu != null)
+				{
+					facturaXML.CustomizationID.Value = "09";
+				}
+
+				DocumentoDetalle tercero_mandatos = new DocumentoDetalle();
+				tercero_mandatos = documento.DocumentoDetalles.Where(m => m.DatosMandatario != null).FirstOrDefault();
+				if (tercero_mandatos != null)
+				{
+					facturaXML.CustomizationID.Value = "11";
+				}
 
 				facturaXML.ProfileID = new ProfileIDType();
 				facturaXML.ProfileID.Value = "DIAN 2.1";
@@ -2028,6 +2042,14 @@ namespace HGInetUBLv2_1
 						}
 
 						#endregion
+
+						if (!string.IsNullOrEmpty(DocDet.ProductoDescripcion))
+						{
+							NoteType nota = new NoteType();
+							nota.Value = DocDet.ProductoDescripcion;
+							InvoiceLineType1.Note = new NoteType[1];
+							InvoiceLineType1.Note[0] = nota;
+						}
 
 						InvoiceLineType1.Item = Item;
 					}

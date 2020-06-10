@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -673,6 +674,11 @@ namespace HGInetMiFacturaElectonicaController
 
 						bool archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo));
 
+						if (archivo_attach == false)
+						{
+							archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo.Replace("xml", "zip")));
+						}
+
 						bool attached = false;
 
 						if (archivo_attach == false && documento.IntVersionDian == 2)
@@ -690,9 +696,23 @@ namespace HGInetMiFacturaElectonicaController
 							//Proceso para agregar la respuesta de la DIAN
 							try
 							{
-								byte[] bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl.Replace("face", "attach"));
+
+								// ruta del zip
+								string ruta_zip = string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo.Replace("xml","zip"));
+
+
+								if (!Archivo.ValidarExistencia(ruta_zip))
+								{
+									// genera la compresión del archivo en zip
+									using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
+									{
+										archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo), Path.GetFileName(nombre_archivo));
+									}
+								}
+
+								byte[] bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace("ws", "attach"));
 								string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
-								string nombre_xml_app = nombre_archivo;
+								string nombre_xml_app = nombre_archivo.Replace("xml", "zip");
 
 								if (!string.IsNullOrEmpty(ruta_fisica_appl))
 								{
@@ -701,6 +721,9 @@ namespace HGInetMiFacturaElectonicaController
 									adjunto.Nombre = nombre_xml_app;
 									archivos.Add(adjunto);
 								}
+
+								if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo)))
+									Archivo.Borrar(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo));
 							}
 							catch (Exception)
 							{

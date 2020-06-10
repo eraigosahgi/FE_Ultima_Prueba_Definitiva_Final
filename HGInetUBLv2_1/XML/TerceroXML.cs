@@ -484,35 +484,20 @@ namespace HGInetUBLv2_1
 					persontype[0] = Person;
 					Party.Person = persontype;
 
-					//if (tercero.Identificacion.Equals("222222222222"))
-					//{
-					//	#region Documento y tipo de documento---Ya esta en PartyTaxScheme no va
-					//	PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
-					//	PartyIdentificationType PartyIdentification = new PartyIdentificationType();
-					//	IDType ID = new IDType();
-					//	ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
-					//	ID.schemeAgencyID = "195";
-					//	ID.schemeID = tercero.TipoIdentificacion.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-					//	ID.Value = tercero.Identificacion.ToString();
-					//	PartyIdentification.ID = ID;
-					//	PartyIdentifications[0] = PartyIdentification;
-					//	Party.PartyIdentification = PartyIdentifications;
-					//	#endregion
-					//}
+					#region Documento y tipo de documento---Ya esta en PartyTaxScheme se agrega cuando sea solo persona natural
+					PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
+					PartyIdentificationType PartyIdentification = new PartyIdentificationType();
+					IDType ID = new IDType();
+					ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
+					ID.schemeAgencyID = "195";
+					ID.schemeName = tercero.TipoIdentificacion.ToString();
+					ID.schemeID = tercero.IdentificacionDv.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					ID.Value = tercero.Identificacion.ToString();
+					PartyIdentification.ID = ID;
+					PartyIdentifications[0] = PartyIdentification;
+					Party.PartyIdentification = PartyIdentifications;
+					#endregion
 				}
-				#endregion
-
-				#region Documento y tipo de documento---Ya esta en PartyTaxScheme no va
-				//PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
-				//PartyIdentificationType PartyIdentification = new PartyIdentificationType();
-				//IDType ID = new IDType();
-				//ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
-				//ID.schemeAgencyID = "195";
-				//ID.schemeID = tercero.TipoIdentificacion.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
-				//ID.Value = tercero.Identificacion.ToString();
-				//PartyIdentification.ID = ID;
-				//PartyIdentifications[0] = PartyIdentification;
-				//Party.PartyIdentification = PartyIdentifications;
 				#endregion
 
 

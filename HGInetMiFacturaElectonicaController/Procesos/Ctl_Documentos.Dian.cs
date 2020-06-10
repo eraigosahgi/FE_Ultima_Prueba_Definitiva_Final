@@ -296,7 +296,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = null;
 					
 					//Depende del ambiente se consulta diferente en la DIAN
-					if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+					if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode() && !string.IsNullOrEmpty(id_validacion_previa))
 					{
 						resultado = Ctl_ConsultaTransacciones.Consultar_v2(id_validacion_previa, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta, xml_archivo);
 					}

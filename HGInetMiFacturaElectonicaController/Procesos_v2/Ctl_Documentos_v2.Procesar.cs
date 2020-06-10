@@ -203,40 +203,31 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//valida si debe consultar el estado del documento en la DIAN
 					if (consulta_documento)
 					{
-						//Si se tiene zipkey no hay que consultar en la DIAN 
-						if (!string.IsNullOrEmpty(documento.StrIdRadicadoDian.ToString()))
-						{
-							respuesta = Consultar(documento, empresa, ref respuesta,documento.StrIdRadicadoDian.ToString());
+						respuesta = Consultar(documento, empresa, ref respuesta);
 
-							//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
-							{
-								HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa,ref respuesta, ref documento_result, resolucion.StrIdSetDian);
-								ValidarRespuesta(respuesta,(acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
-							}
-							else
-							{
-								respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
-								//Actualiza la respuesta
-								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
-								respuesta.FechaUltimoProceso = Fecha.GetFecha();
-
-								//Actualiza Documento en Base de Datos
-								documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-								documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-
-								Ctl_Documento documento_tmp = new Ctl_Documento();
-								documento_tmp.Actualizar(documento);
-
-								//Actualiza la categoria con el nuevo estado
-								respuesta.IdEstado = documento.IdCategoriaEstado;
-								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
-							}
-						}
-						else
+						//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
+						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
 						{
 							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian);
 							ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
+						}
+						else
+						{
+							respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
+							//Actualiza la respuesta
+							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
+							respuesta.FechaUltimoProceso = Fecha.GetFecha();
+
+							//Actualiza Documento en Base de Datos
+							documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+							documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+							Ctl_Documento documento_tmp = new Ctl_Documento();
+							documento_tmp.Actualizar(documento);
+
+							//Actualiza la categoria con el nuevo estado
+							respuesta.IdEstado = documento.IdCategoriaEstado;
+							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
 						}
 
 					}
@@ -251,17 +242,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Valida estado del documento en la Plataforma de la DIAN
 				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode() || respuesta.IdProceso == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode())
 				{
-					if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()) && documento.StrIdRadicadoDian != null)
+					if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()))
 					{
-						respuesta = Consultar(documento, empresa, ref respuesta, documento.StrIdRadicadoDian.ToString());
-					}
-					else if (respuesta.EstadoDian == null && documento.StrIdRadicadoDian == null)
-					{
-						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian);
-						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
+						respuesta = Consultar(documento, empresa, ref respuesta);
 
-						if (acuse.Response == 200)
-							respuesta = Consultar(documento, empresa, ref respuesta, acuse.KeyV2);
+						//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
+						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
+						{
+							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian);
+							ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
+
+							//Consulta si el envio es por habilitacion, produccion hace todo el proceso completo
+							if (acuse.Response == 200)
+								respuesta = Consultar(documento, empresa, ref respuesta, acuse.KeyV2);
+						}
+
 					}
 
 					// envía el mail de documentos al adquiriente

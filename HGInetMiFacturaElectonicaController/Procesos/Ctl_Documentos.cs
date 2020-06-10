@@ -572,6 +572,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				}
 
+				if (tipo.Equals("Adquiriente") && (tercero.RazonSocial.ToLowerInvariant().Equals("consumidor final") || tercero.Identificacion.Equals("222222222222")))
+				{
+					if (!(tercero.Identificacion.Length == 12) || !tercero.Identificacion.Equals("222222222222"))
+						throw new ArgumentException(string.Format("La Identificacion {0} para el consumidor final no es correcto", tercero.Identificacion, tipo));
+
+					tercero.RazonSocial = "consumidor final";
+					tercero.Email = Facturador.StrMailAdmin;
+				}
+
 			}
 
 		}
@@ -980,6 +989,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 					}
 
+					//Valida que la cuotas no lleguen con valores negativos
+					if (documento.Cuotas != null && documento.Cuotas.Count > 0)
+					{
+						List<Cuota> cuotas = documento.Cuotas;
+						Cuota valor_cuota = cuotas.Find(x => x.Valor < 0);
+						if (valor_cuota != null)
+							throw new ApplicationException(string.Format("La cuota {0} con valor {1} no es válido según Estandar DIAN", valor_cuota.Codigo, valor_cuota.Valor));
+					}
+
 					//Validacion del total
 					decimal total_calculado = decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo,MidpointRounding.AwayFromZero);
 					if (total_calculado != decimal.Round(documento.Total, MidpointRounding.AwayFromZero))
@@ -1118,8 +1136,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 
 						decimal subtotal_calculado = decimal.Round((Docdet.Cantidad * Docdet.ValorUnitario) - Docdet.DescuentoValor, 2,MidpointRounding.AwayFromZero);
+						//if (!Numero.Tolerancia(subtotal_calculado, Docdet.ValorSubtotal, 2) && Docdet.ProductoGratis == false)
 						if ((subtotal_calculado != Docdet.ValorSubtotal) && Docdet.ProductoGratis == false)
-							throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado, según calculos generados por valor{2}", "ValorSubTotal", Docdet.ValorSubtotal, subtotal_calculado));
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado, según calculos generados por valor{2}", "ValorSubTotal", Docdet.ValorSubtotal, subtotal_calculado));
 
 						if (Docdet.CalculaIVA == 0)
 						{
@@ -1133,6 +1152,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								Docdet.BaseImpuestoIva += 0.00M;
 
 							decimal iva_cal = decimal.Round((Docdet.BaseImpuestoIva * (Docdet.IvaPorcentaje / 100)),2, MidpointRounding.AwayFromZero);
+							//if (Numero.Tolerancia(iva_cal, Docdet.IvaValor, 2) && Docdet.ProductoGratis == false)
 							if ((iva_cal == Docdet.IvaValor) && Docdet.ProductoGratis == false)
 							{
 								Docdet.IvaPorcentaje += 0.00M;
@@ -1206,6 +1226,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (Docdet.DescuentoValor > 0)
 						{
 							decimal desc_cal = decimal.Round(((Docdet.ValorUnitario * Docdet.Cantidad) * (Docdet.DescuentoPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
+							//if (!Numero.Tolerancia(desc_cal, Docdet.DescuentoValor, 2))
 							if (desc_cal != Docdet.DescuentoValor)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado, según calculos generados por valor {2}", "DescuentoValor", Docdet.DescuentoValor,desc_cal));
 						}
