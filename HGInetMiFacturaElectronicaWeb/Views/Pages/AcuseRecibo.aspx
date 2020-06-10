@@ -135,9 +135,10 @@
 								<span>{{datos.NombreAdquiriente}}</span>
 							</div>
 
-							<div style="margin-top: 0%; width: 90%">
+							<div style="margin-top: 0%; width: 90%; word-wrap: break-word;">
 								<label class="text-bold">CUFE: </label>
 								<span>{{datos.Cufe}}</span>
+								<br />
 							</div>
 
 							<div style="margin-bottom: 0%">
