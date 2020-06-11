@@ -990,12 +990,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					//Valida que la cuotas no lleguen con valores negativos
-					if (documento.Cuotas != null && documento.Cuotas.Count > 0)
+					if (tipo_doc.Equals(TipoDocumento.Factura))
 					{
-						List<Cuota> cuotas = documento.Cuotas;
-						Cuota valor_cuota = cuotas.Find(x => x.Valor < 0);
-						if (valor_cuota != null)
-							throw new ApplicationException(string.Format("La cuota {0} con valor {1} no es válido según Estandar DIAN", valor_cuota.Codigo, valor_cuota.Valor));
+						if (documento.Cuotas != null && documento.Cuotas.Count > 0)
+						{
+							List<Cuota> cuotas = documento.Cuotas;
+							Cuota valor_cuota = cuotas.Find(x => x.Valor < 0);
+							if (valor_cuota != null)
+								throw new ApplicationException(string.Format("La cuota {0} con valor {1} no es válido según Estandar DIAN", valor_cuota.Codigo, valor_cuota.Valor));
+						}
 					}
 
 					//Validacion del total
