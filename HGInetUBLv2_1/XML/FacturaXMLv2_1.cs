@@ -52,20 +52,18 @@ namespace HGInetUBLv2_1
 				facturaXML.UBLVersionID = new UBLVersionIDType();
 				facturaXML.UBLVersionID.Value = "UBL 2.1";
 
-				//------se debe enviar el tipo de operacion tabla 6.1.5
+				//------se debe enviar el tipo de operacion tabla 6.1.5 - Estandar *
 				facturaXML.CustomizationID = new CustomizationIDType();
 				facturaXML.CustomizationID.Value = "10";
 
-				DocumentoDetalle detalle_aiu = new DocumentoDetalle();
-				detalle_aiu = documento.DocumentoDetalles.Where(v => v.Aiu == 1).FirstOrDefault();
-				if (detalle_aiu != null)
+				//Operacion - AIU
+				if(documento.DocumentoDetalles.Exists(v => v.Aiu > 0) && documento.DocumentoDetalles.Exists(x => x.ProductoDescripcion.Contains("Contrato de servicios AIU por concepto de:")))
 				{
 					facturaXML.CustomizationID.Value = "09";
 				}
 
-				DocumentoDetalle tercero_mandatos = new DocumentoDetalle();
-				tercero_mandatos = documento.DocumentoDetalles.Where(m => m.DatosMandatario != null).FirstOrDefault();
-				if (tercero_mandatos != null)
+				//Opercacion - Mandatos
+				if (documento.DocumentoDetalles.Exists(m => m.DatosMandatario != null))
 				{
 					facturaXML.CustomizationID.Value = "11";
 				}
