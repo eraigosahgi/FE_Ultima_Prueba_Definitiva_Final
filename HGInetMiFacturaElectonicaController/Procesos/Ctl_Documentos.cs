@@ -1272,6 +1272,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (!string.IsNullOrEmpty(Docdet.ProductoDescripcion) && Docdet.ProductoDescripcion.Contains("\u001f"))
 							throw new ApplicationException(string.Format("El producto de codigo {0} contiene caracteres especiales no permitidos en la descipción", Docdet.ProductoCodigo));
 
+						if (string.IsNullOrEmpty(Docdet.ProductoDescripcion))
+							Docdet.ProductoDescripcion = string.Empty;
 						#region Campos Adicionales
 
 						bool llenar_marca = false;

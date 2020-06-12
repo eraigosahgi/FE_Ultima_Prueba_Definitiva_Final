@@ -57,15 +57,27 @@ namespace HGInetUBLv2_1
 				facturaXML.CustomizationID.Value = "10";
 
 				//Operacion - AIU
-				if(documento.DocumentoDetalles.Exists(v => v.Aiu > 0) && documento.DocumentoDetalles.Exists(x => x.ProductoDescripcion.Contains("Contrato de servicios AIU por concepto de:")))
+				try
 				{
-					facturaXML.CustomizationID.Value = "09";
+					if (documento.DocumentoDetalles.Exists(v => v.Aiu > 0) && documento.DocumentoDetalles.Exists(x => x.ProductoDescripcion.Contains("Contrato de servicios AIU por concepto de:")))
+					{
+						facturaXML.CustomizationID.Value = "09";
+					}
+				}
+				catch (Exception)
+				{
 				}
 
 				//Opercacion - Mandatos
-				if (documento.DocumentoDetalles.Exists(m => m.DatosMandatario != null))
+				try
 				{
-					facturaXML.CustomizationID.Value = "11";
+					if (documento.DocumentoDetalles.Exists(m => m.DatosMandatario != null))
+					{
+						facturaXML.CustomizationID.Value = "11";
+					}
+				}
+				catch (Exception)
+				{
 				}
 
 				facturaXML.ProfileID = new ProfileIDType();
