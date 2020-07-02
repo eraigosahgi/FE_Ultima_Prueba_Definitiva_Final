@@ -1139,8 +1139,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 
 						decimal subtotal_calculado = decimal.Round((Docdet.Cantidad * Docdet.ValorUnitario) - Docdet.DescuentoValor, 2,MidpointRounding.AwayFromZero);
-						//if (!Numero.Tolerancia(subtotal_calculado, Docdet.ValorSubtotal, 2) && Docdet.ProductoGratis == false)
-						if ((subtotal_calculado != Docdet.ValorSubtotal) && Docdet.ProductoGratis == false)
+						if (!Numero.Tolerancia(subtotal_calculado, Docdet.ValorSubtotal, 2) && Docdet.ProductoGratis == false)
+						//if ((subtotal_calculado != Docdet.ValorSubtotal) && Docdet.ProductoGratis == false)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado, según calculos generados por valor{2}", "ValorSubTotal", Docdet.ValorSubtotal, subtotal_calculado));
 
 						if (Docdet.CalculaIVA == 0)
@@ -1155,8 +1155,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								Docdet.BaseImpuestoIva += 0.00M;
 
 							decimal iva_cal = decimal.Round((Docdet.BaseImpuestoIva * (Docdet.IvaPorcentaje / 100)),2, MidpointRounding.AwayFromZero);
-							//if (Numero.Tolerancia(iva_cal, Docdet.IvaValor, 2) && Docdet.ProductoGratis == false)
-							if ((iva_cal == Docdet.IvaValor) && Docdet.ProductoGratis == false)
+							if (Numero.Tolerancia(iva_cal, Docdet.IvaValor, 2) && Docdet.ProductoGratis == false)
+							//if ((iva_cal == Docdet.IvaValor) && Docdet.ProductoGratis == false)
 							{
 								Docdet.IvaPorcentaje += 0.00M;
 								ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
@@ -1178,7 +1178,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 								//Calculo el valor del IVA para los regalos o muestras para validarlo con el que envian
 								decimal iva_cal_mues = decimal.Round(((Docdet.Cantidad * Docdet.ValorUnitario) - Docdet.DescuentoValor) * (Docdet.IvaPorcentaje / 100), 2, MidpointRounding.AwayFromZero);
-								if (iva_cal_mues != Docdet.IvaValor)
+								if (!Numero.Tolerancia(iva_cal_mues, Docdet.IvaValor, 2))
+								//if (iva_cal_mues != Docdet.IvaValor)
 								{
 									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado para producto gratis o de muestra, según calculos generados por valor {2}", "Iva", Docdet.IvaValor,iva_cal_mues));
 								}
@@ -1211,7 +1212,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							//if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), MidpointRounding.AwayFromZero) == Docdet.ReteFuenteValor)
 							decimal retefte_cal = decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), 2,MidpointRounding.AwayFromZero);
-							if (retefte_cal == Docdet.ReteFuenteValor)
+							if (!Numero.Tolerancia(retefte_cal, Docdet.ReteFuenteValor, 2))
+							//if (retefte_cal == Docdet.ReteFuenteValor)
 							{
 								ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
 								ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
@@ -1229,8 +1231,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (Docdet.DescuentoValor > 0)
 						{
 							decimal desc_cal = decimal.Round(((Docdet.ValorUnitario * Docdet.Cantidad) * (Docdet.DescuentoPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
-							//if (!Numero.Tolerancia(desc_cal, Docdet.DescuentoValor, 2))
-							if (desc_cal != Docdet.DescuentoValor)
+							if (!Numero.Tolerancia(desc_cal, Docdet.DescuentoValor, 2))
+							//if (desc_cal != Docdet.DescuentoValor)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado, según calculos generados por valor {2}", "DescuentoValor", Docdet.DescuentoValor,desc_cal));
 						}
 
@@ -1239,7 +1241,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (Docdet.ValorImpuestoConsumo > 0 && Docdet.ImpoConsumoPorcentaje > 0)
 							{
 								decimal impconsumo_cal = decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje / 100), 2, MidpointRounding.AwayFromZero);
-								if (impconsumo_cal == Docdet.ValorImpuestoConsumo)
+								if (!Numero.Tolerancia(impconsumo_cal, Docdet.ValorImpuestoConsumo, 2))
+								//if (impconsumo_cal == Docdet.ValorImpuestoConsumo)
 								{
 									ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
 									ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();

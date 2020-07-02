@@ -672,9 +672,9 @@ namespace HGInetUBLv2_1
 							AllowanceCharge.BaseAmount.Value = 0.00M;
 						}
 
-						decimal desc_cal = decimal.Round((AllowanceCharge.BaseAmount.Value * (DocDet.DescuentoPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
-						if ((AllowanceCharge.BaseAmount.Value - desc_cal) != DocDet.ValorSubtotal)
-							DocDet.ValorSubtotal = AllowanceCharge.BaseAmount.Value - desc_cal;
+						//decimal desc_cal = decimal.Round((AllowanceCharge.BaseAmount.Value * (DocDet.DescuentoPorcentaje / 100)), 2, MidpointRounding.AwayFromZero);
+						//if ((AllowanceCharge.BaseAmount.Value - desc_cal) != DocDet.ValorSubtotal)
+						//	DocDet.ValorSubtotal = AllowanceCharge.BaseAmount.Value - desc_cal;
 
 						AllowanceCharge.ChargeIndicator = new ChargeIndicatorType();
 						AllowanceCharge.ChargeIndicator.Value = false;
@@ -689,7 +689,7 @@ namespace HGInetUBLv2_1
 						AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 6);
 						AllowanceCharge.Amount = new AmountType2();
 						AllowanceCharge.Amount.currencyID = moneda_detalle.ToString();
-						AllowanceCharge.Amount.Value = decimal.Round(desc_cal, 2);
+						AllowanceCharge.Amount.Value = decimal.Round(DocDet.DescuentoValor, 2);
 						AllowanceCharges[0] = AllowanceCharge;
 
 						CreditNoteLine.AllowanceCharge = AllowanceCharges;

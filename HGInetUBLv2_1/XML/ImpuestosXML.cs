@@ -81,15 +81,16 @@ namespace HGInetUBLv2_1
 						imp_doc.BaseImponible += BaseimponibleMuestra;
 					}
 
+					//********Validar esto si viene sin decimales los valores
 					//Ajuste del impuesto para Versiones de ERP menores a 2020.4
-					if ((!version_erp.Equals(version_validar) && !version_erp.Contains(version_validar) && !version_erp.Equals(version_validar_Rev) && !version_erp.Contains(version_validar_Rev)) && hgi == -1)
-					{
-						decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+					//if ((!version_erp.Equals(version_validar) && !version_erp.Contains(version_validar) && !version_erp.Equals(version_validar_Rev) && !version_erp.Contains(version_validar_Rev)) && hgi == -1)
+					//{
+					//	decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 
-						if (imp_cal != imp_doc.ValorImpuesto)
-							imp_doc.ValorImpuesto = imp_cal;
+					//	if (imp_cal != imp_doc.ValorImpuesto)
+					//		imp_doc.ValorImpuesto = imp_cal;
 
-					}
+					//}
 
 					doc_impuestos.Add(imp_doc);
 
