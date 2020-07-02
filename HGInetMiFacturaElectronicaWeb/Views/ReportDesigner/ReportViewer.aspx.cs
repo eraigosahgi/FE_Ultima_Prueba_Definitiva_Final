@@ -129,6 +129,12 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 								//ASIGNA FORMATO A DISEÑADOR.
 								report.LoadLayoutFromXml(datos);
 
+								//Recorre los detalles y suma los descuentos del detalle
+								foreach (var item in Documento.DocumentoDetalles)
+								{
+									Documento.ValorDescuentoDet += item.DescuentoValor;
+								}
+
 								report.DataSource = Documento;
 
 								if (vista_previa.marca_de_agua)
