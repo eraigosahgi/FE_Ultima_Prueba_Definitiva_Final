@@ -1212,7 +1212,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							//if (decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), MidpointRounding.AwayFromZero) == Docdet.ReteFuenteValor)
 							decimal retefte_cal = decimal.Round((Docdet.ValorSubtotal * (Docdet.ReteFuentePorcentaje / 100)), 2,MidpointRounding.AwayFromZero);
-							if (!Numero.Tolerancia(retefte_cal, Docdet.ReteFuenteValor, 2))
+							if (Numero.Tolerancia(retefte_cal, Docdet.ReteFuenteValor, 2))
 							//if (retefte_cal == Docdet.ReteFuenteValor)
 							{
 								ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
