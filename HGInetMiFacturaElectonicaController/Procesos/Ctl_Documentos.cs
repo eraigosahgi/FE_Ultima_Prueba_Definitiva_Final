@@ -1241,7 +1241,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (Docdet.ValorImpuestoConsumo > 0 && Docdet.ImpoConsumoPorcentaje > 0)
 							{
 								decimal impconsumo_cal = decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumoPorcentaje / 100), 2, MidpointRounding.AwayFromZero);
-								if (!Numero.Tolerancia(impconsumo_cal, Docdet.ValorImpuestoConsumo, 2))
+								if (Numero.Tolerancia(impconsumo_cal, Docdet.ValorImpuestoConsumo, 2))
 								//if (impconsumo_cal == Docdet.ValorImpuestoConsumo)
 								{
 									ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();

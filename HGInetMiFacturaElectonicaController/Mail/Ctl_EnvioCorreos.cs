@@ -19,6 +19,7 @@ using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.Peticiones;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -707,6 +708,7 @@ namespace HGInetMiFacturaElectonicaController
 									using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
 									{
 										archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo), Path.GetFileName(nombre_archivo));
+										archive.Dispose();
 									}
 								}
 
@@ -725,8 +727,22 @@ namespace HGInetMiFacturaElectonicaController
 								if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo)))
 									Archivo.Borrar(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo));
 							}
-							catch (Exception)
+							catch (Exception excepcion)
 							{
+
+								try
+								{
+									Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion, "No fue posible guardar el attach en archivo zip");
+									string msg_excepcion = Excepcion.Mensaje(excepcion);
+								}
+								catch (Exception){}
+
+								//try
+								//{
+								//	int estado_doc = Ctl_Documento.ObtenerCategoria(documento.IntIdEstado);
+								//	clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, empresa_obligado.StrIdentificacion, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible guardar el attach en archivo zip", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
+								//}
+								//catch (Exception) {}
 							}
 						}
 

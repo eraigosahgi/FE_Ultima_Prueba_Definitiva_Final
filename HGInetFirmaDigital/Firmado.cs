@@ -392,7 +392,10 @@ namespace HGInetFirmaDigital
 
 								archivo.Generado = true;
 								archivo.Excepcion = null;
+
+								parametros.Signer.Dispose();
 							}
+							fs.Close();
 						}
 					}
 					catch (Exception excepcion)

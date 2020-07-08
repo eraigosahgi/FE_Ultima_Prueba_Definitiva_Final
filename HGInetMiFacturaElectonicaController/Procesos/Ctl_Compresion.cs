@@ -59,6 +59,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
             using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
             {
                 archive.CreateEntryFromFile(ruta_xml, Path.GetFileName(ruta_xml));
+				archive.Dispose();
             }
 
             return documento.NombreZip;

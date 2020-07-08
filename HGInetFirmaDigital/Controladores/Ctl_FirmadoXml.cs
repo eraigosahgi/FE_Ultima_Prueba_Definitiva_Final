@@ -563,7 +563,10 @@ namespace HGInetFirmaDigital
 							docFirmado.Save(archivo_xml);
 
 							archivo.Excepcion = null;
+
+							parametros.Signer.Dispose();
 						}
+						fs.Close();
 					}
 				}
 				catch (Exception excepcion)
