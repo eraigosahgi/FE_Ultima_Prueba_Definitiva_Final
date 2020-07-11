@@ -294,6 +294,11 @@ namespace HGInetUBLv2_1
 									detalle.ReteFuenteValor = valor_impto;
 									nota_debito_obj.ValorReteFuente += detalle.ReteFuenteValor;
 								}
+								else if (tipo_impto.Equals("22"))//Impuesto a la bolsa
+								{
+									detalle.ValorImpuestoConsumo = valor_impto;
+									nota_debito_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
+								}
 
 							}
 						}

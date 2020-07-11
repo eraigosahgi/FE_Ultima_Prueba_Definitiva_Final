@@ -439,7 +439,13 @@ namespace HGInetUBLv2_1
 							for (int j = 0; j < factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal.Count(); j++)
 							{
 								string tipo_impto = factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.TaxScheme.ID.Value;
-								decimal porcentaje_impto = factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.Percent.Value;
+
+								decimal porcentaje_impto = 0;
+								if (factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.Percent != null)
+								{
+									porcentaje_impto = factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.Percent.Value;
+								}
+								
 								decimal valor_impto = factura_ubl.InvoiceLine[i].TaxTotal[0].TaxSubtotal[j].TaxAmount.Value;
 
 								if (TipoImpuestos.Iva.Equals(tipo_impto))
@@ -464,6 +470,11 @@ namespace HGInetUBLv2_1
 									detalle.ReteFuentePorcentaje = porcentaje_impto;
 									detalle.ReteFuenteValor = valor_impto;
 									factura_obj.ValorReteFuente += detalle.ReteFuenteValor;
+								}
+								else if (tipo_impto.Equals("22"))//Impuesto a la bolsa
+								{
+									detalle.ValorImpuestoConsumo = valor_impto;
+									factura_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
 								}
 
 							}
