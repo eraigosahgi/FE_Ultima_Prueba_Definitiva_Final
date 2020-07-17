@@ -56,11 +56,16 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 
 					TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(Convert.ToInt32(Request.QueryString["TipoDoc"]));
 
+					TblFormatos datos_formato = clase_formatos.Obtener(codigo_formato, cod_empresa, TipoFormato.FormatoPDF.GetHashCode());
+
+					if (datos_formato.IntDocTipo != tipo_doc.GetHashCode())
+					{
+						tipo_doc = Enumeracion.ParseToEnum<TipoDocumento>(datos_formato.IntDocTipo);
+					}
+
 					clase_serialize = new SerializeReport(tipo_doc);
 
 					SerializationService.RegisterSerializer(SerializeReport.Name, clase_serialize);
-
-					TblFormatos datos_formato = clase_formatos.Obtener(codigo_formato, cod_empresa, TipoFormato.FormatoPDF.GetHashCode());
 
 					if (datos_formato != null)
 					{

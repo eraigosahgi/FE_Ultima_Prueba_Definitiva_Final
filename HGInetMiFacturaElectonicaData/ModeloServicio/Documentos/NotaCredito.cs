@@ -69,6 +69,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string Prefijo { get; set; }
 
 		/// <summary>
+		/// Prefijo del Documento de factura afectado
+		/// </summary>
+		public string PrefijoFactura { get; set; }
+
+		/// <summary>
 		/// Fecha de la Nota Credito
 		/// </summary>
 		public DateTime Fecha { get; set; }

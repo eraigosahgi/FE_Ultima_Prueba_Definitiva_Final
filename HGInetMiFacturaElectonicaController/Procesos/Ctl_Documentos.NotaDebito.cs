@@ -406,7 +406,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						//valida si el Documento afectado ya existe en Base de Datos
 						List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
-						if (doc_ref != null)
+						if (doc_ref != null && doc_ref.Count > 0)
 						{
 							DocumentoRespuesta doc_resp = doc_ref.Where(d => d.Cufe.Equals(item.CufeFactura)).FirstOrDefault();
 							if (doc_resp != null)
@@ -451,11 +451,31 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
 								item.TipoOperacion = 32;
 							}
+
+							//Si envian Prefijo de la factura que estan afectando se concatena para la impresion
+							if (!string.IsNullOrEmpty(item.PrefijoFactura))
+							{
+								item.DocumentoRef = string.Format("{0} - {1}", item.PrefijoFactura, item.DocumentoRef);
+							}
+							else
+							{
+								item.PrefijoFactura = string.Empty;
+							}
 						} 
 					}
 					else
 					{
 						item.TipoOperacion = 32;
+
+						//Si envian Prefijo de la factura que estan afectando se concatena para la impresion
+						if (!string.IsNullOrEmpty(item.PrefijoFactura))
+						{
+							item.DocumentoRef = string.Format("{0} - {1}", item.PrefijoFactura, item.DocumentoRef);
+						}
+						else
+						{
+							item.PrefijoFactura = string.Empty;
+						}
 					}
 
 				}

@@ -341,10 +341,9 @@ namespace HGInetUBLv2_1
 					#region Detalle de Documento
 					List<DocumentoDetalle> list_detalle = new List<DocumentoDetalle>();
 
-					//Recorre todo el detalle del documento
+					//Recorre todo el detalle del documento 
 					for (int i = 0; i < factura_ubl.InvoiceLine.Length; i++)
 					{
-
 						DocumentoDetalle detalle = new DocumentoDetalle();
 
 						if (Texto.ValidarExpresion(TipoExpresion.Numero, factura_ubl.InvoiceLine[i].ID.Value))
