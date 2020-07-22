@@ -117,6 +117,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string CodigoPais { get; set; }
 
 		/// <summary>
+		/// País según ISO 3166-1 alfa-2 (ej: CO = Colombia, etc.) Se llena con el codigo enviado y es para el PDF
+		/// </summary>
+		public string Pais { get; set; }
+
+		/// <summary>
 		/// Razón Social
 		/// </summary>
 		public string RazonSocial { get; set; }

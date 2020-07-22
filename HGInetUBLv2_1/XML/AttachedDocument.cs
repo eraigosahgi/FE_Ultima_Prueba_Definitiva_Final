@@ -153,6 +153,7 @@ namespace HGInetUBLv2_1
 				ResultOfVerification.ValidatorID = new ValidatorIDType();
 				ResultOfVerification.ValidatorID.Value = "Unidad Especial Dirección de Impuestos y Aduanas Nacionales";
 
+				/* caso 550364
 				string contenido_resp = String.Empty;
 				XmlReader xml_reader = null;
 				XmlSerializer serializacion = null;
@@ -178,10 +179,10 @@ namespace HGInetUBLv2_1
 					DianResponse resp_prod = (DianResponse)serializacion.Deserialize(xml_reader);
 					respuesta = new List<DianResponse>();
 					respuesta.Add(resp_prod);
-				}
+				}*/
 
 				ResultOfVerification.ValidationResultCode = new ValidationResultCodeType();
-				ResultOfVerification.ValidationResultCode.Value = respuesta[0].StatusCode;
+				ResultOfVerification.ValidationResultCode.Value = "002";//respuesta[0].StatusCode;
 
 				ResultOfVerification.ValidationDate = new ValidationDateType();
 				ResultOfVerification.ValidationDate.Value = Convert.ToDateTime(documentoBd.DatFechaIngreso.ToString(Fecha.formato_fecha_hginet));//Convert.ToDateTime(creacion_respuesta.ToString(Fecha.formato_fecha_hginet));

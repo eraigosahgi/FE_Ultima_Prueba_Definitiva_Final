@@ -451,7 +451,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				ListaPaises list_paises = new ListaPaises();
 				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.CodigoPais)).FirstOrDefault();
 				if (pais == null)
+				{
 					throw new ArgumentException(string.Format("El Codigo Pais {0} no esta bien formado del {1}", tercero.CodigoPais, tipo));
+				}
+				else
+				{
+					tercero.Pais = pais.Descripcion;
+				}
+					
 
 				if (tercero.CodigoPais.Equals("CO"))
 				{
