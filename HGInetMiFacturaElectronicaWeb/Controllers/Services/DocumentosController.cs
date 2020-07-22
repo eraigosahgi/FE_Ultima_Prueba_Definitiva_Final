@@ -385,6 +385,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
+				if (datos.FirstOrDefault().IdCategoriaEstado < 200)
+				{
+					return NotFound();
+				}
+
 				Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 				List<MensajeEnvio> respuesta = null;
 
