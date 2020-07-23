@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUBLv2_1.DianListas;
 
 namespace HGInetUBLv2_1
 {
@@ -42,6 +43,14 @@ namespace HGInetUBLv2_1
 			obligado.Departamento = empresa.Party.PhysicalLocation.Address.CountrySubentity.Value;
 			obligado.CodigoDepartamento = empresa.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
 			obligado.CodigoPais = empresa.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
+			try
+			{
+				ListaPaises list_paises = new ListaPaises();
+				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(obligado.CodigoPais)).FirstOrDefault();
+				obligado.Pais = pais.Descripcion;
+			}
+			catch (Exception)
+			{ }
 			if (empresa.Party.PhysicalLocation.Address.PostalZone != null)
 				obligado.CodigoPostal = empresa.Party.PhysicalLocation.Address.PostalZone.Value;
 
@@ -95,6 +104,14 @@ namespace HGInetUBLv2_1
 			adquiriente.Departamento = cliente.Party.PhysicalLocation.Address.CountrySubentity.Value;
 			adquiriente.CodigoDepartamento = cliente.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
 			adquiriente.CodigoPais = cliente.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
+			try
+			{
+				ListaPaises list_paises = new ListaPaises();
+				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(adquiriente.CodigoPais)).FirstOrDefault();
+				adquiriente.Pais = pais.Descripcion;
+			}
+			catch (Exception)
+			{}
 			if (cliente.Party.PhysicalLocation.Address.PostalZone != null)
 				adquiriente.CodigoPostal = cliente.Party.PhysicalLocation.Address.PostalZone.Value;
 

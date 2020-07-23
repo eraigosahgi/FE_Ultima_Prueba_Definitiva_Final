@@ -555,9 +555,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", item, tipo));
 
 						}
-						if (responsabilidades.Count == 0 && tipo.Equals("Obligado"))
+						if (responsabilidades.Count == 0)
 						{
-							throw new ArgumentException(string.Format(" Las Responsabilidades enviadas del {0} no cumplen con el listado de la DIAN", tipo));
+							responsabilidades.Add("R-99-PN");
+							//throw new ArgumentException(string.Format(" Las Responsabilidades enviadas del {0} no cumplen con el listado de la DIAN", tipo));
 						}
 
 						tercero.Responsabilidades = responsabilidades;
