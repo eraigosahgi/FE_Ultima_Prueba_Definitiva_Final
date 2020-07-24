@@ -182,7 +182,7 @@ namespace HGInetUBLv2_1
 				}*/
 
 				ResultOfVerification.ValidationResultCode = new ValidationResultCodeType();
-				ResultOfVerification.ValidationResultCode.Value = "002";//respuesta[0].StatusCode;
+				ResultOfVerification.ValidationResultCode.Value = "02";//respuesta[0].StatusCode;
 
 				ResultOfVerification.ValidationDate = new ValidationDateType();
 				ResultOfVerification.ValidationDate.Value = Convert.ToDateTime(documentoBd.DatFechaIngreso.ToString(Fecha.formato_fecha_hginet));//Convert.ToDateTime(creacion_respuesta.ToString(Fecha.formato_fecha_hginet));
