@@ -152,7 +152,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					return datos;
 				}
-				else if (datakey_encriptado_Sha512.Equals(datakey) || datakey_encriptado_may_sha512.Equals(datakey))
+				else if (datakey_encriptado_Sha512.Equals(datakey) || datakey_encriptado_may_sha512.Equals(datakey) || datakey_encriptado_may_sha512.ToString().ToUpper().Equals(datakey))
 				{
 					return datos;
 				}
