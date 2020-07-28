@@ -7,7 +7,7 @@
 	<script src="../../Scripts/Services/FiltroGenerico.js"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs2020401"></script>
 	<script src="../../Scripts/Services/SrvDocumentos.js?vjs2020401"></script>
-	<script src="../../Scripts/Pages/DocumentosAdmin.js?vjs2020401"></script>
+	<script src="../../Scripts/Pages/DocumentosAdmin.js?vjs20200728"></script>
 	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs2020401"></script>
 	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs2020401"></script>
 

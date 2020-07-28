@@ -334,11 +334,20 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						dataField: "NumeroDocumento",
 
 					},
+
+
+				{
+					caption: "Fecha Recepción",
+					dataField: "DatFechaIngreso",
+					dataType: "date",
+					format: "yyyy-MM-dd HH:mm:ss",
+					
+				},
 					{
 						caption: "Fecha Documento",
 						dataField: "DatFechaDocumento",
 						dataType: "date",
-						format: "yyyy-MM-dd",
+						format: "yyyy-MM-dd ",
 
 						validationRules: [{
 							type: "required",
@@ -433,7 +442,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  	dataField: "MotivoRechazo",
 					  },
 					{
-						caption: "Estado Email",						
+						caption: "Estado Email",
 						dataField: "EstadoEnvioMail",
 						cellTemplate: function (container, options) {
 

@@ -122,7 +122,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 				Sesion.ValidarSesion();
-			
+
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
@@ -290,12 +290,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				ctl_documento = new Ctl_Documento();
 				TblDocumentos documento = new TblDocumentos();
 				documento = datos.FirstOrDefault();
-				if ( ((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode())))
+				if (((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode())))
 				{
 					if ((documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode()))
 					{
 						documento.IntEstadoEnvio = (short)EstadoEnvio.Leido.GetHashCode();
-						documento.IntAdquirienteRecibo = (short) AdquirienteRecibo.Pendiente.GetHashCode();
+						documento.IntAdquirienteRecibo = (short)AdquirienteRecibo.Pendiente.GetHashCode();
 						documento.DatFechaActualizaEstado = Fecha.GetFecha();
 						ctl_documento.Actualizar(documento);
 					}
@@ -355,7 +355,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					{
 						Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 						int estado_doc = Ctl_Documento.ObtenerCategoria(documento.IntIdEstado);
-						clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrEmpresaFacturador, ProcesoEstado.AcuseVisto, TipoRegistro.Actualizacion, Procedencia.Usuario, (!string.IsNullOrEmpty(usuario) ? usuario : string.Empty), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(ProcesoEstado.AcuseVisto.GetHashCode())), string.Empty, documento.StrPrefijo, Convert.ToString(documento.IntNumero),estado_doc);
+						clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, documento.StrEmpresaFacturador, ProcesoEstado.AcuseVisto, TipoRegistro.Actualizacion, Procedencia.Usuario, (!string.IsNullOrEmpty(usuario) ? usuario : string.Empty), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(ProcesoEstado.AcuseVisto.GetHashCode())), string.Empty, documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
 					}
 					catch (Exception)
 					{ }
@@ -562,7 +562,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					}
 					catch (Exception ex)
 					{
-						RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);						
+						RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 					}
 				}
 
@@ -899,7 +899,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
-				if(string.IsNullOrEmpty(IdSeguridad)) {
+				if (string.IsNullOrEmpty(IdSeguridad))
+				{
 					IdSeguridad = "*";
 				}
 
@@ -985,7 +986,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				List<TblDocumentos> datos = ctl_documento.ObtenerAdmin(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento, tipo_fecha,Desde,Hasta);
+				List<TblDocumentos> datos = ctl_documento.ObtenerAdmin(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento, tipo_fecha, Desde, Hasta);
 
 				if (datos == null)
 				{
@@ -997,6 +998,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					IdFacturador = d.TblEmpresasFacturador.StrIdentificacion,
 					Facturador = d.TblEmpresasFacturador.StrRazonSocial,
 					NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+					d.DatFechaIngreso,
 					d.DatFechaDocumento,
 					d.DatFechaVencDocumento,
 					IntVlrTotal = (d.IntDocTipo == 3) ? -d.IntVlrTotal : d.IntVlrTotal,
@@ -1243,7 +1245,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				return Ok(retorno);
 			}
 			catch (Exception excepcion)
-			{				
+			{
 				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
@@ -1294,7 +1296,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception ex)
 			{
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);				
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 				return Conflict();
 			}
 		}
@@ -1343,7 +1345,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception ex)
 			{
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);				
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 				return Ok(false);
 			}
 		}
