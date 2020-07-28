@@ -664,7 +664,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				ListaConceptoNotaDebito list_concepto = new ListaConceptoNotaDebito();
 				ListaItem concepto = list_concepto.Items.Where(d => d.Codigo.Equals(documento.Concepto)).FirstOrDefault();
 				if (concepto == null)
+				{
 					throw new ApplicationException(string.Format("El concepto {0} no es válido según Estandar DIAN", documento.Concepto));
+				}
+				else
+				{
+					documento.ConceptoDescripcion = concepto.Descripcion;
+				}
 
 				/*
 				Ctl_Documento num_doc = new Ctl_Documento();

@@ -97,10 +97,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		[Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         public string Concepto { get; set; }
 
-        /// <summary>
-        /// Codigo Moneda del documento segun tabla DIAN
-        /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
+		/// <summary>
+		/// Descripcion del concepto por el cual genera la nota, codigo Según Tabla DIAN.
+		/// </summary>
+		public string ConceptoDescripcion { get; set; }
+
+		/// <summary>
+		/// Codigo Moneda del documento segun tabla DIAN
+		/// </summary>
+		[Required(ErrorMessage = "{0} es un campo obligatorio")]
         [MaxLength(3, ErrorMessage = "La {0} no puede superar los {1} caracteres")]
         public string Moneda { get; set; }
 
