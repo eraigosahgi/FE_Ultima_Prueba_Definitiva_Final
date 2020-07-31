@@ -24,7 +24,7 @@ namespace HGInetUBLv2_1
 			obligado.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(empresa.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
 			obligado.CodigoTributo = empresa.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID.Value;
 			obligado.RazonSocial = empresa.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
-			obligado.NombreComercial = obligado.RazonSocial; //empresa.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.Name.Value;
+			obligado.NombreComercial = string.IsNullOrEmpty(empresa.Party.PartyName.FirstOrDefault().Name.Value) ? obligado.RazonSocial : empresa.Party.PartyName.FirstOrDefault().Name.Value;
 
 			//Valida si es persona Natural
 			if (empresa.Party.Person != null)

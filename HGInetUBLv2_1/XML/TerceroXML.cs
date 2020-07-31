@@ -42,7 +42,7 @@ namespace HGInetUBLv2_1
 				PartyNameType partyName = new PartyNameType();
 				//---Razon social
 				NameType1 Name_RZ = new NameType1();
-				Name_RZ.Value = empresa.RazonSocial;
+				Name_RZ.Value = string.IsNullOrEmpty(empresa.NombreComercial) ? empresa.RazonSocial : empresa.NombreComercial;
 				partyName.Name = Name_RZ;
 				PartyNameType[0] = partyName;
 

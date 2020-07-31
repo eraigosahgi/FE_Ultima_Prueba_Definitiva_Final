@@ -377,7 +377,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="telefono"></param>
 		/// <param name="nuevo_email">indica el e-mail del destinatario (si es igual a null, se envía a el email de la empresa del adquiriente)</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "", string id_peticion = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "", ProcesoEstado proceso = ProcesoEstado.EnvioEmailAcuse)
+		public List<MensajeEnvio> NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "", string id_peticion = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "", ProcesoEstado proceso = ProcesoEstado.EnvioEmailAcuse, string nombre_comercial = "")
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
@@ -457,23 +457,41 @@ namespace HGInetMiFacturaElectonicaController
 
 				string numero_doc = string.Format("{0}{1}", documento.StrPrefijo, documento.IntNumero.ToString());
 
+				var objeto = (dynamic)null;
+				if (string.IsNullOrEmpty(nombre_comercial))
+				{
+					objeto = Ctl_Documento.ConvertirServicio(documento, true);
+				}
+
 				// obtiene el tipo de documento
 				TipoDocumento tipo_documento = Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo);
 				string tipodoc_asunto = string.Empty;
 				if (tipo_documento == TipoDocumento.Factura)
 				{
 					tipodoc_asunto = "01";
+					if (string.IsNullOrEmpty(nombre_comercial))
+					{
+						nombre_comercial = string.IsNullOrEmpty(objeto.DatosFactura.DatosObligado.NombreComercial) ? objeto.DatosFactura.DatosObligado.RazonSocial : objeto.DatosFactura.DatosObligado.NombreComercial;
+					}
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
 					tipodoc_asunto = "91";
+					if (string.IsNullOrEmpty(nombre_comercial))
+					{
+						nombre_comercial = string.IsNullOrEmpty(objeto.DatosNotaCredito.DatosObligado.NombreComercial) ? objeto.DatosNotaCredito.DatosObligado.RazonSocial : objeto.DatosNotaCredito.DatosObligado.NombreComercial;
+					}
 				}
 				else if (tipo_documento == TipoDocumento.NotaDebito)
 				{
 					tipodoc_asunto = "92";
+					if (string.IsNullOrEmpty(nombre_comercial))
+					{
+						nombre_comercial = string.IsNullOrEmpty(objeto.DatosNotaDebito.DatosObligado.NombreComercial) ? objeto.DatosNotaDebito.DatosObligado.RazonSocial : objeto.DatosNotaDebito.DatosObligado.NombreComercial;
+					}
 				}
 
-				string asunto = string.Format("{0};{1};{2};{3}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto);
+				string asunto = string.Format("{0};{1};{2};{3};{4}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto,nombre_comercial);
 
 				/*
 				if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
