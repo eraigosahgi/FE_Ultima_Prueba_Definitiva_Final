@@ -159,8 +159,8 @@ namespace HGInetDIANServicios
 					//Se agrega instruccion para habilitar la seguridad en el envio
 					System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-					if (ambiente.Equals("1"))
-					{
+					//if (ambiente.Equals("1"))
+					//{
 						acuse_recibo.Version = "2";
 						acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
 
@@ -408,7 +408,7 @@ namespace HGInetDIANServicios
 
 
 						}
-					}
+					//}
 				}
 				catch (Exception excepcion)
 				{

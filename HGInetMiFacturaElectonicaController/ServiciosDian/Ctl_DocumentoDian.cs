@@ -16,6 +16,7 @@ using HGInetFirmaDigital;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.RegistroLog;
 using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Properties;
 
 namespace HGInetMiFacturaElectonicaController.ServiciosDian
 {
@@ -169,7 +170,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 					case 2:
 						acuse = new AcuseRecibo();
-						if (ambiente_dian.Equals("2"))
+						if (ambiente_dian.Equals("2") && !empresa.StrIdentificacion.Equals(Constantes.NitResolucionsinPrefijo))
 						{
 							acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado,
 								certificado.Clave, clave, UrlServicioWeb, ambiente_dian);
