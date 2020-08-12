@@ -2160,6 +2160,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				if (dias > 0)
 				{
+
 					var respuesta = (from datos in context.TblDocumentos
 									 where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
 										   (datos.IntEstadoEnvio == (estado_enviado) ||
@@ -2170,10 +2171,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				else
 				{
+					DateTime FechaInicial = Fecha.GetFecha().Date;
+					DateTime FechaFinal = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, Fecha.GetFecha().Day, 23, 59, 59, 999);
+
 					var respuesta = (from datos in context.TblDocumentos
-									 where datos.IntEstadoEnvio == (estado_enviado)
+									 where datos.IntEstadoEnvio == (estado_enviado) &&
+											datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal
 									 select datos
 						);
+
 					return respuesta.ToList();
 				}
 
