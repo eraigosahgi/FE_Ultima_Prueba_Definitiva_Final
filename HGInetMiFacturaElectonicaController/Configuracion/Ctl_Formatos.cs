@@ -394,12 +394,25 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				int estado_formato = EstadosFormato.Inactivo.GetHashCode();
 
-				TblFormatos formato_resultado = (from formato in context.TblFormatos
-												 where formato.IntCodigoFormato == id_formato
-												 && formato.IntTipo == tipo_formato
-												 && (formato.StrEmpresa.Equals(identificacion_empresa) || formato.StrEmpresa.Equals(empresa_dependencia))
-												 && formato.IntEstado != estado_formato
-												 select formato).FirstOrDefault();
+				TblFormatos formato_resultado = null;
+
+				formato_resultado = (from formato in context.TblFormatos
+					where formato.IntCodigoFormato == id_formato
+					      && formato.IntTipo == tipo_formato
+					      && formato.StrEmpresa.Equals(identificacion_empresa)
+					      && formato.IntEstado != estado_formato
+					select formato).FirstOrDefault();
+
+				if (formato_resultado == null && !identificacion_empresa.Equals(empresa_dependencia))
+				{
+
+					formato_resultado = (from formato in context.TblFormatos
+						where formato.IntCodigoFormato == id_formato
+						      && formato.IntTipo == tipo_formato
+						      && formato.StrEmpresa.Equals(empresa_dependencia)
+						      && formato.IntEstado != estado_formato
+						select formato).FirstOrDefault();
+				}
 
 				//Si no se obtiene Formato con las Condiciones enviadas, se hace con el formato generico de HGI segun el tipo de documento
 				if (formato_resultado == null)
