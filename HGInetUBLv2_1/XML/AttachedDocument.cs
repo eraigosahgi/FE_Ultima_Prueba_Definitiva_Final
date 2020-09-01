@@ -250,9 +250,12 @@ namespace HGInetUBLv2_1
 			TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
 			TaxLevelCode.listName = empresa.RegimenFiscal;
 
-			string list_responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(empresa.Responsabilidades, ";");
-			TaxLevelCode.Value = list_responsabilidades;
-			PartyTaxScheme.TaxLevelCode = TaxLevelCode;
+			if (empresa.Responsabilidades != null)
+			{
+				string list_responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(empresa.Responsabilidades, ";");
+				TaxLevelCode.Value = list_responsabilidades;
+				PartyTaxScheme.TaxLevelCode = TaxLevelCode;
+			}
 
 			TaxSchemeType TaxScheme = new TaxSchemeType();
 			TaxScheme.ID = new IDType();
