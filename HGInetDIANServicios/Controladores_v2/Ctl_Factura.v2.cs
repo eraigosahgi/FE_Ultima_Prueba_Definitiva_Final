@@ -218,7 +218,7 @@ namespace HGInetDIANServicios
 								{
 									if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())))
 									{
-										if (respuesta.ErrorMessage.FirstOrDefault().Equals("Regla: 90, Rechazo: Documento procesado anteriormente."))
+										if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento con CUFE"))
 										{
 											respuesta.StatusCode = "94";
 
