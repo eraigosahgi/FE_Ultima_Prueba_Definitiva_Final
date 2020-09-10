@@ -46,6 +46,14 @@
           <Property Name="StrUrlFtp" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="BitActivo" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="TblCorreosRecepcion">
+          <Key>
+            <PropertyRef Name="StrIdentificacion" />
+          </Key>
+          <Property Name="StrIdentificacion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrMailRegistrado" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="DatFechaRegistro" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="TblDocumentos">
           <Key>
             <PropertyRef Name="StrIdSeguridad" />
@@ -202,6 +210,25 @@
           <Property Name="StrClaseMenu" Type="varchar" MaxLength="100" />
           <Property Name="StrRutaMenu" Type="varchar" MaxLength="100" />
           <Property Name="IntTipo" Type="int" />
+        </EntityType>
+        <EntityType Name="TblOpcionesERP">
+          <Key>
+            <PropertyRef Name="IdOpcion" />
+          </Key>
+          <Property Name="IdOpcion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Aplicacion" Type="int" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="255" />
+          <Property Name="Menu" Type="varchar" MaxLength="50" />
+          <Property Name="Edicion" Type="int" Nullable="false" />
+          <Property Name="control" Type="varchar" MaxLength="50" />
+          <Property Name="OpcionPadre" Type="varchar" MaxLength="50" />
+          <Property Name="IdImagen" Type="int" Nullable="false" />
+          <Property Name="Auditoria" Type="bit" Nullable="false" />
+          <Property Name="IntActual" Type="smallint" Nullable="false" />
+          <Property Name="IntHabAuditoria" Type="smallint" Nullable="false" />
+          <Property Name="StrUrl" Type="varchar" MaxLength="255" />
+          <Property Name="StrClaseCss" Type="varchar" MaxLength="50" />
+          <Property Name="IntTipo" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblOpcionesPerfil">
           <Key>
@@ -555,11 +582,13 @@
         <EntityContainer Name="ModeloStoreContainer">
           <EntitySet Name="TblAlertas" EntityType="Self.TblAlertas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblConfiguracionInteroperabilidad" EntityType="Self.TblConfiguracionInteroperabilidad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblCorreosRecepcion" EntityType="Self.TblCorreosRecepcion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblDocumentos" EntityType="Self.TblDocumentos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresas" EntityType="Self.TblEmpresas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresasResoluciones" EntityType="Self.TblEmpresasResoluciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblFormatos" EntityType="Self.TblFormatos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpciones" EntityType="Self.TblOpciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblOpcionesERP" EntityType="Self.TblOpcionesERP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpcionesPerfil" EntityType="Self.TblOpcionesPerfil" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpcionesUsuario" EntityType="Self.TblOpcionesUsuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblPagosElectronicos" EntityType="Self.TblPagosElectronicos" Schema="dbo" store:Type="Tables" />
@@ -731,6 +760,8 @@
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
           </AssociationSet>
+          <EntitySet Name="TblCorreosRecepcion" EntityType="Modelo.TblCorreosRecepcion" />
+          <EntitySet Name="TblOpcionesERP" EntityType="Modelo.TblOpcionesERP" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1315,6 +1346,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblCorreosRecepcion">
+          <Key>
+            <PropertyRef Name="StrIdentificacion" />
+          </Key>
+          <Property Name="StrIdentificacion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrMailRegistrado" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DatFechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="TblOpcionesERP">
+          <Key>
+            <PropertyRef Name="IdOpcion" />
+          </Key>
+          <Property Name="IdOpcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Aplicacion" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Menu" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Edicion" Type="Int32" Nullable="false" />
+          <Property Name="control" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OpcionPadre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdImagen" Type="Int32" Nullable="false" />
+          <Property Name="Auditoria" Type="Boolean" Nullable="false" />
+          <Property Name="IntActual" Type="Int16" Nullable="false" />
+          <Property Name="IntHabAuditoria" Type="Int16" Nullable="false" />
+          <Property Name="StrUrl" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="StrClaseCss" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntTipo" Type="Int16" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1648,6 +1706,35 @@
                 <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
                 <ScalarProperty Name="StrNumResolucion" ColumnName="StrNumResolucion" />
                 <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblCorreosRecepcion">
+            <EntityTypeMapping TypeName="Modelo.TblCorreosRecepcion">
+              <MappingFragment StoreEntitySet="TblCorreosRecepcion">
+                <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+                <ScalarProperty Name="StrMailRegistrado" ColumnName="StrMailRegistrado" />
+                <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblOpcionesERP">
+            <EntityTypeMapping TypeName="Modelo.TblOpcionesERP">
+              <MappingFragment StoreEntitySet="TblOpcionesERP">
+                <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+                <ScalarProperty Name="StrClaseCss" ColumnName="StrClaseCss" />
+                <ScalarProperty Name="StrUrl" ColumnName="StrUrl" />
+                <ScalarProperty Name="IntHabAuditoria" ColumnName="IntHabAuditoria" />
+                <ScalarProperty Name="IntActual" ColumnName="IntActual" />
+                <ScalarProperty Name="Auditoria" ColumnName="Auditoria" />
+                <ScalarProperty Name="IdImagen" ColumnName="IdImagen" />
+                <ScalarProperty Name="OpcionPadre" ColumnName="OpcionPadre" />
+                <ScalarProperty Name="control" ColumnName="control" />
+                <ScalarProperty Name="Edicion" ColumnName="Edicion" />
+                <ScalarProperty Name="Menu" ColumnName="Menu" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Aplicacion" ColumnName="Aplicacion" />
+                <ScalarProperty Name="IdOpcion" ColumnName="IdOpcion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

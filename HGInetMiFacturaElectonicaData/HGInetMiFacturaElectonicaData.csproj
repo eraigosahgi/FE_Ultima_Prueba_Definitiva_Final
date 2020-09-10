@@ -173,6 +173,9 @@
     <Compile Include="Modelo\TblConfiguracionInteroperabilidad.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblCorreosRecepcion.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblDocumentos.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
@@ -186,6 +189,9 @@
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\TblOpciones.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblOpcionesERP.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\TblOpcionesPerfil.cs">
