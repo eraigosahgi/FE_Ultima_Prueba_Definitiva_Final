@@ -284,6 +284,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2020.4", "v2020.4", "{9348
 		Documentacion\Liberaciones\v2020.4\20200318-TblEmpresas-PdfCamposDian.sql = Documentacion\Liberaciones\v2020.4\20200318-TblEmpresas-PdfCamposDian.sql
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso553356", "Caso553356", "{3EDF24D1-55B1-47A8-976D-06E4C774FFD4}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso553356\TblCorreosRecepcion.sql = Documentacion\Liberaciones\Caso553356\TblCorreosRecepcion.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -454,5 +459,6 @@ Global
 		{BF7BD325-A511-4119-9FE2-1CDD60C12F48} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{B8068B7D-C1D3-4F1A-90D2-132DD573D4AE} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{9348B25B-EF5A-421F-B0F2-F3A213E4DA2F} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{3EDF24D1-55B1-47A8-976D-06E4C774FFD4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal

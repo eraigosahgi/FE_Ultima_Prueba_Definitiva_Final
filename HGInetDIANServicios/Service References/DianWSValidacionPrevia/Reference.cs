@@ -15,6 +15,99 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ExchangeEmailResponse", Namespace="http://schemas.datacontract.org/2004/07/ExchangeEmailResponse")]
+    [System.SerializableAttribute()]
+    public partial class ExchangeEmailResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte[] CsvBase64BytesField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MessageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string StatusCodeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool SuccessField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public byte[] CsvBase64Bytes {
+            get {
+                return this.CsvBase64BytesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CsvBase64BytesField, value) != true)) {
+                    this.CsvBase64BytesField = value;
+                    this.RaisePropertyChanged("CsvBase64Bytes");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Message {
+            get {
+                return this.MessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
+                    this.MessageField = value;
+                    this.RaisePropertyChanged("Message");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string StatusCode {
+            get {
+                return this.StatusCodeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.StatusCodeField, value) != true)) {
+                    this.StatusCodeField = value;
+                    this.RaisePropertyChanged("StatusCode");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Success {
+            get {
+                return this.SuccessField;
+            }
+            set {
+                if ((this.SuccessField.Equals(value) != true)) {
+                    this.SuccessField = value;
+                    this.RaisePropertyChanged("Success");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DianResponse", Namespace="http://schemas.datacontract.org/2004/07/DianResponse")]
     [System.SerializableAttribute()]
     public partial class DianResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
@@ -671,6 +764,12 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
     [System.ServiceModel.ServiceContractAttribute(Namespace="http://wcf.dian.colombia", ConfigurationName="DianWSValidacionPrevia.IWcfDianCustomerServices")]
     public interface IWcfDianCustomerServices {
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmails", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmailsResponse")]
+        HGInetDIANServicios.DianWSValidacionPrevia.ExchangeEmailResponse GetExchangeEmails();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmails", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmailsResponse")]
+        System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.ExchangeEmailResponse> GetExchangeEmailsAsync();
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusResponse")]
         HGInetDIANServicios.DianWSValidacionPrevia.DianResponse GetStatus(string trackId);
         
@@ -753,6 +852,14 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         
         public WcfDianCustomerServicesClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
+        }
+        
+        public HGInetDIANServicios.DianWSValidacionPrevia.ExchangeEmailResponse GetExchangeEmails() {
+            return base.Channel.GetExchangeEmails();
+        }
+        
+        public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.ExchangeEmailResponse> GetExchangeEmailsAsync() {
+            return base.Channel.GetExchangeEmailsAsync();
         }
         
         public HGInetDIANServicios.DianWSValidacionPrevia.DianResponse GetStatus(string trackId) {

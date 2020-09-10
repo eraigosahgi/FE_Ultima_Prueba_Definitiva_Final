@@ -58,6 +58,7 @@
     <Compile Include="Controladores\Ctl_Factura.cs" />
     <Compile Include="Controladores\Ctl_Resolucion.cs" />
     <Compile Include="Controladores_v2\Ctl_ConsultaTransacciones.v2.cs" />
+    <Compile Include="Controladores_v2\Ctl_CorreosRecepcionDoc.cs" />
     <Compile Include="Controladores_v2\Ctl_Factura.v2.cs" />
     <Compile Include="Controladores_v2\Ctl_Resolucion.v2.cs" />
     <Compile Include="Enumerables\EstadoDocumentoDian.cs" />
@@ -122,6 +123,9 @@
     <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.EventResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.ExchangeEmailResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -182,6 +186,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices98.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices99.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

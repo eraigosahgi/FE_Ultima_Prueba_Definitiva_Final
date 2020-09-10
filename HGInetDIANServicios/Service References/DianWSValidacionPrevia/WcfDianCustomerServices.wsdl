@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://wcf.dian.colombia" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="WcfDianCustomerServices" targetNamespace="http://wcf.dian.colombia" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://wcf.dian.colombia" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="WcfDianCustomerServices" targetNamespace="http://wcf.dian.colombia" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsp:Policy wsu:Id="WSHttpBinding_IWcfDianCustomerServices_policy">
     <wsp:ExactlyOne>
       <wsp:All>
@@ -56,15 +56,22 @@
     <xsd:schema targetNamespace="http://wcf.dian.colombia/Imports">
       <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd0" namespace="http://wcf.dian.colombia" />
       <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/DianResponse" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/UploadDocumentResponse" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/EventResponse" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponseList" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponse" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ExchangeEmailResponse" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/DianResponse" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/UploadDocumentResponse" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/EventResponse" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponseList" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponse" />
     </xsd:schema>
   </wsdl:types>
+  <wsdl:message name="IWcfDianCustomerServices_GetExchangeEmails_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetExchangeEmails" />
+  </wsdl:message>
+  <wsdl:message name="IWcfDianCustomerServices_GetExchangeEmails_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetExchangeEmailsResponse" />
+  </wsdl:message>
   <wsdl:message name="IWcfDianCustomerServices_GetStatus_InputMessage">
     <wsdl:part name="parameters" element="tns:GetStatus" />
   </wsdl:message>
@@ -120,6 +127,10 @@
     <wsdl:part name="parameters" element="tns:GetXmlByDocumentKeyResponse" />
   </wsdl:message>
   <wsdl:portType name="IWcfDianCustomerServices">
+    <wsdl:operation name="GetExchangeEmails">
+      <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmails" message="tns:IWcfDianCustomerServices_GetExchangeEmails_InputMessage" />
+      <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmailsResponse" message="tns:IWcfDianCustomerServices_GetExchangeEmails_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="GetStatus">
       <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus" message="tns:IWcfDianCustomerServices_GetStatus_InputMessage" />
       <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusResponse" message="tns:IWcfDianCustomerServices_GetStatus_OutputMessage" />
@@ -160,6 +171,15 @@
   <wsdl:binding name="WSHttpBinding_IWcfDianCustomerServices" type="tns:IWcfDianCustomerServices">
     <wsp:PolicyReference URI="#WSHttpBinding_IWcfDianCustomerServices_policy" />
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetExchangeEmails">
+      <soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetExchangeEmails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetStatus">
       <soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus" style="document" />
       <wsdl:input>
