@@ -103,7 +103,7 @@ namespace HGInetUBLv2_1
 				#region Valor total base no imponible (no generó impuestos)
 				TaxInclusiveAmountType TaxInclusiveAmount = new TaxInclusiveAmountType();
 				TaxInclusiveAmount.currencyID = moneda_documento.ToString();
-				TaxInclusiveAmount.Value = decimal.Round(documento.ValorSubtotal, 2) + decimal.Round(documento.ValorIva, 2) + decimal.Round(documento.ValorImpuestoConsumo, 2);//decimal.Round(subtotal, 2) + decimal.Round(impuesto, 2);//
+				TaxInclusiveAmount.Value = decimal.Round(subtotal, 2) + decimal.Round(impuesto, 2);//decimal.Round(documento.ValorSubtotal, 2) + decimal.Round(documento.ValorIva, 2) + decimal.Round(documento.ValorImpuestoConsumo, 2);//
 				LegalMonetaryTotal.TaxInclusiveAmount = TaxInclusiveAmount;
 				#endregion
 
