@@ -29,6 +29,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		public void ObtenerCorreos()
 		{
+			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
+			MensajeAccion log_accion = MensajeAccion.lectura;
+
 			try
 			{
 				// obtiene los datos de prueba del proveedor tecnológico de la DIAN
@@ -45,30 +48,39 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				string ruta_archivo = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica);
 
 				//obtengo los correos del servicio de la DIAN convierto el el base64 y guardo el archivo
+				log_categoria = MensajeCategoria.ServicioDian;
+				log_accion = MensajeAccion.consulta;
 				ruta_archivo = Ctl_CorreosRecepcionDoc.ObtenerCorreos(ruta_certificado, certificado.Clave, data_dian.UrlServicioWeb, plataforma_datos.RutaDmsFisica);
 
 				DataTable dt = new DataTable();
 
 				//Convierto el archivo en Datatable
+				log_categoria = MensajeCategoria.Convertir;
+				log_accion = MensajeAccion.creacion;
 				dt = ObtenerDatosExcel(ruta_archivo, ',');
 
 				//Elimino la Data de la Tabla
+				log_categoria = MensajeCategoria.BaseDatos;
+				log_accion = MensajeAccion.eliminacion;
 				if (dt.Rows.Count > 0)
 					EliminarData();
-				
+
 				//Lleno la tabla con la nueva informacion
+				log_categoria = MensajeCategoria.BaseDatos;
+				log_accion = MensajeAccion.cargando;
 				Crear(dt);
 
 			}
 			catch (Exception exec)
 			{
+				Ctl_Log.Guardar(exec, log_categoria, MensajeTipo.Error, log_accion);
 				throw new ApplicationException("Error obteniendo correos", exec);
 			}
 		}
 
 
 		/// <summary>
-		/// Sonda para obtener el subtotal de los documentos y actualizarlo en la BD
+		/// Sonda para obtener los correos registrados en la DIAN y actualizarlo en la BD
 		/// </summary>
 		/// <returns></returns>
 		public async Task SondaObtenerCorreosDian()
@@ -100,6 +112,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		public static DataTable ObtenerDatosExcel(string path, char separator)
 		{
+			MensajeCategoria log_categoria = MensajeCategoria.Convertir;
+			MensajeAccion log_accion = MensajeAccion.creacion;
+
 			DataTable dt = new DataTable();
 			dt.Columns.Add("StrIdentificacion");
 			dt.Columns.Add("StrMailRegistrado");
@@ -131,15 +146,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception exec)
 			{
+				Ctl_Log.Guardar(exec, log_categoria, MensajeTipo.Error, log_accion);
 				throw new ApplicationException("Error al  tratar de leer el excel", exec);
 			}
 
 			return dt;
 		}
 
-
+		/// <summary>
+		/// Proceso para llenar la bd desde un datatable
+		/// </summary>
+		/// <param name="dtcorreos"></param>
 		public void Crear(DataTable dtcorreos)
 		{
+			MensajeCategoria log_categoria = MensajeCategoria.BaseDatos;
+			MensajeAccion log_accion = MensajeAccion.creacion;
 			try
 			{
 				
@@ -159,6 +180,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
+				Ctl_Log.Guardar(excepcion, log_categoria, MensajeTipo.Error, log_accion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
@@ -173,6 +195,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		public void EliminarData()
 		{
 			this.DeleteAll("TblCorreosRecepcion");
+		}
+
+		public string Obtener(string identificacion)
+		{
+			string respuesta = string.Empty;
+			var objeto = (from item in context.TblCorreosRecepcion
+				where item.StrIdentificacion.Equals(identificacion)
+				select item).FirstOrDefault();
+
+			if (objeto != null)
+			{
+				respuesta = objeto.StrMailRegistrado;
+			}
+
+			return respuesta;
 		}
 
 

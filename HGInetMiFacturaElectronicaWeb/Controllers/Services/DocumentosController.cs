@@ -393,7 +393,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
 				List<MensajeEnvio> respuesta = null;
 
-				respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "");
+				respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "", ProcesoEstado.EnvioEmailAcuse,"",true);
 
 				if (datos.FirstOrDefault().IntEstadoEnvio == (short)EstadoEnvio.NoEntregado.GetHashCode() || datos.FirstOrDefault().IntEstadoEnvio == (short)EstadoEnvio.Desconocido.GetHashCode())
 				{

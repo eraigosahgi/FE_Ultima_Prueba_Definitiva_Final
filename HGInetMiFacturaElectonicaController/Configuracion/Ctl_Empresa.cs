@@ -1055,6 +1055,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				datos_retorno.EmailAcuse = datos_empresa.StrMailAcuse;
 				datos_retorno.EmailPagos = datos_empresa.StrMailPagos;
 				datos_retorno.VersionDian = datos_empresa.IntVersionDian;
+
+				//Obtiene correo de la tabla que tiene registrado en la DIAN
+				Ctl_ObtenerCorreos correo_dian = new Ctl_ObtenerCorreos();
+				datos_retorno.EmailRecepcionDian = correo_dian.Obtener(datos_empresa.StrIdentificacion);
+
 				return datos_retorno;
 			}
 			catch (Exception excepcion)

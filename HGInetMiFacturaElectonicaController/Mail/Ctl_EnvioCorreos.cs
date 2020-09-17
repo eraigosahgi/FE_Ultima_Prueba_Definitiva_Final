@@ -377,7 +377,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="telefono"></param>
 		/// <param name="nuevo_email">indica el e-mail del destinatario (si es igual a null, se envía a el email de la empresa del adquiriente)</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "", string id_peticion = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "", ProcesoEstado proceso = ProcesoEstado.EnvioEmailAcuse, string nombre_comercial = "")
+		public List<MensajeEnvio> NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "", string id_peticion = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "", ProcesoEstado proceso = ProcesoEstado.EnvioEmailAcuse, string nombre_comercial = "", bool reenvio_documento = false)
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
@@ -473,6 +473,8 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosFactura.DatosObligado.NombreComercial) ? objeto.DatosFactura.DatosObligado.RazonSocial : objeto.DatosFactura.DatosObligado.NombreComercial;
 					}
+
+					telefono = objeto.DatosFactura.DatosObligado.Telefono;
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
@@ -481,6 +483,7 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosNotaCredito.DatosObligado.NombreComercial) ? objeto.DatosNotaCredito.DatosObligado.RazonSocial : objeto.DatosNotaCredito.DatosObligado.NombreComercial;
 					}
+					telefono = objeto.DatosNotaCredito.DatosObligado.Telefono;
 				}
 				else if (tipo_documento == TipoDocumento.NotaDebito)
 				{
@@ -489,6 +492,7 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosNotaDebito.DatosObligado.NombreComercial) ? objeto.DatosNotaDebito.DatosObligado.RazonSocial : objeto.DatosNotaDebito.DatosObligado.NombreComercial;
 					}
+					telefono = objeto.DatosNotaDebito.DatosObligado.Telefono;
 				}
 
 				string asunto = string.Format("{0};{1};{2};{3};{4}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto,nombre_comercial);
@@ -519,15 +523,43 @@ namespace HGInetMiFacturaElectonicaController
 				DestinatarioEmail destinatario = new DestinatarioEmail();
 				destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
 
+				//*********Agregar validacion si el documento es de y para clientes de HGI para que no sobreescriba el correo
+				string correo_registrado = string.Empty;
+				//Se valida si es un documento de produccion para sobrescribir el correo registrado en la DIAN resolucion 042
+				if (empresa_obligado.IntHabilitacion == Habilitacion.Produccion.GetHashCode() && reenvio_documento == false)
+				{
+					//se obtiene correo registrado para enviar el documento a este(Resolucion 042)
+					Ctl_ObtenerCorreos correo_recep = new Ctl_ObtenerCorreos();
+					correo_registrado = correo_recep.Obtener(empresa_adquiriente.StrIdentificacion);
+				}
+
+				
+
 				if (string.IsNullOrWhiteSpace(nuevo_email))
 				{
-					destinatario.Email = empresa_adquiriente.StrMailRecepcion;
+					//Se valida si tiene correo registrado para enviar el documento a este(Resolucion 042)
+					if (!string.IsNullOrEmpty(correo_registrado))
+					{
+						destinatario.Email = correo_registrado;
+					}
+					else
+					{
+						destinatario.Email = empresa_adquiriente.StrMailRecepcion;
+					}
+						
 					correos_destino.Add(destinatario);
 				}
 				else
 				{
 					if (nuevo_email.Contains(";"))
 					{
+						//Se valida si tiene correo registrado para enviar el documento a este(Resolucion 042)
+						if (!string.IsNullOrEmpty(correo_registrado))
+						{
+							destinatario.Email = correo_registrado;
+							correos_destino.Add(destinatario);
+						}
+							
 						foreach (var item_mail in Coleccion.ConvertirLista(nuevo_email, ';'))
 						{
 							// recibe el email el adquiriente
@@ -539,7 +571,15 @@ namespace HGInetMiFacturaElectonicaController
 					}
 					else
 					{
-						destinatario.Email = nuevo_email;
+						//Se valida si tiene correo registrado para enviar el documento a este(Resolucion 042)
+						if (!string.IsNullOrEmpty(correo_registrado))
+						{
+							destinatario.Email = correo_registrado;
+						}
+						else
+						{
+							destinatario.Email = nuevo_email;
+						}
 						correos_destino.Add(destinatario);
 					}
 				}

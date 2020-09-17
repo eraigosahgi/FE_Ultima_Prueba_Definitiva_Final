@@ -16,6 +16,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string EmailRecepcion { get; set; }
 		public string EmailAcuse { get; set; }
 		public string EmailPagos { get; set; }
+		public string EmailRecepcionDian { get; set; }
 		public string Telefono { get; set; }
 		public short HorasAcuseTacito { get; set; }
 		public bool ManejaAnexo { get; set; }
