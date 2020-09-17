@@ -29,8 +29,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			var documento_obj = (dynamic)null;
 			documento_obj = documento;
 
+			//Se deshabilita proceso de envio de bienvenida caso 560400
 			//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
-			try
+			/*try
 			{
 				if (adquiriente_nuevo == true)
 				{
@@ -41,7 +42,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío de la Bienvenida al Adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
-			}
+			}*/
 
 			//Se agrega esto para guardar correctamente el estado en la Auditoria
 			if (respuesta.EstadoDian != null)
