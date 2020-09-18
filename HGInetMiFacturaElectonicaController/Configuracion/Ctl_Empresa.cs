@@ -24,6 +24,7 @@ using LibreriaGlobalHGInet.RegistroLog;
 using System.Web;
 using System.IO;
 using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetFirmaDigital;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -41,9 +42,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 
-		public CertificadoDigital GuardarCertificadoDigital(HttpPostedFile File, System.Guid IdSeguridad, string clave)
+		public CertificadoDigital GuardarCertificadoDigital(HttpPostedFile File, System.Guid IdSeguridad, string clave, int certificadora)
 		{
 			string carpeta_certificado = string.Empty;
+			EnumCertificadoras _certificadora = Enumeracion.GetEnumObjectByValue<EnumCertificadoras>(certificadora);
 
 			try
 			{
@@ -76,8 +78,33 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				//Validamos si el certificado esta correcto con respecto a la clave 
 				X509Certificate2 Certificado = new X509Certificate2(carpeta_certificado, clave);
 				CertificadoDigital Datos = new CertificadoDigital();
+
+				if (Certificado.Issuer.Contains(Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EnumCertificadoras>(certificadora))) == false)
+				{
+					throw new ApplicationException("El certificado a importar no coincide con la empresa certificadora seleccionada");
+				}
+
+				if (certificadora == EnumCertificadoras.Gse.GetHashCode())
+				{
+					List<string> list_subject = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(Certificado.Subject, ',');
+					foreach (string item in list_subject)
+					{
+						if (item.Contains("CN="))
+						{
+							Datos.Propietario = item.Substring(4);
+						}
+
+					}
+				}
+				else
+				{
+					Datos.Propietario = Certificado.FriendlyName;
+				}
+
+				string nombre_cert = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EnumCertificadoras>(certificadora));
+				
+				
 				Datos.Fechavenc = Certificado.NotAfter;
-				Datos.Propietario = Certificado.FriendlyName;
 				Datos.Serial = Certificado.SerialNumber;
 				Datos.Certificadora = Certificado.Issuer;
 				//Elimino el archivo Temporal
@@ -373,7 +400,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						try
 						{
 							//Buscamos la fecha de vencimiento del certificado
-							var datos = ObtenerInfCert(EmpresaActualiza.StrIdSeguridad, empresa.StrCertClave);
+							var datos = ObtenerInfCert(EmpresaActualiza.StrIdSeguridad, empresa.StrCertClave, (int)empresa.IntCertProveedor);
 							EmpresaActualiza.DatCertVence = datos.Fechavenc;
 						}
 						catch (Exception excepcion)
@@ -905,7 +932,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="IdSeguridad">Id de seguridad de la empresa</param>
 		/// <param name="clave">Clave del certificado</param>
 		/// <returns>DatosCertificados con datos del nombre y fecha de vencimiento del certificado </returns>
-		public CertificadoDigital ObtenerInfCert(System.Guid IdSeguridad, string clave)
+		public CertificadoDigital ObtenerInfCert(System.Guid IdSeguridad, string clave, int certificadora)
 		{
 			string carpeta_certificado = string.Empty;
 
@@ -922,9 +949,27 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				CertificadoDigital Datos = new CertificadoDigital();
 
+				//******Se debe agregar la validacion del certificado vs certificadora7
+				if (certificadora == EnumCertificadoras.Gse.GetHashCode())
+				{
+					List<string> list_subject = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(Certificado.Subject, ',');
+					foreach (string item in list_subject)
+					{
+						if (item.Contains("CN="))
+						{
+							Datos.Propietario = item.Substring(4);
+						}
+
+					}
+				}
+				else
+				{
+					Datos.Propietario = Certificado.FriendlyName;
+				}
+
 				Datos.Fechavenc = Certificado.NotAfter;
 
-				Datos.Propietario = Certificado.FriendlyName;
+				//Datos.Propietario = Certificado.FriendlyName;
 
 				Datos.Serial = Certificado.SerialNumber;
 

@@ -32,8 +32,8 @@
 	}
 
 	//Retorna információn del certificado
-	this.ObtenerInfCert = function (IdSeguridad, Clave) {
-		return $http.get('/api/ObtenerInfCert?IdSeguridad=' + IdSeguridad + '&Clave=' + Clave).then(function (response) {
+	this.ObtenerInfCert = function (IdSeguridad, Clave, Datos_proveedores) {
+		return $http.get('/api/ObtenerInfCert?IdSeguridad=' + IdSeguridad + '&Clave=' + Clave + "&Certificadora=" + Datos_proveedores).then(function (response) {
 			return response.data;
 		}, function (response) {
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);

@@ -28,7 +28,7 @@ namespace HGInetFirmaDigital
 		/// http://www.gse.com.co
 		/// </summary>
 		[Description("GSE")]
-		[AmbientValue("privado")]
+		[AmbientValue("publico")]
 		[Category("1")]
 		Gse = 1,
 

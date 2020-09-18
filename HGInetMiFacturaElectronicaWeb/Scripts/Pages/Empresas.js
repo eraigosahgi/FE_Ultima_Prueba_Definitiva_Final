@@ -76,7 +76,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				DevExpress.ui.notify("Debe ingresar la contraseña del certificado", 'error', 3000);
 				return false;
 			}
-			SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+			SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert, Datos_proveedores).then(function (data) {
 				Datos_FechaCert = data.FechaVencimiento;
 				$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
 				showInfo(data);
@@ -903,10 +903,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		$("#Certificado").dxFileUploader({
 			multiple: false,
-			allowedFileExtensions: [".pfx"],
+			allowedFileExtensions: [".pfx", ".p12"],
 			uploadMode: "instantly",
 			readyToUploadMessage: "Certificado Digital subido exitosamente",
-			uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert,
+			uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert + "&Certificadora=" + Datos_proveedores,
 			//onValueChanged: function (e) {
 			//	console.log(e);
 			//	var files = e.value;
@@ -947,13 +947,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_ClaveCert = data.value;
 				$("#Certificado").dxFileUploader({
 					multiple: false,
-					allowedFileExtensions: [".pfx"],
+					allowedFileExtensions: [".pfx", ".p12"],
 					uploadMode: "instantly",
 					selectButtonText: "Seleccione el Certificado Digital",
 					uploadedMessage: "Certificado guardado exitosamente",
-					uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert,
+					uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert + "&Certificadora=" + Datos_proveedores,
 					onUploaded: function (e) {
-						SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+						SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert, Datos_proveedores).then(function (data) {
 							Datos_FechaCert = data.FechaVencimiento;
 							$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
 							showInfo(data);
@@ -1366,7 +1366,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					if (Datos_ClaveCert != undefined && Datos_ClaveCert != "") {
 						//Si es administrador, validamos si la clave del certificado es correcta
 						if (Datos_proveedores != undefined && Datos_proveedores != "") {
-							SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert).then(function (data) {
+							SrvEmpresas.ObtenerInfCert(id_seguridad, Datos_ClaveCert, Datos_proveedores).then(function (data) {
 								//Si la clave es correcta, habilitamos el viaje del formulario al servidor
 								$("#button").dxButton({ useSubmitBehavior: true });
 								$("#button").click();

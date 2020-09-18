@@ -38,7 +38,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns>Indica si se guardo con exito</returns>
 		[HttpPost]
 		[Route("api/SubirArchivo")]
-		public IHttpActionResult SubirArchivo(System.Guid StrIdSeguridad,string Clave)
+		public IHttpActionResult SubirArchivo(System.Guid StrIdSeguridad,string Clave, int Certificadora)
 		{
 			try
 			{
@@ -52,7 +52,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (file != null && file.ContentLength > 0)
 				{
 					Ctl_Empresa Controlador = new Ctl_Empresa();
-					datos =Controlador.GuardarCertificadoDigital(file, StrIdSeguridad, Clave);
+					datos =Controlador.GuardarCertificadoDigital(file, StrIdSeguridad, Clave, Certificadora);
 				}
 
 				var Resultado = new { Descripcion = datos.Propietario, FechaVencimiento = Convert.ToDateTime(datos.Fechavenc).ToString(Fecha.formato_fecha_hginet), Serial = datos.Serial, Emisor = datos.Certificadora };
@@ -286,7 +286,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("api/ObtenerInfCert")]
-		public IHttpActionResult ObtenerInfCert(System.Guid IdSeguridad, string Clave)// "Shh4DshyVN"
+		public IHttpActionResult ObtenerInfCert(System.Guid IdSeguridad, string Clave, int Certificadora)// "Shh4DshyVN"
 		{
 			try
 			{
@@ -294,7 +294,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
 
-				var datos = ctl_empresa.ObtenerInfCert(IdSeguridad, Clave);
+				var datos = ctl_empresa.ObtenerInfCert(IdSeguridad, Clave, Certificadora);
 
 				if (datos == null)
 				{
