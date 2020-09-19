@@ -974,7 +974,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					}
 					,
 					onUploadError: function (e) {
-						DevExpress.ui.notify("Error al guardar el certificado, verifique la clave", 'error', 6000);
+						console.log(e.request.response);
+						DevExpress.ui.notify(e.request.response.ExceptionMessage, 'error', 6000);
 					}
 				});
 				//Si se coloco una clave en el certificado, entonces 

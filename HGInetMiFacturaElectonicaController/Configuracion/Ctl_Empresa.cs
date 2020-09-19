@@ -100,8 +100,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					Datos.Propietario = Certificado.FriendlyName;
 				}
-
-				string nombre_cert = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EnumCertificadoras>(certificadora));
 				
 				
 				Datos.Fechavenc = Certificado.NotAfter;
@@ -117,7 +115,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Certificado = new X509Certificate2(carpeta_certificado, clave);
 				Datos = new CertificadoDigital();
 				Datos.Fechavenc = Certificado.NotAfter;
-				Datos.Propietario = Certificado.FriendlyName;
+				if (certificadora == EnumCertificadoras.Gse.GetHashCode())
+				{
+					List<string> list_subject = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(Certificado.Subject, ',');
+					foreach (string item in list_subject)
+					{
+						if (item.Contains("CN="))
+						{
+							Datos.Propietario = item.Substring(4);
+						}
+
+					}
+				}
+				else
+				{
+					Datos.Propietario = Certificado.FriendlyName;
+				}
 				Datos.Serial = Certificado.SerialNumber;
 				Datos.Certificadora = Certificado.Issuer;
 				//Retornamos los datos para mostrarlos al usuario
