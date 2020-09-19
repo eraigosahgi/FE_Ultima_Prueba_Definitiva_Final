@@ -33,15 +33,16 @@
 			<div data-ng-repeat="datos in FormatosPdfEmpresa | filter:filtrar">
 				<div class=" col-sm-6 col-md-2" id="{{datos.CodigoFormato}}">
 					<div class="panel" data-ng-class="ClasePanel(datos.Estado)" id="{{datos.ClavePrimaria}}">
-						<div class="panel-heading">
-							<h6 class="panel-title">{{datos.Titulo}}</h6>
-							<i>({{datos.EstadoDescripcion}})</i>
+						<div class="panel-heading text-center">
+							<label style="font-size: medium;">{{datos.Titulo}}</label><br />
+							<label title="({{datos.EstadoDescripcion}})" style="font-size: smaller; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+								({{datos.EstadoDescripcion}})</label>
 						</div>
 
-						<div class="panel-body">
+						<div style="margin: 5%; height: 250px;">
 
 							<div style="margin-bottom: 1%;">
-								<img src="../../Scripts/Images/FormatoPDF.png" class="img-responsive" style="width: 60%; display: block; margin-left: auto; margin-right: auto;" />
+								<img src="../../Scripts/Images/FormatoPDF.png" class="img-responsive" style="width: 40%; display: block; margin-left: auto; margin-right: auto;" />
 							</div>
 							<div style="margin-top: 13%">
 								<label class="no-margin text-size-large text-semibold">Código: </label>
@@ -52,35 +53,35 @@
 								<label class="no-margin text-size-large text-semibold">Fecha Creación: </label>
 								<label class="no-margin text-size-large">{{datos.FechaRegistro}}</label>
 							</div>
-							<div class="text-right" style="margin-top: 10%">
-
-								<ul class="nav nav-tabs nav-tabs-bottom">
-									<li class="dropdown">
-										<a href="#" class="dropdown-toggle legitRipple" data-toggle="dropdown" aria-expanded="false">
-											<i class="icon-cog5"></i>
-											<span class="position-right">Opciones</span>
-											<span class="caret"></span>
-										</a>
-										<ul class="dropdown-menu dropdown-menu-right" style="background-color: #fcfcfc">
-											<li><a data-ng-click="AbrirModal(datos.CodigoFormato, datos.NitEmpresa)" data-ng-class="OpcionAsignar(datos.Estado)"><i class="icon-file-plus2"></i>Asignar Formato</a></li>
-											<li><a data-ng-click="BtnEditar(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionEditar(datos.Generico)"><i class="icon-pencil4"></i>Editar Formato</a></li>
-											<li>
-												<a id="BtnEstado{{datos.ClavePrimaria}}" data-ng-click="BtnCambioEstado(datos.Estado,datos.NitEmpresa,datos.CodigoFormato)" data-ng-class="OpcionCambioEstado(datos.Estado)">
-													<i class="icon-lock5" data-ng-class="{'icon-unlocked2': datos.Estado}"></i>Cambiar Estado
-												</a>
-											</li>
-											<li><a data-ng-click="SolicitarAprobacion(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="{'ng-hide': datos.Estado != 2}"><i class="icon-checkmark4"></i>Solicitar aprobación</a></li>
-											<li><a data-ng-click="AprobarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionAprobar(datos.Estado,datos.Administrador)"><i class="icon-file-check2"></i>Aprobar Diseño</a></li>
-											<li><a data-ng-click="PublicarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionPublicar(datos.Estado)"><i class="icon-upload7"></i>Publicar Diseño</a></li>
-											<li><a data-ng-click="MailPrueba(datos.CodigoFormato,datos.NitEmpresa)"><i class="icon-mail-read"></i>Envíar Prueba</a></li>
-											<li><a data-ng-click="VerAuditoria(datos.CodigoFormato,datos.NitEmpresa)"><i class="icon-file-eye"></i>Auditoría</a></li>
-										</ul>
-									</li>
-								</ul>
-							</div>
 						</div>
 
+						<div class="text-right" style="margin-top: 1%">
 
+							<ul class="nav nav-tabs nav-tabs-bottom">
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle legitRipple" data-toggle="dropdown" aria-expanded="false">
+										<i class="icon-cog5"></i>
+										<span class="position-right">Opciones</span>
+										<span class="caret"></span>
+									</a>
+									<ul class="dropdown-menu dropdown-menu-right" style="background-color: #fcfcfc">
+										<li><a data-ng-click="AbrirModal(datos.CodigoFormato, datos.NitEmpresa)" data-ng-class="OpcionAsignar(datos.Estado)"><i class="icon-file-plus2"></i>Asignar Formato</a></li>
+										<li><a data-ng-click="BtnEditar(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionEditar(datos.Generico)"><i class="icon-pencil4"></i>Editar Formato</a></li>
+										<li>
+											<a id="BtnEstado{{datos.ClavePrimaria}}" data-ng-click="BtnCambioEstado(datos.Estado,datos.NitEmpresa,datos.CodigoFormato)" data-ng-class="OpcionCambioEstado(datos.Estado)">
+												<i class="icon-lock5" data-ng-class="{'icon-unlocked2': datos.Estado}"></i>Cambiar Estado
+											</a>
+										</li>
+										<li><a data-ng-click="SolicitarAprobacion(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="{'ng-hide': datos.Estado != 2}"><i class="icon-checkmark4"></i>Solicitar aprobación</a></li>
+										<li><a data-ng-click="AprobarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionAprobar(datos.Estado,datos.Administrador)"><i class="icon-file-check2"></i>Aprobar Diseño</a></li>
+										<li><a data-ng-click="PublicarFormato(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionPublicar(datos.Estado)"><i class="icon-upload7"></i>Publicar Diseño</a></li>
+										<li><a data-ng-click="MailPrueba(datos.CodigoFormato,datos.NitEmpresa)"><i class="icon-mail-read"></i>Envíar Prueba</a></li>
+										<li><a data-ng-click="VerAuditoria(datos.CodigoFormato,datos.NitEmpresa)"><i class="icon-file-eye"></i>Auditoría</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					
 					</div>
 				</div>
 			</div>

@@ -29,21 +29,29 @@ using System.Xml.Serialization;
 
 namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 {
-	public partial class ReportDesignerWeb : PaginaContenido
+	public partial class ReportDesignerWeb : System.Web.UI.Page//PaginaContenido
 	{
-		protected void Page_Init(object sender, EventArgs e)
+		/*protected void Page_Init(object sender, EventArgs e)
 		{
 			this.RutaRedireccionAlerta = "../Pages/Inicio.aspx";
 			this.CodigoOpcion = OpcionesPermisos.GestionReportes;
 			this.ProcesoPagina = OperacionesBD.IntEditar;
-		}
+		}*/
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			try
 			{
+				((Label)Master.FindControl("lb_TituloPagina")).Text = "Gestión Formatos";
+				((Label)Master.FindControl("lb_GrupoPagina")).Text = "Factura Electrónica / Configuración";
+
+				string id_usuario = HiddenFieldIdUsuario.Value;
+
+				if (string.IsNullOrWhiteSpace(id_usuario))
+					HiddenFieldIdUsuario.Value = Sesion.DatosUsuario.StrIdSeguridad.ToString();
+
 				SerializeReport clase_serialize = new SerializeReport();
 
-				base.Page_Load(sender, e);
+				//base.Page_Load(sender, e);
 				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
 				XtraReportDesigner report = new XtraReportDesigner();
@@ -95,7 +103,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 			}
 			catch (Exception excepcion)
 			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				ASPxReportDesignerWeb.Visible = false;
+				Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "CargarAlerta('" + excepcion.Message + "')", true);
+				//throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
 
@@ -116,13 +126,16 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 					int codigo_formato = Convert.ToInt32(Request.QueryString["ID"]);
 					string cod_empresa = Request.QueryString["Nit"].ToString();
 
-					TblFormatos respuesta = clase_formatos.ActualizarFormato(codigo_formato, cod_empresa, byte_formato, TipoFormato.FormatoPDF.GetHashCode(), Sesion.DatosUsuario.StrIdSeguridad);
+					Guid id_usuario = Guid.Parse(HiddenFieldIdUsuario.Value);
+
+					TblFormatos respuesta = clase_formatos.ActualizarFormato(codigo_formato, cod_empresa, byte_formato, TipoFormato.FormatoPDF.GetHashCode(), id_usuario);
 
 					if (respuesta != null)
 					{
 						string mensaje = string.Format("El formato Número {0} ha sido actualizado correctamente.", respuesta.IntCodigoFormato);
 
 						ASPxReportDesignerWeb.JSProperties["cpTextoBtnNotificacion"] = "Salir";
+						ASPxReportDesignerWeb.JSProperties["cpCargaContinuarEdicion"] = true;
 						ASPxReportDesignerWeb.JSProperties["cpMensajeNotificacion"] = mensaje;
 						ASPxReportDesignerWeb.JSProperties["cpTituloNotificacion"] = "¡ Proceso éxitoso !";
 					}
@@ -130,6 +143,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 			}
 			catch (Exception excepcion)
 			{
+				ASPxReportDesignerWeb.JSProperties["cpCargaContinuarEdicion"] = false;
 				ASPxReportDesignerWeb.JSProperties["cpTextoBtnNotificacion"] = "Aceptar";
 				ASPxReportDesignerWeb.JSProperties["cpMensajeNotificacion"] = excepcion.Message;
 				ASPxReportDesignerWeb.JSProperties["cpTituloNotificacion"] = "¡ Error !";

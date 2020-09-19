@@ -16,5 +16,8 @@
 		ClientSideEvents-CustomizeMenuActions="reportDesigner_CustomizeMenuActions" DisableHttpHandlerValidation="False" ClientSideEvents-SaveCommandExecute="reportDesigner_SaveCommandExecute"
 		ShouldDisposeDataSources="true" OnSaveReportLayout="ASPxReportDesignerWeb_SaveReportLayout" ClientSideEvents-EndCallback="reportDesigner_EndCallback">
 	</dx:ASPxReportDesigner>
+
+	<asp:HiddenField ID="HiddenFieldIdUsuario" runat="server" />
+
 </asp:Content>
 

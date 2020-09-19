@@ -495,6 +495,20 @@ function reportDesigner_SaveCommandExecute(s, e) {
 	isReportSavingCallback = true;
 }
 
+function CargarAlerta(mensaje) {
+	swal({
+		title: 'Notificación',
+		text: mensaje,
+		type: 'warning',
+		confirmButtonColor: '#FF5722',
+		confirmButtonText: 'Aceptar',
+		animation: 'pop',
+		html: true,
+	}, function () {
+		window.location = "/Views/Pages/GestionReportes.aspx";
+	});
+}
+
 function reportDesigner_EndCallback(s, e) {
 
 	if (isReportSavingCallback) {
@@ -510,6 +524,12 @@ function reportDesigner_EndCallback(s, e) {
 				text: s.cpTextoBtnNotificacion,
 				onClick: function (e) {
 					window.location.href = '/Views/Pages/GestionReportes.aspx';
+				}
+			}, {
+				text: 'Continuar Edición',
+				visible: s.cpCargaContinuarEdicion,
+				onClick: function (e) {
+					myDialog.hide();
 				}
 			}
 			]

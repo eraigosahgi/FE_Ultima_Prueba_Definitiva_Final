@@ -20,5 +20,14 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::DevExpress.XtraReports.Web.ASPxReportDesigner ASPxReportDesignerWeb;
+        
+        /// <summary>
+        /// Control HiddenFieldIdUsuario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HiddenFieldIdUsuario;
     }
 }
