@@ -974,8 +974,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					}
 					,
 					onUploadError: function (e) {
-						console.log(e.request.response);
-						DevExpress.ui.notify(e.request.response.ExceptionMessage, 'error', 6000);
+						var datos = JSON.parse(e.request.response);						
+						DevExpress.ui.notify(datos.ExceptionMessage, 'error', 6000);
 					}
 				});
 				//Si se coloco una clave en el certificado, entonces 
