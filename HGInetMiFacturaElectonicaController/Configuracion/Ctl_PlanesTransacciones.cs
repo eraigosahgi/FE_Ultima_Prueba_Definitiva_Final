@@ -370,6 +370,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public List<ObjPlanEnProceso> ObtenerPlanesActivos(string identificacion, int cantidaddoc)
 		{
+			context.Configuration.LazyLoadingEnabled = false;
 
 			int Estado = EstadoPlan.Habilitado.GetHashCode();
 			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();

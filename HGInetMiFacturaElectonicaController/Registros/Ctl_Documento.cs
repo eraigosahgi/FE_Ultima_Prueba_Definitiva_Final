@@ -125,10 +125,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			try
 			{
+
+				context.Configuration.LazyLoadingEnabled = false;
+
 				TblDocumentos documento = new TblDocumentos();
 
 
-				documento = (from documentos in context.TblDocumentos
+				documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
 							 where (documentos.IntNumero == numero_documeto)
 							 && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
 							 && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
@@ -228,7 +231,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Convierte CodigoRegistros en una lista.
 				List<string> lista_documentos = Coleccion.ConvertirLista(CodigosRegistros);
 
-				var respuesta = from documento in context.TblDocumentos
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var respuesta = from documento in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
 								join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
 								where empresa.StrIdentificacion.Equals(identificacion_obligado)
 								&& documento.IntDocTipo == tipo_documento
@@ -276,7 +281,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
 
-				var respuesta = from documento in context.TblDocumentos
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var respuesta = from documento in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
 								join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
 								where empresa.StrIdentificacion.Equals(identificacion_obligado)
 								 && documento.IntDocTipo == tipo_documento

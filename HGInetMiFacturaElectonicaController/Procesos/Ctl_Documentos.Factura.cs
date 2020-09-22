@@ -122,7 +122,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					else
 					{
-						lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*");
+						lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*", false);
 						foreach (var item in documentos)
 						{
 							item.DatosAdquiriente.Email = facturador_electronico.StrMailAdmin;
@@ -133,7 +133,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
-					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*");
+					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*",false);
 
 
 					List<string> resoluciones_docs = documentos.Select(_res => _res.NumeroResolucion).Distinct().ToList();
