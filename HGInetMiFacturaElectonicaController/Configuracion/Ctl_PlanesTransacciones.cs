@@ -220,6 +220,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public List<TblPlanesTransacciones> ObtenerPlanesAmin(string Identificacion, string TipoPlan, string Estado, int TipoFecha, DateTime FechaInicio, DateTime FechaFin)
 		{
+
+			//context.Configuration.LazyLoadingEnabled = false;
+
 			List<TblPlanesTransacciones> datos_plan = new List<TblPlanesTransacciones>();
 
 			//Ctl_Empresa Controlador = new Ctl_Empresa();
@@ -288,6 +291,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public IEnumerable<string> FacturadoresAsociadosPlan(string Stridentificacion)
 		{
+			context.Configuration.LazyLoadingEnabled = false;
+
 			var ListaFacturadores = (from lista in context.TblEmpresas
 									 where lista.StrEmpresaAsociada.Equals(
 										 (from datos in context.TblEmpresas
@@ -305,6 +310,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public List<TblEmpresas> FacturadoresBolsa(string Stridentificacion)
 		{
+
+			context.Configuration.LazyLoadingEnabled = false;
+
 			var ListaFacturadores = (from lista in context.TblEmpresas
 									 where lista.StrEmpresaAsociada.Equals(
 										 (from datos in context.TblEmpresas
@@ -338,6 +346,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblPlanesTransacciones ObtenerIdSeguridad(System.Guid id_seguridad)
 		{
+
+			context.Configuration.LazyLoadingEnabled = false;
+
 			TblPlanesTransacciones datos_plan = (from plan in context.TblPlanesTransacciones
 												 where plan.StrIdSeguridad.Equals(id_seguridad)
 												 select plan).FirstOrDefault();
@@ -353,7 +364,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public List<TblPlanesTransacciones> Obtener(System.Guid StrIdSeguridad)
 		{
-			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones
+
+			context.Configuration.LazyLoadingEnabled = false;
+
+			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones.Include("TblEmpresas")
 													   where t.StrIdSeguridad.Equals(StrIdSeguridad)
 													   select t).ToList();
 
@@ -457,6 +471,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public dynamic obtenerSaldoDisponibles(string identificacion)
 		{
+			context.Configuration.LazyLoadingEnabled = false;
 
 			int tipoplan = (int)TipoCompra.PostPago.GetHashCode();
 			int estadoplan = (int)EstadoPlan.Habilitado.GetHashCode();
@@ -491,7 +506,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			if (Plan == null)
 			{
-				var PlanesPostPago = (from planes in context.TblPlanesTransacciones
+				var PlanesPostPago = (from planes in context.TblPlanesTransacciones.Include("TblEmpresas")
 									  where planes.IntTipoProceso == tipoplan && planes.IntEstado == estadoplan
 									  && planes.StrEmpresaFacturador.Equals(identificacion)
 									  group planes by new { planes.StrEmpresaFacturador } into saldo_Facturador
@@ -525,6 +540,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblPlanesTransacciones Enproceso(Guid idseguridad, int cantdocprocesar)
 		{
+			context.Configuration.LazyLoadingEnabled = false;
 
 			TblPlanesTransacciones PlanesTransacciones = (from t in context.TblPlanesTransacciones
 														  where t.StrIdSeguridad.Equals(idseguridad)
@@ -545,6 +561,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblPlanesTransacciones ConciliarPlanProceso(ObjPlanEnProceso planenproceso)
 		{
+
+			context.Configuration.LazyLoadingEnabled = false;
+
 			TblPlanesTransacciones PlanesTransacciones = (from t in context.TblPlanesTransacciones
 														  where t.StrIdSeguridad.Equals(planenproceso.plan)
 														  select t).FirstOrDefault();
