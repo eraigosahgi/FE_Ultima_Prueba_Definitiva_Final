@@ -303,7 +303,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 							else
 								options.data.Xml = "#";
 
-							if (options.data.EstadoAcuse == 'Aprobado' || options.data.EstadoAcuse == 'Rechazado' || options.data.EstadoAcuse == 'Aprobado Tácito')
+							if (options.data.EstadoAcuse == 1 || options.data.EstadoAcuse == 2 || options.data.EstadoAcuse == 3)
 								visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
 							else
 								visible_acuse = "#";
@@ -341,7 +341,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					dataField: "DatFechaIngreso",
 					dataType: "date",
 					format: "yyyy-MM-dd HH:mm:ss",
-					
+
 				},
 					{
 						caption: "Fecha Documento",
@@ -410,6 +410,11 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					   	dataField: "EstadoCategoria",
 					   	caption: "Estado",
 					   	cssClass: "hidden-xs col-md-1",
+					   	lookup: {
+					   		dataSource: CategoriaEstado,
+					   		displayExpr: "Name",
+					   		valueExpr: "ID"
+					   	},
 					   	cellTemplate: function (container, options) {
 
 					   		$("<div>")
@@ -422,6 +427,12 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  	caption: "Proceso",
 					  	visible: false,
 					  	dataField: "EstadoFactura",
+					  	lookup: {
+					  		dataSource: ProcesoEstado,
+					  		displayExpr: "Name",
+					  		valueExpr: "ID"
+					  	},
+					  	
 					  },
 
 					  {
@@ -429,6 +440,11 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  	visible: false,
 					  	dataField: "EstadoAcuse",
 					  	cssClass: "hidden-xs col-md-1",
+					  	lookup: {
+					  		dataSource: AdquirienteRecibo,
+					  		displayExpr: "Name",
+					  		valueExpr: "ID"
+					  	},
 					  	cellTemplate: function (container, options) {
 
 					  		$("<div>")
@@ -444,6 +460,11 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					{
 						caption: "Estado Email",
 						dataField: "EstadoEnvioMail",
+						lookup: {
+							dataSource: EstadoEnvio,
+							displayExpr: "Name",
+							valueExpr: "ID"
+						},
 						cellTemplate: function (container, options) {
 
 							$("<a>")

@@ -107,9 +107,9 @@
 
 	<!-- JS Localización -->
 	<%--<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>--%>
-	<script src="../../Scripts/WebConfig.js?vjs2020401"></script>
-	<script src="../../Scripts/config.js?vjs2020401"></script>
-	<script src="../../Scripts/Services/Loading.js?vjs2020401"></script>
+	<script src="../../Scripts/WebConfig.js?vjs20200921"></script>
+	<script src="../../Scripts/config.js?vjs20200921"></script>
+	<script src="../../Scripts/Services/Loading.js?vjs20200921"></script>
 
 	<style>
 		.swal-button {
@@ -127,7 +127,7 @@
 			background-color: white;
 		}
 	</style>
-	<link href="../../Content/dx.hgi.css?vjs2020401" rel="stylesheet" />
+	<link href="../../Content/dx.hgi.css?vjs20200921" rel="stylesheet" />
 	<script>
 
 		$(document).ready(function () {

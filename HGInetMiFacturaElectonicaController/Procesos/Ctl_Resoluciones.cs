@@ -38,7 +38,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			Ctl_Empresa Peticion = new Ctl_Empresa();
 
 			//obtiene los datos de la empresa
-			TblEmpresas facturador_electronico = Peticion.Obtener(identificacion_obligado);
+			TblEmpresas facturador_electronico = Peticion.Obtener(identificacion_obligado, false);
 
 			List<TblEmpresasResoluciones> resoluciones_bd = null;
 
@@ -50,7 +50,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				//obtiene las Resoluciones del facturador y las actualiza para que no permita la recepcion de documento
 				Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
-				resoluciones_bd = empresa_resolucion.ObtenerResoluciones(identificacion_obligado, "*");
+				resoluciones_bd = empresa_resolucion.ObtenerResoluciones(identificacion_obligado, "*", false);
 			}
 
 			if (resoluciones_bd != null)
@@ -85,7 +85,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			//obtiene los datos de la empresa 
 			Ctl_Empresa Peticion = new Ctl_Empresa();
-			TblEmpresas facturador_electronico = Peticion.Obtener(obligado);
+			TblEmpresas facturador_electronico = Peticion.Obtener(obligado, false);
 
 			List<Resolucion> resoluciones_respuesta = new List<Resolucion>();
 

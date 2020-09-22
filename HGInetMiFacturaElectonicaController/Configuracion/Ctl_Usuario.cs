@@ -243,6 +243,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
+				context.Configuration.LazyLoadingEnabled = false;
+
 				TblUsuarios usuario = (from item in context.TblUsuarios
 									   where item.StrIdSeguridad == Idseguridad
 									   && item.StrEmpresa.Equals(Empresa)

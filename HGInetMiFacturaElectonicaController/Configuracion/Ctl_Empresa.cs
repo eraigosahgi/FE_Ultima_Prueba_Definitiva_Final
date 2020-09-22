@@ -100,8 +100,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					Datos.Propietario = Certificado.FriendlyName;
 				}
-				
-				
+
+
 				Datos.Fechavenc = Certificado.NotAfter;
 				Datos.Serial = Certificado.SerialNumber;
 				Datos.Certificadora = Certificado.Issuer;
@@ -167,7 +167,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				//Validación debug versión 1
 				//Fecha.GetFecha()
-				if (Fecha.GetFecha() > Convert.ToDateTime("2019-12-02 00:00") && (datos.IntVersionDian==1 && datos.IntDebug != true))
+				if (Fecha.GetFecha() > Convert.ToDateTime("2019-12-02 00:00") && (datos.IntVersionDian == 1 && datos.IntDebug != true))
 				{
 					throw new ApplicationException(string.Format("Según la normatividad, el documento debe enviarse a la DIAN por la plataforma de validación previa, por favor verifique su habilitación en la plataforma"));
 				}
@@ -203,13 +203,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		}
 
+
+
+
+
 		/// <summary>
 		/// Obtiene empresa con la identificacion
 		/// </summary>
 		/// <param name="identificacion">Identificacion de Obligado o Adquiriente</param>
 		/// <returns></returns>
-		public TblEmpresas Obtener(string identificacion)
+		public TblEmpresas Obtener(string identificacion, bool LazyLoading = true)
 		{
+
+			context.Configuration.LazyLoadingEnabled = LazyLoading;
 
 			var datos = (from item in context.TblEmpresas
 						 where item.StrIdentificacion.Equals(identificacion)
@@ -1165,15 +1171,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Obtiene las Primeras 20 empresas
 		/// </summary>        
 		/// <returns></returns>
-		public List<ObjEmpresa> Pag_ObtenerEmpresas(int Desde, int Hasta,int Tipo)
+		public List<ObjEmpresa> Pag_ObtenerEmpresas(int Desde, int Hasta, int Tipo)
 		{
 
 			bool Obligado = false;
 			string strObligado = "";
-			bool Adquiriente=false;
+			bool Adquiriente = false;
 			string StrAdquiriente = "";
 			//Facturador
-			if (Tipo ==0)
+			if (Tipo == 0)
 			{
 				Obligado = true;
 				StrAdquiriente = "*";
@@ -1182,17 +1188,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			if (Tipo == 1)
 			{
 				Adquiriente = true;
-				strObligado = "*";				
+				strObligado = "*";
 			}
 			//Todos
 			if (Tipo == 2)
-			{				
+			{
 				strObligado = "*";
 				StrAdquiriente = "*";
 			}
 
 			List<ObjEmpresa> datos = (from d in context.TblEmpresas
-									  where (d.IntObligado== Obligado || strObligado.Equals("*"))
+									  where (d.IntObligado == Obligado || strObligado.Equals("*"))
 									  && (d.IntAdquiriente == Adquiriente || StrAdquiriente.Equals("*"))
 									  select new ObjEmpresa
 									  {

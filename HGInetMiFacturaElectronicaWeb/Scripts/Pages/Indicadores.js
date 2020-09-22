@@ -28,7 +28,10 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 	var CodCompra = "";
 	var estado = "";
-	CargarIndicadores();
+
+	//Se comenta indicadores  por problemas de rendimiento de la plataforma 2020-09-21
+	//CargarIndicadores(); 
+
 	//Botón de consulta de indicadores
 	$("#BtnFiltroIndicadores").dxButton({
 		text: "Consultar",

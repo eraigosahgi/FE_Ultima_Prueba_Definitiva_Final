@@ -7,15 +7,20 @@ var CantidadRegUsuarios = 2000;
 
 
 function ColocarEstado(Estado, Descripcion) {
+
+	Descripcion = GetDescripcionEnum(CategoriaEstado, Estado);
 	return "<span " + ((Estado == '400') ? " class='badge badge-FallidoDIAN'  title='" + Descripcion + "'" : (Estado == '300') ? " class='badge badge-ValidadoDIAN'  title='" + Descripcion + "'" : (Estado == '200') ? " class='badge badge-envioDian'   title='" + Descripcion + "'" : " class='badge badge-RecibidoPlataforma'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
 }
 
 function ColocarEstadoAcuse(Estado, Descripcion) {
+	Descripcion = GetDescripcionEnum(AdquirienteRecibo, Estado);
 	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Entregado'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Bloqueado'   title='" + Descripcion + "'" : " class='badge badge-Entregado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
 }
 
 
-function ColocarEstadoEmail(Estado, Descripcion, DescEstado,IdSeguridad) {
+function ColocarEstadoEmail(Estado, Descripcion, DescEstado, IdSeguridad) {
+	Descripcion = GetDescripcionEnum(EstadoEnvio, Estado);
+	DescEstado = GetDescripcionEnum(MensajeEstado, Estado);
 	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Bloqueado'  title='" + Descripcion + "'" : " class='badge badge-Entregado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;' target='_blank' data-toggle='modal' data-target='#modal_audit_documento' onClick=AuditoriaMail('" + IdSeguridad + "')>" + DescEstado + "</span>"
 }
 
@@ -435,8 +440,8 @@ var CrearGraficoBarraFecha = function (container, options) {
 
 
 ///*******************************************MasterDetail de los grid
-function ObtenerDetallle(PDF, XML, EstadoAcuse, RutaAcuse, XMLACUSE, ZIP, RutaDIAN,StrIdSeguridad ,StrEmpresaFacturador ,NumeroDocumento,Tipo) {
-	
+function ObtenerDetallle(PDF, XML, EstadoAcuse, RutaAcuse, XMLACUSE, ZIP, RutaDIAN, StrIdSeguridad, StrEmpresaFacturador, NumeroDocumento, Tipo) {
+
 	var visible_zip = "";
 
 	var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
@@ -459,12 +464,12 @@ function ObtenerDetallle(PDF, XML, EstadoAcuse, RutaAcuse, XMLACUSE, ZIP, RutaDI
 	else
 		visible_xml = "#";
 
-	if (EstadoAcuse == 'Aprobado' || EstadoAcuse == 'Rechazado' || EstadoAcuse == 'Aprobado Tácito')
+	if (EstadoAcuse == 1 || EstadoAcuse == 2 || EstadoAcuse == 3)
 		visible_acuse = "href='" + RutaAcuse + "' class='icon-file-eye2'  title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
 	else
 		visible_acuse = "#";
 
-	if (XMLACUSE != "#" && XMLACUSE!=null)
+	if (XMLACUSE != "#" && XMLACUSE != null)
 		visible_xml_acuse = "href='" + XMLACUSE + "' class='icon-file-xml' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
 	else
 		visible_xml_acuse = "#";
@@ -478,8 +483,8 @@ function ObtenerDetallle(PDF, XML, EstadoAcuse, RutaAcuse, XMLACUSE, ZIP, RutaDI
 		visible_Servicio_DIAN = "class='icon-file-xml' href='" + RutaDIAN + "' title='ver XML' style='pointer-events:auto;cursor: pointer;'";
 	else
 		visible_Servicio_DIAN = "#";
-	
-	if (Tipo=="Adquiriente") {
+
+	if (Tipo == "Adquiriente") {
 		return "<td aria-selected='false' role='gridcell' aria-colindex='1' class='dx-cell-focus-disabled dx-master-detail-cell' colspan='6' style='text-align: center;'><div class='master-detail-caption'>Lista de Archivos:</div><div class='dx-widget dx-visibility-change-handler' role='presentation'><div class='dx-datagrid dx-gridbase-container dx-datagrid-borders' role='grid' aria-label='Data grid' aria-rowcount='1' aria-colcount='4'><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-datagrid-headers dx-datagrid-nowrap' role='presentation' style='padding-right: 0px;'><div class='dx-datagrid-content dx-datagrid-scroll-container' role='presentation'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation'><colgroup><col style='width: 16%;'><col style='width: 16%;'><col style='width: 16%;'><col style='width: 16%;'><col style='width: 16%;'><col style='width: 16%;'></colgroup><tbody class=''><tr class='dx-row dx-column-lines dx-header-row' role='row'><td aria-selected='false' role='columnheader' aria-colindex='1' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>PDF Documento</div></td><td aria-selected='false' role='columnheader' aria-colindex='2' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>XML Documento</div></td><td aria-selected='false' role='columnheader' aria-colindex='3' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>XML Acuse</div></td><td aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Ver Acuse</div></td><td aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Anexo</div></td><td aria-selected='false' role='columnheader' aria-colindex='5' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Respuesta DIAN</div></td></tr></tbody></table></div></div><div class='dx-datagrid-rowsview dx-datagrid-nowrap dx-scrollable dx-visibility-change-handler dx-scrollable-both dx-scrollable-simulated dx-scrollable-customizable-scrollbars' role='presentation'><div class='dx-scrollable-wrapper'><div class='dx-scrollable-container'><div class='dx-scrollable-content' style='center: 0px; top: 0px; transform: none;'><div class='dx-datagrid-content'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation' style='table-layout: fixed;'><colgroup style=''><col style='width: 16%;'><col style='width: 16%;'><col style='width: 16%;'><col style='width: 16%;'><col style='width: 16%;'><col style='width: 16%;'></colgroup><tbody><tr class='dx-row dx-data-row dx-column-lines' role='row' aria-rowindex='1' aria-selected='false'><td aria-selected='false' role='gridcell' aria-colindex='1' tabindex='0' style='text-align: center;'> <div> <a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "></a></div> </td><td aria-selected='false' role='gridcell' aria-colindex='2' style='text-align: center;'><div> <a style='margin-left:5%;margin-right:5%;' target='_blank' " + visible_xml + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='3' style='text-align: center;'><div> <a target='_blank'  " + visible_xml_acuse + "></a></div> </td><td aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank'   " + visible_acuse + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank' " + visible_zip + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='5' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank' " + visible_Servicio_DIAN + "></a></div></td></tr><tr class='dx-row dx-column-lines dx-freespace-row' role='row' style='height: 0px; display: none;'><td style='text-align: center;'></td><td style='text-align: center;'></td><td style='text-align: center;'></td><td style='text-align: center;'></td></tr></tbody></table></div></div><div class='dx-scrollable-scrollbar dx-widget dx-scrollbar-horizontal dx-scrollbar-hoverable' style='display: none;'><div class='dx-scrollable-scroll dx-state-invisible' style='width: 831px; transform: translate(0px, 0px);'><div class='dx-scrollable-scroll-content'></div></div></div><div class='dx-scrollable-scrollbar dx-widget dx-scrollbar-vertical dx-scrollbar-hoverable' style='display: none;'><div class='dx-scrollable-scroll dx-state-invisible' style='height: 35px; transform: translate(0px, 0px);'><div class='dx-scrollable-scroll-content'></div></div></div></div></div><span class='dx-datagrid-nodata dx-hidden'></span></div><div class='dx-hidden' style='padding-right: 0px;'></div><div></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-datagrid-drag-header dx-datagrid-text-content dx-widget' style='display: none;'></div><div class='dx-context-menu dx-has-context-menu dx-widget dx-visibility-change-handler dx-collection dx-datagrid'></div><div class='dx-header-filter-menu'></div><div></div></div></div></td>";
 	} else {
 		return "<td aria-selected='false' role='gridcell' aria-colindex='1' class='dx-cell-focus-disabled dx-master-detail-cell' colspan='6' style='text-align: center;'><div class='master-detail-caption'>Lista de Archivos:</div><div class='dx-widget dx-visibility-change-handler' role='presentation'><div class='dx-datagrid dx-gridbase-container dx-datagrid-borders' role='grid' aria-label='Data grid' aria-rowcount='1' aria-colcount='4'><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-datagrid-headers dx-datagrid-nowrap' role='presentation' style='padding-right: 0px;'><div class='dx-datagrid-content dx-datagrid-scroll-container' role='presentation'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation'><colgroup><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody class=''><tr class='dx-row dx-column-lines dx-header-row' role='row'><td aria-selected='false' role='columnheader' aria-colindex='1' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>PDF Documento</div></td><td aria-selected='false' role='columnheader' aria-colindex='2' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>XML Documento</div></td><td aria-selected='false' role='columnheader' aria-colindex='3' class='dx-datagrid-action dx-cell-focus-disabled' aria-sort='none' style='text-align: center;'><div class='dx-column-indicators' style='float: right;'><span class='dx-sort dx-sort-none'></span></div><div class='dx-datagrid-text-content dx-text-content-alignment-center'>XML Acuse</div></td><td aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Ver Acuse</div></td><td aria-selected='false' role='columnheader' aria-colindex='4' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Anexo</div></td><td aria-selected='false' role='columnheader' aria-colindex='5' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Respuesta DIAN</div></td><td aria-selected='false' role='columnheader' aria-colindex='5' aria-sort='none' class='dx-cell-focus-disabled' style='text-align: center;'><div class='dx-datagrid-text-content'>Auditoría</div></td></tr></tbody></table></div></div><div class='dx-datagrid-rowsview dx-datagrid-nowrap dx-scrollable dx-visibility-change-handler dx-scrollable-both dx-scrollable-simulated dx-scrollable-customizable-scrollbars' role='presentation'><div class='dx-scrollable-wrapper'><div class='dx-scrollable-container'><div class='dx-scrollable-content' style='center: 0px; top: 0px; transform: none;'><div class='dx-datagrid-content'><table class='dx-datagrid-table dx-datagrid-table-fixed' role='presentation' style='table-layout: fixed;'><colgroup style=''><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'><col style='width: 14%;'></colgroup><tbody><tr class='dx-row dx-data-row dx-column-lines' role='row' aria-rowindex='1' aria-selected='false'><td aria-selected='false' role='gridcell' aria-colindex='1' tabindex='0' style='text-align: center;'> <div> <a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "></a></div> </td><td aria-selected='false' role='gridcell' aria-colindex='2' style='text-align: center;'><div> <a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='3' style='text-align: center;'><div> <a target='_blank'  " + visible_xml_acuse + "></a></div> </td><td aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank'   " + visible_acuse + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='4' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank' " + visible_zip + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='5' class='dx-editor-inline-block dx-cell-focus-disabled dx-editor-cell dx-datagrid-readonly' style='text-align: center;'><div class='dx-datagrid-checkbox-size dx-checkbox dx-state-readonly dx-widget' role='checkbox' aria-checked='false' aria-readonly='true'><input type='hidden' value='false'><a style='margin-left:5%;' target='_blank' " + visible_Servicio_DIAN + "></a></div></td><td aria-selected='false' role='gridcell' aria-colindex='1' tabindex='0' style='text-align: center;'><div><a style='margin-left:5%;' class='icon-file-eye' onClick=ConsultarAuditDoc('" + StrIdSeguridad + "','" + StrEmpresaFacturador + "','" + NumeroDocumento + "') target='_blank' data-toggle='modal' data-target='#modal_audit_documento' title='ver Auditoría'></a></div></td></tr><tr class='dx-row dx-column-lines dx-freespace-row' role='row' style='height: 0px; display: none;'><td style='text-align: center;'></td><td style='text-align: center;'></td><td style='text-align: center;'></td><td style='text-align: center;'></td></tr></tbody></table></div></div><div class='dx-scrollable-scrollbar dx-widget dx-scrollbar-horizontal dx-scrollbar-hoverable' style='display: none;'><div class='dx-scrollable-scroll dx-state-invisible' style='width: 831px; transform: translate(0px, 0px);'><div class='dx-scrollable-scroll-content'></div></div></div><div class='dx-scrollable-scrollbar dx-widget dx-scrollbar-vertical dx-scrollbar-hoverable' style='display: none;'><div class='dx-scrollable-scroll dx-state-invisible' style='height: 35px; transform: translate(0px, 0px);'><div class='dx-scrollable-scroll-content'></div></div></div></div></div><span class='dx-datagrid-nodata dx-hidden'></span></div><div class='dx-hidden' style='padding-right: 0px;'></div><div></div><div class='dx-hidden'></div><div class='dx-hidden'></div><div class='dx-datagrid-drag-header dx-datagrid-text-content dx-widget' style='display: none;'></div><div class='dx-context-menu dx-has-context-menu dx-widget dx-visibility-change-handler dx-collection dx-datagrid'></div><div class='dx-header-filter-menu'></div><div></div></div></div></td>";
@@ -525,6 +530,84 @@ var EstadoPlan =
 	{ "ID": 2, "Name": "Procesado" }
 ];
 
+var ProcesoEstado =
+    [
+        { "ID": 1, "Name": "Recepción" },
+        { "ID": 2, "Name": "Validación Documento" },
+        { "ID": 3, "Name": "Generación UBL" },
+		{ "ID": 4, "Name": "Almacenamiento XML" },
+		{ "ID": 5, "Name": "Firma XML" },
+		{ "ID": 6, "Name": "Compresión XML" },
+		{ "ID": 7, "Name": "Envío Dian" },
+		{ "ID": 8, "Name": "Envío E-mail Adquiriente" },
+		{ "ID": 9, "Name": "Recepción Acuse" },
+		{ "ID": 10, "Name": "Envío E-mail Acuse" },
+		{ "ID": 11, "Name": "Documento Pendiente Envío Proveedor" },
+		{ "ID": 12, "Name": "Envío Exitoso Proveedor" },
+		{ "ID": 13, "Name": "Acuse Pendiente Envío Proveedor" },
+		{ "ID": 14, "Name": "Consulta DIAN" },
+		{ "ID": 15, "Name": "Pago Documento" },
+		{ "ID": 16, "Name": "Acuse Visto" },
+		{ "ID": 20, "Name": "Almacenamiento Formato PDF" },
+		{ "ID": 22, "Name": "Generación Formato PDF" },
+		{ "ID": 24, "Name": "Almacenamiento Anexo ZIP" },
+		{ "ID": 90, "Name": "Error Dian, Finaliza Proceso" },
+		{ "ID": 92, "Name": "Error Prevalidación Dian V2" },
+		{ "ID": 93, "Name": "Error Prevalidación Plataforma V2" },
+		{ "ID": 94, "Name": "Proceso Pausado Prevalidación Plataforma Dian V2" },
+		{ "ID": 99, "Name": "Fin Proceso Exitoso" }
+
+    ];
+
+var CategoriaEstado =
+[
+	{ "ID": 0, "Name": "No Recibido" },
+	{ "ID": 100, "Name": "Recibido Plataforma" },
+	{ "ID": 200, "Name": "Envío DIAN" },
+	{ "ID": 300, "Name": "Validado DIAN" },
+	{ "ID": 400, "Name": "Fallido DIAN" }	
+];
+
+
+var AdquirienteRecibo =
+[
+	{ "ID": 0, "Name": "Pendiente" },
+	{ "ID": 1, "Name": "Aprobado" },
+	{ "ID": 2, "Name": "Rechazado" },
+	{ "ID": 3, "Name": "Aprobado Tácito" },
+	{ "ID": 4, "Name": "Entregado" },
+	{ "ID": 5, "Name": "Leído" },
+	{ "ID": 6, "Name": "No Entregado" },
+	{ "ID": 7, "Name": "Enviado" }
+];
+
+
+var EstadoEnvio =
+[
+	{ "ID": 0, "Name": "Pendiente" },
+	{ "ID": 1, "Name": "Enviado" },
+	{ "ID": 2, "Name": "Entregado" },
+	{ "ID": 3, "Name": "No Entregado" },
+	{ "ID": 4, "Name": "Leído" },
+	{ "ID": 5, "Name": "Validar con Adquiriente" }
+];
+
+
+var MensajeEstado =
+[
+	{ "ID": 0, "Name": "Procesado" },
+	{ "ID": 1, "Name": "En cola" },
+	{ "ID": 2, "Name": "Enviado" },
+	{ "ID": 3, "Name": "Abierto" },
+	{ "ID": 4, "Name": "Presionó" },
+	{ "ID": 5, "Name": "Rebotado" },
+	{ "ID": 6, "Name": "Spam" },
+	{ "ID": 7, "Name": "Desuscripción" },
+	{ "ID": 8, "Name": "Bloqueado" },
+	{ "ID": 9, "Name": "Rebotado" },
+	{ "ID": 10, "Name": "Rebotado" },
+	{ "ID": 11, "Name": "Diferido" }
+];
 
 
 //Busca en un array la descipcion, pasandole como parametros el array y el id 
@@ -536,3 +619,8 @@ function GetDescripcionEnum(miArray, ID) {
 	}
 }
 //*******************************Enumerables
+
+
+
+
+

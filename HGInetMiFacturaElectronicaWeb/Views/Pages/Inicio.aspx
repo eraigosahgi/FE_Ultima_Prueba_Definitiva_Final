@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Pages/Indicadores.js?vjs2020401"></script>
+	<script src="../../Scripts/Pages/Indicadores.js?vjs20200921"></script>
 
 	<style>
 		.nav-tabs:before {
@@ -24,7 +24,7 @@
 	<div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController">
 
 		<!-- FILTROS DE BÚSQUEDA -->
-		<div class="panel panel-white" id="panel_filtros">
+		<div class="panel panel-white" id="panel_filtros" style="display:none;">
 			<div class="panel-body">
 
 				<div class="col-md-12" style="margin-bottom: 1%">

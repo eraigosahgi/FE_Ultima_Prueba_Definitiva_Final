@@ -272,13 +272,13 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
                      {
                      	caption: "Identificación Facturador",
                      	cssClass: "hidden-xs col-md-1",
-                     	dataField: "IdentificacionFacturador"
+                     	dataField: "IdFacturador"
 
                      },
                       {
                       	caption: "Nombre Facturador",
                       	cssClass: "hidden-xs col-md-1",
-                      	dataField: "NombreFacturador"
+                      	dataField: "Facturador"
                       },
 
                         {
@@ -340,7 +340,7 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
 
                 	cellTemplate: function (container, options) {
                 		if (options.data.Estado != 400) {
-                			var RazonSocial = options.data.NombreFacturador.replace(" ", "_%%_");
+                			var RazonSocial = options.data.Facturador.replace(" ", "_%%_");
                 			var click = "onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "')";
 
                 			var imagen = "";

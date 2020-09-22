@@ -330,7 +330,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                     		else
                     			options.data.Xml = "#";
 
-                    		if (options.data.EstadoAcuse != 'Pendiente')
+                    		if (options.data.EstadoAcuse != 0)
                     			visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
                     		else
                     			options.data.RutaAcuse = "#";
@@ -353,7 +353,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                                     		$('input:text[name=EmailDestino]').val("");
                                     		if (permite_envio != "") {
                                     			SrvDocumento.ConsultarEmailUbl(options.data.StrIdSeguridad).then(function (data) {
-                                    				$('input:text[name=EmailDestino]').val(data);                                    				
+                                    				$('input:text[name=EmailDestino]').val(data);
                                     			});
                                     		}
                                     	}
@@ -424,6 +424,11 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                        	dataField: "EstadoFactura",
                        	caption: "Estado",
                        	cssClass: "hidden-xs col-md-1",
+                       	lookup: {
+                       		dataSource: ProcesoEstado,
+                       		displayExpr: "Name",
+                       		valueExpr: "ID"
+                       	},
                        	cellTemplate: function (container, options) {
 
                        		$("<div>")
@@ -431,32 +436,38 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 								.appendTo(container);
                        	}
                        },
-                      {
-                      	caption: "Acuse",
-                      	cssClass: "hidden-xs col-md-1",
-                      	dataField: "EstadoAcuse",
-                      	cellTemplate: function (container, options) {
+                    
+					   {
+					   	caption: "Acuse",					   	
+					   	dataField: "EstadoAcuse",
+					   	cssClass: "hidden-xs col-md-1",
+					   	lookup: {
+					   		dataSource: AdquirienteRecibo,
+					   		displayExpr: "Name",
+					   		valueExpr: "ID"
+					   	},
+					   	cellTemplate: function (container, options) {
 
-                      		$("<div>")
+					   		$("<div>")
 								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
 								.appendTo(container);
-                      	}
-                      },
+					   	}
+					   },
                       {
                       	caption: "Motivo Rechazo",
                       	cssClass: "hidden-xs col-md-1",
                       	dataField: "MotivoRechazo",
                       },
 					{
-                		caption: "Estado Email",
-                		cssClass: "hidden-xs col-md-1",
-                		dataField: "EstadoEnvioMail",
-                        cellTemplate: function (container, options) {
+						caption: "Estado Email",
+						cssClass: "hidden-xs col-md-1",
+						dataField: "EstadoEnvioMail",
+						cellTemplate: function (container, options) {
 
-	                        $("<a>")
+							$("<a>")
 		                        .append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail, options.data.StrIdSeguridad)))
 		                        .appendTo(container);
-                        }
+						}
 					}
 
                 ],
@@ -466,7 +477,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					enabled: true,
 					template: function (container, options) {
 
-						
+
 
 						container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.StrEmpresaFacturador, options.data.NumeroDocumento));
 
@@ -491,7 +502,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						valueFormat: "currency"
 					}]
                     , totalItems: [{
-                    	name: "Suma",                    
+                    	name: "Suma",
                     	displayFormat: "{0}",
                     	valueFormat: "currency",
                     	summaryType: "custom"
@@ -500,7 +511,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					{
 						column: "IntVlrTotal",
 						showInColumn: "IntVlrTotal",
-						summaryType: "sum",						
+						summaryType: "sum",
 						customizeText: function (data) {
 							return fNumber.go(data.value).replace("$-", "-$");
 						}
@@ -515,13 +526,13 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 					},
 					{
-						name: "SumaNeto",						
+						name: "SumaNeto",
 						displayFormat: "{0}",
 						valueFormat: "currency",
 						summaryType: "custom"
 
 					},
-					{						
+					{
 						column: "IntNeto",
 						summaryType: "sum",
 						customizeText: function (data) {
@@ -685,7 +696,7 @@ App.controller('EnvioEmailController', function EnvioEmailController($scope, $ht
 						});
 					}
 
-					
+
 
 					$('input:text[name=EmailDestino]').val("");
 					$('#btncerrarModal').click();
