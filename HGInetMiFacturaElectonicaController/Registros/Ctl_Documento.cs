@@ -233,7 +233,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				context.Configuration.LazyLoadingEnabled = false;
 
-				var respuesta = from documento in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+				var respuesta = from documento in context.TblDocumentos
 								join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
 								where empresa.StrIdentificacion.Equals(identificacion_obligado)
 								&& documento.IntDocTipo == tipo_documento
@@ -283,7 +283,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				context.Configuration.LazyLoadingEnabled = false;
 
-				var respuesta = from documento in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+				var respuesta = from documento in context.TblDocumentos
 								join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
 								where empresa.StrIdentificacion.Equals(identificacion_obligado)
 								 && documento.IntDocTipo == tipo_documento
@@ -1655,13 +1655,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				obj_documento.FechaRecepcion = respuesta.DatFechaIngreso;
 				obj_documento.FechaUltimoProceso = respuesta.DatFechaActualizaEstado;
 				obj_documento.IdDocumento = respuesta.StrIdSeguridad.ToString();
-				obj_documento.Identificacion = respuesta.TblEmpresasAdquiriente.StrIdentificacion;
-				obj_documento.IdentificacionObligado = respuesta.TblEmpresasFacturador.StrIdentificacion;
+				obj_documento.Identificacion = respuesta.StrEmpresaAdquiriente;
+				obj_documento.IdentificacionObligado = respuesta.StrEmpresaFacturador;
 				obj_documento.IdProceso = respuesta.IntIdEstado;
 				obj_documento.DescripcionProceso = Enumeracion.GetDescription(Enumeracion.ParseToEnum<ProcesoEstado>(Convert.ToInt32(respuesta.IntIdEstado)));
 				obj_documento.MotivoRechazo = respuesta.StrAdquirienteMvoRechazo;
-				obj_documento.NumeroResolucion = respuesta.TblEmpresasResoluciones.StrNumResolucion;
-				obj_documento.Prefijo = respuesta.TblEmpresasResoluciones.StrPrefijo;
+				obj_documento.NumeroResolucion = respuesta.StrNumResolucion;
+				obj_documento.Prefijo = respuesta.StrPrefijo;
 				obj_documento.IdPlan = (respuesta.StrIdPlanTransaccion.HasValue) ? (respuesta.StrIdPlanTransaccion.Value) : new Guid();
 
 				if (respuesta.IntIdEstado == ProcesoEstado.Finalizacion.GetHashCode() || respuesta.IntIdEstado == ProcesoEstado.FinalizacionErrorDian.GetHashCode())

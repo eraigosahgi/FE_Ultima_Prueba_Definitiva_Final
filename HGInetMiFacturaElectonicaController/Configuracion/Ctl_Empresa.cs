@@ -152,6 +152,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public TblEmpresas Validar(string datakey, string identificacion_obligado)
 		{
+			context.Configuration.LazyLoadingEnabled = false;
+
 			TblEmpresas datos = (from item in context.TblEmpresas
 								 where item.StrIdentificacion.Equals(identificacion_obligado)
 								 && (!string.IsNullOrEmpty(item.StrSerial))
