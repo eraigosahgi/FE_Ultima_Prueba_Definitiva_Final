@@ -474,7 +474,8 @@ namespace HGInetMiFacturaElectonicaController
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosFactura.DatosObligado.NombreComercial) ? objeto.DatosFactura.DatosObligado.RazonSocial : objeto.DatosFactura.DatosObligado.NombreComercial;
 					}
 
-					telefono = objeto.DatosFactura.DatosObligado.Telefono;
+					if (string.IsNullOrEmpty(telefono) && objeto != null)
+						telefono = objeto.DatosFactura.DatosObligado.Telefono;
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
@@ -483,7 +484,9 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosNotaCredito.DatosObligado.NombreComercial) ? objeto.DatosNotaCredito.DatosObligado.RazonSocial : objeto.DatosNotaCredito.DatosObligado.NombreComercial;
 					}
-					telefono = objeto.DatosNotaCredito.DatosObligado.Telefono;
+
+					if (string.IsNullOrEmpty(telefono) && objeto != null)
+						telefono = objeto.DatosNotaCredito.DatosObligado.Telefono;
 				}
 				else if (tipo_documento == TipoDocumento.NotaDebito)
 				{
@@ -492,7 +495,9 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosNotaDebito.DatosObligado.NombreComercial) ? objeto.DatosNotaDebito.DatosObligado.RazonSocial : objeto.DatosNotaDebito.DatosObligado.NombreComercial;
 					}
-					telefono = objeto.DatosNotaDebito.DatosObligado.Telefono;
+
+					if (string.IsNullOrEmpty(telefono) && objeto != null)
+						telefono = objeto.DatosNotaDebito.DatosObligado.Telefono;
 				}
 
 				string asunto = string.Format("{0};{1};{2};{3};{4}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto,nombre_comercial);
