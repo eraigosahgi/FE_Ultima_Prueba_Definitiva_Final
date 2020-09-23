@@ -591,9 +591,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					Planestransacciones.ConciliarPlanProceso(plan);
 				}
-			});
-			//Se coloca el Sleep para pruebas de ejecución async
-			Thread.Sleep(20000);
+			});			
 		}
 
 		/// <summary>

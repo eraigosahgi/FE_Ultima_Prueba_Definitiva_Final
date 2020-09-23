@@ -198,15 +198,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 					respuesta.Add(item_respuesta);
 				});
-
-				////Planes y transacciones
-				//foreach (ObjPlanEnProceso plan in ListaPlanes)
-				//{
-				//	plan.procesado = respuesta.Where(x => x.IdPlan == plan.plan).Where(x => x.DescuentaSaldo == true).Count();
-
-				//	Planestransacciones.ConciliarPlanProceso(plan);
-				//}
-
+				
 				var datos = Planestransacciones.ConciliarPlanes(ListaPlanes, respuesta);
 
 				////Planes y transacciones
