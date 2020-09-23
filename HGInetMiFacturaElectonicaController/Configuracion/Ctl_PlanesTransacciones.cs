@@ -5,6 +5,7 @@ using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
@@ -16,6 +17,7 @@ using System.Data.Linq.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
@@ -553,6 +555,47 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return PlanesTransacciones;
 		}
 
+
+		/// <summary>
+		/// Inicia el proceso de tareas async
+		/// </summary>
+		/// <param name="ListaPlanes"></param>
+		/// <param name="respuesta"></param>
+		/// <returns></returns>
+		public async Task ConciliarPlanes(List<ObjPlanEnProceso> ListaPlanes, List<DocumentoRespuesta> respuesta)
+		{
+			try
+			{
+				var Tarea = TareaConciliarPlanes(ListaPlanes, respuesta);
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio);
+			}
+
+		}
+
+
+
+
+		public async Task TareaConciliarPlanes(List<ObjPlanEnProceso> ListaPlanes, List<DocumentoRespuesta> respuesta)
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
+			////Planes y transacciones
+			foreach (ObjPlanEnProceso plan in ListaPlanes)
+				{
+					plan.procesado = respuesta.Where(x => x.IdPlan == plan.plan).Where(x => x.DescuentaSaldo == true).Count();
+
+					Planestransacciones.ConciliarPlanProceso(plan);
+				}
+			});
+			//Se coloca el Sleep para pruebas de ejecución async
+			Thread.Sleep(20000);
+		}
+
 		/// <summary>
 		/// Actualiza el plan al terminar el proceso, coloca los valores reales luego del proceso
 		/// campo intEnProceso le descuenta la cantidad de documentos que se estaban procesando
@@ -823,10 +866,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			context.Configuration.LazyLoadingEnabled = false;
 
-			return  (from documento in context.TblDocumentos
-									 where documento.StrIdPlanTransaccion== id_plan
-									 select documento.IntNumero).Count();
-			
+			return (from documento in context.TblDocumentos
+					where documento.StrIdPlanTransaccion == id_plan
+					select documento.IntNumero).Count();
+
 		}
 
 
@@ -862,7 +905,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 						try
 						{
-							
+
 							//Validamos que exista diferencia entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
 
 							int total_documentos = CantidadDocumentos(item.StrIdSeguridad);

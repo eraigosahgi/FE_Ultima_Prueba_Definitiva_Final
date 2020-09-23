@@ -133,7 +133,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
-					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*",false);
+					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*", false);
 
 
 					List<string> resoluciones_docs = documentos.Select(_res => _res.NumeroResolucion).Distinct().ToList();
@@ -200,12 +200,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				});
 
 				////Planes y transacciones
-				foreach (ObjPlanEnProceso plan in ListaPlanes)
-				{
-					plan.procesado = respuesta.Where(x => x.IdPlan == plan.plan).Where(x => x.DescuentaSaldo == true).Count();
+				//foreach (ObjPlanEnProceso plan in ListaPlanes)
+				//{
+				//	plan.procesado = respuesta.Where(x => x.IdPlan == plan.plan).Where(x => x.DescuentaSaldo == true).Count();
 
-					Planestransacciones.ConciliarPlanProceso(plan);
-				}
+				//	Planestransacciones.ConciliarPlanProceso(plan);
+				//}
+
+				var datos = Planestransacciones.ConciliarPlanes(ListaPlanes, respuesta);
+
 				////Planes y transacciones
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
@@ -220,12 +223,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				try
 				{
-					foreach (ObjPlanEnProceso plan in ListaPlanes)
-					{
-						plan.procesado = respuesta.Where(x => x.IdPlan == plan.plan).Where(x => x.DescuentaSaldo == true).Count();
-
-						Planestransacciones.ConciliarPlanProceso(plan);
-					}
+					var datos = Planestransacciones.ConciliarPlanes(ListaPlanes, respuesta);
 				}
 				catch (Exception exep)
 				{
@@ -275,6 +273,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			return respuesta;
 		}
 
+		public void Procesar(int Tiempo, int dias)
+		{
+
+			Ctl_Documento ctl_documento = new Ctl_Documento();
+
+			var Tarea1 = ctl_documento.SondaDocumentosValidarEmail(Tiempo, dias);
+
+		}
 
 		/// <summary>
 		/// Procesa un documento por paralelismo
@@ -389,7 +395,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				TblEmpresasResoluciones resolucion = null;
 
-				
+
 				//resolucion = Obtenerresolucion(lista_resolucion, item.NumeroResolucion, item.Prefijo, id_peticion, facturador_electronico);
 				// filtra la resolución del documento
 				try
@@ -462,7 +468,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					// realiza el proceso de envío a la DIAN del documento en Validacion Previa V2
 					item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion,
-						facturador_electronico,documento_bd);
+						facturador_electronico, documento_bd);
 				}
 			}
 			catch (Exception excepcion)
@@ -475,7 +481,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
-				catch (Exception ex) {
+				catch (Exception ex)
+				{
 					Ctl_Log.Guardar(ex, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.creacion);
 				}
 
@@ -539,7 +546,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
 				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
-			}			
+			}
 
 			return item_respuesta;
 
@@ -611,7 +618,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			//Valida que la fecha este en los terminos
 			if (documento.Fecha.Date > resolucion.DatFechaVigenciaHasta || documento.Fecha.Date < resolucion.DatFechaVigenciaDesde)
-				throw new ApplicationException(string.Format("El documento {0} no cumple con los términos de la Resolución. Fecha del documento: {1}", documento.Documento,documento.Fecha.Date));
+				throw new ApplicationException(string.Format("El documento {0} no cumple con los términos de la Resolución. Fecha del documento: {1}", documento.Documento, documento.Fecha.Date));
 
 			if (!resolucion.StrPrefijo.Equals(documento.Prefijo))
 				throw new ApplicationException(string.Format("El prefijo '{0}' no es válido según Resolución", documento.Prefijo));
@@ -660,7 +667,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 					{
 						throw new ApplicationException("No se encontró documento referenciado para el documento de contingencia");
-					}		
+					}
 				}
 				else if (documento.TipoOperacion.Equals(2))//Valida que si es Exportacion llegue los campos MARCA y MODELO, por el momento se llenan si no llega
 				{
@@ -691,7 +698,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						ListaTipoReferenciaAdicional list_refAd = new ListaTipoReferenciaAdicional();
 						ListaItem refad = list_refAd.Items.Where(d => d.Codigo.Equals(item.CodigoReferencia)).FirstOrDefault();
 						if (refad == null)
-							throw new ApplicationException(string.Format("El tipo de documento referenciado '{0}' no es válido según Estandar DIAN", item.CodigoReferencia));	
+							throw new ApplicationException(string.Format("El tipo de documento referenciado '{0}' no es válido según Estandar DIAN", item.CodigoReferencia));
 					}
 				}
 			}
