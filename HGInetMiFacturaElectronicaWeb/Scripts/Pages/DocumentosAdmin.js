@@ -601,7 +601,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		if (data != "") {
 			data.forEach(function (d) {
 				Documentos = d;
-				AlmacenDocumentos.push([{ type: "insert", data: Documentos }]);
+				try {
+					AlmacenDocumentos.push([{ type: "insert", data: Documentos }]);
+				} catch (e) {
+				}
 			});
 		}
 	}
