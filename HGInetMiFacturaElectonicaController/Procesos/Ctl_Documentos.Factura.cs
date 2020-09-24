@@ -265,15 +265,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			return respuesta;
 		}
 
-		public void Procesar(int Tiempo, int dias)
-		{
-
-			Ctl_Documento ctl_documento = new Ctl_Documento();
-
-			var Tarea1 = ctl_documento.SondaDocumentosValidarEmail(Tiempo, dias);
-
-		}
-
 		/// <summary>
 		/// Procesa un documento por paralelismo
 		/// </summary>

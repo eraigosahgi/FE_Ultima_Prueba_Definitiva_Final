@@ -58,7 +58,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			try
 			{
 				string nombre_comercial = string.IsNullOrEmpty(documento_obj.DatosObligado.NombreComercial) ? documento_obj.DatosObligado.RazonSocial : documento_obj.DatosObligado.NombreComercial;
-				mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString(),Procedencia.Plataforma,"", ProcesoEstado.EnvioEmailAcuse, nombre_comercial);
+				mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, nombre_comercial);
 				//Actualiza la respuesta del envio del correo
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
 				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
@@ -171,9 +171,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				// envía el mail de documentos y de creación de adquiriente
-				respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result, notificacion_basica);
+				//respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result, notificacion_basica);
+				Task envio = EnviarMailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, respuesta, documento_result, notificacion_basica);
 				//ValidarRespuesta(respuesta);
-
 			}
 			catch (Exception excepcion)
 			{
@@ -182,8 +182,28 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 
 			return respuesta;
+		}
 
+		public static async Task EnviarMailDocumentos(object documento, TblDocumentos documentoBd, TblEmpresas empresa, bool adquiriente_nuevo, TblEmpresas adquirienteBd, TblUsuarios usuarioBd, DocumentoRespuesta respuesta, FacturaE_Documento documento_result, bool notificacion_basica = false)
+		{
+			try
+			{
+				var Tarea = TareaEnviarMailDocumentosAsync(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, respuesta, documento_result, notificacion_basica = false);
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio);
+			}
+		}
 
+		public static async Task TareaEnviarMailDocumentosAsync(object documento, TblDocumentos documentoBd, TblEmpresas empresa, bool adquiriente_nuevo, TblEmpresas adquirienteBd, TblUsuarios usuarioBd, DocumentoRespuesta respuesta, FacturaE_Documento documento_result, bool notificacion_basica = false)
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result, notificacion_basica);
+			});
 		}
 	}
+
 }
