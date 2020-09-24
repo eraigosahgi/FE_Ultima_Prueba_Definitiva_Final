@@ -28,43 +28,35 @@
 							<div data-ng-app="ModalAsignarFormatoApp" data-ng-controller="ModalAsignarFormatoController">
 
 								<div class="col-md-12">
-									<div class="panel panel-white">
-										<div class="panel-body">
-
-											<div class="col-md-12">
-												<label style="margin: 0px; margin-top: 16px;">Empresa:<strom style="color: red;">*</label>
-												<div id="SelectEmpresa"></div>
-											</div>
-
-											<div class="col-md-12">
-												<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Estado:<strom style="color: red;">*</label>
-												<div id="SelectEstado"></div>
-											</div>
-
-											<div class="col-md-12">
-												<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Categoría:<strom style="color: red;">*</label>
-												<div id="SelectGenerico"></div>
-											</div>
-
-											<div class="col-md-12">
-												<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Tipo Documento:<strom style="color: red;">*</label>
-												<div id="SelectTipoDoc"></div>
-											</div>
-
-											<div class="col-md-12">
-												<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observaciones:</label>
-												<div id="TxtObservaciones"></div>
-											</div>
-
-											<div class="col-md-12 text-right">
-												<br />
-												<div id="BtnContinuar"></div>
-											</div>
-
-
-										</div>
-									</div>
+									<label style="margin: 0px; margin-top: 16px;">Empresa:<strom style="color: red;">*</label>
+									<div id="SelectEmpresa"></div>
 								</div>
+
+								<div class="col-md-12">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Estado:<strom style="color: red;">*</label>
+									<div id="SelectEstado"></div>
+								</div>
+
+								<div class="col-md-12">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Categoría:<strom style="color: red;">*</label>
+									<div id="SelectGenerico"></div>
+								</div>
+
+								<div class="col-md-12">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Tipo Documento:<strom style="color: red;">*</label>
+									<div id="SelectTipoDoc"></div>
+								</div>
+
+								<div class="col-md-12">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observaciones:</label>
+									<div id="TxtObservaciones"></div>
+								</div>
+
+								<div class="col-md-12 text-right">
+									<br />
+									<div id="BtnContinuar"></div>
+								</div>
+
 
 							</div>
 

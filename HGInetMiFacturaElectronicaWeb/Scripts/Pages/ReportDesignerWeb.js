@@ -1,9 +1,8 @@
-﻿
+﻿var contenido_archivo_xml = "";
 
 var ModalAsignarFormatoApp = angular.module('ModalAsignarFormatoApp', []);
-
-var GestionReportesApp = angular.module('GestionReportesApp', ['ModalAsignarFormatoApp', 'dx']);
-GestionReportesApp.controller('GestionReportesController', function GestionReportesController($scope, $sce, $http, $location) {
+var GestionReportesApp = angular.module('GestionReportesApp', ['ModalAsignarFormatoApp', 'dx', 'AppSrvFormatos']);
+GestionReportesApp.controller('GestionReportesController', function GestionReportesController($scope, $sce, $http, $location, SrvFormatos) {
 
 	$('#modal_asignar_formato').modal('show');
 
@@ -468,11 +467,144 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 		});
 	}
 
+	$scope.ExportarFormato = function (id_formato, identificacion_empresa) {
+		console.log(datos);
+
+		$http.get('/Api/ObtenerFormato?id_formato=' + id_formato + '&identificacion_empresa=' + identificacion_empresa).then(function (response) {
+
+			console.log(response.data);
+
+			var nombre_archivo = "Formato" + response.data.NitEmpresa + "-" + response.data.CodigoFormato + ".xml";
+
+			var pom = document.createElement('a');
+			pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(response.data.FormatoXml));
+			pom.setAttribute('download', nombre_archivo);
+
+			if (document.createEvent) {
+				var event = document.createEvent('MouseEvents');
+				event.initEvent('click', true, true);
+				pom.dispatchEvent(event);
+			}
+			else {
+				pom.click();
+			}
+
+		}), function errorCallback(response) {
+			Mensaje(response.data.ExceptionMessage, "error");
+		};
+	}
+
+	$scope.ImportarFormato = function (datos) {
+
+		$scope.CodFormatoImportar = datos.CodigoFormato;
+		$scope.NitEmpresaImportar = datos.NitEmpresa;
+		$scope.NombreEmpresaImportar = datos.RazonSocial;
+
+		var summaryImportarFormato = "summaryImportarFormato";
+		$("#summaryImportarFormato").dxValidationSummary({ validationGroup: summaryImportarFormato });
+
+		$("#UploaderFormato").dxFileUploader({
+			selectButtonText: "Seleccione el archivo XML",
+			labelText: "",
+			accept: "text/xml",
+			uploadMode: "useForm",
+			onValueChanged: function (e) {
+
+				console.log(e.value[0].type);
+
+				var fReader = new FileReader();
+
+				if (e.value && e.value[0]) {
+					fReader.readAsDataURL(e.value[0]);
+					fReader.onloadend = function (event) {
+						contenido_archivo_xml = event.target.result;
+						contenido_archivo_xml = contenido_archivo_xml.replace('data:text/xml;base64,', '');
+					}
+				}
+			}
+		}).dxValidator({
+			validationGroup: summaryImportarFormato,
+			validationRules: [{ type: "required", message: "Debe seleccionar un archivo." }, {
+				type: "custom", validationCallback: function (options) {
+					if (options.value.length > 0) {
+						var file = options.value[0];
+						if (file.type != "text/xml") {
+							options.rule.message = "Tipo de archivo inválido, solo se permite formato .xml";
+							return false;
+						}
+					}
+					return true;
+				}
+			}]
+		});
+
+		$("#BtnImportarFormato").dxButton({
+			text: "Cargar Diseño",
+			type: "default",
+			validationGroup: summaryImportarFormato,
+			onClick: function (e) {
+				var result = e.validationGroup.validate();
+				if (result.isValid) {
+
+					var ObjFormato = ({
+						CodigoFormato: datos.CodigoFormato,
+						NitEmpresa: datos.NitEmpresa,
+						FormatoB64: contenido_archivo_xml,
+						IdSeguridad: datos.IdSeguridad
+					});
+
+					SrvFormatos.ImportarFormato(ObjFormato).then(function (data) {
+						$('#modal_importar_formato').modal('hide');
+
+						var myDialog = DevExpress.ui.dialog.custom({
+							title: "Proceso éxitoso",
+							message: "Se ha importado correctamente el diseño para el formato número " + datos.CodigoFormato + " de la empresa " + datos.NitEmpresa,
+							buttons: [{
+								text: "Editar",
+								onClick: function (e) {
+									window.location.href = '/Views/ReportDesigner/ReportDesignerWeb.aspx?ID=' + datos.CodigoFormato + '&Nit=' + datos.NitEmpresa;
+								}
+							},
+							{
+								text: "Cancelar",
+								onClick: function (e) {
+									myDialog.hide();
+									$scope.CargarFormatos();
+								}
+							}]
+						});
+						myDialog.show().done(function (dialogResult) {
+						});
+
+					}, function errorCallback(response) {
+						$('#wait').hide();
+						DevExpress.ui.notify(response, 'error', 6000);
+					});
+
+
+				}
+			}
+		});
+		$('#modal_importar_formato').modal('show');
+	}
+
 });
 
 
 
+
+
 function reportDesigner_CustomizeMenuActions(s, e) {
+
+	/*e.Actions.push({
+		text: 'Importar Diseño',
+		container: 'menu',
+		visible: true,
+		disabled: false,
+		clickAction: function () {
+		},
+		imageClassName: 'dxrd-image-export-to'
+	});*/
 
 	//Elimina la opción del diseñador mediante el asistente
 	var Wizard = e.Actions.filter(function (x) { return x.imageClassName === 'dxrd-image-run-wizard' })[0];
@@ -480,6 +612,8 @@ function reportDesigner_CustomizeMenuActions(s, e) {
 		Wizard.visible = false;
 	}
 }
+
+
 
 //Evento para la captura de excepciones ocurridas durante la construcción del formato
 function reportDesigner_OnServerError(s, e) {
@@ -505,7 +639,7 @@ function CargarAlerta(mensaje) {
 		animation: 'pop',
 		html: true,
 	}, function () {
-		window.location = "/Views/Pages/GestionReportes.aspx";
+		//window.location = "/Views/Pages/GestionReportes.aspx";
 	});
 }
 

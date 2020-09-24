@@ -30,6 +30,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 {
 	public class Ctl_Formatos : BaseObject<TblFormatos>
 	{
+
+		public class ObjFormato
+		{
+			public int CodigoFormato { get; set; }
+			public int NitEmpresa { get; set; }
+			public string FormatoB64 { get; set; }
+			public Guid IdSeguridad { get; set; }
+		}
 		List<Factura> DatosPlantilla()
 		{
 
@@ -219,6 +227,36 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return formato;
 		}
 
+		public TblFormatos ImportarFormato(ObjFormato objeto, Guid usuario)
+		{
+			try
+			{
+				TblFormatos datos_formato = Obtener(objeto.IdSeguridad);
+
+				if (!string.IsNullOrWhiteSpace(objeto.FormatoB64))
+				{
+					try
+					{
+						byte[] data = Convert.FromBase64String(objeto.FormatoB64);
+						datos_formato.FormatoTmp = data;
+					}
+					catch (Exception)
+					{
+					}
+				}
+
+				datos_formato.IntEstado = (short)EstadosFormato.SolicitarAprobacion.GetHashCode();
+				datos_formato.StrUsuarioActualizacion = usuario;
+				datos_formato = this.Edit(datos_formato);
+
+				return datos_formato;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 		/// <summary>
 		/// Actualiza los datos del formato (diseño)
 		/// </summary>
@@ -352,6 +390,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#region Obtener
 
+		public TblFormatos Obtener(Guid IdSeguridad)
+		{
+			try
+			{
+				TblFormatos formato_resultado = (from formato in context.TblFormatos
+												 where formato.StrIdSeguridad == IdSeguridad
+												 select formato).FirstOrDefault();
+
+				return formato_resultado;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 		/// <summary>
 		/// Obtiene el formato por código e identificación de la empresa
 		/// </summary>
@@ -376,6 +430,28 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 		}
 
+		public string ConvertirFormatoXml(byte[] formato)
+		{
+			try
+			{
+				if (formato == null)
+					throw new ApplicationException(string.Format("No se encontró un diseño para el formato {0}.", formato));
+
+				string formato_xml = string.Empty;
+				using (var memoryStream = new MemoryStream(formato))
+				using (var reader = new StreamReader(memoryStream))
+				{
+					formato_xml = reader.ReadToEnd();
+				}
+
+				return formato_xml;
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
 		/// <summary>
 		/// Obtiene el formato del facturador o de la empresa de dependecia. 
 		/// </summary>
@@ -397,21 +473,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				TblFormatos formato_resultado = null;
 
 				formato_resultado = (from formato in context.TblFormatos
-					where formato.IntCodigoFormato == id_formato
-					      && formato.IntTipo == tipo_formato
-					      && formato.StrEmpresa.Equals(identificacion_empresa)
-					      && formato.IntEstado != estado_formato
-					select formato).FirstOrDefault();
+									 where formato.IntCodigoFormato == id_formato
+										   && formato.IntTipo == tipo_formato
+										   && formato.StrEmpresa.Equals(identificacion_empresa)
+										   && formato.IntEstado != estado_formato
+									 select formato).FirstOrDefault();
 
 				if (formato_resultado == null && !identificacion_empresa.Equals(empresa_dependencia))
 				{
 
 					formato_resultado = (from formato in context.TblFormatos
-						where formato.IntCodigoFormato == id_formato
-						      && formato.IntTipo == tipo_formato
-						      && formato.StrEmpresa.Equals(empresa_dependencia)
-						      && formato.IntEstado != estado_formato
-						select formato).FirstOrDefault();
+										 where formato.IntCodigoFormato == id_formato
+											   && formato.IntTipo == tipo_formato
+											   && formato.StrEmpresa.Equals(empresa_dependencia)
+											   && formato.IntEstado != estado_formato
+										 select formato).FirstOrDefault();
 				}
 
 				//Si no se obtiene Formato con las Condiciones enviadas, se hace con el formato generico de HGI segun el tipo de documento
@@ -435,11 +511,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 
 					formato_resultado = (from formato in context.TblFormatos
-										where formato.IntCodigoFormato == codigo_formato
-										&& formato.IntTipo == tipo_formato
-									    && (formato.StrEmpresa.Equals("811021438"))
-									    && formato.IntEstado != estado_formato
-										select formato).FirstOrDefault();
+										 where formato.IntCodigoFormato == codigo_formato
+										 && formato.IntTipo == tipo_formato
+										 && (formato.StrEmpresa.Equals("811021438"))
+										 && formato.IntEstado != estado_formato
+										 select formato).FirstOrDefault();
 
 				}
 
@@ -690,7 +766,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					documento_obj = new Factura();
 					serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
-					HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType) serializacion.Deserialize(xml_reader);
+					HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
 					documento_obj = FacturaXML.Convertir(conversion, datos_doc_bd);
 				}
 				else
@@ -726,7 +802,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
 					}
 
-					
+
 				}
 
 				report.DataSource = documento_obj;

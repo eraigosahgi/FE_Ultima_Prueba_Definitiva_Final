@@ -1960,6 +1960,7 @@
     <Content Include="Scripts\Services\SrvAuditoria.js" />
     <Content Include="Scripts\Services\SrvDocumentos.js" />
     <Content Include="Scripts\Services\SrvEmpresa.js" />
+    <Content Include="Scripts\Services\SrvFormatos.js" />
     <Content Include="Scripts\Services\SrvPermisos.js" />
     <Content Include="Scripts\Services\SrvPlanes.js" />
     <Content Include="Scripts\Services\SrvProveedor.js" />
@@ -3442,7 +3443,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61435/</IISUrl>
+          <IISUrl>http://localhost:61423/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

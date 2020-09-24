@@ -6,6 +6,7 @@
 
 	<script src="../../Scripts/Pages/ReportDesignerWeb.js?vjs20200921"></script>
 	<script src="../../Scripts/Pages/ModalAsignarFormato.js?vjs20200921"></script>
+	<script src="../../Scripts/Services/SrvFormatos.js?vjs2020401"></script>
 	<style>
 		.BtnStyleNone {
 			background-color: transparent;
@@ -33,13 +34,13 @@
 			<div data-ng-repeat="datos in FormatosPdfEmpresa | filter:filtrar">
 				<div class=" col-sm-6 col-md-2" id="{{datos.CodigoFormato}}">
 					<div class="panel" data-ng-class="ClasePanel(datos.Estado)" id="{{datos.ClavePrimaria}}">
-						<div class="panel-heading text-center">
+						<div class="panel-heading text-center" style="padding: 5px 10px !important">
 							<label style="font-size: medium;">{{datos.Titulo}}</label><br />
 							<label title="({{datos.EstadoDescripcion}})" style="font-size: smaller; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
 								({{datos.EstadoDescripcion}})</label>
 						</div>
 
-						<div style="margin: 5%; height: 250px;">
+						<div style="margin: 5%; height: 270px;">
 
 							<div style="margin-bottom: 1%;">
 								<img src="../../Scripts/Images/FormatoPDF.png" class="img-responsive" style="width: 40%; display: block; margin-left: auto; margin-right: auto;" />
@@ -65,6 +66,8 @@
 										<span class="caret"></span>
 									</a>
 									<ul class="dropdown-menu dropdown-menu-right" style="background-color: #fcfcfc">
+										<li><a data-ng-click="ImportarFormato(datos)"><i class="icon-download"></i>Importar</a></li>
+										<li><a data-ng-click="ExportarFormato(datos.CodigoFormato,datos.NitEmpresa)"><i class="icon-upload"></i>Exportar</a></li>
 										<li><a data-ng-click="AbrirModal(datos.CodigoFormato, datos.NitEmpresa)" data-ng-class="OpcionAsignar(datos.Estado)"><i class="icon-file-plus2"></i>Asignar Formato</a></li>
 										<li><a data-ng-click="BtnEditar(datos.CodigoFormato,datos.NitEmpresa,datos.Estado)" data-ng-class="OpcionEditar(datos.Generico)"><i class="icon-pencil4"></i>Editar Formato</a></li>
 										<li>
@@ -81,7 +84,7 @@
 								</li>
 							</ul>
 						</div>
-					
+
 					</div>
 				</div>
 			</div>
@@ -89,7 +92,6 @@
 		</div>
 
 		<div data-ng-include="'ModalAsignarFormato.aspx'"></div>
-
 
 		<div id="modal_solicitar_aprobacion" class="modal fade" style="display: none;">
 			<div class="modal-dialog">
@@ -100,45 +102,35 @@
 					</div>
 
 					<div class="modal-body">
-						<div class="col-md-12 ">
 
-							<div class="col-md-12">
-								<div class="panel panel-white">
-									<div class="panel-body">
-
-										<div class="col-md-12" id="CampoObservaciones">
-											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observaciones:</label>
-											<div id="TxtObservacionesSolicitud"></div>
-
-										</div>
-
-										<div class="col-md-12" id="CampoMailPrueba">
-											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email:</label>
-											<div id="TxtMailPrueba"></div>
-										</div>
-
-										<div id="summary"></div>
-
-										<div id="SolicitudAprobacion">
-											<div class="col-md-12 text-right">
-												<br />
-												<div id="BtnSolicitarAprobacion"></div>
-											</div>
-										</div>
-
-										<div id="AprobacionFormato">
-											<div class="col-md-12 text-right">
-												<br />
-												<div id="BtnRechazarFormato"></div>
-												<div id="BtnAprobarFormato"></div>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
+						<div class="col-md-12" id="CampoObservaciones">
+							<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Observaciones:</label>
+							<div id="TxtObservacionesSolicitud"></div>
 
 						</div>
+
+						<div class="col-md-12" id="CampoMailPrueba">
+							<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email:</label>
+							<div id="TxtMailPrueba"></div>
+						</div>
+
+						<div id="summary"></div>
+
+						<div id="SolicitudAprobacion">
+							<div class="col-md-12 text-right">
+								<br />
+								<div id="BtnSolicitarAprobacion"></div>
+							</div>
+						</div>
+
+						<div id="AprobacionFormato">
+							<div class="col-md-12 text-right">
+								<br />
+								<div id="BtnRechazarFormato"></div>
+								<div id="BtnAprobarFormato"></div>
+							</div>
+						</div>
+
 					</div>
 
 					<div id="divsombra" class="modal-footer" style="margin-top: 22%">
@@ -156,17 +148,45 @@
 						<h5 style="margin-bottom: 10px;" class="modal-title">Auditoría</h5>
 					</div>
 					<div class="modal-body">
-						<div class="col-md-12 ">
 
-							<div class="panel panel-white">
-								<div class="panel-body">
-									<div id="gridAuditoriaFormato"></div>
-								</div>
+						<div class="panel panel-white">
+							<div class="panel-body">
+								<div id="gridAuditoriaFormato"></div>
 							</div>
 						</div>
+
 					</div>
 					<div class="modal-footer" style="margin-top: 5%">
 					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="modal_importar_formato" class="modal fade" style="display: none;">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h5 style="margin-bottom: 10px;" class="modal-title">Importar Diseño</h5>
+					</div>
+					<form>
+						<div class="modal-body">
+							<div class="col-md-12 text-center">
+								<p class="text-muted" style="font-size: small">
+									El diseño a importar será incluido en el formato #{{CodFormatoImportar}} de la empresa {{NitEmpresaImportar}}-{{NombreEmpresaImportar}}
+							y deberá realizar el proceso de solicitud de aprobación.
+								</p>
+
+								<div id="UploaderFormato"></div>
+								<div id="summaryImportarFormato"></div>
+
+							</div>
+						</div>
+						<div class="modal-footer" style="margin-top: 2%">
+							<div id="BtnImportarFormato"></div>
+						</div>
+					</form>
 
 				</div>
 			</div>

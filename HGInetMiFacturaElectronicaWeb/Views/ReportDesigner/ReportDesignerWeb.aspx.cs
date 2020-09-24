@@ -150,5 +150,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 			}
 		}
 
+		/*protected void BtnCargarXml_Click(object sender, EventArgs e)
+		{
+			HttpPostedFile data = InputImportarFormato.PostedFile;
+		}*/
 	}
 }

@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using System.Xml;
+using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_Formatos;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
@@ -56,6 +57,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RazonSocial = d.TblEmpresas.StrRazonSocial,
 					Administrador = (Sesion.DatosEmpresa.IntAdministrador) ? true : false,
 					EstadoDescripcion = DescripcionEstado(d.IntEstado),
+					IdSeguridad = d.StrIdSeguridad,
 				});
 
 				return Ok(datos_retorno);
@@ -101,6 +103,40 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		[HttpPut]
+		[Route("Api/ImportarFormato")]
+		public IHttpActionResult ImportarFormato(ObjFormato objeto)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				TblFormatos datos_formatos = new TblFormatos();
+
+				Ctl_Formatos clase_formatos = new Ctl_Formatos();
+				TblFormatos datos = clase_formatos.ImportarFormato(objeto, Sesion.DatosUsuario.StrIdSeguridad);
+
+				var datos_retorno = new
+				{
+					ClavePrimaria = string.Format("{0}-{1}", datos.IntCodigoFormato, datos.StrEmpresa),
+					CodigoFormato = datos.IntCodigoFormato,
+					FechaRegistro = datos.DatFechaRegistro.ToString(Fecha.formato_fecha_hginet),
+					Titulo = (datos.IntGenerico) ? "Prediseñado" : "Personalizado",
+					Estado = datos.IntEstado,
+					TipoDoc = datos.IntDocTipo,
+					NitEmpresa = datos.StrEmpresa,
+					RazonSocial = datos.TblEmpresas.StrRazonSocial,
+					EstadoDescripcion = DescripcionEstado(datos.IntEstado),
+					FormatoXml = clase_formatos.ConvertirFormatoXml(datos.Formato),
+					IdSeguridad = datos.StrIdSeguridad,
+				};
+				return Ok(datos_retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
 
 		[HttpPost]
 		[Route("Api/AlmacenarFormatoPdf")]
@@ -161,5 +197,46 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+		[HttpGet]
+		[Route("Api/ObtenerFormato")]
+		public IHttpActionResult ObtenerFormato(int id_formato, string identificacion_empresa)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+				Ctl_Formatos clase_formatos = new Ctl_Formatos();
+
+				TblFormatos datos_formatos = new TblFormatos();
+
+				//int formato_base, string empresa_base
+				TblFormatos datos = clase_formatos.Obtener(id_formato, identificacion_empresa, TipoFormato.FormatoPDF.GetHashCode());
+
+
+
+				var datos_retorno = new
+				{
+					ClavePrimaria = string.Format("{0}-{1}", datos.IntCodigoFormato, datos.StrEmpresa),
+					CodigoFormato = datos.IntCodigoFormato,
+					FechaRegistro = datos.DatFechaRegistro.ToString(Fecha.formato_fecha_hginet),
+					Titulo = (datos.IntGenerico) ? "Prediseñado" : "Personalizado",
+					Estado = datos.IntEstado,
+					TipoDoc = datos.IntDocTipo,
+					NitEmpresa = datos.StrEmpresa,
+					RazonSocial = datos.TblEmpresas.StrRazonSocial,
+					EstadoDescripcion = DescripcionEstado(datos.IntEstado),
+					FormatoXml = clase_formatos.ConvertirFormatoXml(datos.Formato),
+					IdSeguridad = datos.StrIdSeguridad,
+				};
+
+				return Ok(datos_retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
 	}
 }
