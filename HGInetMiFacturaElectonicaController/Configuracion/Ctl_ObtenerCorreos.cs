@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Properties;
 using HGInetMiFacturaElectonicaData.ControllerSql;
+using LibreriaGlobalHGInet.Funciones;
+using Newtonsoft.Json;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -174,6 +176,33 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					correo.StrIdentificacion = dtcorreos.Rows[j]["StrIdentificacion"].ToString().Trim();
 					correo.StrMailRegistrado = dtcorreos.Rows[j]["StrMailRegistrado"].ToString().Trim();
 					correo.DatFechaRegistro = Convert.ToDateTime(dtcorreos.Rows[j]["DatFechaRegistro"].ToString());
+
+					try
+					{
+						if (correo.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+						{
+							PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+							// ruta física de la carpeta
+							string carpeta_correo_Dian = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaDocumentosDebug);
+
+							// valida la existencia de la carpeta
+							carpeta_correo_Dian = Directorio.CrearDirectorio(carpeta_correo_Dian);
+
+							// nombre del archivo
+							string archivo_debug = string.Format(@"CorreoDian -{0}-{1}-{2}.json", correo.StrIdentificacion,correo.StrMailRegistrado, Fecha.GetFecha().Minute);
+
+							string ruta_archivo = string.Format("{0}\\{1}", carpeta_correo_Dian, archivo_debug);
+
+							// almacena el objeto en archivo json
+							File.WriteAllText(ruta_archivo, JsonConvert.SerializeObject(correo));
+						}
+					}
+					catch (Exception e)
+					{
+
+						string ex = e.Message;
+					}
 
 					Crear(correo);
 				}
