@@ -151,17 +151,21 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					usuarioBd = _usuario.ObtenerUsuarios(respuesta.Identificacion, respuesta.Identificacion).FirstOrDefault();
 
-					Ctl_ObtenerCorreos correo_recep = new Ctl_ObtenerCorreos();
-					string correo_registrado = correo_recep.Obtener(respuesta.Identificacion);
-
 					//Creacion del Usuario del Adquiriente siempre y cuando tenga correo registrado en la DIAN resolucion 042
-					if (usuarioBd == null && !string.IsNullOrEmpty(correo_registrado))
+					if (usuarioBd == null)
 					{
-						adquirienteBd.StrMailAdmin = correo_registrado;
-						_usuario = new Ctl_Usuario();
-						usuarioBd = _usuario.Crear(adquirienteBd);
+						Ctl_ObtenerCorreos correo_recep = new Ctl_ObtenerCorreos();
+						string correo_registrado = correo_recep.Obtener(respuesta.Identificacion);
 
-						adquiriente_nuevo = true;
+						if (!string.IsNullOrEmpty(correo_registrado))
+						{
+							adquirienteBd.StrMailAdmin = correo_registrado;
+							_usuario = new Ctl_Usuario();
+							usuarioBd = _usuario.Crear(adquirienteBd);
+
+							adquiriente_nuevo = true;
+						}
+						
 					}
 				}
 				catch (Exception excepcion)
