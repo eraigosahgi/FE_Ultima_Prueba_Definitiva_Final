@@ -149,16 +149,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
-		public TblDocumentos ObtenerFormato(string identificacion_obligado, long numero_documeto, string prefijo)
+		public TblDocumentos ObtenerParaPrueba(string identificacion_obligado, string numero_documento, string prefijo)
 		{
 			try
 			{
 				if (string.IsNullOrWhiteSpace(prefijo))
 					prefijo = "*";
 
+				if (string.IsNullOrWhiteSpace(numero_documento))
+					numero_documento = "*";
+
+				long num_doc = -1;
+				long.TryParse(numero_documento, out num_doc);
+
 				context.Configuration.LazyLoadingEnabled = false;
 				TblDocumentos documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
-										   where (documentos.IntNumero == numero_documeto)
+										   where (documentos.IntNumero == num_doc) || numero_documento.Equals("*")
 										   && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
 										   && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
 										   select documentos).OrderByDescending(x => x.DatFechaDocumento).FirstOrDefault();

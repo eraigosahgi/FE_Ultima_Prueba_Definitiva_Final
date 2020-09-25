@@ -222,7 +222,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/EnviarFormatoPrueba")]
-		public IHttpActionResult EnviarFormatoPrueba(int id_formato, string identificacion_empresa, string email_destino, string empresa_documento, string prefijo, long numero_documento)
+		public IHttpActionResult EnviarFormatoPrueba(int id_formato, string identificacion_empresa, string email_destino, string empresa_documento, string prefijo, string numero_documento)
 		{
 			try
 			{

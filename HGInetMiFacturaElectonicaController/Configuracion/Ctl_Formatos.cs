@@ -732,7 +732,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="tipo_formato"></param>
 		/// <param name="email_destino"></param>
 		/// <returns></returns>
-		public bool EnviarFormatoPrueba(TblEmpresas empresa_autenticada, int id_formato, string identificacion_empresa, int tipo_formato, string email_destino, string empresa_documento, string prefijo, long numero_documento)
+		public bool EnviarFormatoPrueba(TblEmpresas empresa_autenticada, int id_formato, string identificacion_empresa, int tipo_formato, string email_destino, string empresa_documento, string prefijo, string numero_documento)
 		{
 			try
 			{
@@ -750,7 +750,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				//Obtiene los datos del último documento generado
 				Ctl_Documento clase_documento = new Ctl_Documento();
-				TblDocumentos datos_doc_bd = clase_documento.ObtenerFormato(empresa_documento, numero_documento, prefijo);
+				TblDocumentos datos_doc_bd = clase_documento.ObtenerParaPrueba(empresa_documento, numero_documento, prefijo);
 
 				var documento_obj = (dynamic)null;
 

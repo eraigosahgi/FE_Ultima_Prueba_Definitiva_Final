@@ -356,12 +356,6 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			onValueChanged: function (data) {
 				$scope.TxtNumeroDoc = data.value;
 			}
-		}).dxValidator({
-			validationRules: [{
-				type: "required",
-				message: "Debe ingresar el número del documento."
-			}],
-			validationGroup: "FrmMailPruebaFormato",
 		});
 
 		$("#TxtMailPrueba").dxTextBox({
@@ -408,6 +402,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 	function EnviarMail(codigo, nit, mail, empresa_documento, prefijo, numero_documento) {
 
 		prefijo = (prefijo == undefined) ? "" : prefijo;
+		numero_documento = (numero_documento == undefined) ? "" : numero_documento;
 
 		SrvFormatos.EnviarFormatoPrueba(codigo, nit, mail, empresa_documento, prefijo, numero_documento).then(function (data) {
 
@@ -556,8 +551,6 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			accept: "text/xml",
 			uploadMode: "useForm",
 			onValueChanged: function (e) {
-
-				console.log(e.value[0].type);
 
 				var fReader = new FileReader();
 
