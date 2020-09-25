@@ -23,6 +23,8 @@ namespace HGInetMiFacturaElectonicaController
         {
             try
             {
+				context.Configuration.LazyLoadingEnabled = false;
+
                 TblOpciones opcion = (from opc in context.TblOpciones
                                       where (opc.IntId == id_opcion)
                                       select opc).FirstOrDefault();
@@ -43,6 +45,8 @@ namespace HGInetMiFacturaElectonicaController
         {
             try
             {
+				context.Configuration.LazyLoadingEnabled = false;
+
                 List<TblOpciones> opciones = (from opc in context.TblOpciones
                                               select opc).ToList();
 

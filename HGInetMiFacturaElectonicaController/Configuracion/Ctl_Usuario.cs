@@ -693,7 +693,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
-				var respuesta = from usuario in context.TblUsuarios
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var respuesta = from usuario in context.TblUsuarios.AsNoTracking()
 								where (usuario.StrIdSeguridad.Equals(id_seguridad))
 								select usuario;
 
@@ -832,7 +834,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
-				var respuesta = (from opciones in context.TblOpciones
+				context.Configuration.LazyLoadingEnabled = false;
+				var respuesta = (from opciones in context.TblOpciones.AsNoTracking()
 								 join opcionesUsuario in context.TblOpcionesUsuario on opciones.IntId equals opcionesUsuario.IntIdOpcion
 								 where (opcionesUsuario.StrUsuario.Equals(codigo_usuario) && opcionesUsuario.StrEmpresa.Equals(codigo_empresa))
 								 && opciones.IntTipo == 0

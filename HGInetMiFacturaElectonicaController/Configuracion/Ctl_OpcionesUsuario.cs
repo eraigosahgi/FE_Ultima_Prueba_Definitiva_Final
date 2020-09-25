@@ -143,7 +143,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 int cod_opcion = -1;
                 int.TryParse(codigo_opcion, out cod_opcion);
 
-                List<TblOpcionesUsuario> permisos_usuario = (from permiso in context.TblOpcionesUsuario
+
+				context.Configuration.LazyLoadingEnabled = false;
+
+                List<TblOpcionesUsuario> permisos_usuario = (from permiso in context.TblOpcionesUsuario.Include("TblOpciones").AsNoTracking()
                                                              where permiso.StrUsuario.Equals(codigo_usuario)
                                                              && permiso.StrEmpresa.Equals(identificacion_empresa)
                                                              && (permiso.IntIdOpcion == cod_opcion || codigo_opcion.Equals("*"))
@@ -195,7 +198,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             try
             {
-                TblOpcionesUsuario datos_dependencia = (from permiso in context.TblOpcionesUsuario
+				context.Configuration.LazyLoadingEnabled = false;
+                TblOpcionesUsuario datos_dependencia = (from permiso in context.TblOpcionesUsuario.AsNoTracking()
                                                         where permiso.StrUsuario.Equals(codigo_usuario)
                                                          && permiso.StrEmpresa.Equals(identificacion_empresa)
                                                         && permiso.IntIdOpcion == codigo
@@ -220,6 +224,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             try
             {
+				context.Configuration.LazyLoadingEnabled = true;
                 List<TblOpcionesUsuario> datos_dependencia = (from permiso in context.TblOpcionesUsuario
                                                               join opcion in context.TblOpciones on permiso.IntIdOpcion equals opcion.IntId
                                                               where permiso.StrUsuario.Equals(codigo_usuario)
@@ -251,8 +256,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 int cod_opcion = -1;
                 int.TryParse(codigo_opcion, out cod_opcion);
 
+				context.Configuration.LazyLoadingEnabled = false;
 
-                List<TblOpcionesUsuario> permisos_usuario_autenticado = (from opcion in context.TblOpcionesUsuario
+                List<TblOpcionesUsuario> permisos_usuario_autenticado = (from opcion in context.TblOpcionesUsuario.Include("TblOpciones")
                                                                          where opcion.StrUsuario.Equals(usuario_autenticado)
                                                                          && opcion.StrEmpresa.Equals(empresa_autenticada)
                                                                          && (opcion.IntIdOpcion == cod_opcion || codigo_opcion.Equals("*"))
@@ -309,6 +315,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         {
             try
             {
+				context.Configuration.LazyLoadingEnabled = false;
+
                 int tipo_valor = tipo_opcion.GetHashCode();
                 List<TblOpcionesUsuario> permisos_tipo = (from opc_usuario in context.TblOpcionesUsuario
                                                           join opc in context.TblOpciones on opc_usuario.IntIdOpcion equals opc.IntId
