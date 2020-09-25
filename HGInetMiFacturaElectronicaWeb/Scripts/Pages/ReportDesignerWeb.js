@@ -242,7 +242,6 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			value: "",
 			validationGroup: "ObservacionesRespuesta",
 			onValueChanged: function (data) {
-				console.log(data.value);
 				$scope.ObservacionesSolicitud = data.value.toUpperCase();
 			}
 		}).dxValidator({
@@ -510,11 +509,8 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 	}
 
 	$scope.ExportarFormato = function (id_formato, identificacion_empresa) {
-		console.log(datos);
 
 		$http.get('/Api/ObtenerFormato?id_formato=' + id_formato + '&identificacion_empresa=' + identificacion_empresa).then(function (response) {
-
-			console.log(response.data);
 
 			var nombre_archivo = "Formato" + response.data.NitEmpresa + "-" + response.data.CodigoFormato + ".xml";
 
