@@ -1,4 +1,4 @@
-﻿var contenido_archivo_xml = "";
+﻿var contenido_archivo_xml = "", opc_pagina = "1335";
 
 var ModalAsignarFormatoApp = angular.module('ModalAsignarFormatoApp', []);
 var GestionReportesApp = angular.module('GestionReportesApp', ['ModalAsignarFormatoApp', 'dx', 'AppSrvFormatos']);
@@ -7,23 +7,34 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 	$('#modal_asignar_formato').modal('show');
 
 	var identificacion_empresa_autenticada = "";
-	var opciones_usuario, opc_crear = false, opc_editar = false, opc_gestion = false;
+	var opc_crear = false, opc_editar = false, opc_gestion = false;
 	$http.get('/api/DatosSesion/').then(function (response) {
 
 		identificacion_empresa_autenticada = response.data[0].Identificacion;
 
 		$http.get('/api/SesionDatosUsuario/').then(function (response) {
-			opciones_usuario = response.data[0].Permisos;
 
-			var item_array = {};
-			item_array = opciones_usuario.filter(d => d.IntIdOpcion == 1335);
+			$http.get('/api/Permisos?codigo_usuario=' + response.data[0].Usuario + '&identificacion_empresa=' + identificacion_empresa_autenticada + '&codigo_opcion=' + opc_pagina).then(function (response) {
+				$("#wait").hide();
+				try {
 
-			opc_crear = item_array[0].IntAgregar;
-			opc_editar = item_array[0].IntEditar;
-			opc_gestion = item_array[0].IntGestion;
+					if (response.data.length > 0) {
+						opc_crear = response.data[0].Agregar;
+						opc_editar = response.data[0].Editar;
+						opc_gestion = response.data[0].Gestion;
 
-			if (!opc_crear)
-				$("#BtnCrearFormato").hide();
+						if (!opc_crear)
+							$("#BtnCrearFormato").hide();
+					}
+
+				} catch (err) {
+					DevExpress.ui.notify(err.message, 'error', 3000);
+				}
+			}, function errorCallback(response) {
+				$('#wait').hide();
+				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			});
+
 		});
 
 
@@ -315,6 +326,44 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 
 		$('#LblTituloModal').text("Envío Formato de Prueba");
 
+		$("#TxtNitEmpresa").dxTextBox({
+			value: "",
+			onValueChanged: function (data) {
+				$scope.TxtNitEmpresa = data.value;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "required",
+				message: "Debe ingresar el nit de la empresa."
+			}, {
+				//Valida que el campo solo contenga números
+				type: "pattern",
+				pattern: "^[0-9]+$",
+				message: "El campo no debe contener letras ni caracteres especiales."
+			}],
+			validationGroup: "FrmMailPruebaFormato",
+		});
+
+		$("#TxtPrefijoDoc").dxTextBox({
+			value: "",
+			onValueChanged: function (data) {
+				$scope.TxtPrefijoDoc = data.value;
+			}
+		});
+
+		$("#TxtNumeroDoc").dxTextBox({
+			value: "",
+			onValueChanged: function (data) {
+				$scope.TxtNumeroDoc = data.value;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "required",
+				message: "Debe ingresar el número del documento."
+			}],
+			validationGroup: "FrmMailPruebaFormato",
+		});
+
 		$("#TxtMailPrueba").dxTextBox({
 			value: "",
 			onValueChanged: function (data) {
@@ -346,7 +395,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			onClick: function (params) {
 				var continua_proceso = params.validationGroup.validate().isValid;
 				if (continua_proceso) {
-					EnviarMail(codigo, nit, $scope.TxtMailPrueba);
+					EnviarMail(codigo, nit, $scope.TxtMailPrueba, $scope.TxtNitEmpresa, $scope.TxtPrefijoDoc, $scope.TxtNumeroDoc);
 					$('#modal_solicitar_aprobacion').modal('hide');
 				}
 			}
@@ -356,19 +405,17 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 
 	}
 
-	function EnviarMail(codigo, nit, mail) {
-		$http.get('/api/EnviarFormatoPrueba?id_formato=' + codigo + '&identificacion_empresa=' + nit + '&email_destino=' + mail).then(function (response) {
-			$("#wait").hide();
-			try {
+	function EnviarMail(codigo, nit, mail, empresa_documento, prefijo, numero_documento) {
 
-				DevExpress.ui.notify({ message: "El mensaje ha sido enviado con éxito.", position: { my: "center top", at: "center top" } }, "success", 1500);
+		prefijo = (prefijo == undefined) ? "" : prefijo;
 
-			} catch (err) {
-				DevExpress.ui.notify(err.message, 'error', 3000);
-			}
+		SrvFormatos.EnviarFormatoPrueba(codigo, nit, mail, empresa_documento, prefijo, numero_documento).then(function (data) {
+
+			DevExpress.ui.notify({ message: "El mensaje ha sido enviado con éxito.", position: { my: "center top", at: "center top" } }, "success", 1500);
+
 		}, function errorCallback(response) {
 			$('#wait').hide();
-			DevExpress.ui.notify(response, 'error', 6000);
+			DevExpress.ui.notify(response.ExceptionMessage, 'error', 6000);
 		});
 	}
 
@@ -578,9 +625,8 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 
 					}, function errorCallback(response) {
 						$('#wait').hide();
-						DevExpress.ui.notify(response, 'error', 6000);
+						DevExpress.ui.notify(response.ExceptionMessage, 'error', 6000);
 					});
-
 
 				}
 			}

@@ -86,8 +86,8 @@
 	<script src="../../Scripts/Scripts-descarga/angular.min.js"></script>
 
 	<!--<script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>    -->
-	
-	
+
+
 	<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script>--%>
 	<script src="../../Scripts/Scripts-descarga/jszip.min.js"></script>
 
@@ -457,7 +457,7 @@
 
 								<li>
 									<a href="#" class="has-ul legitRipple dropdown-toggle" data-toggle="dropdown"><i class="icon-store2"></i>
-										<label runat="server" class="dropdown-toggle" id="LblNombreEmpresa"></label>
+										<label runat="server" class="dropdown-toggle" id="LblNombreEmpresa" style="font-size: small"></label>
 									</a>
 									<ul>
 										<li>
@@ -471,7 +471,7 @@
 						<!-- /Menú de Usuario -->
 
 						<!-- Navegación Principal -->
-						<div class="sidebar-category sidebar-category-visible">
+						<div class="sidebar-category sidebar-category-visible" style="font-size: medium">
 							<div class="category-content no-padding">
 								<div id="DivMenu" runat="server">
 								</div>

@@ -150,6 +150,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 		#region Agregar
+
 		/// <summary>
 		/// Almacena el formato en la base de datos
 		/// </summary>
@@ -197,7 +198,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			try
 			{
 				int formato_resultado = 0;
-
+				context.Configuration.LazyLoadingEnabled = false;
 				IEnumerable<TblFormatos> datos = (from formato in context.TblFormatos
 												  where formato.StrEmpresa.Equals(identificacion_empresa)
 												  select formato);
@@ -394,6 +395,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
+				context.Configuration.LazyLoadingEnabled = false;
+
 				TblFormatos formato_resultado = (from formato in context.TblFormatos
 												 where formato.StrIdSeguridad == IdSeguridad
 												 select formato).FirstOrDefault();
@@ -595,8 +598,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
-
-
 		#region Notificaciones
 
 		public bool GestionarNotificacion(TipoAlerta tipo_alerta, TiposProceso tipo_proceso, TblFormatos datos_formato, TblEmpresas empresa_autenticada, TblUsuarios datos_usuario, string observaciones_solicitud)
@@ -720,7 +721,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
-
 		#region Envío mail prueba
 
 		/// <summary>
@@ -732,7 +732,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="tipo_formato"></param>
 		/// <param name="email_destino"></param>
 		/// <returns></returns>
-		public bool EnviarFormatoPrueba(TblEmpresas empresa_autenticada, int id_formato, string identificacion_empresa, int tipo_formato, string email_destino)
+		public bool EnviarFormatoPrueba(TblEmpresas empresa_autenticada, int id_formato, string identificacion_empresa, int tipo_formato, string email_destino, string empresa_documento, string prefijo, long numero_documento)
 		{
 			try
 			{
@@ -750,59 +750,66 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				//Obtiene los datos del último documento generado
 				Ctl_Documento clase_documento = new Ctl_Documento();
-				TblDocumentos datos_doc_bd = clase_documento.Obtener(datos_formato.StrEmpresa).OrderByDescending(f => f.DatFechaIngreso).FirstOrDefault();
-				string contenido_xml = Archivo.ObtenerContenido(datos_doc_bd.StrUrlArchivoUbl);
+				TblDocumentos datos_doc_bd = clase_documento.ObtenerFormato(empresa_documento, numero_documento, prefijo);
 
-				// valida el contenido del archivo
-				if (string.IsNullOrWhiteSpace(contenido_xml))
-					throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
-
-				// convierte el contenido de texto a xml
-				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
 				var documento_obj = (dynamic)null;
-				// convierte el objeto de acuerdo con el tipo de documento
-				XmlSerializer serializacion = null;
-				if (datos_doc_bd.IntVersionDian == 1)
+
+				if (datos_doc_bd != null)
 				{
-					documento_obj = new Factura();
-					serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
-					HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
-					documento_obj = FacturaXML.Convertir(conversion, datos_doc_bd);
+					string contenido_xml = Archivo.ObtenerContenido(datos_doc_bd.StrUrlArchivoUbl);
+
+					// valida el contenido del archivo
+					if (string.IsNullOrWhiteSpace(contenido_xml))
+						throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
+
+					// convierte el contenido de texto a xml
+					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+
+					// convierte el objeto de acuerdo con el tipo de documento
+					XmlSerializer serializacion = null;
+					if (datos_doc_bd.IntVersionDian == 1)
+					{
+						documento_obj = new Factura();
+						serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
+						HGInetUBL.InvoiceType conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
+						documento_obj = FacturaXML.Convertir(conversion, datos_doc_bd);
+					}
+					else
+					{
+						TipoDocumento tipo_documento = Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc_bd.IntDocTipo);
+
+						if (tipo_documento == TipoDocumento.Factura)
+						{
+							serializacion = new XmlSerializer(typeof(InvoiceType));
+							InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+							documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, datos_doc_bd);
+							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+						}
+						else if (tipo_documento == TipoDocumento.NotaCredito)
+						{
+							serializacion = new XmlSerializer(typeof(CreditNoteType));
+							CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+							documento_obj = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, datos_doc_bd);
+							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+						}
+						else if (tipo_documento == TipoDocumento.NotaDebito)
+						{
+							serializacion = new XmlSerializer(typeof(DebitNoteType));
+							DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+							documento_obj = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, datos_doc_bd);
+							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+						}
+					}
 				}
 				else
 				{
-
-					TipoDocumento tipo_documento = Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc_bd.IntDocTipo);
-
-
-					if (tipo_documento == TipoDocumento.Factura)
-					{
-						serializacion = new XmlSerializer(typeof(InvoiceType));
-						InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
-						documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, datos_doc_bd);
-						if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-							documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
-					}
-					else if (tipo_documento == TipoDocumento.NotaCredito)
-					{
-						serializacion = new XmlSerializer(typeof(CreditNoteType));
-						CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
-						documento_obj = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, datos_doc_bd);
-						if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-							documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
-					}
-					else if (tipo_documento == TipoDocumento.NotaDebito)
-					{
-						serializacion = new XmlSerializer(typeof(DebitNoteType));
-
-						DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
-
-						documento_obj = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, datos_doc_bd);
-						if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-							documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
-					}
-
-
+					documento_obj = new Factura();
+					documento_obj.Documento = numero_documento;
+					documento_obj.Prefijo = prefijo;
 				}
 
 				report.DataSource = documento_obj;
@@ -837,7 +844,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Ctl_EnvioCorreos clase_correos = new Ctl_EnvioCorreos();
 
 				List<MensajeEnvio> respuesta_email = clase_correos.EnvioFormatoPrueba(empresa_autenticada, datos_formato, adjuntos, email_destino);
-
 
 				return true;
 			}

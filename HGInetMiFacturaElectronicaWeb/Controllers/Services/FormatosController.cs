@@ -20,6 +20,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
 	public class FormatosController : ApiController
 	{
+
+		private string DescripcionEstado(int codigo_enum)
+		{
+			try
+			{
+				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadosFormato>(codigo_enum));
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message);
+			}
+		}	
+		
+		#region Obtener
+		
 		/// <summary>
 		/// Obtiene los formatos
 		/// </summary>
@@ -68,53 +83,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-		private string DescripcionEstado(int codigo_enum)
-		{
-			try
-			{
-				return Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadosFormato>(codigo_enum));
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message);
-			}
-		}
-
-		[HttpPost]
-		[Route("Api/ActualizarEstadoFormato")]
-		public IHttpActionResult ActualizarEstadoFormato(int id_formato, string identificacion_empresa, int estado_actual, int tipo_proceso, string observaciones)
+		[HttpGet]
+		[Route("Api/ObtenerFormato")]
+		public IHttpActionResult ObtenerFormato(int id_formato, string identificacion_empresa)
 		{
 			try
 			{
 				Sesion.ValidarSesion();
+				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
 				TblFormatos datos_formatos = new TblFormatos();
 
-				Ctl_Formatos clase_formatos = new Ctl_Formatos();
+				//int formato_base, string empresa_base
+				TblFormatos datos = clase_formatos.Obtener(id_formato, identificacion_empresa, TipoFormato.FormatoPDF.GetHashCode());
 
-				TiposProceso tipo_proceso_bd = Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso);
-				datos_formatos = clase_formatos.ActualizarEstadoFormato(id_formato, identificacion_empresa, estado_actual, TipoFormato.FormatoPDF.GetHashCode(), Sesion.DatosEmpresa, Sesion.DatosUsuario, tipo_proceso_bd, observaciones);
 
-				return Ok();
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
-
-		[HttpPut]
-		[Route("Api/ImportarFormato")]
-		public IHttpActionResult ImportarFormato(ObjFormato objeto)
-		{
-			try
-			{
-				Sesion.ValidarSesion();
-
-				TblFormatos datos_formatos = new TblFormatos();
-
-				Ctl_Formatos clase_formatos = new Ctl_Formatos();
-				TblFormatos datos = clase_formatos.ImportarFormato(objeto, Sesion.DatosUsuario.StrIdSeguridad);
 
 				var datos_retorno = new
 				{
@@ -130,6 +113,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FormatoXml = clase_formatos.ConvertirFormatoXml(datos.Formato),
 					IdSeguridad = datos.StrIdSeguridad,
 				};
+
 				return Ok(datos_retorno);
 			}
 			catch (Exception excepcion)
@@ -137,6 +121,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+		#endregion
+
+		#region Insertar
 
 		[HttpPost]
 		[Route("Api/AlmacenarFormatoPdf")]
@@ -179,16 +167,69 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		#endregion
+
+		#region Actualizar
+		
+		[HttpPost]
+		[Route("Api/ActualizarEstadoFormato")]
+		public IHttpActionResult ActualizarEstadoFormato(int id_formato, string identificacion_empresa, int estado_actual, int tipo_proceso, string observaciones)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				TblFormatos datos_formatos = new TblFormatos();
+
+				Ctl_Formatos clase_formatos = new Ctl_Formatos();
+
+				TiposProceso tipo_proceso_bd = Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso);
+				datos_formatos = clase_formatos.ActualizarEstadoFormato(id_formato, identificacion_empresa, estado_actual, TipoFormato.FormatoPDF.GetHashCode(), Sesion.DatosEmpresa, Sesion.DatosUsuario, tipo_proceso_bd, observaciones);
+
+				return Ok();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		#endregion
+
+		#region Procesos
+
+		[HttpPut]
+		[Route("Api/ImportarFormato")]
+		public IHttpActionResult ImportarFormato(ObjFormato objeto)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				TblFormatos datos_formatos = new TblFormatos();
+
+				Ctl_Formatos clase_formatos = new Ctl_Formatos();
+				TblFormatos datos = clase_formatos.ImportarFormato(objeto, Sesion.DatosUsuario.StrIdSeguridad);
+
+				return Ok(true);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
 		[HttpGet]
 		[Route("Api/EnviarFormatoPrueba")]
-		public IHttpActionResult EnviarFormatoPrueba(int id_formato, string identificacion_empresa, string email_destino)
+		public IHttpActionResult EnviarFormatoPrueba(int id_formato, string identificacion_empresa, string email_destino, string empresa_documento, string prefijo, long numero_documento)
 		{
 			try
 			{
 				Sesion.ValidarSesion();
 				Ctl_Formatos clase_formatos = new Ctl_Formatos();
 
-				bool respuesta_envio = clase_formatos.EnviarFormatoPrueba(Sesion.DatosEmpresa, id_formato, identificacion_empresa, TipoFormato.FormatoPDF.GetHashCode(), email_destino);
+				bool respuesta_envio = clase_formatos.EnviarFormatoPrueba(Sesion.DatosEmpresa, id_formato, identificacion_empresa, TipoFormato.FormatoPDF.GetHashCode(), email_destino, empresa_documento, prefijo, numero_documento);
 
 				return Ok(respuesta_envio);
 			}
@@ -198,45 +239,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-		[HttpGet]
-		[Route("Api/ObtenerFormato")]
-		public IHttpActionResult ObtenerFormato(int id_formato, string identificacion_empresa)
-		{
-			try
-			{
-				Sesion.ValidarSesion();
-				Ctl_Formatos clase_formatos = new Ctl_Formatos();
-
-				TblFormatos datos_formatos = new TblFormatos();
-
-				//int formato_base, string empresa_base
-				TblFormatos datos = clase_formatos.Obtener(id_formato, identificacion_empresa, TipoFormato.FormatoPDF.GetHashCode());
-
-
-
-				var datos_retorno = new
-				{
-					ClavePrimaria = string.Format("{0}-{1}", datos.IntCodigoFormato, datos.StrEmpresa),
-					CodigoFormato = datos.IntCodigoFormato,
-					FechaRegistro = datos.DatFechaRegistro.ToString(Fecha.formato_fecha_hginet),
-					Titulo = (datos.IntGenerico) ? "Prediseñado" : "Personalizado",
-					Estado = datos.IntEstado,
-					TipoDoc = datos.IntDocTipo,
-					NitEmpresa = datos.StrEmpresa,
-					RazonSocial = datos.TblEmpresas.StrRazonSocial,
-					EstadoDescripcion = DescripcionEstado(datos.IntEstado),
-					FormatoXml = clase_formatos.ConvertirFormatoXml(datos.Formato),
-					IdSeguridad = datos.StrIdSeguridad,
-				};
-
-				return Ok(datos_retorno);
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
-
+		#endregion
 
 	}
 }

@@ -110,30 +110,43 @@
 						</div>
 
 						<div class="col-md-12" id="CampoMailPrueba">
+							<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Documento Facturador:</label>
+							<div id="TxtNitEmpresa"></div>
+
+							<div class="row">
+								<div class="col-md-6">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Prefijo Documento:</label>
+									<div id="TxtPrefijoDoc"></div>
+								</div>
+								<div class="col-md-6">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%"># Documento:</label>
+									<div id="TxtNumeroDoc"></div>
+								</div>
+							</div>
+
 							<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Email:</label>
 							<div id="TxtMailPrueba"></div>
 						</div>
 
 						<div id="summary"></div>
 
-						<div id="SolicitudAprobacion">
-							<div class="col-md-12 text-right">
+					</div>
+
+					<div id="divsombra" class="modal-footer">
+						<div class="col-md-12 text-right">
+
+							<div id="SolicitudAprobacion">
 								<br />
 								<div id="BtnSolicitarAprobacion"></div>
 							</div>
-						</div>
 
-						<div id="AprobacionFormato">
-							<div class="col-md-12 text-right">
+							<div id="AprobacionFormato">
 								<br />
 								<div id="BtnRechazarFormato"></div>
 								<div id="BtnAprobarFormato"></div>
 							</div>
+
 						</div>
-
-					</div>
-
-					<div id="divsombra" class="modal-footer" style="margin-top: 22%">
 					</div>
 
 				</div>

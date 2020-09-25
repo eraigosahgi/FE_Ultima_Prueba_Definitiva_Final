@@ -149,6 +149,28 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
+		public TblDocumentos ObtenerFormato(string identificacion_obligado, long numero_documeto, string prefijo)
+		{
+			try
+			{
+				if (string.IsNullOrWhiteSpace(prefijo))
+					prefijo = "*";
+
+				context.Configuration.LazyLoadingEnabled = false;
+				TblDocumentos documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+										   where (documentos.IntNumero == numero_documeto)
+										   && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
+										   && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
+										   select documentos).OrderByDescending(x => x.DatFechaDocumento).FirstOrDefault();
+
+				return documento;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 		/// <summary>
 		/// Obtiene los documentos por número
@@ -491,8 +513,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				context.Configuration.LazyLoadingEnabled = false;
 
-				documentos = (from datos in context.TblDocumentos.AsNoTracking()							  
-							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))							 
+				documentos = (from datos in context.TblDocumentos.AsNoTracking()
+							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
 							  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
 							  && (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
 							  && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
