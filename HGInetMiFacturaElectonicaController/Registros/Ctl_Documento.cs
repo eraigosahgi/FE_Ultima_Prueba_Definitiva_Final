@@ -202,6 +202,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Convierte Numeros en una lista.
 				List<string> lista_documentos = Coleccion.ConvertirLista(Numeros);
 
+				context.Configuration.LazyLoadingEnabled = false;
+
 				var respuesta = from documento in context.TblDocumentos
 								join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
 								where empresa.StrIdentificacion.Equals(identificacion_obligado)
@@ -220,7 +222,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					Ctl_Documento documento = new Ctl_Documento();
 
-					var lista = documento.ProcesarDocumentos(List_id_seguridad);
+					var lista = documento.ProcesarDocumentosSinLazy(List_id_seguridad);
 
 					lista_respuesta.Add(Convertir(item));
 				}
@@ -1872,9 +1874,35 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			try
 			{
+
 				List<TblDocumentos> retorno = (from doc in context.TblDocumentos
 											   where List_id_seguridad.Contains(doc.StrIdSeguridad)
 											   select doc).ToList();
+
+
+				return retorno;
+
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		/// <summary>
+		/// procesa Lista de Documentos sin lazyloading
+		/// </summary>
+		/// <param name="List_id_seguridad"></param>        
+		/// <returns></returns>
+		public List<TblDocumentos> ProcesarDocumentosSinLazy(List<System.Guid> List_id_seguridad)
+		{
+			try
+			{
+				context.Configuration.LazyLoadingEnabled = false;
+
+				List<TblDocumentos> retorno = (from doc in context.TblDocumentos
+					where List_id_seguridad.Contains(doc.StrIdSeguridad)
+					select doc).ToList();
 
 
 				return retorno;

@@ -611,7 +611,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Documento documento = new Ctl_Documento();
 
-				var lista = documento.ProcesarDocumentos(List_id_seguridad);
+				var lista = documento.ProcesarDocumentosSinLazy(List_id_seguridad);
 
 				List<TblDocumentos> datos = new List<TblDocumentos>();
 
