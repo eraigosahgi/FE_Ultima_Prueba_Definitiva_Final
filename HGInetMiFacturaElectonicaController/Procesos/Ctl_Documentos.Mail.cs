@@ -179,8 +179,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				// envía el mail de documentos y de creación de adquiriente
-				//respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result, notificacion_basica);
-				Task envio = EnviarMailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, respuesta, documento_result, notificacion_basica);
+				respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result, notificacion_basica);
+				//Task envio = EnviarMailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, respuesta, documento_result, notificacion_basica);
 				//ValidarRespuesta(respuesta);
 			}
 			catch (Exception excepcion)

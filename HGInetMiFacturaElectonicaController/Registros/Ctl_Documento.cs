@@ -622,7 +622,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <returns></returns>
 		public List<TblDocumentos> ObtenerPorPlan(Guid IdPlan)
 		{
-			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
+			context.Configuration.LazyLoadingEnabled = false;
+
+			List<TblDocumentos> documentos = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador")
 											  where (datos.StrIdPlanTransaccion == IdPlan)
 											  orderby datos.DatFechaIngreso descending
 											  select datos).ToList();
@@ -1011,7 +1013,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			try
 			{
-				var respuesta = (from datos in context.TblDocumentos
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
 								 where datos.StrIdSeguridad.Equals(id_seguridad)
 								 select datos
 								 );
