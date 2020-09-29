@@ -255,9 +255,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 
 
-			datos_plan = (from t in context.TblPlanesTransacciones
-						  join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
-						  join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
+			context.Configuration.LazyLoadingEnabled = false;
+			datos_plan = (from t in context.TblPlanesTransacciones.Include("TblEmpresas")
+						  //join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
+						  //join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
 						  where (t.StrEmpresaFacturador.Equals(Identificacion) || Identificacion.Equals("*"))
 						  && (LstTipoPlan.Contains(t.IntTipoProceso) || TipoPlan == "*")
 						  && (LstEstadoPlan.Contains(t.IntEstado) || Estado == "*")
