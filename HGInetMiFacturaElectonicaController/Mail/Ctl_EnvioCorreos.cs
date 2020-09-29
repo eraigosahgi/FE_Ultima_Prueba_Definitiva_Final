@@ -564,15 +564,19 @@ namespace HGInetMiFacturaElectonicaController
 							destinatario.Email = correo_registrado;
 							correos_destino.Add(destinatario);
 						}
-							
-						foreach (var item_mail in Coleccion.ConvertirLista(nuevo_email, ';'))
+						else
 						{
-							// recibe el email el adquiriente
-							destinatario = new DestinatarioEmail();
-							destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
-							destinatario.Email = item_mail;
-							correos_destino.Add(destinatario);
+							foreach (var item_mail in Coleccion.ConvertirLista(nuevo_email, ';'))
+							{
+								// recibe el email el adquiriente
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
+								destinatario.Email = item_mail;
+								correos_destino.Add(destinatario);
+							}
 						}
+							
+						
 					}
 					else
 					{
