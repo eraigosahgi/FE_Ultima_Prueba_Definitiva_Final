@@ -59,6 +59,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				string nombre_comercial = string.IsNullOrEmpty(documento_obj.DatosObligado.NombreComercial) ? documento_obj.DatosObligado.RazonSocial : documento_obj.DatosObligado.NombreComercial;
 				mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, nombre_comercial);
+				
 				//Actualiza la respuesta del envio del correo
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
 				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
@@ -83,6 +84,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			try
 			{
 				//Valida si el proceso es completo para actualizar estados y bd
+				//Se inactiva por que ya se hace antes de la tarea asincrona
+				/*
 				if (!notificacion_basica)
 				{
 					respuesta.DescripcionProceso = string.Format("{0} - En estado EXITOSA", respuesta.DescripcionProceso);
@@ -101,7 +104,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 					ValidarRespuesta(respuesta, "", mensajes, false);
-				}
+				}*/
 			}
 			catch (Exception excepcion)
 			{
@@ -179,8 +182,40 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				// envía el mail de documentos y de creación de adquiriente
-				respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result, notificacion_basica);
-				//Task envio = EnviarMailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, respuesta, documento_result, notificacion_basica);
+				//respuesta = Ctl_Documentos.MailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, ref respuesta, ref documento_result, notificacion_basica);
+				Task envio = EnviarMailDocumentos(documento, documentoBd, empresa, adquiriente_nuevo, adquirienteBd, usuarioBd, respuesta, documento_result, notificacion_basica);
+
+				//Actualiza la respuesta del envio del correo
+				respuesta.FechaUltimoProceso = Fecha.GetFecha();
+				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
+				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
+				documentoBd.IntEnvioMail = true;
+				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
+				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+
+				//Valida si el proceso es completo para actualizar estados y bd
+				if (!notificacion_basica)
+				{
+					respuesta.DescripcionProceso = string.Format("{0} - En estado EXITOSA", respuesta.DescripcionProceso);
+
+					//Actualiza la respuesta
+					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
+					respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
+
+					//Actualiza Documento en Base de Datos
+					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+					Ctl_Documento documento_tmp = new Ctl_Documento();
+					documento_tmp.Actualizar(documentoBd);
+
+					//Actualiza la categoria con el nuevo estado
+					respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+					ValidarRespuesta(respuesta, "", null, false);
+				}
+
+
+
 				//ValidarRespuesta(respuesta);
 			}
 			catch (Exception excepcion)
