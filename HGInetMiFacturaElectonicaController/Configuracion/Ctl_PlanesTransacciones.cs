@@ -195,10 +195,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				LstEstadoPlan = Coleccion.ConvertirStringInt(Estado);
 			}
 
+			context.Configuration.LazyLoadingEnabled = false;
 
-			datos_plan = (from t in context.TblPlanesTransacciones.Include("TblEmpresas").Include("TblUsuarios")
-						  join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
-						  join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
+			datos_plan = (from t in context.TblPlanesTransacciones.Include("TblEmpresas")
+						  //join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
+						  //join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
 						  where ListaFacturadores.Contains(t.StrEmpresaFacturador)
 						  && (LstTipoPlan.Contains(t.IntTipoProceso) || TipoPlan == "*")
 						  && (LstEstadoPlan.Contains(t.IntEstado) || Estado == "*")
@@ -293,7 +294,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public IEnumerable<string> FacturadoresAsociadosPlan(string Stridentificacion)
 		{
-			
+			context.Configuration.LazyLoadingEnabled = false;
+
 			var ListaFacturadores = (from lista in context.TblEmpresas
 									 where lista.StrEmpresaAsociada.Equals(
 										 (from datos in context.TblEmpresas

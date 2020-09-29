@@ -104,7 +104,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var retorno = datos.Select(d => new
 				{
-					Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
+					Empresa = d.StrEmpresaUsuario,
 					Usuario = d.StrUsuario,
 					Valor = d.IntValor,
 					TCompra = d.IntNumTransaccCompra,
