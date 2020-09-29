@@ -1012,10 +1012,37 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 
 			try
-			{
+			{				
+
 				context.Configuration.LazyLoadingEnabled = false;
 
 				var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+								 where datos.StrIdSeguridad.Equals(id_seguridad)
+								 select datos
+								 );
+
+				return respuesta.ToList();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		/// <summary>
+		/// Obtiene los documentos por id se seguridad.
+		/// </summary>
+		/// <param name="id_seguridad"></param>
+		/// <returns></returns>
+		public List<TblDocumentos> ObtenerPorIdSeguridad(System.Guid id_seguridad, bool LazyLoading = true)
+		{
+
+			try
+			{
+				context.Configuration.LazyLoadingEnabled = LazyLoading;
+
+				var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasResoluciones").Include("TblPagosElectronicos")
 								 where datos.StrIdSeguridad.Equals(id_seguridad)
 								 select datos
 								 );

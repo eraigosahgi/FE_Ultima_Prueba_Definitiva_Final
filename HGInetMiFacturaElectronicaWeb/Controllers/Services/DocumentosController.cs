@@ -347,7 +347,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
+				List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad, false);
 
 				//Actualiza el estado del Acuse como leido
 				ctl_documento = new Ctl_Documento();
@@ -374,7 +374,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				var retorno = datos.Select(d => new
 				{
 					NumeroDocumento = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
-					IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+					IdAdquiriente = d.StrEmpresaAdquiriente,
 					NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
 					Cufe = d.StrCufe,
 					IdSeguridad = d.StrIdSeguridad,
@@ -387,7 +387,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
 					CamposVisibles = (d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Pendiente.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Entregado.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Leido.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Enviado.GetHashCode()) ? true : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
-					//poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
 					Estatus = Pago.VerificarSaldo(id_seguridad),
 					XmlAcuse = d.StrUrlAcuseUbl,
 					EstadoCat = d.IdCategoriaEstado,
@@ -404,7 +403,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						p.StrIdRegistro,
 						p.IntEstadoPago
 					}
-
 					//Se coloca este codigo adicional, para validar si el documento tiene un pago pendiente, y si es asi, este debe retornar un segundo objeto
 					//con el codigo unico de pago en la plataforma de FE, para poder hacer la consulta desde acuse y validar en la plataforma intermedia el estado del documento
 					).Where(x => x.IntEstadoPago.Equals(EstadoPago.Pendiente.GetHashCode()) || x.IntEstadoPago.Equals(EstadoPago.Pendiente2.GetHashCode()))
