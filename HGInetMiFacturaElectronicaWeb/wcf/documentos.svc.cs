@@ -11,6 +11,7 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
 using HGInetMiFacturaElectonicaController.Procesos;
+using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -45,7 +46,16 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 //Obtiene los datos
                 respuesta = ctl_documento.ConsultaPorNumeros(Identificacion, TipoDocumento, Numeros);
 
-                return respuesta;
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("ConsultaPorNumeros", DataKey, Identificacion, TipoDocumento.ToString(), Numeros, respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{
+				}
+
+				return respuesta;
             }
             catch (Exception exec)
             {
@@ -76,7 +86,16 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 //Obtiene los datos
                 respuesta = ctl_documento.ConsultaPorCodigoRegistro(Identificacion, TipoDocumento, CodigosRegistros);
 
-                return respuesta;
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("ConsultaPorCodigoRegistro", DataKey, Identificacion, TipoDocumento.ToString(), CodigosRegistros.ToString(), respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{					
+				}
+
+				return respuesta;
 
             }
             catch (Exception exec)
@@ -122,7 +141,16 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 //Obtiene los datos
                 respuesta = ctl_documento.ConsultaPorFechaElaboracion(Identificacion, TipoDocumento, FechaInicial, FechaFinal);
 
-                return respuesta;
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("ConsultaPorFechaElaboracion", DataKey, Identificacion, TipoDocumento.ToString(), FechaInicial.ToString(), FechaFinal.ToString(), respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{					
+				}
+
+				return respuesta;
 
             }
             catch (Exception exec)

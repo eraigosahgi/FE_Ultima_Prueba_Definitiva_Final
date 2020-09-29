@@ -22,10 +22,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Script.Serialization;
@@ -1122,7 +1125,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<ObjDocumentos> datos = ctl_documento.ObtenerAdministrador(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento, tipo_fecha, Desde, Hasta);
-
+		
 				if (datos == null)
 				{
 					return NotFound();
@@ -1164,13 +1167,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.EnvioMail
 				});
 
+				//Task tarea = Peticion.GuardarPeticionAsync("ObtenerDocumentosAdmin", codigo_facturador, fecha_inicio.ToString(), fecha_fin.ToString(), datos.Count.ToString());
+
 				return Ok(resultado);
-			}
+	}
 			catch (Exception excepcion)
 			{
 
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
+}
 
 		}
 
@@ -1188,393 +1193,393 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 
 		public IHttpActionResult Get(System.Guid strIdSeguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0, string usuario = "")
+{
+	Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+	var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago, usuario);
+	return Ok(datos);
+
+}
+
+
+
+/// <summary>
+/// Obtiene la lista de pagos de un documento en especifico
+/// </summary>
+/// <param name="strIdSeguridad"></param>        
+/// <returns></returns>
+
+[HttpGet]
+[Route("Api/ConsultarPagos")]
+public IHttpActionResult ConsultarPagos(System.Guid StrIdSeguridadDoc)
+{
+
+	try
+	{
+		Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+		var datos = Pago.Obtener(StrIdSeguridadDoc);
+
+
+		if (datos == null)
 		{
-			Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
-
-			var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago, usuario);
-			return Ok(datos);
-
+			return NotFound();
 		}
 
-
-
-		/// <summary>
-		/// Obtiene la lista de pagos de un documento en especifico
-		/// </summary>
-		/// <param name="strIdSeguridad"></param>        
-		/// <returns></returns>
-
-		[HttpGet]
-		[Route("Api/ConsultarPagos")]
-		public IHttpActionResult ConsultarPagos(System.Guid StrIdSeguridadDoc)
+		var retorno = datos.Select(d => new
 		{
+			//Encabezado del pago
+			RazonSocialFacturador = d.TblEmpresasFacturador.StrRazonSocial,
+			NitFacturador = d.TblEmpresasFacturador.StrIdentificacion,
+			Telefono = d.TblEmpresasFacturador.StrTelefono,
+			Mail = d.TblEmpresasFacturador.StrMailAdmin,
+			DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
+			IntNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
+			FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
 
-			try
+			//Detalle del pago
+			Pagos = d.TblPagosElectronicos.Select(p => new
 			{
-				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+				Monto = p.IntValorPago,
+				FechaRegistro = p.DatFechaRegistro,
+				FechaVerificacion = p.DatFechaVerificacion,
+				StrIdSeguridadPago = p.StrIdSeguridadPago,
+				IdRegistro = p.StrIdRegistro,
+				Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(p.IntEstadoPago)),
+			}).OrderByDescending(x => x.FechaRegistro)
 
-				var datos = Pago.Obtener(StrIdSeguridadDoc);
+		});
 
+		return Ok(retorno);
+	}
+	catch (Exception excepcion)
+	{
 
-				if (datos == null)
-				{
-					return NotFound();
-				}
-
-				var retorno = datos.Select(d => new
-				{
-					//Encabezado del pago
-					RazonSocialFacturador = d.TblEmpresasFacturador.StrRazonSocial,
-					NitFacturador = d.TblEmpresasFacturador.StrIdentificacion,
-					Telefono = d.TblEmpresasFacturador.StrTelefono,
-					Mail = d.TblEmpresasFacturador.StrMailAdmin,
-					DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
-					IntNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
-					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
-
-					//Detalle del pago
-					Pagos = d.TblPagosElectronicos.Select(p => new
-					{
-						Monto = p.IntValorPago,
-						FechaRegistro = p.DatFechaRegistro,
-						FechaVerificacion = p.DatFechaVerificacion,
-						StrIdSeguridadPago = p.StrIdSeguridadPago,
-						IdRegistro = p.StrIdRegistro,
-						Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(p.IntEstadoPago)),
-					}).OrderByDescending(x => x.FechaRegistro)
-
-				});
-
-				return Ok(retorno);
-			}
-			catch (Exception excepcion)
-			{
-
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
+		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+	}
 
 
+}
+
+
+
+/// <summary>
+/// Obtiene el saldo de un documento en especifico
+/// </summary>
+/// <param name="strIdSeguridad"></param>        
+/// <returns></returns>
+
+[HttpGet]
+[Route("Api/ConsultaSaldoDocumento")]
+public IHttpActionResult ConsultaSaldoDocumento(System.Guid StrIdSeguridadDoc)
+{
+
+	try
+	{
+		Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+		var datos = Pago.ConsultaSaldoDocumento(StrIdSeguridadDoc);
+
+
+		if (datos == null)
+		{
+			return NotFound();
+		}
+		return Ok(datos);
+	}
+	catch (Exception excepcion)
+	{
+
+		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+	}
+}
+
+/// <summary>
+/// Obtiene la lista de pagos realizadas a un facturador
+/// </summary>
+/// <param name="strIdSeguridad"></param>        
+/// <returns></returns>
+
+[HttpGet]
+[Route("Api/ObtenerPagosFacturador")]
+public IHttpActionResult ObtenerPagosFacturador(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
+{
+
+	try
+	{
+		Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+		var datos = Pago.ObtenerPagosFacturador(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
+
+
+		if (datos == null)
+		{
+			return NotFound();
 		}
 
-
-
-		/// <summary>
-		/// Obtiene el saldo de un documento en especifico
-		/// </summary>
-		/// <param name="strIdSeguridad"></param>        
-		/// <returns></returns>
-
-		[HttpGet]
-		[Route("Api/ConsultaSaldoDocumento")]
-		public IHttpActionResult ConsultaSaldoDocumento(System.Guid StrIdSeguridadDoc)
+		var retorno = datos.Select(d => new
 		{
+			NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
+			StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaAdquiriente,
+			NombreAdquiriente = d.TblDocumentos.TblEmpresasAdquiriente.StrRazonSocial,
+			DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+			DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+			PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
+			//EstadoFactura = (d.IntEstadoPago == 0) ? "Rechazado" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Pendiente" : "",
+			EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+			CodEstado = d.IntEstadoPago,
+			idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+			StrIdRegistro = d.StrIdRegistro,
+			StrIdSeguridadDoc = d.StrIdSeguridadDoc
 
-			try
-			{
-				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-				var datos = Pago.ConsultaSaldoDocumento(StrIdSeguridadDoc);
+		});
+
+		return Ok(retorno);
+	}
+	catch (Exception excepcion)
+	{
+
+		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+	}
 
 
-				if (datos == null)
-				{
-					return NotFound();
-				}
-				return Ok(datos);
-			}
-			catch (Exception excepcion)
-			{
+}
 
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
+/// <summary>
+/// Obtiene la lista de pagos realizadas a un adquiriente
+/// </summary>
+/// <param name="strIdSeguridad"></param>        
+/// <returns></returns>
+[HttpGet]
+[Route("Api/ObtenerPagosAdquiriente")]
+public IHttpActionResult ObtenerPagosAdquiriente(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string codigo_facturador, int tipo_fecha)
+{
+
+	try
+	{
+		Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+		var datos = Pago.ObtenerPagosAdquiriente((string.IsNullOrEmpty(codigo_facturador)) ? "*" : codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
+
+
+		if (datos == null)
+		{
+			return NotFound();
 		}
 
-		/// <summary>
-		/// Obtiene la lista de pagos realizadas a un facturador
-		/// </summary>
-		/// <param name="strIdSeguridad"></param>        
-		/// <returns></returns>
-
-		[HttpGet]
-		[Route("Api/ObtenerPagosFacturador")]
-		public IHttpActionResult ObtenerPagosFacturador(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
+		var retorno = datos.Select(d => new
 		{
 
-			try
-			{
-				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+			NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
+			StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaFacturador,
+			NombreAdquiriente = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
+			DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+			DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+			PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
+			EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+			CodEstado = d.IntEstadoPago,
+			idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+			StrIdRegistro = d.StrIdRegistro,
+			StrIdSeguridadDoc = d.StrIdSeguridadDoc
+		});
 
-				var datos = Pago.ObtenerPagosFacturador(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
-
-
-				if (datos == null)
-				{
-					return NotFound();
-				}
-
-				var retorno = datos.Select(d => new
-				{
-					NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
-					StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaAdquiriente,
-					NombreAdquiriente = d.TblDocumentos.TblEmpresasAdquiriente.StrRazonSocial,
-					DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
-					DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
-					PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
-					//EstadoFactura = (d.IntEstadoPago == 0) ? "Rechazado" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Pendiente" : "",
-					EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-					CodEstado = d.IntEstadoPago,
-					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
-					StrIdRegistro = d.StrIdRegistro,
-					StrIdSeguridadDoc = d.StrIdSeguridadDoc
+		return Ok(retorno);
+	}
+	catch (Exception excepcion)
+	{
+		RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
+		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+	}
 
 
-				});
+}
 
-				return Ok(retorno);
-			}
-			catch (Exception excepcion)
-			{
+/// <summary>
+/// Actualiza el estado del pago consultando antes en la plataforma intermedia y luego con los datos de dicha plataforma, estos son actualziados en FE
+/// </summary>
+/// <param name="IdSeguridad">Id New Guid con el que se crea el pago</param>
+/// <param name="StrIdSeguridadRegistro">Id de seguridad del Documento</param>
+/// <param name="Pago">Objeto de pago que retorna la plataforma de zona de pagos</param>
+/// Aqui se debe colocar un parametro adicional con un cifrado para validar que quien 
+/// esta solicitando la actualizacion es una de las plataformas autorizadas
+/// <returns></returns>
+[HttpGet]
+[Route("Api/ActualizarEstado")]
 
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-
-
+public IHttpActionResult ActualizarEstado(Guid IdSeguridad, Guid StrIdSeguridadRegistro)
+{
+	try
+	{
+		//Ruta de consulta de estado de pago en la plataforma intermedia(Pagos electronicos)
+		PasarelaPagos Ruta_servicio_pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
+		//Aqui consulto el estado del pago en la plataforma intermedia de pagos
+		ClienteRest<TblPasarelaPagosPI> cliente = new ClienteRest<TblPasarelaPagosPI>(string.Format("{0}?IdSeguridadPago={1}&StrIdSeguridadRegistro={2}", Ruta_servicio_pago.RutaServicio.ToString(), IdSeguridad, StrIdSeguridadRegistro), TipoContenido.Applicationjson.GetHashCode(), "");
+		TblPasarelaPagosPI ConfigPago = cliente.GET();
+		//Como el objeto puede venir null de la plataforma de pago, se valida y se coloca los id de seguridad de la consulta
+		if (ConfigPago.StrIdSeguridadDoc == Guid.Empty)
+		{
+			ConfigPago.StrIdSeguridadDoc = IdSeguridad;
+			ConfigPago.StrIdSeguridadRegistro = StrIdSeguridadRegistro;
 		}
-
-		/// <summary>
-		/// Obtiene la lista de pagos realizadas a un adquiriente
-		/// </summary>
-		/// <param name="strIdSeguridad"></param>        
-		/// <returns></returns>
-		[HttpGet]
-		[Route("Api/ObtenerPagosAdquiriente")]
-		public IHttpActionResult ObtenerPagosAdquiriente(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string codigo_facturador, int tipo_fecha)
+		else
 		{
-
-			try
+			//Si vienes datos para actualizar se hace un cifrado para validar la llave de encriptacion
+			string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
+			if (ConfigPago.StrAuthIdEmpresa != CifradoSecundario)
 			{
-				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
-
-				var datos = Pago.ObtenerPagosAdquiriente((string.IsNullOrEmpty(codigo_facturador)) ? "*" : codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
-
-
-				if (datos == null)
-				{
-					return NotFound();
-				}
-
-				var retorno = datos.Select(d => new
-				{
-
-					NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
-					StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaFacturador,
-					NombreAdquiriente = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
-					DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
-					DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
-					PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
-					EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-					CodEstado = d.IntEstadoPago,
-					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
-					StrIdRegistro = d.StrIdRegistro,
-					StrIdSeguridadDoc = d.StrIdSeguridadDoc
-				});
-
-				return Ok(retorno);
-			}
-			catch (Exception excepcion)
-			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-
-
-		}
-
-		/// <summary>
-		/// Actualiza el estado del pago consultando antes en la plataforma intermedia y luego con los datos de dicha plataforma, estos son actualziados en FE
-		/// </summary>
-		/// <param name="IdSeguridad">Id New Guid con el que se crea el pago</param>
-		/// <param name="StrIdSeguridadRegistro">Id de seguridad del Documento</param>
-		/// <param name="Pago">Objeto de pago que retorna la plataforma de zona de pagos</param>
-		/// Aqui se debe colocar un parametro adicional con un cifrado para validar que quien 
-		/// esta solicitando la actualizacion es una de las plataformas autorizadas
-		/// <returns></returns>
-		[HttpGet]
-		[Route("Api/ActualizarEstado")]
-
-		public IHttpActionResult ActualizarEstado(Guid IdSeguridad, Guid StrIdSeguridadRegistro)
-		{
-			try
-			{
-				//Ruta de consulta de estado de pago en la plataforma intermedia(Pagos electronicos)
-				PasarelaPagos Ruta_servicio_pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
-				//Aqui consulto el estado del pago en la plataforma intermedia de pagos
-				ClienteRest<TblPasarelaPagosPI> cliente = new ClienteRest<TblPasarelaPagosPI>(string.Format("{0}?IdSeguridadPago={1}&StrIdSeguridadRegistro={2}", Ruta_servicio_pago.RutaServicio.ToString(), IdSeguridad, StrIdSeguridadRegistro), TipoContenido.Applicationjson.GetHashCode(), "");
-				TblPasarelaPagosPI ConfigPago = cliente.GET();
-				//Como el objeto puede venir null de la plataforma de pago, se valida y se coloca los id de seguridad de la consulta
-				if (ConfigPago.StrIdSeguridadDoc == Guid.Empty)
-				{
-					ConfigPago.StrIdSeguridadDoc = IdSeguridad;
-					ConfigPago.StrIdSeguridadRegistro = StrIdSeguridadRegistro;
-				}
-				else
-				{
-					//Si vienes datos para actualizar se hace un cifrado para validar la llave de encriptacion
-					string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
-					if (ConfigPago.StrAuthIdEmpresa != CifradoSecundario)
-					{
-						return Conflict();
-					}
-				}
-				Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
-				//Luego aqui, actualizo el resultado que me retorno la plataforma de pagos
-				var Detalle = pago.ActualizarPago(ConfigPago);
-				return Ok();
-			}
-			catch (Exception ex)
-			{
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 				return Conflict();
 			}
 		}
-		/// <summary>
-		/// Este metodo es invocado desde la plataforma de pago, se usa para actualziar el estado de un pago
-		/// Recibe en la cabezera el objeto de pago y la llave de encripción necesaria para validar que el pago es seguro
-		/// /// </summary>
-		/// <returns></returns>
-		[HttpPut]
-		[Route("Api/SrcActualizaEstado")]
-		public IHttpActionResult SrcActualizaEstado()
+		Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
+		//Luego aqui, actualizo el resultado que me retorno la plataforma de pagos
+		var Detalle = pago.ActualizarPago(ConfigPago);
+		return Ok();
+	}
+	catch (Exception ex)
+	{
+		RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+		return Conflict();
+	}
+}
+/// <summary>
+/// Este metodo es invocado desde la plataforma de pago, se usa para actualziar el estado de un pago
+/// Recibe en la cabezera el objeto de pago y la llave de encripción necesaria para validar que el pago es seguro
+/// /// </summary>
+/// <returns></returns>
+[HttpPut]
+[Route("Api/SrcActualizaEstado")]
+public IHttpActionResult SrcActualizaEstado()
+{
+	try
+	{
+		System.Net.Http.Headers.HttpRequestHeaders headers = this.Request.Headers;
+		string Pago = string.Empty;
+		string CodValidacion = string.Empty;
+		string ContrasenaActual = string.Empty;
+
+		if (headers.Contains("Pago"))
 		{
-			try
-			{
-				System.Net.Http.Headers.HttpRequestHeaders headers = this.Request.Headers;
-				string Pago = string.Empty;
-				string CodValidacion = string.Empty;
-				string ContrasenaActual = string.Empty;
+			Pago = headers.GetValues("Pago").First();
+		}
 
-				if (headers.Contains("Pago"))
-				{
-					Pago = headers.GetValues("Pago").First();
-				}
+		if (headers.Contains("CodValidacion"))
+		{
+			CodValidacion = headers.GetValues("CodValidacion").First();
+		}
 
-				if (headers.Contains("CodValidacion"))
-				{
-					CodValidacion = headers.GetValues("CodValidacion").First();
-				}
+		var ConfigPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
 
-				var ConfigPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
+		string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
 
-				string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
+		if (CodValidacion != CifradoSecundario)
+		{
+			return Ok(false);
+		}
 
-				if (CodValidacion != CifradoSecundario)
-				{
-					return Ok(false);
-				}
+		var ObjetoPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
 
-				var ObjetoPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
+		Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
 
-				Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
+		var Detalle = pago.ActualizarPago(ObjetoPago);
 
-				var Detalle = pago.ActualizarPago(ObjetoPago);
+		return Ok(true);
+	}
+	catch (Exception ex)
+	{
+		RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+		return Ok(false);
+	}
+}
 
-				return Ok(true);
-			}
-			catch (Exception ex)
-			{
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
-				return Ok(false);
-			}
+
+[HttpPost]
+[Route("Api/SrcActualizaEstadoP")]
+public IHttpActionResult SrcActualizaEstadoP()
+{
+	try
+	{
+		System.Net.Http.Headers.HttpRequestHeaders headers = this.Request.Headers;
+		string Pago = string.Empty;
+		string CodValidacion = string.Empty;
+		string ContrasenaActual = string.Empty;
+
+		if (headers.Contains("Pago"))
+		{
+			Pago = headers.GetValues("Pago").First();
+		}
+
+		if (headers.Contains("CodValidacion"))
+		{
+			CodValidacion = headers.GetValues("CodValidacion").First();
+		}
+
+		var ConfigPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
+
+		string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
+
+		if (CodValidacion != CifradoSecundario)
+		{
+			return Ok(false);
+		}
+
+		var ObjetoPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
+
+		Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
+
+		var Detalle = pago.ActualizarPago(ObjetoPago);
+
+		return Ok(true);
+	}
+	catch (Exception ex)
+	{
+		RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+		return Ok(false);
+	}
+}
+#endregion
+
+/// <summary>
+/// Retorna el correo del adquiriente que se encuentra en el ubl
+/// </summary>
+/// <param name="IdSeguridad">Guid de seguridad del documento</param>
+/// <returns></returns>
+[HttpGet]
+[Route("api/ConsultarEmailUbl")]
+public HttpResponseMessage ConsultarEmailUbl(Guid IdSeguridad)
+{
+	try
+	{
+		Ctl_Documento Controlador = new Ctl_Documento();
+		TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(IdSeguridad).FirstOrDefault();
+		var objeto = (dynamic)null;
+		objeto = Ctl_Documento.ConvertirServicio(datos, true);
+		string correo = string.Empty;
+
+		if (datos.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+		{
+			correo = objeto.DatosFactura.DatosAdquiriente.Email;
+		}
+
+		if (datos.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+		{
+			correo = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+		}
+
+		if (datos.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+		{
+			correo = objeto.DatosNotaDebito.DatosAdquiriente.Email;
 		}
 
 
-		[HttpPost]
-		[Route("Api/SrcActualizaEstadoP")]
-		public IHttpActionResult SrcActualizaEstadoP()
-		{
-			try
-			{
-				System.Net.Http.Headers.HttpRequestHeaders headers = this.Request.Headers;
-				string Pago = string.Empty;
-				string CodValidacion = string.Empty;
-				string ContrasenaActual = string.Empty;
+		return Request.CreateResponse(HttpStatusCode.OK, correo);
 
-				if (headers.Contains("Pago"))
-				{
-					Pago = headers.GetValues("Pago").First();
-				}
-
-				if (headers.Contains("CodValidacion"))
-				{
-					CodValidacion = headers.GetValues("CodValidacion").First();
-				}
-
-				var ConfigPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
-
-				string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
-
-				if (CodValidacion != CifradoSecundario)
-				{
-					return Ok(false);
-				}
-
-				var ObjetoPago = JsonConvert.DeserializeObject<TblPasarelaPagosPI>(Pago);
-
-				Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
-
-				var Detalle = pago.ActualizarPago(ObjetoPago);
-
-				return Ok(true);
-			}
-			catch (Exception ex)
-			{
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
-				return Ok(false);
-			}
-		}
-		#endregion
-
-		/// <summary>
-		/// Retorna el correo del adquiriente que se encuentra en el ubl
-		/// </summary>
-		/// <param name="IdSeguridad">Guid de seguridad del documento</param>
-		/// <returns></returns>
-		[HttpGet]
-		[Route("api/ConsultarEmailUbl")]
-		public HttpResponseMessage ConsultarEmailUbl(Guid IdSeguridad)
-		{
-			try
-			{
-				Ctl_Documento Controlador = new Ctl_Documento();
-				TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(IdSeguridad).FirstOrDefault();
-				var objeto = (dynamic)null;
-				objeto = Ctl_Documento.ConvertirServicio(datos, true);
-				string correo = string.Empty;
-
-				if (datos.IntDocTipo == TipoDocumento.Factura.GetHashCode())
-				{
-					correo = objeto.DatosFactura.DatosAdquiriente.Email;
-				}
-
-				if (datos.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
-				{
-					correo = objeto.DatosNotaCredito.DatosAdquiriente.Email;
-				}
-
-				if (datos.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
-				{
-					correo = objeto.DatosNotaDebito.DatosAdquiriente.Email;
-				}
-
-
-				return Request.CreateResponse(HttpStatusCode.OK, correo);
-
-			}
-			catch (Exception)
-			{
-				return Request.CreateResponse(HttpStatusCode.OK, string.Empty);
-				//throw new ApplicationException(ex.Message, ex.InnerException);
-			}
-		}
+	}
+	catch (Exception)
+	{
+		return Request.CreateResponse(HttpStatusCode.OK, string.Empty);
+		//throw new ApplicationException(ex.Message, ex.InnerException);
+	}
+}
 	}
 }
