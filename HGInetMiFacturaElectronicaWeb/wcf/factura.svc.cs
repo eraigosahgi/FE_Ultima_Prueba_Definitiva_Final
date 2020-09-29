@@ -11,6 +11,7 @@ using LibreriaGlobalHGInet.Error;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
 using HGInetMiFacturaElectonicaController.Registros;
+using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -85,7 +86,16 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 // obtiene los datos
                 respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);
 
-                return respuesta;
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("ObtenerPorFechasAdquiriente", DataKey, Identificacion, FechaInicio.ToString(), FechaFinal.ToString(), respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{
+				}
+
+				return respuesta;
 
             }
             catch (Exception exec)
@@ -124,7 +134,16 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 // obtiene los datos
                 respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros);
 
-                return respuesta;
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("ObtenerPorIdSeguridadAdquiriente", DataKey, Identificacion, CodigosRegistros, respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{
+				}
+
+				return respuesta;
 
             }
             catch (Exception exec)
