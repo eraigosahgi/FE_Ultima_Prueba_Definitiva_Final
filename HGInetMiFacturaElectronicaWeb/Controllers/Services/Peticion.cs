@@ -104,7 +104,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Directorio.CrearDirectorio(ruta_directorio);
 
 
-				string peticion = "";
+				string peticion = Fecha.GetFecha().ToString("yyyy/MM/dd HH:mm:ss.fff;");
 				foreach (var item in args)
 				{
 					peticion += string.Format("{0};", item);
