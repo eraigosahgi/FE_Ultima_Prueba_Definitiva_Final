@@ -314,8 +314,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
         public List<TblOpcionesUsuario> ObtenerOpcionesTipo(string codigo_usuario, string identificacion_empresa, TipoOpciones tipo_opcion, int tipo_perfil)
         {
             try
-            {
-				context.Configuration.LazyLoadingEnabled = false;
+            {				
 
                 int tipo_valor = tipo_opcion.GetHashCode();
                 List<TblOpcionesUsuario> permisos_tipo = (from opc_usuario in context.TblOpcionesUsuario
