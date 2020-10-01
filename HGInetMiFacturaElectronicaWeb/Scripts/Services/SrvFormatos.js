@@ -5,7 +5,7 @@
 .service('SrvFormatos', function ($http, $location, $q) {
 
 	this.ImportarFormato = function (datos) {
-		return $http({ url: '/api/ImportarFormato/', data: datos, method: 'Put' }).then(function (response) {
+		return $http({ url: '/api/ImportarFormato/', data: datos, method: 'Post' }).then(function (response) {
 			return response.data;
 		}, function (response) {
 			//DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);

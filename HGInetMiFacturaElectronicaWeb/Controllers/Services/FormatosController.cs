@@ -198,7 +198,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		#region Procesos
 
-		[HttpPut]
+		[HttpPost]
 		[Route("Api/ImportarFormato")]
 		public IHttpActionResult ImportarFormato(ObjFormato objeto)
 		{
