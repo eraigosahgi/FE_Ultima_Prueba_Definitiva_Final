@@ -1,4 +1,23 @@
-﻿DevExpress.localization.locale(navigator.language);
+﻿var PermisosUsuario = [];
+var OpcionesUsuario = [];
+var ValidacionHP = false;
+
+
+Permisos_Storage = [];
+AlmacenPermisos = new DevExpress.data.ArrayStore({
+	key: "Codigo",
+	data: Permisos_Storage
+});
+
+
+AlmacenPermisosActualizados = new DevExpress.data.ArrayStore({
+	key: "Codigo",
+	data: Permisos_Storage
+});
+var loadPanel;
+
+
+DevExpress.localization.locale(navigator.language);
 var opc_pagina = "1331";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
 var ConsultaUsuarioApp = angular.module('ConsultaUsuarioApp', ['dx', 'ModalEmpresasApp', 'AppSrvUsuario']);
@@ -521,6 +540,8 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
 				var empresa = Datos_empresa.split(' -- ');
 
+				GenerarTreeList();
+
 				$http.get('/api/Usuario/').then(function (response) {
 					//string usuario_autenticado, string empresa_autenticada, string codigo_usuario, string identificacion_empresa
 					$("#wait").show();
@@ -530,18 +551,18 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
 							PermisosUsuario = response.data;
 
-							var data = {};
-							//Recorre la información retornada y la añade a la lista de permisos para almacenar en bd
-							for (i = 0; i < PermisosUsuario.length; i++) {
+							AlmacenPermisos = new DevExpress.data.ArrayStore({
+								key: "Codigo",
+								data: response.data
+							});
+							//AlmacenPermisosActualizados = AlmacenPermisos;
 
-								if (PermisosUsuario[i].Consultar || PermisosUsuario[i].Agregar || PermisosUsuario[i].Editar || PermisosUsuario[i].Eliminar || PermisosUsuario[i].Anular || PermisosUsuario[i].Gestion) {
-
-									var data = {};
-									data = { IntIdOpcion: PermisosUsuario[i].Codigo, IntConsultar: PermisosUsuario[i].Consultar, IntAgregar: PermisosUsuario[i].Agregar, IntEditar: PermisosUsuario[i].Editar, IntEliminar: PermisosUsuario[i].Eliminar, IntAnular: PermisosUsuario[i].Anular, IntGestion: PermisosUsuario[i].Gestion };
-									OpcionesUsuario.push(data);
+							$("#treeListOpcionesPermisos").dxTreeList({
+								dataSource: {
+									store: AlmacenPermisos,
+									reshapeOnPush: true
 								}
-							}
-							GenerarTreeList(response.data);
+							});
 
 						} catch (err) {
 							DevExpress.ui.notify(err.message, 'error', 3000);
@@ -568,15 +589,23 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
 	}
 
+
 	if (id_seguridad == null) {
 		$http.get('/api/Usuario/').then(function (response) {
-			console.log("Datos para crear Treelist: ", response.data);
+
 			$("#wait").show();
 			$http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&codigo_empresa=' + response.data[0].Empresa).then(function (response) {
 				$("#wait").hide();
 				try {
 
-					GenerarTreeList(response.data);
+					AlmacenPermisos = new DevExpress.data.ArrayStore({
+						key: "Codigo",
+						data: response.data
+					});
+
+					//AlmacenPermisosActualizados = AlmacenPermisos;
+
+					GenerarTreeList();
 
 				} catch (err) {
 					DevExpress.ui.notify(err.message, 'error', 3000);
@@ -780,177 +809,397 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 
 
 	//Construye el TreeList
-	function GenerarTreeList(data) {
+	function GenerarTreeList() {
+
 		$("#treeListOpcionesPermisos").dxTreeList({
-			dataSource: data,
+			dataSource: {
+				store: AlmacenPermisos,
+				reshapeOnPush: true
+			},
+			onContentReady: function (e) {
+				loadPanel.hide();
+			},
+			loadPanel: {
+				enabled: "auto",
+				height: 90,
+				indicatorSrc: "",
+				shading: false,
+				shadingColor: "",
+				showIndicator: true,
+				showPane: true,
+				text: "Actualizando Permisos",
+				width: 200
+			},
 			keyExpr: "Codigo",
 			parentIdExpr: "Dependencia",
-			showRowLines: false,
 			columnAutoWidth: true,
 			useSubmitBehavior: false,
-			autoExpandAll: true,
+			rowAlternationEnabled: true,
 			cacheEnabled: true,
+			rootValue: 0,
+			//expandedRowKeys: [1],
+			autoExpandAll: true,
+			showRowLines: true,
+			showBorders: true,
 			columns: [
-                {
-                	dataField: "Descripcion",
-                	caption: "Descripción",
-                },
-        {
-        	caption: "Consultar",
-        	cssClass: "col-xs-3 col-md-1",
-        	cellTemplate: function (container, options) {
-        		$("<div  id='Consultar_" + options.data.Codigo + "'>")
-                    .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
-                    	value: PermisosActuales(options.data.Codigo, 1),
-                    	name: 'IConsultar_' + options.data.Codigo,
-                    	onValueChanged: function (e) {
-                    		ValidarConsultar("IConsultar_" + options.data.Codigo, "IConsultar", "Consultar");
-                    		if (e.value) {
-                    			OpcionesUsuario.push(IncluirItemArray(options.data.Codigo, 1, e.value))
-                    		}
-                    		IncluirItem(e, 1, options.data.Codigo);
+				{
+					dataField: "Descripcion",
+					caption: "Descripción",
+					cssClass: "col-md-3",
+				},
+		{
+			caption: "Consultar",
+			cssClass: "col-xs-3 col-md-1",
+			alignment: "center",
+			cellTemplate: function (container, options) {
+				$("<div  id='Consultar_" + options.data.Codigo + "'>")
+					.append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
+						value: options.data.Consultar,
+						onValueChanged: function (e) {
+							ValidarOpcion(options.data, options.data.Codigo, e.value, 1);
+						}
+					}).removeClass("dx-button dx-button-normal dx-widget")
+					.append($(""))
+				  .appendTo(container);
 
-                    	}
-                    }).removeClass("dx-button dx-button-normal dx-widget")
-                    .append($(""))
-                  .appendTo(container);
-        	}
-        },
-    {
-    	caption: "Crear",
-    	cssClass: "col-xs-3 col-md-1",
-    	cellTemplate: function (container, options) {
-    		$("<div  id='Crear_" + options.data.Codigo + "'>")
-                .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
-                	value: PermisosActuales(options.data.Codigo, 2),
-                	name: 'ICrear_' + options.data.Codigo,
-                	onValueChanged: function (e) {
-                		ValidarConsultar("ICrear_" + options.data.Codigo, "ICrear", "Crear");
-                		if (e.value) {
-                			OpcionesUsuario.push(IncluirItemArray(options.data.Codigo, 2, e.value))
-                		}
-                		IncluirItem(e, 2, options.data.Codigo);
-                	}
-                }).removeClass("dx-button dx-button-normal dx-widget")
-                .append($(""))
-              .appendTo(container);
-    	}
-    },
-                    {
-                    	caption: "Editar",
-                    	cssClass: "col-xs-3 col-md-1",
-                    	cellTemplate: function (container, options) {
-                    		$("<div  id='Editar_" + options.data.Codigo + "'>")
-                                .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
-                                	value: PermisosActuales(options.data.Codigo, 3),
-                                	name: 'IEditar_' + options.data.Codigo,
-                                	onValueChanged: function (e) {
-                                		ValidarConsultar("IEditar_" + options.data.Codigo, "IEditar", "Editar");
-                                		if (e.value) {
-                                			OpcionesUsuario.push(IncluirItemArray(options.data.Codigo, 3, e.value))
-                                		}
-                                		IncluirItem(e, 3, options.data.Codigo);
-                                	}
-                                }).removeClass("dx-button dx-button-normal dx-widget")
-                                .append($(""))
-                              .appendTo(container);
-                    	}
-                    },
-        {
-        	caption: "Eliminar",
-        	cssClass: "col-xs-3 col-md-1",
-        	cellTemplate: function (container, options) {
-        		$("<div  id='Eliminar_" + options.data.Codigo + "'>")
-            .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
-            	value: PermisosActuales(options.data.Codigo, 4),
-            	name: 'IEliminar_' + options.data.Codigo,
-            	onValueChanged: function (e) {
-            		ValidarConsultar("IEliminar_" + options.data.Codigo, "IEliminar", "Eliminar");
-            		if (e.value) {
-            			OpcionesUsuario.push(IncluirItemArray(options.data.Codigo, 4, e.value))
-            		}
-            		IncluirItem(e, 4, options.data.Codigo);
-            	}
-            }).removeClass("dx-button dx-button-normal dx-widget")
-            .append($(""))
-          .appendTo(container);
-        	}
-        },
-    {
-    	caption: "Anular",
-    	cssClass: "col-xs-3 col-md-1",
-    	cellTemplate: function (container, options) {
-    		$("<div  id='Anular_" + options.data.Codigo + "'>")
-                .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
-                	value: PermisosActuales(options.data.Codigo, 5),
-                	name: 'IAnular_' + options.data.Codigo,
-                	onValueChanged: function (e) {
-                		ValidarConsultar("IAnular_" + options.data.Codigo, "IAnular", "Anular");
-                		if (e.value) {
-                			OpcionesUsuario.push(IncluirItemArray(options.data.Codigo, 5, e.value))
-                		}
-                		IncluirItem(e, 5, options.data.Codigo);
-                	}
-                }).removeClass("dx-button dx-button-normal dx-widget")
-                .append($(""))
-              .appendTo(container);
-    	}
-    },
-    {
-    	caption: "Gestión",
-    	cssClass: "col-xs-3 col-md-1",
-    	cellTemplate: function (container, options) {
-    		$("<div  id='Gestion_" + options.data.Codigo + "'>")
-        .append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
-        	value: PermisosActuales(options.data.Codigo, 6),
-        	name: 'IGestion_' + options.data.Codigo,
-        	onValueChanged: function (e) {
-        		ValidarConsultar("IGestion_" + options.data.Codigo, "IGestion", "Gestion");
-        		if (e.value) {
-        			OpcionesUsuario.push(IncluirItemArray(options.data.Codigo, 6, e.value))
-        		}
-        		IncluirItem(e, 6, options.data.Codigo);
-        	}
-        }).removeClass("dx-button dx-button-normal dx-widget")
-        .append($(""))
-      .appendTo(container);
-    	}
-    }
+			}
+		},
+
+		{
+			caption: "Modificar",
+			cssClass: "col-xs-3 col-md-1",
+			alignment: "center",
+			cellTemplate: function (container, options) {
+				$("<div  id='Editar_" + options.data.Codigo + "'>")
+					.append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
+						value: options.data.Editar,
+						onValueChanged: function (e) {
+							ValidarOpcion(options.data, options.data.Codigo, e.value, 2);
+						}
+					}).removeClass("dx-button dx-button-normal dx-widget")
+					.append($(""))
+					.appendTo(container);
+			}
+		},
+
+			{
+				caption: "Crear",
+				cssClass: "col-xs-3 col-md-1",
+				alignment: "center",
+				cellTemplate: function (container, options) {
+					$("<div  id='Crear_" + options.data.Codigo + "'>")
+						.append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
+							value: options.data.Agregar,
+							onValueChanged: function (e) {
+								ValidarOpcion(options.data, options.data.Codigo, e.value, 3);
+							}
+						}).removeClass("dx-button dx-button-normal dx-widget")
+						.append($(""))
+						.appendTo(container);
+				}
+			},
+
+
+
+		{
+			caption: "Eliminar",
+			cssClass: "col-xs-3 col-md-1",
+			alignment: "center",
+			cellTemplate: function (container, options) {
+				$("<div  id='Eliminar_" + options.data.Codigo + "'>")
+				.append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
+					value: options.data.Eliminar,
+					onValueChanged: function (e) {
+						ValidarOpcion(options.data, options.data.Codigo, e.value, 4);
+					}
+				}).removeClass("dx-button dx-button-normal dx-widget")
+				.append($(""))
+				.appendTo(container);
+			}
+		},
+		{
+			caption: "Anular",
+			cssClass: "col-xs-3 col-md-1",
+			alignment: "center",
+			cellTemplate: function (container, options) {
+				$("<div  id='Anular_" + options.data.Codigo + "'>")
+				.append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
+					value: options.data.Anular,
+					onValueChanged: function (e) {
+						ValidarOpcion(options.data, options.data.Codigo, e.value, 5);
+					}
+				}).removeClass("dx-button dx-button-normal dx-widget")
+				.append($(""))
+				.appendTo(container);
+			}
+		},
+		{
+			caption: "Gestión",
+			cssClass: "col-xs-3 col-md-1",
+			alignment: "center",
+			cellTemplate: function (container, options) {
+				$("<div  id='Gestion_" + options.data.Codigo + "'>")
+				.append($("<input type='checkbox' ng-model='fieldView' ng-checked='checked' ng-disabled='checked'>")).dxCheckBox({
+					value: options.data.Gestion,
+					onValueChanged: function (e) {
+						ValidarOpcion(options.data, options.data.Codigo, e.value, 7);
+					}
+				}).removeClass("dx-button dx-button-normal dx-widget")
+				.append($(""))
+				.appendTo(container);
+			}
+		},
+
 			],
 		});
 
+	}
+	//Validar Opcion seleccionada
+	function ValidarOpcion(objeto, opcion, valor, accion) {
+		try {
+
+			loadPanel.show();
+			var Objeto_actualizado = RectorarOpcion(objeto, valor, accion);
+
+			AlmacenPermisos.push([{
+				type: "update",
+				key: Objeto_actualizado.Codigo,
+				data: Objeto_actualizado
+			}]);
+			AlmacenPermisosActualizados.push([{ type: "remove", key: Objeto_actualizado.Codigo }]);
+			AlmacenPermisosActualizados.push([{ type: "insert", data: Objeto_actualizado }]);
+			MarcarOpcionesEnCascadaHijos(opcion, valor, accion);
+
+			//*************************************
+			if (valor) {
+				MarcarOpcionesEnCascadaPadres(objeto.Dependencia, valor, accion);
+			} else {
+				DesmarcarOpcionesEnCascadaPadres(objeto.Dependencia, valor, accion);
+			}
+
+
+		} catch (err) {
+			loadPanel.hide();
+		}
 
 	}
+	//Marcar Permisos en cascada
+	function MarcarOpcionesEnCascadaHijos(opcion, valor, accion) {
+		//*********************************************
+		AlmacenPermisos.load().done(function (result) {
 
-	function ActivarDepencias(codigo) {
+			var dataSource = new DevExpress.data.DataSource({
+				store: {
+					type: "array",
+					key: "Codigo",
+					data: result
+				},
+				pageSize: 10000,
 
-		var dependencia = [];
+			});
+			dataSource.filter("Dependencia", "=", opcion);
 
-		var valor_campo = false;
+			dataSource.load().done(function (result) {
+				result.forEach(function callback(item) {
+					var Objeto_actualizado = RectorarOpcion(item, valor, accion);
+					AlmacenPermisos.push([{
+						type: "update",
+						key: Objeto_actualizado.Codigo,
+						data: Objeto_actualizado
+					}]);
 
-		$("#wait").show();
-		$http.get('/api/Permisos?codigo_opcion=' + codigo).then(function (response) {
-			$("#wait").hide();
-			try {
-
-				dependencia = response.data;
-
-			} catch (err) {
-				DevExpress.ui.notify(err.message, 'error', 3000);
-			}
-		}, function errorCallback(response) {
-			$('#wait').hide();
-			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+					AlmacenPermisosActualizados.push([{ type: "remove", key: Objeto_actualizado.Codigo }]);
+					AlmacenPermisosActualizados.push([{ type: "insert", data: Objeto_actualizado }]);
+					MarcarOpcionesEnCascadaHijos(Objeto_actualizado.Codigo, valor, accion);
+				});
+			});
 		});
 
-
 	}
+
+	//Marcar Permisos en cascada
+	function MarcarOpcionesEnCascadaPadres(opcion, valor, accion) {
+		//*********************************************
+
+		AlmacenPermisos.load().done(function (result) {
+
+			var dataSource = new DevExpress.data.DataSource({
+				store: {
+					type: "array",
+					key: "Codigo",
+					data: result
+				},
+				pageSize: 10000,
+
+			});
+			dataSource.filter("Codigo", "=", opcion);
+
+			dataSource.load().done(function (result) {
+				result.forEach(function callback(item) {
+					var Objeto_actualizado = RectorarOpcion(item, valor, accion);
+					AlmacenPermisos.push([{
+						type: "update",
+						key: Objeto_actualizado.Codigo,
+						data: Objeto_actualizado
+					}]);
+
+					AlmacenPermisosActualizados.push([{ type: "remove", key: Objeto_actualizado.Codigo }]);
+					AlmacenPermisosActualizados.push([{ type: "insert", data: Objeto_actualizado }]);
+
+					if (valor) {
+						MarcarOpcionesEnCascadaPadres(Objeto_actualizado.Dependencia, valor, accion);
+					}
+
+				});
+
+			});
+		});
+	}
+
+	//Desmarcar las opciones del padre
+	function DesmarcarOpcionesEnCascadaPadres(opcion, valor, accion) {
+		//*********************************************
+
+		AlmacenPermisos.load().done(function (result) {
+
+			var dataSource = new DevExpress.data.DataSource({
+				store: {
+					type: "array",
+					key: "Codigo",
+					data: result
+				},
+				pageSize: 10000,
+
+			});
+			dataSource.filter("Codigo", "=", opcion);
+
+			dataSource.load().done(function (result) {
+				result.forEach(function callback(item) {
+
+
+
+					AlmacenPermisos.load().done(function (result) {
+
+						var dataSource = new DevExpress.data.DataSource({
+							store: {
+								type: "array",
+								key: "Codigo",
+								data: result
+							},
+							pageSize: 10000,
+
+						});
+						//dataSource.filter("Codigo", "=", opcion);
+						dataSource.filter(["Dependencia", "=", opcion], ["Consultar", "=", true]);
+
+						dataSource.load().done(function (result) {
+							if (result.length > 0) {
+								return true;
+							} else {
+								//Si no tiene padre, entonces desmarcamos al padre
+								var Objeto_actualizado = RectorarOpcion(item, valor, accion);
+								AlmacenPermisos.push([{
+									type: "update",
+									key: Objeto_actualizado.Codigo,
+									data: Objeto_actualizado
+								}]);
+
+								AlmacenPermisosActualizados.push([{ type: "remove", key: Objeto_actualizado.Codigo }]);
+								AlmacenPermisosActualizados.push([{ type: "insert", data: Objeto_actualizado }]);
+								//Seguimos validando si el padre, del padre, tiene hijos
+								DesmarcarOpcionesEnCascadaPadres(item.Dependencia, valor, accion);
+							}
+						});
+					});
+
+				});
+
+			});
+		});
+	}
+
+	function RectorarOpcion(objeto, valor, accion) {
+		switch (accion) {
+			case 1:
+				objeto.Consultar = valor;
+				break;
+			case 2:
+				objeto.Editar = valor;
+				break;
+			case 3:
+				objeto.Agregar = valor;
+				break;
+			case 4:
+				objeto.Eliminar = valor;
+				break;
+			case 5:
+				objeto.Anular = valor;
+				break;
+			case 6:
+				objeto.Imprimir = valor;
+				break;
+			case 7:
+				objeto.Gestion = valor;
+				break;
+			case 8:
+				objeto.Servicios = valor;
+				break;
+		}
+		return objeto;
+	}
+
+
+	loadPanel = $(".loadpanel").dxLoadPanel({
+		//shadingColor: "rgba(0,0,0,0.4)",
+		position: { of: "#treeListOpcionesPermisos" },
+		visible: false,
+		//message: (txt_hgi_UsuariosPermisos_Usuario == "") ? "Seleccione un usuario" : "Actualizando Permisos ",
+		message: "Actualizando Permisos ",
+		showIndicator: true,
+		showPane: false,
+		shading: false,
+		closeOnOutsideClick: false,
+	}).dxLoadPanel("instance");
+
 
 	//Almacena los permisos 
 	//Envía el objeto de permisos, el nit de la empresa y el usuario que se gestiona en el momento.
 	function guardarPermisos() {
 
+		OpcionesUsuario = [];
+
+		AlmacenPermisosActualizados.load().done(function (resultado) {
+			console.log(resultado);
+			resultado.forEach(function callback(Opcion) {
+
+				try {
+					var ObjOpcion = ({
+						//Aplicacion: Opcion.Aplicacion,
+						IntIdOpcion: Opcion.Codigo,
+						Usuario: Datos_usuario,
+						IntConsultar: Opcion.Consultar,
+						IntEditar: Opcion.Editar,
+						IntAgregar: Opcion.Agregar,
+						IntEliminar: Opcion.Eliminar,
+						IntAnular: Opcion.Anular,
+						IntGestion: Opcion.Gestion,
+					});
+
+					OpcionesUsuario.push(ObjOpcion);
+				} catch (e) {
+					try {
+						console.log(Opcion);
+					} catch (e) {
+
+					}
+				}
+			});
+
+
+		});
+
 		var empresa = Datos_empresa.split(' -- ');
+
 
 		$http({
 			url: '/api/Permisos/',
@@ -967,133 +1216,6 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 });
 
 
-//Retorna el valor de los check, según la opción y el permiso
-function PermisosActuales(codigo, opcion) {
-
-	var opc_permiso = PermisosUsuario.filter(x => x.Codigo == codigo);
-
-	var valor_campo = false;
-
-	if (opc_permiso.length > 0) {
-
-		switch (opcion) {
-			case 1:
-				valor_campo = opc_permiso[0].Consultar;
-				break;
-			case 2:
-				valor_campo = opc_permiso[0].Agregar;
-				break;
-			case 3:
-				valor_campo = opc_permiso[0].Editar;
-				break;
-			case 4:
-				valor_campo = opc_permiso[0].Eliminar;
-				break;
-			case 5:
-				valor_campo = opc_permiso[0].Anular;
-				break;
-			case 6:
-				valor_campo = opc_permiso[0].Gestion;
-				break;
-		}
-	}
-	return valor_campo;
-
-}
-
-/****** Inicio IncluirItem ******/
-//Incluye el item en el array
-//se ejecuta en el evento onValueChanged de los check
-function IncluirItem(e, opcion, codigo) {
-
-	var item_array = {};
-	item_array = OpcionesUsuario.filter(d => d.IntIdOpcion == codigo);
-
-	//Valida la existencia de la opcion en el array.
-	if (item_array.length == 0) {
-		//añade el objeto en el array por primera vez.
-		if ((e.previousValue === 1 || e.previousValue === 0) || e.value === 1) {
-			OpcionesUsuario.push(IncluirItemArray(codigo, opcion, e.value));
-		}
-	} else {
-		for (i = 0; i < OpcionesUsuario.length; i++) {
-
-			if (OpcionesUsuario[i].IntIdOpcion == codigo) {
-				//Elimina el objeto del array.
-				const index = OpcionesUsuario.indexOf(OpcionesUsuario[i]);
-
-				OpcionesUsuario.splice(index, 1);
-
-				//Actualiza el objeto existente.
-				var obj_nuevo = {};
-				obj_nuevo = ActualizarItemObjeto(opcion, e.value, item_array);
-
-				//Valida si alguna de las funciones se encuentra en verdadero y la genera añade al array.
-				if (obj_nuevo.IntConsultar || obj_nuevo.IntAgregar || obj_nuevo.IntEditar || obj_nuevo.IntEliminar || obj_nuevo.IntAnular || obj_nuevo.IntGestion)
-					OpcionesUsuario.push(obj_nuevo);
-			}
-		}
-
-	}
-	//console.log(OpcionesUsuario);
-}
-/****** Fin IncluirItem ******/
-
-//Actualiza el valor del item.
-function ActualizarItemObjeto(opcion, valor, objeto) {
-
-	switch (opcion) {
-		case 1:
-			objeto[0].IntConsultar = valor;
-			break;
-		case 2:
-			objeto[0].IntAgregar = valor;
-			break;
-		case 3:
-			objeto[0].IntEditar = valor;
-			break;
-		case 4:
-			objeto[0].IntEliminar = valor;
-			break;
-		case 5:
-			objeto[0].IntAnular = valor;
-			break;
-		case 6:
-			objeto[0].IntGestion = valor;
-			break;
-	}
-
-	return objeto[0];
-}
-
-//Crea el item en el array por primera vez.
-function IncluirItemArray(codigo, opcion) {
-
-	var data = {};
-
-	switch (opcion) {
-		case 1:
-			data = { IntIdOpcion: codigo, IntConsultar: true, IntAgregar: false, IntEditar: false, IntEliminar: false, IntAnular: false, IntGestion: false };
-			break;
-		case 2:
-			data = { IntIdOpcion: codigo, IntConsultar: false, IntAgregar: true, IntEditar: false, IntEliminar: false, IntAnular: false, IntGestion: false };
-			break;
-		case 3:
-			data = { IntIdOpcion: codigo, IntConsultar: false, IntAgregar: false, IntEditar: true, IntEliminar: false, IntAnular: false, IntGestion: false };
-			break;
-		case 4:
-			data = { IntIdOpcion: codigo, IntConsultar: false, IntAgregar: false, IntEditar: false, IntEliminar: true, IntAnular: false, IntGestion: false };
-			break;
-		case 5:
-			data = { IntIdOpcion: codigo, IntConsultar: false, IntAgregar: false, IntEditar: false, IntEliminar: false, IntAnular: true, IntGestion: false };
-			break;
-		case 6:
-			data = { IntIdOpcion: codigo, IntConsultar: false, IntAgregar: false, IntEditar: false, IntEliminar: false, IntAnular: false, IntGestion: true };
-			break;
-	}
-
-	return data;
-}
 
 function IrAConsulta() {
 	window.location.assign("../Pages/ConsultaUsuarios.aspx");

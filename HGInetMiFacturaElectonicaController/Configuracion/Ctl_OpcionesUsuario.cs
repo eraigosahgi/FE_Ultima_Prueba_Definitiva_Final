@@ -38,7 +38,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
             {
                 foreach (TblOpcionesUsuario item in opciones_usuario)
                 {
-                    Crear(item);
+					try
+					{
+						Crear(item);
+					}
+					catch (Exception)
+					{
+						
+					}
                 }
 
                 return opciones_usuario;
@@ -66,19 +73,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
                 List<TblOpcionesUsuario> opciones_grabar = new List<TblOpcionesUsuario>();
 
 
-                //Valida que los permisos de la base de datos se encuentren en la nueva lista, de lo contrario los elimina.
-                foreach (var item_bd in opciones_usuario_bd)
-                {
-                    TblOpcionesUsuario registro_bd = opciones_usuario.Where(x => x.IntIdOpcion == item_bd.IntIdOpcion).FirstOrDefault();
+				//Valida que los permisos de la base de datos se encuentren en la nueva lista, de lo contrario los elimina.
+				//foreach (var item_bd in opciones_usuario_bd)
+				//{
+				//	TblOpcionesUsuario registro_bd = opciones_usuario.Where(x => x.IntIdOpcion == item_bd.IntIdOpcion).FirstOrDefault();
 
-                    if (registro_bd == null)
-                    {
-                        Eliminar(item_bd);
-                    }
-                }
+				//	if (registro_bd == null)
+				//	{
+				//		Eliminar(item_bd);
+				//	}
+				//}
 
-                //Valida si los permisos de la nueva lista se encuentran en los permisos de base de datos, si no existen, los genera.
-                foreach (TblOpcionesUsuario item in opciones_usuario)
+				//Valida si los permisos de la nueva lista se encuentran en los permisos de base de datos, si no existen, los genera.
+				foreach (TblOpcionesUsuario item in opciones_usuario)
                 {
                     TblOpcionesUsuario registro_nuevo = opciones_usuario_bd.Where(x => x.IntIdOpcion == item.IntIdOpcion).FirstOrDefault();
 
