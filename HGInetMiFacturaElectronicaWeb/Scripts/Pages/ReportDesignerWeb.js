@@ -25,6 +25,8 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 
 						if (!opc_crear)
 							$("#BtnCrearFormato").hide();
+
+						$scope.CargarFormatos();
 					}
 
 				} catch (err) {
@@ -36,9 +38,6 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			});
 
 		});
-
-
-		$scope.CargarFormatos();
 
 	}), function errorCallback(response) {
 		Mensaje(response.data.ExceptionMessage, "error");
@@ -268,7 +267,6 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 			validationGroup: "ObservacionesRespuesta",
 			onClick: function (params) {
 				var continua_proceso = params.validationGroup.validate().isValid;
-				console.log(continua_proceso);
 				if (continua_proceso) {
 					ActualizarFormato(codigo, nit, estado, 6, $scope.ObservacionesSolicitud);
 					$('#modal_solicitar_aprobacion').modal('hide');
@@ -632,7 +630,7 @@ GestionReportesApp.controller('GestionReportesController', function GestionRepor
 function reportDesigner_CustomizeMenuActions(s, e) {
 
 	/*e.Actions.push({
-		text: 'Importar Diseño',
+		text: 'Exportar Diseño',
 		container: 'menu',
 		visible: true,
 		disabled: false,
