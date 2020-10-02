@@ -269,6 +269,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public List<ReferenciaAdicional> ReceiptDocument { get; set; }
 
+        /// <summary>
+        /// Si hay un acuerdo entre un Facturador y Adquiriente se muestra en el asunto del correo
+        /// </summary>
+        public string LineaNegocio { get; set; }
+
 		#endregion
 	}
 }
