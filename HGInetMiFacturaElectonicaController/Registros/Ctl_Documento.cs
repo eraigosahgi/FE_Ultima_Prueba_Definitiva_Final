@@ -1496,6 +1496,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.IntValorSubtotal = documento_obj.ValorSubtotal;
 				tbl_documento.IntValorNeto = documento_obj.Neto;
 				tbl_documento.IntVersionDian = empresa.IntVersionDian;
+				tbl_documento.IntTipoOperacion = documento_obj.TipoOperacion;
+				tbl_documento.StrLineaNegocio = documento_obj.LineaNegocio;
 				//validacion si es un formato de integrador para guardar los campos predeterminados
 				if (documento_obj.DocumentoFormato.Codigo > 0 && empresa.IntVersionDian == 2)
 				{
@@ -2534,11 +2536,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				int estado_adquiriente = Convert.ToInt32(AdquirienteRecibo.Leido.GetHashCode());
 				DateTime FechaActual = Fecha.GetFecha();
 
+				context.Configuration.LazyLoadingEnabled = false;
 
 				if (dias > 0)
 				{
 
-					var respuesta = (from datos in context.TblDocumentos
+					var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
 									 where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
 										   (datos.IntEstadoEnvio == (estado_enviado) ||
 											datos.IntAdquirienteRecibo > estado_adquiriente)
@@ -2551,7 +2554,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					DateTime FechaInicial = Fecha.GetFecha().Date;
 					DateTime FechaFinal = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, Fecha.GetFecha().Day, 23, 59, 59, 999);
 
-					var respuesta = (from datos in context.TblDocumentos
+					var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
 									 where datos.IntEstadoEnvio == (estado_enviado) &&
 											datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal
 									 select datos
