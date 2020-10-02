@@ -1,0 +1,17 @@
+/*
+Caso 562214    
+IntTipoOperacion (int -not Null - Defecto: 0) Permite indicar el tipo operación del documento según las opciones (0 - Factura, 1 - Contingencia, 2 - Exportación)
+*/
+
+ALTER TABLE TblDocumentos ADD
+IntTipoOperacion int NOT NULL Default(0)
+GO
+
+/*
+Caso 563774    
+StrLineaNegocio (varchar(50) -Null) La información aquí consignada se muestra en el asunto del correo que se envía al adquiriente con el documento
+*/
+
+ALTER TABLE TblDocumentos ADD
+StrLineaNegocio varchar(50) NULL
+GO
