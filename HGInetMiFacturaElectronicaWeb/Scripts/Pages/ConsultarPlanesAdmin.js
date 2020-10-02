@@ -210,7 +210,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 		};
 
 
-		CargarConsulta((txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? codigo_facturador : txt_hgi_Facturador);
+		//CargarConsulta((txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? codigo_facturador : txt_hgi_Facturador);
 
 	}
 

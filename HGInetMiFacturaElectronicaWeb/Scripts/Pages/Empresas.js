@@ -974,7 +974,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					}
 					,
 					onUploadError: function (e) {
-						var datos = JSON.parse(e.request.response);						
+						var datos = JSON.parse(e.request.response);
 						DevExpress.ui.notify(datos.ExceptionMessage, 'error', 6000);
 					}
 				});
@@ -1828,185 +1828,194 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
     	}
     }
 
-	consultar();
+	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false, 2).then(function (Datos) {
+		$scope.Facturador = Datos;
+		txt_hgi_Facturador = "";
+	});
+
+	$("#razon_social").dxTextBox({
+	value:""
+	});
+
+
+
+
+	$http.get('/api/DatosSesion/').then(function (response) {
+		$('#wait').hide();
+		if (response.data[0].Admin == false && response.data[0].Integrador == false) {
+			window.location.assign("../Pages/GestionEmpresas.aspx?IdSeguridad=" + response.data[0].IdSeguridad);
+		}
+
+		codigo_facturador = response.data[0].Identificacion;
+		var tipo = response.data[0].Admin;
+		if (tipo) {
+			$scope.Admin = true;
+		};
+
+
+	}, function errorCallback(response) {
+		$('#wait').hide();
+		DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+	});
+
+
+
+
+	//consultar();
 	function consultar() {
 		$('#wait').hide();
-		$http.get('/api/DatosSesion/').then(function (response) {
+
+		SrvEmpresas.ObtenerEmpresas(codigo_facturador, Desde, Hasta, Item_TipoTercero, txt_hgi_Facturador, $("#razon_social").dxTextBox("instance").option().value).then(function (data) {
 			$('#wait').hide();
-			if (response.data[0].Admin == false && response.data[0].Integrador == false) {
-				window.location.assign("../Pages/GestionEmpresas.aspx?IdSeguridad=" + response.data[0].IdSeguridad);
-			}
-
-			codigo_facturador = response.data[0].Identificacion;
-			var tipo = response.data[0].Admin;
-			if (tipo) {
-				$scope.Admin = true;
-			};
-
-
-
-			//	console.log(data);
-			//});
-			//$http.get('/api/ObtenerEmpresas?IdentificacionEmpresa=' + codigo_facturador + '&Todas=false').then(function (response) {
-
-
-			SrvEmpresas.ObtenerEmpresas(codigo_facturador, Desde, Hasta, Item_TipoTercero).then(function (data) {
-				$('#wait').hide();
-				$('#waitRegistros').show();
-				//*******Consulta de los primeros 20 registros
-				Empresas = [];
-				AlmacenEmpresas = new DevExpress.data.ArrayStore({
-					key: "Identificacion",
-					data: Empresas
-				});
-
-				cargarEmpresas(data);
-
-				$("#gridEmpresas").dxDataGrid({
-					dataSource: {
-						store: AlmacenEmpresas,
-						reshapeOnPush: true
-					},
-					keyExpr: "Identificacion",
-					paging: {
-						pageSize: 20
-					},
-					pager: {
-						showPageSizeSelector: true,
-						allowedPageSizes: [5, 10, 20],
-						showInfo: true
-					}
-						 , loadPanel: {
-						 	enabled: true
-						 }
-							  , onCellPrepared: function (options) {
-							  	var fieldData = options.value,
-									fieldHtml = "";
-							  	try {
-							  		if (options.data.Estado == 1) {
-							  			estado = " style='color:green; cursor:default;' title='Activo'";
-							  		}
-							  		if (options.data.Estado == 2) {
-							  			estado = " style='color:red; cursor:default;' title='Inactivo'";
-							  		}
-							  		if (options.data.Estado == 3) {
-							  			estado = " style='color:orange; cursor:default;' title='En proceso de registro'";
-							  		}
-
-							  	} catch (err) {
-
-							  	}
-
-							  }, allowColumnResizing: true
-					, onToolbarPreparing: function (e) {
-						var dataGrid = e.component;
-
-						e.toolbarOptions.items.unshift({
-
-							location: "after",
-							widget: "dxButton",
-							options: {
-								icon: "refresh",
-								onClick: function () {
-									consultar();
-								}
-							}
-						})
-					}
-					   , columns: [
-						   {
-						   	cssClass: "col-md-1 col-xs-2",
-						   	cellTemplate: function (container, options) {
-						   		var ver = "class='icon-user-tie' style='margin-left:5%; font-size:19px;color: #1E88E5;'";
-						   		$("<div title='Detalle : " + options.data.RazonSocial + "' >")
-						   		$("<div style='text-align:center'>")
-									.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
-
-
-
-
-									.append(
-										$("<i " + ver + "></i>").dxButton({
-											onClick: function () {
-												$rootScope.ConsultaDetalleEmpresa(options.data.IdSeguridad);
-											}
-										}).removeClass("dx-button dx-button-normal dx-widget")
-								)
-									.appendTo(container);
-						   	}
-						   }
-
-						   ,
-
-						   {
-						   	caption: "Identificacion",
-						   	dataField: "Identificacion"
-						   },
-						   {
-						   	caption: "Razón social",
-						   	dataField: "RazonSocial",
-						   },
-						   {
-						   	caption: "Email",
-						   	dataField: "Email"
-						   },
-						   {
-						   	caption: "Serial",
-						   	dataField: "Serial"
-						   },
-						   {
-						   	dataField: "Perfil"
-						   },
-						   {
-						   	cssClass: "col-md-1 col-xs-1",
-						   	caption: 'Estado',
-						   	dataField: 'Estado',
-						   	cellTemplate: function (container, options) {
-						   		$("<div style='text-align:center; cursor:default;'>")
-									.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
-									.appendTo(container);
-						   	}
-						   }
-
-					   ],
-					filterRow: {
-						visible: true
-					}
-				});
-
-				//*************************************************************************				
-				CantRegCargados = AlmacenEmpresas._array.length;
-
-				CargarAsyn();
-				function CargarAsyn() {
-					SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa, Item_TipoTercero).then(function (data) {
-						CantRegCargados += data.length;
-						if (data.length > 0) {
-							cargarEmpresas(data);
-							CargarAsyn();
-						} else {
-							$('#waitRegistros').hide();
-						}
-
-					});
-				}
-				//*************************************************************************
-
-
-			}, function errorCallback(response) {
-				$('#wait').hide();
-				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			$('#waitRegistros').show();
+			//*******Consulta de los primeros 20 registros
+			Empresas = [];
+			AlmacenEmpresas = new DevExpress.data.ArrayStore({
+				key: "Identificacion",
+				data: Empresas
 			});
 
+			cargarEmpresas(data);
+
+			$("#gridEmpresas").dxDataGrid({
+				dataSource: {
+					store: AlmacenEmpresas,
+					reshapeOnPush: true
+				},
+				keyExpr: "Identificacion",
+				paging: {
+					pageSize: 20
+				},
+				pager: {
+					showPageSizeSelector: true,
+					allowedPageSizes: [5, 10, 20],
+					showInfo: true
+				}
+					 , loadPanel: {
+					 	enabled: true
+					 }
+						  , onCellPrepared: function (options) {
+						  	var fieldData = options.value,
+								fieldHtml = "";
+						  	try {
+						  		if (options.data.Estado == 1) {
+						  			estado = " style='color:green; cursor:default;' title='Activo'";
+						  		}
+						  		if (options.data.Estado == 2) {
+						  			estado = " style='color:red; cursor:default;' title='Inactivo'";
+						  		}
+						  		if (options.data.Estado == 3) {
+						  			estado = " style='color:orange; cursor:default;' title='En proceso de registro'";
+						  		}
+
+						  	} catch (err) {
+
+						  	}
+
+						  }, allowColumnResizing: true
+				, onToolbarPreparing: function (e) {
+					var dataGrid = e.component;
+
+					e.toolbarOptions.items.unshift({
+
+						location: "after",
+						widget: "dxButton",
+						options: {
+							icon: "refresh",
+							onClick: function () {
+								consultar();
+							}
+						}
+					})
+				}
+				   , columns: [
+					   {
+					   	cssClass: "col-md-1 col-xs-2",
+					   	cellTemplate: function (container, options) {
+					   		var ver = "class='icon-user-tie' style='margin-left:5%; font-size:19px;color: #1E88E5;'";
+					   		$("<div title='Detalle : " + options.data.RazonSocial + "' >")
+					   		$("<div style='text-align:center'>")
+								.append($("<a taget=_self class='icon-pencil3' title='Editar' href='GestionEmpresas.aspx?IdSeguridad=" + options.data.IdSeguridad + "'>"))
 
 
 
+
+								.append(
+									$("<i " + ver + "></i>").dxButton({
+										onClick: function () {
+											$rootScope.ConsultaDetalleEmpresa(options.data.IdSeguridad);
+										}
+									}).removeClass("dx-button dx-button-normal dx-widget")
+							)
+								.appendTo(container);
+					   	}
+					   }
+
+					   ,
+
+					   {
+					   	caption: "Identificacion",
+					   	dataField: "Identificacion"
+					   },
+					   {
+					   	caption: "Razón social",
+					   	dataField: "RazonSocial",
+					   },
+					   {
+					   	caption: "Email",
+					   	dataField: "Email"
+					   },
+					   {
+					   	caption: "Serial",
+					   	dataField: "Serial"
+					   },
+					   {
+					   	dataField: "Perfil"
+					   },
+					   {
+					   	cssClass: "col-md-1 col-xs-1",
+					   	caption: 'Estado',
+					   	dataField: 'Estado',
+					   	cellTemplate: function (container, options) {
+					   		$("<div style='text-align:center; cursor:default;'>")
+								.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
+								.appendTo(container);
+					   	}
+					   }
+
+				   ],
+				filterRow: {
+					visible: true
+				}
+			});
+
+			//*************************************************************************				
+			CantRegCargados = AlmacenEmpresas._array.length;
+
+			CargarAsyn();
+			function CargarAsyn() {
+				SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa, Item_TipoTercero).then(function (data) {
+					CantRegCargados += data.length;
+					if (data.length > 0) {
+						cargarEmpresas(data);
+						CargarAsyn();
+					} else {
+						$('#waitRegistros').hide();
+					}
+
+				});
+			}
+			//*************************************************************************
 
 
 		}, function errorCallback(response) {
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
+
+
+
+
 	}
 
 

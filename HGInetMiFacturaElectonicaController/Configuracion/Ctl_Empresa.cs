@@ -232,7 +232,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public List<TblEmpresas> ObtenerAsociadas(string identificacion)
 		{
-
+			context.Configuration.LazyLoadingEnabled = false;
 			var datos = (from item in context.TblEmpresas
 						 where item.StrIdentificacion.Equals(identificacion) || item.StrEmpresaAsociada.Equals(identificacion)
 						 select item).ToList();
@@ -911,7 +911,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <returns></returns>
 		public List<TblEmpresas> ObtenerFacturadores()
 		{
-			List<TblEmpresas> datos = (from item in context.TblEmpresas
+			context.Configuration.LazyLoadingEnabled = false;
+			List<TblEmpresas> datos = (from item in context.TblEmpresas.AsNoTracking()
 									   where item.IntObligado.Equals(true)
 									   select item).ToList();
 
@@ -937,8 +938,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>        
 		/// /// <param name="IdSeguridad">id de seguridad</param>
 		/// <returns></returns>
-		public List<TblEmpresas> Obtener(System.Guid IdSeguridad)
+		public List<TblEmpresas> Obtener(System.Guid IdSeguridad, bool LazyLoading = true)
 		{
+
+			context.Configuration.LazyLoadingEnabled = LazyLoading;
 			List<TblEmpresas> datos = (from item in context.TblEmpresas
 									   where item.StrIdSeguridad.Equals(IdSeguridad)
 									   select item).ToList();
@@ -1173,7 +1176,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Obtiene las Primeras 20 empresas
 		/// </summary>        
 		/// <returns></returns>
-		public List<ObjEmpresa> Pag_ObtenerEmpresas(int Desde, int Hasta, int Tipo)
+		public List<ObjEmpresa> Pag_ObtenerEmpresas(int Desde, int Hasta, int Tipo, string Nit, string razon_social)
 		{
 
 			bool Obligado = false;
@@ -1199,9 +1202,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				StrAdquiriente = "*";
 			}
 
+			if (string.IsNullOrEmpty(Nit))
+			{
+				Nit = "*";
+			}
+
+			if (string.IsNullOrEmpty(razon_social))
+			{
+				razon_social = "*";
+			}
+
+
 			List<ObjEmpresa> datos = (from d in context.TblEmpresas
 									  where (d.IntObligado == Obligado || strObligado.Equals("*"))
 									  && (d.IntAdquiriente == Adquiriente || StrAdquiriente.Equals("*"))
+									  && (d.StrIdentificacion == Nit || Nit.Equals("*"))
+									  && (d.StrRazonSocial.Contains(razon_social) || razon_social.Equals("*"))
 									  select new ObjEmpresa
 									  {
 										  Identificacion = d.StrIdentificacion,
@@ -1265,11 +1281,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="identificacion">Identificacion de Obligado o Adquiriente</param>
 		/// <returns></returns>
-		public List<ObjEmpresa> Pag_ObtenerAsociadas(string identificacion, int Desde, int Hasta)
+		public List<ObjEmpresa> Pag_ObtenerAsociadas(string identificacion, int Desde, int Hasta, string Nit, string razon_social)
 		{
+			if (string.IsNullOrEmpty(Nit))
+			{
+				Nit = "*";
+			}
+
+			if (string.IsNullOrEmpty(razon_social))
+			{
+				razon_social = "*";
+			}
 
 			List<ObjEmpresa> datos = (from d in context.TblEmpresas
 									  where d.StrIdentificacion.Equals(identificacion) || d.StrEmpresaAsociada.Equals(identificacion)
+									   && (d.StrIdentificacion == Nit || Nit.Equals("*"))
+									  && (d.StrRazonSocial.Contains(razon_social) || razon_social.Equals("*"))
 									  select new ObjEmpresa
 									  {
 										  Identificacion = d.StrIdentificacion,

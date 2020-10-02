@@ -167,7 +167,7 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 			TipoRegistro = datatipo;
 			Procedencia = dataproced;
 			cargarFiltros();
-			consultar();
+			//consultar();
 		});
 	});
 

@@ -43,7 +43,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
 		codigo_facturador = data[0].IdentificacionEmpresa;
 		UsuarioSession = data[0].IdSeguridad;
-		consultar();
+		//consultar();
 	});
 
 	SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {

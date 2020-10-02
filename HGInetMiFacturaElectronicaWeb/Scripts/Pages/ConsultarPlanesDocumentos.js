@@ -207,7 +207,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			}
 		};
 
-		CargarConsulta(codigo_facturador);
+		//CargarConsulta(codigo_facturador);
 
 	}
 

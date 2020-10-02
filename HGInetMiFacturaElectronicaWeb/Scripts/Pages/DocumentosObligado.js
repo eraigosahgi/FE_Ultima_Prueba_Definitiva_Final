@@ -215,7 +215,9 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 		$("#FechaFinal").dxDateBox({ min: now });
 		$("#FechaInicial").dxDateBox({ max: now });
-		consultar();
+
+		//Se desactivan las consultas Automaticas
+		//consultar();
 	}
 
 	$scope.ButtonOptionsConsultar = {

@@ -38,11 +38,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns>Indica si se guardo con exito</returns>
 		[HttpPost]
 		[Route("api/SubirArchivo")]
-		public IHttpActionResult SubirArchivo(System.Guid StrIdSeguridad,string Clave, int Certificadora)
+		public IHttpActionResult SubirArchivo(System.Guid StrIdSeguridad, string Clave, int Certificadora)
 		{
 			try
 			{
-				if (string.IsNullOrEmpty(Clave) ||Clave.Equals("null") )
+				if (string.IsNullOrEmpty(Clave) || Clave.Equals("null"))
 				{
 					throw new ApplicationException("Debe ingresar la clave del certificado Digital");
 				}
@@ -52,12 +52,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (file != null && file.ContentLength > 0)
 				{
 					Ctl_Empresa Controlador = new Ctl_Empresa();
-					datos =Controlador.GuardarCertificadoDigital(file, StrIdSeguridad, Clave, Certificadora);
+					datos = Controlador.GuardarCertificadoDigital(file, StrIdSeguridad, Clave, Certificadora);
 				}
 
 				var Resultado = new { Descripcion = datos.Propietario, FechaVencimiento = Convert.ToDateTime(datos.Fechavenc).ToString(Fecha.formato_fecha_hginet), Serial = datos.Serial, Emisor = datos.Certificadora };
 
-				return Ok(Resultado);				
+				return Ok(Resultado);
 			}
 			catch (Exception excepcion)
 			{
@@ -111,7 +111,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("api/ObtenerEmpresas")]
-		public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa, int Desde, int Hasta,int Tipo)
+		public IHttpActionResult ObtenerEmpresas(string IdentificacionEmpresa, int Desde, int Hasta, int Tipo, string Nit, string razon_social)
 		{
 			Sesion.ValidarSesion();
 
@@ -126,13 +126,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			if (empresa.IntAdministrador)
 			{
-				datos = CtEmpresa.Pag_ObtenerEmpresas(Desde, Hasta,Tipo);
+				datos = CtEmpresa.Pag_ObtenerEmpresas(Desde, Hasta, Tipo, Nit, razon_social);
 			}
 			else
 			{
 				if (empresa.IntIntegrador)
 				{
-					datos = CtEmpresa.Pag_ObtenerAsociadas(IdentificacionEmpresa, Desde, Hasta);
+					datos = CtEmpresa.Pag_ObtenerAsociadas(IdentificacionEmpresa, Desde, Hasta, Nit, razon_social);
 				}
 			}
 
@@ -162,7 +162,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			TblEmpresas empresa = datosSesion.FirstOrDefault();
 
-
 			List<TblEmpresas> datos = new List<TblEmpresas>();
 			bool ConsultaAdmin = false;
 			if (empresa.IntAdministrador)
@@ -180,7 +179,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 				else
 				{
-					datos = ctl_empresa.Obtener(empresa.StrIdSeguridad);
+					datos = ctl_empresa.Obtener(empresa.StrIdSeguridad,false);
 				}
 			}
 			if (datos == null)
@@ -270,7 +269,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				StrCertClave = d.StrCertClave,
 				DatCertVence = Convert.ToDateTime(d.DatCertVence).ToString(Fecha.formato_fecha_hginet),
 				SerialCloudServices = d.StrSerialCloudServices,
-				Debug= d.IntDebug
+				Debug = d.IntDebug
 
 			});
 

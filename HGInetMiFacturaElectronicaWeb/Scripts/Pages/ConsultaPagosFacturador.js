@@ -185,7 +185,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 		$("#FechaFinal").dxDateBox({ min: now });
 		$("#FechaInicial").dxDateBox({ max: now });
 		validarEstado();
-		consultar();
+		//consultar();
 	}
 
 	$scope.ButtonOptionsConsultar = {
@@ -580,7 +580,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 		$("#FechaInicial").dxDateBox({ max: now });
 
 		validarEstado();
-		consultar();
+		//consultar();
 	}
 
 	$scope.ButtonOptionsConsultar = {

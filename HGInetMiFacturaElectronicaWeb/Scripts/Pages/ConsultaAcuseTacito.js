@@ -18,7 +18,7 @@ AcuseConsultaApp.controller('AcuseConsultaController', function AcuseConsultaCon
 
     SrvMaestrosEnum.ObtenerSesion().then(function (data) {
         codigo_facturador = data[0].Identificacion;
-        consultar();
+        //consultar();
     });
 
     SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false).then(function (Datos) {

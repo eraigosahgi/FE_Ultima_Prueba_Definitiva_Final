@@ -13,7 +13,7 @@
 	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs20200921"></script>
 	<div data-ng-app="EmpresasApp" data-ng-controller="ConsultaEmpresasController" data-ng-init="Admin=false">
 
-		
+
 		<div class="col-md-12" data-ng-show="Admin">
 			<div class="panel panel-white">
 				<div class="panel-heading">
@@ -27,12 +27,21 @@
 
 				<div class="panel-body">
 
-					<div class="col-md-4" style="margin-top: 1%">
+					<div class="col-md-3" style="margin-top: 1%">
 						<i class="icon-file-text"></i>
 						<label>Tipo:</label>
 						<div data-dx-select-box="filtros.TipoTercero"></div>
 					</div>
-					
+
+					<div class="col-md-3" style="margin-top: 1%">
+						<div data-hgi-filtro="Facturador"></div>
+					</div>
+
+					<div class="col-md-4" style="margin-top: 1%">
+						<label>Razón Social:</label>
+						<div id="razon_social"></div>
+					</div>
+
 					<div class="col-md-2 text-right" style="margin-top: -5px">
 						<br />
 						<br />

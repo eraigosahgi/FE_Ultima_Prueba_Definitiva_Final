@@ -29,7 +29,7 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
     SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
     	codigo_adquiente = data[0].IdentificacionEmpresa;
     	UsuarioSession = data[0].IdSeguridad;
-    	consultar();
+    	//consultar();
     });
   
 
@@ -93,7 +93,7 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultar2();
+			consultar();
 		}
 	};
 
