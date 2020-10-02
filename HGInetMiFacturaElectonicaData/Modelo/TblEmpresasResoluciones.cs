@@ -40,8 +40,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public Nullable<System.Guid> StrComercioConfigId { get; set; }
         public string StrComercioConfigDescrip { get; set; }
     
+        public virtual TblEmpresas TblEmpresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
-        public virtual TblEmpresas TblEmpresas { get; set; }
     }
 }

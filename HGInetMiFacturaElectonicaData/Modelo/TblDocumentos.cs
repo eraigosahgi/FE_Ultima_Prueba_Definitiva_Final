@@ -17,7 +17,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblDocumentos()
         {
-            this.IntVersionDian = 1;
             this.TblPagosElectronicos = new HashSet<TblPagosElectronicos>();
         }
     
@@ -61,14 +60,16 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntVersionDian { get; set; }
         public Nullable<System.Guid> StrIdRadicadoDian { get; set; }
         public string StrFormato { get; set; }
+        public int IntTipoOperacion { get; set; }
+        public string StrLineaNegocio { get; set; }
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }
-        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
         public virtual TblEmpresas TblEmpresasAdquiriente { get; set; }
         public virtual TblEmpresas TblEmpresasFacturador { get; set; }
         public virtual TblEmpresasResoluciones TblEmpresasResoluciones { get; set; }
+        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
     }
 }
