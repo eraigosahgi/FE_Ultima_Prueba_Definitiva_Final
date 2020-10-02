@@ -34,6 +34,7 @@
       <xs:element minOccurs="0" name="FormaPago" type="xs:int" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
       <xs:element minOccurs="0" name="IdentificacionProveedor" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LineaNegocio" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Neto" type="xs:decimal" />
       <xs:element minOccurs="0" name="Nota" nillable="true" type="xs:string" />
@@ -45,6 +46,7 @@
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReceiptDocument" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
       <xs:element minOccurs="0" name="TerminoPago" type="xs:int" />
+      <xs:element minOccurs="0" name="TerminoPago_Descripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="TipoOperacion" type="xs:int" />
       <xs:element minOccurs="0" name="Total" type="xs:decimal" />
       <xs:element minOccurs="0" name="Trm" nillable="true" type="tns:TasaCambio" />
@@ -115,6 +117,7 @@
       <xs:element minOccurs="0" name="IdentificacionDv" type="xs:int" />
       <xs:element minOccurs="0" name="NombreComercial" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PaginaWeb" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Pais" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PrimerApellido" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PrimerNombre" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="RazonSocial" nillable="true" type="xs:string" />

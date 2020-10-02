@@ -21,6 +21,12 @@ namespace HGInetFeAPI
 		/// <returns>Objeto con las Lista de FE</returns>
 		public static List<ServicioListaFe.ListaFE> Obtener(string UrlWs, string Serial, string Identificacion, string CodigoLista)
 		{
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 

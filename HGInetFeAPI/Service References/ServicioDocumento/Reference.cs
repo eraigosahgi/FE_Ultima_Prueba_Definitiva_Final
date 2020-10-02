@@ -54,7 +54,7 @@ namespace HGInetFeAPI.ServicioDocumento {
         private int DocumentoTipoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private HGInetFeAPI.ServicioDocumento.Error ErrorField;
+        private LibreriaGlobalHGInet.Error.Error ErrorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private HGInetFeAPI.ServicioDocumento.RespuestaDian EstadoDianField;
@@ -257,7 +257,7 @@ namespace HGInetFeAPI.ServicioDocumento {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public HGInetFeAPI.ServicioDocumento.Error Error {
+        public LibreriaGlobalHGInet.Error.Error Error {
             get {
                 return this.ErrorField;
             }
@@ -541,83 +541,6 @@ namespace HGInetFeAPI.ServicioDocumento {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Error", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
-    [System.SerializableAttribute()]
-    public partial class Error : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private HGInetFeAPI.ServicioDocumento.CodigoError CodigoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime FechaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MensajeField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public HGInetFeAPI.ServicioDocumento.CodigoError Codigo {
-            get {
-                return this.CodigoField;
-            }
-            set {
-                if ((this.CodigoField.Equals(value) != true)) {
-                    this.CodigoField = value;
-                    this.RaisePropertyChanged("Codigo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime Fecha {
-            get {
-                return this.FechaField;
-            }
-            set {
-                if ((this.FechaField.Equals(value) != true)) {
-                    this.FechaField = value;
-                    this.RaisePropertyChanged("Fecha");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Mensaje {
-            get {
-                return this.MensajeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
-                    this.MensajeField = value;
-                    this.RaisePropertyChanged("Mensaje");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="RespuestaDian", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
         "cio")]
     [System.SerializableAttribute()]
@@ -724,38 +647,6 @@ namespace HGInetFeAPI.ServicioDocumento {
                 propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="CodigoError", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
-    public enum CodigoError : int {
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        OK = 0,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_NO_CONTROLADO = 1,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_EN_SERVIDOR = 2,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        VALIDACION = 3,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_AGREGAR = 4,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_EDITAR = 5,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_ELIMINAR = 6,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_LICENCIA = 98,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        NINGUNO = 99,
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -942,7 +833,7 @@ namespace HGInetFeAPI.ServicioDocumento {
         private int DocumentoTipoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private HGInetFeAPI.ServicioDocumento.Error ErrorField;
+        private LibreriaGlobalHGInet.Error.Error ErrorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaField;
@@ -1053,7 +944,7 @@ namespace HGInetFeAPI.ServicioDocumento {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public HGInetFeAPI.ServicioDocumento.Error Error {
+        public LibreriaGlobalHGInet.Error.Error Error {
             get {
                 return this.ErrorField;
             }
@@ -1230,7 +1121,7 @@ namespace HGInetFeAPI.ServicioDocumento {
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumeros", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumerosRespon" +
             "se")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ConsultaPorNumeros", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="ConsultaPorNumeros", Name="Error")]
         HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosResponse ConsultaPorNumeros(HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumeros", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumerosRespon" +
@@ -1240,7 +1131,7 @@ namespace HGInetFeAPI.ServicioDocumento {
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistr" +
             "o", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistr" +
             "oResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ConsultaPorCodigoRegistro", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="ConsultaPorCodigoRegistro", Name="Error")]
         HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse ConsultaPorCodigoRegistro(HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistr" +
@@ -1251,7 +1142,7 @@ namespace HGInetFeAPI.ServicioDocumento {
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaborac" +
             "ion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaborac" +
             "ionResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ConsultaPorFechaElaboracion", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="ConsultaPorFechaElaboracion", Name="Error")]
         HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionResponse ConsultaPorFechaElaboracion(HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaborac" +
@@ -1260,14 +1151,14 @@ namespace HGInetFeAPI.ServicioDocumento {
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionResponse> ConsultaPorFechaElaboracionAsync(HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/RecepcionResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="Recepcion", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="Recepcion", Name="Error")]
         HGInetFeAPI.ServicioDocumento.RecepcionResponse Recepcion(HGInetFeAPI.ServicioDocumento.RecepcionRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/RecepcionResponse")]
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioDocumento.RecepcionResponse> RecepcionAsync(HGInetFeAPI.ServicioDocumento.RecepcionRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufe", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufeResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioDocumento.Error), Action="ObtenerCufe", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="ObtenerCufe", Name="Error")]
         HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse ObtenerCufe(HGInetFeAPI.ServicioDocumento.ObtenerCufeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufe", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ObtenerCufeResponse")]

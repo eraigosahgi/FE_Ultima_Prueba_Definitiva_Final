@@ -27,6 +27,11 @@ namespace HGInetFeAPI
 		/// <returns></returns>
 		public static List<ServicioReenvioDocumento.NotificacionCorreo> Recepcion(string UrlWs, string Serial, string Identificacion, List<ServicioReenvioDocumento.EnvioDocumento> datos_envio)
 		{
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
 
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);

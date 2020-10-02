@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibreriaGlobalHGInet.Peticiones;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -154,6 +155,68 @@ namespace HGInetFeAPI
 			catch (Exception excepcion)
 			{
 				throw excepcion;
+			}
+		}
+
+		/// <summary>
+		/// Obtiene la Ruta para emitir o consultar los documentos de FE
+		/// </summary>
+		/// <param name="ruta">ruta de produccion o habilitacion</param>
+		/// <param name="identificacion">identificacion del facturador</param>
+		/// <returns></returns>
+		public static string ObtenerUrl(string ruta, string identificacion)
+		{
+
+			int ambiente = 1;
+			int version = 2;
+			string url_retorno = string.Empty;
+			try
+			{
+				
+				string url_plataforma = "https://cloudservices.hginet.co/";
+				
+
+				//si la ruta contiene esta informacion cambio al ambiente de pruebas
+				if (ruta.Contains("habilitacion"))
+				{
+					ambiente = 2;
+				}
+
+				//Se consulta la ruta disponible para el integrador
+				ClienteRest<string> cliente_rest = new ClienteRest<string>(string.Format("{0}/api/facturae/ObtenerServidorFE?ambiente={1}&version={2}&identificacion_empresa={3}", url_plataforma, ambiente, version, identificacion), 1, "");
+				try
+				{
+					url_retorno = cliente_rest.GET();
+				}
+				catch (Exception ex)
+				{
+					//Se prueba consultando a otra ruta
+					string url_plataforma2 = "https://cloudservices2.hginet.co/";
+
+					ClienteRest<string> cliente_rest2 = new ClienteRest<string>(string.Format("{0}/api/facturae/ObtenerServidorFE?ambiente={1}&version={2}&identificacion_empresa={3}", url_plataforma2, ambiente, version, identificacion), 1, "");
+					try
+					{
+						url_retorno = cliente_rest.GET();
+					}
+					catch (Exception)
+					{
+						var cod = cliente_rest.CodHttp;
+						throw new ApplicationException(ex.Message, ex.InnerException);
+					}
+
+					//var cod = cliente_rest.CodHttp;
+					//throw new ApplicationException(ex.Message, ex.InnerException);
+				}
+
+				if (string.IsNullOrWhiteSpace(url_retorno))
+					throw new ApplicationException("Ruta principal de licencia vacía.");
+
+				return url_retorno;
+			}
+			catch (Exception e)
+			{
+
+				throw new ApplicationException(e.Message, e.InnerException);
 			}
 		}
 

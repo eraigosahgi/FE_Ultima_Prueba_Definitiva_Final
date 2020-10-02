@@ -13,6 +13,13 @@ namespace HGInetFeAPI
 
 		public static ServicioEmpresas.Empresa Obtener(string UrlWs, string Serial, string Identificacion)
 		{
+			
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 

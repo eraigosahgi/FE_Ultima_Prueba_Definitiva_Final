@@ -39,6 +39,9 @@ namespace HGInetFeAPI.ServicioEmpresas {
         private string EmailRecepcionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string EmailRecepcionDianField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private short HorasAcuseTacitoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -133,6 +136,19 @@ namespace HGInetFeAPI.ServicioEmpresas {
                 if ((object.ReferenceEquals(this.EmailRecepcionField, value) != true)) {
                     this.EmailRecepcionField = value;
                     this.RaisePropertyChanged("EmailRecepcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string EmailRecepcionDian {
+            get {
+                return this.EmailRecepcionDianField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.EmailRecepcionDianField, value) != true)) {
+                    this.EmailRecepcionDianField = value;
+                    this.RaisePropertyChanged("EmailRecepcionDian");
                 }
             }
         }
@@ -251,115 +267,6 @@ namespace HGInetFeAPI.ServicioEmpresas {
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Error", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
-    [System.SerializableAttribute()]
-    public partial class Error : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private HGInetFeAPI.ServicioEmpresas.CodigoError CodigoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime FechaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MensajeField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public HGInetFeAPI.ServicioEmpresas.CodigoError Codigo {
-            get {
-                return this.CodigoField;
-            }
-            set {
-                if ((this.CodigoField.Equals(value) != true)) {
-                    this.CodigoField = value;
-                    this.RaisePropertyChanged("Codigo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime Fecha {
-            get {
-                return this.FechaField;
-            }
-            set {
-                if ((this.FechaField.Equals(value) != true)) {
-                    this.FechaField = value;
-                    this.RaisePropertyChanged("Fecha");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Mensaje {
-            get {
-                return this.MensajeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
-                    this.MensajeField = value;
-                    this.RaisePropertyChanged("Mensaje");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="CodigoError", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
-    public enum CodigoError : int {
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        OK = 0,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_NO_CONTROLADO = 1,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_EN_SERVIDOR = 2,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        VALIDACION = 3,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_AGREGAR = 4,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_EDITAR = 5,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_ELIMINAR = 6,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        ERROR_LICENCIA = 98,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        NINGUNO = 99,
-    }
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", ConfigurationName="ServicioEmpresas.ServicioEmpresas")]
     public interface ServicioEmpresas {
@@ -371,7 +278,7 @@ namespace HGInetFeAPI.ServicioEmpresas {
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.TestResponse> TestAsync(HGInetFeAPI.ServicioEmpresas.TestRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Obtener", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ObtenerResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioEmpresas.Error), Action="Obtener", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="Obtener", Name="Error")]
         HGInetFeAPI.ServicioEmpresas.ObtenerResponse Obtener(HGInetFeAPI.ServicioEmpresas.ObtenerRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Obtener", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ObtenerResponse")]

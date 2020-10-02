@@ -478,6 +478,12 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
+      <Project>{A966A394-F6CC-482F-87A4-56EC1AF05E5E}</Project>
+      <Name>LibreriaGlobalHGInet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

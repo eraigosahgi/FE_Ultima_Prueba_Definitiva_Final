@@ -7,6 +7,7 @@
       <xs:element minOccurs="0" name="EmailEnvio" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="EmailPagos" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="EmailRecepcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EmailRecepcionDian" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="HorasAcuseTacito" type="xs:short" />
       <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdentificacionDv" type="xs:int" />

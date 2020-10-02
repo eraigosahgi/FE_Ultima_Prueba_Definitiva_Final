@@ -21,7 +21,16 @@ namespace HGInetFeAPI
 		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
 		/// <returns></returns>
 		public static string Test(string UrlWs)
-		{   // valida la URL del servicio web
+		{
+			string Identificacion = "811021438";
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
+			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 						
 			ServicioAcuseRecibo.ServicioAcuseReciboClient cliente_ws = null;

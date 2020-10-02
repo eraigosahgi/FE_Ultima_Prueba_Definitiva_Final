@@ -23,6 +23,8 @@ namespace HGInetFacturaETestConsola
 		{
 			try
 			{
+				HGInetFeAPI.Ctl_Factura.Test("http://app.mifacturaenlinea.com.co");
+
 				HGInetFeAPI.ServicioDocumento.DocumentoCufe doc1 = new HGInetFeAPI.ServicioDocumento.DocumentoCufe()
 				{
 					ClaveTecnica = "fc8eac422eba16e22ffd8c6f94b3f40a6e38162c",

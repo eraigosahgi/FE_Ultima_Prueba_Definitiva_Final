@@ -24,6 +24,12 @@ namespace HGInetFeAPI
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioNotaCredito.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioNotaCredito.NotaCredito> documentos_envio)
 		{
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -110,6 +116,12 @@ namespace HGInetFeAPI
 		/// <returns>Una lista de las Nota Credito generadas a nombre del adquiriente</returns>
 		public static List<ServicioNotaCredito.NotaCreditoConsulta> ObtenerNotaCreditoPorAdquiriente(string UrlWs, string Serial, string Identificacion, DateTime FechaInicio, DateTime FechaFin)
 		{
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -194,8 +206,14 @@ namespace HGInetFeAPI
 		/// <returns>Una lista de las Notas Credito generadas a nombre del adquiriente</returns>
 		public static List<ServicioNotaCredito.NotaCreditoConsulta> ObtenerPorIdSeguridadAdquiriente(string UrlWs, string Serial, string Identificacion, string CodigosDocumentos)
         {
-            // valida la URL del servicio web
-            UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+	        // valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+	        if (!UrlWs.Contains("hgi"))
+	        {
+		        UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+	        }
+
+			// valida la URL del servicio web
+			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
             // valida el parámetro Serial
             if (string.IsNullOrEmpty(Serial))
@@ -269,7 +287,16 @@ namespace HGInetFeAPI
         /// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
         /// <returns></returns>
         public static string Test(string UrlWs)
-		{   // valida la URL del servicio web
+		{
+			string Identificacion = "811021438";
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
+			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
 			ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = null;

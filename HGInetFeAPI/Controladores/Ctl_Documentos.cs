@@ -26,6 +26,12 @@ namespace HGInetFeAPI
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioDocumento.DocumentoRespuesta> ObtenerPorNumeros(string UrlWs, string Serial, string Identificacion, string NumerosDocumentos, int DocumentoTipo)
 		{
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -101,6 +107,13 @@ namespace HGInetFeAPI
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioDocumento.DocumentoRespuesta> ObtenerPorCodigoRegistro(string UrlWs, string Serial, string Identificacion, string CodigosDocumentos, int DocumentoTipo)
 		{
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -179,6 +192,13 @@ namespace HGInetFeAPI
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioDocumento.DocumentoRespuesta> ObtenerPorFechaElaboracion(string UrlWs, string Serial, string Identificacion, DateTime FechaInicio, DateTime FechaFin, int DocumentoTipo)
 		{
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -256,6 +276,13 @@ namespace HGInetFeAPI
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioDocumento.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioDocumento.DocumentoArchivo> documentos_envio)
 		{
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -334,6 +361,13 @@ namespace HGInetFeAPI
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioDocumento.DocumentoCufe> CalcularCufe(string UrlWs, string Serial, string Identificacion, List<ServicioDocumento.DocumentoCufe> documentos_cufe)
 		{
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -408,7 +442,15 @@ namespace HGInetFeAPI
 		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
 		/// <returns></returns>
 		public static string Test(string UrlWs)
-		{   // valida la URL del servicio web
+		{
+			string Identificacion = "811021438";
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
+			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 			
 			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;

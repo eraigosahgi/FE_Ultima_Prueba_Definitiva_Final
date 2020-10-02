@@ -24,6 +24,13 @@ namespace HGInetFeAPI
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioFactura.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioFactura.Factura> documentos_envio)
 		{
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -119,6 +126,13 @@ namespace HGInetFeAPI
 		/// <returns>Una lista de las Facturas generadas a nombre del adquiriente</returns>
 		public static List<ServicioFactura.FacturaConsulta> ObtenerFacturaPorAdquiriente(string UrlWs, string Serial, string Identificacion, DateTime FechaInicio, DateTime FechaFin)
 		{
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -203,6 +217,13 @@ namespace HGInetFeAPI
 		/// <returns>Una lista de las Facturas generadas a nombre del adquiriente</returns>
 		public static List<ServicioFactura.FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string UrlWs, string Serial, string Identificacion, string CodigosDocumentos)
 		{
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
 			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
@@ -278,7 +299,16 @@ namespace HGInetFeAPI
 		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
 		/// <returns></returns>
 		public static string Test(string UrlWs)
-		{   // valida la URL del servicio web
+		{
+			string Identificacion = "811021438";
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
+			// valida la URL del servicio web
 			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
 			ServicioFactura.ServicioFacturaClient cliente_ws = null;
