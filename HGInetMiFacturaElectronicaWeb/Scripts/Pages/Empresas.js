@@ -1834,7 +1834,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 	});
 
 	$("#razon_social").dxTextBox({
-	value:""
+		value: ""
 	});
 
 
@@ -1996,7 +1996,7 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 
 			CargarAsyn();
 			function CargarAsyn() {
-				SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa, Item_TipoTercero).then(function (data) {
+				SrvEmpresas.ObtenerEmpresas(codigo_facturador, CantRegCargados, CantidadRegEmpresa, Item_TipoTercero, txt_hgi_Facturador, $("#razon_social").dxTextBox("instance").option().value).then(function (data) {
 					CantRegCargados += data.length;
 					if (data.length > 0) {
 						cargarEmpresas(data);
