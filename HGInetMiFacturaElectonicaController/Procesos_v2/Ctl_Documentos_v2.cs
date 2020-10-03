@@ -382,40 +382,72 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "", null, false);
 
-						// envía el archivo zip con el xml firmado a la DIAN
-						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result,resolucion.StrIdSetDian);
-						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
-
-						//Valida estado del documento en la Plataforma de la DIAN
-						if (acuse.Response == 200)
-						respuesta = Consultar(documentoBd, empresa, ref respuesta, acuse.KeyV2);
-
-
-						// envía el mail de documentos al adquiriente
-						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
+						//Se valida que no sea un documento para probar la respuesta de los servicios
+						if (documentoBd.IntTipoOperacion != 50)
 						{
-							//Crea el attached para poder ser enviado en el correo con los demas archivos.
-							try
-							{
-								bool attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documentoBd, empresa);
-							}
-							catch (Exception excepcion)
-							{
-								Ctl_Alertas alerta = new Ctl_Alertas();
-								alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(excepcion.Message), 1, false);
-							}
+							// envía el archivo zip con el xml firmado a la DIAN
+							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian);
+							Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 
-							if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
-							{
-								respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
+							//Valida estado del documento en la Plataforma de la DIAN
+							if (acuse.Response == 200)
+								respuesta = Consultar(documentoBd, empresa, ref respuesta, acuse.KeyV2);
 
-							}
-							else
+
+							// envía el mail de documentos al adquiriente
+							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 							{
-								//Se actualiza respuesta	
-								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PendienteEnvioProveedorDoc);
+								//Crea el attached para poder ser enviado en el correo con los demas archivos.
+								try
+								{
+									bool attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documentoBd, empresa);
+								}
+								catch (Exception excepcion)
+								{
+									Ctl_Alertas alerta = new Ctl_Alertas();
+									alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(excepcion.Message), 1, false);
+								}
+
+								if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
+								{
+									respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
+
+								}
+								else
+								{
+									//Se actualiza respuesta	
+									respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PendienteEnvioProveedorDoc);
+									respuesta.FechaUltimoProceso = Fecha.GetFecha();
+									respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+
+									//Actualiza Documento en Base de Datos
+									documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();
+									documentoBd.IntIdEstado = (short)respuesta.IdProceso;
+
+									//Actualizo el estado del documento para enviar al proveedor receptor
+									documento_tmp = new Ctl_Documento();
+									documento_tmp.Actualizar(documentoBd);
+
+									//Actualiza la categoria con el nuevo estado
+									respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+									respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+								}
+							}
+							else if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode())
+							{
+								#region Proceso anterior V1
+								//respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
+								//documento_tmp = new Ctl_Documento();
+								//documentoBd.IntEnvioMail = true;
+								//documento_tmp.Actualizar(documentoBd);
+								//Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
+								#endregion
+
+								//Se actualiza respuesta
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(respuesta.EstadoDian.Descripcion, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
 								respuesta.FechaUltimoProceso = Fecha.GetFecha();
-								respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+								respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
 
 								//Actualiza Documento en Base de Datos
 								documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();
@@ -428,23 +460,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Actualiza la categoria con el nuevo estado
 								respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+
 							}
 						}
-						else if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode() || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Recibido.GetHashCode())
+						else
 						{
-							#region Proceso anterior V1
-							//respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result, true);
-							//documento_tmp = new Ctl_Documento();
-							//documentoBd.IntEnvioMail = true;
-							//documento_tmp.Actualizar(documentoBd);
-							//Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
-							#endregion
-
-							//Se actualiza respuesta
-							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(respuesta.EstadoDian.Descripcion, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
-							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
+							//Se actualiza respuesta indicando que se completa el proceso
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error("Respuesta efectiva de los servicios, proceso completo", LibreriaGlobalHGInet.Error.CodigoError.OK);
+							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PrevalidacionErrorPlataforma);
 							respuesta.FechaUltimoProceso = Fecha.GetFecha();
-							respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
+							respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 
 							//Actualiza Documento en Base de Datos
 							documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();
@@ -457,7 +482,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//Actualiza la categoria con el nuevo estado
 							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
-
 						}
 
 					}

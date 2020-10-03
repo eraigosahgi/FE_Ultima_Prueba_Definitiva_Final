@@ -500,7 +500,18 @@ namespace HGInetMiFacturaElectonicaController
 						telefono = objeto.DatosNotaDebito.DatosObligado.Telefono;
 				}
 
-				string asunto = string.Format("{0};{1};{2};{3};{4}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto,nombre_comercial);
+				string asunto = string.Empty;
+
+				//Si tiene linea de negocio se agrega en el asunto
+				if (!string.IsNullOrEmpty(documento.StrLineaNegocio))
+				{
+					asunto = string.Format("{0};{1};{2};{3};{4};{5}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto, nombre_comercial, documento.StrLineaNegocio);
+				}
+				else
+				{
+					asunto = string.Format("{0};{1};{2};{3};{4}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto, nombre_comercial);
+				}
+				
 
 				/*
 				if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
