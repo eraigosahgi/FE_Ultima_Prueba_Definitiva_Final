@@ -1850,7 +1850,9 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 		var tipo = response.data[0].Admin;
 		if (tipo) {
 			$scope.Admin = true;
-		};
+		} else {
+			consultar();
+		}
 
 
 	}, function errorCallback(response) {
