@@ -383,7 +383,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "", null, false);
 
 						//Se valida que no sea un documento para probar la respuesta de los servicios
-						if (documentoBd.IntTipoOperacion != 50)
+						if (documentoBd.IntTipoOperacion != 50 || documento_obj.TipoOperacion != 50)
 						{
 							// envía el archivo zip con el xml firmado a la DIAN
 							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documentoBd, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian);
