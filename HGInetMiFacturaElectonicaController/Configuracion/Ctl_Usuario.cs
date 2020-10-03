@@ -468,10 +468,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				try
 				{
 					if (codigo_empresa.Equals(codigo_usuario))
-					{	
+					{
 						//Envio los datos de la empresa y usuario en la actualización de los permisos
 						Ctl_Empresa Controlador_Empresa = new Ctl_Empresa();
-						TblEmpresas Empresa = Controlador_Empresa.Obtener(codigo_empresa);				
+						TblEmpresas Empresa = Controlador_Empresa.Obtener(codigo_empresa);
 						ValidarPermisosUsuario(Empresa, respuesta.FirstOrDefault());
 					}
 				}
@@ -523,7 +523,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			//Obtiene permisos del adquiriente.
 			if (datos_empresa.IntAdquiriente)
-				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Adquiriente));		
+				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Adquiriente));
 
 			opciones_perfil = opciones_perfil.GroupBy(x => x.IntIdOpcion).Select(d => d.First()).ToList();
 
@@ -596,18 +596,33 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 		/// <summary>
-		/// Obtiene la lista de usuarios sin la relación de las entidades
+		/// Obtiene la lista de usuarios
 		/// </summary>
-		/// <param name="codigo_usuario">Codigo de Usuario</param>
+		/// <param name="codigo_usuario">Codigo de usuario</param>
 		/// <param name="codigo_empresa">Codigo de empresa</param>
-		/// <returns></returns>
-		public List<ObjUsuario> ConsultaUsuarios(string codigo_usuario, string codigo_empresa,int Desde, int Hasta)
+		/// <param name="nombre_usuario">nombre de usuario</param>
+		/// <param name="Desde">desde</param>
+		/// <param name="Hasta">hasta</param>
+		/// <returns>lista de ObjUsuario</returns>
+		public List<ObjUsuario> ConsultaUsuarios(string codigo_usuario, string codigo_empresa, string nombre_usuario, int Desde, int Hasta)
 		{
 			try
 			{
+
+				if (string.IsNullOrEmpty(codigo_usuario))
+				{
+					codigo_usuario = "*";
+				}				
+
+				if (string.IsNullOrEmpty(nombre_usuario))
+				{
+					nombre_usuario = "*";
+				}
+
 				var respuesta = (from d in context.TblUsuarios
 								 where (d.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
 								 && (d.StrEmpresa.Equals(codigo_empresa) || codigo_empresa.Equals("*"))
+								 && (d.StrNombres.Contains(nombre_usuario) || nombre_usuario.Equals("*"))
 								 select new ObjUsuario
 								 {
 									 FechaActualizacion = d.DatFechaActualizacion,
@@ -638,19 +653,31 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
-	
+
 		/// <summary>
 		/// Obtiene la lista de usuarios de la empresa y de la lista de empresas asociadas
 		/// </summary>
 		/// <param name="codigo_usuario"></param>
 		/// <returns></returns>
-		public List<ObjUsuario> ObtenerListaUsuarios(string codigo_usuario, string codigo_empresa, int Desde, int Hasta)
+		public List<ObjUsuario> ObtenerListaUsuarios(string codigo_usuario, string codigo_empresa,string nombre_usuario, int Desde, int Hasta)
 		{
 			try
 			{
+
+				if (string.IsNullOrEmpty(codigo_usuario))
+				{
+					codigo_usuario = "*";
+				}
+
+				if (string.IsNullOrEmpty(nombre_usuario))
+				{
+					nombre_usuario = "*";
+				}
+
 				List<ObjUsuario> respuesta = (from d in context.TblUsuarios
-											 where (d.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
-											 && (d.StrEmpresa.Equals(codigo_empresa) || d.TblEmpresas.StrEmpresaAsociada.Equals(codigo_empresa))
+											  where (d.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
+											  && (d.StrEmpresa.Equals(codigo_empresa) || d.TblEmpresas.StrEmpresaAsociada.Equals(codigo_empresa))
+											  && (d.StrNombres.Contains(nombre_usuario) || nombre_usuario.Equals("*"))
 											  select new ObjUsuario
 											  {
 												  FechaActualizacion = d.DatFechaActualizacion,
@@ -854,7 +881,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 
 
-		
+
 
 		#endregion
 

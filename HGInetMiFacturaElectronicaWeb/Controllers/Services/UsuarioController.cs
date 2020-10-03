@@ -184,7 +184,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		///// </summary>
 		///// <param name="codigo_usuario"></param>
 		///// <returns></returns>
-		public IHttpActionResult Get(string codigo_usuario, string codigo_empresa,int Desde, int Hasta)
+		public IHttpActionResult Get(string codigo_usuario, string codigo_empresa,int Desde, int Hasta,string nombre_usuario)
 		{
 			try
 			{
@@ -206,19 +206,33 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				if (datosempresa.IntAdministrador)
 				{
-					codigo_empresa = "*";
-					datos = ctl_usuario.ConsultaUsuarios(codigo_usuario, codigo_empresa, Desde, Hasta);
+					//Si viene vacio entonces le colocamos *, de lo contratio dejamos el filtro
+					if (string.IsNullOrEmpty(codigo_empresa))
+					{
+						codigo_empresa = "*";
+					}
+
+					datos = ctl_usuario.ConsultaUsuarios(codigo_usuario, codigo_empresa, nombre_usuario, Desde, Hasta);
 				}
 
 				else
 				{
 					if (datosempresa.IntIntegrador)
 					{
-						datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario, codigo_empresa, Desde, Hasta);
+						if (string.IsNullOrEmpty(codigo_empresa))
+						{
+							codigo_empresa = datosempresa.StrIdentificacion;
+						}
+						datos = ctl_usuario.ObtenerListaUsuarios(codigo_usuario, codigo_empresa, nombre_usuario, Desde, Hasta);
 					}
 					else
 					{
-						datos = ctl_usuario.ConsultaUsuarios(codigo_usuario, codigo_empresa, Desde, Hasta);
+						if (string.IsNullOrEmpty(codigo_empresa))
+						{
+							codigo_empresa = datosempresa.StrIdentificacion;
+						}
+
+						datos = ctl_usuario.ConsultaUsuarios(codigo_usuario, codigo_empresa, nombre_usuario,Desde, Hasta);
 					}
 				}
 			

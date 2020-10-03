@@ -20,7 +20,7 @@ var loadPanel;
 DevExpress.localization.locale(navigator.language);
 var opc_pagina = "1331";
 var ModalEmpresasApp = angular.module('ModalEmpresasApp', []);
-var ConsultaUsuarioApp = angular.module('ConsultaUsuarioApp', ['dx', 'ModalEmpresasApp', 'AppSrvUsuario']);
+var ConsultaUsuarioApp = angular.module('ConsultaUsuarioApp', ['dx', 'ModalEmpresasApp', 'AppSrvUsuario', 'AppSrvFiltro']);
 var OpcionesUsuario = [];
 var PermisosUsuario = [];
 var ValidacionHP = false;
@@ -29,7 +29,31 @@ var Desde = 0;
 var Hasta = 20;
 var CantRegCargados = 0;
 
-ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsuarioController($scope, $http, $location, SrvUsuario) {
+ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsuarioController($scope, $http, $location, SrvUsuario, SrvFiltro) {
+
+	//Filtros
+	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false, 1).then(function (Datos) {
+		$scope.Facturador = Datos;
+		txt_hgi_Facturador = "";
+	});
+
+	$("#codigo_usuario").dxTextBox({
+		value: ""
+	});
+
+	$("#nombre_usuario").dxTextBox({
+		value: ""
+	});
+
+
+	
+	$("#BtnConsultar").dxButton({
+		text: "Consultar",
+		type: "default",
+		onClick: function (e) {
+			consultar();
+		}
+	});
 
 	var codigo_usuario = "",
         codigo_facturador = "";
@@ -37,8 +61,13 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 	$http.get('/api/DatosSesion/').then(function (response) {
 
 		codigo_facturador = response.data[0].Identificacion;
+		
+		var tipo = response.data[0].Admin;		
+		if (tipo) {
+			$scope.Admin = true;
+		}
 
-		consultar();
+		//consultar();
 	}), function errorCallback(response) {
 		Mensaje(response.data.ExceptionMessage, "error");
 	};
@@ -50,7 +79,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 		//Datos GET: string codigo_usuario, string codigo_empresa
 		$('#wait').show();
 		//$http.get('/api/Usuario?codigo_usuario=' + "*" + '&codigo_empresa=' + codigo_facturador).then(function (response) {
-		SrvUsuario.ObtenerConPag(codigo_facturador, Desde, Hasta).then(function (data) {
+		SrvUsuario.ObtenerConPag(txt_hgi_Facturador, Desde, Hasta, $("#codigo_usuario").dxTextBox("instance").option().value, $("#nombre_usuario").dxTextBox("instance").option().value).then(function (data) {
 			$('#wait').hide();
 			$('#waitRegistros').show();
 			//*******Consulta de los primeros 20 registros
@@ -208,7 +237,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 			CantRegCargados = AlmacenUsuarios._array.length;
 			CargarAsyn();
 			function CargarAsyn() {
-				SrvUsuario.ObtenerConPag(codigo_facturador, CantRegCargados, CantidadRegUsuarios).then(function (data) {
+				SrvUsuario.ObtenerConPag(txt_hgi_Facturador, CantRegCargados, CantidadRegUsuarios, $("#codigo_usuario").dxTextBox("instance").option().value, $("#nombre_usuario").dxTextBox("instance").option().value).then(function (data) {
 
 					CantRegCargados += data.length;
 					if (data.length > 0) {
@@ -242,6 +271,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 
 
 ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuarioController($scope, $http, $location) {
+
 
 	var now = new Date();
 	var codigo_facturador = "",
