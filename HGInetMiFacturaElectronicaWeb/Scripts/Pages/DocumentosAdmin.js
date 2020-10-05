@@ -391,14 +391,14 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						dataField: "IntNeto"
 					},
 					 {
-					 	caption: "Adquiriente",
-
-					 	dataField: "IdentificacionAdquiriente"
-					 },
-					 {
 					 	caption: "Tipo Documento",
 
 					 	dataField: "tipodoc"
+					 },
+					 {
+					 	caption: "Adquiriente",
+
+					 	dataField: "IdentificacionAdquiriente"
 					 },
 					  {
 					  	caption: "Nombre Adquiriente",
@@ -432,7 +432,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  		displayExpr: "Name",
 					  		valueExpr: "ID"
 					  	},
-					  	
+
 					  },
 
 					  {
