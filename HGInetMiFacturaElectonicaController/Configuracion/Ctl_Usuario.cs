@@ -370,7 +370,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					UsuarioActiliza.DatFechaActualizacion = Fecha.GetFecha();
 					UsuarioActiliza.DatFechaCambioClave = Fecha.GetFecha();
-					UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();
+					//UsuarioActiliza.StrIdSeguridad = Guid.NewGuid();					
 
 					// agrega el usuario en la base de datos
 					usuario = Actualizar_usuario(UsuarioActiliza);
