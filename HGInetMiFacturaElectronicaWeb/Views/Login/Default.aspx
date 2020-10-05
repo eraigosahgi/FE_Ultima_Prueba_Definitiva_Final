@@ -75,8 +75,8 @@
             background-color: white;
         }
     </style>
-	<script src="../../Scripts/WebConfig.js?vjs20200921"></script>
-    <script src="../../Scripts/Pages/Autenticacion.js?vjs20200921"></script>
+	<script src="../../Scripts/WebConfig.js?vjs20201005"></script>
+    <script src="../../Scripts/Pages/Autenticacion.js?vjs20201005"></script>
 
 </head>
 <body class="login-container" style="background-color: #eeeded">
