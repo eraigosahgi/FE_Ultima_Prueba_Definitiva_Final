@@ -16,6 +16,8 @@ using LibreriaGlobalHGInet.Properties;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using LibreriaGlobalHGInet.Funciones;
 using Newtonsoft.Json;
+using Microsoft.VisualBasic.FileIO;
+using System.Data.SqlClient;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -59,25 +61,86 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				//Convierto el archivo en Datatable
 				log_categoria = MensajeCategoria.Convertir;
 				log_accion = MensajeAccion.creacion;
-				dt = ObtenerDatosExcel(ruta_archivo, ',');
-
-				//Elimino la Data de la Tabla
-				log_categoria = MensajeCategoria.BaseDatos;
-				log_accion = MensajeAccion.eliminacion;
-				if (dt.Rows.Count > 0)
-					EliminarData();
-
-				//Lleno la tabla con la nueva informacion
-				log_categoria = MensajeCategoria.BaseDatos;
-				log_accion = MensajeAccion.cargando;
-				Crear(dt);
-
+				ProcesarCsv(ruta_archivo, ',');
+				
 			}
 			catch (Exception exec)
 			{
 				Ctl_Log.Guardar(exec, log_categoria, MensajeTipo.Error, log_accion);
 				throw new ApplicationException("Error obteniendo correos", exec);
 			}
+		}
+
+		public void ProcesarCsv(string path, char separator)
+		{
+			var createdCount = 0;
+
+			try
+			{
+				using (var textFieldParser = new TextFieldParser(path))
+				{
+					textFieldParser.TextFieldType = FieldType.Delimited;
+					textFieldParser.Delimiters = new[] { separator.ToString() };
+					textFieldParser.HasFieldsEnclosedInQuotes = true;
+
+					var dataTable = new DataTable("CorreosDian");
+					dataTable.Columns.Add("StrIdentificacion");
+					dataTable.Columns.Add("StrMailRegistrado");
+					dataTable.Columns.Add("DatFechaRegistro");
+
+					using (var sqlConnection = new SqlConnection(context.Database.Connection.ConnectionString.ToString()))
+					{
+						sqlConnection.Open();
+
+						// Elimina los datos de la tabla
+						using (var sqlCommand = new SqlCommand(@"TRUNCATE TABLE TblCorreosRecepcion", sqlConnection))
+						{
+							sqlCommand.ExecuteNonQuery();
+						}
+
+						var sqlBulkCopy = new SqlBulkCopy(sqlConnection)
+						{
+							DestinationTableName = "TblCorreosRecepcion"
+						};
+
+						sqlBulkCopy.ColumnMappings.Add("StrIdentificacion", "StrIdentificacion");
+						sqlBulkCopy.ColumnMappings.Add("StrMailRegistrado", "StrMailRegistrado");
+						sqlBulkCopy.ColumnMappings.Add("DatFechaRegistro", "DatFechaRegistro");
+
+						while (!textFieldParser.EndOfData)
+						{
+							dataTable.Rows.Add(textFieldParser.ReadFields());
+
+							createdCount++;
+
+							if (createdCount > 1000)
+							{
+								InsertDataTable(sqlBulkCopy, sqlConnection, dataTable);
+
+								dataTable.Clear();
+								createdCount = 0;
+							}
+						}
+						InsertDataTable(sqlBulkCopy, sqlConnection, dataTable);
+
+						sqlConnection.Close();
+					}
+				}
+			}
+			catch (Exception exec)
+			{
+				MensajeCategoria log_categoria = MensajeCategoria.Convertir;
+				MensajeAccion log_accion = MensajeAccion.creacion;
+				Ctl_Log.Guardar(exec, log_categoria, MensajeTipo.Error, log_accion);
+				throw new ApplicationException("Error al almacenar los datos de correos electrónicos de la DIAN", exec);
+			}
+		}
+
+		protected void InsertDataTable(SqlBulkCopy sqlBulkCopy, SqlConnection sqlConnection, DataTable dataTable)
+		{
+			sqlBulkCopy.WriteToServer(dataTable);
+
+			dataTable.Rows.Clear();
 		}
 
 
@@ -112,7 +175,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <summary>
 		/// obtiene los datos del archivo y los retorna en un datatable
 		/// </summary>
-		public static DataTable ObtenerDatosExcel(string path, char separator)
+		public static DataTable ObtenerDatosExcel2(string path, char separator)
 		{
 			MensajeCategoria log_categoria = MensajeCategoria.Convertir;
 			MensajeAccion log_accion = MensajeAccion.creacion;
@@ -165,7 +228,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			MensajeAccion log_accion = MensajeAccion.creacion;
 			try
 			{
-				
+
 				if (dtcorreos == null)
 					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "respuesta", "TblDocumentos"));
 
@@ -190,7 +253,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							carpeta_correo_Dian = Directorio.CrearDirectorio(carpeta_correo_Dian);
 
 							// nombre del archivo
-							string archivo_debug = string.Format(@"CorreoDian -{0}-{1}-{2}.json", correo.StrIdentificacion,correo.StrMailRegistrado, Fecha.GetFecha().Minute);
+							string archivo_debug = string.Format(@"CorreoDian -{0}-{1}-{2}.json", correo.StrIdentificacion, correo.StrMailRegistrado, Fecha.GetFecha().Minute);
 
 							string ruta_archivo = string.Format("{0}\\{1}", carpeta_correo_Dian, archivo_debug);
 
@@ -218,7 +281,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		public void Crear(TblCorreosRecepcion correo)
 		{
 			this.Add(correo);
-			
+
 		}
 
 		public void EliminarData()
@@ -230,8 +293,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			string respuesta = string.Empty;
 			var objeto = (from item in context.TblCorreosRecepcion
-				where item.StrIdentificacion.Equals(identificacion)
-				select item).FirstOrDefault();
+						  where item.StrIdentificacion.Equals(identificacion)
+						  select item).FirstOrDefault();
 
 			if (objeto != null)
 			{
