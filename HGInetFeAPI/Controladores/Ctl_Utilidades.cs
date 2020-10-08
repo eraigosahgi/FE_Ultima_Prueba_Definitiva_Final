@@ -1,17 +1,17 @@
-﻿using LibreriaGlobalHGInet.Peticiones;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.ServiceModel;
 using System.Text;
 using System.Xml;
+using HGInetFeAPI.ServicioRutasPlataforma;
 
 namespace HGInetFeAPI
 {
 	class Ctl_Utilidades
 	{
-	
+
 		/// <summary>
 		/// Valida la ruta del servicio web
 		/// </summary>
@@ -56,25 +56,25 @@ namespace HGInetFeAPI
 		}
 
 		public static System.ServiceModel.Channels.Binding ObtenerBinding(string url, string binding_name)
-        {
+		{
 
-            string http_tipo = url.ToLowerInvariant().Split(':')[0];
+			string http_tipo = url.ToLowerInvariant().Split(':')[0];
 
-            if (http_tipo.Equals("https"))
-            {
-                return new System.ServiceModel.WSHttpBinding();
+			if (http_tipo.Equals("https"))
+			{
+				return new System.ServiceModel.WSHttpBinding();
 
-            }
-            else
-            {
-                System.ServiceModel.BasicHttpBinding binding = new System.ServiceModel.BasicHttpBinding();
+			}
+			else
+			{
+				System.ServiceModel.BasicHttpBinding binding = new System.ServiceModel.BasicHttpBinding();
 
-                if (!string.IsNullOrEmpty(binding_name))
-                    binding = new System.ServiceModel.BasicHttpBinding(binding_name);
-                
-                return binding;
-            }
-        }
+				if (!string.IsNullOrEmpty(binding_name))
+					binding = new System.ServiceModel.BasicHttpBinding(binding_name);
+
+				return binding;
+			}
+		}
 
 		/// <summary>
 		/// 
@@ -111,7 +111,7 @@ namespace HGInetFeAPI
 				</bindings>
 
 				*/
-				
+
 				BasicHttpBinding basic_http_binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
 
 				basic_http_binding.Name = "SoapHttpBinding";
@@ -127,8 +127,8 @@ namespace HGInetFeAPI
 
 				// Obtiene o establece el intervalo de tiempo proporcionado para que una operación de escritura se complete antes de que el transporte genere una excepción.
 				basic_http_binding.SendTimeout = new TimeSpan(0, 10, 0);
-				
-				basic_http_binding.BypassProxyOnLocal = false;				
+
+				basic_http_binding.BypassProxyOnLocal = false;
 				basic_http_binding.MaxBufferPoolSize = 2147483647;
 				basic_http_binding.MaxReceivedMessageSize = 2147483647;
 				basic_http_binding.TransferMode = TransferMode.Streamed;
@@ -142,14 +142,14 @@ namespace HGInetFeAPI
 					MaxBytesPerRead = 4096,
 					MaxNameTableCharCount = 16384
 				};
-				
+
 				// conexión segura https
 				if (url.Contains("https://"))
 				{
 					basic_http_binding.Security.Mode = BasicHttpSecurityMode.Transport;
 					basic_http_binding.Name = "SoapHttpsBinding";
 				}
-				
+
 				return basic_http_binding;
 			}
 			catch (Exception excepcion)
@@ -167,14 +167,14 @@ namespace HGInetFeAPI
 		public static string ObtenerUrl(string ruta, string identificacion)
 		{
 
-			int ambiente = 1;
-			int version = 2;
+			short ambiente = 1;
+			short version = 2;
 			string url_retorno = string.Empty;
 			try
 			{
-				
-				string url_plataforma = "https://cloudservices.hginet.co/";
-				
+
+				string url_plataforma = "http://cloudservices.hginet.co/Wcf/facturae.svc";
+
 
 				//si la ruta contiene esta informacion cambio al ambiente de pruebas
 				if (ruta.Contains("habilitacion"))
@@ -183,43 +183,46 @@ namespace HGInetFeAPI
 				}
 
 				//Se consulta la ruta disponible para el integrador
-				ClienteRest<string> cliente_rest = new ClienteRest<string>(string.Format("{0}/api/facturae/ObtenerServidorFE?ambiente={1}&version={2}&identificacion_empresa={3}", url_plataforma, ambiente, version, identificacion), 1, "");
+				//ServicioFacturaEClient cliente_ws = null;
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(url_plataforma);
+				ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient(ObtenerBinding(url_plataforma), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma);
+
+				// ejecución del servicio web
+				url_retorno = cliente_ws.ObtenerServidorFE(ambiente, version, identificacion);
+
+			}
+			catch (Exception ex)
+			{
+				//Se prueba consultando a otra ruta
+				string url_plataforma2 = "http://cloudservices2.hginet.co/Wcf/facturae.svc";
+
+				//Se consulta la ruta disponible para el integrador
+				//ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient();
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(url_plataforma2);
+				ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient(ObtenerBinding(url_plataforma2), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma2);
+
 				try
 				{
-					url_retorno = cliente_rest.GET();
+					// ejecución del servicio web
+					url_retorno = cliente_ws.ObtenerServidorFE(ambiente, version, identificacion);
+
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
-					//Se prueba consultando a otra ruta
-					string url_plataforma2 = "https://cloudservices2.hginet.co/";
-
-					ClienteRest<string> cliente_rest2 = new ClienteRest<string>(string.Format("{0}/api/facturae/ObtenerServidorFE?ambiente={1}&version={2}&identificacion_empresa={3}", url_plataforma2, ambiente, version, identificacion), 1, "");
-					try
-					{
-						url_retorno = cliente_rest.GET();
-					}
-					catch (Exception)
-					{
-						var cod = cliente_rest.CodHttp;
-						throw new ApplicationException(ex.Message, ex.InnerException);
-					}
-
-					//var cod = cliente_rest.CodHttp;
-					//throw new ApplicationException(ex.Message, ex.InnerException);
+					throw new ApplicationException(ex.Message, ex.InnerException);
 				}
 
-				if (string.IsNullOrWhiteSpace(url_retorno))
-					throw new ApplicationException("Ruta principal de licencia vacía.");
-
-				return url_retorno;
+				//var cod = cliente_rest.CodHttp;
+				//throw new ApplicationException(ex.Message, ex.InnerException);
 			}
-			catch (Exception e)
-			{
 
-				throw new ApplicationException(e.Message, e.InnerException);
-			}
+			if (string.IsNullOrWhiteSpace(url_retorno))
+				throw new ApplicationException("Ruta principal de licencia vacía.");
+
+			return url_retorno;
 		}
-
-
 	}
+
 }

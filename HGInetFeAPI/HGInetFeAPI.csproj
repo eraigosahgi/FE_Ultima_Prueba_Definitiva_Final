@@ -101,6 +101,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ServicioRutasPlataforma\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -331,6 +336,17 @@
     <None Include="Service References\ServicioResolucion\resolucion3.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioRutasPlataforma\facturae.wsdl" />
+    <None Include="Service References\ServicioRutasPlataforma\facturae.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioRutasPlataforma\facturae1.wsdl" />
+    <None Include="Service References\ServicioRutasPlataforma\facturae1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioRutasPlataforma\facturae2.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ServicioAcuseRecibo\" />
@@ -342,6 +358,7 @@
     <WCFMetadataStorage Include="Service References\ServicioNotaDebito\" />
     <WCFMetadataStorage Include="Service References\ServicioReenvioDocumento\" />
     <WCFMetadataStorage Include="Service References\ServicioResolucion\" />
+    <WCFMetadataStorage Include="Service References\ServicioRutasPlataforma\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioDocumento\configuration91.svcinfo" />
@@ -351,21 +368,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioDocumento\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioFactura\factura.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioFactura\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioFactura\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioFactura\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -479,10 +481,34 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
-      <Project>{A966A394-F6CC-482F-87A4-56EC1AF05E5E}</Project>
-      <Name>LibreriaGlobalHGInet</Name>
-    </ProjectReference>
+    <None Include="Service References\ServicioRutasPlataforma\facturae.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioRutasPlataforma\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioRutasPlataforma\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioRutasPlataforma\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\factura.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

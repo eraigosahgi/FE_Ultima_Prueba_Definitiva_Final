@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="FacturaE.ServiciosWcf" elementFormDefault="qualified" targetNamespace="FacturaE.ServiciosWcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="https://cloudservices.hginet.co/Wcf/facturae.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:element name="Test">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TestResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="TestResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ObtenerServidorFE">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="ambiente" type="xs:short" />
+        <xs:element minOccurs="0" name="version" type="xs:short" />
+        <xs:element minOccurs="0" name="identificacion_empresa" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ObtenerServidorFEResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="ObtenerServidorFEResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" name="Error" nillable="true" type="q1:Error" />
+</xs:schema>

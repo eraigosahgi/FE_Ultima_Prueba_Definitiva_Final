@@ -17,6 +17,7 @@
       <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="Cargos" nillable="true" type="q2:ArrayOfCargo" />
       <xs:element minOccurs="0" name="CodigoRegistro" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Concepto" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ConceptoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Cufe" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CufeFactura" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DataKey" nillable="true" type="xs:string" />
@@ -33,6 +34,7 @@
       <xs:element minOccurs="0" name="FechaFactura" type="xs:dateTime" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
       <xs:element minOccurs="0" name="IdentificacionProveedor" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LineaNegocio" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Neto" type="xs:decimal" />
       <xs:element minOccurs="0" name="Nota" nillable="true" type="xs:string" />
@@ -41,6 +43,7 @@
       <xs:element minOccurs="0" name="OrderReference" nillable="true" type="tns:ReferenciaAdicional" />
       <xs:element minOccurs="0" name="PedidoRef" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PrefijoFactura" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReceiptDocument" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
       <xs:element minOccurs="0" name="TipoOperacion" type="xs:int" />
       <xs:element minOccurs="0" name="Total" type="xs:decimal" />
@@ -83,6 +86,7 @@
       <xs:element minOccurs="0" name="IdentificacionDv" type="xs:int" />
       <xs:element minOccurs="0" name="NombreComercial" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PaginaWeb" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Pais" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PrimerApellido" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PrimerNombre" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="RazonSocial" nillable="true" type="xs:string" />

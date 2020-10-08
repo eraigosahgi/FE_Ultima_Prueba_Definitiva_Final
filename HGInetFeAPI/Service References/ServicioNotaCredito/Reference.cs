@@ -2368,7 +2368,7 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private int DocumentoTipoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private LibreriaGlobalHGInet.Error.Error ErrorField;
+        private HGInetFeAPI.ServicioNotaCredito.Error ErrorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private HGInetFeAPI.ServicioNotaCredito.RespuestaDian EstadoDianField;
@@ -2571,7 +2571,7 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public LibreriaGlobalHGInet.Error.Error Error {
+        public HGInetFeAPI.ServicioNotaCredito.Error Error {
             get {
                 return this.ErrorField;
             }
@@ -2855,6 +2855,83 @@ namespace HGInetFeAPI.ServicioNotaCredito {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Error", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
+    [System.SerializableAttribute()]
+    public partial class Error : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioNotaCredito.CodigoError CodigoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MensajeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioNotaCredito.CodigoError Codigo {
+            get {
+                return this.CodigoField;
+            }
+            set {
+                if ((this.CodigoField.Equals(value) != true)) {
+                    this.CodigoField = value;
+                    this.RaisePropertyChanged("Codigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Fecha {
+            get {
+                return this.FechaField;
+            }
+            set {
+                if ((this.FechaField.Equals(value) != true)) {
+                    this.FechaField = value;
+                    this.RaisePropertyChanged("Fecha");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Mensaje {
+            get {
+                return this.MensajeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MensajeField, value) != true)) {
+                    this.MensajeField = value;
+                    this.RaisePropertyChanged("Mensaje");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="RespuestaDian", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
         "cio")]
     [System.SerializableAttribute()]
@@ -2963,6 +3040,38 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         }
     }
     
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="CodigoError", Namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error")]
+    public enum CodigoError : int {
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        OK = 0,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_NO_CONTROLADO = 1,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_EN_SERVIDOR = 2,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        VALIDACION = 3,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_AGREGAR = 4,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_EDITAR = 5,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_ELIMINAR = 6,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        ERROR_LICENCIA = 98,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        NINGUNO = 99,
+    }
+    
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="NotaCreditoConsulta", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
@@ -2989,7 +3098,7 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private long DocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private LibreriaGlobalHGInet.Error.Error ErrorField;
+        private HGInetFeAPI.ServicioNotaCredito.Error ErrorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private HGInetFeAPI.ServicioNotaCredito.RespuestaDian EstadoDianField;
@@ -3097,7 +3206,7 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public LibreriaGlobalHGInet.Error.Error Error {
+        public HGInetFeAPI.ServicioNotaCredito.Error Error {
             get {
                 return this.ErrorField;
             }
@@ -3260,7 +3369,7 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioNotaCredito.TestResponse> TestAsync(HGInetFeAPI.ServicioNotaCredito.TestRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/RecepcionResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="Recepcion", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioNotaCredito.Error), Action="Recepcion", Name="Error")]
         HGInetFeAPI.ServicioNotaCredito.RecepcionResponse Recepcion(HGInetFeAPI.ServicioNotaCredito.RecepcionRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/Recepcion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/RecepcionResponse")]
@@ -3269,7 +3378,7 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorFechasAdquiri" +
             "ente", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorFechasAdquiri" +
             "enteResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="ObtenerPorFechasAdquiriente", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioNotaCredito.Error), Action="ObtenerPorFechasAdquiriente", Name="Error")]
         HGInetFeAPI.ServicioNotaCredito.ObtenerPorFechasAdquirienteResponse ObtenerPorFechasAdquiriente(HGInetFeAPI.ServicioNotaCredito.ObtenerPorFechasAdquirienteRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorFechasAdquiri" +
@@ -3280,7 +3389,7 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorIdSeguridadAd" +
             "quiriente", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorIdSeguridadAd" +
             "quirienteResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(LibreriaGlobalHGInet.Error.Error), Action="ObtenerPorIdSeguridadAdquiriente", Name="Error")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioNotaCredito.Error), Action="ObtenerPorIdSeguridadAdquiriente", Name="Error")]
         HGInetFeAPI.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse ObtenerPorIdSeguridadAdquiriente(HGInetFeAPI.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioNotaCredito/ObtenerPorIdSeguridadAd" +
