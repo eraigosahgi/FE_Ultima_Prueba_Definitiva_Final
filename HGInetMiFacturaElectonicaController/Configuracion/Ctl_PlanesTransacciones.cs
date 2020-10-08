@@ -391,7 +391,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			int Estado = EstadoPlan.Habilitado.GetHashCode();
 			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();
-			DateTime Fecha_Actual = Fecha.GetFecha();
+			DateTime Fecha_Actual = Fecha.GetFecha().Date;			
 
 			var ListaFacturadores = (from lista in context.TblEmpresas
 									 where lista.StrEmpresaDescuento.Equals(
@@ -794,7 +794,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				List<TblPlanesTransacciones> planes = new List<TblPlanesTransacciones>();
 				byte postapago = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
-				byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());
+				byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());				
+
 				planes = (from datos in context.TblPlanesTransacciones
 						  where datos.StrEmpresaFacturador.Equals(Facturador)
 						  && datos.IntEstado == habilitado
