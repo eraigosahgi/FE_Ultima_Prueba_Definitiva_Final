@@ -293,6 +293,8 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string LineaNegocio { get; set; }
 
+		public ReferenciaPago ReferenciaPago { get; set; }
+
 
 		#endregion
 

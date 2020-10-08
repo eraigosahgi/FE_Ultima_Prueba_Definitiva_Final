@@ -27,5 +27,9 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio.Documentos
 		/// </summary>
 		public decimal Valor { get; set; }
 
+		/// <summary>
+		/// Descripcion del descuento otorgado
+		/// </summary>
+		public string Descripcion { get; set; }
 	}
 }

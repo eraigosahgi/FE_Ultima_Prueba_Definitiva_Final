@@ -128,6 +128,7 @@
     <Compile Include="ModeloServicio\Documentos\NotaCredito.cs" />
     <Compile Include="ModeloServicio\Documentos\NotaDebito.cs" />
     <Compile Include="ModeloServicio\Documentos\ReferenciaAdicional.cs" />
+    <Compile Include="ModeloServicio\Documentos\ReferenciaPago.cs" />
     <Compile Include="ModeloServicio\Documentos\TasaCambio.cs" />
     <Compile Include="ModeloServicio\General\AIU.cs" />
     <Compile Include="ModeloServicio\General\Anexo.cs" />

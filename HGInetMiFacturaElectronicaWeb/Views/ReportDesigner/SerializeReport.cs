@@ -8,6 +8,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using System.Reflection;
 using LibreriaGlobalHGInet.Objetos;
 using HGInetFacturaEReports.ReportDesigner;
+using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
 
 namespace HGInetMiFacturaElectronicaWeb
 {
@@ -252,6 +253,51 @@ namespace HGInetMiFacturaElectronicaWeb
 			relation_Aditionalref.Nested = true;
 			ds.Tables["DocumentosReferencia"].ParentRelations.Add(relation_Aditionalref);
 
+
+			//DATOS TABLA DATOS DE CAMPO-VALOR
+			DataTable CamposAdicionales = new DataTable("CamposAdicionales");
+			CamposAdicionales.TableName = "CamposAdicionales";
+			foreach (PropertyInfo info in typeof(CampoValor).GetProperties())
+			{
+				CamposAdicionales.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(CamposAdicionales);
+
+			DataColumn datos_CamposAdicionales = ds.Tables["CamposAdicionales"].Columns["Descripcion"];
+			DataRelation relation_CamposAdicionales = new DataRelation("CamposAdicionales", principal, datos_CamposAdicionales);
+			relation_CamposAdicionales.Nested = true;
+			ds.Tables["CamposAdicionales"].ParentRelations.Add(relation_CamposAdicionales);
+
+			//DATOS TABLA DATOS DE DESCUENTOS
+			DataTable Descuentos = new DataTable("Descuentos");
+			Descuentos.TableName = "Descuentos";
+			foreach (PropertyInfo info in typeof(Descuento).GetProperties())
+			{
+				Descuentos.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(Descuentos);
+
+			DataColumn datos_Descuentos = ds.Tables["Descuentos"].Columns["Codigo"];
+			DataRelation relation_Descuentos = new DataRelation("Descuentos", principal, datos_Descuentos);
+			relation_Descuentos.Nested = true;
+			ds.Tables["Descuentos"].ParentRelations.Add(relation_Descuentos);
+
+			//DATOS TABLA DATOS DE DESCUENTOS
+			DataTable RefPago = new DataTable("RefPago");
+			RefPago.TableName = "RefPago";
+			foreach (PropertyInfo info in typeof(ReferenciaPago).GetProperties())
+			{
+				RefPago.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(RefPago);
+
+			DataColumn datos_RefPago = ds.Tables["RefPago"].Columns["EAN"];
+			DataRelation relation_RefPago = new DataRelation("RefPago", principal, datos_RefPago);
+			relation_RefPago.Nested = true;
+			ds.Tables["RefPago"].ParentRelations.Add(relation_RefPago);
 
 			return ds;
 		}
