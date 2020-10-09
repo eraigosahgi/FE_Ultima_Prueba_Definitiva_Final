@@ -36,9 +36,19 @@
   <xs:complexType name="Descuento">
     <xs:sequence>
       <xs:element minOccurs="0" name="Codigo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Descripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Porcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Descuento" nillable="true" type="tns:Descuento" />
+  <xs:complexType name="ReferenciaPago">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EAN" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Fecha" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Referencia" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReferenciaPago" nillable="true" type="tns:ReferenciaPago" />
 </xs:schema>

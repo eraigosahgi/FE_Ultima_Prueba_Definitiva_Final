@@ -36,6 +36,7 @@
   <xs:complexType name="Descuento">
     <xs:sequence>
       <xs:element minOccurs="0" name="Codigo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Descripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Porcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
     </xs:sequence>

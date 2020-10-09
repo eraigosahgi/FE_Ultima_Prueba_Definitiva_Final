@@ -490,6 +490,12 @@
     <None Include="Service References\ServicioRutasPlataforma\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\ServicioRutasPlataforma\HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFEResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioRutasPlataforma\HGInetFeAPI.ServicioRutasPlataforma.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioRutasPlataforma\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

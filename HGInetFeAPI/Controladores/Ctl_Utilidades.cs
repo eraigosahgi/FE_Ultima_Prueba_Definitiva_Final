@@ -188,8 +188,17 @@ namespace HGInetFeAPI
 				ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient(ObtenerBinding(url_plataforma), endpoint_address);
 				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma);
 
+				// datos para la petición
+				ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
+				{
+					ambiente = ambiente,
+					identificacion_empresa = identificacion,
+					version = version
+				};
+
 				// ejecución del servicio web
-				url_retorno = cliente_ws.ObtenerServidorFE(ambiente, version, identificacion);
+				ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws.ObtenerServidorFE(peticion);
+				url_retorno = respuesta.ObtenerServidorFEResult;
 
 			}
 			catch (Exception ex)
@@ -205,8 +214,17 @@ namespace HGInetFeAPI
 
 				try
 				{
+					// datos para la petición
+					ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
+					{
+						ambiente = ambiente,
+						identificacion_empresa = identificacion,
+						version = version
+					};
+
 					// ejecución del servicio web
-					url_retorno = cliente_ws.ObtenerServidorFE(ambiente, version, identificacion);
+					ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws.ObtenerServidorFE(peticion);
+					url_retorno = respuesta.ObtenerServidorFEResult;
 
 				}
 				catch (Exception)

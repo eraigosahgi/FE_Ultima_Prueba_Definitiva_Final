@@ -45,6 +45,7 @@
       <xs:element minOccurs="0" name="Plazo" type="xs:int" />
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReceiptDocument" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="ReferenciaPago" nillable="true" type="q5:ReferenciaPago" />
       <xs:element minOccurs="0" name="TerminoPago" type="xs:int" />
       <xs:element minOccurs="0" name="TerminoPago_Descripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="TipoOperacion" type="xs:int" />
@@ -123,7 +124,7 @@
       <xs:element minOccurs="0" name="RazonSocial" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Regimen" type="xs:int" />
       <xs:element minOccurs="0" name="RegimenFiscal" nillable="true" type="xs:string" />
-      <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Responsabilidades" nillable="true" type="q5:ArrayOfstring" />
+      <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Responsabilidades" nillable="true" type="q6:ArrayOfstring" />
       <xs:element minOccurs="0" name="SegundoApellido" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="SegundoNombre" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Telefono" nillable="true" type="xs:string" />
@@ -234,7 +235,7 @@
       <xs:element minOccurs="0" name="DescuentaSaldo" type="xs:boolean" />
       <xs:element minOccurs="0" name="Documento" type="xs:long" />
       <xs:element minOccurs="0" name="DocumentoTipo" type="xs:int" />
-      <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q6:Error" />
+      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q7:Error" />
       <xs:element minOccurs="0" name="EstadoDian" nillable="true" type="tns:RespuestaDian" />
       <xs:element minOccurs="0" name="FechaRecepcion" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaUltimoProceso" type="xs:dateTime" />
@@ -281,7 +282,7 @@
       <xs:element minOccurs="0" name="DatosFactura" nillable="true" type="tns:Factura" />
       <xs:element minOccurs="0" name="DescripcionProceso" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Documento" type="xs:long" />
-      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q7:Error" />
+      <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q8:Error" />
       <xs:element minOccurs="0" name="EstadoDian" nillable="true" type="tns:RespuestaDian" />
       <xs:element minOccurs="0" name="FechaUltimoProceso" type="xs:dateTime" />
       <xs:element minOccurs="0" name="IdDocumento" nillable="true" type="xs:string" />

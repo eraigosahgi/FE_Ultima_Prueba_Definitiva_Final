@@ -127,17 +127,82 @@ namespace HGInetFeAPI.ServicioRutasPlataforma {
     public interface ServicioFacturaE {
         
         [System.ServiceModel.OperationContractAttribute(Action="FacturaE.ServiciosWcf/ServicioFacturaE/Test", ReplyAction="FacturaE.ServiciosWcf/ServicioFacturaE/TestResponse")]
-        string Test();
+        HGInetFeAPI.ServicioRutasPlataforma.TestResponse Test(HGInetFeAPI.ServicioRutasPlataforma.TestRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="FacturaE.ServiciosWcf/ServicioFacturaE/Test", ReplyAction="FacturaE.ServiciosWcf/ServicioFacturaE/TestResponse")]
-        System.Threading.Tasks.Task<string> TestAsync();
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioRutasPlataforma.TestResponse> TestAsync(HGInetFeAPI.ServicioRutasPlataforma.TestRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="FacturaE.ServiciosWcf/ServicioFacturaE/ObtenerServidorFE", ReplyAction="FacturaE.ServiciosWcf/ServicioFacturaE/ObtenerServidorFEResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioRutasPlataforma.Error), Action="ObtenerServidorFE", Name="Error")]
-        string ObtenerServidorFE(short ambiente, short version, string identificacion_empresa);
+        HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFEResponse ObtenerServidorFE(HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFERequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="FacturaE.ServiciosWcf/ServicioFacturaE/ObtenerServidorFE", ReplyAction="FacturaE.ServiciosWcf/ServicioFacturaE/ObtenerServidorFEResponse")]
-        System.Threading.Tasks.Task<string> ObtenerServidorFEAsync(short ambiente, short version, string identificacion_empresa);
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFEResponse> ObtenerServidorFEAsync(HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFERequest request);
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="Test", WrapperNamespace="FacturaE.ServiciosWcf", IsWrapped=true)]
+    public partial class TestRequest {
+        
+        public TestRequest() {
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="TestResponse", WrapperNamespace="FacturaE.ServiciosWcf", IsWrapped=true)]
+    public partial class TestResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="FacturaE.ServiciosWcf", Order=0)]
+        public string TestResult;
+        
+        public TestResponse() {
+        }
+        
+        public TestResponse(string TestResult) {
+            this.TestResult = TestResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ObtenerServidorFE", WrapperNamespace="FacturaE.ServiciosWcf", IsWrapped=true)]
+    public partial class ObtenerServidorFERequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="FacturaE.ServiciosWcf", Order=0)]
+        public short ambiente;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="FacturaE.ServiciosWcf", Order=1)]
+        public short version;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="FacturaE.ServiciosWcf", Order=2)]
+        public string identificacion_empresa;
+        
+        public ObtenerServidorFERequest() {
+        }
+        
+        public ObtenerServidorFERequest(short ambiente, short version, string identificacion_empresa) {
+            this.ambiente = ambiente;
+            this.version = version;
+            this.identificacion_empresa = identificacion_empresa;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ObtenerServidorFEResponse", WrapperNamespace="FacturaE.ServiciosWcf", IsWrapped=true)]
+    public partial class ObtenerServidorFEResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="FacturaE.ServiciosWcf", Order=0)]
+        public string ObtenerServidorFEResult;
+        
+        public ObtenerServidorFEResponse() {
+        }
+        
+        public ObtenerServidorFEResponse(string ObtenerServidorFEResult) {
+            this.ObtenerServidorFEResult = ObtenerServidorFEResult;
+        }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -167,20 +232,20 @@ namespace HGInetFeAPI.ServicioRutasPlataforma {
                 base(binding, remoteAddress) {
         }
         
-        public string Test() {
-            return base.Channel.Test();
+        public HGInetFeAPI.ServicioRutasPlataforma.TestResponse Test(HGInetFeAPI.ServicioRutasPlataforma.TestRequest request) {
+            return base.Channel.Test(request);
         }
         
-        public System.Threading.Tasks.Task<string> TestAsync() {
-            return base.Channel.TestAsync();
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioRutasPlataforma.TestResponse> TestAsync(HGInetFeAPI.ServicioRutasPlataforma.TestRequest request) {
+            return base.Channel.TestAsync(request);
         }
         
-        public string ObtenerServidorFE(short ambiente, short version, string identificacion_empresa) {
-            return base.Channel.ObtenerServidorFE(ambiente, version, identificacion_empresa);
+        public HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFEResponse ObtenerServidorFE(HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFERequest request) {
+            return base.Channel.ObtenerServidorFE(request);
         }
         
-        public System.Threading.Tasks.Task<string> ObtenerServidorFEAsync(short ambiente, short version, string identificacion_empresa) {
-            return base.Channel.ObtenerServidorFEAsync(ambiente, version, identificacion_empresa);
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFEResponse> ObtenerServidorFEAsync(HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFERequest request) {
+            return base.Channel.ObtenerServidorFEAsync(request);
         }
     }
 }
