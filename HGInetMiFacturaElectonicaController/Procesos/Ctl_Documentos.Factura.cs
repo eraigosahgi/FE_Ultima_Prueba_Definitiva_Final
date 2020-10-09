@@ -439,6 +439,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 					}
 
+					//Se lee un archivo json y se convierte a objeto Factura para pruebas
+					//Factura obj_nc = new Factura();
+					//string objeto = System.IO.File.ReadAllText(@"E:\Desarrollo\jzea\Proyectos\HGInetMiFacturaElectronica\Codigo\HGInetMiFacturaElectronicaWeb\dms\Debug\811021438-SETP-990000005.json").ToString();
+					//obj_nc = JsonConvert.DeserializeObject<Factura>(objeto);
+					//item = obj_nc;
+
 				}
 
 				if (facturador_electronico.IntVersionDian == 1)

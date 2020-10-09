@@ -108,7 +108,7 @@ namespace HGInetMiFacturaElectronicaWeb
 					DtPrincipal.TableName = "Factura";
 					foreach (PropertyInfo info in typeof(Factura).GetProperties())
 					{
-						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional))
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional) && info.PropertyType != typeof(ReferenciaPago))
 						{
 							DtPrincipal.Columns.Add(info.Name.ToString());
 						}
@@ -285,19 +285,19 @@ namespace HGInetMiFacturaElectronicaWeb
 			ds.Tables["Descuentos"].ParentRelations.Add(relation_Descuentos);
 
 			//DATOS TABLA DATOS DE DESCUENTOS
-			DataTable RefPago = new DataTable("RefPago");
-			RefPago.TableName = "RefPago";
+			DataTable ReferenciaPago = new DataTable("ReferenciaPago");
+			ReferenciaPago.TableName = "ReferenciaPago";
 			foreach (PropertyInfo info in typeof(ReferenciaPago).GetProperties())
 			{
-				RefPago.Columns.Add(info.Name.ToString());
+				ReferenciaPago.Columns.Add(info.Name.ToString());
 			}
 
-			ds.Tables.Add(RefPago);
+			ds.Tables.Add(ReferenciaPago);
 
-			DataColumn datos_RefPago = ds.Tables["RefPago"].Columns["EAN"];
-			DataRelation relation_RefPago = new DataRelation("RefPago", principal, datos_RefPago);
+			DataColumn datos_RefPago = ds.Tables["ReferenciaPago"].Columns["EAN"];
+			DataRelation relation_RefPago = new DataRelation("ReferenciaPago", principal, datos_RefPago);
 			relation_RefPago.Nested = true;
-			ds.Tables["RefPago"].ParentRelations.Add(relation_RefPago);
+			ds.Tables["ReferenciaPago"].ParentRelations.Add(relation_RefPago);
 
 			return ds;
 		}

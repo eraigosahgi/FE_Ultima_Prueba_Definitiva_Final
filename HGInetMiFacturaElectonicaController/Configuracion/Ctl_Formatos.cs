@@ -785,6 +785,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, datos_doc_bd);
 							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
 								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+
+							//Convierte en archivo json a objeto factura y sobre escribe el que se obtuvo
+							//Esto es para pruebas si se requiere generar un formato con informacion especifica
+							//Factura obj_nc = new Factura();
+							//string objeto = System.IO.File.ReadAllText(@"E:\Desarrollo\jzea\Proyectos\HGInetMiFacturaElectronica\Codigo\HGInetMiFacturaElectronicaWeb\dms\Debug\811021438-SETP-990000005.json").ToString();
+							//obj_nc = JsonConvert.DeserializeObject<Factura>(objeto);
+							//documento_obj = obj_nc;
 						}
 						else if (tipo_documento == TipoDocumento.NotaCredito)
 						{
