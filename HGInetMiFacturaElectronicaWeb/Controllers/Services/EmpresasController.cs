@@ -300,7 +300,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 				//Generamos formato al resultado
-				var Resultado = new { Descripcion = datos.Propietario, FechaVencimiento = Convert.ToDateTime(datos.Fechavenc).ToString(Fecha.formato_fecha_hginet), Serial = datos.Serial, Emisor = datos.Certificadora };
+				var Resultado = new { Descripcion = datos.Propietario, FechaVencimiento = Convert.ToDateTime(datos.Fechavenc).ToString(Fecha.formato_fecha_hora), Serial = datos.Serial, Emisor = datos.Certificadora };
 
 				return Ok(Resultado);
 			}

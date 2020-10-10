@@ -293,6 +293,9 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string LineaNegocio { get; set; }
 
+		/// <summary>
+		/// Objeto para indicar la informacion del codigo de barras de recaudo
+		/// </summary>
 		public ReferenciaPago ReferenciaPago { get; set; }
 
 

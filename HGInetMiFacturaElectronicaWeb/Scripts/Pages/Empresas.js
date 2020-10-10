@@ -994,6 +994,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		$("#VenceCert").dxTextBox({
 			placeholder: "Fecha de vencimiento",
+			format: "yyyy-MM-dd HH:mm",
 			readOnly: true,
 			onValueChanged: function (data) {
 				Datos_FechaCert = data.value;
