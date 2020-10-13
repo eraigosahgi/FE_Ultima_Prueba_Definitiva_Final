@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibreriaGlobalHGInet.Error;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
@@ -304,10 +305,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
 							numero_documento = num_doc.Actualizar(numero_documento);
 						}
-						else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode())
+						else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode())
 						{
 							// procesa el documento en V2
 							item_respuesta = ProcesarV2(numero_documento, true);
+							if (item_respuesta.Error == null)
+								item_respuesta.Error = new Error();
 							return item_respuesta;
 						}
 						else
@@ -587,6 +590,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
 				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+			}
+			else if (item_respuesta.IdProceso == (short)ProcesoEstado.EnvioZip.GetHashCode())
+			{
+				item_respuesta.IdProceso = (short)ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
+				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+				item_respuesta.Error.Mensaje = "La plataforma de la DIAN no dio respuesta del procesamiento del documento, por favor no modificar el documento y enviarlo de nuevo";
 			}
 
 			return item_respuesta;
