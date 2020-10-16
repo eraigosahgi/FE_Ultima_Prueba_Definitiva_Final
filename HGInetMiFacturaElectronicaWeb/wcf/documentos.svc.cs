@@ -116,7 +116,9 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
         public List<DocumentoRespuesta> ConsultaPorFechaElaboracion(string DataKey, string Identificacion, int TipoDocumento, DateTime FechaInicial, DateTime FechaFinal)
         {
             try
-            {
+            {	// se restringe el acceso al servicio web NOVIEMBRE 16
+				//throw new ApplicationException("El servicio web ConsultaPorFechaElaboracion no se encuentra disponible; por favor realice la consulta mediante el servicio web ConsultaPorCodigoRegistro.");
+				
 				if (string.IsNullOrEmpty(DataKey))
 					throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
 
