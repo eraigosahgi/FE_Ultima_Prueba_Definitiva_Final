@@ -261,6 +261,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Convierte CodigoRegistros en una lista.
 				List<string> lista_documentos = Coleccion.ConvertirLista(CodigosRegistros);
 
+				//Se restringe la consulta a un número de documentos específicos
+				if(lista_documentos.Count > 100)
+					throw new ApplicationException("Supera el número máximo de 100 registros por consulta.");
+
 				context.Configuration.LazyLoadingEnabled = false;
 
 				var respuesta = from documento in context.TblDocumentos
