@@ -21,7 +21,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			prefijo = "",
 			resolucion = "";
 
-	
+
 
 
 	$("#FechaInicial").dxDateBox({
@@ -58,8 +58,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 	cargarFiltros();
 
-	function cargarFiltros() {
-	
+	function cargarFiltros() {		
 		$("#filtrosEstadoRecibo").dxDropDownBox({
 			valueExpr: "ID",
 			placeholder: "Seleccione un Item",
@@ -177,10 +176,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
             		searchEnabled: true,
             		//Carga la data del control
             		dataSource: new DevExpress.data.ArrayStore({
-            			data: items_recibo,
+            			data: AdquirienteRecibo,
             			key: "ID"
             		}),
-            		displayExpr: "Descripcion",
+            		displayExpr: "Name",
             		Enabled: true,
             		placeholder: "Seleccione un Item",
             		onValueChanged: function (data) {
@@ -420,9 +419,9 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 								.appendTo(container);
                        	}
                        },
-                    
+
 					   {
-					   	caption: "Acuse",					   	
+					   	caption: "Acuse",
 					   	dataField: "EstadoAcuse",
 					   	cssClass: "hidden-xs col-md-1",
 					   	lookup: {
@@ -582,9 +581,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 	}
 
 
-	ConsultarAuditoria = function (IdSeguridad, IdFacturador, NumeroDocumento) {
-		$rootScope.ConsultarAuditDoc(IdSeguridad, IdFacturador, NumeroDocumento);
-	};
+
 
 	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false, 4).then(function (Datos) {
 		$scope.Adquiriente = Datos;
@@ -593,22 +590,26 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
 		codigo_facturador = data[0].IdentificacionEmpresa;
 		UsuarioSession = data[0].IdSeguridad;
-	});
 
-	SrvMaestrosEnum.ObtenerEnum(5, '').then(function (data) {
-		SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
-			Estado = data;
-			items_recibo = dataacuse;
 
-			$http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
-				ResolucionesPrefijo = response.data;
-				cargarFiltros();
-			}, function (response) {
-				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+		SrvMaestrosEnum.ObtenerEnum(5, '').then(function (data) {
+			SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
+				Estado = data;
+				items_recibo = dataacuse;
+
+				$http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
+					ResolucionesPrefijo = response.data;
+					cargarFiltros();
+				}, function (response) {
+					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+				});
+
 			});
-
 		});
 	});
+	ConsultarAuditoria = function (IdSeguridad, IdFacturador, NumeroDocumento) {
+		$rootScope.ConsultarAuditDoc(IdSeguridad, IdFacturador, NumeroDocumento);
+	};
 
 });
 

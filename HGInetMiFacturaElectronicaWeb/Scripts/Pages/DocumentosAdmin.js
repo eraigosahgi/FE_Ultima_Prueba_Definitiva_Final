@@ -42,7 +42,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 	cargarFiltros();
 
-	function cargarFiltros() {
+	function cargarFiltros() {		
+
 		$("#FechaInicial").dxDateBox({
 			value: now,
 			width: '100%',
@@ -122,6 +123,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			}
 		});
 
+
+		
 		//Define los campos y las opciones
 		$scope.filtros =
             {
@@ -146,10 +149,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
             		searchEnabled: true,
             		//Carga la data del control
             		dataSource: new DevExpress.data.ArrayStore({
-            			data: items_recibo,
+            			data: AdquirienteRecibo,
             			key: "ID"
             		}),
-            		displayExpr: "Descripcion",
+            		displayExpr: "Name",
             		Enabled: true,
             		placeholder: "Seleccione un Item",
             		onValueChanged: function (data) {
