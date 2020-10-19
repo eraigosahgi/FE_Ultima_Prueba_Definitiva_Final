@@ -42,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ManualTecnico", "ManualTecn
 		Documentacion\ManualTecnico\V20202Rev1-ManualTecnicoServiciosFacturaEV2.pdf = Documentacion\ManualTecnico\V20202Rev1-ManualTecnicoServiciosFacturaEV2.pdf
 		Documentacion\ManualTecnico\V20203Rev4-ManualTecnicoServiciosFacturaEV2.pdf = Documentacion\ManualTecnico\V20203Rev4-ManualTecnicoServiciosFacturaEV2.pdf
 		\\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20206-ManualTecnicoServiciosFacturaEV2.pdf = \\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20206-ManualTecnicoServiciosFacturaEV2.pdf
+		\\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20206Rev1-ManualTecnicoServiciosFacturaEV2.pdf = \\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20206Rev1-ManualTecnicoServiciosFacturaEV2.pdf
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFacturaETestConsola", "HGInetFacturaETestConsola\HGInetFacturaETestConsola.csproj", "{101B7B4C-B4CF-42E9-8370-30B2C3147346}"
