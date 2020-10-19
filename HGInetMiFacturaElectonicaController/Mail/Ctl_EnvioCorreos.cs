@@ -642,6 +642,7 @@ namespace HGInetMiFacturaElectonicaController
 						// Datos Facturador Electronico
 						mensaje = mensaje.Replace("{ImagenLogo}", "<img id='ImgLogo' src='" + "" + "' style='border: none; border-radius: 0px; display: block; outline: none; text-decoration: none; width: 100%; height: auto;' width='233' />");
 						mensaje = mensaje.Replace("{NombreFacturador}", empresa_obligado.StrRazonSocial);
+						mensaje = mensaje.Replace("{NombreComercial}", nombre_comercial);
 						mensaje = mensaje.Replace("{NitFacturador}", empresa_obligado.StrIdentificacion);
 						mensaje = mensaje.Replace("{DigitovFacturador}", empresa_obligado.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{EmailFacturador}", empresa_obligado.StrMailEnvio);
