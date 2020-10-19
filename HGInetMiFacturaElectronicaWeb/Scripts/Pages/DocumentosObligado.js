@@ -21,63 +21,45 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			prefijo = "",
 			resolucion = "";
 
-	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
-		codigo_facturador = data[0].IdentificacionEmpresa;
-		UsuarioSession = data[0].IdSeguridad;
+	
+
+
+	$("#FechaInicial").dxDateBox({
+		value: now,
+		width: '100%',
+		displayFormat: "yyyy-MM-dd",
+		onValueChanged: function (data) {
+			fecha_inicio = new Date(data.value).toISOString();
+			$("#FechaFinal").dxDateBox({ min: fecha_inicio });
+		}
+
 	});
 
-	SrvMaestrosEnum.ObtenerEnum(5, '').then(function (data) {
-		SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
-			Estado = data;
-			items_recibo = dataacuse;
+	$("#FechaFinal").dxDateBox({
+		value: now,
+		width: '100%',
+		displayFormat: "yyyy-MM-dd",
+		onValueChanged: function (data) {
+			fecha_fin = new Date(data.value).toISOString();
+			$("#FechaInicial").dxDateBox({ max: fecha_fin });
+		}
 
-			$http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
-				ResolucionesPrefijo = response.data;
-				cargarFiltros();
-			}, function (response) {
-				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-			});
+	});
 
+	var DataCheckBox = function (Datos) {
+		return new DevExpress.data.CustomStore({
+			loadMode: "raw",
+			key: "ID",
+			load: function () {
+				return JSON.parse(JSON.stringify(Datos));
+			}
 		});
-	});
+	};
 
-
+	cargarFiltros();
 
 	function cargarFiltros() {
-
-		$("#FechaInicial").dxDateBox({
-			value: now,
-			width: '100%',
-			displayFormat: "yyyy-MM-dd",
-			onValueChanged: function (data) {
-				fecha_inicio = new Date(data.value).toISOString();
-				$("#FechaFinal").dxDateBox({ min: fecha_inicio });
-			}
-
-		});
-
-		$("#FechaFinal").dxDateBox({
-			value: now,
-			width: '100%',
-			displayFormat: "yyyy-MM-dd",
-			onValueChanged: function (data) {
-				fecha_fin = new Date(data.value).toISOString();
-				$("#FechaInicial").dxDateBox({ max: fecha_fin });
-			}
-
-		});
-
-
-		var DataCheckBox = function (Datos) {
-			return new DevExpress.data.CustomStore({
-				loadMode: "raw",
-				key: "ID",
-				load: function () {
-					return JSON.parse(JSON.stringify(Datos));
-				}
-			});
-		};
-
+	
 		$("#filtrosEstadoRecibo").dxDropDownBox({
 			valueExpr: "ID",
 			placeholder: "Seleccione un Item",
@@ -608,6 +590,25 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		$scope.Adquiriente = Datos;
 	});
 
+	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
+		codigo_facturador = data[0].IdentificacionEmpresa;
+		UsuarioSession = data[0].IdSeguridad;
+	});
+
+	SrvMaestrosEnum.ObtenerEnum(5, '').then(function (data) {
+		SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
+			Estado = data;
+			items_recibo = dataacuse;
+
+			$http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
+				ResolucionesPrefijo = response.data;
+				cargarFiltros();
+			}, function (response) {
+				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			});
+
+		});
+	});
 
 });
 

@@ -40,6 +40,9 @@ namespace HGInetMiFacturaElectonicaData.Objetos
 		public string EstadoEnvioMail { get; set; }
 		public string MensajeEnvio { get; set; }
 		public short EnvioMail { get; set; }
-		
+		public int poseeIdComercio { get; set; }
+		public short FacturaCancelada { get; set; }
+		public int PagosParciales { get; set; }
+
 	}
 }

@@ -311,6 +311,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (FechaFinal == null)
 					throw new ApplicationException("Fecha final inválida.");
 
+				//if (FechaFinal < FechaInicial)
+				//	throw new ApplicationException("Fecha final debe ser mayor o igual que la fecha inicial.");
+
+				//long diferencia = Fecha.Diferencia(FechaInicial, FechaFinal, DateInterval.Day);
+
+				//if (diferencia > 30)
+				//	throw new ApplicationException("El rango de fechas no pueder ser mayor a 30 dias");
+
 				FechaInicial = FechaInicial.Date;
 				FechaFinal = new DateTime(FechaFinal.Year, FechaFinal.Month, FechaFinal.Day, 23, 59, 59, 999);
 
@@ -356,14 +364,19 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			fecha_inicio = fecha_inicio.Date;
 			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
+			if (string.IsNullOrEmpty(numero_documento))
+				numero_documento = "*";
+
+			if (numero_documento=="null")
+				numero_documento = "*";
+
 			long num_doc = -1;
 			long.TryParse(numero_documento, out num_doc);
 
 			short cod_estado_recibo = -1;
 			short.TryParse(estado_recibo, out cod_estado_recibo);
 
-			if (string.IsNullOrWhiteSpace(numero_documento))
-				numero_documento = "*";
+			
 			if (string.IsNullOrWhiteSpace(estado_recibo))
 				estado_recibo = "*";
 
@@ -378,7 +391,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				context.Configuration.LazyLoadingEnabled = false;
 
-				respuesta = (from datos in context.TblDocumentos.AsNoTracking()
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasResoluciones").AsNoTracking()
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
 										&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
@@ -419,7 +432,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 Estado = datos.IdCategoriaEstado,
 								 EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
 								 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
-								 EnvioMail = datos.IntEstadoEnvio
+								 EnvioMail = datos.IntEstadoEnvio,
+								 poseeIdComercio = (datos.TblEmpresasResoluciones.StrComercioConfigId != null) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
+								 FacturaCancelada = datos.IntIdEstado,
+								 PagosParciales = (datos.TblEmpresasResoluciones.IntPermiteParciales == null) ? 0 : (datos.TblEmpresasResoluciones.IntPermiteParciales == true) ? 1 : 0,
 							 }).ToList();
 
 
@@ -430,7 +446,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				context.Configuration.LazyLoadingEnabled = false;
 
-				respuesta = (from datos in context.TblDocumentos.AsNoTracking()
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasResoluciones").AsNoTracking()
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente))
 							 && (listaDocumetos.Contains(datos.IntNumero))
@@ -468,7 +484,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 Estado = datos.IdCategoriaEstado,
 								 EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
 								 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
-								 EnvioMail = datos.IntEstadoEnvio
+								 EnvioMail = datos.IntEstadoEnvio,
+								 poseeIdComercio = (datos.TblEmpresasResoluciones.StrComercioConfigId != null) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
+								 FacturaCancelada = datos.IntIdEstado,
+								 PagosParciales = (datos.TblEmpresasResoluciones.IntPermiteParciales == null) ? 0 : (datos.TblEmpresasResoluciones.IntPermiteParciales == true) ? 1 : 0,
 							 }).ToList();
 
 			}
@@ -1017,7 +1036,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 
 			try
-			{				
+			{
 
 				context.Configuration.LazyLoadingEnabled = false;
 
@@ -1264,15 +1283,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					doc.IntIdEstado = (short)ProcesoEstado.RecepcionAcuse.GetHashCode();
 
 				// obtiene los datos del facturador electrónico
-				TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador);
+				TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador, false);
 
 				//obtiene los datos del proveedor del facturador
 				ctl_empresa = new Ctl_Empresa();
-				TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor);
+				TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor, false);
 
 				// obtiene los datos del adquiriente
 				ctl_empresa = new Ctl_Empresa();
-				TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente);
+				TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente, false);
 
 				FacturaE_Documento resultado = new FacturaE_Documento();
 
@@ -1299,7 +1318,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					//obtiene los datos del proveedor del adquirirente
 					ctl_empresa = new Ctl_Empresa();
-					TblEmpresas proveedor_receptor = ctl_empresa.Obtener(doc.StrProveedorReceptor);
+					TblEmpresas proveedor_receptor = ctl_empresa.Obtener(doc.StrProveedorReceptor, false);
 					//Crea el XML del Acuse
 					resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_receptor, estado, motivo_rechazo);
 					doc.IntIdEstado = (short)ProcesoEstado.PendienteEnvioProveedorAcuse.GetHashCode();
@@ -1939,8 +1958,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				context.Configuration.LazyLoadingEnabled = false;
 
 				List<TblDocumentos> retorno = (from doc in context.TblDocumentos
-					where List_id_seguridad.Contains(doc.StrIdSeguridad)
-					select doc).ToList();
+											   where List_id_seguridad.Contains(doc.StrIdSeguridad)
+											   select doc).ToList();
 
 
 				return retorno;

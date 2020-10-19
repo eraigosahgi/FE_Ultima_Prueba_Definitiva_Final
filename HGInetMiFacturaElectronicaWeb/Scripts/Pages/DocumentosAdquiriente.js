@@ -351,7 +351,7 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
 
                 			}
 
-                			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCenlada == 100) {//aqui se debe colocar el status que indica el pago de la factura                            
+                			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCancelada == 100) {//aqui se debe colocar el status que indica el pago de la factura                            
                 				imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Ver</a>"
                 			}
 
@@ -374,7 +374,8 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
 				//****************************************************************
 				//Totales y agrupaciones
 				summary: {
-					groupItems: [{
+					groupItems: [
+					{
 						column: "IntVlrTotal",
 						summaryType: "sum",
 						displayFormat: " {0} Total ",
@@ -643,16 +644,19 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
                ],
 
 				summary: {
-					totalItems: [{
+					totalItems: [					
+					{
 						name: "MontoSum",
 						showInColumn: "Monto",
-						displayFormat: "{0}",
-						valueFormat: "currency",
+						displayFormat: "$ {0}",
+						//valueFormat: "$ #,##0.##",
 						summaryType: "custom"
 					}
 
 					],
 					calculateCustomSummary: function (options) {
+
+
 						if (options.name === "MontoSum") {
 							if (options.summaryProcess === "start") {
 								options.totalValue = 0;
@@ -660,7 +664,7 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
 							}
 							if (options.summaryProcess === "calculate") {
 								if (options.value.Estado == "Aprobado") {
-									options.totalValue = options.totalValue + options.value.Monto;
+									options.totalValue =  options.totalValue + options.value.Monto;
 									$scope.TotalPago = $scope.TotalPago + options.totalValue;
 									///Monto pendiente por pagar
 									$scope.valoraPendiente = $scope.montoFactura - options.totalValue;

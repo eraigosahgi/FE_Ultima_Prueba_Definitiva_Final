@@ -1031,7 +1031,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			//Estado empresa     -- 1 Activa
 			//IntObligado = true -- Es Facturador
 			//IntCobroPostPago   -- 1 Tiene plan post pago automatico
-			List<TblEmpresas> ListaEmpresas = (from empresas in context.TblEmpresas
+
+			context.Configuration.LazyLoadingEnabled = false;
+
+			List<TblEmpresas> ListaEmpresas = (from empresas in context.TblEmpresas.AsNoTracking()
 											   where empresas.IntIdEstado == 1
 											   && empresas.IntCobroPostPago == 1
 											   && empresas.IntObligado == true

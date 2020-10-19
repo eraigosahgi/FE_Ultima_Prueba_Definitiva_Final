@@ -40,28 +40,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 
 
-	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
-		codigo_facturador = data[0].IdentificacionEmpresa;
-		UsuarioSession = data[0].IdSeguridad;
-		//consultar();
-	});
-
-	SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {
-		SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
-			Estado = data;
-			items_recibo = dataacuse;
-			cargarFiltros();
-		});
-	});
-
-
-	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false, 7).then(function (Datos) {
-		$scope.Facturador = Datos;
-	});
-
-	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerTodosAdquirientes', 'ID', 'Texto', false, 10).then(function (Datos) {
-		$scope.Adquiriente = Datos;
-	});
+	cargarFiltros();
 
 	function cargarFiltros() {
 		$("#FechaInicial").dxDateBox({
@@ -609,6 +588,29 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		}
 	}
 
+
+	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
+		codigo_facturador = data[0].IdentificacionEmpresa;
+		UsuarioSession = data[0].IdSeguridad;
+		//consultar();
+	});
+
+	SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {
+		SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
+			Estado = data;
+			items_recibo = dataacuse;
+			cargarFiltros();
+		});
+	});
+
+
+	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false, 7).then(function (Datos) {
+		$scope.Facturador = Datos;
+	});
+
+	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerTodosAdquirientes', 'ID', 'Texto', false, 10).then(function (Datos) {
+		$scope.Adquiriente = Datos;
+	});
 
 });
 

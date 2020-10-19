@@ -51,7 +51,7 @@
 	<link href="../../Content/dx.hgi.css" rel="stylesheet" />
 	<!-- /DevExtreme -->
 
-	<script src="../../Scripts/Pages/RestablecerClave.js?vjs20200921"></script>
+	<script src="../../Scripts/Pages/RestablecerClave.js?vjs20201005"></script>
 
 
 	<style>

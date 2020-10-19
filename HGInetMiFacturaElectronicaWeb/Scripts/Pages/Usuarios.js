@@ -46,7 +46,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 	});
 
 
-	
+
 	$("#BtnConsultar").dxButton({
 		text: "Consultar",
 		type: "default",
@@ -61,8 +61,8 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 	$http.get('/api/DatosSesion/').then(function (response) {
 
 		codigo_facturador = response.data[0].Identificacion;
-		
-		var tipo = response.data[0].Admin;		
+
+		var tipo = response.data[0].Admin;
 		if (tipo) {
 			$scope.Admin = true;
 		}
@@ -575,32 +575,8 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 				$http.get('/api/Usuario/').then(function (response) {
 					//string usuario_autenticado, string empresa_autenticada, string codigo_usuario, string identificacion_empresa
 					$("#wait").show();
-					$http.get('/api/Permisos?usuario_autenticado=' + response.data[0].CodigoUsuario + '&empresa_autenticada=' + codigo_facturador + '&codigo_usuario=' + Datos_usuario + '&identificacion_empresa=' + empresa[0]).then(function (response) {
-						$("#wait").hide();
-						try {
-
-							PermisosUsuario = response.data;
-
-							AlmacenPermisos = new DevExpress.data.ArrayStore({
-								key: "Codigo",
-								data: response.data
-							});
-							//AlmacenPermisosActualizados = AlmacenPermisos;
-
-							$("#treeListOpcionesPermisos").dxTreeList({
-								dataSource: {
-									store: AlmacenPermisos,
-									reshapeOnPush: true
-								}
-							});
-
-						} catch (err) {
-							DevExpress.ui.notify(err.message, 'error', 3000);
-						}
-					}, function errorCallback(response) {
-						$('#wait').hide();
-						DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-					});
+					//consultar datos del usuario autenticado
+					consultarPermisosUsuarioAutenticado(empresa, response);
 				});
 
 
@@ -620,11 +596,49 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 	}
 
 
+
+
+	function consultarPermisosUsuarioAutenticado(empresa, response) {
+
+		$http.get('/api/Permisos?usuario_autenticado=' + response.data[0].CodigoUsuario + '&empresa_autenticada=' + codigo_facturador + '&codigo_usuario=' + Datos_usuario + '&identificacion_empresa=' + empresa[0]).then(function (response) {
+			$("#wait").hide();
+			try {
+
+				PermisosUsuario = response.data;
+
+				AlmacenPermisos = new DevExpress.data.ArrayStore({
+					key: "Codigo",
+					data: response.data
+				});
+				//AlmacenPermisosActualizados = AlmacenPermisos;
+
+				$("#treeListOpcionesPermisos").dxTreeList({
+					dataSource: {
+						store: AlmacenPermisos,
+						reshapeOnPush: true
+					}
+				});
+
+			} catch (err) {
+				DevExpress.ui.notify(err.message, 'error', 3000);
+			}
+		}, function errorCallback(response) {
+			$('#wait').hide();
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+		});
+
+	}
+
+
+
+
+
+
 	if (id_seguridad == null) {
 		$http.get('/api/Usuario/').then(function (response) {
 
 			$("#wait").show();
-			$http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&codigo_empresa=' + response.data[0].Empresa).then(function (response) {
+			$http.get('/api/Permisos?codigo_usuario=' + response.data[0].CodigoUsuario + '&codigo_empresa=' + response.data[0].Empresa + '&permisos=false').then(function (response) {
 				$("#wait").hide();
 				try {
 
@@ -654,7 +668,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 	$scope.ButtonGuardar = {
 		text: 'Guardar',
 		type: 'default',
-		validationGroup: "ValidacionDatosEmpresa",
+		validationGroup: "ValidacionDatosEmpresa",		
 		onClick: function (e) {
 			guardarUsuario();
 		}
@@ -694,7 +708,7 @@ ConsultaUsuarioApp.controller('GestionUsuarioController', function GestionUsuari
 			}
 		}, function errorCallback(response) {
 			$('#wait').hide();
-			DevExpress.ui.notify(response, 'error', 6000);
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);
 		});
 	}
 
