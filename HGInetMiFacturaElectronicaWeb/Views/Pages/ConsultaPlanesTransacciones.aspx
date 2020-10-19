@@ -3,10 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201005"></script>
-	<script src="../../Scripts/Services/SrvPlanes.js?vjs20201005"></script>
-    <script src="../../Scripts/Services/MaestrosEnum.js?vjs20201005"></script>
-    <script src="../../Scripts/Pages/PlanesTransacciones.js?vjs20201005"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201019"></script>
+	<script src="../../Scripts/Services/SrvPlanes.js?vjs20201019"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs20201019"></script>
+    <script src="../../Scripts/Pages/PlanesTransacciones.js?vjs20201019"></script>
 		
 
     <div data-ng-app="GestionPlanesApp" data-ng-controller="ConsultaPlanesController">
