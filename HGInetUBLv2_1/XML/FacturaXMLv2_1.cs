@@ -1914,21 +1914,23 @@ namespace HGInetUBLv2_1
 						ItemIdentificationType StandardItemIdentification = new ItemIdentificationType();
 						IDType IDItemStandard = new IDType();
 						//---Validar que no venag null
-						IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
+						//IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
 						// -- 6.3.5. Productos: @schemeID, @schemeName, @schemeAgencyID
 
 						//Se valida si es FRESCONGELADOS PANETTIERE S.A.
-						if (identificiacion_Obligado.Equals("900038405"))
+						if (identificiacion_Obligado.Equals("900038405") && !string.IsNullOrEmpty(DocDet.ProductoCodigoEAN))
 						{
 							ListaTipoCodigoProducto list_TipoPro = new ListaTipoCodigoProducto();
 							ListaItem TipoProd = list_TipoPro.Items.Where(d => d.Codigo.Equals("010")).FirstOrDefault();
 							IDItemStandard.schemeID = TipoProd.Codigo;
 							IDItemStandard.schemeName = TipoProd.Descripcion;
 							IDItemStandard.schemeAgencyID = "9";
+							IDItemStandard.Value = DocDet.ProductoCodigoEAN;
 						}
 						else
 						{
 							IDItemStandard.schemeID = "999";
+							IDItemStandard.Value = DocDet.ProductoCodigo;
 						}
 						StandardItemIdentification.ID = IDItemStandard;
 						Item.StandardItemIdentification = StandardItemIdentification;
