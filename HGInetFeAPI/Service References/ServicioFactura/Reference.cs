@@ -1591,6 +1591,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private string ReferenciaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string Referencia2Field;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -1638,6 +1641,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.ReferenciaField, value) != true)) {
                     this.ReferenciaField = value;
                     this.RaisePropertyChanged("Referencia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Referencia2 {
+            get {
+                return this.Referencia2Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.Referencia2Field, value) != true)) {
+                    this.Referencia2Field = value;
+                    this.RaisePropertyChanged("Referencia2");
                 }
             }
         }

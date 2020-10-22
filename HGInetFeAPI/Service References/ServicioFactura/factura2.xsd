@@ -47,6 +47,7 @@
       <xs:element minOccurs="0" name="EAN" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Fecha" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Referencia" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Referencia2" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
     </xs:sequence>
   </xs:complexType>
