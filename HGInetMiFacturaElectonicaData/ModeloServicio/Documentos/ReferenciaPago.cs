@@ -9,17 +9,22 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio.Documentos
 	public class ReferenciaPago
 	{
 		/// <summary>
-		/// Codigo de EAN
+		/// Codigo de EAN de la empresa
 		/// </summary>
 		public string EAN { get; set; }
 
 		/// <summary>
-		/// Codigo de Referencia
+		/// Primer Codigo de Referencia
 		/// </summary>
 		public string Referencia { get; set; }
 
 		/// <summary>
-		/// Fecha del Pago
+		/// Segundo Codigo de Referencia
+		/// </summary>
+		public string Referencia2 { get; set; }
+
+		/// <summary>
+		/// Fecha del Pago (yyyymmdd sin caracteres)
 		/// </summary>
 		public string Fecha { get; set; }
 
