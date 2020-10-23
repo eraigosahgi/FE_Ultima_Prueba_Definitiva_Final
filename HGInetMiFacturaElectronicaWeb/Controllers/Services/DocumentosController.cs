@@ -1362,9 +1362,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			try
 			{
+
+				Sesion.ValidarSesion();
+
+				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+
+				List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+				datosSesion.Add(Sesion.DatosEmpresa);
+
+				TblEmpresas empresa = datosSesion.FirstOrDefault();
+
+
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-				var datos = Pago.ObtenerPagosAdquiriente((string.IsNullOrEmpty(codigo_facturador)) ? "*" : codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
+				var datos = Pago.ObtenerPagosAdquiriente(empresa.StrIdentificacion, numero_documento, empresa.StrIdentificacion, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
 
 
 				if (datos == null)
@@ -1398,6 +1410,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 		}
+
 
 		/// <summary>
 		/// Actualiza el estado del pago consultando antes en la plataforma intermedia y luego con los datos de dicha plataforma, estos son actualziados en FE
