@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f3b7287e-52bd-4551-b7bd-31d5bb926711" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:9000/Wcf/pagoselectronicos.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="pagoselectronicos.xsd" MetadataType="Schema" ID="600e525f-831a-4a35-b872-1a731498fdfe" SourceId="1" SourceUrl="http://localhost:9000/Wcf/pagoselectronicos.svc?xsd=xsd3" />
+    <MetadataFile FileName="pagoselectronicos1.xsd" MetadataType="Schema" ID="0fa38880-40ee-4832-ba17-a29fef606e14" SourceId="1" SourceUrl="http://localhost:9000/Wcf/pagoselectronicos.svc?xsd=xsd0" />
+    <MetadataFile FileName="pagoselectronicos2.xsd" MetadataType="Schema" ID="2cef8976-84f4-49de-accf-7ef4609e773e" SourceId="1" SourceUrl="http://localhost:9000/Wcf/pagoselectronicos.svc?xsd=xsd2" />
+    <MetadataFile FileName="pagoselectronicos.wsdl" MetadataType="Wsdl" ID="c15d31f4-204f-4814-8b33-aeca03bfa0b2" SourceId="1" SourceUrl="http://localhost:9000/Wcf/pagoselectronicos.svc?wsdl" />
+    <MetadataFile FileName="pagoselectronicos3.xsd" MetadataType="Schema" ID="2de1af45-543e-4311-a149-15319e7b152e" SourceId="1" SourceUrl="http://localhost:9000/Wcf/pagoselectronicos.svc?xsd=xsd1" />
+    <MetadataFile FileName="pagoselectronicos1.wsdl" MetadataType="Wsdl" ID="1aab4f88-7cfd-441c-bd57-8c24960dd011" SourceId="1" SourceUrl="http://localhost:9000/Wcf/pagoselectronicos.svc?wsdl=wsdl0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

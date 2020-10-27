@@ -2844,6 +2844,7 @@
     <Content Include="wcf\listaFe.svc" />
     <Content Include="wcf\notacredito.svc" />
     <Content Include="wcf\notadebito.svc" />
+    <Content Include="wcf\pagoselectronicos.svc" />
     <Content Include="wcf\reenviodocumento.svc" />
     <Content Include="wcf\resolucion.svc" />
     <Content Include="Web.config">
@@ -3336,6 +3337,7 @@
     <Compile Include="wcf\interfaces\Ifactura.cs" />
     <Compile Include="wcf\interfaces\Iresolucion.cs" />
     <Compile Include="wcf\interfaces\Ireenviodocumento.cs" />
+    <Compile Include="wcf\interfaces\Ipagoselectronicos.cs" />
     <Compile Include="wcf\listaFe.svc.cs">
       <DependentUpon>listaFe.svc</DependentUpon>
     </Compile>
@@ -3344,6 +3346,9 @@
     </Compile>
     <Compile Include="wcf\notadebito.svc.cs">
       <DependentUpon>notadebito.svc</DependentUpon>
+    </Compile>
+    <Compile Include="wcf\pagoselectronicos.svc.cs">
+      <DependentUpon>pagoselectronicos.svc</DependentUpon>
     </Compile>
     <Compile Include="wcf\reenviodocumento.svc.cs">
       <DependentUpon>reenviodocumento.svc</DependentUpon>

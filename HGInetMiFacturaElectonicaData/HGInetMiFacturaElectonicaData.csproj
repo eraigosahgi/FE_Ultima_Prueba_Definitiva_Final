@@ -147,6 +147,7 @@
     <Compile Include="ModeloServicio\Respuestas\NotaCreditoConsulta.cs" />
     <Compile Include="ModeloServicio\Respuestas\NotaDebitoConsulta.cs" />
     <Compile Include="ModeloServicio\Respuestas\NotificacionCorreo.cs" />
+    <Compile Include="ModeloServicio\Respuestas\PagoElectronicoRespuesta.cs" />
     <Compile Include="ModeloServicio\Respuestas\Resolucion.cs" />
     <Compile Include="ModeloServicio\Respuestas\RespuestaDian.cs" />
     <Compile Include="ModeloAuditoria\IDatabase.cs" />

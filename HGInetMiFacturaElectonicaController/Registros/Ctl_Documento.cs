@@ -35,6 +35,8 @@ using LibreriaGlobalHGInet.RegistroLog;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Objetos;
+using HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas;
+using HGInetMiFacturaElectonicaController.PagosElectronicos;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -291,6 +293,58 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 		/// <summary>
+		/// Obtiene los documentos por Código de Registros
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+		/// <param name="Identificacion">identificación obligado</param>
+
+		/// <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
+		/// <returns></returns>
+		public List<PagoElectronicoRespuesta> ConsultaPorCodigoRegistro(string identificacion_obligado, string CodigosRegistros)
+		{
+			try
+			{
+				//Valida que los parametros sean correctos.
+				if (string.IsNullOrWhiteSpace(identificacion_obligado))
+					throw new ApplicationException("Número de identificación del obligado inválido.");
+				if (string.IsNullOrWhiteSpace(CodigosRegistros))
+					throw new ApplicationException("Filtro por números inválido.");
+
+				List<PagoElectronicoRespuesta> lista_respuesta = new List<PagoElectronicoRespuesta>();
+
+				//Convierte CodigoRegistros en una lista.
+				List<string> lista_documentos = Coleccion.ConvertirLista(CodigosRegistros);
+
+				//Se restringe la consulta a un número de documentos específicos  NOVIEMBRE 16
+				/*if (lista_documentos.Count > 100)
+					throw new ApplicationException("Supera el número máximo de 100 registros por consulta.");
+				*/
+
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var respuesta = from documento in context.TblDocumentos.Include("TblPagosElectronicos")
+								join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
+								where empresa.StrIdentificacion.Equals(identificacion_obligado)
+								&& (lista_documentos.Contains(documento.StrObligadoIdRegistro) || lista_documentos.Contains(documento.StrIdSeguridad.ToString()))
+								select documento;
+
+				//Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
+				foreach (TblDocumentos item in respuesta)
+				{
+					lista_respuesta.Add(ConvertirPago(item));
+				}
+
+				return lista_respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
+
+		/// <summary>
 		/// Obtiene los documentos por rangos de fecha de elaboración.
 		/// </summary>
 		/// <param name="identificacion_obligado">identificación obligado</param>
@@ -367,7 +421,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			if (string.IsNullOrEmpty(numero_documento))
 				numero_documento = "*";
 
-			if (numero_documento=="null")
+			if (numero_documento == "null")
 				numero_documento = "*";
 
 			long num_doc = -1;
@@ -376,7 +430,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			short cod_estado_recibo = -1;
 			short.TryParse(estado_recibo, out cod_estado_recibo);
 
-			
+
 			if (string.IsNullOrWhiteSpace(estado_recibo))
 				estado_recibo = "*";
 
@@ -1789,6 +1843,71 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 
+		/// <summary>
+		/// Convierte un objeto de tipo de base de datos a objeto de servicio.
+		/// </summary>
+		/// <param name="respuesta">Objeto de tipo TblDocumentos</param>
+		/// <returns>Objeto Tipo DocumentoRespuesta</returns>
+		public static PagoElectronicoRespuesta ConvertirPago(TblDocumentos respuesta)
+		{
+			try
+			{
+				if (respuesta == null)
+					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "respuesta", "TblDocumentos"));
+
+
+				PagoElectronicoRespuesta obj_documento = new PagoElectronicoRespuesta();
+
+				obj_documento.Cufe = respuesta.StrCufe;
+				obj_documento.DocumentoTipo = respuesta.IntDocTipo;
+				obj_documento.Documento = respuesta.IntNumero;
+				obj_documento.FechaDocumento = respuesta.DatFechaIngreso;
+				obj_documento.IdDocumento = respuesta.StrIdSeguridad.ToString();
+				obj_documento.Identificacion = respuesta.StrEmpresaAdquiriente;
+				obj_documento.NumeroResolucion = respuesta.StrNumResolucion;
+				obj_documento.Prefijo = respuesta.StrPrefijo;
+				obj_documento.DocumentoTipo = respuesta.IntDocTipo;
+
+				List<PagoElectronicoRespuestaDetalle> DetallesPagos = new List<PagoElectronicoRespuestaDetalle>();
+
+
+				Ctl_PagosElectronicos _Pagos = new Ctl_PagosElectronicos();
+
+				List<TblPagosElectronicos> lista_pagos = _Pagos.ObtenerPagos(respuesta.StrIdSeguridad);
+
+				//if (respuesta.TblPagosElectronicos != null)
+				//{
+
+				foreach (TblPagosElectronicos pago in lista_pagos)
+				{
+					var respuesta_pago = new PagoElectronicoRespuestaDetalle();
+					respuesta_pago.Fecha = pago.DatFechaRegistro;
+					respuesta_pago.IdPago = pago.StrIdSeguridadPago;
+					respuesta_pago.ReferenciaCUS = pago.StrTransaccionCUS;
+					respuesta_pago.TicketID = pago.StrTicketID;
+					respuesta_pago.PagoEstadoDescripcion = pago.StrMensaje;
+					respuesta_pago.PagoEstado = pago.IntEstadoPago;
+					respuesta_pago.Valor = pago.IntValorPago;
+					respuesta_pago.FormaPago = pago.IntFormaPago.ToString();
+					respuesta_pago.Franquicia = pago.StrCodigoFranquicia;
+
+					DetallesPagos.Add(respuesta_pago);
+				}
+
+				//}
+
+				obj_documento.DetallesPagos = DetallesPagos;
+
+				return obj_documento;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+
+		}
+
+
 
 		#region ProcesarDocumentos
 
@@ -2197,6 +2316,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			}
 		}
+
 
 		/// <summary>
 		/// Tarea para generar el PDF de los documentos

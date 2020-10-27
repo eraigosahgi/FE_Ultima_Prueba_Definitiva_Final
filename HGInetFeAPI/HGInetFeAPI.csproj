@@ -52,6 +52,7 @@
     <Compile Include="Controladores\Ctl_ListaFe.cs" />
     <Compile Include="Controladores\Ctl_NotaCredito.cs" />
     <Compile Include="Controladores\Ctl_NotaDebito.cs" />
+    <Compile Include="Controladores\Ctl_PagosElectronicos.cs" />
     <Compile Include="Controladores\Ctl_ReenvioDocumento.cs" />
     <Compile Include="Controladores\Ctl_Resolucion.cs" />
     <Compile Include="Controladores\Ctl_Utilidades.cs" />
@@ -87,6 +88,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ServicioNotaDebito\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioPagosElectronicos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -293,6 +299,26 @@
     <None Include="Service References\ServicioNotaDebito\notadebito5.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorCodigoRegistroResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos1.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos3.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ServicioReenvioDocumento\HGInetFeAPI.ServicioReenvioDocumento.RecepcionResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -356,6 +382,7 @@
     <WCFMetadataStorage Include="Service References\ServicioListaFe\" />
     <WCFMetadataStorage Include="Service References\ServicioNotaCredito\" />
     <WCFMetadataStorage Include="Service References\ServicioNotaDebito\" />
+    <WCFMetadataStorage Include="Service References\ServicioPagosElectronicos\" />
     <WCFMetadataStorage Include="Service References\ServicioReenvioDocumento\" />
     <WCFMetadataStorage Include="Service References\ServicioResolucion\" />
     <WCFMetadataStorage Include="Service References\ServicioRutasPlataforma\" />
@@ -512,6 +539,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioFactura\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

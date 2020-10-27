@@ -210,6 +210,27 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			}
 		}
 
+		/// <summary>
+		/// Obtiene todos los pagos de un documento
+		/// </summary>
+		/// <param name="id_seguridad_doc">Id de seguridad del documento</param>		
+		/// <returns></returns>
+		public List<TblPagosElectronicos> ObtenerPagos(Guid id_seguridad_doc)
+		{
+			try
+			{
+				List<TblPagosElectronicos> lista_pagos = (from pago in context.TblPagosElectronicos
+												   where pago.StrIdSeguridadDoc == id_seguridad_doc												   
+												   select pago).ToList();
+
+				return lista_pagos;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 		/// <summary>
 		/// Obtiene el pago de la base de datos por códigos principales (StrIdSeguridadPago y StrIdPlataforma).
