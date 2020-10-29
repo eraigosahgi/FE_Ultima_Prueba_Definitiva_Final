@@ -26,12 +26,12 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
 	});
 
 
-    SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
-    	codigo_adquiente = data[0].IdentificacionEmpresa;
-    	UsuarioSession = data[0].IdSeguridad;
-    	//consultar();
-    });
-  
+	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
+		codigo_adquiente = data[0].IdentificacionEmpresa;
+		UsuarioSession = data[0].IdSeguridad;
+		//consultar();
+	});
+
 
 	function cargarFiltros() {
 		$("#FechaInicial").dxDateBox({
@@ -136,7 +136,7 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
 				dataSource: response.data,
 				paging: {
 					pageSize: 20
-				},				
+				},
 				keyExpr: "StrIdSeguridad",
 				pager: {
 					showPageSizeSelector: true,
@@ -198,12 +198,12 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
                     			visible_xml = "href='" + options.data.Xml + "' class='icon-file-xml' style='pointer-events:auto;cursor: pointer;'";
                     		else
                     			visible_xml = "#";
-                    		
+
                     		if (options.data.EstadoAcuse == 'Aprobado' || options.data.EstadoAcuse == 'Rechazado' || options.data.EstadoAcuse == 'Aprobado Tácito')
                     			visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
                     		else
                     			visible_acuse = "#";
-                    		
+
                     		if (options.data.XmlAcuse != null)
                     			visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
                     		else
@@ -287,7 +287,7 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
                         	cssClass: "hidden-xs col-md-1",
                         	cellTemplate: function (container, options) {
 
-                        		$("<div>")                                    
+                        		$("<div>")
                                     .append($(ColocarEstado(options.data.Estado, options.data.EstadoFactura)))
                                     .appendTo(container);
                         	}
@@ -367,9 +367,9 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
 				//**************************************************************
 				masterDetail: {
 					enabled: true,
-					template: function (container, options) {						
+					template: function (container, options) {
 						container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
-						}
+					}
 				},
 				//****************************************************************
 				//Totales y agrupaciones
@@ -592,6 +592,9 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
                					if (response.data[0].Pagos[0].Monto > 0) {
                						$("#panelPagoPendiente").hide();
                						$("#PanelVerificacion").show();
+               						if ($scope.NumVerificacion > 1) {
+               							$("#mensaje").text("El estado del pago aun se encuentra pendiente, por favor intente mas tarde");
+               						}
                						$scope.Idregistro = options.data.IdRegistro;
                						$scope.pagoenVerificacion = true;
                						if ($scope.NumVerificacion <= 4) {
@@ -644,7 +647,7 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
                ],
 
 				summary: {
-					totalItems: [					
+					totalItems: [
 					{
 						name: "MontoSum",
 						showInColumn: "Monto",
@@ -664,7 +667,7 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
 							}
 							if (options.summaryProcess === "calculate") {
 								if (options.value.Estado == "Aprobado") {
-									options.totalValue =  options.totalValue + options.value.Monto;
+									options.totalValue = options.totalValue + options.value.Monto;
 									$scope.TotalPago = $scope.TotalPago + options.totalValue;
 									///Monto pendiente por pagar
 									$scope.valoraPendiente = $scope.montoFactura - options.totalValue;
@@ -817,23 +820,23 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
 	}
 
 
-    $("#form").on("submit", function (e) {        
-        
-        var idseg = $scope.IdSeguridad;
-        var valor_pago = $scope.valoraPagar;        
-        if (idseg != null && idseg != undefined) {
-            $scope.EnProceso = true;
-            $("#button").dxButton({ visible: false });
-            $http.get('/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + valor_pago + '&usuario=' + UsuarioSession).then(function (response) {
-                //Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
-                $scope.NumVerificacion = 1;
-                //Ruta servicio
-                var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
-                $scope.Idregistro = response.data.IdRegistro;
-                var Vpago = window.open(RutaServicio + response.data.Ruta, "_blank");                
-                $timeout(function callAtTimeout() {
-                    VerificarEstado();
-                }, 60000);
+	$("#form").on("submit", function (e) {
+
+		var idseg = $scope.IdSeguridad;
+		var valor_pago = $scope.valoraPagar;
+		if (idseg != null && idseg != undefined) {
+			$scope.EnProceso = true;
+			$("#button").dxButton({ visible: false });
+			$http.get('/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + valor_pago + '&usuario=' + UsuarioSession).then(function (response) {
+				//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
+				$scope.NumVerificacion = 1;
+				//Ruta servicio
+				var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
+				$scope.Idregistro = response.data.IdRegistro;
+				var Vpago = window.open(RutaServicio + response.data.Ruta, "_blank");
+				$timeout(function callAtTimeout() {
+					VerificarEstado();
+				}, 60000);
 
 			}, function (error) {
 
