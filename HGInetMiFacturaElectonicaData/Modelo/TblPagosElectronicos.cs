@@ -34,8 +34,9 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrCampo1 { get; set; }
         public string StrCampo2 { get; set; }
         public string StrCampo3 { get; set; }
+        public string StrFormaPago { get; set; }
     
-        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
         public virtual TblDocumentos TblDocumentos { get; set; }
+        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
     }
 }
