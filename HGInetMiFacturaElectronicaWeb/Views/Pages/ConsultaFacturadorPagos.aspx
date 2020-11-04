@@ -58,7 +58,7 @@
 									<div class="col-md-4">
 										<i class="icon-file-text"></i>
 										<label>Estado Pago:</label>
-										<div data-dx-select-box="filtros.EstadoRecibo"></div>
+										<div id="EstadoRecibo"></div>
 									</div>
 									<div class="col-md-4" style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
@@ -69,8 +69,8 @@
 
 
 									<div class="col-md-4" style="margin-top: 1%">
-									<div data-hgi-filtro="Adquiriente"></div>
-								</div>
+										<div data-hgi-filtro="Adquiriente"></div>
+									</div>
 
 									<div class="col-md-4" style="margin-top: 1%">
 										<i class="icon-files-empty"></i>

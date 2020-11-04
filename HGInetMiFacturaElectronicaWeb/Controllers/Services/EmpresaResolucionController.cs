@@ -63,7 +63,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 				Sesion.ValidarSesion();
-				
+
 				if (string.IsNullOrEmpty(codigo_facturador))
 				{
 					throw new Exception("Debe seleccionar el Facturador");
@@ -122,6 +122,18 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Sesion.ValidarSesion();
 
 				Ctl_EmpresaResolucion Resolucion = new Ctl_EmpresaResolucion();
+
+				try
+				{
+					if (string.IsNullOrEmpty(codigo_facturador))
+					{
+						codigo_facturador = Sesion.DatosUsuario.StrEmpresa;
+					}
+				}
+				catch (Exception)
+				{
+				}
+
 
 				List<TblEmpresasResoluciones> datos = Resolucion.ObtenerResoluciones(codigo_facturador, "*");
 

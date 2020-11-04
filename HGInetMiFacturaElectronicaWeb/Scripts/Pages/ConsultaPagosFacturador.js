@@ -8,7 +8,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 	var now = new Date();
 	var Estado;
-	var ResolucionesPrefijo;
+	var ResolucionesPrefijo = [];
 
 	var codigo_facturador = "",
            numero_documento = "",
@@ -32,161 +32,170 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 	$scope.CantidaddocPendientes = 0;
 
-	SrvMaestrosEnum.ObtenerSesion().then(function (data) {
-		codigo_facturador = data[0].Identificacion;
-
-
-		SrvMaestrosEnum.ObtenerEnum(0, "publico").then(function (data) {
-			SrvMaestrosEnum.ObtenerEnum(4).then(function (dataacuse) {
-				Estado = data;
-				items_recibo = dataacuse;
-
-				$http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
-					ResolucionesPrefijo = response.data;
-					cargarFiltros();
-				}, function (response) {
-					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-				});
-
-			});
-		});
+	$("#FechaInicial").dxDateBox({
+		value: now,
+		width: '100%',
+		displayFormat: "yyyy-MM-dd",
+		onValueChanged: function (data) {
+			fecha_inicio = new Date(data.value).toISOString();
+			$("#FechaFinal").dxDateBox({ min: fecha_inicio });
+		}
 
 	});
+
+	$("#FechaFinal").dxDateBox({
+		value: now,
+		width: '100%',
+		displayFormat: "yyyy-MM-dd",
+		onValueChanged: function (data) {
+			fecha_fin = new Date(data.value).toISOString();
+			$("#FechaInicial").dxDateBox({ max: fecha_fin });
+		}
+
+	});
+	//SrvMaestrosEnum.ObtenerSesion().then(function (data) {
+	//	codigo_facturador = data[0].Identificacion;
+	var codigo_facturador = "";
+
+
+
+	//SrvMaestrosEnum.ObtenerEnum(0, "publico").then(function (data) {
+	//	console.log("publico: ", data);
+
+	//});
+
+	//});
+
+	var items_recibo = [];
+
+	$("#EstadoRecibo").dxSelectBox({
+		placeholder: "Seleccione el Estado",
+		displayExpr: "Descripcion",
+		dataSource: items_recibo,
+		onValueChanged: function (data) {
+			estado_recibo = (data.value == null) ? "*" : data.value.ID;
+		},
+		onOpened: function (data) {
+			if (items_recibo.length == 0) {
+				SrvMaestrosEnum.ObtenerEnum(4).then(function (dataacuse) {
+					items_recibo = dataacuse;
+					$("#EstadoRecibo").dxSelectBox({ dataSource: items_recibo });
+				});
+			}
+		}
+	});
+
+
 
 	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
 		$scope.Adquiriente = Datos;
 	});
 
-	function cargarFiltros() {
-		$("#FechaInicial").dxDateBox({
-			value: now,
-			width: '100%',
-			displayFormat: "yyyy-MM-dd",
-			onValueChanged: function (data) {
-				fecha_inicio = new Date(data.value).toISOString();
-				$("#FechaFinal").dxDateBox({ min: fecha_inicio });
+
+
+	var DataCheckBox = function (Datos) {
+		return new DevExpress.data.CustomStore({
+			loadMode: "raw",
+			key: "ID",
+			load: function () {
+				return JSON.parse(JSON.stringify(Datos));
 			}
-
 		});
+	};
 
-		$("#FechaFinal").dxDateBox({
-			value: now,
-			width: '100%',
-			displayFormat: "yyyy-MM-dd",
-			onValueChanged: function (data) {
-				fecha_fin = new Date(data.value).toISOString();
-				$("#FechaInicial").dxDateBox({ max: fecha_fin });
-			}
+	//Resolucion - Prefijo
+	$("#filtrosResolucion").dxDropDownBox({
+		valueExpr: "ID",
+		placeholder: "Seleccione una Resolución",
+		displayExpr: "Descripcion",
+		showClearButton: true,
+		//dataSource: DataCheckBox(ResolucionesPrefijo),		
+		onOpened: function (data) {
+			if (ResolucionesPrefijo.length == 0) {
+				$http.get('/api/ObtenerResPrefijo?codigo_facturador=').then(function (response) {
+					console.log("Prefijo: ", response);
+					ResolucionesPrefijo = response.data;
+					$("#filtrosResolucion").dxDropDownBox({
+						dataSource: DataCheckBox(ResolucionesPrefijo),
+						contentTemplate: function (e) {
+							var value = e.component.option("value"),
+								$dataGrid = $("<div>").dxDataGrid({
+									dataSource: e.component.option("dataSource"),
+									allowColumnResizing: true,
+									columns:
+										[
+											 {
+											 	caption: "Descripción",
+											 	dataField: "Descripcion",
+											 	title: "Descripcion",
+											 	width: 500
 
-		});
+											 }],
+									hoverStateEnabled: true,
+									paging: { enabled: true, pageSize: 10 },
+									filterRow: { visible: true },
+									scrolling: { mode: "infinite" },
+									height: 240,
+									selection: { mode: "multiple" },
+									selectedRowKeys: value,
+									onSelectionChanged: function (selectedItems) {
+										var keys = selectedItems.selectedRowKeys;
+										e.component.option("value", keys);
+										resolucion = keys;
+									}
+								});
 
+							dataGrid = $dataGrid.dxDataGrid("instance");
 
-		var DataCheckBox = function (Datos) {
-			return new DevExpress.data.CustomStore({
-				loadMode: "raw",
-				key: "ID",
-				load: function () {
-					return JSON.parse(JSON.stringify(Datos));
-				}
-			});
-		};
+							e.component.on("valueChanged", function (args) {
+								var value = args.value;
+								dataGrid.selectRows(value, false);
+							});
 
-
-
-
-		//Resolucion - Prefijo
-		$("#filtrosResolucion").dxDropDownBox({
-			valueExpr: "ID",
-			placeholder: "Seleccione un Item",
-			displayExpr: "Descripcion",
-			showClearButton: true,
-			dataSource: DataCheckBox(ResolucionesPrefijo),
-			contentTemplate: function (e) {
-				var value = e.component.option("value"),
-                    $dataGrid = $("<div>").dxDataGrid({
-                    	dataSource: e.component.option("dataSource"),
-                    	allowColumnResizing: true,
-                    	columns:
-                            [
-                                 {
-                                 	caption: "Descripción",
-                                 	dataField: "Descripcion",
-                                 	title: "Descripcion",
-                                 	width: 500
-
-                                 }],
-                    	hoverStateEnabled: true,
-                    	paging: { enabled: true, pageSize: 10 },
-                    	filterRow: { visible: true },
-                    	scrolling: { mode: "infinite" },
-                    	height: 240,
-                    	selection: { mode: "multiple" },
-                    	selectedRowKeys: value,
-                    	onSelectionChanged: function (selectedItems) {
-                    		var keys = selectedItems.selectedRowKeys;
-                    		e.component.option("value", keys);
-                    		resolucion = keys;
-                    	}
-                    });
-
-				dataGrid = $dataGrid.dxDataGrid("instance");
-
-				e.component.on("valueChanged", function (args) {
-					var value = args.value;
-					dataGrid.selectRows(value, false);
+							return $dataGrid;
+						},
+					});
+				}, function (response) {
+					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 				});
-
-				return $dataGrid;
 			}
-		});
+		}
+	});
 
-		//Define los campos y las opciones
-		$scope.filtros =
-            {
-            	Fecha: {
-            		//Carga la data del control
-            		dataSource: new DevExpress.data.ArrayStore({
-            			data: items_Fecha,
-            			key: "ID"
-            		}),
-            		displayExpr: "Texto",
-            		value: items_Fecha[1],
+	//Define los campos y las opciones
+	$scope.filtros =
+		{
+			Fecha: {
+				//Carga la data del control
+				dataSource: new DevExpress.data.ArrayStore({
+					data: items_Fecha,
+					key: "ID"
+				}),
+				displayExpr: "Texto",
+				value: items_Fecha[1],
 
-            		onValueChanged: function (data) {
-            			if (data.value != null) {
-            				Filtro_fecha = data.value.ID;
-            			} else {
-            				Filtro_fecha = 1;
-            			}
-            		}
-            	},
-            	EstadoRecibo: {
-            		searchEnabled: true,
-            		//Carga la data del control
-            		dataSource: new DevExpress.data.ArrayStore({
-            			data: items_recibo,
-            			key: "ID"
-            		}),
-            		displayExpr: "Descripcion",
-            		Enabled: true,
-            		placeholder: "Seleccione un Item",
-            		onValueChanged: function (data) {
-            			estado_recibo = (data.value == null) ? "*" : data.value.ID;
-            		}
-            	},
-            	NumeroDocumento: {
-            		placeholder: "Ingrese Número Documento",
-            		onValueChanged: function (data) {
-            			numero_documento = data.value;
-            		}
-            	}
-            }
+				onValueChanged: function (data) {
+					if (data.value != null) {
+						Filtro_fecha = data.value.ID;
+					} else {
+						Filtro_fecha = 1;
+					}
+				}
+			},
 
-		$("#FechaFinal").dxDateBox({ min: now });
-		$("#FechaInicial").dxDateBox({ max: now });
-		validarEstado();
-		//consultar();
-	}
+			NumeroDocumento: {
+				placeholder: "Ingrese Número Documento",
+				onValueChanged: function (data) {
+					numero_documento = (data.value == null) ? "" : data.value;
+				}
+			}
+		}
+
+	$("#FechaFinal").dxDateBox({ min: now });
+	$("#FechaInicial").dxDateBox({ max: now });
+	//validarEstado();
+	//consultar();
+
 
 	$scope.ButtonOptionsConsultar = {
 		text: 'Consultar',
@@ -361,10 +370,26 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
         	cellTemplate: function (container, options) {
         		$("<div>").append($(ControlEstadoPago(options.data.CodEstado, options.data.EstadoFactura))).appendTo(container);
         	}
-        }, {
-        	caption: "Adquiriente",
-        	dataField: "StrEmpresaAdquiriente"
         },
+		{
+			caption: "Forma Pago",
+			dataField: "Franquicia",
+			width: '90px',
+			alignment: "center",
+			cellTemplate: function (container, options) {
+
+				if (options.data.Franquicia != "") {
+					var titulo = (options.data.Franquicia != "") ? "title = " + options.data.Franquicia : "";
+
+					$('<img src="/Scripts/Images/' + options.data.Franquicia + '.png"  ' + titulo + ' />')
+							.appendTo(container);
+				}
+			}
+		},
+		{
+			caption: "Adquiriente",
+			dataField: "StrEmpresaAdquiriente"
+		},
 
               {
               	caption: "Nombre Adquiriente",
@@ -409,7 +434,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 						valueFormat: "currency"
 					}]
                     , totalItems: [{
-                    	name: "Suma",                    	
+                    	name: "Suma",
                     	displayFormat: "{0}",
                     	valueFormat: "currency",
                     	summaryType: "custom"
@@ -465,7 +490,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 	var now = new Date();
 	var Estado;
-	var ResolucionesPrefijo;
+	var ResolucionesPrefijo = [];
 
 	var codigo_facturador = "",
            numero_documento = "",
@@ -800,7 +825,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 						valueFormat: "currency"
 					}]
                     , totalItems: [{
-                    	name: "Suma",                    	
+                    	name: "Suma",
                     	displayFormat: "{0}",
                     	valueFormat: "currency",
                     	summaryType: "custom"

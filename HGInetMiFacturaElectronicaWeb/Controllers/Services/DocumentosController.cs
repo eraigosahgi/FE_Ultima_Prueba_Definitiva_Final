@@ -1171,7 +1171,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					EstadoEnvioMail = d.EstadoEnvioMail,// DescripcionEstadoEmail(Convert.ToInt16(d.EstadoEnvioMail)),
 					MensajeEnvio = d.MensajeEnvio,// DescripcionMensajeEmail(Convert.ToInt16(d.MensajeEnvio)),
 					d.EnvioMail
-				});				
+				});
 
 				return Ok(resultado);
 			}
@@ -1313,6 +1313,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
+
+				try
+				{
+					codigo_facturador = Sesion.DatosUsuario.StrEmpresa;
+				}
+				catch (Exception)
+				{					
+				}
+
+
 				var datos = Pago.ObtenerPagosFacturador(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
 
 
@@ -1334,9 +1344,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					CodEstado = d.IntEstadoPago,
 					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
 					StrIdRegistro = d.StrIdRegistro,
-					StrIdSeguridadDoc = d.StrIdSeguridadDoc
-
-
+					StrIdSeguridadDoc = d.StrIdSeguridadDoc,
+					Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" :  d.StrCodigoFranquicia.ToUpper()
 				});
 
 				return Ok(retorno);
