@@ -42,7 +42,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 	cargarFiltros();
 
-	function cargarFiltros() {		
+	function cargarFiltros() {
 
 		$("#FechaInicial").dxDateBox({
 			value: now,
@@ -124,7 +124,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		});
 
 
-		
+
 		//Define los campos y las opciones
 		$scope.filtros =
             {
@@ -163,7 +163,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
             		placeholder: "Ingrese Número Documento",
             		showClearButton: true,
             		onValueChanged: function (data) {
-            			numero_documento = data.value;
+            			numero_documento = (data.value == null) ? "" : data.value;
             		}
             	}
             }
