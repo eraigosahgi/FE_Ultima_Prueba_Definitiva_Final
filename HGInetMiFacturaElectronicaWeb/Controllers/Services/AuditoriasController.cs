@@ -139,13 +139,36 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/ConsultaAuditoria")]
-		public IHttpActionResult ConsultaAuditoria(DateTime fecha_inicio, DateTime fecha_fin, string identificacion_obligado, string estado, string proceso, string tipo_registro, string procedencia, string numero_documento,int Desde, int Hasta)
+		public IHttpActionResult ConsultaAuditoria(DateTime fecha_inicio, DateTime fecha_fin, string identificacion_obligado, string estado, string proceso, string tipo_registro, string procedencia, string numero_documento, int Desde, int Hasta)
 		{
 			try
 			{
 
 				//Valida los datos de la sesión.
 				//Sesion.ValidarSesion();
+
+				//Con este proceso no validamos si tiene el permiso o no, porque este servicio es llamado desde varias partes, sin importar si este en la plataforma autenticado
+				string usuario = string.Empty;
+				string empresa = string.Empty;
+				bool muestra_detalle = false;
+				try
+				{
+					usuario = Sesion.DatosUsuario.StrUsuario;
+					empresa = Sesion.DatosUsuario.StrEmpresa;
+					if (!string.IsNullOrEmpty(usuario) && !string.IsNullOrEmpty(empresa))
+					{
+						Ctl_OpcionesUsuario _opciones = new Ctl_OpcionesUsuario();
+						var datos = _opciones.ObtenerPermiso(usuario, empresa, 1347); //Permiso de auditoria
+						//Validamos si tiene el permiso de auditoria
+						if (datos != null)
+						{
+							//luego retornamos el permiso de gestión
+							muestra_detalle = datos.IntGestion;
+						}
+					}
+				}
+				catch (Exception)
+				{}
 
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
 
@@ -177,7 +200,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					StrDesProcesadoPor = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Procedencia>(d.IntIdProcesadoPor)),
 					StrRealizadoPor = (!string.IsNullOrWhiteSpace(d.StrRealizadoPor)) ? NombreUsuario(new Guid(d.StrRealizadoPor)) : string.Empty,
 					StrNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.StrNumero),
-
+					mostrar_detalle = muestra_detalle
 				}).ToList();
 
 				return Ok(datos_retorno);
@@ -227,7 +250,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}).ToList();
 
 				return Ok(datos_retorno);
-				
+
 			}
 			catch (Exception excepcion)
 			{

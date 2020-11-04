@@ -261,6 +261,8 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 			fecha_fin = now.toISOString();
 		var cod_facturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? "*" : txt_hgi_Facturador;
 		SrvAuditoria.ConsultaAuditoria(fecha_inicio, fecha_fin, cod_facturador, numero_documento, estado_dian, proceso_doc, tipo_registro, procedencia_proceso, Desde, Hasta).then(function (data) {
+			var mostrar_detalle = data[0].mostrar_detalle;
+
 			$('#wait').hide();
 			$('#waitRegistros').show();
 
@@ -364,95 +366,98 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 
 				//**************************************************************
 				masterDetail: {
-					enabled: true,
+					enabled: mostrar_detalle,
 					template: function (container, options) {
+						//Si tiene el permiso de gestión, entonces muestra el detalle
+						if (mostrar_detalle) {
+							container.append($('<h4 class="form-control">MENSAJE:</h4><pre style="width:100%"> ' + options.data.StrMensaje + '</pre><br/>'));
 
-						container.append($('<h4 class="form-control">MENSAJE:</h4><pre style="width:100%"> ' + options.data.StrMensaje + '</pre><br/>'));
+							if (options.data.IntIdProceso == 8 || options.data.IntIdProceso == 10) {
 
-						if (options.data.IntIdProceso == 8 || options.data.IntIdProceso == 10) {
+								if (options.data.StrResultadoProceso)
+									container.append($('<h4 class="form-control">RESPUESTA:</h4><span><p style="width:10%"> ' + options.data.StrResultadoProceso + '</p></span>'));
 
-							if (options.data.StrResultadoProceso)
-								container.append($('<h4 class="form-control">RESPUESTA:</h4><span><p style="width:10%"> ' + options.data.StrResultadoProceso + '</p></span>'));
+								if (options.data.StrResultadoProceso) {
+									$http.get('/api/DetallesRespuesta?id_proceso=' + options.data.IntIdProceso + '&respuesta=' + options.data.StrResultadoProceso).then(function (response) {
 
-							if (options.data.StrResultadoProceso) {
-								$http.get('/api/DetallesRespuesta?id_proceso=' + options.data.IntIdProceso + '&respuesta=' + options.data.StrResultadoProceso).then(function (response) {
+										if (response.data != null) {
+											container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4></br><label><b>Fecha Envío: </b> ' + response.data.Recibido + '</label></br><label><b>ID Remitente : </b> '
+											+ response.data.IdRemitente + '</label></br><label><b>ID Contacto : </b> ' + response.data.IdContacto + '</label></br><label><b>Cantidad Adjuntos: </b> '
+											+ response.data.Adjuntos + '</label></br><div id="json"></div>'));
 
-									if (response.data != null) {
-										container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4></br><label><b>Fecha Envío: </b> ' + response.data.Recibido + '</label></br><label><b>ID Remitente : </b> '
-										+ response.data.IdRemitente + '</label></br><label><b>ID Contacto : </b> ' + response.data.IdContacto + '</label></br><label><b>Cantidad Adjuntos: </b> '
-										+ response.data.Adjuntos + '</label></br><div id="json"></div>'));
+											$("#json").dxDataGrid({
+												dataSource: response.data.Seguimiento,
+												allowColumnResizing: true,
+												allowColumnReordering: true,
+												paging: {
+													pageSize: 10
+												},
+												pager: {
+													showPageSizeSelector: true,
+													allowedPageSizes: [5, 10, 20],
+													showInfo: true
+												}, loadPanel: {
+													enabled: true
+												},
+												columns: [{
+													caption: "Fecha Proceso",
+													dataField: "FechaEvento",
+													dataType: "date",
+													format: "yyyy-MM-dd HH:mm:ss",
+												},
+												{
+													dataField: "Tipo Proceso",
+													caption: "TipoEvento",
+													cellTemplate: function (container, options) {
+														$("<div>").append($(ControlTipoEventoMail(options.data.TipoEvento))).appendTo(container);
+													}
+												},
+												]
+											}, function (response) {
+												$('#wait').hide();
+												DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+											});
+										}
+									});
+								}
+							} else {
+								var cadena_inicio = options.data.StrResultadoProceso.substring(0, 4);
 
-										$("#json").dxDataGrid({
-											dataSource: response.data.Seguimiento,
-											allowColumnResizing: true,
-											allowColumnReordering: true,
-											paging: {
-												pageSize: 10
-											},
-											pager: {
-												showPageSizeSelector: true,
-												allowedPageSizes: [5, 10, 20],
-												showInfo: true
-											}, loadPanel: {
-												enabled: true
-											},
-											columns: [{
-												caption: "Fecha Proceso",
-												dataField: "FechaEvento",
-												dataType: "date",
-												format: "yyyy-MM-dd HH:mm:ss",
-											},
-											{
-												dataField: "Tipo Proceso",
-												caption: "TipoEvento",
-												cellTemplate: function (container, options) {
-													$("<div>").append($(ControlTipoEventoMail(options.data.TipoEvento))).appendTo(container);
-												}
-											},
-											]
-										}, function (response) {
-											$('#wait').hide();
-											DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-										});
+								//Valida si el mensaje de respuesta inicia con http y lo añade como link.
+								if (cadena_inicio == "http") {
+									container.append($('<h4 class="form-control">RESPUESTA:</h4><pre><a style="margin-left:5%;" target="_blank" href="' + options.data.StrResultadoProceso + '">' + options.data.StrResultadoProceso + '</a></pre>'));
+								}
+									//Valida si la cadena inicia con {
+								else if (options.data.StrResultadoProceso.substring(0, 1) == "{") {
+									container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4>'));
+
+									var datos = angular.fromJson(options.data.StrResultadoProceso)
+
+									var code_html = "";
+									//Recorre una cadena json y la carga en código html propiedad por propiedad.
+									for (var prop in datos) {
+
+										code_html = code_html + '<label><b>' + prop + ':</b></label>';
+
+										cadena_inicio = datos[prop].toString().substring(0, 4)
+
+										//Valida si el valor de la propiedad es una ruta.
+										if (cadena_inicio == "http")
+											code_html = code_html + '<a style="margin-left:5%;" target="_blank" href="' + datos[prop] + '">' + datos[prop] + '</a></br>';
+										else
+											code_html = code_html + '<label>' + datos[prop] + '</label></br>';
 									}
-								});
-							}
-						} else {
-							var cadena_inicio = options.data.StrResultadoProceso.substring(0, 4);
 
-							//Valida si el mensaje de respuesta inicia con http y lo añade como link.
-							if (cadena_inicio == "http") {
-								container.append($('<h4 class="form-control">RESPUESTA:</h4><pre><a style="margin-left:5%;" target="_blank" href="' + options.data.StrResultadoProceso + '">' + options.data.StrResultadoProceso + '</a></pre>'));
-							}
-								//Valida si la cadena inicia con {
-							else if (options.data.StrResultadoProceso.substring(0, 1) == "{") {
-								container.append($('<h4 class="form-control">DETALLES RESPUESTA:</h4>'));
+									container.append($('<pre>' + code_html + '</pre>'));
 
-								var datos = angular.fromJson(options.data.StrResultadoProceso)
-
-								var code_html = "";
-								//Recorre una cadena json y la carga en código html propiedad por propiedad.
-								for (var prop in datos) {
-
-									code_html = code_html + '<label><b>' + prop + ':</b></label>';
-
-									cadena_inicio = datos[prop].toString().substring(0, 4)
-
-									//Valida si el valor de la propiedad es una ruta.
-									if (cadena_inicio == "http")
-										code_html = code_html + '<a style="margin-left:5%;" target="_blank" href="' + datos[prop] + '">' + datos[prop] + '</a></br>';
-									else
-										code_html = code_html + '<label>' + datos[prop] + '</label></br>';
+								}
+								else if (options.data.StrResultadoProceso) {
+									container.append($('<h4 class="form-control">RESPUESTA:</h4><span><p style="width:10%"> ' + options.data.StrResultadoProceso + '</p></span>'));
 								}
 
-								container.append($('<pre>' + code_html + '</pre>'));
-
 							}
-							else if (options.data.StrResultadoProceso) {
-								container.append($('<h4 class="form-control">RESPUESTA:</h4><span><p style="width:10%"> ' + options.data.StrResultadoProceso + '</p></span>'));
-							}
-
 						}
+
 					}
 				},
 				filterRow: {
@@ -491,8 +496,11 @@ AudAdminApp.controller('AudAdminController', function AudAdminController($scope,
 	function cargarAuditoria(data) {
 		if (data != "") {
 			data.forEach(function (d) {
-				Auditoria = d;
-				AlmacenAuditoria.push([{ type: "insert", data: Auditoria }]);
+				try {
+					Auditoria = d;
+					AlmacenAuditoria.push([{ type: "insert", data: Auditoria }]);
+				} catch (e) {
+				}
 			});
 		}
 	}
