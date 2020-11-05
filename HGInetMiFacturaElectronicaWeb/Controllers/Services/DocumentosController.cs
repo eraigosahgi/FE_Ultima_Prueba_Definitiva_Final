@@ -132,7 +132,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					MensajeEnvio = d.MensajeEnvio,// DescripcionMensajeEmail(Convert.ToInt16(d.MensajeEnvio)),
 					d.EnvioMail,
 					poseeIdComercio = d.poseeIdComercio,
-					FacturaCenlada = d.FacturaCancelada,
+					FacturaCancelada = d.FacturaCancelada,
 					PagosParciales = d.PagosParciales
 					//Telefono = d.TblEmpresasFacturador.StrTelefono,
 				});
@@ -1384,8 +1384,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
-
-				var datos = Pago.ObtenerPagosAdquiriente(empresa.StrIdentificacion, numero_documento, empresa.StrIdentificacion, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
+				
+				var datos = Pago.ObtenerPagosAdquiriente(codigo_facturador, numero_documento, empresa.StrIdentificacion, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
 
 
 				if (datos == null)
@@ -1406,7 +1406,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					CodEstado = d.IntEstadoPago,
 					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
 					StrIdRegistro = d.StrIdRegistro,
-					StrIdSeguridadDoc = d.StrIdSeguridadDoc
+					StrIdSeguridadDoc = d.StrIdSeguridadDoc,
+					Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper()
 				});
 
 				return Ok(retorno);

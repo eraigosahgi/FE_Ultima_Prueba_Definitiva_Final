@@ -513,14 +513,36 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 	$scope.CantidaddocPendientes = 0;
 
+	$("#FechaInicial").dxDateBox({
+		value: now,
+		width: '100%',
+		displayFormat: "yyyy-MM-dd",
+		onValueChanged: function (data) {
+			fecha_inicio = new Date(data.value).toISOString();
+			$("#FechaFinal").dxDateBox({ min: fecha_inicio });
+		}
 
-	SrvMaestrosEnum.ObtenerSesion().then(function (data) {
-		codigo_facturador = data[0].Identificacion;
+	});
 
-		SrvMaestrosEnum.ObtenerEnum(4).then(function (dataacuse) {
-			items_recibo = dataacuse;
-			cargarFiltros();
-		});
+	$("#FechaFinal").dxDateBox({
+		value: now,
+		width: '100%',
+		displayFormat: "yyyy-MM-dd",
+		onValueChanged: function (data) {
+			fecha_fin = new Date(data.value).toISOString();
+			$("#FechaInicial").dxDateBox({ max: fecha_fin });
+		}
+
+	});
+
+
+	//SrvMaestrosEnum.ObtenerSesion().then(function (data) {
+	//	codigo_facturador = data[0].Identificacion;		
+	//});
+
+	SrvMaestrosEnum.ObtenerEnum(4).then(function (dataacuse) {
+		items_recibo = dataacuse;
+		cargarFiltros();
 	});
 
 
@@ -529,27 +551,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 	});
 
 	function cargarFiltros() {
-		$("#FechaInicial").dxDateBox({
-			value: now,
-			width: '100%',
-			displayFormat: "yyyy-MM-dd",
-			onValueChanged: function (data) {
-				fecha_inicio = new Date(data.value).toISOString();
-				$("#FechaFinal").dxDateBox({ min: fecha_inicio });
-			}
-
-		});
-
-		$("#FechaFinal").dxDateBox({
-			value: now,
-			width: '100%',
-			displayFormat: "yyyy-MM-dd",
-			onValueChanged: function (data) {
-				fecha_fin = new Date(data.value).toISOString();
-				$("#FechaInicial").dxDateBox({ max: fecha_fin });
-			}
-
-		});
+		
 
 
 		//Define los campos y las opciones
@@ -590,7 +592,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
             	NumeroDocumento: {
             		placeholder: "Ingrese Número Documento",
             		onValueChanged: function (data) {
-            			numero_documento = data.value;
+            			numero_documento = (data.value == null) ? "" : data.value;
             		}
             	},
             	Adquiriente: {
@@ -777,6 +779,21 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
         		$("<div>").append($(ControlEstadoPago(options.data.CodEstado, options.data.EstadoFactura))).appendTo(container);
         	}
         },
+		{
+			caption: "Forma Pago",
+			dataField: "Franquicia",
+			width: '90px',
+			alignment: "center",
+			cellTemplate: function (container, options) {
+
+				if (options.data.Franquicia != "") {
+					var titulo = (options.data.Franquicia != "") ? "title = " + options.data.Franquicia : "";
+
+					$('<img src="/Scripts/Images/' + options.data.Franquicia + '.png"  ' + titulo + ' />')
+							.appendTo(container);
+				}
+			}
+		},
              {
              	caption: "Facturador",
              	dataField: "StrEmpresaAdquiriente"

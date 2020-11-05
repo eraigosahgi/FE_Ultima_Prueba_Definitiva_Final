@@ -169,7 +169,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					try
 					{
 						Ctl_DocumentosAudit _auditoria = new Ctl_DocumentosAudit();
-						_auditoria.Crear(datos_registro.TblDocumentos.StrIdSeguridad, Guid.Empty, datos_registro.TblDocumentos.StrEmpresaFacturador, ProcesoEstado.PagoDocumento, TipoRegistro.Actualizacion, Procedencia.Usuario, string.Empty,string.Format("Actualizando estado del pago"), datos_pago.StrMensajeVerificacion, datos_registro.TblDocumentos.StrPrefijo, datos_registro.TblDocumentos.IntNumero.ToString());
+						_auditoria.Crear(datos_registro.TblDocumentos.StrIdSeguridad, Guid.Empty, datos_registro.TblDocumentos.StrEmpresaFacturador, ProcesoEstado.PagoDocumento, TipoRegistro.Actualizacion, Procedencia.Usuario, string.Empty, string.Format("Actualizando estado del pago"), datos_pago.StrMensajeVerificacion, datos_registro.TblDocumentos.StrPrefijo, datos_registro.TblDocumentos.IntNumero.ToString());
 					}
 					catch (Exception) { }
 				}
@@ -220,8 +220,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			try
 			{
 				List<TblPagosElectronicos> lista_pagos = (from pago in context.TblPagosElectronicos
-												   where pago.StrIdSeguridadDoc == id_seguridad_doc												   
-												   select pago).ToList();
+														  where pago.StrIdSeguridadDoc == id_seguridad_doc
+														  select pago).ToList();
 
 				return lista_pagos;
 			}
@@ -301,10 +301,10 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				decimal Datos_pago = 0;
 				if (Pagos > 0)
 				{
-				Datos_pago = (from pagos in context.TblPagosElectronicos
-							  where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
-							   && pagos.IntEstadoPago == Aprobado
-							  select pagos.IntValorPago).Sum();
+					Datos_pago = (from pagos in context.TblPagosElectronicos
+								  where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+								   && pagos.IntEstadoPago == Aprobado
+								  select pagos.IntValorPago).Sum();
 				}
 
 
@@ -469,12 +469,17 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			if (string.IsNullOrWhiteSpace(estado_recibo))
 				estado_recibo = "*";
 
+			if (string.IsNullOrEmpty(codigo_facturador) || codigo_facturador == "null")
+			{
+				codigo_facturador = "*";
+			}
+
 
 			var documentos = (from Pagos in context.TblPagosElectronicos
 							  where Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_adquiriente)
 							  && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
 							  && ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)
-							  && (Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_facturador))
+							  && (Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
 							  && (Pagos.IntEstadoPago == cod_estado_recibo || estado_recibo.Equals("*"))
 							  && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))
 							  orderby Pagos.DatFechaRegistro descending
@@ -619,7 +624,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						//consulta la resolución para obtener el comercio que tiene asociado.
 						Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
 						TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
-						
+
 						//Valida que la resolución no sea null.
 						if (datos_resolucion != null)
 						{
@@ -686,7 +691,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						//ObjPago.StrComercioIdRuta = pasarela.RutaComercio;
 						//ObjPago.StrCodigoServicio = pasarela.CodigoServicio;
 						//ObjPago.IntPasarela = 1;//Pasarela por defecto es 1 Zona de pagos
-						
+
 						//Obtiene el plan de transacciones.
 						Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 						TblPlanesTransacciones datos_plan = clase_planes.ObtenerIdSeguridad(id_seguridad);

@@ -335,17 +335,21 @@ App.controller('DocAdquirienteController', function DocAdquirienteController($sc
                 	///Opción de pago
                 	cssClass: "col-md-1 ",
                 	caption: "Pago",
-                	width: "80px",
+                	width: "120px",
                 	alignment: "center",
 
                 	cellTemplate: function (container, options) {
                 		if (options.data.Estado != 400) {
                 			var RazonSocial = options.data.Facturador.replace(" ", "_%%_");
-                			var click = "onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "')";
+                			var click = " onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "')";
+
+
+                			var boton_pagar = '<div  ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-success dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Pagar" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Pagar</span></div></div>'
+
 
                 			var imagen = "";
                 			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1) {
-                				imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Pagar</a>";
+                				imagen = boton_pagar;//  "<a " + click + " style='font-size: 20px !important; color: #4caf50;' class='icon dx-icon-money' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' ></a><a " + click + " style='font-size: 16px !important; color: black;' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Pagar</a>";
                 			} else {
                 				imagen = "";
 
@@ -706,16 +710,21 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
 			}
 
 			//-------------------------
-			var Vpago = window.open("", "Pagos", "width=10,height=10");
-			if (Vpago == null || Vpago == undefined) {
-				$("#button").dxButton({ visible: false });
-				DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
-			} else {
-				$("#button").dxButton({
-					text: "Pagar",
-					type: "success",
-					useSubmitBehavior: true
-				});
+			//Esta validación es solo la primera vez
+			if ($scope.NumVerificacion == 1) {
+				var Vpago = window.open("", "Pagos", "width=10,height=10");
+				if (Vpago == null || Vpago == undefined) {
+					$("#button").dxButton({ visible: false });
+					DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
+				} else {
+					$("#button").dxButton({
+						text: "Pagar",
+						type: "success",
+						icon: 'money',
+						useSubmitBehavior: true
+					});
+
+				}
 				Vpago.close();
 			}
 			//-------------------------
@@ -833,10 +842,14 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
 				//Ruta servicio
 				var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
 				$scope.Idregistro = response.data.IdRegistro;
-				var Vpago = window.open(RutaServicio + response.data.Ruta, "_blank");
+
+				var alto_pantalla = $(window).height() - 10;
+				var ancho_pantalla = $(window).width() - 10;
+
+				var Vpago2 = window.open(RutaServicio + response.data.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
 				$timeout(function callAtTimeout() {
 					VerificarEstado();
-				}, 60000);
+				}, 90000);
 
 			}, function (error) {
 
@@ -865,7 +878,7 @@ App.controller('ModalPagosController', function ModalPagosController($scope, $ro
 		if ($scope.pagoenVerificacion) {
 			$timeout(function callAtTimeout() {
 				VerificarEstado();
-			}, 60000);
+			}, 90000);
 		}
 	}
 
