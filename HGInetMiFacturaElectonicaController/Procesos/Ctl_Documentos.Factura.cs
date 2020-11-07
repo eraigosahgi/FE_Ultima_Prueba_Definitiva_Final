@@ -144,7 +144,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Valida si hay items de una lista que no esten en otra
 					List<string> resol = resoluciones_docs.Except(resoluciones_bd, StringComparer.OrdinalIgnoreCase).ToList();
 
-					if (resol != null || resol.Count > 0)
+					if ((resol != null || resol.Count > 0) && documentos[0].TipoOperacion != 50)
 					{
 						// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
 						lista_resolucion = new List<TblEmpresasResoluciones>();
@@ -534,10 +534,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (item_respuesta.Error == null)
 				item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
 			//Si el estado es menor a firmado, la respuesta del estado siempre
-			if (item_respuesta.IdProceso < (short)ProcesoEstado.FirmaXml.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.Recibido.GetHashCode())
+			if (item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode() && (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
+				//Se actualiza el estado del documento en BD para que lo envien de nuevo
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
+
+				if ((numero_documento != null) && (item_respuesta.IdProceso > (short) ProcesoEstado.Recepcion.GetHashCode() || item_respuesta.IdProceso < (short) ProcesoEstado.EnvioZip.GetHashCode()))
+				{
+					numero_documento.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+					numero_documento = num_doc.Actualizar(numero_documento);
+					if (string.IsNullOrEmpty(item_respuesta.Error.Mensaje))
+						item_respuesta.Error.Mensaje = "Se presentó inconsistencia al procesar el documento, enviar de nuevo el documento";
+				}
+
 				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
 				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+
 			}
 			else if (item_respuesta.IdProceso == (short) ProcesoEstado.EnvioZip.GetHashCode())
 			{

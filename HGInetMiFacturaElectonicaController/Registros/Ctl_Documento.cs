@@ -1192,7 +1192,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				//Valida que los parametros sean correctos.
 				if (documentos == null || documentos.Count == 0)
-					throw new ApplicationException("No se encontraron documentos para calcular.");
+					throw new ApplicationException("No se encontraron documentos para calcular el Cufe.");
 
 				Ctl_Empresa Peticion = new Ctl_Empresa();
 

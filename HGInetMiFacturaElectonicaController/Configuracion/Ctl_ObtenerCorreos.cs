@@ -18,6 +18,7 @@ using LibreriaGlobalHGInet.Funciones;
 using Newtonsoft.Json;
 using Microsoft.VisualBasic.FileIO;
 using System.Data.SqlClient;
+using HGInetFirmaDigital;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -62,6 +63,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				log_categoria = MensajeCategoria.Convertir;
 				log_accion = MensajeAccion.creacion;
 				ProcesarCsv(ruta_archivo, ',');
+				EliminarVacios();
 				
 			}
 			catch (Exception exec)
@@ -302,6 +304,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 
 			return respuesta;
+		}
+
+		public void EliminarVacios()
+		{
+			string query = "delete from TblCorreosRecepcion WHERE StrMailRegistrado = 'NULL'";
+
+			var datos = context.Database.ExecuteSqlCommand(query);
+
 		}
 
 
