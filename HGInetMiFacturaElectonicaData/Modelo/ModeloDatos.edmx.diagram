@@ -37,7 +37,7 @@
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasFacturador" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblPlanesTransacciones" />
-        <EntityTypeShape EntityType="Modelo.TblPagosElectronicos" Width="1.75" PointX="16.75" PointY="6.875" />
+        <EntityTypeShape EntityType="Modelo.TblPagosElectronicos" Width="1.875" PointX="16.75" PointY="6.875" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblDocumentos" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
         </Diagram>

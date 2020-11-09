@@ -286,7 +286,6 @@
           <Property Name="StrCampo1" Type="varchar" MaxLength="50" />
           <Property Name="StrCampo2" Type="varchar" MaxLength="50" />
           <Property Name="StrCampo3" Type="varchar" MaxLength="50" />
-          <Property Name="StrFormaPago" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="TblPerfiles">
           <Key>
@@ -1351,7 +1350,6 @@
           <Property Name="StrCampo1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrCampo2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrCampo3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrFormaPago" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblPagosElectronicos_TblDocumentos" FromRole="TblPagosElectronicos" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" FromRole="TblPagosElectronicos" ToRole="TblPlanesTransacciones" />
         </EntityType>
@@ -1723,7 +1721,6 @@
           <EntitySetMapping Name="TblPagosElectronicos">
             <EntityTypeMapping TypeName="Modelo.TblPagosElectronicos">
               <MappingFragment StoreEntitySet="TblPagosElectronicos">
-                <ScalarProperty Name="StrFormaPago" ColumnName="StrFormaPago" />
                 <ScalarProperty Name="StrCampo3" ColumnName="StrCampo3" />
                 <ScalarProperty Name="StrCampo2" ColumnName="StrCampo2" />
                 <ScalarProperty Name="StrCampo1" ColumnName="StrCampo1" />

@@ -17,8 +17,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblPlanesTransacciones()
         {
-            this.TblPagosElectronicos = new HashSet<TblPagosElectronicos>();
             this.TblDocumentos = new HashSet<TblDocumentos>();
+            this.TblPagosElectronicos = new HashSet<TblPagosElectronicos>();
         }
     
         public System.Guid StrIdSeguridad { get; set; }
@@ -38,11 +38,11 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string DocumentoRef { get; set; }
         public Nullable<System.DateTime> DatFechaInicio { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
         public virtual TblUsuarios TblUsuarios { get; set; }
         public virtual TblEmpresas TblEmpresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
     }
 }
