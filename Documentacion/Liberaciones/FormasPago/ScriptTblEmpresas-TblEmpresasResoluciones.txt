@@ -1,0 +1,16 @@
+/**** TblEmpresasResoluciones ****/
+ALTER TABLE TblEmpresasResoluciones 
+ALTER COLUMN [StrComercioConfigDescrip] varchar(250);
+
+ALTER TABLE TblEmpresasResoluciones 
+ADD  StrComercioConfigIdTC uniqueidentifier NULL;
+
+ALTER TABLE TblEmpresasResoluciones 
+ADD  StrComercioConfigDescripTC varchar(250) NULL;
+
+  
+
+
+/**** TblEmpresas ****/
+ALTER TABLE TblEmpresas 
+ADD  IntManejaPagoE bit default(0);

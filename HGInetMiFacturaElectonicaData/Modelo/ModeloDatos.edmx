@@ -153,6 +153,7 @@
           <Property Name="IntPdfCampoDian" Type="bit" Nullable="false" />
           <Property Name="IntPdfCampoDianPosX" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="IntPdfCampoDianPosY" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="IntManejaPagoE" Type="bit" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -178,7 +179,9 @@
           <Property Name="StrIdSetDian" Type="varchar" MaxLength="50" />
           <Property Name="IntVersionDian" Type="smallint" Nullable="false" />
           <Property Name="StrComercioConfigId" Type="uniqueidentifier" />
-          <Property Name="StrComercioConfigDescrip" Type="varchar" MaxLength="50" />
+          <Property Name="StrComercioConfigDescrip" Type="varchar" MaxLength="250" />
+          <Property Name="StrComercioConfigIdTC" Type="uniqueidentifier" />
+          <Property Name="StrComercioConfigDescripTC" Type="varchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="TblFormatos">
           <Key>
@@ -1080,6 +1083,7 @@
           <Property Name="IntPdfCampoDianPosY" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblEmpresas" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblEmpresas" ToRole="TblDocumentos" />
+          <Property Name="IntManejaPagoE" Type="Boolean" />
         </EntityType>
         <Association Name="FK_TblFormatos_TblEmpresas">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1153,9 +1157,11 @@
           <Property Name="StrIdSetDian" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntVersionDian" Type="Int16" Nullable="false" />
           <Property Name="StrComercioConfigId" Type="Guid" />
-          <Property Name="StrComercioConfigDescrip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrComercioConfigDescrip" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblEmpresasResoluciones" ToRole="TblDocumentos" />
+          <Property Name="StrComercioConfigIdTC" Type="Guid" />
+          <Property Name="StrComercioConfigDescripTC" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1565,6 +1571,7 @@
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntManejaPagoE" ColumnName="IntManejaPagoE" />
                 <ScalarProperty Name="IntPdfCampoDianPosY" ColumnName="IntPdfCampoDianPosY" />
                 <ScalarProperty Name="IntPdfCampoDianPosX" ColumnName="IntPdfCampoDianPosX" />
                 <ScalarProperty Name="IntPdfCampoDian" ColumnName="IntPdfCampoDian" />
@@ -1619,6 +1626,8 @@
           <EntitySetMapping Name="TblEmpresasResoluciones">
             <EntityTypeMapping TypeName="Modelo.TblEmpresasResoluciones">
               <MappingFragment StoreEntitySet="TblEmpresasResoluciones">
+                <ScalarProperty Name="StrComercioConfigDescripTC" ColumnName="StrComercioConfigDescripTC" />
+                <ScalarProperty Name="StrComercioConfigIdTC" ColumnName="StrComercioConfigIdTC" />
                 <ScalarProperty Name="StrComercioConfigDescrip" ColumnName="StrComercioConfigDescrip" />
                 <ScalarProperty Name="StrComercioConfigId" ColumnName="StrComercioConfigId" />
                 <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />

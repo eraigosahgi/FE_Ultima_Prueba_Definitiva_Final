@@ -74,6 +74,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntPdfCampoDian { get; set; }
         public decimal IntPdfCampoDianPosX { get; set; }
         public decimal IntPdfCampoDianPosY { get; set; }
+        public Nullable<bool> IntManejaPagoE { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblFormatos> TblFormatos { get; set; }

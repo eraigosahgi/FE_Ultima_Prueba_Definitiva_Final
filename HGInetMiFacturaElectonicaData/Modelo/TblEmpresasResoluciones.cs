@@ -39,6 +39,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntVersionDian { get; set; }
         public Nullable<System.Guid> StrComercioConfigId { get; set; }
         public string StrComercioConfigDescrip { get; set; }
+        public Nullable<System.Guid> StrComercioConfigIdTC { get; set; }
+        public string StrComercioConfigDescripTC { get; set; }
     
         public virtual TblEmpresas TblEmpresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
