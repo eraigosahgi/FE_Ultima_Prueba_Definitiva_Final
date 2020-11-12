@@ -2954,6 +2954,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
+
 				Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 
 				throw excepcion;
