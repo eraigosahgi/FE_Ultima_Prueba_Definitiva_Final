@@ -802,42 +802,78 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerAcuseTacito(string codigo_facturador, string numero_documento, string codigo_adquiriente)
+		public List<TblDocumentos> ObtenerAcuseTacito(string codigo_facturador, string numero_documento, string codigo_adquiriente, bool sonda = false)
 		{
-			long num_doc = -1;
-			long.TryParse(numero_documento, out num_doc);
+			try
+			{
+				long num_doc = -1;
+				long.TryParse(numero_documento, out num_doc);
 
-			if (string.IsNullOrWhiteSpace(codigo_facturador))
-				codigo_facturador = "*";
-			if (string.IsNullOrWhiteSpace(numero_documento))
-				numero_documento = "*";
-			if (string.IsNullOrWhiteSpace(codigo_adquiriente))
-				codigo_adquiriente = "*";
+				if (string.IsNullOrWhiteSpace(codigo_facturador))
+					codigo_facturador = "*";
+				if (string.IsNullOrWhiteSpace(numero_documento))
+					numero_documento = "*";
+				if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+					codigo_adquiriente = "*";
 
-			int HATP = Convert.ToInt32(Constantes.HorasAcuseTacitoInteroperabilidad.ToString());
+				int HATP = Convert.ToInt32(Constantes.HorasAcuseTacitoInteroperabilidad.ToString());
 
-			int estado_error = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
+				int estado_error = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
 
-			int Enviomail = ProcesoEstado.EnvioZip.GetHashCode();
+				int Enviomail = ProcesoEstado.EnvioZip.GetHashCode();
 
 
-			DateTime FechaActual = Fecha.GetFecha();
+				DateTime FechaActual = Fecha.GetFecha();
 
-			List<TblDocumentos> documentos = (from datos in context.TblDocumentos
-											  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
-											  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-											  where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
-											  && (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
-											  && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
-											  && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
-											  //********************************************************
-											  || ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
-											  && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
-											  && datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error)
+				//context.Configuration.LazyLoadingEnabled = false;
+				List<TblDocumentos> documentos = new List<TblDocumentos>();
 
-											  orderby datos.IntNumero descending
-											  select datos).ToList();
-			return documentos;
+				if (sonda)
+				{
+					Ctl_Empresa _empresa = new Ctl_Empresa();
+					List<TblEmpresas> facturadores = _empresa.ObtenerEmpresaAcuse();
+
+					context.Configuration.LazyLoadingEnabled = false;
+
+					foreach (TblEmpresas item in facturadores)
+					{
+						List<TblDocumentos> docs = new List<TblDocumentos>();
+						docs = (from datos in context.TblDocumentos
+							where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+								  && datos.StrEmpresaFacturador == item.StrIdentificacion
+							      && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
+							               && item.IntAcuseTacito.Value > 0)))
+
+							orderby datos.IntNumero descending
+							select datos).ToList();
+						documentos.AddRange(docs);
+					}
+				}
+				else
+				{
+					documentos = (from datos in context.TblDocumentos
+						join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+						join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+						where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+						      && (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
+						           && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
+						               && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
+						      //********************************************************
+						      || ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
+						          && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
+						          && datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error)
+
+						orderby datos.IntNumero descending
+						select datos).ToList();
+				}
+
+				return documentos;
+			}
+			catch (Exception exception)
+			{
+				RegistroLog.EscribirLog(exception, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+				throw;
+			}
 		}
 
 		#endregion
@@ -2559,7 +2595,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			await Task.Factory.StartNew(() =>
 			{
-				List<TblDocumentos> datos = ObtenerAcuseTacito("*", "*", "*");
+				List<TblDocumentos> datos = ObtenerAcuseTacito("*", "*", "*", true);
 
 				foreach (var item in datos)
 				{
@@ -2569,6 +2605,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 					catch (Exception excepcion)
 					{
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 					}
 				}

@@ -585,7 +585,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (item_respuesta.Error == null)
 				item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
 			//Si el estado es menor a firmado, la respuesta del estado siempre
-			if (item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode() && (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
+			if ((item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode() || (item_respuesta.IdProceso > (short)ProcesoEstado.EnvioEmailAcuse.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.FinalizacionErrorDian.GetHashCode()))
+			    && (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);

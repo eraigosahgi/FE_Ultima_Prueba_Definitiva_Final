@@ -1328,7 +1328,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		#endregion
 
 
+		/// <summary>
+		/// Obtiene todas las empresa asociadas al facturador
+		/// </summary>
+		/// <param name="identificacion">Identificacion de Obligado o Adquiriente</param>
+		/// <returns></returns>
+		public List<TblEmpresas> ObtenerEmpresaAcuse()
+		{
+			context.Configuration.LazyLoadingEnabled = false;
 
+			var datos = (from item in context.TblEmpresas
+				where item.IntAcuseTacito >= 72
+				select item).ToList();
+
+			return datos;
+		}
 
 	}
 }
