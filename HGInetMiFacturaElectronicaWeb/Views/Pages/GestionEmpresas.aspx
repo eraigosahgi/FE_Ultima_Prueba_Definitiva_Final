@@ -54,7 +54,7 @@
 
 							</div>
 							<div class="col-md-12" style="z-index: 9; margin-bottom: 3px;">
-								<div class="col-md-6" style="z-index: 9;">
+								<div class="col-md-4" style="z-index: 9;">
 									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nº Horas acuse:</label>
 									<div id="txtHorasAcuse"></div>
 									<div id="tooltip_txtHorasAcuse">
@@ -71,6 +71,15 @@
 										<div id="tooltip_Anexo">Activa la recepción de archivos anexos en los documentos de Factura Electrónica</div>
 									</div>
 								</div>
+
+								<div class="col-md-4 " style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Maneja Pagos Electrónicos:</label>
+									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
+										<div id="ManejaPagos"></div>
+										<div id="tooltip_ManejaPagos">Indica si el Facturador maneja Pagos  Electrónicos</div>
+									</div>
+								</div>
+
 							</div>
 
 							<div class="dx-fieldset" style="padding: -80px;">
@@ -310,13 +319,13 @@
 			</div>
 		</div>
 
-		<div class="col-md-12" id="PanelCertificado" data-ng-show="ReponsableFacturadorCertificado || Admin" >
+		<div class="col-md-12" id="PanelCertificado" data-ng-show="ReponsableFacturadorCertificado || Admin">
 			<div class="panel panel-white">
 				<div class="panel-heading">
 					<h6 class="panel-title">Certificado</h6>
 				</div>
 				<div class="panel panel-white">
-					
+
 
 					<div class="panel-body">
 						<div class="col-lg-12">
@@ -340,7 +349,7 @@
 									<div class="col-md-12" id="PanelFirmaFacturador" data-ng-show="id_seguridad != ''">
 										<div class="col-md-6">
 
-											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%;" >Proveedor del Certificado:<strom style="color: red;">*</strom></label>
+											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%;">Proveedor del Certificado:<strom style="color: red;">*</strom></label>
 											<div id="cboProveedor"></div>
 
 

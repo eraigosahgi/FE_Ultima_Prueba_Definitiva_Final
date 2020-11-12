@@ -388,6 +388,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntNumUsuarios = empresa.IntNumUsuarios;
 
 					EmpresaActualiza.IntManejaAnexos = empresa.IntManejaAnexos;
+					EmpresaActualiza.IntManejaPagoE = empresa.IntManejaPagoE;
 
 					EmpresaActualiza.StrEmpresaDescuento = empresa.StrEmpresaDescuento;
 					EmpresaActualiza.IntIdEstado = empresa.IntIdEstado;

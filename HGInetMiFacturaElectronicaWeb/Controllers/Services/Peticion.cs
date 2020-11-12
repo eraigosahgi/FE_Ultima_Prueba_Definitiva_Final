@@ -1,6 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using System;
@@ -20,14 +21,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// </summary>
 		/// <param name="DataKey"></param>
 		/// <param name="identificacion_obligado"></param>
-		public static void Validar(string DataKey, string identificacion_obligado)
+		public static TblEmpresas Validar(string DataKey, string identificacion_obligado)
 		{
 			try
 			{
 				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
 
 				//Válida que la key sea correcta.
-				ctl_empresa.Validar(DataKey, identificacion_obligado);
+				TblEmpresas empresa = ctl_empresa.Validar(DataKey, identificacion_obligado);
+
+				return empresa;
 			}
 			catch (Exception excepcion)
 			{
@@ -89,7 +92,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
-			{				
+			{
 			}
 		}
 

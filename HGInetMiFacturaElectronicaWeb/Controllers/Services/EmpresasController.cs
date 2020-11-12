@@ -244,6 +244,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				IntIntegrador = d.IntIntegrador,
 				IntNumUsuarios = d.IntNumUsuarios,
 				IntAnexo = d.IntManejaAnexos,
+				d.IntManejaPagoE,
 				IntEmailRecepcion = d.IntEnvioMailRecepcion,
 				IntAcuseTacito = d.IntAcuseTacito,
 				StrEmpresaDescuenta = ctl_empresa.ObtenerRazonSocial(d.StrEmpresaDescuento),
@@ -340,6 +341,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntIdEstado = ObjEmpresa.IntIdEstado;
 				Empresa.IntCobroPostPago = ObjEmpresa.IntCobroPostPago;
 				Empresa.IntManejaAnexos = ObjEmpresa.IntManejaAnexos;
+				Empresa.IntManejaPagoE = ObjEmpresa.IntManejaPagoE;
 				Empresa.IntEnvioMailRecepcion = ObjEmpresa.IntEnvioMailRecepcion;
 				Empresa.IntVersionDian = ObjEmpresa.IntVersionDian;
 				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(ObjEmpresa.StrEmpresaDescuento) ? ObjEmpresa.StrIdentificacion.Trim() : ObjEmpresa.StrEmpresaDescuento.Trim());

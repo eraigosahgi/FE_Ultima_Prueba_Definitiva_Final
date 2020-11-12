@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController.Registros;
+using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
 using LibreriaGlobalHGInet.Error;
@@ -36,12 +37,18 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				List<PagoElectronicoRespuesta> respuesta = new List<PagoElectronicoRespuesta>();
 
 				//Válida que la key sea correcta.
-				Peticion.Validar(DataKey, Identificacion);
+				TblEmpresas empresa = Peticion.Validar(DataKey, Identificacion);
+
+				//Se valida si la empresa maneja Pagos
+				if (!empresa.IntManejaPagoE)
+				{
+					throw new ApplicationException(string.Format("El Facturador con la identificación {0} no maneja Pagos Electrónicos.", Identificacion));
+				}
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
 				//Obtiene los datos
-				respuesta = ctl_documento.ConsultaPorCodigoRegistro(Identificacion,  CodigosRegistros);
+				respuesta = ctl_documento.ConsultaPorCodigoRegistro(Identificacion, CodigosRegistros);
 
 				//Almacena la petición
 				try

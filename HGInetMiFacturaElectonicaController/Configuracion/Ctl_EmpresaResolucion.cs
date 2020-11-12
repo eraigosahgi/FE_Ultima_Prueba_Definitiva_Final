@@ -77,7 +77,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 
-		
+
 
 
 		/// <summary>
@@ -181,7 +181,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 
 			Ctl_Empresa empresa = new Ctl_Empresa();
-			TblEmpresas empresaBd = empresa.Obtener(obligado,false);
+			TblEmpresas empresaBd = empresa.Obtener(obligado, false);
 
 			List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
@@ -191,7 +191,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					item.Prefijo = string.Empty;
 
 				//Valida si la Resolucion ya existe en BD
-				TblEmpresasResoluciones tbl_resolucion_actual = Obtener(empresaBd.StrIdentificacion, item.NumeroResolucion.ToString(), item.Prefijo,false);
+				TblEmpresasResoluciones tbl_resolucion_actual = Obtener(empresaBd.StrIdentificacion, item.NumeroResolucion.ToString(), item.Prefijo, false);
 
 				// convierte el objeto del servicio a base de datos
 				TblEmpresasResoluciones tbl_resolucion = Convertir(item, empresaBd, setidpruebas);
@@ -236,15 +236,32 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="IdComercio">Guid del id de comercio</param>
 		/// <param name="DescripcionComercio">Descripción de la configuración</param>
 		/// <returns>TblEmpresasResoluciones</returns>
-		public TblEmpresasResoluciones EditarConfigPago(Guid Stridseguridad, bool Permitepagosparciales, Guid IdComercio, string DescripcionComercio)
+		public TblEmpresasResoluciones EditarConfigPago(Guid Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio, string IdComercioTC, string DescripcionComercioTC)
 		{
 			try
 			{
 				TblEmpresasResoluciones tbl = context.TblEmpresasResoluciones.Where(x => x.StrIdSeguridad == Stridseguridad).FirstOrDefault();
 
 				tbl.IntPermiteParciales = Permitepagosparciales;
-				tbl.StrComercioConfigId = IdComercio;
+				try
+				{
+					tbl.StrComercioConfigId = null;
+					tbl.StrComercioConfigId = Guid.Parse(IdComercio);
+				}
+				catch (Exception)
+				{
+				}
 				tbl.StrComercioConfigDescrip = DescripcionComercio;
+				try
+				{
+					tbl.StrComercioConfigIdTC = null;
+					tbl.StrComercioConfigIdTC = Guid.Parse(IdComercioTC);
+				}
+				catch (Exception)
+				{
+				}
+
+				tbl.StrComercioConfigDescripTC = DescripcionComercioTC;
 
 				this.Edit(tbl);
 

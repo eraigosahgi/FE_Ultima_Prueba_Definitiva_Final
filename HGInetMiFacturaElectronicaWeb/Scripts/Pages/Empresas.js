@@ -212,6 +212,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	Datos_empresa_Asociada = "",
 	Datos_Integrador = false,
 	Datos_Anexo = false,
+	Datos_ManejaPagos = false,
 	Datos_EmailRecepcion = false,
 	Datos_Numero_usuarios = 1,
 	Datos_Horas_Acuse = 0;
@@ -763,6 +764,16 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 			});
 
+
+			$("#ManejaPagos").dxCheckBox({
+				name: "ManejaPagos",
+				value: false,
+				onValueChanged: function (data) {
+					Datos_ManejaPagos = data.value;
+				}
+			});
+
+
 			$("#EmailRecepcion").dxCheckBox({
 				name: "EmailRecepcion",
 				value: true,
@@ -784,6 +795,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				consultar();
 				//Si es Facturador Común o Integrador, entonces no debe tener activa la opción de manejar anexos
 				$("#Anexo").dxCheckBox({ readOnly: true });
+				$("#ManejaPagos").dxCheckBox({ readOnly: true });
 				$("#txtRasonSocial").dxTextBox({ readOnly: true });
 			}
 		}
@@ -1218,6 +1230,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			title: "Detalle:"
 		});
 
+		$("#tooltip_ManejaPagos").dxPopover({
+			target: "#ManejaPagos",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
 
 		$("#tooltip_EmailRecepcion").dxPopover({
 			target: "#EmailRecepcion",
@@ -1500,6 +1525,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
 				Datos_Horas_Acuse = response.data[0].IntAcuseTacito;
 				Datos_Anexo = response.data[0].IntAnexo;
+				Datos_ManejaPagos = response.data[0].IntManejaPagoE;
 				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
 				Datos_estado = response.data[0].Estado;
 				Datos_postpago = response.data[0].Postpago;
@@ -1540,6 +1566,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				$("#txtHorasAcuse").dxNumberBox({ value: Datos_Horas_Acuse });
 				if (Datos_Anexo == 1) {
 					$("#Anexo").dxCheckBox({ value: true });
+				}
+
+				if (Datos_ManejaPagos == 1) {
+					$("#ManejaPagos ").dxCheckBox({ value: true });
 				}
 
 				//Proceso de validación de Correo****************************
@@ -1749,6 +1779,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntNumUsuarios: Datos_Numero_usuarios,
 				IntAcuseTacito: Datos_Horas_Acuse,
 				IntManejaAnexos: Datos_Anexo,
+				IntManejaPagoE: Datos_ManejaPagos,
 				IntEnvioMailRecepcion: Datos_EmailRecepcion,
 				StrEmpresaDescuento: empresaDescuenta,
 				IntIdEstado: Datos_estado,

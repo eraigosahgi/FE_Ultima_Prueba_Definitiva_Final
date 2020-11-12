@@ -230,7 +230,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					VersionDian = d.IntVersionDian,
 					ComercioConfigId = d.StrComercioConfigId,
 					ComercioConfigDescrip = d.StrComercioConfigDescrip,
-					SerialCloud = d.TblEmpresas.StrSerialCloudServices
+					SerialCloud = d.TblEmpresas.StrSerialCloudServices,
+					ComercioConfigIdTC = d.StrComercioConfigIdTC,
+					ComercioConfigDescripTC = d.StrComercioConfigDescripTC,
 				});
 
 				return Ok(retorno);
@@ -248,7 +250,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/EditarConfigPago")]
-		public IHttpActionResult EditarConfigPago(string Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio)
+		public IHttpActionResult EditarConfigPago(string Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio, string IdComercioTC, string DescripcionComercioTC)
 		{
 			try
 			{
@@ -256,12 +258,46 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_EmpresaResolucion Controlador = new Ctl_EmpresaResolucion();
 
-				if (string.IsNullOrEmpty(IdComercio))
+				//PSE
+				if (!string.IsNullOrEmpty(DescripcionComercio) || !string.IsNullOrEmpty(IdComercio))
 				{
-					throw new ApplicationException("Id de comercio Invalido");
+					if (string.IsNullOrEmpty(DescripcionComercio))
+					{
+						throw new ApplicationException("Debe indicar una descripción para la configuración de comercio por PSE, o indicar una ruta de pago");
+					}
+					if (string.IsNullOrEmpty(IdComercio) && !DescripcionComercio.ToUpper().Contains("HTTP"))
+					{
+						throw new ApplicationException("Url para PSE Invalido");
+					}
+
+					if (!string.IsNullOrEmpty(IdComercio) && DescripcionComercio.ToUpper().Contains("HTTP"))
+					{
+						throw new ApplicationException("Si esta configurando un Id de comercio para PSE, no puede indicar una ruta http de pago");
+					}
 				}
 
-				var Datos = Controlador.EditarConfigPago(Guid.Parse(Stridseguridad), Permitepagosparciales, Guid.Parse(IdComercio), DescripcionComercio);
+
+				//TDC
+
+
+				if (!string.IsNullOrEmpty(DescripcionComercioTC) || !string.IsNullOrEmpty(IdComercioTC))
+				{
+					if (!string.IsNullOrEmpty(IdComercioTC) && string.IsNullOrEmpty(DescripcionComercioTC))
+					{
+						throw new ApplicationException("Debe indicar una descripción para la configuración de comercio para Tarjeta de Crédito, o indicar una ruta de pago");
+					}
+
+					if (string.IsNullOrEmpty(IdComercioTC) && !DescripcionComercioTC.ToUpper().Contains("HTTP"))
+					{
+						throw new ApplicationException("Url para Tarjeta de Crédito Invalido");
+					}
+
+					if (!string.IsNullOrEmpty(IdComercioTC) && DescripcionComercioTC.ToUpper().Contains("HTTP"))
+					{
+						throw new ApplicationException("Si esta configurando un Id de comercio para PSE, no puede indicar una ruta http de pago");
+					}
+				}
+				var Datos = Controlador.EditarConfigPago(Guid.Parse(Stridseguridad), Permitepagosparciales, IdComercio, DescripcionComercio, IdComercioTC, DescripcionComercioTC);
 
 				return Ok();
 
@@ -290,6 +326,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Sesion.ValidarSesion();
 
 				Ctl_EmpresaResolucion Controlador = new Ctl_EmpresaResolucion();
+
+				try
+				{
+					codigo_facturador = Sesion.DatosUsuario.StrEmpresa;
+				}
+				catch (Exception)
+				{
+				}
 
 				var Datos = Controlador.ObtenerComercios(codigo_facturador, serial_cloudservices);
 
