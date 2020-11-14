@@ -117,7 +117,10 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
         {
             try
             {	// se restringe el acceso al servicio web NOVIEMBRE 16
-				//throw new ApplicationException("El servicio web ConsultaPorFechaElaboracion no se encuentra disponible; por favor realice la consulta mediante el servicio web ConsultaPorCodigoRegistro.");
+				DateTime fecha_control = new DateTime(2020,11,15).Date;
+				DateTime fecha_actual = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha().Date;
+				if (fecha_control < fecha_actual)
+					throw new ApplicationException("El servicio web ConsultaPorFechaElaboracion no se encuentra disponible; por favor realice la consulta mediante el servicio web ConsultaPorCodigoRegistro.");
 				
 				if (string.IsNullOrEmpty(DataKey))
 					throw new ApplicationException("Parámetro DataKey de tipo string inválido.");

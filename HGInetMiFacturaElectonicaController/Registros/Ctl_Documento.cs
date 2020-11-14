@@ -204,6 +204,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Convierte Numeros en una lista.
 				List<string> lista_documentos = Coleccion.ConvertirLista(Numeros);
 
+				//Se restringe la consulta a un número de documentos específicos  NOVIEMBRE 16
+				if (lista_documentos.Count > 100)
+					throw new ApplicationException("Supera el número máximo de 100 registros por consulta.");
+
 				context.Configuration.LazyLoadingEnabled = false;
 
 				var respuesta = from documento in context.TblDocumentos
@@ -264,9 +268,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				List<string> lista_documentos = Coleccion.ConvertirLista(CodigosRegistros);
 
 				//Se restringe la consulta a un número de documentos específicos  NOVIEMBRE 16
-				/*if (lista_documentos.Count > 100)
+				if (lista_documentos.Count > 100)
 					throw new ApplicationException("Supera el número máximo de 100 registros por consulta.");
-				*/
 
 				context.Configuration.LazyLoadingEnabled = false;
 
@@ -802,7 +805,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerAcuseTacito(string codigo_facturador, string numero_documento, string codigo_adquiriente, bool sonda = false)
+		public List<Guid> ObtenerAcuseTacito(string codigo_facturador, string numero_documento, string codigo_adquiriente, bool sonda = false)
 		{
 			try
 			{
@@ -826,7 +829,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				DateTime FechaActual = Fecha.GetFecha();
 
 				//context.Configuration.LazyLoadingEnabled = false;
-				List<TblDocumentos> documentos = new List<TblDocumentos>();
+				List<Guid> documentos = new List<Guid>();
 
 				if (sonda)
 				{
@@ -837,34 +840,57 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					foreach (TblEmpresas item in facturadores)
 					{
-						List<TblDocumentos> docs = new List<TblDocumentos>();
-						docs = (from datos in context.TblDocumentos
-							where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
-								  && datos.StrEmpresaFacturador == item.StrIdentificacion
-							      && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
-							               && item.IntAcuseTacito.Value > 0)))
+						try
+						{
+							//List<Guid> docs = new List<Guid>();
+							List<Guid> docs = (from datos in context.TblDocumentos
+											   where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+													 && datos.StrEmpresaFacturador == item.StrIdentificacion
+													 && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
+															  && item.IntAcuseTacito.Value > 0)))
+											   orderby datos.IntNumero descending
+											   select datos.StrIdSeguridad).ToList();
 
-							orderby datos.IntNumero descending
-							select datos).ToList();
-						documentos.AddRange(docs);
+							if (docs.Count > 0)
+							{
+								foreach (var doc in docs)
+								{
+									try
+									{
+										ActualizarRespuestaAcuse(doc, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), string.Empty);
+									}
+									catch (Exception excepcion)
+									{
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion, item.StrIdentificacion);
+										//Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+									}
+								}
+							}
+
+							documentos.AddRange(docs);
+						}
+						catch (Exception exception)
+						{
+							RegistroLog.EscribirLog(exception, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+						}
 					}
 				}
 				else
 				{
 					documentos = (from datos in context.TblDocumentos
-						join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
-						join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-						where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
-						      && (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
-						           && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
-						               && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
-						      //********************************************************
-						      || ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
-						          && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
-						          && datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error)
+								  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
+								  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
+								  where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+										&& (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
+											 && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
+												 && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
+										//********************************************************
+										|| ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
+											&& (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
+											&& datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error)
 
-						orderby datos.IntNumero descending
-						select datos).ToList();
+								  orderby datos.IntNumero descending
+								  select datos.StrIdSeguridad).ToList();
 				}
 
 				return documentos;
@@ -1437,6 +1463,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -2595,20 +2623,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			await Task.Factory.StartNew(() =>
 			{
-				List<TblDocumentos> datos = ObtenerAcuseTacito("*", "*", "*", true);
+				List<Guid> datos = ObtenerAcuseTacito("*", "*", "*", true);
 
+				//RegistroLog.EscribirLog(new ApplicationException("Guids: " + datos.Count), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+
+				/*
 				foreach (var item in datos)
 				{
 					try
 					{
-						ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), string.Empty);
+						ActualizarRespuestaAcuse(item, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), string.Empty);
 					}
 					catch (Exception excepcion)
 					{
 						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 					}
-				}
+				}*/
 
 				return true;
 			});

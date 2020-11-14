@@ -1148,6 +1148,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (precioref == null)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} para informar muestra y/o regalo del detalle no está bien formado", "PrecioReferencia", Docdet.ProductoGratisPrecioRef));
 						}
+						else if (Docdet.DescuentoPorcentaje == 100)
+							throw new ApplicationException(string.Format("El campo {0} con valor {1} para informar no es permitido,este item debe manejarse como muestra y/o regalo", "DescuentoPorcentaje", Docdet.DescuentoPorcentaje));
 
 						decimal subtotal_calculado = decimal.Round((Docdet.Cantidad * Docdet.ValorUnitario) - Docdet.DescuentoValor, 2,MidpointRounding.AwayFromZero);
 						if (!Numero.Tolerancia(subtotal_calculado, Docdet.ValorSubtotal, 2) && Docdet.ProductoGratis == false)

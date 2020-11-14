@@ -551,7 +551,25 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 				//PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				List<TblDocumentos> datos = ctl_documento.ObtenerAcuseTacito(codigo_facturador, numero_documento, codigo_adquiriente);
+				List<Guid> guids = ctl_documento.ObtenerAcuseTacito(codigo_facturador, numero_documento, codigo_adquiriente);
+
+				List<TblDocumentos> datos = new List<TblDocumentos>();
+
+				foreach (var item in guids)
+				{
+					try
+					{
+						datos.AddRange(ctl_documento.ObtenerPorIdSeguridad(item));
+						
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e);
+						throw;
+					}
+					
+				}
+
 
 				var retorno = datos.Select(d => new
 				{
@@ -575,6 +593,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaServDian = (d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					XmlAcuse = d.StrUrlAcuseUbl
 				});
+
+					
 
 				return Ok(retorno);
 			}
