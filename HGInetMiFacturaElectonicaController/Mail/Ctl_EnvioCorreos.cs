@@ -686,7 +686,7 @@ namespace HGInetMiFacturaElectonicaController
 						bool IdPago = false;
 
 						if (documento.TblEmpresasResoluciones != null)
-							IdPago = (documento.TblEmpresasResoluciones.StrComercioConfigId == null) ? false : true;
+							IdPago = (documento.TblEmpresasFacturador.IntManejaPagoE) ? true : false;
 
 						if (doc_tipo == TipoDocumento.Factura && IdPago)
 						{
@@ -1059,7 +1059,7 @@ namespace HGInetMiFacturaElectonicaController
 						bool IdPago = false;
 
 						if (documento.TblEmpresasResoluciones != null)
-							IdPago = (documento.TblEmpresasResoluciones.StrComercioConfigId == null) ? false : true ;
+							IdPago = (documento.TblEmpresasFacturador.IntManejaPagoE) ? true : false;
 
 						if (doc_tipo == TipoDocumento.Factura && IdPago)
 						{

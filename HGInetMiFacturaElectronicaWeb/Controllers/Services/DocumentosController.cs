@@ -405,8 +405,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					documento = d.IntNumero,
 					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
 					ValorDoc = d.IntVlrTotal,
-					poseeIdComercio = (d.TblEmpresasResoluciones.StrComercioConfigId == null) ? false : true,
-					PermiteParciales = d.TblEmpresasResoluciones.IntPermiteParciales,
+					poseeIdComercio = (d.TblEmpresasFacturador.IntManejaPagoE) ? true : false,
+					PermiteParciales = (d.TblEmpresasFacturador.IntPagoEParcial) ? true : false,					
 					pago = d.TblPagosElectronicos.Select(p => new
 					{
 						p.StrIdRegistro,

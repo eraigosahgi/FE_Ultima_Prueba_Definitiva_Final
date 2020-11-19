@@ -242,26 +242,26 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				TblEmpresasResoluciones tbl = context.TblEmpresasResoluciones.Where(x => x.StrIdSeguridad == Stridseguridad).FirstOrDefault();
 
-				tbl.IntPermiteParciales = Permitepagosparciales;
-				try
-				{
-					tbl.StrComercioConfigId = null;
-					tbl.StrComercioConfigId = Guid.Parse(IdComercio);
-				}
-				catch (Exception)
-				{
-				}
-				tbl.StrComercioConfigDescrip = DescripcionComercio;
-				try
-				{
-					tbl.StrComercioConfigIdTC = null;
-					tbl.StrComercioConfigIdTC = Guid.Parse(IdComercioTC);
-				}
-				catch (Exception)
-				{
-				}
+				//tbl.IntPermiteParciales = Permitepagosparciales;
+				//try
+				//{
+				//	tbl.StrComercioConfigId = null;
+				//	tbl.StrComercioConfigId = Guid.Parse(IdComercio);
+				//}
+				//catch (Exception)
+				//{
+				//}
+				//tbl.StrComercioConfigDescrip = DescripcionComercio;
+				//try
+				//{
+				//	tbl.StrComercioConfigIdTC = null;
+				//	tbl.StrComercioConfigIdTC = Guid.Parse(IdComercioTC);
+				//}
+				//catch (Exception)
+				//{
+				//}
 
-				tbl.StrComercioConfigDescripTC = DescripcionComercioTC;
+				//tbl.StrComercioConfigDescripTC = DescripcionComercioTC;
 
 				this.Edit(tbl);
 

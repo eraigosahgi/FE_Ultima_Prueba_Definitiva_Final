@@ -629,7 +629,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						if (datos_resolucion != null)
 						{
 
-							ObjPago.StrIdSeguridadComercio = datos_resolucion.StrComercioConfigId;
+							//ObjPago.StrIdSeguridadComercio = datos_resolucion.StrComercioConfigId;
 							ObjPago.StrAuthToken = datos_resolucion.StrEmpresa;
 
 							/*if (datos_resolucion.IntComercioId.Value <= 0)

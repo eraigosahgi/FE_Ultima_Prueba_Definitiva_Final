@@ -225,14 +225,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FechaActualizacion = d.DatFechaActualizacion,
 					RespuestaServicioWeb = d.StrRespuestaServicioWeb,
 					TipoDoc = d.IntTipoDoc,
-					PermiteParciales = d.IntPermiteParciales,
+					//PermiteParciales = d.IntPermiteParciales,
 					IdSetDian = d.StrIdSetDian,
 					VersionDian = d.IntVersionDian,
-					ComercioConfigId = d.StrComercioConfigId,
-					ComercioConfigDescrip = d.StrComercioConfigDescrip,
+					//ComercioConfigId = d.StrComercioConfigId,
+					//ComercioConfigDescrip = d.StrComercioConfigDescrip,
 					SerialCloud = d.TblEmpresas.StrSerialCloudServices,
-					ComercioConfigIdTC = d.StrComercioConfigIdTC,
-					ComercioConfigDescripTC = d.StrComercioConfigDescripTC,
+					//ComercioConfigIdTC = d.StrComercioConfigIdTC,
+					//ComercioConfigDescripTC = d.StrComercioConfigDescripTC,
 				});
 
 				return Ok(retorno);
