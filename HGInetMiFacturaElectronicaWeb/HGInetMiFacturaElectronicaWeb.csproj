@@ -1904,6 +1904,7 @@
     <Content Include="Scripts\Images\LogoHGICertificados.png" />
     <Content Include="Scripts\Images\LogoHGICertificadosTexto.png" />
     <Content Include="Scripts\Images\LogoHGIErp.png" />
+    <Content Include="Scripts\Images\LogoHGIFeCertificados.png" />
     <Content Include="Scripts\Images\LogoPlataforma.png" />
     <Content Include="Scripts\Images\LogoPSE40x40.png" />
     <Content Include="Scripts\Images\LogoPSE90x90.png" />

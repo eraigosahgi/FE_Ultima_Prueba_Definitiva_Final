@@ -108,9 +108,11 @@
 
 								<!-- Formulario Autenticación -->
 								<form data-ng-submit="onFormSubmit($event)">
+								
 
 									<div class="text-center">
-										<img src="../../Scripts/Images/LogoPlataforma.png" class="img-responsive" style="width: 70%; height: 70%; margin-left: 15%; margin-right: 15%" />
+									<img src="/../Scripts/Images/LogoHGIFeCertificados.png" style="align-content: center; width: 350px" class="img-responsive center-block" />
+									<br />
 										<%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
 										<h5 class="content-group-lg"><small class="display-block">Ingrese los datos de autenticación</small></h5>
 									</div>
@@ -120,23 +122,29 @@
 										</div>
 									</div>
 									<br />
-									<a data-toggle="modal" data-target="#modal_restablecer_clave" data-popup="tooltip" title="Restablecer contraseña" style="color: #166dba">
+									
+									<table style="width: 100%;" >
+									<tbody>
+									<tr>
+									<td><div data-dx-button="buttonOptions"></div></td>
+									<td><a data-toggle="modal" data-target="#modal_restablecer_clave" data-popup="tooltip" title="Restablecer contraseña" style="color: #166dba">
 										<h6>Restablecer contraseña</h6>
-									</a>
+									</a></td>
+									</tr>
+									</tbody>
+									</table>
 									<br />
-									<div data-dx-button="buttonOptions"></div>
-
-									<div style="font-size: small; margin-bottom: 3%; margin-top: 3%" class="text-center">
-										<a href="https://www.hgi.com.co/protecciondatospersonales/" target="_blank">Política de Protección de Datos Personales</a><br />
-										<a href="https://www.hgi.com.co/politicadeseguridaddelainformacion/" target="_blank">Política de Seguridad de la Información</a><br />
-										<a href="https://www.hgi.com.co/politicadeusodelportalwebfacturaelectronica/" target="_blank">Política de Uso del Portal Web Factura Electrónica</a>
+									<div style="font-size: small; margin-bottom: 3%; margin-top: 3%" class="text-left">
+										<a href="https://www.hgi.com.co/protecciondatospersonales/" target="_blank" style="color:#001d85 !important; text-decoration:underline #001d85 !important; line-height: 2;">Política de Protección de Datos Personales</a><br />
+										<a href="https://www.hgi.com.co/politicadeseguridaddelainformacion/" target="_blank" style="color:#001d85 !important; text-decoration:underline #001d85 !important; line-height: 2;">Política de Seguridad de la Información</a><br />
+										<a href="https://www.hgi.com.co/politicadeusodelportalwebfacturaelectronica/" target="_blank" style="color:#001d85 !important; text-decoration:underline #001d85 !important; line-height: 2;">Política de Uso del Portal Web Factura Electrónica</a>
 									</div>
 
 								</form>
 								<!-- /Formulario Autenticación -->
 
 								<span class="help-block text-center no-margin">
-									<img src="/../Scripts/Images/LogoHGICertificados.png" style="align-content: center; width: 130px" class="img-responsive center-block" />
+									<br />
 									Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S.</a>
 									<br />
 								</span>
