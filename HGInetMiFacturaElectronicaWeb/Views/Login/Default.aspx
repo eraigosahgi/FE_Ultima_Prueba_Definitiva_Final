@@ -89,8 +89,9 @@
 	</div>
 	<div class="row" style="height: 106%; background-color: white;">
 		<div class="col-md-6 col-lg-8 hidden-xs hidden-sm" style="height: 100%;">
-			<div id="galleryContainer" style="background-color: white; height: 106%;">
-			</div>
+			<%--<div id="galleryContainer" style="background-color: white; height: 106%;">
+			</div>--%>
+			<img src="/Scripts/Images/Autenticacion4.jpg" style="align-content: center; width: 100%" class="img-responsive center-block" />
 		</div>
 		<div class="col-md-6 col-lg-4" style="background-color: white; height: 106%;">
 			<div data-ng-app="AutenticacionApp">
