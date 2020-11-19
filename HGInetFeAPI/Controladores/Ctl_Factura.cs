@@ -22,11 +22,11 @@ namespace HGInetFeAPI
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <param name="documentos_envio">documentos de tipo Factura</param>
 		/// <returns>respuesta del proceso de los documentos</returns>
-		public static List<ServicioFactura.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioFactura.Factura> documentos_envio)
+		public static List<ServicioFactura.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioFactura.Factura> documentos_envio, bool Obtener_ruta= true)
 		{
 
 			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
-			if (!UrlWs.Contains("hgi"))
+			if (!UrlWs.Contains("hgi") && Obtener_ruta)
 			{
 				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
 			}
@@ -50,7 +50,7 @@ namespace HGInetFeAPI
 			{
 				// conexión cliente para el servicio web
 				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs, Obtener_ruta), endpoint_address);
 				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
 
 				// configura la cadena de autenticación para la ejecución del servicio web en SHA1

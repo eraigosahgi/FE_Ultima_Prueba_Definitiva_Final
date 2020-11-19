@@ -298,11 +298,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso562214-563593", "Caso56
 		CamposTblDocumentos.txt = CamposTblDocumentos.txt
 	EndProjectSection
 EndProject
+<<<<<<< .mine
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMonitorServWeb", "HGInetMonitorServWeb\HGInetMonitorServWeb.csproj", "{FA96BAE1-D2EC-4343-A5D1-349102DB8988}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMonitorServController", "HGInetMonitorServController\HGInetMonitorServController.csproj", "{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}"
+EndProject
+||||||| .r2121
+=======
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FormasPago", "FormasPago", "{40ADCB67-6DFE-4D1F-A5D9-9BC9D795A9F6}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\FormasPago\ScriptTblEmpresas-TblEmpresasResoluciones.txt = Documentacion\Liberaciones\FormasPago\ScriptTblEmpresas-TblEmpresasResoluciones.txt
 	EndProjectSection
 EndProject
+>>>>>>> .r2126
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -435,6 +443,22 @@ Global
 		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|x86.ActiveCfg = Release|Any CPU
 		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|x86.Build.0 = Release|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Debug|x86.Build.0 = Debug|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Release|x86.Build.0 = Release|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Debug|x86.Build.0 = Debug|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|x86.ActiveCfg = Release|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

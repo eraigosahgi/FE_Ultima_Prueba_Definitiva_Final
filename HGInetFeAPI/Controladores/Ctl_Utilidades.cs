@@ -81,7 +81,7 @@ namespace HGInetFeAPI
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		public static BasicHttpBinding ObtenerBinding(string url)
+		public static BasicHttpBinding ObtenerBinding(string url, bool obtener_ruta = true)
 		{
 			try
 			{
@@ -112,21 +112,32 @@ namespace HGInetFeAPI
 
 				*/
 
+				int minutos_peticion;
+
+				if (obtener_ruta)
+				{
+					minutos_peticion = 10;
+				}
+				else
+				{
+					minutos_peticion = 2;
+				}
+
 				BasicHttpBinding basic_http_binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
 
 				basic_http_binding.Name = "SoapHttpBinding";
 
 				// Obtiene o establece el intervalo de tiempo proporcionado para que una conexión se cierre antes de que el transporte genere una excepción.
-				basic_http_binding.CloseTimeout = new TimeSpan(0, 10, 0);
+				basic_http_binding.CloseTimeout = new TimeSpan(0, minutos_peticion, 0);
 
 				// Obtiene o establece el intervalo de tiempo proporcionado para que una conexión se abra antes de que el transporte genere una excepción.
 				basic_http_binding.OpenTimeout = new TimeSpan(0, 1, 0);
 
 				// Obtiene o establece el intervalo de tiempo que una conexión puede permanecer inactiva, durante el cual no se recibe ningún mensaje de la aplicación, antes de interrumpir la conexión.
-				basic_http_binding.ReceiveTimeout = new TimeSpan(0, 10, 0);
+				basic_http_binding.ReceiveTimeout = new TimeSpan(0, minutos_peticion, 0);
 
 				// Obtiene o establece el intervalo de tiempo proporcionado para que una operación de escritura se complete antes de que el transporte genere una excepción.
-				basic_http_binding.SendTimeout = new TimeSpan(0, 10, 0);
+				basic_http_binding.SendTimeout = new TimeSpan(0, minutos_peticion, 0);
 
 				basic_http_binding.BypassProxyOnLocal = false;
 				basic_http_binding.MaxBufferPoolSize = 2147483647;

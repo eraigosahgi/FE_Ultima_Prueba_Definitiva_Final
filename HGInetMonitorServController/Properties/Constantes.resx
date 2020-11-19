@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CarpetaObjetoJson" xml:space="preserve">
+    <value>ObjetoJson</value>
+    <comment>Carpeta en donde se encuentra los archivos json con los objetos a usar para el envio a plataforma</comment>
+  </data>
+  <data name="ObjetoJson" xml:space="preserve">
+    <value>{
+	"DataKey": "b02fe5c200434a2cb1dc9cc4c037b6cfa2163ca6ed182ed07407fd775fffd0fb668c54ea1fc96d3b4376c2af66a75752c8f185240322821e793e492f955f2aa0",
+	"CodigoRegistro": "9fd43ae2-a5fb-42c1-82cb-452d4e215991",
+	"Documento": 990001170,
+	"DocumentoRef": null,
+	"PedidoRef": null,
+	"NumeroResolucion": "18760000001",
+	"Cufe": "0477a2b9ba7ecb7cdf6f93d9fd834f1ed359e89d292f5b2e2f716a1d0804f443ad4c91ffb321f450e477ee9016fe92d9",
+	"Prefijo": "SETP",
+	"Fecha": "2020-09-25T14:49:24",
+	"FechaVence": "2020-09-25T00:00:00",
+	"Nota": "hacer descuento 10%",
+	"Notas": null,
+	"Moneda": "COP",
+	"DatosObligado": {
+		"Identificacion": "8888",
+		"IdentificacionDv": 1,
+		"TipoIdentificacion": 31,
+		"TipoPersona": 1,
+		"Regimen": 2,
+		"NombreComercial": "FACTURADOR PRUEBA.",
+		"CodigoDepartamento": "05",
+		"Departamento": "ANTIOQUIA",
+		"CodigoCiudad": "05001",
+		"Ciudad": "MEDELLÍN",
+		"Direccion": "CL 48 No. 77C - 06",
+		"CodigoPostal": "050001",
+		"Telefono": "4444584",
+		"Email": "tic@hgi.com.co",
+		"PaginaWeb": "",
+		"CodigoPais": "CO",
+		"Pais": null,
+		"RazonSocial": "FACTURADOR PRUEBA.",
+		"PrimerApellido": "FACTURADOR PRUEBA.",
+		"SegundoApellido": "",
+		"PrimerNombre": "",
+		"SegundoNombre": "",
+		"RegimenFiscal": "2",
+		"Responsabilidades": [
+			"O-48",
+			"O-07"
+		],
+		"CodigoTributo": "01",
+		"ActividadEconomica": "6201"
+	},
+	"DatosAdquiriente": {
+		"Identificacion": "1020395355",
+		"IdentificacionDv": 8,
+		"TipoIdentificacion": 13,
+		"TipoPersona": 2,
+		"Regimen": 2,
+		"NombreComercial": "JHG SAS",
+		"CodigoDepartamento": "05",
+		"Departamento": "ANTIOQUIA",
+		"CodigoCiudad": "05001",
+		"Ciudad": "MEDELLÍN",
+		"Direccion": "cl 48 77 c 06",
+		"CodigoPostal": "050001",
+		"Telefono": "4444584",
+		"Email": "tic@hgi.com.co",
+		"PaginaWeb": "",
+		"CodigoPais": "CO",
+		"Pais": null,
+		"RazonSocial": "Alvarez Jaramillo Elkin Hernan",
+		"PrimerApellido": "Alvarez",
+		"SegundoApellido": "Jaramillo",
+		"PrimerNombre": "Elkin",
+		"SegundoNombre": "Hernan",
+		"RegimenFiscal": "2",
+		"Responsabilidades": [
+			"O-48",
+			"O-07"
+		],
+		"CodigoTributo": "01",
+		"ActividadEconomica": null
+	},
+	"Valor": 16200.00,
+	"ValorSubtotal": 13750.00,
+	"ValorDescuento": 0.0,
+	"ValorDescuentoDet": 0.0,
+	"ValorCargo": 0.0,
+	"ValorAnticipo": 0.0,
+	"ValorIva": 2612.00,
+	"ValorReteIva": 0.0,
+	"ValorImpuestoConsumo": 0.0,
+	"ValorReteFuente": 0.0,
+	"ValorReteIca": 0.0,
+	"Total": 16362.00,
+	"Neto": 16362.00,
+	"DocumentoDetalles": [
+		{
+			"Codigo": 1,
+			"ProductoCodigo": "10617",
+			"ProductoNombre": "AA cambio kumis vaso x 160",
+			"ProductoDescripcion": "",
+			"Bodega": null,
+			"Cantidad": 1.0,
+			"ValorUnitario": 200.02,
+			"ValorSubtotal": 150.00,
+			"ImpoConsumoPorcentaje": 0.0,
+			"ValorImpuestoConsumo": 0.0,
+			"IvaPorcentaje": 19.00,
+			"IvaValor": 28.00,
+			"ReteIcaPorcentaje": 0.0,
+			"ReteIcaValor": 0.0,
+			"ReteFuentePorcentaje": 0.0,
+			"ReteFuenteValor": 0.0,
+			"DescuentoPorcentaje": 25.00,
+			"DescuentoValor": 50.00,
+			"ProductoGratis": false,
+			"UnidadCodigo": "94",
+			"OcultarItem": 0,
+			"ProductoCodigoEAN": "",
+			"Aiu": 0,
+			"CalculaIVA": 0,
+			"DatosMandatario": null,
+			"ProductoGratisPrecioRef": null,
+			"CamposAdicionales": [
+				{
+					"Descripcion": "Lote",
+					"Valor": "0"
+				},
+				{
+					"Descripcion": "OtroTALLA",
+					"Valor": "0"
+				}
+			],
+			"BaseImpuestoIva": 0.0
+		},
+		{
+			"Codigo": 2,
+			"ProductoCodigo": "10617",
+			"ProductoNombre": "AA cambio kumis vaso x 160",
+			"ProductoDescripcion": "",
+			"Bodega": null,
+			"Cantidad": 1.0,
+			"ValorUnitario": 16000.00,
+			"ValorSubtotal": 13600.00,
+			"ImpoConsumoPorcentaje": 0.0,
+			"ValorImpuestoConsumo": 0.0,
+			"IvaPorcentaje": 19.00,
+			"IvaValor": 2584.00,
+			"ReteIcaPorcentaje": 0.0,
+			"ReteIcaValor": 0.0,
+			"ReteFuentePorcentaje": 0.0,
+			"ReteFuenteValor": 0.0,
+			"DescuentoPorcentaje": 15.00,
+			"DescuentoValor": 2400.00,
+			"ProductoGratis": false,
+			"UnidadCodigo": "94",
+			"OcultarItem": 0,
+			"ProductoCodigoEAN": "",
+			"Aiu": 0,
+			"CalculaIVA": 0,
+			"DatosMandatario": null,
+			"ProductoGratisPrecioRef": null,
+			"CamposAdicionales": [
+				{
+					"Descripcion": "Lote",
+					"Valor": "0"
+				},
+				{
+					"Descripcion": "OtroTALLA",
+					"Valor": "0"
+				}
+			],
+			"BaseImpuestoIva": 0.0
+		}
+	],
+	"DocumentoFormato": {
+		"Codigo": 1,
+		"CamposPredeterminados": null,
+		"ArchivoPdf": null,
+		"Titulo": null
+	},
+	"Cuotas": [
+		{
+			"Codigo": 1,
+			"Valor": 16362.00,
+			"FechaVence": "2020-09-25T00:00:00"
+		}
+	],
+	"VersionAplicativo": "Ver. 2020.7 Rev.1",
+	"Plazo": 0,
+	"FormaPago": 2,
+	"TerminoPago": 0,
+	"TerminoPago_Descripcion": null,
+	"IdentificacionProveedor": "0",
+	"ArchivoAnexos": null,
+	"IdPlan": "f9ce92ab-9322-450d-84cb-b1dbfe8da668",
+	"Descuentos": null,
+	"Cargos": null,
+	"Anticipos": null,
+	"TipoOperacion": 50,
+	"DocumentosReferencia": null,
+	"Trm": null,
+	"TrmAlternativa": null,
+	"CamposAdicionales": null,
+	"OrderReference": {
+		"Documento": "CA-1236",
+		"CodigoReferencia": null,
+		"FechaReferencia": "0001-01-01T00:00:00"
+	},
+	"DespatchDocument": [
+		{
+			"Documento": "LN – INTERMEDIACION",
+			"CodigoReferencia": null,
+			"FechaReferencia": "0001-01-01T00:00:00"
+		}
+	],
+	"ReceiptDocument": null
+}</value>
+    <comment>Objeto Factura en fomato json</comment>
+  </data>
+  <data name="RutaPlataformaHgi" xml:space="preserve">
+    <value>https://hgi#.mifacturaenlinea.com.co/</value>
+    <comment>Ruta para enviar peticiones de los clientes de HGI</comment>
+  </data>
+  <data name="RutaPlataformaIntegrador" xml:space="preserve">
+    <value>https://Serv#.mifacturaenlinea.com.co/</value>
+    <comment>Ruta para enviar peticiones de los integradores de HGI</comment>
+  </data>
+</root>
