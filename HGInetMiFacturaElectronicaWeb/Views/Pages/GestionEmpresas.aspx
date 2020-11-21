@@ -54,7 +54,7 @@
 
 							</div>
 							<div class="col-md-12" style="z-index: 9; margin-bottom: 3px;">
-								<div class="col-md-4" style="z-index: 9;">
+								<div class="col-md-3" style="z-index: 9;">
 									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nº Horas acuse:</label>
 									<div id="txtHorasAcuse"></div>
 									<div id="tooltip_txtHorasAcuse">
@@ -64,7 +64,7 @@
 								</div>
 
 
-								<div class="col-md-4 " style="z-index: 9;">
+								<div class="col-md-3" style="z-index: 9;">
 									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Maneja Anexo:</label>
 									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
 										<div id="Anexo"></div>
@@ -72,11 +72,19 @@
 									</div>
 								</div>
 
-								<div class="col-md-4 " style="z-index: 9;">
-									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Maneja Pagos Electrónicos:</label>
+								<div class="col-md-3" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Maneja Pagos:</label>
 									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
 										<div id="ManejaPagos"></div>
 										<div id="tooltip_ManejaPagos">Indica si el Facturador maneja Pagos  Electrónicos</div>
+									</div>
+								</div>
+
+								<div class="col-md-3" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Pagos Parciales?:</label>
+									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
+										<div id="PermitePagosParciales"></div>	
+										<div id="tooltip_PermitePagosParciales">Indica si el Facturador Permite Pagos Parciales</div>									
 									</div>
 								</div>
 

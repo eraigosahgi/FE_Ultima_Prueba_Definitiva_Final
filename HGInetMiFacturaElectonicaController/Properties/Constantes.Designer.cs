@@ -160,6 +160,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1.
+        /// </summary>
+        public static string IdAplicativoPagosE {
+            get {
+                return ResourceManager.GetString("IdAplicativoPagosE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 811021438.
         /// </summary>
         public static string NitResolucionconPrefijo {

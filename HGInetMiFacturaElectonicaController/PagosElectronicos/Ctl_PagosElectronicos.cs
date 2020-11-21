@@ -23,6 +23,7 @@ using System.Globalization;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using LibreriaGlobalHGInet.ObjetosComunes.PagosEnLinea;
 using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Properties;
 
 namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 {
@@ -59,7 +60,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		/// <param name="tipo_pago">indica si el pago es para un documento o una compra de planes (0: Documento - 1: Plan).</param>
 		/// <param name="valor"></param>
 		/// <returns></returns>
-		public TblPagosElectronicos CrearPago(Guid StrIdRegistro, System.Guid id_seguridad, int tipo_pago, decimal valor)
+		public TblPagosElectronicos CrearPago(Guid StrIdRegistro, System.Guid id_seguridad, int tipo_pago, decimal valor, int forma_pago)
 		{
 			try
 			{
@@ -87,6 +88,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				datos_registro.IntValorPago = valor;
 
 				datos_registro.IntEstadoPago = EstadoPago.Pendiente.GetHashCode();
+
+				datos_registro.IntFormaPago = forma_pago;
 
 				Crear(datos_registro);
 
@@ -242,8 +245,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		{
 			try
 			{
+				context.Configuration.LazyLoadingEnabled = false;
 
-				List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos
+				List<TblDocumentos> datos_pago = (from documentos in context.TblDocumentos.Include("TblEmpresasFacturador").Include("TblPagosElectronicos")
 												  where documentos.StrIdSeguridad == StrIdSeguridadDoc
 												  select documentos).ToList();
 
@@ -532,15 +536,16 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		/// <param name="tipo_pago">indica si el pago es para un documento o una compra de planes (0: Documento - 1: Plan).</param>
 		/// <param name="registrar_pago">indica si se registra el pago en base de datos.</param>
 		/// <param name="valor_pago">valor a pagar.</param>
+		/// <param name="usuario">Guid de seguridad del usuario para guardar en la auditoria</param>
+		/// /// <param name="Metodo">Metodo de Pago, 0 = No Definida, 29 = PSE, 31 = Tarjeta de Crédito</param>
 		/// <returns></returns>
-		public dynamic ReportePagoElectronicoPI(System.Guid id_seguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0, string usuario = "")
+		public dynamic ReportePagoElectronicoPI(System.Guid id_seguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0, string usuario = "", int IntPagoFormaPago = 0)
 		{
 			try
 			{
 				//Ruta retornada por el servicio, redirecciona a la  página de inicio del pago (Selección de tipo persona, forma pago y banco).
 				string ruta_inicio = string.Empty;
-				//Datos de la pasarela electrónica.
-				int comercio_id = 0;
+				//Datos de la pasarela electrónica.				
 				string comercio_clave = string.Empty;
 				string comercio_ruta = string.Empty;
 				string codigo_servicio = string.Empty;
@@ -582,6 +587,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 				decimal Monto_Pendiente = 0;
 
+				ObjPago.IntPagoFormaPago = IntPagoFormaPago;
+
 				//Valida si el pago es de un documento o una compra de planes.
 				if (tipo_pago == 0)
 				{
@@ -612,7 +619,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 					identificacion_empresa = datos_documento.StrEmpresaAdquiriente;
 
-					//valisa que el documento no sea null.
+					//valida que el documento no sea null.
 					if (datos_documento != null)
 					{
 						ObjPago.DatFechaDocumento = datos_documento.DatFechaDocumento;
@@ -622,45 +629,20 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						ObjPago.IntVlrTotalDocumento = datos_documento.IntVlrTotal;
 
 						//consulta la resolución para obtener el comercio que tiene asociado.
-						Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
-						TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
+						//Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
+						//TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
 
 						//Valida que la resolución no sea null.
-						if (datos_resolucion != null)
+						if (!datos_documento.TblEmpresasFacturador.IntManejaPagoE)
 						{
-
-							//ObjPago.StrIdSeguridadComercio = datos_resolucion.StrComercioConfigId;
-							ObjPago.StrAuthToken = datos_resolucion.StrEmpresa;
-
-							/*if (datos_resolucion.IntComercioId.Value <= 0)
-								throw new ApplicationException(string.Format("La Resuloción N.{0} para el Facturador {1}, no tiene configurado un comercio.", datos_documento.StrNumResolucion, datos_documento.StrEmpresaFacturador));
-
-							//Obtiene los datos de la pasarela.
-							Ctl_EmpresasPasarela clase_pasarela = new Ctl_EmpresasPasarela();
-							TblEmpresasPasarela datos_pasarela = clase_pasarela.Obtener(datos_documento.StrEmpresaFacturador, datos_resolucion.IntComercioId.Value);
-
-							if (datos_pasarela != null)
-							{
-								ObjPago.IntComercioId = datos_pasarela.IntComercioId;
-								ObjPago.StrComercioClave = datos_pasarela.StrComercioClave;
-								ObjPago.StrComercioIdRuta = datos_pasarela.StrComercioIdRuta;
-								ObjPago.StrCodigoServicio = datos_pasarela.StrCodigoServicio;
-								ObjPago.IntPasarela = datos_pasarela.IntPasarela;
-							}*/
-							//Asigna valores a prefijo y documento para la auditoria
-							try
-							{
-								var Doc = datos_resolucion.TblDocumentos.Where(x => x.StrIdSeguridad == id_seguridad).FirstOrDefault();
-								prefijo = Doc.StrPrefijo;
-								documento = Doc.IntNumero.ToString();
-								FacturadorAut = Doc.StrEmpresaFacturador;
-							}
-							catch (Exception) { }
+							throw new ApplicationException("Empresa no maneja Pagos");
 						}
-						else
-						{
-							throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el número de Resolución", datos_documento.StrNumResolucion));
-						}
+
+						ObjPago.StrIdTercero = datos_documento.StrEmpresaFacturador;
+
+						ObjPago.StrAuthToken = datos_documento.StrEmpresaFacturador;
+
+						ObjPago.IntIdAplicativo = Convert.ToInt32(Constantes.IdAplicativoPagosE.ToString());
 
 						datos_pago.descripcion_pago = string.Format("{0}", datos_pago.id_pago);
 						//Si la variable de pago viene sin valor
@@ -683,14 +665,6 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					}
 					else
 					{
-						//PasarelaPagos pasarela = HgiConfiguracion.GetConfiguration().PasarelaPagos;
-
-						////Datos de la pasarela electrónica.
-						//ObjPago.IntComercioId = Convert.ToInt32(pasarela.IdComercio);
-						//ObjPago.StrComercioClave = pasarela.ClaveComercio;
-						//ObjPago.StrComercioIdRuta = pasarela.RutaComercio;
-						//ObjPago.StrCodigoServicio = pasarela.CodigoServicio;
-						//ObjPago.IntPasarela = 1;//Pasarela por defecto es 1 Zona de pagos
 
 						//Obtiene el plan de transacciones.
 						Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
@@ -737,7 +711,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-" + ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ObjPago.StrIdSeguridadComercio.ToString() + "-" + ObjPago.IntValor.ToString("0.##"));
 
 					//Registro el Pago Local                    
-					TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago));
+					TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, id_seguridad, tipo_pago, Convert.ToDecimal(valor_pago), IntPagoFormaPago);
 
 					//convierto el Objeto de pago en Json
 					var ObjetoPago = JsonConvert.SerializeObject(ObjPago);
@@ -751,7 +725,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					catch (Exception) { }
 
 					//Retorno el Objeto Json Cifrado 
-					return new { Ruta = EncriptarObjeto(ObjetoPago.ToString()), IdRegistro = ObjPago.StrIdSeguridadRegistro };
+					return new { Ruta = EncriptarObjeto(ObjetoPago.ToString()), IdRegistro = ObjPago.StrIdSeguridadRegistro, PasarelaHgi = true };
 
 
 				}

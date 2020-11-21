@@ -1937,6 +1937,7 @@
     <Content Include="Scripts\Pages\ModalAuditoria.js" />
     <Content Include="Scripts\Pages\ModalConsultaProveedores.js" />
     <Content Include="Scripts\Pages\ModalDetalleEmpresa.js" />
+    <Content Include="Scripts\Pages\ModalPagos.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
@@ -2815,6 +2816,8 @@
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
     <Content Include="Views\Pages\Partials\LoadingRegistros.html" />
+    <Content Include="Views\Pages\Partials\ModalFormasDePago.html" />
+    <Content Include="Views\Pages\Partials\ModalPagosEmbebida.html" />
     <Content Include="Views\Pages\Partials\ModalResoluciones.html" />
     <Content Include="Views\Pages\ProcesarDocumentos.aspx" />
     <Content Include="Views\Pages\DocumentosAdquiriente.aspx" />
@@ -3453,7 +3456,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61423/</IISUrl>
+          <IISUrl>http://localhost:61435/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

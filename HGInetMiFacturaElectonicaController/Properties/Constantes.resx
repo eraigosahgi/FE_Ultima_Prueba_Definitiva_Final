@@ -301,4 +301,8 @@
     <value>Debug</value>
     <comment>Carpeta para guardar las peticiones de documentos electronicos que envian los Facturadores electronicos y se necesitan para validaciones.</comment>
   </data>
+  <data name="IdAplicativoPagosE" xml:space="preserve">
+    <value>1</value>
+    <comment>Id de aplicativo para Pagos Electrónicos</comment>
+  </data>
 </root>

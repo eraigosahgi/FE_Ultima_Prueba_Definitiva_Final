@@ -92,14 +92,23 @@
 	<script src="../../Scripts/config.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20201019"></script>
 	<script src="../../Scripts/config.js?vjs20201019"></script>
+	<script src="../../Scripts/Pages/DocumentosAdquiriente.js"></script>
 	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs20201019"></script>
+	<script src="../../Scripts/Pages/ModalPagos.js?vjs20201019"></script>
 
 </head>
 
 <body class="login-container" style="background-color: #eeeded">
 	<input type="hidden" id="Hdf_RutaPlataformaServicios" runat="server" />
 
-	<div runat="server" class="form-horizontal" ng-app="AcuseReciboApp" ng-controller="AcuseReciboController" data-ng-cloak="" data-ng-init="DetalleAcuse=true">
+	<div runat="server" class="form-horizontal" ng-app="App" ng-controller="AcuseReciboController" data-ng-cloak="" data-ng-init="DetalleAcuse=true">
+
+	<!--Aplicacion de Pagos-->
+		<div data-ng-include="'ModalPagos.aspx'"></div>
+		<div data-ng-include="'Partials/ModalFormasDePago.html'"></div>
+		<div data-ng-include="'Partials/ModalPagosEmbebida.html'"></div>
+		<!--Aplicacion de Pagos-->
+
 		<div style="margin: 1%;" runat="server" id="PanelInformacion" ng-repeat="datos in RespuestaAcuse">
 			<!--Ruta de servicios de plataforma de pago-->
 			<input type="hidden" id="Hdf_RutaPagos" runat="server" />
@@ -237,10 +246,10 @@
 
 								<div style="text-align: center; margin-top: 5%;">
 									<div style="display: inline-block; margin-bottom: 5%">
-										<a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-show="BtnVerPagos" data-ng-click="ConsultarDetallesPago()">Historial Pagos</a>
+										<a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-hide="datos.tipodoc=='Nota Crédito' || datos.poseeIdComercio==false || datos.Estatus !=1" data-ng-click="ConsultarDetallesPago()">Historial Pagos</a>
 									</div>
 									<div id="cmdpago" style="display: inline-block; margin-bottom: 5%">
-										<a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-click="habilitar()" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true && datos.Estatus ==3">Realizar Pago</a>
+										<a class="btn btn-default" id="btnpago"  style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" data-ng-click="ConsultarPago1('','1',true,true)" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true && datos.Estatus ==3">Realizar Pago</a>
 									</div>
 								</div>
 
@@ -307,7 +316,7 @@
 			</div>
 		</div>
 
-		<form id="formInicioPago" target="_blank">
+		<%--<form id="formInicioPago" target="_blank">
 			<div id="modal_inicio_pago" class="modal fade" style="display: none; z-index: 999999;">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -316,7 +325,7 @@
 							<h5 style="margin-bottom: 5px;" class="modal-title">Efectuar Pago</h5>
 						</div>
 						<div class="modal-body">
-							<!-- CONTENEDOR PRINCIPAL -->
+							
 
 							<div class="row" style="margin-bottom: 5%; margin-left: 3%; margin-right: 3%" runat="server" id="PanelInfoRecaudador">
 
@@ -383,7 +392,9 @@
 					</div>
 				</div>
 			</div>
-		</form>
+		</form>--%>
+
+		
 
 	</div>
 
@@ -404,7 +415,7 @@
 				i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
 				m = s.getElementsByTagName(o)
 				[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-			})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');		
+			})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 		} catch (e) { }
 	</script>
 </body>

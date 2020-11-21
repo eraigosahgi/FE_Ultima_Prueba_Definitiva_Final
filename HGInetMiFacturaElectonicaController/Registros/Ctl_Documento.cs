@@ -448,7 +448,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				context.Configuration.LazyLoadingEnabled = false;
 
-				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasResoluciones").AsNoTracking()
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
 										&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
@@ -490,9 +490,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
 								 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
 								 EnvioMail = datos.IntEstadoEnvio,
-								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
 								 FacturaCancelada = datos.IntIdEstado,
-								 PagosParciales = (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0,
+								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,								 
 							 }).ToList();
 
 
@@ -503,7 +503,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				context.Configuration.LazyLoadingEnabled = false;
 
-				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasResoluciones").AsNoTracking()
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente))
 							 && (listaDocumetos.Contains(datos.IntNumero))
@@ -542,9 +542,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
 								 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
 								 EnvioMail = datos.IntEstadoEnvio,
-								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
 								 FacturaCancelada = datos.IntIdEstado,
-								 PagosParciales = (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0,
+								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
 							 }).ToList();
 
 			}

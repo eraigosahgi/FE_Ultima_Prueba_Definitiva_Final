@@ -81,7 +81,7 @@
 <body>
 	<!--Pagos-->
 	<div data-ng-controller="ModalPagosController">
-		<div id="modal_Pagos_Electronicos" class="modal fade" style="display: none; z-index: 999999;">
+		<div id="modal_Pagos_Electronicos" class="modal fade" style="display: none; z-index: 99999;">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div id="EncabezadoModal" class="modal-header">
@@ -187,6 +187,8 @@
                                                         <div style="visibility: hidden" id="PagoTotal"></div>
                                                     </div>
                                                 </div>-->
+												<div data-ng-include="'Partials/ModalFormasDePago.html'"></div>
+
 												<div id="panelPagoPendiente">
 													<div class="col-md-12 text-right" id="PanelPago">
 														<br />

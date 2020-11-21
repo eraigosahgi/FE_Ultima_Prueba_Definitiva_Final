@@ -133,8 +133,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.EnvioMail,
 					poseeIdComercio = d.poseeIdComercio,
 					FacturaCancelada = d.FacturaCancelada,
-					PagosParciales = d.PagosParciales
+					PagosParciales = d.PagosParciales,
 					//Telefono = d.TblEmpresasFacturador.StrTelefono,
+					d.poseeIdComercioPSE,
+					d.poseeIdComercioTC
 				});
 
 				return Ok(retorno);
@@ -406,7 +408,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
 					ValorDoc = d.IntVlrTotal,
 					poseeIdComercio = (d.TblEmpresasFacturador.IntManejaPagoE) ? true : false,
-					PermiteParciales = (d.TblEmpresasFacturador.IntPagoEParcial) ? true : false,					
+					PermiteParciales = (d.TblEmpresasFacturador.IntPagoEParcial) ? true : false,
 					pago = d.TblPagosElectronicos.Select(p => new
 					{
 						p.StrIdRegistro,
@@ -560,14 +562,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					try
 					{
 						datos.AddRange(ctl_documento.ObtenerPorIdSeguridad(item));
-						
+
 					}
 					catch (Exception e)
 					{
 						Console.WriteLine(e);
 						throw;
 					}
-					
+
 				}
 
 
@@ -594,7 +596,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					XmlAcuse = d.StrUrlAcuseUbl
 				});
 
-					
+
 
 				return Ok(retorno);
 			}
@@ -1214,18 +1216,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="registrar_pago">Indica si debe registrar el pago en base de datos</param>
 		/// <param name="valor_pago">Valor del pago</param>
 		/// <param name="usuario">Usuario que guarda el pago</param>
-		/// <returns></returns>
-
-		public IHttpActionResult Get(System.Guid strIdSeguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0, string usuario = "")
+		/// <param name="Metodo">Metodo de Pago, 0 = No Definida, 29 = PSE, 31 = Tarjeta de Crédito</param>
+		/// <returns>Ruta de Pago</returns>
+		public IHttpActionResult Get(System.Guid strIdSeguridad, int tipo_pago = 0, bool registrar_pago = true, double valor_pago = 0, string usuario = "", int IntPagoFormaPago = 0)
 		{
 			Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-			var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago, usuario);
+			var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago, usuario, IntPagoFormaPago);
 			return Ok(datos);
 
 		}
-
-
 
 		/// <summary>
 		/// Obtiene la lista de pagos de un documento en especifico
@@ -1260,7 +1260,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					IntNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
 					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
-
+					Monto = d.IntVlrTotal,
 					//Detalle del pago
 					Pagos = d.TblPagosElectronicos.Select(p => new
 					{
@@ -1339,7 +1339,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					codigo_facturador = Sesion.DatosUsuario.StrEmpresa;
 				}
 				catch (Exception)
-				{					
+				{
 				}
 
 
@@ -1365,7 +1365,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
 					StrIdRegistro = d.StrIdRegistro,
 					StrIdSeguridadDoc = d.StrIdSeguridadDoc,
-					Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" :  d.StrCodigoFranquicia.ToUpper()
+					Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper()
 				});
 
 				return Ok(retorno);
@@ -1404,7 +1404,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
-				
+
 				var datos = Pago.ObtenerPagosAdquiriente(codigo_facturador, numero_documento, empresa.StrIdentificacion, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
 
 
@@ -1468,6 +1468,24 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					ConfigPago.StrIdSeguridadDoc = IdSeguridad;
 					ConfigPago.StrIdSeguridadRegistro = StrIdSeguridadRegistro;
+					ConfigPago.IntPagoEstado = EstadoPago.Pendiente.GetHashCode();
+
+					Ctl_PagosElectronicos _pagos = new Ctl_PagosElectronicos();
+
+					var pago_electronico = _pagos.Obtener(IdSeguridad, StrIdSeguridadRegistro);
+
+					var fecha_pago = pago_electronico.DatFechaRegistro;
+					var fecha_actual = Fecha.GetFecha();
+
+					var diferencia = (fecha_actual - fecha_pago);
+
+					//Si despues de este tiempo no tenemos datos del pago en la plataforma intermedia
+					//Colocamos el estado de Pago no Iniciado
+					if (diferencia.TotalMinutes > 15) 
+					{
+						ConfigPago.IntPagoEstado = EstadoPago.NoIniciado.GetHashCode();
+					}
+
 				}
 				else
 				{

@@ -1,13 +1,13 @@
 ﻿
 DevExpress.localization.locale(navigator.language);
 
-var AcuseReciboApp = angular.module('AcuseReciboApp', ['dx']);
-AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboController($scope, $http, $timeout) {
+var App = angular.module('App', ['dx']);
+App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $timeout) {
 
+	var IdSeguridad = location.search.split('id_seguridad=')[1];
 
 	$(document).ready(function () {
 
-		var IdSeguridad = location.search.split('id_seguridad=')[1];
 		//Almacena el parametro Zpago para ver si debe enviarlo a la pantalla de pago
 		var Zpago = location.search.split('Zpago=')[1];
 		$scope.DetalleAcuse = true;
@@ -26,144 +26,144 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 		$scope.EnProceso = false;
 
 
-		$scope.habilitar = function () {
-			//-------------------------------------------------------------------
-			var id = IdSeguridad.split('&')[0];
-			$http.get('/api/ConsultaSaldoDocumento?StrIdSeguridadDoc=' + id).then(function (response) {
-				if (response.data != "PagoPendiente" && response.data != "DocumentoCancelado" && response.data != "ErrorDian") {
-					var Vpago1 = window.open("", "Pagos", "width=10,height=10");
-					if (Vpago1 == null || Vpago1 == undefined) {
-						DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
+		//$scope.habilitar = function () {
+		//	//-------------------------------------------------------------------
+		//	var id = IdSeguridad.split('&')[0];
+		//	$http.get('/api/ConsultaSaldoDocumento?StrIdSeguridadDoc=' + id).then(function (response) {
+		//		if (response.data != "PagoPendiente" && response.data != "DocumentoCancelado" && response.data != "ErrorDian") {
+		//			var Vpago1 = window.open("", "Pagos", "width=10,height=10");
+		//			if (Vpago1 == null || Vpago1 == undefined) {
+		//				DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
 
-					} else {
-						//--------------------------					
-						$("#summary").dxValidationSummary({});
+		//			} else {
+		//				//--------------------------					
+		//				$("#summary").dxValidationSummary({});
 
-						$scope.ValorPagoDoc = parseInt(response.data);
-						$scope.VlrTxtValorPago = $scope.ValorPagoDoc;
+		//				$scope.ValorPagoDoc = parseInt(response.data);
+		//				$scope.VlrTxtValorPago = $scope.ValorPagoDoc;
 
-						//Campo valor del pago de modal_inicio_pago
-						$("#TxtValorPago").dxNumberBox({
-							value: $scope.ValorPagoDoc,
-							format: "$ #,##0.##",
-							validationGroup: "ValidarPago",
-							onValueChanged: function (data) {
-								$scope.VlrTxtValorPago = data.value;
-							}
-						}).dxValidator({
-							validationRules: [{
-								type: "required",
-								message: "Debe Indicar el monto a pagar"
-							},
-							{
-								type: 'custom', validationCallback: function (options) {
-									if ($scope.VlrTxtValorPago > $scope.ValorPagoDoc) {
-										options.rule.message = "El monto a pagar no puede ser mayor al monto pendiente.";
-										return false;
-									} else { return true; }
-								}
-							},
-							{
-								type: 'custom', validationCallback: function (options) {
+		//				//Campo valor del pago de modal_inicio_pago
+		//				$("#TxtValorPago").dxNumberBox({
+		//					value: $scope.ValorPagoDoc,
+		//					format: "$ #,##0.##",
+		//					validationGroup: "ValidarPago",
+		//					onValueChanged: function (data) {
+		//						$scope.VlrTxtValorPago = data.value;
+		//					}
+		//				}).dxValidator({
+		//					validationRules: [{
+		//						type: "required",
+		//						message: "Debe Indicar el monto a pagar"
+		//					},
+		//					{
+		//						type: 'custom', validationCallback: function (options) {
+		//							if ($scope.VlrTxtValorPago > $scope.ValorPagoDoc) {
+		//								options.rule.message = "El monto a pagar no puede ser mayor al monto pendiente.";
+		//								return false;
+		//							} else { return true; }
+		//						}
+		//					},
+		//					{
+		//						type: 'custom', validationCallback: function (options) {
 
-									if ($scope.VlrTxtValorPago < 1) {
-										options.rule.message = "El monto de ser mayor a cero (0).";
-										return false;
-									} else
-										return true;
-								}
-							}, {
-								type: 'pattern',
-								pattern: '^[0-9-.]+$',
-								message: 'No debe Incluir puntos(.) ni caracteres especiales.'
-							}
-							, {
-								type: "numeric",
-								message: "El monto a pagar debe ser numérico."
-							}]
-						});
-
-
-						var datos_doc = $scope.RespuestaAcuse;
-
-						//Carga información del documento
-						$scope.tipodoc = datos_doc[0].tipodoc;
-						$scope.NumeroDocumento = datos_doc[0].NumeroDocumento;
-						$scope.FechaDocumento = datos_doc[0].FechaDocumento;
-						$scope.ValorDoc = datos_doc[0].ValorDoc;
-
-						//Valida si se permiten pagos parciales, según el número de resolución del documento.
-						if (datos_doc[0].PermiteParciales) {
-							$scope.CampoValorPago = true;
-							$scope.InfoValorPago = false;
-						}
-						else {
-							$scope.InfoValorPago = true;
-							$scope.CampoValorPago = false;
-							$scope.ValorPago = $scope.ValorPagoDoc;
-						}
+		//							if ($scope.VlrTxtValorPago < 1) {
+		//								options.rule.message = "El monto de ser mayor a cero (0).";
+		//								return false;
+		//							} else
+		//								return true;
+		//						}
+		//					}, {
+		//						type: 'pattern',
+		//						pattern: '^[0-9-.]+$',
+		//						message: 'No debe Incluir puntos(.) ni caracteres especiales.'
+		//					}
+		//					, {
+		//						type: "numeric",
+		//						message: "El monto a pagar debe ser numérico."
+		//					}]
+		//				});
 
 
-						//Botón continuar de modal_inicio_pago
-						$("#BtnContinuarPago").dxButton({
-							text: "continuar",
-							type: "default",
-							useSubmitBehavior: true,
-						});
+		//				var datos_doc = $scope.RespuestaAcuse;
 
-						$("#formInicioPago").on("submit", function (e) {
+		//				//Carga información del documento
+		//				$scope.tipodoc = datos_doc[0].tipodoc;
+		//				$scope.NumeroDocumento = datos_doc[0].NumeroDocumento;
+		//				$scope.FechaDocumento = datos_doc[0].FechaDocumento;
+		//				$scope.ValorDoc = datos_doc[0].ValorDoc;
 
-							$http.get('/api/Documentos?strIdSeguridad=' + id + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + $scope.VlrTxtValorPago).then(function (response) {
-
-								var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
-
-								window.open(RutaServicio + response.data.Ruta, "_blank");
-
-								$('#cmdpago').hide();
-								VerificarEstado();
-								//Si lo envia a la pantalla de pago, cierra la pantalla actual
-								//if (Zpago)
-								// window.close();
-								$("#modal_inicio_pago").modal('hide');
-							}, function (error) {
-								DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
-								$scope.DetalleAcuse = false;
-							});
-
-							e.preventDefault();
-
-						});
+		//				//Valida si se permiten pagos parciales, según el número de resolución del documento.
+		//				if (datos_doc[0].PermiteParciales) {
+		//					$scope.CampoValorPago = true;
+		//					$scope.InfoValorPago = false;
+		//				}
+		//				else {
+		//					$scope.InfoValorPago = true;
+		//					$scope.CampoValorPago = false;
+		//					$scope.ValorPago = $scope.ValorPagoDoc;
+		//				}
 
 
+		//				//Botón continuar de modal_inicio_pago
+		//				$("#BtnContinuarPago").dxButton({
+		//					text: "continuar",
+		//					type: "default",
+		//					useSubmitBehavior: true,
+		//				});
+
+		//				$("#formInicioPago").on("submit", function (e) {
+
+		//					$http.get('/api/Documentos?strIdSeguridad=' + id + '&tipo_pago = 0 &registrar_pago=true&valor_pago=' + $scope.VlrTxtValorPago).then(function (response) {
+
+		//						var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
+
+		//						window.open(RutaServicio + response.data.Ruta, "_blank");
+
+		//						$('#cmdpago').hide();
+		//						VerificarEstado();
+		//						//Si lo envia a la pantalla de pago, cierra la pantalla actual
+		//						//if (Zpago)
+		//						// window.close();
+		//						$("#modal_inicio_pago").modal('hide');
+		//					}, function (error) {
+		//						DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
+		//						$scope.DetalleAcuse = false;
+		//					});
+
+		//					e.preventDefault();
+
+		//				});
 
 
-						//Abre modal
-						$("#modal_inicio_pago").modal('show');
-						//-------------------------
-					}
-
-				} else {
-					if (response.data == "PagoPendiente") {
-						DevExpress.ui.notify("No puede hacer pagos mientras tenga pagos pendientes", 'error', 7000);
-					}
-					if (response.data == "DocumentoCancelado") {
-						DevExpress.ui.notify("Este documento ya fue pagado", 'error', 7000);
-					}
-
-					if (response.data == "ErrorDian") {
-						DevExpress.ui.notify("El estado actual del documento, no permite hacer pagos", 'error', 7000);
-					}
 
 
-				}
-			}, function (error) {
-				$scope.DetalleAcuse = false;
-				DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
+		//				//Abre modal
+		//				$("#modal_inicio_pago").modal('show');
+		//				//-------------------------
+		//			}
 
-			});
-			//----------------------------------------------------------------
+		//		} else {
+		//			if (response.data == "PagoPendiente") {
+		//				DevExpress.ui.notify("No puede hacer pagos mientras tenga pagos pendientes", 'error', 7000);
+		//			}
+		//			if (response.data == "DocumentoCancelado") {
+		//				DevExpress.ui.notify("Este documento ya fue pagado", 'error', 7000);
+		//			}
 
-		};
+		//			if (response.data == "ErrorDian") {
+		//				DevExpress.ui.notify("El estado actual del documento, no permite hacer pagos", 'error', 7000);
+		//			}
+
+
+		//		}
+		//	}, function (error) {
+		//		$scope.DetalleAcuse = false;
+		//		DevExpress.ui.notify("Problemas con la plataforma de pago", 'error', 7000);
+
+		//	});
+		//	//----------------------------------------------------------------
+
+		//};
 
 		//Realiza la redirección para dar inicio al pago.
 		function RedireccionPago(id_seguridad, valor_pago) {
@@ -207,8 +207,9 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 					ga('send', 'event', 'Pagina Vista', pagina, (sessionStorage.getItem("Usuario")) ? sessionStorage.getItem("Usuario") : response.data[0].NombreAdquiriente);
 				} catch (e) {
 
-				}				
+				}
 				//Si estatus es igual a 2, entonces asigno los valores a las variables para ejecutar la consulta de saldo
+				console.log(response.data[0].Estatus);
 				if (response.data[0].Estatus == 2) {
 					$scope.Idregistro = response.data[0].pago[0].StrIdRegistro
 					VerificarEstado();
@@ -365,7 +366,11 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 				}, 1000);
 			} else {
 				$scope.PanelInformacion = false;
-				$scope.habilitar();
+											
+				$timeout(function callAtTimeout() {
+					$("#modal_Pagos_Electronicos").modal("show");
+					$scope.ConsultarPago1('', '1', true, true);
+				}, 1000);
 			}
 
 		}
@@ -456,7 +461,11 @@ AcuseReciboApp.controller('AcuseReciboController', function AcuseReciboControlle
 	});
 
 
+	//Redirecciona el pago interno al metodo del controlador de pago    
+	$scope.ConsultarPago1 = function (Monto, PagosParciales, poseeIdComercioPSE, poseeIdComercioTC) {
+		$rootScope.ConsultarPago(IdSeguridad, Monto, PagosParciales, poseeIdComercioPSE, poseeIdComercioTC);
+	};
+
 
 });
-
 

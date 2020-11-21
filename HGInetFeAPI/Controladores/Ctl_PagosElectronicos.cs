@@ -5,9 +5,9 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HGInetFeAPI.Controladores
+namespace HGInetFeAPI
 {
-	class Ctl_PagosElectronicos
+	public class Ctl_PagosElectronicos
 	{
 		// ruta donde se encuentra el servicio web
 		private static string UrlWcf = "wcf/pagoselectronicos.svc";

@@ -213,6 +213,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	Datos_Integrador = false,
 	Datos_Anexo = false,
 	Datos_ManejaPagos = false,
+	Datos_PermitePagosParciales = false,
 	Datos_EmailRecepcion = false,
 	Datos_Numero_usuarios = 1,
 	Datos_Horas_Acuse = 0;
@@ -773,6 +774,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 			});
 
+			$("#PermitePagosParciales").dxCheckBox({
+				name: "PermitePagosParciales",
+				value: false,
+				onValueChanged: function (data) {
+					Datos_PermitePagosParciales = data.value;
+				}
+			});
+
+
 
 			$("#EmailRecepcion").dxCheckBox({
 				name: "EmailRecepcion",
@@ -1244,6 +1254,22 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 
 
+		$("#tooltip_PermitePagosParciales").dxPopover({
+			target: "#PermitePagosParciales",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+
+
+
 		$("#tooltip_EmailRecepcion").dxPopover({
 			target: "#EmailRecepcion",
 			showEvent: {
@@ -1526,6 +1552,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Horas_Acuse = response.data[0].IntAcuseTacito;
 				Datos_Anexo = response.data[0].IntAnexo;
 				Datos_ManejaPagos = response.data[0].IntManejaPagoE;
+				Datos_PermitePagosParciales = response.data[0].IntPagoEParcial;
 				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
 				Datos_estado = response.data[0].Estado;
 				Datos_postpago = response.data[0].Postpago;
@@ -1569,7 +1596,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 
 				if (Datos_ManejaPagos == 1) {
-					$("#ManejaPagos ").dxCheckBox({ value: true });
+					$("#ManejaPagos").dxCheckBox({ value: true });
+				}
+
+				if (Datos_PermitePagosParciales == 1) {
+					$("#PermitePagosParciales").dxCheckBox({ value: true });
 				}
 
 				//Proceso de validación de Correo****************************
@@ -1780,6 +1811,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntAcuseTacito: Datos_Horas_Acuse,
 				IntManejaAnexos: Datos_Anexo,
 				IntManejaPagoE: Datos_ManejaPagos,
+				IntPagoEParcial:Datos_PermitePagosParciales,
 				IntEnvioMailRecepcion: Datos_EmailRecepcion,
 				StrEmpresaDescuento: empresaDescuenta,
 				IntIdEstado: Datos_estado,

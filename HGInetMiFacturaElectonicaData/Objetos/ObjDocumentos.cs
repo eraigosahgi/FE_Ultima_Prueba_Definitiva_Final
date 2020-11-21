@@ -43,6 +43,8 @@ namespace HGInetMiFacturaElectonicaData.Objetos
 		public int poseeIdComercio { get; set; }
 		public short FacturaCancelada { get; set; }
 		public int PagosParciales { get; set; }
+		public bool poseeIdComercioPSE { get; set; }
+		public bool poseeIdComercioTC { get; set; }
 
 	}
 }
