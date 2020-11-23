@@ -652,7 +652,7 @@ namespace HGInetUBLv2_1
 					#region Valor Total
 					LineExtensionAmountType LineExtensionAmount = new LineExtensionAmountType();
 					LineExtensionAmount.currencyID = moneda_detalle.ToString(); //(LISTADO DE VALORES DEFINIDO POR LA DIAN)
-					LineExtensionAmount.Value = decimal.Round(DocDet.ValorSubtotal, 2);
+					LineExtensionAmount.Value = DocDet.ValorSubtotal; //decimal.Round(DocDet.ValorSubtotal, 2);
 					CreditNoteLine.LineExtensionAmount = LineExtensionAmount;
 					#endregion
 
@@ -665,7 +665,7 @@ namespace HGInetUBLv2_1
 						if (DocDet.DescuentoPorcentaje > 0)
 						{
 							decimal valorTotal_cal = DocDet.Cantidad * DocDet.ValorUnitario;
-							AllowanceCharge.BaseAmount.Value = decimal.Round(valorTotal_cal, 2);
+							AllowanceCharge.BaseAmount.Value = decimal.Round(valorTotal_cal, 6);
 						}
 						else
 						{
@@ -686,10 +686,10 @@ namespace HGInetUBLv2_1
 						AllowanceChargeReasonType[0] = AllowanceChargeReason;
 						AllowanceCharge.AllowanceChargeReason = AllowanceChargeReasonType;
 						AllowanceCharge.MultiplierFactorNumeric = new MultiplierFactorNumericType();
-						AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 6);
+						AllowanceCharge.MultiplierFactorNumeric.Value = DocDet.DescuentoPorcentaje; // decimal.Round(DocDet.DescuentoPorcentaje, 6);
 						AllowanceCharge.Amount = new AmountType2();
 						AllowanceCharge.Amount.currencyID = moneda_detalle.ToString();
-						AllowanceCharge.Amount.Value = decimal.Round(DocDet.DescuentoValor, 2);
+						AllowanceCharge.Amount.Value = DocDet.DescuentoValor;// decimal.Round(DocDet.DescuentoValor, 2);
 						AllowanceCharges[0] = AllowanceCharge;
 
 						CreditNoteLine.AllowanceCharge = AllowanceCharges;
@@ -731,7 +731,7 @@ namespace HGInetUBLv2_1
 							TaxTotal.TaxAmount = new TaxAmountType()
 							{
 								currencyID = moneda_detalle.ToString(),
-								Value = decimal.Round(DocDet.IvaValor, 2)
+								Value = DocDet.IvaValor// decimal.Round(DocDet.IvaValor, 2)
 							};
 
 							// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
@@ -758,7 +758,7 @@ namespace HGInetUBLv2_1
 							TaxSubtotalIva.TaxableAmount.currencyID = moneda_detalle.ToString();
 							if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0 && DocDet.IvaPorcentaje > 0)
 							{
-								TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 2, MidpointRounding.AwayFromZero);
+								TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 6, MidpointRounding.AwayFromZero);
 							}
 							else
 							{
@@ -825,7 +825,7 @@ namespace HGInetUBLv2_1
 						TaxTotal.TaxAmount = new TaxAmountType()
 						{
 							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round(DocDet.ValorImpuestoConsumo, 2)
+							Value = DocDet.ValorImpuestoConsumo// decimal.Round(DocDet.ValorImpuestoConsumo, 2)
 						};
 
 						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
@@ -883,7 +883,7 @@ namespace HGInetUBLv2_1
 							TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
 							{
 								currencyID = moneda_detalle.ToString(),
-								Value = decimal.Round((DocDet.ValorImpuestoConsumo) / DocDet.Cantidad, 2) + 0.00M
+								Value = decimal.Round((DocDet.ValorImpuestoConsumo) / DocDet.Cantidad, 6) + 0.00M
 							};
 
 						}
@@ -936,7 +936,7 @@ namespace HGInetUBLv2_1
 						TaxTotal.TaxAmount = new TaxAmountType()
 						{
 							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round(DocDet.ValorImpuestoConsumo, 2)
+							Value = DocDet.ValorImpuestoConsumo// decimal.Round(DocDet.ValorImpuestoConsumo, 2)
 						};
 
 						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
@@ -976,7 +976,7 @@ namespace HGInetUBLv2_1
 						TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
 						{
 							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round((DocDet.ValorImpuestoConsumo) / DocDet.Cantidad, 2) + 0.00M//decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2) + 0.00M//
+							Value = decimal.Round((DocDet.ValorImpuestoConsumo) / DocDet.Cantidad, 6) + 0.00M//decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2) + 0.00M//
 						};
 
 						// categoría de impuestos aplicable a este subtotal.
@@ -1227,7 +1227,7 @@ namespace HGInetUBLv2_1
 					// <cbc:PriceAmount>
 					PriceAmountType PriceAmount = new PriceAmountType();
 					PriceAmount.currencyID = moneda_detalle.ToString();
-					PriceAmount.Value = decimal.Round(DocDet.ValorUnitario, 2);
+					PriceAmount.Value = DocDet.ValorUnitario; //decimal.Round(DocDet.ValorUnitario, 2);
 					Price.PriceAmount = PriceAmount;
 
 					//---Segun la base de la unidad utilizada
