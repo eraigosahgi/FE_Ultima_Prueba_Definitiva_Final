@@ -843,7 +843,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						try
 						{
 							//List<Guid> docs = new List<Guid>();
-							List<Guid> docs = (from datos in context.TblDocumentos
+							List<Guid> docs = (from datos in context.TblDocumentos.AsNoTracking()
 											   where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
 													 && datos.StrEmpresaFacturador == item.StrIdentificacion
 													 && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
@@ -1989,13 +1989,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			estado_recibo = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));
 
-			List<string> estados = Coleccion.ConvertirLista(estado_recibo);
+			//List<string> estados = Coleccion.ConvertirLista(estado_recibo);
+			string estados_permitidos = string.Format("{0},{1},{2},{3},{4}", ProcesoEstado.AlmacenaXML.GetHashCode(), ProcesoEstado.FirmaXml.GetHashCode(), ProcesoEstado.CompresionXml.GetHashCode(), ProcesoEstado.EnvioZip.GetHashCode(), ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode());
 
 			DateTime FechaActual = Fecha.GetFecha();
 
 			var respuesta = (from datos in context.TblDocumentos
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-							 where (estado_recibo.Contains(datos.IntIdEstado.ToString()))
+							 where (estados_permitidos.Contains(datos.IntIdEstado.ToString()))
 							 && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual)
 
 							 orderby datos.DatFechaIngreso descending
