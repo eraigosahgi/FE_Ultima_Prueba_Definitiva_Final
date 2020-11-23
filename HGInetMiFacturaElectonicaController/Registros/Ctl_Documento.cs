@@ -1990,17 +1990,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			estado_recibo = Coleccion.ConvertirString(Ctl_MaestrosEnum.ListaEnum(0, "privado"));
 
 			//List<string> estados = Coleccion.ConvertirLista(estado_recibo);
-			string estados_permitidos = string.Format("{0},{1},{2},{3},{4}", ProcesoEstado.AlmacenaXML.GetHashCode(), ProcesoEstado.FirmaXml.GetHashCode(), ProcesoEstado.CompresionXml.GetHashCode(), ProcesoEstado.EnvioZip.GetHashCode(), ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode());
+			string estados_permitidos = string.Format("{0},{1},{2},{3}", ProcesoEstado.AlmacenaXML.GetHashCode(), ProcesoEstado.FirmaXml.GetHashCode(), ProcesoEstado.CompresionXml.GetHashCode(), ProcesoEstado.EnvioZip.GetHashCode());
+			int estado_pausado = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
 
 			DateTime FechaActual = Fecha.GetFecha();
 
 			var respuesta = (from datos in context.TblDocumentos
-							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-							 where (estados_permitidos.Contains(datos.IntIdEstado.ToString()))
-							 && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual)
+				join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+				where (estados_permitidos.Contains(datos.IntIdEstado.ToString()) || estado_pausado == datos.IntIdEstado)
+				      && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual)
 
-							 orderby datos.DatFechaIngreso descending
-							 select datos).ToList();
+				orderby datos.DatFechaIngreso descending
+				select datos).ToList();
 
 			return respuesta;
 		}
