@@ -138,6 +138,21 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
                    	dataField: "StrIdSeguridadPago"
 
                    },
+				   {
+				   	caption: "Forma Pago",
+				   	dataField: "Franquicia",
+				   	width: '90px',
+				   	alignment: "center",
+				   	cellTemplate: function (container, options) {
+
+				   		if (options.data.Franquicia != "") {
+				   			var titulo = (options.data.Franquicia != "") ? "title = " + options.data.Franquicia : "";
+
+				   			$('<img src="/Scripts/Images/' + options.data.Franquicia + '.png"  ' + titulo + ' />')
+									.appendTo(container);
+				   		}
+				   	}
+				   },
                    {
                    	caption: "Fecha Pago",
                    	dataField: "FechaRegistro",

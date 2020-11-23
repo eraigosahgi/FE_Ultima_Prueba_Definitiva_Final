@@ -1265,6 +1265,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Pagos = d.TblPagosElectronicos.Select(p => new
 					{
 						Monto = p.IntValorPago,
+						Franquicia = (!string.IsNullOrEmpty(p.StrCodigoFranquicia)) ? p.StrCodigoFranquicia : "",
 						FechaRegistro = p.DatFechaRegistro,
 						FechaVerificacion = p.DatFechaVerificacion,
 						StrIdSeguridadPago = p.StrIdSeguridadPago,
@@ -1481,7 +1482,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 					//Si despues de este tiempo no tenemos datos del pago en la plataforma intermedia
 					//Colocamos el estado de Pago no Iniciado
-					if (diferencia.TotalMinutes > 15) 
+					if (diferencia.TotalMinutes > 15)
 					{
 						ConfigPago.IntPagoEstado = EstadoPago.NoIniciado.GetHashCode();
 					}
