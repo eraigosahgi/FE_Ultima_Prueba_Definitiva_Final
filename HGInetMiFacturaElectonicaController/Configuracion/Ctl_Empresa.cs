@@ -144,6 +144,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 
+
 		/// <summary>
 		/// Valida Autenticacion del Datakey respecto a los campos enviados 
 		/// </summary>
@@ -206,8 +207,34 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 
+		/// <summary>
+		/// Validar tercero Facturador desde Interoperabilidad
+		/// </summary>
+		/// <param name="identificacion_obligado"></param>
+		/// <returns></returns>
+		public TblEmpresas ValidarInteroperabilidad(string identificacion_obligado)
+		{
+			context.Configuration.LazyLoadingEnabled = false;
 
+			TblEmpresas datos = (from item in context.TblEmpresas
+								 where item.StrIdentificacion.Equals(identificacion_obligado)
+								 && (!string.IsNullOrEmpty(item.StrSerial))
+								 select item).FirstOrDefault();
 
+			if (datos != null)
+			{
+				if (datos.IntIdEstado == 2)
+					throw new ApplicationException(string.Format("La identificación {0} no se encuentra activo.", identificacion_obligado));
+					
+				if (datos.IntVersionDian != 2)
+					throw new ApplicationException(string.Format("La identificación {0} no se encuentra en la versión 2.", identificacion_obligado));
+					
+				return datos;
+			}
+
+			throw new ApplicationException(string.Format("No se encontró la identificación {0}", identificacion_obligado));
+		}
+		
 
 		/// <summary>
 		/// Obtiene empresa con la identificacion
@@ -1339,8 +1366,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			context.Configuration.LazyLoadingEnabled = false;
 
 			var datos = (from item in context.TblEmpresas
-				where item.IntAcuseTacito >= 72
-				select item).ToList();
+						 where item.IntAcuseTacito >= 72
+						 select item).ToList();
 
 			return datos;
 		}
