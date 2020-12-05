@@ -125,6 +125,60 @@ namespace HGInetUBLv2_1
 				//Grupo de información para informar dirección fiscal - RUT
 				//--Puede ser diferente la localizacion Fisica a la del RUT
 				PartyTaxScheme.RegistrationAddress = new AddressType();
+
+				//Se valida si envian una direccion fiscal diferente
+				if (empresa.DireccionFiscal != null)
+				{
+					Address = new AddressType();
+
+					//----6.4.3. Municipios:  cbc:CityName Ver listado del DANE
+					Address.ID = new IDType();
+					Address.ID.Value = empresa.DireccionFiscal.CodigoCiudad;
+					City = new CityNameType();
+					list_municipio = new ListaMunicipio();
+					municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empresa.DireccionFiscal.CodigoCiudad)).FirstOrDefault();
+					City.Value = municipio.Nombre; //empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					Address.CityName = City;
+
+					//6.4.2. Departamentos (ISO 3166-2:CO):  cbc:CountrySubentity, cbc:CountrySubentityCode
+					CountrySubentity = new CountrySubentityType();
+					list_depart = new ListaDepartamentos();
+					departamento = list_depart.Items.Where(d => d.Codigo.Equals(empresa.DireccionFiscal.CodigoDepartamento)).FirstOrDefault();
+					CountrySubentity.Value = departamento.Nombre;//"Antioquia";//Listado de Departamentos el Nombre
+					Address.CountrySubentity = CountrySubentity;
+					CountrySubentityCode = new CountrySubentityCodeType();
+					CountrySubentityCode.Value = empresa.DireccionFiscal.CodigoDepartamento;//Listado de Departamentos el codigo
+					Address.CountrySubentityCode = CountrySubentityCode;
+
+					//Direccion
+					AddressLines = new AddressLineType[1];
+					AddressLine = new AddressLineType();
+					Line = new LineType();
+					Line.Value = empresa.DireccionFiscal.Direccion;
+					AddressLine.Line = Line;
+
+					AddressLines[0] = AddressLine;
+					Address.AddressLine = AddressLines;
+
+					//---Zona Postal
+					Address.PostalZone = new PostalZoneType();
+					Address.PostalZone.Value = empresa.DireccionFiscal.CodigoPostal;//Listado de Zona Postal de Colombia
+
+					//6.4.1. Países (ISO 3166-1): cbc:IdentificationCode 
+					//ISO 3166-1 alfa-2: Códigos de país de das letras. Si recomienda como el código de propósito
+					//general.Estos códigos se utilizan por ejemplo en internet como dominios geográficos de nivel superior.
+					Country = new CountryType();
+					IdentificationCode = new IdentificationCodeType();
+					IdentificationCode.Value = empresa.DireccionFiscal.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
+					Country.IdentificationCode = IdentificationCode;
+					Country.Name = new NameType1();
+					list_paises = new ListaPaises();
+					pais = list_paises.Items.Where(d => d.Codigo.Equals(empresa.DireccionFiscal.CodigoPais)).FirstOrDefault();
+					Country.Name.Value = pais.Nombre;//"Colombia";//Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
+					Country.Name.languageID = "es";
+					Address.Country = Country;
+
+				}
 				PartyTaxScheme.RegistrationAddress = Address;
 
 				//Identificacion
@@ -376,6 +430,83 @@ namespace HGInetUBLv2_1
 				//Grupo de información para informar dirección fiscal - RUT
 				//--Puede ser diferente la localizacion Fisica a la del RUT
 				PartyTaxScheme.RegistrationAddress = new AddressType();
+
+				//Se valida si envian una direccion fiscal diferente a la de entrega
+				if (tercero.DireccionFiscal != null)
+				{
+					Address = new AddressType();
+
+					//----5.4.3. Municipios:  cbc:CityName Ver listado del DANE
+					Address.ID = new IDType();
+					Address.ID.Value = (!string.IsNullOrEmpty(tercero.DireccionFiscal.CodigoCiudad) && tercero.DireccionFiscal.CodigoPais.Equals("CO")) ? tercero.DireccionFiscal.CodigoCiudad : "";
+					City = new CityNameType();
+					if (tercero.DireccionFiscal.CodigoPais.Equals("CO"))
+					{
+						ListaMunicipio list_municipio = new ListaMunicipio();
+						ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoCiudad)).FirstOrDefault();
+						City.Value = municipio.Nombre; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+						tercero.DireccionFiscal.Ciudad = municipio.Nombre;
+					}
+					else
+					{
+						City.Value = tercero.DireccionFiscal.Ciudad;
+					}
+					Address.CityName = City;
+
+
+					//5.4.2. Departamentos (ISO 3166-2:CO):  cbc:CountrySubentity, cbc:CountrySubentityCode
+					CountrySubentity = new CountrySubentityType();
+					if (tercero.DireccionFiscal.CodigoPais.Equals("CO"))
+					{
+						ListaDepartamentos list_depart = new ListaDepartamentos();
+						ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoDepartamento)).FirstOrDefault();
+						CountrySubentity.Value = departamento.Nombre; //Listado de Departamentos el Nombre
+						Address.CountrySubentity = CountrySubentity;
+						CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
+						CountrySubentityCode.Value = tercero.DireccionFiscal.CodigoDepartamento; //Listado de Departamentos el codigo
+						Address.CountrySubentityCode = CountrySubentityCode;
+						tercero.DireccionFiscal.Departamento = departamento.Nombre;
+					}
+					else
+					{
+						CountrySubentity.Value = tercero.DireccionFiscal.Departamento; //Listado de Departamentos el Nombre
+						Address.CountrySubentity = CountrySubentity;
+						CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
+						CountrySubentityCode.Value = (string.IsNullOrEmpty(tercero.DireccionFiscal.CodigoDepartamento)) ? "" : tercero.DireccionFiscal.CodigoDepartamento; //Listado de Departamentos el codigo
+						Address.CountrySubentityCode = CountrySubentityCode;
+					}
+
+					//Direccion
+					//Informar la dirección, sin ciudad ni departamento.
+					//Si el adquirente no es responsable de IVA entonces se puede informar solo este elemento en dirección. 
+					AddressLines = new AddressLineType[1];
+					AddressLine = new AddressLineType();
+					Line = new LineType();
+					Line.Value = tercero.DireccionFiscal.Direccion;
+					AddressLine.Line = Line;
+
+					AddressLines[0] = AddressLine;
+					Address.AddressLine = AddressLines;
+
+					//Zona Postal - Obligatorio para emisores y Adquirentes Responsables 
+					Address.PostalZone = new PostalZoneType();
+					Address.PostalZone.Value = tercero.DireccionFiscal.CodigoPostal;//Listado de Zona Postal de Colombia
+
+					//5.4.1. Países (ISO 3166-1): cbc:IdentificationCode 
+					//ISO 3166-1 alfa-2: Códigos de país de das letras. Si recomienda como el código de propósito
+					//general.Estos códigos se utilizan por ejemplo en internet como dominios geográficos de nivel superior.
+					Country = new CountryType();
+
+					IdentificationCode = new IdentificationCodeType();
+					IdentificationCode.Value = tercero.DireccionFiscal.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
+					Country.IdentificationCode = IdentificationCode;
+					Country.Name = new NameType1();
+					list_paises = new ListaPaises();
+					pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoPais)).FirstOrDefault();
+					Country.Name.Value = pais.Nombre;//"Colombia";//Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
+					Country.Name.languageID = "es";
+					Address.Country = Country;
+				}
 				PartyTaxScheme.RegistrationAddress = Address;
 
 				//Identificacion

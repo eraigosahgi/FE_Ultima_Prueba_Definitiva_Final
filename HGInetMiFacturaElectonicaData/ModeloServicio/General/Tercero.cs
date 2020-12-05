@@ -84,6 +84,16 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string Direccion { get; set; }
 
 		/// <summary>
+		/// Direccion
+		/// </summary>
+		public Direcciones DireccionFiscal { get; set; }
+
+		/// <summary>
+		/// Direccion
+		/// </summary>
+		public Direcciones DireccionEntrega { get; set; }
+
+		/// <summary>
 		/// Codigo Postal necesario para V2
 		/// </summary>
 		public string CodigoPostal { get; set; }

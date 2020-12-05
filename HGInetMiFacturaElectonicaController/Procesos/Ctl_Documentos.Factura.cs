@@ -444,7 +444,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					//Se lee un archivo json y se convierte a objeto Factura para pruebas
 					//Factura obj_nc = new Factura();
-					//string objeto = System.IO.File.ReadAllText(@"E:\Desarrollo\jzea\Proyectos\HGInetMiFacturaElectronica\Codigo\HGInetMiFacturaElectronicaWeb\dms\Debug\811021438-SETP-990000005.json").ToString();
+					//string objeto = System.IO.File.ReadAllText(@"E:\Desarrollo\jzea\Proyectos\HGInetMiFacturaElectronica\Codigo\HGInetMiFacturaElectronicaWeb\dms\Debug\811021438-SETP-990001209-.json").ToString();
 					//obj_nc = JsonConvert.DeserializeObject<Factura>(objeto);
 					//item = obj_nc;
 
@@ -700,6 +700,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						throw new ApplicationException("No se encontró Tasa de Cambio para el documento de exportación");
 					}
+
+					if (documento.TipoEntrega != null )
+					{
+
+						ListaTipoEntrega list_tipo_entrega = new ListaTipoEntrega();
+						ListaItem entrega = list_tipo_entrega.Items.Where(d => d.Codigo.Equals(documento.TipoEntrega.CodCondicionEntrega)).FirstOrDefault();
+						if (entrega == null)
+							throw new ApplicationException(string.Format("El código de la Condicion de Entrega '{0}' no es válido según Estandar DIAN", documento.TipoEntrega.CodCondicionEntrega));
+					}
 				}
 
 				if (documento.DocumentosReferencia != null)
@@ -723,6 +732,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (!ConfiguracionRegional.ValidarCodigoMoneda(documento.Moneda))
 				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 4217", "Moneda", documento.Moneda));
+
+			if (documento.FechaEntrega.Date >= Fecha.GetFecha().Date)
+			{
+				if (documento.FechaEntrega.Date < documento.Fecha.Date)
+					throw new ApplicationException(string.Format("La fecha de entrega {0} debe ser mayor o igual a la fecha de elaboración del documento {1}", documento.FechaEntrega, documento.Fecha));
+
+				if (documento.FechaEntrega.Date > Fecha.GetFecha().Date.AddDays(10))
+					throw new ApplicationException(string.Format("La fecha de entrega {0} no puede ser mayor a 10 dias de la fecha de recepcion en la plataforma.", documento.FechaEntrega));
+
+			}
+			else if(documento.DatosAdquiriente.DireccionEntrega != null)
+				throw new ApplicationException("La fecha de entrega es requerida cuando se informa la dirección de entrega.");
 
 			//Valida que no este vacio y este bien formado 
 			ValidarTercero(documento.DatosObligado, "Obligado", facturador);

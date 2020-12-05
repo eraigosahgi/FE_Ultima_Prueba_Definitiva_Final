@@ -443,6 +443,116 @@ namespace HGInetUBLv2_1
 				if (documento.Descuentos != null || documento.Cargos != null)
 					facturaXML.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
 
+				if (documento.DatosAdquiriente.DireccionEntrega != null)
+				{
+					DeliveryType[] delivery = new DeliveryType[1];
+					DeliveryType deliverytype = new DeliveryType();
+
+					AddressType Address = new AddressType();
+
+					//----5.4.3. Municipios:  cbc:CityName Ver listado del DANE
+					Address.ID = new IDType();
+					Address.ID.Value = (!string.IsNullOrEmpty(documento.DatosAdquiriente.DireccionEntrega.CodigoCiudad) && documento.DatosAdquiriente.DireccionEntrega.CodigoPais.Equals("CO")) ? documento.DatosAdquiriente.DireccionEntrega.CodigoCiudad : "";
+					CityNameType City = new CityNameType();
+					if (documento.DatosAdquiriente.DireccionEntrega.CodigoPais.Equals("CO"))
+					{
+						ListaMunicipio list_municipio = new ListaMunicipio();
+						ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(documento.DatosAdquiriente.DireccionEntrega.CodigoCiudad)).FirstOrDefault();
+						City.Value = municipio.Nombre; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+						documento.DatosAdquiriente.DireccionEntrega.Ciudad = municipio.Nombre;
+					}
+					else
+					{
+						City.Value = documento.DatosAdquiriente.DireccionEntrega.Ciudad;
+					}
+					Address.CityName = City;
+
+
+					//5.4.2. Departamentos (ISO 3166-2:CO):  cbc:CountrySubentity, cbc:CountrySubentityCode
+					CountrySubentityType CountrySubentity = new CountrySubentityType();
+					if (documento.DatosAdquiriente.DireccionEntrega.CodigoPais.Equals("CO"))
+					{
+						ListaDepartamentos list_depart = new ListaDepartamentos();
+						ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(documento.DatosAdquiriente.DireccionEntrega.CodigoDepartamento)).FirstOrDefault();
+						CountrySubentity.Value = departamento.Nombre; //Listado de Departamentos el Nombre
+						Address.CountrySubentity = CountrySubentity;
+						CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
+						CountrySubentityCode.Value = documento.DatosAdquiriente.DireccionEntrega.CodigoDepartamento; //Listado de Departamentos el codigo
+						Address.CountrySubentityCode = CountrySubentityCode;
+						documento.DatosAdquiriente.DireccionEntrega.Departamento = departamento.Nombre;
+					}
+					else
+					{
+						CountrySubentity.Value = documento.DatosAdquiriente.DireccionEntrega.Departamento; //Listado de Departamentos el Nombre
+						Address.CountrySubentity = CountrySubentity;
+						CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
+						CountrySubentityCode.Value = (string.IsNullOrEmpty(documento.DatosAdquiriente.DireccionEntrega.CodigoDepartamento)) ? "" : documento.DatosAdquiriente.DireccionEntrega.CodigoDepartamento; //Listado de Departamentos el codigo
+						Address.CountrySubentityCode = CountrySubentityCode;
+					}
+
+					//Direccion
+					//Informar la dirección, sin ciudad ni departamento.
+					//Si el adquirente no es responsable de IVA entonces se puede informar solo este elemento en dirección. 
+					AddressLineType[] AddressLines = new AddressLineType[1];
+					AddressLineType AddressLine = new AddressLineType();
+					LineType Line = new LineType();
+					Line.Value = documento.DatosAdquiriente.DireccionEntrega.Direccion;
+					AddressLine.Line = Line;
+
+					AddressLines[0] = AddressLine;
+					Address.AddressLine = AddressLines;
+
+					//Zona Postal - Obligatorio para emisores y Adquirentes Responsables 
+					Address.PostalZone = new PostalZoneType();
+					Address.PostalZone.Value = documento.DatosAdquiriente.DireccionEntrega.CodigoPostal;//Listado de Zona Postal de Colombia
+
+					//5.4.1. Países (ISO 3166-1): cbc:IdentificationCode 
+					//ISO 3166-1 alfa-2: Códigos de país de das letras. Si recomienda como el código de propósito
+					//general.Estos códigos se utilizan por ejemplo en internet como dominios geográficos de nivel superior.
+					CountryType Country = new CountryType();
+
+					IdentificationCodeType IdentificationCode = new IdentificationCodeType();
+					IdentificationCode.Value = documento.DatosAdquiriente.DireccionEntrega.CodigoPais; //Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
+					Country.IdentificationCode = IdentificationCode;
+					Country.Name = new NameType1();
+					ListaPaises list_paises = new ListaPaises();
+					ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(documento.DatosAdquiriente.DireccionEntrega.CodigoPais)).FirstOrDefault();
+					Country.Name.Value = pais.Nombre;//"Colombia";//Pais (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.4.1)
+					Country.Name.languageID = "es";
+					Address.Country = Country;
+
+					deliverytype.DeliveryAddress = Address;
+					
+
+					ActualDeliveryDateType fecha_entrega = new ActualDeliveryDateType();
+					fecha_entrega.Value = documento.FechaEntrega;
+					deliverytype.ActualDeliveryDate = fecha_entrega;
+
+					delivery[0] = deliverytype;
+					facturaXML.Delivery = delivery;
+
+				}
+
+
+				if (documento.TipoOperacion == TipoOperacion.FacturaExportacion.GetHashCode() && documento.TipoEntrega != null)
+				{
+					ListaTipoEntrega list_tipo_entrega = new ListaTipoEntrega();
+					ListaItem entrega = list_tipo_entrega.Items.Where(d => d.Codigo.Equals(documento.TipoEntrega.CodCondicionEntrega)).FirstOrDefault();
+					DeliveryTermsType TerminosEntrega = new DeliveryTermsType();
+					TerminosEntrega.LossRiskResponsibilityCode = new LossRiskResponsibilityCodeType();
+					TerminosEntrega.LossRiskResponsibilityCode.Value = entrega.Codigo;
+					TerminosEntrega.LossRisk = new LossRiskType[1];
+					LossRiskType lossRisk = new LossRiskType();
+					lossRisk.Value = entrega.Descripcion;
+					TerminosEntrega.LossRisk[0] = lossRisk;
+					TerminosEntrega.SpecialTerms = new SpecialTermsType[1];
+					SpecialTermsType specialTermsType = new SpecialTermsType();
+					specialTermsType.Value = documento.TipoEntrega.TerminosEntrega;
+					TerminosEntrega.SpecialTerms[0] = specialTermsType;
+					facturaXML.DeliveryTerms = TerminosEntrega;
+
+				}
+
 
 				#region Anticipos
 				if (documento.Anticipos != null)
@@ -498,7 +608,7 @@ namespace HGInetUBLv2_1
 				string resp = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.DatosObligado.Responsabilidades, ";");
 				if (resp.Contains("O-15") == true)
 					autoretenedor = true;
-				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda, autoretenedor, documento.DatosObligado.Identificacion.ToString());
+				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda, autoretenedor, documento.DatosObligado.Identificacion.ToString(), documento.TipoOperacion);
 				#endregion
 
 				#region	facturaXML.TaxTotal - Impuesto y Impuesto Retenido
@@ -1249,7 +1359,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo InvoiceLineType1</returns>
-		private static InvoiceLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string moneda, bool Autoretenedor, string identificiacion_Obligado)
+		private static InvoiceLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string moneda, bool Autoretenedor, string identificiacion_Obligado, int tipo_operacion)
 		{
 			try
 			{
@@ -1917,8 +2027,17 @@ namespace HGInetUBLv2_1
 						//IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
 						// -- 6.3.5. Productos: @schemeID, @schemeName, @schemeAgencyID
 
-						//Se valida si es FRESCONGELADOS PANETTIERE S.A.
-						if (identificiacion_Obligado.Equals("900038405") && !string.IsNullOrEmpty(DocDet.ProductoCodigoEAN))
+						//Se valida si es Exportacion y que llegue informacion en la posicion arancelaria
+						if (tipo_operacion.Equals(2) && !string.IsNullOrEmpty(DocDet.ProductoCodigoPArancelaria))
+						{
+							ListaTipoCodigoProducto list_TipoPro = new ListaTipoCodigoProducto();
+							ListaItem TipoProd = list_TipoPro.Items.Where(d => d.Codigo.Equals("020")).FirstOrDefault();
+							IDItemStandard.schemeID = TipoProd.Codigo;
+							IDItemStandard.schemeName = TipoProd.Descripcion;
+							IDItemStandard.schemeAgencyID = "195";
+							IDItemStandard.Value = DocDet.ProductoCodigoPArancelaria;
+						}
+						else if (!string.IsNullOrEmpty(DocDet.ProductoCodigoEAN))
 						{
 							ListaTipoCodigoProducto list_TipoPro = new ListaTipoCodigoProducto();
 							ListaItem TipoProd = list_TipoPro.Items.Where(d => d.Codigo.Equals("010")).FirstOrDefault();

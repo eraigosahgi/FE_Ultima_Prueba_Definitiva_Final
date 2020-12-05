@@ -1393,6 +1393,7 @@
       <DependentUpon>VersionesDIANv2_1.resx</DependentUpon>
     </Compile>
     <Compile Include="XML\AcuseReciboXMLv2_1.cs" />
+    <Compile Include="XML\AttachedDocument.Convertir.cs" />
     <Compile Include="XML\AttachedDocument.cs" />
     <Compile Include="XML\ConvertirXML.cs" />
     <Compile Include="XML\DocumentoImpuestos.cs" />

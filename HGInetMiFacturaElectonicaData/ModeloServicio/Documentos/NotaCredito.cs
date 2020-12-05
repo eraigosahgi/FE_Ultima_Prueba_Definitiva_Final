@@ -274,6 +274,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public string LineaNegocio { get; set; }
 
+        /// <summary>
+        /// Tasa de cambio de moneda extranjera
+        /// </summary>
+        public TasaCambio Trm { get; set; }
+
 		#endregion
 	}
 }

@@ -313,6 +313,34 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
+				#region PaymentExchangeRate - Conversión de divisas: cac:PaymentExchangeRate
+				if (!documento.Moneda.Equals("COP") && documento.Trm != null)
+				{
+					ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
+					//---5.3.3. Moneda (ISO 4217):
+					//cbc: SourceCurrencyCode [1..1] La moneda de referencia para este tipo de cambio; La moneda a partir de la cual se realiza el cambio.
+					PaymentExchangeRate.SourceCurrencyCode = new SourceCurrencyCodeType();
+					PaymentExchangeRate.SourceCurrencyCode.Value = documento.Moneda;
+					//---Valor debe ser 1.00 si es pesos colombianos
+					//*cbc: SourceCurrencyBaseRate[0..1] En el caso de una moneda de origen con denominaciones de pequeño valor, la unidad base.
+					PaymentExchangeRate.SourceCurrencyBaseRate = new SourceCurrencyBaseRateType();
+					PaymentExchangeRate.SourceCurrencyBaseRate.Value = 1.00M;
+					//* cbc: TargetCurrencyCode [1..1] La moneda de destino para este tipo de cambio; La moneda a la que se realiza el cambio.
+					PaymentExchangeRate.TargetCurrencyCode = new TargetCurrencyCodeType();
+					PaymentExchangeRate.TargetCurrencyCode.Value = (documento.Trm != null ? documento.Trm.Moneda : documento.Moneda);//documento.Moneda;
+																																	 //* cbc: TargetCurrencyBaseRate [0..1] En el caso de una moneda de destino con denominaciones de valor pequeño, la base de la unidad.
+					PaymentExchangeRate.TargetCurrencyBaseRate = new TargetCurrencyBaseRateType();
+					PaymentExchangeRate.TargetCurrencyBaseRate.Value = 1.00M;
+					//* cbc: CalculationRate [0..1] El factor aplicado a la moneda de origen para calcular la moneda de destino.
+					PaymentExchangeRate.CalculationRate = new CalculationRateType();
+					PaymentExchangeRate.CalculationRate.Value = (documento.Trm != null ? documento.Trm.Valor + 0.00M : 1.00M);//1.0M;
+																															  //* cbc: Fecha [0..1] La fecha en que se estableció el tipo de cambio.
+					PaymentExchangeRate.Date = new DateType1();
+					PaymentExchangeRate.Date.Value = ((documento.Trm != null) ? Convert.ToDateTime(documento.Trm.FechaTrm.ToString(Fecha.formato_fecha_hginet)) : Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet)));
+					nota_credito.PaymentExchangeRate = PaymentExchangeRate;
+				} 
+				#endregion
+
 				#region nota_credito.AccountingSupplierParty // Información del obligado a facturar
 				nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado,documento.Prefijo);
 				#endregion
@@ -1117,8 +1145,17 @@ namespace HGInetUBLv2_1
 					//IDItemStandard.Value = (string.IsNullOrEmpty(DocDet.ProductoCodigoEAN)) ? string.Empty : DocDet.ProductoCodigoEAN;
 					// -- 6.3.5. Productos: @schemeID, @schemeName, @schemeAgencyID
 
-					//Se valida si es FRESCONGELADOS PANETTIERE S.A.
-					if (identificiacion_Obligado.Equals("900038405") && !string.IsNullOrEmpty(DocDet.ProductoCodigoEAN))
+					//Se valida si es Exportacion y que llegue informacion en la posicion arancelaria
+					if (!moneda_detalle.ToString().Equals("COP") && !string.IsNullOrEmpty(DocDet.ProductoCodigoPArancelaria))
+					{
+						ListaTipoCodigoProducto list_TipoPro = new ListaTipoCodigoProducto();
+						ListaItem TipoProd = list_TipoPro.Items.Where(d => d.Codigo.Equals("020")).FirstOrDefault();
+						IDItemStandard.schemeID = TipoProd.Codigo;
+						IDItemStandard.schemeName = TipoProd.Descripcion;
+						IDItemStandard.schemeAgencyID = "195";
+						IDItemStandard.Value = DocDet.ProductoCodigoPArancelaria;
+					}
+					else if (!string.IsNullOrEmpty(DocDet.ProductoCodigoEAN))
 					{
 						ListaTipoCodigoProducto list_TipoPro = new ListaTipoCodigoProducto();
 						ListaItem TipoProd = list_TipoPro.Items.Where(d => d.Codigo.Equals("010")).FirstOrDefault();

@@ -138,6 +138,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string ProductoCodigoEAN { get; set; }
 
 		/// <summary>
+		/// Codigo de la posición Arancelaria del producto y/o servicio
+		/// </summary>
+		public string ProductoCodigoPArancelaria { get; set; }
+
+		/// <summary>
 		/// Informacion relacionado al manejo AIU: 0 - Ninguno, 1 - Utilidad, 2 - Administracion, 3 - Imprevisto
 		/// </summary>
 		public int Aiu { get; set; }

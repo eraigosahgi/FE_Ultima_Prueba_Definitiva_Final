@@ -74,6 +74,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public DateTime FechaVence { get; set; }
 
 		/// <summary>
+		/// Fecha efectiva de la entrega de los bienes y servicios
+		/// </summary>
+		public DateTime FechaEntrega { get; set; }
+
+		/// <summary>
 		/// Observaciones del documento
 		/// </summary>
 		public string Nota { get; set; }
@@ -297,6 +302,13 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Objeto para indicar la informacion del codigo de barras de recaudo
 		/// </summary>
 		public ReferenciaPago ReferenciaPago { get; set; }
+
+		/// <summary>
+		/// Condiciones de Entrega - INCOTERMS
+		/// https://iccwbo.org/resources-for-business/incoterms-rules/incoterms-rules-2010/.
+		/// 6.3.6. Condiciones de entrega (INCOTERMS): …/cbc:LossRiskResponsibilityCode
+		/// </summary>
+		public CondicionEntrega TipoEntrega { get; set; }
 
 
 		#endregion

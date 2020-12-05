@@ -21,6 +21,7 @@ namespace HGInetUBLv2_1.DianListas
 		{
 			new ListaItem("001", "UNSPSC", "UNSPSC"),
 			new ListaItem("010", "GTIN", "GTIN"),
+			new ListaItem("020", "Partida Arancelarias", "Partida Arancelarias"),
 			new ListaItem("999", "Estándar de adopción del contribuyente", "Estándar de adopción del contribuyente"),
 
 		};
