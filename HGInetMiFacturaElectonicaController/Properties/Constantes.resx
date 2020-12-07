@@ -195,7 +195,7 @@
     <comment>Ruta fisica para el ftp interoperabilidad</comment>
   </data>
   <data name="RutaInteroperabilidadRecepcion" xml:space="preserve">
-    <value>interoperabilidad\\operacion\\recepcion\\</value>
+    <value>interoperabilidad\operacion\recepcion\</value>
     <comment>Ruta fisica para el proceso de recepcion de los documentos a interoperabilidad</comment>
   </data>
   <data name="RutaPlantillaAcuse" xml:space="preserve">
