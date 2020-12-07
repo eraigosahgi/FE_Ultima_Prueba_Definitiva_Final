@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HGInetInteroperabilidad</RootNamespace>
     <AssemblyName>HGInetInteroperabilidad</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -31,12 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HttpClientDiagnostics, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HttpClientDiagnostics.1.1.1.1462518862\lib\portable-net45+netcore45+win8+wpa81+wp8+UAP10+MonoAndroid403+MonoTouch10+Xamarin.iOS10\HttpClientDiagnostics.dll</HintPath>
+    <Reference Include="HGICtrlUtilidades">
+      <HintPath>..\Documentacion\Librerias\HGICtrlUtilidades.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="OpenPop, Version=2.0.6.1120, Culture=neutral, PublicKeyToken=6bdb97f144b7efc8, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenPop.NET.2.0.6.1120\lib\net40\OpenPop.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -75,6 +78,7 @@
     <Compile Include="Objetos\RespuestaRegistro.cs" />
     <Compile Include="Objetos\Usuario.cs" />
     <Compile Include="Procesos\Ctl_Envio.cs" />
+    <Compile Include="Procesos\Ctl_MailRecepcion.cs" />
     <Compile Include="Procesos\Ctl_Recepcion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicios\Ctl_ClienteWebApi.cs" />
