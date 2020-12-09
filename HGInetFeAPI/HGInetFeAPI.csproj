@@ -305,18 +305,18 @@
     <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.wsdl" />
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos2.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos21.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos1.wsdl" />
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos1.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos2.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos3.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos43.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioReenvioDocumento\HGInetFeAPI.ServicioReenvioDocumento.RecepcionResponse.datasource">
