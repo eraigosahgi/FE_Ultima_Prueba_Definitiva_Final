@@ -30,6 +30,7 @@
       <xs:element minOccurs="0" name="DocumentoRef" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DocumentosReferencia" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
       <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaEntrega" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaVence" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FormaPago" type="xs:int" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
@@ -48,6 +49,7 @@
       <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="ReferenciaPago" nillable="true" type="q5:ReferenciaPago" />
       <xs:element minOccurs="0" name="TerminoPago" type="xs:int" />
       <xs:element minOccurs="0" name="TerminoPago_Descripcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TipoEntrega" nillable="true" type="tns:CondicionEntrega" />
       <xs:element minOccurs="0" name="TipoOperacion" type="xs:int" />
       <xs:element minOccurs="0" name="Total" type="xs:decimal" />
       <xs:element minOccurs="0" name="Trm" nillable="true" type="tns:TasaCambio" />
@@ -113,6 +115,8 @@
       <xs:element minOccurs="0" name="CodigoTributo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Departamento" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Direccion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DireccionEntrega" nillable="true" type="tns:Direcciones" />
+      <xs:element minOccurs="0" name="DireccionFiscal" nillable="true" type="tns:Direcciones" />
       <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdentificacionDv" type="xs:int" />
@@ -133,6 +137,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Tercero" nillable="true" type="tns:Tercero" />
+  <xs:complexType name="Direcciones">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Ciudad" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoCiudad" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoDepartamento" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoPais" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoPostal" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Departamento" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Direccion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Pais" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Direcciones" nillable="true" type="tns:Direcciones" />
   <xs:complexType name="ArrayOfReferenciaAdicional">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="ReferenciaAdicional" nillable="true" type="tns:ReferenciaAdicional" />
@@ -171,6 +188,7 @@
       <xs:element minOccurs="0" name="OcultarItem" type="xs:int" />
       <xs:element minOccurs="0" name="ProductoCodigo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoCodigoEAN" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProductoCodigoPArancelaria" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoGratis" type="xs:boolean" />
       <xs:element minOccurs="0" name="ProductoGratisPrecioRef" nillable="true" type="xs:string" />
@@ -209,6 +227,13 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="FormatoCampo" nillable="true" type="tns:FormatoCampo" />
+  <xs:complexType name="CondicionEntrega">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CodCondicionEntrega" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TerminosEntrega" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CondicionEntrega" nillable="true" type="tns:CondicionEntrega" />
   <xs:complexType name="TasaCambio">
     <xs:sequence>
       <xs:element minOccurs="0" name="FechaTrm" type="xs:dateTime" />

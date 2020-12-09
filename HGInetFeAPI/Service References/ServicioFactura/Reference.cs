@@ -78,6 +78,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private System.DateTime FechaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaEntregaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaVenceField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -130,6 +133,9 @@ namespace HGInetFeAPI.ServicioFactura {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string TerminoPago_DescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioFactura.CondicionEntrega TipoEntregaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int TipoOperacionField;
@@ -424,6 +430,19 @@ namespace HGInetFeAPI.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaEntrega {
+            get {
+                return this.FechaEntregaField;
+            }
+            set {
+                if ((this.FechaEntregaField.Equals(value) != true)) {
+                    this.FechaEntregaField = value;
+                    this.RaisePropertyChanged("FechaEntrega");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public System.DateTime FechaVence {
             get {
                 return this.FechaVenceField;
@@ -653,6 +672,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.TerminoPago_DescripcionField, value) != true)) {
                     this.TerminoPago_DescripcionField = value;
                     this.RaisePropertyChanged("TerminoPago_Descripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioFactura.CondicionEntrega TipoEntrega {
+            get {
+                return this.TipoEntregaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TipoEntregaField, value) != true)) {
+                    this.TipoEntregaField = value;
+                    this.RaisePropertyChanged("TipoEntrega");
                 }
             }
         }
@@ -991,6 +1023,12 @@ namespace HGInetFeAPI.ServicioFactura {
         private string DireccionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioFactura.Direcciones DireccionEntregaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioFactura.Direcciones DireccionFiscalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string EmailField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1164,6 +1202,32 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.DireccionField, value) != true)) {
                     this.DireccionField = value;
                     this.RaisePropertyChanged("Direccion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioFactura.Direcciones DireccionEntrega {
+            get {
+                return this.DireccionEntregaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DireccionEntregaField, value) != true)) {
+                    this.DireccionEntregaField = value;
+                    this.RaisePropertyChanged("DireccionEntrega");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioFactura.Direcciones DireccionFiscal {
+            get {
+                return this.DireccionFiscalField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DireccionFiscalField, value) != true)) {
+                    this.DireccionFiscalField = value;
+                    this.RaisePropertyChanged("DireccionFiscal");
                 }
             }
         }
@@ -1667,6 +1731,68 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.ValorField.Equals(value) != true)) {
                     this.ValorField = value;
                     this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="CondicionEntrega", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class CondicionEntrega : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodCondicionEntregaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TerminosEntregaField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodCondicionEntrega {
+            get {
+                return this.CodCondicionEntregaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodCondicionEntregaField, value) != true)) {
+                    this.CodCondicionEntregaField = value;
+                    this.RaisePropertyChanged("CodCondicionEntrega");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string TerminosEntrega {
+            get {
+                return this.TerminosEntregaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TerminosEntregaField, value) != true)) {
+                    this.TerminosEntregaField = value;
+                    this.RaisePropertyChanged("TerminosEntrega");
                 }
             }
         }
@@ -2192,6 +2318,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private string ProductoCodigoEANField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ProductoCodigoPArancelariaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ProductoDescripcionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -2446,6 +2575,19 @@ namespace HGInetFeAPI.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProductoCodigoPArancelaria {
+            get {
+                return this.ProductoCodigoPArancelariaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProductoCodigoPArancelariaField, value) != true)) {
+                    this.ProductoCodigoPArancelariaField = value;
+                    this.RaisePropertyChanged("ProductoCodigoPArancelaria");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string ProductoDescripcion {
             get {
                 return this.ProductoDescripcionField;
@@ -2597,6 +2739,164 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.ValorUnitarioField.Equals(value) != true)) {
                     this.ValorUnitarioField = value;
                     this.RaisePropertyChanged("ValorUnitario");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Direcciones", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio")]
+    [System.SerializableAttribute()]
+    public partial class Direcciones : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CiudadField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoCiudadField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoDepartamentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoPaisField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodigoPostalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DepartamentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DireccionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PaisField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Ciudad {
+            get {
+                return this.CiudadField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CiudadField, value) != true)) {
+                    this.CiudadField = value;
+                    this.RaisePropertyChanged("Ciudad");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoCiudad {
+            get {
+                return this.CodigoCiudadField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoCiudadField, value) != true)) {
+                    this.CodigoCiudadField = value;
+                    this.RaisePropertyChanged("CodigoCiudad");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoDepartamento {
+            get {
+                return this.CodigoDepartamentoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoDepartamentoField, value) != true)) {
+                    this.CodigoDepartamentoField = value;
+                    this.RaisePropertyChanged("CodigoDepartamento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoPais {
+            get {
+                return this.CodigoPaisField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoPaisField, value) != true)) {
+                    this.CodigoPaisField = value;
+                    this.RaisePropertyChanged("CodigoPais");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CodigoPostal {
+            get {
+                return this.CodigoPostalField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodigoPostalField, value) != true)) {
+                    this.CodigoPostalField = value;
+                    this.RaisePropertyChanged("CodigoPostal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Departamento {
+            get {
+                return this.DepartamentoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DepartamentoField, value) != true)) {
+                    this.DepartamentoField = value;
+                    this.RaisePropertyChanged("Departamento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Direccion {
+            get {
+                return this.DireccionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DireccionField, value) != true)) {
+                    this.DireccionField = value;
+                    this.RaisePropertyChanged("Direccion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Pais {
+            get {
+                return this.PaisField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PaisField, value) != true)) {
+                    this.PaisField = value;
+                    this.RaisePropertyChanged("Pais");
                 }
             }
         }

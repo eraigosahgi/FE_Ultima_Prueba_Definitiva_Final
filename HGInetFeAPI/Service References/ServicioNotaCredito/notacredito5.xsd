@@ -47,6 +47,7 @@
       <xs:element minOccurs="0" name="ReceiptDocument" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
       <xs:element minOccurs="0" name="TipoOperacion" type="xs:int" />
       <xs:element minOccurs="0" name="Total" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Trm" nillable="true" type="tns:TasaCambio" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorAnticipo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorCargo" type="xs:decimal" />
@@ -81,6 +82,8 @@
       <xs:element minOccurs="0" name="CodigoTributo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Departamento" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Direccion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DireccionEntrega" nillable="true" type="tns:Direcciones" />
+      <xs:element minOccurs="0" name="DireccionFiscal" nillable="true" type="tns:Direcciones" />
       <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdentificacionDv" type="xs:int" />
@@ -101,6 +104,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Tercero" nillable="true" type="tns:Tercero" />
+  <xs:complexType name="Direcciones">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Ciudad" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoCiudad" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoDepartamento" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoPais" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoPostal" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Departamento" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Direccion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Pais" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Direcciones" nillable="true" type="tns:Direcciones" />
   <xs:complexType name="ArrayOfReferenciaAdicional">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="ReferenciaAdicional" nillable="true" type="tns:ReferenciaAdicional" />
@@ -139,6 +155,7 @@
       <xs:element minOccurs="0" name="OcultarItem" type="xs:int" />
       <xs:element minOccurs="0" name="ProductoCodigo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoCodigoEAN" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProductoCodigoPArancelaria" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoGratis" type="xs:boolean" />
       <xs:element minOccurs="0" name="ProductoGratisPrecioRef" nillable="true" type="xs:string" />
@@ -190,6 +207,14 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="FormatoCampo" nillable="true" type="tns:FormatoCampo" />
+  <xs:complexType name="TasaCambio">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FechaTrm" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TasaCambio" nillable="true" type="tns:TasaCambio" />
   <xs:complexType name="ArrayOfDocumentoRespuesta">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="DocumentoRespuesta" nillable="true" type="tns:DocumentoRespuesta" />
