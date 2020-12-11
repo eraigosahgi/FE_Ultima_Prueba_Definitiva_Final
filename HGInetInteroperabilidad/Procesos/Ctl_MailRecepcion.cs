@@ -7,6 +7,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.General;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace HGInetInteroperabilidad.Procesos
 				try
 				{
 					cliente_pop = new Cl_MailPop(servidor, puerto, usuario, clave, habilitar_ssl);
-					mensajes = cliente_pop.Obtener();					
+					mensajes = cliente_pop.Obtener();				
 				}
 				catch (Exception excepcion)
 				{
@@ -49,7 +50,7 @@ namespace HGInetInteroperabilidad.Procesos
 				foreach (PopMessage mensaje in mensajes)
 				{
 					try
-					{
+					{	
 						/*						 
 							-	Tamaño máximo de 2MB
 							-	Estructura asunto (separador por carácter punto y coma ; )
@@ -92,18 +93,26 @@ namespace HGInetInteroperabilidad.Procesos
 
 						// procesar archivo adjunto temporal
 						PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-						string ruta_archivos = string.Format("{0}\\{1}\\{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, empresa.StrIdSeguridad);
+						string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, empresa.StrIdSeguridad);
 
-						Directorio.CrearDirectorio(ruta_archivos);
+						ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
+						Guid id_mail = Guid.NewGuid();
+
+						// almacena el correo electrónico temporalmente
+						string ruta_mail = cliente_pop.Guardar(mensaje, ruta_archivos, id_mail.ToString());
+						
+						// almacena los adjuntos del correo electrónico temporalmente
 						List<string> rutas_archivos = cliente_pop.GuardarAdjuntos(mensaje, ruta_archivos);
 
 						if(rutas_archivos.Count > 1)
 							throw new ApplicationException("Los archivos adjuntos del correo electrónico superan la cantidad permitida.");
-
-						Ctl_Descomprimir.ProcesarCorreo(empresa, rutas_archivos[0]);
-
 						
+						// descomprime el zip adjunto
+						string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
+
+						Ctl_Descomprimir.ProcesarCorreo(empresa, rutas_archivos[0], ruta_descomprimir);
+											
 
 					}
 					catch (Exception excepcion)

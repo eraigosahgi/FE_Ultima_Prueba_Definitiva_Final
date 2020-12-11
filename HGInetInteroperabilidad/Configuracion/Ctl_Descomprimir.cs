@@ -130,7 +130,7 @@ namespace HGInetInteroperabilidad.Configuracion
 			return datos_respuesta;
 		}
 
-		public static RegistroListaDocRespuesta ProcesarCorreo(TblEmpresas empresa, string archivo_zip)
+		public static RegistroListaDocRespuesta ProcesarCorreo(TblEmpresas empresa, string archivo_zip, string carpeta_descomprimir = "")
 		{
 			RegistroListaDocRespuesta datos_respuesta = new RegistroListaDocRespuesta();
 
@@ -163,15 +163,18 @@ namespace HGInetInteroperabilidad.Configuracion
 							}
 						}
 						
-						// Obtiene la ruta completa para garantizar que se eliminen los segmentos relativos.
-						destino = Path.GetFullPath(Path.Combine(archivo_zip.Replace(Path.GetFileName(archivo_zip), ""), Path.GetFileNameWithoutExtension(archivo_zip)));
+						// Obtiene la ruta completa para garantizar que se eliminen los segmentos relativos
+						if(string.IsNullOrEmpty(carpeta_descomprimir))
+							destino = Path.GetFullPath(Path.Combine(archivo_zip.Replace(Path.GetFileName(archivo_zip), ""), Path.GetFileNameWithoutExtension(archivo_zip)));
+						else
+							destino = carpeta_descomprimir;
+							
 						// genera la descompresión del archivo zip
 						file.ExtractToDirectory(destino);
 
 						file.Dispose();
 					}
-
-
+					
 					//Archivo.Borrar(@"C:\inetpub\vhosts\mifacturaenlinea.com.co\fileshab.mifacturaenlinea.com.co\interoperabilidad\publico\f791dbce-c640-4f32-99d4-5966a573701f\811021438_123456_86cfbb40-5dde-4908-bbd1-fc2ae7c6e8b6.zip");
 					//ruta_fisica_zip = string.Format(@"{0}{1}{2}\{3}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadFtp.Replace("\\", @"\"), proveedor.StrIdSeguridad, datos.nombre);
 
