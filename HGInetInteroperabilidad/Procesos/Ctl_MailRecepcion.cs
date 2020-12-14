@@ -111,7 +111,7 @@ namespace HGInetInteroperabilidad.Procesos
 						// descomprime el zip adjunto
 						string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
 
-						Ctl_Descomprimir.ProcesarCorreo(empresa, rutas_archivos[0], ruta_descomprimir);
+						Ctl_Descomprimir.Procesar(empresa, rutas_archivos[0], ruta_descomprimir);
 											
 
 					}
