@@ -1,6 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBLv2_1.Dian;
+using HGInetUBLv2_1.DianListas;
 using LibreriaGlobalHGInet.Enumerables;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
@@ -247,91 +248,11 @@ namespace HGInetUBLv2_1
 
 				factura_obj.DatosAdquiriente = TerceroXMLv2_1.Obtener_adquiriente(factura_ubl.AccountingCustomerParty);
 
-				/*
-				Tercero adquiriente = new Tercero();
-
-				adquiriente.Identificacion = factura_ubl.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.Value;
-				adquiriente.IdentificacionDv = Convert.ToInt16(factura_ubl.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID);
-				adquiriente.TipoIdentificacion = Convert.ToInt16(factura_ubl.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName);
-				adquiriente.TipoPersona = Convert.ToInt16(factura_ubl.AccountingCustomerParty.AdditionalAccountID.FirstOrDefault().Value);
-				adquiriente.RegimenFiscal = factura_ubl.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName;
-				adquiriente.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(factura_ubl.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
-				adquiriente.CodigoTributo = factura_ubl.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID.Value;
-				adquiriente.RazonSocial = factura_ubl.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
-				adquiriente.NombreComercial = factura_ubl.AccountingCustomerParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.Name.Value;
-
-				//Valida si es persona Natural 
-				if (factura_ubl.AccountingCustomerParty.Party.Person != null)
-				{
-					adquiriente.PrimerNombre = factura_ubl.AccountingCustomerParty.Party.Person.FirstOrDefault().FirstName.Value;
-					if (factura_ubl.AccountingCustomerParty.Party.Person.FirstOrDefault().MiddleName != null)
-						adquiriente.SegundoNombre = factura_ubl.AccountingCustomerParty.Party.Person.FirstOrDefault().MiddleName.Value;
-					if (factura_ubl.AccountingCustomerParty.Party.Person.FirstOrDefault().FamilyName != null)
-						adquiriente.PrimerApellido = factura_ubl.AccountingCustomerParty.Party.Person.FirstOrDefault().FamilyName.Value;
-				}
-				
-				adquiriente.Direccion = factura_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.AddressLine[0].Line.Value;
-				adquiriente.Ciudad = factura_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.CityName.Value;
-				adquiriente.CodigoCiudad = factura_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.ID.Value;
-				adquiriente.Departamento = factura_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.CountrySubentity.Value;
-				adquiriente.CodigoDepartamento = factura_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
-				adquiriente.CodigoPais = factura_ubl.AccountingCustomerParty.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
-
-				//Valida si tiene Contacto
-				if (factura_ubl.AccountingCustomerParty.Party.Contact != null)
-				{
-					adquiriente.Telefono = factura_ubl.AccountingCustomerParty.Party.Contact.Telephone.Value;
-					adquiriente.Email = factura_ubl.AccountingCustomerParty.Party.Contact.ElectronicMail.Value;
-				}
-				//Valida si tiene pagina web
-				if (factura_ubl.AccountingCustomerParty.Party.WebsiteURI != null)
-					adquiriente.PaginaWeb = factura_ubl.AccountingCustomerParty.Party.WebsiteURI.Value;
-				factura_obj.DatosAdquiriente = adquiriente;*/
 				#endregion
 
 				#region Datos del Obligado
 
 				factura_obj.DatosObligado = TerceroXMLv2_1.Obtener_obligado(factura_ubl.AccountingSupplierParty);
-				/*
-				Tercero obligado = new Tercero();
-				
-				obligado.Identificacion = factura_ubl.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.Value;
-				obligado.IdentificacionDv = Convert.ToInt16(factura_ubl.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID);
-				obligado.TipoIdentificacion = Convert.ToInt16(factura_ubl.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName);
-				obligado.TipoPersona = Convert.ToInt16(factura_ubl.AccountingSupplierParty.AdditionalAccountID.FirstOrDefault().Value);
-				obligado.RegimenFiscal = factura_ubl.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName;
-				obligado.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(factura_ubl.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
-				obligado.CodigoTributo = factura_ubl.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID.Value;
-				obligado.RazonSocial = factura_ubl.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
-				obligado.NombreComercial = factura_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.Name.Value;
-
-				//Valida si es persona Natural
-				if (factura_ubl.AccountingSupplierParty.Party.Person != null)
-				{
-					obligado.PrimerNombre = factura_ubl.AccountingSupplierParty.Party.Person.FirstOrDefault().FirstName.Value;
-					if (factura_ubl.AccountingSupplierParty.Party.Person.FirstOrDefault().MiddleName != null)
-						obligado.SegundoNombre = factura_ubl.AccountingSupplierParty.Party.Person.FirstOrDefault().MiddleName.Value;
-					if (factura_ubl.AccountingSupplierParty.Party.Person.FirstOrDefault().FamilyName != null)
-						obligado.PrimerApellido = factura_ubl.AccountingSupplierParty.Party.Person.FirstOrDefault().FamilyName.Value;
-				}
-
-
-				obligado.Direccion = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.AddressLine[0].Line.Value;
-				obligado.Ciudad = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.CityName.Value;
-				obligado.CodigoCiudad = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.ID.Value;
-				obligado.Departamento = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.CountrySubentity.Value;
-				obligado.CodigoDepartamento = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
-				obligado.CodigoPais = factura_ubl.AccountingSupplierParty.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
-
-				if (factura_ubl.AccountingSupplierParty.Party.Contact != null)
-				{
-					obligado.Telefono = factura_ubl.AccountingSupplierParty.Party.Contact.Telephone.Value;
-					obligado.Email = factura_ubl.AccountingSupplierParty.Party.Contact.ElectronicMail.Value;
-					//Valida si tiene pagina web
-					if (factura_ubl.AccountingSupplierParty.Party.WebsiteURI != null)
-						obligado.PaginaWeb = factura_ubl.AccountingSupplierParty.Party.WebsiteURI.Value;
-				}
-				factura_obj.DatosObligado = obligado;*/
 
 				#endregion
 
@@ -514,10 +435,59 @@ namespace HGInetUBLv2_1
 					else
 					{
 						factura_obj.Neto = (factura_obj.Total - (factura_obj.ValorReteFuente + factura_obj.ValorReteIca + factura_obj.ValorReteIva));
-					} 
-				}
+					}
 
-				#endregion
+					#endregion
+
+					//Direccion de entrega
+					if (factura_ubl.Delivery != null && factura_ubl.Delivery.Length >= 1)
+					{
+						if (factura_ubl.Delivery[0].DeliveryAddress != null)
+						{
+							factura_obj.DatosAdquiriente.DireccionEntrega = new Direcciones();
+							factura_obj.DatosAdquiriente.DireccionEntrega.Ciudad = factura_ubl.Delivery[0].DeliveryAddress.CityName.Value;
+							factura_obj.DatosAdquiriente.DireccionEntrega.CodigoCiudad = factura_ubl.Delivery[0].DeliveryAddress.ID.Value;
+							factura_obj.DatosAdquiriente.DireccionEntrega.Departamento = factura_ubl.Delivery[0].DeliveryAddress.CountrySubentity.Value;
+							factura_obj.DatosAdquiriente.DireccionEntrega.CodigoDepartamento = factura_ubl.Delivery[0].DeliveryAddress.CountrySubentityCode.Value;
+							factura_obj.DatosAdquiriente.DireccionEntrega.CodigoPais = factura_ubl.Delivery[0].DeliveryAddress.Country.IdentificationCode.Value;
+							factura_obj.DatosAdquiriente.DireccionEntrega.Direccion = factura_ubl.Delivery[0].DeliveryAddress.AddressLine[0].Line.Value;
+							try
+							{
+								ListaPaises list_paises = new ListaPaises();
+								ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(factura_obj.DatosAdquiriente.DireccionEntrega.CodigoPais)).FirstOrDefault();
+								factura_obj.DatosAdquiriente.DireccionEntrega.Pais = pais.Descripcion;
+							}
+							catch (Exception)
+							{ }
+							if (factura_ubl.Delivery[0].DeliveryAddress.PostalZone != null)
+								factura_obj.DatosAdquiriente.DireccionEntrega.CodigoPostal = factura_ubl.Delivery[0].DeliveryAddress.PostalZone.Value;
+						}
+					}
+
+					//Condiciones de Entrega
+					if (factura_ubl.DeliveryTerms != null)
+					{
+						factura_obj.TipoEntrega = new CondicionEntrega();
+						if (factura_ubl.DeliveryTerms.LossRiskResponsibilityCode != null)
+							factura_obj.TipoEntrega.CodCondicionEntrega = factura_ubl.DeliveryTerms.LossRiskResponsibilityCode.Value;
+
+					}
+
+					//Tasa de Cambio
+					if (factura_ubl.PaymentExchangeRate != null)
+					{
+						if (!factura_ubl.PaymentExchangeRate.SourceCurrencyCode.Value.Equals(factura_ubl.PaymentExchangeRate.TargetCurrencyCode.Value))
+						{
+							factura_obj.Trm = new TasaCambio();
+							factura_obj.Trm.Moneda = factura_ubl.PaymentExchangeRate.TargetCurrencyCode.Value;
+							factura_obj.Trm.FechaTrm = factura_ubl.PaymentExchangeRate.Date.Value;
+							factura_obj.Trm.Valor = factura_ubl.PaymentExchangeRate.CalculationRate.Value;
+
+						}
+
+					}
+
+				}
 
 				return factura_obj;
 			}

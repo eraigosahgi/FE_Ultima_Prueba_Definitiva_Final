@@ -163,7 +163,10 @@ namespace HGInetMiFacturaElectronicaWeb
 			DocumentoDetalles.TableName = "DocumentoDetalles";
 			foreach (PropertyInfo info in typeof(DocumentoDetalle).GetProperties())
 			{
-				DocumentoDetalles.Columns.Add(info.Name.ToString());
+				if (!info.PropertyType.Name.Equals("List`1"))
+				{
+					DocumentoDetalles.Columns.Add(info.Name.ToString());
+				}
 			}
 
 			ds.Tables.Add(DocumentoDetalles);
@@ -172,6 +175,23 @@ namespace HGInetMiFacturaElectronicaWeb
 			DataRelation relation_detalles = new DataRelation("DocumentoDetalles", principal, datos_detalles);
 			relation_detalles.Nested = true;
 			ds.Tables["DocumentoDetalles"].ParentRelations.Add(relation_detalles);
+
+
+			//DATOS TABLA DATOS DE CAMPO-VALOR DETALLE
+			DataTable CamposAdicionalesDet = new DataTable("CamposAdicionales");
+			CamposAdicionalesDet.TableName = "CamposAdicionales";
+			foreach (PropertyInfo info in typeof(CampoValor).GetProperties())
+			{
+				CamposAdicionalesDet.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(CamposAdicionalesDet);
+
+			
+			DataColumn datos_det_campos_adicionales = ds.Tables["CamposAdicionales"].Columns["Descripcion"];
+			DataRelation relation_det_campos_adicionales = new DataRelation("CamposAdicionales", datos_detalles, datos_det_campos_adicionales);
+			relation_det_campos_adicionales.Nested = true;
+			ds.Tables["CamposAdicionales"].ParentRelations.Add(relation_det_campos_adicionales);
 
 
 			//DATOS TABLA DATOS DE LAS CUOTAS
@@ -255,8 +275,8 @@ namespace HGInetMiFacturaElectronicaWeb
 
 
 			//DATOS TABLA DATOS DE CAMPO-VALOR
-			DataTable CamposAdicionales = new DataTable("CamposAdicionales");
-			CamposAdicionales.TableName = "CamposAdicionales";
+			DataTable CamposAdicionales = new DataTable("CamposAdicionalesEnc");
+			CamposAdicionales.TableName = "CamposAdicionalesEnc";
 			foreach (PropertyInfo info in typeof(CampoValor).GetProperties())
 			{
 				CamposAdicionales.Columns.Add(info.Name.ToString());
@@ -264,10 +284,10 @@ namespace HGInetMiFacturaElectronicaWeb
 
 			ds.Tables.Add(CamposAdicionales);
 
-			DataColumn datos_CamposAdicionales = ds.Tables["CamposAdicionales"].Columns["Descripcion"];
-			DataRelation relation_CamposAdicionales = new DataRelation("CamposAdicionales", principal, datos_CamposAdicionales);
+			DataColumn datos_CamposAdicionales = ds.Tables["CamposAdicionalesEnc"].Columns["Descripcion"];
+			DataRelation relation_CamposAdicionales = new DataRelation("CamposAdicionalesEnc", principal, datos_CamposAdicionales);
 			relation_CamposAdicionales.Nested = true;
-			ds.Tables["CamposAdicionales"].ParentRelations.Add(relation_CamposAdicionales);
+			ds.Tables["CamposAdicionalesEnc"].ParentRelations.Add(relation_CamposAdicionales);
 
 			//DATOS TABLA DATOS DE DESCUENTOS
 			DataTable Descuentos = new DataTable("Descuentos");

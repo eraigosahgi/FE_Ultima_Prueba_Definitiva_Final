@@ -115,6 +115,25 @@ namespace HGInetUBLv2_1
 			if (cliente.Party.PhysicalLocation.Address.PostalZone != null)
 				adquiriente.CodigoPostal = cliente.Party.PhysicalLocation.Address.PostalZone.Value;
 
+			//Direccion Fiscal
+			adquiriente.DireccionFiscal = new Direcciones();
+			adquiriente.DireccionFiscal.Ciudad = cliente.Party.PartyTaxScheme[0].RegistrationAddress.CityName.Value;
+			adquiriente.DireccionFiscal.CodigoCiudad = cliente.Party.PartyTaxScheme[0].RegistrationAddress.ID.Value;
+			adquiriente.DireccionFiscal.Departamento = cliente.Party.PartyTaxScheme[0].RegistrationAddress.CountrySubentity.Value;
+			adquiriente.DireccionFiscal.CodigoDepartamento = cliente.Party.PartyTaxScheme[0].RegistrationAddress.CountrySubentityCode.Value;
+			adquiriente.DireccionFiscal.CodigoPais = cliente.Party.PartyTaxScheme[0].RegistrationAddress.Country.IdentificationCode.Value;
+			adquiriente.DireccionFiscal.Direccion = cliente.Party.PartyTaxScheme[0].RegistrationAddress.AddressLine[0].Line.Value;
+			try
+			{
+				ListaPaises list_paises = new ListaPaises();
+				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(adquiriente.DireccionFiscal.CodigoPais)).FirstOrDefault();
+				adquiriente.DireccionFiscal.Pais = pais.Descripcion;
+			}
+			catch (Exception)
+			{ }
+			if (cliente.Party.PartyTaxScheme[0].RegistrationAddress.PostalZone != null)
+				adquiriente.DireccionFiscal.CodigoPostal = cliente.Party.PartyTaxScheme[0].RegistrationAddress.PostalZone.Value;
+
 			//Valida si tiene Contacto
 			if (cliente.Party.Contact != null)
 			{

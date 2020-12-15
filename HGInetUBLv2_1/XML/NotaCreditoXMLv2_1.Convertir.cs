@@ -320,7 +320,20 @@ namespace HGInetUBLv2_1
 					nota_credito_obj.DocumentoDetalles = list_detalle;
 					#endregion
 
-				
+					//Tasa de Cambio
+					if (nota_credito_ubl.PaymentExchangeRate != null)
+					{
+						if (!nota_credito_ubl.PaymentExchangeRate.SourceCurrencyCode.Value.Equals(nota_credito_ubl.PaymentExchangeRate.TargetCurrencyCode.Value))
+						{
+							nota_credito_obj.Trm = new TasaCambio();
+							nota_credito_obj.Trm.Moneda = nota_credito_ubl.PaymentExchangeRate.TargetCurrencyCode.Value;
+							nota_credito_obj.Trm.FechaTrm = nota_credito_ubl.PaymentExchangeRate.Date.Value;
+							nota_credito_obj.Trm.Valor = nota_credito_ubl.PaymentExchangeRate.CalculationRate.Value;
+
+						}
+
+					}
+
 					#region Totales
 					nota_credito_obj.ValorSubtotal = nota_credito_ubl.LegalMonetaryTotal.LineExtensionAmount.Value;
 					nota_credito_obj.Valor = nota_credito_obj.ValorSubtotal + nota_credito_obj.DocumentoDetalles.Sum(b => b.DescuentoValor);

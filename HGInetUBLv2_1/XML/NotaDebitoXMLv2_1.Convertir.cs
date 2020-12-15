@@ -315,6 +315,20 @@ namespace HGInetUBLv2_1
 					nota_debito_obj.DocumentoDetalles = list_detalle;
 					#endregion
 
+					//Tasa de Cambio
+					if (nota_debito_ubl.PaymentExchangeRate != null)
+					{
+						if (!nota_debito_ubl.PaymentExchangeRate.SourceCurrencyCode.Value.Equals(nota_debito_ubl.PaymentExchangeRate.TargetCurrencyCode.Value))
+						{
+							nota_debito_obj.Trm = new TasaCambio();
+							nota_debito_obj.Trm.Moneda = nota_debito_ubl.PaymentExchangeRate.TargetCurrencyCode.Value;
+							nota_debito_obj.Trm.FechaTrm = nota_debito_ubl.PaymentExchangeRate.Date.Value;
+							nota_debito_obj.Trm.Valor = nota_debito_ubl.PaymentExchangeRate.CalculationRate.Value;
+
+						}
+
+					}
+
 					#region Totales
 
 					nota_debito_obj.ValorSubtotal = nota_debito_ubl.RequestedMonetaryTotal.LineExtensionAmount.Value;
