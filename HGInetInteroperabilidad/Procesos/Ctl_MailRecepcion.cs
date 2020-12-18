@@ -5,6 +5,9 @@ using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
+using MailKit;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,8 +19,149 @@ namespace HGInetInteroperabilidad.Procesos
 {
 	public class Ctl_MailRecepcion
 	{
-		
+
+
 		public static void Procesar()
+		{
+			try
+			{
+				// https://webmail.mifacturaenlinea.com.co/
+				// hostname: "mifacturaenlinea.com.co", username: "recepcion.dev@mifacturaenlinea.com.co", password: "gUx&819a#2ge", port: 995, isUseSsl: true
+
+				// obtener los parámetros de configuración para la lectura POP
+				string servidor = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.servidor");
+				int puerto = Convert.ToInt32(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.puerto"));
+				string usuario = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.usuario");
+				string clave = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.clave");
+				bool habilitar_ssl = Convert.ToBoolean(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.ssl"));
+
+				Cl_MailImap cliente_imap = null;
+				List<UniqueId> ids_mensajes = null;
+
+				// obtener los correos electrónicos
+				try
+				{
+					cliente_imap = new Cl_MailImap(servidor, puerto, usuario, clave, habilitar_ssl);
+					ids_mensajes = cliente_imap.ObtenerIds();
+				}
+				catch (Exception excepcion)
+				{
+					string msg = string.Format("Error al obtener los correos electrónicos del servidor IMAP");
+					throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
+				}
+
+				// procesa los correos electrónicos obtenidos
+				foreach (UniqueId id_mensaje in ids_mensajes)
+				{
+					try
+					{
+						// obtiene el mensaje por id
+						MimeMessage mensaje = cliente_imap.Obtener(id_mensaje, true);
+
+						if (mensaje != null)
+						{
+							string remitente = "";
+							DateTime fecha = Cl_Fecha.GetFecha();
+							string asunto = "";
+
+							try
+							{
+								/*						 
+									-	Tamaño máximo de 2MB
+									-	Estructura asunto (separador por carácter punto y coma ; )
+										NIT del Facturador Electrónico
+										Nombre del Facturador Electrónico
+										Número del Documento Electrónico
+										Código del tipo de documento
+										Nombre comercial del facturador
+										Línea de negocio (este último opcional, acuerdo comercial entre las partes)
+									-	Extensión archivo ZIP adjunto (Attached Document, PDF, ZIP anexo)
+
+								*/
+
+								// obtiene el asunto del correo electrónico
+								asunto = mensaje.Subject;
+
+								// información del remitente
+								remitente = string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Name, mensaje.From.Mailboxes.FirstOrDefault().Address);
+
+								fecha = mensaje.Date.DateTime;
+
+								// obtiene el tamaño de los adjuntos del correo electrónico
+								long tamano = cliente_imap.ObtenerTamanoAdjuntos(mensaje);
+
+								// 0 Bytes
+								if (tamano == 0)
+									throw new ApplicationException("No se encontró archivo adjunto en el correo electrónico.");
+
+								// 2097152 Bytes
+								if (tamano > 2097152)
+									throw new ApplicationException("Los archivos adjuntos del correo electrónico supera la capacidad máxima de 2MB.");
+
+								List<string> asunto_params = asunto.Split(';').ToList();
+
+								if (asunto_params.Count < 5)
+									throw new ApplicationException("El correo electrónico no cumple con los parámetros del asunto.");
+
+								// validar y obtener la empresa
+								Ctl_Empresa _empresa = new Ctl_Empresa();
+								TblEmpresas empresa = _empresa.ValidarInteroperabilidad(asunto_params[0]);
+
+								// valida las extensiones de archivos adjuntos
+								List<string> extensiones = new List<string> { "zip" };
+								cliente_imap.ValidarExtensionesAdjuntos(mensaje, extensiones);
+
+								// procesar archivo adjunto temporal
+								PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+								string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, empresa.StrIdSeguridad);
+
+								ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
+
+								Guid id_mail = Guid.NewGuid();
+
+								// almacena el correo electrónico temporalmente
+								string ruta_mail = cliente_imap.Guardar(mensaje, ruta_archivos, id_mail.ToString());
+
+								// almacena los adjuntos del correo electrónico temporalmente
+								List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_archivos);
+
+								if (rutas_archivos.Count > 1)
+									throw new ApplicationException("Los archivos adjuntos del correo electrónico superan la cantidad permitida.");
+
+								// descomprime el zip adjunto
+								string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
+								Ctl_Descomprimir.Procesar(empresa, rutas_archivos[0], ruta_descomprimir);
+
+								// elimina el mensaje después de procesado de la bandeja de entrada
+								cliente_imap.Eliminar(id_mensaje);
+
+							}
+							catch (Exception excepcion)
+							{
+								string msg = string.Format("Error al procesar el correo electrónico: {0} - {1} - {2}", fecha.ToString(Cl_Fecha.formato_fecha_hora_completa), remitente, asunto);
+								RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
+							}
+						}
+					}
+					catch (Exception excepcion)
+					{
+						string msg = string.Format("Error al obtener el correo electrónico: {0}", id_mensaje);
+						RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
+					}
+				}
+
+				// desconectar el servidor Imap
+				cliente_imap.Desconectar();
+			}
+			catch (Exception excepcion)
+			{
+				string msg = string.Format("Error al procesar los correos electrónicos");
+				throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
+			}
+		}
+
+
+		public static void ProcesarPop3()
 		{
 			try
 			{
@@ -30,7 +174,7 @@ namespace HGInetInteroperabilidad.Procesos
 				string usuario = Cl_InfoConfiguracionServer.ObtenerAppSettings("pop.usuario");
 				string clave = Cl_InfoConfiguracionServer.ObtenerAppSettings("pop.clave");
 				bool habilitar_ssl = Convert.ToBoolean(Cl_InfoConfiguracionServer.ObtenerAppSettings("pop.ssl"));
-				
+
 				Cl_MailPop cliente_pop = null;
 				List<PopMessage> mensajes = null;
 
@@ -38,7 +182,7 @@ namespace HGInetInteroperabilidad.Procesos
 				try
 				{
 					cliente_pop = new Cl_MailPop(servidor, puerto, usuario, clave, habilitar_ssl);
-					mensajes = cliente_pop.Obtener();				
+					mensajes = cliente_pop.Obtener();
 				}
 				catch (Exception excepcion)
 				{
@@ -49,8 +193,12 @@ namespace HGInetInteroperabilidad.Procesos
 				// procesa los correos electrónicos obtenidos
 				foreach (PopMessage mensaje in mensajes)
 				{
+					string remitente = "";
+					DateTime fecha = Cl_Fecha.GetFecha();
+					string asunto = "";
+
 					try
-					{	
+					{
 						/*						 
 							-	Tamaño máximo de 2MB
 							-	Estructura asunto (separador por carácter punto y coma ; )
@@ -64,6 +212,14 @@ namespace HGInetInteroperabilidad.Procesos
 
 						*/
 
+						// obtiene el asunto del correo electrónico
+						asunto = mensaje.Mensaje.Headers.Subject;
+
+						// información del remitente
+						remitente = string.Format("{0} - {1}", mensaje.Mensaje.Headers.From.DisplayName, mensaje.Mensaje.Headers.From.Address);
+
+						fecha = mensaje.Mensaje.Headers.DateSent;
+
 						// obtiene el tamaño de los adjuntos del correo electrónico
 						long tamano = cliente_pop.ObtenerTamanoAdjuntos(mensaje);
 
@@ -74,13 +230,10 @@ namespace HGInetInteroperabilidad.Procesos
 						// 2097152 Bytes
 						if (tamano > 2097152)
 							throw new ApplicationException("Los archivos adjuntos del correo electrónico supera la capacidad máxima de 2MB.");
-							
-						// obtiene el asunto del correo electrónico
-						string asunto = mensaje.Mensaje.Headers.Subject;
 
 						List<string> asunto_params = asunto.Split(';').ToList();
 
-						if(asunto_params.Count < 5)
+						if (asunto_params.Count < 5)
 							throw new ApplicationException("El correo electrónico no cumple con los parámetros del asunto.");
 
 						// validar y obtener la empresa
@@ -101,22 +254,25 @@ namespace HGInetInteroperabilidad.Procesos
 
 						// almacena el correo electrónico temporalmente
 						string ruta_mail = cliente_pop.Guardar(mensaje, ruta_archivos, id_mail.ToString());
-						
+
 						// almacena los adjuntos del correo electrónico temporalmente
 						List<string> rutas_archivos = cliente_pop.GuardarAdjuntos(mensaje, ruta_archivos);
 
-						if(rutas_archivos.Count > 1)
+						if (rutas_archivos.Count > 1)
 							throw new ApplicationException("Los archivos adjuntos del correo electrónico superan la cantidad permitida.");
-						
+
 						// descomprime el zip adjunto
 						string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-
 						Ctl_Descomprimir.Procesar(empresa, rutas_archivos[0], ruta_descomprimir);
-											
+
+						// elimina el mensaje después de procesado de la bandeja de entrada
+						cliente_pop.Eliminar(mensaje.Id);
 
 					}
 					catch (Exception excepcion)
-					{	string msg = string.Format("Error al procesar el correos electrónico");						
+					{
+						string msg = string.Format("Error al procesar el correo electrónico: {0} - {1} - {2}", fecha.ToString(Cl_Fecha.formato_fecha_hora_completa), remitente, asunto);
+						RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
 					}
 				}
 			}
@@ -126,7 +282,7 @@ namespace HGInetInteroperabilidad.Procesos
 				throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
 			}
 		}
-		
+
 
 	}
 }

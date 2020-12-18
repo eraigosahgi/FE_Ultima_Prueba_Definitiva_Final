@@ -167,6 +167,20 @@ namespace HGInetInteroperabilidad.Configuracion
 
 						file.Dispose();
 					}
+
+
+					// se elimina el archivo ZIP
+					try
+					{
+						Archivo.Borrar(archivo_zip);
+					}
+					catch (Exception excepcion)
+					{
+						string msg = string.Format("Error al eliminar el archivo '{0}'", archivo_zip);
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, msg);
+
+					}
+
 				}
 				catch (Exception excepcion)
 				{
