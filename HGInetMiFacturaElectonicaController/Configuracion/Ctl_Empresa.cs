@@ -84,22 +84,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					throw new ApplicationException("El certificado a importar no coincide con la empresa certificadora seleccionada");
 				}
 
-				if (certificadora == EnumCertificadoras.Gse.GetHashCode())
-				{
-					List<string> list_subject = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(Certificado.Subject, ',');
-					foreach (string item in list_subject)
-					{
-						if (item.Contains("CN="))
-						{
-							Datos.Propietario = item.Substring(4);
-						}
+				//Se obtiene el facturador
+				TblEmpresas facturador = Obtener(IdSeguridad).FirstOrDefault();
 
-					}
-				}
-				else
-				{
-					Datos.Propietario = Certificado.FriendlyName;
-				}
+				//Se valida que el nit del facturador en plataforma sea el mismo del certificado
+				if (!Certificado.Subject.Contains(facturador.StrIdentificacion))
+					throw new ApplicationException(string.Format("Certificado digital {0} no corresponde a  la identificación {1}", Path.GetFileNameWithoutExtension(carpeta_certificado).Substring(0, 8), facturador.StrIdentificacion));
+
+				//Se valida que el certificado no este vencido
+				if (Certificado.NotAfter < Fecha.GetFecha())
+					throw new ApplicationException(string.Format("Certificado digital {0} con fecha de vigencia {1}, se encuentra vencido", Path.GetFileNameWithoutExtension(carpeta_certificado).Substring(0, 8), Certificado.NotAfter));
 
 
 				Datos.Fechavenc = Certificado.NotAfter;
@@ -113,24 +107,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				File.SaveAs(carpeta_certificado);
 				//Leemos el archivo para garantizar que si esta copiado en la ruta original
 				Certificado = new X509Certificate2(carpeta_certificado, clave);
+
+				//Se valida que el nit del facturador en plataforma sea el mismo del certificado
+				if (!Certificado.Subject.Contains(facturador.StrIdentificacion))
+					throw new ApplicationException(string.Format("Certificado digital {0} no corresponde a  la identificación {1}", Path.GetFileNameWithoutExtension(carpeta_certificado).Substring(0, 8), facturador.StrIdentificacion));
+
+				//Se valida que el certificado no este vencido
+				if (Certificado.NotAfter < Fecha.GetFecha())
+					throw new ApplicationException(string.Format("Certificado digital {0} con fecha de vigencia {1}, se encuentra vencido", Path.GetFileNameWithoutExtension(carpeta_certificado).Substring(0, 8), Certificado.NotAfter));
+
 				Datos = new CertificadoDigital();
 				Datos.Fechavenc = Certificado.NotAfter;
-				if (certificadora == EnumCertificadoras.Gse.GetHashCode())
-				{
-					List<string> list_subject = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(Certificado.Subject, ',');
-					foreach (string item in list_subject)
-					{
-						if (item.Contains("CN="))
-						{
-							Datos.Propietario = item.Substring(4);
-						}
-
-					}
-				}
-				else
-				{
-					Datos.Propietario = Certificado.FriendlyName;
-				}
+				Datos.Propietario = facturador.StrIdentificacion;
 				Datos.Serial = Certificado.SerialNumber;
 				Datos.Certificadora = Certificado.Issuer;
 				//Retornamos los datos para mostrarlos al usuario
