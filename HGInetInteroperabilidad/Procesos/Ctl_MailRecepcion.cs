@@ -53,6 +53,9 @@ namespace HGInetInteroperabilidad.Procesos
 				// procesa los correos electrónicos obtenidos
 				foreach (UniqueId id_mensaje in ids_mensajes)
 				{
+					List<string> mensajes = new List<string>();
+					bool correo_procesado = true;
+
 					try
 					{
 						// obtiene el mensaje por id
@@ -88,53 +91,100 @@ namespace HGInetInteroperabilidad.Procesos
 								fecha = mensaje.Date.DateTime;
 
 								// obtiene el tamaño de los adjuntos del correo electrónico
-								long tamano = cliente_imap.ObtenerTamanoAdjuntos(mensaje);
+								Cl_MailAdjuntos adjunto = cliente_imap.ObtenerPropiedadesAdjuntos(mensaje);
 
 								// 0 Bytes
-								if (tamano == 0)
-									throw new ApplicationException("No se encontró archivo adjunto en el correo electrónico.");
+								if (adjunto.TamanoTotal == 0)
+								{
+									mensajes.Add("No se encontró archivo adjunto en el correo electrónico.");
+									correo_procesado = false;
+								}
 
 								// 2097152 Bytes
-								if (tamano > 2097152)
-									throw new ApplicationException("Los archivos adjuntos del correo electrónico supera la capacidad máxima de 2MB.");
+								if (adjunto.TamanoTotal > 2097152)
+								{
+									mensajes.Add("Los archivos adjuntos del correo electrónico supera la capacidad máxima de 2MB.");
+									correo_procesado = false;
+								}
+
+								// valida la cantidad de archivos adjuntos
+								if (adjunto.Cantidad > 1)
+								{
+									mensajes.Add(string.Format("Los archivos ({0}) adjuntos del correo electrónico superan la cantidad permitida (1).", adjunto.Cantidad));
+									correo_procesado = false;
+								}
 
 								List<string> asunto_params = asunto.Split(';').ToList();
-
 								if (asunto_params.Count < 5)
-									throw new ApplicationException("El correo electrónico no cumple con los parámetros del asunto.");
+								{
+									mensajes.Add("El correo electrónico no cumple con los parámetros del asunto.");
+									correo_procesado = false;
+								}
 
 								// validar y obtener la empresa
-								Ctl_Empresa _empresa = new Ctl_Empresa();
-								TblEmpresas empresa = _empresa.ValidarInteroperabilidad(asunto_params[0]);
+								TblEmpresas empresa = null;
+								try
+								{
+									Ctl_Empresa _empresa = new Ctl_Empresa();
+									empresa = _empresa.ValidarInteroperabilidad(asunto_params[0]);
+								}
+								catch (Exception excepcion)
+								{
+									mensajes.Add("Error validando el Adquiriente electrónico.");
+									correo_procesado = false;
+									throw excepcion;
+								}
 
-								// valida las extensiones de archivos adjuntos
-								List<string> extensiones = new List<string> { "zip" };
-								cliente_imap.ValidarExtensionesAdjuntos(mensaje, extensiones);
+								try
+								{   // valida las extensiones de archivos adjuntos
+									List<string> extensiones = new List<string> { "zip" };
+									cliente_imap.ValidarExtensionesAdjuntos(mensaje, extensiones);
+								}
+								catch (Exception excepcion)
+								{
+									mensajes.Add(excepcion.Message);
+									correo_procesado = false;
+									throw excepcion;
+								}
 
-								// procesar archivo adjunto temporal
-								PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-								string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, empresa.StrIdSeguridad);
+								if (correo_procesado)
+								{   // id de recepción
+									Guid id_mail = Guid.NewGuid();
 
-								ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
+									// procesar archivo adjunto temporal
+									PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+									string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, empresa.StrIdSeguridad);
+									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
-								Guid id_mail = Guid.NewGuid();
+									// almacena el correo electrónico temporalmente
+									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_archivos, id_mail.ToString());
 
-								// almacena el correo electrónico temporalmente
-								string ruta_mail = cliente_imap.Guardar(mensaje, ruta_archivos, id_mail.ToString());
+									// almacena los adjuntos del correo electrónico temporalmente
+									List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_archivos);
 
-								// almacena los adjuntos del correo electrónico temporalmente
-								List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_archivos);
+									// descomprime el zip adjunto
+									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
+									Ctl_Descomprimir.Procesar(empresa, rutas_archivos[0], ruta_descomprimir);
 
-								if (rutas_archivos.Count > 1)
-									throw new ApplicationException("Los archivos adjuntos del correo electrónico superan la cantidad permitida.");
+									// elimina el mensaje después de procesado de la bandeja de entrada
+									cliente_imap.Eliminar(id_mensaje);
+								}
+								else
+								{
 
-								// descomprime el zip adjunto
-								string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-								Ctl_Descomprimir.Procesar(empresa, rutas_archivos[0], ruta_descomprimir);
+									// notificar por correo electrónico
+								}
 
-								// elimina el mensaje después de procesado de la bandeja de entrada
-								cliente_imap.Eliminar(id_mensaje);
+								/*
+								 -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
 
+								-	Notificación al Facturador especificando detalladamente la inconsistencia y el evento generado (ApplicationResponse).
+
+								* Se realizan todas las validaciones y se notifican completamente.
+
+								-	Si el Adquiriente no cumple con las validaciones de Cliente HGI se notifica al Facturador (ApplicationResponse).
+
+								 */
 							}
 							catch (Exception excepcion)
 							{
