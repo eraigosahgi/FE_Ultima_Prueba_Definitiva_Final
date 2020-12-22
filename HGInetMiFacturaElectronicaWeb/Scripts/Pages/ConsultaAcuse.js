@@ -17,7 +17,7 @@ App.controller('AcuseConsultaController', function AcuseConsultaController($scop
     SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {    	
     	codigo_facturador = data[0].IdentificacionEmpresa;
     	Usuariosession = data[0].IdSeguridad;
-        //consultar();
+        consultar();
     });
 
     SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false,6).then(function (Datos) {
