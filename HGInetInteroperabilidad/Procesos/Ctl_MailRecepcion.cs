@@ -55,6 +55,7 @@ namespace HGInetInteroperabilidad.Procesos
 				{
 					List<string> mensajes = new List<string>();
 					bool correo_procesado = true;
+					bool empresa_valida = false;
 
 					try
 					{
@@ -127,6 +128,7 @@ namespace HGInetInteroperabilidad.Procesos
 								{
 									Ctl_Empresa _empresa = new Ctl_Empresa();
 									empresa = _empresa.ValidarInteroperabilidad(asunto_params[0]);
+									empresa_valida = true;
 								}
 								catch (Exception excepcion)
 								{
@@ -167,12 +169,37 @@ namespace HGInetInteroperabilidad.Procesos
 									Ctl_Descomprimir.Procesar(empresa, rutas_archivos[0], ruta_descomprimir);
 
 									// elimina el mensaje después de procesado de la bandeja de entrada
-									cliente_imap.Eliminar(id_mensaje);
+									//cliente_imap.Eliminar(id_mensaje);
 								}
 								else
 								{
+									if (empresa_valida)
+									{
+										MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
 
-									// notificar por correo electrónico
+										// notificar por correo electrónico
+										// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
+										Cl_MailCliente cliente_smtp = new Cl_MailCliente()
+										{
+											Servidor = configuracion_server.Servidor,
+											Puerto = configuracion_server.Puerto,
+											Habilitar_ssl = configuracion_server.HabilitaSsl,
+											TimeOut = 120000,
+											Usuario = configuracion_server.Usuario,
+											Clave = configuracion_server.Clave,
+										};
+
+										MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
+
+										List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+										correos_destino.Add(new MailboxAddress("mparamo@hgi.com.co"));
+
+										BodyBuilder contenido = new BodyBuilder();
+										contenido.TextBody = string.Format("Inconsistencias presentadas:\n{0}", string.Join("\n", mensajes));
+										contenido.HtmlBody = string.Format("<strong>Inconsistencias presentadas:</strong><br />{0}<br />", string.Join("<br />", mensajes));
+
+										cliente_imap.Reenviar(id_mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
+									}
 								}
 
 								/*
