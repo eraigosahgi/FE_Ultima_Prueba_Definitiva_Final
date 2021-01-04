@@ -192,13 +192,10 @@ namespace HGInetInteroperabilidad.Procesos
 										MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
 
 										List<MailboxAddress> correos_destino = new List<MailboxAddress>();
-										correos_destino.Add(new MailboxAddress("mparamo@hgi.com.co"));
-
-										BodyBuilder contenido = new BodyBuilder();
-										contenido.TextBody = string.Format("Inconsistencias presentadas:\n{0}", string.Join("\n", mensajes));
-										contenido.HtmlBody = string.Format("<strong>Inconsistencias presentadas:</strong><br />{0}<br />", string.Join("<br />", mensajes));
-
-										cliente_imap.Reenviar(id_mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
+										correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
+										
+										BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
+										cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
 									}
 								}
 
@@ -236,6 +233,63 @@ namespace HGInetInteroperabilidad.Procesos
 				throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
 			}
 		}
+
+
+		/// <summary>
+		/// Contenido del correo electrónico para notificación de inconsistencias
+		/// </summary>
+		/// <param name="empresa">adquiriente</param>
+		/// <param name="mensajes">mensajes de inconsistencias</param>
+		/// <returns></returns>
+		public static BodyBuilder NotificacionInconsistencias(TblEmpresas empresa, List<string> mensajes)
+		{
+			try
+			{
+				if (empresa == null)
+					throw new ApplicationException("No se encontró información de la empresa.");
+					
+				BodyBuilder contenido = new BodyBuilder();
+				
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaHtmlNotifInconsistencias);
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{
+						// Datos del Tercero
+						if (empresa.StrTipoIdentificacion.Equals("31"))
+							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
+						else
+							mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
+
+						mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
+						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
+						
+						string detalle = string.Empty;
+
+						foreach (string item in mensajes)
+						{	detalle += string.Format("<tr><td class='tg - yzt1'>{0}</td></tr>", item);
+						}
+
+						mensaje = mensaje.Replace("{TablaHtml}", detalle);
+						
+						contenido.HtmlBody = mensaje;
+					}
+				}
+				return contenido;
+			}
+			catch (Exception ex)
+			{	throw new ApplicationException(ex.Message);
+			}
+		}
+
 
 
 		public static void ProcesarPop3()

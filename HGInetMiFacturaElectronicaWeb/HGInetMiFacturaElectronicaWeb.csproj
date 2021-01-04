@@ -177,6 +177,7 @@
     <Content Include="emails\plantilla_documento_basica.html" />
     <Content Include="emails\plantilla_notificacion_alerta.html" />
     <Content Include="emails\plantilla_notificacion_correo_no_entregado.html" />
+    <Content Include="emails\plantilla_notificacion_inconsistencias_interoperabilidad.html" />
     <Content Include="emails\plantilla_notificacion_planes_vence.html" />
     <Content Include="emails\plantilla_notificacion_consumo_facturador.html" />
     <Content Include="emails\plantilla_notificacion_consumo_hgi.html" />
@@ -3464,7 +3465,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61435/</IISUrl>
+          <IISUrl>http://localhost:6885/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

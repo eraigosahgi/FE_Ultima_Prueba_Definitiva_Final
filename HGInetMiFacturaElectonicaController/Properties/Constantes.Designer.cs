@@ -385,6 +385,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_inconsistencias_interoperabilidad.html.
+        /// </summary>
+        public static string RutaPlantillaHtmlNotifInconsistencias {
+            get {
+                return ResourceManager.GetString("RutaPlantillaHtmlNotifInconsistencias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a emails\\plantilla_notificacion_consumo_facturador.html.
         /// </summary>
         public static string RutaPlantillaPlanPorcentaje {

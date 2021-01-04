@@ -305,4 +305,8 @@
     <value>1</value>
     <comment>Id de aplicativo para Pagos Electrónicos</comment>
   </data>
+  <data name="RutaPlantillaHtmlNotifInconsistencias" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_inconsistencias_interoperabilidad.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de inconsistencias de interoperabilidad</comment>
+  </data>
 </root>
