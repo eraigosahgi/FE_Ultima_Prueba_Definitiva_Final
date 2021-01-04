@@ -192,8 +192,9 @@ namespace HGInetInteroperabilidad.Procesos
 										MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
 
 										List<MailboxAddress> correos_destino = new List<MailboxAddress>();
-										correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
-										
+										//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
+										correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
+
 										BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
 										cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
 									}
