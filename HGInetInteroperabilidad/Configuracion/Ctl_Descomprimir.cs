@@ -258,5 +258,32 @@ namespace HGInetInteroperabilidad.Configuracion
 		}
 
 
+		/// <summary>
+		/// Sonda para descargar los correos de interoperabilidad y alojarlos en una ruta para procesarlos
+		/// </summary>
+		/// <returns></returns>
+		public async Task SondaProcesarCorreos()
+		{
+			try
+			{
+				var Tarea = TareaProcesarCorreos();
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				string msg = string.Format("Error ejecutando la sonda para descargar los correos electrónicos");
+				RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.lectura, msg);
+			}
+
+		}
+
+		public async Task TareaProcesarCorreos()
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				ProcesarArchivosCorreo();
+			});
+		}
+
 	}
 }
