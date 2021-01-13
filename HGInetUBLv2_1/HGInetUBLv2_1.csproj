@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -1392,6 +1393,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VersionesDIANv2_1.resx</DependentUpon>
     </Compile>
+    <Compile Include="XML\AcuseReciboXMLv2_1.Convertir.cs" />
     <Compile Include="XML\AcuseReciboXMLv2_1.cs" />
     <Compile Include="XML\AttachedDocument.Convertir.cs" />
     <Compile Include="XML\AttachedDocument.cs" />
@@ -1432,6 +1434,10 @@
     <ProjectReference Include="..\HGInetDIANServicios\HGInetDIANServicios.csproj">
       <Project>{E87C13D9-AEF2-442C-B377-7A5D7290502A}</Project>
       <Name>HGInetDIANServicios</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HGInetFirmaDigital\HGInetFirmaDigital.csproj">
+      <Project>{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}</Project>
+      <Name>HGInetFirmaDigital</Name>
     </ProjectReference>
     <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>

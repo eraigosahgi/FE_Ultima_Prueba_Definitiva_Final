@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using HGInetInteroperabilidad.Configuracion;
 
 namespace HGInetMiFacturaElectronicaWeb.Tests
 {
@@ -15,6 +16,7 @@ namespace HGInetMiFacturaElectronicaWeb.Tests
 			try
 			{
 				Ctl_MailRecepcion.Procesar();
+				//Ctl_Descomprimir.ProcesarArchivosCorreo();
 				txt_resultado.Text = "";
 			}
 			catch (Exception excepcion)

@@ -26,8 +26,18 @@ namespace HGInetUBL
                 if (string.IsNullOrWhiteSpace(identificacion))
                     throw new Exception("El NIT es inválido.");
 
-                int id_factura = Convert.ToInt32(consecutivo_documento);
-                string hex_id_factura = id_factura.ToString("X10");//Convierte el consecutivo de la factura en hexadecimal
+                string hex_id_factura = string.Empty;
+
+				try
+				{
+					int id_factura = Convert.ToInt32(consecutivo_documento);
+					hex_id_factura = id_factura.ToString("X10");//Convierte el consecutivo de la factura en hexadecimal
+				}
+				catch (Exception)
+				{
+					long id_fac = Convert.ToInt64(consecutivo_documento);
+					hex_id_factura = id_fac.ToString("X10");
+				}
 
                 identificacion = identificacion.PadLeft(10, '0');//La identificación del obligado a facturar debe contener 10 caracteres, si contiene menos lo rellena con 0 a la izquierda 
 

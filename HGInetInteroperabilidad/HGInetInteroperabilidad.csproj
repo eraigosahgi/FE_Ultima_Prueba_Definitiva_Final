@@ -111,6 +111,10 @@
       <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
       <Name>HGInetMiFacturaElectonicaData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HGInetUBLv2_1\HGInetUBLv2_1.csproj">
+      <Project>{3782ec8b-12e6-44c9-a31b-9eb4ec7755ac}</Project>
+      <Name>HGInetUBLv2_1</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HGInetUBL\HGInetUBL.csproj">
       <Project>{E571F23F-B598-4DB1-893B-D94EC0354775}</Project>
       <Name>HGInetUBL</Name>

@@ -870,7 +870,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 
 				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-				email.EnviaNotificacionAlertaDIAN(Facturador, Documento, ListaNotificacion, Proceso, Resultado, mail);
+				email.EnviaNotificacionAlertaDIAN(Facturador, Documento, ListaNotificacion, Proceso, Resultado, mail, false);
 
 			}
 			catch (Exception excepcion)

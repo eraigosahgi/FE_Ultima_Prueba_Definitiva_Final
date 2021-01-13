@@ -377,7 +377,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="telefono"></param>
 		/// <param name="nuevo_email">indica el e-mail del destinatario (si es igual a null, se envía a el email de la empresa del adquiriente)</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "", string id_peticion = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "", ProcesoEstado proceso = ProcesoEstado.EnvioEmailAcuse, string nombre_comercial = "", bool reenvio_documento = false)
+		public List<MensajeEnvio> NotificacionDocumento(TblDocumentos documento, string telefono, string nuevo_email = "", string id_peticion = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "", ProcesoEstado proceso = ProcesoEstado.EnvioEmailAcuse, string nombre_comercial = "", bool reenvio_documento = false, bool interoperabilidad = false)
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
@@ -412,7 +412,7 @@ namespace HGInetMiFacturaElectonicaController
 					if (!Archivo.ValidarExistencia(ruta_xml))
 						throw new ApplicationException("No se encontró ruta de archivo de respuesta de la DIAN");
 
-					if (empresa_obligado.IntPdfCampoDian == true)
+					if (empresa_obligado.IntPdfCampoDian == true && interoperabilidad == false)
 					{
 
 						//Proceso para obtener la fecha y hora de la respuesta de la DIAN
@@ -529,6 +529,12 @@ namespace HGInetMiFacturaElectonicaController
 				remitente.Nombre = empresa_obligado.StrRazonSocial;
 				remitente.Email = empresa_obligado.StrMailEnvio;
 
+				//Si el facturador es de interoperabilidad y no tiene correo se pone el de la plataforma
+				if (string.IsNullOrEmpty(remitente.Email) && interoperabilidad == true)
+				{
+					remitente.Email = Constantes.EmailRemitente;
+				}
+
 				// obtiene los datos del adquiriente
 				Ctl_Empresa adquiriente = new Ctl_Empresa();
 				TblEmpresas empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaAdquiriente);
@@ -542,7 +548,7 @@ namespace HGInetMiFacturaElectonicaController
 				//*********Agregar validacion si el documento es de y para clientes de HGI para que no sobreescriba el correo
 				string correo_registrado = string.Empty;
 				//Se valida si es un documento de produccion para sobrescribir el correo registrado en la DIAN resolucion 042
-				if (empresa_obligado.IntHabilitacion == Habilitacion.Produccion.GetHashCode() && reenvio_documento == false)
+				if (empresa_obligado.IntHabilitacion == Habilitacion.Produccion.GetHashCode() && reenvio_documento == false && interoperabilidad == false)
 				{
 					//se obtiene correo registrado para enviar el documento a este(Resolucion 042)
 					Ctl_ObtenerCorreos correo_recep = new Ctl_ObtenerCorreos();
@@ -551,7 +557,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				
 
-				if (string.IsNullOrWhiteSpace(nuevo_email))
+				if (string.IsNullOrWhiteSpace(nuevo_email) && interoperabilidad == false)
 				{
 					//Se valida si tiene correo registrado para enviar el documento a este(Resolucion 042)
 					if (!string.IsNullOrEmpty(correo_registrado))
@@ -2620,7 +2626,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="identificacion">Nit del Facturador</param>
 		/// <param name="mail">email al que se va enviar el correo</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> EnviaNotificacionAlertaDIAN(string Facturador, string Documento, List<String> ListaNotificacion, int Proceso, bool Resultado,string mail)
+		public List<MensajeEnvio> EnviaNotificacionAlertaDIAN(string Facturador, string Documento, List<String> ListaNotificacion, int Proceso, bool Resultado,string mail, bool interoperabilidad)
 		{
 			try
 			{
@@ -2629,7 +2635,17 @@ namespace HGInetMiFacturaElectonicaController
 
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaAlertaDocumentoDIAN);
 
-				string asunto = "ALERTA DE INCONSISTENCIAS DE DOCUMENTO ELECTRÓNICO EN LA DIAN";
+				string asunto = string.Empty;
+
+				if (interoperabilidad == false)
+				{
+					asunto = "ALERTA DE INCONSISTENCIAS DE DOCUMENTO ELECTRÓNICO EN LA DIAN";
+				}
+				else
+				{
+					asunto = "ALERTA DE INCONSISTENCIAS DE PROCESAMIENTO DE CORREO DE INTEROPERABILIDAD";
+				}
+				
 
 				// obtiene los datos del Facturador
 				Ctl_Empresa empresa = new Ctl_Empresa();
@@ -2668,7 +2684,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
 						mensaje = mensaje.Replace("{Documento}", Documento);
 						mensaje = mensaje.Replace("{Estado}", (Resultado)?"Recibido": "No Recibido");
-						mensaje = mensaje.Replace("{Proceso}", (Proceso==0) ? "Desconocido" : (Proceso == 1) ? "Envío" : "Consulta");
+						mensaje = mensaje.Replace("{Proceso}", (Proceso==0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Interoperabilidad" : "Consulta");
 
 
 						DestinatarioEmail remitente = new DestinatarioEmail();

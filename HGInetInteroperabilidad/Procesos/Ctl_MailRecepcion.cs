@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
 
 namespace HGInetInteroperabilidad.Procesos
 {
@@ -56,6 +57,7 @@ namespace HGInetInteroperabilidad.Procesos
 					List<string> mensajes = new List<string>();
 					bool correo_procesado = true;
 					bool empresa_valida = false;
+					bool validacion_asunto = true;
 
 					try
 					{
@@ -120,15 +122,41 @@ namespace HGInetInteroperabilidad.Procesos
 								{
 									mensajes.Add("El correo electrónico no cumple con los parámetros del asunto.");
 									correo_procesado = false;
+									validacion_asunto = false;
 								}
 
-								// validar y obtener la empresa
+								//obtener la empresa emisora o crearla
 								TblEmpresas empresa = null;
 								try
 								{
-									Ctl_Empresa _empresa = new Ctl_Empresa();
-									empresa = _empresa.ValidarInteroperabilidad(asunto_params[0]);
-									empresa_valida = true;
+									if (validacion_asunto == true)
+									{
+										Ctl_Empresa _empresa = new Ctl_Empresa();
+										empresa = _empresa.Obtener(asunto_params[0]);
+
+										if (empresa == null)
+										{
+
+											Tercero empresa_emisor = new Tercero();
+											empresa_emisor.Identificacion = asunto_params[0];
+											empresa_emisor.RazonSocial = asunto_params[1];
+											empresa_emisor.NombreComercial = asunto_params[4];
+											empresa_emisor.Email = mensaje.From.Mailboxes.FirstOrDefault().Address;
+
+											empresa = _empresa.Crear(empresa_emisor, false);
+										}
+										else if (empresa.IntObligado == false && correo_procesado)
+										{
+											empresa.IntObligado = true;
+											empresa.StrSerial = Guid.NewGuid().ToString();
+
+											if (string.IsNullOrEmpty(empresa.StrMailAdmin))
+												empresa.StrMailAdmin = mensaje.From.Mailboxes.FirstOrDefault().Address;
+
+											_empresa.Actualizar(empresa);
+										}
+									}
+
 								}
 								catch (Exception excepcion)
 								{
@@ -166,38 +194,52 @@ namespace HGInetInteroperabilidad.Procesos
 
 									// descomprime el zip adjunto
 									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-									Ctl_Descomprimir.Procesar(empresa, rutas_archivos[0], ruta_descomprimir);
+									Ctl_Descomprimir.Procesar(rutas_archivos[0], ruta_descomprimir);
 
 									// elimina el mensaje después de procesado de la bandeja de entrada
-									//cliente_imap.Eliminar(id_mensaje);
+									cliente_imap.Eliminar(id_mensaje);
 								}
 								else
 								{
-									if (empresa_valida)
+									MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
+
+									// notificar por correo electrónico
+									// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
+									Cl_MailCliente cliente_smtp = new Cl_MailCliente()
 									{
-										MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
+										Servidor = configuracion_server.Servidor,
+										Puerto = configuracion_server.Puerto,
+										Habilitar_ssl = configuracion_server.HabilitaSsl,
+										TimeOut = 120000,
+										Usuario = configuracion_server.Usuario,
+										Clave = configuracion_server.Clave,
+									};
 
-										// notificar por correo electrónico
-										// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
-										Cl_MailCliente cliente_smtp = new Cl_MailCliente()
-										{
-											Servidor = configuracion_server.Servidor,
-											Puerto = configuracion_server.Puerto,
-											Habilitar_ssl = configuracion_server.HabilitaSsl,
-											TimeOut = 120000,
-											Usuario = configuracion_server.Usuario,
-											Clave = configuracion_server.Clave,
-										};
+									MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
 
-										MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
+									if (remitente_reply.Equals(Constantes.EmailRemitente))
+										remitente_reply.Address = Constantes.EmailCopiaOculta;
 
-										List<MailboxAddress> correos_destino = new List<MailboxAddress>();
-										//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
+									List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+									//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
+
+									if (empresa != null)
+									{
 										correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
-
-										BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
-										cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
 									}
+									else
+									{
+										correos_destino.Add(new MailboxAddress(asunto, Constantes.EmailCopiaOculta));
+										Ctl_Empresa _empresa = new Ctl_Empresa();
+										empresa = _empresa.Obtener(Constantes.NitResolucionconPrefijo);
+									}
+
+
+									BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
+									cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
+
+
+									//EnviarAlerta(id_mensaje,mensaje,empresa,mensajes,cliente_imap);
 								}
 
 								/*
@@ -395,7 +437,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 						// descomprime el zip adjunto
 						string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-						Ctl_Descomprimir.Procesar(empresa, rutas_archivos[0], ruta_descomprimir);
+						Ctl_Descomprimir.Procesar(rutas_archivos[0], ruta_descomprimir);
 
 						// elimina el mensaje después de procesado de la bandeja de entrada
 						cliente_pop.Eliminar(mensaje.Id);
@@ -413,6 +455,32 @@ namespace HGInetInteroperabilidad.Procesos
 				string msg = string.Format("Error al procesar los correos electrónicos");
 				throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
 			}
+		}
+
+		public static void EnviarAlerta(UniqueId id_mensaje, MimeMessage mensaje, TblEmpresas empresa, List<string> mensajes, Cl_MailImap cliente_imap)
+		{
+			MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
+
+			// notificar por correo electrónico
+			// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
+			Cl_MailCliente cliente_smtp = new Cl_MailCliente()
+			{
+				Servidor = configuracion_server.Servidor,
+				Puerto = configuracion_server.Puerto,
+				Habilitar_ssl = configuracion_server.HabilitaSsl,
+				TimeOut = 120000,
+				Usuario = configuracion_server.Usuario,
+				Clave = configuracion_server.Clave,
+			};
+
+			MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
+
+			List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+			//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
+			correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
+
+			BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
+			cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
 		}
 
 

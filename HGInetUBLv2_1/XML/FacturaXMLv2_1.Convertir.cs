@@ -60,6 +60,16 @@ namespace HGInetUBLv2_1
 							}
 						}
 					}
+					else if (item.LocalName.Equals("SoftwareProvider"))
+					{
+						foreach (XmlNode item_child in item.ChildNodes)
+						{
+							if (item_child.LocalName.Equals("ProviderID"))
+							{
+								factura_obj.IdentificacionProveedor = item_child.InnerText;
+							}
+						}
+					}
 				}
 
 				//Si tiene prefijo lo substrae para dejar el numero del documento como entero
@@ -131,7 +141,10 @@ namespace HGInetUBLv2_1
 				DateTime fecha = factura_ubl.IssueDate.Value;
 				DateTime fecha_hora = new DateTime(fecha.Year, fecha.Month, fecha.Day, hora.Hour, hora.Minute, hora.Second);
 				factura_obj.Fecha = fecha_hora;
-				factura_obj.FechaVence = factura_ubl.DueDate.Value;
+				if (factura_ubl.DueDate != null)
+					factura_obj.FechaVence = factura_ubl.DueDate.Value;
+				else if (factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate != null)
+					factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
 				factura_obj.FormaPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().ID.Value);
 				if (factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value.Equals("ZZZ"))
 					factura_obj.TerminoPago = 0;
@@ -446,11 +459,16 @@ namespace HGInetUBLv2_1
 						{
 							factura_obj.DatosAdquiriente.DireccionEntrega = new Direcciones();
 							factura_obj.DatosAdquiriente.DireccionEntrega.Ciudad = factura_ubl.Delivery[0].DeliveryAddress.CityName.Value;
-							factura_obj.DatosAdquiriente.DireccionEntrega.CodigoCiudad = factura_ubl.Delivery[0].DeliveryAddress.ID.Value;
-							factura_obj.DatosAdquiriente.DireccionEntrega.Departamento = factura_ubl.Delivery[0].DeliveryAddress.CountrySubentity.Value;
-							factura_obj.DatosAdquiriente.DireccionEntrega.CodigoDepartamento = factura_ubl.Delivery[0].DeliveryAddress.CountrySubentityCode.Value;
-							factura_obj.DatosAdquiriente.DireccionEntrega.CodigoPais = factura_ubl.Delivery[0].DeliveryAddress.Country.IdentificationCode.Value;
-							factura_obj.DatosAdquiriente.DireccionEntrega.Direccion = factura_ubl.Delivery[0].DeliveryAddress.AddressLine[0].Line.Value;
+							if (factura_ubl.Delivery[0].DeliveryAddress.ID != null)
+								factura_obj.DatosAdquiriente.DireccionEntrega.CodigoCiudad = factura_ubl.Delivery[0].DeliveryAddress.ID.Value;
+							if (factura_ubl.Delivery[0].DeliveryAddress.CountrySubentity != null)
+								factura_obj.DatosAdquiriente.DireccionEntrega.Departamento = factura_ubl.Delivery[0].DeliveryAddress.CountrySubentity.Value;
+							if (factura_ubl.Delivery[0].DeliveryAddress.CountrySubentityCode != null)
+								factura_obj.DatosAdquiriente.DireccionEntrega.CodigoDepartamento = factura_ubl.Delivery[0].DeliveryAddress.CountrySubentityCode.Value;
+							if (factura_ubl.Delivery[0].DeliveryAddress.Country != null)
+								factura_obj.DatosAdquiriente.DireccionEntrega.CodigoPais = factura_ubl.Delivery[0].DeliveryAddress.Country.IdentificationCode.Value;
+							if (factura_ubl.Delivery[0].DeliveryAddress.AddressLine != null)
+								factura_obj.DatosAdquiriente.DireccionEntrega.Direccion = factura_ubl.Delivery[0].DeliveryAddress.AddressLine[0].Line.Value;
 							try
 							{
 								ListaPaises list_paises = new ListaPaises();

@@ -51,24 +51,14 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string RespuestaDianXml { get; set; }
 
-		///// <summary>
-		///// Datos del Obligado a facturar
-		///// </summary>
-		//public Tercero DatosObligado { get; set; }
-
-		///// <summary>
-		///// Datos del Adquiriente de la Factura
-		///// </summary>
-		//public Tercero DatosAdquiriente { get; set; }
-
 		/// <summary>
-		/// Código de respuesta de acuerdo a los valores definidos en Guia de Interoperabilidad en la ​Tabla No. 5.2.1: Códigos de respuesta - Capítulo No. 5.2. 
+		/// Código CUFE del documento Electronico enviado 
 		/// </summary>
 		public string CufeDocumentoElectronico { get; set; }
 
 		/// <summary>
 		/// Descripción que complementa o justifica el código de respuesta reportado
 		/// </summary>
-		public string MvoRespuesta { get; set; }
+		///public string MvoRespuesta { get; set; }
 	}
 }

@@ -4,7 +4,6 @@ using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
-using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.RegistroLog;
@@ -16,6 +15,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetMiFacturaElectonicaData.Modelo;
 
 namespace HGInetInteroperabilidad.Configuracion
 {
@@ -129,8 +132,71 @@ namespace HGInetInteroperabilidad.Configuracion
 
 			return datos_respuesta;
 		}
+
+
+		/// <summary>
+		/// Metodo para procesar documentos recibidos por correo
+		/// </summary>
+		/// <returns></returns>
+		public static bool ProcesarArchivosCorreo()
+		{
+
+			bool datos_respuesta = false;
+
+			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+			string ruta_archivos = string.Format(@"{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion);
+
+			string[] directorios_Obligado = Directorio.ObtenerSubdirectoriosDirectorio(ruta_archivos);
+
+			string ruta_directorio_borrar = string.Empty;
+
+			try
+			{
+				if (directorios_Obligado != null && directorios_Obligado.Length > 0)
+				{
+					foreach (var directorio in directorios_Obligado)
+					{
+						string[] directorios_archivos = Directorio.ObtenerSubdirectoriosDirectorio(directorio);
+
+						if (directorios_archivos != null && directorios_archivos.Length > 0)
+						{
+							foreach (var item in directorios_archivos)
+							{
+								var archivos_recibidos = Directorio.ObtenerArchivosDirectorio(item);
+
+								if (archivos_recibidos != null)
+								{
+									try
+									{
+										bool procesado = Ctl_Recepcion.ProcesarCorreo(item);
+										datos_respuesta = procesado;
+
+										if (procesado == true)
+										{
+											Directorio.BorrarArchivos(item);
+											
+										}
+									}
+									catch (Exception ex)
+									{}
+								}
+							}
+						}
+					}
+
+				}
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, excepcion.Message);
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+
+			return datos_respuesta;
+		}
 		
-		public static string Procesar(TblEmpresas empresa, string archivo_zip, string carpeta_descomprimir = "")
+		public static string Procesar(string archivo_zip, string carpeta_descomprimir = "")
 		{
 			string destino = string.Empty;
 			

@@ -49,6 +49,9 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HGICtrlUtilidades">
+      <HintPath>..\Documentacion\Librerias\HGICtrlUtilidades.dll</HintPath>
+    </Reference>
     <Reference Include="HGInetEmailServicios, Version=2018.7.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Documentacion\Librerias\Email\HGInetEmailServicios.dll</HintPath>

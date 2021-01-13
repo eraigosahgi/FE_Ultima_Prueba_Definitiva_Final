@@ -28,6 +28,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public long Documento { get; set; }
 
+        /// <summary>
+        /// Cufe del Documento que se le dio acuse
+        /// </summary>
+        public string CufeDocumento { get; set; }
+
 		/// <summary>
 		/// Prefijo del Documento
 		/// </summary>

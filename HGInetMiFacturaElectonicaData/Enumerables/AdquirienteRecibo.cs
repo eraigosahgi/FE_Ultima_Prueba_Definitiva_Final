@@ -71,6 +71,10 @@ namespace HGInetMiFacturaElectonicaData
 
 		[Description("Recepción de los Bienes y/o Servicios")]
 		[AmbientValue("032")]
-		Aceptado = 5
+		Aceptado = 5,
+
+		[Description("Documento validado por la DIAN")]
+		[AmbientValue("02")]
+		ValidadoDian = 10
 	}
 }
