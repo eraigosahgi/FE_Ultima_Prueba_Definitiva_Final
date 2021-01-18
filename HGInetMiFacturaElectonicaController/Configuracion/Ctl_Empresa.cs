@@ -1003,6 +1003,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					}
 				}
+				else if(certificadora == EnumCertificadoras.Certicamara.GetHashCode())
+				{
+					List<string> list_subject = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(Certificado.Subject, ',');
+					foreach (string item in list_subject)
+					{
+						if (item.Contains("CN="))
+						{
+							Datos.Propietario = item.Substring(3);
+						}
+
+					}
+				}
 				else
 				{
 					Datos.Propietario = Certificado.FriendlyName;

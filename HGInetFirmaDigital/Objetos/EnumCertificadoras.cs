@@ -39,7 +39,16 @@ namespace HGInetFirmaDigital
 		[Description("Andes")]
 		[AmbientValue("publico")]
 		[Category("1")]
-		Andes = 2
+		Andes = 2,
+
+		/// <summary>
+		/// CERTICAMARA
+		/// http://www.certicamara.com
+		/// </summary>
+		[Description("CERTICAMARA")]
+		[AmbientValue("publico")]
+		[Category("1")]
+		Certicamara = 3
 
 	}
 }

@@ -834,7 +834,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						Datos_proveedores = data.value.ID;
 						$("#Certificado").dxFileUploader({
 							multiple: false,
-							allowedFileExtensions: [".pfx", ".p12"],
+							allowedFileExtensions: [".pfx", ".p12", ".dat"],
 							uploadMode: "instantly",
 							readyToUploadMessage: "Certificado Digital subido exitosamente",
 							uploadUrl: "/api/SubirArchivo?StrIdSeguridad=" + id_seguridad + "&Clave=" + Datos_ClaveCert + "&Certificadora=" + Datos_proveedores,
@@ -976,7 +976,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_ClaveCert = data.value;
 				$("#Certificado").dxFileUploader({
 					multiple: false,
-					allowedFileExtensions: [".pfx", ".p12"],
+					allowedFileExtensions: [".pfx", ".p12", ".dat"],
 					uploadMode: "instantly",
 					selectButtonText: "Seleccione el Certificado Digital",
 					uploadedMessage: "Certificado guardado exitosamente",
