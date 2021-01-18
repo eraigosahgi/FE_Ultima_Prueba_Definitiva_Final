@@ -575,22 +575,21 @@ namespace HGInetMiFacturaElectonicaController
 				{
 					if (nuevo_email.Contains(";"))
 					{
+
+						foreach (var item_mail in Coleccion.ConvertirLista(nuevo_email, ';'))
+						{
+							// recibe el email el adquiriente
+							destinatario = new DestinatarioEmail();
+							destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
+							destinatario.Email = item_mail;
+							correos_destino.Add(destinatario);
+						}
+
 						//Se valida si tiene correo registrado para enviar el documento a este(Resolucion 042)
-						if (!string.IsNullOrEmpty(correo_registrado))
+						if (!string.IsNullOrEmpty(correo_registrado) && !nuevo_email.Contains(correo_registrado))
 						{
 							destinatario.Email = correo_registrado;
 							correos_destino.Add(destinatario);
-						}
-						else
-						{
-							foreach (var item_mail in Coleccion.ConvertirLista(nuevo_email, ';'))
-							{
-								// recibe el email el adquiriente
-								destinatario = new DestinatarioEmail();
-								destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
-								destinatario.Email = item_mail;
-								correos_destino.Add(destinatario);
-							}
 						}
 							
 						
@@ -598,15 +597,22 @@ namespace HGInetMiFacturaElectonicaController
 					else
 					{
 						//Se valida si tiene correo registrado para enviar el documento a este(Resolucion 042)
-						if (!string.IsNullOrEmpty(correo_registrado))
+						if (!string.IsNullOrEmpty(correo_registrado) && !nuevo_email.Equals(correo_registrado))
 						{
 							destinatario.Email = correo_registrado;
+							correos_destino.Add(destinatario);
+							// recibe el email el adquiriente
+							destinatario = new DestinatarioEmail();
+							destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
+							destinatario.Email = nuevo_email;
+							correos_destino.Add(destinatario);
 						}
 						else
 						{
 							destinatario.Email = nuevo_email;
+							correos_destino.Add(destinatario);
 						}
-						correos_destino.Add(destinatario);
+						
 					}
 				}
 
