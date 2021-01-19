@@ -597,15 +597,21 @@ namespace HGInetMiFacturaElectonicaController
 					else
 					{
 						//Se valida si tiene correo registrado para enviar el documento a este(Resolucion 042)
-						if (!string.IsNullOrEmpty(correo_registrado) && !nuevo_email.Equals(correo_registrado))
+						if (!string.IsNullOrEmpty(correo_registrado))
 						{
 							destinatario.Email = correo_registrado;
 							correos_destino.Add(destinatario);
-							// recibe el email el adquiriente
-							destinatario = new DestinatarioEmail();
-							destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
-							destinatario.Email = nuevo_email;
-							correos_destino.Add(destinatario);
+
+							if (!nuevo_email.Equals(correo_registrado))
+							{
+								// recibe el email el adquiriente
+								destinatario = new DestinatarioEmail();
+								destinatario.Nombre = empresa_adquiriente.StrRazonSocial;
+								destinatario.Email = nuevo_email;
+								correos_destino.Add(destinatario);
+							}
+
+							
 						}
 						else
 						{
@@ -698,7 +704,7 @@ namespace HGInetMiFacturaElectonicaController
 						bool IdPago = false;
 
 						if (documento.TblEmpresasResoluciones != null)
-							IdPago = (documento.TblEmpresasFacturador.IntManejaPagoE) ? true : false;
+							IdPago = (empresa_obligado.IntManejaPagoE) ? true : false;
 
 						if (doc_tipo == TipoDocumento.Factura && IdPago)
 						{
