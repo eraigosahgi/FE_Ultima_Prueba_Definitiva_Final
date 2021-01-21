@@ -1181,10 +1181,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			try
 			{
 				context.Configuration.LazyLoadingEnabled = LazyLoading;
-
-				//var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasResoluciones").Include("TblPagosElectronicos")
-
-				var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblPagosElectronicos")
+				
+				var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblPagosElectronicos")
 								 where datos.StrIdSeguridad.Equals(id_seguridad)
 								 select datos
 								 );
