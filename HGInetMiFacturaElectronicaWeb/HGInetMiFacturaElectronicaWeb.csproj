@@ -84,8 +84,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
@@ -2838,8 +2838,10 @@
     <Content Include="Views\Pages\SondaConciliaPlanes.aspx" />
     <Content Include="Views\Pages\SondaCrearPlanes.aspx" />
     <Content Include="Views\Pages\SondadeNotificaciones.aspx" />
+    <Content Include="Views\Pages\SondaDescargarCorreos.aspx" />
     <Content Include="Views\Pages\SondaGenerarPDF.aspx" />
     <Content Include="Views\Pages\SondaObtenerCorreosDian.aspx" />
+    <Content Include="Views\Pages\SondaProcesarCorreo.aspx" />
     <Content Include="Views\Pages\SondaResoluciones.aspx" />
     <Content Include="Views\Pages\SondaValidarEmail.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
@@ -3290,6 +3292,13 @@
     <Compile Include="Views\Pages\SondadeNotificaciones.aspx.designer.cs">
       <DependentUpon>SondadeNotificaciones.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\SondaDescargarCorreos.aspx.cs">
+      <DependentUpon>SondaDescargarCorreos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaDescargarCorreos.aspx.designer.cs">
+      <DependentUpon>SondaDescargarCorreos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\SondaGenerarPDF.aspx.cs">
       <DependentUpon>SondaGenerarPDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3303,6 +3312,13 @@
     </Compile>
     <Compile Include="Views\Pages\SondaObtenerCorreosDian.aspx.designer.cs">
       <DependentUpon>SondaObtenerCorreosDian.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\SondaProcesarCorreo.aspx.cs">
+      <DependentUpon>SondaProcesarCorreo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaProcesarCorreo.aspx.designer.cs">
+      <DependentUpon>SondaProcesarCorreo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\SondaResoluciones.aspx.cs">
       <DependentUpon>SondaResoluciones.aspx</DependentUpon>
@@ -3465,7 +3481,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:6885/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
