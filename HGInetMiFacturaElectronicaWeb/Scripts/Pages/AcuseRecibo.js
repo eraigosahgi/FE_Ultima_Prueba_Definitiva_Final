@@ -1,6 +1,7 @@
 ﻿
 DevExpress.localization.locale(navigator.language);
-
+var PagosParciales = false;
+var poseeIdComercio = false;
 var App = angular.module('App', ['dx']);
 App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $timeout) {
 
@@ -194,6 +195,13 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 				$('#plugin').attr('src', $scope.RespuestaAcuse[0].Pdf);
 
 				try {
+					PagosParciales = $scope.RespuestaAcuse[0].PermiteParciales;
+					poseeIdComercio = $scope.RespuestaAcuse[0].poseeIdComercio;
+
+					if (!poseeIdComercio) {
+						$("#modal_Pagos_Electronicos").modal("hide");
+					}
+
 					ga('create', GoogleAnalytics, {
 						'clientId': (sessionStorage.getItem("Usuario")) ? sessionStorage.getItem("Usuario") : response.data[0].IdAdquiriente + '_' + response.data[0].IdAdquiriente
 					});
@@ -209,7 +217,7 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 
 				}
 				//Si estatus es igual a 2, entonces asigno los valores a las variables para ejecutar la consulta de saldo
-				console.log(response.data[0].Estatus);
+
 				if (response.data[0].Estatus == 2) {
 					$scope.Idregistro = response.data[0].pago[0].StrIdRegistro
 					VerificarEstado();
@@ -366,10 +374,10 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 				}, 1000);
 			} else {
 				$scope.PanelInformacion = false;
-											
+
 				$timeout(function callAtTimeout() {
 					$("#modal_Pagos_Electronicos").modal("show");
-					$scope.ConsultarPago1('', '1', true, true);
+					$scope.ConsultarPago1('', PagosParciales, poseeIdComercio, false);
 				}, 1000);
 			}
 
