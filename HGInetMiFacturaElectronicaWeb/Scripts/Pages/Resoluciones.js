@@ -371,50 +371,24 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						dataField: "Observaciones",
 						hidingPriority: 5,
 					}
-					,
-					{
-						caption: "Permite Pagos Parciales",
-						dataField: "PermiteParciales",
-						hidingPriority: 6,
-					},
+					,					
 
 					{
 						dataField: "RangoInicial",
 						caption: "RangoInicial",
-						hidingPriority: 7,
+						hidingPriority: 6,
 					},
 
 					{
 						caption: "Respuesta ServicioWeb",
 						dataField: "RespuestaServicioWeb",
-						hidingPriority: 8,
+						hidingPriority: 7,
 					},
 					{
 						caption: "Versión Dian",
 						dataField: "VersionDian",
-						hidingPriority: 9,
-					},
-					{
-						caption: "Comercio PSE",
-						dataField: "ComercioConfigId",
-						hidingPriority: 10,
-					},
-					{
-						caption: "Descripción del Comercio PSE",
-						dataField: "ComercioConfigDescrip",
-						hidingPriority: 11,
-					},
-
-					{
-						caption: "Comercio TDC",
-						dataField: "ComercioConfigIdTC",
-						hidingPriority: 10,
-					},
-					{
-						caption: "Descripción del Comercio TDC",
-						dataField: "ComercioConfigDescripTC",
-						hidingPriority: 13,
-					},
+						hidingPriority: 8,
+					},					
 
 				],
 				filterRow: {
