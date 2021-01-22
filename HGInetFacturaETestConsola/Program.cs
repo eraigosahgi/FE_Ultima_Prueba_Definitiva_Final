@@ -1,5 +1,4 @@
 ﻿using HGInetDIANServicios;
-using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBL;
