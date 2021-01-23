@@ -149,15 +149,17 @@ namespace HGInetInteroperabilidad.Configuracion
 
 			string[] directorios_Obligado = Directorio.ObtenerSubdirectoriosDirectorio(ruta_archivos);
 
-			string ruta_directorio_borrar = string.Empty;
-
 			try
 			{
 				if (directorios_Obligado != null && directorios_Obligado.Length > 0)
 				{
 					foreach (var directorio in directorios_Obligado)
 					{
+						int i = 0;
+
 						string[] directorios_archivos = Directorio.ObtenerSubdirectoriosDirectorio(directorio);
+
+						bool procesado = false;
 
 						if (directorios_archivos != null && directorios_archivos.Length > 0)
 						{
@@ -169,20 +171,65 @@ namespace HGInetInteroperabilidad.Configuracion
 								{
 									try
 									{
-										bool procesado = Ctl_Recepcion.ProcesarCorreo(item);
+										procesado = Ctl_Recepcion.ProcesarCorreo(item);
 										datos_respuesta = procesado;
 
 										if (procesado == true)
 										{
 											Directorio.BorrarArchivos(item);
-											
+											Directorio.BorrarDirectorio(item);
+										}
+										else
+										{
+											throw new ApplicationException("No se proceso el correo");
 										}
 									}
 									catch (Exception ex)
-									{}
+									{
+										string ruta_dir = string.Format(@"{0}\\Archivos", ruta_archivos.Replace("recepcion", "no procesados"));
+										Directorio.CrearDirectorio(ruta_dir);
+										string nom_dir = Path.GetFileName(directorios_archivos[i]);
+										try
+										{
+											Directorio.MoverDirectorio(item, string.Format(@"{0}\\{1}", ruta_dir, nom_dir));
+										}
+										catch (Exception)
+										{}
+										if (Archivo.ValidarExistencia(string.Format(@"{0}\\{1}.mail", directorio,Path.GetFileName(directorios_archivos[i]))))
+										{
+											try
+											{
+												Archivo.Mover(string.Format(@"{0}\\{1}.mail", directorio, Path.GetFileName(directorios_archivos[i])), ruta_dir, string.Format("Mail - {0}.mail", Path.GetFileName(directorios_archivos[i])));
+											}
+											catch (Exception)
+											{}
+										}
+											
+									}
 								}
+								Directorio.BorrarArchivos(item);
+								try
+								{
+									Directorio.BorrarDirectorio(item);
+								}
+								catch (Exception)
+								{ }
 							}
+
+							Directorio.BorrarArchivos(directorio);
+							try
+							{
+								Directorio.BorrarDirectorio(directorio);
+							}
+							catch (Exception)
+							{ }
 						}
+						else
+						{
+							Directorio.BorrarDirectorio(directorio);
+						}
+
+						i++;
 					}
 
 				}
