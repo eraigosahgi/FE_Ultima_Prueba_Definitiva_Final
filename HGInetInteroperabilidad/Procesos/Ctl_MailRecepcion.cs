@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using Newtonsoft.Json;
 
 namespace HGInetInteroperabilidad.Procesos
 {
@@ -132,6 +133,10 @@ namespace HGInetInteroperabilidad.Procesos
 									if (validacion_asunto == true)
 									{
 										Ctl_Empresa _empresa = new Ctl_Empresa();
+
+										if (asunto_params[0].Contains("Fwd:"))
+											asunto_params[0] = asunto_params[0].Replace("Fwd:", "").Trim();
+
 										empresa = _empresa.Obtener(asunto_params[0]);
 
 										if (empresa == null)
@@ -141,7 +146,11 @@ namespace HGInetInteroperabilidad.Procesos
 											empresa_emisor.Identificacion = asunto_params[0];
 											empresa_emisor.RazonSocial = asunto_params[1];
 											empresa_emisor.NombreComercial = asunto_params[4];
-											empresa_emisor.Email = mensaje.From.Mailboxes.FirstOrDefault().Address;
+											string mail_emisor = mensaje.From.Mailboxes.FirstOrDefault().Address;
+											//Se valida que si el correo emisor es de la plataforma se tome el correo del facturador si no existe
+											if (mensaje.From.Mailboxes.FirstOrDefault().Address.Equals(Constantes.EmailRemitente))
+												mail_emisor = mensaje.ReplyTo.Mailboxes.FirstOrDefault().Address;
+											empresa_emisor.Email = mail_emisor;
 
 											empresa = _empresa.Crear(empresa_emisor, false);
 										}
@@ -177,12 +186,14 @@ namespace HGInetInteroperabilidad.Procesos
 									throw excepcion;
 								}
 
-								if (correo_procesado)
-								{   // id de recepción
-									Guid id_mail = Guid.NewGuid();
+								// procesar archivo adjunto temporal
+								PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-									// procesar archivo adjunto temporal
-									PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+								// id de recepción
+								Guid id_mail = Guid.NewGuid();
+
+								if (correo_procesado)
+								{  
 									string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, empresa.StrIdSeguridad);
 									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
@@ -201,6 +212,30 @@ namespace HGInetInteroperabilidad.Procesos
 								}
 								else
 								{
+
+									string ruta_archivos = string.Format("{0}\\{1}Mail\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion.Replace("recepcion", "no procesados"));
+									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
+
+									// almacena el correo electrónico temporalmente
+									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_archivos, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address, id_mail.ToString()));
+
+									// almacena los adjuntos del correo electrónico temporalmente
+									List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_archivos);
+
+									// descomprime el zip adjunto
+									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
+									Ctl_Descomprimir.Procesar(rutas_archivos[0], ruta_descomprimir);
+
+									try
+									{
+										ruta_descomprimir = string.Format("{0}\\Archivo_errores.json", ruta_descomprimir);
+
+										// almacena el objeto en archivo json
+										File.WriteAllText(ruta_descomprimir, JsonConvert.SerializeObject(mensajes));
+									}
+									catch (Exception)
+									{}
+
 									MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
 
 									// notificar por correo electrónico
@@ -235,8 +270,16 @@ namespace HGInetInteroperabilidad.Procesos
 									}
 
 
-									BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
-									cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
+									try
+									{
+										BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
+										cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
+									}
+									catch (Exception)
+									{}
+
+									// mueve el mensaje a no procesado de la bandeja de entrada
+									cliente_imap.MoverNoProcesado(id_mensaje);
 
 
 									//EnviarAlerta(id_mensaje,mensaje,empresa,mensajes,cliente_imap);
