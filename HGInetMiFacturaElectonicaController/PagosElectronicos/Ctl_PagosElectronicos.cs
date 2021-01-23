@@ -24,6 +24,9 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using LibreriaGlobalHGInet.ObjetosComunes.PagosEnLinea;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas;
+using LibreriaGlobalHGInet.Error;
+using System.ServiceModel;
 
 namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 {
@@ -755,5 +758,79 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 
 		#endregion
+
+
+
+
+
+		/// <summary>
+		/// Obtiene los pagos entre un rango de fechas especifica
+		/// </summary>
+		/// <param name="identificacion_obligado">Identificación del Facturador</param>
+		/// <param name="FechaInicial">Fecha Inicial</param>
+		/// <param name="FechaFinal">Fecha Final</param>
+		/// <param name="Procesados">Procesado</param>
+		/// <returns>List<PagoElectronicoRespuesta></returns>
+		public List<PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string identificacion_obligado, DateTime FechaInicial, DateTime FechaFinal, bool Procesados = true)
+		{
+			try
+			{
+				//Valida que los parametros sean correctos.
+				if (string.IsNullOrWhiteSpace(identificacion_obligado))
+					throw new ApplicationException("Número de identificación del obligado inválido.");
+
+
+				List<PagoElectronicoRespuesta> lista_respuesta = new List<PagoElectronicoRespuesta>();
+
+
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var respuesta = (from documento in context.TblDocumentos
+								 join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
+								 join pagos in context.TblPagosElectronicos on documento.StrIdSeguridad equals pagos.StrIdSeguridadDoc
+								 where empresa.StrIdentificacion.Equals(identificacion_obligado)
+								 && pagos.DatFechaRegistro >= FechaInicial
+								 && pagos.DatFechaRegistro <= FechaFinal
+								 select new // PagoElectronicoRespuesta
+								 {
+									 IdDocumento = documento.StrIdSeguridad.ToString(),
+									 Identificacion = documento.StrEmpresaAdquiriente,
+									 NumeroResolucion = documento.StrNumResolucion,
+									 Cufe = documento.StrCufe,
+									 DocumentoTipo = documento.IntDocTipo,
+									 Documento = documento.IntNumero,
+									 FechaDocumento = documento.DatFechaIngreso,
+									 Prefijo = documento.StrPrefijo,
+
+									 DetallesPagos = documento.TblPagosElectronicos.Select(p => new PagoElectronicoRespuestaDetalle
+									 {
+										 Fecha = p.DatFechaRegistro,
+										 IdPago = p.StrIdSeguridadPago,
+										 ReferenciaCUS = p.StrTransaccionCUS,
+										 TicketID = p.StrTicketID,
+										 PagoEstadoDescripcion = p.StrMensaje,
+										 PagoEstado = p.IntEstadoPago,
+										 Valor = p.IntValorPago,
+										 FormaPago = p.IntFormaPago.ToString(),
+										 Franquicia = p.StrCodigoFranquicia
+
+									 })
+
+								 }).ToList();
+
+
+				var datos = JsonConvert.SerializeObject(respuesta);
+
+				lista_respuesta = JsonConvert.DeserializeObject<List<PagoElectronicoRespuesta>>(datos);
+
+
+				return lista_respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Registros;
+﻿using HGInetMiFacturaElectonicaController.PagosElectronicos;
+using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
@@ -60,6 +61,53 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				}
 
 				return respuesta;
+
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
+		/// <summary>
+		///  Obtiene los pagos entre un rango de fechas especifica
+		/// </summary>
+		/// <param name="DataKey">DataKey</param>
+		/// <param name="Identificacion">Identificacion</param>
+		/// <param name="FechaInicial">Fecha Inicial</param>
+		/// <param name="FechaFinal">Fecha Final</param>
+		/// <param name="Procesados"> Procesados</param>
+		/// <returns>List<PagoElectronicoRespuesta></returns>
+		public List<PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string DataKey, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, bool Procesados = true)
+		{
+			try
+			{
+				List<PagoElectronicoRespuesta> respuesta = new List<PagoElectronicoRespuesta>();
+
+				//Válida que la key sea correcta.
+				TblEmpresas empresa = Peticion.Validar(DataKey, Identificacion);
+
+				//Se valida si la empresa maneja Pagos
+				if (!empresa.IntManejaPagoE)
+				{
+					throw new ApplicationException(string.Format("El Facturador con la identificación {0} no maneja Pagos Electrónicos.", Identificacion));
+				}
+
+				Ctl_PagosElectronicos controlador = new Ctl_PagosElectronicos();
+
+				var datos = controlador.ConsultaPorFechaElaboracion(Identificacion, FechaInicial, FechaFinal, Procesados);
+
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("ConsultaPorFechaElaboracion", DataKey, Identificacion, FechaInicial.ToString(), FechaFinal.ToString(), respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{
+				}
+
+				return datos;
 
 			}
 			catch (Exception exec)
