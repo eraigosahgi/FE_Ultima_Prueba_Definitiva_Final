@@ -2696,7 +2696,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
 						mensaje = mensaje.Replace("{Documento}", Documento);
 						mensaje = mensaje.Replace("{Estado}", (Resultado)?"Recibido": "No Recibido");
-						mensaje = mensaje.Replace("{Proceso}", (Proceso==0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Interoperabilidad" : "Consulta");
+						mensaje = mensaje.Replace("{Proceso}", (Proceso==0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Consulta" : "Interoperabilidad");
 
 
 						DestinatarioEmail remitente = new DestinatarioEmail();

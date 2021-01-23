@@ -593,13 +593,20 @@ namespace HGInetInteroperabilidad.Procesos
 						documento_obj.DatosObligado.Email = string.Empty;
 
 					facturador_emisor = empresa.Crear(documento_obj.DatosObligado, false);
+				}
 
-					if (string.IsNullOrEmpty(facturador_emisor.StrSerial))
-					{
-						facturador_emisor.StrSerial = Guid.NewGuid().ToString();
-						empresa.Actualizar(facturador_emisor);
-					}
+				if (string.IsNullOrEmpty(facturador_emisor.StrSerial))
+				{
+					facturador_emisor.StrSerial = Guid.NewGuid().ToString();
+					if (string.IsNullOrEmpty(facturador_emisor.StrMailEnvio) && !string.IsNullOrEmpty(facturador_emisor.StrMailAdmin))
+						facturador_emisor.StrMailEnvio = facturador_emisor.StrMailAdmin;
+					empresa.Actualizar(facturador_emisor);
+				}
 
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+				if (!plataforma_datos.RutaPublica.Contains("habilitacion") && facturador_emisor.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+				{
+					facturador_emisor.IntHabilitacion = (byte)Habilitacion.Produccion.GetHashCode();
 				}
 
 				//Se crea Resolucion
@@ -854,7 +861,7 @@ namespace HGInetInteroperabilidad.Procesos
 					try
 					{
 						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-						email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 2, false, Constantes.EmailCopiaOculta, true);
+						email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, true);
 					}
 					catch (Exception)
 					{ }
@@ -1206,45 +1213,50 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 
 				TblDocumentos documento_bd = new TblDocumentos();
+				Ctl_Documento ctl_doc = new Ctl_Documento();
 
-				//Convierto el Objeto a Tbl
-				try
-				{
-					documento_bd = Convertir(documento_obj, Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc), facturador_emisor, nombre_archivo, documento_obj.IdentificacionProveedor, contiene_pdf, contiene_anexo);
-				}
-				catch (Exception excepcion)
-				{
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-					throw new ApplicationException(string.Format("Error al convertir objeto {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
-				}
+				//valida si el Documento ya existe en Base de Datos
+				documento_bd = ctl_doc.Obtener(facturador_emisor.StrIdentificacion, documento_obj.Documento, documento_obj.Prefijo);
 
-				//Valida Proveedor Emisor
-				try
+				if (documento_bd == null)
 				{
-					Ctl_ConfiguracionInteroperabilidad config_inter = new Ctl_ConfiguracionInteroperabilidad();
-					TblConfiguracionInteroperabilidad proveedor_emisor = config_inter.Obtener(documento_obj.IdentificacionProveedor);
-					if (proveedor_emisor == null)
+					//Convierto el Objeto a Tbl
+					try
 					{
-						proveedor_emisor = config_inter.GuardarProveedor(documento_obj.IdentificacionProveedor, string.Empty, string.Format("Proveedor - {0}", facturador_emisor.StrRazonSocial), facturador_emisor.StrMailAdmin, facturador_emisor.StrTelefono, string.Format("Creado por documento recibido - {0}", documento_obj.Documento), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, true, Fecha.GetFecha(), Fecha.GetFecha());
+						documento_bd = Convertir(documento_obj, Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc), facturador_emisor, nombre_archivo, documento_obj.IdentificacionProveedor, contiene_pdf, contiene_anexo);
 					}
-				}
-				catch (Exception excepcion)
-				{
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-					throw new ApplicationException(string.Format("Error al crear proveedor Emisor {0} Detalle: {1}", documento_obj.IdentificacionProveedor, excepcion.Message));
-				}
+					catch (Exception excepcion)
+					{
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+						throw new ApplicationException(string.Format("Error al convertir objeto {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+					}
 
-				//Guardo el documento en BD
-				Ctl_Documento documento_tmp = new Ctl_Documento();
+					//Valida Proveedor Emisor
+					try
+					{
+						Ctl_ConfiguracionInteroperabilidad config_inter = new Ctl_ConfiguracionInteroperabilidad();
+						TblConfiguracionInteroperabilidad proveedor_emisor = config_inter.Obtener(documento_obj.IdentificacionProveedor);
+						if (proveedor_emisor == null)
+						{
+							proveedor_emisor = config_inter.GuardarProveedor(documento_obj.IdentificacionProveedor, string.Empty, string.Format("Proveedor - {0}", facturador_emisor.StrRazonSocial), facturador_emisor.StrMailAdmin, facturador_emisor.StrTelefono, string.Format("Creado por documento recibido - {0}", documento_obj.Documento), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, true, Fecha.GetFecha(), Fecha.GetFecha());
+						}
+					}
+					catch (Exception excepcion)
+					{
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+						throw new ApplicationException(string.Format("Error al crear proveedor Emisor {0} Detalle: {1}", documento_obj.IdentificacionProveedor, excepcion.Message));
+					}
 
-				try
-				{
-					documento_bd = documento_tmp.Crear(documento_bd);
-				}
-				catch (Exception excepcion)
-				{
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-					throw new ApplicationException(string.Format("Error al guardar el documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+					//Guardo el documento en BD
+					try
+					{
+						documento_bd = ctl_doc.Crear(documento_bd);
+					}
+					catch (Exception excepcion)
+					{
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+						throw new ApplicationException(string.Format("Error al guardar el documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+					}
 				}
 
 				try
@@ -1274,7 +1286,7 @@ namespace HGInetInteroperabilidad.Procesos
 				try
 				{
 					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-					email.EnviaNotificacionAlertaDIAN(attach_document.IdentificacionFacturador, attach_document.Documento.ToString(), mensajes, 2, false, Constantes.EmailCopiaOculta, true);
+					email.EnviaNotificacionAlertaDIAN(attach_document.IdentificacionFacturador, attach_document.Documento.ToString(), mensajes, 3, false, Constantes.EmailCopiaOculta, true);
 				}
 				catch (Exception)
 				{}

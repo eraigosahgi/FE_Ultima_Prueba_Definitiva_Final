@@ -106,7 +106,7 @@ namespace HGInetMiFacturaElectonicaController
 								throw new ArgumentException(string.Format("El Email {0} no esta bien formado", item.Email));
 
 							Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
-							List<MensajeEnvio> envio = clase_email.NotificacionDocumento(list_tbldocumento.FirstOrDefault(), list_tbldocumento.FirstOrDefault().TblEmpresasFacturador.StrTelefono, item.Email);
+							List<MensajeEnvio> envio = clase_email.NotificacionDocumento(list_tbldocumento.FirstOrDefault(), list_tbldocumento.FirstOrDefault().TblEmpresasFacturador.StrTelefono, item.Email,string.Empty,Procedencia.Mail,"",ProcesoEstado.EnvioEmailAcuse,"",true, false);
 
 							//if (envio == true)
 							if (envio != null)
