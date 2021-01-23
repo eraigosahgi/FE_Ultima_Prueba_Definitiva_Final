@@ -506,6 +506,17 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
             "Registro", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ConsultaPorCodigo" +
             "RegistroResponse")]
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorCodigoRegistroResponse> ConsultaPorCodigoRegistroAsync(HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorCodigoRegistroRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ConsultaPorFechaE" +
+            "laboracion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ConsultaPorFechaE" +
+            "laboracionResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioPagosElectronicos.Error), Action="ConsultaPorFechaElaboracion", Name="Error")]
+        HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionResponse ConsultaPorFechaElaboracion(HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ConsultaPorFechaE" +
+            "laboracion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ConsultaPorFechaE" +
+            "laboracionResponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionResponse> ConsultaPorFechaElaboracionAsync(HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -573,6 +584,54 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultaPorFechaElaboracion", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultaPorFechaElaboracionRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public string DataKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=1)]
+        public string Identificacion;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
+        public System.DateTime FechaInicial;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=3)]
+        public System.DateTime FechaFinal;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=4)]
+        public bool Procesados;
+        
+        public ConsultaPorFechaElaboracionRequest() {
+        }
+        
+        public ConsultaPorFechaElaboracionRequest(string DataKey, string Identificacion, System.DateTime FechaInicial, System.DateTime FechaFinal, bool Procesados) {
+            this.DataKey = DataKey;
+            this.Identificacion = Identificacion;
+            this.FechaInicial = FechaInicial;
+            this.FechaFinal = FechaFinal;
+            this.Procesados = Procesados;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultaPorFechaElaboracionResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultaPorFechaElaboracionResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuesta> ConsultaPorFechaElaboracionResult;
+        
+        public ConsultaPorFechaElaboracionResponse() {
+        }
+        
+        public ConsultaPorFechaElaboracionResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuesta> ConsultaPorFechaElaboracionResult) {
+            this.ConsultaPorFechaElaboracionResult = ConsultaPorFechaElaboracionResult;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface ServicioPagosElectronicosChannel : HGInetFeAPI.ServicioPagosElectronicos.ServicioPagosElectronicos, System.ServiceModel.IClientChannel {
     }
@@ -614,6 +673,14 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
         
         public System.Threading.Tasks.Task<HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorCodigoRegistroResponse> ConsultaPorCodigoRegistroAsync(HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorCodigoRegistroRequest request) {
             return base.Channel.ConsultaPorCodigoRegistroAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionResponse ConsultaPorFechaElaboracion(HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionRequest request) {
+            return base.Channel.ConsultaPorFechaElaboracion(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionResponse> ConsultaPorFechaElaboracionAsync(HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionRequest request) {
+            return base.Channel.ConsultaPorFechaElaboracionAsync(request);
         }
     }
 }
