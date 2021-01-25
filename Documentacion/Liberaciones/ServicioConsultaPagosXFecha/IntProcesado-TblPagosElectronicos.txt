@@ -1,0 +1,3 @@
+ALTER TABLE TblPagosElectronicos ADD
+IntProcesado bit NOT NULL Default(0)
+GO

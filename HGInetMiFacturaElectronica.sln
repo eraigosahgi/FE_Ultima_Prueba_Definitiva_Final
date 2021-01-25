@@ -310,6 +310,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FormasPago", "FormasPago", 
 		Documentacion\Liberaciones\FormasPago\ScriptTblEmpresas-TblEmpresasResoluciones2.txt = Documentacion\Liberaciones\FormasPago\ScriptTblEmpresas-TblEmpresasResoluciones2.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServicioConsultaPagosXFecha", "ServicioConsultaPagosXFecha", "{B713EFD5-6A3D-4385-B9B4-AE30CFB4FA9E}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\ServicioConsultaPagosXFecha\IntProcesado-TblPagosElectronicos.txt = Documentacion\Liberaciones\ServicioConsultaPagosXFecha\IntProcesado-TblPagosElectronicos.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -499,5 +504,6 @@ Global
 		{3EDF24D1-55B1-47A8-976D-06E4C774FFD4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{3C74ABA9-841A-4034-9EBA-D945D13627C4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{40ADCB67-6DFE-4D1F-A5D9-9BC9D795A9F6} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{B713EFD5-6A3D-4385-B9B4-AE30CFB4FA9E} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal
