@@ -806,7 +806,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 									 FechaDocumento = documento.DatFechaIngreso,
 									 Prefijo = documento.StrPrefijo,
 
-									 DetallesPagos = documento.TblPagosElectronicos.Select(p => new PagoElectronicoRespuestaDetalle
+									 DetallesPagos = documento.TblPagosElectronicos.Where(x => (x.IntProcesado == estado_pago || Procesados == 0)).Select(p => new PagoElectronicoRespuestaDetalle
 									 {
 										 IdRegistro = p.StrIdRegistro.ToString(),
 										 Fecha = p.DatFechaRegistro,
