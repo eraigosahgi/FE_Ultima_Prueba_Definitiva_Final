@@ -34,6 +34,7 @@
       <xs:element minOccurs="0" name="FormaPago" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Franquicia" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdPago" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdRegistro" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PagoEstado" type="xs:int" />
       <xs:element minOccurs="0" name="PagoEstadoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReferenciaCUS" nillable="true" type="xs:string" />

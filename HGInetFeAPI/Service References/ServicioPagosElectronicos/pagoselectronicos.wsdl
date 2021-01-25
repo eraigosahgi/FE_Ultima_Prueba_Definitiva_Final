@@ -32,6 +32,15 @@
   <wsdl:message name="ServicioPagosElectronicos_ConsultaPorFechaElaboracion_Error_FaultMessage">
     <wsdl:part name="detail" element="tns:Error" />
   </wsdl:message>
+  <wsdl:message name="ServicioPagosElectronicos_ActualizarEstadoPago_InputMessage">
+    <wsdl:part name="parameters" element="tns:ActualizarEstadoPago" />
+  </wsdl:message>
+  <wsdl:message name="ServicioPagosElectronicos_ActualizarEstadoPago_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ActualizarEstadoPagoResponse" />
+  </wsdl:message>
+  <wsdl:message name="ServicioPagosElectronicos_ActualizarEstadoPago_Error_FaultMessage">
+    <wsdl:part name="detail" element="tns:Error" />
+  </wsdl:message>
   <wsdl:portType name="ServicioPagosElectronicos">
     <wsdl:operation name="Test">
       <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/Test" message="tns:ServicioPagosElectronicos_Test_InputMessage" />
@@ -46,6 +55,11 @@
       <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ConsultaPorFechaElaboracion" message="tns:ServicioPagosElectronicos_ConsultaPorFechaElaboracion_InputMessage" />
       <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ConsultaPorFechaElaboracionResponse" message="tns:ServicioPagosElectronicos_ConsultaPorFechaElaboracion_OutputMessage" />
       <wsdl:fault wsaw:Action="ConsultaPorFechaElaboracion" name="Error" message="tns:ServicioPagosElectronicos_ConsultaPorFechaElaboracion_Error_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ActualizarEstadoPago">
+      <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ActualizarEstadoPago" message="tns:ServicioPagosElectronicos_ActualizarEstadoPago_InputMessage" />
+      <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ActualizarEstadoPagoResponse" message="tns:ServicioPagosElectronicos_ActualizarEstadoPago_OutputMessage" />
+      <wsdl:fault wsaw:Action="ActualizarEstadoPago" name="Error" message="tns:ServicioPagosElectronicos_ActualizarEstadoPago_Error_FaultMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>

@@ -38,7 +38,7 @@
         <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="FechaInicial" type="xs:dateTime" />
         <xs:element minOccurs="0" name="FechaFinal" type="xs:dateTime" />
-        <xs:element minOccurs="0" name="Procesados" type="xs:boolean" />
+        <xs:element minOccurs="0" name="Procesados" type="xs:int" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -46,6 +46,22 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas" minOccurs="0" name="ConsultaPorFechaElaboracionResult" nillable="true" type="q3:ArrayOfPagoElectronicoRespuesta" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ActualizarEstadoPago">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="DataKey" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="CodigosRegistros" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ActualizarEstadoPagoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas" minOccurs="0" name="ActualizarEstadoPagoResult" nillable="true" type="q4:ArrayOfPagoElectronicoRespuestaDetalle" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

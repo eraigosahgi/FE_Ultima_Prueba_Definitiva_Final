@@ -303,6 +303,9 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
         private string IdPagoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdRegistroField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int PagoEstadoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -375,6 +378,19 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
                 if ((object.ReferenceEquals(this.IdPagoField, value) != true)) {
                     this.IdPagoField = value;
                     this.RaisePropertyChanged("IdPago");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdRegistro {
+            get {
+                return this.IdRegistroField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdRegistroField, value) != true)) {
+                    this.IdRegistroField = value;
+                    this.RaisePropertyChanged("IdRegistro");
                 }
             }
         }
@@ -517,6 +533,17 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
             "laboracion", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ConsultaPorFechaE" +
             "laboracionResponse")]
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionResponse> ConsultaPorFechaElaboracionAsync(HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ActualizarEstadoP" +
+            "ago", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ActualizarEstadoP" +
+            "agoResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioPagosElectronicos.Error), Action="ActualizarEstadoPago", Name="Error")]
+        HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoResponse ActualizarEstadoPago(HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ActualizarEstadoP" +
+            "ago", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioPagosElectronicos/ActualizarEstadoP" +
+            "agoResponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoResponse> ActualizarEstadoPagoAsync(HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -602,12 +629,12 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
         public System.DateTime FechaFinal;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=4)]
-        public bool Procesados;
+        public int Procesados;
         
         public ConsultaPorFechaElaboracionRequest() {
         }
         
-        public ConsultaPorFechaElaboracionRequest(string DataKey, string Identificacion, System.DateTime FechaInicial, System.DateTime FechaFinal, bool Procesados) {
+        public ConsultaPorFechaElaboracionRequest(string DataKey, string Identificacion, System.DateTime FechaInicial, System.DateTime FechaFinal, int Procesados) {
             this.DataKey = DataKey;
             this.Identificacion = Identificacion;
             this.FechaInicial = FechaInicial;
@@ -629,6 +656,46 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
         
         public ConsultaPorFechaElaboracionResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuesta> ConsultaPorFechaElaboracionResult) {
             this.ConsultaPorFechaElaboracionResult = ConsultaPorFechaElaboracionResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ActualizarEstadoPago", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ActualizarEstadoPagoRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public string DataKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=1)]
+        public string Identificacion;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
+        public string CodigosRegistros;
+        
+        public ActualizarEstadoPagoRequest() {
+        }
+        
+        public ActualizarEstadoPagoRequest(string DataKey, string Identificacion, string CodigosRegistros) {
+            this.DataKey = DataKey;
+            this.Identificacion = Identificacion;
+            this.CodigosRegistros = CodigosRegistros;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ActualizarEstadoPagoResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ActualizarEstadoPagoResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuestaDetalle> ActualizarEstadoPagoResult;
+        
+        public ActualizarEstadoPagoResponse() {
+        }
+        
+        public ActualizarEstadoPagoResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuestaDetalle> ActualizarEstadoPagoResult) {
+            this.ActualizarEstadoPagoResult = ActualizarEstadoPagoResult;
         }
     }
     
@@ -681,6 +748,14 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
         
         public System.Threading.Tasks.Task<HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionResponse> ConsultaPorFechaElaboracionAsync(HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionRequest request) {
             return base.Channel.ConsultaPorFechaElaboracionAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoResponse ActualizarEstadoPago(HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoRequest request) {
+            return base.Channel.ActualizarEstadoPago(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoResponse> ActualizarEstadoPagoAsync(HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoRequest request) {
+            return base.Channel.ActualizarEstadoPagoAsync(request);
         }
     }
 }

@@ -299,6 +299,9 @@
     <None Include="Service References\ServicioNotaDebito\notadebito5.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorCodigoRegistroResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
