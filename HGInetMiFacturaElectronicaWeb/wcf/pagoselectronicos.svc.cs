@@ -79,7 +79,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		/// <param name="FechaFinal">Fecha Final</param>
 		/// <param name="Procesados"> Procesados</param>
 		/// <returns>List<PagoElectronicoRespuesta></returns>
-		public List<PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string DataKey, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, bool Procesados = true)
+		public List<PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string DataKey, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
 		{
 			try
 			{
@@ -108,6 +108,54 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				}
 
 				return datos;
+
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
+
+
+		/// <summary>
+		/// Obtiene los pagos electronicos de documentos por Código de Registro
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+		/// <param name="Identificacion">identificación obligado</param>		
+		/// <param name="CodigosRegistros">código de registro de los Pagos (recibe varios códigos separados por coma)</param>
+		/// <returns></returns>
+		public List<PagoElectronicoRespuestaDetalle> ActualizarEstadoPago(string DataKey, string Identificacion, string CodigosRegistros)
+		{
+			try
+			{
+				List<PagoElectronicoRespuestaDetalle> respuesta = new List<PagoElectronicoRespuestaDetalle>();
+
+				//Válida que la key sea correcta.
+				TblEmpresas empresa = Peticion.Validar(DataKey, Identificacion);
+
+				//Se valida si la empresa maneja Pagos
+				if (!empresa.IntManejaPagoE)
+				{
+					throw new ApplicationException(string.Format("El Facturador con la identificación {0} no maneja Pagos Electrónicos.", Identificacion));
+				}
+
+				Ctl_PagosElectronicos ctl_pagos = new Ctl_PagosElectronicos();
+
+				//Obtiene los datos
+				respuesta = ctl_pagos.ActualizarEstadoPago(Identificacion, CodigosRegistros);
+
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("PagoConsultaPorCodigoRegistro", DataKey, Identificacion, CodigosRegistros.ToString(), respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{
+				}
+
+				return respuesta;
 
 			}
 			catch (Exception exec)

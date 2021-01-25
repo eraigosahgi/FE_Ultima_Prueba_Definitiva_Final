@@ -11,6 +11,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas
 	public class PagoElectronicoRespuestaDetalle
 	{
 		/// <summary>
+		/// StrIdRegistro id de seguridad unico de cada pago
+		/// </summary>
+		public string IdRegistro { get; set; }
+		/// <summary>
 		/// Fecha de pago
 		/// </summary>
 		public System.DateTime Fecha { get; set; }

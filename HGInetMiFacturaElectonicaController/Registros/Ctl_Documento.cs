@@ -492,7 +492,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 EnvioMail = datos.IntEstadoEnvio,
 								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
 								 FacturaCancelada = datos.IntIdEstado,
-								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,								 
+								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
 							 }).ToList();
 
 
@@ -1181,7 +1181,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			try
 			{
 				context.Configuration.LazyLoadingEnabled = LazyLoading;
-				
+
 				var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblPagosElectronicos")
 								 where datos.StrIdSeguridad.Equals(id_seguridad)
 								 select datos
@@ -1944,18 +1944,25 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				foreach (TblPagosElectronicos pago in lista_pagos)
 				{
-					var respuesta_pago = new PagoElectronicoRespuestaDetalle();
-					respuesta_pago.Fecha = pago.DatFechaRegistro;
-					respuesta_pago.IdPago = pago.StrIdSeguridadPago;
-					respuesta_pago.ReferenciaCUS = pago.StrTransaccionCUS;
-					respuesta_pago.TicketID = pago.StrTicketID;
-					respuesta_pago.PagoEstadoDescripcion = pago.StrMensaje;
-					respuesta_pago.PagoEstado = pago.IntEstadoPago;
-					respuesta_pago.Valor = pago.IntValorPago;
-					respuesta_pago.FormaPago = pago.IntFormaPago.ToString();
-					respuesta_pago.Franquicia = pago.StrCodigoFranquicia;
+					try
+					{
+						var respuesta_pago = new PagoElectronicoRespuestaDetalle();
+						respuesta_pago.IdRegistro = pago.StrIdRegistro.ToString();
+						respuesta_pago.Fecha = pago.DatFechaRegistro;
+						respuesta_pago.IdPago = pago.StrIdSeguridadPago;
+						respuesta_pago.ReferenciaCUS = pago.StrTransaccionCUS;
+						respuesta_pago.TicketID = pago.StrTicketID;
+						respuesta_pago.PagoEstadoDescripcion = pago.StrMensaje;
+						respuesta_pago.PagoEstado = pago.IntEstadoPago;
+						respuesta_pago.Valor = pago.IntValorPago;
+						respuesta_pago.FormaPago = pago.IntFormaPago.ToString();
+						respuesta_pago.Franquicia = pago.StrCodigoFranquicia;
 
-					DetallesPagos.Add(respuesta_pago);
+						DetallesPagos.Add(respuesta_pago);
+					}
+					catch (Exception)
+					{						
+					}
 				}
 
 				//}
@@ -1996,12 +2003,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			DateTime FechaActual = Fecha.GetFecha();
 
 			var respuesta = (from datos in context.TblDocumentos
-				join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-				where (estados_permitidos.Contains(datos.IntIdEstado.ToString()) || estado_pausado == datos.IntIdEstado)
-				      && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual)
+							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+							 where (estados_permitidos.Contains(datos.IntIdEstado.ToString()) || estado_pausado == datos.IntIdEstado)
+								   && datos.DatFechaIngreso < SqlFunctions.DateAdd("ss", -15, FechaActual)
 
-				orderby datos.DatFechaIngreso descending
-				select datos).ToList();
+							 orderby datos.DatFechaIngreso descending
+							 select datos).ToList();
 
 			return respuesta;
 		}

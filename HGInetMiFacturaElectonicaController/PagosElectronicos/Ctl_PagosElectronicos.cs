@@ -763,15 +763,16 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 
 
+		#region Metodos para los WCF
 		/// <summary>
 		/// Obtiene los pagos entre un rango de fechas especifica
 		/// </summary>
 		/// <param name="identificacion_obligado">Identificación del Facturador</param>
 		/// <param name="FechaInicial">Fecha Inicial</param>
 		/// <param name="FechaFinal">Fecha Final</param>
-		/// <param name="Procesados">Procesado</param>
+		/// <param name="Procesados">0 Todos Los Pagos, 1 Pagos Procesados, 2 Pagos que aun no se han Procesado</param>
 		/// <returns>List<PagoElectronicoRespuesta></returns>
-		public List<PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string identificacion_obligado, DateTime FechaInicial, DateTime FechaFinal, bool Procesados = true)
+		public List<PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string identificacion_obligado, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
 		{
 			try
 			{
@@ -782,6 +783,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 				List<PagoElectronicoRespuesta> lista_respuesta = new List<PagoElectronicoRespuesta>();
 
+				//Creamos variable para saber si la consulta en con pagos aprobados o no aprobados.
+				bool estado_pago = (Procesados == 1) ? true : false;
 
 				context.Configuration.LazyLoadingEnabled = false;
 
@@ -791,6 +794,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 								 where empresa.StrIdentificacion.Equals(identificacion_obligado)
 								 && pagos.DatFechaRegistro >= FechaInicial
 								 && pagos.DatFechaRegistro <= FechaFinal
+								 && (pagos.IntProcesado == estado_pago || Procesados == 0) // Condición del Estado del Pago
 								 select new // PagoElectronicoRespuesta
 								 {
 									 IdDocumento = documento.StrIdSeguridad.ToString(),
@@ -804,6 +808,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 									 DetallesPagos = documento.TblPagosElectronicos.Select(p => new PagoElectronicoRespuestaDetalle
 									 {
+										 IdRegistro = p.StrIdRegistro.ToString(),
 										 Fecha = p.DatFechaRegistro,
 										 IdPago = p.StrIdSeguridadPago,
 										 ReferenciaCUS = p.StrTransaccionCUS,
@@ -832,5 +837,86 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
 			}
 		}
+
+
+
+
+		/// <summary>
+		/// Obtiene los documentos por Código de Registros
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+		/// <param name="Identificacion">identificación obligado</param>
+
+		/// <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
+		/// <returns></returns>
+		public List<PagoElectronicoRespuestaDetalle> ActualizarEstadoPago(string identificacion_obligado, string CodigosRegistros)
+		{
+			try
+			{
+				//Valida que los parametros sean correctos.
+				if (string.IsNullOrWhiteSpace(identificacion_obligado))
+					throw new ApplicationException("Número de identificación del obligado inválido.");
+				if (string.IsNullOrWhiteSpace(CodigosRegistros))
+					throw new ApplicationException("Filtro por números inválido.");
+
+				List<PagoElectronicoRespuestaDetalle> lista_respuesta = new List<PagoElectronicoRespuestaDetalle>();
+
+				//Convierte CodigoRegistros en una lista.
+				List<string> lista_pagos = Coleccion.ConvertirLista(CodigosRegistros);
+
+				//Se restringe la consulta a un número de documentos específicos  NOVIEMBRE 16
+				if (lista_pagos.Count > 100)
+					throw new ApplicationException("Supera el número máximo de 100 registros por consulta.");
+
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var pagos = (from p in context.TblPagosElectronicos
+							 where (lista_pagos.Contains(p.StrIdRegistro.ToString()))
+							 select p).ToList();
+
+				foreach (TblPagosElectronicos p in pagos)
+				{
+					try
+					{
+						p.IntProcesado = true;
+						this.Edit(p);
+
+
+						PagoElectronicoRespuestaDetalle detalle_pago = new PagoElectronicoRespuestaDetalle();
+
+						detalle_pago.IdRegistro = p.StrIdRegistro.ToString();
+						detalle_pago.Fecha = p.DatFechaRegistro;
+						detalle_pago.IdPago = p.StrIdSeguridadPago;
+						detalle_pago.ReferenciaCUS = p.StrTransaccionCUS;
+						detalle_pago.TicketID = p.StrTicketID;
+						detalle_pago.PagoEstadoDescripcion = p.StrMensaje;
+						detalle_pago.PagoEstado = p.IntEstadoPago;
+						detalle_pago.Valor = p.IntValorPago;
+						detalle_pago.FormaPago = p.IntFormaPago.ToString();
+						detalle_pago.Franquicia = p.StrCodigoFranquicia;
+
+						lista_respuesta.Add(detalle_pago);
+
+					}
+					catch (Exception)
+					{
+
+					}
+				}
+
+				return lista_respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
+
+
+		#endregion
+
+
 	}
 }
