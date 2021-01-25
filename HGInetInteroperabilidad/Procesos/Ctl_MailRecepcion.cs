@@ -46,9 +46,10 @@ namespace HGInetInteroperabilidad.Procesos
 					cliente_imap = new Cl_MailImap(servidor, puerto, usuario, clave, habilitar_ssl);
 					ids_mensajes = cliente_imap.ObtenerIds();
 				}
-				catch (Exception excepcion)
+				catch (ExcepcionHgi excepcion)
 				{
-					string msg = string.Format("Error al obtener los correos electrónicos del servidor IMAP");
+					string msg = string.Format("Error al obtener los correos electrónicos del servidor IMAP Servidor:{0} - Puerto:{1} - Usuario:{2}, Clave:{3} - SSL:{4} -- Exception:{5} - {6} - Det_Excp {7}", servidor, puerto, usuario, clave, habilitar_ssl, excepcion.MensajeAdicional, excepcion.MensajeResultado, excepcion.Excepcion);
+					RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.lectura, msg);
 					throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
 				}
 
@@ -298,7 +299,7 @@ namespace HGInetInteroperabilidad.Procesos
 							}
 							catch (Exception excepcion)
 							{
-								string msg = string.Format("Error al procesar el correo electrónico: {0} - {1} - {2}", fecha.ToString(Cl_Fecha.formato_fecha_hora_completa), remitente, asunto);
+								string msg = string.Format("Error al procesar el correo electrónico: {0} - {1} - {2} - {3}", fecha.ToString(Cl_Fecha.formato_fecha_hora_completa), remitente, asunto, excepcion.Message);
 								RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
 							}
 						}
@@ -313,9 +314,10 @@ namespace HGInetInteroperabilidad.Procesos
 				// desconectar el servidor Imap
 				cliente_imap.Desconectar();
 			}
-			catch (Exception excepcion)
+			catch (ExcepcionHgi excepcion)
 			{
-				string msg = string.Format("Error al procesar los correos electrónicos");
+				string msg = string.Format("Error al procesar los correos electrónicos - detalle: {0} - {1}", excepcion.MensajeAdicional, excepcion.MensajeResultado);
+				RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio, msg);
 				throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
 			}
 		}

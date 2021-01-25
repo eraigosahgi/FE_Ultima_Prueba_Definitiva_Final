@@ -9,6 +9,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -149,12 +150,30 @@ namespace HGInetInteroperabilidad.Configuracion
 
 			string[] directorios_Obligado = Directorio.ObtenerSubdirectoriosDirectorio(ruta_archivos);
 
+			string ruta_dir_facturador_borrar = string.Empty;
+
+			string ruta_dir_archivos_borrar = string.Empty;
+
 			try
 			{
 				if (directorios_Obligado != null && directorios_Obligado.Length > 0)
 				{
+
 					foreach (var directorio in directorios_Obligado)
 					{
+
+						try
+						{
+							if (!string.IsNullOrEmpty(ruta_dir_facturador_borrar))
+							{
+								EliminarDirectorios(ruta_dir_facturador_borrar);
+
+								ruta_dir_facturador_borrar = string.Empty;
+							}
+						}
+						catch (Exception)
+						{ }
+
 						int i = 0;
 
 						string[] directorios_archivos = Directorio.ObtenerSubdirectoriosDirectorio(directorio);
@@ -163,8 +182,34 @@ namespace HGInetInteroperabilidad.Configuracion
 
 						if (directorios_archivos != null && directorios_archivos.Length > 0)
 						{
+
+							try
+							{
+								if (!string.IsNullOrEmpty(ruta_dir_archivos_borrar))
+								{
+									EliminarDirectorios(ruta_dir_archivos_borrar);
+
+									ruta_dir_archivos_borrar = string.Empty;
+								}
+							}
+							catch (Exception)
+							{ }
+
 							foreach (var item in directorios_archivos)
 							{
+
+								try
+								{
+									if (!string.IsNullOrEmpty(ruta_dir_archivos_borrar))
+									{
+										EliminarDirectorios(ruta_dir_archivos_borrar);
+
+										ruta_dir_archivos_borrar = string.Empty;
+									}
+								}
+								catch (Exception)
+								{}
+
 								var archivos_recibidos = Directorio.ObtenerArchivosDirectorio(item);
 
 								if (archivos_recibidos != null)
@@ -176,8 +221,9 @@ namespace HGInetInteroperabilidad.Configuracion
 
 										if (procesado == true)
 										{
-											Directorio.BorrarArchivos(item);
-											Directorio.BorrarDirectorio(item);
+											ruta_dir_archivos_borrar = item;
+											//Directorio.BorrarArchivos(item);
+											//Directorio.BorrarDirectorio(item);
 										}
 										else
 										{
@@ -207,30 +253,44 @@ namespace HGInetInteroperabilidad.Configuracion
 											
 									}
 								}
-								Directorio.BorrarArchivos(item);
-								try
-								{
-									Directorio.BorrarDirectorio(item);
-								}
-								catch (Exception)
-								{ }
+								//Directorio.BorrarArchivos(item);
+								//try
+								//{
+								//	Directorio.BorrarDirectorio(item);
+								//}
+								//catch (Exception)
+								//{ }
 							}
 
-							Directorio.BorrarArchivos(directorio);
-							try
-							{
-								Directorio.BorrarDirectorio(directorio);
-							}
-							catch (Exception)
-							{ }
+							ruta_dir_facturador_borrar = directorio;
+
+							//Directorio.BorrarArchivos(directorio);
+							//try
+							//{
+							//	Directorio.BorrarDirectorio(directorio);
+							//}
+							//catch (Exception)
+							//{ }
 						}
 						else
 						{
-							Directorio.BorrarDirectorio(directorio);
+							ruta_dir_facturador_borrar = directorio;
 						}
 
 						i++;
 					}
+
+					try
+					{
+						if (!string.IsNullOrEmpty(ruta_dir_facturador_borrar))
+						{
+							EliminarDirectorios(ruta_dir_facturador_borrar);
+
+							ruta_dir_facturador_borrar = string.Empty;
+						}
+					}
+					catch (Exception)
+					{ }
 
 				}
 			}
@@ -330,6 +390,19 @@ namespace HGInetInteroperabilidad.Configuracion
 			{
 				ProcesarArchivosCorreo();
 			});
+		}
+
+		public static void EliminarDirectorios(string ruta)
+		{
+			try
+			{
+				Directorio.BorrarArchivos(ruta);
+				Directorio.BorrarDirectorio(ruta);
+			}
+			catch (Exception)
+			{
+
+			}
 		}
 
 	}
