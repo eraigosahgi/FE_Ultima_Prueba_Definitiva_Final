@@ -71,8 +71,9 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception ex)
 			{
-				RegistroLog.EscribirLog(ex, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
-				throw new ApplicationException(ex.Message, ex.InnerException);
+				string mensaje = string.Format("Se presento inconsistencia convirtiendo el xml de Acuse a objeto. Detalle: {0}", ex.Message);
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna, mensaje);
+				throw new ApplicationException(mensaje, ex.InnerException);
 			}
 
 
