@@ -772,7 +772,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		/// <param name="FechaFinal">Fecha Final</param>
 		/// <param name="Procesados">0 Todos Los Pagos, 1 Pagos Procesados, 2 Pagos que aun no se han Procesado</param>
 		/// <returns>List<PagoElectronicoRespuesta></returns>
-		public List<PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string identificacion_obligado, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
+		public List<PagoElectronicoRespuestaPorFecha> ConsultaPorFechaElaboracion(string identificacion_obligado, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
 		{
 			try
 			{
@@ -781,52 +781,44 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					throw new ApplicationException("Número de identificación del obligado inválido.");
 
 
-				List<PagoElectronicoRespuesta> lista_respuesta = new List<PagoElectronicoRespuesta>();
+				List<PagoElectronicoRespuestaPorFecha> lista_respuesta = new List<PagoElectronicoRespuestaPorFecha>();
 
 				//Creamos variable para saber si la consulta en con pagos aprobados o no aprobados.
 				bool estado_pago = (Procesados == 1) ? true : false;
 
 				context.Configuration.LazyLoadingEnabled = false;
 
-				var respuesta = (from documento in context.TblDocumentos
-								 join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
-								 join pagos in context.TblPagosElectronicos on documento.StrIdSeguridad equals pagos.StrIdSeguridadDoc
-								 where empresa.StrIdentificacion.Equals(identificacion_obligado)
-								 && pagos.DatFechaRegistro >= FechaInicial
-								 && pagos.DatFechaRegistro <= FechaFinal
-								 && (pagos.IntProcesado == estado_pago || Procesados == 0) // Condición del Estado del Pago
-								 select new // PagoElectronicoRespuesta
-								 {
-									 IdDocumento = documento.StrIdSeguridad.ToString(),
-									 Identificacion = documento.StrEmpresaAdquiriente,
-									 NumeroResolucion = documento.StrNumResolucion,
-									 Cufe = documento.StrCufe,
-									 DocumentoTipo = documento.IntDocTipo,
-									 Documento = documento.IntNumero,
-									 FechaDocumento = documento.DatFechaIngreso,
-									 Prefijo = documento.StrPrefijo,
 
-									 DetallesPagos = documento.TblPagosElectronicos.Where(x => (x.IntProcesado == estado_pago || Procesados == 0)).Select(p => new PagoElectronicoRespuestaDetalle
-									 {
-										 IdRegistro = p.StrIdRegistro.ToString(),
-										 Fecha = p.DatFechaRegistro,
-										 IdPago = p.StrIdSeguridadPago,
-										 ReferenciaCUS = p.StrTransaccionCUS,
-										 TicketID = p.StrTicketID,
-										 PagoEstadoDescripcion = p.StrMensaje,
-										 PagoEstado = p.IntEstadoPago,
-										 Valor = p.IntValorPago,
-										 FormaPago = p.IntFormaPago.ToString(),
-										 Franquicia = p.StrCodigoFranquicia
-
-									 })
-
-								 }).ToList();
+				var paso_detalle = (from pagos in context.TblPagosElectronicos.Include("TblDocumentos")
+									join documento in context.TblDocumentos on pagos.StrIdSeguridadDoc equals documento.StrIdSeguridad
+									where documento.StrEmpresaFacturador.Equals(identificacion_obligado)
+											&& pagos.DatFechaRegistro >= FechaInicial
+											&& pagos.DatFechaRegistro <= FechaFinal
+											&& (pagos.IntProcesado == estado_pago || Procesados == 0)
+									select new PagoElectronicoRespuestaPorFecha
+									{
+										Documento = documento.IntNumero,
+										Cufe = documento.StrCufe,
+										Identificacion = documento.StrEmpresaAdquiriente,
+										IdDocumento = documento.StrIdSeguridad.ToString(),
+										IdRegistro = pagos.StrIdRegistro.ToString(),
+										Fecha = pagos.DatFechaRegistro,
+										IdPago = pagos.StrIdSeguridadPago,
+										ReferenciaCUS = pagos.StrTransaccionCUS,
+										TicketID = pagos.StrTicketID,
+										PagoEstadoDescripcion = pagos.StrMensaje,
+										PagoEstado = pagos.IntEstadoPago,
+										Valor = pagos.IntValorPago,
+										FormaPago = pagos.IntFormaPago.ToString(),
+										Franquicia = pagos.StrCodigoFranquicia
+									}
+									).ToList();
 
 
-				var datos = JsonConvert.SerializeObject(respuesta);
 
-				lista_respuesta = JsonConvert.DeserializeObject<List<PagoElectronicoRespuesta>>(datos);
+				var datos = JsonConvert.SerializeObject(paso_detalle);
+
+				lista_respuesta = JsonConvert.DeserializeObject<List<PagoElectronicoRespuestaPorFecha>>(datos);
 
 
 				return lista_respuesta;

@@ -79,11 +79,11 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		/// <param name="FechaFinal">Fecha Final</param>
 		/// <param name="Procesados"> Procesados</param>
 		/// <returns>List<PagoElectronicoRespuesta></returns>
-		public List<PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string DataKey, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
+		public List<PagoElectronicoRespuestaPorFecha> ConsultaPorFechaElaboracion(string DataKey, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
 		{
 			try
 			{
-				List<PagoElectronicoRespuesta> respuesta = new List<PagoElectronicoRespuesta>();
+				List<PagoElectronicoRespuestaPorFecha> respuesta = new List<PagoElectronicoRespuestaPorFecha>();
 
 				//Válida que la key sea correcta.
 				TblEmpresas empresa = Peticion.Validar(DataKey, Identificacion);
