@@ -166,9 +166,14 @@ namespace HGInetInteroperabilidad.Configuracion
 						{
 							if (!string.IsNullOrEmpty(ruta_dir_facturador_borrar))
 							{
-								EliminarDirectorios(ruta_dir_facturador_borrar);
+								try
+								{
+									EliminarDirectorios(ruta_dir_facturador_borrar);
 
-								ruta_dir_facturador_borrar = string.Empty;
+									ruta_dir_facturador_borrar = string.Empty;
+								}
+								catch (Exception)
+								{}
 							}
 						}
 						catch (Exception)
@@ -187,9 +192,14 @@ namespace HGInetInteroperabilidad.Configuracion
 							{
 								if (!string.IsNullOrEmpty(ruta_dir_archivos_borrar))
 								{
-									EliminarDirectorios(ruta_dir_archivos_borrar);
+									try
+									{
+										EliminarDirectorios(ruta_dir_archivos_borrar);
 
-									ruta_dir_archivos_borrar = string.Empty;
+										ruta_dir_archivos_borrar = string.Empty;
+									}
+									catch (Exception)
+									{}
 								}
 							}
 							catch (Exception)
@@ -202,9 +212,14 @@ namespace HGInetInteroperabilidad.Configuracion
 								{
 									if (!string.IsNullOrEmpty(ruta_dir_archivos_borrar))
 									{
-										EliminarDirectorios(ruta_dir_archivos_borrar);
+										try
+										{
+											EliminarDirectorios(ruta_dir_archivos_borrar);
 
-										ruta_dir_archivos_borrar = string.Empty;
+											ruta_dir_archivos_borrar = string.Empty;
+										}
+										catch (Exception)
+										{}
 									}
 								}
 								catch (Exception)
@@ -265,12 +280,14 @@ namespace HGInetInteroperabilidad.Configuracion
 							ruta_dir_facturador_borrar = directorio;
 
 							//Directorio.BorrarArchivos(directorio);
-							//try
-							//{
-							//	Directorio.BorrarDirectorio(directorio);
-							//}
-							//catch (Exception)
-							//{ }
+							try
+							{
+								EliminarDirectorios(ruta_dir_archivos_borrar);
+
+								ruta_dir_archivos_borrar = string.Empty;
+							}
+							catch (Exception)
+							{ }
 						}
 						else
 						{
@@ -284,9 +301,14 @@ namespace HGInetInteroperabilidad.Configuracion
 					{
 						if (!string.IsNullOrEmpty(ruta_dir_facturador_borrar))
 						{
-							EliminarDirectorios(ruta_dir_facturador_borrar);
+							try
+							{
+								EliminarDirectorios(ruta_dir_facturador_borrar);
 
-							ruta_dir_facturador_borrar = string.Empty;
+								ruta_dir_facturador_borrar = string.Empty;
+							}
+							catch (Exception)
+							{}
 						}
 					}
 					catch (Exception)
@@ -399,9 +421,9 @@ namespace HGInetInteroperabilidad.Configuracion
 				Directorio.BorrarArchivos(ruta);
 				Directorio.BorrarDirectorio(ruta);
 			}
-			catch (Exception)
+			catch (Exception exec)
 			{
-
+				throw new ApplicationException(exec.Message);
 			}
 		}
 

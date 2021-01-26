@@ -200,7 +200,7 @@ namespace HGInetUBLv2_1
 					factura_obj.Moneda = factura_ubl.DocumentCurrencyCode.Value;
 
 					//Valida si trae mas notas para validar los campos
-					if (factura_ubl.Note.Length > 1)
+					if (factura_ubl.Note != null && factura_ubl.Note.Length > 1)
 						if (factura_ubl.Note[1] != null)
 							factura_obj.Nota = factura_ubl.Note[1].Value;
 						else

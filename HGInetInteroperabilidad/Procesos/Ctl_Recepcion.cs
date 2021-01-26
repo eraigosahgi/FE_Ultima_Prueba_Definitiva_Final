@@ -1196,22 +1196,6 @@ namespace HGInetInteroperabilidad.Procesos
 					throw new ApplicationException(string.Format("Error creando el Facturador emisor con identificacion {0} Detalle: {1}", documento_obj.DatosObligado.Identificacion, excepcion.Message));
 				}
 
-				//Proceso para Gestionar los archivo recibidos y los convertidos en la ruta del facturador emisor
-				bool contiene_pdf = false;
-				bool contiene_anexo = false;
-
-				try
-				{
-					ProcesarArchivos(ruta_archivo, nombre_archivo, facturador_emisor, attach_document, ref contiene_pdf, ref contiene_anexo);
-				}
-				catch (Exception excepcion)
-				{
-
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-					throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
-
-				}
-
 				TblDocumentos documento_bd = new TblDocumentos();
 				Ctl_Documento ctl_doc = new Ctl_Documento();
 
@@ -1220,6 +1204,23 @@ namespace HGInetInteroperabilidad.Procesos
 
 				if (documento_bd == null)
 				{
+
+					//Proceso para Gestionar los archivo recibidos y los convertidos en la ruta del facturador emisor
+					bool contiene_pdf = false;
+					bool contiene_anexo = false;
+
+					try
+					{
+						ProcesarArchivos(ruta_archivo, nombre_archivo, facturador_emisor, attach_document, ref contiene_pdf, ref contiene_anexo);
+					}
+					catch (Exception excepcion)
+					{
+
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+						throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+
+					}
+
 					//Convierto el Objeto a Tbl
 					try
 					{
