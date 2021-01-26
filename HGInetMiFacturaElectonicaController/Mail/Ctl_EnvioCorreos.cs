@@ -382,6 +382,7 @@ namespace HGInetMiFacturaElectonicaController
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
 			TblEmpresas empresa_obligado = new TblEmpresas();
+			TblEmpresas empresa_adquiriente = new TblEmpresas();
 			try
 			{
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -458,6 +459,7 @@ namespace HGInetMiFacturaElectonicaController
 				string numero_doc = string.Format("{0}{1}", documento.StrPrefijo, documento.IntNumero.ToString());
 
 				var objeto = (dynamic)null;
+				var documento_obj = (dynamic)null;
 				if (string.IsNullOrEmpty(nombre_comercial))
 				{
 					objeto = Ctl_Documento.ConvertirServicio(documento, true);
@@ -474,8 +476,14 @@ namespace HGInetMiFacturaElectonicaController
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosFactura.DatosObligado.NombreComercial) ? objeto.DatosFactura.DatosObligado.RazonSocial : objeto.DatosFactura.DatosObligado.NombreComercial;
 					}
 
-					if (string.IsNullOrEmpty(telefono) && objeto != null)
-						telefono = objeto.DatosFactura.DatosObligado.Telefono;
+					if (objeto != null)
+					{
+						if (string.IsNullOrEmpty(telefono))
+							telefono = objeto.DatosFactura.DatosObligado.Telefono;
+
+						documento_obj = objeto.DatosFactura;
+					}
+					
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
@@ -485,8 +493,14 @@ namespace HGInetMiFacturaElectonicaController
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosNotaCredito.DatosObligado.NombreComercial) ? objeto.DatosNotaCredito.DatosObligado.RazonSocial : objeto.DatosNotaCredito.DatosObligado.NombreComercial;
 					}
 
-					if (string.IsNullOrEmpty(telefono) && objeto != null)
-						telefono = objeto.DatosNotaCredito.DatosObligado.Telefono;
+					if (objeto != null)
+					{
+						if (string.IsNullOrEmpty(telefono))
+							telefono = objeto.DatosNotaCredito.DatosObligado.Telefono;
+
+						documento_obj = objeto.DatosNotaCredito;
+					}
+
 				}
 				else if (tipo_documento == TipoDocumento.NotaDebito)
 				{
@@ -496,8 +510,15 @@ namespace HGInetMiFacturaElectonicaController
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosNotaDebito.DatosObligado.NombreComercial) ? objeto.DatosNotaDebito.DatosObligado.RazonSocial : objeto.DatosNotaDebito.DatosObligado.NombreComercial;
 					}
 
-					if (string.IsNullOrEmpty(telefono) && objeto != null)
-						telefono = objeto.DatosNotaDebito.DatosObligado.Telefono;
+					if (objeto != null)
+					{
+						if (string.IsNullOrEmpty(telefono))
+							telefono = objeto.DatosNotaDebito.DatosObligado.Telefono;
+
+						documento_obj = objeto.DatosNotaDebito;
+					}
+
+					
 				}
 
 				string asunto = string.Empty;
@@ -537,7 +558,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				// obtiene los datos del adquiriente
 				Ctl_Empresa adquiriente = new Ctl_Empresa();
-				TblEmpresas empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaAdquiriente);
+				empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaAdquiriente);
 
 				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 
@@ -785,7 +806,15 @@ namespace HGInetMiFacturaElectonicaController
 
 						if (archivo_attach == false && documento.IntVersionDian == 2)
 						{
-							attached = Ctl_Documento.ConvertirAttachedDoc(null, documento, empresa_obligado);
+							if (documento_obj != null)
+							{
+								attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documento, empresa_obligado);
+							}
+							else
+							{
+								attached = Ctl_Documento.ConvertirAttachedDoc(null, documento, empresa_obligado);
+							}
+							
 						}
 						else if (documento.IntVersionDian == 2)
 						{
@@ -932,8 +961,19 @@ namespace HGInetMiFacturaElectonicaController
 					int estado_doc = Ctl_Documento.ObtenerCategoria(documento.IntIdEstado);
 					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, empresa_obligado.StrIdentificacion, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible el envio del documento, favor validar con el Adquiriente ó hacer el reenvío del documento desde nuestra Plataforma ", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
 				}
-				catch (Exception) { throw; }
+				catch (Exception) { }
 
+				if (respuesta_email == null || respuesta_email.Count == 0)
+				{
+					try
+					{
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+						List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, nuevo_email, "Error enviando Correo", documento.StrIdSeguridad.ToString());
+
+					}
+					catch (Exception) { }
+				}
+				
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
