@@ -45,7 +45,7 @@
   <xs:element name="ConsultaPorFechaElaboracionResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas" minOccurs="0" name="ConsultaPorFechaElaboracionResult" nillable="true" type="q3:ArrayOfPagoElectronicoRespuesta" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas" minOccurs="0" name="ConsultaPorFechaElaboracionResult" nillable="true" type="q3:ArrayOfPagoElectronicoRespuestaPorFecha" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

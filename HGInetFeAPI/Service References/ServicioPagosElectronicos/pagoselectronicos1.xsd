@@ -43,4 +43,31 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="PagoElectronicoRespuestaDetalle" nillable="true" type="tns:PagoElectronicoRespuestaDetalle" />
+  <xs:complexType name="ArrayOfPagoElectronicoRespuestaPorFecha">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PagoElectronicoRespuestaPorFecha" nillable="true" type="tns:PagoElectronicoRespuestaPorFecha" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPagoElectronicoRespuestaPorFecha" nillable="true" type="tns:ArrayOfPagoElectronicoRespuestaPorFecha" />
+  <xs:complexType name="PagoElectronicoRespuestaPorFecha">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Cufe" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Documento" type="xs:long" />
+      <xs:element minOccurs="0" name="DocumentoTipo" type="xs:int" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" minOccurs="0" name="Error" nillable="true" type="q2:Error" />
+      <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FormaPago" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Franquicia" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdDocumento" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdPago" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdRegistro" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PagoEstado" type="xs:int" />
+      <xs:element minOccurs="0" name="PagoEstadoDescripcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReferenciaCUS" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TicketID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PagoElectronicoRespuestaPorFecha" nillable="true" type="tns:PagoElectronicoRespuestaPorFecha" />
 </xs:schema>

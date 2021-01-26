@@ -502,6 +502,292 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
         NINGUNO = 99,
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="PagoElectronicoRespuestaPorFecha", Namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServi" +
+        "cio.Respuestas")]
+    [System.SerializableAttribute()]
+    public partial class PagoElectronicoRespuestaPorFecha : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CufeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private long DocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int DocumentoTipoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioPagosElectronicos.Error ErrorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string FormaPagoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string FranquiciaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdDocumentoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdPagoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdRegistroField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int PagoEstadoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PagoEstadoDescripcionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ReferenciaCUSField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TicketIDField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Cufe {
+            get {
+                return this.CufeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CufeField, value) != true)) {
+                    this.CufeField = value;
+                    this.RaisePropertyChanged("Cufe");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public long Documento {
+            get {
+                return this.DocumentoField;
+            }
+            set {
+                if ((this.DocumentoField.Equals(value) != true)) {
+                    this.DocumentoField = value;
+                    this.RaisePropertyChanged("Documento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int DocumentoTipo {
+            get {
+                return this.DocumentoTipoField;
+            }
+            set {
+                if ((this.DocumentoTipoField.Equals(value) != true)) {
+                    this.DocumentoTipoField = value;
+                    this.RaisePropertyChanged("DocumentoTipo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioPagosElectronicos.Error Error {
+            get {
+                return this.ErrorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ErrorField, value) != true)) {
+                    this.ErrorField = value;
+                    this.RaisePropertyChanged("Error");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Fecha {
+            get {
+                return this.FechaField;
+            }
+            set {
+                if ((this.FechaField.Equals(value) != true)) {
+                    this.FechaField = value;
+                    this.RaisePropertyChanged("Fecha");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string FormaPago {
+            get {
+                return this.FormaPagoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FormaPagoField, value) != true)) {
+                    this.FormaPagoField = value;
+                    this.RaisePropertyChanged("FormaPago");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Franquicia {
+            get {
+                return this.FranquiciaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FranquiciaField, value) != true)) {
+                    this.FranquiciaField = value;
+                    this.RaisePropertyChanged("Franquicia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdDocumento {
+            get {
+                return this.IdDocumentoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdDocumentoField, value) != true)) {
+                    this.IdDocumentoField = value;
+                    this.RaisePropertyChanged("IdDocumento");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdPago {
+            get {
+                return this.IdPagoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdPagoField, value) != true)) {
+                    this.IdPagoField = value;
+                    this.RaisePropertyChanged("IdPago");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdRegistro {
+            get {
+                return this.IdRegistroField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdRegistroField, value) != true)) {
+                    this.IdRegistroField = value;
+                    this.RaisePropertyChanged("IdRegistro");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Identificacion {
+            get {
+                return this.IdentificacionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionField, value) != true)) {
+                    this.IdentificacionField = value;
+                    this.RaisePropertyChanged("Identificacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int PagoEstado {
+            get {
+                return this.PagoEstadoField;
+            }
+            set {
+                if ((this.PagoEstadoField.Equals(value) != true)) {
+                    this.PagoEstadoField = value;
+                    this.RaisePropertyChanged("PagoEstado");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string PagoEstadoDescripcion {
+            get {
+                return this.PagoEstadoDescripcionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PagoEstadoDescripcionField, value) != true)) {
+                    this.PagoEstadoDescripcionField = value;
+                    this.RaisePropertyChanged("PagoEstadoDescripcion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ReferenciaCUS {
+            get {
+                return this.ReferenciaCUSField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ReferenciaCUSField, value) != true)) {
+                    this.ReferenciaCUSField = value;
+                    this.RaisePropertyChanged("ReferenciaCUS");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string TicketID {
+            get {
+                return this.TicketIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TicketIDField, value) != true)) {
+                    this.TicketIDField = value;
+                    this.RaisePropertyChanged("TicketID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((this.ValorField.Equals(value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", ConfigurationName="ServicioPagosElectronicos.ServicioPagosElectronicos")]
     public interface ServicioPagosElectronicos {
@@ -649,12 +935,12 @@ namespace HGInetFeAPI.ServicioPagosElectronicos {
     public partial class ConsultaPorFechaElaboracionResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
-        public System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuesta> ConsultaPorFechaElaboracionResult;
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuestaPorFecha> ConsultaPorFechaElaboracionResult;
         
         public ConsultaPorFechaElaboracionResponse() {
         }
         
-        public ConsultaPorFechaElaboracionResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuesta> ConsultaPorFechaElaboracionResult) {
+        public ConsultaPorFechaElaboracionResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioPagosElectronicos.PagoElectronicoRespuestaPorFecha> ConsultaPorFechaElaboracionResult) {
             this.ConsultaPorFechaElaboracionResult = ConsultaPorFechaElaboracionResult;
         }
     }

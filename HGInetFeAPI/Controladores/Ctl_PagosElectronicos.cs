@@ -106,7 +106,7 @@ namespace HGInetFeAPI
 		/// <param name="FechaFinal">Fecha Final</param>
 		/// <param name="Procesados"></param>
 		/// <returns>indica el Pago fue procesado o no: 0 Todos Los Pagos, 1 Pagos Procesados, 2 Pagos que aun no se han Procesado</returns>
-		public static List<ServicioPagosElectronicos.PagoElectronicoRespuesta> ConsultaPorFechaElaboracion(string UrlWs, string Serial, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
+		public static List<ServicioPagosElectronicos.PagoElectronicoRespuestaPorFecha> ConsultaPorFechaElaboracion(string UrlWs, string Serial, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
 		{
 
 			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
@@ -126,7 +126,7 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
-			List<ServicioPagosElectronicos.PagoElectronicoRespuesta> datos = new List<ServicioPagosElectronicos.PagoElectronicoRespuesta>();
+			List<ServicioPagosElectronicos.PagoElectronicoRespuestaPorFecha> datos = new List<ServicioPagosElectronicos.PagoElectronicoRespuestaPorFecha>();
 
 			ServicioPagosElectronicos.ServicioPagosElectronicosClient cliente_ws = null;
 
@@ -154,7 +154,7 @@ namespace HGInetFeAPI
 				ServicioPagosElectronicos.ConsultaPorFechaElaboracionResponse respuesta = cliente_ws.ConsultaPorFechaElaboracion(peticion);
 
 				// resultado del servicio web
-				List<ServicioPagosElectronicos.PagoElectronicoRespuesta> result = respuesta.ConsultaPorFechaElaboracionResult;
+				List<ServicioPagosElectronicos.PagoElectronicoRespuestaPorFecha> result = respuesta.ConsultaPorFechaElaboracionResult;
 
 				if (respuesta != null)
 					return result;
