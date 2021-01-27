@@ -802,6 +802,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 										Identificacion = documento.StrEmpresaAdquiriente,
 										IdDocumento = documento.StrIdSeguridad.ToString(),
 										IdRegistro = pagos.StrIdRegistro.ToString(),
+										DocumentoTipo = pagos.TblDocumentos.IntDocTipo,
 										Fecha = pagos.DatFechaRegistro,
 										IdPago = pagos.StrIdSeguridadPago,
 										ReferenciaCUS = pagos.StrTransaccionCUS,
