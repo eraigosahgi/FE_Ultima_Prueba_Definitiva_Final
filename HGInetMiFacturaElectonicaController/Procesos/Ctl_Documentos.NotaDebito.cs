@@ -734,8 +734,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 
 			//Se valida que si el documento tiene una moneda diferente a pesos colombianos envien la tasa de cambio
-			if (!documento.Moneda.Equals("COP") && documento.Trm == null)
-				throw new ArgumentException(string.Format("No se encontró información de la tasa de Cambio para la Moneda {0}", documento.Moneda));
+			//if (!documento.Moneda.Equals("COP") && documento.Trm == null)
+			//	throw new ArgumentException(string.Format("No se encontró información de la tasa de Cambio para la Moneda {0}", documento.Moneda));
 
 			return documento;
 		}
