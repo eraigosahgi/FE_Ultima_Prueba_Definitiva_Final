@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Data.Entity.SqlServer;
+using DevExpress.XtraReports.Web.ReportDesigner.Native.Services;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 using HGInetMiFacturaElectonicaData.ModeloAuditoria.Objetos;
@@ -2763,9 +2764,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 
 					var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
-									 where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
+									 where datos.DatFechaIngreso >= SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
 										   (datos.IntEstadoEnvio == (estado_enviado) ||
-											datos.IntAdquirienteRecibo > estado_adquiriente)
+											datos.IntAdquirienteRecibo > estado_adquiriente) ||
+										   datos.IntEnvioMail == false
 									 select datos
 							);
 					return respuesta.ToList();
@@ -2794,11 +2796,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		}
 
-		public async Task SondaDocumentosValidarEmail(int Tiempo, int dias)
+		public async Task SondaDocumentosValidarEmail(int dias, bool Solodia)
 		{
 			try
 			{
-				var Tarea = TareaDocumentosValidarEmail(Tiempo, dias);
+				var Tarea = TareaDocumentosValidarEmail(dias, Solodia);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -2813,10 +2815,48 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="Tiempo">si estado de Acuse > al parametro en minutos se notifica al Facturador</param>
 		/// <returns></returns>
-		public async Task TareaDocumentosValidarEmail(int Tiempo, int dias)
+		public async Task TareaDocumentosValidarEmail(int dias, bool solodia)
 		{
 			await Task.Factory.StartNew(() =>
 			{
+
+				List<TblDocumentos> documentos_sinmail = null;
+
+				//Se valida que documentos no se han enviado al correo por algun motivo
+				try
+				{
+					documentos_sinmail = ObtenerDocumentosValidarSinEmail(dias, solodia);
+
+					if (documentos_sinmail != null && documentos_sinmail.Count > 0)
+					{
+						foreach (TblDocumentos item in documentos_sinmail)
+						{
+							try
+							{
+								ReenviarCorreoSonda(item);
+								item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
+								item.DatFechaActualizaEstado = Fecha.GetFecha();
+								item.IntEnvioMail = true;
+							}
+							catch (Exception)
+							{
+								item.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
+								item.DatFechaActualizaEstado = Fecha.GetFecha();
+								item.IntEnvioMail = false;
+							}
+
+						}
+					}
+
+					
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+				}
+
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
 				List<TblDocumentos> datos = ObtenerDocumentosValidarEmail(dias);
 
@@ -2859,63 +2899,20 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						}
 						else
 						{
-							respuesta_consulta.Estado = string.Empty;
-							var objeto = (dynamic)null;
-							objeto = Ctl_Documento.ConvertirServicio(item, true);
-							string email_objeto = string.Empty;
-							string telefono_objeto = string.Empty;
-							if (item.IntDocTipo == TipoDocumento.Factura.GetHashCode())
-							{
-								email_objeto = objeto.DatosFactura.DatosAdquiriente.Email;
-								telefono_objeto = objeto.DatosFactura.DatosAdquiriente.Telefono;
-							}
 
-							if (item.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+							try
 							{
-								email_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Email;
-								telefono_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Telefono;
+								ReenviarCorreoSonda(item);
+								item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
+								item.DatFechaActualizaEstado = Fecha.GetFecha();
+								item.IntEnvioMail = true;
 							}
-
-							if (item.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+							catch (Exception)
 							{
-								email_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Email;
-								telefono_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Telefono;
-							}
-							//Se hace validacion para hacer el reenvio del documento
-							if ((item.IntEstadoEnvio == EstadoEnvio.Pendiente.GetHashCode() || item.IntEstadoEnvio == EstadoEnvio.Enviado.GetHashCode()))
-							{
-
-								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-								List<MensajeEnvio> notificacion = new List<MensajeEnvio>();
-								try
-								{
-									notificacion = email.NotificacionDocumento(item, telefono_objeto, email_objeto, item.StrIdSeguridad.ToString());
-								}
-								catch (Exception)
-								{
-									//Si se presenta un error en el envio se notifica al facturador para que valide
-									item.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
-									item.DatFechaActualizaEstado = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
-									item.IntEnvioMail = false;
-									email.NotificacionCorreofacturador(item, telefono_objeto, email_objeto, respuesta_consulta.Estado, item.StrIdSeguridad.ToString());
-
-								}
-								if ((notificacion != null) && (notificacion.Any()))
-								{
-									item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
-									item.DatFechaActualizaEstado = Fecha.GetFecha();
-									item.IntEnvioMail = true;
-								}
-							}
-							//Valida si lleva mucho tiempo en el mismo estado y notifico al Facturador
-							if (Fecha.Diferencia(item.DatFechaIngreso, Fecha.GetFecha(), DateInterval.Minute) > Tiempo)
-							{
-								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-								List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(item, telefono_objeto, email_objeto, respuesta_consulta.Estado, item.StrIdSeguridad.ToString());
 								item.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
-								item.DatFechaActualizaEstado = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
+								item.DatFechaActualizaEstado = Fecha.GetFecha();
+								item.IntEnvioMail = false;
 							}
-
 
 						}
 						//Cambio el estado del acuse siempre y cuando sea mayor a 3 el estado de acuse
@@ -2940,6 +2937,65 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			});
 		}
 
+		public static void ReenviarCorreoSonda(TblDocumentos doc)
+		{
+
+			try
+			{
+				var objeto = (dynamic)null;
+				objeto = Ctl_Documento.ConvertirServicio(doc, true);
+				string email_objeto = string.Empty;
+				string telefono_objeto = string.Empty;
+				if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+				{
+					email_objeto = objeto.DatosFactura.DatosAdquiriente.Email;
+					telefono_objeto = objeto.DatosFactura.DatosAdquiriente.Telefono;
+				}
+
+				if (doc.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+				{
+					email_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+					telefono_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Telefono;
+				}
+
+				if (doc.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+				{
+					email_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Email;
+					telefono_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Telefono;
+				}
+				//Se hace validacion para hacer el reenvio del documento
+				if ((doc.IntEstadoEnvio == EstadoEnvio.Pendiente.GetHashCode() || doc.IntEstadoEnvio == EstadoEnvio.Enviado.GetHashCode()))
+				{
+
+					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+					List<MensajeEnvio> notificacion = new List<MensajeEnvio>();
+					try
+					{
+						notificacion = email.NotificacionDocumento(doc, telefono_objeto, email_objeto, doc.StrIdSeguridad.ToString());
+					}
+					catch (Exception excepcion)
+					{
+						//Si se presenta un error en el envio se notifica al facturador para que valide
+						doc.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
+						doc.DatFechaActualizaEstado = Fecha.GetFecha();
+						doc.IntEnvioMail = false;
+						email.NotificacionCorreofacturador(doc, telefono_objeto, email_objeto, "Error enviando Correo", doc.StrIdSeguridad.ToString());
+
+						throw excepcion;
+					}
+				}
+
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.ninguna);
+
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion);
+
+				throw excepcion;
+			}
+
+		}
 
 		/// <summary>
 		/// Proceso para generar el documento UBL2.1 Attach para enviar por correo al adquiriente con la respuesta de la DIAN
@@ -3039,6 +3095,80 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 
 			return doc_creado;
+
+		}
+
+		/// <summary>
+		/// Obtiene documentos que no se envio el correo y no se ha notificado al facturador
+		/// </summary>
+		/// <param name="dias">Dias hacia atras que valida los documentos</param>
+		/// <param name="solodia">Solo busca los documentos del dia segun la diferencia enviada en dias</param>
+		/// <returns></returns>
+		public List<TblDocumentos> ObtenerDocumentosValidarSinEmail(int dias, bool solodia)
+		{
+
+			try
+			{
+				int estado_enviado = Convert.ToInt32(EstadoEnvio.Entregado.GetHashCode());
+				int estado_adquiriente = Convert.ToInt32(AdquirienteRecibo.Leido.GetHashCode());
+				int estado_doc = CategoriaEstado.ValidadoDian.GetHashCode();
+				DateTime FechaActual = Fecha.GetFecha();
+
+				context.Configuration.LazyLoadingEnabled = false;
+
+				if (dias > 0)
+				{
+					if (solodia == true)
+					{
+						DateTime FechaInicial = FechaActual.AddDays(-dias).Date;
+						DateTime FechaFinal = new DateTime(FechaInicial.Year, FechaInicial.Month, FechaInicial.Day, 23, 59, 59, 999);
+
+						var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
+								where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal &&
+									  datos.IdCategoriaEstado == estado_doc &&
+								      datos.IntEnvioMail == false &&
+									  datos.IntEstadoEnvio < estado_enviado
+										 select datos
+							);
+						return respuesta.ToList();
+					}
+					else
+					{
+						var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
+								where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
+										datos.IdCategoriaEstado == estado_doc &&
+										datos.IntEnvioMail == false &&
+										datos.IntEstadoEnvio < estado_enviado
+										 select datos
+							);
+						return respuesta.ToList();
+					}
+
+					
+				}
+				else
+				{
+					DateTime FechaInicial = FechaActual.Date;
+					DateTime FechaFinal = new DateTime(FechaInicial.Year, FechaInicial.Month, FechaInicial.Day, 23, 59, 59, 999);
+
+					var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
+									 where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal &&
+										   datos.IdCategoriaEstado == estado_doc &&
+										   datos.IntEnvioMail == false &&
+										   datos.IntEstadoEnvio < estado_enviado
+									 select datos
+						);
+
+					return respuesta.ToList();
+				}
+
+
+
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
 
 		}
 

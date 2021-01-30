@@ -72,12 +72,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				//Falla el envio de correo por algun motivo de la plataforma o Mailjet
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
-				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
+				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Pendiente.GetHashCode();
 				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el Envío correo adquiriente. Detalle: {0} -", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-				documentoBd.IntEnvioMail = (documentoBd.IntEnvioMail == null) ? documentoBd.IntEnvioMail : false;
+				documentoBd.IntEnvioMail = false;
+				try
+				{
+					Ctl_Documento documento_tmp = new Ctl_Documento();
+					documento_tmp.Actualizar(documentoBd);
+				}
+				catch (Exception)
+				{}
 				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 			}
 
