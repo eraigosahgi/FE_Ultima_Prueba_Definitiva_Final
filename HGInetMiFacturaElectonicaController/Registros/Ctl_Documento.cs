@@ -2749,28 +2749,47 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="dias">Dias hacia atras que valida los documentos</param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerDocumentosValidarEmail(int dias)
+		public List<TblDocumentos> ObtenerDocumentosValidarEmail(int dias, bool solodia)
 		{
 
 			try
 			{
 				int estado_enviado = Convert.ToInt32(EstadoEnvio.Enviado.GetHashCode());
 				int estado_adquiriente = Convert.ToInt32(AdquirienteRecibo.Leido.GetHashCode());
+				int estado_doc = CategoriaEstado.ValidadoDian.GetHashCode();
 				DateTime FechaActual = Fecha.GetFecha();
 
 				context.Configuration.LazyLoadingEnabled = false;
 
 				if (dias > 0)
 				{
+					if (solodia == true)
+					{
+						DateTime FechaInicial = FechaActual.AddDays(-dias).Date;
+						DateTime FechaFinal = new DateTime(FechaInicial.Year, FechaInicial.Month, FechaInicial.Day, 23, 59, 59, 999);
 
-					var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
-									 where datos.DatFechaIngreso >= SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
-										   (datos.IntEstadoEnvio == (estado_enviado) ||
-											datos.IntAdquirienteRecibo > estado_adquiriente) ||
-										   datos.IntEnvioMail == false
-									 select datos
+						var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
+								where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal &&
+									   datos.IdCategoriaEstado == estado_doc &&
+									   (datos.IntEstadoEnvio == (estado_enviado) ||
+									    datos.IntAdquirienteRecibo > estado_adquiriente)
+									select datos
 							);
-					return respuesta.ToList();
+						return respuesta.ToList();
+					}
+					else
+					{
+						var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
+								where datos.DatFechaIngreso >= SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
+								      datos.IdCategoriaEstado == estado_doc &&
+									  (datos.IntEstadoEnvio == (estado_enviado) ||
+								       datos.IntAdquirienteRecibo > estado_adquiriente)
+								select datos
+							);
+						return respuesta.ToList();
+					}
+
+					
 				}
 				else
 				{
@@ -2779,6 +2798,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
 									 where datos.IntEstadoEnvio == (estado_enviado) &&
+									       datos.IdCategoriaEstado == estado_doc &&
 											datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal
 									 select datos
 						);
@@ -2796,11 +2816,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		}
 
-		public async Task SondaDocumentosValidarEmail(int dias, bool Solodia)
+		public async Task SondaDocumentosValidarEmail(int dias, bool Solodia, bool SoloCorreo)
 		{
 			try
 			{
-				var Tarea = TareaDocumentosValidarEmail(dias, Solodia);
+				var Tarea = TareaDocumentosValidarEmail(dias, Solodia, SoloCorreo);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -2813,9 +2833,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <summary>
 		/// Tarea para consultar el estado del acuse del documento
 		/// </summary>
-		/// <param name="Tiempo">si estado de Acuse > al parametro en minutos se notifica al Facturador</param>
+		/// <param name="dias">si es mayor a Cero resta ese valor a la fecha actual para validar, si es 0 valida los documentos actuales</param>
+		/// <param name="solodia">Si es true y dias > 0 valida los documentos solo de esa fecha, si no procesa </param>
 		/// <returns></returns>
-		public async Task TareaDocumentosValidarEmail(int dias, bool solodia)
+		public async Task TareaDocumentosValidarEmail(int dias, bool solodia, bool SoloCorreo)
 		{
 			await Task.Factory.StartNew(() =>
 			{
@@ -2845,6 +2866,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								item.IntEnvioMail = false;
 							}
 
+							Ctl_Documento ctl_documento = new Ctl_Documento();
+							ctl_documento.Actualizar(item);
+
 						}
 					}
 
@@ -2857,78 +2881,81 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
 				}
 
-				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
-				List<TblDocumentos> datos = ObtenerDocumentosValidarEmail(dias);
-
-				foreach (TblDocumentos item in datos)
+				if (SoloCorreo == false)
 				{
+					Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
+					List<TblDocumentos> datos = ObtenerDocumentosValidarEmail(dias, solodia);
 
-					try
+					foreach (TblDocumentos item in datos)
 					{
 
-						MensajeValidarEmail respuesta_consulta = new MensajeValidarEmail();
-						Ctl_DocumentosAudit documento_auditoria = new Ctl_DocumentosAudit();
-
-						respuesta_consulta = documento_auditoria.ObtenerResultadoEmail(item.StrIdSeguridad);
-
-						if (respuesta_consulta.EmailEnviado != null)
+						try
 						{
-							if (MensajeIdResultado.Entregado.GetHashCode().Equals(respuesta_consulta.IdResultado))
-							{
-								item.IntEstadoEnvio = (short)EstadoEnvio.Entregado.GetHashCode();
-								item.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(respuesta_consulta.Estado);
-								item.DatFechaActualizaEstado = Fecha.GetFecha();
 
-							}
-							else if (MensajeIdResultado.NoEntregado.GetHashCode().Equals(respuesta_consulta.IdResultado))
-							{
-								item.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
-								item.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(respuesta_consulta.Estado);
-								item.DatFechaActualizaEstado = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
-								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-								List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(item, item.TblEmpresasAdquiriente.StrTelefono, respuesta_consulta.EmailEnviado, respuesta_consulta.Estado, item.StrIdSeguridad.ToString());
+							MensajeValidarEmail respuesta_consulta = new MensajeValidarEmail();
+							Ctl_DocumentosAudit documento_auditoria = new Ctl_DocumentosAudit();
 
+							respuesta_consulta = documento_auditoria.ObtenerResultadoEmail(item.StrIdSeguridad);
+
+							if (respuesta_consulta.EmailEnviado != null)
+							{
+								if (MensajeIdResultado.Entregado.GetHashCode().Equals(respuesta_consulta.IdResultado))
+								{
+									item.IntEstadoEnvio = (short)EstadoEnvio.Entregado.GetHashCode();
+									item.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(respuesta_consulta.Estado);
+									item.DatFechaActualizaEstado = Fecha.GetFecha();
+
+								}
+								else if (MensajeIdResultado.NoEntregado.GetHashCode().Equals(respuesta_consulta.IdResultado))
+								{
+									item.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
+									item.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(respuesta_consulta.Estado);
+									item.DatFechaActualizaEstado = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
+									Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+									List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(item, item.TblEmpresasAdquiriente.StrTelefono, respuesta_consulta.EmailEnviado, respuesta_consulta.Estado, item.StrIdSeguridad.ToString());
+
+								}
+								else
+								{
+									item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
+									item.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(respuesta_consulta.Estado);
+									item.DatFechaActualizaEstado = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
+
+								}
 							}
 							else
 							{
-								item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
-								item.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(respuesta_consulta.Estado);
-								item.DatFechaActualizaEstado = (string.IsNullOrEmpty(respuesta_consulta.Estado)) ? Fecha.GetFecha() : respuesta_consulta.Recibido;
+
+								try
+								{
+									ReenviarCorreoSonda(item);
+									item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
+									item.DatFechaActualizaEstado = Fecha.GetFecha();
+									item.IntEnvioMail = true;
+								}
+								catch (Exception)
+								{
+									item.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
+									item.DatFechaActualizaEstado = Fecha.GetFecha();
+									item.IntEnvioMail = false;
+								}
 
 							}
-						}
-						else
-						{
-
-							try
+							//Cambio el estado del acuse siempre y cuando sea mayor a 3 el estado de acuse
+							if (item.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode())
 							{
-								ReenviarCorreoSonda(item);
-								item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
-								item.DatFechaActualizaEstado = Fecha.GetFecha();
-								item.IntEnvioMail = true;
-							}
-							catch (Exception)
-							{
-								item.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
-								item.DatFechaActualizaEstado = Fecha.GetFecha();
-								item.IntEnvioMail = false;
+								item.IntAdquirienteRecibo = (short)AdquirienteRecibo.Pendiente.GetHashCode();
+								item.DatAdquirienteFechaRecibo = null;
 							}
 
+							Ctl_Documento ctl_documento = new Ctl_Documento();
+							ctl_documento.Actualizar(item);
 						}
-						//Cambio el estado del acuse siempre y cuando sea mayor a 3 el estado de acuse
-						if (item.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode())
+						catch (Exception excepcion)
 						{
-							item.IntAdquirienteRecibo = (short)AdquirienteRecibo.Pendiente.GetHashCode();
-							item.DatAdquirienteFechaRecibo = null;
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+
 						}
-
-
-						Ctl_Documento ctl_documento = new Ctl_Documento();
-						ctl_documento.Actualizar(item);
-					}
-					catch (Exception excepcion)
-					{
-						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 
 					}
 
@@ -3110,7 +3137,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			try
 			{
 				int estado_enviado = Convert.ToInt32(EstadoEnvio.Entregado.GetHashCode());
-				int estado_adquiriente = Convert.ToInt32(AdquirienteRecibo.Leido.GetHashCode());
 				int estado_doc = CategoriaEstado.ValidadoDian.GetHashCode();
 				DateTime FechaActual = Fecha.GetFecha();
 

@@ -16,20 +16,20 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 
 			try
 			{
-				int Tiempo = 0;
+
 				int Dias = 0;
+
+				//Solo validar que documentos no tiene envio de correo y hacer este proceso
+				string SoloCorreo = Request.QueryString["SoloCorreo"];
+				
 				//Hacer procesos solo ese dia cuando Dias es mayor a 0
-				string Solodia = Request.QueryString["Solodia"];
+				string Solodia = Request.QueryString["SoloDia"];
 
 				//Se envia sobre cuantos dias segun fecha ingreso del doc se consulta en bd para hacer la validacion del correo
 				if (Request.QueryString["Dias"] != null)
 					Int32.TryParse(Request.QueryString["Dias"], out Dias);
 
-				//Se envia el tiempo de notificacion en Minutos
-				if (Request.QueryString["Tiempo"] != null)
-					Int32.TryParse(Request.QueryString["Tiempo"], out Tiempo);
-
-				Procesar(Dias, Convert.ToBoolean(Solodia));
+				Procesar(Dias, Convert.ToBoolean(Solodia), Convert.ToBoolean(SoloCorreo));
 			}
 			catch (Exception ex)
 			{
@@ -37,12 +37,12 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			}
 		}
 
-		public void Procesar(int dias, bool Solodia)
+		public void Procesar(int dias, bool Solodia, bool SoloCorreo)
 		{
 
 			Ctl_Documento ctl_documento = new Ctl_Documento();
 
-			var Tarea1 = ctl_documento.SondaDocumentosValidarEmail(dias, Solodia);
+			var Tarea1 = ctl_documento.SondaDocumentosValidarEmail(dias, Solodia, SoloCorreo);
 			lblResultado.Text = string.Format("Termino");
 		}
 	}
