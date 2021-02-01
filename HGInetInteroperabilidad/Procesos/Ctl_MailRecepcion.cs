@@ -28,7 +28,10 @@ namespace HGInetInteroperabilidad.Procesos
 			try
 			{
 				// https://webmail.mifacturaenlinea.com.co/
+				//Pruebas
 				// hostname: "mifacturaenlinea.com.co", username: "recepcion.dev@mifacturaenlinea.com.co", password: "gUx&819a#2ge", port: 995, isUseSsl: true
+				//Produccion
+				// hostname: "mifacturaenlinea.com.co", username: "recepcion@mifacturaenlinea.com.co", password: "gUx&819a#2ge", port: 995, isUseSsl: true
 
 				// obtener los parámetros de configuración para la lectura POP
 				string servidor = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.servidor");
@@ -112,10 +115,10 @@ namespace HGInetInteroperabilidad.Procesos
 									correo_procesado = false;
 								}
 
-								// valida la cantidad de archivos adjuntos
-								if (adjunto.Cantidad > 1)
+								// valida la cantidad de archivos adjuntos como minimo sea 1 .zip
+								if (adjunto.Cantidad == 0)
 								{
-									mensajes.Add(string.Format("Los archivos ({0}) adjuntos del correo electrónico superan la cantidad permitida (1).", adjunto.Cantidad));
+									mensajes.Add(string.Format("En los archivos adjuntos del correo electrónico no se encontró como minimo (1) zip."));
 									correo_procesado = false;
 								}
 
@@ -172,9 +175,10 @@ namespace HGInetInteroperabilidad.Procesos
 								{
 									mensajes.Add("Error validando el Adquiriente electrónico.");
 									correo_procesado = false;
-									throw excepcion;
+									//throw excepcion;
 								}
 
+								/*
 								try
 								{   // valida las extensiones de archivos adjuntos
 									List<string> extensiones = new List<string> { "zip" };
@@ -184,8 +188,8 @@ namespace HGInetInteroperabilidad.Procesos
 								{
 									mensajes.Add(excepcion.Message);
 									correo_procesado = false;
-									throw excepcion;
-								}
+									//throw excepcion;
+								}*/
 
 								// procesar archivo adjunto temporal
 								PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -259,6 +263,7 @@ namespace HGInetInteroperabilidad.Procesos
 									List<MailboxAddress> correos_destino = new List<MailboxAddress>();
 									//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
 
+									//Si se sabe quien es la empresa receptora(Adquiriente) se hace envio del correo original y el por que no se proceso
 									if (empresa != null)
 									{
 										correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
