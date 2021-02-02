@@ -60,7 +60,7 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("39", "Crédito Negocio Intercambio Corporativo (CTX)", "Crédito Negocio Intercambio Corporativo (CTX)"),
 			new ListaItem("40", "Débito Negocio Intercambio Corporativo (CTX)", "Débito Negocio Intercambio Corporativo (CTX)"),
 			new ListaItem("41", "Concentración efectivo/Desembolso Crédito plus (CCD+) ", "Concentración efectivo/Desembolso Crédito plus (CCD+) "),
-			new ListaItem("42", "Consiganción bancaria", "Consiganción bancaria"),
+			new ListaItem("42", "Consignación bancaria", "Consignación bancaria"),
 			new ListaItem("43", "Concentración efectivo / Desembolso Débito plus (CCD+)", "Concentración efectivo / Desembolso Débito plus (CCD+)"),
 			new ListaItem("44", "Nota cambiaria", "Nota cambiaria"),
 			new ListaItem("45", "Transferencia Crédito Bancario", "Transferencia Crédito Bancario"),
