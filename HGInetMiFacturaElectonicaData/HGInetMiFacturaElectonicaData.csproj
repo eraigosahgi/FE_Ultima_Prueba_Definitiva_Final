@@ -217,6 +217,9 @@
     <Compile Include="Modelo\TblPlanesTransacciones.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblProcesoCorreo.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblUsuarios.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>

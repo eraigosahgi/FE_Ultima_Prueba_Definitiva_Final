@@ -333,6 +333,17 @@
           <Property Name="DocumentoRef" Type="nvarchar" MaxLength="10" />
           <Property Name="DatFechaInicio" Type="datetime" />
         </EntityType>
+        <EntityType Name="TblProcesoCorreo">
+          <Key>
+            <PropertyRef Name="StrIdSeguridadDoc" />
+          </Key>
+          <Property Name="StrIdSeguridadDoc" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DatFecha" Type="datetime" Nullable="false" />
+          <Property Name="IntEnvioMail" Type="bit" Nullable="false" />
+          <Property Name="StrIdMensaje" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IntValidadoMail" Type="bit" Nullable="false" />
+          <Property Name="DatFechaValidado" Type="datetime" />
+        </EntityType>
         <EntityType Name="TblUsuarios">
           <Key>
             <PropertyRef Name="StrEmpresa" />
@@ -597,6 +608,7 @@
           <EntitySet Name="TblPerfiles" EntityType="Self.TblPerfiles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblPlanes" EntityType="Self.TblPlanes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblPlanesTransacciones" EntityType="Self.TblPlanesTransacciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblProcesoCorreo" EntityType="Self.TblProcesoCorreo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblUsuarios" EntityType="Self.TblUsuarios" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" Association="Self.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
             <End Role="TblConfiguracionInteroperabilidad" EntitySet="TblConfiguracionInteroperabilidad" />
@@ -764,6 +776,7 @@
             <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
             <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
           </AssociationSet>
+          <EntitySet Name="TblProcesoCorreo" EntityType="Modelo.TblProcesoCorreo" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1377,6 +1390,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblProcesoCorreo">
+          <Key>
+            <PropertyRef Name="StrIdSeguridadDoc" />
+          </Key>
+          <Property Name="StrIdSeguridadDoc" Type="Guid" Nullable="false" />
+          <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IntEnvioMail" Type="Boolean" Nullable="false" />
+          <Property Name="StrIdMensaje" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntValidadoMail" Type="Boolean" Nullable="false" />
+          <Property Name="DatFechaValidado" Type="DateTime" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1741,6 +1765,18 @@
                 <ScalarProperty Name="StrIdPlataforma" ColumnName="StrIdPlataforma" />
                 <ScalarProperty Name="StrIdSeguridadPago" ColumnName="StrIdSeguridadPago" />
                 <ScalarProperty Name="StrIdRegistro" ColumnName="StrIdRegistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblProcesoCorreo">
+            <EntityTypeMapping TypeName="Modelo.TblProcesoCorreo">
+              <MappingFragment StoreEntitySet="TblProcesoCorreo">
+                <ScalarProperty Name="DatFechaValidado" ColumnName="DatFechaValidado" />
+                <ScalarProperty Name="IntValidadoMail" ColumnName="IntValidadoMail" />
+                <ScalarProperty Name="StrIdMensaje" ColumnName="StrIdMensaje" />
+                <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />
+                <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+                <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
