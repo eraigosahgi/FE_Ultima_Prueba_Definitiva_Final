@@ -23,7 +23,7 @@ CREATE TABLE dbo.TblProcesoCorreo
 	StrIdSeguridadDoc uniqueidentifier NOT NULL,
 	DatFecha datetime NOT NULL,
 	IntEnvioMail bit NOT NULL,
-	StrIdMensaje varchar(50) NOT NULL,
+	StrIdMensaje varchar(50) NULL,
 	IntValidadoMail bit NOT NULL,
 	DatFechaValidado datetime NULL
 	)  ON [PRIMARY]
