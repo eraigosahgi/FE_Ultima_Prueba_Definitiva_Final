@@ -25,7 +25,8 @@ CREATE TABLE dbo.TblProcesoCorreo
 	IntEnvioMail bit NOT NULL,
 	StrIdMensaje varchar(50) NULL,
 	IntValidadoMail bit NOT NULL,
-	DatFechaValidado datetime NULL
+	DatFechaValidado datetime NULL,
+	StrMailEnviado varchar(100) NULL
 	)  ON [PRIMARY]
 GO
 ALTER TABLE dbo.TblProcesoCorreo ADD CONSTRAINT

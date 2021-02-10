@@ -20,5 +20,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrIdMensaje { get; set; }
         public bool IntValidadoMail { get; set; }
         public Nullable<System.DateTime> DatFechaValidado { get; set; }
+        public string StrMailEnviado { get; set; }
     }
 }

@@ -343,6 +343,7 @@
           <Property Name="StrIdMensaje" Type="varchar" MaxLength="50" />
           <Property Name="IntValidadoMail" Type="bit" Nullable="false" />
           <Property Name="DatFechaValidado" Type="datetime" />
+          <Property Name="StrMailEnviado" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="TblUsuarios">
           <Key>
@@ -1400,6 +1401,7 @@
           <Property Name="StrIdMensaje" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IntValidadoMail" Type="Boolean" Nullable="false" />
           <Property Name="DatFechaValidado" Type="DateTime" Precision="3" />
+          <Property Name="StrMailEnviado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1771,6 +1773,7 @@
           <EntitySetMapping Name="TblProcesoCorreo">
             <EntityTypeMapping TypeName="Modelo.TblProcesoCorreo">
               <MappingFragment StoreEntitySet="TblProcesoCorreo">
+                <ScalarProperty Name="StrMailEnviado" ColumnName="StrMailEnviado" />
                 <ScalarProperty Name="DatFechaValidado" ColumnName="DatFechaValidado" />
                 <ScalarProperty Name="IntValidadoMail" ColumnName="IntValidadoMail" />
                 <ScalarProperty Name="StrIdMensaje" ColumnName="StrIdMensaje" />
