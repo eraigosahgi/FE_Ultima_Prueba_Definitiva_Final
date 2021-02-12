@@ -410,6 +410,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 								if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 								{
+									//Registro el documento en la tabla correo para gestionarlo
+									try
+									{
+										Ctl_ProcesosCorreos proceso_correo = new Ctl_ProcesosCorreos();
+										proceso_correo.Crear(documentoBd.StrIdSeguridad);
+									}
+									catch (Exception)
+									{}
+
+									//Envio de correo
 									respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
 
 								}

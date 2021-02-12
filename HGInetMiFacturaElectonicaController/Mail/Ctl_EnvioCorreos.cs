@@ -58,6 +58,8 @@ namespace HGInetMiFacturaElectonicaController
 			{
 				List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
 
+				string ruta_envio = string.Empty;
+
 				if (correo_remitente == null)
 					throw new ApplicationException("No se encontró información del Remitente");
 				else if (string.IsNullOrWhiteSpace(correo_remitente.Email))
@@ -67,6 +69,11 @@ namespace HGInetMiFacturaElectonicaController
 					throw new ApplicationException("No se encontró información del Destinatario");
 
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				//Obtengo a la ruta de plataforma de servicio
+				ruta_envio = ObtenerUrl();
+				if (string.IsNullOrEmpty(ruta_envio))
+					ruta_envio = plataforma.RutaHginetMail;
 
 				if (plataforma.Mailenvio.Equals("smtp"))
 				{
@@ -174,7 +181,8 @@ namespace HGInetMiFacturaElectonicaController
 					List<MensajeContenido> mensajes = new List<MensajeContenido>();
 					mensajes.Add(contenido);
 
-					respuesta_email = Ctl_CloudMensajeria.Enviar(plataforma.RutaHginetMail, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes, plataforma.IdAplicacionHGInetMail);				
+					respuesta_email = Ctl_CloudMensajeria.Enviar(ruta_envio, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes, plataforma.IdAplicacionHGInetMail);
+
 				}
 
 				return respuesta_email;
@@ -182,8 +190,52 @@ namespace HGInetMiFacturaElectonicaController
 			}
 			catch (Exception excepcion)
 			{
+				Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "No fue posible el envio del correo");
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
+		}
+
+		/// <summary>
+		/// Obtiene la configuración para el ambiente, la versión y la empresa solicita
+		/// </summary>
+		/// <param name="ambiente"></param>
+		/// <param name="version"></param>
+		/// <param name="identificacion_empresa"></param>
+		/// <returns></returns>
+		public string ObtenerUrl()
+		{
+			string StrUrl = "https://srvcloudservices#.hginet.co/";
+
+			try
+			{
+				
+				int intervalo = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha().Second;
+
+				int subdominio = (intervalo / 5);
+
+				while (subdominio > 10)
+				{
+					subdominio = (intervalo / 10);
+				}
+
+				subdominio += 1;
+
+				if (subdominio > 5)
+					subdominio -= 5;
+
+				StrUrl = StrUrl.Replace("#", subdominio.ToString());
+
+				if (StrUrl.Contains("#"))
+				{
+					StrUrl = "https://cloudservices.hginet.co/";
+				}
+			}
+			catch (Exception)
+			{
+				StrUrl = "https://cloudservices.hginet.co/";
+			}
+
+			return StrUrl;
 		}
 
 		/// <summary>
@@ -939,9 +991,57 @@ namespace HGInetMiFacturaElectonicaController
 								//catch (Exception) {}
 							}
 						}
-						
+
 						// envía el correo electrónico
 						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
+
+						if (respuesta_email.Count > 0)
+						{
+							try
+							{
+								Ctl_ProcesosCorreos proceso_correo = new Ctl_ProcesosCorreos();
+								TblProcesoCorreo correo_doc = proceso_correo.Obtener(documento.StrIdSeguridad);
+								if (correo_doc == null)
+									correo_doc = proceso_correo.Crear(documento.StrIdSeguridad);
+
+								//Valida que el registro sea nuevo para que lo haga solo en el proceso principal
+								if (correo_doc.IntEnvioMail == false && string.IsNullOrEmpty(correo_doc.StrIdMensaje))
+								{
+
+									correo_doc.IntEnvioMail = true;
+
+									//obtengo el primer MessageID
+									try
+									{
+										correo_doc.StrIdMensaje = respuesta_email.FirstOrDefault().Data.FirstOrDefault().MessageID.ToString();
+										correo_doc.StrMailEnviado = respuesta_email.FirstOrDefault().Data.FirstOrDefault().Email;
+									}
+									catch (Exception excepcion)
+									{
+										Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error asiganando el MessageID y Email");
+										correo_doc.IntEnvioMail = false;
+									}
+
+								}
+								else if (correo_doc.IntEnvioMail == true)
+								{
+									correo_doc.IntEnvioMail = false;
+								}
+								else
+								{
+									correo_doc.IntEnvioMail = true;
+								}
+
+								//Actualizo tabla de correos
+								correo_doc = proceso_correo.Actualizar(correo_doc);
+							}
+							catch (Exception e)
+							{
+								Ctl_Log.Guardar(e, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error Tratando de Actualizar la TblProcesoCorreo");
+							}
+
+						}
+
 					}
 				}
 				try
@@ -963,16 +1063,16 @@ namespace HGInetMiFacturaElectonicaController
 				}
 				catch (Exception) { }
 
-				if (respuesta_email == null || respuesta_email.Count == 0)
-				{
-					try
-					{
-						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-						List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, nuevo_email, "Error enviando Correo", documento.StrIdSeguridad.ToString());
+				//if (respuesta_email == null || respuesta_email.Count == 0)
+				//{
+				//	try
+				//	{
+				//		Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+				//		List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, nuevo_email, "Error enviando Correo", documento.StrIdSeguridad.ToString());
 
-					}
-					catch (Exception) { }
-				}
+				//	}
+				//	catch (Exception) { }
+				//}
 				
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
@@ -2333,12 +2433,18 @@ namespace HGInetMiFacturaElectonicaController
 
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
+			//Obtengo a la ruta de plataforma de servicio
+			string ruta_envio = string.Empty;
+			ruta_envio = ObtenerUrl();
+			if (string.IsNullOrEmpty(ruta_envio))
+				ruta_envio = plataforma_datos.RutaHginetMail;
+
 			MensajeResumenGlobal obj_peticion = new MensajeResumenGlobal();
 			obj_peticion.identificacion = plataforma_datos.IdentificacionHGInetMail;
 			obj_peticion.serial = plataforma_datos.LicenciaHGInetMail;
 			obj_peticion.id_mensaje = MessageID;
 
-			ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", plataforma_datos.RutaHginetMail), TipoContenido.Applicationjson.GetHashCode(), "");
+			ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", ruta_envio), TipoContenido.Applicationjson.GetHashCode(), "");
 			try
 			{
 				datos_retorno = cliente.POST(obj_peticion);
@@ -2678,7 +2784,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="identificacion">Nit del Facturador</param>
 		/// <param name="mail">email al que se va enviar el correo</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> EnviaNotificacionAlertaDIAN(string Facturador, string Documento, List<String> ListaNotificacion, int Proceso, bool Resultado,string mail, bool interoperabilidad)
+		public List<MensajeEnvio> EnviaNotificacionAlertaDIAN(string Facturador, string Documento, List<String> ListaNotificacion, int Proceso, bool Resultado,string mail, int tipo_asunto)
 		{
 			try
 			{
@@ -2688,14 +2794,26 @@ namespace HGInetMiFacturaElectonicaController
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaAlertaDocumentoDIAN);
 
 				string asunto = string.Empty;
+				string titulo = string.Empty;
 
-				if (interoperabilidad == false)
+				switch (tipo_asunto)
 				{
-					asunto = "ALERTA DE INCONSISTENCIAS DE DOCUMENTO ELECTRÓNICO EN LA DIAN";
-				}
-				else
-				{
-					asunto = "ALERTA DE INCONSISTENCIAS DE PROCESAMIENTO DE CORREO DE INTEROPERABILIDAD";
+					case 1:
+						asunto = "ALERTA DE INCONSISTENCIAS DE DOCUMENTO ELECTRÓNICO EN LA DIAN";
+						titulo = "DOCUMENTO ELECTRÓNICO CON INCONSISTENCIAS EN LA DIAN";
+						break;
+					case 2:
+						asunto = "ALERTA DE INCONSISTENCIAS DE PROCESAMIENTO DE CORREO DE INTEROPERABILIDAD";
+						titulo = "CORREO DE INTEROPERABILIDAD CON INCONSISTENCIAS EN EL PROCESAMIENTO ";
+						break;
+					case 3:
+						asunto = "ALERTA DE INCONSISTENCIAS EN VALIDACION DEL CORREO ENVIADO";
+						titulo = "CORREO ENVIADO CON INCONSISTENCIAS EN LA VALIDACION";
+						break;
+					default:
+						asunto = "ALERTA DE INCONSISTENCIAS DE DOCUMENTO ELECTRÓNICO EN LA DIAN";
+						titulo = "DOCUMENTO ELECTRÓNICO CON INCONSISTENCIAS EN LA DIAN";
+						break;
 				}
 				
 
@@ -2732,6 +2850,7 @@ namespace HGInetMiFacturaElectonicaController
 								detalle += string.Format("<tr><td>{0}</td></tr>", item);
 						}
 
+						mensaje = mensaje.Replace("{Titulo}", titulo);
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);
 						mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
 						mensaje = mensaje.Replace("{Documento}", Documento);

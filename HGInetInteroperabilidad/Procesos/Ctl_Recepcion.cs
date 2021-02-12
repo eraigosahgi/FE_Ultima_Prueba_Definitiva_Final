@@ -861,7 +861,7 @@ namespace HGInetInteroperabilidad.Procesos
 					try
 					{
 						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-						email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, true);
+						email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
 					}
 					catch (Exception)
 					{ }
@@ -1287,7 +1287,7 @@ namespace HGInetInteroperabilidad.Procesos
 				try
 				{
 					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-					email.EnviaNotificacionAlertaDIAN(attach_document.IdentificacionFacturador, attach_document.Documento.ToString(), mensajes, 3, false, Constantes.EmailCopiaOculta, true);
+					email.EnviaNotificacionAlertaDIAN(attach_document.IdentificacionFacturador, attach_document.Documento.ToString(), mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
 				}
 				catch (Exception)
 				{}

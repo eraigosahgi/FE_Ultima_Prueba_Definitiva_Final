@@ -29,6 +29,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			var documento_obj = (dynamic)null;
 			documento_obj = documento;
 
+			//Registro el documento en la tabla correo para gestionarlo
+			Ctl_ProcesosCorreos proceso_correo = new Ctl_ProcesosCorreos();
+			TblProcesoCorreo correo_doc = null;
+			correo_doc = proceso_correo.Obtener(documentoBd.StrIdSeguridad);
+			if (correo_doc == null)
+				correo_doc = proceso_correo.Crear(documentoBd.StrIdSeguridad);
+
 			//Se deshabilita proceso de envio de bienvenida caso 560400
 			//Si es nuevo en la Plataforma envia Bienvenida a la plataforma
 			/*try
@@ -60,7 +67,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string nombre_comercial = string.IsNullOrEmpty(documento_obj.DatosObligado.NombreComercial) ? documento_obj.DatosObligado.RazonSocial : documento_obj.DatosObligado.NombreComercial;
 				mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, nombre_comercial);
 				
-				//Actualiza la respuesta del envio del correo
+				//Actualiza la respuesta del envio del correo en TblDocumentos
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
 				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
 				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
@@ -78,15 +85,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 				documentoBd.IntEnvioMail = false;
-				try
-				{
-					Ctl_Documento documento_tmp = new Ctl_Documento();
-					documento_tmp.Actualizar(documentoBd);
-				}
-				catch (Exception)
-				{}
+				
 				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio);
 			}
+
+			try
+			{
+				Ctl_Documento documento_tmp = new Ctl_Documento();
+				documento_tmp.Actualizar(documentoBd);
+			}
+			catch (Exception)
+			{ }
 
 			try
 			{
@@ -194,9 +203,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//Actualiza la respuesta del envio del correo
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
-				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
+				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Pendiente.GetHashCode();
 				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
-				documentoBd.IntEnvioMail = true;
+				documentoBd.IntEnvioMail = false;
 				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 

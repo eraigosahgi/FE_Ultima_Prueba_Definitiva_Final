@@ -18,6 +18,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			{
 
 				int Dias = 0;
+				bool CorreoAudit = false;
 
 				//Solo validar que documentos no tiene envio de correo y hacer este proceso
 				string SoloCorreo = Request.QueryString["SoloCorreo"];
@@ -29,7 +30,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 				if (Request.QueryString["Dias"] != null)
 					Int32.TryParse(Request.QueryString["Dias"], out Dias);
 
-				Procesar(Dias, Convert.ToBoolean(Solodia), Convert.ToBoolean(SoloCorreo));
+				//Si llega true se hace por el proceso anterior que es consultando la auditoria
+				if (Request.QueryString["CorreoAudit"] != null)
+					Boolean.TryParse(Request.QueryString["CorreoAudit"], out CorreoAudit);
+
+				Procesar(Dias, Convert.ToBoolean(Solodia), Convert.ToBoolean(SoloCorreo), CorreoAudit);
 			}
 			catch (Exception ex)
 			{
@@ -37,12 +42,23 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			}
 		}
 
-		public void Procesar(int dias, bool Solodia, bool SoloCorreo)
+		public void Procesar(int dias, bool Solodia, bool SoloCorreo, bool CorreoAudit)
 		{
 
 			Ctl_Documento ctl_documento = new Ctl_Documento();
 
-			var Tarea1 = ctl_documento.SondaDocumentosValidarEmail(dias, Solodia, SoloCorreo);
+			if (SoloCorreo == true && CorreoAudit == false)
+			{
+				//Valida que correos no se han enviado
+				var Tarea1 = ctl_documento.SondaDocumentosEnviarEmail(dias, Solodia);
+			}
+			else
+			{
+				//valida el estado de los correos segun plataforma de servicios
+				var Tarea1 = ctl_documento.SondaDocumentosValidarEmail(dias, Solodia, SoloCorreo, CorreoAudit);
+			}
+
+			
 			lblResultado.Text = string.Format("Termino");
 		}
 	}
