@@ -89,7 +89,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				datos = (from item in context.TblProcesoCorreo
 					where item.IntValidadoMail == false &&
-					      item.IntEnvioMail == true &&
+					      (item.IntEnvioMail == true || item.StrIdMensaje != null) &&
 						  item.DatFecha >= FechaInicial && item.DatFecha <= FechaFinal
 					orderby item.DatFecha descending
 					select item).ToList();
@@ -102,7 +102,7 @@ namespace HGInetMiFacturaElectonicaController
 
 					datos = (from item in context.TblProcesoCorreo
 						where item.IntValidadoMail == false &&
-						      item.IntEnvioMail == true &&
+						      (item.IntEnvioMail == true || item.StrIdMensaje != null) &&
 							  item.DatFecha >= FechaInicial && item.DatFecha <= FechaFinal
 							 orderby item.DatFecha descending
 						select item).ToList();
@@ -111,7 +111,7 @@ namespace HGInetMiFacturaElectonicaController
 				{
 					datos = (from item in context.TblProcesoCorreo
 						where item.IntValidadoMail == false &&
-						      item.IntEnvioMail == true &&
+						      (item.IntEnvioMail == true || item.StrIdMensaje != null) &&
 							  item.DatFecha >= SqlFunctions.DateAdd("dd", -dias, FechaActual)
 						orderby item.DatFecha descending
 						select item).ToList();

@@ -2925,6 +2925,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									{
 										item.DatFechaValidado = doc_bd.DatFechaActualizaEstado;
 									}
+
+									if (item.IntEnvioMail == false)
+										item.IntEnvioMail = true;
+
 									procesos_correo.Actualizar(item);
 
 								}
