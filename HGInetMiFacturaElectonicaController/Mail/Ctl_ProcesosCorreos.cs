@@ -44,8 +44,8 @@ namespace HGInetMiFacturaElectonicaController
 
 				datos = (from item in context.TblProcesoCorreo
 					where item.IntEnvioMail == false
-					orderby item.DatFecha descending
-					select item).ToList();
+					orderby item.DatFecha ascending
+						 select item).ToList();
 			}
 			else
 			{
@@ -56,16 +56,16 @@ namespace HGInetMiFacturaElectonicaController
 					datos = (from item in context.TblProcesoCorreo
 						where item.IntEnvioMail == false &&
 						      item.DatFecha >= FechaInicial && item.DatFecha <= FechaFinal
-						orderby item.DatFecha descending
-						select item).ToList();
+						orderby item.DatFecha ascending
+							 select item).ToList();
 				}
 				else
 				{
 					datos = (from item in context.TblProcesoCorreo
 						where item.IntEnvioMail == false &&
 						      item.DatFecha >= SqlFunctions.DateAdd("dd", -dias, FechaActual)
-						orderby item.DatFecha descending
-						select item).ToList();
+						orderby item.DatFecha ascending
+							 select item).ToList();
 				}
 
 			}
@@ -91,7 +91,7 @@ namespace HGInetMiFacturaElectonicaController
 					where item.IntValidadoMail == false &&
 					      (item.IntEnvioMail == true || item.StrIdMensaje != null) &&
 						  item.DatFecha >= FechaInicial && item.DatFecha <= FechaFinal
-					orderby item.DatFecha descending
+					orderby item.DatFecha ascending 
 					select item).ToList();
 			}
 			else
@@ -104,8 +104,8 @@ namespace HGInetMiFacturaElectonicaController
 						where item.IntValidadoMail == false &&
 						      (item.IntEnvioMail == true || item.StrIdMensaje != null) &&
 							  item.DatFecha >= FechaInicial && item.DatFecha <= FechaFinal
-							 orderby item.DatFecha descending
-						select item).ToList();
+							 orderby item.DatFecha ascending
+							 select item).ToList();
 				}
 				else
 				{
@@ -113,8 +113,8 @@ namespace HGInetMiFacturaElectonicaController
 						where item.IntValidadoMail == false &&
 						      (item.IntEnvioMail == true || item.StrIdMensaje != null) &&
 							  item.DatFecha >= SqlFunctions.DateAdd("dd", -dias, FechaActual)
-						orderby item.DatFecha descending
-						select item).ToList();
+						orderby item.DatFecha ascending
+							 select item).ToList();
 				}
 
 			}

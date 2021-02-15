@@ -2932,6 +2932,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									procesos_correo.Actualizar(item);
 
 								}
+								else
+								{
+
+								}
 
 							}
 						}
