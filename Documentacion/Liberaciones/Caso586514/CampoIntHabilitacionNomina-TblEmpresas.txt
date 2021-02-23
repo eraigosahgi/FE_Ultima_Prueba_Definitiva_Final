@@ -1,0 +1,3 @@
+ALTER TABLE TblEmpresas ADD
+IntHabilitacionNomina tinyint NULL Default(0)
+GO
