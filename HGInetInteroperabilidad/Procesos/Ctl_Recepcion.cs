@@ -566,7 +566,7 @@ namespace HGInetInteroperabilidad.Procesos
 		/// </summary>
 		/// <param name="emisor"></param>
 		/// <returns>Un objeto BD de Empresa</returns>
-		public static TblEmpresas CrearFacturadorEmisor(dynamic documento_obj, int tipo_documento)
+		public static TblEmpresas CrearFacturadorEmisor(dynamic documento_obj, int tipo_documento, byte ambiente = 0)
 		{
 
 
@@ -603,11 +603,15 @@ namespace HGInetInteroperabilidad.Procesos
 					empresa.Actualizar(facturador_emisor);
 				}
 
+				/*
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 				if (!plataforma_datos.RutaPublica.Contains("habilitacion") && facturador_emisor.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
 					facturador_emisor.IntHabilitacion = (byte)Habilitacion.Produccion.GetHashCode();
-				}
+				}*/
+
+				//Se coloca el mismo ambiente en el que este el facturador receptor(0 y 1 Habilitacion, 99 - Produccion)
+				facturador_emisor.IntHabilitacion = ambiente;
 
 				//Se crea Resolucion
 				TblEmpresasResoluciones resolucion = new TblEmpresasResoluciones();
@@ -1187,7 +1191,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 				try
 				{
-					facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode());
+					facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion);
 
 				}
 				catch (Exception excepcion)
