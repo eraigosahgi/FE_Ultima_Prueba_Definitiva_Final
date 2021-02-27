@@ -1191,7 +1191,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 				try
 				{
-					facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion);
+					facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion.Value);
 
 				}
 				catch (Exception excepcion)
