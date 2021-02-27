@@ -59,7 +59,7 @@ namespace HGInetUBLv2_1
 
 				if (empresa.Party.Contact != null)
 				{
-					obligado.Telefono = empresa.Party.Contact.Telephone.Value;
+					obligado.Telefono = (empresa.Party.Contact.Telephone == null) ? string.Empty : empresa.Party.Contact.Telephone.Value;
 					obligado.Email = empresa.Party.Contact.ElectronicMail.Value;
 					//Valida si tiene pagina web
 					if (empresa.Party.WebsiteURI != null)
@@ -96,7 +96,8 @@ namespace HGInetUBLv2_1
 				adquiriente.RegimenFiscal = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName;
 				if (!string.IsNullOrEmpty(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value))
 					adquiriente.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
-				adquiriente.CodigoTributo = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID.Value;
+				if (cliente.Party.PartyTaxScheme.FirstOrDefault().TaxScheme != null && cliente.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID != null)
+					adquiriente.CodigoTributo = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID.Value;
 				adquiriente.RazonSocial = cliente.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 				adquiriente.NombreComercial = adquiriente.RazonSocial; //cliente.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.Name.Value;
 
@@ -152,7 +153,7 @@ namespace HGInetUBLv2_1
 				//Valida si tiene Contacto
 				if (cliente.Party.Contact != null)
 				{
-					adquiriente.Telefono = cliente.Party.Contact.Telephone.Value;
+					adquiriente.Telefono = (cliente.Party.Contact.Telephone == null) ? string.Empty :cliente.Party.Contact.Telephone.Value;
 					adquiriente.Email = cliente.Party.Contact.ElectronicMail.Value;
 				}
 				//Valida si tiene pagina web

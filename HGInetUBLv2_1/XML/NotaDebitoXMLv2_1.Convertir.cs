@@ -211,7 +211,7 @@ namespace HGInetUBLv2_1
 							detalle.ProductoDescripcion = string.Empty;
 						}
 						detalle.Cantidad = nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.Value;
-						if (!string.IsNullOrEmpty(nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.unitCode.ToString()))
+						if (nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.unitCode != null && !string.IsNullOrEmpty(nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.unitCode.ToString()))
 						{
 							detalle.UnidadCodigo = nota_debito_ubl.DebitNoteLine[i].DebitedQuantity.unitCode.ToString();
 						}

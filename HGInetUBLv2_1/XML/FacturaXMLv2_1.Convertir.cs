@@ -316,7 +316,7 @@ namespace HGInetUBLv2_1
 							detalle.Bodega = string.Empty;
 						}
 						detalle.Cantidad = factura_ubl.InvoiceLine[i].InvoicedQuantity.Value;
-						if (!string.IsNullOrEmpty(factura_ubl.InvoiceLine[i].InvoicedQuantity.unitCode.ToString()))
+						if (factura_ubl.InvoiceLine[i].InvoicedQuantity.unitCode != null && !string.IsNullOrEmpty(factura_ubl.InvoiceLine[i].InvoicedQuantity.unitCode.ToString()))
 						{
 							detalle.UnidadCodigo = factura_ubl.InvoiceLine[i].InvoicedQuantity.unitCode.ToString();
 						}

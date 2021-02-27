@@ -209,7 +209,7 @@ namespace HGInetUBLv2_1
 							detalle.ProductoDescripcion = string.Empty;
 						}
 						detalle.Cantidad = nota_credito_ubl.CreditNoteLine[i].CreditedQuantity.Value;
-						if (!string.IsNullOrEmpty(nota_credito_ubl.CreditNoteLine[i].CreditedQuantity.unitCode.ToString()))
+						if (nota_credito_ubl.CreditNoteLine[i].CreditedQuantity.unitCode != null && !string.IsNullOrEmpty(nota_credito_ubl.CreditNoteLine[i].CreditedQuantity.unitCode.ToString()))
 						{
 							detalle.UnidadCodigo = nota_credito_ubl.CreditNoteLine[i].CreditedQuantity.unitCode.ToString();
 						}
