@@ -1382,6 +1382,100 @@
     <Compile Include="Enumeraciones\Ctl_Enumeracion.cs" />
     <Compile Include="Hgi\HgiNetExtensionsType.cs" />
     <Compile Include="Namespaces\NamespacesXML.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteType.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeEliminar.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeEliminarEliminandoPredecesor.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeEliminarEmpleador.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeEliminarInformacionGeneral.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeEliminarLugarGeneracionXML.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeEliminarNumeroSecuenciaXML.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeEliminarProveedorXML.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazar.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDeducciones.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDeduccionesFondoPension.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDeduccionesFondoSP.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDeduccionesLibranza.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDeduccionesSalud.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDeduccionesSancion.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDeduccionesSindicato.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengados.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosAuxilio.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosBasico.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosBonificacion.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosBonoEPCTV.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosCesantias.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosCompensacion.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosHED.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosHEDDF.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosHEN.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosHENDF.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosHRDDF.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosHRN.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosHRNDF.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosHuelgaLegal.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosIncapacidad.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosLicencias.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosLicenciasLicenciaMP.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosLicenciasLicenciaNR.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosLicenciasLicenciaR.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosOtroConcepto.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosPrimas.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosTransporte.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosVacaciones.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosVacacionesVacacionesCompensadas.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarDevengadosVacacionesVacacionesComunes.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarEmpleador.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarInformacionGeneral.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarLugarGeneracionXML.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarNumeroSecuenciaXML.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarPago.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarPeriodo.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarProveedorXML.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarReemplazandoPredecesor.cs" />
+    <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteTypeReemplazarTrabajador.cs" />
+    <Compile Include="Nomina\NominaIndividualType.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDeducciones.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDeduccionesFondoPension.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDeduccionesFondoSP.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDeduccionesLibranza.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDeduccionesSalud.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDeduccionesSancion.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDeduccionesSindicato.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengados.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosAuxilio.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosBasico.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosBonificacion.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosBonoEPCTV.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosCesantias.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosCompensacion.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosHED.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosHEDDF.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosHEN.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosHENDF.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosHRDDF.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosHRN.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosHRNDF.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosHuelgaLegal.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosIncapacidad.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosLicencias.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosLicenciasLicenciaMP.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosLicenciasLicenciaNR.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosLicenciasLicenciaR.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosOtroConcepto.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosPrimas.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosTransporte.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosVacaciones.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosVacacionesVacacionesCompensadas.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeDevengadosVacacionesVacacionesComunes.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeEmpleador.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeInformacionGeneral.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeLugarGeneracionXML.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeNovedad.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeNumeroSecuenciaXML.cs" />
+    <Compile Include="Nomina\NominaIndividualTypePago.cs" />
+    <Compile Include="Nomina\NominaIndividualTypePeriodo.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeProveedorXML.cs" />
+    <Compile Include="Nomina\NominaIndividualTypeTrabajador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recursos\NombreArchivos.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1450,8 +1544,45 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Nomina\Scheme\CCTS_CCT_SchemaModule-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\NominaIndividualDeAjusteElectronicaXSDV1.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\NominaIndividualElectronicaXSDV1.0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-CommonBasicComponents-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-CommonExtensionComponents-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-CoreComponentParameters-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-ExtensionContentDataType-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-QualifiedDataTypes-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-UnqualifiedDataTypes-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-XAdESv132-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-XAdESv141-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nomina\Scheme\UBL-xmldsig-core-schema-2.1.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

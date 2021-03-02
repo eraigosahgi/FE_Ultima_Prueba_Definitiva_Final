@@ -1,0 +1,125 @@
+﻿/// <comentarios/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="dian:gov:co:facturaelectronica:NominaIndividualDeAjuste")]
+public partial class NominaIndividualDeAjusteTypeReemplazarProveedorXML {
+    
+	private string razonSocialField;
+    
+	private string primerApellidoField;
+    
+	private string segundoApellidoField;
+    
+	private string primerNombreField;
+    
+	private string otrosNombresField;
+    
+	private string nITField;
+    
+	private string dvField;
+    
+	private string softwareIDField;
+    
+	private string softwareSCField;
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string RazonSocial {
+		get {
+			return this.razonSocialField;
+		}
+		set {
+			this.razonSocialField = value;
+		}
+	}
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string PrimerApellido {
+		get {
+			return this.primerApellidoField;
+		}
+		set {
+			this.primerApellidoField = value;
+		}
+	}
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string SegundoApellido {
+		get {
+			return this.segundoApellidoField;
+		}
+		set {
+			this.segundoApellidoField = value;
+		}
+	}
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string PrimerNombre {
+		get {
+			return this.primerNombreField;
+		}
+		set {
+			this.primerNombreField = value;
+		}
+	}
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string OtrosNombres {
+		get {
+			return this.otrosNombresField;
+		}
+		set {
+			this.otrosNombresField = value;
+		}
+	}
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute(DataType="integer")]
+	public string NIT {
+		get {
+			return this.nITField;
+		}
+		set {
+			this.nITField = value;
+		}
+	}
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute(DataType="integer")]
+	public string DV {
+		get {
+			return this.dvField;
+		}
+		set {
+			this.dvField = value;
+		}
+	}
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string SoftwareID {
+		get {
+			return this.softwareIDField;
+		}
+		set {
+			this.softwareIDField = value;
+		}
+	}
+    
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string SoftwareSC {
+		get {
+			return this.softwareSCField;
+		}
+		set {
+			this.softwareSCField = value;
+		}
+	}
+}
