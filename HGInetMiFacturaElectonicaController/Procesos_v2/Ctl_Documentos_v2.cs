@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LibreriaGlobalHGInet.Error;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -72,16 +73,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					FechaRecepcion = fecha_actual,
 					FechaUltimoProceso = fecha_actual,
 					IdDocumento = id_radicado.ToString(),
-					Identificacion = documento_obj.DatosAdquiriente.Identificacion,
+					Identificacion = (tipo_doc == TipoDocumento.Nomina) ? documento_obj.DatosTrabajador.Identificacion : documento_obj.DatosAdquiriente.Identificacion,
 					IdProceso = ProcesoEstado.Recepcion.GetHashCode(),
 					MotivoRechazo = "",
-					NumeroResolucion = documento_obj.NumeroResolucion,
+					NumeroResolucion = (tipo_doc == TipoDocumento.Nomina) ? string.Empty : documento_obj.NumeroResolucion,
 					Prefijo = documento_obj.Prefijo,
 					ProcesoFinalizado = 0,
 					UrlPdf = "",
 					UrlXmlUbl = "",
 					IdPeticion = id_peticion,
-					IdentificacionObligado = documento_obj.DatosObligado.Identificacion,
+					IdentificacionObligado = (tipo_doc == TipoDocumento.Nomina) ? documento_obj.DatosEmpleador.Identificacion : documento_obj.DatosObligado.Identificacion,
 					UrlAuditoria = string.Format("{0}{1}", datos_plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", id_radicado.ToString())),
 					IdVersionDian = empresa.IntVersionDian
 				};
@@ -105,8 +106,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
 
+					//Validacion si es un documento de nomina y si se esta validando el objeto enviado
+					bool continuar_proceso = true;
 
-					if (empresa.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode())
+					if (tipo_doc == TipoDocumento.Nomina && (empresa.IntHabilitacionNomina == null || empresa.IntHabilitacionNomina < Habilitacion.Pruebas.GetHashCode()))
+						continuar_proceso = false;
+
+
+					if (empresa.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && continuar_proceso == true)
 					{
 
 						//Guarda la id de la Peticion con la que se esta haciendo el proceso
@@ -119,23 +126,27 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_result.VersionDian = empresa.IntVersionDian;
 
 						//Valida que el Proveedor Receptor enviado exista en Bd
-						if (documento_obj.IdentificacionProveedor != null)
+						if (tipo_doc != TipoDocumento.Nomina)
 						{
-
-							if (!documento_obj.IdentificacionProveedor.Equals(Constantes.NitResolucionsinPrefijo))
+							if (documento_obj.IdentificacionProveedor != null)
 							{
-								TblConfiguracionInteroperabilidad proveedor_receptor = new TblConfiguracionInteroperabilidad();
 
-								Ctl_ConfiguracionInteroperabilidad proveedor = new Ctl_ConfiguracionInteroperabilidad();
-
-								proveedor_receptor = proveedor.Obtener(documento_obj.IdentificacionProveedor);
-
-								//si no existe asigna a HGI como Proveedor Receptor
-								if (proveedor_receptor == null)
+								if (!documento_obj.IdentificacionProveedor.Equals(Constantes.NitResolucionsinPrefijo))
 								{
-									documento_obj.IdentificacionProveedor = null;
+									TblConfiguracionInteroperabilidad proveedor_receptor = new TblConfiguracionInteroperabilidad();
+
+									Ctl_ConfiguracionInteroperabilidad proveedor = new Ctl_ConfiguracionInteroperabilidad();
+
+									proveedor_receptor = proveedor.Obtener(documento_obj.IdentificacionProveedor);
+
+									//si no existe asigna a HGI como Proveedor Receptor
+									if (proveedor_receptor == null)
+									{
+										documento_obj.IdentificacionProveedor = null;
+									}
 								}
 							}
+
 						}
 
 						Ctl_Documento documento_tmp = new Ctl_Documento();
@@ -493,6 +504,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
 						}
+
+					}
+					else
+					{
+						if (respuesta.Error == null)
+						{
+							respuesta.Error = new Error();
+							respuesta.Error.Codigo = CodigoError.OK;
+						}
+
+						respuesta.Error.Mensaje = "Objeto cumple con la estructura solicitada y supera validaciones basicas";
 
 					}
 

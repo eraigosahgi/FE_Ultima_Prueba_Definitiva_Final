@@ -2854,6 +2854,7 @@
     <Content Include="wcf\empresas.svc" />
     <Content Include="wcf\factura.svc" />
     <Content Include="wcf\listaFe.svc" />
+    <Content Include="wcf\nomina.svc" />
     <Content Include="wcf\notacredito.svc" />
     <Content Include="wcf\notadebito.svc" />
     <Content Include="wcf\pagoselectronicos.svc" />
@@ -3361,6 +3362,7 @@
     <Compile Include="wcf\factura.svc.cs">
       <DependentUpon>factura.svc</DependentUpon>
     </Compile>
+    <Compile Include="wcf\interfaces\Inomina.cs" />
     <Compile Include="wcf\interfaces\IlistaFe.cs" />
     <Compile Include="wcf\interfaces\Iempresas.cs" />
     <Compile Include="wcf\interfaces\Iacuserecibo.cs" />
@@ -3373,6 +3375,9 @@
     <Compile Include="wcf\interfaces\Ipagoselectronicos.cs" />
     <Compile Include="wcf\listaFe.svc.cs">
       <DependentUpon>listaFe.svc</DependentUpon>
+    </Compile>
+    <Compile Include="wcf\nomina.svc.cs">
+      <DependentUpon>nomina.svc</DependentUpon>
     </Compile>
     <Compile Include="wcf\notacredito.svc.cs">
       <DependentUpon>notacredito.svc</DependentUpon>

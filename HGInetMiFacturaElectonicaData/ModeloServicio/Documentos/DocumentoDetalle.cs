@@ -127,10 +127,15 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string UnidadCodigo { get; set; }
 
-        /// <summary>
-        /// Indica si este detalle va hacer visible para la impresion (True - False)
-        /// </summary>
-        public int OcultarItem { get; set; }
+		/// <summary>
+		/// Código de la unidad de medida del detalle (unidad predeterminada = S7)
+		/// </summary>
+		public string UnidadCodigoDesc { get; set; }
+
+		/// <summary>
+		/// Indica si este detalle va hacer visible para la impresion (True - False)
+		/// </summary>
+		public int OcultarItem { get; set; }
 
 		/// <summary>
 		/// Codigo EAN del producto y/o servicio

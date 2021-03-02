@@ -124,7 +124,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		#region Obtener
 
-		public TblDocumentos Obtener(string identificacion_obligado, long numero_documeto, string prefijo)
+		public TblDocumentos Obtener(string identificacion_obligado, long numero_documeto, string prefijo, bool doc_nomina = false)
 		{
 			try
 			{
@@ -133,12 +133,26 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				TblDocumentos documento = new TblDocumentos();
 
+				if (doc_nomina == false)
+				{
+					documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+						where (documentos.IntNumero == numero_documeto)
+						      && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
+						          && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
+						select documentos).FirstOrDefault();
+				}
+				else
+				{
+					int doc_nom = TipoDocumento.Nomina.GetHashCode();
+					documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+						where (documentos.IntNumero == numero_documeto)
+						      && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
+						          && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
+							  && (documentos.IntDocTipo == doc_nom)
+						select documentos).FirstOrDefault();
+				}
 
-				documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
-							 where (documentos.IntNumero == numero_documeto)
-							 && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
-							 && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
-							 select documentos).FirstOrDefault();
+				
 
 
 
@@ -1610,37 +1624,53 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				TblDocumentos tbl_documento = new TblDocumentos();
 
+				if (tipo_doc < TipoDocumento.Nomina)
+				{
+					if (tipo_doc == TipoDocumento.NotaCredito || tipo_doc == TipoDocumento.NotaDebito)
+					{
+						tbl_documento.DatFechaVencDocumento = documento_obj.Fecha;
+					}
+					else
+					{
+						tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
+					}
+
+					tbl_documento.DatFechaDocumento = Convert.ToDateTime(documento_obj.Fecha.ToString(Fecha.formato_fecha_hginet));
+					tbl_documento.StrEmpresaAdquiriente = documento_obj.DatosAdquiriente.Identificacion;
+					tbl_documento.StrProveedorReceptor = documento_obj.IdentificacionProveedor;
+					tbl_documento.IntVlrTotal = documento_obj.Total;
+					tbl_documento.IntValorSubtotal = documento_obj.ValorSubtotal;
+					tbl_documento.IntValorNeto = documento_obj.Neto;
+					tbl_documento.IntTipoOperacion = documento_obj.TipoOperacion;
+					tbl_documento.StrLineaNegocio = documento_obj.LineaNegocio;
+				}
+				else
+				{
+					tbl_documento.DatFechaVencDocumento = documento_obj.FechaGen;
+					tbl_documento.DatFechaDocumento = Convert.ToDateTime(documento_obj.FechaGen.ToString(Fecha.formato_fecha_hginet));
+					tbl_documento.StrEmpresaAdquiriente = documento_obj.DatosTrabajador.Identificacion;
+					tbl_documento.StrProveedorReceptor = Constantes.NitResolucionsinPrefijo;
+					tbl_documento.IntVlrTotal = documento_obj.ComprobanteTotal;
+					tbl_documento.IntValorSubtotal = documento_obj.ComprobanteTotal;
+					tbl_documento.IntValorNeto = documento_obj.ComprobanteTotal;
+				}
+
 				tbl_documento.DatFechaIngreso = respuesta.FechaRecepcion;
 				tbl_documento.IntDocTipo = tipo_doc.GetHashCode();
 				tbl_documento.IntNumero = documento_obj.Documento;
 				tbl_documento.StrPrefijo = (!string.IsNullOrEmpty(documento_obj.Prefijo)) ? documento_obj.Prefijo : "";
-				if (tipo_doc == TipoDocumento.NotaCredito || tipo_doc == TipoDocumento.NotaDebito)
-				{
-					tbl_documento.DatFechaVencDocumento = documento_obj.Fecha;
-				}
-				else
-				{
-					tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
-				}
-				tbl_documento.DatFechaDocumento = Convert.ToDateTime(documento_obj.Fecha.ToString(Fecha.formato_fecha_hginet));
 				tbl_documento.StrObligadoIdRegistro = documento_obj.CodigoRegistro;
 				tbl_documento.StrNumResolucion = resolucion.StrNumResolucion;
 				tbl_documento.StrEmpresaFacturador = empresa.StrIdentificacion;
-				tbl_documento.StrEmpresaAdquiriente = documento_obj.DatosAdquiriente.Identificacion;
 				tbl_documento.StrCufe = respuesta.Cufe;
-				tbl_documento.IntVlrTotal = documento_obj.Total;
 				tbl_documento.StrIdSeguridad = Guid.Parse(respuesta.IdDocumento);
 				tbl_documento.IntAdquirienteRecibo = 0;
 				tbl_documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 				tbl_documento.DatFechaActualizaEstado = Fecha.GetFecha();
 				tbl_documento.StrVersion = documento_obj.VersionAplicativo;
 				tbl_documento.StrProveedorEmisor = Constantes.NitResolucionsinPrefijo;
-				tbl_documento.StrProveedorReceptor = documento_obj.IdentificacionProveedor;
-				tbl_documento.IntValorSubtotal = documento_obj.ValorSubtotal;
-				tbl_documento.IntValorNeto = documento_obj.Neto;
 				tbl_documento.IntVersionDian = empresa.IntVersionDian;
-				tbl_documento.IntTipoOperacion = documento_obj.TipoOperacion;
-				tbl_documento.StrLineaNegocio = documento_obj.LineaNegocio;
+				
 				//validacion si es un formato de integrador para guardar los campos predeterminados
 				if (documento_obj.DocumentoFormato.Codigo > 0 && empresa.IntVersionDian == 2)
 				{

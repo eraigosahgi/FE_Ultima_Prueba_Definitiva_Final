@@ -1316,6 +1316,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							ListaItem unidad = list_unidad.Items.Where(d => d.Codigo.Equals(Docdet.UnidadCodigo)).FirstOrDefault();
 							if (unidad == null)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "UnidadCodigo", Docdet.UnidadCodigo));
+
+							Docdet.UnidadCodigoDesc = unidad.Descripcion;
 						}
 						else
 						{
@@ -1610,6 +1612,612 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 
 			return respuesta;
+		}
+
+		public static void ValidarEmpleador(Empleador empleador)
+		{
+
+			string tipo = "Empleador";
+
+			if (empleador == null)
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DatosEmpleador", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(empleador.RazonSocial))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial", tipo).Replace("de tipo", "del"));
+
+			//valida que la identificacion no contenga caracteres especiales
+			//Regex isnumber = new Regex("[^0-9]");
+			if (!string.IsNullOrEmpty(empleador.Identificacion))
+			{
+				if (!Texto.ValidarExpresion(TipoExpresion.Numero, empleador.Identificacion) && !Texto.ValidarExpresion(TipoExpresion.Alfanumerico, empleador.Identificacion))
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener caracteres especiales", "NIT", tipo));
+
+				// valida los ceros al inicio de la identificación
+				if (!Texto.ValidarExpresion(TipoExpresion.NumeroNotStartZero, empleador.Identificacion))
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener ceros al inicio", "NIT", tipo));
+			}
+			else
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Identificacion", tipo).Replace("de tipo", "del"));
+
+			if (empleador.TipoDocumento.Equals(13))
+			{
+				if (string.IsNullOrEmpty(empleador.PrimerApellido))
+					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerApellido", tipo).Replace("de tipo", "del"));
+
+				if (string.IsNullOrEmpty(empleador.PrimerNombre))
+					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerNombre", tipo).Replace("de tipo", "del"));
+			}
+
+
+			if ((empleador.DV < 0) || (empleador.DV > 9))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DV", tipo).Replace("de tipo", "del"));
+
+			//Validacion del digito de verificacion enviado
+			short tercero_dv = FuncionesIdentificacion.Dv(empleador.Identificacion.ToString());
+
+			if (tercero_dv != empleador.DV)
+				throw new ArgumentException(string.Format("El digito de verificacion {0} no esta bien calculado del {1}", empleador.DV, tipo));
+
+			if (string.IsNullOrEmpty(empleador.Pais))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
+
+			if (!ConfiguracionRegional.ValidarCodigoPais(empleador.Pais))
+				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "Pais", empleador.Pais, tipo));
+
+			if (string.IsNullOrEmpty(empleador.MunicipioCiudad) && empleador.Pais.Equals("CO"))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "MunicipioCiudad", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(empleador.DepartamentoEstado) && empleador.Pais.Equals("CO"))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DepartamentoEstado", tipo).Replace("de tipo", "del"));
+
+			ListaPaises list_paises = new ListaPaises();
+			ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(empleador.Pais)).FirstOrDefault();
+			if (pais == null)
+			{
+				throw new ArgumentException(string.Format("El Codigo Pais {0} no esta bien formado del {1}", empleador.Pais, tipo));
+			}
+			else
+			{
+				empleador.PaisNombre = pais.Descripcion;
+			}
+
+
+			if (empleador.Pais.Equals("CO"))
+			{
+
+				ListaMunicipio list_municipio = new ListaMunicipio();
+				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empleador.MunicipioCiudad)).FirstOrDefault();
+				if (municipio == null)
+					throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}", empleador.MunicipioCiudad, tipo));
+				else
+					empleador.CiudadNombre = municipio.Nombre;
+
+
+				ListaDepartamentos list_depart = new ListaDepartamentos();
+				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(empleador.DepartamentoEstado)).FirstOrDefault();
+				if (departamento == null)
+					throw new ArgumentException(string.Format("El Codigo Departamento {0} no esta bien formado del {1}", empleador.DepartamentoEstado, tipo));
+				else
+					empleador.DepartamentoNombre = departamento.Nombre;
+			}
+
+			if (string.IsNullOrEmpty(empleador.Direccion))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(empleador.Telefono))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(empleador.Email))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Email", tipo).Replace("de tipo", "del"));
+
+			if (!Texto.ValidarExpresion(TipoExpresion.Email, empleador.Email))
+				throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+
+			//Regex isweb = new Regex("([\\w-]+\\.)+(/[\\w- ./?%&=]*)?");
+			if (empleador.PaginaWeb == null)
+			{
+				empleador.PaginaWeb = string.Empty;
+			}
+			else if (!Texto.ValidarExpresion(TipoExpresion.PaginaWeb, empleador.PaginaWeb))
+				empleador.PaginaWeb = string.Empty;
+
+		}
+
+		public static void ValidarTrabajador(Trabajador trabajador)
+		{
+
+			string tipo = "Trabajador";
+
+			if (trabajador == null)
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DatosTrabajador", tipo).Replace("de tipo", "del"));
+
+			//valida que la identificacion no contenga caracteres especiales
+			//Regex isnumber = new Regex("[^0-9]");
+			if (!string.IsNullOrEmpty(trabajador.Identificacion))
+			{
+				if (!Texto.ValidarExpresion(TipoExpresion.Numero, trabajador.Identificacion) && !Texto.ValidarExpresion(TipoExpresion.Alfanumerico, trabajador.Identificacion))
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener caracteres especiales", "NumeroDocumento", tipo));
+
+				// valida los ceros al inicio de la identificación
+				if (!Texto.ValidarExpresion(TipoExpresion.NumeroNotStartZero, trabajador.Identificacion))
+					throw new ArgumentException(string.Format("El parámetro {0} del {1} no puede contener ceros al inicio", "NumeroDocumento", tipo));
+			}
+			else
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroDocumento", tipo).Replace("de tipo", "del"));
+
+			ListaTipoIdFiscal list_tipoId = new ListaTipoIdFiscal();
+			ListaItem identi = list_tipoId.Items.Where(d => d.Codigo.Equals(trabajador.TipoDocumento.ToString())).FirstOrDefault();
+			if (identi == null)
+				throw new ArgumentException(string.Format("El Tipo de Identificacion {0} no esta bien formado del {1}", trabajador.TipoDocumento, tipo));
+
+			if (string.IsNullOrEmpty(trabajador.LugarTrabajoPais))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "LugarTrabajoPais", tipo).Replace("de tipo", "del"));
+
+			if (!ConfiguracionRegional.ValidarCodigoPais(trabajador.LugarTrabajoPais))
+				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "LugarTrabajoPais", trabajador.LugarTrabajoPais, tipo));
+
+			if (string.IsNullOrEmpty(trabajador.LugarTrabajoMunicipioCiudad) && trabajador.LugarTrabajoPais.Equals("CO"))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "LugarTrabajoMunicipioCiudad", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(trabajador.LugarTrabajoDepartamentoEstado) && trabajador.LugarTrabajoPais.Equals("CO"))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DepartamentoEstado", tipo).Replace("de tipo", "del"));
+
+			ListaPaises list_paises = new ListaPaises();
+			ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(trabajador.LugarTrabajoPais)).FirstOrDefault();
+			if (pais == null)
+			{
+				throw new ArgumentException(string.Format("El Codigo Pais {0} no esta bien formado del {1}", trabajador.LugarTrabajoPais, tipo));
+			}
+			else
+			{
+				trabajador.PaisNombre = pais.Descripcion;
+			}
+
+
+			if (trabajador.LugarTrabajoPais.Equals("CO"))
+			{
+
+				ListaMunicipio list_municipio = new ListaMunicipio();
+				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(trabajador.LugarTrabajoMunicipioCiudad)).FirstOrDefault();
+				if (municipio == null)
+					throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}", trabajador.LugarTrabajoMunicipioCiudad, tipo));
+				else
+					trabajador.CiudadNombre = municipio.Nombre;
+
+
+				ListaDepartamentos list_depart = new ListaDepartamentos();
+				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(trabajador.LugarTrabajoDepartamentoEstado)).FirstOrDefault();
+				if (departamento == null)
+					throw new ArgumentException(string.Format("El Codigo Departamento {0} no esta bien formado del {1}", trabajador.LugarTrabajoDepartamentoEstado, tipo));
+				else
+					trabajador.DepartamentoNombre = departamento.Nombre;
+			}
+
+			if (string.IsNullOrEmpty(trabajador.LugarTrabajoDireccion))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(trabajador.Telefono))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(trabajador.Email))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Email", tipo).Replace("de tipo", "del"));
+
+			if (!Texto.ValidarExpresion(TipoExpresion.Email, trabajador.Email))
+				throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+
+			if (string.IsNullOrEmpty(trabajador.PrimerApellido))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerApellido", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(trabajador.PrimerNombre))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerNombre", tipo).Replace("de tipo", "del"));
+
+			if (string.IsNullOrEmpty(trabajador.TipoTrabajador))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
+
+			//****Falta validar con el listado de la DIAN
+
+			if (string.IsNullOrEmpty(trabajador.SubTipoTrabajador))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
+
+			//****Falta validar con el listado de la DIAN
+
+			if ((trabajador.TipoContrato < 0) || (trabajador.TipoContrato > 5))
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DV", tipo).Replace("de tipo", "del"));
+
+			if (trabajador.Sueldo <= 0)
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Sueldo", tipo).Replace("de tipo", "del"));
+		}
+
+		public static void ValidarValoresNomina(Nomina documento)
+		{
+
+			decimal devengados_cal = 0;
+			decimal deducciones_cal = 0;
+			decimal totalcomprobante_cal = 0;
+
+
+			if (documento.DatosDevengados == null)
+				throw new Exception("No se encontró devengados en el documento.");
+
+			if (documento.DatosDeducciones == null)
+				throw new Exception("No se encontró deducciones en el documento.");
+
+
+			int dias_laborales_mes = DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month);
+
+			if (dias_laborales_mes == 31)
+				dias_laborales_mes -= 1;
+
+			//Se valida los devengados del documento
+			devengados_cal = ValidarDevengados(documento.DatosDevengados, dias_laborales_mes, documento.DatosTrabajador.Sueldo);
+
+			if (devengados_cal != decimal.Round(documento.DevengadosTotal, MidpointRounding.AwayFromZero))
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DevengadosTotal", documento.DevengadosTotal, devengados_cal));
+
+			//Se valida las deducciones del documento
+			deducciones_cal = ValidarDeducciones(documento.DatosDeducciones);
+
+			if (deducciones_cal != decimal.Round(documento.DeduccionesTotal, MidpointRounding.AwayFromZero))
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DeduccionesTotal", documento.DeduccionesTotal, deducciones_cal));
+
+			totalcomprobante_cal = devengados_cal - deducciones_cal;
+
+			if (totalcomprobante_cal != decimal.Round(documento.ComprobanteTotal, MidpointRounding.AwayFromZero))
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "ComprobanteTotal", documento.ComprobanteTotal, totalcomprobante_cal));
+
+
+		}
+
+
+		public static decimal ValidarDevengados(Devengados devengado, int dias_laborales_mes, decimal salario_empleado)
+		{
+			decimal valor_devengado = 0;
+			int dias_incapacidad = 0;
+			int dias_licencia = 0;
+			int dias_trabajados = 0;
+			decimal valor_dia = salario_empleado / dias_laborales_mes;
+
+			if (devengado == null)
+				throw new Exception("No se encontró devengados en el documento.");
+
+			if (devengado.DiasTrabajados > dias_laborales_mes || devengado.DiasTrabajados <= 0)
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} del devengado no está bien formado", "DiasTrabajados", devengado.DiasTrabajados));
+
+			if (devengado.DatosTransporte != null)
+			{
+				valor_devengado += devengado.DatosTransporte.Sum(x => x.AuxilioTransporte) + devengado.DatosTransporte.Sum(x => x.ViaticoManuAlojS) + devengado.DatosTransporte.Sum(x => x.ViaticoManuAlojNS);
+			}
+
+			//Se valida Horas extras, festivas, nocturnas y recargos
+			if (devengado.DatosHoras != null && devengado.DatosHoras.Count > 0)
+			{
+
+				foreach (Hora item in devengado.DatosHoras)
+				{
+
+					if (item.TipoHora <= 0 || item.TipoHora > 7)
+						throw new ApplicationException(string.Format("El campo {0} de DatosHoras con valor {1} del devengado no está bien formado", "TipoHora", item.TipoHora));
+
+					TipoHoraNomina tipo_hora = Enumeracion.GetEnumObjectByValue<TipoHoraNomina>(item.TipoHora);
+					decimal porcentaje_hora = Convert.ToDecimal(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<TipoHoraNomina>(item.TipoHora)));
+
+					if (!porcentaje_hora.Equals(item.Porcentaje))
+						throw new ApplicationException(string.Format("El procentaje de la Hora con valor {0} identificada con el código {1} del devengado no está bien formado", item.Porcentaje, tipo_hora));
+
+					if (item.Cantidad <= 0)
+						throw new ApplicationException(string.Format("La Cantidad de Horas con valor {0} identificada con el código {1} del devengado no está bien formado", item.Cantidad, tipo_hora));
+
+					decimal valor_horas = (salario_empleado / 240) * (item.Porcentaje * item.Cantidad);
+
+					if (!valor_horas.Equals(item.Valor))
+						throw new ApplicationException(string.Format("El Valor de las Horas con valor {0} identificada con el código {1} del devengado no está bien formado", item.Valor, tipo_hora));
+
+					valor_devengado += item.Valor;
+				}
+				//valor_devengado += devengado.DatosHoras.Sum(x => x.Valor);
+			}
+
+			//Se valida Vacaciones Compensadas o disfrutadas
+			if (devengado.Vacaciones != null && devengado.Vacaciones.Count > 0)
+			{
+
+				foreach (NovedadGeneral item in devengado.Vacaciones)
+				{
+
+					if (item.Tipo <= 0 || item.Tipo > 2)
+						throw new ApplicationException(string.Format("El campo {0} de Vacaciones con valor {1} del devengado no está bien formado", "Tipo", item.Tipo));
+
+					if (item.Pago > 0 && item.Cantidad == 0)
+						throw new ApplicationException(string.Format("La Cantidad de Dias con valor {0} de las vacaciones tipo {1} del devengado no está bien formado", item.Cantidad, item.Tipo));
+
+					if (item.Pago == 0 && item.Cantidad > 0)
+						throw new ApplicationException(string.Format("El Valor de las vacaciones tipo {0} con valor {1} del devengado no está bien formado", item.Tipo , item.Pago));
+
+					valor_devengado += item.Pago;
+
+				}
+
+			}
+
+			if (devengado.PagoPrima != null)
+			{
+				if (devengado.PagoPrima.Pago != null)
+				{
+					if (devengado.PagoPrima.Cantidad > 0 && devengado.PagoPrima.Pago.Pago == 0 && devengado.PagoPrima.Pago.PagoNS == 0)
+						throw new ApplicationException(string.Format("La Cantidad de dias con valor {0} del pago de la prima no está bien formado", devengado.PagoPrima.Cantidad));
+
+					if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.Pago > 0)
+						throw new ApplicationException(string.Format("El pago de la prima con valor {0} no está bien formado", devengado.PagoPrima.Pago.Pago));
+
+					if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.PagoNS > 0)
+						throw new ApplicationException(string.Format("La Cantidad de dias con valor {0} del pago de la prima no está bien formado", devengado.PagoPrima.Cantidad));
+
+					valor_devengado += devengado.PagoPrima.Pago.Pago + devengado.PagoPrima.Pago.PagoNS;
+
+				}
+
+			}
+
+			if (devengado.Incapacidades != null && devengado.Incapacidades.Count > 0)
+			{
+				foreach (NovedadGeneral item in devengado.Incapacidades)
+				{
+
+					if (item.Tipo <= 0 || item.Tipo > 3)
+						throw new ApplicationException(string.Format("El campo {0} de Incapacidades con valor {1} del devengado no está bien formado", "Tipo", item.Tipo));
+
+					if (item.Pago > 0 && item.Cantidad == 0)
+						throw new ApplicationException(string.Format("La Cantidad de Horas con valor {0} de la incapacidad tipo {1} del devengado no está bien formado", item.Cantidad, item.Tipo));
+
+					if (item.Pago == 0 && item.Cantidad > 0)
+						throw new ApplicationException(string.Format("El Valor de la incapacidad tipo {0} con valor {1} del devengado no está bien formado", item.Tipo, item.Pago));
+
+					dias_incapacidad += item.Cantidad;
+					valor_devengado += item.Pago;
+
+				}
+
+			}
+
+			if (devengado.Licencias != null && devengado.Licencias.Count > 0)
+			{
+				foreach (NovedadGeneral item in devengado.Licencias)
+				{
+
+					if (item.Tipo <= 0 || item.Tipo > 3)
+						throw new ApplicationException(string.Format("El campo {0} de Licencias con valor {1} del devengado no está bien formado", "Tipo", item.Tipo));
+
+					if (item.Pago > 0 && item.Cantidad == 0)
+						throw new ApplicationException(string.Format("La Cantidad de Dias con valor {0} de la Licencia tipo {1} del devengado no está bien formado", item.Cantidad, item.Tipo));
+
+					if (item.Pago == 0 && item.Cantidad > 0)
+						throw new ApplicationException(string.Format("El Valor de la Licencia tipo {0} con valor {1} del devengado no está bien formado", item.Tipo, item.Pago));
+
+					dias_licencia += item.Cantidad;
+					valor_devengado += item.Pago;
+
+				}
+
+			}
+
+			if (devengado.Bonificaciones != null && devengado.Bonificaciones.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.Bonificaciones)
+				{
+
+					if (item.Pago == 0 && item.PagoNS == 0)
+						throw new ApplicationException("No se encontró valor para la Bonificación en el devengado");
+
+					valor_devengado += item.Pago + item.PagoNS;
+
+				}
+
+			}
+
+			if (devengado.Auxilios != null && devengado.Auxilios.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.Auxilios)
+				{
+
+					if (item.Pago == 0 && item.PagoNS == 0)
+						throw new ApplicationException("No se encontró valor para el Auxilio en el devengado");
+
+					valor_devengado += item.Pago + item.PagoNS;
+
+				}
+
+			}
+
+			if (devengado.HuelgaLegal != null && devengado.HuelgaLegal.Count > 0)
+			{
+				foreach (NovedadGeneral item in devengado.HuelgaLegal)
+				{
+
+					if (item.Cantidad == 0)
+						throw new ApplicationException(string.Format("La Cantidad de Dias con valor {0} de la HuelgaLegal del devengado no está bien formado", item.Cantidad));
+
+				}
+
+			}
+
+			if (devengado.OtrosConceptos != null && devengado.OtrosConceptos.Count > 0)
+			{
+				foreach (OtroConcepto item in devengado.OtrosConceptos)
+				{
+					if(string.IsNullOrEmpty(item.DescripcionConcepto))
+						throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DescripcionConcepto", "OtrosConceptos"));
+
+
+					if (item.PagoConcepto.Pago == 0 && item.PagoConcepto.PagoNS == 0)
+						throw new ApplicationException(string.Format("No se encontró valor del concepto {0} en el devengado", item.DescripcionConcepto));
+
+					valor_devengado += item.PagoConcepto.Pago + item.PagoConcepto.PagoNS;
+
+				}
+
+			}
+
+			if (devengado.Compensaciones != null && devengado.Compensaciones.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.Compensaciones)
+				{
+
+					if (item.Pago == 0 && item.PagoNS == 0)
+						throw new ApplicationException("No se encontró valor para la Compensacion en el devengado");
+
+					valor_devengado += item.Pago + item.PagoNS;
+
+				}
+
+			}
+
+			if (devengado.BonoEPCTV != null && devengado.BonoEPCTV.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.BonoEPCTV)
+				{
+
+					if (item.Pago == 0 && item.PagoNS == 0)
+						throw new ApplicationException("No se encontró valor para los Bonos Electrónicos o de Papel de Servicio, Cheques, Tarjetas, Vales en el devengado");
+
+					valor_devengado += item.Pago + item.PagoNS;
+
+				}
+
+			}
+
+			if (devengado.BonoAlimentacion != null && devengado.BonoAlimentacion.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.BonoAlimentacion)
+				{
+
+					if (item.Pago == 0 && item.PagoNS == 0)
+						throw new ApplicationException("No se encontró valor para los Bonos de Alimentación en el devengado");
+
+					valor_devengado += item.Pago + item.PagoNS;
+
+				}
+
+			}
+
+			dias_trabajados = dias_laborales_mes - dias_incapacidad - dias_licencia;
+
+			if (!devengado.DiasTrabajados.Equals(dias_trabajados))
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} de los devengados no está bien formado, según el resultado de dias laborales del mes menos incacidades y menos licencias con valor {2}", "DiasTrabajados", devengado.DiasTrabajados, dias_trabajados));
+
+			if (devengado.SueldoTrabajado.Equals(dias_trabajados * valor_dia))
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} del devengado no está bien formado", "SueldoTrabajado", devengado.SueldoTrabajado));
+
+			valor_devengado += devengado.Comisiones.Sum() + devengado.PagosTerceros.Sum() + devengado.Anticipos.Sum() + devengado.Dotacion + devengado.Teletrabajo + devengado.BonifRetiro + devengado.Indemnizacion ;
+
+			return valor_devengado;
+
+		}
+
+		public static decimal ValidarDeducciones(Deducciones deduccion)
+		{
+			decimal valor_deduccion = 0;
+
+			if (deduccion == null)
+				throw new Exception("No se encontró deducciones en el documento.");
+
+			if (deduccion.Salud != null)
+			{
+				if (deduccion.Salud.Porcentaje != 4)
+					throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Salud no está bien formado", deduccion.Salud.Porcentaje));
+
+				if (deduccion.Salud.Deduccion <= 0)
+					throw new ApplicationException(string.Format("La Deduccion de Salud con valor de {0} no está bien formado", deduccion.Salud.Deduccion));
+
+				valor_deduccion += deduccion.Salud.Deduccion;
+			}
+			else
+			{
+				throw new Exception("No se encontró deduccion de salud en el documento.");
+			}
+
+			if (deduccion.Pension != null)
+			{
+				if (deduccion.Pension.Porcentaje != 4)
+					throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Pension no está bien formado", deduccion.Pension.Porcentaje));
+
+				if (deduccion.Pension.Deduccion <= 0)
+					throw new ApplicationException(string.Format("La Deduccion de Pension con valor de {0} no está bien formado", deduccion.Pension.Deduccion));
+
+				valor_deduccion += deduccion.Pension.Deduccion;
+			}
+			else
+			{
+				throw new Exception("No se encontró deduccion de salud en el documento.");
+			}
+
+			if (deduccion.DatosFondoSP != null)
+			{
+				if (deduccion.DatosFondoSP.Porcentaje > 0 && deduccion.DatosFondoSP.DeduccionFSP == 0)
+					throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Seguridad Pensional y no valor de deducción", deduccion.Pension.Porcentaje));
+
+				if (deduccion.DatosFondoSP.Porcentaje == 0 && deduccion.DatosFondoSP.DeduccionFSP > 0)
+					throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Seguridad Pensional y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
+
+				if (deduccion.DatosFondoSP.PorcentajeSub > 0 && deduccion.DatosFondoSP.DeduccionSub == 0)
+					throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Subsistencia y no valor de deducción", deduccion.Pension.Porcentaje));
+
+				if (deduccion.DatosFondoSP.PorcentajeSub == 0 && deduccion.DatosFondoSP.DeduccionSub > 0)
+					throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Subsistencia y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
+
+				valor_deduccion += deduccion.DatosFondoSP.DeduccionFSP + deduccion.DatosFondoSP.DeduccionSub;
+			}
+
+			if (deduccion.DatosSindicatos != null && deduccion.DatosSindicatos.Count > 0)
+			{
+				foreach (NovedadDeduccion item in deduccion.DatosSindicatos)
+				{
+					if (item.Porcentaje > 0 && item.Deduccion == 0)
+						throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Sindicatos y no valor de deducción", item.Porcentaje));
+
+					if (item.Porcentaje == 0 && item.Deduccion > 0)
+						throw new ApplicationException(string.Format("Se encontró deducción con valor {0} de Sindicatos y no porcentaje aplicado", item.Deduccion));
+
+					valor_deduccion += item.Deduccion;
+
+				}
+			}
+
+			if (deduccion.DatosSanciones != null && deduccion.DatosSanciones.Count > 0)
+			{
+				foreach (Sancion item in deduccion.DatosSanciones)
+				{
+					if (item.SancionPublic == 0 && item.SancionPriv == 0)
+						throw new ApplicationException("No se encontró valor para la Sancion en la Deducción");
+
+					valor_deduccion += item.SancionPublic + item.SancionPriv;
+
+				}
+			}
+
+			if (deduccion.DatosLibranzas != null && deduccion.DatosLibranzas.Count > 0)
+			{
+				foreach (Libranza item in deduccion.DatosLibranzas)
+				{
+					if (string.IsNullOrEmpty(item.Descripcion))
+						throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Descripcion", "DatosLibranzas"));
+
+					if (item.Deduccion == 0)
+						throw new ApplicationException(string.Format("No se encontró valor Libranza {0} en la Deducción", item.Descripcion));
+
+					valor_deduccion += item.Deduccion;
+
+				}
+
+			}
+
+			valor_deduccion += deduccion.PagosTerceros.Sum() + deduccion.Anticipos.Sum() +
+			                   deduccion.OtrasDeducciones.Sum() + deduccion.PensionVoluntaria +
+			                   deduccion.RetencionFuente + deduccion.ICA + deduccion.AFC + deduccion.Cooperativa +
+			                   deduccion.EmbargoFiscal + deduccion.PlanComplementarios + deduccion.Educacion +
+			                   deduccion.Reintegro + deduccion.Deuda;
+
+			return valor_deduccion;
+
 		}
 
 	}
