@@ -1940,6 +1940,9 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private string UnidadCodigoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UnidadCodigoDescField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorImpuestoConsumoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -2292,6 +2295,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.UnidadCodigoField, value) != true)) {
                     this.UnidadCodigoField = value;
                     this.RaisePropertyChanged("UnidadCodigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UnidadCodigoDesc {
+            get {
+                return this.UnidadCodigoDescField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UnidadCodigoDescField, value) != true)) {
+                    this.UnidadCodigoDescField = value;
+                    this.RaisePropertyChanged("UnidadCodigoDesc");
                 }
             }
         }

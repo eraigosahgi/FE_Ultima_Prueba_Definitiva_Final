@@ -50,6 +50,7 @@
     <Compile Include="Controladores\Ctl_Empresas.cs" />
     <Compile Include="Controladores\Ctl_Factura.cs" />
     <Compile Include="Controladores\Ctl_ListaFe.cs" />
+    <Compile Include="Controladores\Ctl_Nomina.cs" />
     <Compile Include="Controladores\Ctl_NotaCredito.cs" />
     <Compile Include="Controladores\Ctl_NotaDebito.cs" />
     <Compile Include="Controladores\Ctl_PagosElectronicos.cs" />
@@ -78,6 +79,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ServicioListaFe\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioNomina\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -235,6 +241,29 @@
     <None Include="Service References\ServicioListaFe\listaFe3.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioNomina\HGInetFeAPI.ServicioNomina.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNomina\HGInetFeAPI.ServicioNomina.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina.wsdl" />
+    <None Include="Service References\ServicioNomina\nomina.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina1.wsdl" />
+    <None Include="Service References\ServicioNomina\nomina1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina4.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ServicioNotaCredito\HGInetFeAPI.ServicioNotaCredito.ObtenerPorFechasAdquirienteResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -311,18 +340,18 @@
     <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.wsdl" />
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos2.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos21.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos1.wsdl" />
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos1.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos2.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos3.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos43.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioReenvioDocumento\HGInetFeAPI.ServicioReenvioDocumento.RecepcionResponse.datasource">
@@ -386,6 +415,7 @@
     <WCFMetadataStorage Include="Service References\ServicioEmpresas\" />
     <WCFMetadataStorage Include="Service References\ServicioFactura\" />
     <WCFMetadataStorage Include="Service References\ServicioListaFe\" />
+    <WCFMetadataStorage Include="Service References\ServicioNomina\" />
     <WCFMetadataStorage Include="Service References\ServicioNotaCredito\" />
     <WCFMetadataStorage Include="Service References\ServicioNotaDebito\" />
     <WCFMetadataStorage Include="Service References\ServicioPagosElectronicos\" />
@@ -560,6 +590,24 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\nomina.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
