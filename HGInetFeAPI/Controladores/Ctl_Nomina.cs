@@ -14,13 +14,13 @@ namespace HGInetFeAPI
 		private static string UrlWcf = "wcf/nomina.svc";
 
 		/// <summary>
-		/// Permite enviar los documentos de tipo Factura por el Facturador Electrónico
-		/// Manual Técnico: 5.1.1 Metodo Web: Crear Factura
+		/// Permite enviar los documentos de tipo Nomina por el Facturador Electrónico
+		/// Manual Técnico: 4.10.1 Metodo Web: Crear Nomina
 		/// </summary>
 		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
 		/// <param name="Serial">serial de licenciamiento para HGI Facturación Electrónica</param>
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
-		/// <param name="documentos_envio">documentos de tipo Factura</param>
+		/// <param name="documentos_envio">documentos de tipo Nomina</param>
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioNomina.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioNomina.Nomina> documentos_envio, bool Obtener_ruta = true)
 		{
@@ -59,7 +59,7 @@ namespace HGInetFeAPI
 				foreach (ServicioNomina.Nomina item in documentos_envio)
 				{
 					if (item == null)
-						throw new ApplicationException("No se encontró informacion en el ServicioFactura.Factura");
+						throw new ApplicationException("No se encontró informacion en el ServicioNomina.Nomina");
 					//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioFactura.Factura"));
 
 					if (item.DatosDevengados == null)
