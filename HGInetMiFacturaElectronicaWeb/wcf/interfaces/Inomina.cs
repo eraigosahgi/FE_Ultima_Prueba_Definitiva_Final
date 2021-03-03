@@ -10,8 +10,7 @@ using LibreriaGlobalHGInet.Error;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
-	// NOTA: puede usar el comando "Rename" del menú "Refactorizar" para cambiar el nombre de interfaz "Inomina" en el código y en el archivo de configuración a la vez.
-	[ServiceContract]
+	[ServiceContract(SessionMode = SessionMode.Allowed, Namespace = "HGInetFacturaElectronica.ServiciosWcf", Name = "ServicioNomina")]
 	public interface Inomina
 	{
 		[OperationContract(Name = "Test")]
