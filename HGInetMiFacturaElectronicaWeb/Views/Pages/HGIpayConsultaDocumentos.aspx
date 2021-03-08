@@ -119,7 +119,7 @@
 			<div class="col-md-5" style="padding-top: 20px; text-align: right; margin-left: -10px;">
 				<asp:Label runat="server" ID="lblUsuario"></asp:Label>
 
-				<div id="BtnCerrar" style="margin: 50px; background-color: #a6a0a0; color: white;"></div>
+				<div id="BtnCerrar" style="margin: 50px; "></div>
 
 			</div>
 			<input type="hidden" runat="server" id="Hdf_RutaSrvPagos" />
@@ -137,7 +137,7 @@
 				<div class="menu dropdown-content wmin-xl- show">
 
 					<ul class="nav nav-tabs ">
-						<li class="nav-item"><a href="!#tabs_content_documentos" id="tabs_documentos" class="nav-link border-left-0 active" data-toggle="tab">Documentos</a></li>
+						<li class="nav-item active"><a href="!#tabs_content_documentos" id="tabs_documentos" class="nav-link border-left-0 active" data-toggle="tab">Documentos</a></li>
 						<li class="nav-item"><a href="!#tabs_content_pagos" id="tabs_pagos" class="nav-link border-right-0" data-toggle="tab">Pagos</a></li>
 					</ul>
 

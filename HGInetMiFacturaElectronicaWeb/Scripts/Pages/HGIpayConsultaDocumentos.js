@@ -11,7 +11,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 
 	$("#BtnCerrar").dxButton({
 		text: "Cerrar",
-		type: "dark",
+		type: "danger",
 		icon: ' icon-switch2',
 		onClick: function (e) {
 			window.location.assign("../Login/Default.aspx?serial=" + serial);

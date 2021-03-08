@@ -68,7 +68,7 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
 		},
 		onContentReady: function (e) {
-			if (nit != null && nit != undefined) {
+			if ((nit != null && nit != undefined) || (serial != null && serial != undefined)) {
 				$('input:text[name=Identificacion]').val(nit);
 				dato_identificacion = nit;
 			}
@@ -81,12 +81,12 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
                 {
                 	dataField: "Identificacion",
                 	editorType: "dxTextBox",
-                	visible: (nit != null && nit != undefined) ? false : true,
+                	visible: ((nit != null && nit != undefined) || (serial != null && serial != undefined)) ? false : true,
                 	label: {
                 		text: "Identificación"
                 	},
                 	validationRules: [{
-                		type: (nit != null && nit != undefined) ? "null" : "required",
+                		type: ((nit != null && nit != undefined) || (serial != null && serial != undefined)) ? "null" : "required",
                 		message: "El documento de identificación es requerido."
                 	}, {
                 		//Valida que el campo solo contenga números
@@ -139,9 +139,13 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 
 	//Evento del botón.
 	$scope.onFormSubmit = function (e) {
-
-		if (nit == null || nit == undefined) {
+		//Si ya viene con la identificación del facturador
+		if ((nit == null || nit == undefined)) {
 			dato_identificacion = $('input:text[name=Identificacion]').val();
+		}
+		//Si viene con serial del Facturador, entonces se ingresa solo como adquiriente
+		if (serial != null && serial != undefined) {
+			dato_identificacion = $('input:text[name=Usuario]').val();
 		}
 
 		dato_usuario = $('input:text[name=Usuario]').val();
