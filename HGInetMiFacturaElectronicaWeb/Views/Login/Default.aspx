@@ -75,8 +75,8 @@
 			background-color: white;
 		}
 	</style>
-	<script src="../../Scripts/WebConfig.js?vjs20210308"></script>
-	<script src="../../Scripts/Pages/Autenticacion.js?vjs20210308"></script>
+	<script src="../../Scripts/WebConfig.js?vjs20210308r2"></script>
+	<script src="../../Scripts/Pages/Autenticacion.js?vjs20210308r2"></script>
 
 </head>
 <body class="login-container" style="background-color: #eeeded">
@@ -87,7 +87,7 @@
 			<img class="divImg" style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
 		</div>
 	</div>
-	<div class="row" style="height: 106%; background-color: white;" >
+	<div class="row" style="height: 106%; background-color: white; display:none" id="pnl_general" >
 		<div class="col-md-6 col-lg-8 hidden-xs hidden-sm" style="height: 100%;" id="pnl_galeria">
 			<%--<div id="galleryContainer" style="background-color: white; height: 106%;">
 			</div>--%>

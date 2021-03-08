@@ -46,6 +46,8 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 		//Damos posición al panel de autenticación
 		$('#pnl_autenticacion').attr("class", "col-md-4 col-md-offset-4");
 	}
+
+	$('#pnl_general').show();
 	//*************************************************************************
 
 
