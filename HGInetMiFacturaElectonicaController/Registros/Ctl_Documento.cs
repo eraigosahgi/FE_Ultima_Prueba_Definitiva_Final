@@ -49,6 +49,156 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		#endregion
 
+
+		#region HGIpay
+		/// <summary>
+		/// Obtener Documentos  de adquiriente para ACH
+		/// </summary>
+		/// <param name="identificacion_adquiente">identificación de adquiriente</param>
+		/// <param name="identificacion_facturador">identificación de facturador</param>
+		/// <param name="numero_documento">numero de documento</param>
+		/// <param name="estado_recibo">Estado</param>
+		/// <param name="fecha_inicio">Fecha Inicial</param>
+		/// <param name="fecha_fin">Fecha Final</param>
+		/// <param name="tipo_filtro_fecha">Tipo de Fecha</param>
+		/// <returns></returns>
+		public List<ObjDocumentos> HGIpayObtenerPorFechasAdquiriente(string identificacion_adquiente, string identificacion_facturador, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_filtro_fecha)
+		{
+
+			fecha_inicio = fecha_inicio.Date;
+			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+			if (string.IsNullOrEmpty(numero_documento))
+				numero_documento = "*";
+
+			if (numero_documento == "null")
+				numero_documento = "*";
+
+			long num_doc = -1;
+			long.TryParse(numero_documento, out num_doc);
+
+			short cod_estado_recibo = -1;
+			short.TryParse(estado_recibo, out cod_estado_recibo);
+
+
+			if (string.IsNullOrWhiteSpace(estado_recibo))
+				estado_recibo = "*";
+
+			int ErrorDian = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
+
+			int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
+
+			List<ObjDocumentos> respuesta = new List<ObjDocumentos>();
+
+
+			if (numero_documento.Equals("*"))
+			{
+				context.Configuration.LazyLoadingEnabled = false;
+
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()
+							 where (datos.StrEmpresaAdquiriente.Equals(identificacion_adquiente))
+							 && (datos.StrEmpresaFacturador.Equals(identificacion_facturador))
+										&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+										&& ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+										&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
+										&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
+										&& (datos.IdCategoriaEstado == Categoria)
+							 orderby datos.IntNumero descending
+							 select new ObjDocumentos
+							 {
+								 IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								 Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								 Prefijo = datos.StrPrefijo,
+								 NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+								 DatFechaIngreso = datos.DatFechaIngreso,
+								 DatFechaDocumento = datos.DatFechaDocumento,
+								 DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								 IntVlrTotal = (datos.IntDocTipo == 3) ? -datos.IntVlrTotal : datos.IntVlrTotal,
+								 IntSubTotal = (datos.IntDocTipo == 3) ? -datos.IntValorSubtotal : datos.IntValorSubtotal,
+								 IntNeto = (datos.IntDocTipo == 3) ? -datos.IntValorNeto : datos.IntValorNeto,
+								 EstadoFactura = datos.IntIdEstado,
+								 EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								 EstadoAcuse = datos.IntAdquirienteRecibo,
+								 MotivoRechazo = datos.StrAdquirienteMvoRechazo,
+								 StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
+								 IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								 NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								 MailAdquiriente = datos.TblEmpresasAdquiriente.StrMailAdmin,
+								 Xml = datos.StrUrlArchivoUbl,
+								 Pdf = datos.StrUrlArchivoPdf,
+								 StrIdSeguridad = datos.StrIdSeguridad,
+								 tipodoc = datos.IntDocTipo,
+								 zip = datos.StrUrlAnexo,
+								 RutaServDian = datos.StrUrlArchivoUbl,
+								 XmlAcuse = datos.StrUrlAcuseUbl,
+								 permiteenvio = (Int16)datos.IdCategoriaEstado,
+								 IntAdquirienteRecibo = datos.IntAdquirienteRecibo,
+								 Estado = datos.IdCategoriaEstado,
+								 EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
+								 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
+								 EnvioMail = datos.IntEstadoEnvio,
+								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
+								 FacturaCancelada = datos.IntIdEstado,
+								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+							 }).ToList();
+			}
+			else
+			{
+				var listaDocumetos = Coleccion.ConvertirStringlong(numero_documento);
+
+				context.Configuration.LazyLoadingEnabled = false;
+
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()
+							 where (datos.StrEmpresaAdquiriente.Equals(identificacion_adquiente))
+								&& (datos.StrEmpresaFacturador.Equals(identificacion_facturador))
+								&& (listaDocumetos.Contains(datos.IntNumero))
+								&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
+							 orderby datos.IntNumero descending
+							 select new ObjDocumentos
+							 {
+								 IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								 Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								 Prefijo = datos.StrPrefijo,
+								 NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+								 DatFechaIngreso = datos.DatFechaIngreso,
+								 DatFechaDocumento = datos.DatFechaDocumento,
+								 DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								 IntVlrTotal = (datos.IntDocTipo == 3) ? -datos.IntVlrTotal : datos.IntVlrTotal,
+								 IntSubTotal = (datos.IntDocTipo == 3) ? -datos.IntValorSubtotal : datos.IntValorSubtotal,
+								 IntNeto = (datos.IntDocTipo == 3) ? -datos.IntValorNeto : datos.IntValorNeto,
+								 EstadoFactura = datos.IntIdEstado,
+								 EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								 EstadoAcuse = datos.IntAdquirienteRecibo,
+								 MotivoRechazo = datos.StrAdquirienteMvoRechazo,
+								 StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
+								 IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								 NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								 MailAdquiriente = datos.TblEmpresasAdquiriente.StrMailAdmin,
+								 Xml = datos.StrUrlArchivoUbl,
+								 Pdf = datos.StrUrlArchivoPdf,
+								 StrIdSeguridad = datos.StrIdSeguridad,
+								 tipodoc = datos.IntDocTipo,
+								 zip = datos.StrUrlAnexo,
+								 RutaServDian = datos.StrUrlArchivoUbl,
+								 XmlAcuse = datos.StrUrlAcuseUbl,
+								 permiteenvio = (Int16)datos.IdCategoriaEstado,
+								 IntAdquirienteRecibo = datos.IntAdquirienteRecibo,
+								 Estado = datos.IdCategoriaEstado,
+								 EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
+								 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
+								 EnvioMail = datos.IntEstadoEnvio,
+								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
+								 FacturaCancelada = datos.IntIdEstado,
+								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+							 }).ToList();
+
+			}
+
+			return respuesta;
+		}
+		#endregion
+
+
 		/// <summary>
 		/// Crea un documento en la Base de Datos
 		/// </summary>
@@ -566,6 +716,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			return respuesta;
 		}
+
 
 		/// <summary>
 		/// Obtiene los documentos del Facturador
@@ -1992,7 +2143,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						DetallesPagos.Add(respuesta_pago);
 					}
 					catch (Exception)
-					{						
+					{
 					}
 				}
 
@@ -2799,27 +2950,27 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						DateTime FechaFinal = new DateTime(FechaInicial.Year, FechaInicial.Month, FechaInicial.Day, 23, 59, 59, 999);
 
 						var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
-								where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal &&
-									   datos.IdCategoriaEstado == estado_doc &&
-									   (datos.IntEstadoEnvio == (estado_enviado) ||
-									    datos.IntAdquirienteRecibo > estado_adquiriente)
-									select datos
+										 where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal &&
+												datos.IdCategoriaEstado == estado_doc &&
+												(datos.IntEstadoEnvio == (estado_enviado) ||
+												 datos.IntAdquirienteRecibo > estado_adquiriente)
+										 select datos
 							);
 						return respuesta.ToList();
 					}
 					else
 					{
 						var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
-								where datos.DatFechaIngreso >= SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
-								      datos.IdCategoriaEstado == estado_doc &&
-									  (datos.IntEstadoEnvio == (estado_enviado) ||
-								       datos.IntAdquirienteRecibo > estado_adquiriente)
-								select datos
+										 where datos.DatFechaIngreso >= SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
+											   datos.IdCategoriaEstado == estado_doc &&
+											   (datos.IntEstadoEnvio == (estado_enviado) ||
+												datos.IntAdquirienteRecibo > estado_adquiriente)
+										 select datos
 							);
 						return respuesta.ToList();
 					}
 
-					
+
 				}
 				else
 				{
@@ -2828,7 +2979,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
 									 where datos.IntEstadoEnvio == (estado_enviado) &&
-									       datos.IdCategoriaEstado == estado_doc &&
+										   datos.IdCategoriaEstado == estado_doc &&
 											datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal
 									 select datos
 						);
@@ -2925,15 +3076,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										{
 											item.DatFechaValidado = item.DatFecha;
 										}
-										else if(item.DatFechaValidado == item.DatFecha)
+										else if (item.DatFechaValidado == item.DatFecha)
 										{
 											if (Fecha.Diferencia(doc_bd.DatFechaIngreso, Fecha.GetFecha(), DateInterval.Minute) > 120)
 											{
 												//Si pasa algo envio notificacion a tic para validar por que no se proceso
 												List<string> mensajes = new List<string>();
 												mensajes.Add("Plataforma de Correo no entrega un estado de la recepcion del correo y tiene una diferencia de 120 minutos respecto al ingreso, sin una respuesta");
-												mensajes.Add(string.Format("Los Datos son: Documento: {0} , Correo: {1} , MessageId: {2}", doc_bd.IntNumero.ToString(),item.StrMailEnviado, item.StrIdMensaje));
-												List<MensajeEnvio> notificacion = email.EnviaNotificacionAlertaDIAN(doc_bd.StrEmpresaFacturador, doc_bd.IntNumero.ToString(), mensajes, 2, false,Constantes.EmailCopiaOculta,3);
+												mensajes.Add(string.Format("Los Datos son: Documento: {0} , Correo: {1} , MessageId: {2}", doc_bd.IntNumero.ToString(), item.StrMailEnviado, item.StrIdMensaje));
+												List<MensajeEnvio> notificacion = email.EnviaNotificacionAlertaDIAN(doc_bd.StrEmpresaFacturador, doc_bd.IntNumero.ToString(), mensajes, 2, false, Constantes.EmailCopiaOculta, 3);
 												item.DatFechaValidado = Fecha.GetFecha();
 												item.IntValidadoMail = true;
 											}
@@ -3050,7 +3201,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						}
 					}
-					
+
 
 				}
 				else
@@ -3108,7 +3259,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				var objeto = (dynamic)null;
 				objeto = Ctl_Documento.ConvertirServicio(doc, true);
-				
+
 				if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode())
 				{
 					email_objeto = objeto.DatosFactura.DatosAdquiriente.Email;
@@ -3142,7 +3293,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				catch (Exception) { }
 
-				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion,"Error enviando correo desde la Sonda");
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Error enviando correo desde la Sonda");
 
 				throw excepcion;
 			}
@@ -3275,10 +3426,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						DateTime FechaFinal = new DateTime(FechaInicial.Year, FechaInicial.Month, FechaInicial.Day, 23, 59, 59, 999);
 
 						var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
-								where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal &&
-									  datos.IdCategoriaEstado == estado_doc &&
-								      datos.IntEnvioMail == false &&
-									  datos.IntEstadoEnvio < estado_enviado
+										 where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal &&
+											   datos.IdCategoriaEstado == estado_doc &&
+											   datos.IntEnvioMail == false &&
+											   datos.IntEstadoEnvio < estado_enviado
 										 select datos
 							);
 						return respuesta.ToList();
@@ -3286,16 +3437,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					else
 					{
 						var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente")
-								where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
-										datos.IdCategoriaEstado == estado_doc &&
-										datos.IntEnvioMail == false &&
-										datos.IntEstadoEnvio < estado_enviado
+										 where datos.DatFechaIngreso > SqlFunctions.DateAdd("dd", -dias, FechaActual) &&
+												 datos.IdCategoriaEstado == estado_doc &&
+												 datos.IntEnvioMail == false &&
+												 datos.IntEstadoEnvio < estado_enviado
 										 select datos
 							);
 						return respuesta.ToList();
 					}
 
-					
+
 				}
 				else
 				{

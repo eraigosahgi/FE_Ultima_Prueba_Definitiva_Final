@@ -33,6 +33,58 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 	public class Ctl_PagosElectronicos : BaseObject<TblPagosElectronicos>
 	{
 
+		#region HGIpay
+		/// <summary>
+		/// Obtiene la lista de pagos del Adquiriente
+		/// </summary>
+		/// <param name="id_seguridad_pago">ID de seguridad del pago (generado aleatoriamente - sólo números).</param>
+		/// <param name="id_plataforma">ID generado por la plataforma de pagos.</param>
+		/// <returns></returns>
+		public List<TblPagosElectronicos> HGIpayObtenerPagosAdquiriente(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha)
+		{
+
+			fecha_inicio = fecha_inicio.Date;
+
+			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+			int num_doc = -1;
+			int.TryParse(numero_documento, out num_doc);
+
+			short cod_estado_recibo = -1;
+			short.TryParse(estado_recibo, out cod_estado_recibo);
+
+			if (string.IsNullOrWhiteSpace(numero_documento))
+				numero_documento = "*";
+			if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+				codigo_adquiriente = "*";
+
+			if (string.IsNullOrWhiteSpace(estado_recibo))
+				estado_recibo = "*";
+
+			if (string.IsNullOrEmpty(codigo_facturador) || codigo_facturador == "null")
+			{
+				codigo_facturador = "*";
+			}
+
+
+			var documentos = (from Pagos in context.TblPagosElectronicos
+							  where Pagos.TblDocumentos.StrEmpresaAdquiriente.Equals(codigo_adquiriente)
+							  && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
+							  && ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)
+							  && (Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador))
+							  && (Pagos.IntEstadoPago == cod_estado_recibo || estado_recibo.Equals("*"))
+							  && (Pagos.TblDocumentos.IntNumero == num_doc || numero_documento.Equals("*"))
+							  orderby Pagos.DatFechaRegistro descending
+							  select Pagos).ToList();
+
+			return documentos;
+
+		}
+
+
+		#endregion
+
+
 		#region Crear 
 
 		/// <summary>
@@ -758,10 +810,6 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 
 		#endregion
-
-
-
-
 
 		#region Metodos para los WCF
 		/// <summary>

@@ -75,8 +75,8 @@
 			background-color: white;
 		}
 	</style>
-	<script src="../../Scripts/WebConfig.js?vjs20201019"></script>
-	<script src="../../Scripts/Pages/Autenticacion.js?vjs20201019"></script>
+	<script src="../../Scripts/WebConfig.js?vjs20210308"></script>
+	<script src="../../Scripts/Pages/Autenticacion.js?vjs20210308"></script>
 
 </head>
 <body class="login-container" style="background-color: #eeeded">
@@ -87,13 +87,13 @@
 			<img class="divImg" style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
 		</div>
 	</div>
-	<div class="row" style="height: 106%; background-color: white;">
-		<div class="col-md-6 col-lg-8 hidden-xs hidden-sm" style="height: 100%;">
+	<div class="row" style="height: 106%; background-color: white;" >
+		<div class="col-md-6 col-lg-8 hidden-xs hidden-sm" style="height: 100%;" id="pnl_galeria">
 			<%--<div id="galleryContainer" style="background-color: white; height: 106%;">
 			</div>--%>
-			<img src="/Scripts/Images/Autenticacion4.jpg" style="align-content: center; width: 100%" class="img-responsive center-block" />
+			<img src="/Scripts/Images/Autenticacion4.jpg"  style="align-content: center; width: 100%" class="img-responsive center-block" />
 		</div>
-		<div class="col-md-6 col-lg-4" style="background-color: white; height: 106%;">
+		<div class="col-md-6 col-lg-4" style="background-color: white; height: 106%;" id="pnl_autenticacion">
 			<div data-ng-app="AutenticacionApp">
 				<!-- Contenedor de Página -->
 				<div class="page-container" data-ng-controller="AutenticacionController">
@@ -112,7 +112,7 @@
 
 
 									<div class="text-center">
-										<img src="/../Scripts/Images/LogoHGIFeCertificados.png" style="align-content: center; width: 350px" class="img-responsive center-block" />
+										<img src="/../Scripts/Images/LogoHGIFeCertificados.png" id="img_cliente" style="align-content: center; width: 350px" class="img-responsive center-block" />
 										<br />
 										<%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
 										<h5 class="content-group-lg"><small class="display-block">Ingrese los datos de autenticación</small></h5>

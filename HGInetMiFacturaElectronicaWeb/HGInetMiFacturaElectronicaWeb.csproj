@@ -1933,6 +1933,7 @@
     <Content Include="Scripts\Pages\ConsultarPlanesAdmin.js" />
     <Content Include="Scripts\Pages\ConsultarPlanesDocumentos.js" />
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
+    <Content Include="Scripts\Pages\HGIpayConsultaDocumentos.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
     <Content Include="Scripts\Pages\ModalAuditoria.js" />
@@ -2811,6 +2812,7 @@
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
     <Content Include="Views\Pages\GestionProveedores.aspx" />
     <Content Include="Views\Pages\GestionReportes.aspx" />
+    <Content Include="Views\Pages\HGIpayConsultaDocumentos.aspx" />
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
     <Content Include="Views\Pages\ModalDetalleEmpresa.aspx" />
     <Content Include="Views\Pages\ModalDetallePago.aspx" />
@@ -3138,6 +3140,13 @@
     </Compile>
     <Compile Include="Views\Pages\GestionReportes.aspx.designer.cs">
       <DependentUpon>GestionReportes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\HGIpayConsultaDocumentos.aspx.cs">
+      <DependentUpon>HGIpayConsultaDocumentos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\HGIpayConsultaDocumentos.aspx.designer.cs">
+      <DependentUpon>HGIpayConsultaDocumentos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ModalAsignarFormato.aspx.cs">
       <DependentUpon>ModalAsignarFormato.aspx</DependentUpon>
@@ -3486,7 +3495,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61428/</IISUrl>
+          <IISUrl>http://localhost:61435/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

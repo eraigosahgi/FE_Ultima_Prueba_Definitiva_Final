@@ -147,6 +147,180 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+
+
+		#region HgiPay
+		/// <summary>
+		/// Obtiene los documentos por adquiriente
+		/// </summary>
+		/// <param name="codigo_adquiente"></param>
+		/// <param name="numero_documento"></param>
+		/// <param name="estado_recibo"></param>
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
+		/// <returns></returns>
+		[HttpGet]
+		[Route("api/HGIpayConsultaDocumentos")]
+		public IHttpActionResult HGIpayConsultaDocumentos(string IdSeguridad, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_filtro_fecha)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+
+				if (string.IsNullOrEmpty(IdSeguridad))
+					throw new ApplicationException("Error de identificación del Facturador. no se encontro Serial");
+
+				string codigo_adquiente = "";
+
+				codigo_adquiente = Sesion.DatosUsuario.StrEmpresa;
+
+				if (string.IsNullOrEmpty(codigo_adquiente))
+					throw new ApplicationException("No se encontro información de los datos del Adquiriente");
+
+
+				Ctl_Empresa _controlador_empresa = new Ctl_Empresa();
+				TblEmpresas empresa = new TblEmpresas();
+				empresa = _controlador_empresa.Obtener(Guid.Parse(IdSeguridad), false).FirstOrDefault();
+
+				if (empresa == null)
+					throw new ApplicationException("No se encontro información de los datos del Facturador");
+
+
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+				List<ObjDocumentos> datos = ctl_documento.HGIpayObtenerPorFechasAdquiriente(codigo_adquiente, empresa.StrIdentificacion, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date, tipo_filtro_fecha);
+
+				if (datos == null)
+				{
+					return NotFound();
+				}
+
+				var retorno = datos.Select(d => new
+				{
+					d.IdFacturador,
+					d.DatFechaDocumento,
+					d.DatFechaVencDocumento,
+					d.IntVlrTotal,
+					d.IntSubTotal,
+					d.IntNeto,
+					EstadoFactura = d.EstadoFactura,
+					EstadoAcuse = d.EstadoAcuse,
+					d.MotivoRechazo,
+					StrAdquirienteMvoRechazo = d.StrAdquirienteMvoRechazo,
+					d.Facturador,
+					d.NumeroDocumento,
+					d.DatFechaIngreso,
+					EstadoCategoria = d.EstadoCategoria,
+					d.IdentificacionAdquiriente,
+					d.NombreAdquiriente,
+					d.MailAdquiriente,
+					d.Xml,
+					d.Pdf,
+					d.StrIdSeguridad,
+					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.tipodoc)),
+					d.zip,
+					RutaServDian = (d.RutaServDian != null) ? d.RutaServDian.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+					d.XmlAcuse,
+					permiteenvio = (d.EstadoCategoria == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
+					d.IntAdquirienteRecibo,
+					d.Estado,
+					EstadoEnvioMail = d.EstadoEnvioMail,
+					MensajeEnvio = d.MensajeEnvio,
+					d.EnvioMail,
+					poseeIdComercio = d.poseeIdComercio,
+					FacturaCancelada = d.FacturaCancelada,
+					PagosParciales = d.PagosParciales,
+					d.poseeIdComercioPSE,
+					d.poseeIdComercioTC
+				});
+
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+
+		/// <summary>
+		/// Obtiene la lista de pagos realizadas a un adquiriente
+		/// </summary>
+		/// <param name="strIdSeguridad"></param>        
+		/// <returns></returns>
+		[HttpGet]
+		[Route("Api/HGIpayObtenerPagosAdquiriente")]
+		public IHttpActionResult HGIpayObtenerPagosAdquiriente(string IdSeguridad, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha)
+		{
+
+			try
+			{
+
+				Sesion.ValidarSesion();
+
+				if (string.IsNullOrEmpty(IdSeguridad))
+					throw new ApplicationException("Error de identificación del Facturador. no se encontro Serial");
+
+				string codigo_adquiente = "";
+
+				codigo_adquiente = Sesion.DatosUsuario.StrEmpresa;
+
+				if (string.IsNullOrEmpty(codigo_adquiente))
+					throw new ApplicationException("No se encontro información de los datos del Adquiriente");
+
+
+				Ctl_Empresa _controlador_empresa = new Ctl_Empresa();
+				TblEmpresas empresa = new TblEmpresas();
+				empresa = _controlador_empresa.Obtener(Guid.Parse(IdSeguridad), false).FirstOrDefault();
+
+				if (empresa == null)
+					throw new ApplicationException("No se encontro información de los datos del Facturador");
+
+
+				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+				var datos = Pago.HGIpayObtenerPagosAdquiriente(empresa.StrIdentificacion, numero_documento, codigo_adquiente, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
+
+
+				if (datos == null)
+				{
+					return NotFound();
+				}
+
+				var retorno = datos.Select(d => new
+				{
+
+					NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
+					StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaFacturador,
+					NombreAdquiriente = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
+					DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+					DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+					PagoFactura = d.IntValorPago,
+					EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+					CodEstado = d.IntEstadoPago,
+					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+					StrIdRegistro = d.StrIdRegistro,
+					StrIdSeguridadDoc = d.StrIdSeguridadDoc,
+					Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper()
+				});
+
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+
+
+		}
+
+
+		#endregion
 		/// <summary>
 		/// Obtiene los documentos por obligado
 		/// </summary>

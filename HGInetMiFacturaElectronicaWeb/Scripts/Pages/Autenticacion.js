@@ -35,6 +35,20 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 	var nit = location.search.split('nit=')[1];
 
 
+	//Validación de Serial de Cliente de Pagos**********************************
+	var serial = location.search.split('serial=')[1];
+	//Validamos si tiene un serial en la url
+	if (serial != undefined) {
+		//Si es asi, entonces asignamos la imagen del tercero
+		$('#img_cliente').attr("src", "/../Scripts/Images/Terceros/" + serial + ".png");
+		//Ocultamos la galeria de presentación de HGI SAS
+		$('#pnl_galeria').hide();
+		//Damos posición al panel de autenticación
+		$('#pnl_autenticacion').attr("class", "col-md-4 col-md-offset-4");
+	}
+	//*************************************************************************
+
+
 	var restabler = location.search.split('restablecer')[1];
 	if (restabler) {
 		$('#modal_restablecer_clave').removeAttr('style');
@@ -135,7 +149,7 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 		try {
 			var Id = dato_usuario.toUpperCase() + '_' + dato_identificacion;
 
-			sessionStorage.setItem("Usuario", Id);			
+			sessionStorage.setItem("Usuario", Id);
 
 			ga('create', GoogleAnalytics, {
 				'clientId': Id
@@ -158,7 +172,14 @@ AutenticacionApp.controller('AutenticacionController', function AutenticacionCon
 					//Google Analytics
 					ga('send', 'event', 'Autenticar', 'Exitoso', (sessionStorage.getItem("Usuario")) ? sessionStorage.getItem("Usuario") : 'Usuario Sin Sesión');
 				} catch (e) { }
-				window.location.assign("../Pages/Inicio.aspx?ID=" + response.data[0].Token);
+
+				if (serial == undefined) {
+					window.location.assign("../Pages/Inicio.aspx?ID=" + response.data[0].Token);
+				} else {
+					window.location.assign("../Pages/HGIpayConsultaDocumentos.aspx?ID=" + response.data[0].Token + "&Serial=" + serial);
+				}
+
+
 			}
 			else {
 				try {
