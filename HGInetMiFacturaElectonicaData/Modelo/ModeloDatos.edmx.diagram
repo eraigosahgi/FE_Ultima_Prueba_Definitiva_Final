@@ -41,6 +41,7 @@
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblDocumentos" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
         <EntityTypeShape EntityType="Modelo.TblProcesoCorreo" Width="1.5" PointX="0.75" PointY="13.75" />
+        <EntityTypeShape EntityType="Modelo.TblUsuariosPagos" Width="1.5" PointX="0.75" PointY="17.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

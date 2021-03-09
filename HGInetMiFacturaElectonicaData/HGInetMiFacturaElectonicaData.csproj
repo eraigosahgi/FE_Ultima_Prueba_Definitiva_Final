@@ -242,6 +242,9 @@
     <Compile Include="Modelo\TblUsuarios.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblUsuariosPagos.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Objetos\ObjDocumentos.cs" />
     <Compile Include="Objetos\ObjEmpresa.cs" />
     <Compile Include="Objetos\ObjUsuario.cs" />

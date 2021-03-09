@@ -370,6 +370,28 @@
           <Property Name="StrToken" Type="uniqueidentifier" />
           <Property Name="DatFechaUltimoIngreso" Type="datetime" />
         </EntityType>
+        <EntityType Name="TblUsuariosPagos">
+          <Key>
+            <PropertyRef Name="StrEmpresaFacturador" />
+            <PropertyRef Name="StrEmpresaAdquiriente" />
+          </Key>
+          <Property Name="StrEmpresaFacturador" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrEmpresaAdquiriente" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrUsuario" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrClave" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="StrNombres" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="StrApellidos" Type="varchar" MaxLength="50" />
+          <Property Name="StrTelefono" Type="varchar" MaxLength="50" />
+          <Property Name="StrMail" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="DatFechaRegistro" Type="datetime" Nullable="false" />
+          <Property Name="DatFechaActualizacion" Type="datetime" Nullable="false" />
+          <Property Name="IntIdEstado" Type="smallint" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DatFechaCambioClave" Type="datetime" />
+          <Property Name="StrIdCambioClave" Type="uniqueidentifier" />
+          <Property Name="StrToken" Type="uniqueidentifier" />
+          <Property Name="DatFechaUltimoIngreso" Type="datetime" />
+        </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Role="TblConfiguracionInteroperabilidad" Type="Self.TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
           <End Role="TblDocumentos" Type="Self.TblDocumentos" Multiplicity="*" />
@@ -612,6 +634,7 @@
           <EntitySet Name="TblPlanesTransacciones" EntityType="Self.TblPlanesTransacciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblProcesoCorreo" EntityType="Self.TblProcesoCorreo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblUsuarios" EntityType="Self.TblUsuarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblUsuariosPagos" EntityType="Self.TblUsuariosPagos" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" Association="Self.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
             <End Role="TblConfiguracionInteroperabilidad" EntitySet="TblConfiguracionInteroperabilidad" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
@@ -779,6 +802,7 @@
             <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
           </AssociationSet>
           <EntitySet Name="TblProcesoCorreo" EntityType="Modelo.TblProcesoCorreo" />
+          <EntitySet Name="TblUsuariosPagos" EntityType="Modelo.TblUsuariosPagos" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1405,6 +1429,28 @@
           <Property Name="DatFechaValidado" Type="DateTime" Precision="3" />
           <Property Name="StrMailEnviado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="TblUsuariosPagos">
+          <Key>
+            <PropertyRef Name="StrEmpresaFacturador" />
+            <PropertyRef Name="StrEmpresaAdquiriente" />
+          </Key>
+          <Property Name="StrEmpresaFacturador" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrEmpresaAdquiriente" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrUsuario" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrClave" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="StrNombres" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="StrApellidos" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrTelefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrMail" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DatFechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DatFechaActualizacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IntIdEstado" Type="Int16" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <Property Name="DatFechaCambioClave" Type="DateTime" Precision="3" />
+          <Property Name="StrIdCambioClave" Type="Guid" />
+          <Property Name="StrToken" Type="Guid" />
+          <Property Name="DatFechaUltimoIngreso" Type="DateTime" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1783,6 +1829,28 @@
                 <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />
                 <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
                 <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblUsuariosPagos">
+            <EntityTypeMapping TypeName="Modelo.TblUsuariosPagos">
+              <MappingFragment StoreEntitySet="TblUsuariosPagos">
+                <ScalarProperty Name="DatFechaUltimoIngreso" ColumnName="DatFechaUltimoIngreso" />
+                <ScalarProperty Name="StrToken" ColumnName="StrToken" />
+                <ScalarProperty Name="StrIdCambioClave" ColumnName="StrIdCambioClave" />
+                <ScalarProperty Name="DatFechaCambioClave" ColumnName="DatFechaCambioClave" />
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+                <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+                <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+                <ScalarProperty Name="StrMail" ColumnName="StrMail" />
+                <ScalarProperty Name="StrTelefono" ColumnName="StrTelefono" />
+                <ScalarProperty Name="StrApellidos" ColumnName="StrApellidos" />
+                <ScalarProperty Name="StrNombres" ColumnName="StrNombres" />
+                <ScalarProperty Name="StrClave" ColumnName="StrClave" />
+                <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
+                <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+                <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
