@@ -21,8 +21,8 @@ GO
 CREATE TABLE dbo.TblUsuariosPagos
 	(
 	StrEmpresaFacturador varchar(50) NOT NULL,
-	StrEmpresaAdquiriente varchar(50) NOT NULL,
 	StrUsuario varchar(50) NOT NULL,
+	StrEmpresaAdquiriente varchar(50) NOT NULL,
 	StrClave varchar(128) NOT NULL,
 	StrNombres varchar(256) NOT NULL,
 	StrApellidos varchar(50) NULL,
@@ -42,7 +42,7 @@ ALTER TABLE dbo.TblUsuariosPagos ADD CONSTRAINT
 	PK_TblUsuariosPagos PRIMARY KEY CLUSTERED 
 	(
 	StrEmpresaFacturador,
-	StrEmpresaAdquiriente
+	StrUsuario
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 
 GO

@@ -15,8 +15,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     public partial class TblUsuariosPagos
     {
         public string StrEmpresaFacturador { get; set; }
-        public string StrEmpresaAdquiriente { get; set; }
         public string StrUsuario { get; set; }
+        public string StrEmpresaAdquiriente { get; set; }
         public string StrClave { get; set; }
         public string StrNombres { get; set; }
         public string StrApellidos { get; set; }
