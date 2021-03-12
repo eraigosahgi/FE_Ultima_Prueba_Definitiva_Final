@@ -14,7 +14,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 		type: "danger",
 		icon: ' icon-switch2',
 		onClick: function (e) {
-			window.location.assign("../Login/Default.aspx?serial=" + serial);
+			window.location.assign("../Login/Pagos.aspx?serial=" + serial);
 		}
 	});
 
@@ -36,21 +36,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 	} else {
 		console.log("Retornar a Index");
 	}
-	//*************************************************************************
-
-	//SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {
-	//	console.log(data);
-	//	Estado = data;
-	//	cargarFiltros();
-	//});
-
-
-	//SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
-	//	codigo_adquiente = data[0].IdentificacionEmpresa;
-	//	UsuarioSession = data[0].IdSeguridad;
-	//	//consultar();
-	//});
-
+	
 	cargarFiltros();
 
 	function cargarFiltros() {

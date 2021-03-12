@@ -28,9 +28,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 
 						System.Guid id_seguridad = new System.Guid(Request.QueryString["ID"]);
 
-						sesion.GuardarSesionWeb(id_seguridad);
+						sesion.GuardarSesionWebPagos(id_seguridad);
 
-						lblUsuario.Text = string.Format("{0} {1}", Sesion.DatosUsuario.StrNombres, Sesion.DatosUsuario.StrApellidos);
+						lblUsuario.Text = string.Format("{0} {1}", Sesion.DatosUsuarioPagos.StrNombres, Sesion.DatosUsuarioPagos.StrApellidos);
 
 					}else
 					{

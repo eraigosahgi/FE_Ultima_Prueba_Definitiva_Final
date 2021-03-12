@@ -179,7 +179,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 				else
 				{
-					datos = ctl_empresa.Obtener(empresa.StrIdSeguridad,false);
+					datos = ctl_empresa.Obtener(empresa.StrIdSeguridad, false);
 				}
 			}
 			if (datos == null)
@@ -631,6 +631,32 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Empresa controlador = new Ctl_Empresa();
 				var lista = controlador.ObtenerAdquirientes(Facturador);
 
+
+				return Ok(lista);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		[HttpGet]
+		[Route("api/ObtenerAdquirientesPagos")]
+		public IHttpActionResult ObtenerAdquirientesPagos()
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+				datosSesion.Add(Sesion.DatosEmpresa);
+
+				TblEmpresas datosempresa = datosSesion.FirstOrDefault();
+
+				Ctl_Empresa controlador = new Ctl_Empresa();
+				var lista = controlador.ObtenerAdquirientes(datosempresa.StrIdentificacion);
 
 				return Ok(lista);
 			}

@@ -286,23 +286,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (doc_nomina == false)
 				{
 					documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
-						where (documentos.IntNumero == numero_documeto)
-						      && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
-						          && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
-						select documentos).FirstOrDefault();
+								 where (documentos.IntNumero == numero_documeto)
+									   && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
+										   && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
+								 select documentos).FirstOrDefault();
 				}
 				else
 				{
 					int doc_nom = TipoDocumento.Nomina.GetHashCode();
 					documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
-						where (documentos.IntNumero == numero_documeto)
-						      && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
-						          && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
-							  && (documentos.IntDocTipo == doc_nom)
-						select documentos).FirstOrDefault();
+								 where (documentos.IntNumero == numero_documeto)
+									   && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
+										   && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
+									   && (documentos.IntDocTipo == doc_nom)
+								 select documentos).FirstOrDefault();
 				}
 
-				
+
 
 
 
@@ -1407,6 +1407,33 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 		/// <summary>
+		/// Valida si existe un documento de ese adquiriente para ese facturador
+		/// </summary>
+		/// <param name="identificacion_empresa"></param>
+		/// <param name="identificacion_adquiriente"></param>
+		/// <returns>TblDocumentos</returns>
+		public TblDocumentos ObtenerDocumentodeFacturadorAdquiriente(string identificacion_empresa, string identificacion_adquiriente)
+		{
+			try
+			{
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var respuesta = (from datos in context.TblDocumentos.AsNoTracking()
+								 where datos.StrEmpresaFacturador.Equals(identificacion_empresa)
+								 && datos.StrEmpresaAdquiriente.Equals(identificacion_adquiriente)
+								 select datos
+								 ).FirstOrDefault();
+
+				return respuesta;
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+		/// <summary>
 		/// Calcula el CUFE o CUDE y QR de los documentos electrónicos para la representación gráfica
 		/// </summary>
 		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
@@ -1821,7 +1848,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.StrVersion = documento_obj.VersionAplicativo;
 				tbl_documento.StrProveedorEmisor = Constantes.NitResolucionsinPrefijo;
 				tbl_documento.IntVersionDian = empresa.IntVersionDian;
-				
+
 				//validacion si es un formato de integrador para guardar los campos predeterminados
 				if (documento_obj.DocumentoFormato.Codigo > 0 && empresa.IntVersionDian == 2)
 				{

@@ -275,5 +275,14 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
                 return ResourceManager.GetString("Usuarios", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 1315.
+        /// </summary>
+        internal static string UsuariosPagos {
+            get {
+                return ResourceManager.GetString("UsuariosPagos", resourceCulture);
+            }
+        }
     }
 }

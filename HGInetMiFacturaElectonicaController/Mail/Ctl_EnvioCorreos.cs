@@ -208,7 +208,7 @@ namespace HGInetMiFacturaElectonicaController
 
 			try
 			{
-				
+
 				int intervalo = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha().Second;
 
 				int subdominio = (intervalo / 5);
@@ -292,6 +292,102 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
 						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
 						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClave.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
+
+						string asunto = Constantes.AsuntoEmailBienvenida;
+
+						DestinatarioEmail remitente = new DestinatarioEmail();
+						remitente.Email = Constantes.EmailRemitente;
+						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						DestinatarioEmail destinatario = new DestinatarioEmail();
+						destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
+						if (string.IsNullOrWhiteSpace(nuevo_email))
+							destinatario.Email = usuario.StrMail;
+						else
+							destinatario.Email = nuevo_email;
+
+						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+						correos_destino.Add(destinatario);
+
+						// envía correo electrónico con copia de auditoría
+						List<DestinatarioEmail> correos_copia_oculta = null;
+						if (empresa.IntObligado && !string.IsNullOrWhiteSpace(Constantes.EmailCopiaOculta))
+						{
+							correos_copia_oculta = new List<DestinatarioEmail>();
+
+							DestinatarioEmail copia_oculta = new DestinatarioEmail();
+							copia_oculta.Nombre = "Auditoría";
+							copia_oculta.Email = Constantes.EmailCopiaOculta;
+							correos_copia_oculta.Add(copia_oculta);
+						}
+
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						Mensaje = clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+
+					}
+				}
+				return Mensaje;
+
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException(ex.Message);
+			}
+
+
+		}
+
+		/// <summary>
+		/// Envía mail de bienvenida al portal.
+		/// </summary>
+		/// <param name="empresa">Datos del Obligado o el Adquiriente</param>
+		/// <param name="datos_usuario">datos del usuario</param>
+		/// <returns></returns>
+		public List<MensajeEnvio> BienvenidaPagos(TblEmpresas empresa, TblUsuariosPagos usuario, string nuevo_email = "")
+		{
+
+			try
+			{
+
+				//Objeto de respuesta
+				List<MensajeEnvio> Mensaje = new List<MensajeEnvio>();
+
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				string fileName = string.Empty;
+
+				if (empresa == null)
+					throw new ApplicationException("No se encontró información de la empresa.");
+
+				if (usuario == null)
+					throw new ApplicationException("No se encontró información del usuario");
+
+				fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaAdquirientePagos);
+
+				// permite el cambio de contraseña para el usuario
+				Ctl_UsuarioPagos _usuario = new Ctl_UsuarioPagos();
+				usuario.DatFechaCambioClave = Fecha.GetFecha();
+				usuario.StrIdCambioClave = Guid.NewGuid();
+				usuario = _usuario.Actualizar_usuario(usuario);
+
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{
+
+						mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
+						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
+						mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
+						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
+						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClavePagos.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
 						string asunto = Constantes.AsuntoEmailBienvenida;
@@ -473,7 +569,7 @@ namespace HGInetMiFacturaElectonicaController
 						FileStream xml_reader_serializacion = new FileStream(ruta_xml, FileMode.Open);
 						HGInetUBLv2_1.ApplicationResponseType obj_acuse_serializado = new HGInetUBLv2_1.ApplicationResponseType();
 						XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
-						obj_acuse_serializado = (HGInetUBLv2_1.ApplicationResponseType) serializacion1.Deserialize(xml_reader_serializacion);
+						obj_acuse_serializado = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader_serializacion);
 						string fecha_doc_resp = obj_acuse_serializado.IssueDate.Value.ToString("yyyy-MM-dd");
 						string hora_doc_resp = obj_acuse_serializado.IssueTime.Value.ToString();
 						xml_reader_serializacion.Close();
@@ -485,8 +581,8 @@ namespace HGInetMiFacturaElectonicaController
 						string texto = string.Format("Fecha Validación DIAN: {0} {1}  DOCUMENTO ELECTRÓNICO GENERADO POR HGI S.A.S NIT 811021438-4", fecha_doc_resp, hora_doc_resp);
 
 						// ejecución para poner el texto en el PDF
-						string ruta_pdf_resultado = ruta_pdf.Replace(nombre_archivo,string.Format("{0}_resultado.pdf", nombre_archivo));
-						ruta_pdf_resultado = LibreriaGlobalHGInet.Funciones.Pdf.AgregarTexto(ruta_pdf, ruta_pdf_resultado, texto,(float) empresa_obligado.IntPdfCampoDianPosX, (float) empresa_obligado.IntPdfCampoDianPosY,true);
+						string ruta_pdf_resultado = ruta_pdf.Replace(nombre_archivo, string.Format("{0}_resultado.pdf", nombre_archivo));
+						ruta_pdf_resultado = LibreriaGlobalHGInet.Funciones.Pdf.AgregarTexto(ruta_pdf, ruta_pdf_resultado, texto, (float)empresa_obligado.IntPdfCampoDianPosX, (float)empresa_obligado.IntPdfCampoDianPosY, true);
 					}
 
 				}
@@ -496,7 +592,7 @@ namespace HGInetMiFacturaElectonicaController
 					int estado_doc = Ctl_Documento.ObtenerCategoria(documento.IntIdEstado);
 					string mensaje = (string.IsNullOrEmpty(id_peticion) ? "Reenvio de Documento" : "Notificación Documento");
 					clase_auditoria = new Ctl_DocumentosAudit();
-					clase_auditoria.Crear(documento.StrIdSeguridad, peticion, documento.StrEmpresaFacturador, ProcesoEstado.EnvioEmailAcuse, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty,excepcion.Message, string.Empty, documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
+					clase_auditoria.Crear(documento.StrIdSeguridad, peticion, documento.StrEmpresaFacturador, ProcesoEstado.EnvioEmailAcuse, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, excepcion.Message, string.Empty, documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
 					Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio);
 				}
 
@@ -535,7 +631,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						documento_obj = objeto.DatosFactura;
 					}
-					
+
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
@@ -570,7 +666,7 @@ namespace HGInetMiFacturaElectonicaController
 						documento_obj = objeto.DatosNotaDebito;
 					}
 
-					
+
 				}
 
 				string asunto = string.Empty;
@@ -584,7 +680,7 @@ namespace HGInetMiFacturaElectonicaController
 				{
 					asunto = string.Format("{0};{1};{2};{3};{4}", empresa_obligado.StrIdentificacion, empresa_obligado.StrRazonSocial, numero_doc, tipodoc_asunto, nombre_comercial);
 				}
-				
+
 
 				/*
 				if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
@@ -628,7 +724,7 @@ namespace HGInetMiFacturaElectonicaController
 					correo_registrado = correo_recep.Obtener(empresa_adquiriente.StrIdentificacion);
 				}
 
-				
+
 
 				if (string.IsNullOrWhiteSpace(nuevo_email) && interoperabilidad == false)
 				{
@@ -641,7 +737,7 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						destinatario.Email = empresa_adquiriente.StrMailRecepcion;
 					}
-						
+
 					correos_destino.Add(destinatario);
 				}
 				else
@@ -664,8 +760,8 @@ namespace HGInetMiFacturaElectonicaController
 							destinatario.Email = correo_registrado;
 							correos_destino.Add(destinatario);
 						}
-							
-						
+
+
 					}
 					else
 					{
@@ -684,14 +780,14 @@ namespace HGInetMiFacturaElectonicaController
 								correos_destino.Add(destinatario);
 							}
 
-							
+
 						}
 						else
 						{
 							destinatario.Email = nuevo_email;
 							correos_destino.Add(destinatario);
 						}
-						
+
 					}
 				}
 
@@ -866,13 +962,13 @@ namespace HGInetMiFacturaElectonicaController
 							{
 								attached = Ctl_Documento.ConvertirAttachedDoc(null, documento, empresa_obligado);
 							}
-							
+
 						}
 						else if (documento.IntVersionDian == 2)
 						{
 							attached = true;
 						}
-						
+
 						// ruta del zip
 						string ruta_zip = string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo.Replace("xml", "zip"));
 
@@ -884,13 +980,13 @@ namespace HGInetMiFacturaElectonicaController
 							{
 								if (Archivo.ValidarExistencia(ruta_zip))
 									Archivo.Borrar(ruta_zip);
-									
+
 								// genera la compresión del archivo en zip
 								using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
 								{
 									archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo), Path.GetFileName(nombre_archivo));
 									archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_pdf), Path.GetFileName(nombre_pdf));
-									
+
 									//Proceso para los anexos
 									if (documento.StrUrlAnexo != null)
 									{
@@ -899,15 +995,15 @@ namespace HGInetMiFacturaElectonicaController
 											mensaje = mensaje.Replace("{Anexos}", "Anexos");
 											mensaje = mensaje.Replace("{ObservacionAnexos}", documento.StrObservacionAnexo);
 											mensaje = mensaje.Replace("{UrlAnexos}", documento.StrUrlAnexo);
-											
+
 											if (documento.IntPesoAnexo > 0)
 											{
 												byte[] bytes_anexo = Archivo.ObtenerWeb(documento.StrUrlAnexo);
-												
+
 												string ruta_fisica_anexo = Convert.ToBase64String(bytes_anexo);
-												
+
 												string nombre_anexo = Path.GetFileName(documento.StrUrlAnexo);
-												
+
 												if (!string.IsNullOrEmpty(ruta_fisica_anexo))
 												{
 													// ruta física del xml
@@ -915,7 +1011,7 @@ namespace HGInetMiFacturaElectonicaController
 													carpeta_anexo = string.Format(@"{0}\{1}", carpeta_anexo, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos);
 
 													archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_anexo, nombre_anexo), Path.GetFileName(nombre_anexo));
-													
+
 													//Adjunto adjunto = new Adjunto();
 													//adjunto.ContenidoB64 = ruta_fisica_anexo;
 													//adjunto.Nombre = nombre_anexo;
@@ -929,7 +1025,7 @@ namespace HGInetMiFacturaElectonicaController
 											mensaje = mensaje.Replace("{Anexos}", "");
 											mensaje = mensaje.Replace("{ObservacionAnexos}", "");
 											mensaje = mensaje.Replace("{UrlAnexos}", "");
-											
+
 										}
 									}
 									else
@@ -937,11 +1033,11 @@ namespace HGInetMiFacturaElectonicaController
 										mensaje = mensaje.Replace("{Anexos}", "");
 										mensaje = mensaje.Replace("{ObservacionAnexos}", "");
 										mensaje = mensaje.Replace("{UrlAnexos}", "");
-										
+
 									}
 
 									archive.Dispose();
-									
+
 								}
 
 								byte[] bytes_applications = null;
@@ -956,21 +1052,21 @@ namespace HGInetMiFacturaElectonicaController
 								}
 
 								string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
-								
+
 								string nombre_xml_app = nombre_archivo.Replace("xml", "zip");
-								
+
 								if (!string.IsNullOrEmpty(ruta_fisica_appl))
 								{
 									Adjunto adjunto = new Adjunto();
 									adjunto.ContenidoB64 = ruta_fisica_appl;
 									adjunto.Nombre = nombre_xml_app;
 									archivos.Add(adjunto);
-									
+
 								}
 
 								if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo)))
 									Archivo.Borrar(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo));
-									
+
 							}
 							catch (Exception excepcion)
 							{
@@ -981,7 +1077,7 @@ namespace HGInetMiFacturaElectonicaController
 									Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion, "No fue posible guardar el attach en archivo zip");
 									string msg_excepcion = Excepcion.Mensaje(excepcion);
 								}
-								catch (Exception){}
+								catch (Exception) { }
 
 								//try
 								//{
@@ -1073,7 +1169,7 @@ namespace HGInetMiFacturaElectonicaController
 				//	}
 				//	catch (Exception) { }
 				//}
-				
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
@@ -1389,6 +1485,73 @@ namespace HGInetMiFacturaElectonicaController
 			}
 		}
 
+
+
+		/// <summary>
+		/// Envía mail para restablecer contraseña al usuario de Pagos
+		/// </summary>
+		/// <param name="empresa">Datos del Obligado o del Adquiriente</param>
+		/// <param name="usuario">Datos del usuario guardado en BD</param>
+		public void RestablecerClavePagos(TblEmpresas empresa, TblUsuariosPagos usuario)
+		{
+
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				if (empresa == null)
+					throw new ApplicationException(string.Format("No se encontró información del Nit {0} ", empresa.StrIdentificacion));
+
+				if (usuario == null)
+					throw new ApplicationException(string.Format("No se encontró información del usuario {0}", usuario));
+
+				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaRestablecerPagos);
+
+				if (!string.IsNullOrWhiteSpace(fileName))
+				{
+					FileInfo file = new FileInfo(fileName);
+
+					string mensaje = file.OpenText().ReadToEnd();
+
+					if (file != null)
+					{
+						mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
+						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
+						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
+						mensaje = mensaje.Replace("{NombresUsuario}", usuario.StrNombres);
+						mensaje = mensaje.Replace("{ApellidosUsuario}", usuario.StrApellidos);
+						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
+						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClavePagos.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+						mensaje = mensaje.Replace("{ImagenTercero}", string.Format(" src={0}{1}/Scripts/Images/Terceros/{2}.png{3} ", '"', plataforma.RutaPublica, empresa.StrIdSeguridad, '"'));
+						//mensaje = mensaje.Replace("{ImagenTercero}", string.Format(" src={0}{1}{2} ", '"', "https://portal.mifacturaenlinea.com.co/Scripts/Images/Terceros/eb821fbe-02ba-4cfc-a7a9-248711513591.png", '"'));
+						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
+
+						string asunto = "Restablecimiento de Contraseña";
+
+						DestinatarioEmail remitente = new DestinatarioEmail();
+						remitente.Email = Constantes.EmailRemitente;
+						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						DestinatarioEmail destinatario = new DestinatarioEmail();
+						destinatario.Email = usuario.StrMail;
+						destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
+
+						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
+						correos_destino.Add(destinatario);
+
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						clase_email.EnviarEmail(empresa.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "");
+
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
 		/// <summary>
 		/// Envía acuse de recibo al Obligado
 		/// </summary>
@@ -1665,7 +1828,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Costo}", plan.IntValor.ToString("C"));
 						mensaje = mensaje.Replace("{Transacciones}", plan.IntNumTransaccCompra.ToString("N0"));
 						mensaje = mensaje.Replace("{Meses}", (plan.IntMesesVence > 0) ? string.Format("<td class='tg-yzt1'>Vencimiento:</td> <td class='tg-3we0'>Esta recarga tiene {0} meses de vigencia a partir de la recepción del primer documento que consuma la misma.</td>", plan.IntMesesVence.ToString()) : "");
-																							
+
 						string asunto = "RECARGA DE SALDO DE DOCUMENTOS ELECTRÓNICOS";
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
@@ -2784,7 +2947,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="identificacion">Nit del Facturador</param>
 		/// <param name="mail">email al que se va enviar el correo</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> EnviaNotificacionAlertaDIAN(string Facturador, string Documento, List<String> ListaNotificacion, int Proceso, bool Resultado,string mail, int tipo_asunto)
+		public List<MensajeEnvio> EnviaNotificacionAlertaDIAN(string Facturador, string Documento, List<String> ListaNotificacion, int Proceso, bool Resultado, string mail, int tipo_asunto)
 		{
 			try
 			{
@@ -2815,7 +2978,7 @@ namespace HGInetMiFacturaElectonicaController
 						titulo = "DOCUMENTO ELECTRÓNICO CON INCONSISTENCIAS EN LA DIAN";
 						break;
 				}
-				
+
 
 				// obtiene los datos del Facturador
 				Ctl_Empresa empresa = new Ctl_Empresa();
@@ -2847,15 +3010,15 @@ namespace HGInetMiFacturaElectonicaController
 						foreach (var item in ListaNotificacion)
 						{
 							//	detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3} Documentos</td><td>{4}</td><td>{5}</td></tr>", detalle, item.identificacion, item.facturador, item.tdisponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.intIdtipo)), item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet));
-								detalle += string.Format("<tr><td>{0}</td></tr>", item);
+							detalle += string.Format("<tr><td>{0}</td></tr>", item);
 						}
 
 						mensaje = mensaje.Replace("{Titulo}", titulo);
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);
 						mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
 						mensaje = mensaje.Replace("{Documento}", Documento);
-						mensaje = mensaje.Replace("{Estado}", (Resultado)?"Recibido": "No Recibido");
-						mensaje = mensaje.Replace("{Proceso}", (Proceso==0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Consulta" : "Interoperabilidad");
+						mensaje = mensaje.Replace("{Estado}", (Resultado) ? "Recibido" : "No Recibido");
+						mensaje = mensaje.Replace("{Proceso}", (Proceso == 0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Consulta" : "Interoperabilidad");
 
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
@@ -2959,10 +3122,10 @@ namespace HGInetMiFacturaElectonicaController
 						}
 
 						string RutaUrl = string.Empty;
-						
+
 						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}/Views/Pages/ConfirmacionEmail.aspx?ID={1}&Mail={2}", plataforma.RutaPublica, facturador.StrIdSeguridad, mail));
 						mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
-						
+
 						DestinatarioEmail remitente = new DestinatarioEmail();
 						remitente.Email = Constantes.EmailRemitente;
 						remitente.Nombre = Constantes.NombreRemitenteEmail;

@@ -169,6 +169,7 @@
     <Content Include="Content\layouts\Popup\PopupLayout.html" />
     <Content Include="Content\layouts\Popup\PopupLayout.js" />
     <Content Include="emails\plantilla_bienvenida_adquiriente.html" />
+    <Content Include="emails\plantilla_bienvenida_adquiriente_pagos.html" />
     <Content Include="emails\plantilla_bienvenida_facturador.html" />
     <Content Include="emails\plantilla_confirmacion_email.html" />
     <Content Include="emails\plantilla_documento.html" />
@@ -189,6 +190,7 @@
     <Content Include="emails\plantilla_recarga_transacciones.html" />
     <Content Include="emails\plantilla_envio_serial.html" />
     <Content Include="emails\plantilla_restablecer_clave.html" />
+    <Content Include="emails\plantilla_restablecer_clave_pagos.html" />
     <Content Include="emails\plantilla_solicitud_aprobacion_formato.html" />
     <Content Include="Scripts\assets\css\bootstrap.css" />
     <Content Include="Scripts\assets\css\bootstrap.min.css" />
@@ -1923,6 +1925,7 @@
     <Content Include="Scripts\Pages\AcuseRecibo.js" />
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\Alertas.js" />
+    <Content Include="Scripts\Pages\AutenticacionPagos.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\ConsultaAcuseTacito.js" />
     <Content Include="Scripts\Pages\ConsultaAuditoriaAdmin.js" />
@@ -1947,12 +1950,15 @@
     <Content Include="Scripts\Pages\PlanesTransacciones.js" />
     <Content Include="Scripts\Pages\ProcesarInteroperabilidad.js" />
     <Content Include="Scripts\Pages\Proveedores.js" />
+    <Content Include="Scripts\Pages\RegistroUsuarioPagos.js" />
     <Content Include="Scripts\Pages\ReportDesignerWeb.js" />
     <Content Include="Scripts\Pages\Resoluciones.js" />
+    <Content Include="Scripts\Pages\RestablecerClavePagos.js" />
     <Content Include="Scripts\Pages\Usuarios.js" />
     <Content Include="Scripts\Pages\DocumentosAdquiriente.js" />
     <Content Include="Scripts\Pages\DocumentosObligado.js" />
     <Content Include="Scripts\Pages\RestablecerClave.js" />
+    <Content Include="Scripts\Pages\UsuariosPagos.js" />
     <Content Include="Scripts\Scripts-descarga\angular.min.js" />
     <Content Include="Scripts\Scripts-descarga\devextreme-intl.min.js" />
     <Content Include="Scripts\Scripts-descarga\dx.all.js" />
@@ -1974,6 +1980,7 @@
     <Content Include="Scripts\Services\SrvProveedor.js" />
     <Content Include="Scripts\Services\SrvResoluciones.js" />
     <Content Include="Scripts\Services\SrvUsuario.js" />
+    <Content Include="Scripts\Services\SrvUsuarioPagos.js" />
     <Content Include="Scripts\WebConfig.js" />
     <Content Include="Tests\TestInteroperabilidad.aspx" />
     <Content Include="Views\Demos\Demo.aspx" />
@@ -2786,6 +2793,9 @@
     <Content Include="Scripts\vectormap-utils\dx.vectormaputils.js" />
     <Content Include="Scripts\vectormap-utils\dx.vectormaputils.node.js" />
     <Content Include="Views\Login\Default.aspx" />
+    <Content Include="Views\Login\Pagos.aspx" />
+    <Content Include="Views\Login\RegistroUsuarioPagos.html" />
+    <Content Include="Views\Login\RestablecerClavePagos.aspx" />
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
@@ -2812,6 +2822,7 @@
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
     <Content Include="Views\Pages\GestionProveedores.aspx" />
     <Content Include="Views\Pages\GestionReportes.aspx" />
+    <Content Include="Views\Pages\GestionUsuariosPagos.aspx" />
     <Content Include="Views\Pages\HGIpayConsultaDocumentos.aspx" />
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
     <Content Include="Views\Pages\ModalDetalleEmpresa.aspx" />
@@ -2846,6 +2857,7 @@
     <Content Include="Views\Pages\SondaProcesarCorreo.aspx" />
     <Content Include="Views\Pages\SondaResoluciones.aspx" />
     <Content Include="Views\Pages\SondaValidarEmail.aspx" />
+    <Content Include="Views\Pages\ConsultaUsuariosPagos.aspx" />
     <Content Include="Views\ReportDesigner\ReportDesignerWeb.aspx" />
     <Content Include="Views\ReportDesigner\ReportViewer.aspx" />
     <Content Include="Views\ReportDesigner\XmlReporteBase.xml">
@@ -2878,6 +2890,7 @@
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
     <Compile Include="Controllers\Services\InteroperabilidadController.cs" />
     <Compile Include="Controllers\Services\PagosController.cs" />
+    <Compile Include="Controllers\Services\UsuarioPagosController.cs" />
     <Compile Include="Properties\Constantes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2944,6 +2957,20 @@
     </Compile>
     <Compile Include="Views\Login\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Login\Pagos.aspx.cs">
+      <DependentUpon>Pagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Login\Pagos.aspx.designer.cs">
+      <DependentUpon>Pagos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Login\RestablecerClavePagos.aspx.cs">
+      <DependentUpon>RestablecerClavePagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Login\RestablecerClavePagos.aspx.designer.cs">
+      <DependentUpon>RestablecerClavePagos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Login\RestablecerClave.aspx.cs">
       <DependentUpon>RestablecerClave.aspx</DependentUpon>
@@ -3140,6 +3167,13 @@
     </Compile>
     <Compile Include="Views\Pages\GestionReportes.aspx.designer.cs">
       <DependentUpon>GestionReportes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\GestionUsuariosPagos.aspx.cs">
+      <DependentUpon>GestionUsuariosPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\GestionUsuariosPagos.aspx.designer.cs">
+      <DependentUpon>GestionUsuariosPagos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\HGIpayConsultaDocumentos.aspx.cs">
       <DependentUpon>HGIpayConsultaDocumentos.aspx</DependentUpon>
@@ -3343,6 +3377,13 @@
     </Compile>
     <Compile Include="Views\Pages\SondaValidarEmail.aspx.designer.cs">
       <DependentUpon>SondaValidarEmail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaUsuariosPagos.aspx.cs">
+      <DependentUpon>ConsultaUsuariosPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaUsuariosPagos.aspx.designer.cs">
+      <DependentUpon>ConsultaUsuariosPagos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\ReportDesigner\ReportDesignerWeb.aspx.cs">
       <DependentUpon>ReportDesignerWeb.aspx</DependentUpon>

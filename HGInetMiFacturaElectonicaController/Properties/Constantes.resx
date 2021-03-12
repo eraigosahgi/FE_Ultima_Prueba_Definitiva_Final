@@ -309,4 +309,16 @@
     <value>emails\\plantilla_notificacion_inconsistencias_interoperabilidad.html</value>
     <comment>Ruta de la plantilla Html de envío notificación de inconsistencias de interoperabilidad</comment>
   </data>
+  <data name="PaginaRestablecerClavePagos" xml:space="preserve">
+    <value>/Views/Login/RestablecerClavePagos.aspx?id_seguridad={id_seguridad}</value>
+    <comment>Ruta de redireccion página restablecer contraseña para usuarios de Pagos</comment>
+  </data>
+  <data name="RutaPlantillaRestablecerPagos" xml:space="preserve">
+    <value>emails\\plantilla_restablecer_clave_pagos.html</value>
+    <comment>Ruta de la plantilla Html de envío restablecer contraseña para usuarios de Pagos</comment>
+  </data>
+  <data name="RutaPlantillaBienvenidaAdquirientePagos" xml:space="preserve">
+    <value>emails\\plantilla_bienvenida_adquiriente_pagos.html</value>
+    <comment>Ruta de la plantilla Html de envío de bienvenida Adquiriente Pagos</comment>
+  </data>
 </root>

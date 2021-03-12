@@ -165,7 +165,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			try
 			{
-				Sesion.ValidarSesion();
+				Sesion.ValidarSesionPagos();
 
 
 				if (string.IsNullOrEmpty(IdSeguridad))
@@ -173,7 +173,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				string codigo_adquiente = "";
 
-				codigo_adquiente = Sesion.DatosUsuario.StrEmpresa;
+				codigo_adquiente = Sesion.DatosUsuarioPagos.StrEmpresaAdquiriente;
 
 				if (string.IsNullOrEmpty(codigo_adquiente))
 					throw new ApplicationException("No se encontro información de los datos del Adquiriente");
@@ -260,14 +260,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 
-				Sesion.ValidarSesion();
+				Sesion.ValidarSesionPagos();
 
 				if (string.IsNullOrEmpty(IdSeguridad))
 					throw new ApplicationException("Error de identificación del Facturador. no se encontro Serial");
 
 				string codigo_adquiente = "";
 
-				codigo_adquiente = Sesion.DatosUsuario.StrEmpresa;
+				codigo_adquiente = Sesion.DatosUsuarioPagos.StrEmpresaAdquiriente;
 
 				if (string.IsNullOrEmpty(codigo_adquiente))
 					throw new ApplicationException("No se encontro información de los datos del Adquiriente");

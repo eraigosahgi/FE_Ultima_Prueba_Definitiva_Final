@@ -1,14 +1,14 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Masters/MasterPrincipal.Master" AutoEventWireup="true" CodeBehind="ConsultaUsuarios.aspx.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Pages.ConsultaUsuarios" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Masters/MasterPrincipal.Master" AutoEventWireup="true" CodeBehind="ConsultaUsuariosPagos.aspx.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Pages.ConsultaUsuariosPagos" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<asp:Content ID="Content3" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
+<asp:Content ID="Content4" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201019"></script>
-	<script src="../../Scripts/Services/SrvUsuario.js?vjs20201019"></script>
-	<script src="../../Scripts/Pages/Usuarios.js?vjs20200922"></script>
+	<script src="../../Scripts/Services/SrvUsuarioPagos.js?vjs20201019"></script>
+	<script src="../../Scripts/Pages/UsuariosPagos.js?vjs20200922"></script>
 
-	<div data-ng-app="ConsultaUsuarioApp" data-ng-controller="ConsultaUsuarioController">
+	<div data-ng-app="ConsultaUsuarioPagosApp" data-ng-controller="ConsultaUsuarioPagosController">
 
 
 
@@ -22,13 +22,9 @@
 				</div>
 			</div>
 
-			<div class="panel-body">
-
-				<div class="col-md-3" style="margin-top: 1%" data-ng-show="Admin">
-					<div data-hgi-filtro="Facturador"></div>
-				</div>
+			<div class="panel-body">				
 			
-				<div class="col-md-3" style="margin-top: 1%">
+				<div class="col-md-4" style="margin-top: 1%">
 					<label>Usuario</label>
 					<div id="codigo_usuario"></div>
 				</div>
@@ -39,7 +35,7 @@
 					<div id="nombre_usuario"></div>
 				</div>
 
-				<div class="col-md-2 text-right" style="margin-top: -5px">
+				<div class="col-md-4 text-right" style="margin-top: -5px">
 					<br />
 					<br />
 					<div id="BtnConsultar"></div>
@@ -63,7 +59,7 @@
 						<h6 class="panel-title">Datos</h6>
 					</div>
 					<div class="col-md-12 text-right" style="margin-top: -2%">
-						<a class="btn btn-primary" style="background: #337ab7" href="GestionUsuarios.aspx">Crear</a>
+						<a class="btn btn-primary" style="background: #337ab7" href="GestionUsuariosPagos.aspx">Crear</a>
 						<br />
 					</div>
 				</div>
@@ -78,5 +74,6 @@
 				<div data-ng-include="'Partials/LoadingRegistros.Html'"></div>
 			</div>
 		</div>
-	</div>	
+	</div>
+	</div>   
 </asp:Content>

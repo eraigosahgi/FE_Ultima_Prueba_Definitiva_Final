@@ -189,4 +189,7 @@
   <data name="ConsultaResoluciones" xml:space="preserve">
     <value>1337</value>
   </data>
+  <data name="UsuariosPagos" xml:space="preserve">
+    <value>1315</value>
+  </data>
 </root>

@@ -158,7 +158,7 @@ ConsultaUsuarioApp.controller('ConsultaUsuarioController', function ConsultaUsua
 
 												if (respuesta) {
 													swal({
-														title: 'Proceso Éxitoso',
+														title: 'Proceso Exitoso',
 														text: 'El e-mail ha sido enviado con éxito.',
 														type: 'success',
 														confirmButtonColor: '#66BB6A',

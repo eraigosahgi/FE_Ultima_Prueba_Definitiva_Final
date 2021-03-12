@@ -223,6 +223,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a /Views/Login/RestablecerClavePagos.aspx?id_seguridad={id_seguridad}.
+        /// </summary>
+        public static string PaginaRestablecerClavePagos {
+            get {
+                return ResourceManager.GetString("PaginaRestablecerClavePagos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a PRUE.
         /// </summary>
         public static string PrefijoResolucionPruebas {
@@ -327,6 +336,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         public static string RutaPlantillaBienvenidaAdquiriente {
             get {
                 return ResourceManager.GetString("RutaPlantillaBienvenidaAdquiriente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_bienvenida_adquiriente_pagos.html.
+        /// </summary>
+        public static string RutaPlantillaBienvenidaAdquirientePagos {
+            get {
+                return ResourceManager.GetString("RutaPlantillaBienvenidaAdquirientePagos", resourceCulture);
             }
         }
         
@@ -453,6 +471,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         public static string RutaPlantillaRestablecer {
             get {
                 return ResourceManager.GetString("RutaPlantillaRestablecer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_restablecer_clave_pagos.html.
+        /// </summary>
+        public static string RutaPlantillaRestablecerPagos {
+            get {
+                return ResourceManager.GetString("RutaPlantillaRestablecerPagos", resourceCulture);
             }
         }
         
