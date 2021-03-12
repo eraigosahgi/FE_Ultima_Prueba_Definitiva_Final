@@ -43,7 +43,13 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("R2","Referencias internas","Referencias internas"),
 			new ListaItem("FTC","Factura Talonario Contingencia","Factura Talonario Contingencia"),
 			new ListaItem("FTP","Factura Talonario Papel","Factura Talonario Papel"),
-			new ListaItem("FTPC","Factura Talonario Por computador","Factura Talonario Por computador")
+			new ListaItem("FTPC","Factura Talonario Por computador","Factura Talonario Por computador"),
+			new ListaItem("01","Factura electrónica de Venta","Factura electrónica de Venta"),
+			new ListaItem("02","Factura electrónica de venta -exportación","Factura electrónica de venta -exportación"),
+			new ListaItem("03","Documento electrónico de transmisión – tipo 03","Documento electrónico de transmisión – tipo 03"),
+			new ListaItem("04","Factura electrónica de Venta - tipo 04","Factura electrónica de Venta - tipo 04"),
+			new ListaItem("91","Nota Crédito","Nota Crédito"),
+			new ListaItem("92","Nota Débito","Nota Débito")
 		};
 	}
 }

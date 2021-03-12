@@ -194,6 +194,18 @@ namespace HGInetUBLv2_1
 
 				attached.ParentDocumentLineReference[0] = LineReference;
 
+				XmlDocument doc = new XmlDocument();
+				doc.LoadXml("<firma></firma>");
+
+				List<UBLExtensionType> UBLExtensions = new List<UBLExtensionType>();
+
+				// Extension de la firma
+				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
+				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
+				UBLExtensions.Add(UBLExtensionFirma);
+
+				attached.UBLExtensions = UBLExtensions.ToArray();
+
 				// convierte los datos del objeto en texto XML 
 				StringBuilder txt_xml = ConvertirXML.Convertir(attached, namespaces_xml, TipoDocumento.Attached);
 

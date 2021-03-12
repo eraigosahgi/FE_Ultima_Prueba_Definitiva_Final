@@ -16,8 +16,12 @@ namespace HGInetMiFacturaElectonicaData.Enumerables
         [Description("Pruebas")]
         [AmbientValue("0")]
         Pruebas = 1,
-        
-        [Description("Producción")]
+
+		[Description("Pruebas con recepcion DIAN y set de pruebas aprobado")]
+		[AmbientValue("0")]
+		PruebasDian = 2,
+
+		[Description("Producción")]
         [AmbientValue("99")]
         Produccion = 99
     }

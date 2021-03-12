@@ -388,8 +388,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
-				// valida el nodo de ExtensionContent
-				documento.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(documento.DocumentoXml);
+				int extension_sector = 0;
 
 				string id_obligado = string.Empty;
 
@@ -398,6 +397,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					case TipoDocumento.Factura:
 						Factura doc_factura = ((Factura)documento.Documento);
 						id_obligado = documento.IdSeguridadTercero.ToString();
+						if (doc_factura.SectorSalud != null && doc_factura.SectorSalud.CamposSector.Count > 0)
+							extension_sector = 1;
 						break;
 					case TipoDocumento.NotaCredito:
 						NotaCredito doc_nota_credito = ((NotaCredito)documento.Documento);
@@ -417,6 +418,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					default:
 						break;
 				}
+
+				// valida el nodo de ExtensionContent
+				documento.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(documento.DocumentoXml, extension_sector);
 
 
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;

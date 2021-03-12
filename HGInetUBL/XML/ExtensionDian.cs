@@ -159,7 +159,7 @@ namespace HGInetUBL
 		/// </summary>
 		/// <param name="xml">datos del xml</param>
 		/// <returns>texto del xml</returns>
-		public static StringBuilder ValidarNodo(StringBuilder xml)
+		public static StringBuilder ValidarNodo(StringBuilder xml, int extension_sector = 0)
 		{
 
 			// valida el namespace xmlns:schemaLocation y lo reemplaza para Google Chrome
@@ -178,10 +178,14 @@ namespace HGInetUBL
 
 			var indiceNodo = 1;
 
-			if (xmlDoc.DocumentElement.Name == "ApplicationResponse")
+			if ((xmlDoc.DocumentElement.Name == "ApplicationResponse") || (xmlDoc.DocumentElement.Name == "AttachedDocument"))
             {
                 indiceNodo = 0;
             }
+
+			if (extension_sector > 0)
+				indiceNodo += extension_sector;
+
 			var nodoExtension = xmlDoc.GetElementsByTagName("ExtensionContent", "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2").Item(indiceNodo);
 
             if (nodoExtension != null)

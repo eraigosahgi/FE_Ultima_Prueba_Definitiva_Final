@@ -449,6 +449,13 @@ namespace HGInetUBLv2_1
 				string nit_adq = documento.DatosAdquiriente.Identificacion;
 				string cadena_qr = string.Format("{0}TipoDocumento={1}NroDocumento={2}NITFacturador={3}NumIdentAdquiriente={3}Cufe={4}", ruta_qr_Dian, tipo_doc, num_doc, nit_fac, nit_adq, CUFE);
 
+				// Extension del sector Salud
+				if (documento.SectorSalud != null && documento.SectorSalud.CamposSector.Count > 0)
+				{
+					UBLExtensionType UBLExtensionSector = new UBLExtensionType();
+					UBLExtensionSector.ExtensionContent = ExtensionSector.Obtener(documento.SectorSalud, tipo);
+					UBLExtensions.Add(UBLExtensionSector);
+				}
 
 				// Extension de la Dian
 				UBLExtensionType UBLExtensionDian = new UBLExtensionType();

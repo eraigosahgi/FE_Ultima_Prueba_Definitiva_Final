@@ -1380,6 +1380,14 @@
       <DependentUpon>TipoImpuestos.resx</DependentUpon>
     </Compile>
     <Compile Include="Enumeraciones\Ctl_Enumeracion.cs" />
+    <Compile Include="Salud\AdditionalInformationType.cs" />
+    <Compile Include="Salud\CampoValorType.cs" />
+    <Compile Include="Salud\Collection.cs" />
+    <Compile Include="Salud\EntregaDocumentoType.cs" />
+    <Compile Include="Salud\Group.cs" />
+    <Compile Include="Salud\InteroperabilidadPtType.cs" />
+    <Compile Include="Salud\InterOperabilidadType.cs" />
+    <Compile Include="Salud\CustomTagGeneralType.cs" />
     <Compile Include="Hgi\HgiNetExtensionsType.cs" />
     <Compile Include="Namespaces\NamespacesXML.cs" />
     <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteType.cs" />
@@ -1487,6 +1495,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VersionesDIANv2_1.resx</DependentUpon>
     </Compile>
+    <Compile Include="Salud\Name.cs" />
+    <Compile Include="Salud\ParametrosArgumentosType.cs" />
+    <Compile Include="Salud\URLDescagaAdjuntosType.cs" />
+    <Compile Include="Salud\Value.cs" />
     <Compile Include="XML\AcuseReciboXMLv2_1.Convertir.cs" />
     <Compile Include="XML\AcuseReciboXMLv2_1.cs" />
     <Compile Include="XML\AttachedDocument.Convertir.cs" />
@@ -1495,6 +1507,7 @@
     <Compile Include="XML\DocumentoImpuestos.cs" />
     <Compile Include="XML\ExtensionDian.cs" />
     <Compile Include="XML\ExtensionHgiSas.cs" />
+    <Compile Include="XML\ExtensionSector.cs" />
     <Compile Include="XML\FacturaXMLv2_1.Convertir.cs" />
     <Compile Include="XML\FacturaXMLv2_1.cs" />
     <Compile Include="XML\FormatoNotas.cs" />

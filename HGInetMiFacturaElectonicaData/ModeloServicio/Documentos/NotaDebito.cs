@@ -277,6 +277,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public TasaCambio Trm { get; set; }
 
+		/// <summary>
+		/// Campos Adicionales requeridos para informar datos necesarios para el Sector Salud Resolucion 084
+		/// </summary>
+		public Salud SectorSalud { get; set; }
+
 
 		#endregion
 	}

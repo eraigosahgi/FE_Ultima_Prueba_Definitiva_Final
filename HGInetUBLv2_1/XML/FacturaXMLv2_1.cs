@@ -54,7 +54,16 @@ namespace HGInetUBLv2_1
 
 				//------se debe enviar el tipo de operacion tabla 6.1.5 - Estandar *
 				facturaXML.CustomizationID = new CustomizationIDType();
-				facturaXML.CustomizationID.Value = "10";
+				if (documento.SectorSalud == null)
+				{
+					facturaXML.CustomizationID.Value = "10";
+				}
+				else
+				{
+					facturaXML.CustomizationID.Value = "SS-Recaudo";
+					facturaXML.CustomizationID.schemeID = "SS-CUFE";
+				}
+				
 
 				//Operacion - AIU
 				try
@@ -696,20 +705,36 @@ namespace HGInetUBLv2_1
 					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", facturaXML.UUID.Value);
 				}
 
+				////Proceso para el sector Salud
+				//documento.SectorSalud = new Salud();
+				//documento.SectorSalud.CamposSector = new List<CampoValor>();
+				//CampoValor dato1 = new CampoValor();
+				//CampoValor dato2 = new CampoValor();
+
+				//dato1.Descripcion = "1";
+				//dato1.Valor = "0521";
+
+				//dato2.Descripcion = "2";
+				//dato2.Valor = "CC";
+
+				//documento.SectorSalud.CamposSector.Add(dato1);
+				//documento.SectorSalud.CamposSector.Add(dato2);
+
+				//documento.SectorSalud.URLDescargaAdjuntos = "URL de descarga de archivos";
+				//documento.SectorSalud.URLWebService = "URL del webservices";
+
+				// Extension del sector Salud
+				if (documento.SectorSalud != null && documento.SectorSalud.CamposSector.Count > 0)
+				{
+					UBLExtensionType UBLExtensionSector = new UBLExtensionType();
+					UBLExtensionSector.ExtensionContent = ExtensionSector.Obtener(documento.SectorSalud, tipo);
+					UBLExtensions.Add(UBLExtensionSector);
+				}
+
 				// Extension de la Dian
 				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
 				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, tipo, facturaXML.ID.Value, ruta_qr_Dian);
 				UBLExtensions.Add(UBLExtensionDian);
-
-				/*
-				UBLExtensionType UBLExtensionAuthorizationProvider = new UBLExtensionType();
-				UBLExtensionAuthorizationProvider.ID = new IDType();
-				UBLExtensionAuthorizationProvider.ID.Value = resolucion.NitProveedor;
-				UBLExtensionAuthorizationProvider.ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
-				UBLExtensionAuthorizationProvider.ID.schemeAgencyID = "195";
-				UBLExtensionAuthorizationProvider.ID.schemeID = "4";
-				UBLExtensionAuthorizationProvider.ID.schemeName = "31";
-				UBLExtensions.Add(UBLExtensionAuthorizationProvider);*/
 
 				// Extension de la firma
 				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();

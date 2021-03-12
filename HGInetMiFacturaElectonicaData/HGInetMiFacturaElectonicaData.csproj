@@ -95,6 +95,7 @@
     <Compile Include="Enumerables\Accion.cs" />
     <Compile Include="Enumerables\AdquirienteRecibo.cs" />
     <Compile Include="Enumerables\Auditorias.cs" />
+    <Compile Include="Enumerables\CamposSalud.cs" />
     <Compile Include="Enumerables\CategoriaEstado.cs" />
     <Compile Include="Enumerables\EstadoEmail.cs" />
     <Compile Include="Enumerables\EstadoEmpresa.cs" />
@@ -130,7 +131,9 @@
     <Compile Include="ModeloServicio\Documentos\NotaCredito.cs" />
     <Compile Include="ModeloServicio\Documentos\NotaDebito.cs" />
     <Compile Include="ModeloServicio\Documentos\ReferenciaAdicional.cs" />
+    <Compile Include="ModeloServicio\Documentos\ReferenciaDocumento.cs" />
     <Compile Include="ModeloServicio\Documentos\ReferenciaPago.cs" />
+    <Compile Include="ModeloServicio\Documentos\Salud.cs" />
     <Compile Include="ModeloServicio\Documentos\TasaCambio.cs" />
     <Compile Include="ModeloServicio\General\AIU.cs" />
     <Compile Include="ModeloServicio\General\Anexo.cs" />

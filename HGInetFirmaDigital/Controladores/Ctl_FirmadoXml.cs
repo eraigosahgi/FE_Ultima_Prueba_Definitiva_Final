@@ -537,15 +537,29 @@ namespace HGInetFirmaDigital
 						{
 							parametros.SignatureDestination.Namespaces.Add("nsDocument", documentoXml.DocumentElement.NamespaceURI);
 
-							if (archivo.DocumentoTipo != TipoDocumento.AcuseRecibo)
+							if (archivo.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
 							{
-								parametros.SignatureDestination.XPathExpression = string.Format("/nsDocument:{0}/ext:UBLExtensions/ext:UBLExtension[2]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
+								int cantidad_extension = 2;
+
+								//Se valida si el documento trae informacion de algun sector para que sepa en la ruta donde debe agregar la firma del documento
+								var documento_obj = (dynamic)null;
+								documento_obj = archivo.Documento;
+								if (documento_obj.SectorSalud != null && documento_obj.SectorSalud.CamposSector.Count > 0)
+								{
+									cantidad_extension += 1;
+								}
+
+								//Ruta en el XML donde debe quedar la firma
+								parametros.SignatureDestination.XPathExpression = string.Format("/nsDocument:{0}/ext:UBLExtensions/ext:UBLExtension[{1}]/ext:ExtensionContent", documentoXml.DocumentElement.Name, cantidad_extension);
+
+								//parametros.SignatureDestination.XPathExpression = string.Format("/nsDocument:{0}/ext:UBLExtensions/ext:UBLExtension[2]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
+
 							}
-							else
+							else if (archivo.DocumentoTipo == TipoDocumento.AcuseRecibo || archivo.DocumentoTipo == TipoDocumento.Attached)
 							{
 								parametros.SignatureDestination.XPathExpression = string.Format("/nsDocument:{0}/ext:UBLExtensions/ext:UBLExtension[1]/ext:ExtensionContent", documentoXml.DocumentElement.Name);
 							}
-							
+
 						}
 
 						// lee el certificado digital para firmar

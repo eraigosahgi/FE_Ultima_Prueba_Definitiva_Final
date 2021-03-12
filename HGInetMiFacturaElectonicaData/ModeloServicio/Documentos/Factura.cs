@@ -310,6 +310,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public CondicionEntrega TipoEntrega { get; set; }
 
+		/// <summary>
+		/// Campos Adicionales requeridos para informar datos necesarios para el Sector Salud Resolucion 084
+		/// </summary>
+		public Salud SectorSalud { get; set; }
+
 
 		#endregion
 

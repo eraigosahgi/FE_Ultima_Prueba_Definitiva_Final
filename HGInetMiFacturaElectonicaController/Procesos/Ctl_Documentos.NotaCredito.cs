@@ -737,8 +737,54 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 
 			//Se valida que si el documento tiene una moneda diferente a pesos colombianos envien la tasa de cambio
-			//if (!documento.Moneda.Equals("COP") && documento.Trm == null)
-			//	throw new ArgumentException(string.Format("No se encontró información de la tasa de Cambio para la Moneda {0}", documento.Moneda));
+			if (!documento.Moneda.Equals("COP") && documento.Trm == null)
+				throw new ArgumentException(string.Format("No se encontró información de la tasa de Cambio para la Moneda {0}", documento.Moneda));
+
+			//Validacion Sector Salud
+			if (documento.SectorSalud != null)
+			{
+				if (documento.SectorSalud.CamposSector.Count == 0 || documento.SectorSalud.CamposSector.Count < 22 || documento.SectorSalud.CamposSector.Count > 21)
+					throw new ApplicationException("No se encontró la cantidad correcta de información del Sector Salud, deben ser 21 items Según Resolucion 084 del ministerio de Salud");
+
+				CampoValor valid_salud = new CampoValor();
+				string valid_enum_salud = string.Empty;
+
+				valid_salud = documento.SectorSalud.CamposSector[1];
+				try
+				{
+					TipoIdentificacionSalud dato_iden = Enumeracion.GetValueFromAmbiente<TipoIdentificacionSalud>(valid_salud.Valor);
+					valid_enum_salud = Enumeracion.GetDescription(dato_iden);
+				}
+				catch (Exception)
+				{
+					throw new ApplicationException(string.Format("El tipo de identificacion del usuario {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+				}
+
+				valid_salud = documento.SectorSalud.CamposSector[7];
+				try
+				{
+					TipoUsuarioSalud dato_enum = Enumeracion.GetEnumObjectByValue<TipoUsuarioSalud>(Convert.ToInt16(valid_salud.Valor));
+					valid_enum_salud = Enumeracion.GetDescription(dato_enum);
+				}
+				catch (Exception)
+				{
+
+					throw new ApplicationException(string.Format("El tipo de usuario {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+				}
+
+				valid_salud = documento.SectorSalud.CamposSector[9];
+				try
+				{
+					CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(valid_salud.Valor));
+					valid_enum_salud = Enumeracion.GetDescription(dato_enum);
+				}
+				catch (Exception)
+				{
+
+					throw new ApplicationException(string.Format("La Cobertura o Plan de beneficio {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+				}
+
+			}
 
 			return documento;
 		}

@@ -170,7 +170,9 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 					case 2:
 						acuse = new AcuseRecibo();
-						if (ambiente_dian.Equals("2") && !empresa.StrIdentificacion.Equals(Constantes.NitResolucionsinPrefijo))
+
+						//Si no es HGI y es una empresa que tiene el set de pruebas aceptado y quiere que el documento sea validado por la DIAN se pone en ambiente 2 
+						if (ambiente_dian.Equals("2") && !empresa.StrIdentificacion.Equals(Constantes.NitResolucionsinPrefijo) && empresa.IntHabilitacion < Habilitacion.PruebasDian.GetHashCode())
 						{
 							acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado,
 								certificado.Clave, clave, UrlServicioWeb, ambiente_dian);

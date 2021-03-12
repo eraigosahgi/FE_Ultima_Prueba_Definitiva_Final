@@ -3381,7 +3381,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				// ruta física del xml
 				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador.StrIdSeguridad.ToString());
-				carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+				carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
 
 
 				//Convierte el objeto en archivo XML-UBL
@@ -3391,6 +3391,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				resultado.IdSeguridadPeticion = new Guid();
 				resultado.DocumentoTipo = TipoDocumento.Attached;
 				resultado.NombreXml = nombre_archivo.Replace("face", "attach");
+
+				// valida el nodo de ExtensionContent
+				resultado.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(resultado.DocumentoXml);
 
 				// nombre del xml
 				string archivo_xml = string.Format(@"{0}.xml", resultado.NombreXml);
@@ -3405,8 +3408,39 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				// almacena el archivo xml
 				string ruta_save = Xml.Guardar(resultado.DocumentoXml, carpeta_xml, archivo_xml);
 
-				// asigna la ruta del directorio para los archivos
+				// asigna la ruta del directorio para los archivos sin firmar
 				resultado.RutaArchivosProceso = carpeta_xml;
+
+				//Proceso para firmar Attached
+				DocumentoRespuesta respuesta = new DocumentoRespuesta();
+
+				// asigna la ruta del directorio para los archivos firmados
+				resultado.RutaArchivosEnvio = carpeta_xml.Replace(LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+				resultado.VersionDian = doc.IntVersionDian;
+
+				string ruta_arch_fimado = string.Format(@"{0}\{1}", resultado.RutaArchivosEnvio, archivo_xml);
+
+				// elimina el archivo xml si existe
+				if (Archivo.ValidarExistencia(ruta_arch_fimado))
+					Archivo.Borrar(ruta_arch_fimado);
+
+				try
+				{
+					respuesta = Ctl_Documentos.UblFirmar(facturador, doc, ref respuesta, ref resultado);
+
+					// elimina el archivo xml si existe
+					if (!Archivo.ValidarExistencia(ruta_arch_fimado))
+						throw new ApplicationException("");
+				}
+				catch (Exception)
+				{
+					// almacena el archivo xml
+					string ruta_save_sinfirma = Xml.Guardar(resultado.DocumentoXml, resultado.RutaArchivosEnvio, archivo_xml);
+				}
+
+				// elimina el archivo xml si existe
+				if (Archivo.ValidarExistencia(ruta_xml))
+					Archivo.Borrar(ruta_xml);
 
 				//resultado = Ctl_Ubl.Almacenar(resultado);
 
