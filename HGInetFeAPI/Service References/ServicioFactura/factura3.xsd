@@ -47,6 +47,7 @@
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReceiptDocument" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
       <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="ReferenciaPago" nillable="true" type="q5:ReferenciaPago" />
+      <xs:element minOccurs="0" name="SectorSalud" nillable="true" type="tns:Salud" />
       <xs:element minOccurs="0" name="TerminoPago" type="xs:int" />
       <xs:element minOccurs="0" name="TerminoPago_Descripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="TipoEntrega" nillable="true" type="tns:CondicionEntrega" />
@@ -228,6 +229,33 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="FormatoCampo" nillable="true" type="tns:FormatoCampo" />
+  <xs:complexType name="Salud">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CamposSector" nillable="true" type="tns:ArrayOfCampoValor" />
+      <xs:element minOccurs="0" name="Documentosreferencia" nillable="true" type="tns:ArrayOfReferenciaDocumento" />
+      <xs:element minOccurs="0" name="ParametrosDescargaAdjuntos" nillable="true" type="tns:ArrayOfCampoValor" />
+      <xs:element minOccurs="0" name="ParametrosWebService" nillable="true" type="tns:ArrayOfCampoValor" />
+      <xs:element minOccurs="0" name="URLDescargaAdjuntos" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="URLWebService" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Salud" nillable="true" type="tns:Salud" />
+  <xs:complexType name="ArrayOfReferenciaDocumento">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ReferenciaDocumento" nillable="true" type="tns:ReferenciaDocumento" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfReferenciaDocumento" nillable="true" type="tns:ArrayOfReferenciaDocumento" />
+  <xs:complexType name="ReferenciaDocumento">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CufeDocumentoRef" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocumentoRef" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FechaDocumentoRef" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="PrefijoDocumentoRef" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TipoDocumento" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReferenciaDocumento" nillable="true" type="tns:ReferenciaDocumento" />
   <xs:complexType name="CondicionEntrega">
     <xs:sequence>
       <xs:element minOccurs="0" name="CodCondicionEntrega" nillable="true" type="xs:string" />
