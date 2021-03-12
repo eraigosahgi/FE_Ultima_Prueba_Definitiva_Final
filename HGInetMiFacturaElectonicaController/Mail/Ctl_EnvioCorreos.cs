@@ -393,7 +393,8 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
 						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
-						mensaje = mensaje.Replace("{ImagenTercero}", string.Format(" src={0}{1}/Scripts/Images/Terceros/{2}.png{3} ", '"', plataforma.RutaPublica, empresa.StrIdSeguridad, '"'));						
+						mensaje = mensaje.Replace("{ImagenTercero}", string.Format(" src={0}{1}/Scripts/Images/Terceros/{2}.png{3} ", '"', plataforma.RutaPublica, empresa.StrIdSeguridad, '"'));
+						mensaje = mensaje.Replace("{RutaAccesoIdentificacion}", string.Format("{0}?serial={1}", '"', plataforma.RutaPublica, empresa.StrIdSeguridad, '"'));
 
 						if (notifica_empresa)
 						{
@@ -414,11 +415,13 @@ namespace HGInetMiFacturaElectonicaController
 						string asunto = "";
 						if (notifica_empresa)
 						{
+							//Empresa
 							asunto = Constantes.AsuntoEmailNuevoUsuarioPagos;
 						}
 						else
 						{
-							asunto = Constantes.AsuntoEmailBienvenida;
+							//Usuarios
+							asunto = Constantes.AsuntoEmailBienvenidaPagos;
 						}
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
@@ -1551,7 +1554,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{ApellidosUsuario}", usuario.StrApellidos);
 						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
 						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClavePagos.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
-						mensaje = mensaje.Replace("{ImagenTercero}", string.Format(" src={0}{1}/Scripts/Images/Terceros/{2}.png{3} ", '"', plataforma.RutaPublica, empresa.StrIdSeguridad, '"'));						
+						mensaje = mensaje.Replace("{ImagenTercero}", string.Format(" src={0}{1}/Scripts/Images/Terceros/{2}.png{3} ", '"', plataforma.RutaPublica, empresa.StrIdSeguridad, '"'));
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
 						string asunto = "Restablecimiento de Contraseña";

@@ -333,4 +333,8 @@
     <value>/Views/Pages/ConfirmacionUsuarioPagos.aspx?id_seguridad={id_seguridad}</value>
     <comment>Pagina para la confirmación de usuarios nuevos en el modulo de pagos</comment>
   </data>
+  <data name="AsuntoEmailBienvenidaPagos" xml:space="preserve">
+    <value>Acceso Plataforma de Pagos de Facturación Electrónica</value>
+    <comment>Asunto para la bienvenida de usuarios al portal de pagos de factura electronica</comment>
+  </data>
 </root>

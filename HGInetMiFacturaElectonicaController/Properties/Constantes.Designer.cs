@@ -70,6 +70,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Acceso Plataforma de Pagos de Facturación Electrónica.
+        /// </summary>
+        public static string AsuntoEmailBienvenidaPagos {
+            get {
+                return ResourceManager.GetString("AsuntoEmailBienvenidaPagos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Nuevo Usuario en Plataforma de Pagos de Facturación Electrónica.
         /// </summary>
         public static string AsuntoEmailNuevoUsuarioPagos {
