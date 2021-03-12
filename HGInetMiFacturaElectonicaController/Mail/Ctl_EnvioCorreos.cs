@@ -394,7 +394,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
 						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
 						mensaje = mensaje.Replace("{ImagenTercero}", string.Format(" src={0}{1}/Scripts/Images/Terceros/{2}.png{3} ", '"', plataforma.RutaPublica, empresa.StrIdSeguridad, '"'));
-						mensaje = mensaje.Replace("{RutaAccesoIdentificacion}", string.Format("{0}?serial={1}",plataforma.RutaPublica, empresa.StrIdSeguridad));
+						mensaje = mensaje.Replace("{RutaAccesoIdentificacion}", string.Format("{0}/Views/Login/Pagos.aspx?serial={1}", plataforma.RutaPublica, empresa.StrIdSeguridad));
 
 						if (notifica_empresa)
 						{
