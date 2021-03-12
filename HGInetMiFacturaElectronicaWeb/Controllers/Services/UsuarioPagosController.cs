@@ -437,7 +437,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				usuario.StrTelefono = StrTelefono;
 				usuario.IntIdEstado = 2;//Inactivo
 
-				bool datos = ctl_usuario.Crear(usuario, null);
+				bool datos = ctl_usuario.Crear(usuario, null,true);
 
 				return Ok();
 			}

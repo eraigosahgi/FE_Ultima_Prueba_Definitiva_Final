@@ -345,7 +345,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// <param name="empresa">Datos del Obligado o el Adquiriente</param>
 		/// <param name="datos_usuario">datos del usuario</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> BienvenidaPagos(TblEmpresas empresa, TblUsuariosPagos usuario, string nuevo_email = "")
+		public List<MensajeEnvio> BienvenidaPagos(TblEmpresas empresa, TblUsuariosPagos usuario, string nuevo_email = "", bool notifica_empresa = false)
 		{
 
 			try
@@ -364,7 +364,15 @@ namespace HGInetMiFacturaElectonicaController
 				if (usuario == null)
 					throw new ApplicationException("No se encontró información del usuario");
 
-				fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaAdquirientePagos);
+				if (notifica_empresa)
+				{
+					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaNuevoUsuarioPagos);
+				}
+				else
+				{
+					fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaBienvenidaAdquirientePagos);
+				}
+
 
 				// permite el cambio de contraseña para el usuario
 				Ctl_UsuarioPagos _usuario = new Ctl_UsuarioPagos();
@@ -385,12 +393,33 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
 						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
-						mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
+
+
+						if (notifica_empresa)
+						{
+							mensaje = mensaje.Replace("{DocumentoIdentificacion}", usuario.StrEmpresaAdquiriente);
+							mensaje = mensaje.Replace("{Nombres}", string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos));
+							mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaConfirmacionRegistroUsuarioPagos.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+						}
+						else
+						{
+							mensaje = mensaje.Replace("{DocumentoIdentificacion}", empresa.StrIdentificacion);
+							mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClavePagos.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+						}
+
 						mensaje = mensaje.Replace("{CodigoUsuario}", usuario.StrUsuario);
-						mensaje = mensaje.Replace("{RutaUrl}", string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaRestablecerClavePagos.Replace("{id_seguridad}", usuario.StrIdCambioClave.ToString())));
+
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
-						string asunto = Constantes.AsuntoEmailBienvenida;
+						string asunto = "";
+						if (notifica_empresa)
+						{
+							asunto = Constantes.AsuntoEmailNuevoUsuarioPagos;
+						}
+						else
+						{
+							asunto = Constantes.AsuntoEmailBienvenida;
+						}
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
 						remitente.Email = Constantes.EmailRemitente;
@@ -398,10 +427,10 @@ namespace HGInetMiFacturaElectonicaController
 
 						DestinatarioEmail destinatario = new DestinatarioEmail();
 						destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
-						if (string.IsNullOrWhiteSpace(nuevo_email))
-							destinatario.Email = usuario.StrMail;
+						if (notifica_empresa)
+							destinatario.Email = empresa.StrMailPagos;
 						else
-							destinatario.Email = nuevo_email;
+							destinatario.Email = usuario.StrMail;
 
 						List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 						correos_destino.Add(destinatario);

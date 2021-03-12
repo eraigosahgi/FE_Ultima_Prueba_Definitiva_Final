@@ -321,4 +321,16 @@
     <value>emails\\plantilla_bienvenida_adquiriente_pagos.html</value>
     <comment>Ruta de la plantilla Html de envío de bienvenida Adquiriente Pagos</comment>
   </data>
+  <data name="RutaPlantillaNuevoUsuarioPagos" xml:space="preserve">
+    <value>emails\\plantilla_nuevo_usuario_pagos .html</value>
+    <comment>Ruta de la plantilla para nuevos usuarios de Pagos</comment>
+  </data>
+  <data name="AsuntoEmailNuevoUsuarioPagos" xml:space="preserve">
+    <value>Nuevo Usuario en Plataforma de Pagos de Facturación Electrónica</value>
+    <comment>Asunto del correo que le llega al facturador cuando se registra un nuevo usuario</comment>
+  </data>
+  <data name="PaginaConfirmacionRegistroUsuarioPagos" xml:space="preserve">
+    <value>/Views/Pages/ConfirmacionUsuarioPagos.aspx?id_seguridad={id_seguridad}</value>
+    <comment>Pagina para la confirmación de usuarios nuevos en el modulo de pagos</comment>
+  </data>
 </root>

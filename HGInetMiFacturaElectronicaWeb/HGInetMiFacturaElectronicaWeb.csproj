@@ -186,6 +186,7 @@
     <Content Include="emails\plantilla_notificacion_sinsaldo.html" />
     <Content Include="emails\plantilla_notificacion_sinsaldo_hgi.html" />
     <Content Include="emails\plantilla_notifica_alertas_documentos_DIAN.html" />
+    <Content Include="emails\plantilla_nuevo_usuario_pagos .html" />
     <Content Include="emails\plantilla_prueba_formato.html" />
     <Content Include="emails\plantilla_recarga_transacciones.html" />
     <Content Include="emails\plantilla_envio_serial.html" />
@@ -2800,6 +2801,7 @@
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
     <Content Include="Views\Pages\ConfirmacionEmail.aspx" />
+    <Content Include="Views\Pages\ConfirmacionUsuarioPagos.aspx" />
     <Content Include="Views\Pages\ConsultaResoluciones.aspx" />
     <Content Include="Views\Pages\GestionAlertas.aspx" />
     <Content Include="Views\Pages\ConfigurarPlanes.aspx" />
@@ -3020,6 +3022,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConfirmacionEmail.aspx.designer.cs">
       <DependentUpon>ConfirmacionEmail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConfirmacionUsuarioPagos.aspx.cs">
+      <DependentUpon>ConfirmacionUsuarioPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConfirmacionUsuarioPagos.aspx.designer.cs">
+      <DependentUpon>ConfirmacionUsuarioPagos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaResoluciones.aspx.cs">
       <DependentUpon>ConsultaResoluciones.aspx</DependentUpon>

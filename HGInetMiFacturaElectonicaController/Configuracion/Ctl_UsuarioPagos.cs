@@ -71,7 +71,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="empresa">información de la empresa</param>
 		/// <returns>información del usuario</returns>
-		public bool Crear(TblUsuariosPagos usuario, TblEmpresas empresa = null)
+		public bool Crear(TblUsuariosPagos usuario, TblEmpresas empresa = null, bool notifica_facturador = false)
 		{
 
 			try
@@ -104,7 +104,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						   where a.StrIdentificacion.Equals(usuario.StrEmpresaFacturador)
 						   select a).FirstOrDefault();
 
-				Email.BienvenidaPagos(empresa, usuario); //debo crear un objeto de tipo TblUsuario para ver si es posible reutilizar la bienvenida
+				Email.BienvenidaPagos(empresa, usuario, "", notifica_facturador); //debo crear un objeto de tipo TblUsuario para ver si es posible reutilizar la bienvenida
 
 
 				return true;
@@ -604,6 +604,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		#endregion
 
 		#region Cambio de Clave
+		/// <summary>
+		/// Restablecer contraseña de usuario de pagos
+		/// </summary>
+		/// <param name="IdSeguridad">IdSeguridad</param>
+		/// <param name="clave">clave</param>
+		/// <returns>string</returns>
 		public string RestablecerClave(System.Guid IdSeguridad, string clave)
 		{
 			try
@@ -674,29 +680,54 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
-		#region Permisos Usuarios
+
 		/// <summary>
-		/// Renorta los permisos de consulta del usuario(Menu)
+		/// Confirmar el usuario registrado
 		/// </summary>
-		/// <param name="codigo_usuario"></param>Usuario Logeado
-		/// /// <param name="codigo_empresa"></param>Empresa Logeada
-		/// <returns></returns>
-		public List<TblOpciones> ObtenerPermisos(string codigo_usuario, string codigo_empresa)
+		/// <param name="IdSeguridad">IdSeguridad</param>		
+		/// <returns>Bool</returns>
+		public bool ConfirmarUsuarioPagos(Guid IdSeguridad)
+		{
+			var usuario = ObtenerIdSeguridadCambioClave(IdSeguridad);
+
+			if (usuario == null)
+			{
+				throw new ApplicationException("Link ya no existe o usuario ya esta activo");
+			}
+
+			usuario.IntIdEstado = 1;//Activo
+
+			this.Edit(usuario);
+
+			Ctl_EnvioCorreos Email = new Ctl_EnvioCorreos();
+
+			var empresa = (from a in context.TblEmpresas
+						   where a.StrIdentificacion.Equals(usuario.StrEmpresaFacturador)
+						   select a).FirstOrDefault();
+
+			Email.BienvenidaPagos(empresa, usuario);
+
+			return true;
+		}
+
+
+		/// <summary>
+		/// Obtener Usuario por el id de seguridad del token
+		/// </summary>
+		/// <param name="id_seguridad">id_seguridad</param>
+		/// <returns>TblUsuariosPagos</returns>
+		public TblUsuariosPagos ObtenerIdSeguridadCambioClave(System.Guid id_seguridad)
 		{
 			try
 			{
 				context.Configuration.LazyLoadingEnabled = false;
-				var respuesta = (from opciones in context.TblOpciones.AsNoTracking()
-								 join opcionesUsuario in context.TblOpcionesUsuario on opciones.IntId equals opcionesUsuario.IntIdOpcion
-								 where (opcionesUsuario.StrUsuario.Equals(codigo_usuario) && opcionesUsuario.StrEmpresa.Equals(codigo_empresa))
-								 && opciones.IntHabilitado == true
-								 && opciones.IntTipo == 0
-								 && opcionesUsuario.IntConsultar == true
 
-								 select opciones);
+				var respuesta = (from usuario in context.TblUsuariosPagos.AsNoTracking()
+								 where (usuario.StrIdCambioClave == id_seguridad)
+								 && usuario.IntIdEstado == 2
+								 select usuario).FirstOrDefault();
 
-
-				return respuesta.ToList();
+				return respuesta;
 			}
 			catch (Exception excepcion)
 			{
@@ -704,11 +735,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 		}
 
-
-
-
-
-		#endregion
 
 	}
 }

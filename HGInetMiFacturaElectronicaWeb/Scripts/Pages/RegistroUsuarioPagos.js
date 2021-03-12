@@ -154,7 +154,7 @@ AutenticacionPagosApp.controller('RegistroUsuarioPagosController', function Regi
 		$("#button").dxButton({
 			tabIndex: 10,
 			icon: 'save',
-			text: "Registrarme",
+			text: "Continuar",
 			type: "default",
 			validationGroup: ValidarGestionRegistro,
 			onClick: function (e) {
@@ -197,11 +197,11 @@ AutenticacionPagosApp.controller('RegistroUsuarioPagosController', function Regi
 			try {
 
 				DevExpress.ui.notify({ message: "Usuario Registrado con exito, su información sera validada y luego recibira un correo para continuar con el registro", position: { my: "center top", at: "center top" } }, "success", 3500);
-				$("#button").hide();
-				$("#btncancelar").hide();
-
+				//$("#button").hide();
+				//$("#btncancelar").hide();
+				$('#CerrarModal').click();
 			} catch (err) {
-				DevExpress.ui.notify(err.message, 'error', 3000);
+				DevExpress.ui.notify(err.message, 'error', 9000);
 			}
 		}, function errorCallback(response) {
 			$('#wait').hide();

@@ -70,6 +70,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Nuevo Usuario en Plataforma de Pagos de Facturación Electrónica.
+        /// </summary>
+        public static string AsuntoEmailNuevoUsuarioPagos {
+            get {
+                return ResourceManager.GetString("AsuntoEmailNuevoUsuarioPagos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Serial de activacion HGI Facturación Electrónica.
         /// </summary>
         public static string AsuntoEnviaSerial {
@@ -201,6 +210,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         public static string PaginaAcuseRecibo {
             get {
                 return ResourceManager.GetString("PaginaAcuseRecibo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a /Views/Pages/ConfirmacionUsuarioPagos.aspx?id_seguridad={id_seguridad}.
+        /// </summary>
+        public static string PaginaConfirmacionRegistroUsuarioPagos {
+            get {
+                return ResourceManager.GetString("PaginaConfirmacionRegistroUsuarioPagos", resourceCulture);
             }
         }
         
@@ -408,6 +426,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         public static string RutaPlantillaHtmlNotifInconsistencias {
             get {
                 return ResourceManager.GetString("RutaPlantillaHtmlNotifInconsistencias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a emails\\plantilla_nuevo_usuario_pagos .html.
+        /// </summary>
+        public static string RutaPlantillaNuevoUsuarioPagos {
+            get {
+                return ResourceManager.GetString("RutaPlantillaNuevoUsuarioPagos", resourceCulture);
             }
         }
         
