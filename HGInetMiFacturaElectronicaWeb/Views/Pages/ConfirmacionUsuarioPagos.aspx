@@ -4,9 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-	<title>Confirmación de Email</title>
-
-
+	<title>Confirmación de Usuario</title>
 
 	<link href="../../Scripts/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css" />
 	<link href="../../Scripts/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />

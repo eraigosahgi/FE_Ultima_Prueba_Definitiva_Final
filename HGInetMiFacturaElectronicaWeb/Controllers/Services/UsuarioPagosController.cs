@@ -201,6 +201,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				string datos = ctl_usuario.ValidarExistenciaRestablecer(Guid.Parse(IdSeguridadFacturador), codigo_usuario);
 
+				var resultado = datos.Split('@');
+
+				try
+				{
+					datos = string.Format("{0}****@{1}", resultado[0].Substring(0, 1), resultado[1].ToString());
+				}
+				catch (Exception)
+				{
+				}
+
 				return Ok(datos);
 			}
 			catch (Exception excepcion)
@@ -437,7 +447,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				usuario.StrTelefono = StrTelefono;
 				usuario.IntIdEstado = 2;//Inactivo
 
-				bool datos = ctl_usuario.Crear(usuario, null,true);
+				bool datos = ctl_usuario.Crear(usuario, null, true);
 
 				return Ok();
 			}
