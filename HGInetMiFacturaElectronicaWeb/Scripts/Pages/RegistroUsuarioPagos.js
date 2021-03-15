@@ -195,11 +195,19 @@ AutenticacionPagosApp.controller('RegistroUsuarioPagosController', function Regi
 		$http.post('/api/RegistroUsuarioPagos?' + data).then(function (response) {
 			$("#wait").hide();
 			try {
-
-				DevExpress.ui.notify({ message: "Usuario Registrado con exito, su información sera validada y luego recibira un correo para continuar con el registro", position: { my: "center top", at: "center top" } }, "success", 3500);
-				//$("#button").hide();
-				//$("#btncancelar").hide();
-				$('#CerrarModal').click();
+				
+				swal({
+					title: 'Solicitud Exitosa',
+					text: 'Hemos recibido su solicitud de registro en nuestra plataforma de pagos, una vez verificada, recibira un correo con los datos de ingreso',
+					type: 'success',
+					confirmButtonColor: '#66BB6A',
+					confirmButtonText: 'Aceptar',
+					animation: 'pop',
+					html: true,
+				}).then((value) => {
+					$('#CerrarModal').click();
+				});
+				
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 9000);
 			}

@@ -132,7 +132,7 @@ DemoApp.controller('RestablecerClaveController', function DemoController($scope,
 				$("#divcontenido").hide();
 
 				swal({
-					title: 'Solicitud Éxitosa',
+					title: 'Solicitud Exitosa',
 					text: 'Su contraseña ha sido restablecida exitosamente.',
 					type: 'success',
 					confirmButtonColor: '#66BB6A',

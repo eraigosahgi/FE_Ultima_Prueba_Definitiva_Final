@@ -426,7 +426,20 @@ namespace HGInetMiFacturaElectonicaController
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
 						remitente.Email = Constantes.EmailRemitente;
-						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						if (notifica_empresa)
+						{
+							//Registro Usuario							
+							remitente.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
+							remitente.Email = usuario.StrMail;
+
+						}
+						else
+						{
+							//Confirmar Empresa													
+							remitente.Nombre = empresa.StrRazonSocial;
+							remitente.Email = empresa.StrMailPagos;
+						}
 
 						DestinatarioEmail destinatario = new DestinatarioEmail();
 						destinatario.Nombre = string.Format("{0} {1}", usuario.StrNombres, usuario.StrApellidos);
@@ -1560,8 +1573,10 @@ namespace HGInetMiFacturaElectonicaController
 						string asunto = "Restablecimiento de Contraseña";
 
 						DestinatarioEmail remitente = new DestinatarioEmail();
-						remitente.Email = Constantes.EmailRemitente;
-						remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+						//Confirmar Empresa													
+						remitente.Nombre = empresa.StrRazonSocial;
+						remitente.Email = empresa.StrMailPagos;
 
 						DestinatarioEmail destinatario = new DestinatarioEmail();
 						destinatario.Email = usuario.StrMail;
