@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 
 namespace HGInetInteroperabilidad.Procesos
 {
@@ -585,6 +586,8 @@ namespace HGInetInteroperabilidad.Procesos
 					RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 				}
 
+				bool actualizar_emisor = false;
+
 				if (facturador_emisor == null)
 				{
 					empresa = new Ctl_Empresa();
@@ -594,14 +597,30 @@ namespace HGInetInteroperabilidad.Procesos
 
 					facturador_emisor = empresa.Crear(documento_obj.DatosObligado, false);
 				}
-
+				
 				if (string.IsNullOrEmpty(facturador_emisor.StrSerial))
 				{
 					facturador_emisor.StrSerial = Guid.NewGuid().ToString();
 					if (string.IsNullOrEmpty(facturador_emisor.StrMailEnvio) && !string.IsNullOrEmpty(facturador_emisor.StrMailAdmin))
 						facturador_emisor.StrMailEnvio = facturador_emisor.StrMailAdmin;
+
+					actualizar_emisor = true;
+				}
+
+				if ((!string.IsNullOrWhiteSpace(documento_obj.DatosObligado.Email)) && !facturador_emisor.StrMailAdmin.Equals(documento_obj.DatosObligado.Email))
+				{
+					facturador_emisor.StrMailAdmin = documento_obj.DatosObligado.Email;
+					facturador_emisor.StrMailEnvio = facturador_emisor.StrMailAdmin;
+					facturador_emisor.StrMailAcuse = facturador_emisor.StrMailAdmin;
+					facturador_emisor.StrMailRecepcion = facturador_emisor.StrMailAdmin;
+					actualizar_emisor = true;
+				}
+
+				if (actualizar_emisor == true)
+				{
 					empresa.Actualizar(facturador_emisor);
 				}
+
 
 				/*
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -1252,16 +1271,56 @@ namespace HGInetInteroperabilidad.Procesos
 						throw new ApplicationException(string.Format("Error al crear proveedor Emisor {0} Detalle: {1}", documento_obj.IdentificacionProveedor, excepcion.Message));
 					}
 
+					Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
+					List<ObjPlanEnProceso> ListaPlanes = new List<ObjPlanEnProceso>();
+
+					//asignacion plan de documentos
+					try
+					{
+						ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_receptor.StrIdentificacion, 1);
+
+						if (ListaPlanes == null)
+						{
+							///Validación de alertas y notificaciones
+							try
+							{
+								Ctl_Alertas controlador = new Ctl_Alertas();
+								controlador.alertaSinSaldo(facturador_receptor.StrIdentificacion);
+							}
+							catch (Exception excepcion)
+							{
+								LogExcepcion.Guardar(excepcion);
+							}
+							throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
+						}
+
+						documento_bd.StrIdPlanTransaccion = Guid.Parse(ListaPlanes.FirstOrDefault().plan.ToString());
+						ListaPlanes.FirstOrDefault().reservado += 1;
+					}
+					catch (Exception excepcion)
+					{
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, string.Format("Se genera inconsistencias en el proceso de planes. Detalle: {0}", excepcion.Message));
+					}
+
 					//Guardo el documento en BD
 					try
 					{
 						documento_bd = ctl_doc.Crear(documento_bd);
+
+						//Se hace proceso de conciliacion de planes
+						if (ListaPlanes.FirstOrDefault().reservado == 1)
+						{
+							ListaPlanes.FirstOrDefault().procesado += 1;
+							var datos = Planestransacciones.ConciliarPlanProceso(ListaPlanes.FirstOrDefault());
+						}
 					}
+						
 					catch (Exception excepcion)
 					{
 						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 						throw new ApplicationException(string.Format("Error al guardar el documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 					}
+
 				}
 
 				try
