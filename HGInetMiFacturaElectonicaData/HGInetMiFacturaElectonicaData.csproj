@@ -194,6 +194,9 @@
       <DependentUpon>ModeloDatos.edmx</DependentUpon>
     </Compile>
     <Compile Include="ModeloAuditoria\MongoDBContext.cs" />
+    <Compile Include="Modelo\QryAdquirientes.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblAlertas.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>

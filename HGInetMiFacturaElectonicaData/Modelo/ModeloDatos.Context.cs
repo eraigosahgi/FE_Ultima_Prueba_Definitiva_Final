@@ -43,5 +43,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual DbSet<TblPagosElectronicos> TblPagosElectronicos { get; set; }
         public virtual DbSet<TblProcesoCorreo> TblProcesoCorreo { get; set; }
         public virtual DbSet<TblUsuariosPagos> TblUsuariosPagos { get; set; }
+        public virtual DbSet<QryAdquirientes> QryAdquirientes { get; set; }
     }
 }
