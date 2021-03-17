@@ -956,8 +956,8 @@ namespace HGInetInteroperabilidad.Procesos
 					if (!string.Format("{0}{1}", attach_document.Prefijo, attach_document.Documento).Equals(string.Format("{0}{1}", doc_acuse_Dian.Prefijo, doc_acuse_Dian.Documento)))
 						throw new ArgumentException("El CUFE del Documento Electrónico en el AttachDocument no coincide con la respuesta de la DIAN recibida ");
 
-					if (!attach_document.IdentificacionFacturador.Equals(doc_acuse_Dian.DatosObligado.Identificacion))
-						throw new ArgumentException("El facturador del AttachDocument no coincide con el de la respuesta de la DIAN");
+					//if (!attach_document.IdentificacionFacturador.Equals(doc_acuse_Dian.DatosObligado.Identificacion))
+					//	throw new ArgumentException("El facturador del AttachDocument no coincide con el de la respuesta de la DIAN");
 				}
 				else
 				{
@@ -968,8 +968,8 @@ namespace HGInetInteroperabilidad.Procesos
 					if (!string.Format("{0}{1}", attach_document.Prefijo, attach_document.Documento).Equals(string.Format("{0}{1}", documento_obj.Prefijo, documento_obj.Documento)))
 						throw new ArgumentException("El CUFE del Documento Electrónico no coincide con el AttachDocument recibido");
 
-					if (!attach_document.IdentificacionFacturador.Equals(documento_obj.DatosObligado.Identificacion))
-						throw new ArgumentException("El Facturador del Documento Electrónico no coincide con el del AttachDocument recibido");
+					//if (!attach_document.IdentificacionFacturador.Equals(documento_obj.DatosObligado.Identificacion))
+					//	throw new ArgumentException("El Facturador del Documento Electrónico no coincide con el del AttachDocument recibido");
 
 					if (!attach_document.Identificacionadquiriente.Equals(documento_obj.DatosAdquiriente.Identificacion))
 						throw new ArgumentException("El Adquiriente del Documento Electrónico no coincide con el del AttachDocument recibido");

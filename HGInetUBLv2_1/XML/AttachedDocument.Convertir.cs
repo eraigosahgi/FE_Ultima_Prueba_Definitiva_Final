@@ -30,13 +30,19 @@ namespace HGInetUBLv2_1
 				attach_document.Fecha = fecha_hora;
 
 				//Documento con Prefijo
-				string documento = attach_ubl.ParentDocumentID.Value;
-
 				Match numero_doc = Regex.Match(attach_ubl.ParentDocumentID.Value, "\\d+");
 
-				attach_document.Documento = Convert.ToInt64(numero_doc.Value);
-
-				attach_document.Prefijo = attach_ubl.ParentDocumentID.Value.Substring(0, attach_ubl.ParentDocumentID.Value.Length - attach_document.Documento.ToString().Length);
+				try
+				{
+					attach_document.Documento = Convert.ToInt64(numero_doc.Value);
+					attach_document.Prefijo = attach_ubl.ParentDocumentID.Value.Substring(0, attach_ubl.ParentDocumentID.Value.Length - attach_document.Documento.ToString().Length);
+				}
+				catch (Exception)
+				{
+					numero_doc = Regex.Match(attach_ubl.ParentDocumentLineReference[0].DocumentReference.ID.Value, "\\d+");
+					attach_document.Documento = Convert.ToInt64(numero_doc.Value);
+					attach_document.Prefijo = attach_ubl.ParentDocumentLineReference[0].DocumentReference.ID.Value.Substring(0, attach_ubl.ParentDocumentLineReference[0].DocumentReference.ID.Value.Length - attach_document.Documento.ToString().Length);
+				}
 
 				attach_document.CufeDocumentoElectronico = attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID.Value;
 
