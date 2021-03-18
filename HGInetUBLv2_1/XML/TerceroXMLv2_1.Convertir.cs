@@ -60,7 +60,7 @@ namespace HGInetUBLv2_1
 				if (empresa.Party.Contact != null)
 				{
 					obligado.Telefono = (empresa.Party.Contact.Telephone == null) ? string.Empty : empresa.Party.Contact.Telephone.Value;
-					obligado.Email = empresa.Party.Contact.ElectronicMail.Value;
+					obligado.Email = (empresa.Party.Contact.ElectronicMail == null) ? string.Empty :empresa.Party.Contact.ElectronicMail.Value;
 					//Valida si tiene pagina web
 					if (empresa.Party.WebsiteURI != null)
 						obligado.PaginaWeb = empresa.Party.WebsiteURI.Value;
@@ -90,7 +90,8 @@ namespace HGInetUBLv2_1
 			try
 			{
 				adquiriente.Identificacion = cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.Value;
-				adquiriente.IdentificacionDv = Convert.ToInt16(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID);
+				if (!string.IsNullOrEmpty(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID))
+					adquiriente.IdentificacionDv = Convert.ToInt16(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID);
 				adquiriente.TipoIdentificacion = Convert.ToInt16(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName);
 				adquiriente.TipoPersona = Convert.ToInt16(cliente.AdditionalAccountID.FirstOrDefault().Value);
 				adquiriente.RegimenFiscal = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName;
@@ -111,23 +112,28 @@ namespace HGInetUBLv2_1
 						adquiriente.PrimerApellido = cliente.Party.Person.FirstOrDefault().FamilyName.Value;
 				}
 
-				adquiriente.Direccion = cliente.Party.PhysicalLocation.Address.AddressLine[0].Line.Value;
-				adquiriente.Ciudad = cliente.Party.PhysicalLocation.Address.CityName.Value;
-				adquiriente.CodigoCiudad = cliente.Party.PhysicalLocation.Address.ID.Value;
-				adquiriente.Departamento = cliente.Party.PhysicalLocation.Address.CountrySubentity.Value;
-				adquiriente.CodigoDepartamento = cliente.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
-				adquiriente.CodigoPais = cliente.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
-				try
+				if (cliente.Party.PhysicalLocation != null)
 				{
-					ListaPaises list_paises = new ListaPaises();
-					ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(adquiriente.CodigoPais)).FirstOrDefault();
-					adquiriente.Pais = pais.Descripcion;
-				}
-				catch (Exception)
-				{ }
-				if (cliente.Party.PhysicalLocation.Address.PostalZone != null)
-					adquiriente.CodigoPostal = cliente.Party.PhysicalLocation.Address.PostalZone.Value;
+					adquiriente.Direccion = cliente.Party.PhysicalLocation.Address.AddressLine[0].Line.Value;
+					adquiriente.Ciudad = cliente.Party.PhysicalLocation.Address.CityName.Value;
+					adquiriente.CodigoCiudad = cliente.Party.PhysicalLocation.Address.ID.Value;
+					adquiriente.Departamento = cliente.Party.PhysicalLocation.Address.CountrySubentity.Value;
+					adquiriente.CodigoDepartamento = cliente.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
+					adquiriente.CodigoPais = cliente.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
 
+					try
+					{
+						ListaPaises list_paises = new ListaPaises();
+						ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(adquiriente.CodigoPais)).FirstOrDefault();
+						adquiriente.Pais = pais.Descripcion;
+					}
+					catch (Exception)
+					{ }
+
+					if (cliente.Party.PhysicalLocation.Address.PostalZone != null)
+						adquiriente.CodigoPostal = cliente.Party.PhysicalLocation.Address.PostalZone.Value;
+				}
+				
 				if (cliente.Party.PartyTaxScheme[0].RegistrationAddress != null)
 				{
 					//Direccion Fiscal

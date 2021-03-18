@@ -969,11 +969,14 @@ namespace HGInetInteroperabilidad.Procesos
 					if (!cod_respuestaDian.Equals(CodigoResponseV2.ValidadoDian))
 						throw new ArgumentException("El Documento Electrónico no esta validado por la DIAN");
 
-					if (!attach_document.CufeDocumentoElectronico.Equals(doc_acuse_Dian.CufeDocumento))
-						throw new ArgumentException("El CUFE del Documento Electrónico no coincide con la respuesta de la DIAN recibida en el AttachDocument");
+					//if (!attach_document.CufeDocumentoElectronico.Equals(doc_acuse_Dian.CufeDocumento))
+					//	throw new ArgumentException("El CUFE del Documento Electrónico no coincide con la respuesta de la DIAN recibida en el AttachDocument");
 
 					if (!string.Format("{0}{1}", attach_document.Prefijo, attach_document.Documento).Equals(string.Format("{0}{1}", doc_acuse_Dian.Prefijo, doc_acuse_Dian.Documento)))
-						throw new ArgumentException("El CUFE del Documento Electrónico en el AttachDocument no coincide con la respuesta de la DIAN recibida ");
+					{
+						if (!attach_document.CufeDocumentoElectronico.Equals(doc_acuse_Dian.CufeDocumento))
+							throw new ArgumentException("El CUFE del Documento Electrónico en el AttachDocument no coincide con la respuesta de la DIAN recibida ");
+					}
 
 					//if (!attach_document.IdentificacionFacturador.Equals(doc_acuse_Dian.DatosObligado.Identificacion))
 					//	throw new ArgumentException("El facturador del AttachDocument no coincide con el de la respuesta de la DIAN");
