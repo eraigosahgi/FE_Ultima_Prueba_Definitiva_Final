@@ -458,7 +458,8 @@ namespace HGInetUBLv2_1
 						if (factura_ubl.Delivery[0].DeliveryAddress != null)
 						{
 							factura_obj.DatosAdquiriente.DireccionEntrega = new Direcciones();
-							factura_obj.DatosAdquiriente.DireccionEntrega.Ciudad = factura_ubl.Delivery[0].DeliveryAddress.CityName.Value;
+							if (factura_ubl.Delivery[0].DeliveryAddress.CityName != null)
+								factura_obj.DatosAdquiriente.DireccionEntrega.Ciudad = factura_ubl.Delivery[0].DeliveryAddress.CityName.Value;
 							if (factura_ubl.Delivery[0].DeliveryAddress.ID != null)
 								factura_obj.DatosAdquiriente.DireccionEntrega.CodigoCiudad = factura_ubl.Delivery[0].DeliveryAddress.ID.Value;
 							if (factura_ubl.Delivery[0].DeliveryAddress.CountrySubentity != null)
