@@ -213,16 +213,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				if (datos.IntIdEstado == 2)
 					throw new ApplicationException(string.Format("La identificación {0} no se encuentra activo.", identificacion_obligado));
-					
+
 				if (datos.IntVersionDian != 2)
 					throw new ApplicationException(string.Format("La identificación {0} no se encuentra en la versión 2.", identificacion_obligado));
-					
+
 				return datos;
 			}
 
 			throw new ApplicationException(string.Format("No se encontró la identificación {0}", identificacion_obligado));
 		}
-		
+
 
 		/// <summary>
 		/// Obtiene empresa con la identificacion
@@ -1003,7 +1003,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					}
 				}
-				else if(certificadora == EnumCertificadoras.Certicamara.GetHashCode())
+				else if (certificadora == EnumCertificadoras.Certicamara.GetHashCode())
 				{
 					List<string> list_subject = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(Certificado.Subject, ',');
 					foreach (string item in list_subject)
@@ -1076,21 +1076,40 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#region Filtros
 
+		//public object ObtenerAdquirientes(string identificacion)
+		//{
+
+		//	var datos = (from item in context.TblDocumentos
+		//				 where item.TblEmpresasAdquiriente.IntAdquiriente == true
+		//				 group item by new { item.StrEmpresaAdquiriente } into Adquirientes
+		//				 select new
+		//				 {
+		//					 ID = Adquirientes.FirstOrDefault().StrEmpresaAdquiriente,
+		//					 Texto = Adquirientes.FirstOrDefault().TblEmpresasAdquiriente.StrRazonSocial,
+		//					 Fact = Adquirientes.FirstOrDefault().TblEmpresasFacturador.StrIdentificacion
+		//				 }).Where(x => x.Fact.Equals(identificacion)).OrderBy(x => x.Texto).ToList();
+
+		//	return datos;
+		//}
+
+
 		public object ObtenerAdquirientes(string identificacion)
 		{
 
-			var datos = (from item in context.TblDocumentos
-						 where item.TblEmpresasAdquiriente.IntAdquiriente == true
-						 group item by new { item.StrEmpresaAdquiriente } into Adquirientes
+			var datos = (from Adquirientes in context.QryAdquirientes
+						 where Adquirientes.StrEmpresaFacturador.Equals(identificacion)
 						 select new
 						 {
-							 ID = Adquirientes.FirstOrDefault().StrEmpresaAdquiriente,
-							 Texto = Adquirientes.FirstOrDefault().TblEmpresasAdquiriente.StrRazonSocial,
-							 Fact = Adquirientes.FirstOrDefault().TblEmpresasFacturador.StrIdentificacion
-						 }).Where(x => x.Fact.Equals(identificacion)).OrderBy(x => x.Texto).ToList();
+							 ID = Adquirientes.StrEmpresaAdquiriente,
+							 Texto = Adquirientes.StrRazonSocial,
+							 Fact = Adquirientes.StrEmpresaFacturador
+						 }).OrderBy(x => x.Texto).ToList();
 
 			return datos;
 		}
+
+
+
 
 		/// <summary>
 		/// Obtiene todos los adquirientes de tblempresas que sean adquirientes
