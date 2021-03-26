@@ -6,7 +6,7 @@
 
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201019"></script>
-	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs20201019"></script>
+	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs20210326"></script>
 	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20201019"></script>
 
 	<div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController" data-ng-init="consumido=false" data-ng-cloak>

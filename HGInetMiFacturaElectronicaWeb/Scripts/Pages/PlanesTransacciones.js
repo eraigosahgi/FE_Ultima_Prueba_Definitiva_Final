@@ -138,7 +138,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             	}]
             });
 
-			
+
 
 			if (StrIdSeguridad != '' && StrIdSeguridad != null) {
 				Consultar(StrIdSeguridad);
@@ -451,7 +451,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				Datos_DocRef = response.data[0].DocRef;
 				Datos_Meses_Vence = response.data[0].MesesVence;
 
-				if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2 || Datos_TiposProceso == 3) {					
+				if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2 || Datos_TiposProceso == 3) {
 					$("#TipoProceso").dxRadioGroup({ value: TiposProceso[BuscarID(TiposProceso, Datos_TiposProceso)] });
 				}
 
@@ -488,10 +488,10 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					$('#TituloFecVenc').show();
 				}
 
-				if (response.data[0].FechaVence == null) {										
+				if (response.data[0].FechaVence == null || Datos_T_Procesadas == 0) {
 					$('#TituloFecVenc').hide();
-					$("#FechaVence").dxDateBox({ visible: false});
-				} else {					
+					$("#FechaVence").dxDateBox({ visible: false });
+				} else {
 					$("#FechaVence").dxDateBox({ value: response.data[0].FechaVence });
 					$("#FechaVence").dxDateBox({ visible: true });
 					$('#TituloFecVenc').show();
@@ -507,7 +507,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					$scope.FechaInicio = "";
 				}
 
-				
+
 
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 7000);

@@ -74,23 +74,11 @@
 			background-color: white;
 		}
 	</style>
-	<style>
-		.resumen {
-			font-weight: 400;
-			position: relative;
-			margin: 20px auto 0px;
-			padding: 10px;
-			overflow: hidden;
-			box-shadow: inset 0 0 2px 1px rgb(255 255 255 / 8%), 0 16px 10px -8px rgb(155 151 151 / 60%);
-			border-radius: 0.4em;
-			border: 1px solid #898686;
-			background-color: #f4f5f7;
-		}
-	</style>
+
 	<script src="../../Scripts/WebConfig.js?vjs20210308r2"></script>
 	<script src="../../Scripts/Pages/AutenticacionPagos.js?vjs20210308r2"></script>
 	<script src="../../Scripts/Pages/RegistroUsuarioPagos.js"></script>
-	
+
 
 </head>
 <body class="login-container" style="background-color: #eeeded">
@@ -109,7 +97,7 @@
 				<div class="page-container" data-ng-controller="AutenticacionPagosController">
 
 					<!-- Contenido de Página -->
-					<div class="resumen">
+					<div>
 
 						<!-- Main content -->
 						<div class="text-center">
@@ -122,7 +110,7 @@
 
 
 									<div class="text-center">
-										<img src="/../Scripts/Images/LogoHGIFeCertificados.png" id="img_cliente" style="align-content: center; width: 350px" class="img-responsive center-block" />
+										<img id="img_cliente" style="align-content: center; width: 350px" class="img-responsive center-block" />
 										<br />
 										<%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
 										<h5 class="content-group-lg"><small class="display-block">Ingrese los datos de autenticación</small></h5>
@@ -134,27 +122,28 @@
 									</div>
 									<br />
 
-									<table style="width: 100%;">
+									<table style="width: 100%;" class="text-right">
 										<tbody>
 											<tr>
 												<td>
-													<div data-dx-button="buttonOptions"></div>
+													<div  data-dx-button="buttonOptions"></div>
 												</td>
-												<td><a data-toggle="modal" data-target="#modal_restablecer_clave" data-popup="tooltip" title="Restablecer contraseña" style="color: #166dba">
-													<h6>Restablecer contraseña</h6>
-												</a></td>
+												<td></td>
 											</tr>
 										</tbody>
 									</table>
 									<br />
 									<br />
-									<div class="text-center" >
-										<div data-toggle="modal" data-target="#modal_registrar_usuario_pagos" data-popup="tooltip" title="Registrarme"  id="BtnRegistrarme">
-										
-										</div>
+									<div class="text-center">
+										<a data-toggle="modal" data-target="#modal_restablecer_clave" data-popup="tooltip" title="Restablecer contraseña" style="color: #166dba">
+											<h6>Restablecer contraseña</h6>
+										</a>
+										<br />
+										<a data-toggle="modal" data-target="#modal_registrar_usuario_pagos" data-popup="tooltip" style="color: #166dba" title="Registrarme">Registrarme										
+										</a>
 
 
-										
+
 									</div>
 									<br />
 									<div style="font-size: small; margin-bottom: 3%; margin-top: 3%; display: none" class="text-left">
@@ -226,7 +215,7 @@
 			</div>
 		</div>
 
-		
+
 	</div>
 	<div id="panelfondo"></div>
 	<%--/ Modal Restablecer Contraseña--%>

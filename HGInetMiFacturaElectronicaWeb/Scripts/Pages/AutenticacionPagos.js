@@ -218,7 +218,7 @@ AutenticacionPagosApp.controller('RestablecerPagosController', function Restable
 
 	$("#BtnRegistrarme").dxButton({
 		text: "Registrarme",
-		type: "default",
+		//type: "default",
 		onClick: function (e) {
 			setTimeout(function () { $('#txtidentificacionid').focus(); }, 1000);
 		}
