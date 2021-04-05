@@ -510,7 +510,7 @@ namespace HGInetInteroperabilidad.Procesos
 				//FileStream xml_reader = new FileStream(objeto_cadena, FileMode.Open);
 
 				// convierte el contenido de texto a xml
-				XmlReader xml_reader = XmlReader.Create(new StringReader(objeto_cadena));
+				XmlReader xml_reader = XmlReader.Create(new StringReader(objeto_cadena.Trim()));
 
 				XmlSerializer serializacion = null;
 
