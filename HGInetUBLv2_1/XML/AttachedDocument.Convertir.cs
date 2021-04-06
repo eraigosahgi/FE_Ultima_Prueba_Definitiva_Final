@@ -50,9 +50,9 @@ namespace HGInetUBLv2_1
 
 				attach_document.Identificacionadquiriente = attach_ubl.ReceiverParty.PartyTaxScheme[0].CompanyID.Value;
 
-				attach_document.RespuestaDianXml = attach_ubl.ParentDocumentLineReference[0].DocumentReference.Attachment.ExternalReference.Description[0].Value;
+				attach_document.RespuestaDianXml = attach_ubl.ParentDocumentLineReference[0].DocumentReference.Attachment.ExternalReference.Description[0].Value.Trim();
 
-				attach_document.DocumentoElectronico = attach_ubl.Attachment.ExternalReference.Description[0].Value;
+				attach_document.DocumentoElectronico = attach_ubl.Attachment.ExternalReference.Description[0].Value.Trim();
 			}
 			catch (Exception ex)
 			{

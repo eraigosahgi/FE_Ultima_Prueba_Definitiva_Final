@@ -145,6 +145,8 @@ namespace HGInetUBLv2_1
 					factura_obj.FechaVence = factura_ubl.DueDate.Value;
 				else if (factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate != null)
 					factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
+				else
+					factura_obj.FechaVence = fecha_hora;
 				factura_obj.FormaPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().ID.Value);
 				if (factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value.Equals("ZZZ"))
 					factura_obj.TerminoPago = 0;
