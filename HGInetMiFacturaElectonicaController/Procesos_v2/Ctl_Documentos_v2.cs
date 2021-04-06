@@ -109,6 +109,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Validacion si es un documento de nomina y si se esta validando el objeto enviado
 					bool continuar_proceso = true;
 
+					//Cambiar validacion para produccion.
 					if (tipo_doc == TipoDocumento.Nomina && (empresa.IntHabilitacionNomina == null || empresa.IntHabilitacionNomina < Habilitacion.Pruebas.GetHashCode()))
 						continuar_proceso = false;
 

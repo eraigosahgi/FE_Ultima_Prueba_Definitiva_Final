@@ -1875,7 +1875,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			int dias_incapacidad = 0;
 			int dias_licencia = 0;
 			int dias_trabajados = 0;
-			decimal valor_dia = salario_empleado / dias_laborales_mes;
+			decimal valor_dia = decimal.Round(salario_empleado / dias_laborales_mes,2, MidpointRounding.AwayFromZero);
 
 			if (devengado == null)
 				throw new Exception("No se encontró devengados en el documento.");
@@ -2102,12 +2102,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			dias_trabajados = dias_laborales_mes - dias_incapacidad - dias_licencia;
 
 			if (!devengado.DiasTrabajados.Equals(dias_trabajados))
-				throw new ApplicationException(string.Format("El campo {0} con valor {1} de los devengados no está bien formado, según el resultado de dias laborales del mes menos incacidades y menos licencias con valor {2}", "DiasTrabajados", devengado.DiasTrabajados, dias_trabajados));
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} de los devengados no está bien formado, según el resultado de dias laborales del mes menos incapacidades y menos licencias debe ser un valor de {2}", "DiasTrabajados", devengado.DiasTrabajados, dias_trabajados));
 
 			if (devengado.SueldoTrabajado.Equals(dias_trabajados * valor_dia))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} del devengado no está bien formado", "SueldoTrabajado", devengado.SueldoTrabajado));
 
-			valor_devengado += devengado.Comisiones.Sum() + devengado.PagosTerceros.Sum() + devengado.Anticipos.Sum() + devengado.Dotacion + devengado.Teletrabajo + devengado.BonifRetiro + devengado.Indemnizacion ;
+			decimal Comisiones = devengado.Comisiones != null ? devengado.Comisiones.Sum() : 0;
+			decimal PagosTerceros = devengado.PagosTerceros != null ? devengado.PagosTerceros.Sum() : 0;
+			decimal Anticipos = devengado.Anticipos != null ? devengado.Anticipos.Sum() : 0;
+
+			valor_devengado += devengado.SueldoTrabajado + Comisiones + PagosTerceros + Anticipos + devengado.Dotacion + devengado.Teletrabajo + devengado.BonifRetiro + devengado.Indemnizacion ;
 
 			return valor_devengado;
 
@@ -2210,8 +2214,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			}
 
-			valor_deduccion += deduccion.PagosTerceros.Sum() + deduccion.Anticipos.Sum() +
-			                   deduccion.OtrasDeducciones.Sum() + deduccion.PensionVoluntaria +
+			decimal OtrasDeducciones = deduccion.OtrasDeducciones != null ? deduccion.OtrasDeducciones.Sum() : 0;
+			decimal PagosTerceros = deduccion.PagosTerceros != null ? deduccion.PagosTerceros.Sum() : 0;
+			decimal Anticipos = deduccion.Anticipos != null ? deduccion.Anticipos.Sum() : 0;
+
+			valor_deduccion += PagosTerceros + Anticipos +
+							   OtrasDeducciones + deduccion.PensionVoluntaria +
 			                   deduccion.RetencionFuente + deduccion.ICA + deduccion.AFC + deduccion.Cooperativa +
 			                   deduccion.EmbargoFiscal + deduccion.PlanComplementarios + deduccion.Educacion +
 			                   deduccion.Reintegro + deduccion.Deuda;
