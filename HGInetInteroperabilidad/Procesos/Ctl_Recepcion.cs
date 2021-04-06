@@ -618,6 +618,8 @@ namespace HGInetInteroperabilidad.Procesos
 
 				if (actualizar_emisor == true)
 				{
+					//Se coloca el mismo ambiente en el que este el facturador receptor(0 y 1 Habilitacion, 99 - Produccion)
+					facturador_emisor.IntHabilitacion = ambiente;
 					empresa.Actualizar(facturador_emisor);
 				}
 
@@ -628,9 +630,6 @@ namespace HGInetInteroperabilidad.Procesos
 				{
 					facturador_emisor.IntHabilitacion = (byte)Habilitacion.Produccion.GetHashCode();
 				}*/
-
-				//Se coloca el mismo ambiente en el que este el facturador receptor(0 y 1 Habilitacion, 99 - Produccion)
-				facturador_emisor.IntHabilitacion = ambiente;
 
 				//Se crea Resolucion
 				TblEmpresasResoluciones resolucion = new TblEmpresasResoluciones();
