@@ -5,6 +5,7 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectronicaAudit.Controladores;
 using HGInetMiFacturaElectronicaAudit.Modelo;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.RegistroLog;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			}
 			catch (Exception excepcion)
 			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion,string.Format("Error al intentar crear la alerta Cliente {0}, {1} ", StrIdentificacion, StrMensaje));
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}

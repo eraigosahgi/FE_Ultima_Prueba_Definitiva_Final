@@ -406,7 +406,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 													   where ListaFacturadores.Contains(t.StrEmpresaFacturador)
 														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
 														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == Plan_PostPago))
-													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFechaVencimiento }).ToList();
+													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
 
 			List<ObjPlanEnProceso> listaobjproceso = new List<ObjPlanEnProceso>();
 			ObjPlanEnProceso objproceso = new ObjPlanEnProceso();
