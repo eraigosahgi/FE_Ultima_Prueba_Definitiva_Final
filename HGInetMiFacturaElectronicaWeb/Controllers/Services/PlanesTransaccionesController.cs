@@ -354,10 +354,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 
-				if (Vence && MesesVence>0)
-				{
-					ObjPlanTransacciones.DatFechaVencimiento = DateTime.Now.AddMonths(MesesVence);					
-				}
+				//if (Vence && MesesVence>0)
+				//{
+				//	ObjPlanTransacciones.DatFechaVencimiento = DateTime.Now.AddMonths(MesesVence);					
+				//}
 
 				clase_planes.Crear(ObjPlanTransacciones, Envia_email);
 
