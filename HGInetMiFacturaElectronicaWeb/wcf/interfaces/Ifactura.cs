@@ -25,11 +25,16 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		[OperationContract(Name = "ObtenerPorFechasAdquiriente")]
 		[FaultContract(typeof(Error), Action = "ObtenerPorFechasAdquiriente", Name = "Error")]
 		[WebInvoke(Method = "GET")]
-		List<FacturaConsulta> ObtenerPorFechasAdquiriente(string DataKey, string Identificacion, DateTime FechaInicio, DateTime FechaFinal);
+		List<FacturaConsulta> ObtenerPorFechasAdquiriente(string DataKey, string Identificacion, DateTime FechaInicio, DateTime FechaFinal, int Procesados_ERP = 0);
 
-        [OperationContract(Name = "ObtenerPorIdSeguridadAdquiriente")]
-        [FaultContract(typeof(Error), Action = "ObtenerPorIdSeguridadAdquiriente", Name = "Error")]
-        [WebInvoke(Method = "GET")]
-        List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros);
-    }
+		[OperationContract(Name = "ObtenerPorIdSeguridadAdquiriente")]
+		[FaultContract(typeof(Error), Action = "ObtenerPorIdSeguridadAdquiriente", Name = "Error")]
+		[WebInvoke(Method = "GET")]
+		List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros);
+
+		[OperationContract(Name = "ActualizarEstadoProcesoERP")]
+		[FaultContract(typeof(Error), Action = "ActualizarEstadoProcesoERP", Name = "Error")]
+		[WebInvoke(Method = "GET")]
+		List<FacturaConsulta> ActualizarEstadoProcesoERP(string DataKey, string Identificacion, string CodigosRegistros);
+	}
 }

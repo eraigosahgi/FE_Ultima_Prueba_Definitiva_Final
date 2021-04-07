@@ -57,11 +57,11 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		/// <param name="FechaInicial">fecha inicial del rango de búsqueda - aplica sobre la fecha del registro</param>
 		/// <param name="FechaFinal">fecha final del rango de búsqueda - aplica sobre la fecha del registro</param>
 		/// <returns>documentos facturas entre fechas por adquiriente</returns>
-		public List<FacturaConsulta> ObtenerPorFechasAdquiriente(string DataKey, string Identificacion, DateTime FechaInicio, DateTime FechaFinal)
-        {
-            try
-            {
-                
+		public List<FacturaConsulta> ObtenerPorFechasAdquiriente(string DataKey, string Identificacion, DateTime FechaInicio, DateTime FechaFinal, int Procesados_ERP = 0)
+		{
+			try
+			{
+
 				if (string.IsNullOrEmpty(DataKey))
 					throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
 
@@ -83,8 +83,8 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				Ctl_Factura ctl_documento = new Ctl_Factura();
 
-                // obtiene los datos
-                respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);
+				// obtiene los datos
+				respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal, Procesados_ERP);
 
 				//Almacena la petición
 				try
@@ -97,15 +97,56 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				return respuesta;
 
-            }
-            catch (Exception exec)
-            {
-                Error error = new Error(CodigoError.VALIDACION, exec);
-                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
-            }
-        }
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
 
-        /// <summary>
+		/// <summary>
+		///Actualiza el estado de proceso de los documentos a procesados en el ERP
+		/// </summary>
+		/// <param name="DataKey">Clave compuesta (serial + identificación obligado ) en formato Sha1</param>
+		/// <param name="Identificacion">identificación obligado</param>		
+		/// <param name="CodigosRegistros">código de registro de los Pagos (recibe varios códigos separados por coma)</param>
+		/// <returns></returns>
+		public List<FacturaConsulta> ActualizarEstadoProcesoERP(string DataKey, string Identificacion, string CodigosRegistros)
+		{
+			try
+			{
+				List<FacturaConsulta> respuesta = new List<FacturaConsulta>();
+
+				//Válida que la key sea correcta.
+				Peticion.Validar(DataKey, Identificacion);
+
+
+				Ctl_Factura ctl_documento = new Ctl_Factura();
+
+				//Obtiene los datos
+				respuesta = ctl_documento.ActualizarEstadoProcesoERP(Identificacion, CodigosRegistros);
+
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("ActualizarEstadoProcesoERP", DataKey, Identificacion, CodigosRegistros.ToString(), respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{
+				}
+
+				return respuesta;
+
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
+		/// <summary>
 		/// Obtiene los documentos facturas para un adquiriente específico en un rango de tiempo especifico
 		/// </summary>
 		/// <param name="DataKey">Clave compuesta (serial + identificación obligado) en formato Sha1</param>
@@ -113,26 +154,26 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		/// <param  <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
 		/// <returns>documentos facturas entre fechas por adquiriente</returns>
 		public List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros)
-        {
-            try
-            {
+		{
+			try
+			{
 
-                if (string.IsNullOrEmpty(DataKey))
-                    throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
+				if (string.IsNullOrEmpty(DataKey))
+					throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
 
-                if (string.IsNullOrEmpty(Identificacion))
-                    throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+				if (string.IsNullOrEmpty(Identificacion))
+					throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
 
-                List<FacturaConsulta> respuesta = new List<FacturaConsulta>();
+				List<FacturaConsulta> respuesta = new List<FacturaConsulta>();
 
-                //Válida que la key sea correcta.
-                Peticion.Validar(DataKey, Identificacion);
+				//Válida que la key sea correcta.
+				Peticion.Validar(DataKey, Identificacion);
 
-                Ctl_Factura ctl_documento = new Ctl_Factura();
+				Ctl_Factura ctl_documento = new Ctl_Factura();
 
-                // obtiene los datos
-                respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros);
+				// obtiene los datos
+				respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros);
 
 				//Almacena la petición
 				try
@@ -145,39 +186,39 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				return respuesta;
 
-            }
-            catch (Exception exec)
-            {
-                Error error = new Error(CodigoError.VALIDACION, exec);
-                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
-            }
-        }
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
 
 
-        /// <summary>
+		/// <summary>
 		/// Método Web para probar Formato
 		/// </summary>
 		/// <param name="formato">formato</param>
 		/// <returns>resultado de la operación</returns>
 		private string TestFormato(Formato formato)
-        {
-            try
-            {
-                // id de la petición en la plataforma
-                Guid id_peticion = Guid.NewGuid();
+		{
+			try
+			{
+				// id de la petición en la plataforma
+				Guid id_peticion = Guid.NewGuid();
 
-                string nombre_pdf = string.Empty;
+				string nombre_pdf = string.Empty;
 
-                nombre_pdf = Ctl_Formato.GuardarArchivo(formato, "log_pdf", id_peticion.ToString());
+				nombre_pdf = Ctl_Formato.GuardarArchivo(formato, "log_pdf", id_peticion.ToString());
 
-                return nombre_pdf;
-            }
-            catch (Exception exec)
-            {
-                Error error = new Error(CodigoError.VALIDACION, exec);
-                throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
-            }
-        }
+				return nombre_pdf;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
 
-    }
+	}
 }
