@@ -4326,6 +4326,15 @@ namespace HGInetFeAPI.ServicioFactura {
             "iente", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioFactura/ObtenerPorIdSeguridadAdquir" +
             "ienteResponse")]
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioFactura.ObtenerPorIdSeguridadAdquirienteResponse> ObtenerPorIdSeguridadAdquirienteAsync(HGInetFeAPI.ServicioFactura.ObtenerPorIdSeguridadAdquirienteRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioFactura/ActualizarEstadoProcesoERP", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioFactura/ActualizarEstadoProcesoERPR" +
+            "esponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioFactura.Error), Action="ActualizarEstadoProcesoERP", Name="Error")]
+        HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPResponse ActualizarEstadoProcesoERP(HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioFactura/ActualizarEstadoProcesoERP", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioFactura/ActualizarEstadoProcesoERPR" +
+            "esponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPResponse> ActualizarEstadoProcesoERPAsync(HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -4402,14 +4411,18 @@ namespace HGInetFeAPI.ServicioFactura {
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=3)]
         public System.DateTime FechaFinal;
         
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=4)]
+        public int Procesados_ERP;
+        
         public ObtenerPorFechasAdquirienteRequest() {
         }
         
-        public ObtenerPorFechasAdquirienteRequest(string DataKey, string Identificacion, System.DateTime FechaInicio, System.DateTime FechaFinal) {
+        public ObtenerPorFechasAdquirienteRequest(string DataKey, string Identificacion, System.DateTime FechaInicio, System.DateTime FechaFinal, int Procesados_ERP) {
             this.DataKey = DataKey;
             this.Identificacion = Identificacion;
             this.FechaInicio = FechaInicio;
             this.FechaFinal = FechaFinal;
+            this.Procesados_ERP = Procesados_ERP;
         }
     }
     
@@ -4466,6 +4479,46 @@ namespace HGInetFeAPI.ServicioFactura {
         
         public ObtenerPorIdSeguridadAdquirienteResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.FacturaConsulta> ObtenerPorIdSeguridadAdquirienteResult) {
             this.ObtenerPorIdSeguridadAdquirienteResult = ObtenerPorIdSeguridadAdquirienteResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ActualizarEstadoProcesoERP", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ActualizarEstadoProcesoERPRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public string DataKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=1)]
+        public string Identificacion;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
+        public string CodigosRegistros;
+        
+        public ActualizarEstadoProcesoERPRequest() {
+        }
+        
+        public ActualizarEstadoProcesoERPRequest(string DataKey, string Identificacion, string CodigosRegistros) {
+            this.DataKey = DataKey;
+            this.Identificacion = Identificacion;
+            this.CodigosRegistros = CodigosRegistros;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ActualizarEstadoProcesoERPResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ActualizarEstadoProcesoERPResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.FacturaConsulta> ActualizarEstadoProcesoERPResult;
+        
+        public ActualizarEstadoProcesoERPResponse() {
+        }
+        
+        public ActualizarEstadoProcesoERPResponse(System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.FacturaConsulta> ActualizarEstadoProcesoERPResult) {
+            this.ActualizarEstadoProcesoERPResult = ActualizarEstadoProcesoERPResult;
         }
     }
     
@@ -4526,6 +4579,14 @@ namespace HGInetFeAPI.ServicioFactura {
         
         public System.Threading.Tasks.Task<HGInetFeAPI.ServicioFactura.ObtenerPorIdSeguridadAdquirienteResponse> ObtenerPorIdSeguridadAdquirienteAsync(HGInetFeAPI.ServicioFactura.ObtenerPorIdSeguridadAdquirienteRequest request) {
             return base.Channel.ObtenerPorIdSeguridadAdquirienteAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPResponse ActualizarEstadoProcesoERP(HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPRequest request) {
+            return base.Channel.ActualizarEstadoProcesoERP(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPResponse> ActualizarEstadoProcesoERPAsync(HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPRequest request) {
+            return base.Channel.ActualizarEstadoProcesoERPAsync(request);
         }
     }
 }

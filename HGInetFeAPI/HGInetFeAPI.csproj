@@ -209,6 +209,9 @@
     <None Include="Service References\ServicioFactura\factura5.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.ObtenerPorFechasAdquirienteResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -565,21 +568,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioFactura\factura.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioFactura\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioFactura\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioFactura\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioPagosElectronicos\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -608,6 +596,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\factura.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

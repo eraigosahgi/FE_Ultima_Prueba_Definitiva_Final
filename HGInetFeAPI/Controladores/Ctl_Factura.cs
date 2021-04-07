@@ -123,8 +123,9 @@ namespace HGInetFeAPI
 		/// <param name="Identificacion">número de identificación del Adquiriente</param>
 		/// <param name="FechaInicio">fecha inicial de consulta</param>
 		/// <param name="FechaFin">fecha final de consulta</param>
+		/// <param name="ProcesadosERP">indica el Documento fue procesado o no: 0 Todos Los Documentos, 1 Documentos Procesados, 2 Documentos que aun no se han Procesado</param>
 		/// <returns>Una lista de las Facturas generadas a nombre del adquiriente</returns>
-		public static List<ServicioFactura.FacturaConsulta> ObtenerFacturaPorAdquiriente(string UrlWs, string Serial, string Identificacion, DateTime FechaInicio, DateTime FechaFin)
+		public static List<ServicioFactura.FacturaConsulta> ObtenerFacturaPorAdquiriente(string UrlWs, string Serial, string Identificacion, DateTime FechaInicio, DateTime FechaFin, int ProcesadosERP = 2)
 		{
 
 			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
@@ -173,6 +174,7 @@ namespace HGInetFeAPI
 					Identificacion = Identificacion,
 					FechaInicio = FechaInicio,
 					FechaFinal = FechaFin,
+					Procesados_ERP = ProcesadosERP
 				};
 
 				// ejecución del servicio web
@@ -205,6 +207,91 @@ namespace HGInetFeAPI
 					cliente_ws.Abort();
 			}
 		}
+
+
+		/// <summary>
+		/// Permite actualizar el estado de los documentos procesado y retornar la lista de documentos enviados a actualizar
+		/// </summary>
+		/// <param name="UrlWs">ruta principal de ejecución del servicio web HGI Facturación Electrónica (http)</param>
+		/// <param name="Serial">serial de licenciamiento para HGI Facturación Electrónica</param>
+		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
+		/// <param name="CodigosPagos">còdigos de documentos separados por el caracter coma (,), campo IdSeguridad de documento en plataforma de FE</param>		
+		/// <returns>Una lista de las Facturas actualizadas</returns>
+		public static List<ServicioFactura.FacturaConsulta> ActualizarEstadoProcesoERP(string UrlWs, string Serial, string Identificacion, string CodigosDocumentos)
+		{
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
+			{
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
+			}
+
+			// valida la URL del servicio web
+			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			// valida el parámetro Serial
+			if (string.IsNullOrEmpty(Serial))
+				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
+
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(Identificacion))
+				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+			List<ServicioFactura.FacturaConsulta> datos = new List<ServicioFactura.FacturaConsulta>();
+
+			
+			ServicioFactura.ServicioFacturaClient cliente_ws = null;
+
+			try
+			{
+				// conexión cliente para el servicio web
+				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+				// datos para la petición
+				ServicioFactura.ActualizarEstadoProcesoERPRequest peticion = new ServicioFactura.ActualizarEstadoProcesoERPRequest()
+				{
+					DataKey = dataKey,
+					Identificacion = Identificacion,
+					CodigosRegistros = CodigosDocumentos
+				};
+
+				// ejecución del servicio web
+
+				ServicioFactura.ActualizarEstadoProcesoERPResponse respuesta = cliente_ws.ActualizarEstadoProcesoERP(peticion);
+
+				// resultado del servicio web
+				List<ServicioFactura.FacturaConsulta> result = respuesta.ActualizarEstadoProcesoERPResult;
+
+				if (respuesta != null)
+					return result;
+				else
+					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			}
+			catch (FaultException excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion);
+			}
+			catch (CommunicationException excepcion)
+			{
+				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			}
+			catch (Exception excepcion)
+			{
+				throw excepcion;
+			}
+			finally
+			{
+				if (cliente_ws != null)
+					cliente_ws.Abort();
+			}
+		}
+
 
 
 		/// <summary>
