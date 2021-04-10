@@ -3600,6 +3600,48 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			});
 		}
 
+
+
+		public List<TblDocumentos> ConsultarPagosFueraPlataforma(string codigo_facturador, string numero_documento, string codigo_adquiriente, string prefijo, bool empresa_maneja_lista_documentos)
+		{
+
+			long num_doc = -1;
+			long.TryParse(numero_documento, out num_doc);
+
+			if (string.IsNullOrWhiteSpace(numero_documento))
+				numero_documento = "*";
+
+			//Si la empresa maneja la opcion de consultar lista de documentos
+			if (empresa_maneja_lista_documentos)
+			{
+				//Si viene en null, entonces se cambia a "*"
+				if (string.IsNullOrWhiteSpace(prefijo))
+					prefijo = "*";
+			}
+			else
+			{
+				//si la empresa no maneja lista de documentos y viene en "*", se cambia a "", para que no puedan buscar por todos los prefijos
+				if (prefijo.Equals("*"))
+				{
+					prefijo = "";
+				}
+			}
+
+			List<TblDocumentos> documentos = new List<TblDocumentos>();
+
+
+			documentos = (from datos in context.TblDocumentos
+						  where datos.StrEmpresaFacturador.Equals(codigo_facturador)
+						  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente))
+						  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+						  && (datos.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
+						  select datos).ToList();
+
+			return documentos;
+		}
+
+
+
 	}
 
 }

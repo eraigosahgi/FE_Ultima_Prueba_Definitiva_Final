@@ -1821,5 +1821,70 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				//throw new ApplicationException(ex.Message, ex.InnerException);
 			}
 		}
+
+
+
+		[HttpGet]
+		[Route("api/ConsultarPagosFueraPlataforma")]
+		public HttpResponseMessage ConsultarPagosFueraPlataforma(System.Guid IdSeguridad, string identificacion, string documento, string prefijo)
+		{
+
+			try
+			{
+				if (string.IsNullOrEmpty(IdSeguridad.ToString()))
+				{
+					return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro serial en la petición");
+				}
+
+				if (string.IsNullOrEmpty(identificacion))
+				{
+					return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro identificación en la petición");
+				}
+
+				//if (string.IsNullOrEmpty(documento))
+				//{
+				//	return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro documento en la petición");
+				//}
+
+
+				Ctl_Empresa _empresa = new Ctl_Empresa();
+				TblEmpresas empresa = _empresa.Obtener(IdSeguridad, false).FirstOrDefault();
+
+
+				if (empresa == null)
+				{
+					return Request.CreateResponse(HttpStatusCode.InternalServerError, "Empresa no existe o serial invalido");
+				}
+
+				bool empresa_maneja_lista_documentos = true;
+
+				Ctl_Documento Controlador = new Ctl_Documento();
+				List<TblDocumentos> datos = Controlador.ConsultarPagosFueraPlataforma(empresa.StrIdentificacion, documento, identificacion, prefijo, empresa_maneja_lista_documentos);
+
+				if (datos == null)
+				{
+					return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro ningún documento con los criterios de busqueda");
+				}
+
+
+				var retorno = datos.Select(d => new
+				{
+					d.StrIdSeguridad,
+					d.StrPrefijo,
+					d.IntNumero,
+					d.IntVlrTotal
+				});
+
+				return Request.CreateResponse(HttpStatusCode.OK, retorno);
+
+			}
+			catch (Exception ex)
+			{
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+			}
+
+		}
+
+
 	}
 }
