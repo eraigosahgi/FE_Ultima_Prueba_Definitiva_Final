@@ -77,6 +77,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntManejaPagoE { get; set; }
         public bool IntPagoEParcial { get; set; }
         public Nullable<byte> IntHabilitacionNomina { get; set; }
+        public bool IntPagosPermiteConsTodos { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }
