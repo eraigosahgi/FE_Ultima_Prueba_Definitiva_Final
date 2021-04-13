@@ -740,7 +740,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//Validacion Sector Salud
 			if (documento.SectorSalud != null)
 			{
-				if (documento.SectorSalud.CamposSector.Count == 0 || documento.SectorSalud.CamposSector.Count < 22 || documento.SectorSalud.CamposSector.Count > 21)
+				if (documento.SectorSalud.CamposSector.Count == 0 || documento.SectorSalud.CamposSector.Count < 21 || documento.SectorSalud.CamposSector.Count > 21)
 					throw new ApplicationException("No se encontró la cantidad correcta de información del Sector Salud, deben ser 21 items Según Resolucion 084 del ministerio de Salud");
 
 				CampoValor valid_salud = new CampoValor();
