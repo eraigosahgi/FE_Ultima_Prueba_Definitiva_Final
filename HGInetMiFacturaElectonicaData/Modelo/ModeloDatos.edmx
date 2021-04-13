@@ -406,6 +406,44 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryAdqui
           <Property Name="StrEmpresaAdquiriente" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrRazonSocial" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocumentosSaldo' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="QryDocumentosSaldo">
+          <Key>
+            <PropertyRef Name="IntVlrTotal" />
+            <PropertyRef Name="StrIdSeguridad" />
+            <PropertyRef Name="IntDocTipo" />
+            <PropertyRef Name="StrEmpresaFacturador" />
+            <PropertyRef Name="StrNumResolucion" />
+            <PropertyRef Name="StrPrefijo" />
+            <PropertyRef Name="IntNumero" />
+            <PropertyRef Name="StrEmpresaAdquiriente" />
+            <PropertyRef Name="IntAdquirienteRecibo" />
+            <PropertyRef Name="IntIdEstado" />
+            <PropertyRef Name="IdCategoriaEstado" />
+            <PropertyRef Name="IntValorSubtotal" />
+            <PropertyRef Name="IntValorNeto" />
+            <PropertyRef Name="IntEstadoEnvio" />
+          </Key>
+          <Property Name="IntVlrTotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
+          <Property Name="Abono" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IntDocTipo" Type="int" Nullable="false" />
+          <Property Name="StrEmpresaFacturador" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrNumResolucion" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="StrPrefijo" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="IntNumero" Type="bigint" Nullable="false" />
+          <Property Name="StrEmpresaAdquiriente" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IntAdquirienteRecibo" Type="smallint" Nullable="false" />
+          <Property Name="StrAdquirienteMvoRechazo" Type="varchar" MaxLength="500" />
+          <Property Name="IntIdEstado" Type="smallint" Nullable="false" />
+          <Property Name="IntIdEstadoPago" Type="smallint" />
+          <Property Name="IdCategoriaEstado" Type="int" Nullable="false" />
+          <Property Name="IntEnvioMail" Type="bit" />
+          <Property Name="IntValorSubtotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
+          <Property Name="IntValorNeto" Type="numeric" Precision="17" Scale="2" Nullable="false" />
+          <Property Name="IntEstadoEnvio" Type="smallint" Nullable="false" />
+        </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Role="TblConfiguracionInteroperabilidad" Type="Self.TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
           <End Role="TblDocumentos" Type="Self.TblDocumentos" Multiplicity="*" />
@@ -656,6 +694,28 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryAdqui
     [QryAdquirientes].[StrRazonSocial] AS [StrRazonSocial]
     FROM [dbo].[QryAdquirientes] AS [QryAdquirientes]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="QryDocumentosSaldo" EntityType="Self.QryDocumentosSaldo" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [QryDocumentosSaldo].[IntVlrTotal] AS [IntVlrTotal], 
+    [QryDocumentosSaldo].[Abono] AS [Abono], 
+    [QryDocumentosSaldo].[StrIdSeguridad] AS [StrIdSeguridad], 
+    [QryDocumentosSaldo].[IntDocTipo] AS [IntDocTipo], 
+    [QryDocumentosSaldo].[StrEmpresaFacturador] AS [StrEmpresaFacturador], 
+    [QryDocumentosSaldo].[StrNumResolucion] AS [StrNumResolucion], 
+    [QryDocumentosSaldo].[StrPrefijo] AS [StrPrefijo], 
+    [QryDocumentosSaldo].[IntNumero] AS [IntNumero], 
+    [QryDocumentosSaldo].[StrEmpresaAdquiriente] AS [StrEmpresaAdquiriente], 
+    [QryDocumentosSaldo].[IntAdquirienteRecibo] AS [IntAdquirienteRecibo], 
+    [QryDocumentosSaldo].[StrAdquirienteMvoRechazo] AS [StrAdquirienteMvoRechazo], 
+    [QryDocumentosSaldo].[IntIdEstado] AS [IntIdEstado], 
+    [QryDocumentosSaldo].[IntIdEstadoPago] AS [IntIdEstadoPago], 
+    [QryDocumentosSaldo].[IdCategoriaEstado] AS [IdCategoriaEstado], 
+    [QryDocumentosSaldo].[IntEnvioMail] AS [IntEnvioMail], 
+    [QryDocumentosSaldo].[IntValorSubtotal] AS [IntValorSubtotal], 
+    [QryDocumentosSaldo].[IntValorNeto] AS [IntValorNeto], 
+    [QryDocumentosSaldo].[IntEstadoEnvio] AS [IntEstadoEnvio]
+    FROM [dbo].[QryDocumentosSaldo] AS [QryDocumentosSaldo]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" Association="Self.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
             <End Role="TblConfiguracionInteroperabilidad" EntitySet="TblConfiguracionInteroperabilidad" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
@@ -825,6 +885,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryAdqui
           <EntitySet Name="TblProcesoCorreo" EntityType="Modelo.TblProcesoCorreo" />
           <EntitySet Name="TblUsuariosPagos" EntityType="Modelo.TblUsuariosPagos" />
           <EntitySet Name="QryAdquirientes" EntityType="Modelo.QryAdquirientes" />
+          <EntitySet Name="QryDocumentosSaldo" EntityType="Modelo.QryDocumentosSaldo" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1485,6 +1546,42 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryAdqui
           <Property Name="StrEmpresaAdquiriente" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrRazonSocial" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="QryDocumentosSaldo">
+          <Key>
+            <PropertyRef Name="IntVlrTotal" />
+            <PropertyRef Name="StrIdSeguridad" />
+            <PropertyRef Name="IntDocTipo" />
+            <PropertyRef Name="StrEmpresaFacturador" />
+            <PropertyRef Name="StrNumResolucion" />
+            <PropertyRef Name="StrPrefijo" />
+            <PropertyRef Name="IntNumero" />
+            <PropertyRef Name="StrEmpresaAdquiriente" />
+            <PropertyRef Name="IntAdquirienteRecibo" />
+            <PropertyRef Name="IntIdEstado" />
+            <PropertyRef Name="IdCategoriaEstado" />
+            <PropertyRef Name="IntValorSubtotal" />
+            <PropertyRef Name="IntValorNeto" />
+            <PropertyRef Name="IntEstadoEnvio" />
+          </Key>
+          <Property Name="IntVlrTotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
+          <Property Name="Abono" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <Property Name="IntDocTipo" Type="Int32" Nullable="false" />
+          <Property Name="StrEmpresaFacturador" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrNumResolucion" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StrPrefijo" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="IntNumero" Type="Int64" Nullable="false" />
+          <Property Name="StrEmpresaAdquiriente" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntAdquirienteRecibo" Type="Int16" Nullable="false" />
+          <Property Name="StrAdquirienteMvoRechazo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IntIdEstado" Type="Int16" Nullable="false" />
+          <Property Name="IntIdEstadoPago" Type="Int16" />
+          <Property Name="IdCategoriaEstado" Type="Int32" Nullable="false" />
+          <Property Name="IntEnvioMail" Type="Boolean" />
+          <Property Name="IntValorSubtotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
+          <Property Name="IntValorNeto" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
+          <Property Name="IntEstadoEnvio" Type="Int16" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1896,6 +1993,30 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryAdqui
                 <ScalarProperty Name="StrRazonSocial" ColumnName="StrRazonSocial" />
                 <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
                 <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QryDocumentosSaldo">
+            <EntityTypeMapping TypeName="Modelo.QryDocumentosSaldo">
+              <MappingFragment StoreEntitySet="QryDocumentosSaldo">
+                <ScalarProperty Name="IntEstadoEnvio" ColumnName="IntEstadoEnvio" />
+                <ScalarProperty Name="IntValorNeto" ColumnName="IntValorNeto" />
+                <ScalarProperty Name="IntValorSubtotal" ColumnName="IntValorSubtotal" />
+                <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />
+                <ScalarProperty Name="IdCategoriaEstado" ColumnName="IdCategoriaEstado" />
+                <ScalarProperty Name="IntIdEstadoPago" ColumnName="IntIdEstadoPago" />
+                <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+                <ScalarProperty Name="StrAdquirienteMvoRechazo" ColumnName="StrAdquirienteMvoRechazo" />
+                <ScalarProperty Name="IntAdquirienteRecibo" ColumnName="IntAdquirienteRecibo" />
+                <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+                <ScalarProperty Name="IntNumero" ColumnName="IntNumero" />
+                <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+                <ScalarProperty Name="StrNumResolucion" ColumnName="StrNumResolucion" />
+                <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+                <ScalarProperty Name="IntDocTipo" ColumnName="IntDocTipo" />
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="Abono" ColumnName="Abono" />
+                <ScalarProperty Name="IntVlrTotal" ColumnName="IntVlrTotal" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

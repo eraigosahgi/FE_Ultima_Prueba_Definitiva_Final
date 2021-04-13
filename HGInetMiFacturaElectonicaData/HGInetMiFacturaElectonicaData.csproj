@@ -197,6 +197,9 @@
     <Compile Include="Modelo\QryAdquirientes.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\QryDocumentosSaldo.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblAlertas.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
