@@ -3601,8 +3601,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 
-
-		public List<TblDocumentos> ConsultarPagosFueraPlataforma(string codigo_facturador, string numero_documento, string codigo_adquiriente, string prefijo, bool empresa_maneja_lista_documentos)
+		/// <summary>
+		/// Consulta documentos 
+		/// </summary>
+		/// <param name="codigo_facturador"></param>
+		/// <param name="numero_documento"></param>
+		/// <param name="codigo_adquiriente"></param>
+		/// <param name="prefijo"></param>
+		/// <param name="empresa_maneja_lista_documentos"></param>
+		/// <returns></returns>
+		public List<QryDocumentosSaldo> ConsultarPagosFueraPlataforma(string codigo_facturador, string numero_documento, string codigo_adquiriente, string prefijo, bool empresa_maneja_lista_documentos)
 		{
 
 			long num_doc = -1;
@@ -3629,18 +3637,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			List<TblDocumentos> documentos = new List<TblDocumentos>();
 
+			var datos = (from doc in context.QryDocumentosSaldo
+						 where doc.StrEmpresaFacturador.Equals(codigo_facturador)
+						 && doc.StrEmpresaAdquiriente.Equals(codigo_adquiriente)
+						  && (doc.IntNumero == num_doc || numero_documento.Equals("*"))
+						  && (doc.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
+						 select doc).OrderBy(x => x.IntNumero).ToList();
 
-			documentos = (from datos in context.TblDocumentos
-						  where datos.StrEmpresaFacturador.Equals(codigo_facturador)
-						  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente))
-						  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
-						  && (datos.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
-						  select datos).ToList();
+			//documentos = (from datos in context.TblDocumentos
+			//			  where datos.StrEmpresaFacturador.Equals(codigo_facturador)
+			//			  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente))
+			//			  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+			//			  && (datos.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
+			//			  select datos).ToList();
 
-			return documentos;
+
+			return datos;
 		}
-
-
 
 	}
 

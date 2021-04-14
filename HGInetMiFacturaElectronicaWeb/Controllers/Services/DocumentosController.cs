@@ -1841,10 +1841,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro identificación en la petición");
 				}
 
-				//if (string.IsNullOrEmpty(documento))
-				//{
-				//	return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro documento en la petición");
-				//}
 
 
 				Ctl_Empresa _empresa = new Ctl_Empresa();
@@ -1858,8 +1854,23 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				bool empresa_maneja_lista_documentos = true;
 
+
+				if (!empresa.IntManejaPagoE)
+				{
+					return Request.CreateResponse(HttpStatusCode.InternalServerError, "Empresa no maneja pagos");
+				}
+
+				if (!empresa.IntPagosPermiteConsTodos)
+				{
+					if (string.IsNullOrEmpty(documento))
+					{
+						return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro documento en la petición");
+					}
+				}
+
+
 				Ctl_Documento Controlador = new Ctl_Documento();
-				List<TblDocumentos> datos = Controlador.ConsultarPagosFueraPlataforma(empresa.StrIdentificacion, documento, identificacion, prefijo, empresa_maneja_lista_documentos);
+				List<QryDocumentosSaldo> datos = Controlador.ConsultarPagosFueraPlataforma(empresa.StrIdentificacion, documento, identificacion, prefijo, empresa_maneja_lista_documentos);
 
 				if (datos == null)
 				{

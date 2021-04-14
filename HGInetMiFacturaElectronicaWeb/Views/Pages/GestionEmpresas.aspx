@@ -64,27 +64,35 @@
 								</div>
 
 
-								<div class="col-md-3" style="z-index: 9;">
-									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Maneja Anexo:</label>
+								<div class="col-md-2" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">M. Anexo:</label>
 									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
 										<div id="Anexo"></div>
 										<div id="tooltip_Anexo">Activa la recepción de archivos anexos en los documentos de Factura Electrónica</div>
 									</div>
 								</div>
 
-								<div class="col-md-3" style="z-index: 9;">
-									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Maneja Pagos:</label>
+								<div class="col-md-2" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">M. Pagos:</label>
 									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
 										<div id="ManejaPagos"></div>
 										<div id="tooltip_ManejaPagos">Indica si el Facturador maneja Pagos  Electrónicos</div>
 									</div>
 								</div>
 
-								<div class="col-md-3" style="z-index: 9;">
-									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Pagos Parciales?:</label>
+								<div class="col-md-2" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">P. Parciales?:</label>
 									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
 										<div id="PermitePagosParciales"></div>	
 										<div id="tooltip_PermitePagosParciales">Indica si el Facturador Permite Pagos Parciales</div>									
+									</div>
+								</div>
+
+								<div class="col-md-3" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Adte Consulta Todos:</label>
+									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
+										<div id="PermiteConsultarTodosLosDocumentos"></div>	
+										<div id="tooltip_PermiteConsultarTodosLosDocumentos">Indica si el Aquiriente puede consultar todos los documentos pendientes por pago o debe especificar el documento con prefijo</div>									
 									</div>
 								</div>
 

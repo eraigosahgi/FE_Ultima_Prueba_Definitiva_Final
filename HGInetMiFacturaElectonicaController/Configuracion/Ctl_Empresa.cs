@@ -406,6 +406,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntManejaPagoE = empresa.IntManejaPagoE;
 					EmpresaActualiza.IntPagoEParcial = empresa.IntPagoEParcial;
 
+
 					EmpresaActualiza.StrEmpresaDescuento = empresa.StrEmpresaDescuento;
 					EmpresaActualiza.IntIdEstado = empresa.IntIdEstado;
 					EmpresaActualiza.IntCobroPostPago = empresa.IntCobroPostPago;
@@ -466,6 +467,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				EmpresaActualiza.StrMailPagos = (string.IsNullOrEmpty(empresa.StrMailPagos)) ? string.Empty : empresa.StrMailPagos;
 				EmpresaActualiza.DatFechaActualizacion = Fecha.GetFecha();
 				EmpresaActualiza.StrTelefono = empresa.StrTelefono;
+
+				//Si la empresa no maneja pagos, entonces no puede permitir que consulten los documentos
+				if (!empresa.IntManejaPagoE)
+				{
+					EmpresaActualiza.IntPagosPermiteConsTodos = false;
+				}
 
 				//Creamos una lista para agregar los emails que ya estan confirmados y asi poder validar si uno que esta en proceso de verificación ya existe en la lista de correos confirmados
 				List<ObjVerificacionEmail> ListaEmailVerificados = new List<ObjVerificacionEmail>();

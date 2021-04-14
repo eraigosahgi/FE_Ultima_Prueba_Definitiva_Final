@@ -214,6 +214,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	Datos_Anexo = false,
 	Datos_ManejaPagos = false,
 	Datos_PermitePagosParciales = false,
+	Datos_PermiteConsultarTodosLosDocumentos = false,
 	Datos_EmailRecepcion = false,
 	Datos_Numero_usuarios = 1,
 	Datos_Horas_Acuse = 0;
@@ -782,6 +783,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 			});
 
+			$("#PermiteConsultarTodosLosDocumentos").dxCheckBox({
+				name: "PermiteConsultarTodosLosDocumentos",
+				value: false,
+				onValueChanged: function (data) {
+					Datos_PermiteConsultarTodosLosDocumentos = data.value;
+				}
+			});
+
 
 
 			$("#EmailRecepcion").dxCheckBox({
@@ -807,6 +816,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				$("#Anexo").dxCheckBox({ readOnly: true });
 				$("#ManejaPagos").dxCheckBox({ readOnly: true });
 				$("#txtRasonSocial").dxTextBox({ readOnly: true });
+				$("#PermitePagosParciales").dxCheckBox({ name: "PermitePagosParciales", readOnly: true });
+				$("#PermiteConsultarTodosLosDocumentos").dxCheckBox({
+					name: "PermiteConsultarTodosLosDocumentos",
+					readOnly: true
+				});
 			}
 		}
 
@@ -1267,6 +1281,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			title: "Detalle:"
 		});
 
+		$("#tooltip_PermiteConsultarTodosLosDocumentos").dxPopover({
+			target: "#PermiteConsultarTodosLosDocumentos",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
 
 
 
@@ -1553,6 +1580,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Anexo = response.data[0].IntAnexo;
 				Datos_ManejaPagos = response.data[0].IntManejaPagoE;
 				Datos_PermitePagosParciales = response.data[0].IntPagoEParcial;
+				Datos_PermiteConsultarTodosLosDocumentos = response.data[0].IntPagosPermiteConsTodos;
 				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
 				Datos_estado = response.data[0].Estado;
 				Datos_postpago = response.data[0].Postpago;
@@ -1597,10 +1625,22 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 				if (Datos_ManejaPagos == 1) {
 					$("#ManejaPagos").dxCheckBox({ value: true });
+
+					$("#PermiteConsultarTodosLosDocumentos").dxCheckBox({
+						readOnly: false
+					});
+				} else {
+					$("#PermiteConsultarTodosLosDocumentos").dxCheckBox({
+						readOnly: true
+					});
 				}
 
 				if (Datos_PermitePagosParciales == 1) {
 					$("#PermitePagosParciales").dxCheckBox({ value: true });
+				}
+
+				if (Datos_PermiteConsultarTodosLosDocumentos == 1) {
+					$("#PermiteConsultarTodosLosDocumentos ").dxCheckBox({ value: true });
 				}
 
 				//Proceso de validación de Correo****************************
@@ -1811,7 +1851,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntAcuseTacito: Datos_Horas_Acuse,
 				IntManejaAnexos: Datos_Anexo,
 				IntManejaPagoE: Datos_ManejaPagos,
-				IntPagoEParcial:Datos_PermitePagosParciales,
+				IntPagoEParcial: Datos_PermitePagosParciales,
+				IntPagosPermiteConsTodos: Datos_PermiteConsultarTodosLosDocumentos,
 				IntEnvioMailRecepcion: Datos_EmailRecepcion,
 				StrEmpresaDescuento: empresaDescuenta,
 				IntIdEstado: Datos_estado,

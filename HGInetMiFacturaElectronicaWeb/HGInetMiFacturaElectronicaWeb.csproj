@@ -1976,6 +1976,7 @@
     <Content Include="Scripts\Services\SrvDocumentos.js" />
     <Content Include="Scripts\Services\SrvEmpresa.js" />
     <Content Include="Scripts\Services\SrvFormatos.js" />
+    <Content Include="Scripts\Services\SrvPagos.js" />
     <Content Include="Scripts\Services\SrvPermisos.js" />
     <Content Include="Scripts\Services\SrvPlanes.js" />
     <Content Include="Scripts\Services\SrvProveedor.js" />
@@ -1985,6 +1986,7 @@
     <Content Include="Scripts\WebConfig.js" />
     <Content Include="Tests\TestInteroperabilidad.aspx" />
     <Content Include="Views\Demos\Demo.aspx" />
+    <Content Include="Views\Demos\Demo.html" />
     <Content Include="Views\Demos\Demos.aspx" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
@@ -3545,7 +3547,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61436/</IISUrl>
+          <IISUrl>http://localhost:61437/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -111,6 +111,8 @@
 	<script src="../../Scripts/config.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/Loading.js?vjs20201019"></script>
 
+
+
 	<style>
 		.swal-button {
 			background-color: #337ab7;

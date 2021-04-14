@@ -143,7 +143,78 @@ li {
 	border-color: #37474F;
 }
 
-.gridHGI{
-			font-size: 12px !important;
-			padding:2px;
-		}
+.gridHGI {
+	font-size: 12px !important;
+	padding: 2px;
+}
+
+
+
+.Texto {
+	height: 30px !important;
+	padding: 8px 16px !important;
+	font-size: 13px !important;
+	line-height: 1.5384616 !important;
+	color: #333333 !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	border: 1px solid #ddd !important;
+	border-radius: 3px !important;
+	-webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%) !important;
+	box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%) !important;
+	-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s !important;
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s !important;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s !important;
+	
+}
+
+.Etiquetas {
+	height: 20px !important;
+	/*padding: 8px 16px;*/
+	font-size: 15px !important;
+	line-height: 1.5384616 !important;
+	color: #333333 !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	/*border: 1px solid #ddd;
+			border-radius: 3px;
+			-webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+			box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+			-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;*/
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s !important;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s !important;
+}
+
+.BtnConsulta {
+	position: relative !important;
+	font-weight: 500 !important;
+	text-transform: uppercase !important;
+	border-width: 0 !important;
+	padding: 9px 17px !important;
+	color: #fff !important;
+	background-color: #2196F3 !important;
+	border-color: #2196F3 !important;
+	display: inline-block;
+	margin-bottom: 0 !important;
+	font-weight: normal !important;
+	text-align: center !important;
+	vertical-align: middle !important;
+	touch-action: manipulation !important;
+	cursor: pointer !important;
+	background-image: none !important;
+	border: 1px solid transparent !important;
+	white-space: nowrap !important;
+	padding: 8px 16px !important;
+	font-size: 13px !important;
+	line-height: 1.5384616 !important;
+	border-radius: 3px !important;
+	-webkit-user-select: none !important;
+	-moz-user-select: none !important;
+	-ms-user-select: none !important;
+	user-select: none !important;
+}
+
+
+.panelPago {
+	padding: 20px !important;
+}

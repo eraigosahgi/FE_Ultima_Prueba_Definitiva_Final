@@ -271,7 +271,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				StrCertClave = d.StrCertClave,
 				DatCertVence = Convert.ToDateTime(d.DatCertVence).ToString(Fecha.formato_fecha_hginet),
 				SerialCloudServices = d.StrSerialCloudServices,
-				Debug = d.IntDebug
+				Debug = d.IntDebug,
+				d.IntPagosPermiteConsTodos
 
 			});
 
@@ -344,6 +345,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntManejaAnexos = ObjEmpresa.IntManejaAnexos;
 				Empresa.IntManejaPagoE = ObjEmpresa.IntManejaPagoE;
 				Empresa.IntPagoEParcial = ObjEmpresa.IntPagoEParcial;
+				Empresa.IntPagosPermiteConsTodos = ObjEmpresa.IntPagosPermiteConsTodos;
 				Empresa.IntEnvioMailRecepcion = ObjEmpresa.IntEnvioMailRecepcion;
 				Empresa.IntVersionDian = ObjEmpresa.IntVersionDian;
 				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(ObjEmpresa.StrEmpresaDescuento) ? ObjEmpresa.StrIdentificacion.Trim() : ObjEmpresa.StrEmpresaDescuento.Trim());
