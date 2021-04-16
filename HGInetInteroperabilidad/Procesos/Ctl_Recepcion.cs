@@ -757,6 +757,8 @@ namespace HGInetInteroperabilidad.Procesos
 				tbl_documento.StrEmpresaAdquiriente = documento_obj.DatosAdquiriente.Identificacion;
 				tbl_documento.StrCufe = documento_obj.Cufe;
 				tbl_documento.IntVlrTotal = documento_obj.Total;
+				tbl_documento.IntValorSubtotal = documento_obj.ValorSubtotal;
+				tbl_documento.IntValorNeto = documento_obj.Neto;
 				tbl_documento.StrIdSeguridad = tracking;
 				tbl_documento.IntAdquirienteRecibo = 0;
 				tbl_documento.IntIdEstado = Convert.ToInt16(ProcesoEstado.EnvioEmailAcuse.GetHashCode());
