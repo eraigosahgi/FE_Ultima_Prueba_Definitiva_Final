@@ -186,58 +186,58 @@
 
 
 		//Obtiene los datos de la session para luego consultar los documentos disponibles
+		//$.ajax({
+		//	url: '/api/SesionDatosUsuario/',
+		//	success: function (respuesta) {
 		$.ajax({
-			url: '/api/SesionDatosUsuario/',
+			url: '/api/ObtenerSaldo?Facturador=1',//respuesta[0].IdentificacionEmpresa
 			success: function (respuesta) {
-				$.ajax({
-					url: '/api/ObtenerSaldo?Facturador=' + respuesta[0].IdentificacionEmpresa,
-					success: function (respuesta) {
-						$('#SpTotalDocumentos').text(respuesta.TDisponible);
+				$('#SpTotalDocumentos').text(respuesta.TDisponible);
 
-						//Factrurador
-						if (respuesta.Facturador) {
-							$('#DocumentosFacturador').show();
-							//Facturador Sin Documentos
-							if (respuesta.Planes == 0) {
-								//Facturador sin documentos electronicos
-								$('#lblPlanpostpago').text("No cuenta con documentos");
-								$('#lblComprados').text("");
-								$('#lblProcesados').text("");
-								$('#lblDisponibles').text("");
-								$('#lblPorcentaje').text("");
-							} else {
-								//Diferente de postPago
-								if (respuesta.Tipo != 3) {
-									setTimeout(CargarPorcentaje(respuesta.Porcentaje), 3000);
-									$('#lblComprados').text("Adquiridos: " + respuesta.TCompra);
-									$('#lblProcesados').text("Procesados: " + respuesta.TProcesadas);
-									$('#lblDisponibles').text("Disponibles: " + respuesta.TDisponible);
-									$('#lblPorcentaje').text(respuesta.Porcentaje);
-									$('#lblPlanpostpago').text("");
-								} else {
-									//Plan postPago
-									$('#lblPlanpostpago').text("Plan PostPago: " + respuesta.TDisponible + " Documentos");
-									$('#lblComprados').text("");
-									$('#lblProcesados').text("");
-									$('#lblDisponibles').text("");
-									$('#lblPorcentaje').text("");
-								}
-							}
+				//Factrurador
+				if (respuesta.Facturador) {
+					$('#DocumentosFacturador').show();
+					//Facturador Sin Documentos
+					if (respuesta.Planes == 0) {
+						//Facturador sin documentos electronicos
+						$('#lblPlanpostpago').text("No cuenta con documentos");
+						$('#lblComprados').text("");
+						$('#lblProcesados').text("");
+						$('#lblDisponibles').text("");
+						$('#lblPorcentaje').text("");
+					} else {
+						//Diferente de postPago
+						if (respuesta.Tipo != 3) {
+							setTimeout(CargarPorcentaje(respuesta.Porcentaje), 3000);
+							$('#lblComprados').text("Adquiridos: " + respuesta.TCompra);
+							$('#lblProcesados').text("Procesados: " + respuesta.TProcesadas);
+							$('#lblDisponibles').text("Disponibles: " + respuesta.TDisponible);
+							$('#lblPorcentaje').text(respuesta.Porcentaje);
+							$('#lblPlanpostpago').text("");
 						} else {
-							//Adquiriente
-							$('#DocumentosFacturador').hide();
+							//Plan postPago
+							$('#lblPlanpostpago').text("Plan PostPago: " + respuesta.TDisponible + " Documentos");
+							$('#lblComprados').text("");
+							$('#lblProcesados').text("");
+							$('#lblDisponibles').text("");
+							$('#lblPorcentaje').text("");
 						}
-
-					},
-					error: function () {
-						console.log("No se ha podido obtener la información");
 					}
-				});
+				} else {
+					//Adquiriente
+					$('#DocumentosFacturador').hide();
+				}
+
 			},
 			error: function () {
 				console.log("No se ha podido obtener la información");
 			}
 		});
+		//	},
+		//	error: function () {
+		//		console.log("No se ha podido obtener la información");
+		//	}
+		//});
 
 
 

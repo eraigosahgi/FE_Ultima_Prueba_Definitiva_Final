@@ -437,6 +437,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Sesion.ValidarSesion();
 
+				Facturador = Sesion.DatosEmpresa.StrIdentificacion;
+
 				//Busco documentos disponibles
 				Ctl_PlanesTransacciones CtrPlanes = new Ctl_PlanesTransacciones();
 				var Planes = CtrPlanes.obtenerSaldoDisponibles(Facturador);
@@ -462,7 +464,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception)
 			{
-				return Ok();				
+				return Ok();
 			}
 
 		}

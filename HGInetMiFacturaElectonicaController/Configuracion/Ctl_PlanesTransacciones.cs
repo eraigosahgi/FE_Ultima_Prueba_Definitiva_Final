@@ -198,8 +198,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			context.Configuration.LazyLoadingEnabled = false;
 
 			datos_plan = (from t in context.TblPlanesTransacciones.Include("TblEmpresas")
-						  //join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
-						  //join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
+							  //join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
+							  //join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
 						  where ListaFacturadores.Contains(t.StrEmpresaFacturador)
 						  && (LstTipoPlan.Contains(t.IntTipoProceso) || TipoPlan == "*")
 						  && (LstEstadoPlan.Contains(t.IntEstado) || Estado == "*")
@@ -254,7 +254,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				LstEstadoPlan = Coleccion.ConvertirStringInt(Estado);
 			}
 
-			
+
 			datos_plan = (from t in context.TblPlanesTransacciones
 						  join empresa in context.TblEmpresas on t.StrEmpresaFacturador equals empresa.StrIdentificacion
 						  join empresacrea in context.TblEmpresas on t.StrEmpresaUsuario equals empresacrea.StrIdentificacion
@@ -391,7 +391,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			int Estado = EstadoPlan.Habilitado.GetHashCode();
 			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();
-			DateTime Fecha_Actual = Fecha.GetFecha().Date;			
+			DateTime Fecha_Actual = Fecha.GetFecha().Date;
 
 			var ListaFacturadores = (from lista in context.TblEmpresas
 									 where lista.StrEmpresaDescuento.Equals(
@@ -480,12 +480,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			int estadoplan = (int)EstadoPlan.Habilitado.GetHashCode();
 
 			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();
-			DateTime Fecha_Actual = Fecha.GetFecha();
+			DateTime Fecha_Actual = Fecha.GetFecha().AddDays(1);
 
 
 			var Plan = (from planes in context.TblPlanesTransacciones
 						where planes.IntTipoProceso != tipoplan && planes.IntEstado == estadoplan
 						&& planes.StrEmpresaFacturador.Equals(identificacion)
+						&& (planes.DatFechaVencimiento == null || planes.DatFechaVencimiento >= Fecha_Actual)
 						group planes by new { planes.StrEmpresaFacturador } into saldo_Facturador
 
 						select new
@@ -512,6 +513,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				var PlanesPostPago = (from planes in context.TblPlanesTransacciones.Include("TblEmpresas")
 									  where planes.IntTipoProceso == tipoplan && planes.IntEstado == estadoplan
 									  && planes.StrEmpresaFacturador.Equals(identificacion)
+									  && (planes.DatFechaVencimiento == null || planes.DatFechaVencimiento >= Fecha_Actual)
 									  group planes by new { planes.StrEmpresaFacturador } into saldo_Facturador
 
 									  select new
@@ -585,14 +587,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			await Task.Factory.StartNew(() =>
 			{
 				Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
-			////Planes y transacciones
-			foreach (ObjPlanEnProceso plan in ListaPlanes)
+				////Planes y transacciones
+				foreach (ObjPlanEnProceso plan in ListaPlanes)
 				{
 					plan.procesado = respuesta.Where(x => x.IdPlan == plan.plan).Where(x => x.DescuentaSaldo == true).Count();
 
 					Planestransacciones.ConciliarPlanProceso(plan);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
@@ -794,7 +796,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				List<TblPlanesTransacciones> planes = new List<TblPlanesTransacciones>();
 				byte postapago = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
-				byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());				
+				byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());
 
 				planes = (from datos in context.TblPlanesTransacciones
 						  where datos.StrEmpresaFacturador.Equals(Facturador)
