@@ -352,8 +352,17 @@ namespace HGInetUBLv2_1
 
 						if (factura_ubl.InvoiceLine[i].AllowanceCharge != null)
 						{
-							detalle.DescuentoPorcentaje = factura_ubl.InvoiceLine[i].AllowanceCharge.FirstOrDefault().MultiplierFactorNumeric.Value;
+
 							detalle.DescuentoValor = factura_ubl.InvoiceLine[i].AllowanceCharge.FirstOrDefault().Amount.Value;
+							if (factura_ubl.InvoiceLine[i].AllowanceCharge.FirstOrDefault().MultiplierFactorNumeric != null)
+							{
+								detalle.DescuentoPorcentaje = factura_ubl.InvoiceLine[i].AllowanceCharge.FirstOrDefault().MultiplierFactorNumeric.Value;
+							}
+							else
+							{
+								detalle.DescuentoPorcentaje = decimal.Round((detalle.DescuentoValor / (detalle.ValorUnitario * detalle.Cantidad)),6,MidpointRounding.AwayFromZero);
+							}
+							
 						}
 						else
 						{

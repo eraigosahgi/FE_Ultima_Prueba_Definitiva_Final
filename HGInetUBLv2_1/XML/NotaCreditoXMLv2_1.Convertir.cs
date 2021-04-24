@@ -251,8 +251,17 @@ namespace HGInetUBLv2_1
 
 						if (nota_credito_ubl.CreditNoteLine[i].AllowanceCharge != null)
 						{
-							detalle.DescuentoPorcentaje = nota_credito_ubl.CreditNoteLine[i].AllowanceCharge.FirstOrDefault().MultiplierFactorNumeric.Value;
+
 							detalle.DescuentoValor = nota_credito_ubl.CreditNoteLine[i].AllowanceCharge.FirstOrDefault().Amount.Value;
+							if (nota_credito_ubl.CreditNoteLine[i].AllowanceCharge.FirstOrDefault().MultiplierFactorNumeric != null)
+							{
+								detalle.DescuentoPorcentaje = nota_credito_ubl.CreditNoteLine[i].AllowanceCharge.FirstOrDefault().MultiplierFactorNumeric.Value;
+							}
+							else
+							{
+								detalle.DescuentoPorcentaje = decimal.Round((detalle.DescuentoValor / (detalle.ValorUnitario * detalle.Cantidad)), 6, MidpointRounding.AwayFromZero);
+							}
+
 						}
 						else
 						{
