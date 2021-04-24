@@ -32,24 +32,19 @@ namespace HGInetUBLv2_1
 
 			CustomTagGeneral TagGeneral = new CustomTagGeneral();
 
-			TagGeneral.Name = new Name[2];
-			TagGeneral.Value = new Value[2];
+			
 
-			TagGeneral.Name[0] = new Name();
-			TagGeneral.Name[0].Value = name1;
-			TagGeneral.Value[0] = new Value();
-			TagGeneral.Value[0].Value = value1;
-			TagGeneral.Name[1] = new Name();
-			TagGeneral.Name[1].Value = name2;
-			TagGeneral.Value[1] = new Value();
-			TagGeneral.Value[1].Value = value2;
+
+			TagGeneral.Name= new Name();
+			TagGeneral.Name.Value = name1;
+			TagGeneral.Value = new Value();
+			TagGeneral.Value.Value = value1;
 
 			InteroperabilidadType interoperabilidad = new InteroperabilidadType();
 			interoperabilidad.Group = new Group();
 			interoperabilidad.Group.schemeName = sector;
-			interoperabilidad.Group.Collection = new Collection[1];
-			interoperabilidad.Group.Collection[0] = new Collection();
-			interoperabilidad.Group.Collection[0].schemeName = usuario;
+			interoperabilidad.Group.Collection = new Collection();
+			interoperabilidad.Group.Collection.schemeName = usuario;
 			interoperabilidad.InteroperabilidadPT = new InteroperabilidadPtType();
 			interoperabilidad.InteroperabilidadPT.URLDescargaAdjuntos = new URLDescagaAdjuntosType();
 			interoperabilidad.InteroperabilidadPT.URLDescargaAdjuntos.URL = datos.URLDescargaAdjuntos;
@@ -97,14 +92,15 @@ namespace HGInetUBLv2_1
 				interoperabilidad.InteroperabilidadPT.EntregaDocumento.ParametroArgumentos = list_parametros_descarga.ToArray();
 			}
 
-			List<AdditionalType> datos_adicionales = new List<AdditionalType>();
+			List<AdditionalInformationType1> datos_adicionales = new List<AdditionalInformationType1>();
+			//interoperabilidad.Group.Collection.AdditionalInformation = new AdditionalInformationType1[21];
 
 			for (int i = 0; i < datos.CamposSector.Count; i++)
 			{
-				AdditionalType coleccion_datos = new AdditionalType();
-				coleccion_datos.Name = new NameType1();
+				AdditionalInformationType1 coleccion_datos = new AdditionalInformationType1();
+				coleccion_datos.Name = new Name();
 				coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
-				coleccion_datos.Value = new ValueType();
+				coleccion_datos.Value = new Value();
 				coleccion_datos.Value.Value = datos.CamposSector[i].Valor;
 
 				if (i == 1)
@@ -131,10 +127,15 @@ namespace HGInetUBLv2_1
 					coleccion_datos.schemeID = Enumeracion.GetAmbiente(dato_enum);
 				}
 
+				//interoperabilidad.Group.Collection.AdditionalInformation[i] = coleccion_datos;
+				//interoperabilidad.Group.Collection.AdditionalInformation[i].Name = new Name();
+				//interoperabilidad.Group.Collection.AdditionalInformation[i].Name = coleccion_datos.Name;
+				//interoperabilidad.Group.Collection.AdditionalInformation[i].Value = new Value();
+				//interoperabilidad.Group.Collection.AdditionalInformation[i].Value = coleccion_datos.Value;
 				datos_adicionales.Add(coleccion_datos);
 			}
-
-			interoperabilidad.Group.Collection[0].AdditionalInformation = datos_adicionales.ToArray();
+			
+			interoperabilidad.Group.Collection.AdditionalInformation = datos_adicionales.ToArray();
 
 			TagGeneral.Interoperabilidad = interoperabilidad;
 
@@ -152,9 +153,21 @@ namespace HGInetUBLv2_1
 
 			XmlDocument extension_sector = new XmlDocument();
 			extension_sector.LoadXml(buffer);
+
+			XmlNode root = extension_sector.DocumentElement;
+
+			extension_sector.DocumentElement.RemoveAllAttributes();
+
+			XmlNode nodo_name = extension_sector.DocumentElement.FirstChild.Clone();
+			nodo_name.InnerText = name2;
+			root.InsertBefore(nodo_name, extension_sector.DocumentElement.ChildNodes[2]);
+
+			XmlNode nodo_value = extension_sector.DocumentElement.ChildNodes[1].Clone();
+			nodo_value.InnerText = value2;
+			root.InsertBefore(nodo_value, extension_sector.DocumentElement.ChildNodes[3]);
+
 			return extension_sector.DocumentElement;
 		}
-
 
 	}
 }

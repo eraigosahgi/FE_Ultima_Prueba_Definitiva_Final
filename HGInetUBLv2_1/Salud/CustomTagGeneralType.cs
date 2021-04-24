@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace HGInetUBLv2_1
 {
-	[System.Xml.Serialization.XmlRootAttribute("CustomTagGeneral", Namespace = "http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures", IsNullable = false)]
+	[System.Xml.Serialization.XmlRootAttribute("CustomTagGeneral")]
 	public partial class CustomTagGeneral
 	{
-		private Name[] nameField;
+		private Name nameField;
 
-		private Value[] valueField;
+		private Value valueField;
 
 		private InteroperabilidadType interoperabilidadField;
 
-		public Name[] Name
+		public Name Name
 		{
 			get
 			{
@@ -27,7 +27,7 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		public Value[] Value
+		public Value Value
 		{
 			get
 			{

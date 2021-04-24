@@ -11,6 +11,10 @@ namespace HGInetUBLv2_1
 		private Name nameField;
 		private Value valueField;
 
+		private string schemeIDField;
+
+		private string schemeNameField;
+
 		/// <comentarios/>
 		//[System.Xml.Serialization.XmlTextAttribute()]
 		public Name Name
@@ -36,6 +40,34 @@ namespace HGInetUBLv2_1
 			set
 			{
 				this.valueField = value;
+			}
+		}
+
+		/// <comentarios/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string schemeName
+		{
+			get
+			{
+				return this.schemeNameField;
+			}
+			set
+			{
+				this.schemeNameField = value;
+			}
+		}
+
+		/// <comentarios/>
+		[System.Xml.Serialization.XmlAttributeAttribute()]
+		public string schemeID
+		{
+			get
+			{
+				return this.schemeIDField;
+			}
+			set
+			{
+				this.schemeIDField = value;
 			}
 		}
 	}

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace HGInetUBLv2_1
 {
-	public partial class Collection
+	public partial class Collection 
 	{
 
 		private string schemeNameField;
 
-		private AdditionalType[] additionalInformationField;
+		private AdditionalInformationType1[] additionalInformationField;
 
 		/// <comentarios/>
 		[System.Xml.Serialization.XmlAttributeAttribute()]
@@ -27,7 +27,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		public AdditionalType[] AdditionalInformation
+		[System.Xml.Serialization.XmlElementAttribute("AdditionalInformation")]
+		public AdditionalInformationType1[] AdditionalInformation
 		{
 			get
 			{
