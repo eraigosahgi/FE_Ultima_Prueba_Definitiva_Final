@@ -989,7 +989,10 @@ namespace HGInetInteroperabilidad.Procesos
 					documento_obj = objeto_doc;
 
 					if (!string.Format("{0}{1}", attach_document.Prefijo, attach_document.Documento).Equals(string.Format("{0}{1}", documento_obj.Prefijo, documento_obj.Documento)))
-						throw new ArgumentException("El CUFE del Documento Electrónico no coincide con el AttachDocument recibido");
+					{
+						if (!attach_document.CufeDocumentoElectronico.Equals(documento_obj.Cufe))
+							throw new ArgumentException("El CUFE del Documento Electrónico no coincide con el AttachDocument recibido");
+					}
 
 					//if (!attach_document.IdentificacionFacturador.Equals(documento_obj.DatosObligado.Identificacion))
 					//	throw new ArgumentException("El Facturador del Documento Electrónico no coincide con el del AttachDocument recibido");
