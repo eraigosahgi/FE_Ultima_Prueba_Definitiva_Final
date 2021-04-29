@@ -424,6 +424,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             <PropertyRef Name="IntValorSubtotal" />
             <PropertyRef Name="IntValorNeto" />
             <PropertyRef Name="IntEstadoEnvio" />
+            <PropertyRef Name="DatFechaDocumento" />
           </Key>
           <Property Name="IntVlrTotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="Abono" Type="numeric" Precision="38" Scale="2" />
@@ -443,6 +444,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <Property Name="IntValorSubtotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="IntValorNeto" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="IntEstadoEnvio" Type="smallint" Nullable="false" />
+          <Property Name="DatFechaDocumento" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Role="TblConfiguracionInteroperabilidad" Type="Self.TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
@@ -713,7 +715,8 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
     [QryDocumentosSaldo].[IntEnvioMail] AS [IntEnvioMail], 
     [QryDocumentosSaldo].[IntValorSubtotal] AS [IntValorSubtotal], 
     [QryDocumentosSaldo].[IntValorNeto] AS [IntValorNeto], 
-    [QryDocumentosSaldo].[IntEstadoEnvio] AS [IntEstadoEnvio]
+    [QryDocumentosSaldo].[IntEstadoEnvio] AS [IntEstadoEnvio], 
+    [QryDocumentosSaldo].[DatFechaDocumento] AS [DatFechaDocumento]
     FROM [dbo].[QryDocumentosSaldo] AS [QryDocumentosSaldo]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" Association="Self.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
@@ -1562,6 +1565,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             <PropertyRef Name="IntValorSubtotal" />
             <PropertyRef Name="IntValorNeto" />
             <PropertyRef Name="IntEstadoEnvio" />
+            <PropertyRef Name="DatFechaDocumento" />
           </Key>
           <Property Name="IntVlrTotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <Property Name="Abono" Type="Decimal" Precision="38" Scale="2" />
@@ -1581,6 +1585,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <Property Name="IntValorSubtotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <Property Name="IntValorNeto" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <Property Name="IntEstadoEnvio" Type="Int16" Nullable="false" />
+          <Property Name="DatFechaDocumento" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1999,6 +2004,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <EntitySetMapping Name="QryDocumentosSaldo">
             <EntityTypeMapping TypeName="Modelo.QryDocumentosSaldo">
               <MappingFragment StoreEntitySet="QryDocumentosSaldo">
+                <ScalarProperty Name="DatFechaDocumento" ColumnName="DatFechaDocumento" />
                 <ScalarProperty Name="IntEstadoEnvio" ColumnName="IntEstadoEnvio" />
                 <ScalarProperty Name="IntValorNeto" ColumnName="IntValorNeto" />
                 <ScalarProperty Name="IntValorSubtotal" ColumnName="IntValorSubtotal" />

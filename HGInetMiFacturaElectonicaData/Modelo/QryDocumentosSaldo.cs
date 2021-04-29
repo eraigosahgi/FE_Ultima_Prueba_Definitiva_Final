@@ -32,5 +32,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public decimal IntValorSubtotal { get; set; }
         public decimal IntValorNeto { get; set; }
         public short IntEstadoEnvio { get; set; }
+        public System.DateTime DatFechaDocumento { get; set; }
     }
 }
