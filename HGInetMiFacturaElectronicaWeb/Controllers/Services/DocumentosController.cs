@@ -1870,9 +1870,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 				Ctl_Documento Controlador = new Ctl_Documento();
-				List<QryDocumentosSaldo> datos = Controlador.ConsultarPagosFueraPlataforma(empresa.StrIdentificacion, documento, identificacion, prefijo, empresa_maneja_lista_documentos);
+				List<QryDocumentosSaldo> datos = Controlador.ConsultarPagosFueraPlataforma(empresa.StrIdentificacion, documento, identificacion, empresa_maneja_lista_documentos);
 
-				if (datos == null)
+				if (datos.Count() == 0)
 				{
 					return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro ningún documento con los criterios de busqueda");
 				}
@@ -1880,8 +1880,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var retorno = datos.Select(d => new
 				{
+					PagosParciales = empresa.IntPagoEParcial,
 					d.StrIdSeguridad,
 					d.StrPrefijo,
+					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
 					d.IntNumero,
 					d.IntVlrTotal
 				});

@@ -3610,7 +3610,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="prefijo"></param>
 		/// <param name="empresa_maneja_lista_documentos"></param>
 		/// <returns></returns>
-		public List<QryDocumentosSaldo> ConsultarPagosFueraPlataforma(string codigo_facturador, string numero_documento, string codigo_adquiriente, string prefijo, bool empresa_maneja_lista_documentos)
+		public List<QryDocumentosSaldo> ConsultarPagosFueraPlataforma(string codigo_facturador, string numero_documento, string codigo_adquiriente, bool empresa_maneja_lista_documentos)
 		{
 
 			long num_doc = -1;
@@ -3619,39 +3619,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			if (string.IsNullOrWhiteSpace(numero_documento))
 				numero_documento = "*";
 
-			//Si la empresa maneja la opcion de consultar lista de documentos
-			if (empresa_maneja_lista_documentos)
-			{
-				//Si viene en null, entonces se cambia a "*"
-				if (string.IsNullOrWhiteSpace(prefijo))
-					prefijo = "*";
-			}
-			else
-			{
-				//si la empresa no maneja lista de documentos y viene en "*", se cambia a "", para que no puedan buscar por todos los prefijos
-				if (prefijo.Equals("*"))
-				{
-					prefijo = "";
-				}
-			}
-
-			List<TblDocumentos> documentos = new List<TblDocumentos>();
 
 			var datos = (from doc in context.QryDocumentosSaldo
 						 where doc.StrEmpresaFacturador.Equals(codigo_facturador)
 						 && doc.StrEmpresaAdquiriente.Equals(codigo_adquiriente)
 						  && (doc.IntNumero == num_doc || numero_documento.Equals("*"))
-						  && (doc.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
 						 select doc).OrderBy(x => x.IntNumero).ToList();
 
-			//documentos = (from datos in context.TblDocumentos
-			//			  where datos.StrEmpresaFacturador.Equals(codigo_facturador)
-			//			  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente))
-			//			  && (datos.IntNumero == num_doc || numero_documento.Equals("*"))
-			//			  && (datos.StrPrefijo.Equals(prefijo) || prefijo.Equals("*"))
-			//			  select datos).ToList();
-
-
+			
 			return datos;
 		}
 
