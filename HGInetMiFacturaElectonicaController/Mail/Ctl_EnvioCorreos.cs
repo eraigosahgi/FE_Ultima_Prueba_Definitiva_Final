@@ -939,9 +939,16 @@ namespace HGInetMiFacturaElectonicaController
 
 						List<Adjunto> archivos = new List<Adjunto>();
 
-						if (string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
-							throw new ApplicationException("No se encontró ruta de archivo pdf");
+						bool contiene_pdf = true;
 
+						if (interoperabilidad == false && string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
+						{
+							throw new ApplicationException("No se encontró ruta de archivo pdf");
+						}
+						else if (interoperabilidad == true && string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
+						{
+							contiene_pdf = false;
+						}
 						//Se quita que el pdf vaya como archivo segun resolucion 042 de mayo de 2020
 						/*
 						byte[] bytes_pdf = Archivo.ObtenerWeb(documento.StrUrlArchivoPdf);
@@ -957,7 +964,7 @@ namespace HGInetMiFacturaElectonicaController
 							archivos.Add(adjunto);
 						}*/
 
-						string nombre_pdf = Path.GetFileName(documento.StrUrlArchivoPdf);
+						
 
 						string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
 
@@ -1030,7 +1037,12 @@ namespace HGInetMiFacturaElectonicaController
 								using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
 								{
 									archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo), Path.GetFileName(nombre_archivo));
-									archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_pdf), Path.GetFileName(nombre_pdf));
+
+									if (contiene_pdf == true)
+									{
+										string nombre_pdf = Path.GetFileName(documento.StrUrlArchivoPdf);
+										archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_pdf), Path.GetFileName(nombre_pdf));
+									}
 
 									//Proceso para los anexos
 									if (documento.StrUrlAnexo != null)
@@ -1707,13 +1719,16 @@ namespace HGInetMiFacturaElectonicaController
 						switch (documento.IntAdquirienteRecibo)
 						{
 							case 1:
-								estado_respuesta = "Aprobada";
+								estado_respuesta = "Acuse";
 								break;
 							case 2:
 								estado_respuesta = "Rechazada";
 								break;
 							case 3:
 								estado_respuesta = "Aprobado Tácito";
+								break;
+							case 4:
+								estado_respuesta = "Aprobada";
 								break;
 						}
 
