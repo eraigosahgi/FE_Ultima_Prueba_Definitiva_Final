@@ -1500,6 +1500,63 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 
 		[HttpGet]
+		[Route("Api/ObtenerPagosAdministracion")]
+		public IHttpActionResult ObtenerPagosAdministracion(string codigo_facturador, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
+		{
+
+			try
+			{
+				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+				if (Sesion.DatosEmpresa.IntAdministrador)
+				{
+					var datos = Pago.ObtenerPagosFacturador(codigo_facturador, numero_documento, "*", fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
+
+
+					if (datos == null)
+					{
+						return NotFound();
+					}
+
+					var retorno = datos.Select(d => new
+					{
+						NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
+						StrEmpresaFacturador = d.TblDocumentos.StrEmpresaFacturador,
+						NombreFacturador = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
+						DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+						DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+						PagoFactura = d.IntValorPago,
+						EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+						CodEstado = d.IntEstadoPago,
+						idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+						StrIdRegistro = d.StrIdRegistro,
+						StrIdSeguridadDoc = d.StrIdSeguridadDoc,
+						Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper()
+					});
+
+					return Ok(retorno);
+				}
+				else
+				{
+					throw new ApplicationException("No tiene permisos para ejecutar esta opción");
+				}
+			}
+			catch (Exception excepcion)
+			{
+
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+
+
+		}
+
+		/// <summary>
+		/// Obtiene la lista de pagos realizadas a un facturador
+		/// </summary>
+		/// <param name="strIdSeguridad"></param>        
+		/// <returns></returns>
+
+		[HttpGet]
 		[Route("Api/ObtenerPagosFacturador")]
 		public IHttpActionResult ObtenerPagosFacturador(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
 		{

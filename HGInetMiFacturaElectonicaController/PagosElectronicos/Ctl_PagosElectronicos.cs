@@ -480,10 +480,12 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				LstResolucion = Coleccion.ConvertirLista(Resolucion);
 			}
 
+			if (string.IsNullOrEmpty(codigo_facturador))
+				codigo_facturador = "*";
 
 
 			var documentos = (from Pagos in context.TblPagosElectronicos
-							  where Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador)
+							  where (Pagos.TblDocumentos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
 							  //Valida si la fecha es documento o fecha pago
 							  && ((Pagos.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)
 							  //&& ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin) || tipo_fecha == 1)

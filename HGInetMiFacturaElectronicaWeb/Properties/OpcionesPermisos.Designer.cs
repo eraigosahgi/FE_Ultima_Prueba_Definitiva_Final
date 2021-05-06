@@ -178,7 +178,7 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 1345.
+        ///   Busca una cadena traducida similar a 1373.
         /// </summary>
         internal static string ConsultarPlanesAdmin {
             get {
@@ -187,7 +187,7 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 1343.
+        ///   Busca una cadena traducida similar a 1371.
         /// </summary>
         internal static string DocumetosAdmin {
             get {
@@ -237,6 +237,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         internal static string GestionReportes {
             get {
                 return ResourceManager.GetString("GestionReportes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 1372.
+        /// </summary>
+        internal static string PagosAdministracion {
+            get {
+                return ResourceManager.GetString("PagosAdministracion", resourceCulture);
             }
         }
         

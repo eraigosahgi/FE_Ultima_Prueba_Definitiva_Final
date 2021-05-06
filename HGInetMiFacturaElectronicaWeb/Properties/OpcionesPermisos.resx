@@ -154,10 +154,10 @@
     <value>1363</value>
   </data>
   <data name="ConsultarPlanesAdmin" xml:space="preserve">
-    <value>1345</value>
+    <value>1373</value>
   </data>
   <data name="DocumetosAdmin" xml:space="preserve">
-    <value>1343</value>
+    <value>1371</value>
   </data>
   <data name="Empresas" xml:space="preserve">
     <value>1332</value>
@@ -191,5 +191,8 @@
   </data>
   <data name="UsuariosPagos" xml:space="preserve">
     <value>1315</value>
+  </data>
+  <data name="PagosAdministracion" xml:space="preserve">
+    <value>1372</value>
   </data>
 </root>

@@ -72,10 +72,10 @@
 	<!-- Estilos CSS -->
 	<%-- <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" />--%>
 	<link href="../../Scripts/Scripts-descarga/dx.spa.css" rel="stylesheet" />
-	<%--<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />
-	<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />--%>
-	<link href="../../Scripts/Scripts-descarga/dx.common.css" rel="stylesheet" />
-	<link href="../../Scripts/Scripts-descarga/dx.light.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />
+	<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />
+	<%--<link href="../../Scripts/Scripts-descarga/dx.common.css" rel="stylesheet" />
+	<link href="../../Scripts/Scripts-descarga/dx.light.css" rel="stylesheet" />--%>
 
 
 	<!-- Scripts Requeridos

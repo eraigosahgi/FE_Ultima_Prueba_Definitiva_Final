@@ -24,7 +24,7 @@
 	<div class="col-md-12" data-ng-app="IndicadoresApp" data-ng-controller="IndicadoresController">
 
 		<!-- FILTROS DE BÚSQUEDA -->
-		<div class="panel panel-white" id="panel_filtros" style="display:none;">
+		<div class="panel panel-white" id="panel_filtros" >
 			<div class="panel-body">
 
 				<div class="col-md-12" style="margin-bottom: 1%">
