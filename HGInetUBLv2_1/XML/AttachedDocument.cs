@@ -37,7 +37,7 @@ namespace HGInetUBLv2_1
 				string documento = string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero);
 
 				AttachedDocumentType attached = new AttachedDocumentType();
-				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces();
+				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces(TipoDocumento.Attached);
 
 
 				attached.UBLVersionID = new UBLVersionIDType();

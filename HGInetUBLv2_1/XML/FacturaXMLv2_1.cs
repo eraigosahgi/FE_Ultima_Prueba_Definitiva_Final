@@ -45,7 +45,7 @@ namespace HGInetUBLv2_1
 
 
 				InvoiceType facturaXML = new InvoiceType();
-				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces();
+				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces(tipo);
 
 				//------
 				//-----Se debe cambiar datos para que no sean quemados

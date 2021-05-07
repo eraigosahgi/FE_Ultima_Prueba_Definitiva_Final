@@ -37,7 +37,7 @@ namespace HGInetUBLv2_1
 				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo, documento.Prefijo);
 
 				DebitNoteType nota_debito = new DebitNoteType();
-				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces();
+				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces(tipo);
 
 				#region nota_debito.UBLVersionID //Versión de los esquemas UBL
 

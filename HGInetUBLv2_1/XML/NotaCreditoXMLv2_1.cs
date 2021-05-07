@@ -42,7 +42,7 @@ namespace HGInetUBLv2_1
 
 
 				CreditNoteType nota_credito = new CreditNoteType();
-				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces();
+				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces(tipo);
 
 				#region nota_credito.UBLVersionID //Versión de los esquemas UBL
 
