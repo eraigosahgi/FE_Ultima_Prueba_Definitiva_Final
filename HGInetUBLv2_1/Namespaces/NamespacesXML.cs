@@ -42,10 +42,10 @@ namespace HGInetUBLv2_1
 				{
 					namespaces.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-DebitNote-2.1.xsd");
 				}
-				else if (tipo == TipoDocumento.Attached)
-				{
-					namespaces.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:AttachedDocument-2");
-				}
+				//else if (tipo == TipoDocumento.Attached)
+				//{
+				//	namespaces.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:AttachedDocument-2");
+				//}
 				
 			}
 			else if (tipo == TipoDocumento.AcuseRecibo)
