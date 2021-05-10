@@ -1004,6 +1004,11 @@ namespace HGInetMiFacturaElectonicaController
 
 						bool attached = false;
 
+						//Se agrega validacion por ajustes en el namespace de los documentos electronicos
+						DateTime fecha_valid = new DateTime(2021, 5, 6, 0, 0, 0);
+						if (reenvio_documento == true && documento.DatFechaIngreso.Date <= fecha_valid)
+							archivo_attach = false;
+
 						if (archivo_attach == false && documento.IntVersionDian == 2)
 						{
 							if (documento_obj != null)
