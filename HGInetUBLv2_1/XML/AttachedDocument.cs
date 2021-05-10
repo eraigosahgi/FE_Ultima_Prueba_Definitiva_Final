@@ -216,13 +216,14 @@ namespace HGInetUBLv2_1
 				if (texto_xml.Contains("xmlns:schemaLocation"))
 				{
 					texto_xml = texto_xml.Replace("xmlns:schemaLocation", "xsi:schemaLocation");
-					if (texto_xml.Contains("&lt;") && texto_xml.Contains("&gt;"))
-					{
-						texto_xml = texto_xml.Replace("&lt;", "<");
-						texto_xml = texto_xml.Replace("&gt;", ">");
-					}
-					txt_xml = new StringBuilder(texto_xml);
 				}
+
+				if (texto_xml.Contains("&lt;") && texto_xml.Contains("&gt;"))
+				{
+					texto_xml = texto_xml.Replace("&lt;", "<");
+					texto_xml = texto_xml.Replace("&gt;", ">");
+				}
+				txt_xml = new StringBuilder(texto_xml);
 
 				FacturaE_Documento xml_sin_firma = new FacturaE_Documento();
 				xml_sin_firma.Documento = documento;
