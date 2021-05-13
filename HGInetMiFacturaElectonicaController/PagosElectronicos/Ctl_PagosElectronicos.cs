@@ -652,6 +652,11 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					Ctl_Documento clase_documento = new Ctl_Documento();
 					TblDocumentos datos_documento = clase_documento.ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
 
+					if (datos_documento.IntIdEstadoPago == 1000)//Documento pagado por fuera o manualmente
+					{
+						throw new ApplicationException("Documento ya no esta disponible");
+					}
+
 					//Valido si este documento tiene algún pago
 					var Pagos = (from pagos in context.TblPagosElectronicos
 								 where pagos.StrIdSeguridadDoc == datos_documento.StrIdSeguridad

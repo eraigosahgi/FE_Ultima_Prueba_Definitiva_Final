@@ -442,9 +442,14 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
 			}, function (error) {
 
 				if (error != undefined) {
-					DevExpress.ui.notify(error, 'error', 3000);
+					DevExpress.ui.notify(error.data.ExceptionMessage, 'error', 6000);
 					$("#button").dxButton({ visible: true });
 					$scope.EnProceso = false;
+
+					if (error.data.ExceptionMessage == 'Documento ya no esta disponible') {
+						$('#modal_Pagos_Electronicos').modal('hide')
+					}
+
 				}
 
 				$scope.$apply(function () {
