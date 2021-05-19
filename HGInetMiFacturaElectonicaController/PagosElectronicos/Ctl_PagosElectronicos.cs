@@ -27,6 +27,7 @@ using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas;
 using LibreriaGlobalHGInet.Error;
 using System.ServiceModel;
+using LibreriaGlobalHGInet.RegistroLog;
 
 namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 {
@@ -965,6 +966,59 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 		#endregion
 
+		#region Generación de Nota Crédito como pago
+
+
+		/// <summary>
+		/// Proceso asyncronico para generar una nota credito como pago en la factura
+		/// </summary>
+		/// <param name="cufe_factura">identificador de la factura afectada por la nota</param>
+		/// <param name="documentoBd">resgitro de la nota credito en bd para tomar el valor a registrar como pago</param>
+		/// <returns></returns>
+		public async Task GenerarNotaPago(string cufe_factura, TblDocumentos documentoBd)
+		{
+			try
+			{
+				var Tarea = TareaGenerarNotaPagoAsync(cufe_factura, documentoBd);
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio);
+			}
+		}
+
+		public async Task TareaGenerarNotaPagoAsync(string cufe_factura, TblDocumentos documentoBd)
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				ProcesarNotaPago(cufe_factura, documentoBd);
+			});
+		}
+
+		public void ProcesarNotaPago(string cufe_factura, TblDocumentos documentoBd)
+		{
+
+			try
+			{
+				TblDocumentos factura = (from Doc in context.TblDocumentos
+										 where Doc.StrCufe == cufe_factura && Doc.IntDocTipo == 1
+										 select Doc).FirstOrDefault();
+
+				if (factura != null)
+				{
+					Guid id_pago = Guid.NewGuid();
+					CrearPago(id_pago, factura.StrIdSeguridad, 0, documentoBd.IntVlrTotal, 0);
+				}
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio);
+			}
+
+		}
+
+		#endregion
 
 	}
 }
