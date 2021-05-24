@@ -1380,6 +1380,9 @@
       <DependentUpon>TipoImpuestos.resx</DependentUpon>
     </Compile>
     <Compile Include="Enumeraciones\Ctl_Enumeracion.cs" />
+    <Compile Include="Radian\ConstanciadePagosType.cs" />
+    <Compile Include="Radian\CustomTagGeneralType1.cs" />
+    <Compile Include="Radian\InformacionNegociacionType.cs" />
     <Compile Include="Salud\AdditionalInformationType.cs" />
     <Compile Include="Salud\CampoValorType.cs" />
     <Compile Include="Salud\Collection.cs" />
@@ -1507,16 +1510,20 @@
     <Compile Include="XML\DocumentoImpuestos.cs" />
     <Compile Include="XML\ExtensionDian.cs" />
     <Compile Include="XML\ExtensionHgiSas.cs" />
+    <Compile Include="XML\ExtensionRadian.cs" />
     <Compile Include="XML\ExtensionSector.cs" />
     <Compile Include="XML\FacturaXMLv2_1.Convertir.cs" />
     <Compile Include="XML\FacturaXMLv2_1.cs" />
     <Compile Include="XML\FormatoNotas.cs" />
     <Compile Include="XML\ImpuestosXML.cs" />
     <Compile Include="XML\NombramientoArchivo.cs" />
+    <Compile Include="XML\NominaXML.cs" />
     <Compile Include="XML\NotaCreditoXMLv2_1.Convertir.cs" />
     <Compile Include="XML\NotaCreditoXMLv2_1.cs" />
     <Compile Include="XML\NotaDebitoXMLv2_1.Convertir.cs" />
     <Compile Include="XML\NotaDebitoXMLv2_1.cs" />
+    <Compile Include="XML\NovedadesNominaXML.cs" />
+    <Compile Include="XML\ParticipantesNominaXML.cs" />
     <Compile Include="XML\TerceroXML.cs" />
     <Compile Include="XML\TerceroXMLv2_1.Convertir.cs" />
     <Compile Include="XML\TotalesXML.cs" />

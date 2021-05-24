@@ -7,7 +7,9 @@
 public partial class NominaIndividualTypeNovedad {
     
 	private string cUNENovField;
-    
+
+	private bool valueField;
+
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlAttributeAttribute()]
 	public string CUNENov {
@@ -16,6 +18,20 @@ public partial class NominaIndividualTypeNovedad {
 		}
 		set {
 			this.cUNENovField = value;
+		}
+	}
+
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlTextAttribute()]
+	public bool Value
+	{
+		get
+		{
+			return this.valueField;
+		}
+		set
+		{
+			this.valueField = value;
 		}
 	}
 }

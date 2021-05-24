@@ -128,5 +128,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public decimal Indemnizacion { get; set; }
 
+		/// <summary>
+		/// Valor que le regresa la empresa al trabajador por una deducción mal realizada en otro pago de nomina. Ocurrencia 0-1
+		/// </summary>
+		public decimal Reintegro { get; set; }
+
 	}
 }

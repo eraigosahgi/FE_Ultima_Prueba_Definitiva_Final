@@ -407,7 +407,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					case TipoDocumento.NotaDebito:
 						NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
 						id_obligado = documento.IdSeguridadTercero.ToString();
-
+						break;
+					case TipoDocumento.Nomina:
+						Nomina doc_nomina = ((Nomina)documento.Documento);
+						id_obligado = documento.IdSeguridadTercero.ToString();
 						break;
 					case TipoDocumento.AcuseRecibo:
 						Acuse doc_acuse_recibo = ((Acuse)documento.Documento);
@@ -466,6 +469,67 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (file != null)
 					file.Close();
 			}
+		}
+
+		public static FacturaE_Documento Generar(Guid id_seguridad, Nomina documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion, ref string cadena_cufe)
+		{
+			// resolución del documento
+			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
+
+			DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+
+			//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
+			DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
+
+			string IdSoftware = data_dian.IdSoftware;
+			string PinSoftware = data_dian.Pin;
+			string NitProveedor = data_dian.NitProveedor;
+
+			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación y es HGI
+			if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode() && empresa.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor))
+			{
+				IdSoftware = data_dian_habilitacion.IdSoftware;
+				PinSoftware = data_dian_habilitacion.Pin;
+				NitProveedor = data_dian_habilitacion.NitProveedor;
+			}
+
+			// convierte la información de la resolución a la extensión DIAN
+			extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian()
+			{
+				TipoDocumento = tipo_doc.GetHashCode(),
+				NumResolucion = resolucion.StrNumResolucion,
+				Prefijo = (!string.IsNullOrEmpty(resolucion.StrPrefijo)) ? resolucion.StrPrefijo : "",
+				FechaResIni = resolucion.DatFechaVigenciaDesde,
+				FechaResFin = resolucion.DatFechaVigenciaHasta,
+				RangoIni = resolucion.IntRangoInicial,
+				RangoFin = resolucion.IntRangoFinal,
+				IdSoftware = IdSoftware,
+				NitProveedor = NitProveedor,
+				ClaveTecnicaDIAN = resolucion.StrClaveTecnica,
+				PinSoftware = PinSoftware
+			};
+
+			FacturaE_Documento resultado = null;
+
+			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+			//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
+			string ambiente_dian = string.Empty;
+
+			if (plataforma_datos.RutaPublica.Contains("app"))
+				ambiente_dian = "1";
+			else
+				ambiente_dian = "2";
+
+			resultado = HGInetUBLv2_1.NominaXML.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
+
+			resultado.DocumentoTipo = tipo_doc;
+			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
+
+			// genera el nombre del archivo ZIP
+			resultado.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosEmpleador.Identificacion, tipo_doc, documento.Prefijo);
+
+			return resultado;
 		}
 
 	}

@@ -47,7 +47,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                     documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaCredito)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
 				else if (tipo_doc == TipoDocumento.NotaDebito)
 					documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaDebito)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
-
+				else if (tipo_doc == TipoDocumento.Nomina)
+					documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (Nomina)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
 			}
 			catch (Exception excepcion)
             {
