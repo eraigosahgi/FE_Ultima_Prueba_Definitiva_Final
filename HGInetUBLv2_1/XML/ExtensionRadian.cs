@@ -12,7 +12,7 @@ namespace HGInetUBLv2_1
 {
 	public class ExtensionRadian
 	{
-		public static XmlElement ObtenerRadianInscripcion(decimal valor_fe, CodigoResponseV2 tipo_acuse)
+		/*public static XmlElement ObtenerRadianInscripcion(decimal valor_fe, CodigoResponseV2 tipo_acuse)
 		{
 
 			CustomTagGeneral1 TagGeneral = new CustomTagGeneral1();
@@ -176,12 +176,12 @@ namespace HGInetUBLv2_1
 					break;
 				default:
 					break;
-			}
+			}  
 
 			
 
 			return extension_sector.DocumentElement;
-		}
+		}	*/
 
 	}
 }
