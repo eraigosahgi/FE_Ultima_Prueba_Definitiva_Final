@@ -158,6 +158,8 @@
           <Property Name="IntPagoEParcial" Type="bit" Nullable="false" />
           <Property Name="IntHabilitacionNomina" Type="tinyint" />
           <Property Name="IntPagosPermiteConsTodos" Type="bit" Nullable="false" />
+          <Property Name="ComercioConfigId" Type="uniqueidentifier" />
+          <Property Name="ComercioConfigDescrip" Type="varchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -181,6 +183,9 @@
           <Property Name="IntTipoDoc" Type="int" Nullable="false" />
           <Property Name="StrIdSetDian" Type="varchar" MaxLength="50" />
           <Property Name="IntVersionDian" Type="smallint" Nullable="false" />
+          <Property Name="PermiteParciales" Type="int" Nullable="false" />
+          <Property Name="ComercioConfigId" Type="uniqueidentifier" />
+          <Property Name="ComercioConfigDescrip" Type="varchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="TblFormatos">
           <Key>
@@ -1327,6 +1332,8 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresasResoluciones" />
           <Property Name="IntHabilitacionNomina" Type="Byte" />
           <Property Name="IntPagosPermiteConsTodos" Type="Boolean" Nullable="false" />
+          <Property Name="ComercioConfigId" Type="Guid" />
+          <Property Name="ComercioConfigDescrip" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -1424,6 +1431,9 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <Property Name="IntVersionDian" Type="Int16" Nullable="false" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblEmpresasResoluciones" ToRole="TblDocumentos" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" FromRole="TblEmpresasResoluciones" ToRole="TblEmpresas" />
+          <Property Name="PermiteParciales" Type="Int32" Nullable="false" />
+          <Property Name="ComercioConfigId" Type="Guid" />
+          <Property Name="ComercioConfigDescrip" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasResoluciones">
           <End Type="Modelo.TblEmpresasResoluciones" Role="TblEmpresasResoluciones" Multiplicity="1" />
@@ -1853,6 +1863,8 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="ComercioConfigDescrip" ColumnName="ComercioConfigDescrip" />
+                <ScalarProperty Name="ComercioConfigId" ColumnName="ComercioConfigId" />
                 <ScalarProperty Name="IntPagosPermiteConsTodos" ColumnName="IntPagosPermiteConsTodos" />
                 <ScalarProperty Name="IntHabilitacionNomina" ColumnName="IntHabilitacionNomina" />
                 <ScalarProperty Name="IntPagoEParcial" ColumnName="IntPagoEParcial" />
@@ -1911,6 +1923,9 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <EntitySetMapping Name="TblEmpresasResoluciones">
             <EntityTypeMapping TypeName="Modelo.TblEmpresasResoluciones">
               <MappingFragment StoreEntitySet="TblEmpresasResoluciones">
+                <ScalarProperty Name="ComercioConfigDescrip" ColumnName="ComercioConfigDescrip" />
+                <ScalarProperty Name="ComercioConfigId" ColumnName="ComercioConfigId" />
+                <ScalarProperty Name="PermiteParciales" ColumnName="PermiteParciales" />
                 <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
                 <ScalarProperty Name="StrIdSetDian" ColumnName="StrIdSetDian" />
                 <ScalarProperty Name="IntTipoDoc" ColumnName="IntTipoDoc" />
