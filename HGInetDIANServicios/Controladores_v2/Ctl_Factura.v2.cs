@@ -27,7 +27,7 @@ namespace HGInetDIANServicios
 		/// <param name="clave_dian">Clave proporcionada en la plataforma de la Dian</param>
 		/// <param name="ruta_servicio_web">Url del servicio web de la DIAN</param>
 		/// <returns></returns>
-		public static AcuseRecibo Enviar_v2(string ruta_zip, string nombre_archivo, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web, string ambiente)
+		public static AcuseRecibo Enviar_v2(string ruta_zip, string nombre_archivo, string ruta_certificado, string clave_certificado, string clave_dian, string ruta_servicio_web, string ambiente, int proceso_acuse = 0)
 		{
 
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
@@ -64,8 +64,12 @@ namespace HGInetDIANServicios
 					}
 					else
 					{
-						//Ejecución de produccion DIAN Enviando archivo ZIP	
-						resultadoHab = webServiceHab.SendBillAsync(nombre_archivo, bytes);
+
+						if (proceso_acuse == 0)
+						{
+							//Ejecución de produccion DIAN Enviando archivo ZIP	
+							resultadoHab = webServiceHab.SendBillAsync(nombre_archivo, bytes);
+						}
 					}
 
 					acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
@@ -93,7 +97,15 @@ namespace HGInetDIANServicios
 
 					string carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
 
-					string archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+					string archivo = string.Empty;
+					if (proceso_acuse == 0)
+					{
+						archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+					}
+					else
+					{
+						archivo = string.Format("{0}-{1}.xml", Path.GetFileNameWithoutExtension(ruta_zip), proceso_acuse);
+					} 
 
 					// almacena el mensaje de respuesta del servicio web
 					archivo = Xml.GuardarObjeto(resultadoHab, carpeta, archivo);

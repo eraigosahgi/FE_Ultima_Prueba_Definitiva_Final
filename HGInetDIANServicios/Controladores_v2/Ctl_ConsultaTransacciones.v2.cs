@@ -24,7 +24,7 @@ namespace HGInetDIANServicios
 		/// <param name="ruta_servicio_web">Ruta del Sw de la DIAN</param>
 		/// <param name="xml_archivo">Nombre con el que se guarda el documento</param>
 		/// <returns></returns>
-		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string xml_archivo = "", string cufe = "")
+		public static List<DianWSValidacionPrevia.DianResponse> Consultar_v2(string TrackId, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string xml_archivo = "", string cufe = "", int proceso_acuse = 0)
 		{
 
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
@@ -57,7 +57,11 @@ namespace HGInetDIANServicios
 				{
 					if (!string.IsNullOrEmpty(cufe))
 					{
-						DianResponse consulta = webServiceHab.GetStatus(cufe);
+						DianResponse consulta = null;
+
+						consulta = webServiceHab.GetStatus(cufe);
+
+						consulta = webServiceHab.GetStatusEvent(cufe);
 						resultado = new List<DianResponse>();
 						resultado.Add(consulta);
 					}
@@ -96,7 +100,7 @@ namespace HGInetDIANServicios
 										{
 											BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
 											bw.Write(respuesta.XmlBase64Bytes);
-											bw.Close();
+										bw.Close();
 											fs.Close();
 										}
 
