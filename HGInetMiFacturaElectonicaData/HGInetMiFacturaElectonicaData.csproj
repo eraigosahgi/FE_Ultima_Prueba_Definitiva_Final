@@ -155,6 +155,7 @@
     <Compile Include="ModeloServicio\Nomina\Hora.cs" />
     <Compile Include="ModeloServicio\Nomina\Libranza.cs" />
     <Compile Include="ModeloServicio\Nomina\Nomina.cs" />
+    <Compile Include="ModeloServicio\Nomina\NominaAjuste.cs" />
     <Compile Include="ModeloServicio\Nomina\NovedadDeduccion.cs" />
     <Compile Include="ModeloServicio\Nomina\NovedadSalNoSal.cs" />
     <Compile Include="ModeloServicio\Nomina\OtroConcepto.cs" />

@@ -164,13 +164,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documentoBd.StrIdPlanTransaccion = documento_ex.StrIdPlanTransaccion;
 						}
 
-						if ((documento_obj.DocumentoFormato.Codigo == -1 || documento_obj.DocumentoFormato.Codigo == 99) && (string.IsNullOrEmpty(documento_obj.Cufe)))
+						if (documento_obj.DocumentoFormato != null && (documento_obj.DocumentoFormato.Codigo == -1 || documento_obj.DocumentoFormato.Codigo == 99) && (string.IsNullOrEmpty(documento_obj.Cufe)))
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error("No se encontró CUFE, generar y enviar de nuevo el documento", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 							throw new ApplicationException("No se encontró CUFE, generar y enviar de nuevo el documento");
 						}
 
-						if ((documento_obj.DocumentoFormato.Codigo == -1 || documento_obj.DocumentoFormato.Codigo == 99) && (string.IsNullOrEmpty(documento_obj.DocumentoFormato.ArchivoPdf)))
+						if (documento_obj.DocumentoFormato != null && (documento_obj.DocumentoFormato.Codigo == -1 || documento_obj.DocumentoFormato.Codigo == 99) && (string.IsNullOrEmpty(documento_obj.DocumentoFormato.ArchivoPdf)))
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error("No se encontró Formato de impresión, generar y enviar de nuevo el documento", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 							throw new ApplicationException("No se encontró CUFE, generar y enviar de nuevo el documento");
@@ -208,7 +208,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 						//Validacion de Cufe a documento_obj VS el calculado en Plataforma 
-						if ((documento_obj.DocumentoFormato.Codigo == -1) && (!string.IsNullOrEmpty(documento_obj.Cufe)) && (documento_obj.Cufe != documento_result.CUFE))
+						if (documento_obj.DocumentoFormato != null && (documento_obj.DocumentoFormato.Codigo == -1) && (!string.IsNullOrEmpty(documento_obj.Cufe)) && (documento_obj.Cufe != documento_result.CUFE))
 						{
 							//Se agrega validacion para detectar si es una nota generada de version diferente
 							bool Valida_nota = true;
@@ -226,7 +226,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							
 						}
-						else if (documento_obj.DocumentoFormato.Codigo == 99)
+						else if (documento_obj.DocumentoFormato != null && documento_obj.DocumentoFormato.Codigo == 99)
 						{
 							if (!string.IsNullOrEmpty(documento_obj.Cufe))
 							{
@@ -245,26 +245,33 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 
 						//Asignación de Cufe a documento_obj 
-						documento_obj.Cufe = documento_result.CUFE;
+						if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
+							documento_obj.Cufe = documento_result.CUFE;
+						else
+							documento_obj.Cune = documento_result.CUFE;
 
 						//Asignacion del CUFE a la respuesta
 						respuesta.Cufe = documento_result.CUFE;
 
-						// almacena Formato
-						respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result, empresa);
-						if (respuesta.Error != null && documento_existente == true)
+						// almacena Formato ****** Falta el Formato de Nomina
+						if (documento_obj.DocumentoFormato != null)
 						{
-							//Se actualiza el estado del documento en BD para que lo envien de nuevo
-							documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
-							Ctl_Documento num_doc = new Ctl_Documento();
-							documentoBd = num_doc.Actualizar(documentoBd);
-							respuesta.IdProceso = documentoBd.IntIdEstado;
-							respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+							respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result, empresa);
+							if (respuesta.Error != null && documento_existente == true)
+							{
+								//Se actualiza el estado del documento en BD para que lo envien de nuevo
+								documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+								Ctl_Documento num_doc = new Ctl_Documento();
+								documentoBd = num_doc.Actualizar(documentoBd);
+								respuesta.IdProceso = documentoBd.IntIdEstado;
+								respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+							}
+							Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlPdf);
 						}
-						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlPdf);
+						
 
 						// almacena Anexos enviados
-						if (documento_obj.ArchivoAnexos != null)
+						if ((tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste) && documento_obj.ArchivoAnexos != null)
 						{
 							if (empresa.IntManejaAnexos)
 							{
@@ -313,7 +320,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 
 							//Obtiene la informacion del Adquiriente que se tiene en BD
-							adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+							if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
+								adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+							else
+								adquirienteBd = empresa_config.Obtener(documento_obj.DatosTrabajador.Identificacion);
 							try
 							{
 
@@ -322,8 +332,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								{
 									empresa_config = new Ctl_Empresa();
 									//Creacion del Adquiriente
-									adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
-
+									if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
+										adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
+									else
+									{
+										Tercero trabajador = empresa_config.ConvertirTrabajador(documento_obj.DatosTrabajador);
+										adquirienteBd = empresa_config.Crear(trabajador);
+									}
 								}
 							}
 							catch (Exception excepcion)

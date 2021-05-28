@@ -129,6 +129,10 @@
     <value>Factura Electrónica de Venta</value>
     <comment>Versión del Formato: Indicar versión del documento. Debe usarse “Factura Electrónica de Venta”. Tomado del documento "Anexo Técnico de Facturación Electrónica con Validacion Previa" publicado por la DIAN</comment>
   </data>
+  <data name="ProfileIDAR" xml:space="preserve">
+    <value>DIAN 2.1: ApplicationResponse de la Factura Electrónica de Venta</value>
+    <comment>Application Response</comment>
+  </data>
   <data name="UBLVersionID" xml:space="preserve">
     <value>UBL 2.1</value>
     <comment>Debe marcar UBL 2.1 (versión base de UBL usada para crear este perfil). Tomado del documento "Anexo Técnico de Facturación Electrónica con Validacion Previa" publicado por la DIAN</comment>

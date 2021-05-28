@@ -60,7 +60,7 @@ namespace HGInetUBLv2_1
 				namespaces.Add("sts", "dian:gov:co:facturaelectronica:Structures-2-1");
 				namespaces.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-ApplicationResponse-2.1.xsd");
 			}
-			else if (tipo == TipoDocumento.Nomina)
+			else if (tipo == TipoDocumento.Nomina || tipo == TipoDocumento.NominaAjuste)
 			{
 				namespaces.Add("xs", "http://www.w3.org/2001/XMLSchema-instance");
 				namespaces.Add("ds", "http://www.w3.org/2000/09/xmldsig#");
@@ -68,8 +68,12 @@ namespace HGInetUBLv2_1
 				namespaces.Add("xades", "http://uri.etsi.org/01903/v1.3.2#");
 				namespaces.Add("xades141", "http://uri.etsi.org/01903/v1.4.1#");
 				namespaces.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-				namespaces.Add("sts", "dian:gov:co:facturaelectronica:Structures-2-1");
-				namespaces.Add("schemaLocation", "dian:gov:co:facturaelectronica:NominaIndividual NominaIndividualElectronicaXSD.xsd");
+				//namespaces.Add("sts", "dian:gov:co:facturaelectronica:Structures-2-1");
+				namespaces.Add("schemaLocation", "");
+				if (tipo == TipoDocumento.Nomina)
+					namespaces.Add("schemaLocation", "dian:gov:co:facturaelectronica:NominaIndividual NominaIndividualElectronicaXSD.xsd");
+				else
+					namespaces.Add("schemaLocation", "dian:gov:co:facturaelectronica:NominaIndividualDeAjuste NominaIndividualDeAjusteElectronicaXSD.xsd");
 			}
 
 			return namespaces;

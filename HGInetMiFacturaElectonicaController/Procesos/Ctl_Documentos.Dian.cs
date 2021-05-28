@@ -195,7 +195,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="empresa">Obligado a facturar</param>
 		/// <param name="respuesta">Objeto de respuesta</param>
 		/// <returns>Segun la respuesta de la DIAN cambia el estado del documento</returns>
-		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "", List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> respuesta_dian = null)
+		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "", List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> respuesta_dian = null, int proceso_acuse = 0)
 		{
 
 			DateTime fecha_actual = Fecha.GetFecha();
@@ -223,6 +223,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// Nombre del archivo Xml 
 				string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo, documentoBd.StrPrefijo));
+
+				if (string.IsNullOrEmpty(respuesta.IdentificacionObligado) && (respuesta.DocumentoTipo == TipoDocumento.AcuseRecibo.GetHashCode()))
+				{
+					doc_tipo = TipoDocumento.AcuseRecibo;
+					carpeta_xml = carpeta_xml.Replace("FacturaEConsultaDian", "XmlAcuse");
+					archivo_xml = string.Format(@"{0}-{1}-2.xml", NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo, documentoBd.StrPrefijo), respuesta.Documento);
+				}
 
 				// ruta del xml
 				string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
@@ -312,9 +319,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					HGInetDIANServicios.DianResultadoTransacciones.DocumentosRecibidos resultado = Ctl_ConsultaTransacciones.Consultar(Guid.NewGuid(), IdSoftware, clave, documentoBd.IntDocTipo, documentoBd.StrPrefijo, documentoBd.IntNumero.ToString(), obligado_identificacion, documentoBd.DatFechaDocumento, documentoBd.StrCufe, url_ws_consulta, ruta_xml);
 					resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccion(resultado);
 				}
-				
+
 				// proceso para validar la respuesta de la DIAN
-				respuesta = ValidarRespuestaConsulta(resultado_doc, documentoBd, empresa, respuesta, archivo_xml);
+				respuesta = ValidarRespuestaConsulta(resultado_doc, documentoBd, empresa, respuesta, archivo_xml, doc_tipo);
 
 				return respuesta;
 			}
@@ -337,7 +344,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="respuesta"></param>
 		/// <param name="archivo_xml"></param>
 		/// <returns></returns>
-		public static DocumentoRespuesta ValidarRespuestaConsulta(ConsultaDocumento resultado_doc, TblDocumentos documentoBd, TblEmpresas empresa, DocumentoRespuesta respuesta, string archivo_xml)
+		public static DocumentoRespuesta ValidarRespuestaConsulta(ConsultaDocumento resultado_doc, TblDocumentos documentoBd, TblEmpresas empresa, DocumentoRespuesta respuesta, string archivo_xml, TipoDocumento tipo_doc)
 		{
 
 			DateTime fecha_actual = Fecha.GetFecha();
@@ -445,15 +452,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta.Error.Mensaje = string.Format("Documento rechazado DIAN: {0} - Validar inconsistencias de la DIAN en la ruta {1} ", resultado_doc.EstadoDianDescripcion, respuesta.EstadoDian.UrlXmlRespuesta);
 					}
 
-					//Actualiza Documento en Base de Datos
-					documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-					documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+					if (tipo_doc != TipoDocumento.AcuseRecibo)
+					{
+						//Actualiza Documento en Base de Datos
+						documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+						documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
-					documento_tmp.Actualizar(documentoBd);
-
-					//Actualiza la categoria con el nuevo estado
-					respuesta.IdEstado = documentoBd.IdCategoriaEstado;
-					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+						documento_tmp.Actualizar(documentoBd);
+							
+						//Actualiza la categoria con el nuevo estado
+						respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+						respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+					}
 
 				}
 				return respuesta;

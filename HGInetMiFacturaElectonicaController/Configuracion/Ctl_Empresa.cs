@@ -913,6 +913,24 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return empresa_obj;
 		}
 
+		public Tercero ConvertirTrabajador(Trabajador empleado)
+		{
+			if (empleado == null)
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "empresa", "Ctl_Empresa"));
+
+			Tercero empresa_obj = new Tercero();
+
+			empresa_obj.Identificacion = empleado.Identificacion;
+			empresa_obj.IdentificacionDv = 0;
+			empresa_obj.TipoIdentificacion = Convert.ToInt16(empleado.TipoDocumento);
+			empresa_obj.RazonSocial = string.Format("{0} {1} {2} {3}", empleado.PrimerApellido, empleado.SegundoApellido, empleado.PrimerNombre, empleado.OtrosNombres);
+			empresa_obj.Email = empleado.Email;
+			empresa_obj.Telefono = empleado.Telefono;
+			empresa_obj.CodigoTributo = "01";
+
+			return empresa_obj;
+		}
+
 		/// <summary>
 		/// Obtiene Todas las empresas
 		/// </summary>        
@@ -924,10 +942,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			return datos;
 		}
-
-
-
-
 
 		/// <summary>
 		/// Obtiene las empresas facturadoras

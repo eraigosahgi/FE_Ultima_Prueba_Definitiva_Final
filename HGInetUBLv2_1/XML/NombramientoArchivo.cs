@@ -48,6 +48,14 @@ namespace HGInetUBLv2_1
 				{
 					nombre_archivo = Recursos.NombreArchivos.nombre_xml_acuse_recibo;
 				}
+				else if (tipo_documento == TipoDocumento.Nomina)
+				{
+					nombre_archivo = "nie";
+				}
+				else if (tipo_documento == TipoDocumento.NominaAjuste)
+				{
+					nombre_archivo = "niae";
+				}
 
 				nombre_archivo = string.Format("{0}{1}{2}{3}", nombre_archivo, identificacion, prefijo, hex_id_factura);
 

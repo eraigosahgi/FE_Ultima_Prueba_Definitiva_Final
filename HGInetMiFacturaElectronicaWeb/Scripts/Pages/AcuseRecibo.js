@@ -258,13 +258,18 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 		}
 		//ValidarEstado(1);
 		$scope.ValidarEstado = function (Estado) {
-			if (Estado == 1) {
+			if (Estado == 1 || Estado == 4) {
+				//$scope.AcuseVar = true;
 				$scope.AceptarVar = true;
 				$scope.RechazarVar = false;
 			} else {
+				//$scope.AcuseVar = false;
 				$scope.AceptarVar = false;
 				$scope.RechazarVar = true;
-			}
+			}//} else if (Estado == 4) {
+			//	$scope.AcuseVar = true;
+			//	$scope.AceptarVar = true;
+			//	$scope.RechazarVar = false;
 		}
 
 		//Botón Rechazar.
@@ -272,7 +277,7 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 			text: "Enviar",
 			type: "success",
 			onClick: function (e) {
-				estado = 1;
+				estado = 4;
 				motivo_rechazo = $('textarea[name=Observaciones]').val();
 				ActualizarDatos();
 			}

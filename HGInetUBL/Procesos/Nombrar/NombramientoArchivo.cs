@@ -57,8 +57,16 @@ namespace HGInetUBL
                 {
                     nombre_archivo = Recursos.NombreArchivos.nombre_xml_acuse_recibo;
                 }
+				else if (tipo_documento == TipoDocumento.Nomina)
+				{
+					nombre_archivo = Recursos.NombreArchivos.nombre_xml_nomina;
+				}
+				else if (tipo_documento == TipoDocumento.Nomina)
+				{
+					nombre_archivo = Recursos.NombreArchivos.nombre_xml_nomina_ajuste;
+				}
 
-                nombre_archivo = string.Format("{0}{1}{2}{3}", nombre_archivo, identificacion, prefijo , hex_id_factura);
+				nombre_archivo = string.Format("{0}{1}{2}{3}", nombre_archivo, identificacion, prefijo , hex_id_factura);
 
                 return nombre_archivo;
             }
@@ -104,8 +112,12 @@ namespace HGInetUBL
                 {
                     nombre_archivo = Recursos.NombreArchivos.nombre_zip_nota_credito;
                 }
+				else if (tipo_documento == TipoDocumento.Nomina || tipo_documento == TipoDocumento.NominaAjuste)
+				{
+					nombre_archivo = Recursos.NombreArchivos.nombre_zip_nomina;
+				}
 
-                nombre_archivo = string.Format("{0}{1}{2}{3}", nombre_archivo, identificacion, prefijo, hex_id_factura);
+				nombre_archivo = string.Format("{0}{1}{2}{3}", nombre_archivo, identificacion, prefijo, hex_id_factura);
 
                 return nombre_archivo;
             }

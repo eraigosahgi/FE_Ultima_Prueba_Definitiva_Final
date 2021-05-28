@@ -178,8 +178,8 @@ namespace HGInetUBL
 
 			var indiceNodo = 1;
 
-			if ((xmlDoc.DocumentElement.Name == "ApplicationResponse") || (xmlDoc.DocumentElement.Name == "AttachedDocument"))
-            {
+			if ((xmlDoc.DocumentElement.Name == "AttachedDocument") || (xmlDoc.DocumentElement.Name == "NominaIndividual") || (xmlDoc.DocumentElement.Name == "NominaIndividualDeAjuste")) //(xmlDoc.DocumentElement.Name == "ApplicationResponse") || (xmlDoc.DocumentElement.Name == "AttachedDocument")
+			{
                 indiceNodo = 0;
             }
 

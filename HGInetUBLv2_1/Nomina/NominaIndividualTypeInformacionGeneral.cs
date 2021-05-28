@@ -18,7 +18,7 @@ public partial class NominaIndividualTypeInformacionGeneral {
     
 	private System.DateTime fechaGenField;
     
-	private System.DateTime horaGenField;
+	private string horaGenField;
     
 	private string periodoNominaField;
     
@@ -95,8 +95,8 @@ public partial class NominaIndividualTypeInformacionGeneral {
 	}
     
 	/// <comentarios/>
-	[System.Xml.Serialization.XmlAttributeAttribute(DataType="time")]
-	public System.DateTime HoraGen {
+	[System.Xml.Serialization.XmlAttributeAttribute(DataType="string")]
+	public string HoraGen {
 		get {
 			return this.horaGenField;
 		}

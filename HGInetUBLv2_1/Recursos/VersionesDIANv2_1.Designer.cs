@@ -88,6 +88,15 @@ namespace HGInetUBLv2_1.Recursos {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a DIAN 2.1: ApplicationResponse de la Factura Electrónica de Venta.
+        /// </summary>
+        internal static string ProfileIDAR {
+            get {
+                return ResourceManager.GetString("ProfileIDAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a UBL 2.1.
         /// </summary>
         internal static string UBLVersionID {

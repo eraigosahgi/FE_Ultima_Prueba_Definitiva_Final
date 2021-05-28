@@ -537,7 +537,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				ctl_documento = new Ctl_Documento();
 				TblDocumentos documento = new TblDocumentos();
 				documento = datos.FirstOrDefault();
-				if (((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode())))
+				if (((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.Entregado.GetHashCode())))
 				{
 					if ((documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode()))
 					{
@@ -568,8 +568,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
-					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Pendiente.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Entregado.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Leido.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Enviado.GetHashCode()) ? true : false,
+					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2 || d.IntAdquirienteRecibo == 4) ? true : false,
+					CamposVisibles = (d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Pendiente.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Leido.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Enviado.GetHashCode()) ? true : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					Estatus = Pago.VerificarSaldo(id_seguridad),
 					XmlAcuse = d.StrUrlAcuseUbl,
@@ -594,7 +594,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				});
 
 				//Si el documento ya tiene acuse de recibo, no guarda en auditoria que el documento esta visto
-				if (((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode())))
+				if (((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.Entregado.GetHashCode())))
 				{
 
 					try

@@ -79,6 +79,24 @@ namespace HGInetUBL.Recursos {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a nie.
+        /// </summary>
+        internal static string nombre_xml_nomina {
+            get {
+                return ResourceManager.GetString("nombre_xml_nomina", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a niae.
+        /// </summary>
+        internal static string nombre_xml_nomina_ajuste {
+            get {
+                return ResourceManager.GetString("nombre_xml_nomina_ajuste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a face_c.
         /// </summary>
         internal static string nombre_xml_nota_credito {
@@ -102,6 +120,15 @@ namespace HGInetUBL.Recursos {
         internal static string nombre_zip_factura {
             get {
                 return ResourceManager.GetString("nombre_zip_factura", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ws_z.
+        /// </summary>
+        internal static string nombre_zip_nomina {
+            get {
+                return ResourceManager.GetString("nombre_zip_nomina", resourceCulture);
             }
         }
         

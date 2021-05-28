@@ -1517,6 +1517,7 @@
     <Compile Include="XML\FormatoNotas.cs" />
     <Compile Include="XML\ImpuestosXML.cs" />
     <Compile Include="XML\NombramientoArchivo.cs" />
+    <Compile Include="XML\NominaAjusteXML.cs" />
     <Compile Include="XML\NominaXML.cs" />
     <Compile Include="XML\NotaCreditoXMLv2_1.Convertir.cs" />
     <Compile Include="XML\NotaCreditoXMLv2_1.cs" />

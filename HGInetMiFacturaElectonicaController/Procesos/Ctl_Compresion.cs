@@ -22,26 +22,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
         /// <param name="documento">datos del documento procesado</param>
         public static string Comprimir(FacturaE_Documento documento)
         {
-            string nit_obligado = string.Empty;
-
-            switch (documento.DocumentoTipo)
-            {
-                case TipoDocumento.Factura:
-                    Factura doc_factura = ((Factura)documento.Documento);
-                    nit_obligado = doc_factura.DatosObligado.Identificacion;
-                    break;
-                case TipoDocumento.NotaCredito:
-                    NotaCredito doc_nota_credito = ((NotaCredito)documento.Documento);
-                    nit_obligado = doc_nota_credito.DatosObligado.Identificacion;
-                    break;
-                case TipoDocumento.NotaDebito:
-                    NotaDebito doc_nota_debito = ((NotaDebito)documento.Documento);
-                    nit_obligado = doc_nota_debito.DatosObligado.Identificacion;
-                    break;
-                default:
-                    break;
-            }
-
             // ruta del xml
             string ruta_xml = string.Format(@"{0}\{1}.xml", documento.RutaArchivosEnvio, documento.NombreXml);
 

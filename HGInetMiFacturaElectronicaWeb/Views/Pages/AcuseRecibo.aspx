@@ -198,8 +198,17 @@
 									<div>
 										<h4 class="panel-title text-bold text-center">Respuesta Acuse</h4>
 										<br />
+										<%--<div class="col-md-12 ">
+
+											<label><strong>Acuse documento:</strong></label>
+											<input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+
+											<div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar" style="margin-left: 20px"></div>
+										</div>
+										<br />--%>
 										<div class="col-md-12 ">
-											<label><strong>Aprobar:</strong></label>
+
+											<label><strong>Aceptación documento:</strong></label>
 											<input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
 
 											<label style="margin-left: 20px;"><strong>Rechazar:</strong></label>
@@ -213,6 +222,7 @@
 									<div class="col-lg-12 text-right" style="margin-top: -15px">
 										<div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
 										<div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
+										<%--<div data-dx-button="ButtonOptionsAcuse" data-ng-if="AcuseVar"></div>--%>
 										&nbsp;&nbsp;&nbsp;
                                     
 									</div>

@@ -125,6 +125,14 @@
     <value>face_f</value>
     <comment>Nombre del archivo XML que contiene datos correspondientes a una factura. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
   </data>
+  <data name="nombre_xml_nomina" xml:space="preserve">
+    <value>nie</value>
+    <comment>Nombre del archivo XML que contiene datos correspondientes a la Nomina. Tomado del documento "Anexo Técnico Documento Soporte de Pago de Nómina Electrónica – Versión 1.0" publicado por la DIAN</comment>
+  </data>
+  <data name="nombre_xml_nomina_ajuste" xml:space="preserve">
+    <value>niae</value>
+    <comment>Nombre del archivo XML que contiene datos correspondientes al Ajuste de Nomina. Tomado del documento "Anexo Técnico Documento Soporte de Pago de Nómina Electrónica – Versión 1.0" publicado por la DIAN</comment>
+  </data>
   <data name="nombre_xml_nota_credito" xml:space="preserve">
     <value>face_c</value>
     <comment>Nombre del archivo XML que contiene datos correspondientes a una nota credito. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
@@ -136,6 +144,10 @@
   <data name="nombre_zip_factura" xml:space="preserve">
     <value>ws_f</value>
     <comment>Nombre del archivo ZIP que contiene datos correspondientes a una factura. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
+  </data>
+  <data name="nombre_zip_nomina" xml:space="preserve">
+    <value>ws_z</value>
+    <comment>Nombre del archivo ZIP que contiene datos correspondientes a la nomina o al ajuste. Tomado del documento "Anexo Técnico Documento Soporte de Pago de Nómina Electrónica – Versión 1.0" publicado por la DIAN</comment>
   </data>
   <data name="nombre_zip_nota_credito" xml:space="preserve">
     <value>ws_c</value>

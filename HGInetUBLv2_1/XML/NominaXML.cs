@@ -4,6 +4,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,9 +42,9 @@ namespace HGInetUBLv2_1
 
 				numero_documento = string.Format("{0}{1}", numero_documento, documento.Documento.ToString());
 				nomina.NumeroSecuenciaXML = new NominaIndividualTypeNumeroSecuenciaXML();
-				nomina.NumeroSecuenciaXML.Numero = numero_documento;
+				nomina.NumeroSecuenciaXML.Numero = documento.Documento.ToString();
 				nomina.NumeroSecuenciaXML.Prefijo = documento.Prefijo;
-				nomina.NumeroSecuenciaXML.Consecutivo = documento.DatosTrabajador.Identificacion;
+				nomina.NumeroSecuenciaXML.Consecutivo = numero_documento;
 
 				nomina.NumeroSecuenciaXML.CodigoTrabajador = documento.DatosTrabajador.CodigoTrabajador;
 
@@ -52,6 +53,7 @@ namespace HGInetUBLv2_1
 				nomina.Periodo = new NominaIndividualTypePeriodo();
 				nomina.Periodo.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
 				nomina.Periodo.FechaIngreso = Convert.ToDateTime(documento.DatosPeriodo.FechaIngreso.ToString(Fecha.formato_fecha_hginet));
+				//***Llenar solo si hay retiro
 				nomina.Periodo.FechaRetiro = Convert.ToDateTime(documento.DatosPeriodo.FechaRetiro.ToString(Fecha.formato_fecha_hginet));
 				nomina.Periodo.FechaLiquidacionInicio = Convert.ToDateTime(documento.DatosPeriodo.FechaLiquidacionInicio.ToString(Fecha.formato_fecha_hginet));
 				nomina.Periodo.FechaLiquidacionFin = Convert.ToDateTime(documento.DatosPeriodo.FechaLiquidacionFin.ToString(Fecha.formato_fecha_hginet));
@@ -67,7 +69,7 @@ namespace HGInetUBLv2_1
 				nomina.InformacionGeneral = new NominaIndividualTypeInformacionGeneral();
 				nomina.InformacionGeneral.Ambiente = ambiente_dian;
 				nomina.InformacionGeneral.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
-				nomina.InformacionGeneral.HoraGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_hora_zona));
+				nomina.InformacionGeneral.HoraGen = documento.FechaGen.ToString(Fecha.formato_hora_zona);
 				nomina.InformacionGeneral.PeriodoNomina = documento.PeriodoNomina.ToString();
 				nomina.InformacionGeneral.TipoMoneda = documento.Moneda;
 				nomina.InformacionGeneral.TipoXML = "102";
@@ -106,8 +108,8 @@ namespace HGInetUBLv2_1
 
 				nomina.ComprobanteTotal = documento.ComprobanteTotal;
 
-				if (string.IsNullOrEmpty(resolucion.ClaveTecnicaDIAN))
-					throw new Exception("La clave técnica en la resolución de la DIAN es inválida para el documento.");
+				//if (string.IsNullOrEmpty(resolucion.ClaveTecnicaDIAN))
+				//	throw new Exception("La clave técnica en la resolución de la DIAN es inválida para el documento.");
 
 				string CUNE = CalcularCUNE(nomina, resolucion.PinSoftware, ambiente_dian, ref cadena_cufe);
 				nomina.InformacionGeneral.CUNE = CUNE;
@@ -145,6 +147,17 @@ namespace HGInetUBLv2_1
 
 				// convierte los datos del objeto en texto XML 
 				StringBuilder txt_xml = ConvertirXML.Convertir(nomina, namespaces_xml, TipoDocumento.Nomina);
+
+				// valida el namespace xmlns:schemaLocation y lo reemplaza para Google Chrome
+				TextReader textReader = new StringReader(txt_xml.ToString());
+				string texto_xml = textReader.ReadToEnd();
+
+				if (texto_xml.Contains("xmlns:schemaLocation"))
+				{
+					texto_xml = texto_xml.Replace("xmlns:schemaLocation", "xsi:schemaLocation");
+					texto_xml = texto_xml.Replace("xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"", "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+					txt_xml = new StringBuilder(texto_xml);
+				}
 
 				FacturaE_Documento xml_sin_firma = new FacturaE_Documento();
 				xml_sin_firma.Documento = documento;

@@ -23,7 +23,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 	public class Ctl_DocumentoDian
 	{
 
-		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string IdSetDian)
+		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string IdSetDian, int proceso_acuse = 0)
 		{
 
 			string IdSoftware = null;
@@ -171,16 +171,25 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 					case 2:
 						acuse = new AcuseRecibo();
 
-						//Si no es HGI y es una empresa que tiene el set de pruebas aceptado y quiere que el documento sea validado por la DIAN se pone en ambiente 2 
-						if (ambiente_dian.Equals("2") && !empresa.StrIdentificacion.Equals(Constantes.NitResolucionsinPrefijo) && empresa.IntHabilitacion < Habilitacion.PruebasDian.GetHashCode())
+						if (empresa.IntHabilitacionNomina == null)
+							empresa.IntHabilitacionNomina = 0;
+
+						//si son pruebas de documentos diferentes a nomina y es HGI que continue enviado los documentos para que los valide
+						if (documento.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode() && empresa.IntHabilitacion == Habilitacion.PruebasDian.GetHashCode())
+						{
+							empresa.IntHabilitacionNomina = 2;
+						}
+
+						//Si quiere que el documento sea validado por la DIAN aun si ya tiene el set de pruebas aceptado se pone en ambiente 2 las so propiedades de empresa 
+						if (ambiente_dian.Equals("2") && (empresa.IntHabilitacion < Habilitacion.PruebasDian.GetHashCode() || empresa.IntHabilitacionNomina < Habilitacion.PruebasDian.GetHashCode()))
 						{
 							acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado,
-								certificado.Clave, clave, UrlServicioWeb, ambiente_dian);
+								certificado.Clave, clave, UrlServicioWeb, ambiente_dian, proceso_acuse);
 						}
 						else
 						{
 								List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> respuesta_dian = null;
-
+								
 								//Envio el documento y guardo la respuesta en archivo y en objeto respuesta_dian
 								acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreXml, documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), ruta_certificado,certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian);
 
@@ -191,7 +200,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 								ConsultaDocumento consulta_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(respuesta_dian);
 
 								//Se valida respuesta para indicar el estado de las validaciones que se le hicieron al documento
-								HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.ValidarRespuestaConsulta(consulta_doc, documentoBd, empresa, respuesta, string.Format("{0}.xml",documento.NombreXml));
+								HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.ValidarRespuestaConsulta(consulta_doc, documentoBd, empresa, respuesta, string.Format("{0}.xml",documento.NombreXml), documento.DocumentoTipo);
 						}
 						break;
 

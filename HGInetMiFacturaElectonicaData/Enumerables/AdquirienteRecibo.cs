@@ -52,29 +52,53 @@ namespace HGInetMiFacturaElectonicaData
     {
 	    
 		Pendiente = 0,
-	    
-	    [Description("Aceptación Expresa de Documento")]
-	    [AmbientValue("033")]
-		Expresa = 1,
 
-	    [Description("Rechazo de Documento")]
-	    [AmbientValue("031")]
+		[Description("Acuse de recibo de Factura Electrónica de Venta")]
+		[AmbientValue("030")]
+		Recibido = 1,
+
+		[Description("Reclamo de la Factura Electrónica de Venta")]
+		[AmbientValue("031")]
 		Rechazado = 2,
 
-	    [Description("Aceptación Expresa de Documento")]
-	    [AmbientValue("033")]
+		[Description("Aceptación Tácita")]
+		[AmbientValue("034")]
 		AprobadoTacito = 3,
 
-		[Description("Acuse de Recibo")]
-		[AmbientValue("030")]
-		Recibido = 4,
-
-		[Description("Recepción de los Bienes y/o Servicios")]
+		[Description("Recibo del bien y/o prestación del servicio")]
 		[AmbientValue("032")]
-		Aceptado = 5,
+		Aceptado = 4,
+
+		[Description("Aceptación expresa")]
+	    [AmbientValue("033")]
+		Expresa = 5,
+
+		[Description("Inscripción de la factura electrónica de venta como título valor - RADIAN")]
+		[AmbientValue("036")]
+		Inscripcion = 6,
+
+		[Description("Endoso en propiedad")]
+		[AmbientValue("037")]
+		EndosoPp = 7,
+
+		[Description("Endoso en garantía")]
+		[AmbientValue("038")]
+		EndosoG = 8,
+
+		[Description("Cancelación de endoso")]
+		[AmbientValue("040")]
+		CancelacionEG = 9,
 
 		[Description("Documento validado por la DIAN")]
 		[AmbientValue("02")]
-		ValidadoDian = 10
+		ValidadoDian = 10,
+
+		[Description("Endoso en procuración")]
+		[AmbientValue("039")]
+		EndosoPc = 15,
+
+		[Description("Mandato")]
+		[AmbientValue("043")]
+		MandatoG = 20
 	}
 }

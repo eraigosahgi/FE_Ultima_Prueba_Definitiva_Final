@@ -471,8 +471,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 		}
 
-		public static FacturaE_Documento Generar(Guid id_seguridad, Nomina documento, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion, ref string cadena_cufe)
+		public static FacturaE_Documento Generar(Guid id_seguridad, object documento_obj, TipoDocumento tipo_doc, TblEmpresas empresa, TblEmpresasResoluciones resolucion, ref string cadena_cufe)
 		{
+
+			var documento = (dynamic)null;
+			documento = documento_obj;
+
 			// resolución del documento
 			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
 
@@ -521,7 +525,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			else
 				ambiente_dian = "2";
 
-			resultado = HGInetUBLv2_1.NominaXML.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
+			if (TipoDocumento.Nomina.Equals(tipo_doc))
+			{
+				resultado = HGInetUBLv2_1.NominaXML.CrearDocumento(id_seguridad, (Nomina)documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
+			}
+			else if (TipoDocumento.NominaAjuste.Equals(tipo_doc))
+			{
+				resultado = HGInetUBLv2_1.NominaAjusteXML.CrearDocumento(id_seguridad, (NominaAjuste)documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
+			}
+
+				
 
 			resultado.DocumentoTipo = tipo_doc;
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;

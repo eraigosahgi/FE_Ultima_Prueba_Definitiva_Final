@@ -49,6 +49,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NotaDebito)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
 				else if (tipo_doc == TipoDocumento.Nomina)
 					documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (Nomina)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
+				else if (tipo_doc == TipoDocumento.NominaAjuste)
+					documento_result = Ctl_Ubl.Generar(documento_result.IdSeguridadDocumento, (NominaAjuste)documento_obj, tipo_doc, empresa, resolucion, ref cadena_cufe);
 			}
 			catch (Exception excepcion)
             {
@@ -163,7 +165,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// genera la firma del documento XML
 				documento_result = Ctl_Firma.Generar(certificado_nit, ruta_certificado, certificado_serial, certificado_clave, empresa_certificadora, documento_result, firma_proveedor);
 
-				if (documento_result.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
+				if (documento_result.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode() || documento_result.DocumentoTipo == TipoDocumento.Nomina || documento_result.DocumentoTipo == TipoDocumento.NominaAjuste)
 				{
 					// ruta física del xml
 					string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica,Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
