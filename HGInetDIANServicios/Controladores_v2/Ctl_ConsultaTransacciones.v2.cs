@@ -57,11 +57,12 @@ namespace HGInetDIANServicios
 				{
 					if (!string.IsNullOrEmpty(cufe))
 					{
-						DianResponse consulta = null;
+						DianResponse consulta = webServiceHab.GetStatus(cufe);
+						//DianResponse consulta = null;
 
-						consulta = webServiceHab.GetStatus(cufe);
+						//consulta = webServiceHab.GetStatus(cufe);
 
-						consulta = webServiceHab.GetStatusEvent(cufe);
+						//consulta = webServiceHab.GetStatusEvent(cufe);
 						resultado = new List<DianResponse>();
 						resultado.Add(consulta);
 					}
