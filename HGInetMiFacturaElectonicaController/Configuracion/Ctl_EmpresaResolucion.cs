@@ -236,32 +236,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="IdComercio">Guid del id de comercio</param>
 		/// <param name="DescripcionComercio">Descripción de la configuración</param>
 		/// <returns>TblEmpresasResoluciones</returns>
-		public TblEmpresasResoluciones EditarConfigPago(Guid Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio, string IdComercioTC, string DescripcionComercioTC)
+		public TblEmpresasResoluciones EditarConfigPago(Guid Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio)
 		{
 			try
 			{
 				TblEmpresasResoluciones tbl = context.TblEmpresasResoluciones.Where(x => x.StrIdSeguridad == Stridseguridad).FirstOrDefault();
 
-				//tbl.IntPermiteParciales = Permitepagosparciales;
-				//try
-				//{
-				//	tbl.StrComercioConfigId = null;
-				//	tbl.StrComercioConfigId = Guid.Parse(IdComercio);
-				//}
-				//catch (Exception)
-				//{
-				//}
-				//tbl.StrComercioConfigDescrip = DescripcionComercio;
-				//try
-				//{
-				//	tbl.StrComercioConfigIdTC = null;
-				//	tbl.StrComercioConfigIdTC = Guid.Parse(IdComercioTC);
-				//}
-				//catch (Exception)
-				//{
-				//}
-
-				//tbl.StrComercioConfigDescripTC = DescripcionComercioTC;
+				tbl.PermiteParciales = (Permitepagosparciales) ? 1 : 0;
+				try
+				{
+					tbl.ComercioConfigId = null;
+					tbl.ComercioConfigId = Guid.Parse(IdComercio);
+				}
+				catch (Exception)
+				{
+				}
+				tbl.ComercioConfigDescrip = DescripcionComercio;
 
 				this.Edit(tbl);
 
@@ -397,6 +387,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 
 		}
+
+
+		
 		#endregion
 
 	}

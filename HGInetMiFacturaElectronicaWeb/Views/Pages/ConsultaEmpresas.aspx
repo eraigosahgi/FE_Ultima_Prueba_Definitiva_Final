@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
-
+<script src="../../Scripts/Services/SrvResoluciones.js?vjs20201019"></script>
 	<script src="../../Scripts/config.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201019"></script>

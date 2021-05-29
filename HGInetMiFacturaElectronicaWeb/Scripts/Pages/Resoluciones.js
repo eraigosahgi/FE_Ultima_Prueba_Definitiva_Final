@@ -139,6 +139,7 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 					cssClass: "col-md-1 col-xs-2",
 					cellTemplate: function (container, options) {
 						var EditarResolucion = "";
+						//La empresa debe manejar pagos y tener serial de cloudservices para poder configurar un comercio
 						if (options.data.SerialCloud) {
 							EditarResolucion = "<a class='icon-pencil3' data-toggle='modal' data-target='#modal_Resoluciones' style='margin-left:12%; font-size:19px'></a>";
 						}
@@ -155,8 +156,8 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						 		var Datos_Descripcion_Comercio = "";
 
 
-						 		var Datos_Id_ComercioTC = "";
-						 		var Datos_Descripcion_ComercioTC = "";
+						 		//var Datos_Id_ComercioTC = "";
+						 		//var Datos_Descripcion_ComercioTC = "";
 
 
 						 		//Servicio para obtener la lista de comercios en plataforma intermedia
@@ -165,13 +166,14 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 
 						 			Datos_Id_Comercio = (options.data.ComercioConfigId == null) ? "" : options.data.ComercioConfigId;
 						 			Datos_Descripcion_Comercio = (options.data.ComercioConfigDescrip == null) ? "" : options.data.ComercioConfigDescrip;
-						 			Datos_Id_ComercioTC = (options.data.ComercioConfigIdTC == null) ? "" : options.data.ComercioConfigIdTC;
-						 			Datos_Descripcion_ComercioTC = (options.data.ComercioConfigDescripTC == null) ? "" : options.data.ComercioConfigDescripTC;
-						 			Datos_Pagos_Parciales = options.data.PermiteParciales;
+						 			//Datos_Id_ComercioTC = (options.data.ComercioConfigIdTC == null) ? "" : options.data.ComercioConfigIdTC;
+						 			//Datos_Descripcion_ComercioTC = (options.data.ComercioConfigDescripTC == null) ? "" : options.data.ComercioConfigDescripTC;
+						 			Datos_Pagos_Parciales = (options.data.PermiteParciales == 1) ? true : false;
 
 						 			//**************************************PSE
 						 			$("#IddeComercio").dxTextBox({
 						 				value: options.data.ComercioConfigId,
+						 				enabled: false,
 						 				onValueChanged: function (data) {
 						 					Datos_Id_Comercio = (data.value == null) ? "" : data.value;
 						 				}
@@ -223,50 +225,50 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						 			});
 						 			//**************************************PSE
 
-						 			//**************************************TDC
-						 			$("#IddeComercioTC").dxTextBox({
-						 				value: options.data.ComercioConfigIdTC,
-						 				onValueChanged: function (data) {
-						 					Datos_Id_ComercioTC = (data.value == null) ? "" : data.value;						 					
-						 				}
-						 			});
+						 			////**************************************TDC
+						 			//$("#IddeComercioTC").dxTextBox({
+						 			//	value: options.data.ComercioConfigIdTC,
+						 			//	onValueChanged: function (data) {
+						 			//		Datos_Id_ComercioTC = (data.value == null) ? "" : data.value;						 					
+						 			//	}
+						 			//});
 
 
-						 			$("#DescripcionComercioTC").dxTextBox({
-						 				value: options.data.ComercioConfigDescripTC,
-						 				onValueChanged: function (data) {
-						 					Datos_Descripcion_ComercioTC = (data.value == null) ? "" : data.value;
-						 				}
-						 			});
+						 			//$("#DescripcionComercioTC").dxTextBox({
+						 			//	value: options.data.ComercioConfigDescripTC,
+						 			//	onValueChanged: function (data) {
+						 			//		Datos_Descripcion_ComercioTC = (data.value == null) ? "" : data.value;
+						 			//	}
+						 			//});
 
 
-						 			//Crear Lista de comercios
-						 			$("#lstComerciosTC").dxSelectBox({
-						 				dataSource: new DevExpress.data.ArrayStore({
-						 					data: data,
-						 					key: "Valor"
-						 				}),
-						 				displayExpr: "Descripcion",
-						 				valueExpr: "Valor",
-						 				onValueChanged: function (e) {
+						 			////Crear Lista de comercios
+						 			//$("#lstComerciosTC").dxSelectBox({
+						 			//	dataSource: new DevExpress.data.ArrayStore({
+						 			//		data: data,
+						 			//		key: "Valor"
+						 			//	}),
+						 			//	displayExpr: "Descripcion",
+						 			//	valueExpr: "Valor",
+						 			//	onValueChanged: function (e) {
 
-						 					$("#IddeComercioTC").dxTextBox({ value: e.value });
-						 					Datos_Id_ComercioTC = e.value;
+						 			//		$("#IddeComercioTC").dxTextBox({ value: e.value });
+						 			//		Datos_Id_ComercioTC = e.value;
 
 
-						 					var Id = e.value;
-						 					//Recorremos la lista de configuraciones para sacar la descripción.
-						 					for (var i = 0; i < Datos.length; i += 1) {
-						 						if (Id == Datos[i].Valor) {
-						 							//Asignar Descripción
-						 							$("#DescripcionComercioTC").dxTextBox({ value: Datos[i].Descripcion.replace('- ' + e.value, '') });
-						 							Datos_Descripcion_ComercioTC = Datos[i].Descripcion.replace('- ' + e.value, '');
-						 						}
-						 					}
-						 				}
-						 			});
+						 			//		var Id = e.value;
+						 			//		//Recorremos la lista de configuraciones para sacar la descripción.
+						 			//		for (var i = 0; i < Datos.length; i += 1) {
+						 			//			if (Id == Datos[i].Valor) {
+						 			//				//Asignar Descripción
+						 			//				$("#DescripcionComercioTC").dxTextBox({ value: Datos[i].Descripcion.replace('- ' + e.value, '') });
+						 			//				Datos_Descripcion_ComercioTC = Datos[i].Descripcion.replace('- ' + e.value, '');
+						 			//			}
+						 			//		}
+						 			//	}
+						 			//});
 
-						 			//**************************************TDC
+						 			////**************************************TDC
 
 
 
@@ -277,7 +279,7 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						 				type: "default",
 						 				onClick: function (e) {
 						 					//Servicio para guardar la configuración
-						 					SrvResoluciones.EditarConfigPago(options.data.IdSeguridad, Datos_Pagos_Parciales, Datos_Id_Comercio, Datos_Descripcion_Comercio, Datos_Id_ComercioTC, Datos_Descripcion_ComercioTC).then(function (data) {
+						 					SrvResoluciones.EditarConfigPago(options.data.IdSeguridad, (Datos_Pagos_Parciales == 1 || Datos_Pagos_Parciales == true) ? true : false, Datos_Id_Comercio, Datos_Descripcion_Comercio).then(function (data) {
 						 						DevExpress.ui.notify("Datos guardados con exito", 'success', 6000);
 						 						//Actualiza los datos en el grid para que no tenga que ir nuevamente a base de datos
 						 						//for (var i = 0; i < Lista_Resoluciones.length; i += 1) {
@@ -371,7 +373,7 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						dataField: "Observaciones",
 						hidingPriority: 5,
 					}
-					,					
+					,
 
 					{
 						dataField: "RangoInicial",
@@ -388,7 +390,17 @@ App.controller('ConsultaResolucionesController', function ConsultaResolucionesCo
 						caption: "Versión Dian",
 						dataField: "VersionDian",
 						hidingPriority: 8,
-					},					
+					},
+					{
+						caption: "Id de Comercio",
+						dataField: "ComercioConfigId",
+						hidingPriority: 9,
+					},
+					{
+						caption: "Descripción del Comercio",
+						dataField: "ComercioConfigDescrip",
+						hidingPriority: 10,
+					},
 
 				],
 				filterRow: {

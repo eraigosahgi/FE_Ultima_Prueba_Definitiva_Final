@@ -49,9 +49,9 @@ var AppSrvResoluciones = angular.module('AppSrvResoluciones', ['dx'])
 	}
 
 	//Actualiza los datos de configuración de una resolución	
-	this.EditarConfigPago = function (Stridseguridad, Permitepagosparciales, IdComercio, DescripcionComercio, IdComercioTC, DescripcionComercioTC) {
+	this.EditarConfigPago = function (Stridseguridad, Permitepagosparciales, IdComercio, DescripcionComercio) {
 
-		return $http.get('/api/EditarConfigPago?Stridseguridad=' + Stridseguridad + '&Permitepagosparciales=' + Permitepagosparciales + '&IdComercio=' + IdComercio + '&DescripcionComercio=' + DescripcionComercio + '&IdComercioTC=' + IdComercioTC + '&DescripcionComercioTC=' + DescripcionComercioTC).then(function (response) {
+		return $http.get('/api/EditarConfigPago?Stridseguridad=' + Stridseguridad + '&Permitepagosparciales=' + Permitepagosparciales + '&IdComercio=' + IdComercio + '&DescripcionComercio=' + DescripcionComercio).then(function (response) {
 			return response.data;
 		}, function (response) {
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);

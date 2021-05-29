@@ -225,14 +225,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FechaActualizacion = d.DatFechaActualizacion,
 					RespuestaServicioWeb = d.StrRespuestaServicioWeb,
 					TipoDoc = d.IntTipoDoc,
-					//PermiteParciales = d.IntPermiteParciales,
+					PermiteParciales = d.PermiteParciales,
 					IdSetDian = d.StrIdSetDian,
 					VersionDian = d.IntVersionDian,
-					//ComercioConfigId = d.StrComercioConfigId,
-					//ComercioConfigDescrip = d.StrComercioConfigDescrip,
-					SerialCloud = d.TblEmpresas.StrSerialCloudServices,
-					//ComercioConfigIdTC = d.StrComercioConfigIdTC,
-					//ComercioConfigDescripTC = d.StrComercioConfigDescripTC,
+					ComercioConfigId = d.ComercioConfigId,
+					ComercioConfigDescrip = d.ComercioConfigDescrip,
+					SerialCloud = (d.TblEmpresas.IntManejaPagoE) ? d.TblEmpresas.StrSerialCloudServices : "",
 				});
 
 				return Ok(retorno);
@@ -247,10 +245,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		#endregion
 
-
+		#region Comercios de Pago
 		[HttpGet]
 		[Route("Api/EditarConfigPago")]
-		public IHttpActionResult EditarConfigPago(string Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio, string IdComercioTC, string DescripcionComercioTC)
+		public IHttpActionResult EditarConfigPago(string Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio)
 		{
 			try
 			{
@@ -258,46 +256,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_EmpresaResolucion Controlador = new Ctl_EmpresaResolucion();
 
-				//PSE
 				if (!string.IsNullOrEmpty(DescripcionComercio) || !string.IsNullOrEmpty(IdComercio))
 				{
 					if (string.IsNullOrEmpty(DescripcionComercio))
 					{
-						throw new ApplicationException("Debe indicar una descripción para la configuración de comercio por PSE, o indicar una ruta de pago");
-					}
-					if (string.IsNullOrEmpty(IdComercio) && !DescripcionComercio.ToUpper().Contains("HTTP"))
-					{
-						throw new ApplicationException("Url para PSE Invalido");
-					}
-
-					if (!string.IsNullOrEmpty(IdComercio) && DescripcionComercio.ToUpper().Contains("HTTP"))
-					{
-						throw new ApplicationException("Si esta configurando un Id de comercio para PSE, no puede indicar una ruta http de pago");
+						throw new ApplicationException("Debe indicar una descripción para la configuración de comercio");
 					}
 				}
-
-
-				//TDC
-
-
-				if (!string.IsNullOrEmpty(DescripcionComercioTC) || !string.IsNullOrEmpty(IdComercioTC))
-				{
-					if (!string.IsNullOrEmpty(IdComercioTC) && string.IsNullOrEmpty(DescripcionComercioTC))
-					{
-						throw new ApplicationException("Debe indicar una descripción para la configuración de comercio para Tarjeta de Crédito, o indicar una ruta de pago");
-					}
-
-					if (string.IsNullOrEmpty(IdComercioTC) && !DescripcionComercioTC.ToUpper().Contains("HTTP"))
-					{
-						throw new ApplicationException("Url para Tarjeta de Crédito Invalido");
-					}
-
-					if (!string.IsNullOrEmpty(IdComercioTC) && DescripcionComercioTC.ToUpper().Contains("HTTP"))
-					{
-						throw new ApplicationException("Si esta configurando un Id de comercio para PSE, no puede indicar una ruta http de pago");
-					}
-				}
-				var Datos = Controlador.EditarConfigPago(Guid.Parse(Stridseguridad), Permitepagosparciales, IdComercio, DescripcionComercio, IdComercioTC, DescripcionComercioTC);
+				var Datos = Controlador.EditarConfigPago(Guid.Parse(Stridseguridad), Permitepagosparciales, IdComercio, DescripcionComercio);
 
 				return Ok();
 
@@ -307,15 +273,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
 				throw;
 			}
-
-
 		}
 
 
-
-
-
-		#region Comercios de Pago
 
 		[HttpGet]
 		[Route("Api/ObtenerComercios")]
@@ -348,6 +308,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 		}
+
+		
+
 		#endregion
 	}
 }

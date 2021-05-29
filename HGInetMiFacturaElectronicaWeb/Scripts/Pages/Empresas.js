@@ -57,9 +57,9 @@ var CantRegCargados = 0;
 
 var ModalDetalleEmpresasApp = angular.module('ModalDetalleEmpresasApp', []);
 
-var EmpresasApp = angular.module('EmpresasApp', ['ModalDetalleEmpresasApp', 'dx', 'AppSrvFiltro', 'AppMaestrosEnum', 'AppSrvEmpresas']);
+var EmpresasApp = angular.module('EmpresasApp', ['ModalDetalleEmpresasApp', 'dx', 'AppSrvFiltro', 'AppMaestrosEnum', 'AppSrvEmpresas', 'AppSrvResoluciones']);
 //Controlador para la gestion de Empresas(Editar, Nueva Empresa)
-EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location, SrvFiltro, SrvMaestrosEnum, SrvEmpresas) {
+EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasController($scope, $http, $location, SrvFiltro, SrvMaestrosEnum, SrvEmpresas, SrvResoluciones) {
 
 	$("#Recargar").dxButton({
 		icon: "refresh",
@@ -80,6 +80,21 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_FechaCert = data.FechaVencimiento;
 				$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
 				showInfo(data);
+			});
+		}
+	}).removeClass("dx-icon");
+
+
+
+	$("#btnActualizarSerialCloudServices").dxButton({
+		icon: "refresh",
+		onClick: function (e) {
+			SrvEmpresas.ObtenerSerialCloud($("#NumeroIdentificacion").dxTextBox("instance").option().value).then(function (data) {
+				try {
+					$("#txtSerialCloud").dxTextBox({ value: data });
+				} catch (e) {
+					console.log(e);
+				}
 			});
 		}
 	}).removeClass("dx-icon");
@@ -206,18 +221,20 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		Datos_Obligado = "",
 		Datos_Habilitacion = "",
 		Datos_telefono = "",
-	Datos_IdentificacionDv = "",
-	Datos_Tipo = "1",
-	Datos_Observaciones = "",
-	Datos_empresa_Asociada = "",
-	Datos_Integrador = false,
-	Datos_Anexo = false,
-	Datos_ManejaPagos = false,
-	Datos_PermitePagosParciales = false,
-	Datos_PermiteConsultarTodosLosDocumentos = false,
-	Datos_EmailRecepcion = false,
-	Datos_Numero_usuarios = 1,
-	Datos_Horas_Acuse = 0;
+		Datos_IdentificacionDv = "",
+		Datos_Tipo = "1",
+		Datos_Observaciones = "",
+		Datos_empresa_Asociada = "",
+		Datos_Integrador = false,
+		Datos_Anexo = false,
+		Datos_ManejaPagos = false,
+		Datos_PermitePagosParciales = false,
+		Datos_PermiteConsultarTodosLosDocumentos = false,
+		Datos_EmailRecepcion = false,
+		Datos_Numero_usuarios = 1,
+		Datos_Horas_Acuse = 0,
+		Datos_ComercioConfigId = "",
+		Datos_ComercioConfigDescrip = "";
 
 
 	//Define los campos del Formulario  
@@ -772,6 +789,16 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				value: false,
 				onValueChanged: function (data) {
 					Datos_ManejaPagos = data.value;
+					if (Datos_ManejaPagos) {
+						if (Datos_Serial_Cloud) {
+							$("#ModalConfiguracionPagos").dxButton({ visible: true });
+						} else {
+							DevExpress.ui.notify("Para configurar un comercio de pago, debe tener Serial Cluod Services", 'error', 10000);
+							$("#ManejaPagos").dxCheckBox({ value: false });
+						}
+					} else {
+						$("#ModalConfiguracionPagos").dxButton({ visible: false });
+					}
 				}
 			});
 
@@ -1578,7 +1605,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
 				Datos_Horas_Acuse = response.data[0].IntAcuseTacito;
 				Datos_Anexo = response.data[0].IntAnexo;
+				//Si Maneja Pagos, entonces mostramos la configuración de Pago
 				Datos_ManejaPagos = response.data[0].IntManejaPagoE;
+				if (Datos_ManejaPagos) {
+					$("#ModalConfiguracionPagos").dxButton({ visible: true });
+				} else {
+					$("#ModalConfiguracionPagos").dxButton({ visible: false });
+				}
 				Datos_PermitePagosParciales = response.data[0].IntPagoEParcial;
 				Datos_PermiteConsultarTodosLosDocumentos = response.data[0].IntPagosPermiteConsTodos;
 				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
@@ -1593,6 +1626,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 				Datos_Serial_Cloud = response.data[0].SerialCloudServices;
 				Datos_debug = response.data[0].Debug;
+				//Comercio
+				Datos_ComercioConfigId = response.data[0].ComercioConfigId;
+				Datos_ComercioConfigDescrip = response.data[0].ComercioConfigDescrip;
 
 				//Certificado				
 				Datos_CertFirma = response.data[0].IntCertFirma;
@@ -1895,6 +1931,99 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 
+	///********************Pagos
+	$("#ModalConfiguracionPagos").dxButton({
+		icon: "edit",
+		visible: false,
+		onClick: function (e) {
+			$('#modal_Resoluciones').modal('show');
+			SrvResoluciones.ObtenerComercios($("#NumeroIdentificacion").dxTextBox("instance").option().value, $("#txtSerialCloud").dxTextBox("instance").option().value).then(function (data) {
+				var Datos = data;
+
+				//try {
+				//	Datos_ComercioConfigId = Datos_ComercioConfigId;
+				//	Datos_ComercioConfigDescrip = Datos_ComercioConfigDescrip;
+				//	Datos_Pagos_Parciales = (Datos_PermitePagosParciales == true) ? true : false;
+				//} catch (e) {
+
+				//}
+
+				try {
+					//**************************************
+					$("#IddeComercio").dxTextBox({
+						value: Datos_ComercioConfigId,
+						onValueChanged: function (data) {
+							Datos_ComercioConfigId = (data.value == null) ? "" : data.value;
+						}
+					});
+
+					$("#DescripcionComercio").dxTextBox({
+						value: Datos_ComercioConfigDescrip,
+						onValueChanged: function (data) {
+							Datos_ComercioConfigDescrip = (data.value == null) ? "" : data.value;
+						}
+					});
+
+					$("#PermiteParciales").dxCheckBox({
+						value: Datos_PermitePagosParciales,
+						onValueChanged: function (data) {
+							Datos_PermitePagosParciales = (data.value == null) ? "" : data.value;
+						}
+					});
+
+					//Crear Lista de comercios
+					$("#lstComercios").dxSelectBox({
+						dataSource: new DevExpress.data.ArrayStore({
+							data: data,
+							key: "Valor"
+						}),
+						displayExpr: "Descripcion",
+						valueExpr: "Valor",
+						onValueChanged: function (e) {
+
+							$("#IddeComercio").dxTextBox({ value: e.value });
+							Datos_ComercioConfigId = e.value;
+
+							$("#PermiteParciales").dxCheckBox({ value: Datos_PermitePagosParciales });
+							Datos_PermitePagosParciales = Datos_PermitePagosParciales;
+
+							var Id = e.value;
+							//Recorremos la lista de configuraciones para sacar la descripción.
+							for (var i = 0; i < Datos.length; i += 1) {
+								if (Id == Datos[i].Valor) {
+									//Asignar Descripción
+									$("#DescripcionComercio").dxTextBox({ value: Datos[i].Descripcion.replace('- ' + e.value, '') });
+									Datos_ComercioConfigDescrip = Datos[i].Descripcion.replace('- ' + e.value, '');
+								}
+							}
+						}
+					});
+
+					// Botón Guardar
+					$("#buttonGuardar").dxButton({
+						text: "Guardar",
+						type: "default",
+						onClick: function (e) {
+							//Servicio para guardar la configuración
+							SrvEmpresas.EditarConfigPago(id_seguridad, Datos_PermitePagosParciales, Datos_ComercioConfigId, Datos_ComercioConfigDescrip).then(function (data) {
+								DevExpress.ui.notify("Datos guardados con exito", 'success', 6000);
+
+								Datos_PermitePagosParciales = data.IntPagoEParcial;
+								Datos_ComercioConfigId = data.ComercioConfigId;
+								Datos_ComercioConfigDescrip = data.ComercioConfigDescrip;
+
+								$('#btncancelar').click();
+								//consultar(txt_hgi_Facturador);
+							});
+						}
+					});
+				} catch (e) {
+
+				}
+			});
+		}
+	});
+	//**************************
 
 
 });
@@ -2147,11 +2276,6 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 	}
 
 });
-
-
-
-
-
 
 
 //Esta funcion es para ir a la pagina de consulta

@@ -50,4 +50,27 @@
 		});
 	}
 
+	//Actualiza los datos de configuración de comercio de la Empresa	
+	this.EditarConfigPago = function (Stridseguridad, Permitepagosparciales, IdComercio, DescripcionComercio) {
+
+		return $http.get('/api/EmpresaEditarConfigPago?Stridseguridad=' + Stridseguridad + '&Permitepagosparciales=' + Permitepagosparciales + '&IdComercio=' + IdComercio + '&DescripcionComercio=' + DescripcionComercio).then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);
+			return $q.reject(response.data);
+		});
+	}
+
+	//Obtiene la lista de comercios disponibles para este facturador
+	this.ObtenerSerialCloud = function (codigo_facturador) {
+
+		return $http.get('/api/ObtenerSerialCloud?codigo_facturador=' + codigo_facturador).then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			return $q.reject(response.data);
+		});
+	}
+
+
 });

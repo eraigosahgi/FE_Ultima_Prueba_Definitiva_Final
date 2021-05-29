@@ -25,6 +25,7 @@ using System.Web;
 using System.IO;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetFirmaDigital;
+using LibreriaGlobalHGInet.Peticiones;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -1411,6 +1412,58 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			return datos;
 		}
+
+		#region Configuracion de Comercios
+		public TblEmpresas EditarConfigPago(Guid Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio)
+		{
+			try
+			{
+				TblEmpresas tbl = context.TblEmpresas.Where(x => x.StrIdSeguridad == Stridseguridad).FirstOrDefault();
+
+				tbl.IntPagoEParcial = Permitepagosparciales;
+				try
+				{
+					tbl.ComercioConfigId = null;
+					tbl.ComercioConfigId = Guid.Parse(IdComercio);
+				}
+				catch (Exception)
+				{
+				}
+				tbl.ComercioConfigDescrip = DescripcionComercio;
+
+				this.Edit(tbl);
+
+				return tbl;
+			}
+			catch (Exception e)
+			{
+				Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion, "");
+				throw;
+			}
+		}
+
+
+		public string ObtenerSerialCloud(string Tercero)
+		{
+
+			PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+			var url = plataforma.RutaHginetMail;
+
+			ClienteRest<string> cliente = new ClienteRest<string>(string.Format("{0}/Api/ObtenerSerialCloud?tercero={1}", url, Tercero), TipoContenido.Applicationjson.GetHashCode(), "");
+			try
+			{
+				string data = cliente.GET();
+				return data;
+			}
+			catch (Exception ex)
+			{
+				var cod = cliente.CodHttp;
+				throw ex;
+			}
+
+		}
+
+		#endregion
 
 	}
 }

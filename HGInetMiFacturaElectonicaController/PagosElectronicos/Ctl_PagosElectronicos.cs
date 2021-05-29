@@ -692,8 +692,29 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						ObjPago.IntVlrTotalDocumento = datos_documento.IntVlrTotal;
 
 						//consulta la resolución para obtener el comercio que tiene asociado.
-						//Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
-						//TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo);
+						Ctl_EmpresaResolucion clase_resoluciones = new Ctl_EmpresaResolucion();
+						TblEmpresasResoluciones datos_resolucion = clase_resoluciones.Obtener(datos_documento.StrEmpresaFacturador, datos_documento.StrNumResolucion, datos_documento.StrPrefijo,false);
+
+						//Validamos si existe resolucion con los parametros indicados
+						if (datos_resolucion != null)
+						{
+							//Si la resolucion no tiene configuración de pago, entonces tiene que tomar la configuracion de la empresa
+							if (datos_resolucion.ComercioConfigId != null)
+							{
+								ObjPago.StrIdSeguridadComercio = datos_resolucion.ComercioConfigId;
+								ObjPago.StrAuthToken = datos_resolucion.StrEmpresa;
+							}
+							else
+							{
+								//Comercio de la empresa
+								ObjPago.StrIdSeguridadComercio = datos_documento.TblEmpresasFacturador.ComercioConfigId;
+							}
+						}
+						else
+						{
+							//Comercio de la empresa
+							ObjPago.StrIdSeguridadComercio = datos_documento.TblEmpresasFacturador.ComercioConfigId;
+						}
 
 						//Valida que la resolución no sea null.
 						if (!datos_documento.TblEmpresasFacturador.IntManejaPagoE)

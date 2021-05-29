@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController;
+using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
@@ -11,6 +12,7 @@ using LibreriaGlobalHGInet.Enumerables;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
+using LibreriaGlobalHGInet.RegistroLog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -272,7 +274,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				DatCertVence = Convert.ToDateTime(d.DatCertVence).ToString(Fecha.formato_fecha_hginet),
 				SerialCloudServices = d.StrSerialCloudServices,
 				Debug = d.IntDebug,
-				d.IntPagosPermiteConsTodos
+				d.IntPagosPermiteConsTodos,
+				d.ComercioConfigId,
+				d.ComercioConfigDescrip
 
 			});
 
@@ -695,6 +699,68 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		#endregion
 
+
+
+		[HttpGet]
+		[Route("Api/EmpresaEditarConfigPago")]
+		public IHttpActionResult EditarConfigPago(string Stridseguridad, bool Permitepagosparciales, string IdComercio, string DescripcionComercio)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_Empresa Controlador = new Ctl_Empresa();
+
+				if (!string.IsNullOrEmpty(DescripcionComercio) || !string.IsNullOrEmpty(IdComercio))
+				{
+					if (string.IsNullOrEmpty(DescripcionComercio))
+					{
+						throw new ApplicationException("Debe indicar una descripción para la configuración de comercio");
+					}
+				}
+				var Datos = Controlador.EditarConfigPago(Guid.Parse(Stridseguridad), Permitepagosparciales, IdComercio, DescripcionComercio);
+
+				//Resultado
+				var resultado = new
+				{
+					Datos.ComercioConfigDescrip,
+					Datos.ComercioConfigId,
+					Datos.IntPagoEParcial
+				};
+
+				return Ok(resultado);
+
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/ObtenerSerialCloud")]
+		public IHttpActionResult ObtenerSerialCloud(string codigo_facturador)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_Empresa Controlador = new Ctl_Empresa();
+
+				var Datos = Controlador.ObtenerSerialCloud(codigo_facturador);
+
+				return Ok(Datos);
+
+			}
+			catch (Exception e)
+			{
+				//Ctl_Log.Guardar(e, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
+				return InternalServerError(new ApplicationException("No se encontraron datos, por favor valide que tenga configuración asignada en CloudServices"));
+			}
+
+
+		}
 
 
 	}

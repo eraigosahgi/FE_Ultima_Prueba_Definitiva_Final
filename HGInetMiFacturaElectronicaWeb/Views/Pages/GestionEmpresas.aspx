@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-
+	<script src="../../Scripts/Services/SrvResoluciones.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201019"></script>
@@ -12,6 +12,7 @@
 	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20201019"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController" class="col-md-12">
+		<div data-ng-include="'Partials/ModalResoluciones.html'"></div>
 		<%--Panel información General--%>
 		<div class="col-md-6">
 			<div class="panel panel-white">
@@ -64,23 +65,29 @@
 								</div>
 
 
-								<div class="col-md-2" style="z-index: 9;">
-									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">M. Anexo:</label>
+								<div class="col-md-3" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Maneja Anexo:</label>
 									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
 										<div id="Anexo"></div>
 										<div id="tooltip_Anexo">Activa la recepción de archivos anexos en los documentos de Factura Electrónica</div>
 									</div>
 								</div>
 
-								<div class="col-md-2" style="z-index: 9;">
-									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">M. Pagos:</label>
-									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
-										<div id="ManejaPagos"></div>
-										<div id="tooltip_ManejaPagos">Indica si el Facturador maneja Pagos  Electrónicos</div>
+								<div class="panel panel-white col-md-5" style="z-index: 9; margin-top: 16px;">
+									<div class="col-md-6" style="z-index: 9;">
+										<label style="">Maneja Pagos:</label>
+										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px; margin-bottom: 10px;">
+											<div id="ManejaPagos"></div>
+											<div id="tooltip_ManejaPagos">Indica si el Facturador maneja Pagos  Electrónicos</div>
+											<%--<a class='icon-pencil3' data-toggle='modal' data-target='#modal_Resoluciones' style='margin-left:12%; font-size:19px'></a>--%>
+										</div>
+									</div>
+
+									<div class="col-md-5" style="z-index: 9; margin-top: 20px; margin-bottom: 10px;">
+										<div id="ModalConfiguracionPagos"></div>
 									</div>
 								</div>
-
-								<div class="col-md-2" style="z-index: 9;">
+								<%--<div class="col-md-2" style="z-index: 9;">
 									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">P. Parciales?:</label>
 									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
 										<div id="PermitePagosParciales"></div>	
@@ -94,8 +101,7 @@
 										<div id="PermiteConsultarTodosLosDocumentos"></div>	
 										<div id="tooltip_PermiteConsultarTodosLosDocumentos">Indica si el Aquiriente puede consultar todos los documentos pendientes por pago o debe especificar el documento con prefijo</div>									
 									</div>
-								</div>
-
+								</div>--%>
 							</div>
 
 							<div class="dx-fieldset" style="padding: -80px;">
@@ -248,6 +254,9 @@
 
 									</label>
 									<div id="txtSerialCloud"></div>
+									<div class="text-right" style="z-index: 9999; margin-top: -76px;" title="Obtener Serial Cloud Services">
+										<div id="btnActualizarSerialCloudServices"></div>
+									</div>
 								</div>
 
 
@@ -413,7 +422,7 @@
 											<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Fecha Vencimiento:<strom style="color: red;">*</strom></label>
 											<div id="VenceCert"></div>
 
-											<div class="text-right" style="z-index: 9999; margin-top: -38px; margin-right: -40px;" title="Obtener información del certificado">
+											<div class="text-right" style="z-index: 9999; margin-top: -36px; margin-right: -40px;" title="Obtener información del certificado">
 												<div id="InfCert"></div>
 											</div>
 										</div>
