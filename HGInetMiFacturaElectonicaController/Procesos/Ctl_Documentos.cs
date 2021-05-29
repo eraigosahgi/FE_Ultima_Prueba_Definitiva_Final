@@ -1828,8 +1828,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Sueldo", tipo).Replace("de tipo", "del"));
 		}
 
-		public static void ValidarValoresNomina(Nomina documento)
+		public static void ValidarValoresNomina(object documento_obj, TipoDocumento tipo_nomina)
 		{
+
+			var documento = (dynamic)null;
+			documento = documento_obj;
 
 			decimal devengados_cal = 0;
 			decimal deducciones_cal = 0;
@@ -1843,13 +1846,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new Exception("No se encontró deducciones en el documento.");
 
 
-			int dias_laborales_mes = DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month);
+			int dias_laborales_periodo = DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month);
 
-			if (dias_laborales_mes == 31)
-				dias_laborales_mes -= 1;
+			if (dias_laborales_periodo == 31)
+				dias_laborales_periodo -= 1;
 
 			//Se valida los devengados del documento
-			devengados_cal = ValidarDevengados(documento.DatosDevengados, dias_laborales_mes, documento.DatosTrabajador.Sueldo);
+			if (tipo_nomina.Equals(TipoDocumento.Nomina) && documento.VariacionNomina == true)
+			{
+				dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
+			}
+			else if (tipo_nomina.Equals(TipoDocumento.NominaAjuste) && !documento.DatosDevengados.DiasTrabajados.Equals(30))
+			{
+				dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
+			}
+
+			devengados_cal = ValidarDevengados(documento.DatosDevengados, dias_laborales_periodo, documento.DatosTrabajador.Sueldo);
 
 			if (devengados_cal != decimal.Round(documento.DevengadosTotal, MidpointRounding.AwayFromZero))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DevengadosTotal", documento.DevengadosTotal, devengados_cal));
@@ -1869,18 +1881,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		}
 
 
-		public static decimal ValidarDevengados(Devengados devengado, int dias_laborales_mes, decimal salario_empleado)
+		public static decimal ValidarDevengados(Devengados devengado, int dias_laborales_periodo, decimal salario_empleado)
 		{
 			decimal valor_devengado = 0;
 			int dias_incapacidad = 0;
 			int dias_licencia = 0;
 			int dias_trabajados = 0;
-			decimal valor_dia = decimal.Round(salario_empleado / dias_laborales_mes,2, MidpointRounding.AwayFromZero);
+			decimal valor_dia = decimal.Round(salario_empleado / dias_laborales_periodo, 2, MidpointRounding.AwayFromZero);
 
 			if (devengado == null)
 				throw new Exception("No se encontró devengados en el documento.");
 
-			if (devengado.DiasTrabajados > dias_laborales_mes || devengado.DiasTrabajados <= 0)
+			if (devengado.DiasTrabajados > dias_laborales_periodo || devengado.DiasTrabajados <= 0)
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} del devengado no está bien formado", "DiasTrabajados", devengado.DiasTrabajados));
 
 			if (devengado.DatosTransporte != null)
@@ -2099,7 +2111,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			}
 
-			dias_trabajados = dias_laborales_mes - dias_incapacidad - dias_licencia;
+			dias_trabajados = dias_laborales_periodo - dias_incapacidad - dias_licencia;
 
 			if (!devengado.DiasTrabajados.Equals(dias_trabajados))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} de los devengados no está bien formado, según el resultado de dias laborales del mes menos incapacidades y menos licencias debe ser un valor de {2}", "DiasTrabajados", devengado.DiasTrabajados, dias_trabajados));

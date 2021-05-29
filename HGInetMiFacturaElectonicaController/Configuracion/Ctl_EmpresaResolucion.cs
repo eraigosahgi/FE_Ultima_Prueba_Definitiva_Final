@@ -198,6 +198,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				if (tbl_resolucion_actual == null)
 				{
+
+					if (empresaBd.IntHabilitacion.Equals(99) && empresaBd.IntManejaPagoE == true)
+					{
+						TblEmpresasResoluciones tbl_resolucion_comercio = ObtenerResoluciones(empresaBd.StrIdentificacion, "*").Where(x => x.ComercioConfigId != null && x.StrPrefijo.Equals(item.Prefijo)).First();
+						if (tbl_resolucion_comercio != null)
+						{
+							tbl_resolucion.ComercioConfigId = tbl_resolucion_comercio.ComercioConfigId;
+							tbl_resolucion.ComercioConfigDescrip = tbl_resolucion_comercio.ComercioConfigDescrip;
+							tbl_resolucion.PermiteParciales = tbl_resolucion_comercio.PermiteParciales;
+						}
+						
+					}
+
 					// crea el registro en base de datos
 					tbl_resolucion = Crear(tbl_resolucion);
 

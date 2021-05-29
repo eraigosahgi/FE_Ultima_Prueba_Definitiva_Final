@@ -20,6 +20,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string CodigoRegistro { get; set; }
 
 		/// <summary>
+		/// Indica si esa nomina presenta variacion(False - Es compleata por el Mes, True - No esta completa por el mes y solo representa una parte de lo liquidado al empleado)
+		/// </summary>
+		public bool VariacionNomina { get; set; }
+
+		/// <summary>
 		/// Prefijo de la Nómina, depende de las sucursales que posea el Empleador y elegido por este.
 		/// </summary>
 		public string Prefijo { get; set; }

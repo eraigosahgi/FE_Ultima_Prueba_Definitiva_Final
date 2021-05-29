@@ -2870,6 +2870,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="wcf\acuserecibo.svc" />
+    <Content Include="wcf\ajustenomina.svc" />
     <Content Include="wcf\documentos.svc" />
     <Content Include="wcf\empresas.svc" />
     <Content Include="wcf\factura.svc" />
@@ -3423,6 +3424,9 @@
     <Compile Include="wcf\acuserecibo.svc.cs">
       <DependentUpon>acuserecibo.svc</DependentUpon>
     </Compile>
+    <Compile Include="wcf\ajustenomina.svc.cs">
+      <DependentUpon>ajustenomina.svc</DependentUpon>
+    </Compile>
     <Compile Include="wcf\documentos.svc.cs">
       <DependentUpon>documentos.svc</DependentUpon>
     </Compile>
@@ -3432,6 +3436,7 @@
     <Compile Include="wcf\factura.svc.cs">
       <DependentUpon>factura.svc</DependentUpon>
     </Compile>
+    <Compile Include="wcf\interfaces\Iajustenomina.cs" />
     <Compile Include="wcf\interfaces\Inomina.cs" />
     <Compile Include="wcf\interfaces\IlistaFe.cs" />
     <Compile Include="wcf\interfaces\Iempresas.cs" />
@@ -3556,7 +3561,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61466/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

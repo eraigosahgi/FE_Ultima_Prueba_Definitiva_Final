@@ -44,7 +44,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else if (tipo_doc == TipoDocumento.NotaDebito)
 					documento_obj = ValidarNotaDebito((NotaDebito)documento_obj, resolucion, facturador);
 				else if (tipo_doc == TipoDocumento.Nomina)
-					documento_obj = ValidarNomina((Nomina)documento_obj, facturador);
+					documento_obj = ValidarNomina((Nomina)documento_obj, facturador, TipoDocumento.Nomina);
+				else if (tipo_doc == TipoDocumento.NominaAjuste)
+					documento_obj = ValidarNomina((NominaAjuste)documento_obj, facturador, TipoDocumento.NominaAjuste);
 
 
 

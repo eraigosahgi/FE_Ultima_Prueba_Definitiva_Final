@@ -39,6 +39,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public DateTime FechaGenPred { get; set; }
 
 		/// <summary>
+		/// Corresponde al Código del tipo de documento que se va hacer la afectacion tabla 5.5.8.(1 - Nomina, 2 - Ajuste)
+		/// </summary>
+		public int TipoDocPred { get; set; }
+
+		/// <summary>
 		/// Prefijo de la Nómina, depende de las sucursales que posea el Empleador y elegido por este.
 		/// </summary>
 		public string Prefijo { get; set; }
