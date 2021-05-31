@@ -2158,7 +2158,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Construye la url publica para la Auditoria de recibo del documento
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-				DocumentoRespuesta obj_documento = new DocumentoRespuesta();
+				//****Se agrega siempre a uno para dejar procesos como estaba sin Radian.
+				if (respuesta.IntAdquirienteRecibo == AdquirienteRecibo.Entregado.GetHashCode())
+					respuesta.IntAdquirienteRecibo = (short)AdquirienteRecibo.Aprobado.GetHashCode();
+
+			   DocumentoRespuesta obj_documento = new DocumentoRespuesta();
 
 				obj_documento.Aceptacion = (respuesta.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode()) ? AdquirienteRecibo.Pendiente.GetHashCode() : respuesta.IntAdquirienteRecibo;
 				obj_documento.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(respuesta.IntAdquirienteRecibo));
