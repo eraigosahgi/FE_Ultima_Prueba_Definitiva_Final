@@ -287,13 +287,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_EmpresaResolucion Controlador = new Ctl_EmpresaResolucion();
 
-				try
-				{
-					codigo_facturador = Sesion.DatosUsuario.StrEmpresa;
-				}
-				catch (Exception)
-				{
-				}
+				//try
+				//{
+				//	codigo_facturador = Sesion.DatosUsuario.StrEmpresa;
+				//}
+				//catch (Exception)
+				//{
+				//}
 
 				var Datos = Controlador.ObtenerComercios(codigo_facturador, serial_cloudservices);
 
