@@ -907,15 +907,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
           </AssociationSet>
-          <EntitySet Name="TblPagosElectronicos" EntityType="Modelo.TblPagosElectronicos" />
-          <AssociationSet Name="FK_TblPagosElectronicos_TblDocumentos" Association="Modelo.FK_TblPagosElectronicos_TblDocumentos">
-            <End Role="TblDocumentos" EntitySet="TblDocumentos" />
-            <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TblPagosElectronicos_TblPlanesTransacciones" Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones">
-            <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
-            <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
-          </AssociationSet>
           <EntitySet Name="TblProcesoCorreo" EntityType="Modelo.TblProcesoCorreo" />
           <EntitySet Name="TblUsuariosPagos" EntityType="Modelo.TblUsuariosPagos" />
           <EntitySet Name="QryAdquirientes" EntityType="Modelo.QryAdquirientes" />
@@ -925,9 +916,14 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
             <End Role="TblPagosDetalles" EntitySet="TblPagosDetalles" />
           </AssociationSet>
+          <EntitySet Name="TblPagosElectronicos" EntityType="Modelo.TblPagosElectronicos" />
           <AssociationSet Name="FK_TblPagosDetalles_TblPagosElectronicos" Association="Modelo.FK_TblPagosDetalles_TblPagosElectronicos">
             <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
             <End Role="TblPagosDetalles" EntitySet="TblPagosDetalles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TblPagosElectronicos_TblPlanesTransacciones" Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones">
+            <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
+            <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
@@ -1265,7 +1261,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <NavigationProperty Name="TblEmpresasAdquiriente" Relationship="Modelo.FK_TblDocumentos_TblEmpresasAdquiriente" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasFacturador" Relationship="Modelo.FK_TblDocumentos_TblEmpresasFacturador" FromRole="TblDocumentos" ToRole="TblEmpresas" />
           <NavigationProperty Name="TblEmpresasResoluciones" Relationship="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" FromRole="TblDocumentos" ToRole="TblEmpresasResoluciones" />
-          <NavigationProperty Name="TblPagosElectronicos" Relationship="Modelo.FK_TblPagosElectronicos_TblDocumentos" FromRole="TblDocumentos" ToRole="TblPagosElectronicos" />
           <Property Name="IntProcesadoERP" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="TblPagosDetalles" Relationship="Modelo.FK_TblPagosDetalles_TblDocumentos" FromRole="TblDocumentos" ToRole="TblPagosDetalles" />
         </EntityType>
@@ -1499,60 +1494,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TblPagosElectronicos">
-          <Key>
-            <PropertyRef Name="StrIdRegistro" />
-          </Key>
-          <Property Name="StrIdRegistro" Type="Guid" Nullable="false" />
-          <Property Name="StrIdSeguridadPago" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="StrIdPlataforma" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrIdSeguridadDoc" Type="Guid" />
-          <Property Name="StrIdSeguridadPlanes" Type="Guid" />
-          <Property Name="DatFechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DatFechaVerificacion" Type="DateTime" Precision="3" />
-          <Property Name="IntEstadoPago" Type="Int32" Nullable="false" />
-          <Property Name="StrTicketID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrTransaccionCUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IntValorPago" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
-          <Property Name="IntClicloTransaccion" Type="Int32" />
-          <Property Name="StrCodigoBanco" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IntCodigoServicio" Type="Int32" />
-          <Property Name="IntFormaPago" Type="Int32" />
-          <Property Name="StrCodigoFranquicia" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrMensaje" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="StrCampo1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrCampo2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StrCampo3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IntProcesado" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblPagosElectronicos_TblDocumentos" FromRole="TblPagosElectronicos" ToRole="TblDocumentos" />
-          <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" FromRole="TblPagosElectronicos" ToRole="TblPlanesTransacciones" />
-          <Property Name="StrIdRegistro2" Type="Guid" />
-          <NavigationProperty Name="TblPagosDetalles" Relationship="Modelo.FK_TblPagosDetalles_TblPagosElectronicos" FromRole="TblPagosElectronicos" ToRole="TblPagosDetalles" />
-        </EntityType>
-        <Association Name="FK_TblPagosElectronicos_TblDocumentos">
-          <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="0..1" />
-          <End Type="Modelo.TblPagosElectronicos" Role="TblPagosElectronicos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblDocumentos">
-              <PropertyRef Name="StrIdSeguridad" />
-            </Principal>
-            <Dependent Role="TblPagosElectronicos">
-              <PropertyRef Name="StrIdSeguridadDoc" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TblPagosElectronicos_TblPlanesTransacciones">
-          <End Type="Modelo.TblPlanesTransacciones" Role="TblPlanesTransacciones" Multiplicity="0..1" />
-          <End Type="Modelo.TblPagosElectronicos" Role="TblPagosElectronicos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TblPlanesTransacciones">
-              <PropertyRef Name="StrIdSeguridad" />
-            </Principal>
-            <Dependent Role="TblPagosElectronicos">
-              <PropertyRef Name="StrIdSeguridadPlanes" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="TblProcesoCorreo">
           <Key>
             <PropertyRef Name="StrIdSeguridadDoc" />
@@ -1658,6 +1599,34 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblPagosElectronicos">
+          <Key>
+            <PropertyRef Name="StrIdRegistro" />
+          </Key>
+          <Property Name="StrIdRegistro" Type="Guid" Nullable="false" />
+          <Property Name="StrIdSeguridadPago" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="StrIdPlataforma" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrIdRegistro2" Type="Guid" />
+          <Property Name="StrIdSeguridadPlanes" Type="Guid" />
+          <Property Name="DatFechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DatFechaVerificacion" Type="DateTime" Precision="3" />
+          <Property Name="IntEstadoPago" Type="Int32" Nullable="false" />
+          <Property Name="StrTicketID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrTransaccionCUS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntValorPago" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
+          <Property Name="IntClicloTransaccion" Type="Int32" />
+          <Property Name="StrCodigoBanco" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntCodigoServicio" Type="Int32" />
+          <Property Name="IntFormaPago" Type="Int32" />
+          <Property Name="StrCodigoFranquicia" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrMensaje" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="StrCampo1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrCampo2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrCampo3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntProcesado" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TblPagosDetalles" Relationship="Modelo.FK_TblPagosDetalles_TblPagosElectronicos" FromRole="TblPagosElectronicos" ToRole="TblPagosDetalles" />
+          <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" FromRole="TblPagosElectronicos" ToRole="TblPlanesTransacciones" />
+        </EntityType>
         <Association Name="FK_TblPagosDetalles_TblPagosElectronicos">
           <End Type="Modelo.TblPagosElectronicos" Role="TblPagosElectronicos" Multiplicity="1" />
           <End Type="Modelo.TblPagosDetalles" Role="TblPagosDetalles" Multiplicity="*" />
@@ -1667,6 +1636,18 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             </Principal>
             <Dependent Role="TblPagosDetalles">
               <PropertyRef Name="StrIdPagoPrincipal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TblPagosElectronicos_TblPlanesTransacciones">
+          <End Type="Modelo.TblPlanesTransacciones" Role="TblPlanesTransacciones" Multiplicity="0..1" />
+          <End Type="Modelo.TblPagosElectronicos" Role="TblPagosElectronicos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblPlanesTransacciones">
+              <PropertyRef Name="StrIdSeguridad" />
+            </Principal>
+            <Dependent Role="TblPagosElectronicos">
+              <PropertyRef Name="StrIdSeguridadPlanes" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2018,33 +1999,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TblPagosElectronicos">
-            <EntityTypeMapping TypeName="Modelo.TblPagosElectronicos">
-              <MappingFragment StoreEntitySet="TblPagosElectronicos">
-                <ScalarProperty Name="StrIdRegistro2" ColumnName="StrIdRegistro2" />
-                <ScalarProperty Name="IntProcesado" ColumnName="IntProcesado" />
-                <ScalarProperty Name="StrCampo3" ColumnName="StrCampo3" />
-                <ScalarProperty Name="StrCampo2" ColumnName="StrCampo2" />
-                <ScalarProperty Name="StrCampo1" ColumnName="StrCampo1" />
-                <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
-                <ScalarProperty Name="StrCodigoFranquicia" ColumnName="StrCodigoFranquicia" />
-                <ScalarProperty Name="IntFormaPago" ColumnName="IntFormaPago" />
-                <ScalarProperty Name="IntCodigoServicio" ColumnName="IntCodigoServicio" />
-                <ScalarProperty Name="StrCodigoBanco" ColumnName="StrCodigoBanco" />
-                <ScalarProperty Name="IntClicloTransaccion" ColumnName="IntClicloTransaccion" />
-                <ScalarProperty Name="IntValorPago" ColumnName="IntValorPago" />
-                <ScalarProperty Name="StrTransaccionCUS" ColumnName="StrTransaccionCUS" />
-                <ScalarProperty Name="StrTicketID" ColumnName="StrTicketID" />
-                <ScalarProperty Name="IntEstadoPago" ColumnName="IntEstadoPago" />
-                <ScalarProperty Name="DatFechaVerificacion" ColumnName="DatFechaVerificacion" />
-                <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
-                <ScalarProperty Name="StrIdSeguridadPlanes" ColumnName="StrIdSeguridadPlanes" />
-                <ScalarProperty Name="StrIdPlataforma" ColumnName="StrIdPlataforma" />
-                <ScalarProperty Name="StrIdSeguridadPago" ColumnName="StrIdSeguridadPago" />
-                <ScalarProperty Name="StrIdRegistro" ColumnName="StrIdRegistro" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TblProcesoCorreo">
             <EntityTypeMapping TypeName="Modelo.TblProcesoCorreo">
               <MappingFragment StoreEntitySet="TblProcesoCorreo">
@@ -2120,6 +2074,33 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
                 <ScalarProperty Name="IntValorPago" ColumnName="IntValorPago" />
                 <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
                 <ScalarProperty Name="StrIdPagoPrincipal" ColumnName="StrIdPagoPrincipal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblPagosElectronicos">
+            <EntityTypeMapping TypeName="Modelo.TblPagosElectronicos">
+              <MappingFragment StoreEntitySet="TblPagosElectronicos">
+                <ScalarProperty Name="IntProcesado" ColumnName="IntProcesado" />
+                <ScalarProperty Name="StrCampo3" ColumnName="StrCampo3" />
+                <ScalarProperty Name="StrCampo2" ColumnName="StrCampo2" />
+                <ScalarProperty Name="StrCampo1" ColumnName="StrCampo1" />
+                <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
+                <ScalarProperty Name="StrCodigoFranquicia" ColumnName="StrCodigoFranquicia" />
+                <ScalarProperty Name="IntFormaPago" ColumnName="IntFormaPago" />
+                <ScalarProperty Name="IntCodigoServicio" ColumnName="IntCodigoServicio" />
+                <ScalarProperty Name="StrCodigoBanco" ColumnName="StrCodigoBanco" />
+                <ScalarProperty Name="IntClicloTransaccion" ColumnName="IntClicloTransaccion" />
+                <ScalarProperty Name="IntValorPago" ColumnName="IntValorPago" />
+                <ScalarProperty Name="StrTransaccionCUS" ColumnName="StrTransaccionCUS" />
+                <ScalarProperty Name="StrTicketID" ColumnName="StrTicketID" />
+                <ScalarProperty Name="IntEstadoPago" ColumnName="IntEstadoPago" />
+                <ScalarProperty Name="DatFechaVerificacion" ColumnName="DatFechaVerificacion" />
+                <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+                <ScalarProperty Name="StrIdSeguridadPlanes" ColumnName="StrIdSeguridadPlanes" />
+                <ScalarProperty Name="StrIdRegistro2" ColumnName="StrIdRegistro2" />
+                <ScalarProperty Name="StrIdPlataforma" ColumnName="StrIdPlataforma" />
+                <ScalarProperty Name="StrIdSeguridadPago" ColumnName="StrIdSeguridadPago" />
+                <ScalarProperty Name="StrIdRegistro" ColumnName="StrIdRegistro" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

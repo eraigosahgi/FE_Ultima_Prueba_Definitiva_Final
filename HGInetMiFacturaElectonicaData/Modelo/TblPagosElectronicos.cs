@@ -23,7 +23,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public System.Guid StrIdRegistro { get; set; }
         public string StrIdSeguridadPago { get; set; }
         public string StrIdPlataforma { get; set; }
-        public Nullable<System.Guid> StrIdSeguridadDoc { get; set; }
+        public Nullable<System.Guid> StrIdRegistro2 { get; set; }
         public Nullable<System.Guid> StrIdSeguridadPlanes { get; set; }
         public System.DateTime DatFechaRegistro { get; set; }
         public Nullable<System.DateTime> DatFechaVerificacion { get; set; }
@@ -41,11 +41,9 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrCampo2 { get; set; }
         public string StrCampo3 { get; set; }
         public bool IntProcesado { get; set; }
-        public Nullable<System.Guid> StrIdRegistro2 { get; set; }
     
-        public virtual TblDocumentos TblDocumentos { get; set; }
-        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosDetalles> TblPagosDetalles { get; set; }
+        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
     }
 }

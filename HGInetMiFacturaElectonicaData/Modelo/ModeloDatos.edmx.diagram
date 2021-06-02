@@ -37,16 +37,15 @@
         <EntityTypeShape EntityType="Modelo.TblEmpresasResoluciones" Width="2.125" PointX="10.125" PointY="3.625" />
         <AssociationConnector Association="Modelo.FK_TblDocumentos_TblEmpresasResoluciones" />
         <AssociationConnector Association="Modelo.FK_TblEmpresasResoluciones_TblEmpresas" />
-        <EntityTypeShape EntityType="Modelo.TblPagosElectronicos" Width="2" PointX="17.125" PointY="7" />
-        <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblDocumentos" />
-        <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
         <EntityTypeShape EntityType="Modelo.TblProcesoCorreo" Width="1.5" PointX="0.75" PointY="13.75" />
         <EntityTypeShape EntityType="Modelo.TblUsuariosPagos" Width="1.5" PointX="0.75" PointY="17.75" />
         <EntityTypeShape EntityType="Modelo.QryAdquirientes" Width="1.5" PointX="9.375" PointY="0.75" />
         <EntityTypeShape EntityType="Modelo.QryDocumentosSaldo" Width="1.5" PointX="3.375" PointY="17.75" />
         <EntityTypeShape EntityType="Modelo.TblPagosDetalles" Width="1.5" PointX="19.875" PointY="6.625" />
         <AssociationConnector Association="Modelo.FK_TblPagosDetalles_TblDocumentos" />
+        <EntityTypeShape EntityType="Modelo.TblPagosElectronicos" Width="2.125" PointX="17.5" PointY="8.875" />
         <AssociationConnector Association="Modelo.FK_TblPagosDetalles_TblPagosElectronicos" />
+        <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
