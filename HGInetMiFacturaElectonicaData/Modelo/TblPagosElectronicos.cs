@@ -14,6 +14,12 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     
     public partial class TblPagosElectronicos
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public TblPagosElectronicos()
+        {
+            this.TblPagosDetalles = new HashSet<TblPagosDetalles>();
+        }
+    
         public System.Guid StrIdRegistro { get; set; }
         public string StrIdSeguridadPago { get; set; }
         public string StrIdPlataforma { get; set; }
@@ -35,8 +41,11 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrCampo2 { get; set; }
         public string StrCampo3 { get; set; }
         public bool IntProcesado { get; set; }
+        public Nullable<System.Guid> StrIdRegistro2 { get; set; }
     
         public virtual TblDocumentos TblDocumentos { get; set; }
         public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblPagosDetalles> TblPagosDetalles { get; set; }
     }
 }

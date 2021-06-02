@@ -44,6 +44,9 @@
         <EntityTypeShape EntityType="Modelo.TblUsuariosPagos" Width="1.5" PointX="0.75" PointY="17.75" />
         <EntityTypeShape EntityType="Modelo.QryAdquirientes" Width="1.5" PointX="9.375" PointY="0.75" />
         <EntityTypeShape EntityType="Modelo.QryDocumentosSaldo" Width="1.5" PointX="3.375" PointY="17.75" />
+        <EntityTypeShape EntityType="Modelo.TblPagosDetalles" Width="1.5" PointX="19.875" PointY="6.625" />
+        <AssociationConnector Association="Modelo.FK_TblPagosDetalles_TblDocumentos" />
+        <AssociationConnector Association="Modelo.FK_TblPagosDetalles_TblPagosElectronicos" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

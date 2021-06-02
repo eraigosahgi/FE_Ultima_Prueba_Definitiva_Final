@@ -235,6 +235,9 @@
     <Compile Include="Modelo\TblOpcionesUsuario.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblPagosDetalles.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblPagosElectronicos.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
