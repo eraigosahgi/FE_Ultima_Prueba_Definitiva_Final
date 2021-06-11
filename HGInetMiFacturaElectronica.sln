@@ -342,6 +342,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EmpresaConsultaPagos", "Emp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MultiplesComercios", "MultiplesComercios", "{227A9F03-6B68-4526-A617-5AD89C6BAFC4}"
 	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\MultiplesComercios\Empresa y Adquiriente en TblPagosElectronicos.txt = Documentacion\Liberaciones\MultiplesComercios\Empresa y Adquiriente en TblPagosElectronicos.txt
 		Documentacion\Liberaciones\MultiplesComercios\Pagos Electronicos de Multiples Documentos.txt = Documentacion\Liberaciones\MultiplesComercios\Pagos Electronicos de Multiples Documentos.txt
 		Documentacion\Liberaciones\MultiplesComercios\Script Empresas-Resoluciones.txt = Documentacion\Liberaciones\MultiplesComercios\Script Empresas-Resoluciones.txt
 	EndProjectSection
