@@ -1,5 +1,5 @@
-﻿var ruta = 'https://serv7.mifacturaenlinea.com.co/';
-var ruta_servicios = 'https://cloudservices.hginet.co/Views/IniciarPago.aspx';
+﻿var ruta = 'http://localhost:61428/';
+var ruta_servicios = 'https://pruebascloudservices.hginet.co/Views/Pago.aspx';
 
 var apphgi = angular.module('myApp', []);
 apphgi.controller('myCtrl', function ($scope, SrvPagos) {
@@ -10,7 +10,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 	$scope.Monto = 0;
 	$scope.IdSeguridad = '';
 	$scope.EtiquetaIdentificacion = 'Identificación';
-	$scope.EtiquetaDocumento = 'Documento';
+	$scope.EtiquetaDocumento = 'Documento Scope';
 	$scope.PagosParciales = false;
 	$scope.MuestraDocumento = true;
 	$scope.PnlConsulta = true;
@@ -25,12 +25,17 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 	});
 
 	$scope.ConsultarDocumento = function () {
-		Consultar($scope.Identificacion, $scope.Documento);
+		//Consultar($scope.Identificacion, $scope.Documento);
+		ConsultarDocumentos();
 	}
-
-
+	//Sin Angularjs
+	PagarDocumento = function (documento, monto) {
+		$scope.Monto = $("#txtSaldo_" + documento).dxNumberBox("instance").option().value;
+		InicicarPago(documento, monto);
+	}
+	//Con Angularjs
 	$scope.PagarDocumento = function (documento, monto) {
-		InicicarPago(documento, monto)
+		InicicarPago(documento, monto);
 	}
 
 	function Consultar(ValorIdentificacion, ValorDocumento) {
@@ -59,8 +64,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 
 	function InicicarPago(idseg, valor_pago) {
-	
-		valor_pago = $("#txtvalorPago_" + idseg).val();
+
 		var forma_pago = 0;
 		var UsuarioSession = '';
 		if (idseg != null && idseg != undefined) {
@@ -97,7 +101,324 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 
 	$scope.ConsultarDocumentoFueraCtrl = function (Identificacion, Documento) {
-		Consultar(Identificacion, Documento);
+		//Consultar(Identificacion, Documento);
+		$scope.Identificacion = Identificacion;
+		$scope.Documento = Documento;
+		ConsultarDocumentos();
+	}
+
+
+
+
+
+
+	function ConsultarDocumentos() {
+		var ValidarGestionPagos = "ValidarGestionPagos";
+		$("#summary_Pagos").dxValidationSummary(
+		{
+			validationGroup: ValidarGestionPagos
+		});
+
+		//Limpiar Errores
+		$("#mensajeError").text("");
+
+		$.ajax({
+			url: ruta + '/api/ConsultarPagosFueraPlataforma?IdSeguridad=' + $scope.serial + '&identificacion=' + $scope.Identificacion + '&documento=' + $scope.Documento + '&prefijo=' + $scope.Prefijo,
+			success: function (respuesta) {
+
+				$('#wait').hide();
+				$("#gridDocumentos").dxDataGrid({
+					dataSource: respuesta,
+					paging: {
+						pageSize: 20
+					},
+					keyExpr: "StrIdSeguridad",
+					pager: {
+						showPageSizeSelector: true,
+						allowedPageSizes: [5, 10, 20],
+						showInfo: true
+					},
+					onContentReady: function (options) {						
+						try {
+							if (options.component._options.dataSource.length == 1) {
+								$("#gridDocumentos").dxDataGrid("columnOption", "Seleccionar", "visible", false);
+							} else {
+								$("#gridDocumentos").dxDataGrid("columnOption", "Seleccionar", "visible", true);
+							}
+						} catch (e) {
+						}
+					}
+					, onCellPrepared: function (options) {
+						var fieldData = options.value,
+							fieldHtml = "";
+						try {
+							if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Neto") {
+								if (fieldData) {
+									var inicial = fNumber.go(fieldData).replace("$-", "-$");
+									options.cellElement.html(inicial);
+								}
+							}
+						} catch (err) {
+							DevExpress.ui.notify(err.message, 'error', 3000);
+						}
+					}, loadPanel: {
+						enabled: true
+					},
+
+					columns: [
+				   {
+				   	caption: "Seleccionar",
+				   	cssClass: "col-md-1 col-xs-2",
+				   	cellTemplate: function (container, options) {
+				   		$('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
+				   			name: "chkSaldo_" + options.data.StrIdSeguridad,
+				   			onValueChanged: function (data) {
+				   				validarSeleccion();
+				   			}
+				   		})
+						.appendTo(container);
+				   	},
+				   },
+					   {
+					   	caption: "Prefijo",
+					   	dataField: "StrPrefijo",
+					   },
+					   {
+					   	caption: "Fecha Documento",
+					   	dataField: "FechaDocumento",
+					   },
+					   {
+					   	caption: $scope.EtiquetaDocumento,//"Documento",
+					   	dataField: "IntNumero",
+					   },
+
+					   {
+					   	caption: "Valor Total",
+					   	dataField: "IntVlrTotal",
+					   	Type: Number,
+					   },
+
+				   {
+				   	caption: "Saldo",
+				   	dataField: "Saldo",
+				   	visible: true,
+				   	//disabled: !data.habilitar_documento,
+				   	cellTemplate: function (container, options) {
+
+				   		$('<div id="txtSaldo_' + options.data.StrIdSeguridad + '"></div>').dxNumberBox({
+				   			value: options.data.Saldo,
+				   			name: "txtSaldo_" + options.data.StrIdSeguridad,
+				   			disabled: (options.data.PagosParciales == 1) ? false : true,
+				   			inputAttr: {
+				   				id: "txtSaldo_cursor_" + options.data.StrIdSeguridad,
+				   				style: "width: 100%; text-align:right;",
+				   			},
+
+				   			//tabIndex: Documento_Indice,
+				   			format: {
+				   				type: "fixedPoint",
+				   				precision: 2
+				   			},
+				   			onValueChanged: function (data) {
+				   				validarSeleccion();
+				   			},
+				   		})
+						.dxValidator({
+							validationGroup: ValidarGestionPagos,
+							validationRules: [{
+								type: "numeric",
+								message: "El campo debe ser numerico"
+							}, {
+								type: "range",
+								min: 1,
+								max: options.data.Saldo,
+								message: "Monto incorrecto"
+							}]
+						})
+						.appendTo(container);
+				   	},
+
+
+				   },
+					   {
+					   	///Opción de pago
+					   	cssClass: "col-md-1 ",
+					   	caption: "Pago",
+					   	width: "120px",
+					   	alignment: "center",
+
+					   	cellTemplate: function (container, options) {
+
+					   		if (options.data.Saldo > 0) {
+					   			if (options.data.Estado != 400) {
+
+
+					   				//var RazonSocial = options.data.Facturador.replace(" ", "_%%_");
+					   				//var click = " onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "'," + options.data.poseeIdComercioPSE + "," + options.data.poseeIdComercioTC + ")";
+					   				var click = " onClick=PagarDocumento('" + options.data.StrIdSeguridad + "','" + options.data.Saldo + "')";
+
+					   				var boton_pagar = '<div  ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-success dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Pagar" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Pagar</span></div></div>'
+
+
+					   				var imagen = "";
+					   				//if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1) {
+					   				imagen = boton_pagar;//  "<a " + click + " style='font-size: 20px !important; color: #4caf50;' class='icon dx-icon-money' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' ></a><a " + click + " style='font-size: 16px !important; color: black;' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Pagar</a>";
+					   				//} else {
+					   				//	imagen = "";
+
+					   				//}
+
+					   				//if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCancelada == 100) {//aqui se debe colocar el status que indica el pago de la factura                            
+					   				//	imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Ver</a>"
+					   				//}
+
+					   				$("<div>")
+									.append($(imagen))
+									 .appendTo(container);
+					   			}
+					   		}
+					   	}
+					   },
+
+					],
+
+				});
+			}, error: function (error) {
+				$("#mensajeError").text(error.responseText);
+			}
+		});
+
+
+
+
+
+		$("#multipagos").dxButton({
+			text: "Pagar",
+			type: "success",
+			icon: 'money',
+			visible: false,
+			validationGroup: ValidarGestionPagos,
+			onClick: function (e) {
+				var result = e.validationGroup.validate();
+				if (result.isValid) {
+
+					var Vpago = window.open("", "Pagos", "width=10,height=10");
+					if (Vpago == null || Vpago == undefined) {
+						DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
+					} else {
+
+						///Pago Multiple
+						$.ajax({
+							url: ruta + '/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total,
+							success: function (respuesta) {
+
+								var alto_pantalla = $(window).height() - 10;
+								var ancho_pantalla = $(window).width() - 10;
+
+								//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
+								$scope.NumVerificacion = 1;
+								//Ruta servicio
+								var RutaServicio = ruta_servicios + "?IdSeguridad=";
+								$scope.Idregistro = respuesta.IdRegistro;
+								var Vpago2 = window.open(RutaServicio + respuesta.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
+
+
+							},
+							error: function (error) {
+								if (error != undefined) {
+									DevExpress.ui.notify(error.responseJSON.ExceptionMessage, 'error', 6000);
+									$("#button").dxButton({ visible: true });
+
+
+									if (error.responseJSON.ExceptionMessage == 'Documento ya no esta disponible') {
+										$('#modal_Pagos_Electronicos').modal('hide')
+									}
+
+								}
+							}
+						});
+
+					}
+				}
+			}
+		});
+
+	}
+
+	function validarSeleccion() {
+		var data = $("#gridDocumentos").dxDataGrid("instance").option().dataSource;
+		var lista = '';
+		var total_a_pagar = 0;
+		var total_seleccionados = 0;
+		var comercios_direfentes = false;
+
+		var comercio_actual = "";
+		for (var i = 0; i < data.length; i++) {
+
+			var valor = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+			if (valor) {
+				if (comercio_actual != "") {
+					if (comercio_actual != data[i].IdComercio) {
+						comercios_direfentes = true;
+						swal({
+							title: 'Comercios Diferentes',
+							text: 'Para realizar pagos de multiples documentos, estos deben ser del mismo comercio',
+							icon: 'error',
+							confirmButtonColor: '#66BB6A',
+							confirmButtonText: 'Aceptar',
+							animation: 'pop',
+							html: true,
+						});
+					}
+				}
+				total_seleccionados += 1;
+				comercio_actual = data[i].IdComercio;
+			}
+		}
+
+		if (total_seleccionados > 0) {
+			$("#gridDocumentos").dxDataGrid("columnOption", "Pago", "visible", false);
+			//$("#gridDocumentos").dxDataGrid("columnOption", "Saldo", "visible", true);
+
+
+			for (var i = 0; i < data.length; i++) {
+
+				var valor_seleccionado = 0;
+				var seleccion = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+				if (seleccion) {
+					lista += (lista) ? ',' : '';
+					valor_seleccionado = $("#txtSaldo_" + data[i].StrIdSeguridad).dxNumberBox("instance").option().value;
+					lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado + "'}";
+					total_a_pagar += valor_seleccionado;
+				}
+			}
+			lista = "[" + lista + "]"
+			$scope.documentos = lista;
+			$scope.total = total_a_pagar;
+
+		} else {
+			$scope.documentos = "Ningun Documento Por Procesar";
+			$scope.total = 0;
+			$("#gridDocumentos").dxDataGrid("columnOption", "Pago", "visible", true);
+			//$("#gridDocumentos").dxDataGrid("columnOption", "Saldo", "visible", false);
+			$("#multipagos").dxButton({ visible: false });
+		}
+
+
+
+		if (total_a_pagar > 0) {
+			if (comercios_direfentes) {
+				$('#Total_a_Pagar').text("");
+				$("#multipagos").dxButton({ visible: false });
+			} else {
+				$('#Total_a_Pagar').text("Total: " + fNumber.go(total_a_pagar).replace("$-", "-$"));
+				$("#multipagos").dxButton({ visible: true });
+			}
+		} else {
+			$('#Total_a_Pagar').text("");
+			$("#multipagos").dxButton({ visible: false });
+		}
+
 	}
 
 
@@ -113,6 +434,10 @@ apphgi.service('SrvPagos', function ($location, $q) {
 
 		var panel_pago = '<link href="' + ruta + '/Content/dx.hgi.css" rel="stylesheet" />\
 			<script src="'+ ruta + '/Scripts/config.js"></script>\
+			<script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>\
+			<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />\
+			<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />\
+			<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>\
 			<div style="margin-top: 1%; min-width: 400px;">\
 				<div class="panelPago" >\
 					<div id="wait" style="display: none; z-index: 9999;">\
@@ -158,11 +483,15 @@ apphgi.service('SrvPagos', function ($location, $q) {
 							<td style="padding: 0px; text-align: center;">{{x.IntNumero}}</td>\
 							<td style="padding: 0px; text-align: center;">{{x.FechaDocumento}}</td>\
 							<td style="padding: 0px; text-align: right; width: 100px; padding-right: 10px; padding-left: 10px;">{{x.IntVlrTotal | number }}</td>\
-							<td style="padding: 0px; text-align: right; width: 100px;" ><input type="text" style="width: 100%; text-align: right;  padding-right: 10px;"  id="txtvalorPago_{{x.StrIdSeguridad}}" ng-disabled="!PagosParciales" value="{{x.IntVlrTotal | number }}" class="Texto" /></td>\
+							<td style="padding: 0px; text-align: right; width: 100px;" ><input type="text" style="width: 100%; text-align: right;  padding-right: 10px;"  id="txtvalorPago_{{x.StrIdSeguridad}}" ng-disabled="!PagosParciales" value="{{x.Saldo | number }}" class="Texto" /></td>\
 							<td style="padding: 0px; text-align: right;">\
-								<input type="button" class="BtnConsulta" value="Pagar" ng-click="PagarDocumento(x.StrIdSeguridad,x.IntVlrTotal)" /></td>\
+								<input type="button" class="BtnConsulta" value="Pagar" ng-show="x.Saldo>0" ng-click="PagarDocumento(x.StrIdSeguridad,x.IntVlrTotal)" /></td>\
 						</tr>\
 					</table>\
+					<div class="col-md-12" style="padding: 5px; text-align: right;">\
+					<div id="multipagos"></div>\
+					</div>\
+					<div id="gridDocumentos"></div>\
 				</div>';
 
 		//Impresión de campos
@@ -170,9 +499,14 @@ apphgi.service('SrvPagos', function ($location, $q) {
 			return panel_pago;
 		});
 	}
-
-
 });
+
+
+
+
+
+
+
 
 
 apphgi.directive('hgiPagos', function ($compile) {

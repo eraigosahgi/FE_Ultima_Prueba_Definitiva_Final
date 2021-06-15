@@ -35,20 +35,20 @@
 
 								<div class="dx-fieldset">
 
-									<div class="col-md-4">
+									<%--<div class="col-md-4">
 										<i class="icon-file-text"></i>
 										<label>Filtro Fecha</label>
 										<div data-dx-select-box="filtros.Fecha"></div>
-									</div>
+									</div>--%>
 
-									<div class="col-md-2">
+									<div class="col-md-4">
 										<i class=" icon-calendar"></i>
 										<label>Fecha Inicial:</label>
 										<div id="FechaInicial"></div>
 									</div>
 
 
-									<div class="col-md-2">
+									<div class="col-md-4">
 										<i class=" icon-calendar"></i>
 										<label>Fecha Final:</label>
 										<div id="FechaFinal"></div>
@@ -72,11 +72,11 @@
 										<div data-hgi-filtro="Adquiriente"></div>
 									</div>
 
-									<div class="col-md-4" style="margin-top: 1%">
+									<%--<div class="col-md-4" style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
 										<label>Resolución-Prefijo:</label>
 										<div id="filtrosResolucion"></div>
-									</div>
+									</div>--%>
 
 
 								</div>

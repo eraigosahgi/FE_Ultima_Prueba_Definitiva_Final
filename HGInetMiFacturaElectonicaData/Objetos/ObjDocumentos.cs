@@ -45,6 +45,7 @@ namespace HGInetMiFacturaElectonicaData.Objetos
 		public int PagosParciales { get; set; }
 		public bool poseeIdComercioPSE { get; set; }
 		public bool poseeIdComercioTC { get; set; }
-
+		public string IdComercio { get; set; }
+		public string DescripComercio { get; set; }
 	}
 }

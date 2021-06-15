@@ -1978,6 +1978,7 @@
     <Content Include="Scripts\Services\SrvEmpresa.js" />
     <Content Include="Scripts\Services\SrvFormatos.js" />
     <Content Include="Scripts\Services\SrvPagos.js" />
+    <Content Include="Scripts\Services\SrvPagos_Respaldo.js" />
     <Content Include="Scripts\Services\SrvPermisos.js" />
     <Content Include="Scripts\Services\SrvPlanes.js" />
     <Content Include="Scripts\Services\SrvProveedor.js" />

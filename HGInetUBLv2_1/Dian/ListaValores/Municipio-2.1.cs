@@ -1141,6 +1141,7 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("99524", "La Primavera ", "La Primavera "),
 			new ListaItem("99624", "Santa Rosalía ", "Santa Rosalía "),
 			new ListaItem("99773", "Cumaribo", "Cumaribo"),
+			new ListaItem("27086", "Belén de Bajirá", "Belén de Bajirá"),
 
 		};
 

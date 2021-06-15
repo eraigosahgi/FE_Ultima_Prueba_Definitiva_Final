@@ -26,7 +26,7 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
 	$scope.PermitePagosParciales = false;
 	$rootScope.ConsultarPago = function (IdSeguridad, Monto, PagosParciales, poseeIdComercioPSE, poseeIdComercioTC) {
 		$("#PanelPago").show();
-		$("#MontoPago").dxNumberBox({ readOnly: (PagosParciales == "1") ? false : true });
+		//$("#MontoPago").dxNumberBox({ readOnly: (PagosParciales == "1") ? false : true });
 		$("#Detallepagos").hide();
 		$("#panelPagoPendiente").show();
 		$("#PanelVerificacion").hide();
@@ -55,8 +55,9 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
 		$scope.EnProceso = false;
 
 
+		
 
-
+		
 		//Consulto los pagos de este documento        
 		$http.get('/api/ConsultarPagos?StrIdSeguridadDoc=' + IdSeguridad).then(function (response) {
 			///Este es el monto total de la factura
@@ -76,7 +77,8 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
 			$scope.nit = response.data[0].NitFacturador;
 			$scope.razonsocial = response.data[0].RazonSocialFacturador;
 
-
+			
+			$("#MontoPago").dxNumberBox({ readOnly: !response.data[0].PagosParciales });
 
 
 			$("#button").dxButton({ visible: true });
@@ -159,7 +161,6 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
                    	dataType: "date",
                    	format: "yyyy-MM-dd HH:mm"
                    },
-
                    {
                    	caption: "Valor",
                    	dataField: "Monto"
@@ -168,14 +169,12 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
                    	caption: "Estado",
                    	dataField: "Estado"
                    },
-
                    {
                    	caption: "Fecha Verificación",
                    	dataField: "FechaVerificacion",
                    	dataType: "date",
                    	format: "yyyy-MM-dd HH:mm"
                    }
-
                ],
 
 				summary: {
@@ -250,8 +249,7 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
 						type: "success",
 						icon: 'money',
 						//useSubmitBehavior: true
-						onClick: function (e) {
-							console.log("Prueba");
+						onClick: function (e) {							
 							InicicarPago(0);
 							//console.log("poseeIdComercioPSE", poseeIdComercioPSE);
 							//console.log("poseeIdComercioTC", poseeIdComercioTC);
@@ -300,6 +298,15 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
 
 				}
 				Vpago.close();
+
+				try {
+					//Limpiamos la seleccion de mas de un doumento en la grid de pagos
+					var dataGrid = $("#gridDocumentos").dxDataGrid("instance");
+					dataGrid.deselectAll();
+					dataGrid.clearSelection();
+				} catch (e) {
+
+				}
 			}
 			//-------------------------
 
@@ -404,7 +411,7 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
 
 
 	$("#form").on("submit", function (e) {
-		console.log("Prueba");
+		
 
 		//e.preventDefault();
 	});
@@ -488,8 +495,11 @@ App.controller('ModalPagosController', function ($scope, $rootScope, $location, 
 
 			//Incremento la variable consulta para llegar a un maximo de tres consultar al servicio de zona virtual
 			$scope.NumVerificacion = $scope.NumVerificacion + 1;
-
+			
 			$rootScope.ConsultarPago($scope.IdSeguridad, $scope.montoFactura, $scope.PermitePagosParciales);
+
+			
+
 
 			$scope.EnProceso = false;
 

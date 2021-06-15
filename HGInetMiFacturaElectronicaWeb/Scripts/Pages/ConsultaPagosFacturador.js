@@ -72,6 +72,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 		placeholder: "Seleccione el Estado",
 		displayExpr: "Descripcion",
 		dataSource: items_recibo,
+		showClearButton: true,
 		onValueChanged: function (data) {
 			estado_recibo = (data.value == null) ? "*" : data.value.ID;
 		},
@@ -103,85 +104,85 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 		});
 	};
 
-	//Resolucion - Prefijo
-	$("#filtrosResolucion").dxDropDownBox({
-		valueExpr: "ID",
-		placeholder: "Seleccione una Resolución",
-		displayExpr: "Descripcion",
-		showClearButton: true,
-		//dataSource: DataCheckBox(ResolucionesPrefijo),		
-		onOpened: function (data) {
-			if (ResolucionesPrefijo.length == 0) {
-				$http.get('/api/ObtenerResPrefijo?codigo_facturador=').then(function (response) {
-					console.log("Prefijo: ", response);
-					ResolucionesPrefijo = response.data;
-					$("#filtrosResolucion").dxDropDownBox({
-						dataSource: DataCheckBox(ResolucionesPrefijo),
-						contentTemplate: function (e) {
-							var value = e.component.option("value"),
-								$dataGrid = $("<div>").dxDataGrid({
-									dataSource: e.component.option("dataSource"),
-									allowColumnResizing: true,
-									columns:
-										[
-											 {
-											 	caption: "Descripción",
-											 	dataField: "Descripcion",
-											 	title: "Descripcion",
-											 	width: 500
+	////Resolucion - Prefijo
+	//$("#filtrosResolucion").dxDropDownBox({
+	//	valueExpr: "ID",
+	//	placeholder: "Seleccione una Resolución",
+	//	displayExpr: "Descripcion",
+	//	showClearButton: true,
+	//	//dataSource: DataCheckBox(ResolucionesPrefijo),		
+	//	onOpened: function (data) {
+	//		if (ResolucionesPrefijo.length == 0) {
+	//			$http.get('/api/ObtenerResPrefijo?codigo_facturador=').then(function (response) {
+	//				console.log("Prefijo: ", response);
+	//				ResolucionesPrefijo = response.data;
+	//				$("#filtrosResolucion").dxDropDownBox({
+	//					dataSource: DataCheckBox(ResolucionesPrefijo),
+	//					contentTemplate: function (e) {
+	//						var value = e.component.option("value"),
+	//							$dataGrid = $("<div>").dxDataGrid({
+	//								dataSource: e.component.option("dataSource"),
+	//								allowColumnResizing: true,
+	//								columns:
+	//									[
+	//										 {
+	//										 	caption: "Descripción",
+	//										 	dataField: "Descripcion",
+	//										 	title: "Descripcion",
+	//										 	width: 500
 
-											 }],
-									hoverStateEnabled: true,
-									paging: { enabled: true, pageSize: 10 },
-									filterRow: { visible: true },
-									scrolling: { mode: "infinite" },
-									height: 240,
-									selection: { mode: "multiple" },
-									selectedRowKeys: value,
-									onSelectionChanged: function (selectedItems) {
-										var keys = selectedItems.selectedRowKeys;
-										e.component.option("value", keys);
-										resolucion = keys;
-									}
-								});
+	//										 }],
+	//								hoverStateEnabled: true,
+	//								paging: { enabled: true, pageSize: 10 },
+	//								filterRow: { visible: true },
+	//								scrolling: { mode: "infinite" },
+	//								height: 240,
+	//								selection: { mode: "multiple" },
+	//								selectedRowKeys: value,
+	//								onSelectionChanged: function (selectedItems) {
+	//									var keys = selectedItems.selectedRowKeys;
+	//									e.component.option("value", keys);
+	//									resolucion = keys;
+	//								}
+	//							});
 
-							dataGrid = $dataGrid.dxDataGrid("instance");
+	//						dataGrid = $dataGrid.dxDataGrid("instance");
 
-							e.component.on("valueChanged", function (args) {
-								var value = args.value;
-								dataGrid.selectRows(value, false);
-							});
+	//						e.component.on("valueChanged", function (args) {
+	//							var value = args.value;
+	//							dataGrid.selectRows(value, false);
+	//						});
 
-							return $dataGrid;
-						},
-					});
-				}, function (response) {
-					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-				});
-			}
-		}
-	});
+	//						return $dataGrid;
+	//					},
+	//				});
+	//			}, function (response) {
+	//				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+	//			});
+	//		}
+	//	}
+	//});
 
 	//Define los campos y las opciones
 	$scope.filtros =
 		{
-			Fecha: {
-				//Carga la data del control
-				dataSource: new DevExpress.data.ArrayStore({
-					data: items_Fecha,
-					key: "ID"
-				}),
-				displayExpr: "Texto",
-				value: items_Fecha[1],
+			//Fecha: {
+			//	//Carga la data del control
+			//	dataSource: new DevExpress.data.ArrayStore({
+			//		data: items_Fecha,
+			//		key: "ID"
+			//	}),
+			//	displayExpr: "Texto",
+			//	value: items_Fecha[1],
 
-				onValueChanged: function (data) {
-					if (data.value != null) {
-						Filtro_fecha = data.value.ID;
-					} else {
-						Filtro_fecha = 1;
-					}
-				}
-			},
+			//	onValueChanged: function (data) {
+			//		if (data.value != null) {
+			//			Filtro_fecha = data.value.ID;
+			//		} else {
+			//			Filtro_fecha = 1;
+			//		}
+			//	}
+			//},
 
 			NumeroDocumento: {
 				placeholder: "Ingrese Número Documento",
@@ -308,7 +309,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
-				keyExpr: "NumeroDocumento",
+				keyExpr: "StrIdRegistro",
 				paging: {
 					pageSize: 20
 				},
@@ -386,13 +387,25 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 				}
 			}
 		},
+		  {
+		  	caption: "Ticket",
+		  	dataField: "Ticket"
+		  },
+        {
+        	caption: "Ciclo",
+        	dataField: "Ciclo"
+        },
+		{
+			caption: "CUS o Aprobación",
+			dataField: "Cus"
+		},
 		{
 			caption: "Adquiriente",
 			dataField: "StrEmpresaAdquiriente"
 		},
 
               {
-              	caption: "Nombre Adquiriente",
+              	caption: "Adquiriente",
               	dataField: "NombreAdquiriente"
               },
               {
@@ -402,15 +415,6 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
               	format: "yyyy-MM-dd HH:mm"
 
               },
-            {
-            	caption: "Documento",
-            	dataField: "NumeroDocumento",
-
-            },
-             {
-             	caption: "Cod. Transacción",
-             	dataField: "idseguridadpago",
-             },
 
             {
             	caption: "Fecha Verificación",
@@ -425,6 +429,58 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 
 
         ],
+        masterDetail: {
+        	enabled: true,
+        	template: function (container, options) {
+
+        		var currentEmployeeData = options.data;
+        		console.log(options.data);
+        		//$("<div>")
+        		//	.addClass("master-detail-caption")
+        		//	.text(currentEmployeeData.FirstName + " " + currentEmployeeData.LastName + "'s Tasks:")
+        		//	.appendTo(container);
+
+        		$("<div>")
+					.dxDataGrid({
+						columnAutoWidth: true,
+						showBorders: true,
+						onCellPrepared: function (options) {
+							var fieldData = options.value,
+								fieldHtml = "";
+							try {
+								if (options.column.caption == "Monto") {
+									if (fieldData) {
+										var inicial = fNumber.go(fieldData).replace("$-", "-$");
+										options.cellElement.html(inicial);
+									}
+								}
+
+							} catch (err) {
+							}
+
+						},
+						columns: [
+						{
+							caption: "Prefijo",
+							dataField: "Prefijo",
+
+
+						},
+						{
+							caption: "Documento",
+							dataField: "Documento"
+						},
+						{
+							caption: "Monto",
+							dataField: "Monto",
+
+						}],
+						dataSource: options.data.Pagos
+
+					}).appendTo(container);
+        		//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
+        	}
+        },
 
 				summary: {
 					groupItems: [{
@@ -551,7 +607,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 	});
 
 	function cargarFiltros() {
-		
+
 
 
 		//Define los campos y las opciones
@@ -717,7 +773,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
-				keyExpr: "NumeroDocumento",
+				keyExpr: "StrIdRegistro",
 				paging: {
 					pageSize: 20
 				},
@@ -794,6 +850,19 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 				}
 			}
 		},
+		 {
+		 	caption: "Ticket",
+		 	dataField: "Ticket"
+		 },
+        {
+        	caption: "Ciclo",
+        	dataField: "Ciclo"
+        },
+		{
+			caption: "CUS o Aprobación",
+			dataField: "Cus"
+		},
+		
              {
              	caption: "Facturador",
              	dataField: "StrEmpresaAdquiriente"
@@ -810,11 +879,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
               	format: "yyyy-MM-dd HH:mm"
 
               },
-            {
-            	caption: "Documento",
-            	dataField: "NumeroDocumento",
-
-            },
+          
              {
              	caption: "Cod. Transacción",
              	dataField: "idseguridadpago",
@@ -833,7 +898,52 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 
         ],
+        masterDetail: {
+        	enabled: true,
+        	template: function (container, options) {
 
+        		var currentEmployeeData = options.data;        	
+        		$("<div>")
+					.dxDataGrid({
+						columnAutoWidth: true,
+						showBorders: true,
+						onCellPrepared: function (options) {
+							var fieldData = options.value,
+								fieldHtml = "";
+							try {
+								if (options.column.caption == "Monto") {
+									if (fieldData) {
+										var inicial = fNumber.go(fieldData).replace("$-", "-$");
+										options.cellElement.html(inicial);
+									}
+								}
+
+							} catch (err) {
+							}
+
+						},
+						columns: [
+						{
+							caption: "Prefijo",
+							dataField: "Prefijo",
+
+
+						},
+						{
+							caption: "Documento",
+							dataField: "Documento"
+						},
+						{
+							caption: "Monto",
+							dataField: "Monto",
+
+						}],
+						dataSource: options.data.Pagos
+
+					}).appendTo(container);
+        		//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
+        	}
+        },
 				summary: {
 					groupItems: [{
 						column: "PagoFactura",
@@ -896,8 +1006,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 
 ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
-	//var ruta_redireccion = "http://localhost:50121/Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
-
+	
 	var ruta_redireccion = $('#Hdf_RutaPlataformaServicios').val() + "Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
 
 	console.log(ruta_redireccion);

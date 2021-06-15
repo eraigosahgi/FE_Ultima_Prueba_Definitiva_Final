@@ -52,6 +52,90 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 		#region HGIpay
+
+
+
+		/// <summary>
+		/// Obtiene los documentos de un facturador que estan pendiente por pago webpart
+		/// </summary>
+		/// <param name="identificacion_adquiente">Nit Facturador</param>
+		/// <param name="identificacion_facturador">Identificación del adquiriente</param>
+		/// <param name="numero_documento">Documento</param>
+		/// <returns>List<ObjDocumentos></returns>
+		public List<ObjDocumentos> ConsultarPagosFueraPlataforma(string identificacion_adquiente, string identificacion_facturador, string numero_documento)
+		{
+
+
+			if (string.IsNullOrEmpty(numero_documento))
+				numero_documento = "*";
+
+			if (numero_documento == "null")
+				numero_documento = "*";
+
+			long num_doc = -1;
+			long.TryParse(numero_documento, out num_doc);
+
+
+			int ErrorDian = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
+
+			int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
+
+			List<ObjDocumentos> respuesta = new List<ObjDocumentos>();
+
+
+			//context.Configuration.LazyLoadingEnabled = false;
+
+			respuesta = (from datos in context.TblDocumentos//.Include("TblEmpresasFacturador").AsNoTracking()
+						 where (datos.StrEmpresaAdquiriente.Equals(identificacion_adquiente))
+							&& (datos.StrEmpresaFacturador.Equals(identificacion_facturador))
+							&& (datos.IntNumero == num_doc || numero_documento.Equals("*"))
+							&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
+						 orderby datos.IntNumero descending
+						 select new ObjDocumentos
+						 {
+							 IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+							 Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+							 Prefijo = datos.StrPrefijo,
+							 NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+							 DatFechaIngreso = datos.DatFechaIngreso,
+							 DatFechaDocumento = datos.DatFechaDocumento,
+							 DatFechaVencDocumento = datos.DatFechaVencDocumento,
+							 IntVlrTotal = (datos.IntDocTipo == 3) ? -datos.IntVlrTotal : datos.IntVlrTotal,
+							 IntSubTotal = (datos.IntDocTipo == 3) ? -datos.IntValorSubtotal : datos.IntValorSubtotal,
+							 IntNeto = (datos.IntDocTipo == 3) ? -datos.IntValorNeto : datos.IntValorNeto,
+							 EstadoFactura = datos.IntIdEstado,
+							 EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+							 EstadoAcuse = datos.IntAdquirienteRecibo,
+							 MotivoRechazo = datos.StrAdquirienteMvoRechazo,
+							 StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
+							 IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+							 NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+							 MailAdquiriente = datos.TblEmpresasAdquiriente.StrMailAdmin,
+							 Xml = datos.StrUrlArchivoUbl,
+							 Pdf = datos.StrUrlArchivoPdf,
+							 StrIdSeguridad = datos.StrIdSeguridad,
+							 tipodoc = datos.IntDocTipo,
+							 zip = datos.StrUrlAnexo,
+							 RutaServDian = datos.StrUrlArchivoUbl,
+							 XmlAcuse = datos.StrUrlAcuseUbl,
+							 permiteenvio = (Int16)datos.IdCategoriaEstado,
+							 IntAdquirienteRecibo = datos.IntAdquirienteRecibo,
+							 Estado = datos.IdCategoriaEstado,
+							 EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
+							 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
+							 EnvioMail = datos.IntEstadoEnvio,
+							 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
+							 FacturaCancelada = (datos.IntIdEstadoPago.Value!=null)? datos.IntIdEstadoPago.Value:(short)1,
+							 PagosParciales = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
+							 IdComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigId.ToString() : datos.TblEmpresasResoluciones.ComercioConfigId.ToString(),
+						 }).ToList();
+
+
+
+			return respuesta;
+
+		}
+
 		/// <summary>
 		/// Obtener Documentos  de adquiriente para ACH
 		/// </summary>
@@ -94,16 +178,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			if (numero_documento.Equals("*"))
 			{
-				context.Configuration.LazyLoadingEnabled = false;
+				//context.Configuration.LazyLoadingEnabled = false;
 
-				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()
+				//respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones").AsNoTracking()
 							 where (datos.StrEmpresaAdquiriente.Equals(identificacion_adquiente))
-							 && (datos.StrEmpresaFacturador.Equals(identificacion_facturador))
-										&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
-										&& ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
-										&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
-										&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
-										&& (datos.IdCategoriaEstado == Categoria)
+				&& (datos.StrEmpresaFacturador.Equals(identificacion_facturador))
+						   && (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+						   && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+						   && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
+						   && (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
+						   && (datos.IdCategoriaEstado == Categoria)
 							 orderby datos.IntNumero descending
 							 select new ObjDocumentos
 							 {
@@ -139,8 +224,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
 								 EnvioMail = datos.IntEstadoEnvio,
 								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
-								 FacturaCancelada = datos.IntIdEstado,
-								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 //FacturaCancelada = datos.IntIdEstadoPago.Value,
+								 //PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 PagosParciales = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
+								 IdComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigId.ToString() : datos.TblEmpresasResoluciones.ComercioConfigId.ToString(),
+								 DescripComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigDescrip.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigDescrip.ToString() : datos.TblEmpresasResoluciones.ComercioConfigDescrip.ToString()
 							 }).ToList();
 			}
 			else
@@ -1320,7 +1408,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			try
 			{
-
 				context.Configuration.LazyLoadingEnabled = false;
 
 				var respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
@@ -1708,7 +1795,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			switch (cod_acuse)
 			{
 				case CodigoResponseV2.Recibido:
-					doc_acuse.IdAcuse = string.Format("{0}1",doc.IntNumero);
+					doc_acuse.IdAcuse = string.Format("{0}1", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.Rechazado:
@@ -1729,7 +1816,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					break;
 				case CodigoResponseV2.Inscripcion:
 					var randomNumber = new Random().Next(0, 10);
-					doc_acuse.IdAcuse = string.Format("{0}6{1}", doc.IntNumero,randomNumber);
+					doc_acuse.IdAcuse = string.Format("{0}6{1}", doc.IntNumero, randomNumber);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.EndosoPp:
@@ -1755,13 +1842,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				default:
 					break;
 			}
-			
+
 			doc_acuse.IdSeguridad = doc.StrIdSeguridad.ToString();
 			doc_acuse.Documento = doc.IntNumero;
 			doc_acuse.Prefijo = doc.StrPrefijo;
 			doc_acuse.MvoRespuesta = motivo_rechazo;
 			doc_acuse.Fecha = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
-			
+
 			doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.DocumentTypeV2>(doc.IntDocTipo));
 			doc_acuse.DatosAdquiriente = Ctl_Empresa.Convertir(adquiriente);
 			doc_acuse.DatosObligado = Ctl_Empresa.Convertir(facturador);
@@ -1821,7 +1908,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				resultado.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(resultado.DocumentoXml, 1);
 			}
-			
+
 
 			// ruta física del xml
 			string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, resultado.IdSeguridadTercero.ToString());
@@ -2162,7 +2249,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (respuesta.IntAdquirienteRecibo == AdquirienteRecibo.Entregado.GetHashCode())
 					respuesta.IntAdquirienteRecibo = (short)AdquirienteRecibo.Aprobado.GetHashCode();
 
-			   DocumentoRespuesta obj_documento = new DocumentoRespuesta();
+				DocumentoRespuesta obj_documento = new DocumentoRespuesta();
 
 				obj_documento.Aceptacion = (respuesta.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode()) ? AdquirienteRecibo.Pendiente.GetHashCode() : respuesta.IntAdquirienteRecibo;
 				obj_documento.DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(respuesta.IntAdquirienteRecibo));
@@ -3730,7 +3817,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						  && (doc.IntNumero == num_doc || numero_documento.Equals("*"))
 						 select doc).OrderBy(x => x.IntNumero).ToList();
 
-			
+
 			return datos;
 		}
 

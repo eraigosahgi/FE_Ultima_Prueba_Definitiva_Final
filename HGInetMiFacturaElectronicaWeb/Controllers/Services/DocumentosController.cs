@@ -197,6 +197,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
+				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+
 				var retorno = datos.Select(d => new
 				{
 					d.IdFacturador,
@@ -234,7 +237,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FacturaCancelada = d.FacturaCancelada,
 					PagosParciales = d.PagosParciales,
 					d.poseeIdComercioPSE,
-					d.poseeIdComercioTC
+					d.poseeIdComercioTC,
+					d.IdComercio,
+					d.DescripComercio,
+					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal)
 				});
 
 				return Ok(retorno);
@@ -247,77 +253,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 
-		/// <summary>
-		/// Obtiene la lista de pagos realizadas a un adquiriente
-		/// </summary>
-		/// <param name="strIdSeguridad"></param>        
-		/// <returns></returns>
-		[HttpGet]
-		[Route("Api/HGIpayObtenerPagosAdquiriente")]
-		public IHttpActionResult HGIpayObtenerPagosAdquiriente(string IdSeguridad, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha)
-		{
-
-			try
-			{
-
-				Sesion.ValidarSesionPagos();
-
-				if (string.IsNullOrEmpty(IdSeguridad))
-					throw new ApplicationException("Error de identificación del Facturador. no se encontro Serial");
-
-				string codigo_adquiente = "";
-
-				codigo_adquiente = Sesion.DatosUsuarioPagos.StrEmpresaAdquiriente;
-
-				if (string.IsNullOrEmpty(codigo_adquiente))
-					throw new ApplicationException("No se encontro información de los datos del Adquiriente");
-
-
-				Ctl_Empresa _controlador_empresa = new Ctl_Empresa();
-				TblEmpresas empresa = new TblEmpresas();
-				empresa = _controlador_empresa.Obtener(Guid.Parse(IdSeguridad), false).FirstOrDefault();
-
-				if (empresa == null)
-					throw new ApplicationException("No se encontro información de los datos del Facturador");
-
-
-				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
-
-				var datos = Pago.HGIpayObtenerPagosAdquiriente(empresa.StrIdentificacion, numero_documento, codigo_adquiente, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
-
-
-				if (datos == null)
-				{
-					return NotFound();
-				}
-
-				var retorno = datos.Select(d => new
-				{
-
-					NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
-					StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaFacturador,
-					NombreAdquiriente = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
-					DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
-					DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
-					PagoFactura = d.IntValorPago,
-					EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-					CodEstado = d.IntEstadoPago,
-					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
-					StrIdRegistro = d.StrIdRegistro,
-					StrIdSeguridadDoc = d.StrIdSeguridadDoc,
-					Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper()
-				});
-
-				return Ok(retorno);
-			}
-			catch (Exception excepcion)
-			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-
-
-		}
 
 
 		#endregion
@@ -499,10 +434,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					XmlAcuse = d.StrUrlAcuseUbl,
 					EstadoCat = d.IdCategoriaEstado,
 					EstadoFactura = DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado),
-					pago = d.TblPagosElectronicos.Select(p => new
+					pago = d.TblPagosDetalles.Select(p => new
 					{
-						p.StrIdRegistro,
-						p.IntEstadoPago
+						p.TblPagosElectronicos.StrIdRegistro,
+						p.TblPagosElectronicos.IntEstadoPago
 					}
 					//Se coloca este codigo adicional, para validar si el documento tiene un pago pendiente, y si es asi, este debe retornar un segundo objeto
 					//con el codigo unico de pago en la plataforma de FE, para poder hacer la consulta desde acuse y validar en la plataforma intermedia el estado del documento
@@ -583,10 +518,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					ValorDoc = d.IntVlrTotal,
 					poseeIdComercio = (d.TblEmpresasFacturador.IntManejaPagoE) ? true : false,
 					PermiteParciales = (d.TblEmpresasFacturador.IntPagoEParcial) ? true : false,
-					pago = d.TblPagosElectronicos.Select(p => new
+					pago = d.TblPagosDetalles.Select(p => new
 					{
-						p.StrIdRegistro,
-						p.IntEstadoPago
+						p.TblPagosElectronicos.StrIdRegistro,
+						p.TblPagosElectronicos.IntEstadoPago
 					}
 					//Se coloca este codigo adicional, para validar si el documento tiene un pago pendiente, y si es asi, este debe retornar un segundo objeto
 					//con el codigo unico de pago en la plataforma de FE, para poder hacer la consulta desde acuse y validar en la plataforma intermedia el estado del documento
@@ -1381,6 +1316,50 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		#endregion
 
+		/// <summary>
+		/// Retorna el correo del adquiriente que se encuentra en el ubl
+		/// </summary>
+		/// <param name="IdSeguridad">Guid de seguridad del documento</param>
+		/// <returns></returns>
+		[HttpGet]
+		[Route("api/ConsultarEmailUbl")]
+		public HttpResponseMessage ConsultarEmailUbl(Guid IdSeguridad)
+		{
+			try
+			{
+				Ctl_Documento Controlador = new Ctl_Documento();
+				TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(IdSeguridad).FirstOrDefault();
+				var objeto = (dynamic)null;
+				objeto = Ctl_Documento.ConvertirServicio(datos, true);
+				string correo = string.Empty;
+
+				if (datos.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+				{
+					correo = objeto.DatosFactura.DatosAdquiriente.Email;
+				}
+
+				if (datos.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+				{
+					correo = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+				}
+
+				if (datos.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+				{
+					correo = objeto.DatosNotaDebito.DatosAdquiriente.Email;
+				}
+
+
+				return Request.CreateResponse(HttpStatusCode.OK, correo);
+
+			}
+			catch (Exception)
+			{
+				return Request.CreateResponse(HttpStatusCode.OK, string.Empty);
+				//throw new ApplicationException(ex.Message, ex.InnerException);
+			}
+		}
+
+
 		#region Zonas de pago
 		/// <summary>
 		/// Obtiene link para el pago de factura
@@ -1396,9 +1375,35 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-			var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago, usuario, IntPagoFormaPago);
+			string lista_documentos = string.Concat("[{Documento:", "'", strIdSeguridad, "',Valor:", valor_pago, "}]");
+
+			//var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago, usuario, IntPagoFormaPago);
+			var datos = Pago.ReportePagoElectronicoPIMultiple(lista_documentos, valor_pago);
 			return Ok(datos);
 
+		}
+
+
+		[HttpGet]
+		[Route("Api/PagoMultiple")]
+		public IHttpActionResult PagoMultiple(string lista_documentos, double valor_pago = 0)
+		{
+			try
+			{
+				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
+				var datos = Pago.ReportePagoElectronicoPIMultiple(lista_documentos, valor_pago);
+				return Ok(datos);
+			}
+			catch (Exception ex)
+			{
+				return InternalServerError(ex);
+			}
+		}
+		public class PagosMultiples
+		{
+			public Guid Documento { get; set; }
+			public decimal Valor { get; set; }
 		}
 
 		/// <summary>
@@ -1435,16 +1440,18 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					IntNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
 					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
 					Monto = d.IntVlrTotal,
+					//Validamos si la resolucion tiene configuracion para entonces validar si maneja pagos parciales, si no maneja pagos parciales, entonces se busca la configuración de la empresa
+					PagosParciales = (string.IsNullOrEmpty(d.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? d.TblEmpresasFacturador.IntManejaPagoE : (d.TblEmpresasResoluciones.PermiteParciales == 1) ? true : false,
 					//Detalle del pago
-					Pagos = d.TblPagosElectronicos.Select(p => new
+					Pagos = d.TblPagosDetalles.Select(p => new
 					{
 						Monto = p.IntValorPago,
-						Franquicia = (!string.IsNullOrEmpty(p.StrCodigoFranquicia)) ? p.StrCodigoFranquicia : "",
-						FechaRegistro = p.DatFechaRegistro,
-						FechaVerificacion = p.DatFechaVerificacion,
-						StrIdSeguridadPago = p.StrIdSeguridadPago,
-						IdRegistro = p.StrIdRegistro,
-						Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(p.IntEstadoPago)),
+						Franquicia = (!string.IsNullOrEmpty(p.TblPagosElectronicos.StrCodigoFranquicia)) ? p.TblPagosElectronicos.StrCodigoFranquicia : "",
+						FechaRegistro = p.TblPagosElectronicos.DatFechaRegistro,
+						FechaVerificacion = p.TblPagosElectronicos.DatFechaVerificacion,
+						StrIdSeguridadPago = p.TblPagosElectronicos.StrIdSeguridadPago,
+						IdRegistro = p.TblPagosElectronicos.StrIdRegistro,
+						Estado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(p.TblPagosElectronicos.IntEstadoPago)),
 					}).OrderByDescending(x => x.FechaRegistro)
 
 				});
@@ -1510,7 +1517,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				if (Sesion.DatosEmpresa.IntAdministrador)
 				{
-					var datos = Pago.ObtenerPagosFacturador(codigo_facturador, numero_documento, "*", fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
+					var datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, "*", fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
 
 
 					if (datos == null)
@@ -1518,23 +1525,35 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						return NotFound();
 					}
 
-					var retorno = datos.Select(d => new
-					{
-						NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
-						StrEmpresaFacturador = d.TblDocumentos.StrEmpresaFacturador,
-						NombreFacturador = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
-						DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
-						DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
-						PagoFactura = d.IntValorPago,
-						EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-						CodEstado = d.IntEstadoPago,
-						idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
-						StrIdRegistro = d.StrIdRegistro,
-						StrIdSeguridadDoc = d.StrIdSeguridadDoc,
-						Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper()
-					});
+					var resultado = ConvertirPagos(datos);
+					//var retorno = datos.Select(d => new
+					//{
+					//	//NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
+					//	StrEmpresaFacturador = d.StrEmpresaFacturador,
+					//	NombreFacturador = d.TblEmpresas.StrRazonSocial,
+					//	DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+					//	DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+					//	PagoFactura = d.IntValorPago,
+					//	EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+					//	CodEstado = d.IntEstadoPago,
+					//	idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+					//	StrIdRegistro = d.StrIdRegistro,
+					//	StrIdSeguridadDoc = d.StrIdRegistro2,
+					//	Ciclo = d.IntClicloTransaccion,
+					//	Ticket = d.StrTicketID,
+					//	Cus = (d.IntFormaPago == 31) ? d.StrCampo1 : d.StrTransaccionCUS,//Si es tarjeta de credito, entonces el valor del campo Strcampo1, corresponde al cogido de aprobacion
+					//	Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper(),
+					//	Pagos = d.TblPagosDetalles.Select(p => new
+					//	{
+					//		Prefijo = p.TblDocumentos.StrPrefijo,
+					//		Documento = p.TblDocumentos.IntNumero,
+					//		Monto = p.IntValorPago,
+					//	})
 
-					return Ok(retorno);
+
+					//});
+
+					return Ok(resultado);
 				}
 				else
 				{
@@ -1549,12 +1568,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 		}
-
-		/// <summary>
-		/// Obtiene la lista de pagos realizadas a un facturador
-		/// </summary>
-		/// <param name="strIdSeguridad"></param>        
-		/// <returns></returns>
 
 		[HttpGet]
 		[Route("Api/ObtenerPagosFacturador")]
@@ -1574,33 +1587,53 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 				}
 
-
-				var datos = Pago.ObtenerPagosFacturador(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
-
-
-				if (datos == null)
+				try
 				{
-					return NotFound();
+					var datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, "*", fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
+
+					var resultado = ConvertirPagos(datos);
+					//if (datos == null)
+					//{
+					//	return NotFound();
+					//}
+
+					//var retorno = datos.Select(d => new
+					//{
+					//	//NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
+					//	StrEmpresaFacturador = d.StrEmpresaFacturador,
+					//	NombreFacturador = d.TblEmpresas.StrRazonSocial,
+					//	StrEmpresaAdquiriente = d.StrEmpresaAdquiriente,
+					//	NombreAdquiriente = d.TblEmpresas1.StrRazonSocial,
+					//	DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+					//	DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+					//	PagoFactura = d.IntValorPago,
+					//	EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+					//	CodEstado = d.IntEstadoPago,
+					//	idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+					//	StrIdRegistro = d.StrIdRegistro,
+					//	StrIdSeguridadDoc = d.StrIdRegistro2,
+					//	Ciclo = d.IntClicloTransaccion,
+					//	Ticket = d.StrTicketID,
+					//	Cus = (d.IntFormaPago == 31) ? d.StrCampo1 : d.StrTransaccionCUS,//Si es tarjeta de credito, entonces el valor del campo Strcampo1, corresponde al cogido de aprobacion
+					//	Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper(),
+					//	Pagos = d.TblPagosDetalles.Select(p => new
+					//	{
+					//		Prefijo = p.TblDocumentos.StrPrefijo,
+					//		Documento = p.TblDocumentos.IntNumero,
+					//		Monto = p.IntValorPago,
+					//	})
+
+
+					//});
+
+					return Ok(resultado);
+
 				}
-
-				var retorno = datos.Select(d => new
+				catch (Exception excepcion)
 				{
-					NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
-					StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaAdquiriente,
-					NombreAdquiriente = d.TblDocumentos.TblEmpresasAdquiriente.StrRazonSocial,
-					DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
-					DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
-					PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
-					//EstadoFactura = (d.IntEstadoPago == 0) ? "Rechazado" : (d.IntEstadoPago == 1) ? "Aprobado" : (d.IntEstadoPago == 999) ? "Pendiente" : "",
-					EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-					CodEstado = d.IntEstadoPago,
-					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
-					StrIdRegistro = d.StrIdRegistro,
-					StrIdSeguridadDoc = d.StrIdSeguridadDoc,
-					Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper()
-				});
 
-				return Ok(retorno);
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				}
 			}
 			catch (Exception excepcion)
 			{
@@ -1610,6 +1643,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 		}
+
 
 		/// <summary>
 		/// Obtiene la lista de pagos realizadas a un adquiriente
@@ -1623,46 +1657,150 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			try
 			{
+				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-				Sesion.ValidarSesion();
+				try
+				{
+					codigo_adquiriente = Sesion.DatosUsuario.StrEmpresa;
+				}
+				catch (Exception)
+				{
+				}
 
-				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+				try
+				{
 
-				List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+					var datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, "*", tipo_fecha);
 
-				datosSesion.Add(Sesion.DatosEmpresa);
+					if (datos == null)
+					{
+						return NotFound();
+					}
 
-				TblEmpresas empresa = datosSesion.FirstOrDefault();
+					var resultado = ConvertirPagos(datos);
+					return Ok(resultado);
+					//var retorno = datos.Select(d => new
+					//{
+					//	//NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
+					//	StrEmpresaFacturador = d.StrEmpresaFacturador,
+					//	NombreFacturador = d.TblEmpresas.StrRazonSocial,
+					//	StrEmpresaAdquiriente = d.StrEmpresaAdquiriente,
+					//	NombreAdquiriente = d.TblEmpresas1.StrRazonSocial,
+					//	DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+					//	DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+					//	PagoFactura = d.IntValorPago,
+					//	EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+					//	CodEstado = d.IntEstadoPago,
+					//	idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+					//	StrIdRegistro = d.StrIdRegistro,
+					//	StrIdSeguridadDoc = d.StrIdRegistro2,
+					//	Ciclo = d.IntClicloTransaccion,
+					//	Ticket = d.StrTicketID,
+					//	Cus = (d.IntFormaPago == 31) ? d.StrCampo1 : d.StrTransaccionCUS,//Si es tarjeta de credito, entonces el valor del campo Strcampo1, corresponde al cogido de aprobacion
+					//	Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper(),
+					//	Pagos = d.TblPagosDetalles.Select(p => new
+					//	{
+					//		Prefijo = p.TblDocumentos.StrPrefijo,
+					//		Documento = p.TblDocumentos.IntNumero,
+					//		Monto = p.IntValorPago,
+					//	})
+
+					//});
+
+					//return Ok(retorno);
+
+				}
+				catch (Exception excepcion)
+				{
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				}
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		/// <summary>
+		/// Obtiene la lista de pagos realizadas a un adquiriente
+		/// </summary>
+		/// <param name="strIdSeguridad"></param>        
+		/// <returns></returns>
+		[HttpGet]
+		[Route("Api/HGIpayObtenerPagosAdquiriente")]
+		public IHttpActionResult HGIpayObtenerPagosAdquiriente(string IdSeguridad, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha)
+		{
+
+			try
+			{
+
+				Sesion.ValidarSesionPagos();
+
+				if (string.IsNullOrEmpty(IdSeguridad))
+					throw new ApplicationException("Error de identificación del Facturador. no se encontro Serial");
+
+				string codigo_adquiente = "";
+
+				codigo_adquiente = Sesion.DatosUsuarioPagos.StrEmpresaAdquiriente;
+
+				if (string.IsNullOrEmpty(codigo_adquiente))
+					throw new ApplicationException("No se encontro información de los datos del Adquiriente");
+
+
+				Ctl_Empresa _controlador_empresa = new Ctl_Empresa();
+				TblEmpresas empresa = new TblEmpresas();
+				empresa = _controlador_empresa.Obtener(Guid.Parse(IdSeguridad), false).FirstOrDefault();
+
+				if (empresa == null)
+					throw new ApplicationException("No se encontro información de los datos del Facturador");
 
 
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
-
-				var datos = Pago.ObtenerPagosAdquiriente(codigo_facturador, numero_documento, empresa.StrIdentificacion, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
-
+				var datos = Pago.ObtenerPagos(empresa.StrIdentificacion, numero_documento, codigo_adquiente, fecha_inicio, fecha_fin, estado_recibo, "*", tipo_fecha);
 
 				if (datos == null)
 				{
 					return NotFound();
 				}
 
-				var retorno = datos.Select(d => new
-				{
+				var resultado = ConvertirPagos(datos);
+				return Ok(resultado);
 
-					NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
-					StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaFacturador,
-					NombreAdquiriente = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
-					DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
-					DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
-					PagoFactura = (d.IntValorPago == null) ? 0 : d.IntValorPago,
-					EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-					CodEstado = d.IntEstadoPago,
-					idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
-					StrIdRegistro = d.StrIdRegistro,
-					StrIdSeguridadDoc = d.StrIdSeguridadDoc,
-					Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper()
-				});
+				//Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+				//var datos = Pago.HGIpayObtenerPagosAdquiriente(empresa.StrIdentificacion, numero_documento, codigo_adquiente, fecha_inicio, fecha_fin, estado_recibo, tipo_fecha);
+				//if (datos == null)
+				//{
+				//	return NotFound();
+				//}
+				//var retorno = datos.Select(d => new
+				//{
+				//	//NumeroDocumento = string.Format("{0}{1}", (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.TblDocumentos.IntNumero),
+				//	//StrEmpresaAdquiriente = d.TblDocumentos.StrEmpresaFacturador,
+				//	//NombreAdquiriente = d.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
+				//	DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+				//	DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+				//	PagoFactura = d.IntValorPago,
+				//	EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+				//	CodEstado = d.IntEstadoPago,
+				//	idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+				//	StrIdRegistro = d.StrIdRegistro,
+				//	StrIdSeguridadDoc = d.StrIdRegistro2,
+				//	Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper(),
+				//	ticket = d.StrTicketID,
+				//	cus = d.StrTransaccionCUS,
+				//	ciclo = d.IntClicloTransaccion,
+				//	detalle = d.TblPagosDetalles.Select(p => new
+				//	{
+				//		p.TblDocumentos.TblEmpresasFacturador.StrIdentificacion,
+				//		p.TblDocumentos.TblEmpresasFacturador.StrRazonSocial,
+				//		p.TblDocumentos.StrPrefijo,
+				//		p.TblDocumentos.IntNumero,
+				//		p.IntValorPago
+				//	})
+				//});
 
-				return Ok(retorno);
+				//return Ok(retorno);
 			}
 			catch (Exception excepcion)
 			{
@@ -1672,7 +1810,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 		}
-
 
 		/// <summary>
 		/// Actualiza el estado del pago consultando antes en la plataforma intermedia y luego con los datos de dicha plataforma, estos son actualziados en FE
@@ -1690,6 +1827,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			try
 			{
+
+				//Ctl_PagosDetalles _detalle = new Ctl_PagosDetalles();
+				//var datos = _detalle.Obtener(IdSeguridad, StrIdSeguridadRegistro);
+
+
+				//if (datos != null)
+				//{
+
 				//Ruta de consulta de estado de pago en la plataforma intermedia(Pagos electronicos)
 				PasarelaPagos Ruta_servicio_pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
 				//Aqui consulto el estado del pago en la plataforma intermedia de pagos
@@ -1732,6 +1877,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				//Luego aqui, actualizo el resultado que me retorno la plataforma de pagos
 				var Detalle = pago.ActualizarPago(ConfigPago);
 				return Ok();
+				//}
+				//return Ok();
 			}
 			catch (Exception ex)
 			{
@@ -1739,6 +1886,68 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				return Conflict();
 			}
 		}
+
+
+
+		[HttpGet]
+		[Route("Api/ActualizarEstadoPI")]
+
+		public IHttpActionResult ActualizarEstadoPI(Guid IdSeguridad, Guid StrIdSeguridadRegistro)
+		{
+			try
+			{
+
+				//Ruta de consulta de estado de pago en la plataforma intermedia(Pagos electronicos)
+				PasarelaPagos Ruta_servicio_pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
+				//Aqui consulto el estado del pago en la plataforma intermedia de pagos
+				ClienteRest<TblPasarelaPagosPI> cliente = new ClienteRest<TblPasarelaPagosPI>(string.Format("{0}?IdSeguridadPago={1}&StrIdSeguridadRegistro={2}", Ruta_servicio_pago.RutaServicio.ToString(), IdSeguridad, StrIdSeguridadRegistro), TipoContenido.Applicationjson.GetHashCode(), "");
+				TblPasarelaPagosPI ConfigPago = cliente.GET();
+				//Como el objeto puede venir null de la plataforma de pago, se valida y se coloca los id de seguridad de la consulta
+				if (ConfigPago.StrIdSeguridadDoc == Guid.Empty)
+				{
+					ConfigPago.StrIdSeguridadDoc = IdSeguridad;
+					ConfigPago.StrIdSeguridadRegistro = StrIdSeguridadRegistro;
+					ConfigPago.IntPagoEstado = EstadoPago.Pendiente.GetHashCode();
+
+					Ctl_PagosElectronicos _pagos = new Ctl_PagosElectronicos();
+
+					var pago_electronico = _pagos.Obtener(IdSeguridad, StrIdSeguridadRegistro);
+
+					var fecha_pago = pago_electronico.DatFechaRegistro;
+					var fecha_actual = Fecha.GetFecha();
+
+					var diferencia = (fecha_actual - fecha_pago);
+
+					//Si despues de este tiempo no tenemos datos del pago en la plataforma intermedia
+					//Colocamos el estado de Pago no Iniciado
+					if (diferencia.TotalMinutes > 15)
+					{
+						ConfigPago.IntPagoEstado = EstadoPago.NoIniciado.GetHashCode();
+					}
+
+				}
+				else
+				{
+					//Si vienes datos para actualizar se hace un cifrado para validar la llave de encriptacion
+					string CifradoSecundario = Encriptar.Encriptar_SHA256(ConfigPago.StrIdSeguridadRegistro.ToString() + "-" + ConfigPago.StrClienteIdentificacion + "-" + ConfigPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ConfigPago.StrIdSeguridadComercio + "-" + ConfigPago.IntValor.ToString("0.##"));
+					if (ConfigPago.StrAuthIdEmpresa != CifradoSecundario)
+					{
+						return Conflict();
+					}
+				}
+				Ctl_PagosElectronicos pago = new Ctl_PagosElectronicos();
+				//Luego aqui, actualizo el resultado que me retorno la plataforma de pagos
+				var Detalle = pago.ActualizarPago(ConfigPago);
+				return Ok();
+
+			}
+			catch (Exception ex)
+			{
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+				return Conflict();
+			}
+		}
+
 		/// <summary>
 		/// Este metodo es invocado desde la plataforma de pago, se usa para actualziar el estado de un pago
 		/// Recibe en la cabezera el objeto de pago y la llave de encripción necesaria para validar que el pago es seguro
@@ -1836,51 +2045,85 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		}
 		#endregion
 
-		/// <summary>
-		/// Retorna el correo del adquiriente que se encuentra en el ubl
-		/// </summary>
-		/// <param name="IdSeguridad">Guid de seguridad del documento</param>
-		/// <returns></returns>
-		[HttpGet]
-		[Route("api/ConsultarEmailUbl")]
-		public HttpResponseMessage ConsultarEmailUbl(Guid IdSeguridad)
-		{
-			try
-			{
-				Ctl_Documento Controlador = new Ctl_Documento();
-				TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(IdSeguridad).FirstOrDefault();
-				var objeto = (dynamic)null;
-				objeto = Ctl_Documento.ConvertirServicio(datos, true);
-				string correo = string.Empty;
-
-				if (datos.IntDocTipo == TipoDocumento.Factura.GetHashCode())
-				{
-					correo = objeto.DatosFactura.DatosAdquiriente.Email;
-				}
-
-				if (datos.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
-				{
-					correo = objeto.DatosNotaCredito.DatosAdquiriente.Email;
-				}
-
-				if (datos.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
-				{
-					correo = objeto.DatosNotaDebito.DatosAdquiriente.Email;
-				}
 
 
-				return Request.CreateResponse(HttpStatusCode.OK, correo);
+		////Consulta del Webpart
+		//[HttpGet]
+		//[Route("api/ConsultarPagosFueraPlataforma")]
+		//public HttpResponseMessage ConsultarPagosFueraPlataforma(System.Guid IdSeguridad, string identificacion, string documento, string prefijo)
+		//{
 
-			}
-			catch (Exception)
-			{
-				return Request.CreateResponse(HttpStatusCode.OK, string.Empty);
-				//throw new ApplicationException(ex.Message, ex.InnerException);
-			}
-		}
+		//	try
+		//	{
+		//		if (string.IsNullOrEmpty(IdSeguridad.ToString()))
+		//		{
+		//			return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro serial en la petición");
+		//		}
+
+		//		if (string.IsNullOrEmpty(identificacion))
+		//		{
+		//			return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro identificación en la petición");
+		//		}
 
 
 
+		//		Ctl_Empresa _empresa = new Ctl_Empresa();
+		//		TblEmpresas empresa = _empresa.Obtener(IdSeguridad, false).FirstOrDefault();
+
+
+		//		if (empresa == null)
+		//		{
+		//			return Request.CreateResponse(HttpStatusCode.InternalServerError, "Empresa no existe o serial invalido");
+		//		}
+
+		//		bool empresa_maneja_lista_documentos = true;
+
+
+		//		if (!empresa.IntManejaPagoE)
+		//		{
+		//			return Request.CreateResponse(HttpStatusCode.InternalServerError, "Empresa no maneja pagos");
+		//		}
+
+		//		if (!empresa.IntPagosPermiteConsTodos)
+		//		{
+		//			if (string.IsNullOrEmpty(documento))
+		//			{
+		//				return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro documento en la petición");
+		//			}
+		//		}
+
+
+		//		Ctl_Documento Controlador = new Ctl_Documento();
+		//		List<QryDocumentosSaldo> datos = Controlador.ConsultarPagosFueraPlataforma(empresa.StrIdentificacion, documento, identificacion, empresa_maneja_lista_documentos);
+
+		//		if (datos.Count() == 0)
+		//		{
+		//			return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro ningún documento con los criterios de busqueda");
+		//		}
+
+
+		//		var retorno = datos.Select(d => new
+		//		{
+		//			PagosParciales = empresa.IntPagoEParcial,
+		//			d.StrIdSeguridad,
+		//			d.StrPrefijo,
+		//			FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
+		//			d.IntNumero,
+		//			d.IntVlrTotal
+		//		});
+
+		//		return Request.CreateResponse(HttpStatusCode.OK, retorno);
+
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+		//	}
+
+		//}
+
+
+		//Consulta del Webpart
 		[HttpGet]
 		[Route("api/ConsultarPagosFueraPlataforma")]
 		public HttpResponseMessage ConsultarPagosFueraPlataforma(System.Guid IdSeguridad, string identificacion, string documento, string prefijo)
@@ -1888,35 +2131,35 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			try
 			{
+				///Validamos si viene serial en la petición
 				if (string.IsNullOrEmpty(IdSeguridad.ToString()))
 				{
 					return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro serial en la petición");
 				}
 
+				///Validamos si viene identificación en la petición
 				if (string.IsNullOrEmpty(identificacion))
 				{
 					return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro identificación en la petición");
 				}
 
-
-
 				Ctl_Empresa _empresa = new Ctl_Empresa();
+				///Consultar la empresa
 				TblEmpresas empresa = _empresa.Obtener(IdSeguridad, false).FirstOrDefault();
 
-
+				///Validamos si la empresa existe
 				if (empresa == null)
 				{
 					return Request.CreateResponse(HttpStatusCode.InternalServerError, "Empresa no existe o serial invalido");
 				}
 
-				bool empresa_maneja_lista_documentos = true;
-
-
+				///Validamos si la empresa maneja pagos
 				if (!empresa.IntManejaPagoE)
 				{
 					return Request.CreateResponse(HttpStatusCode.InternalServerError, "Empresa no maneja pagos");
 				}
 
+				///Validamos si la empresa maneja la modalidad de consultar la lista de documentos
 				if (!empresa.IntPagosPermiteConsTodos)
 				{
 					if (string.IsNullOrEmpty(documento))
@@ -1926,24 +2169,29 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 
-				Ctl_Documento Controlador = new Ctl_Documento();
-				List<QryDocumentosSaldo> datos = Controlador.ConsultarPagosFueraPlataforma(empresa.StrIdentificacion, documento, identificacion, empresa_maneja_lista_documentos);
-
-				if (datos.Count() == 0)
+				Ctl_Documento Controlador = new Ctl_Documento();				
+				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+				///Consultamos los documentos
+				List<ObjDocumentos> datos2 = Controlador.ConsultarPagosFueraPlataforma(identificacion, empresa.StrIdentificacion, documento);
+				///Validamos si la consulta retorna documentos
+				if (datos2.Count() == 0)
 				{
 					return Request.CreateResponse(HttpStatusCode.InternalServerError, "No se encontro ningún documento con los criterios de busqueda");
 				}
 
-
-				var retorno = datos.Select(d => new
+				///Filtramos que los documentos tengan saldo pendiente por pago.
+				var retorno = datos2.Select(d => new
 				{
-					PagosParciales = empresa.IntPagoEParcial,
+					d.PagosParciales,
+					d.IdComercio,
 					d.StrIdSeguridad,
-					d.StrPrefijo,
+					StrPrefijo = d.Prefijo,
 					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
-					d.IntNumero,
-					d.IntVlrTotal
-				});
+					IntNumero = d.NumeroDocumento,
+					d.IntVlrTotal,
+					d.FacturaCancelada,
+					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal)
+				}).Where(x => x.Saldo > 0 ).Where(x=>x.FacturaCancelada != 1000);
 
 				return Request.CreateResponse(HttpStatusCode.OK, retorno);
 
@@ -1954,7 +2202,45 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 
 		}
+		/// <summary>
+		/// Objeto de respuesta para todas las consultas de pagos
+		/// Consulta de Pagos Recibidos
+		/// Consulta de Pagos Realizados
+		/// COnsulta de Pagos Administracion
+		/// Consulta de Pagos Usuarios de Pagos
+		/// </summary>
+		/// <param name="datos">List<TblPagosElectronicos></param>
+		/// <returns>object con la Respuesta</returns>
+		public static object ConvertirPagos(List<TblPagosElectronicos> datos)
+		{
+			var resultado = datos.Select(d => new
+			{
+				StrEmpresaFacturador = d.StrEmpresaFacturador,
+				NombreFacturador = d.TblEmpresas.StrRazonSocial,
+				StrEmpresaAdquiriente = d.StrEmpresaAdquiriente,
+				NombreAdquiriente = d.TblEmpresas1.StrRazonSocial,
+				DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+				DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+				PagoFactura = d.IntValorPago,
+				EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+				CodEstado = d.IntEstadoPago,
+				idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+				StrIdRegistro = d.StrIdRegistro,
+				StrIdSeguridadDoc = d.StrIdRegistro2,
+				Ciclo = d.IntClicloTransaccion,
+				Ticket = d.StrTicketID,
+				Cus = (d.IntFormaPago == 31) ? d.StrCampo1 : d.StrTransaccionCUS,//Si es tarjeta de credito, entonces el valor del campo Strcampo1, corresponde al cogido de aprobacion
+				Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper(),
+				Pagos = d.TblPagosDetalles.Select(p => new
+				{
+					Prefijo = p.TblDocumentos.StrPrefijo,
+					Documento = p.TblDocumentos.IntNumero,
+					Monto = p.IntValorPago,
+				})
 
+			});
+			return resultado;
+		}
 
 	}
 }

@@ -135,6 +135,7 @@
     <Compile Include="Indicadores\Objetos\VentasMensuales.cs" />
     <Compile Include="Mail\Ctl_ProcesosCorreos.cs" />
     <Compile Include="Mail\Ctl_EnvioDocumento.cs" />
+    <Compile Include="PagosElectronicos\Ctl_PagosDetalles.cs" />
     <Compile Include="PagosElectronicos\Ctl_PagosElectronicos.cs" />
     <Compile Include="PlataformaServicios\Ctl_Sms.cs" />
     <Compile Include="Procesos\Ctl_Documentos.AjusteNomina.cs" />

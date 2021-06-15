@@ -167,23 +167,23 @@ PagosAdministracionApp.controller('PagosAdministracionController', function Pago
 	//Define los campos y las opciones
 	$scope.filtros =
 		{
-			Fecha: {
-				//Carga la data del control
-				dataSource: new DevExpress.data.ArrayStore({
-					data: items_Fecha,
-					key: "ID"
-				}),
-				displayExpr: "Texto",
-				value: items_Fecha[1],
+			//Fecha: {
+			//	//Carga la data del control
+			//	dataSource: new DevExpress.data.ArrayStore({
+			//		data: items_Fecha,
+			//		key: "ID"
+			//	}),
+			//	displayExpr: "Texto",
+			//	value: items_Fecha[1],
 
-				onValueChanged: function (data) {
-					if (data.value != null) {
-						Filtro_fecha = data.value.ID;
-					} else {
-						Filtro_fecha = 1;
-					}
-				}
-			},
+			//	onValueChanged: function (data) {
+			//		if (data.value != null) {
+			//			Filtro_fecha = data.value.ID;
+			//		} else {
+			//			Filtro_fecha = 1;
+			//		}
+			//	}
+			//},
 
 			NumeroDocumento: {
 				placeholder: "Ingrese Número Documento",
@@ -310,7 +310,7 @@ PagosAdministracionApp.controller('PagosAdministracionController', function Pago
 
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
-				keyExpr: "NumeroDocumento",
+				keyExpr: "StrIdRegistro",
 				paging: {
 					pageSize: 20
 				},
@@ -392,9 +392,22 @@ PagosAdministracionApp.controller('PagosAdministracionController', function Pago
 			caption: "Facturador",
 			dataField: "StrEmpresaFacturador"
 		},
-
+		
+        {
+        	caption: "Ticket",
+        	dataField: "Ticket"
+		},
+        {
+        	caption: "Ciclo",
+        	dataField: "Ciclo"
+        },
+		{
+			caption: "CUS o Aprobación",
+			dataField: "Cus"
+		},
+		
               {
-              	caption: "Nombre Facturador",
+              	caption: "Facturador",
               	dataField: "NombreFacturador"
               },
               {
@@ -404,15 +417,15 @@ PagosAdministracionApp.controller('PagosAdministracionController', function Pago
               	format: "yyyy-MM-dd HH:mm"
 
               },
-            {
-            	caption: "Documento",
-            	dataField: "NumeroDocumento",
+            //{
+            //	caption: "Documento",
+            //	dataField: "NumeroDocumento",
 
-            },
-             {
-             	caption: "Cod. Transacción",
-             	dataField: "idseguridadpago",
-             },
+            //},
+             //{
+             //	caption: "Cod. Transacción",
+             //	dataField: "idseguridadpago",
+             //},
 
             {
             	caption: "Fecha Verificación",
@@ -427,6 +440,60 @@ PagosAdministracionApp.controller('PagosAdministracionController', function Pago
 
 
         ],
+				//**************************************************************
+        masterDetail: {
+        	enabled: true,
+        	template: function (container, options) {
+
+        		var currentEmployeeData = options.data;
+        		console.log(options.data);
+        		//$("<div>")
+        		//	.addClass("master-detail-caption")
+        		//	.text(currentEmployeeData.FirstName + " " + currentEmployeeData.LastName + "'s Tasks:")
+        		//	.appendTo(container);
+
+        		$("<div>")
+					.dxDataGrid({
+						columnAutoWidth: true,
+						showBorders: true,
+						onCellPrepared: function (options) {
+							var fieldData = options.value,
+								fieldHtml = "";
+							try {
+								if (options.column.caption == "Monto") {
+									if (fieldData) {
+										var inicial = fNumber.go(fieldData).replace("$-", "-$");
+										options.cellElement.html(inicial);
+									}
+								}
+
+							} catch (err) {
+							}
+
+						},
+						columns: [
+						{
+							caption: "Prefijo",
+							dataField: "Prefijo",
+
+
+						},
+						{
+							caption: "Documento",
+							dataField: "Documento"
+						},
+						{
+							caption: "Monto",
+							dataField: "Monto",
+
+						}],
+						dataSource: options.data.Pagos
+
+					}).appendTo(container);
+        		//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
+        	}
+        },
+
 
 				summary: {
 					groupItems: [{

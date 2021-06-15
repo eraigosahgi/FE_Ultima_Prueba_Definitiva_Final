@@ -103,6 +103,7 @@
 	<script src="../../Scripts/config.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/Loading.js?vjs20201019"></script>
 	<script src="../../Scripts/Pages/HGIpayConsultaDocumentos.js?vjs20201019"></script>
+	<link href="../../Content/dx.hgi.css" rel="stylesheet" />
 </head>
 <body data-ng-app="App">
 	<form id="form1" runat="server">
@@ -224,7 +225,9 @@
 										<div class="panel-heading">
 											<h6 class="panel-title">Datos</h6>
 											<div style="float: right; margin-right: 2%; margin-top: -20px;">
-												<label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>
+												<%--<label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>--%>
+												<label id="Total_a_Pagar" class="text-semibold text-right" style="font-size: medium; margin-right: 20px;"></label>
+												<div id="multipagos"></div>
 											</div>
 										</div>
 
@@ -270,39 +273,39 @@
 													<div class="dx-fieldset">
 
 
-														<div class="col-md-4">
+														<%--<div class="col-md-4">
 															<i class="icon-file-text"></i>
 															<label>Filtro Fecha</label>
 															<div data-dx-select-box="filtros.Fecha"></div>
-														</div>
+														</div>--%>
 
-														<div class="col-md-4">
+														<div class="col-md-2">
 															<i class=" icon-calendar"></i>
 															<label>Fecha Inicial:</label>
 															<div id="FechaInicialPagos"></div>
 														</div>
 
 
-														<div class="col-md-4">
+														<div class="col-md-2">
 															<i class=" icon-calendar"></i>
 															<label>Fecha Final:</label>
 															<div id="FechaFinalPagos"></div>
 														</div>
 
 
-														<div class="col-md-4">
+														<div class="col-md-3">
 															<i class="icon-file-text"></i>
 															<label>Estado Pago:</label>
 															<div data-dx-select-box="filtros.EstadoRecibo"></div>
 														</div>
-														<div class="col-md-4" style="margin-top: 1%">
+														<div class="col-md-3" >
 															<i class="icon-files-empty"></i>
 															<label>Número Documento:</label>
 															<div data-dx-autocomplete="filtros.NumeroDocumento"></div>
 														</div>
 														
 
-														<div class="col-md-4 text-right" style="margin-top: 1%">
+														<div class="col-md-2 text-right">
 															<br />
 															<div data-dx-button="ButtonOptionsConsultarPagos"></div>
 														</div>
