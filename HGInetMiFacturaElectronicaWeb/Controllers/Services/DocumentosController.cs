@@ -520,12 +520,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					PermiteParciales = (d.TblEmpresasFacturador.IntPagoEParcial) ? true : false,
 					pago = d.TblPagosDetalles.Select(p => new
 					{
-						p.TblPagosElectronicos.StrIdRegistro,
-						p.TblPagosElectronicos.IntEstadoPago
+						//p.TblPagosElectronicos.StrIdRegistro,
+						//p.TblPagosElectronicos.IntEstadoPago
+						StrIdRegistro=Pago.ObtenerPorRegistroPrincipal(p.StrIdPagoPrincipal),
+						//p.TblPagosElectronicos.IntEstadoPago
 					}
 					//Se coloca este codigo adicional, para validar si el documento tiene un pago pendiente, y si es asi, este debe retornar un segundo objeto
 					//con el codigo unico de pago en la plataforma de FE, para poder hacer la consulta desde acuse y validar en la plataforma intermedia el estado del documento
-					).Where(x => x.IntEstadoPago.Equals(EstadoPago.Pendiente.GetHashCode()) || x.IntEstadoPago.Equals(EstadoPago.Pendiente2.GetHashCode()))
+					)//.Where(x => x.IntEstadoPago.Equals(EstadoPago.Pendiente.GetHashCode()) || x.IntEstadoPago.Equals(EstadoPago.Pendiente2.GetHashCode()))
 				});
 
 				//Si el documento ya tiene acuse de recibo, no guarda en auditoria que el documento esta visto
@@ -1828,8 +1830,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 
-				//Ctl_PagosDetalles _detalle = new Ctl_PagosDetalles();
-				//var datos = _detalle.Obtener(IdSeguridad, StrIdSeguridadRegistro);
+				Ctl_PagosElectronicos _detalle = new Ctl_PagosElectronicos();
+				var Id_Documento = _detalle.ObtenerPorRegistroPrincipal(StrIdSeguridadRegistro);
 
 
 				//if (datos != null)
@@ -1838,7 +1840,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				//Ruta de consulta de estado de pago en la plataforma intermedia(Pagos electronicos)
 				PasarelaPagos Ruta_servicio_pago = HgiConfiguracion.GetConfiguration().PasarelaPagos;
 				//Aqui consulto el estado del pago en la plataforma intermedia de pagos
-				ClienteRest<TblPasarelaPagosPI> cliente = new ClienteRest<TblPasarelaPagosPI>(string.Format("{0}?IdSeguridadPago={1}&StrIdSeguridadRegistro={2}", Ruta_servicio_pago.RutaServicio.ToString(), IdSeguridad, StrIdSeguridadRegistro), TipoContenido.Applicationjson.GetHashCode(), "");
+				ClienteRest<TblPasarelaPagosPI> cliente = new ClienteRest<TblPasarelaPagosPI>(string.Format("{0}?IdSeguridadPago={1}&StrIdSeguridadRegistro={2}", Ruta_servicio_pago.RutaServicio.ToString(), Id_Documento, StrIdSeguridadRegistro), TipoContenido.Applicationjson.GetHashCode(), "");
 				TblPasarelaPagosPI ConfigPago = cliente.GET();
 				//Como el objeto puede venir null de la plataforma de pago, se valida y se coloca los id de seguridad de la consulta
 				if (ConfigPago.StrIdSeguridadDoc == Guid.Empty)
