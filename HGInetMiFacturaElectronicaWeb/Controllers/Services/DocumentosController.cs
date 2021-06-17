@@ -1591,7 +1591,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				try
 				{
-					var datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, "*", fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
+					var datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
 
 					var resultado = ConvertirPagos(datos);
 					//if (datos == null)

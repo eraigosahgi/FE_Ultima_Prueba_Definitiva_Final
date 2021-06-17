@@ -393,20 +393,65 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();
 			DateTime Fecha_Actual = Fecha.GetFecha().Date;
 
-			var ListaFacturadores = (from lista in context.TblEmpresas
-									 where lista.StrEmpresaDescuento.Equals(
-										 (from datos in context.TblEmpresas
-										  where datos.StrIdentificacion.Equals(identificacion)
-										  select datos.StrEmpresaDescuento).FirstOrDefault())
-									 select lista.StrIdentificacion).ToList();
 
+			#region Proceso de descuento por empresa descuento y propios planes
+			//************************** 
 
-
+			//Consultamos los planes del facturador
 			List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones
-													   where ListaFacturadores.Contains(t.StrEmpresaFacturador)
+													   where (t.StrEmpresaFacturador.Equals(identificacion))
 														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
 														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == Plan_PostPago))
 													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
+
+			//Calculamos el saldo disponible de la lista de planes del facturador
+			var Saldo = datos_plan.Sum(x => x.IntNumTransaccCompra - (x.IntNumTransaccProcesadas + x.IntNumTransaccProceso));
+
+			//Si el saldo es menor a la cantidad de documentos a procesar, entonces consultamos los planes del facturador y las del asociado
+			if (Saldo < cantidaddoc)
+			{
+				//Validamos si la empresa tiene algun asociado para ver si podemos usar el saldo de este
+				var empresa_descuenta = (from d in context.TblEmpresas
+										 where d.StrIdentificacion.Equals(identificacion)
+										 select d.StrEmpresaDescuento).FirstOrDefault();
+
+				if (string.IsNullOrEmpty(empresa_descuenta))
+				{
+					empresa_descuenta = identificacion;
+				}
+
+				datos_plan = (from t in context.TblPlanesTransacciones
+							  where (t.StrEmpresaFacturador.Equals(identificacion) || t.StrEmpresaFacturador.Equals(empresa_descuenta))
+							   && t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
+							   && (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == Plan_PostPago))
+							  select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
+			}
+
+			//************************** 
+			#endregion
+
+
+			#region Descuento de Bosla
+
+			//var ListaFacturadores = (from lista in context.TblEmpresas
+			//						 where lista.StrEmpresaDescuento.Equals(
+			//							 (from datos in context.TblEmpresas
+			//							  where datos.StrIdentificacion.Equals(identificacion)
+			//							  select datos.StrEmpresaDescuento).FirstOrDefault())
+			//						 select lista.StrIdentificacion).ToList();
+
+
+
+			//List<TblPlanesTransacciones> datos_plan = (from t in context.TblPlanesTransacciones
+			//										   where ListaFacturadores.Contains(t.StrEmpresaFacturador)
+			//											&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
+			//											&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == Plan_PostPago))
+			//										   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
+
+
+			#endregion
+
+
 
 			List<ObjPlanEnProceso> listaobjproceso = new List<ObjPlanEnProceso>();
 			ObjPlanEnProceso objproceso = new ObjPlanEnProceso();

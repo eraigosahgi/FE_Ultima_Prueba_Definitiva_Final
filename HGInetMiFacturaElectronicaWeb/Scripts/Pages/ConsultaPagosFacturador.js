@@ -865,12 +865,12 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 		
              {
              	caption: "Facturador",
-             	dataField: "StrEmpresaAdquiriente"
+             	dataField: "StrEmpresaFacturador"
              },
 
               {
               	caption: "Nombre Facturador",
-              	dataField: "NombreAdquiriente"
+              	dataField: "NombreFacturador"
               },
               {
               	caption: "Fecha Pago",

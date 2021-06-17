@@ -130,14 +130,9 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 				$("#gridDocumentos").dxDataGrid({
 					dataSource: respuesta,
 					paging: {
-						pageSize: 20
+						enabled: false,
 					},
-					keyExpr: "StrIdSeguridad",
-					pager: {
-						showPageSizeSelector: true,
-						allowedPageSizes: [5, 10, 20],
-						showInfo: true
-					},
+					keyExpr: "StrIdSeguridad",					
 					onContentReady: function (options) {						
 						try {
 							if (options.component._options.dataSource.length == 1) {
@@ -301,8 +296,10 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 			onClick: function (e) {
 				var result = e.validationGroup.validate();
 				if (result.isValid) {
+					var alto_pantalla = $(window).height() - 10;
+					var ancho_pantalla = $(window).width() - 10;
 
-					var Vpago = window.open("", "Pagos", "width=10,height=10");
+					var Vpago = window.open("", "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
 					if (Vpago == null || Vpago == undefined) {
 						DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
 					} else {
@@ -312,8 +309,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 							url: ruta + '/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total,
 							success: function (respuesta) {
 
-								var alto_pantalla = $(window).height() - 10;
-								var ancho_pantalla = $(window).width() - 10;
+							
 
 								//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
 								$scope.NumVerificacion = 1;
@@ -321,6 +317,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 								var RutaServicio = ruta_servicios + "?IdSeguridad=";
 								$scope.Idregistro = respuesta.IdRegistro;
 								var Vpago2 = window.open(RutaServicio + respuesta.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
+								
 
 
 							},
@@ -489,6 +486,7 @@ apphgi.service('SrvPagos', function ($location, $q) {
 						</tr>\
 					</table>\
 					<div class="col-md-12" style="padding: 5px; text-align: right;">\
+					<label id="Total_a_Pagar" class="text-semibold text-right" style="font-size: medium; margin-right: 20px;"></label>\
 					<div id="multipagos"></div>\
 					</div>\
 					<div id="gridDocumentos"></div>\

@@ -412,7 +412,7 @@ PagosAdministracionApp.controller('PagosAdministracionController', function Pago
               },
               {
               	caption: "Fecha Pago",
-              	dataField: "DatFacturadorFechaRecibo",
+              	dataField: "DatAdquirienteFechaRecibo",
               	dataType: "date",
               	format: "yyyy-MM-dd HH:mm"
 

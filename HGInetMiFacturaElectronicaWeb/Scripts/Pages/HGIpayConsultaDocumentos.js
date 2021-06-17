@@ -34,41 +34,47 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 			var result = e.validationGroup.validate();
 			if (result.isValid) {
 
-				var Vpago = window.open("", "Pagos", "width=10,height=10");
+				var alto_pantalla = $(window).height() - 10;
+				var ancho_pantalla = $(window).width() - 10;
+
+				var Vpago = window.open("", "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
 				if (Vpago == null || Vpago == undefined) {
 					DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
 				} else {
-					console.log("Generar Pago: ", $scope.documentos);
-					///Pago Multiple
-					$http.get('/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total).then(function (response) {
 
-						var alto_pantalla = $(window).height() - 10;
-						var ancho_pantalla = $(window).width() - 10;
-						
-						//Ruta servicio
-						var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
-						$scope.Idregistro = response.data.IdRegistro;
-						
-						var Vpago2 = window.open(RutaServicio + response.data.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
-						//$timeout(function callAtTimeout() {
-						//	VerificarEstado();
-						//}, 90000);
+					if ($scope.total > 0) {
+						///Pago Multiple
+						$http.get('/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total).then(function (response) {
 
-					}, function (error) {
+							
 
-						if (error != undefined) {
-							DevExpress.ui.notify(error.data.ExceptionMessage, 'error', 6000);
-							$("#button").dxButton({ visible: true });
+							//Ruta servicio
+							var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
+							$scope.Idregistro = response.data.IdRegistro;
+
+							var Vpago2 = window.open(RutaServicio + response.data.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
+							//$timeout(function callAtTimeout() {
+							//	VerificarEstado();
+							//}, 90000);
+
+						}, function (error) {
+
+							if (error != undefined) {
+								DevExpress.ui.notify(error.data.ExceptionMessage, 'error', 6000);
+								$("#button").dxButton({ visible: true });
 
 
-							if (error.data.ExceptionMessage == 'Documento ya no esta disponible') {
-								$('#modal_Pagos_Electronicos').modal('hide')
+								if (error.data.ExceptionMessage == 'Documento ya no esta disponible') {
+									$('#modal_Pagos_Electronicos').modal('hide')
+								}
+
 							}
 
-						}
 
-
-					});
+						});
+					} else {
+						DevExpress.ui.notify('El monto a pagar debe ser mayor a cero(0)', 'error', 6000);
+					}
 
 					///
 				}
@@ -202,30 +208,25 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
 				paging: {
-					pageSize: 20
-				},				
+					enabled: false
+				},
 				keyExpr: "StrIdSeguridad",
-				pager: {
-					showPageSizeSelector: true,
-					allowedPageSizes: [5, 10, 20],
-					showInfo: true
-				}				
-                , onCellPrepared: function (options) {
-                	var fieldData = options.value,
+				onCellPrepared: function (options) {
+					var fieldData = options.value,
                         fieldHtml = "";
-                	try {
-                		if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Neto") {
-                			if (fieldData) {
-                				var inicial = fNumber.go(fieldData).replace("$-", "-$");
-                				options.cellElement.html(inicial);
-                			}
-                		}
-                	} catch (err) {
-                		DevExpress.ui.notify(err.message, 'error', 3000);
-                	}
-                }, loadPanel: {
-                	enabled: true
-                },
+					try {
+						if (options.column.caption == "Valor Total" || options.column.caption == "SubTotal" || options.column.caption == "Neto") {
+							if (fieldData) {
+								var inicial = fNumber.go(fieldData).replace("$-", "-$");
+								options.cellElement.html(inicial);
+							}
+						}
+					} catch (err) {
+						DevExpress.ui.notify(err.message, 'error', 3000);
+					}
+				}, loadPanel: {
+					enabled: true
+				},
 				headerFilter: {
 					visible: true
 				}
@@ -238,11 +239,11 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 				groupPanel: {
 					allowColumnDragging: true,
 					visible: true
-				}				
+				}
                 , columns: [
 				{
 					caption: "Seleccionar",
-					cssClass: "col-md-1 col-xs-2",					
+					cssClass: "col-md-1 col-xs-2",
 					cellTemplate: function (container, options) {
 						$('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
 							name: "chkSaldo_" + options.data.StrIdSeguridad,
@@ -455,7 +456,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 								message: "El campo debe ser numerico"
 							}, {
 								type: "range",
-								min: 1,
+								//min: 0,
 								max: options.data.Saldo,
 								message: "Monto incorrecto"
 							}]
@@ -641,10 +642,10 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 
 
 	function validarSeleccion() {
-		var data = $("#gridDocumentos").dxDataGrid("instance").option().dataSource;		
+		var data = $("#gridDocumentos").dxDataGrid("instance").option().dataSource;
 		var lista = '';
 		var total_a_pagar = 0;
-		var total_seleccionados = 0;		
+		var total_seleccionados = 0;
 		var comercios_direfentes = false;
 
 		var comercio_actual = "";
@@ -688,7 +689,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 				}
 			}
 			lista = "[" + lista + "]"
-			$scope.documentos = lista;			
+			$scope.documentos = lista;
 			$scope.total = total_a_pagar;
 
 		} else {
@@ -713,7 +714,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 			$('#Total_a_Pagar').text("");
 			$("#multipagos").dxButton({ visible: false });
 		}
-	
+
 	}
 
 
@@ -1083,52 +1084,52 @@ App.controller('HGIpayPagosAdquirienteController', function ($scope, $http, $loc
 
         ],
 				//**************************************************************
-        masterDetail: {
-        	enabled: true,
-        	template: function (container, options) {
+				masterDetail: {
+					enabled: true,
+					template: function (container, options) {
 
-        		var currentEmployeeData = options.data;
-        		$("<div>")
-					.dxDataGrid({
-						columnAutoWidth: true,
-						showBorders: true,
-						onCellPrepared: function (options) {
-							var fieldData = options.value,
-								fieldHtml = "";
-							try {
-								if (options.column.caption == "Monto") {
-									if (fieldData) {
-										var inicial = fNumber.go(fieldData).replace("$-", "-$");
-										options.cellElement.html(inicial);
+						var currentEmployeeData = options.data;
+						$("<div>")
+							.dxDataGrid({
+								columnAutoWidth: true,
+								showBorders: true,
+								onCellPrepared: function (options) {
+									var fieldData = options.value,
+										fieldHtml = "";
+									try {
+										if (options.column.caption == "Monto") {
+											if (fieldData) {
+												var inicial = fNumber.go(fieldData).replace("$-", "-$");
+												options.cellElement.html(inicial);
+											}
+										}
+
+									} catch (err) {
 									}
-								}
 
-							} catch (err) {
-							}
-
-						},
-						columns: [
-						{
-							caption: "Prefijo",
-							dataField: "Prefijo",
+								},
+								columns: [
+								{
+									caption: "Prefijo",
+									dataField: "Prefijo",
 
 
-						},
-						{
-							caption: "Documento",
-							dataField: "Documento"
-						},
-						{
-							caption: "Monto",
-							dataField: "Monto",
+								},
+								{
+									caption: "Documento",
+									dataField: "Documento"
+								},
+								{
+									caption: "Monto",
+									dataField: "Monto",
 
-						}],
-						dataSource: options.data.Pagos
+								}],
+								dataSource: options.data.Pagos
 
-					}).appendTo(container);
-        		//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
-        	}
-        },
+							}).appendTo(container);
+						//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
+					}
+				},
 				//****************************************************************
 
 				summary: {
