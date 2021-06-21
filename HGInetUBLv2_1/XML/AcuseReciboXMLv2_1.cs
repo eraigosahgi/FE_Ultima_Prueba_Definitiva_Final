@@ -157,6 +157,8 @@ namespace HGInetUBLv2_1
 					{
 						case CodigoResponseV2.AprobadoTacito:
 							nota.Value = string.Format("Manifiesto bajo la gravedad de juramento que transcurridos 3 días hábiles siguientes a la fecha de recepción de la mercancía o del servicio en la referida factura de este evento, el adquirente {0} identificado con NIT {1} no manifestó expresamente la aceptación o rechazo de la referida factura, ni reclamó en contra de su contenido.", documento.DatosAdquiriente.RazonSocial, documento.DatosAdquiriente.Identificacion);
+							if (acuse.CustomizationID.Value.Equals("1"))
+								tercero_dian = documento.DatosObligado;
 							break;
 						case CodigoResponseV2.Inscripcion:
 							nota.Value = string.Format("HGI SAS \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
