@@ -1673,7 +1673,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (doc == null)
 					throw new ArgumentException(string.Format(LibreriaGlobalHGInet.Properties.RecursoMensajes.ObjectNotExistError, "el documento", doc.IntNumero));
 
-				doc.IntAdquirienteRecibo = estado;
+				//*******Cuando se haga proceso de Radian Quitar Validacion
+				if (estado.Equals(4))
+					doc.IntAdquirienteRecibo = 1;
+				else
+					doc.IntAdquirienteRecibo = estado;
+
 				doc.StrAdquirienteMvoRechazo = motivo_rechazo;
 				doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
 				if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode())
