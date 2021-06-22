@@ -147,11 +147,18 @@ namespace HGInetUBLv2_1
 					factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
 				else
 					factura_obj.FechaVence = fecha_hora;
+
 				factura_obj.FormaPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().ID.Value);
-				if (factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value.Equals("ZZZ"))
+
+				if (factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode == null)
 					factura_obj.TerminoPago = 0;
 				else
-					factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value);
+				{
+					if (string.IsNullOrEmpty(factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value) || factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value.Equals("ZZZ"))
+						factura_obj.TerminoPago = 0;
+					else
+						factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value);
+				}
 
 				if (factura_ubl.PaymentTerms != null)
 				{
