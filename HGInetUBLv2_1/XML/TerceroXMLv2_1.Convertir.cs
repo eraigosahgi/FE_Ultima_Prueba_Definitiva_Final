@@ -94,9 +94,15 @@ namespace HGInetUBLv2_1
 					adquiriente.IdentificacionDv = Convert.ToInt16(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID);
 				adquiriente.TipoIdentificacion = Convert.ToInt16(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName);
 				adquiriente.TipoPersona = Convert.ToInt16(cliente.AdditionalAccountID.FirstOrDefault().Value);
-				adquiriente.RegimenFiscal = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName;
-				if (!string.IsNullOrEmpty(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value))
-					adquiriente.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
+
+				if (cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode != null)
+				{
+					if (!string.IsNullOrEmpty(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName))
+						adquiriente.RegimenFiscal = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName;
+					if (!string.IsNullOrEmpty(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value))
+						adquiriente.Responsabilidades = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(cliente.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.Value, ';');
+				}
+				
 				if (cliente.Party.PartyTaxScheme.FirstOrDefault().TaxScheme != null && cliente.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID != null)
 					adquiriente.CodigoTributo = cliente.Party.PartyTaxScheme.FirstOrDefault().TaxScheme.ID.Value;
 				adquiriente.RazonSocial = cliente.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;

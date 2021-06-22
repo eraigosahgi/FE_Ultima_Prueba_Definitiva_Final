@@ -1180,7 +1180,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 
 
-				if (attach_document.DocumentoElectronico.Contains("<cbc:InvoiceTypeCode>"))
+				if (attach_document.DocumentoElectronico.Contains("<cbc:InvoiceTypeCode"))
 				{
 					tipo_doc = TipoDocumento.Factura.GetHashCode();
 					documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.Factura);
@@ -1190,7 +1190,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.Factura, documento_obj.Prefijo);
 				}
-				else if (attach_document.DocumentoElectronico.Contains("<cbc:CreditNoteTypeCode>"))
+				else if (attach_document.DocumentoElectronico.Contains("<cbc:CreditNoteTypeCode"))
 				{
 					tipo_doc = TipoDocumento.NotaCredito.GetHashCode();
 					documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaCredito);
@@ -1200,7 +1200,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaCredito, documento_obj.Prefijo);
 				}
-				else if (attach_document.DocumentoElectronico.Contains("<cbc:DebitNoteTypeCode>"))
+				else if (attach_document.DocumentoElectronico.Contains("<cbc:DebitNoteTypeCode"))
 				{
 					tipo_doc = TipoDocumento.NotaDebito.GetHashCode();
 					documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaDebito);
