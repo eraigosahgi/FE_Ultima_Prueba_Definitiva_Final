@@ -203,7 +203,7 @@ PagosAdministracionApp.controller('PagosAdministracionController', function Pago
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			//validarEstado();
+			validarEstado();
 			consultar();
 		}
 	};
@@ -222,51 +222,51 @@ PagosAdministracionApp.controller('PagosAdministracionController', function Pago
 
 
 
-	//function validarEstado() {
+	function validarEstado() {
 
-	//	$('#Total').text("");
-	//	if (fecha_inicio == "")
-	//		fecha_inicio = now.toISOString();
+		$('#Total').text("");
+		if (fecha_inicio == "")
+			fecha_inicio = now.toISOString();
 
-	//	if (fecha_fin == "")
-	//		fecha_fin = now.toISOString();
+		if (fecha_fin == "")
+			fecha_fin = now.toISOString();
 
+		var txt_hgi_Facturador = "";
+		$('#wait').show();
+		var codigo_facturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+		$http.get('/api/ObtenerPagosAdministracion?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
+			$('#wait').hide();
+			datos = [];
+			//Recorro la data para ver la cantidad de documentos pendientes por procesar
+			response.data.forEach(function (valor, indice, array) {
+				if (valor.CodEstado == 888 || valor.CodEstado == 999) {
+					datos.push({ "StrIdRegistro": valor.StrIdRegistro, "StrIdSeguridadDoc": valor.StrIdSeguridadDoc });
+				}
+			});
 
-	//	$('#wait').show();
-	//	var codigo_adquiriente = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
-	//	$http.get('/api/ObtenerPagosAdministracion?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
-	//		$('#wait').hide();
-	//		datos = [];
-	//		//Recorro la data para ver la cantidad de documentos pendientes por procesar
-	//		response.data.forEach(function (valor, indice, array) {
-	//			if (valor.CodEstado == 888 || valor.CodEstado == 999) {
-	//				datos.push({ "StrIdRegistro": valor.StrIdRegistro, "StrIdSeguridadDoc": valor.StrIdSeguridadDoc });
-	//			}
-	//		});
+			objeto.datos = datos;
 
-	//		objeto.datos = datos;
+			if (objeto.datos.length > 0) {
+				//var RutaServicio = $('#Hdf_RutaSrvPagos').val();
 
-	//		if (objeto.datos.length > 0) {
-	//			//var RutaServicio = $('#Hdf_RutaSrvPagos').val();
+				objeto.datos.forEach(function (valor, indice, array) {
+					//Conuslto el estado del documento en PI
+					//SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
+					//Actualizado datos de plataforma intermedia, en la plataforma de FE
+					SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data2) {
+						consultar();
+					});
+					//});
 
-	//			objeto.datos.forEach(function (valor, indice, array) {
-	//				//Conuslto el estado del documento en PI
-	//				//SrvDocumento.ActualizaEstatusPago(RutaServicio, valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data1) {
-	//				//Actualizado datos de plataforma intermedia, en la plataforma de FE
-	//				SrvDocumento.ActualizaEstatusPagoInterno(valor.StrIdSeguridadDoc, valor.StrIdRegistro).then(function (data2) {
-	//					consultar();
-	//				});
-	//				//});
-
-	//			});
-	//		}
-	//	});
-	//	/*
-	//    $scope.$apply(function () {
-	//        $scope.Verificando = false;
-	//    });
-	//    */
-	//}
+				});
+			}
+		});
+		/*
+	    $scope.$apply(function () {
+	        $scope.Verificando = false;
+	    });
+	    */
+	}
 
 
 	function consultar() {

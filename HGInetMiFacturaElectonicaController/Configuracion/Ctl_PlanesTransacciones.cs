@@ -26,6 +26,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 	{
 
 
+	
+
 
 		/// <summary>
 		/// Crea los planes transacciones

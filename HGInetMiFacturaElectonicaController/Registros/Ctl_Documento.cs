@@ -51,6 +51,43 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		#endregion
 
 
+		#region Prueba de Acuse Tacito
+		public TblDocumentos COnsultaPorDocumento(string identificacion, int documento)
+		{
+
+			try
+			{
+				TblEmpresas empresa = new TblEmpresas();
+
+				Ctl_Empresa _empresa = new Ctl_Empresa();
+
+				empresa = _empresa.Obtener(identificacion, false);
+
+				DateTime FechaActual = Fecha.GetFecha();
+
+				int estado_error = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
+
+				int Enviomail = ProcesoEstado.EnvioZip.GetHashCode();
+
+				TblDocumentos docs = (from datos in context.TblDocumentos.AsNoTracking()
+									  where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+											&& datos.StrEmpresaFacturador == identificacion
+											&& (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -empresa.IntAcuseTacito.Value, FechaActual)
+											&& (datos.IntNumero == documento)
+											&& empresa.IntAcuseTacito.Value > 0)))
+									  orderby datos.IntNumero descending
+									  select datos).FirstOrDefault();
+				return docs;
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+		#endregion
+
+
 		#region HGIpay
 
 
@@ -125,7 +162,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							 MensajeEnvio = datos.IntMensajeEnvio.ToString(),
 							 EnvioMail = datos.IntEstadoEnvio,
 							 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
-							 FacturaCancelada = (datos.IntIdEstadoPago.Value!=null)? datos.IntIdEstadoPago.Value:(short)1,
+							 FacturaCancelada = (datos.IntIdEstadoPago.Value != null) ? datos.IntIdEstadoPago.Value : (short)1,
 							 PagosParciales = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
 							 IdComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigId.ToString() : datos.TblEmpresasResoluciones.ComercioConfigId.ToString(),
 						 }).ToList();
@@ -702,7 +739,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				context.Configuration.LazyLoadingEnabled = false;
 
-				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()//.Include("TblEmpresasResoluciones").AsNoTracking()
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
 										&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
@@ -746,7 +783,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 EnvioMail = datos.IntEstadoEnvio,
 								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
 								 FacturaCancelada = datos.IntIdEstado,
-								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 //PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 PagosParciales = (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0// (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
 							 }).ToList();
 
 
@@ -757,7 +795,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				context.Configuration.LazyLoadingEnabled = false;
 
-				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()
+				respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()//.Include("TblEmpresasResoluciones").AsNoTracking()
 							 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 							 where (empresa.StrIdentificacion.Equals(identificacion_adquiente))
 							 && (listaDocumetos.Contains(datos.IntNumero))
@@ -798,7 +836,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 EnvioMail = datos.IntEstadoEnvio,
 								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
 								 FacturaCancelada = datos.IntIdEstado,
-								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 //PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 PagosParciales = (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0// (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
 							 }).ToList();
 
 			}
@@ -2767,9 +2806,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			await Task.Factory.StartNew(() =>
 			{
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				//Se obtienen todos los documentos para procesar, pero se excluyen los que estan pendientes por enviar a la DIAN(Se hacen manuales por el momento)
-				//List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar().Where(d => d.IntIdEstado != ProcesoEstado.CompresionXml.GetHashCode()).ToList();
-				List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar(ListaEstados, dias);
+		//Se obtienen todos los documentos para procesar, pero se excluyen los que estan pendientes por enviar a la DIAN(Se hacen manuales por el momento)
+		//List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar().Where(d => d.IntIdEstado != ProcesoEstado.CompresionXml.GetHashCode()).ToList();
+		List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaProcesar(ListaEstados, dias);
 				List<DocumentoRespuesta> datosProcesar = Procesos.Ctl_Documentos.Procesar(datos, Consultar);
 
 			});
@@ -2828,22 +2867,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							XmlSerializer serializacion = null;
 
-							// ruta física del xml
-							string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento.TblEmpresasFacturador.StrIdSeguridad);
+					// ruta física del xml
+					string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento.TblEmpresasFacturador.StrIdSeguridad);
 							carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
 							documento_result.RutaArchivosEnvio = carpeta_xml;
 
-							// ruta del xml
-							string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_xml, documento_result.NombreXml);
+					// ruta del xml
+					string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_xml, documento_result.NombreXml);
 
 							if (documento.IntVersionDian == 1)
 							{
-								//Se lee un xml de una ruta
-								FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
+						//Se lee un xml de una ruta
+						FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
 
-								// convierte el objeto de acuerdo con el tipo de documento
-								if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+						// convierte el objeto de acuerdo con el tipo de documento
+						if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
 								{
 									HGInetUBL.InvoiceType conversion = new HGInetUBL.InvoiceType();
 
@@ -2878,17 +2917,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								}
 
-								// cerrar la lectura del archivo xml
-								xml_reader.Close();
+						// cerrar la lectura del archivo xml
+						xml_reader.Close();
 
 							}
 							else
 							{
-								//Se lee un xml de una ruta
-								FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
+						//Se lee un xml de una ruta
+						FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
 
-								// convierte el objeto de acuerdo con el tipo de documento
-								if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+						// convierte el objeto de acuerdo con el tipo de documento
+						if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
 								{
 									serializacion = new XmlSerializer(typeof(InvoiceType));
 
@@ -2921,21 +2960,21 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(documento.StrFormato);
 								}
 
-								// cerrar la lectura del archivo xml
-								xml_reader.Close();
+						// cerrar la lectura del archivo xml
+						xml_reader.Close();
 
 							}
 
 
-							// valida la conversión del objeto
-							if (documento_obj == null)
+					// valida la conversión del objeto
+					if (documento_obj == null)
 								throw new ArgumentException("No se recibieron datos para realizar el proceso");
 
 							documento_result.Documento = documento_obj;
 
 							DocumentoRespuesta respuesta = new DocumentoRespuesta();
-							//Genera Formato PDF
-							Ctl_Documentos.GuardarFormato(documento_obj, documento, ref respuesta, ref documento_result, documento.TblEmpresasFacturador);
+					//Genera Formato PDF
+					Ctl_Documentos.GuardarFormato(documento_obj, documento, ref respuesta, ref documento_result, documento.TblEmpresasFacturador);
 
 						}
 
@@ -3039,21 +3078,21 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				List<Guid> datos = ObtenerAcuseTacito("*", "*", "*", true);
 
-				//RegistroLog.EscribirLog(new ApplicationException("Guids: " + datos.Count), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+		//RegistroLog.EscribirLog(new ApplicationException("Guids: " + datos.Count), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
 
-				/*
-				foreach (var item in datos)
-				{
-					try
-					{
-						ActualizarRespuestaAcuse(item, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), string.Empty);
-					}
-					catch (Exception excepcion)
-					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
-						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
-					}
-				}*/
+		/*
+		foreach (var item in datos)
+		{
+			try
+			{
+				ActualizarRespuestaAcuse(item, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), string.Empty);
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+			}
+		}*/
 
 				return true;
 			});
@@ -3112,8 +3151,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				try
 				{
 					Ctl_Documento ctl_documento = new Ctl_Documento();
-					//Obtengo la lista de documentos con codigo de plan null
-					List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaPlanesNull(Facturadores);
+			//Obtengo la lista de documentos con codigo de plan null
+			List<TblDocumentos> datos = ctl_documento.ObtenerDocumentosaPlanesNull(Facturadores);
 					List<ObjPlanEnProceso> obj_plan = new List<ObjPlanEnProceso>();
 					Ctl_PlanesTransacciones controladorplanes = new Ctl_PlanesTransacciones();
 
@@ -3123,8 +3162,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						{
 							controladorplanes = new Ctl_PlanesTransacciones();
 							obj_plan = new List<ObjPlanEnProceso>();
-							//Obtengo el plan con el que voy a descontar el saldo
-							obj_plan = controladorplanes.ObtenerPlanesActivos(item.StrEmpresaFacturador, 1);
+					//Obtengo el plan con el que voy a descontar el saldo
+					obj_plan = controladorplanes.ObtenerPlanesActivos(item.StrEmpresaFacturador, 1);
 							if (obj_plan != null)
 							{
 								item.StrIdPlanTransaccion = obj_plan[0].plan;
@@ -3303,8 +3342,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										{
 											if (Fecha.Diferencia(doc_bd.DatFechaIngreso, Fecha.GetFecha(), DateInterval.Minute) > 120)
 											{
-												//Si pasa algo envio notificacion a tic para validar por que no se proceso
-												List<string> mensajes = new List<string>();
+										//Si pasa algo envio notificacion a tic para validar por que no se proceso
+										List<string> mensajes = new List<string>();
 												mensajes.Add("Plataforma de Correo no entrega un estado de la recepcion del correo y tiene una diferencia de 120 minutos respecto al ingreso, sin una respuesta");
 												mensajes.Add(string.Format("Los Datos son: Documento: {0} , Correo: {1} , MessageId: {2}", doc_bd.IntNumero.ToString(), item.StrMailEnviado, item.StrIdMensaje));
 												List<MensajeEnvio> notificacion = email.EnviaNotificacionAlertaDIAN(doc_bd.StrEmpresaFacturador, doc_bd.IntNumero.ToString(), mensajes, 2, false, Constantes.EmailCopiaOculta, 3);
@@ -3315,8 +3354,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 									}
 
-									//Cambio el estado del acuse siempre y cuando sea mayor a 3 el estado de acuse
-									if (doc_bd.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode())
+							//Cambio el estado del acuse siempre y cuando sea mayor a 3 el estado de acuse
+							if (doc_bd.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode())
 									{
 										doc_bd.IntAdquirienteRecibo = (short)AdquirienteRecibo.Pendiente.GetHashCode();
 										doc_bd.DatAdquirienteFechaRecibo = null;
@@ -3324,8 +3363,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 									Actualizar(doc_bd);
 
-									//Actualizo tabla de correos
-									if (item.DatFechaValidado == null)
+							//Actualizo tabla de correos
+							if (item.DatFechaValidado == null)
 									{
 										item.DatFechaValidado = doc_bd.DatFechaActualizaEstado;
 									}
@@ -3406,8 +3445,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									}
 
 								}
-								//Cambio el estado del acuse siempre y cuando sea mayor a 3 el estado de acuse
-								if (item.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode())
+						//Cambio el estado del acuse siempre y cuando sea mayor a 3 el estado de acuse
+						if (item.IntAdquirienteRecibo > AdquirienteRecibo.AprobadoTacito.GetHashCode())
 								{
 									item.IntAdquirienteRecibo = (short)AdquirienteRecibo.Pendiente.GetHashCode();
 									item.DatAdquirienteFechaRecibo = null;
@@ -3431,8 +3470,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					List<TblDocumentos> documentos_sinmail = null;
 
-					//Se valida que documentos no se han enviado al correo por algun motivo
-					try
+			//Se valida que documentos no se han enviado al correo por algun motivo
+			try
 					{
 						documentos_sinmail = ObtenerDocumentosValidarSinEmail(dias, solodia);
 
@@ -3770,13 +3809,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							catch (Exception excepcion)
 							{
 								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, "Error Enviando el Correo");
-								//Se actualiza el documento en bd
-								doc_bd.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
+						//Se actualiza el documento en bd
+						doc_bd.IntEstadoEnvio = (short)EstadoEnvio.Desconocido.GetHashCode();
 								doc_bd.DatFechaActualizaEstado = Fecha.GetFecha();
 								doc_bd.IntEnvioMail = false;
 
-								//Se actualiza registro ProcesosCorreo puesto que tampoco se pudo enviar por la sonda y en este proceso se notifico al facturador
-								item.IntValidadoMail = true;
+						//Se actualiza registro ProcesosCorreo puesto que tampoco se pudo enviar por la sonda y en este proceso se notifico al facturador
+						item.IntValidadoMail = true;
 								item.DatFechaValidado = Fecha.GetFecha();
 								correo_procesos.Actualizar(item);
 							}

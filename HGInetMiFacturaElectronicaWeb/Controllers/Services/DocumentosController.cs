@@ -61,6 +61,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
+				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<ObjDocumentos> datos = ctl_documento.ObtenerPorFechasAdquiriente(codigo_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date, tipo_filtro_fecha);
 
@@ -136,7 +138,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					PagosParciales = d.PagosParciales,
 					//Telefono = d.TblEmpresasFacturador.StrTelefono,
 					d.poseeIdComercioPSE,
-					d.poseeIdComercioTC
+					d.poseeIdComercioTC,
+					//Saldo = (d.poseeIdComercio == 1) ? Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal) : 0
 				});
 
 				return Ok(retorno);
@@ -522,7 +525,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					{
 						//p.TblPagosElectronicos.StrIdRegistro,
 						//p.TblPagosElectronicos.IntEstadoPago
-						StrIdRegistro=Pago.ObtenerPorRegistroPrincipal(p.StrIdPagoPrincipal),
+						StrIdRegistro = Pago.ObtenerPorRegistroPrincipal(p.StrIdPagoPrincipal),
 						//p.TblPagosElectronicos.IntEstadoPago
 					}
 					//Se coloca este codigo adicional, para validar si el documento tiene un pago pendiente, y si es asi, este debe retornar un segundo objeto
@@ -1833,6 +1836,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_PagosElectronicos _detalle = new Ctl_PagosElectronicos();
 				var Id_Documento = _detalle.ObtenerPorRegistroPrincipal(StrIdSeguridadRegistro);
 
+				Ctl_PagosElectronicos _pagos = new Ctl_PagosElectronicos();
+
+				var pago_electronico = _pagos.Obtener(IdSeguridad, StrIdSeguridadRegistro);
+				if (pago_electronico == null)
+				{
+					pago_electronico = _pagos.Obtener(Guid.Parse(Id_Documento), StrIdSeguridadRegistro);
+				}
+
 
 				//if (datos != null)
 				//{
@@ -1849,9 +1860,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					ConfigPago.StrIdSeguridadRegistro = StrIdSeguridadRegistro;
 					ConfigPago.IntPagoEstado = EstadoPago.Pendiente.GetHashCode();
 
-					Ctl_PagosElectronicos _pagos = new Ctl_PagosElectronicos();
-
-					var pago_electronico = _pagos.Obtener(IdSeguridad, StrIdSeguridadRegistro);
+					pago_electronico = _pagos.Obtener(IdSeguridad, StrIdSeguridadRegistro);
+					if (pago_electronico == null)
+					{
+						pago_electronico = _pagos.Obtener(Guid.Parse(Id_Documento), StrIdSeguridadRegistro);
+						ConfigPago.StrIdSeguridadDoc = Guid.Parse(Id_Documento);
+					}
 
 					var fecha_pago = pago_electronico.DatFechaRegistro;
 					var fecha_actual = Fecha.GetFecha();
@@ -2171,7 +2185,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 
-				Ctl_Documento Controlador = new Ctl_Documento();				
+				Ctl_Documento Controlador = new Ctl_Documento();
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 				///Consultamos los documentos
 				List<ObjDocumentos> datos2 = Controlador.ConsultarPagosFueraPlataforma(identificacion, empresa.StrIdentificacion, documento);
@@ -2193,7 +2207,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.IntVlrTotal,
 					d.FacturaCancelada,
 					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal)
-				}).Where(x => x.Saldo > 0 ).Where(x=>x.FacturaCancelada != 1000);
+				}).Where(x => x.Saldo > 0).Where(x => x.FacturaCancelada != 1000);
 
 				return Request.CreateResponse(HttpStatusCode.OK, retorno);
 

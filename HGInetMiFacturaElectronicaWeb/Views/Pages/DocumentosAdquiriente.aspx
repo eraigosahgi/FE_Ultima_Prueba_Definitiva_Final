@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<!-- JS DocumentosAdquiriente-->
-	
+
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201019"></script>
 	<script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs20201019"></script>
 	<script src="../../Scripts/Pages/ModalPagos.js?vjs20201019"></script>
@@ -67,7 +67,7 @@
 									<div class="col-md-4 text-right">
 										<br />
 										<div data-dx-button="ButtonOptionsConsultar"></div>
-										
+
 									</div>
 
 								</div>
@@ -91,7 +91,9 @@
 					<div class="panel-heading">
 						<h6 class="panel-title">Datos</h6>
 						<div style="float: right; margin-right: 2%; margin-top: -20px;">
-							<label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>
+							<%--<label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>--%>
+							<label id="Total_a_Pagar" class="text-semibold text-right" style="font-size: medium; margin-right: 20px;"></label>
+							<div id="multipagos"></div>
 						</div>
 					</div>
 

@@ -583,7 +583,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 			if (num_doc > 0)
 			{
-				
+
 				List<TblDocumentos> datos = new List<TblDocumentos>();
 
 				datos = (from d in context.TblDocumentos
@@ -624,8 +624,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			{
 				documentos = (from Pagos in context.TblPagosElectronicos
 							  where (Pagos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
-							   //Valida si la fecha es documento o fecha pago
-							   //&& ((Pagos.TblPagosDetalles.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)							  
+							  //Valida si la fecha es documento o fecha pago
+							  //&& ((Pagos.TblPagosDetalles.TblDocumentos.DatFechaDocumento >= fecha_inicio && Pagos.TblDocumentos.DatFechaDocumento <= fecha_fin) || tipo_fecha == 2)							  
 							  && ((Pagos.DatFechaRegistro >= fecha_inicio && Pagos.DatFechaRegistro <= fecha_fin))
 							  && (Pagos.IntEstadoPago.Equals(cod_estado_recibo) || estado_recibo.Equals("*"))
 							  && (Pagos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
@@ -1023,6 +1023,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 				TblDocumentos datos_documento = new TblDocumentos();
 
+
+				string facturador_actual = string.Empty;
+
 				foreach (var item in lista_pagos_multiples)
 				{
 
@@ -1031,6 +1034,14 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 					//valida que el documento no sea null.
 					if (datos_documento != null)
 					{
+						//Se hace una validacion para garantizar que el pago multiple, sea a documentos del mismo facturador.
+						if (!string.IsNullOrEmpty(facturador_actual))
+						{
+							if (facturador_actual != datos_documento.StrEmpresaFacturador)
+							{
+								throw new ApplicationException("No se puede hacer hacer pagos multiples a diferentes facturadores");
+							}
+						}
 
 						//Valida que la resolución no sea null.
 						if (!datos_documento.TblEmpresasFacturador.IntManejaPagoE)
@@ -1126,6 +1137,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						pago_detalle.IntValorPago = item.Valor;
 						lista_pagos_detalle.Add(pago_detalle);
 
+						facturador_actual = datos_documento.StrEmpresaFacturador;
 					}
 					else
 						throw new ApplicationException(string.Format(RecursoMensajes.ObjectNotExistError, "el documento", ObjPago.StrIdSeguridadDoc));
@@ -1449,7 +1461,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		{
 			public Guid Documento { get; set; }
 			public decimal Valor { get; set; }
-		}		
+		}
 
 	}
 }
