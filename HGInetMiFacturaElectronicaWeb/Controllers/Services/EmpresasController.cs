@@ -208,6 +208,41 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 
+		/// <summary>
+		/// Obtiene de Facturadores y perfil 99 de Habilitacion 
+		/// </summary>        
+		/// <returns></returns>
+		[HttpGet]
+		[Route("api/ObtenerMisFacturadores")]
+		public IHttpActionResult ObtenerMisFacturadores()
+		{
+
+			Sesion.ValidarSesion();
+
+			Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+
+			List<TblEmpresas> datosSesion = new List<TblEmpresas>();
+
+			datosSesion.Add(Sesion.DatosEmpresa);
+
+			TblEmpresas empresa = datosSesion.FirstOrDefault();
+
+
+
+			var datos = ctl_empresa.ObtenerMisFacturadores(empresa.StrIdentificacion);
+
+			if (datos == null)
+			{
+				return NotFound();
+			}
+
+
+			return Ok(datos);
+
+		}
+
+
+
 
 		/// <summary>
 		/// Obtiene la lista 

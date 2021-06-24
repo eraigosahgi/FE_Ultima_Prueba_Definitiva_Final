@@ -7,9 +7,9 @@
 
 var Estado;
 var UsuarioSession = "";
-var App = angular.module('App', ['dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
+var App = angular.module('App', ['dx', 'AppMaestrosEnum']);
 //Controlador para la consulta de documentos Adquiriente
-App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
+App.controller('DocAdquirientePagosController', function ($scope, $rootScope, $http, $location, SrvMaestrosEnum) {
 
 	var ValidarGestionPagos = "ValidarGestionPagos";
 	$("#summary_Pagos").dxValidationSummary(
@@ -17,9 +17,6 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		validationGroup: ValidarGestionPagos
 	});
 
-	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ObtenerMisFacturadores', 'Identificacion', 'RazonSocial', false, 7).then(function (Datos) {
-		$scope.Facturador = Datos;
-	});
 
 	$("#multipagos").dxButton({
 		text: "Pagar",
@@ -174,11 +171,8 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
 
-
-		var codigo_facturador = (txt_hgi_Facturador != undefined) ? txt_hgi_Facturador : '';
-
 		$('#wait').show();
-		$http.get('/api/ObtenerDocumentosAdquirientes?codigo_facturador=' + codigo_facturador + '&codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
+		$http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data
@@ -197,13 +191,11 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
 
-
-		var codigo_facturador = (txt_hgi_Facturador != undefined) ? txt_hgi_Facturador : '';
 		//Obtiene los datos del web api
 		//ControladorApi: /Api/Documentos/
 		//Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
 		$('#wait').show();
-		$http.get('/api/ObtenerDocumentosAdquirientes?codigo_facturador=' + codigo_facturador + '&codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
+		$http.get('/api/Documentos?codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
@@ -249,7 +241,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                 , columns: [
 				{
 					caption: "Seleccionar",
-					width: "auto",
+					cssClass: "col-md-1 col-xs-2",
 					cellTemplate: function (container, options) {
 						if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo > 0) {
 							$('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
@@ -263,7 +255,8 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					},
 				},
                     {
-                    	caption: "Archivos",
+                    	caption: "  Lista de Archivos",
+                    	cssClass: "col-md-1 col-xs-2",
                     	width: "auto",
                     	cellTemplate: function (container, options) {
                     		var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
@@ -327,7 +320,6 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                     	dataType: "date",
                     	format: "yyyy-MM-dd ",
                     	cssClass: "hidden-xs col-md-1",
-                    	visible: false,
                     	validationRules: [{
                     		type: "required",
                     		message: "El campo Fecha es obligatorio."
@@ -425,7 +417,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					   	caption: "Saldo",
 					   	dataField: "Saldo",
 					   	visible: false,
-					   	cssClass: "col-md-1 col-xs-3",
+					   	cssClass: "col-md-1 col-xs-2",
 					   	//disabled: !data.habilitar_documento,
 					   	cellTemplate: function (container, options) {
 

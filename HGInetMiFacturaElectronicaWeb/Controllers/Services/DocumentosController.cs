@@ -53,7 +53,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
 		[HttpGet]
-		public IHttpActionResult Get(string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_filtro_fecha)
+		[Route("api/ObtenerDocumentosAdquirientes")]
+		public IHttpActionResult ObtenerDocumentosAdquirientes(string codigo_facturador,string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_filtro_fecha)
 		{
 			try
 			{
@@ -63,8 +64,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
+				Ctl_EmpresaResolucion Resolucion = new Ctl_EmpresaResolucion();
+
+
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				List<ObjDocumentos> datos = ctl_documento.ObtenerPorFechasAdquiriente(codigo_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date, tipo_filtro_fecha);
+				List<ObjDocumentos> datos = ctl_documento.ObtenerPorFechasAdquiriente(codigo_facturador, codigo_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date, tipo_filtro_fecha);
 
 				if (datos == null)
 				{
@@ -135,11 +139,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.EnvioMail,
 					poseeIdComercio = d.poseeIdComercio,
 					FacturaCancelada = d.FacturaCancelada,
-					PagosParciales = d.PagosParciales,
-					//Telefono = d.TblEmpresasFacturador.StrTelefono,
+					PagosParciales = (d.poseeIdComercio == 1) ? Resolucion.ManejaPagosParciales(d.NumResolucion, d.IdFacturador) : 0, // d.PagosParciales,
+																																	  //Telefono = d.TblEmpresasFacturador.StrTelefono,
 					d.poseeIdComercioPSE,
 					d.poseeIdComercioTC,
-					//Saldo = (d.poseeIdComercio == 1) ? Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal) : 0
+					Saldo = (d.poseeIdComercio == 1) ? Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal) : 0
 				});
 
 				return Ok(retorno);

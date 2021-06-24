@@ -47,5 +47,6 @@ namespace HGInetMiFacturaElectonicaData.Objetos
 		public bool poseeIdComercioTC { get; set; }
 		public string IdComercio { get; set; }
 		public string DescripComercio { get; set; }
+		public string NumResolucion { get; set; }
 	}
 }

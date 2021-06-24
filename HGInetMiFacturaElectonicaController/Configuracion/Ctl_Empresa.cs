@@ -977,6 +977,55 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>        
 		/// /// <param name="IdSeguridad">id de seguridad</param>
 		/// <returns></returns>
+		public object ObtenerMisFacturadores(string indentificacion)
+		{
+
+			context.Configuration.LazyLoadingEnabled = false;
+
+			var datos = (from d in context.TblDocumentos
+						 where d.StrEmpresaAdquiriente.Equals(indentificacion)
+						 group d by new { d.StrEmpresaFacturador } into hh
+						 select new
+						 {
+							 hh.Key.StrEmpresaFacturador,
+						 }).ToList();
+
+			List<Facturador> lista = new List<Facturador>();
+
+			Facturador Fact = new Facturador();
+
+			foreach (var item in datos)
+			{
+
+				try
+				{
+					Fact = new Facturador();
+					Fact.Identificacion = item.StrEmpresaFacturador;
+					Fact.RazonSocial = Obtener(item.StrEmpresaFacturador, false).StrRazonSocial;
+					lista.Add(Fact);
+				}
+				catch (Exception)
+				{
+				}
+			}
+
+
+			return lista;
+		}
+
+
+		public class Facturador
+		{
+			public string Identificacion { get; set; }
+			public string RazonSocial { get; set; }
+		}
+
+
+		/// <summary>
+		/// Obtiene Todas las empresas
+		/// </summary>        
+		/// /// <param name="IdSeguridad">id de seguridad</param>
+		/// <returns></returns>
 		public List<TblEmpresas> Obtener(System.Guid IdSeguridad, bool LazyLoading = true)
 		{
 

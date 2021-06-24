@@ -1938,6 +1938,7 @@
     <Content Include="Scripts\Pages\ConsultarPlanesAdmin.js" />
     <Content Include="Scripts\Pages\ConsultarPlanesDocumentos.js" />
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
+    <Content Include="Scripts\Pages\DocumentosAdquirientePagos.js" />
     <Content Include="Scripts\Pages\HGIpayConsultaDocumentos.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />

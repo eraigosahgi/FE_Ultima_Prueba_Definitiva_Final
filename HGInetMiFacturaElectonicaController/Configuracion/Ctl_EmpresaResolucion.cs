@@ -29,6 +29,48 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#region Obtener
 
+		/// <summary>
+		/// Valida si la resolucion maneja pagos parciales
+		/// </summary>
+		/// <returns></returns>
+		public int ManejaPagosParciales(string numero_resolucion, string documento_empresa)
+		{
+
+			try
+			{
+				//Validamos si la resoluciona maneja pagos parciales
+				var datos = (from item in context.TblEmpresasResoluciones
+							 where (item.StrNumResolucion.Equals(numero_resolucion))
+							 && (item.StrEmpresa.Equals(documento_empresa))
+							 select item).FirstOrDefault();
+
+				//Si no existe resolucion para esa empresa, entonces retornamos cero(0)
+				if (datos != null)
+				{
+					//Si la resolucion maneja la configuracion del pago, entonces retornamos esa configurracion de pagos parciales
+					if (!string.IsNullOrEmpty(datos.ComercioConfigId.ToString()) && !string.IsNullOrEmpty(datos.ComercioConfigDescrip))
+					{
+						return datos.PermiteParciales;
+					}
+					else
+					{
+						///si no maneja la configuración en la resolución, entonces la buscamos en la empresa
+						var empresa = context.TblEmpresas.Where(x => x.StrIdentificacion.Equals(documento_empresa)).FirstOrDefault();
+						if (empresa != null)
+						{
+							return (empresa.IntPagoEParcial) ? 1 : 0;
+						}
+					}
+
+				}
+
+				return 0;
+			}
+			catch (Exception)
+			{
+				return 0;
+			}
+		}
 
 		/// <summary>
 		/// Obtiene una lista de resoluciones
@@ -208,7 +250,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							tbl_resolucion.ComercioConfigDescrip = tbl_resolucion_comercio.ComercioConfigDescrip;
 							tbl_resolucion.PermiteParciales = tbl_resolucion_comercio.PermiteParciales;
 						}
-						
+
 					}
 
 					// crea el registro en base de datos
@@ -402,7 +444,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 
-		
+
 		#endregion
 
 	}

@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<!-- JS DocumentosAdquiriente-->
-
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201019"></script>
 	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201019"></script>
 	<script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs20201019"></script>
 	<script src="../../Scripts/Pages/ModalPagos.js?vjs20201019"></script>
@@ -58,7 +58,13 @@
                                         <div data-dx-select-box="filtros.EstadoRecibo"></div>
                                     </div>--%>
 
-									<div class="col-md-8">
+									
+
+									<div class="col-md-4" style="margin-top: 1%">
+										<div data-hgi-filtro="Facturador"></div>
+									</div>
+
+									<div class="col-md-4"  style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
 										<label>Número Documento:</label>
 										<div data-dx-autocomplete="filtros.NumeroDocumento"></div>
