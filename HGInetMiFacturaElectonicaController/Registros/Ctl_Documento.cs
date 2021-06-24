@@ -39,6 +39,7 @@ using HGInetMiFacturaElectonicaData.Objetos;
 using HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas;
 using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using System.IO.Compression;
+using HGInetUBL;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -3872,6 +3873,59 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 			return datos;
+		}
+
+		public string ValidarTextoXYPDF(Guid guid_facturador, string identificacion_facturador, int tipo_documento, string numero_documento, string numero_resolucion, decimal posicion_x, decimal posicion_y)
+		{
+			try
+			{
+				string ruta_retorno = string.Empty;
+
+				//TblDocumentos documento = ObtenerDocumentoCliente(identificacion_facturador, Convert.ToInt32(numero_documento), "*", numero_resolucion).FirstOrDefault();
+
+
+				long num_doc = Convert.ToInt64(numero_documento);
+				TblDocumentos documento = (from datos in context.TblDocumentos
+										   join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+										   where datos.StrEmpresaFacturador.Equals(identificacion_facturador)
+												 && (datos.StrNumResolucion.Equals(numero_resolucion))
+												 && (datos.IntNumero == num_doc)
+												 && (datos.IntDocTipo == tipo_documento)
+										   select datos).FirstOrDefault();
+
+
+				if (documento == null)
+					throw new ApplicationException("El documento solicitado no ha sido encontrado.");
+
+				if (string.IsNullOrWhiteSpace(documento.StrUrlArchivoPdf))
+					throw new ApplicationException("El PDF para el documento solicitado no ha sido encontrado.");
+
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				string carpeta_archivos = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronicaTmp, guid_facturador.ToString());
+				carpeta_archivos = string.Format(@"{0}\{1}", carpeta_archivos, RecursoDms.CarpetaFacturaEConsultaDian);
+
+				string nombre_archivo = NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
+
+				string ruta_pdf_copia = carpeta_archivos.Replace(RecursoDms.CarpetaFacturaEConsultaDian, RecursoDms.CarpetaFacturaEDian);
+				ruta_pdf_copia = Directorio.CrearDirectorio(ruta_pdf_copia);
+				ruta_pdf_copia = string.Format(@"{0}\{1}.pdf", ruta_pdf_copia, nombre_archivo);
+
+				byte[] byte_pdf = Archivo.ObtenerWeb(documento.StrUrlArchivoPdf);
+				File.WriteAllBytes(ruta_pdf_copia, byte_pdf);
+
+				string ruta_pdf_resultado = ruta_pdf_copia.Replace(nombre_archivo, string.Format("{0}_resultado", nombre_archivo));
+
+				ruta_pdf_resultado = Pdf.AgregarTexto(ruta_pdf_copia, ruta_pdf_resultado, string.Empty, (float)posicion_x, (float)posicion_y, false);
+
+				string url_ppal_pdf = string.Format("{0}/{1}/{2}", plataforma.RutaDmsPublica, Constantes.CarpetaFacturaElectronicaTmp, guid_facturador.ToString());
+				ruta_retorno = string.Format(@"{0}/{1}/{2}.pdf", url_ppal_pdf, RecursoDms.CarpetaFacturaEDian, string.Format("{0}_resultado", nombre_archivo));
+
+				return ruta_retorno;
+			}
+			catch (Exception exception)
+			{
+				throw new ApplicationException(exception.Message, exception.InnerException);
+			}
 		}
 
 	}

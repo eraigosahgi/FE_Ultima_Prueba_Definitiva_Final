@@ -2222,6 +2222,27 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 
 		}
+
+
+		[HttpGet]
+		[Route("api/ValidarTextoXYPDF")]
+		public HttpResponseMessage ValidarTextoXYPDF(Guid guid_facturador, string identificacion_facturador, int tipo_documento, string numero_documento, string numero_resolucion, decimal posicion_x, decimal posicion_y)
+		{
+			try
+			{
+				Ctl_Documento Controlador = new Ctl_Documento();
+				string retorno = Controlador.ValidarTextoXYPDF(guid_facturador, identificacion_facturador, tipo_documento, numero_documento, numero_resolucion, posicion_x, posicion_y);
+
+				return Request.CreateResponse(HttpStatusCode.OK, retorno);
+
+			}
+			catch (Exception)
+			{
+				return Request.CreateResponse(HttpStatusCode.OK, string.Empty);
+				//throw new ApplicationException(ex.Message, ex.InnerException);
+			}
+		}
+
 		/// <summary>
 		/// Objeto de respuesta para todas las consultas de pagos
 		/// Consulta de Pagos Recibidos

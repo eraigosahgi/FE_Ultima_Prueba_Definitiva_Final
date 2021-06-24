@@ -1927,6 +1927,7 @@
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\Alertas.js" />
     <Content Include="Scripts\Pages\AutenticacionPagos.js" />
+    <Content Include="Scripts\Pages\ConfigurarFechaRecepcionDian.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\ConsultaAcuseTacito.js" />
     <Content Include="Scripts\Pages\ConsultaAuditoriaAdmin.js" />
@@ -2805,6 +2806,7 @@
     <Content Include="Views\Login\RestablecerClave.aspx" />
     <Content Include="Views\Pages\AcusePendienteRecepcion.aspx" />
     <Content Include="Views\Pages\AcuseRecibo.aspx" />
+    <Content Include="Views\Pages\ConfigurarFechaRecepcionDian.aspx" />
     <Content Include="Views\Pages\ConfirmacionEmail.aspx" />
     <Content Include="Views\Pages\ConfirmacionUsuarioPagos.aspx" />
     <Content Include="Views\Pages\ConsultaAdministracionPagos.aspx" />
@@ -3022,6 +3024,13 @@
     </Compile>
     <Compile Include="Views\Pages\AuditoriaDocumento.aspx.designer.cs">
       <DependentUpon>AuditoriaDocumento.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConfigurarFechaRecepcionDian.aspx.cs">
+      <DependentUpon>ConfigurarFechaRecepcionDian.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConfigurarFechaRecepcionDian.aspx.designer.cs">
+      <DependentUpon>ConfigurarFechaRecepcionDian.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConfirmacionEmail.aspx.cs">
       <DependentUpon>ConfirmacionEmail.aspx</DependentUpon>
@@ -3563,7 +3572,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61436/</IISUrl>
+          <IISUrl>http://localhost:61423/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

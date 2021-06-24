@@ -1491,6 +1491,33 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 		}
 
+		public TblEmpresas EditarCamposDian(Guid StrIdseguridad, decimal posicion_x, decimal posicion_y)
+		{
+			try
+			{
+				TblEmpresas tbl_empresa = Obtener(StrIdseguridad, false).FirstOrDefault();
+
+				tbl_empresa.IntPdfCampoDian = true;
+				try
+				{
+					tbl_empresa.IntPdfCampoDianPosX = posicion_x;
+					tbl_empresa.IntPdfCampoDianPosY = posicion_y;
+				}
+				catch (Exception)
+				{
+				}
+
+				this.Edit(tbl_empresa);
+
+				return tbl_empresa;
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna);
+				throw new ApplicationException(string.Format("Error : {0}", excepcion.Message), excepcion);
+			}
+		}
+
 
 		public string ObtenerSerialCloud(string Tercero)
 		{

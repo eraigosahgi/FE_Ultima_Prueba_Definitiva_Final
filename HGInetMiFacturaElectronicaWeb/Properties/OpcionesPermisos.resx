@@ -195,4 +195,7 @@
   <data name="PagosAdministracion" xml:space="preserve">
     <value>1372</value>
   </data>
+  <data name="ActivacionFechaRecepcion" xml:space="preserve">
+    <value>1338</value>
+  </data>
 </root>

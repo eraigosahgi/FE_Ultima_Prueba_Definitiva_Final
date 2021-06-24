@@ -142,6 +142,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a facturaelectronica_tmp.
+        /// </summary>
+        public static string CarpetaFacturaElectronicaTmp {
+            get {
+                return ResourceManager.GetString("CarpetaFacturaElectronicaTmp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a PLAN CERRADO AUT. EL {0}, CON UNA CANT. DE DOC. DE {1} POR VENCIMIENTO EL {2}.
         /// </summary>
         public static string CierreAutomaticoPostPago {

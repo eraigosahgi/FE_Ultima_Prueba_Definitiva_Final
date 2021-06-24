@@ -72,5 +72,24 @@
 		});
 	}
 
+	//Actualiza los datos de campos dian	
+	this.EditarCamposDian = function (StrIdseguridad, posicion_x, posicion_y) {
+
+		return $http.get('/api/EmpresaEditarCamposDian?StrIdseguridad=' + StrIdseguridad + '&posicion_x=' + posicion_x + '&posicion_y=' + posicion_y).then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 6000);
+			return $q.reject(response.data);
+		});
+	}
+
+	this.ObtenerFacturadores = function () {
+		return $http.get('/api/Empresas?Facturador=true').then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			return $q.reject(response.data);
+		});
+	}
 
 });

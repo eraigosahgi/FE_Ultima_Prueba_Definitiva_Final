@@ -347,6 +347,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MultiplesComercios", "Multi
 		Documentacion\Liberaciones\MultiplesComercios\Script Empresas-Resoluciones.txt = Documentacion\Liberaciones\MultiplesComercios\Script Empresas-Resoluciones.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CamposXY", "CamposXY", "{04725DF0-4044-4FAC-BDA5-728109147048}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\CamposXY\PermisoAccesoFormulario.txt = Documentacion\Liberaciones\CamposXY\PermisoAccesoFormulario.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -543,5 +548,6 @@ Global
 		{7F2A4119-8345-4D0C-AF64-A772BBA1F325} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{4053CFED-AC25-4032-8D0B-635F8C43D0E5} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{227A9F03-6B68-4526-A617-5AD89C6BAFC4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{04725DF0-4044-4FAC-BDA5-728109147048} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal

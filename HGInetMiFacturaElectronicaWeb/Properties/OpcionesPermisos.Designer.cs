@@ -61,6 +61,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1338.
+        /// </summary>
+        internal static string ActivacionFechaRecepcion {
+            get {
+                return ResourceManager.GetString("ActivacionFechaRecepcion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1333.
         /// </summary>
         internal static string ActivacionSerial {

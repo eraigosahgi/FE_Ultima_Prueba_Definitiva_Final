@@ -200,7 +200,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Habilitacion = d.IntHabilitacion,
 				IdSeguridad = d.StrIdSeguridad,
 				Resolucion = d.StrResolucionDian,
-				ConsultaAdmin = ConsultaAdmin
+				ConsultaAdmin = ConsultaAdmin,
+				d.IntPdfCampoDianPosX,
+				d.IntPdfCampoDianPosY
 			});
 
 			return Ok(retorno);
@@ -761,6 +763,35 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Datos.ComercioConfigDescrip,
 					Datos.ComercioConfigId,
 					Datos.IntPagoEParcial
+				};
+
+				return Ok(resultado);
+
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, "");
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/EmpresaEditarCamposDian")]
+		public IHttpActionResult EditarCamposDian(string StrIdseguridad, decimal posicion_x, decimal posicion_y)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				Ctl_Empresa Controlador = new Ctl_Empresa();
+				var Datos = Controlador.EditarCamposDian(Guid.Parse(StrIdseguridad), posicion_x, posicion_y);
+
+				//Resultado
+				var resultado = new
+				{
+					Datos.IntPdfCampoDian,
+					Datos.IntPdfCampoDianPosX,
+					Datos.IntPdfCampoDianPosY
 				};
 
 				return Ok(resultado);

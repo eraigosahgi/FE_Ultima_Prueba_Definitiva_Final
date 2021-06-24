@@ -1,0 +1,2 @@
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad,StrClaseMenu,StrRutaMenu,IntTipo)
+VALUES (1338,133,'Activación Fecha Recepción',1,1, NEWID(), 'icon-calendar52',	'ConfigurarFechaRecepcionDian.aspx', 0);

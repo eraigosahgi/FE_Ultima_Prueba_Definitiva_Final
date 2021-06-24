@@ -337,4 +337,7 @@
     <value>Acceso Plataforma de Pagos de Facturación Electrónica</value>
     <comment>Asunto para la bienvenida de usuarios al portal de pagos de factura electronica</comment>
   </data>
+  <data name="CarpetaFacturaElectronicaTmp" xml:space="preserve">
+    <value>facturaelectronica_tmp</value>
+  </data>
 </root>
