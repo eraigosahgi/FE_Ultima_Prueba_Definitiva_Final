@@ -37,7 +37,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		/// </summary>
 		/// <param name="documento"></param>
 		/// <returns></returns>
-		public TblPagosDetalles Obtener(Guid documento,Guid id_pago)
+		public TblPagosDetalles Obtener(Guid documento, Guid id_pago)
 		{
 			try
 			{
@@ -45,6 +45,29 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 										  where d.StrIdSeguridadDoc == documento
 										  && d.StrIdPagoPrincipal == id_pago
 										  select d).FirstOrDefault();
+				return datos;
+			}
+			catch (Exception excepcion)
+			{
+
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		/// <summary>
+		/// Obtiene un detalle por documento
+		/// </summary>
+		/// <param name="documento"></param>
+		/// <returns></returns>
+		public List<TblPagosDetalles> Obtener(Guid documento)
+		{
+			try
+			{
+				var datos = (from d in context.TblPagosDetalles
+							 where d.StrIdSeguridadDoc == documento
+							 //&& d.StrIdPagoPrincipal == id_pago
+							 select d).ToList();
 				return datos;
 			}
 			catch (Exception excepcion)

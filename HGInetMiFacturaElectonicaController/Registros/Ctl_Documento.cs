@@ -617,9 +617,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				context.Configuration.LazyLoadingEnabled = false;
 
-				var respuesta = from documento in context.TblDocumentos.Include("TblPagosElectronicos")
-								join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
-								where empresa.StrIdentificacion.Equals(identificacion_obligado)
+				var respuesta = from documento in context.TblDocumentos//.Include("TblPagosElectronicos")
+																	   //join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
+																	   //where empresa.StrIdentificacion.Equals(identificacion_obligado)
+								where documento.StrEmpresaFacturador.Equals(identificacion_obligado)
 								&& (lista_documentos.Contains(documento.StrObligadoIdRegistro) || lista_documentos.Contains(documento.StrIdSeguridad.ToString()))
 								select documento;
 
@@ -1465,6 +1466,32 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 );
 
 				return respuesta.ToList();
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+		/// <summary>
+		/// Obtiene los documentos por id se seguridad.
+		/// </summary>
+		/// <param name="id_seguridad"></param>
+		/// <returns></returns>
+		public TblDocumentos ObtenerDocumento(System.Guid id_seguridad)
+		{
+
+			try
+			{
+				context.Configuration.LazyLoadingEnabled = false;
+
+				var respuesta = (from datos in context.TblDocumentos
+								 where datos.StrIdSeguridad.Equals(id_seguridad)
+								 select datos
+								 );
+
+				return respuesta.FirstOrDefault();
 			}
 			catch (Exception excepcion)
 			{
@@ -2389,28 +2416,52 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				List<PagoElectronicoRespuestaDetalle> DetallesPagos = new List<PagoElectronicoRespuestaDetalle>();
 
 
-				Ctl_PagosElectronicos _Pagos = new Ctl_PagosElectronicos();
-
-				List<TblPagosElectronicos> lista_pagos = _Pagos.ObtenerPagos(respuesta.StrIdSeguridad);
-
-				//if (respuesta.TblPagosElectronicos != null)
+				//Ctl_PagosElectronicos _Pagos = new Ctl_PagosElectronicos();
+				//List<TblPagosElectronicos> lista_pagos = _Pagos.ObtenerPagos(respuesta.StrIdSeguridad);				
+				//foreach (TblPagosElectronicos pago in lista_pagos)
 				//{
+				//	try
+				//	{
+				//		var respuesta_pago = new PagoElectronicoRespuestaDetalle();
+				//		respuesta_pago.IdRegistro = pago.StrIdRegistro.ToString();
+				//		respuesta_pago.Fecha = pago.DatFechaRegistro;
+				//		respuesta_pago.IdPago = pago.StrIdSeguridadPago;
+				//		respuesta_pago.ReferenciaCUS = pago.StrTransaccionCUS;
+				//		respuesta_pago.TicketID = pago.StrTicketID;
+				//		respuesta_pago.PagoEstadoDescripcion = pago.StrMensaje;
+				//		respuesta_pago.PagoEstado = pago.IntEstadoPago;
+				//		respuesta_pago.Valor = pago.IntValorPago;
+				//		respuesta_pago.FormaPago = pago.IntFormaPago.ToString();
+				//		respuesta_pago.Franquicia = pago.StrCodigoFranquicia;
 
-				foreach (TblPagosElectronicos pago in lista_pagos)
+				//		DetallesPagos.Add(respuesta_pago);
+				//	}
+				//	catch (Exception)
+				//	{
+				//	}
+				//}
+
+				Ctl_PagosElectronicos _Pago = new Ctl_PagosElectronicos();
+				Ctl_PagosDetalles _Pago_Detalle = new Ctl_PagosDetalles();
+				List<TblPagosDetalles> lista_pagos = _Pago_Detalle.Obtener(respuesta.StrIdSeguridad);
+				foreach (TblPagosDetalles pago in lista_pagos)
 				{
 					try
 					{
+
+						TblPagosElectronicos pago_principal = _Pago.ObtenerPagoPorRegistroPrincipal(pago.StrIdPagoPrincipal);
+
 						var respuesta_pago = new PagoElectronicoRespuestaDetalle();
-						respuesta_pago.IdRegistro = pago.StrIdRegistro.ToString();
-						respuesta_pago.Fecha = pago.DatFechaRegistro;
-						respuesta_pago.IdPago = pago.StrIdSeguridadPago;
-						respuesta_pago.ReferenciaCUS = pago.StrTransaccionCUS;
-						respuesta_pago.TicketID = pago.StrTicketID;
-						respuesta_pago.PagoEstadoDescripcion = pago.StrMensaje;
-						respuesta_pago.PagoEstado = pago.IntEstadoPago;
+						respuesta_pago.IdRegistro = pago_principal.StrIdRegistro.ToString();
+						respuesta_pago.Fecha = pago_principal.DatFechaRegistro;
+						respuesta_pago.IdPago = pago_principal.StrIdSeguridadPago;
+						respuesta_pago.ReferenciaCUS = pago_principal.StrTransaccionCUS;
+						respuesta_pago.TicketID = pago_principal.StrTicketID;
+						respuesta_pago.PagoEstadoDescripcion = pago_principal.StrMensaje;
+						respuesta_pago.PagoEstado = pago_principal.IntEstadoPago;
 						respuesta_pago.Valor = pago.IntValorPago;
-						respuesta_pago.FormaPago = pago.IntFormaPago.ToString();
-						respuesta_pago.Franquicia = pago.StrCodigoFranquicia;
+						respuesta_pago.FormaPago = pago_principal.IntFormaPago.ToString();
+						respuesta_pago.Franquicia = pago_principal.StrCodigoFranquicia;
 
 						DetallesPagos.Add(respuesta_pago);
 					}
@@ -2419,7 +2470,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 				}
 
-				//}
 
 				obj_documento.DetallesPagos = DetallesPagos;
 
