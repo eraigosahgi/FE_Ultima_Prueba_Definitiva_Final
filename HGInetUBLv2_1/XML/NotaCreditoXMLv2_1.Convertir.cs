@@ -29,30 +29,46 @@ namespace HGInetUBLv2_1
 			{
 				NotaCredito nota_credito_obj = new NotaCredito();
 
-				nota_credito_obj.Prefijo = documento_bd.StrPrefijo;
+				Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
+
+				Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
+
+				nota_credito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+
+				nota_credito_obj.Prefijo = pref.Value.ToString();
+
+				//if (documento_bd != null && !string.IsNullOrEmpty(documento_bd.StrPrefijo))
+				//	nota_credito_obj.Prefijo = documento_bd.StrPrefijo;
+
 
 				//captura el numero del documento y valida proceso de interoperabilidad
-				if (interopeabilidad)
-				{
-					Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
+				//if (interopeabilidad)
+				//{
+				//	Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
 
-					nota_credito_obj.Documento = Convert.ToInt64(numero_doc.Value);
-				}
-				else
-				{
-					if (string.IsNullOrEmpty(nota_credito_obj.Prefijo))
-					{
-						nota_credito_obj.Documento = Convert.ToInt64(nota_credito_ubl.ID.Value);
-					}
-					else
-					{
-						string documento = nota_credito_ubl.ID.Value;
-						if (documento.Substring(0, nota_credito_obj.Prefijo.Length).Equals(nota_credito_obj.Prefijo))
-						{
-							nota_credito_obj.Documento = Convert.ToInt64(documento.Substring(nota_credito_obj.Prefijo.Length));
-						}
-					}
-				}
+				//	int cant_num = numero_doc.Value.Count();
+
+				//	Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
+
+				//	nota_credito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+
+				//	nota_credito_obj.Prefijo = pref.Value.ToString();
+				//}
+				//else
+				//{
+				//	if (string.IsNullOrEmpty(nota_credito_obj.Prefijo))
+				//	{
+				//		nota_credito_obj.Documento = Convert.ToInt64(nota_credito_ubl.ID.Value);
+				//	}
+				//	else
+				//	{
+				//		string documento = nota_credito_ubl.ID.Value;
+				//		if (documento.Substring(0, nota_credito_obj.Prefijo.Length).Equals(nota_credito_obj.Prefijo))
+				//		{
+				//			nota_credito_obj.Documento = Convert.ToInt64(documento.Substring(nota_credito_obj.Prefijo.Length));
+				//		}
+				//	}
+				//}
 				//Capturo la informacion del encabezado del documento
 				if (nota_credito_ubl.UUID != null)
 					nota_credito_obj.Cufe = nota_credito_ubl.UUID.Value;
@@ -128,47 +144,59 @@ namespace HGInetUBLv2_1
 
 				if (!interopeabilidad)
 				{
+
+
+					nota_credito_obj.Moneda = nota_credito_ubl.DocumentCurrencyCode.Value;
+
+					//Valida si trae mas notas para validar los campos
+					if (nota_credito_ubl.Note != null && nota_credito_ubl.Note.Length > 1)
+						if (nota_credito_ubl.Note[1] != null)
+							nota_credito_obj.Nota = nota_credito_ubl.Note[1].Value;
+						else
+							nota_credito_obj.Nota = string.Empty;
+					nota_credito_obj.Notas = new List<string>();
+
 					//valida las notas para llenar los campos del pdf
-					Formato documento_formato = new Formato();
-					List<FormatoCampo> lista_campos = new List<FormatoCampo>();
+					//Formato documento_formato = new Formato();
+					//List<FormatoCampo> lista_campos = new List<FormatoCampo>();
 
-					try
-					{
+					//try
+					//{
 
-						if (nota_credito_ubl.Note[0].Value != null)
-						{
-							//Deserializa la posición 1 y las convierte en FormatoCampo
-							dynamic jsonObj = JsonConvert.DeserializeObject(nota_credito_ubl.Note[0].Value);
+					//	if (nota_credito_ubl.Note[0].Value != null)
+					//	{
+					//		//Deserializa la posición 1 y las convierte en FormatoCampo
+					//		dynamic jsonObj = JsonConvert.DeserializeObject(nota_credito_ubl.Note[0].Value);
 
-							if (jsonObj != null)
-							{
-								documento_formato.Codigo = jsonObj.Codigo;
+					//		if (jsonObj != null)
+					//		{
+					//			documento_formato.Codigo = jsonObj.Codigo;
 
-								if (jsonObj.CamposPredeterminados != null)
-								{
-									foreach (var obj in jsonObj.CamposPredeterminados)
-									{
-										FormatoCampo campo = new FormatoCampo();
-										campo.Descripcion = obj.Descripcion;
-										campo.Ubicacion = obj.Ubicacion;
-										campo.Valor = obj.Valor;
+					//			if (jsonObj.CamposPredeterminados != null)
+					//			{
+					//				foreach (var obj in jsonObj.CamposPredeterminados)
+					//				{
+					//					FormatoCampo campo = new FormatoCampo();
+					//					campo.Descripcion = obj.Descripcion;
+					//					campo.Ubicacion = obj.Ubicacion;
+					//					campo.Valor = obj.Valor;
 
-										lista_campos.Add(campo);
-									}
-								}
-							}
-						}
-					}
-					catch (Exception)
-					{
-						nota_credito_obj.Notas.Add(nota_credito_ubl.Note[0].Value);
-					}
+					//					lista_campos.Add(campo);
+					//				}
+					//			}
+					//		}
+					//	}
+					//}
+					//catch (Exception)
+					//{
+					//	nota_credito_obj.Notas.Add(nota_credito_ubl.Note[0].Value);
+					//}
 
-					documento_formato.CamposPredeterminados = lista_campos;
+					//documento_formato.CamposPredeterminados = lista_campos;
 
-					nota_credito_obj.DocumentoFormato = documento_formato;
-					if (nota_credito_ubl.Note.Count() > 1 && (nota_credito_ubl.Note[1].Value != null))
-						nota_credito_obj.Nota = nota_credito_ubl.Note[1].Value;
+					//nota_credito_obj.DocumentoFormato = documento_formato;
+					//if (nota_credito_ubl.Note.Count() > 1 && (nota_credito_ubl.Note[1].Value != null))
+					//	nota_credito_obj.Nota = nota_credito_ubl.Note[1].Value;
 				}
 
 				#region Datos del Adquiriente

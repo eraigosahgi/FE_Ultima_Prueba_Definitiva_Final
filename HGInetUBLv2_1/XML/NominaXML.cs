@@ -42,9 +42,9 @@ namespace HGInetUBLv2_1
 
 				numero_documento = string.Format("{0}{1}", numero_documento, documento.Documento.ToString());
 				nomina.NumeroSecuenciaXML = new NominaIndividualTypeNumeroSecuenciaXML();
-				nomina.NumeroSecuenciaXML.Numero = documento.Documento.ToString();
+				nomina.NumeroSecuenciaXML.Numero = numero_documento;
 				nomina.NumeroSecuenciaXML.Prefijo = documento.Prefijo;
-				nomina.NumeroSecuenciaXML.Consecutivo = numero_documento;
+				nomina.NumeroSecuenciaXML.Consecutivo = documento.Documento.ToString();
 
 				nomina.NumeroSecuenciaXML.CodigoTrabajador = documento.DatosTrabajador.CodigoTrabajador;
 
@@ -155,7 +155,7 @@ namespace HGInetUBLv2_1
 				if (texto_xml.Contains("xmlns:schemaLocation"))
 				{
 					texto_xml = texto_xml.Replace("xmlns:schemaLocation", "xsi:schemaLocation");
-					texto_xml = texto_xml.Replace("xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"", "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+					texto_xml = texto_xml.Replace("xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"", "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" SchemaLocation=\"\" ");
 					txt_xml = new StringBuilder(texto_xml);
 				}
 

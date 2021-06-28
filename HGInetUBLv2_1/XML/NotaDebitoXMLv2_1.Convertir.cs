@@ -30,30 +30,38 @@ namespace HGInetUBLv2_1
 			{
 				NotaDebito nota_debito_obj = new NotaDebito();
 
-				nota_debito_obj.Prefijo = documento_bd.StrPrefijo;
+				Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
 
-				//captura el numero del documento y valida proceso de interoperabilidad
-				if (interopeabilidad)
-				{
-					Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
+				Match pref = Regex.Match(nota_debito_ubl.ID.Value, "\\D+");
 
-					nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
-				}
-				else
-				{
-					if (string.IsNullOrEmpty(nota_debito_obj.Prefijo))
-					{
-						nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
-					}
-					else
-					{
-						string documento = nota_debito_ubl.ID.Value;
-						if (documento.Substring(0, nota_debito_obj.Prefijo.Length).Equals(nota_debito_obj.Prefijo))
-						{
-							nota_debito_obj.Documento = Convert.ToInt64(documento.Substring(nota_debito_obj.Prefijo.Length));
-						}
-					}
-				}
+				nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+
+				nota_debito_obj.Prefijo = pref.Value.ToString();
+
+				//nota_debito_obj.Prefijo = documento_bd.StrPrefijo;
+
+				////captura el numero del documento y valida proceso de interoperabilidad
+				//if (interopeabilidad)
+				//{
+				//	Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
+
+				//	nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+				//}
+				//else
+				//{
+				//	if (string.IsNullOrEmpty(nota_debito_obj.Prefijo))
+				//	{
+				//		nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
+				//	}
+				//	else
+				//	{
+				//		string documento = nota_debito_ubl.ID.Value;
+				//		if (documento.Substring(0, nota_debito_obj.Prefijo.Length).Equals(nota_debito_obj.Prefijo))
+				//		{
+				//			nota_debito_obj.Documento = Convert.ToInt64(documento.Substring(nota_debito_obj.Prefijo.Length));
+				//		}
+				//	}
+				//}
 				//Capturo la informacion del encabezado del documento
 				if (nota_debito_ubl.UUID != null)
 					nota_debito_obj.Cufe = nota_debito_ubl.UUID.Value;
@@ -130,47 +138,57 @@ namespace HGInetUBLv2_1
 
 				if (!interopeabilidad)
 				{
+					nota_debito_obj.Moneda = nota_debito_ubl.DocumentCurrencyCode.Value;
+
+					//Valida si trae mas notas para validar los campos
+					if (nota_debito_ubl.Note != null && nota_debito_ubl.Note.Length > 1)
+						if (nota_debito_ubl.Note[1] != null)
+							nota_debito_obj.Nota = nota_debito_ubl.Note[1].Value;
+						else
+							nota_debito_obj.Nota = string.Empty;
+					nota_debito_obj.Notas = new List<string>();
+
 					//valida las notas para llenar los campos del pdf
-					Formato documento_formato = new Formato();
-					List<FormatoCampo> lista_campos = new List<FormatoCampo>();
+					//Formato documento_formato = new Formato();
+					//List<FormatoCampo> lista_campos = new List<FormatoCampo>();
 
-					try
-					{
+					//try
+					//{
 
-						if (nota_debito_ubl.Note[0].Value != null)
-						{
-							//Deserializa la posición 1 y las convierte en FormatoCampo
-							dynamic jsonObj = JsonConvert.DeserializeObject(nota_debito_ubl.Note[0].Value);
+					//	if (nota_debito_ubl.Note[0].Value != null)
+					//	{
+					//		//Deserializa la posición 1 y las convierte en FormatoCampo
+					//		dynamic jsonObj = JsonConvert.DeserializeObject(nota_debito_ubl.Note[0].Value);
 
-							if (jsonObj != null)
-							{
-								documento_formato.Codigo = jsonObj.Codigo;
+					//		if (jsonObj != null)
+					//		{
+					//			documento_formato.Codigo = jsonObj.Codigo;
 
-								if (jsonObj.CamposPredeterminados != null)
-								{
-									foreach (var obj in jsonObj.CamposPredeterminados)
-									{
-										FormatoCampo campo = new FormatoCampo();
-										campo.Descripcion = obj.Descripcion;
-										campo.Ubicacion = obj.Ubicacion;
-										campo.Valor = obj.Valor;
+					//			if (jsonObj.CamposPredeterminados != null)
+					//			{
+					//				foreach (var obj in jsonObj.CamposPredeterminados)
+					//				{
+					//					FormatoCampo campo = new FormatoCampo();
+					//					campo.Descripcion = obj.Descripcion;
+					//					campo.Ubicacion = obj.Ubicacion;
+					//					campo.Valor = obj.Valor;
 
-										lista_campos.Add(campo);
-									}
-								}
-							}
-						}
-					}
-					catch (Exception)
-					{
-						nota_debito_obj.Notas.Add(nota_debito_ubl.Note[0].Value);
-					}
+					//					lista_campos.Add(campo);
+					//				}
+					//			}
+					//		}
+					//	}
+					//}
+					//catch (Exception)
+					//{
+					//	nota_debito_obj.Notas.Add(nota_debito_ubl.Note[0].Value);
+					//}
 
-					documento_formato.CamposPredeterminados = lista_campos;
+					//documento_formato.CamposPredeterminados = lista_campos;
 
-					nota_debito_obj.DocumentoFormato = documento_formato;
-					if (nota_debito_ubl.Note.Count() > 1 && (nota_debito_ubl.Note[1].Value != null))
-						nota_debito_obj.Nota = nota_debito_ubl.Note[1].Value;
+					//nota_debito_obj.DocumentoFormato = documento_formato;
+					//if (nota_debito_ubl.Note.Count() > 1 && (nota_debito_ubl.Note[1].Value != null))
+					//	nota_debito_obj.Nota = nota_debito_ubl.Note[1].Value;
 				}
 
 				#region Datos del Adquiriente
