@@ -63,6 +63,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public int IntTipoOperacion { get; set; }
         public string StrLineaNegocio { get; set; }
         public bool IntProcesadoERP { get; set; }
+        public decimal IntValorPagar { get; set; }
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }
