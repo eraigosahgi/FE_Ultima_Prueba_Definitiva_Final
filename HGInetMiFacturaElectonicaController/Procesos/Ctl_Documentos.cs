@@ -1863,18 +1863,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			devengados_cal = ValidarDevengados(documento.DatosDevengados, dias_laborales_periodo, documento.DatosTrabajador.Sueldo);
 
-			if (devengados_cal != decimal.Round(documento.DevengadosTotal, MidpointRounding.AwayFromZero))
+			if (!Numero.Tolerancia(devengados_cal, documento.DevengadosTotal, 2))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DevengadosTotal", documento.DevengadosTotal, devengados_cal));
 
 			//Se valida las deducciones del documento
 			deducciones_cal = ValidarDeducciones(documento.DatosDeducciones);
 
-			if (deducciones_cal != decimal.Round(documento.DeduccionesTotal, MidpointRounding.AwayFromZero))
+			if (!Numero.Tolerancia(deducciones_cal, documento.DeduccionesTotal, 2))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DeduccionesTotal", documento.DeduccionesTotal, deducciones_cal));
 
 			totalcomprobante_cal = devengados_cal - deducciones_cal;
 
-			if (totalcomprobante_cal != decimal.Round(documento.ComprobanteTotal, MidpointRounding.AwayFromZero))
+			if (!Numero.Tolerancia(totalcomprobante_cal, documento.ComprobanteTotal, 2))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "ComprobanteTotal", documento.ComprobanteTotal, totalcomprobante_cal));
 
 
@@ -1887,7 +1887,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			int dias_incapacidad = 0;
 			int dias_licencia = 0;
 			int dias_trabajados = 0;
-			decimal valor_dia = decimal.Round(salario_empleado / dias_laborales_periodo, 2, MidpointRounding.AwayFromZero);
+			decimal valor_dia = decimal.Round(salario_empleado / dias_laborales_periodo, 0, MidpointRounding.AwayFromZero);
 
 			if (devengado == null)
 				throw new Exception("No se encontró devengados en el documento.");
@@ -1919,9 +1919,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (item.Cantidad <= 0)
 						throw new ApplicationException(string.Format("La Cantidad de Horas con valor {0} identificada con el código {1} del devengado no está bien formado", item.Cantidad, tipo_hora));
 
-					decimal valor_horas = (salario_empleado / 240) * (item.Porcentaje * item.Cantidad);
+					//decimal val_hora_unit = (salario_empleado / 240);
 
-					if (!valor_horas.Equals(item.Valor))
+					//decimal valor_horas = 0;
+
+					//if (tipo_hora.Equals(TipoHoraNomina.ExtraDiurna) || tipo_hora.Equals(TipoHoraNomina.ExtraNocturna) || tipo_hora.Equals(TipoHoraNomina.ExtraDominicalesFestivasNocturnas) || tipo_hora.Equals(TipoHoraNomina.DominicalesFestivas))
+					//{
+					//	valor_horas = decimal.Round((val_hora_unit + (val_hora_unit * (item.Porcentaje / 100))) * item.Cantidad, 0 , MidpointRounding.AwayFromZero);
+					//}
+					//else
+					//{
+					//	valor_horas = decimal.Round(((salario_empleado / 240) * (item.Porcentaje / 100)) * item.Cantidad, 0, MidpointRounding.AwayFromZero);
+					//}
+
+					if (item.Valor < 0)
 						throw new ApplicationException(string.Format("El Valor de las Horas con valor {0} identificada con el código {1} del devengado no está bien formado", item.Valor, tipo_hora));
 
 					valor_devengado += item.Valor;
@@ -2116,7 +2127,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (!devengado.DiasTrabajados.Equals(dias_trabajados))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} de los devengados no está bien formado, según el resultado de dias laborales del mes menos incapacidades y menos licencias debe ser un valor de {2}", "DiasTrabajados", devengado.DiasTrabajados, dias_trabajados));
 
-			if (devengado.SueldoTrabajado.Equals(dias_trabajados * valor_dia))
+			if (!Numero.Tolerancia(devengado.SueldoTrabajado,(dias_trabajados * valor_dia), 10))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} del devengado no está bien formado", "SueldoTrabajado", devengado.SueldoTrabajado));
 
 			decimal Comisiones = devengado.Comisiones != null ? devengado.Comisiones.Sum() : 0;

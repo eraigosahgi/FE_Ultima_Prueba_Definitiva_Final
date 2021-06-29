@@ -315,6 +315,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public Salud SectorSalud { get; set; }
 
+		/// <summary>
+		/// Valor a mostrar para hacer el pago.
+		/// </summary>
+		public decimal ValorPagar { get; set; }
+
 
 		#endregion
 

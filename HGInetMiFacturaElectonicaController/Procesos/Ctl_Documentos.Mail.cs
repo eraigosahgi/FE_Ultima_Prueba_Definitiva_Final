@@ -64,8 +64,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
-				string nombre_comercial = string.IsNullOrEmpty(documento_obj.DatosObligado.NombreComercial) ? documento_obj.DatosObligado.RazonSocial : documento_obj.DatosObligado.NombreComercial;
-				mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, nombre_comercial);
+				if (documentoBd.IntDocTipo < TipoDocumento.Factura.GetHashCode())
+				{
+					string nombre_comercial = string.IsNullOrEmpty(documento_obj.DatosObligado.NombreComercial) ? documento_obj.DatosObligado.RazonSocial : documento_obj.DatosObligado.NombreComercial;
+					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, nombre_comercial);
+				}
+				else
+				{
+					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosEmpleador.Telefono, documento_obj.DatosTrabajador.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, obligado.StrRazonSocial);
+				}
 				
 				//Actualiza la respuesta del envio del correo en TblDocumentos
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();

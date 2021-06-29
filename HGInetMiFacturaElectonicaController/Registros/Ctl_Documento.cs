@@ -1937,7 +1937,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 			string ambiente_dian = string.Empty;
 
-			if (plataforma_datos.RutaPublica.Contains("app"))
+			if (facturador.IntHabilitacion.Equals(Habilitacion.Produccion.GetHashCode()))
 				ambiente_dian = "1";
 			else
 				ambiente_dian = "2";
@@ -2079,6 +2079,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					else
 					{
 						tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
+						tbl_documento.IntValorPagar = documento_obj.ValorPagar;
 					}
 
 					tbl_documento.DatFechaDocumento = Convert.ToDateTime(documento_obj.Fecha.ToString(Fecha.formato_fecha_hginet));
@@ -3653,6 +3654,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					{
 						documento_obj = documento_ser.DatosNotaDebito;
 					}
+					else if (doc.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
+					{
+						documento_obj = documento_ser.DatosNomina;
+					}
 				}
 				else
 				{
@@ -3665,22 +3670,40 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 				string ambiente_dian = string.Empty;
 
-				if (plataforma_datos.RutaPublica.Contains("app"))
+				if (facturador.IntHabilitacion.Equals(Habilitacion.Produccion.GetHashCode()))
 					ambiente_dian = "1";
 				else
 					ambiente_dian = "2";
 
 				TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(doc.IntDocTipo);
-
-				string nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
-
+				
 				// ruta física del xml
 				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador.StrIdSeguridad.ToString());
 				carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
 
+				string nombre_archivo = string.Empty;
+				Tercero obligado_empleador = new Tercero();
+				Tercero adquiriente_tratrajador = new Tercero();
 
 				//Convierte el objeto en archivo XML-UBL
-				FacturaE_Documento resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad, documento_obj.DatosObligado, documento_obj.DatosAdquiriente, ambiente_dian, doc);
+				FacturaE_Documento resultado = null;
+
+				if (doc.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode())
+				{
+					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
+
+					resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad, documento_obj.DatosObligado, documento_obj.DatosAdquiriente, ambiente_dian, doc);
+				}
+				else if (doc.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
+				{
+					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
+					Ctl_Empresa emp = new Ctl_Empresa();
+					obligado_empleador = Ctl_Empresa.Convertir(facturador);
+					adquiriente_tratrajador = emp.ConvertirTrabajador(documento_obj.DatosTrabajador);
+
+					resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad, obligado_empleador, adquiriente_tratrajador, ambiente_dian, doc);
+
+				}
 				resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
 				resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
 				resultado.IdSeguridadPeticion = new Guid();
