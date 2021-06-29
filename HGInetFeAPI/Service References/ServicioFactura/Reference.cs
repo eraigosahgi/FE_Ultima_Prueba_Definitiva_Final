@@ -174,6 +174,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private decimal ValorIvaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorPagarField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorReteFuenteField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -844,6 +847,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.ValorIvaField.Equals(value) != true)) {
                     this.ValorIvaField = value;
                     this.RaisePropertyChanged("ValorIva");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorPagar {
+            get {
+                return this.ValorPagarField;
+            }
+            set {
+                if ((this.ValorPagarField.Equals(value) != true)) {
+                    this.ValorPagarField = value;
+                    this.RaisePropertyChanged("ValorPagar");
                 }
             }
         }

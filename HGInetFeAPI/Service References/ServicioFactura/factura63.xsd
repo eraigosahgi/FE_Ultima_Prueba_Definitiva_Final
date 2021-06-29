@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:61466/wcf/factura.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" />
-  <xs:import schemaLocation="http://localhost:61466/wcf/factura.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="http://localhost:61466/wcf/factura.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:import schemaLocation="http://localhost:61466/wcf/factura.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" />
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
   <xs:complexType name="ArrayOfFactura">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="Factura" nillable="true" type="tns:Factura" />
@@ -62,6 +62,7 @@
       <xs:element minOccurs="0" name="ValorDescuentoDet" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorImpuestoConsumo" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorIva" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ValorPagar" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorReteFuente" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorReteIca" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorReteIva" type="xs:decimal" />

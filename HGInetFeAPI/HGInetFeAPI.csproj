@@ -189,24 +189,24 @@
     <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioFactura\factura.wsdl" />
-    <None Include="Service References\ServicioFactura\factura.xsd">
+    <None Include="Service References\ServicioFactura\factura2.wsdl" />
+    <None Include="Service References\ServicioFactura\factura21.wsdl" />
+    <None Include="Service References\ServicioFactura\factura6.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura1.wsdl" />
-    <None Include="Service References\ServicioFactura\factura1.xsd">
+    <None Include="Service References\ServicioFactura\factura61.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura2.xsd">
+    <None Include="Service References\ServicioFactura\factura62.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura3.xsd">
+    <None Include="Service References\ServicioFactura\factura63.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura4.xsd">
+    <None Include="Service References\ServicioFactura\factura64.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioFactura\factura5.xsd">
+    <None Include="Service References\ServicioFactura\factura65.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPResponse.datasource">
@@ -598,9 +598,6 @@
     <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.disco" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioFactura\factura.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioFactura\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -611,6 +608,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\factura1.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -93,6 +93,9 @@ namespace HGInetFeAPI.ServicioNomina {
         private HGInetFeAPI.ServicioNomina.TasaCambio TrmField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool VariacionNominaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string VersionAplicativoField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -400,6 +403,19 @@ namespace HGInetFeAPI.ServicioNomina {
                 if ((object.ReferenceEquals(this.TrmField, value) != true)) {
                     this.TrmField = value;
                     this.RaisePropertyChanged("Trm");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool VariacionNomina {
+            get {
+                return this.VariacionNominaField;
+            }
+            set {
+                if ((this.VariacionNominaField.Equals(value) != true)) {
+                    this.VariacionNominaField = value;
+                    this.RaisePropertyChanged("VariacionNomina");
                 }
             }
         }
@@ -832,6 +848,9 @@ namespace HGInetFeAPI.ServicioNomina {
         private System.Collections.Generic.List<decimal> PagosTercerosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ReintegroField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal SueldoTrabajadoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1106,6 +1125,19 @@ namespace HGInetFeAPI.ServicioNomina {
                 if ((object.ReferenceEquals(this.PagosTercerosField, value) != true)) {
                     this.PagosTercerosField = value;
                     this.RaisePropertyChanged("PagosTerceros");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Reintegro {
+            get {
+                return this.ReintegroField;
+            }
+            set {
+                if ((this.ReintegroField.Equals(value) != true)) {
+                    this.ReintegroField = value;
+                    this.RaisePropertyChanged("Reintegro");
                 }
             }
         }

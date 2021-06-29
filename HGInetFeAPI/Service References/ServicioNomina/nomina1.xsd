@@ -34,6 +34,7 @@
       <xs:element minOccurs="0" name="PeriodoNomina" type="xs:int" />
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Trm" nillable="true" type="tns:TasaCambio" />
+      <xs:element minOccurs="0" name="VariacionNomina" type="xs:boolean" />
       <xs:element minOccurs="0" name="VersionAplicativo" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
@@ -133,6 +134,7 @@
       <xs:element minOccurs="0" name="PagoCesantias" nillable="true" type="tns:Cesantias" />
       <xs:element minOccurs="0" name="PagoPrima" nillable="true" type="tns:Prima" />
       <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="PagosTerceros" nillable="true" type="q8:ArrayOfdecimal" />
+      <xs:element minOccurs="0" name="Reintegro" type="xs:decimal" />
       <xs:element minOccurs="0" name="SueldoTrabajado" type="xs:decimal" />
       <xs:element minOccurs="0" name="Teletrabajo" type="xs:decimal" />
       <xs:element minOccurs="0" name="Vacaciones" nillable="true" type="tns:ArrayOfNovedadGeneral" />
