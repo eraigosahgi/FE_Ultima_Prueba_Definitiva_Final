@@ -16,6 +16,7 @@ namespace HGInetMiFacturaElectonicaData.Objetos
 		public DateTime DatFechaDocumento { get; set; }
 		public DateTime DatFechaVencDocumento { get; set; }
 		public decimal IntVlrTotal { get; set; }
+		public decimal IntValorPagar { get; set; }
 		public decimal IntSubTotal { get; set; }
 		public decimal IntNeto { get; set; }
 		public short EstadoFactura { get; set; }

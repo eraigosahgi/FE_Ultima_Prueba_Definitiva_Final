@@ -166,6 +166,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							 FacturaCancelada = (datos.IntIdEstadoPago.Value != null) ? datos.IntIdEstadoPago.Value : (short)1,
 							 PagosParciales = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
 							 IdComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigId.ToString() : datos.TblEmpresasResoluciones.ComercioConfigId.ToString(),
+							 IntValorPagar = datos.IntValorPagar
 						 }).ToList();
 
 
@@ -266,7 +267,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 //PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
 								 PagosParciales = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
 								 IdComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigId.ToString() : datos.TblEmpresasResoluciones.ComercioConfigId.ToString(),
-								 DescripComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigDescrip.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigDescrip.ToString() : datos.TblEmpresasResoluciones.ComercioConfigDescrip.ToString()
+								 DescripComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigDescrip.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigDescrip.ToString() : datos.TblEmpresasResoluciones.ComercioConfigDescrip.ToString(),
+								 IntValorPagar = datos.IntValorPagar
 							 }).ToList();
 			}
 			else
@@ -316,7 +318,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 EnvioMail = datos.IntEstadoEnvio,
 								 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
 								 FacturaCancelada = datos.IntIdEstado,
-								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
+								 PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,								 
+								 IntValorPagar = datos.IntValorPagar
 							 }).ToList();
 
 			}
@@ -793,7 +796,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 FacturaCancelada = datos.IntIdEstado,
 								 //PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
 								 PagosParciales = (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0,// (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
-								 NumResolucion = datos.StrNumResolucion
+								 NumResolucion = datos.StrNumResolucion,
+								 IntValorPagar = datos.IntValorPagar
 							 }).ToList();
 
 
@@ -848,7 +852,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 FacturaCancelada = datos.IntIdEstado,
 								 //PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
 								 PagosParciales = (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0,// (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
-								 NumResolucion = datos.StrNumResolucion
+								 NumResolucion = datos.StrNumResolucion,
+								 IntValorPagar = datos.IntValorPagar
 							 }).ToList();
 
 			}

@@ -54,7 +54,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpGet]
 		[Route("api/ObtenerDocumentosAdquirientes")]
-		public IHttpActionResult ObtenerDocumentosAdquirientes(string codigo_facturador,string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_filtro_fecha)
+		public IHttpActionResult ObtenerDocumentosAdquirientes(string codigo_facturador, string codigo_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_filtro_fecha)
 		{
 			try
 			{
@@ -143,7 +143,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 																																	  //Telefono = d.TblEmpresasFacturador.StrTelefono,
 					d.poseeIdComercioPSE,
 					d.poseeIdComercioTC,
-					Saldo = (d.poseeIdComercio == 1) ? Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal) : 0
+					Saldo = (d.poseeIdComercio == 1) ? Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, (d.IntValorPagar == 0) ? d.IntVlrTotal : d.IntValorPagar) : 0
 				});
 
 				return Ok(retorno);
@@ -247,7 +247,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.poseeIdComercioTC,
 					d.IdComercio,
 					d.DescripComercio,
-					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal)
+					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, (d.IntValorPagar == 0) ? d.IntVlrTotal : d.IntValorPagar)
 				});
 
 				return Ok(retorno);
@@ -1448,8 +1448,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					DocTipo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					IntNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.IntNumero),
 					FechaDocumento = d.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet),
-					Monto = d.IntVlrTotal,
-					//Validamos si la resolucion tiene configuracion para entonces validar si maneja pagos parciales, si no maneja pagos parciales, entonces se busca la configuración de la empresa
+					Monto = (d.IntValorPagar == 0) ? d.IntVlrTotal : d.IntValorPagar,//d.IntVlrTotal,
+																					 //Validamos si la resolucion tiene configuracion para entonces validar si maneja pagos parciales, si no maneja pagos parciales, entonces se busca la configuración de la empresa
 					PagosParciales = (string.IsNullOrEmpty(d.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? d.TblEmpresasFacturador.IntManejaPagoE : (d.TblEmpresasResoluciones.PermiteParciales == 1) ? true : false,
 					//Detalle del pago
 					Pagos = d.TblPagosDetalles.Select(p => new
@@ -2210,7 +2210,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					IntNumero = d.NumeroDocumento,
 					d.IntVlrTotal,
 					d.FacturaCancelada,
-					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntVlrTotal)
+					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, (d.IntValorPagar == 0) ? d.IntVlrTotal : d.IntValorPagar)
 				}).Where(x => x.Saldo > 0).Where(x => x.FacturaCancelada != 1000);
 
 				return Request.CreateResponse(HttpStatusCode.OK, retorno);
