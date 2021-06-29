@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace HGInetUBLv2_1
 {
@@ -36,6 +37,22 @@ namespace HGInetUBLv2_1
 				nota_credito_obj.Documento = Convert.ToInt64(numero_doc.Value);
 
 				nota_credito_obj.Prefijo = pref.Value.ToString();
+
+
+				//Se obtiene el proveedor Emisor del documento
+				foreach (XmlNode item in nota_credito_ubl.UBLExtensions[0].ExtensionContent.ChildNodes)
+				{
+					if (item.LocalName.Equals("SoftwareProvider"))
+					{
+						foreach (XmlNode item_child in item.ChildNodes)
+						{
+							if (item_child.LocalName.Equals("ProviderID"))
+							{
+								nota_credito_obj.IdentificacionProveedor = item_child.InnerText;
+							}
+						}
+					}
+				}
 
 				//if (documento_bd != null && !string.IsNullOrEmpty(documento_bd.StrPrefijo))
 				//	nota_credito_obj.Prefijo = documento_bd.StrPrefijo;

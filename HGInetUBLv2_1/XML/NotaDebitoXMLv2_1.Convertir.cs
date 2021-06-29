@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace HGInetUBLv2_1
 {
@@ -37,6 +38,21 @@ namespace HGInetUBLv2_1
 				nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
 
 				nota_debito_obj.Prefijo = pref.Value.ToString();
+
+				//Se obtiene el proveedor Emisor del documento
+				foreach (XmlNode item in nota_debito_ubl.UBLExtensions[0].ExtensionContent.ChildNodes)
+				{
+					if (item.LocalName.Equals("SoftwareProvider"))
+					{
+						foreach (XmlNode item_child in item.ChildNodes)
+						{
+							if (item_child.LocalName.Equals("ProviderID"))
+							{
+								nota_debito_obj.IdentificacionProveedor = item_child.InnerText;
+							}
+						}
+					}
+				}
 
 				//nota_debito_obj.Prefijo = documento_bd.StrPrefijo;
 
