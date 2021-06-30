@@ -64,12 +64,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
-				if (documentoBd.IntDocTipo < TipoDocumento.Factura.GetHashCode())
+				if (documentoBd.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode())
 				{
 					string nombre_comercial = string.IsNullOrEmpty(documento_obj.DatosObligado.NombreComercial) ? documento_obj.DatosObligado.RazonSocial : documento_obj.DatosObligado.NombreComercial;
 					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, nombre_comercial);
 				}
-				else
+				else if (documentoBd.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
 				{
 					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosEmpleador.Telefono, documento_obj.DatosTrabajador.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, obligado.StrRazonSocial);
 				}
