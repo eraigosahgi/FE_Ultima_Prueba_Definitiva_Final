@@ -1073,7 +1073,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						}
 
 						//Validamos Saldo Pendiente del documento
-						Monto_Pendiente = ConsultaSaldoDocumentoPM(datos_documento.StrIdSeguridad, (datos_documento.IntValorPagar == 0) ? datos_documento.IntVlrTotal : datos_documento.IntValorPagar);
+						Monto_Pendiente = ConsultaSaldoDocumentoPM(datos_documento.StrIdSeguridad,  datos_documento.IntValorPagar);
 
 						//Si la variable de pago viene sin valor
 						if (item.Valor <= 0)

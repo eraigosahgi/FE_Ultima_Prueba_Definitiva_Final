@@ -46,7 +46,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 						///Pago Multiple
 						$http.get('/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total).then(function (response) {
 
-							
+
 
 							//Ruta servicio
 							var RutaServicio = $('#Hdf_RutaPagos').val() + "?IdSeguridad=";
@@ -243,20 +243,22 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
                 , columns: [
 				{
 					caption: "Seleccionar",
-					cssClass: "col-md-1 col-xs-2",
+					width: "auto",
 					cellTemplate: function (container, options) {
-						$('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
-							name: "chkSaldo_" + options.data.StrIdSeguridad,
-							onValueChanged: function (data) {
-								validarSeleccion();
-							}
-						})
-						.appendTo(container);
+						if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo > 0) {
+							$('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
+								name: "chkSaldo_" + options.data.StrIdSeguridad,
+								onValueChanged: function (data) {
+									validarSeleccion();
+								}
+							})
+							.appendTo(container);
+						}
+
 					},
 				},
                     {
                     	caption: "  Lista de Archivos",
-                    	cssClass: "col-md-1 col-xs-2",
                     	width: "auto",
                     	cellTemplate: function (container, options) {
                     		var visible_pdf = "style='pointer-events:auto;cursor: not-allowed;'";
@@ -301,25 +303,25 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 					{
 						caption: "IdComercio",
 						dataField: "IdComercio",
-						cssClass: "col-md-1 col-xs-3",
-						visible: false
+						//cssClass: "col-md-1 col-xs-3",
+						visible: true
 					},
 					{
 						caption: "DescripComercio",
 						dataField: "DescripComercio",
-						cssClass: "col-md-1 col-xs-3",
+						visible: false
 					},
                     {
                     	caption: "Documento",
                     	dataField: "NumeroDocumento",
-                    	cssClass: "col-md-1 col-xs-3",
+                    	//cssClass: "col-md-1 col-xs-3",
                     },
                     {
                     	caption: "Fecha Documento",
                     	dataField: "DatFechaDocumento",
                     	dataType: "date",
                     	format: "yyyy-MM-dd ",
-                    	cssClass: "col-md-1 col-xs-3",
+                    	//cssClass: "col-md-1 col-xs-3",
                     	validationRules: [{
                     		type: "required",
                     		message: "El campo Fecha es obligatorio."
@@ -339,7 +341,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
                     {
                     	caption: "Valor Total",
                     	dataField: "IntVlrTotal",
-                    	cssClass: "col-md-1 col-xs-1",
+                    	//cssClass: "col-md-1 col-xs-1",
                     	width: '12%',
                     	Type: Number,
                     }
@@ -375,7 +377,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
                         {
                         	dataField: "EstadoFactura",
                         	caption: "Estado",
-                        	cssClass: "hidden-xs col-md-1",
+                        	//cssClass: "hidden-xs col-md-1",
                         	cellTemplate: function (container, options) {
 
                         		$("<div>")
@@ -386,12 +388,12 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 
                        {
                        	caption: "Tipo Documento",
-                       	cssClass: "hidden-xs col-md-1",
+                       	//cssClass: "hidden-xs col-md-1",
                        	dataField: "tipodoc"
                        },
                       {
                       	caption: "Estado Acuse",
-                      	cssClass: "hidden-xs col-md-1",
+                      	//cssClass: "hidden-xs col-md-1",
                       	dataField: "EstadoAcuse",
                       	cellTemplate: function (container, options) {
 
@@ -408,7 +410,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
                       {
                       	dataField: "",
                       	caption: "Acuse",
-                      	cssClass: "col-md-1 col-xs-2",
+                      	//cssClass: "col-md-1 col-xs-2",
                       	cellTemplate: function (container, options) {
 
                       		var Mostrar_Acuse;
@@ -427,8 +429,8 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
                 	caption: "Saldo",
                 	dataField: "Saldo",
                 	visible: false,
-                	cssClass: "col-md-1 col-xs-2",
-                	//disabled: !data.habilitar_documento,
+                	//cssClass: "col-md-1 col-xs-2",
+                	////disabled: !data.habilitar_documento,
                 	cellTemplate: function (container, options) {
 
                 		$('<div id="txtSaldo_' + options.data.StrIdSeguridad + '"></div>').dxNumberBox({
@@ -468,7 +470,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
                 },
 					{
 						///Opción de pago
-						cssClass: "col-md-1 ",
+						//cssClass: "col-md-1 ",
 						caption: "Pago",
 						width: "120px",
 						alignment: "center",
@@ -490,8 +492,12 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 
 								}
 
-								if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCancelada == 100) {//aqui se debe colocar el status que indica el pago de la factura                            
-									imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Ver</a>"
+								//if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCancelada == 100) {//aqui se debe colocar el status que indica el pago de la factura                            
+								//	imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Ver</a>"
+								//}
+
+								if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo <= 0) {//aqui se debe colocar el status que indica el pago de la factura                            
+									imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' class='btn btn-default' >Ver</a>"
 								}
 
 								$("<div>")
@@ -651,7 +657,14 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 		var comercio_actual = "";
 		for (var i = 0; i < data.length; i++) {
 
-			var valor = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+			valor = false;
+
+			try {
+				var valor = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+			} catch (e) {
+
+			}
+
 			if (valor) {
 				if (comercio_actual != "") {
 					if (comercio_actual != data[i].IdComercio) {
@@ -680,7 +693,13 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 			for (var i = 0; i < data.length; i++) {
 
 				var valor_seleccionado = 0;
-				var seleccion = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+
+				try {
+					var seleccion = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+				} catch (e) {
+
+				}
+
 				if (seleccion) {
 					lista += (lista) ? ',' : '';
 					valor_seleccionado = $("#txtSaldo_" + data[i].StrIdSeguridad).dxNumberBox("instance").option().value;

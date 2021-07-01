@@ -490,7 +490,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 
                 			}
 
-                			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo == 0) {//aqui se debe colocar el status que indica el pago de la factura                            
+                			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo <= 0) {//aqui se debe colocar el status que indica el pago de la factura                            
                 				imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' class='btn btn-default' >Ver</a>"
                 			}
 
