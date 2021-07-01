@@ -922,8 +922,12 @@ namespace HGInetMiFacturaElectonicaController
 
 						if (doc_tipo == TipoDocumento.Factura && IdPago)
 						{
+							string total_a_pagar = String.Format(@"<tr>
+															<td class=""tg-yzt1"">Total a Pagar:</td>
+															<td class=""tg-3we0"">$ {0}</td>
+													</tr>", String.Format("{0:###,##0.}", documento.IntValorPagar));
 
-							mensaje = mensaje.Replace("{TotalPagar}", String.Format("{0:###,##0.}", documento.IntValorPagar));
+							mensaje = mensaje.Replace("{TotalPagar}", total_a_pagar);
 
 							string ruta_pse = ruta_acuse + "&Zpago=true";
 
@@ -967,7 +971,7 @@ namespace HGInetMiFacturaElectonicaController
 							archivos.Add(adjunto);
 						}*/
 
-						
+
 
 						string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
 
