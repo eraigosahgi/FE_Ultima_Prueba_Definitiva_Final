@@ -860,7 +860,7 @@ namespace HGInetMiFacturaElectonicaController
 					if (file != null)
 					{
 
-						if (empresa_obligado.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+						if (plataforma.RutaPublica.Contains("habilitacion") || plataforma.RutaPublica.Contains("localhost"))
 						{
 							string div_prueba = "<div style='background:#E7F122;cursor:auto;color:#000000;font-family:Arial, sans-serif;font-size:13px;line-height:24px;text-align:left;'><span style ='font-family:Ubuntufont-size,Helvetica,Arial,sans-serif'><b>Este correo electrónico es exclusivo para pruebas y no tiene ninguna validez comercial y/o de soporte.</b></span></p></div>";
 
@@ -923,6 +923,8 @@ namespace HGInetMiFacturaElectonicaController
 						if (doc_tipo == TipoDocumento.Factura && IdPago)
 						{
 
+							mensaje = mensaje.Replace("{TotalPagar}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
+
 							string ruta_pse = ruta_acuse + "&Zpago=true";
 
 							mensaje = mensaje.Replace("{PSETexto}", "o el pago del documento");
@@ -933,6 +935,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						}
 
+						mensaje = mensaje.Replace("{TotalPagar}", "");
 						mensaje = mensaje.Replace("{PSE}", "");
 						mensaje = mensaje.Replace("{PSETexto}", "");
 						mensaje = mensaje.Replace("{ContenidoPagoPSE}", "");
@@ -1724,7 +1727,7 @@ namespace HGInetMiFacturaElectonicaController
 						switch (documento.IntAdquirienteRecibo)
 						{
 							case 1:
-								estado_respuesta = "Acuse";
+								estado_respuesta = "Aprobada"; //"Acuse";
 								break;
 							case 2:
 								estado_respuesta = "Rechazada";

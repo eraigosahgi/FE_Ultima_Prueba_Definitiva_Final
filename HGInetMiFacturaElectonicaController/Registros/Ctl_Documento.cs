@@ -2084,7 +2084,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					else
 					{
 						tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
-						tbl_documento.IntValorPagar = documento_obj.ValorPagar;
+						//Validacion: Si < 0 el valor es 0, si es = 0 es el valor del documento, si es > 0 es el valor a pagar que envian
+						tbl_documento.IntValorPagar = (documento_obj.ValorPagar < 0) ? 0 : (documento_obj.ValorPagar == 0) ? documento_obj.Total : (documento_obj.ValorPagar > 0) ? documento_obj.ValorPagar : 0 ;
 					}
 
 					tbl_documento.DatFechaDocumento = Convert.ToDateTime(documento_obj.Fecha.ToString(Fecha.formato_fecha_hginet));
