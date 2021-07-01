@@ -923,7 +923,7 @@ namespace HGInetMiFacturaElectonicaController
 						if (doc_tipo == TipoDocumento.Factura && IdPago)
 						{
 
-							mensaje = mensaje.Replace("{TotalPagar}", String.Format("{0:###,##0.}", documento.IntVlrTotal));
+							mensaje = mensaje.Replace("{TotalPagar}", String.Format("{0:###,##0.}", documento.IntValorPagar));
 
 							string ruta_pse = ruta_acuse + "&Zpago=true";
 
