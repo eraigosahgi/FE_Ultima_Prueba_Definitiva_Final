@@ -139,7 +139,7 @@ namespace HGInetDIANServicios
 		/// <param name="clave_dian">Clave proporcionada en la plataforma de la Dian</param>
 		/// <param name="ruta_servicio_web">Url del servicio web de la DIAN</param>
 		/// <returns></returns>
-		public static AcuseRecibo EnviarSync_v2(string ruta_zip, string nombre_archivo, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string ambiente, ref List<DianWSValidacionPrevia.DianResponse> respuesta_dian)
+		public static AcuseRecibo EnviarSync_v2(string ruta_zip, string nombre_archivo, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string ambiente, ref List<DianWSValidacionPrevia.DianResponse> respuesta_dian, string cufe_doc)
 		{
 
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
@@ -228,7 +228,7 @@ namespace HGInetDIANServicios
 							{
 								if (respuesta.ErrorMessage != null)
 								{
-									if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())))
+									if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())) && cufe_doc.Equals(respuesta.XmlDocumentKey))
 									{
 										if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento con CUFE"))
 										{

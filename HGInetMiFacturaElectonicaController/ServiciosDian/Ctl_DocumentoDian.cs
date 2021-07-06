@@ -191,7 +191,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 								List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> respuesta_dian = null;
 								
 								//Envio el documento y guardo la respuesta en archivo y en objeto respuesta_dian
-								acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreXml, documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), ruta_certificado,certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian);
+								acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreXml, documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), ruta_certificado,certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian, documento.CUFE);
 
 								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
 								respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
