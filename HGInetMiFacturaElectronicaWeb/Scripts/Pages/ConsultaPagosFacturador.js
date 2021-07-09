@@ -18,7 +18,8 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
            fecha_fin = "",
            codigo_adquiriente = "";
 	resolucion = "";
-	Filtro_fecha = 2;
+	Filtro_fecha = 2,
+	tipo_consulta = 1;
 
 	Estado_Documento = "";
 
@@ -86,6 +87,18 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 		}
 	});
 
+	$("#txtTipoConsulta").dxSelectBox({
+		placeholder: "Seleccione el Tipo de Consulta",
+		displayExpr: "Texto",
+		valueExpr: "ID",
+		value: items_tipo_consulta[0].ID,
+		dataSource: items_tipo_consulta,
+		showClearButton: true,
+		onValueChanged: function (data) {
+			console.log(data.value);
+			tipo_consulta = data.value;
+		},
+	});
 
 
 	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false).then(function (Datos) {
@@ -284,10 +297,8 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 		//Obtiene los datos del web api        
 		$('#wait').show();
 		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
-		$http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
+		$http.get('/api/ObtenerPagosFacturador?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&estado_recibo=' + estado_recibo + '&resolucion=' + resolucion + '&tipo_fecha=' + Filtro_fecha + '&tipo_consulta=' + tipo_consulta).then(function (response) {
 			$('#wait').hide();
-
-
 
 			datos = [];
 			//Recorro la data para ver la cantidad de documentos pendientes por procesar
@@ -297,7 +308,6 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 				}
 			});
 
-
 			objeto.datos = datos;
 
 			if (objeto.datos.length > 0) {
@@ -306,233 +316,390 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 				$scope.documentosPendientes = false;
 			}
 
-
-			$("#gridDocumentos").dxDataGrid({
-				dataSource: response.data,
-				keyExpr: "StrIdRegistro",
-				paging: {
-					pageSize: 20
-				},
-				export: {
-					enabled: true,
-				},
-				/*,stateStoring: {
-					enabled: true,
-					type: "localStorage",
-					storageKey: "storage"
-				},*/
-				pager: {
-					showPageSizeSelector: true,
-					allowedPageSizes: [5, 10, 20],
-					showInfo: true
-				}
-				//Formatos personalizados a las columnas en este caso para el monto
-                , onCellPrepared: function (options) {
-                	var fieldData = options.value,
-                        fieldHtml = "";
-                	try {
-                		if (options.column.caption == "Valor") {
-                			if (fieldData) {
-                				var inicial = fNumber.go(fieldData).replace("$-", "-$");
-                				options.cellElement.html(inicial);
-                			}
-                		}
-
-
-                	} catch (err) {
-                	}
-
-                }, loadPanel: {
-                	enabled: true
-                },
-				headerFilter: {
-					visible: true
-				}
-        , allowColumnResizing: true
-        , allowColumnReordering: true
-        , columnChooser: {
-        	enabled: true,
-        	mode: "select",
-        	title: "Selector de Columnas"
-        },
-				groupPanel: {
-					allowColumnDragging: true,
-					visible: true
-				}
-        , columns: [{
-        	caption: 'Detalles',
-        	cssClass: "col-md-1 col-xs-1",
-        	cellTemplate: function (container, options) {
-        		$("<div style='text-align:center;'><a style='margin-left:5%;' class='icon-file-eye' onClick=ConsultarDetallesPago('" + options.data.StrIdRegistro + "','" + options.data.StrIdSeguridadDoc + "') title='Ver Detalles Pago'></a></div>")
-						.appendTo(container);
-
-        	}
-        }, {
-        	cssClass: "col-md-1 col-xs-1",
-        	caption: 'Estado',
-        	dataField: 'EstadoFactura',
-        	cellTemplate: function (container, options) {
-        		$("<div>").append($(ControlEstadoPago(options.data.CodEstado, options.data.EstadoFactura))).appendTo(container);
-        	}
-        },
-		{
-			caption: "Forma Pago",
-			dataField: "Franquicia",
-			width: '90px',
-			alignment: "center",
-			cellTemplate: function (container, options) {
-
-				if (options.data.Franquicia != "") {
-					var titulo = (options.data.Franquicia != "") ? "title = " + options.data.Franquicia : "";
-
-					$('<img src="/Scripts/Images/' + options.data.Franquicia + '.png"  ' + titulo + ' />')
-							.appendTo(container);
-				}
-			}
-		},
-		  {
-		  	caption: "Ticket",
-		  	dataField: "Ticket"
-		  },
-        {
-        	caption: "Ciclo",
-        	dataField: "Ciclo"
-        },
-		{
-			caption: "CUS o Aprobación",
-			dataField: "Cus"
-		},
-		{
-			caption: "Adquiriente",
-			dataField: "StrEmpresaAdquiriente"
-		},
-
-              {
-              	caption: "Adquiriente",
-              	dataField: "NombreAdquiriente"
-              },
-              {
-              	caption: "Fecha Pago",
-              	dataField: "DatAdquirienteFechaRecibo",
-              	dataType: "date",
-              	format: "yyyy-MM-dd HH:mm"
-
-              },
-
-            {
-            	caption: "Fecha Verificación",
-            	dataField: "DatFechaVencDocumento",
-            	dataType: "date",
-            	format: "yyyy-MM-dd HH:mm"
-            },
-              {
-              	caption: "Valor",
-              	dataField: "PagoFactura"
-              }
-
-
-        ],
-        masterDetail: {
-        	enabled: true,
-        	template: function (container, options) {
-
-        		var currentEmployeeData = options.data;
-        		console.log(options.data);
-        		//$("<div>")
-        		//	.addClass("master-detail-caption")
-        		//	.text(currentEmployeeData.FirstName + " " + currentEmployeeData.LastName + "'s Tasks:")
-        		//	.appendTo(container);
-
-        		$("<div>")
-					.dxDataGrid({
-						columnAutoWidth: true,
-						showBorders: true,
-						onCellPrepared: function (options) {
-							var fieldData = options.value,
-								fieldHtml = "";
-							try {
-								if (options.column.caption == "Monto") {
-									if (fieldData) {
-										var inicial = fNumber.go(fieldData).replace("$-", "-$");
-										options.cellElement.html(inicial);
-									}
+			if (tipo_consulta == 1) {
+				$("#gridDocumentos").dxDataGrid({
+					dataSource: response.data,
+					keyExpr: "StrIdRegistro",
+					paging: {
+						pageSize: 20
+					},
+					export: {
+						enabled: true,
+					},
+					/*,stateStoring: {
+						enabled: true,
+						type: "localStorage",
+						storageKey: "storage"
+					},*/
+					pager: {
+						showPageSizeSelector: true,
+						allowedPageSizes: [5, 10, 20],
+						showInfo: true
+					}
+					//Formatos personalizados a las columnas en este caso para el monto
+					, onCellPrepared: function (options) {
+						var fieldData = options.value,
+							fieldHtml = "";
+						try {
+							if (options.column.caption == "Valor") {
+								if (fieldData) {
+									var inicial = fNumber.go(fieldData).replace("$-", "-$");
+									options.cellElement.html(inicial);
 								}
-
-							} catch (err) {
 							}
 
-						},
-						columns: [
-						{
-							caption: "Prefijo",
-							dataField: "Prefijo",
 
-
-						},
-						{
-							caption: "Documento",
-							dataField: "Documento"
-						},
-						{
-							caption: "Monto",
-							dataField: "Monto",
-
-						}],
-						dataSource: options.data.Pagos
-
-					}).appendTo(container);
-        		//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
-        	}
-        },
-
-				summary: {
-					groupItems: [{
-						column: "PagoFactura",
-						summaryType: "sum",
-						displayFormat: " {0} Total ",
-						valueFormat: "currency"
-					}]
-                    , totalItems: [{
-                    	name: "Suma",
-                    	displayFormat: "{0}",
-                    	valueFormat: "currency",
-                    	summaryType: "custom"
-
-                    },
-					{
-						column: "PagoFactura",
-						showInColumn: "PagoFactura",
-						summaryType: "sum",
-						customizeText: function (data) {
-							return fNumber.go(data.value).replace("$-", "-$");
+						} catch (err) {
 						}
 
+					}, loadPanel: {
+						enabled: true
 					},
-                    {
-                    	showInColumn: "DatFechaVencDocumento",
-                    	displayFormat: "Total : ",
-                    	alignment: "right"
-                    }
-                    ],
-					calculateCustomSummary: function (options) {
-						if (options.name === "Suma") {
-							if (options.summaryProcess === "start") {
-								options.totalValue = 0;
-								$('#Total').text("");
+					headerFilter: {
+						visible: true
+					}
+			, allowColumnResizing: true
+			, allowColumnReordering: true
+			, columnChooser: {
+				enabled: true,
+				mode: "select",
+				title: "Selector de Columnas"
+			},
+					groupPanel: {
+						allowColumnDragging: true,
+						visible: true
+					}
+			, columns: [{
+				caption: 'Detalles',
+				cssClass: "col-md-1 col-xs-1",
+				cellTemplate: function (container, options) {
+					$("<div style='text-align:center;'><a style='margin-left:5%;' class='icon-file-eye' onClick=ConsultarDetallesPago('" + options.data.StrIdRegistro + "','" + options.data.StrIdSeguridadDoc + "') title='Ver Detalles Pago'></a></div>")
+							.appendTo(container);
+
+				}
+			}, {
+				cssClass: "col-md-1 col-xs-1",
+				caption: 'Estado',
+				dataField: 'EstadoFactura',
+				cellTemplate: function (container, options) {
+					$("<div>").append($(ControlEstadoPago(options.data.CodEstado, options.data.EstadoFactura))).appendTo(container);
+				}
+			},
+			{
+				caption: "Forma Pago",
+				dataField: "Franquicia",
+				width: '90px',
+				alignment: "center",
+				cellTemplate: function (container, options) {
+
+					if (options.data.Franquicia != "") {
+						var titulo = (options.data.Franquicia != "") ? "title = " + options.data.Franquicia : "";
+
+						$('<img src="/Scripts/Images/' + options.data.Franquicia + '.png"  ' + titulo + ' />')
+								.appendTo(container);
+					}
+				}
+			},
+			  {
+			  	caption: "Ticket",
+			  	dataField: "Ticket"
+			  },
+			{
+				caption: "Ciclo",
+				dataField: "Ciclo"
+			},
+			{
+				caption: "CUS o Aprobación",
+				dataField: "Cus"
+			},
+			{
+				caption: "Adquiriente",
+				dataField: "StrEmpresaAdquiriente"
+			},
+
+				  {
+				  	caption: "Adquiriente",
+				  	dataField: "NombreAdquiriente"
+				  },
+				  {
+				  	caption: "Fecha Pago",
+				  	dataField: "DatAdquirienteFechaRecibo",
+				  	dataType: "date",
+				  	format: "yyyy-MM-dd HH:mm"
+
+				  },
+
+				{
+					caption: "Fecha Verificación",
+					dataField: "DatFechaVencDocumento",
+					dataType: "date",
+					format: "yyyy-MM-dd HH:mm"
+				},
+				  {
+				  	caption: "Valor",
+				  	dataField: "PagoFactura"
+				  }
+
+
+			],
+					masterDetail: {
+						enabled: true,
+						template: function (container, options) {
+
+							var currentEmployeeData = options.data;
+							console.log(options.data);
+							//$("<div>")
+							//	.addClass("master-detail-caption")
+							//	.text(currentEmployeeData.FirstName + " " + currentEmployeeData.LastName + "'s Tasks:")
+							//	.appendTo(container);
+
+							$("<div>")
+								.dxDataGrid({
+									columnAutoWidth: true,
+									showBorders: true,
+									onCellPrepared: function (options) {
+										var fieldData = options.value,
+											fieldHtml = "";
+										try {
+											if (options.column.caption == "Monto") {
+												if (fieldData) {
+													var inicial = fNumber.go(fieldData).replace("$-", "-$");
+													options.cellElement.html(inicial);
+												}
+											}
+
+										} catch (err) {
+										}
+
+									},
+									columns: [
+									{
+										caption: "Prefijo",
+										dataField: "Prefijo",
+
+
+									},
+									{
+										caption: "Documento",
+										dataField: "Documento"
+									},
+									{
+										caption: "Monto",
+										dataField: "Monto",
+
+									}],
+									dataSource: options.data.Pagos
+
+								}).appendTo(container);
+							//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
+						}
+					},
+
+					summary: {
+						groupItems: [{
+							column: "PagoFactura",
+							summaryType: "sum",
+							displayFormat: " {0} Total ",
+							valueFormat: "currency"
+						}]
+						, totalItems: [{
+							name: "Suma",
+							displayFormat: "{0}",
+							valueFormat: "currency",
+							summaryType: "custom"
+
+						},
+						{
+							column: "PagoFactura",
+							showInColumn: "PagoFactura",
+							summaryType: "sum",
+							customizeText: function (data) {
+								return fNumber.go(data.value).replace("$-", "-$");
 							}
-							if (options.summaryProcess === "calculate") {
-								options.totalValue = options.totalValue + options.value.PagoFactura;
-								$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+
+						},
+						{
+							showInColumn: "DatFechaVencDocumento",
+							displayFormat: "Total : ",
+							alignment: "right"
+						}
+						],
+						calculateCustomSummary: function (options) {
+							if (options.name === "Suma") {
+								if (options.summaryProcess === "start") {
+									options.totalValue = 0;
+									$('#Total').text("");
+								}
+								if (options.summaryProcess === "calculate") {
+									options.totalValue = options.totalValue + options.value.PagoFactura;
+									$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+								}
 							}
 						}
 					}
-				}
-        ,
-				filterRow: {
-					visible: true
-				}
+			,
+					filterRow: {
+						visible: true
+					}
 
-			});
+				});
+			} else {
+				$("#gridDocumentos").dxDataGrid({
+					dataSource: response.data,
+					paging: {
+						pageSize: 20
+					},
+					export: {
+						enabled: true,
+					},
+					pager: {
+						showPageSizeSelector: true,
+						allowedPageSizes: [5, 10, 20],
+						showInfo: true
+					},
+					onCellPrepared: function (options) {
+						//Formatos personalizados a las columnas en este caso para el monto
+						var fieldData = options.value,
+							fieldHtml = "";
+						try {
+							if (options.column.caption == "Valor") {
+								if (fieldData) {
+									var inicial = fNumber.go(fieldData).replace("$-", "-$");
+									options.cellElement.html(inicial);
+								}
+							}
+						} catch (err) { }
+					}, loadPanel: {
+						enabled: true
+					},
+					headerFilter: {
+						visible: true
+					},
+					allowColumnResizing: true,
+					allowColumnReordering: true,
+					columnChooser: {
+						enabled: true,
+						mode: "select",
+						title: "Selector de Columnas"
+					},
+					columns: [
+					{
+						cssClass: "col-md-1 col-xs-1",
+						caption: "Prefijo",
+						dataField: "Prefijo"
+					},
+					{
+						caption: "Documento",
+						dataField: "Documento"
+					},
+					{
+						cssClass: "col-md-1 col-xs-1",
+						caption: 'Estado',
+						dataField: 'EstadoFactura',
+						cellTemplate: function (container, options) {
+							$("<div>").append($(ControlEstadoPago(options.data.CodEstado, options.data.EstadoFactura))).appendTo(container);
+						}
+					},
+					{
+						caption: "Forma Pago",
+						dataField: "Franquicia",
+						width: '90px',
+						alignment: "center",
+						cellTemplate: function (container, options) {
+
+							if (options.data.Franquicia != "") {
+								var titulo = (options.data.Franquicia != "") ? "title = " + options.data.Franquicia : "";
+
+								$('<img src="/Scripts/Images/' + options.data.Franquicia + '.png"  ' + titulo + ' />')
+										.appendTo(container);
+							}
+						}
+					},
+					{
+						caption: "Ticket",
+						dataField: "Ticket"
+					},
+					{
+						caption: "Ciclo",
+						dataField: "Ciclo"
+					}, {
+						caption: "CUS o Aprobación",
+						dataField: "Cus"
+					},
+					{
+						caption: "Adquiriente",
+						dataField: "StrEmpresaAdquiriente"
+					},
+					{
+						caption: "Adquiriente",
+						dataField: "NombreAdquiriente"
+					},
+					{
+						caption: "Fecha Pago",
+						dataField: "DatAdquirienteFechaRecibo",
+						dataType: "date",
+						format: "yyyy-MM-dd HH:mm"
+					},
+					{
+						caption: "Fecha Verificación",
+						dataField: "DatFechaVencDocumento",
+						dataType: "date",
+						format: "yyyy-MM-dd HH:mm"
+					},
+					{
+						caption: "Valor",
+						dataField: "PagoFactura"
+					}],
+					masterDetail: {
+						enabled: false,
+					},
+					summary: {
+						groupItems: [{
+							column: "PagoFactura",
+							summaryType: "sum",
+							displayFormat: " {0} Total ",
+							valueFormat: "currency"
+						}]
+						, totalItems: [{
+							name: "Suma",
+							displayFormat: "{0}",
+							valueFormat: "currency",
+							summaryType: "custom"
+
+						},
+						{
+							column: "PagoFactura",
+							showInColumn: "PagoFactura",
+							summaryType: "sum",
+							customizeText: function (data) {
+								return fNumber.go(data.value).replace("$-", "-$");
+							}
+
+						},
+						{
+							showInColumn: "DatFechaVencDocumento",
+							displayFormat: "Total : ",
+							alignment: "right"
+						}
+						],
+						calculateCustomSummary: function (options) {
+							if (options.name === "Suma") {
+								if (options.summaryProcess === "start") {
+									options.totalValue = 0;
+									$('#Total').text("");
+								}
+								if (options.summaryProcess === "calculate") {
+									options.totalValue = options.totalValue + options.value.PagoFactura;
+									$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+								}
+							}
+						}
+					},
+					filterRow: {
+						visible: true
+					}
+				});
+			}
 
 		}, function errorCallback(response) {
 			$('#wait').hide();
@@ -865,7 +1032,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 			caption: "CUS o Aprobación",
 			dataField: "Cus"
 		},
-		
+
              {
              	caption: "Facturador",
              	dataField: "StrEmpresaFacturador"
@@ -882,7 +1049,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
               	format: "yyyy-MM-dd HH:mm"
 
               },
-          
+
              {
              	caption: "Cod. Transacción",
              	dataField: "idseguridadpago",
@@ -901,52 +1068,52 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 
         ],
-        masterDetail: {
-        	enabled: true,
-        	template: function (container, options) {
+				masterDetail: {
+					enabled: true,
+					template: function (container, options) {
 
-        		var currentEmployeeData = options.data;        	
-        		$("<div>")
-					.dxDataGrid({
-						columnAutoWidth: true,
-						showBorders: true,
-						onCellPrepared: function (options) {
-							var fieldData = options.value,
-								fieldHtml = "";
-							try {
-								if (options.column.caption == "Monto") {
-									if (fieldData) {
-										var inicial = fNumber.go(fieldData).replace("$-", "-$");
-										options.cellElement.html(inicial);
+						var currentEmployeeData = options.data;
+						$("<div>")
+							.dxDataGrid({
+								columnAutoWidth: true,
+								showBorders: true,
+								onCellPrepared: function (options) {
+									var fieldData = options.value,
+										fieldHtml = "";
+									try {
+										if (options.column.caption == "Monto") {
+											if (fieldData) {
+												var inicial = fNumber.go(fieldData).replace("$-", "-$");
+												options.cellElement.html(inicial);
+											}
+										}
+
+									} catch (err) {
 									}
-								}
 
-							} catch (err) {
-							}
-
-						},
-						columns: [
-						{
-							caption: "Prefijo",
-							dataField: "Prefijo",
+								},
+								columns: [
+								{
+									caption: "Prefijo",
+									dataField: "Prefijo",
 
 
-						},
-						{
-							caption: "Documento",
-							dataField: "Documento"
-						},
-						{
-							caption: "Monto",
-							dataField: "Monto",
+								},
+								{
+									caption: "Documento",
+									dataField: "Documento"
+								},
+								{
+									caption: "Monto",
+									dataField: "Monto",
 
-						}],
-						dataSource: options.data.Pagos
+								}],
+								dataSource: options.data.Pagos
 
-					}).appendTo(container);
-        		//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
-        	}
-        },
+							}).appendTo(container);
+						//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdentificacionFacturador, options.data.NumeroDocumento, "Adquiriente"));
+					}
+				},
 				summary: {
 					groupItems: [{
 						column: "PagoFactura",
@@ -1009,7 +1176,7 @@ PagosFacturadorApp.controller('PagosAdquirienteController', function PagosAdquir
 
 
 ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
-	
+
 	var ruta_redireccion = $('#Hdf_RutaPlataformaServicios').val() + "Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
 
 	console.log(ruta_redireccion);
@@ -1023,3 +1190,5 @@ var items_Fecha =
     { ID: "1", Texto: 'Fecha-Documento' },
     { ID: "2", Texto: 'Fecha-Pago' }
     ];
+
+var items_tipo_consulta = [{ ID: "1", Texto: 'General' }, { ID: "2", Texto: 'Por Documento' }];

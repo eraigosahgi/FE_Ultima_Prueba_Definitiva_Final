@@ -4,10 +4,10 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 	<!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201020"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20201020"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201020"></script>
-	<script src="../../Scripts/Pages/ConsultaPagosFacturador.js?vjs20201020"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201021"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20201021"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201021"></script>
+	<script src="../../Scripts/Pages/ConsultaPagosFacturador.js?vjs20201021"></script>
 
 	<div data-ng-app="PagosFacturadorApp">
 
@@ -72,85 +72,89 @@
 										<div data-hgi-filtro="Adquiriente"></div>
 									</div>
 
-									<%--<div class="col-md-4" style="margin-top: 1%">
+									<div class="col-md-4" style="margin-top: 1%">
+										<i class="icon-file-text"></i>
+										<label>Tipo Consulta:</label>
+										<div id="txtTipoConsulta"></div>
+									</div>
+
+								<%--<div class="col-md-4" style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
 										<label>Resolución-Prefijo:</label>
 										<div id="filtrosResolucion"></div>
 									</div>--%>
-
-
-								</div>
-
 							</div>
 
-
-						</div>
-						<div class="col-lg-12 text-right">
-							<br />
-							<br />
-							<div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
 						</div>
 
-						<p data-ng-bind-html="message"></p>
 
 					</div>
+					<div class="col-lg-12 text-right">
+						<br />
+						<br />
+						<div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
+					</div>
+
+					<p data-ng-bind-html="message"></p>
 
 				</div>
+
 			</div>
-
-			<!--/FILTROS DE BÚSQUEDA -->
-
-			<!-- DATOS -->
-			<div class="col-md-12">
-				<div class="panel panel-white">
-					<div class="panel-heading" style="height: 60px">
-						<div class="col-md-2">
-							<h6 class="panel-title ">Datos</h6>
-						</div>
-
-						<div id="pnl_Verificar_Pago" class="col-md-7 text-right">
-
-							<div data-ng-show="documentosPendientes">
-								<div data-dx-button="buttonProcesar">
-									<i class="icon-spinner11"></i>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-3">
-							<label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>
-						</div>
-					</div>
-
-					<div class="panel-body">
-						<div class="demo-container">
-							<div id="gridDocumentos"></div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-			<!-- /DATOS -->
-
 		</div>
-		<!-- /CONTENEDOR PRINCIPAL -->
 
-		<div id="modal_detalles_pago" class="modal fade" style="display: none;">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div id="EncabezadoModal" class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h5 style="margin-bottom: 10px;" class="modal-title">Detalles Pago Electrónico</h5>
+		<!--/FILTROS DE BÚSQUEDA -->
+
+		<!-- DATOS -->
+		<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-heading" style="height: 60px">
+					<div class="col-md-2">
+						<h6 class="panel-title ">Datos</h6>
 					</div>
-					<div class="modal-body">
 
-						<div id="ContenidoDetallesPago">
+					<div id="pnl_Verificar_Pago" class="col-md-7 text-right">
+
+						<div data-ng-show="documentosPendientes">
+							<div data-dx-button="buttonProcesar">
+								<i class="icon-spinner11"></i>
+							</div>
 						</div>
-
 					</div>
+
+					<div class="col-md-3">
+						<label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>
+					</div>
+				</div>
+
+				<div class="panel-body">
+					<div class="demo-container">
+						<div id="gridDocumentos"></div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- /DATOS -->
+
+	</div>
+	<!-- /CONTENEDOR PRINCIPAL -->
+
+	<div id="modal_detalles_pago" class="modal fade" style="display: none;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div id="EncabezadoModal" class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h5 style="margin-bottom: 10px;" class="modal-title">Detalles Pago Electrónico</h5>
+				</div>
+				<div class="modal-body">
+
+					<div id="ContenidoDetallesPago">
+					</div>
+
 				</div>
 			</div>
 		</div>
+	</div>
 
 	</div>
 

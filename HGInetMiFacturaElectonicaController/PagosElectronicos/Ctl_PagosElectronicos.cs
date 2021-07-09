@@ -657,6 +657,101 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		}
 
 
+		public List<TblPagosDetalles> ObtenerPagosDetalle(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string Resolucion, int tipo_fecha)
+		{
+
+			fecha_inicio = fecha_inicio.Date;
+
+			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+			long num_doc = -1;
+			long.TryParse(numero_documento, out num_doc);
+
+
+			short cod_estado_recibo = -1;
+			short.TryParse(estado_recibo, out cod_estado_recibo);
+
+			if (string.IsNullOrWhiteSpace(numero_documento))
+				numero_documento = "*";
+			if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+				codigo_adquiriente = "*";
+
+			if (string.IsNullOrWhiteSpace(estado_recibo))
+				estado_recibo = "*";
+
+			List<string> LstResolucion = new List<string>();
+
+			if (string.IsNullOrWhiteSpace(Resolucion))
+			{
+				Resolucion = "*";
+			}
+			else
+			{
+				LstResolucion = Coleccion.ConvertirLista(Resolucion);
+			}
+
+			if (string.IsNullOrEmpty(codigo_facturador))
+				codigo_facturador = "*";
+
+			List<TblPagosDetalles> documentos = new List<TblPagosDetalles>();
+
+			if (num_doc > 0)
+			{
+
+				List<TblDocumentos> datos = new List<TblDocumentos>();
+
+				datos = (from d in context.TblDocumentos
+						 where d.IntNumero == num_doc
+						 && (d.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+						 && (d.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+						 select d).ToList();
+
+				if (datos != null)
+				{
+					List<Guid> lista_documentos = new List<Guid>();
+					foreach (var item in datos)
+					{
+						lista_documentos.Add(item.StrIdSeguridad);
+					}
+
+					var detalles = (from det in context.TblPagosDetalles
+									where lista_documentos.Contains(det.StrIdSeguridadDoc)
+									select det).ToList();
+
+					if (detalles != null)
+					{
+						lista_documentos = new List<Guid>();
+						foreach (var item in detalles)
+						{
+							lista_documentos.Add(item.StrIdPagoPrincipal);
+						}
+
+						documentos = (from Pagos in context.TblPagosDetalles
+									  where lista_documentos.Contains(Pagos.StrIdPagoPrincipal)
+									  select Pagos).ToList();
+					}
+				}
+
+
+			}
+			else
+			{
+				documentos = (from Pagos in context.TblPagosDetalles
+							  join enc_pago in context.TblPagosElectronicos on Pagos.StrIdPagoPrincipal equals enc_pago.StrIdRegistro
+							  where (enc_pago.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))							  
+							  && ((enc_pago.DatFechaRegistro >= fecha_inicio && enc_pago.DatFechaRegistro <= fecha_fin))
+							  && (enc_pago.IntEstadoPago.Equals(cod_estado_recibo) || estado_recibo.Equals("*"))
+							  && (enc_pago.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+							  orderby enc_pago.DatFechaRegistro descending
+							  select Pagos).ToList();
+			}
+
+
+
+			return documentos;
+
+		}
+
 		/// <summary>
 		/// Obtiene la lista de pagos del Adquiriente
 		/// </summary>
