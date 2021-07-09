@@ -313,6 +313,9 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 				paging: {
 					pageSize: 20
 				},
+				export: {
+					enabled: true,
+				},
 				/*,stateStoring: {
 					enabled: true,
 					type: "localStorage",
