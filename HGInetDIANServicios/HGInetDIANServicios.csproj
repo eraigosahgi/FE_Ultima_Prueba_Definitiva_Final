@@ -120,6 +120,9 @@
     <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.DianResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.DocIdentifierWithEventsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\DianWSValidacionPrevia\HGInetDIANServicios.DianWSValidacionPrevia.EventResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -138,6 +141,12 @@
     </None>
     <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.wsdl" />
     <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices11.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices2.xsd">
@@ -186,9 +195,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices98.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DianWSValidacionPrevia\WcfDianCustomerServices99.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -257,6 +263,7 @@
     <None Include="Service References\DianWSValidacionPrevia\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>

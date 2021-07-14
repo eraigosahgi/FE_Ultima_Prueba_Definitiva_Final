@@ -61,9 +61,10 @@
       <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
       <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/UploadDocumentResponse" />
       <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/EventResponse" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponseList" />
-      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponse" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponseList" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponse" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/EventResponse" />
+      <xsd:import schemaLocation="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/DocIdentifierWithEventsResponse" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IWcfDianCustomerServices_GetExchangeEmails_InputMessage">
@@ -83,6 +84,12 @@
   </wsdl:message>
   <wsdl:message name="IWcfDianCustomerServices_GetStatusZip_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetStatusZipResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWcfDianCustomerServices_GetStatusEvent_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetStatusEvent" />
+  </wsdl:message>
+  <wsdl:message name="IWcfDianCustomerServices_GetStatusEvent_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetStatusEventResponse" />
   </wsdl:message>
   <wsdl:message name="IWcfDianCustomerServices_SendBillAsync_InputMessage">
     <wsdl:part name="parameters" element="tns:SendBillAsync" />
@@ -114,6 +121,12 @@
   <wsdl:message name="IWcfDianCustomerServices_SendEventUpdateStatus_OutputMessage">
     <wsdl:part name="parameters" element="tns:SendEventUpdateStatusResponse" />
   </wsdl:message>
+  <wsdl:message name="IWcfDianCustomerServices_SendNominaSync_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendNominaSync" />
+  </wsdl:message>
+  <wsdl:message name="IWcfDianCustomerServices_SendNominaSync_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendNominaSyncResponse" />
+  </wsdl:message>
   <wsdl:message name="IWcfDianCustomerServices_GetNumberingRange_InputMessage">
     <wsdl:part name="parameters" element="tns:GetNumberingRange" />
   </wsdl:message>
@@ -125,6 +138,12 @@
   </wsdl:message>
   <wsdl:message name="IWcfDianCustomerServices_GetXmlByDocumentKey_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetXmlByDocumentKeyResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWcfDianCustomerServices_GetDocIdentifierWithEvents_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDocIdentifierWithEvents" />
+  </wsdl:message>
+  <wsdl:message name="IWcfDianCustomerServices_GetDocIdentifierWithEvents_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDocIdentifierWithEventsResponse" />
   </wsdl:message>
   <wsdl:portType name="IWcfDianCustomerServices">
     <wsdl:operation name="GetExchangeEmails">
@@ -138,6 +157,10 @@
     <wsdl:operation name="GetStatusZip">
       <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZip" message="tns:IWcfDianCustomerServices_GetStatusZip_InputMessage" />
       <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZipResponse" message="tns:IWcfDianCustomerServices_GetStatusZip_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusEvent">
+      <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusEvent" message="tns:IWcfDianCustomerServices_GetStatusEvent_InputMessage" />
+      <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusEventResponse" message="tns:IWcfDianCustomerServices_GetStatusEvent_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="SendBillAsync">
       <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAsync" message="tns:IWcfDianCustomerServices_SendBillAsync_InputMessage" />
@@ -159,6 +182,10 @@
       <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatus" message="tns:IWcfDianCustomerServices_SendEventUpdateStatus_InputMessage" />
       <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatusResponse" message="tns:IWcfDianCustomerServices_SendEventUpdateStatus_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="SendNominaSync">
+      <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendNominaSync" message="tns:IWcfDianCustomerServices_SendNominaSync_InputMessage" />
+      <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendNominaSyncResponse" message="tns:IWcfDianCustomerServices_SendNominaSync_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="GetNumberingRange">
       <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRange" message="tns:IWcfDianCustomerServices_GetNumberingRange_InputMessage" />
       <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRangeResponse" message="tns:IWcfDianCustomerServices_GetNumberingRange_OutputMessage" />
@@ -166,6 +193,10 @@
     <wsdl:operation name="GetXmlByDocumentKey">
       <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKey" message="tns:IWcfDianCustomerServices_GetXmlByDocumentKey_InputMessage" />
       <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKeyResponse" message="tns:IWcfDianCustomerServices_GetXmlByDocumentKey_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocIdentifierWithEvents">
+      <wsdl:input wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetDocIdentifierWithEvents" message="tns:IWcfDianCustomerServices_GetDocIdentifierWithEvents_InputMessage" />
+      <wsdl:output wsaw:Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetDocIdentifierWithEventsResponse" message="tns:IWcfDianCustomerServices_GetDocIdentifierWithEvents_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSHttpBinding_IWcfDianCustomerServices" type="tns:IWcfDianCustomerServices">
@@ -191,6 +222,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetStatusZip">
       <soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZip" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusEvent">
+      <soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusEvent" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -243,6 +283,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="SendNominaSync">
+      <soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendNominaSync" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetNumberingRange">
       <soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRange" style="document" />
       <wsdl:input>
@@ -254,6 +303,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetXmlByDocumentKey">
       <soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKey" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocIdentifierWithEvents">
+      <soap12:operation soapAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetDocIdentifierWithEvents" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

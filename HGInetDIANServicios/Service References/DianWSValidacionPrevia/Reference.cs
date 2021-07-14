@@ -451,83 +451,6 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="EventResponse", Namespace="http://schemas.datacontract.org/2004/07/EventResponse")]
-    [System.SerializableAttribute()]
-    public partial class EventResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CodeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MessageField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string XmlBytesBase64Field;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Code {
-            get {
-                return this.CodeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CodeField, value) != true)) {
-                    this.CodeField = value;
-                    this.RaisePropertyChanged("Code");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Message {
-            get {
-                return this.MessageField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
-                    this.MessageField = value;
-                    this.RaisePropertyChanged("Message");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string XmlBytesBase64 {
-            get {
-                return this.XmlBytesBase64Field;
-            }
-            set {
-                if ((object.ReferenceEquals(this.XmlBytesBase64Field, value) != true)) {
-                    this.XmlBytesBase64Field = value;
-                    this.RaisePropertyChanged("XmlBytesBase64");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="NumberRangeResponseList", Namespace="http://schemas.datacontract.org/2004/07/NumberRangeResponseList")]
     [System.SerializableAttribute()]
     public partial class NumberRangeResponseList : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
@@ -760,6 +683,176 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="EventResponse", Namespace="http://schemas.datacontract.org/2004/07/EventResponse")]
+    [System.SerializableAttribute()]
+    public partial class EventResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MessageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string XmlBytesBase64Field;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Code {
+            get {
+                return this.CodeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodeField, value) != true)) {
+                    this.CodeField = value;
+                    this.RaisePropertyChanged("Code");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Message {
+            get {
+                return this.MessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
+                    this.MessageField = value;
+                    this.RaisePropertyChanged("Message");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string XmlBytesBase64 {
+            get {
+                return this.XmlBytesBase64Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.XmlBytesBase64Field, value) != true)) {
+                    this.XmlBytesBase64Field = value;
+                    this.RaisePropertyChanged("XmlBytesBase64");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DocIdentifierWithEventsResponse", Namespace="http://schemas.datacontract.org/2004/07/DocIdentifierWithEventsResponse")]
+    [System.SerializableAttribute()]
+    public partial class DocIdentifierWithEventsResponse : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte[] CsvBase64BytesField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MessageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string StatusCodeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool SuccessField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public byte[] CsvBase64Bytes {
+            get {
+                return this.CsvBase64BytesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CsvBase64BytesField, value) != true)) {
+                    this.CsvBase64BytesField = value;
+                    this.RaisePropertyChanged("CsvBase64Bytes");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Message {
+            get {
+                return this.MessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
+                    this.MessageField = value;
+                    this.RaisePropertyChanged("Message");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string StatusCode {
+            get {
+                return this.StatusCodeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.StatusCodeField, value) != true)) {
+                    this.StatusCodeField = value;
+                    this.RaisePropertyChanged("StatusCode");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Success {
+            get {
+                return this.SuccessField;
+            }
+            set {
+                if ((this.SuccessField.Equals(value) != true)) {
+                    this.SuccessField = value;
+                    this.RaisePropertyChanged("Success");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="http://wcf.dian.colombia", ConfigurationName="DianWSValidacionPrevia.IWcfDianCustomerServices")]
     public interface IWcfDianCustomerServices {
@@ -781,6 +874,12 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZip", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZipResponse")]
         System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse[]> GetStatusZipAsync(string trackId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusEvent", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusEventResponse")]
+        HGInetDIANServicios.DianWSValidacionPrevia.DianResponse GetStatusEvent(string trackId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusEvent", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusEventResponse")]
+        System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> GetStatusEventAsync(string trackId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAsync", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAsyncResponse")]
         HGInetDIANServicios.DianWSValidacionPrevia.UploadDocumentResponse SendBillAsync(string fileName, byte[] contentFile);
@@ -809,10 +908,16 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.UploadDocumentResponse> SendBillAttachmentAsyncAsync(string fileName, byte[] contentFile);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatus", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatusResponse")]
-        HGInetDIANServicios.DianWSValidacionPrevia.EventResponse[] SendEventUpdateStatus(byte[] contentFile);
+        HGInetDIANServicios.DianWSValidacionPrevia.DianResponse SendEventUpdateStatus(byte[] contentFile);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatus", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendEventUpdateStatusResponse")]
-        System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.EventResponse[]> SendEventUpdateStatusAsync(byte[] contentFile);
+        System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> SendEventUpdateStatusAsync(byte[] contentFile);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendNominaSync", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendNominaSyncResponse")]
+        HGInetDIANServicios.DianWSValidacionPrevia.DianResponse SendNominaSync(byte[] contentFile);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/SendNominaSync", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/SendNominaSyncResponse")]
+        System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> SendNominaSyncAsync(byte[] contentFile);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRange", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetNumberingRangeResponse")]
         HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList GetNumberingRange(string accountCode, string accountCodeT, string softwareCode);
@@ -825,6 +930,14 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKey", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetXmlByDocumentKeyResponse")]
         System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.EventResponse> GetXmlByDocumentKeyAsync(string trackId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetDocIdentifierWithEvents", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetDocIdentifierWithEventsRespo" +
+            "nse")]
+        HGInetDIANServicios.DianWSValidacionPrevia.DocIdentifierWithEventsResponse GetDocIdentifierWithEvents(string contributorCode, string dateNumber);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://wcf.dian.colombia/IWcfDianCustomerServices/GetDocIdentifierWithEvents", ReplyAction="http://wcf.dian.colombia/IWcfDianCustomerServices/GetDocIdentifierWithEventsRespo" +
+            "nse")]
+        System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DocIdentifierWithEventsResponse> GetDocIdentifierWithEventsAsync(string contributorCode, string dateNumber);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -878,6 +991,14 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
             return base.Channel.GetStatusZipAsync(trackId);
         }
         
+        public HGInetDIANServicios.DianWSValidacionPrevia.DianResponse GetStatusEvent(string trackId) {
+            return base.Channel.GetStatusEvent(trackId);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> GetStatusEventAsync(string trackId) {
+            return base.Channel.GetStatusEventAsync(trackId);
+        }
+        
         public HGInetDIANServicios.DianWSValidacionPrevia.UploadDocumentResponse SendBillAsync(string fileName, byte[] contentFile) {
             return base.Channel.SendBillAsync(fileName, contentFile);
         }
@@ -910,12 +1031,20 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
             return base.Channel.SendBillAttachmentAsyncAsync(fileName, contentFile);
         }
         
-        public HGInetDIANServicios.DianWSValidacionPrevia.EventResponse[] SendEventUpdateStatus(byte[] contentFile) {
+        public HGInetDIANServicios.DianWSValidacionPrevia.DianResponse SendEventUpdateStatus(byte[] contentFile) {
             return base.Channel.SendEventUpdateStatus(contentFile);
         }
         
-        public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.EventResponse[]> SendEventUpdateStatusAsync(byte[] contentFile) {
+        public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> SendEventUpdateStatusAsync(byte[] contentFile) {
             return base.Channel.SendEventUpdateStatusAsync(contentFile);
+        }
+        
+        public HGInetDIANServicios.DianWSValidacionPrevia.DianResponse SendNominaSync(byte[] contentFile) {
+            return base.Channel.SendNominaSync(contentFile);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> SendNominaSyncAsync(byte[] contentFile) {
+            return base.Channel.SendNominaSyncAsync(contentFile);
         }
         
         public HGInetDIANServicios.DianWSValidacionPrevia.NumberRangeResponseList GetNumberingRange(string accountCode, string accountCodeT, string softwareCode) {
@@ -932,6 +1061,14 @@ namespace HGInetDIANServicios.DianWSValidacionPrevia {
         
         public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.EventResponse> GetXmlByDocumentKeyAsync(string trackId) {
             return base.Channel.GetXmlByDocumentKeyAsync(trackId);
+        }
+        
+        public HGInetDIANServicios.DianWSValidacionPrevia.DocIdentifierWithEventsResponse GetDocIdentifierWithEvents(string contributorCode, string dateNumber) {
+            return base.Channel.GetDocIdentifierWithEvents(contributorCode, dateNumber);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetDIANServicios.DianWSValidacionPrevia.DocIdentifierWithEventsResponse> GetDocIdentifierWithEventsAsync(string contributorCode, string dateNumber) {
+            return base.Channel.GetDocIdentifierWithEventsAsync(contributorCode, dateNumber);
         }
     }
 }

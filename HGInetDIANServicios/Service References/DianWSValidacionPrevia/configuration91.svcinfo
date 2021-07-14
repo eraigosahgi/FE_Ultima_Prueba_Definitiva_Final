@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="BUMApQQd27T23go8zTBA39TI4yE=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="7XfVPdBVoSChnLbpnRAR8i9us9I=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="wsHttpBinding" name="WSHttpBinding_IWcfDianCustomerServices1">
+    <bindingConfiguration bindingType="wsHttpBinding" name="WSHttpBinding_IWcfDianCustomerServices">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSHttpBinding_IWcfDianCustomerServices1</serializedValue>
+          <serializedValue>WSHttpBinding_IWcfDianCustomerServices</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -127,7 +127,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSHttpBinding_IWcfDianCustomerServices1" contract="DianWSValidacionPrevia.IWcfDianCustomerServices" bindingType="wsHttpBinding" address="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc" bindingConfiguration="WSHttpBinding_IWcfDianCustomerServices1">
+    <endpoint name="WSHttpBinding_IWcfDianCustomerServices" contract="DianWSValidacionPrevia.IWcfDianCustomerServices" bindingType="wsHttpBinding" address="https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc" bindingConfiguration="WSHttpBinding_IWcfDianCustomerServices">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc</serializedValue>
@@ -139,7 +139,7 @@
           <serializedValue>wsHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSHttpBinding_IWcfDianCustomerServices1</serializedValue>
+          <serializedValue>WSHttpBinding_IWcfDianCustomerServices</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>DianWSValidacionPrevia.IWcfDianCustomerServices</serializedValue>
@@ -202,7 +202,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSHttpBinding_IWcfDianCustomerServices1</serializedValue>
+          <serializedValue>WSHttpBinding_IWcfDianCustomerServices</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
