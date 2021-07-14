@@ -221,7 +221,11 @@ public partial class TextType {
 	private string languageIDField;
     
 	private string languageLocaleIDField;
-    
+
+	private string schemeIDField;
+
+	private string schemeNameField;
+
 	private string valueField;
     
 	/// <comentarios/>
@@ -254,6 +258,34 @@ public partial class TextType {
 		}
 		set {
 			this.valueField = value;
+		}
+	}
+
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string schemeName
+	{
+		get
+		{
+			return this.schemeNameField;
+		}
+		set
+		{
+			this.schemeNameField = value;
+		}
+	}
+
+	/// <comentarios/>
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public string schemeID
+	{
+		get
+		{
+			return this.schemeIDField;
+		}
+		set
+		{
+			this.schemeIDField = value;
 		}
 	}
 }

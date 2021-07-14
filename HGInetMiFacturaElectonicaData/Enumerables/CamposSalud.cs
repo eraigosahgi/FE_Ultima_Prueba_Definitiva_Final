@@ -9,68 +9,68 @@ namespace HGInetMiFacturaElectonicaData
 {
 	public enum CamposSalud
 	{
-		[Description("Código del prestador de servicios de salud")]
+		[Description("CODIGO_PRESTADOR")]
 		prestadorservicios = 1,
 
-		[Description("Tipo de documento de identificación del usuario")]
+		[Description("TIPO_DOCUMENTO_IDENTIFICACION")]
 		tipodocumento = 2,
 
-		[Description("Número de documento de identificación del usuario")]
+		[Description("NUMERO_DOCUMENTO_IDENTIFICACION")]
 		numerodocumento = 3,
 
-		[Description("Primer apellido del usuario")]
+		[Description("PRIMER_APELLIDO")]
 		primerapellidousuario = 4,
 
-		[Description("Segundo apellido del usuario")]
+		[Description("SEGUNDO_APELLIDO")]
 		segundoapellidousuario = 5,
 
-		[Description("Primer nombre del usuario")]
+		[Description("PRIMER_NOMBRE")]
 		primernombreusuario = 6,
 
-		[Description("Otros Nombres")]
+		[Description("SEGUNDO_NOMBRE")]
 		segundonombreusuario = 7,
 
-		[Description("Tipo de usuario")]
+		[Description("TIPO_USUARIO")]
 		tipousuario = 8,
 
-		[Description("Modalidades de contratación y de pago")]
+		[Description("MODALIDAD_CONTRATACION")]
 		RecepcionAcuse = 9,
 
-		[Description("Cobertura o plan de beneficios")]
+		[Description("COBERTURA_PLAN_BENEFICIOS")]
 		coberturaplanbeneficios = 10,
 
-		[Description("Número de autorización")]
+		[Description("NUMERO_AUTORIZACION")]
 		numeroautorizacion = 11,
 
-		[Description("Número de mi prescripción (MIPRES)")]
+		[Description("NUMERO_MIPRES")]
 		numeromipres = 12,
 
-		[Description("Número de ID de suministro mi prescripción (MIPRES)")]
+		[Description("NUMERO_ENTREGA_MIPRES")]
 		numeroidmipres = 13,
 
-		[Description("Número de contrato")]
+		[Description("NUMERO_CONTRATO")]
 		numerocontrato = 14,
 
-		[Description("Número de póliza")]
+		[Description("NUMERO_POLIZA")]
 		numeropoliza = 15,
 
-		[Description("Fecha de inicio")]
+		[Description("FECHA_INICIO")]
 		fechainicio = 16,
 
-		[Description("Fecha final")]
+		[Description("FECHA_FIN")]
 		fechafin = 17,
 
-		[Description("Copago")]
+		[Description("COPAGO")]
 		copago = 18,
 
-		[Description("Cuota moderadora")]
+		[Description("CUOTA_MODERADORA")]
 		cuotamoderadora = 19,
 
-		[Description("Cuota de recuperación")]
+		[Description("CUOTA_RECUPERACION")]
 		cuotarecuperacion = 20,
 
-		[Description("Pagos compartidos en planes voluntarios de salud")]
-		PrevalidacionErrorDian = 21
+		[Description("PAGOS_COMPARTIDOS")]
+		pagoscompartidos = 21
 	}
 
 	public enum TipoIdentificacionSalud

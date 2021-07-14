@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HGInetUBLv2_1
 {
-	[System.Xml.Serialization.XmlRootAttribute("CustomTagGeneral")]
+	[System.Xml.Serialization.XmlRootAttribute("CustomTagGeneral", Namespace = "co:facturaelectronica:ccce:CustomTagGeneral", IsNullable = false)]
 	public partial class CustomTagGeneral
 	{
 		private Name nameField;

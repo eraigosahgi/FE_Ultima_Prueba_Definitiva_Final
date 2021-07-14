@@ -12,7 +12,7 @@ namespace HGInetUBLv2_1
 
 		private string schemeNameField;
 
-		private Collection ColletionField;
+		private Collection[] ColletionField;
 
 		/// <comentarios/>
 		[System.Xml.Serialization.XmlAttributeAttribute()]
@@ -30,7 +30,7 @@ namespace HGInetUBLv2_1
 
 		/// <comentarios/>
 		//[System.Xml.Serialization.XmlElementAttribute(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
-		public Collection Collection
+		public Collection[] Collection
 		{
 			get
 			{

@@ -32,7 +32,7 @@ namespace HGInetUBLv2_1
 
 			CustomTagGeneral TagGeneral = new CustomTagGeneral();
 
-			
+
 
 
 			TagGeneral.Name= new Name();
@@ -43,8 +43,6 @@ namespace HGInetUBLv2_1
 			InteroperabilidadType interoperabilidad = new InteroperabilidadType();
 			interoperabilidad.Group = new Group();
 			interoperabilidad.Group.schemeName = sector;
-			interoperabilidad.Group.Collection = new Collection();
-			interoperabilidad.Group.Collection.schemeName = usuario;
 			interoperabilidad.InteroperabilidadPT = new InteroperabilidadPtType();
 			interoperabilidad.InteroperabilidadPT.URLDescargaAdjuntos = new URLDescagaAdjuntosType();
 			interoperabilidad.InteroperabilidadPT.URLDescargaAdjuntos.URL = datos.URLDescargaAdjuntos;
@@ -93,49 +91,63 @@ namespace HGInetUBLv2_1
 			}
 
 			List<AdditionalInformationType1> datos_adicionales = new List<AdditionalInformationType1>();
-			//interoperabilidad.Group.Collection.AdditionalInformation = new AdditionalInformationType1[21];
 
+			List<Collection> datos_usuario = new List<Collection>();
+
+			int campo_validador = 0;
 			for (int i = 0; i < datos.CamposSector.Count; i++)
 			{
 				AdditionalInformationType1 coleccion_datos = new AdditionalInformationType1();
 				coleccion_datos.Name = new Name();
-				coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
+				try
+				{
+					coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
+				}
+				catch (Exception)
+				{
+
+					coleccion_datos.Name.Value = datos.CamposSector[i].Descripcion;
+				}
 				coleccion_datos.Value = new Value();
 				coleccion_datos.Value.Value = datos.CamposSector[i].Valor;
 
-				if (i == 1)
+				if (i == campo_validador+1)
 				{
 					TipoIdentificacionSalud dato_enum = Enumeracion.GetValueFromAmbiente<TipoIdentificacionSalud>(datos.CamposSector[i].Valor);
 					coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
-					coleccion_datos.schemeName = "salud_identificación.gc";
-					coleccion_datos.schemeID = datos.CamposSector[i].Valor;
+					coleccion_datos.Value.schemeName = "salud_identificación.gc";
+					coleccion_datos.Value.schemeID = datos.CamposSector[i].Valor;
 				}
 
-				if (i == 7)
+				if (i == campo_validador+7)
 				{
 					TipoUsuarioSalud dato_enum = Enumeracion.GetEnumObjectByValue<TipoUsuarioSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
 					coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
-					coleccion_datos.schemeName = "salud_tipo_usuario.gc";
-					coleccion_datos.schemeID = Enumeracion.GetAmbiente(dato_enum);
+					coleccion_datos.Value.schemeName = "salud_tipo_usuario.gc";
+					coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
 				}
 
-				if (i == 9)
+				if (i == campo_validador+9)
 				{
 					CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
 					coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
-					coleccion_datos.schemeName = "salud_cobertura.gc";
-					coleccion_datos.schemeID = Enumeracion.GetAmbiente(dato_enum);
+					coleccion_datos.Value.schemeName = "salud_cobertura.gc";
+					coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
+					campo_validador += 21;
 				}
 
-				//interoperabilidad.Group.Collection.AdditionalInformation[i] = coleccion_datos;
-				//interoperabilidad.Group.Collection.AdditionalInformation[i].Name = new Name();
-				//interoperabilidad.Group.Collection.AdditionalInformation[i].Name = coleccion_datos.Name;
-				//interoperabilidad.Group.Collection.AdditionalInformation[i].Value = new Value();
-				//interoperabilidad.Group.Collection.AdditionalInformation[i].Value = coleccion_datos.Value;
 				datos_adicionales.Add(coleccion_datos);
+
+				if (i == campo_validador - 1)
+				{
+					Collection datos_coleccion = new Collection();
+					datos_coleccion.schemeName = usuario;
+					datos_coleccion.AdditionalInformation = datos_adicionales.ToArray();
+					datos_usuario.Add(datos_coleccion);
+				}
 			}
 			
-			interoperabilidad.Group.Collection.AdditionalInformation = datos_adicionales.ToArray();
+			interoperabilidad.Group.Collection = datos_usuario.ToArray();
 
 			TagGeneral.Interoperabilidad = interoperabilidad;
 
