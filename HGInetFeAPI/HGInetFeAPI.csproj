@@ -46,6 +46,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Controladores\Ctl_AcuseRecibo.cs" />
+    <Compile Include="Controladores\Ctl_AjusteNomina.cs" />
     <Compile Include="Controladores\Ctl_Documentos.cs" />
     <Compile Include="Controladores\Ctl_Empresas.cs" />
     <Compile Include="Controladores\Ctl_Factura.cs" />
@@ -59,6 +60,11 @@
     <Compile Include="Controladores\Ctl_Utilidades.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\ServicioAcuseRecibo\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioAjusteNomina\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -135,6 +141,29 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioAcuseRecibo\HGInetFeAPI.ServicioAcuseRecibo.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina.wsdl" />
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina1.wsdl" />
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\HGInetFeAPI.ServicioAjusteNomina.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\HGInetFeAPI.ServicioAjusteNomina.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioDocumento\documentos.wsdl" />
@@ -414,6 +443,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ServicioAcuseRecibo\" />
+    <WCFMetadataStorage Include="Service References\ServicioAjusteNomina\" />
     <WCFMetadataStorage Include="Service References\ServicioDocumento\" />
     <WCFMetadataStorage Include="Service References\ServicioEmpresas\" />
     <WCFMetadataStorage Include="Service References\ServicioFactura\" />
@@ -611,6 +641,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioFactura\factura1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
