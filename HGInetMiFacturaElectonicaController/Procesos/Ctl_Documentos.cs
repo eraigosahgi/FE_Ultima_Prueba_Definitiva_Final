@@ -1115,7 +1115,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					//Validacion del total
-					decimal total_calculado = decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo,MidpointRounding.AwayFromZero);
+					decimal total_calculado = decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento, MidpointRounding.AwayFromZero);
 					if (total_calculado != decimal.Round(documento.Total, MidpointRounding.AwayFromZero))
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "Total", documento.Total, total_calculado));
