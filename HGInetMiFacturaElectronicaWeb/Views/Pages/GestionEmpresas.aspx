@@ -273,11 +273,19 @@
 								</div>
 
 
-								<div class="col-md-12" style="z-index: 9; margin: 0px; margin-bottom: 1%">
-									<div class="dx-field-label" style="font-size: 14px;" id="idHabilitacion">Ambiente:<strom style="color: red;">*</strom></div>
+								<div class="col-md-6" style="z-index: 9; margin: 0px; margin-bottom: 1%">
+									<div class="dx-field-label" style="font-size: 14px;" id="idHabilitacion">Ambiente FE:<strom style="color: red;">*</strom></div>
 									<div class="dx-field-value">
 										<div id="Habilitacion"></div>
-										<div id="tooltip_Habilitacion">Indica el ambiente actual de la Empresa</div>
+										<div id="tooltip_Habilitacion">Indica el ambiente actual de la Empresa en Factura Electrónica</div>
+									</div>
+								</div>
+
+								<div class="col-md-6" style="z-index: 9; margin: 0px; margin-bottom: 1%">
+									<div class="dx-field-label" style="font-size: 14px;" id="idHabilitacion_NominaE">Ambiente Nomina E:<strom style="color: red;">*</strom></div>
+									<div class="dx-field-value">
+										<div id="Habilitacion_NominaE"></div>
+										<div id="tooltip_Habilitacion_NominaE">Indica el ambiente actual de la Empresa en Nomina Electrónica</div>
 									</div>
 								</div>
 

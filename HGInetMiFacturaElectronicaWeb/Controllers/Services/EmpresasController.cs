@@ -273,6 +273,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Serial = d.StrSerial,
 				Perfil = d.IntAdquiriente,
 				Habilitacion = d.IntHabilitacion,
+				Habilitacion_NominaE = d.IntHabilitacionNomina,
 				IdSeguridad = d.StrIdSeguridad,
 				Intadquiriente = d.IntAdquiriente,
 				intObligado = d.IntObligado,
@@ -375,6 +376,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.StrRazonSocial = ObjEmpresa.StrRazonSocial;
 				Empresa.IntAdquiriente = ObjEmpresa.IntAdquiriente;
 				Empresa.IntHabilitacion = ObjEmpresa.IntHabilitacion;
+				Empresa.IntHabilitacionNomina = ObjEmpresa.IntHabilitacionNomina;
 				Empresa.IntObligado = ObjEmpresa.IntObligado;
 				Empresa.StrEmpresaAsociada = (string.IsNullOrEmpty(ObjEmpresa.StrEmpresaAsociada) ? ObjEmpresa.StrIdentificacion.Trim() : ObjEmpresa.StrEmpresaAsociada.Trim());
 				Empresa.StrObservaciones = ObjEmpresa.StrObservaciones;

@@ -163,6 +163,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		codigo_facturador = response.data[0].Identificacion;
 		Habilitacion = response.data[0].Habilitacion;
+		console.log(response);
 		var tipo = response.data[0].Admin;
 		if (tipo) {
 			$scope.Admin = true;
@@ -220,6 +221,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		Datos_Adquiriente = "",
 		Datos_Obligado = "",
 		Datos_Habilitacion = "",
+		Datos_Habilitacion_NominaE = "",
 		Datos_telefono = "",
 		Datos_IdentificacionDv = "",
 		Datos_Tipo = "1",
@@ -864,6 +866,17 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 			});
 
+			$("#Habilitacion_NominaE").dxRadioGroup({
+				searchEnabled: true,
+				caption: 'Habilitación Nomina E',
+				dataSource: TiposHabilitacion,
+				displayExpr: "Texto",
+				Enabled: true,
+				onValueChanged: function (data) {
+					Datos_Habilitacion_NominaE = data.value.ID;
+				}
+			});
+
 			//*********************************
 			SrvMaestrosEnum.ObtenerEnum(9, 'publico').then(function (data) {
 				Lista_Proveedores_Firma = data;
@@ -903,9 +916,17 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			$("#Habilitacion").dxRadioGroup().dxValidator({
 				validationRules: [{
 					type: "required",
-					message: "Debe indicar el tipo de Habilitacion"
+					message: "Debe indicar el tipo de Habilitacion de Factura E"
 				}]
 			});
+
+			$("#Habilitacion_NominaE").dxRadioGroup().dxValidator({
+				validationRules: [{
+					type: "required",
+					message: "Debe indicar el tipo de Habilitacion de Nomina"
+				}]
+			});
+			
 		}
 
 
@@ -1240,6 +1261,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			title: "Detalle:"
 		});
 
+		$("#tooltip_Habilitacion_NominaE").dxPopover({
+			target: "#Habilitacion_NominaE",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
 		$("#tooltip_txtUsuarios").dxPopover({
 			target: "#txtUsuarios",
 			showEvent: {
@@ -1415,13 +1449,24 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$('#idHabilitacion').show();
 					$("#Habilitacion").dxRadioGroup({ visible: true });
 					$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
+
+					$('#idHabilitacion_NominaE').show();
+					$("#Habilitacion_NominaE").dxRadioGroup({ visible: true });
+					$("#Habilitacion_NominaE").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion_NominaE)] });
+
 					$("#divEmailFacturador").show();
 					break;
 				case "Adquiriente":
 					$('#idHabilitacion').hide();
 					$("#Habilitacion").dxRadioGroup({ visible: false });
 					$("#Habilitacion").dxRadioGroup({ value: "0" });
+
+					$('#idHabilitacion_NominaE').hide();
+					$("#Habilitacion_NominaE").dxRadioGroup({ visible: false });
+					$("#Habilitacion_NominaE").dxRadioGroup({ value: "0" });
+
 					Datos_Habilitacion = "0";
+					Datos_Habilitacion_NominaE = "0";
 					$("#divEmailFacturador").hide();
 					break;
 				case "":
@@ -1429,6 +1474,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#Habilitacion").dxRadioGroup({ visible: false });
 					$("#Habilitacion").dxRadioGroup({ value: "" });
 					Datos_Habilitacion = "0";
+
+					$('#idHabilitacion_NominaE').hide();
+					$("#Habilitacion_NominaE").dxRadioGroup({ visible: false });
+					$("#Habilitacio_NominaEn").dxRadioGroup({ value: "" });
+					Datos_Habilitacion_NominaE = "0";
 					$("#divEmailFacturador").hide();
 			}
 
@@ -1597,6 +1647,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Adquiriente = (response.data[0].Intadquiriente) ? 1 : 0;
 				Datos_Obligado = (response.data[0].intObligado) ? 1 : 0;
 				Datos_Habilitacion = response.data[0].Habilitacion;
+				Datos_Habilitacion_NominaE = response.data[0].Habilitacion_NominaE;
 				Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
 				Datos_Observaciones = response.data[0].StrObservaciones;
 				Datos_Serial = response.data[0].Serial;
@@ -1719,7 +1770,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					if (Datos_Obligado == 1) {
 						$("#Facturador").dxCheckBox({ value: 1 });
 						$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion)] });
+						$("#Habilitacion_NominaE").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, response.data[0].Habilitacion_NominaE)] });
 					}
+
 
 					Datos_EmailRecepcion = true;//Se coloca como true la variable ya que este campo debe estar en True y de solo lectura, solicitud: mparamo
 					if (Datos_EmailRecepcion == true) {
@@ -1879,6 +1932,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntAdquiriente: (Datos_Adquiriente) ? true : false,
 				IntObligado: (Datos_Obligado) ? true : false,
 				IntHabilitacion: Datos_Habilitacion,
+				IntHabilitacionNomina: Datos_Habilitacion_NominaE,
 				StrEmpresaAsociada: Asociada,
 				StrObservaciones: Datos_Observaciones,
 				StrSerial: Datos_Serial,

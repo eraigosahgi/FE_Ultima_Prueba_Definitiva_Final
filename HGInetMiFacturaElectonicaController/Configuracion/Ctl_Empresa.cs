@@ -395,6 +395,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					EmpresaActualiza.IntAdquiriente = empresa.IntAdquiriente;
 					EmpresaActualiza.IntHabilitacion = empresa.IntHabilitacion;
+					EmpresaActualiza.IntHabilitacionNomina = empresa.IntHabilitacionNomina;
 					EmpresaActualiza.IntObligado = empresa.IntObligado;
 					EmpresaActualiza.StrEmpresaAsociada = empresa.StrEmpresaAsociada;
 					EmpresaActualiza.StrResolucionDian = empresa.StrResolucionDian;
