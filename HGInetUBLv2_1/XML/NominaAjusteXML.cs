@@ -29,6 +29,7 @@ namespace HGInetUBLv2_1
 
 				NominaIndividualDeAjusteType nomina = new NominaIndividualDeAjusteType();
 				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces(tipo);
+				nomina.TipoNota = documento.TipoNota.ToString();
 				string CUNE = string.Empty;
 				string numero_documento = "";
 
@@ -52,7 +53,7 @@ namespace HGInetUBLv2_1
 					reemplazo_doc.NumeroSecuenciaXML = new NominaIndividualDeAjusteTypeReemplazarNumeroSecuenciaXML();
 					reemplazo_doc.NumeroSecuenciaXML.Numero = numero_documento;
 					reemplazo_doc.NumeroSecuenciaXML.Prefijo = documento.Prefijo;
-					reemplazo_doc.NumeroSecuenciaXML.Consecutivo = documento.DatosTrabajador.Identificacion;
+					reemplazo_doc.NumeroSecuenciaXML.Consecutivo = documento.Documento.ToString();
 
 					reemplazo_doc.NumeroSecuenciaXML.CodigoTrabajador = documento.DatosTrabajador.CodigoTrabajador;
 
@@ -76,7 +77,7 @@ namespace HGInetUBLv2_1
 					reemplazo_doc.InformacionGeneral = new NominaIndividualDeAjusteTypeReemplazarInformacionGeneral();
 					reemplazo_doc.InformacionGeneral.Ambiente = ambiente_dian;
 					reemplazo_doc.InformacionGeneral.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
-					reemplazo_doc.InformacionGeneral.HoraGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_hora_zona));
+					reemplazo_doc.InformacionGeneral.HoraGen = documento.FechaGen.ToString(Fecha.formato_hora_zona);
 					reemplazo_doc.InformacionGeneral.PeriodoNomina = documento.PeriodoNomina.ToString();
 					reemplazo_doc.InformacionGeneral.TipoMoneda = documento.Moneda;
 					reemplazo_doc.InformacionGeneral.TipoXML = "103";
@@ -143,7 +144,7 @@ namespace HGInetUBLv2_1
 					eliminar_doc.NumeroSecuenciaXML = new NominaIndividualDeAjusteTypeEliminarNumeroSecuenciaXML();
 					eliminar_doc.NumeroSecuenciaXML.Numero = numero_documento;
 					eliminar_doc.NumeroSecuenciaXML.Prefijo = documento.Prefijo;
-					eliminar_doc.NumeroSecuenciaXML.Consecutivo = documento.DatosTrabajador.Identificacion;
+					eliminar_doc.NumeroSecuenciaXML.Consecutivo = documento.Documento.ToString();
 
 					#endregion
 
@@ -156,7 +157,7 @@ namespace HGInetUBLv2_1
 					eliminar_doc.InformacionGeneral = new NominaIndividualDeAjusteTypeEliminarInformacionGeneral();
 					eliminar_doc.InformacionGeneral.Ambiente = ambiente_dian;
 					eliminar_doc.InformacionGeneral.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
-					eliminar_doc.InformacionGeneral.HoraGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_hora_zona));
+					eliminar_doc.InformacionGeneral.HoraGen = documento.FechaGen.ToString(Fecha.formato_hora_zona);
 					eliminar_doc.InformacionGeneral.TipoXML = "103";
 					eliminar_doc.InformacionGeneral.Version = "V1.0: Documento Soporte de Pago de Nómina Electrónica";
 
@@ -175,7 +176,15 @@ namespace HGInetUBLv2_1
 				string software_security_code = string.Format("{0}{1}{2}", resolucion.IdSoftware, resolucion.PinSoftware, numero_documento);
 				string software_security_code_encriptado = Encriptar.Encriptar_SHA384(software_security_code);
 
-				string ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", CUNE);
+				string ruta_qr_Dian = string.Empty;
+				if (ambiente_dian.Equals("1"))
+				{
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", CUNE);
+				}
+				else
+				{
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=", CUNE);
+				}
 
 				//1 - Reemplazar y 2 - Eliminar
 				if (documento.TipoNota.Equals(1))
@@ -212,7 +221,7 @@ namespace HGInetUBLv2_1
 				nomina.UBLExtensions = UBLExtensions.ToArray();
 
 				// convierte los datos del objeto en texto XML 
-				StringBuilder txt_xml = ConvertirXML.Convertir(nomina, namespaces_xml, TipoDocumento.Nomina);
+				StringBuilder txt_xml = ConvertirXML.Convertir(nomina, namespaces_xml, tipo);
 
 				// valida el namespace xmlns:schemaLocation y lo reemplaza para Google Chrome
 				TextReader textReader = new StringReader(txt_xml.ToString());
@@ -221,7 +230,7 @@ namespace HGInetUBLv2_1
 				if (texto_xml.Contains("xmlns:schemaLocation"))
 				{
 					texto_xml = texto_xml.Replace("xmlns:schemaLocation", "xsi:schemaLocation");
-					texto_xml = texto_xml.Replace("xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"", "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+					texto_xml = texto_xml.Replace("xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"", "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" SchemaLocation=\"\" ");
 					txt_xml = new StringBuilder(texto_xml);
 				}
 
@@ -279,7 +288,7 @@ namespace HGInetUBLv2_1
 				string DocEmp = string.Empty;
 				string TipoXML = string.Empty;
 
-				if (tipo_nota.Equals(2))
+				if (tipo_nota.Equals(1))
 				{
 					NumCr = nomina.Reemplazar.NumeroSecuenciaXML.Numero;
 					FecCr = string.Format("{0}{1}", nomina.Reemplazar.InformacionGeneral.FechaGen.ToString("yyyy-MM-dd"), nomina.Reemplazar.InformacionGeneral.HoraGen); //fecha.ToString(Fecha.formato_fecha_java);

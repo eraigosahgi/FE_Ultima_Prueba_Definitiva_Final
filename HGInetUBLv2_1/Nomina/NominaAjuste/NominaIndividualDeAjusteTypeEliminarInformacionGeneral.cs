@@ -17,9 +17,9 @@ public partial class NominaIndividualDeAjusteTypeEliminarInformacionGeneral {
 	private string encripCUNEField;
     
 	private System.DateTime fechaGenField;
-    
-	private System.DateTime horaGenField;
-    
+
+	private string horaGenField;
+
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlAttributeAttribute()]
 	public string Version {
@@ -85,14 +85,17 @@ public partial class NominaIndividualDeAjusteTypeEliminarInformacionGeneral {
 			this.fechaGenField = value;
 		}
 	}
-    
+
 	/// <comentarios/>
-	[System.Xml.Serialization.XmlAttributeAttribute(DataType="time")]
-	public System.DateTime HoraGen {
-		get {
+	[System.Xml.Serialization.XmlAttributeAttribute(DataType = "string")]
+	public string HoraGen
+	{
+		get
+		{
 			return this.horaGenField;
 		}
-		set {
+		set
+		{
 			this.horaGenField = value;
 		}
 	}

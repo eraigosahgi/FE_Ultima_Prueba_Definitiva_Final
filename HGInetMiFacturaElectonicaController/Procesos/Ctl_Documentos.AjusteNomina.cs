@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
 
@@ -284,12 +285,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
-				/*
-				if (string.IsNullOrEmpty(item.NumeroResolucion))
-					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));*/
-
+				
 				//valida si el Documento ya existe en Base de Datos
-				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, true);
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, TipoDocumento.NominaAjuste.GetHashCode());
 
 				TblDocumentos documento_bd = new TblDocumentos();
 
@@ -330,6 +328,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 
+				lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(item.DatosEmpleador.Identificacion, TipoDocumento.NominaAjuste.GetHashCode());
+
 				// filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
 				TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
 																								   _resolucion_doc.StrPrefijo.Equals(item.Prefijo)).FirstOrDefault();
@@ -344,16 +344,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					tbl_resolucion = Ctl_EmpresaResolucion.Convertir(facturador_electronico.StrIdentificacion, item.Prefijo, TipoDocumento.NominaAjuste.GetHashCode(), facturador_electronico.IntVersionDian);
 
 					//Toma el IdsetDian de la resolucion de pruebas de Factura cuando esta en habilitacion
-					if (facturador_electronico.IntHabilitacion < 99)
-					{
-						TblEmpresasResoluciones resol_factura = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
-																				  !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
-																				  && _resolucion_doc.IntTipoDoc == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault();
-
-						if (resol_factura == null)
+					if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+					{  
+						if (string.IsNullOrWhiteSpace(item.NumeroResolucion))
 							throw new ApplicationException("No se encontró IdSetDian registrado para el facturador electrónico");
 						else
-							tbl_resolucion.StrIdSetDian = resol_factura.StrIdSetDian;
+							tbl_resolucion.StrIdSetDian = item.NumeroResolucion;
 					}
 					// crea el registro en base de datos
 					resolucion = _resolucion.Crear(tbl_resolucion);
@@ -362,7 +358,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else
 				{
 					//Toma el IdsetDian de la resolucion de pruebas de Factura cuando esta en habilitacion
-					if ((facturador_electronico.IntVersionDian.Equals(2)) && (facturador_electronico.IntHabilitacion < 99) && string.IsNullOrEmpty(resolucion_doc.StrIdSetDian))
+					if ((facturador_electronico.IntVersionDian.Equals(2)) && (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode()) && string.IsNullOrEmpty(resolucion_doc.StrIdSetDian))
 					{
 
 						TblEmpresasResoluciones resol_nomina = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
@@ -391,16 +387,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if ((item.TipoNota > 0) && !string.IsNullOrEmpty(item.CUNEPred))
 				{
 					//valida si el Documento afectado ya existe en Base de Datos
-					List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, tipo_doc_pred.GetHashCode(), item.NumeroPred);
+					Match numero_doc = Regex.Match(item.NumeroPred, "\\d+");
+
+					//Match pref = Regex.Match(item.NumeroPred, "\\D+");
+					List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, tipo_doc_pred.GetHashCode(), numero_doc.Value);
 					if (doc_ref != null && doc_ref.Count > 0)
 					{
 
 						DocumentoRespuesta doc_resp = doc_ref.Where(d => d.Cufe.Equals(item.CUNEPred)).FirstOrDefault();
-						if (doc_resp != null)
-						{
-							item.NumeroPred = string.Format("{0} - {1}", doc_resp.Prefijo, doc_resp.Documento);
-						}
-						else
+						if (doc_resp == null)
 						{
 							doc_resp = doc_ref.Where(d => d.Identificacion.Equals(item.DatosTrabajador.Identificacion)).FirstOrDefault();
 							if (doc_resp != null)
@@ -465,7 +460,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException("No se indica tipo de ajuste o numero de documento para afectar");
 
 				// realiza el proceso de envío a la DIAN del documento en Validacion Previa V2
-				item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.Nomina, resolucion,
+				item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.NominaAjuste, resolucion,
 					facturador_electronico, documento_bd);
 			}
 			catch (Exception excepcion)
@@ -543,7 +538,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				&& (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
-				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, true);
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, TipoDocumento.NominaAjuste.GetHashCode());
 
 				if ((numero_documento != null) && (item_respuesta.IdProceso > (short)ProcesoEstado.Recepcion.GetHashCode() || item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode()))
 				{

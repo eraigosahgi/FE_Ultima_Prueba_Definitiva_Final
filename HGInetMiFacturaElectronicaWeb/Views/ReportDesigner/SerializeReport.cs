@@ -9,6 +9,7 @@ using System.Reflection;
 using LibreriaGlobalHGInet.Objetos;
 using HGInetFacturaEReports.ReportDesigner;
 using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
+using HGInetMiFacturaElectonicaData.Formatos;
 
 namespace HGInetMiFacturaElectronicaWeb
 {
@@ -41,7 +42,10 @@ namespace HGInetMiFacturaElectronicaWeb
 		{
 			if (value == "DataSetReporte")
 			{
-				return GenerarColumnas();
+				if (this.TipoDocumento.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
+					return GenerarColumnas();
+				else
+					return GenerarColumnasNom();
 			}
 			return null;
 		}
@@ -320,6 +324,229 @@ namespace HGInetMiFacturaElectronicaWeb
 			ds.Tables["ReferenciaPago"].ParentRelations.Add(relation_RefPago);
 
 			return ds;
+		}
+
+		public DataSet GenerarColumnasNom()
+		{
+
+			var ds = new DataSet();
+			ds.DataSetName = "DataSetReporte";
+
+			DataTable DtPrincipal = new DataTable();
+			DataColumn principal = new DataColumn();
+
+			XtraReportDesigner reporte = new XtraReportDesigner();
+			reporte.Name = "DataSet";
+
+			switch (this.TipoDocumento)
+			{
+				
+
+				case TipoDocumento.NominaAjuste:
+					//DATOS TABLA NOMINA
+					DtPrincipal = new DataTable("NominaAjuste");
+					DtPrincipal.TableName = "NominaAjuste";
+					foreach (PropertyInfo info in typeof(NominaAjuste).GetProperties())
+					{
+						if (info.PropertyType != typeof(Empleador) && info.PropertyType != typeof(Trabajador) && !info.PropertyType.Name.Equals("List`1"))
+						{
+							DtPrincipal.Columns.Add(info.Name.ToString());
+						}
+					}
+					//Agrega la tabla principal al dataset
+					ds.Tables.Add(DtPrincipal);
+
+					principal = ds.Tables["NominaAjuste"].Columns["Planilla"];
+					this.DataMember = "NominaAjuste";
+					break;
+
+				default:
+					//DATOS TABLA NOMINA
+					DtPrincipal = new DataTable("Nomina");
+					DtPrincipal.TableName = "Nomina";
+					//foreach (PropertyInfo info in typeof(Nomina).GetProperties())
+					//{
+					//	if (info.PropertyType != typeof(Empleador) && info.PropertyType != typeof(Trabajador) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(Periodo)
+					//	&& info.PropertyType != typeof(Pago) && info.PropertyType != typeof(Devengados) && info.PropertyType != typeof(Deducciones) && info.PropertyType != typeof(Transporte)
+					//	&& info.PropertyType != typeof(Hora))
+					//	{
+					//		DtPrincipal.Columns.Add(info.Name.ToString());
+					//	}
+					//}
+					////Agrega la tabla principal al dataset
+					//ds.Tables.Add(DtPrincipal);
+
+					//principal = ds.Tables["Nomina"].Columns["Documento"];
+					//this.DataMember = "Nomina";
+
+					List<string> lista_excepciones = new List<string>() { };
+
+					foreach (PropertyInfo info in typeof(Planilla).GetProperties())
+					{
+						if (!info.PropertyType.Name.Equals("List`1"))
+						{
+							DtPrincipal.Columns.Add(info.Name.ToString());
+						}
+					}
+
+					//Agrega la tabla principal al dataset
+					ds.Tables.Add(DtPrincipal);
+					principal = ds.Tables["Nomina"].Columns["Documento"];
+					DataMember = "Nomina";
+
+					break;
+			}
+
+			//DATOS TABLA DATOS DE LOS DETALLES DEL DOCUMENTO
+			DataTable Novedades = new DataTable("Novedades");
+			Novedades.TableName = "Novedades";
+			foreach (PropertyInfo info in typeof(Novedad).GetProperties())
+			{
+				if (!info.PropertyType.Name.Equals("List`1"))
+				{
+					Novedades.Columns.Add(info.Name.ToString());
+				}
+			}
+
+			ds.Tables.Add(Novedades);
+
+			DataColumn datos_Novedad = ds.Tables["Novedades"].Columns["Concepto"];
+			DataRelation relation_Novedad = new DataRelation("Novedades", principal, datos_Novedad);
+			relation_Novedad.Nested = true;
+			ds.Tables["Novedades"].ParentRelations.Add(relation_Novedad);
+
+			/*
+			//DATOS TABLA DATOS DEL EMPLEADOR(OBLIGADO)
+			DataTable DatosEmpleador = new DataTable("DatosEmpleador");
+			DatosEmpleador.TableName = "DatosEmpleador";
+			foreach (PropertyInfo info in typeof(Empleador).GetProperties())
+			{
+				DatosEmpleador.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(DatosEmpleador);
+
+			DataColumn empleador = ds.Tables["DatosEmpleador"].Columns["Identificacion"];
+			DataRelation relation_empleador = new DataRelation("DatosEmpleador", principal, empleador);
+			relation_empleador.Nested = true;
+			ds.Tables["DatosEmpleador"].ParentRelations.Add(relation_empleador);
+
+
+			//DATOS TABLA DATOS DEL TRABAJADOR(ADQUIRIENTE)
+			DataTable DatosTrabajador = new DataTable("DatosTrabajador");
+			DatosTrabajador.TableName = "DatosTrabajador";
+			foreach (PropertyInfo info in typeof(Trabajador).GetProperties())
+			{
+				DatosTrabajador.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(DatosTrabajador);
+
+			DataColumn trabajador = ds.Tables["DatosTrabajador"].Columns["Identificacion"];
+			DataRelation relation_trabajador = new DataRelation("DatosTrabajador", principal, trabajador);
+			relation_trabajador.Nested = true;
+			ds.Tables["DatosTrabajador"].ParentRelations.Add(relation_trabajador);
+
+			//DATOS TABLA DATOS DEL PERIODO DEL DOCUMENTO NOMINA
+			DataTable Periodo = new DataTable("Periodo");
+			Periodo.TableName = "Periodo";
+			foreach (PropertyInfo info in typeof(Periodo).GetProperties())
+			{
+				Periodo.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(Periodo);
+
+			DataColumn periodo = ds.Tables["Periodo"].Columns["FechaIngreso"];
+			DataRelation relation_periodo = new DataRelation("Periodo", principal, periodo);
+			relation_periodo.Nested = true;
+			ds.Tables["Periodo"].ParentRelations.Add(relation_periodo);
+
+			//DATOS TABLA DATOS DEL PERIODO DEL DOCUMENTO NOMINA
+			DataTable Pago = new DataTable("Pago");
+			Pago.TableName = "Pago";
+			foreach (PropertyInfo info in typeof(Pago).GetProperties())
+			{
+				Pago.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(Pago);
+
+			DataColumn pago = ds.Tables["Pago"].Columns["Forma"];
+			DataRelation relation_pago = new DataRelation("Pago", principal, pago);
+			relation_pago.Nested = true;
+			ds.Tables["Pago"].ParentRelations.Add(relation_pago);
+
+
+			//DATOS TABLA DATOS DE LOS DEVENGADOS DEL DOCUMENTO
+			DataTable Devengados = new DataTable("Devengados");
+			Devengados.TableName = "Devengados";
+			foreach (PropertyInfo info in typeof(Devengados).GetProperties())
+			{
+				if (!info.PropertyType.Name.Equals("List`1"))
+				{
+					Devengados.Columns.Add(info.Name.ToString());
+				}
+			}
+
+			ds.Tables.Add(Devengados);
+
+			DataColumn datos_devengados = ds.Tables["Devengados"].Columns["DiasTrabajados"];
+			DataRelation relation_devengados = new DataRelation("Devengados", principal, datos_devengados);
+			relation_devengados.Nested = true;
+			ds.Tables["Devengados"].ParentRelations.Add(relation_devengados);
+
+			//DATOS TABLA DATOS DE LAS DEDUCCIONES DEL DOCUMENTO
+			DataTable Deducciones = new DataTable("Deducciones");
+			Deducciones.TableName = "Deducciones";
+			foreach (PropertyInfo info in typeof(Deducciones).GetProperties())
+			{
+				if (!info.PropertyType.Name.Equals("List`1"))
+				{
+					Deducciones.Columns.Add(info.Name.ToString());
+				}
+			}
+
+			ds.Tables.Add(Deducciones);
+
+			DataColumn datos_deducciones = ds.Tables["Deducciones"].Columns["Salud"];
+			DataRelation relation_deducciones = new DataRelation("Deducciones", principal, datos_deducciones);
+			relation_deducciones.Nested = true;
+			ds.Tables["Deducciones"].ParentRelations.Add(relation_deducciones);
+
+			//DATOS TABLA DATOS DEL TRANSPORTE DEL DOCUMENTO NOMINA
+			DataTable Transporte = new DataTable("Transporte");
+			Transporte.TableName = "Transporte";
+			foreach (PropertyInfo info in typeof(Transporte).GetProperties())
+			{
+				Transporte.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(Transporte);
+
+			DataColumn datos_transporte = ds.Tables["Transporte"].Columns["AuxilioTransporte"];
+			DataRelation relation_transporte = new DataRelation("Transporte", principal, datos_transporte);
+			relation_transporte.Nested = true;
+			ds.Tables["Transporte"].ParentRelations.Add(relation_transporte);
+
+			//DATOS TABLA DATOS DE HORA EXTRAS O RECARGOS DEL DOCUMENTO NOMINA
+			DataTable Hora = new DataTable("Hora");
+			Hora.TableName = "DatosHoras";
+			foreach (PropertyInfo info in typeof(Hora).GetProperties())
+			{
+				Hora.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(Hora);
+
+			DataColumn datos_hora = ds.Tables["DatosHoras"].Columns["TipoHora"];
+			DataRelation relation_hora = new DataRelation("DatosHoras", principal, datos_hora);
+			relation_hora.Nested = true;
+			ds.Tables["DatosHoras"].ParentRelations.Add(relation_hora);
+			*/
+
+			return ds;
+
 		}
 
 	}

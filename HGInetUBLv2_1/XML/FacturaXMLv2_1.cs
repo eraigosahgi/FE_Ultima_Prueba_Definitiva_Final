@@ -90,7 +90,10 @@ namespace HGInetUBLv2_1
 				}
 
 				facturaXML.ProfileID = new ProfileIDType();
-				facturaXML.ProfileID.Value = "DIAN 2.1";
+				if (documento.TipoOperacion < 2)
+					facturaXML.ProfileID.Value = "DIAN 2.1: Factura Electrónica de Venta";
+				else
+					facturaXML.ProfileID.Value = "DIAN 2.1: documento soporte en adquisiciones efectuadas a no obligados a facturar.";
 
 				//---Ambiente al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 				facturaXML.ProfileExecutionID = new ProfileExecutionIDType();
@@ -252,9 +255,13 @@ namespace HGInetUBLv2_1
 				{
 					InvoiceTypeCode.Value = "03";
 				}
-				else//Exportacion
+				else if (documento.TipoOperacion == 2)//Exportacion
 				{
-					InvoiceTypeCode.Value = "02";
+					InvoiceTypeCode.Value = "03";
+				}
+				else//Documento Equivalente
+				{
+					InvoiceTypeCode.Value = "05";
 				}
 
 				facturaXML.InvoiceTypeCode = InvoiceTypeCode;
@@ -430,7 +437,11 @@ namespace HGInetUBLv2_1
 				#endregion
 
 				#region facturaXML.AccountingSupplierParty - Información del obligado a facturaXMLr
-				facturaXML.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado, documento.Prefijo);
+				if (documento.TipoOperacion < 3)
+					facturaXML.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado, documento.Prefijo);
+				else
+					documento.DatosAdquiriente.TipoIdentificacion = 31;
+					facturaXML.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosAdquiriente, documento.Prefijo);
 				#endregion
 
 				#region facturaXML.AccountingCustomerParty - Información del Adquiriente
@@ -445,11 +456,13 @@ namespace HGInetUBLv2_1
 				51 o documento equivalente y, que tratándose de la facturaXML electrónica, 
 			    la recibe, rechaza, cuando
 				52 sea del caso, y conserva para su posterior exhibición*/
-
-				facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
+				if (documento.TipoOperacion < 3)
+					facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
+				else
+					facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosObligado);
 				#endregion
 
-				if (documento.Descuentos != null || documento.Cargos != null)
+				if ((documento.Descuentos != null && documento.Descuentos.Sum(x => (x.Valor)) > 0) || (documento.Cargos != null && documento.Descuentos.Sum(x => (x.Valor)) > 0))
 					facturaXML.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
 
 				if (documento.DatosAdquiriente.DireccionEntrega != null)
@@ -564,7 +577,7 @@ namespace HGInetUBLv2_1
 
 
 				#region Anticipos
-				if (documento.Anticipos != null)
+				if (documento.Anticipos != null && documento.Anticipos.Count > 0)
 				{
 					List<PaymentType> list_anticipos = new List<PaymentType>();
 					foreach (var item in documento.Anticipos)
@@ -587,28 +600,33 @@ namespace HGInetUBLv2_1
 				/*** QUEMADO ***/
 				//---Validar Se llena con informacion del ejemplo Factura Genericas
 				#region PaymentExchangeRate - Conversión de divisas: cac:PaymentExchangeRate 
-				ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
-				//---5.3.3. Moneda (ISO 4217):
-				//cbc: SourceCurrencyCode [1..1] La moneda de referencia para este tipo de cambio; La moneda a partir de la cual se realiza el cambio.
-				PaymentExchangeRate.SourceCurrencyCode = new SourceCurrencyCodeType();
-				PaymentExchangeRate.SourceCurrencyCode.Value = documento.Moneda;
-				//---Valor debe ser 1.00 si es pesos colombianos
-				//*cbc: SourceCurrencyBaseRate[0..1] En el caso de una moneda de origen con denominaciones de pequeño valor, la unidad base.
-				PaymentExchangeRate.SourceCurrencyBaseRate = new SourceCurrencyBaseRateType();
-				PaymentExchangeRate.SourceCurrencyBaseRate.Value = 1.00M;
-				//* cbc: TargetCurrencyCode [1..1] La moneda de destino para este tipo de cambio; La moneda a la que se realiza el cambio.
-				PaymentExchangeRate.TargetCurrencyCode = new TargetCurrencyCodeType();
-				PaymentExchangeRate.TargetCurrencyCode.Value = (documento.Trm != null ? documento.Trm.Moneda : documento.Moneda);//documento.Moneda;
-				//* cbc: TargetCurrencyBaseRate [0..1] En el caso de una moneda de destino con denominaciones de valor pequeño, la base de la unidad.
-				PaymentExchangeRate.TargetCurrencyBaseRate = new TargetCurrencyBaseRateType();
-				PaymentExchangeRate.TargetCurrencyBaseRate.Value = 1.00M;
-				//* cbc: CalculationRate [0..1] El factor aplicado a la moneda de origen para calcular la moneda de destino.
-				PaymentExchangeRate.CalculationRate = new CalculationRateType();
-				PaymentExchangeRate.CalculationRate.Value = (documento.Trm != null ? documento.Trm.Valor+0.00M : 1.00M);//1.0M;
-				//* cbc: Fecha [0..1] La fecha en que se estableció el tipo de cambio.
-				PaymentExchangeRate.Date = new DateType1();
-				PaymentExchangeRate.Date.Value = ((documento.Trm != null) ? Convert.ToDateTime(documento.Trm.FechaTrm.ToString(Fecha.formato_fecha_hginet)) : Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet)));
-				facturaXML.PaymentExchangeRate = PaymentExchangeRate;
+
+				if (documento.TipoOperacion < 3)
+				{
+					ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
+					//---5.3.3. Moneda (ISO 4217):
+					//cbc: SourceCurrencyCode [1..1] La moneda de referencia para este tipo de cambio; La moneda a partir de la cual se realiza el cambio.
+					PaymentExchangeRate.SourceCurrencyCode = new SourceCurrencyCodeType();
+					PaymentExchangeRate.SourceCurrencyCode.Value = documento.Moneda;
+					//---Valor debe ser 1.00 si es pesos colombianos
+					//*cbc: SourceCurrencyBaseRate[0..1] En el caso de una moneda de origen con denominaciones de pequeño valor, la unidad base.
+					PaymentExchangeRate.SourceCurrencyBaseRate = new SourceCurrencyBaseRateType();
+					PaymentExchangeRate.SourceCurrencyBaseRate.Value = 1.00M;
+					//* cbc: TargetCurrencyCode [1..1] La moneda de destino para este tipo de cambio; La moneda a la que se realiza el cambio.
+					PaymentExchangeRate.TargetCurrencyCode = new TargetCurrencyCodeType();
+					PaymentExchangeRate.TargetCurrencyCode.Value = (documento.Trm != null ? documento.Trm.Moneda : documento.Moneda);//documento.Moneda;
+																																	 //* cbc: TargetCurrencyBaseRate [0..1] En el caso de una moneda de destino con denominaciones de valor pequeño, la base de la unidad.
+					PaymentExchangeRate.TargetCurrencyBaseRate = new TargetCurrencyBaseRateType();
+					PaymentExchangeRate.TargetCurrencyBaseRate.Value = 1.00M;
+					//* cbc: CalculationRate [0..1] El factor aplicado a la moneda de origen para calcular la moneda de destino.
+					PaymentExchangeRate.CalculationRate = new CalculationRateType();
+					PaymentExchangeRate.CalculationRate.Value = (documento.Trm != null ? documento.Trm.Valor + 0.00M : 1.00M);//1.0M;
+																															  //* cbc: Fecha [0..1] La fecha en que se estableció el tipo de cambio.
+					PaymentExchangeRate.Date = new DateType1();
+					PaymentExchangeRate.Date.Value = ((documento.Trm != null) ? Convert.ToDateTime(documento.Trm.FechaTrm.ToString(Fecha.formato_fecha_hginet)) : Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet)));
+					facturaXML.PaymentExchangeRate = PaymentExchangeRate;
+				}
+
 				#endregion
 
 				#region facturaXML.InvoiceLine - Línea de facturaXML
@@ -1482,7 +1500,7 @@ namespace HGInetUBLv2_1
 							AllowanceChargeReasonType[0] = AllowanceChargeReason;
 							AllowanceCharge.AllowanceChargeReason = AllowanceChargeReasonType;
 							AllowanceCharge.MultiplierFactorNumeric = new MultiplierFactorNumericType();
-							AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 6);
+							AllowanceCharge.MultiplierFactorNumeric.Value = decimal.Round(DocDet.DescuentoPorcentaje, 2);
 							AllowanceCharge.Amount = new AmountType2();
 							AllowanceCharge.Amount.currencyID = moneda_detalle.ToString();
 							AllowanceCharge.Amount.Value = DocDet.DescuentoValor;//decimal.Round(DocDet.DescuentoValor, 2);
@@ -1549,6 +1567,11 @@ namespace HGInetUBLv2_1
 									Value = false
 								};
 
+								RoundingAmountType Rouding = new RoundingAmountType();
+								Rouding.Value = 0.00M;
+								Rouding.currencyID = moneda_detalle.ToString();
+								TaxTotal.RoundingAmount = Rouding;
+
 								// Debe ser informado un grupo de estos para cada tarifa. 
 								// <cac:TaxSubtotal>
 								TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
@@ -1570,7 +1593,15 @@ namespace HGInetUBLv2_1
 								}
 								else
 								{
-									TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
+									if (DocDet.BaseImpuestoIva > 0)
+									{
+										TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
+									}
+									else
+									{
+										TaxSubtotalIva.TaxableAmount.Value = DocDet.ValorSubtotal;
+									}
+									
 								}
 
 
@@ -1629,7 +1660,7 @@ namespace HGInetUBLv2_1
 
 					try
 					{
-						if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == false)
+						if (DocDet.ValorImpuestoConsumo >= 0 && DocDet.ProductoGratis == false)
 						{
 
 
@@ -1653,6 +1684,11 @@ namespace HGInetUBLv2_1
 							{
 								Value = false
 							};
+
+							RoundingAmountType Rouding = new RoundingAmountType();
+							Rouding.Value = 0.00M;
+							Rouding.currencyID = moneda_detalle.ToString();
+							TaxTotal.RoundingAmount = Rouding;
 
 							// Debe ser informado un grupo de estos para cada tarifa. 
 							// <cac:TaxSubtotal>
@@ -1764,6 +1800,11 @@ namespace HGInetUBLv2_1
 							{
 								Value = false
 							};
+
+							RoundingAmountType Rouding = new RoundingAmountType();
+							Rouding.Value = 0;
+							Rouding.currencyID = moneda_detalle.ToString();
+							TaxTotal.RoundingAmount = Rouding;
 
 							// Debe ser informado un grupo de estos para cada tarifa. 
 							// <cac:TaxSubtotal>
@@ -2074,6 +2115,7 @@ namespace HGInetUBLv2_1
 						else
 						{
 							IDItemStandard.schemeID = "999";
+							IDItemStandard.schemeName = "Estándar de adopción del contribuyente";
 							IDItemStandard.Value = DocDet.ProductoCodigo;
 						}
 						StandardItemIdentification.ID = IDItemStandard;

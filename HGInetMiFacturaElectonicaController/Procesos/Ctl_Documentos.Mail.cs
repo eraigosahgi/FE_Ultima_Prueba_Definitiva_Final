@@ -69,7 +69,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					string nombre_comercial = string.IsNullOrEmpty(documento_obj.DatosObligado.NombreComercial) ? documento_obj.DatosObligado.RazonSocial : documento_obj.DatosObligado.NombreComercial;
 					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosObligado.Telefono, documento_obj.DatosAdquiriente.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, nombre_comercial);
 				}
-				else if (documentoBd.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
+				else if (documentoBd.IntDocTipo == TipoDocumento.Nomina.GetHashCode() || (documentoBd.IntDocTipo == TipoDocumento.NominaAjuste.GetHashCode() && documento_obj.TipoNota.Equals(1)))
 				{
 					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosEmpleador.Telefono, documento_obj.DatosTrabajador.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, obligado.StrRazonSocial);
 				}

@@ -222,7 +222,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			try
 			{
 				//valida si el Documento ya existe en Base de Datos
-				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, true);
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, TipoDocumento.Nomina.GetHashCode());
 
 				TblDocumentos documento_bd = new TblDocumentos();
 
@@ -275,6 +275,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					TblEmpresasResoluciones tbl_resolucion = new TblEmpresasResoluciones();
 
 					tbl_resolucion = Ctl_EmpresaResolucion.Convertir(facturador_electronico.StrIdentificacion, item.Prefijo, TipoDocumento.Nomina.GetHashCode(), facturador_electronico.IntVersionDian);
+
+					//Toma el IdsetDian de la resolucion de pruebas de Factura cuando esta en habilitacion
+					if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+					{
+						if (string.IsNullOrWhiteSpace(item.NumeroResolucion))
+							throw new ApplicationException("No se encontró IdSetDian registrado para el facturador electrónico");
+						else
+							tbl_resolucion.StrIdSetDian = item.NumeroResolucion;
+					}
 
 					// crea el registro en base de datos
 					tbl_resolucion.StrIdSetDian = item.NumeroResolucion;
@@ -418,7 +427,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				&& (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
-				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, true);
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, TipoDocumento.Nomina.GetHashCode());
 
 				if ((numero_documento != null) && (item_respuesta.IdProceso > (short)ProcesoEstado.Recepcion.GetHashCode() || item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode()))
 				{

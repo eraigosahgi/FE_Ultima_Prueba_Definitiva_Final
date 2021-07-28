@@ -74,16 +74,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					FechaRecepcion = fecha_actual,
 					FechaUltimoProceso = fecha_actual,
 					IdDocumento = id_radicado.ToString(),
-					Identificacion = (tipo_doc == TipoDocumento.Nomina) ? documento_obj.DatosTrabajador.Identificacion : documento_obj.DatosAdquiriente.Identificacion,
+					Identificacion = (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) ? documento_obj.DatosTrabajador.Identificacion : documento_obj.DatosAdquiriente.Identificacion,
 					IdProceso = ProcesoEstado.Recepcion.GetHashCode(),
 					MotivoRechazo = "",
-					NumeroResolucion = (tipo_doc == TipoDocumento.Nomina) ? string.Empty : documento_obj.NumeroResolucion,
+					NumeroResolucion = (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) ? string.Empty : documento_obj.NumeroResolucion,
 					Prefijo = documento_obj.Prefijo,
 					ProcesoFinalizado = 0,
 					UrlPdf = "",
 					UrlXmlUbl = "",
 					IdPeticion = id_peticion,
-					IdentificacionObligado = (tipo_doc == TipoDocumento.Nomina) ? documento_obj.DatosEmpleador.Identificacion : documento_obj.DatosObligado.Identificacion,
+					IdentificacionObligado = (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) ? documento_obj.DatosEmpleador.Identificacion : documento_obj.DatosObligado.Identificacion,
 					UrlAuditoria = string.Format("{0}{1}", datos_plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", id_radicado.ToString())),
 					IdVersionDian = empresa.IntVersionDian
 				};
@@ -111,7 +111,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					bool continuar_proceso = true;
 
 					//Cambiar validacion para produccion.
-					if (tipo_doc == TipoDocumento.Nomina && (empresa.IntHabilitacionNomina == null || empresa.IntHabilitacionNomina < Habilitacion.Pruebas.GetHashCode()))
+					if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && (empresa.IntHabilitacionNomina == null || empresa.IntHabilitacionNomina < Habilitacion.Pruebas.GetHashCode()))
 						continuar_proceso = false;
 
 
@@ -128,7 +128,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_result.VersionDian = empresa.IntVersionDian;
 
 						//Valida que el Proveedor Receptor enviado exista en Bd
-						if (tipo_doc != TipoDocumento.Nomina)
+						if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
 						{
 							if (documento_obj.IdentificacionProveedor != null)
 							{
@@ -252,6 +252,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						//Asignacion del CUFE a la respuesta
 						respuesta.Cufe = documento_result.CUFE;
+
+						//Obtiene el Formato Generico de Nomina
+						if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && documento_obj.DocumentoFormato == null)
+						{
+							try
+							{
+								Formato formato_nomina = new Formato();
+								Ctl_Formatos clase_formatos = new Ctl_Formatos();
+								formato_nomina.Codigo = clase_formatos.ObtenerFormatosEmpresa(Constantes.NitResolucionconPrefijo, TipoFormato.FormatoPDF.GetHashCode()).Where(x => x.IntDocTipo == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault().IntCodigoFormato;
+								documento_obj.DocumentoFormato = new Formato();
+								documento_obj.DocumentoFormato = formato_nomina;
+							}
+							catch (Exception)
+							{
+
+							}
+
+						}
 
 						// almacena Formato ****** Falta el Formato de Nomina
 						if (documento_obj.DocumentoFormato != null)
@@ -425,16 +443,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							// envía el mail de documentos al adquiriente
 							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 							{
-								//Crea el attached para poder ser enviado en el correo con los demas archivos.
-								try
+								//Crea el attached para poder ser enviado en el correo con los demas archivos menos en nomina.
+								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
 								{
-									bool attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documentoBd, empresa);
+									try
+									{
+										bool attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documentoBd, empresa);
+									}
+									catch (Exception excepcion)
+									{
+										Ctl_Alertas alerta = new Ctl_Alertas();
+										alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(excepcion.Message), 1, false);
+									}
 								}
-								catch (Exception excepcion)
-								{
-									Ctl_Alertas alerta = new Ctl_Alertas();
-									alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(excepcion.Message), 1, false);
-								}
+								
 
 								if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 								{

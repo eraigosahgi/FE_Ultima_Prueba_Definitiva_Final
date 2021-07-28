@@ -115,7 +115,15 @@ namespace HGInetUBLv2_1
 				nomina.InformacionGeneral.CUNE = CUNE;
 				nomina.InformacionGeneral.EncripCUNE = "CUNE-SHA384";
 
-				string ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", CUNE);
+				string ruta_qr_Dian = string.Empty;
+				if (ambiente_dian.Equals("1"))
+				{
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", CUNE);
+				}
+				else
+				{
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=", CUNE);
+				} 
 
 				string software_security_code = string.Format("{0}{1}{2}", resolucion.IdSoftware, resolucion.PinSoftware, numero_documento);
 				string software_security_code_encriptado = Encriptar.Encriptar_SHA384(software_security_code);

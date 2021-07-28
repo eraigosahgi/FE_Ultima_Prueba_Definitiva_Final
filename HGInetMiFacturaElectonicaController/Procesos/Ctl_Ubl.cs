@@ -412,6 +412,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Nomina doc_nomina = ((Nomina)documento.Documento);
 						id_obligado = documento.IdSeguridadTercero.ToString();
 						break;
+					case TipoDocumento.NominaAjuste:
+						NominaAjuste doc_nomina_ajus = ((NominaAjuste)documento.Documento);
+						id_obligado = documento.IdSeguridadTercero.ToString();
+						break;
 					case TipoDocumento.AcuseRecibo:
 						Acuse doc_acuse_recibo = ((Acuse)documento.Documento);
 						id_obligado = documento.IdSeguridadTercero.ToString();
@@ -485,14 +489,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
 			DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
 
-			string IdSoftware = data_dian.IdSoftware;
+			DianProveedorTest data_dian_test = HgiConfiguracion.GetConfiguration().DianProveedorTest;
+
+			string IdSoftware = data_dian_test.IdSoftware;
 			string PinSoftware = data_dian.Pin;
 			string NitProveedor = data_dian.NitProveedor;
 
 			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación y es HGI
 			if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode() && empresa.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor))
 			{
-				IdSoftware = data_dian_habilitacion.IdSoftware;
+				//IdSoftware = data_dian_habilitacion.IdSoftware;
 				PinSoftware = data_dian_habilitacion.Pin;
 				NitProveedor = data_dian_habilitacion.NitProveedor;
 			}

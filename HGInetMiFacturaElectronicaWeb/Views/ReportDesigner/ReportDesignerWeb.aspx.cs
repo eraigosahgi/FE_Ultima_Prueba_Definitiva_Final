@@ -57,6 +57,8 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 				XtraReportDesigner report = new XtraReportDesigner();
 				report.CreateDocument(true);
 
+				bool formato_nomina = false;
+
 				if (!string.IsNullOrWhiteSpace(Request.QueryString["ID"]) && !string.IsNullOrWhiteSpace(Request.QueryString["Nit"]))
 				{
 					int codigo_formato = Convert.ToInt32(Request.QueryString["ID"]);
@@ -70,6 +72,10 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 					{
 						tipo_doc = Enumeracion.ParseToEnum<TipoDocumento>(datos_formato.IntDocTipo);
 					}
+
+					//Se valida si es un formato de nomina para que haga el llenado de las propiedades correspondientes a estos documentos
+					if (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste)
+						formato_nomina = true;
 
 					clase_serialize = new SerializeReport(tipo_doc);
 
@@ -96,7 +102,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 				}
 
 				report.Extensions[SerializationService.Guid] = SerializeReport.Name;
-				report.DataSource = clase_serialize.GenerarColumnas();
+				if (formato_nomina == false)
+				{
+					report.DataSource = clase_serialize.GenerarColumnas();
+				}
+				else
+				{
+					report.DataSource = clase_serialize.GenerarColumnasNom();
+				}
+				
 				report.DataMember = clase_serialize.DataMember;
 				ASPxReportDesignerWeb.OpenReport(report);
 

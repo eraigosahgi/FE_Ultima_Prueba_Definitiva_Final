@@ -17,9 +17,9 @@ public partial class NominaIndividualDeAjusteTypeReemplazarInformacionGeneral {
 	private string encripCUNEField;
     
 	private System.DateTime fechaGenField;
-    
-	private System.DateTime horaGenField;
-    
+
+	private string horaGenField;
+
 	private string periodoNominaField;
     
 	private string tipoMonedaField;
@@ -93,18 +93,21 @@ public partial class NominaIndividualDeAjusteTypeReemplazarInformacionGeneral {
 			this.fechaGenField = value;
 		}
 	}
-    
+
 	/// <comentarios/>
-	[System.Xml.Serialization.XmlAttributeAttribute(DataType="time")]
-	public System.DateTime HoraGen {
-		get {
+	[System.Xml.Serialization.XmlAttributeAttribute(DataType = "string")]
+	public string HoraGen
+	{
+		get
+		{
 			return this.horaGenField;
 		}
-		set {
+		set
+		{
 			this.horaGenField = value;
 		}
 	}
-    
+
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlAttributeAttribute(DataType="integer")]
 	public string PeriodoNomina {

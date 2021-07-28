@@ -62,7 +62,7 @@ namespace HGInetUBLv2_1
 				#region nota_credito.ProfileID //Versión del documento DIAN_UBL.xsd publicado por la DIAN
 				nota_credito.ProfileID = new ProfileIDType()
 				{
-					Value = "DIAN 2.1"//Recursos.VersionesDIAN.ProfileID
+					Value = "DIAN 2.1: Nota Crédito de Factura Electrónica de Venta"//Recursos.VersionesDIAN.ProfileID
 				};
 
 				//---Ambiente de Pruebas
@@ -342,7 +342,7 @@ namespace HGInetUBLv2_1
 				#endregion
 
 				#region nota_credito.AccountingSupplierParty // Información del obligado a facturar
-				nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado,documento.Prefijo);
+				nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado,documento.Prefijo, true);
 				#endregion
 
 				#region nota_credito.AccountingCustomerParty //Información del Adquiriente
@@ -442,12 +442,15 @@ namespace HGInetUBLv2_1
 				List<UBLExtensionType> UBLExtensions = new List<UBLExtensionType>();
 
 				//Informacion del QR
-				string ruta_qr_Dian = "https://muisca.dian.gov.co/WebFacturaelectronica/paginas/VerificarFacturaElectronicaExterno.faces?";
-				string tipo_doc = nota_credito.CreditNoteTypeCode.Value;
-				string num_doc = nota_credito.ID.Value;
-				string nit_fac = documento.DatosObligado.Identificacion;
-				string nit_adq = documento.DatosAdquiriente.Identificacion;
-				string cadena_qr = string.Format("{0}TipoDocumento={1}NroDocumento={2}NITFacturador={3}NumIdentAdquiriente={3}Cufe={4}", ruta_qr_Dian, tipo_doc, num_doc, nit_fac, nit_adq, CUFE);
+				string ruta_qr_Dian = string.Empty;
+				if (nota_credito.ProfileExecutionID.Value.Equals("2"))
+				{
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=", nota_credito.UUID.Value);
+				}
+				else
+				{
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", nota_credito.UUID.Value);
+				}
 
 				// Extension del sector Salud
 				if (documento.SectorSalud != null && documento.SectorSalud.CamposSector.Count > 0)
@@ -459,7 +462,7 @@ namespace HGInetUBLv2_1
 
 				// Extension de la Dian
 				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
-				UBLExtensionDian.ExtensionContent = HGInetUBLv2_1.ExtensionDian.Obtener(resolucion, TipoDocumento.NotaCredito, nota_credito.ID.Value, cadena_qr);
+				UBLExtensionDian.ExtensionContent = HGInetUBLv2_1.ExtensionDian.Obtener(resolucion, TipoDocumento.NotaCredito, nota_credito.ID.Value, ruta_qr_Dian);
 				UBLExtensions.Add(UBLExtensionDian);
 
 				// Extension de la firma
@@ -776,6 +779,11 @@ namespace HGInetUBLv2_1
 								Value = false
 							};
 
+							RoundingAmountType Rouding = new RoundingAmountType();
+							Rouding.Value = 0;
+							Rouding.currencyID = moneda_detalle.ToString();
+							TaxTotal.RoundingAmount = Rouding;
+
 							// Debe ser informado un grupo de estos para cada tarifa. 
 							// <cac:TaxSubtotal>
 							TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
@@ -797,7 +805,14 @@ namespace HGInetUBLv2_1
 							}
 							else
 							{
-								TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
+								if (DocDet.BaseImpuestoIva > 0)
+								{
+									TaxSubtotalIva.TaxableAmount.Value = DocDet.BaseImpuestoIva;
+								}
+								else
+								{
+									TaxSubtotalIva.TaxableAmount.Value = DocDet.ValorSubtotal;
+								}
 							}
 
 
@@ -869,6 +884,11 @@ namespace HGInetUBLv2_1
 						{
 							Value = false
 						};
+
+						RoundingAmountType Rouding = new RoundingAmountType();
+						Rouding.Value = 0;
+						Rouding.currencyID = moneda_detalle.ToString();
+						TaxTotal.RoundingAmount = Rouding;
 
 						// Debe ser informado un grupo de estos para cada tarifa. 
 						// <cac:TaxSubtotal>
@@ -980,6 +1000,11 @@ namespace HGInetUBLv2_1
 						{
 							Value = false
 						};
+
+						RoundingAmountType Rouding = new RoundingAmountType();
+						Rouding.Value = 0;
+						Rouding.currencyID = moneda_detalle.ToString();
+						TaxTotal.RoundingAmount = Rouding;
 
 						// Debe ser informado un grupo de estos para cada tarifa. 
 						// <cac:TaxSubtotal>

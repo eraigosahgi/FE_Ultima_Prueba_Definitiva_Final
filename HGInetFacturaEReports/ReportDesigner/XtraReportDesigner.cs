@@ -40,8 +40,15 @@ namespace HGInetFacturaEReports.ReportDesigner
 				//Asignar los datos al reporte.
 				rep.DataSource = datos_documento;
 				List<FormatoCampo> campos = null;
-				if (datos_documento.DocumentoFormato != null)
-					campos = datos_documento.DocumentoFormato.CamposPredeterminados;
+				try
+				{
+					if (datos_documento.DocumentoFormato != null)
+						campos = datos_documento.DocumentoFormato.CamposPredeterminados;
+				}
+				catch (Exception)
+				{
+				  
+				}
 				bool lleno_titulo = false;
 
 				if (campos != null)

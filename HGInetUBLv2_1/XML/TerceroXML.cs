@@ -16,7 +16,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="empresa">Datos de la empresa</param>
 		/// <returns>Objeto de tipo SupplierPartyType1</returns>
-		public static SupplierPartyType ObtenerObligado(Tercero empresa, string prefijo)
+		public static SupplierPartyType ObtenerObligado(Tercero empresa, string prefijo, bool Notas = false)
 		{
 			try
 			{
@@ -32,6 +32,10 @@ namespace HGInetUBLv2_1
 				AdditionalAccountIDType AdditionalAccountID = new AdditionalAccountIDType();
 				AdditionalAccountID.Value = empresa.TipoPersona.ToString();//Tipo de persona (LISTADO DE VALORES DEFINIDO POR LA DIAN)
 				AdditionalAccountID.schemeAgencyID = "195";
+				
+				//**** Para Documento Equivalente(Sopote) 01 - Residente; 02 - No Residente 
+				//AdditionalAccountID.schemeID = "01";
+
 				AccountingSupplierParty.AdditionalAccountID = new AdditionalAccountIDType[1];
 				AccountingSupplierParty.AdditionalAccountID[0] = AdditionalAccountID;
 				#endregion
@@ -237,18 +241,21 @@ namespace HGInetUBLv2_1
 				PartyLegalEntity.CompanyID = new CompanyIDType();
 				PartyLegalEntity.CompanyID = CompanyID;
 
-				//Grupo de informaciones legales del emisor 
-				PartyLegalEntity.CorporateRegistrationScheme = new CorporateRegistrationSchemeType();
+				if (Notas == false)
+				{
+					//Grupo de informaciones legales del emisor 
+					PartyLegalEntity.CorporateRegistrationScheme = new CorporateRegistrationSchemeType();
 
-				//Prefijo de la facturación usada para el punto de venta
-				//---Validar---obligatorio para el obligado ocurrencia 1..1
-				PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
-				PartyLegalEntity.CorporateRegistrationScheme.ID.Value = prefijo;
+					//Prefijo de la facturación usada para el punto de venta
+					//---Validar---obligatorio para el obligado ocurrencia 1..1
+					PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
+					PartyLegalEntity.CorporateRegistrationScheme.ID.Value = prefijo;
 
-				//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
-				//---Validar--ocurrencia 0..1
-				PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
-				PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "0";//empresa.NombreComercial; //"HGI SAS";
+					//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
+					//---Validar--ocurrencia 0..1
+					PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
+					PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "0";//empresa.NombreComercial; //"HGI SAS";
+				}
 
 				if (!string.IsNullOrEmpty(empresa.ActividadEconomica))
 				{

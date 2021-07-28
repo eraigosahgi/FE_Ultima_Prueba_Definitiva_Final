@@ -404,7 +404,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		#region Obtener
 
-		public TblDocumentos Obtener(string identificacion_obligado, long numero_documeto, string prefijo, bool doc_nomina = false)
+		public TblDocumentos Obtener(string identificacion_obligado, long numero_documeto, string prefijo, int tipo_doc = 0)
 		{
 			try
 			{
@@ -413,7 +413,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				TblDocumentos documento = new TblDocumentos();
 
-				if (doc_nomina == false)
+				if (tipo_doc.Equals(0))
 				{
 					documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
 								 where (documentos.IntNumero == numero_documeto)
@@ -423,12 +423,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				else
 				{
-					int doc_nom = TipoDocumento.Nomina.GetHashCode();
+
 					documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
 								 where (documentos.IntNumero == numero_documeto)
 									   && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
 										   && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
-									   && (documentos.IntDocTipo == doc_nom)
+									   && (documentos.IntDocTipo == tipo_doc)
 								 select documentos).FirstOrDefault();
 				}
 
@@ -489,7 +489,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				if (string.IsNullOrWhiteSpace(identificacion_obligado))
 					throw new ApplicationException("Número de identificación del obligado inválido.");
-				if (tipo_documento < 1 || tipo_documento > 3)
+				if (tipo_documento < TipoDocumento.Factura.GetHashCode() || tipo_documento > TipoDocumento.NotaCredito.GetHashCode() && tipo_documento < TipoDocumento.Nomina.GetHashCode() || tipo_documento > TipoDocumento.NominaAjuste.GetHashCode())
 					throw new ApplicationException("Tipo de documento inválido.");
 				if (string.IsNullOrWhiteSpace(Numeros))
 					throw new ApplicationException("Filtro por números inválido.");
@@ -2099,8 +2099,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				else
 				{
-					tbl_documento.DatFechaVencDocumento = documento_obj.FechaGen;
-					tbl_documento.DatFechaDocumento = Convert.ToDateTime(documento_obj.FechaGen.ToString(Fecha.formato_fecha_hginet));
+					tbl_documento.DatFechaVencDocumento = Convert.ToDateTime(documento_obj.FechaGen.ToString(Fecha.formato_fecha_hginet));
+					tbl_documento.DatFechaDocumento = documento_obj.FechaGen;
 					tbl_documento.StrEmpresaAdquiriente = documento_obj.DatosTrabajador.Identificacion;
 					tbl_documento.StrProveedorReceptor = Constantes.NitResolucionsinPrefijo;
 					tbl_documento.IntVlrTotal = documento_obj.ComprobanteTotal;

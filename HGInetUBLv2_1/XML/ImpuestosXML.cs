@@ -215,7 +215,7 @@ namespace HGInetUBLv2_1
 
 					}
 
-				}*/ 
+				}*/
 				#endregion
 
 				List<TaxTotalType> List_Taxtotal = new List<TaxTotalType>();
@@ -235,6 +235,11 @@ namespace HGInetUBLv2_1
 					TaxAmount.currencyID = moneda_detalle.ToString();
 					TaxAmount.Value = decimal.Round(doc_impuestos.Where(d => d.TipoImpuesto.Equals(item)).Sum(v => v.ValorImpuesto), 2, MidpointRounding.AwayFromZero);
 					TaxTotal.TaxAmount = TaxAmount;
+
+					RoundingAmountType Rouding = new RoundingAmountType();
+					Rouding.Value = 0.00M;
+					Rouding.currencyID = moneda_detalle.ToString();
+					TaxTotal.RoundingAmount = Rouding;
 
 					#endregion
 

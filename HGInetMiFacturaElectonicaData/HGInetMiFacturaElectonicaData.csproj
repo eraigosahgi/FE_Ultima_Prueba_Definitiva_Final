@@ -115,6 +115,8 @@
     <Compile Include="Enumerables\TipoFormato.cs" />
     <Compile Include="Enumerables\TipoFrecuencia.cs" />
     <Compile Include="Enumerables\TipoOpciones.cs" />
+    <Compile Include="Formatos\Nomina\Novedad.cs" />
+    <Compile Include="Formatos\Nomina\Planilla.cs" />
     <Compile Include="ModeloAuditoria\Objetos\TblAuditFormatos.cs" />
     <Compile Include="ModeloAuditoria\Objetos\TblGenerica.cs" />
     <Compile Include="ModeloAuditoria\Objetos\TblAuditDocumentos.cs" />

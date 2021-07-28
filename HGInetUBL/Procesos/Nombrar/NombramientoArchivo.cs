@@ -61,7 +61,7 @@ namespace HGInetUBL
 				{
 					nombre_archivo = Recursos.NombreArchivos.nombre_xml_nomina;
 				}
-				else if (tipo_documento == TipoDocumento.Nomina)
+				else if (tipo_documento == TipoDocumento.NominaAjuste)
 				{
 					nombre_archivo = Recursos.NombreArchivos.nombre_xml_nomina_ajuste;
 				}

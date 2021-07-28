@@ -1156,7 +1156,7 @@ namespace HGInetUBLv2_1
 				deduccion.Salud.Deduccion = deduccion_doc.Salud.Deduccion;
 				if (deduccion_doc.Salud.Porcentaje.Equals(4))
 				{
-					deduccion.Salud.Porcentaje = 25.00M;//deduccion_doc.Salud.Porcentaje;
+					deduccion.Salud.Porcentaje = deduccion_doc.Salud.Porcentaje;//25.00M;//
 				}
 
 
@@ -1164,7 +1164,7 @@ namespace HGInetUBLv2_1
 				deduccion.FondoPension.Deduccion = deduccion_doc.Pension.Deduccion;
 				if (deduccion_doc.Pension.Porcentaje.Equals(4))
 				{
-					deduccion.FondoPension.Porcentaje = 25.00M;//deduccion_doc.Pension.Porcentaje;
+					deduccion.FondoPension.Porcentaje = deduccion_doc.Pension.Porcentaje;//25.00M;//
 				}
 
 

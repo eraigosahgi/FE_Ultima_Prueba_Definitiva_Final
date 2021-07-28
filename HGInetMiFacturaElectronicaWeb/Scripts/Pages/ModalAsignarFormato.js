@@ -177,5 +177,7 @@ var TiposDocumento =
         { ID: "0", Texto: 'Todos' },
         { ID: "1", Texto: 'Factura' },
         { ID: "2", Texto: 'Nota Débito' },
-        { ID: "3", Texto: 'Nota Crédito' }
+        { ID: "3", Texto: 'Nota Crédito' },
+		{ ID: "10", Texto: 'Nomina' },
+        { ID: "11", Texto: 'Nomina Ajuste' }
     ];

@@ -1856,10 +1856,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
 			}
-			else if (tipo_nomina.Equals(TipoDocumento.NominaAjuste) && !documento.DatosDevengados.DiasTrabajados.Equals(30))
-			{
-				dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
-			}
+			//else if (tipo_nomina.Equals(TipoDocumento.NominaAjuste) && !documento.DatosDevengados.DiasTrabajados.Equals(30))
+			//{
+			//	dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
+			//}
 
 			devengados_cal = ValidarDevengados(documento.DatosDevengados, dias_laborales_periodo, documento.DatosTrabajador.Sueldo);
 

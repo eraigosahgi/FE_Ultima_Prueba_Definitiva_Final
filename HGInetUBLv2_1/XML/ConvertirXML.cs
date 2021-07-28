@@ -66,6 +66,11 @@ namespace HGInetUBLv2_1
 					documento_obj = (NominaIndividualType)documento;
 					texto_xml = Xml.Convertir<NominaIndividualType>(documento_obj, namespaces_xml);
 				}
+				else if (tipo_doc == TipoDocumento.NominaAjuste)
+				{
+					documento_obj = (NominaIndividualDeAjusteType)documento;
+					texto_xml = Xml.Convertir<NominaIndividualDeAjusteType>(documento_obj, namespaces_xml);
+				}
 
 				return texto_xml;
 			}
