@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HGInetDIANServicios.DianWSValidacionPrevia;
 using LibreriaGlobalHGInet.RegistroLog;
+using LibreriaGlobalHGInet.Objetos;
 
 namespace HGInetDIANServicios
 {
@@ -139,7 +140,7 @@ namespace HGInetDIANServicios
 		/// <param name="clave_dian">Clave proporcionada en la plataforma de la Dian</param>
 		/// <param name="ruta_servicio_web">Url del servicio web de la DIAN</param>
 		/// <returns></returns>
-		public static AcuseRecibo EnviarSync_v2(string ruta_zip, string nombre_archivo, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string ambiente, ref List<DianWSValidacionPrevia.DianResponse> respuesta_dian, string cufe_doc)
+		public static AcuseRecibo EnviarSync_v2(string ruta_zip, string nombre_archivo, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string ambiente, ref List<DianWSValidacionPrevia.DianResponse> respuesta_dian, string cufe_doc, int tipo_doc)
 		{
 
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
@@ -181,7 +182,10 @@ namespace HGInetDIANServicios
 						//Ejecución de produccion DIAN Enviando archivo ZIP	
 						try
 						{
-							respuesta = webServiceHab.SendBillSync(nombre_archivo, bytes);
+							if (tipo_doc < TipoDocumento.Nomina.GetHashCode())
+								respuesta = webServiceHab.SendBillSync(nombre_archivo, bytes);
+							else
+								respuesta = webServiceHab.SendNominaSync(bytes);
 
 							log_categoria = MensajeCategoria.Archivos;
 							log_accion = MensajeAccion.creacion;
