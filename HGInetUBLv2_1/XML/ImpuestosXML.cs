@@ -34,74 +34,87 @@ namespace HGInetUBLv2_1
 				//Toma los impuestos de IVA que tiene el producto en el detalle del documento
 				var impuestos_iva = documentoDetalle.Where(d => d.CalculaIVA == 0).ToList().Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor }).GroupBy(_impuesto => new { _impuesto.IvaPorcentaje }).Select(_impuesto => _impuesto.First()).ToList();
 
+				//Toma el impuesto al consumo de los productos que esten el detalle
+				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0 || d.Aiu == 4).ToList().Select(_consumo => new
+				{ _consumo.ImpoConsumoPorcentaje, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
+
 				List<DocumentoImpuestos> doc_impuestos = new List<DocumentoImpuestos>();
 
 				decimal BaseImponibleImpuesto = 0;
 
+				//Se cambia a false cuando no envian IVA pero si Impoconsumo mayor 0
+				bool agregar_iva = true;
+
+				if (impuestos_iva.Sum(x => x.IvaValor) == 0 && impuesto_consumo.Count() > 0)
+					agregar_iva = false;
+
 				// moneda del primer detalle
 				CurrencyCodeContentType moneda_detalle = Ctl_Enumeracion.ObtenerMoneda(moneda);
 
-				foreach (var item in impuestos_iva)
+				//Se valida si no envian impoconsumo para que llene el IVA por defecto asi sea en tarifa 0
+				if (agregar_iva == true)
 				{
-					DocumentoImpuestos imp_doc = new DocumentoImpuestos();
-					decimal porcentaje = item.IvaPorcentaje;
-
-					List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
-					BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.BaseImpuestoIva), 2, MidpointRounding.AwayFromZero);
-
-					if (BaseImponibleImpuesto == 0 && item.IvaPorcentaje == 0)
-						BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
-
-					//imp_doc.Codigo = item.IntIva;
-					//-------Hay que hacer Enumerable
-					if (item.IvaPorcentaje == 0)
-						porcentaje = Convert.ToDecimal(0.00M);
-					ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
-					ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(porcentaje.ToString().Replace(",", "."))).FirstOrDefault();
-
-					imp_doc.Nombre = iva.Nombre;
-					imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje + 0.00M, 2);
-					imp_doc.TipoImpuesto = item.Iva;
-					imp_doc.BaseImponible = BaseImponibleImpuesto;
-
-					foreach (var docDet in doc_)
+					foreach (var item in impuestos_iva)
 					{
-						imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IvaValor, 2, MidpointRounding.AwayFromZero);
+						DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+						decimal porcentaje = item.IvaPorcentaje;
+
+						List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
+						BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.BaseImpuestoIva), 2, MidpointRounding.AwayFromZero);
+
+						if (BaseImponibleImpuesto == 0 && item.IvaPorcentaje == 0)
+							BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
+
+						//imp_doc.Codigo = item.IntIva;
+						//-------Hay que hacer Enumerable
+						if (item.IvaPorcentaje == 0)
+							porcentaje = Convert.ToDecimal(0.00M);
+						ListaTarifaImpuestoIVA lista_iva = new ListaTarifaImpuestoIVA();
+						ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(porcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+
+						imp_doc.Nombre = iva.Nombre;
+						imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje + 0.00M, 2);
+						imp_doc.TipoImpuesto = item.Iva;
+						imp_doc.BaseImponible = BaseImponibleImpuesto;
+
+						foreach (var docDet in doc_)
+						{
+							imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.IvaValor, 2, MidpointRounding.AwayFromZero);
+						}
+
+						//Validacion de muestras
+						List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje && docDet.ProductoGratis.Equals(true) && docDet.ValorImpuestoConsumo.Equals(0)).ToList();
+						decimal BaseimponibleMuestra = 0;
+						foreach (var DocMues in muestra)
+						{
+							if (DocMues.IvaPorcentaje > 0)
+								BaseimponibleMuestra = decimal.Round(BaseimponibleMuestra + ((DocMues.Cantidad * DocMues.ValorUnitario) - DocMues.DescuentoValor), 2, MidpointRounding.AwayFromZero);
+						}
+
+						if (BaseimponibleMuestra > 0)
+						{
+							BaseImponibleImpuesto += BaseimponibleMuestra;
+							imp_doc.BaseImponible += BaseimponibleMuestra;
+						}
+
+						//********Validar esto si viene sin decimales los valores
+						//Ajuste del impuesto para Versiones de ERP menores a 2020.4
+						//if ((!version_erp.Equals(version_validar) && !version_erp.Contains(version_validar) && !version_erp.Equals(version_validar_Rev) && !version_erp.Contains(version_validar_Rev)) && hgi == -1)
+						//{
+						//	decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+
+						//	if (imp_cal != imp_doc.ValorImpuesto)
+						//		imp_doc.ValorImpuesto = imp_cal;
+
+						//}
+
+						doc_impuestos.Add(imp_doc);
+
 					}
-
-					//Validacion de muestras
-					List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje && docDet.ProductoGratis.Equals(true) && docDet.ValorImpuestoConsumo.Equals(0)).ToList();
-					decimal BaseimponibleMuestra = 0;
-					foreach (var DocMues in muestra)
-					{
-						if (DocMues.IvaPorcentaje > 0)
-							BaseimponibleMuestra = decimal.Round(BaseimponibleMuestra + ((DocMues.Cantidad * DocMues.ValorUnitario) - DocMues.DescuentoValor), 2, MidpointRounding.AwayFromZero);
-					}
-
-					if (BaseimponibleMuestra > 0)
-					{
-						BaseImponibleImpuesto += BaseimponibleMuestra;
-						imp_doc.BaseImponible += BaseimponibleMuestra;
-					}
-
-					//********Validar esto si viene sin decimales los valores
-					//Ajuste del impuesto para Versiones de ERP menores a 2020.4
-					//if ((!version_erp.Equals(version_validar) && !version_erp.Contains(version_validar) && !version_erp.Equals(version_validar_Rev) && !version_erp.Contains(version_validar_Rev)) && hgi == -1)
-					//{
-					//	decimal imp_cal = decimal.Round(BaseImponibleImpuesto * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
-
-					//	if (imp_cal != imp_doc.ValorImpuesto)
-					//		imp_doc.ValorImpuesto = imp_cal;
-
-					//}
-
-					doc_impuestos.Add(imp_doc);
-
 				}
 
 				//Toma el impuesto al consumo de los productos que esten el detalle
-				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0 || d.Aiu == 4).ToList().Select(_consumo => new
-					{ _consumo.ImpoConsumoPorcentaje, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
+				
 				decimal BaseImponibleImpConsumo = 0;
 				decimal BaseImponibleBolsa = 0;
 
