@@ -837,7 +837,7 @@ namespace HGInetUBLv2_1
 								DocDet.IvaPorcentaje = 0.00M;
 							TaxCategoryIva.Percent = new PercentType1()
 							{
-								Value = decimal.Round((DocDet.IvaPorcentaje), 2)
+								Value = decimal.Round((DocDet.IvaPorcentaje + 0.00M), 2)
 							};
 
 							// <cac:TaxScheme>

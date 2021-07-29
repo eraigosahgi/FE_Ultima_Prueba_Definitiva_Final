@@ -19,11 +19,11 @@ namespace HGInetUBLv2_1.DianListas
 
 		public List<ListaItem> Items = new List<ListaItem>()
 		{
-			new ListaItem("1", "Devolución de parte de los bienes; no aceptación de partes del servicio ", "Devolución de parte de los bienes; no aceptación de partes del servicio "),
-new ListaItem("2", "Anulación de factura electrónica ", "Anulación de factura electrónica "),
-new ListaItem("3", "Rebaja total aplicada ", "Rebaja total aplicada "),
-new ListaItem("4", "Descuento total aplicado ", "Descuento total aplicado "),
-new ListaItem("5", "Rescisión: nulidad por falta de requisitos ", "Rescisión: nulidad por falta de requisitos "),
+			new ListaItem("1", "Devolución parcial de los bienes y/o no aceptación parcial del servicio", "Devolución parcial de los bienes y/o no aceptación parcial del servicio"),
+new ListaItem("2", "Anulación de factura electrónica", "Anulación de factura electrónica"),
+new ListaItem("3", "Rebaja o descuento parcial o total","Rebaja o descuento parcial o total"),
+new ListaItem("4", "Ajuste de precio", "Ajuste de precio"),
+new ListaItem("5", "Otros", "Otros"),
 new ListaItem("6", "Otros ", "Otros "),
 
 		};
