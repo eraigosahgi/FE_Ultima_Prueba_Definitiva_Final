@@ -19,6 +19,7 @@ namespace HGInetUBLv2_1.DianListas
 
 		public List<ListaItem> Items = new List<ListaItem>()
 		{
+			new ListaItem("0.00", "INC", "Tarifa especial"),
 			new ListaItem("2.00", "INC", "Tarifa especial"),
 			new ListaItem("4.00", "INC", "Tarifa especial"),
 			new ListaItem("8.00", "INC", "Tarifa general"),

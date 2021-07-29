@@ -603,6 +603,34 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
 				}
 
+				List<string> responsabilidades = new List<string>();
+
+				if (tercero.Responsabilidades == null || tercero.Responsabilidades.Count == 0)
+				{
+					responsabilidades.Add("R-99-PN");
+				}
+				else
+				{
+					foreach (string item in tercero.Responsabilidades)
+					{
+						ListaTipoResponsabilidad list_resp = new ListaTipoResponsabilidad();
+						ListaItem responsabilidad = list_resp.Items.Where(r => r.Codigo.Equals(item)).FirstOrDefault();
+						if (responsabilidad != null)
+							responsabilidades.Add(item);
+						//throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", item, tipo));
+
+					}
+				}
+
+				if (responsabilidades.Count == 0)
+				{
+					responsabilidades.Add("R-99-PN");
+					//throw new ArgumentException(string.Format(" Las Responsabilidades enviadas del {0} no cumplen con el listado de la DIAN", tipo));
+				}
+
+				tercero.Responsabilidades = responsabilidades;
+
+				/*
 				if (string.IsNullOrEmpty(tercero.RegimenFiscal))
 					tercero.RegimenFiscal = "48";
 				//	throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.RegimenFiscal, tipo));
@@ -683,7 +711,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						tercero.RegimenFiscal = "49";
 					}
 
-				}
+				}  */
 
 				if (tipo.Equals("Adquiriente") && (tercero.RazonSocial.ToLowerInvariant().Equals("consumidor final") || tercero.Identificacion.Equals("222222222222")))
 				{

@@ -49,6 +49,9 @@ namespace HGInetUBLv2_1
 					List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).ToList();
 					BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.BaseImpuestoIva), 2, MidpointRounding.AwayFromZero);
 
+					if (BaseImponibleImpuesto == 0 && item.IvaPorcentaje == 0)
+						BaseImponibleImpuesto = decimal.Round(documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
+
 					//imp_doc.Codigo = item.IntIva;
 					//-------Hay que hacer Enumerable
 					if (item.IvaPorcentaje == 0)
@@ -57,7 +60,7 @@ namespace HGInetUBLv2_1
 					ListaItem iva = lista_iva.Items.Where(d => d.Codigo.Equals(porcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 
 					imp_doc.Nombre = iva.Nombre;
-					imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje, 2);
+					imp_doc.Porcentaje = decimal.Round(item.IvaPorcentaje + 0.00M, 2);
 					imp_doc.TipoImpuesto = item.Iva;
 					imp_doc.BaseImponible = BaseImponibleImpuesto;
 
@@ -97,7 +100,7 @@ namespace HGInetUBLv2_1
 				}
 
 				//Toma el impuesto al consumo de los productos que esten el detalle
-				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0 || d.Aiu == 4).ToList().Select(_consumo => new
+				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo >= 0 || d.Aiu == 4).ToList().Select(_consumo => new
 					{ _consumo.ImpoConsumoPorcentaje, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
 				decimal BaseImponibleImpConsumo = 0;
 				decimal BaseImponibleBolsa = 0;
@@ -109,8 +112,8 @@ namespace HGInetUBLv2_1
 					foreach (var item in impuesto_consumo)
 					{
 						//Valida si hay algun producto con impuesto al consumo
-						if (item.ValorImpuestoConsumo != 0)
-						{
+						//if (item.ValorImpuestoConsumo != 0)
+						//{
 							DocumentoImpuestos imp_doc = new DocumentoImpuestos();
 							List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo != 0 && item.ImpoConsumoPorcentaje == docDet.ImpoConsumoPorcentaje && item.Aiu == docDet.Aiu).ToList();
 							DocumentoDetalle bolsa = doc_.Where(det => item.Aiu == 4 && det.ValorImpuestoConsumo > 0 && det.ImpoConsumoPorcentaje == item.ImpoConsumoPorcentaje && det.Aiu == 4).FirstOrDefault();
@@ -137,22 +140,27 @@ namespace HGInetUBLv2_1
 								}
 								
 								imp_doc.Porcentaje = decimal.Round(item.ImpoConsumoPorcentaje, 2, MidpointRounding.AwayFromZero);
-								
+
+								if (item.ImpoConsumoPorcentaje == 0 && imp_doc.TipoImpuesto == "04")
+									imp_doc.Porcentaje = 4.00M;
+
 								imp_doc.BaseImponible = BaseImponibleImpConsumo;
 								foreach (var docDet in doc_)
 								{
 									imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2, MidpointRounding.AwayFromZero);
 								}
 
-								if (imp_doc.Porcentaje >= 0 && imp_doc.ValorImpuesto > 0)
-								{
-									//decimal imp_cal = decimal.Round(BaseImponibleImpConsumo * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+								doc_impuestos.Add(imp_doc);
 
-									//if (imp_cal != imp_doc.ValorImpuesto)
-									//	imp_doc.ValorImpuesto = imp_cal;
+								//if (imp_doc.Porcentaje >= 0 && imp_doc.ValorImpuesto > 0)
+								//{
+								//	//decimal imp_cal = decimal.Round(BaseImponibleImpConsumo * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 
-									doc_impuestos.Add(imp_doc);
-								}
+								//	//if (imp_cal != imp_doc.ValorImpuesto)
+								//	//	imp_doc.ValorImpuesto = imp_cal;
+
+								//	doc_impuestos.Add(imp_doc);
+								//}
 
 							}
 							else
@@ -174,7 +182,7 @@ namespace HGInetUBLv2_1
 							}
 						}
 
-					}
+					//}
 				}
 
 				//Se debe hacer validacion es sobre el ICA y no sobre el RETEICA

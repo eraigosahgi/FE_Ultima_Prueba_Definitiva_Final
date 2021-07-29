@@ -204,7 +204,7 @@ namespace HGInetUBLv2_1
 				//----Validar si cambia la ocurrecia de las responsabilidades esta de 1..1 y deberia estar 1..N
 				TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
 				//-----Listado 6.2.4
-				TaxLevelCode.listName = empresa.RegimenFiscal;
+				//TaxLevelCode.listName = empresa.RegimenFiscal;
 
 				//---Listado 6.2.7 Responsabilidades pero solo permite 1 actualmente
 				//TaxLevelCode.Value = empresa.Regimen.ToString();
@@ -533,7 +533,7 @@ namespace HGInetUBLv2_1
 				//----validar el regimen
 				TaxLevelCodeType TaxLevelCode = new TaxLevelCodeType();
 				//-----Listado 6.2.4
-				TaxLevelCode.listName = tercero.RegimenFiscal;
+				//TaxLevelCode.listName = tercero.RegimenFiscal;
 				//---Listado 6.2.7 Responsabilidades para enviar varias se deben seperar por ;
 				//TaxLevelCode.Value = tercero.Regimen.ToString();
 				//----Se pone Responsabilidad para las pruebas
