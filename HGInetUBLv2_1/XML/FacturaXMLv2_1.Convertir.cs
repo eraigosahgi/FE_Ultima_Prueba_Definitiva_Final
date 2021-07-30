@@ -31,9 +31,13 @@ namespace HGInetUBLv2_1
 
 			try
 			{
+				//para saber donde busca la informacion de resoluciones y que el xml sea del sector salud
+				int cont = 0;
+				if (factura_ubl.UBLExtensions.Count() > 2)
+					cont = 1;
 
 				//Captura la resolucion y el prefijo
-				foreach (XmlNode item in factura_ubl.UBLExtensions[0].ExtensionContent.ChildNodes)
+				foreach (XmlNode item in factura_ubl.UBLExtensions[cont].ExtensionContent.ChildNodes)
 				{
 					if (item.LocalName.Equals("InvoiceControl"))
 					{
