@@ -1979,10 +1979,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException(string.Format("El campo {0} de Vacaciones con valor {1} del devengado no está bien formado", "Tipo", item.Tipo));
 
 					if (item.Pago > 0 && item.Cantidad == 0)
-						throw new ApplicationException(string.Format("La Cantidad de Dias con valor {0} de las vacaciones tipo {1} del devengado no está bien formado", item.Cantidad, item.Tipo));
+						throw new ApplicationException(string.Format("No se encuentra la cantidad de dias de las vacaciones por el valor de {0} en el devengado", item.Pago));
 
 					if (item.Pago == 0 && item.Cantidad > 0)
-						throw new ApplicationException(string.Format("El Valor de las vacaciones tipo {0} con valor {1} del devengado no está bien formado", item.Tipo , item.Pago));
+						throw new ApplicationException(string.Format("No se encuentra el valor de las vacaciones con cantidad {0} en el devengado", item.Cantidad));
 
 					valor_devengado += item.Pago;
 
@@ -1994,14 +1994,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				if (devengado.PagoPrima.Pago != null)
 				{
-					if (devengado.PagoPrima.Cantidad > 0 && devengado.PagoPrima.Pago.Pago == 0 && devengado.PagoPrima.Pago.PagoNS == 0)
-						throw new ApplicationException(string.Format("La Cantidad de dias con valor {0} del pago de la prima no está bien formado", devengado.PagoPrima.Cantidad));
+					if (devengado.PagoPrima.Cantidad > 0 && devengado.PagoPrima.Pago.Pago == 0)
+						throw new ApplicationException(string.Format("No se encuentra el valor del pago de la prima con cantidad {0} en el devengado", devengado.PagoPrima.Cantidad));
 
 					if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.Pago > 0)
-						throw new ApplicationException(string.Format("El pago de la prima con valor {0} no está bien formado", devengado.PagoPrima.Pago.Pago));
+						throw new ApplicationException(string.Format("No se encuentra la cantidad de dias del pago de la Prima Salarial por el valor de {0} en el devengado", devengado.PagoPrima.Pago.Pago));
 
-					if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.PagoNS > 0)
-						throw new ApplicationException(string.Format("La Cantidad de dias con valor {0} del pago de la prima no está bien formado", devengado.PagoPrima.Cantidad));
+					//if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.PagoNS > 0)
+					//	throw new ApplicationException(string.Format("No se encuentra la cantidad de dias del pago de la Prima No Salarial por el valor de {0} en el devengado", devengado.PagoPrima.Pago.PagoNS));
 
 					valor_devengado += devengado.PagoPrima.Pago.Pago + devengado.PagoPrima.Pago.PagoNS;
 
@@ -2018,10 +2018,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException(string.Format("El campo {0} de Incapacidades con valor {1} del devengado no está bien formado", "Tipo", item.Tipo));
 
 					if (item.Pago > 0 && item.Cantidad == 0)
-						throw new ApplicationException(string.Format("La Cantidad de Horas con valor {0} de la incapacidad tipo {1} del devengado no está bien formado", item.Cantidad, item.Tipo));
+						throw new ApplicationException(string.Format("No se encuentra la cantidad de dias de la Incapacidad por el valor de {0} en el devengado", item.Pago));
 
 					if (item.Pago == 0 && item.Cantidad > 0)
-						throw new ApplicationException(string.Format("El Valor de la incapacidad tipo {0} con valor {1} del devengado no está bien formado", item.Tipo, item.Pago));
+						throw new ApplicationException(string.Format("No se encuentra el valor del pago de la Incapacidad con cantidad {0} en el devengado", item.Cantidad));
 
 					dias_incapacidad += item.Cantidad;
 					valor_devengado += item.Pago;
@@ -2039,10 +2039,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException(string.Format("El campo {0} de Licencias con valor {1} del devengado no está bien formado", "Tipo", item.Tipo));
 
 					if (item.Pago > 0 && item.Cantidad == 0)
-						throw new ApplicationException(string.Format("La Cantidad de Dias con valor {0} de la Licencia tipo {1} del devengado no está bien formado", item.Cantidad, item.Tipo));
+						throw new ApplicationException(string.Format("No se encuentra la cantidad de dias de la Licencia por el valor de {0} en el devengado", item.Pago));
 
 					if (item.Pago == 0 && item.Cantidad > 0)
-						throw new ApplicationException(string.Format("El Valor de la Licencia tipo {0} con valor {1} del devengado no está bien formado", item.Tipo, item.Pago));
+						throw new ApplicationException(string.Format("No se encuentra el valor del pago de la Licencia con cantidad {0} en el devengado", item.Cantidad));
 
 					dias_licencia += item.Cantidad;
 					valor_devengado += item.Pago;
@@ -2071,7 +2071,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 
 					if (item.Pago == 0 && item.PagoNS == 0)
-						throw new ApplicationException("No se encontró valor para el Auxilio en el devengado");
+						throw new ApplicationException("No se encontró valor para los Auxilios en el devengado");
 
 					valor_devengado += item.Pago + item.PagoNS;
 
@@ -2185,10 +2185,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				valor_deduccion += deduccion.Salud.Deduccion;
 			}
-			else
-			{
-				throw new Exception("No se encontró deduccion de salud en el documento.");
-			}
+			//else
+			//{
+			//	throw new Exception("No se encontró deduccion de salud en el documento.");
+			//}
 
 			if (deduccion.Pension != null)
 			{
@@ -2200,10 +2200,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				valor_deduccion += deduccion.Pension.Deduccion;
 			}
-			else
-			{
-				throw new Exception("No se encontró deduccion de salud en el documento.");
-			}
+			//else
+			//{
+			//	throw new Exception("No se encontró deduccion de salud en el documento.");
+			//}
 
 			if (deduccion.DatosFondoSP != null)
 			{

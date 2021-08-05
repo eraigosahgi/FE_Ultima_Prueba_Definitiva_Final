@@ -11,31 +11,31 @@ namespace HGInetMiFacturaElectonicaData
 	public enum TipoHoraNomina
 	{
 		[Description("HED")]
-		[AmbientValue("0.25")]
+		[AmbientValue("25.00")]
 		ExtraDiurna = 1,
 
 		[Description("HEN")]
-		[AmbientValue("0.75")]
+		[AmbientValue("75.00")]
 		ExtraNocturna = 2,
 
 		[Description("HRN")]
-		[AmbientValue("0.35")]
+		[AmbientValue("35.00")]
 		RecargoNocturno = 3,
 
 		[Description("HEDDF")]
-		[AmbientValue("1.00")]
+		[AmbientValue("100.00")]
 		DominicalesFestivas = 4,
 
 		[Description("HRDDF")]
-		[AmbientValue("0.75")]
+		[AmbientValue("75.00")]
 		RecargoDominicalesFestivas = 5,
 
 		[Description("HENDF")]
-		[AmbientValue("1.50")]
+		[AmbientValue("150.00")]
 		ExtraDominicalesFestivasNocturnas = 6,
 
 		[Description("HRNDF")]
-		[AmbientValue("1.10")]
+		[AmbientValue("110.00")]
 		RecargoDominicalesFestivasNocturnas = 7
 
 	}
