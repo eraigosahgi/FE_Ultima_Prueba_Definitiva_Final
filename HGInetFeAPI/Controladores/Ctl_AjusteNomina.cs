@@ -62,10 +62,12 @@ namespace HGInetFeAPI
 						throw new ApplicationException("No se encontró informacion en el ServicioNomina.Nomina");
 					//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioFactura.Factura"));
 
-					if (item.DatosDevengados == null)
+					//Se valida siempre y cuando sea un ajuste tipo reemplazo
+					if (item.DatosDevengados == null && item.TipoNota < 2)
 						throw new Exception("No se encontró Devengados en el documento.");
 
-					if (item.DatosDeducciones == null)
+					//Se valida siempre y cuando sea un ajuste tipo reemplazo
+					if (item.DatosDeducciones == null && item.TipoNota < 2)
 						throw new Exception("No se encontró Deducciones en el documento.");
 
 					if (item.DocumentoFormato != null)
