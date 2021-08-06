@@ -63,7 +63,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*", false);
 					foreach (var item in documentos)
 					{
-						item.DatosTrabajador.Email = facturador_electronico.StrMailAdmin;
+						//Se valida que la nota sea de reemplazo
+						if (item.DatosTrabajador != null)
+							item.DatosTrabajador.Email = facturador_electronico.StrMailAdmin;
 
 					}
 				}
@@ -406,6 +408,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							{
 								throw new ApplicationException(string.Format("El número de documento {0} para afectar no se encontró registrado en nuestra base de datos", item.NumeroPred));
 							}
+						}
+						else if (item.TipoNota.Equals(2) && item.DatosTrabajador == null)
+						{
+							TblEmpresas adquiriente = new TblEmpresas();
+							Ctl_Empresa clase_empresa = new Ctl_Empresa();
+							adquiriente = clase_empresa.Obtener(doc_resp.Identificacion);
+							
+							item.DatosTrabajador = new Trabajador();
+							item.DatosTrabajador.Identificacion = adquiriente.StrIdentificacion;
+							item.DatosTrabajador.PrimerApellido = adquiriente.StrRazonSocial;
+							item.DatosTrabajador.TipoDocumento = Convert.ToInt16(adquiriente.StrTipoIdentificacion);
+							item.DatosTrabajador.Email = item.DatosEmpleador.Email;
+							item.DatosTrabajador.Telefono = adquiriente.StrTelefono;
+							item.DatosTrabajador.LugarTrabajoMunicipioCiudad = item.DatosEmpleador.MunicipioCiudad;
+							item.DatosTrabajador.LugarTrabajoDepartamentoEstado = item.DatosEmpleador.DepartamentoEstado;
+							item.DatosTrabajador.LugarTrabajoPais = item.DatosEmpleador.Pais;
+							item.DatosTrabajador.LugarTrabajoDireccion = item.DatosEmpleador.Direccion;
 						}
 					}
 					else

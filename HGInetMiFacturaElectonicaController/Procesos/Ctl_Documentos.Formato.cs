@@ -119,7 +119,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_obj.TerminoPago_Descripcion = medio.Descripcion;
 					}
 
-					if (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste)
+					if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && (documento_obj.DatosPago != null))
 					{
 						ListaMediosPago list_medio = new ListaMediosPago();
 						ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento_obj.DatosPago.Forma.ToString())).FirstOrDefault();
@@ -247,11 +247,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				documento = documento_obj;
 
 				//Informacion Fecha y periodo
-				objeto_result.Año = (short)documento.DatosPeriodo.FechaLiquidacionInicio.Year;
-				objeto_result.Mes = (short)documento.DatosPeriodo.FechaLiquidacionInicio.Month;
+				
+				objeto_result.Año = (documento.DatosPeriodo != null) ? (short)documento.DatosPeriodo.FechaLiquidacionInicio.Year : (short)documento.FechaGen.Year;
+				objeto_result.Mes = (documento.DatosPeriodo != null) ? (short)documento.DatosPeriodo.FechaLiquidacionInicio.Month : (short)documento.FechaGen.Month;
 				objeto_result.Fecha = documento.FechaGen;
-				objeto_result.PeriodoFechaI = documento.DatosPeriodo.FechaLiquidacionInicio;
-				objeto_result.PeriodoFechaF = documento.DatosPeriodo.FechaLiquidacionFin;
+				objeto_result.PeriodoFechaI = (documento.DatosPeriodo != null) ? documento.DatosPeriodo.FechaLiquidacionInicio : documento.FechaGen;
+				objeto_result.PeriodoFechaF = (documento.DatosPeriodo != null) ? documento.DatosPeriodo.FechaLiquidacionFin : documento.FechaGen;
 
 				//Informacion de Empresa
 				objeto_result.EmpresaNombre = documento.DatosEmpleador.RazonSocial;
@@ -280,7 +281,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				objeto_result.EmpleadoTel = documento.DatosTrabajador.Telefono;
 				objeto_result.EmpleadoEmail = documento.DatosTrabajador.Email;
 				objeto_result.EmpleadoSalario = documento.DatosTrabajador.Sueldo;
-				objeto_result.EmpleadoCuenta = documento.DatosPago.NumeroCuenta;
+				objeto_result.EmpleadoCuenta = (documento.DatosPago != null) ? documento.DatosPago.NumeroCuenta : "";
 
 				//Informacion del documento
 				objeto_result.Documento = documento.Documento;
@@ -1207,11 +1208,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				return objeto_result;
 
 			}
-			catch (Exception)
+			catch (Exception excepcion)
 			{
-
-				throw;
-			}																					
+				string mensaje = string.Format("inconsistencia conviertiendo objeto a planilla de Pago - {0}", excepcion.Message);
+				throw new ApplicationException(mensaje, excepcion.InnerException);
+			}
 		}
 
 		public static string ObtenerQR(TipoDocumento DocumentoTipo, string Prefijo, long NumDocumento, DateTime FechaDocumento, string IdentificacionEmpleador, string IdentificacionTrabajador, decimal DevengadoTotal, decimal DeduccionTotal, decimal Total)

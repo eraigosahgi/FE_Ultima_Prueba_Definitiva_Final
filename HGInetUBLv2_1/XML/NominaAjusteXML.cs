@@ -81,7 +81,7 @@ namespace HGInetUBLv2_1
 					reemplazo_doc.InformacionGeneral.PeriodoNomina = documento.PeriodoNomina.ToString();
 					reemplazo_doc.InformacionGeneral.TipoMoneda = documento.Moneda;
 					reemplazo_doc.InformacionGeneral.TipoXML = "103";
-					reemplazo_doc.InformacionGeneral.Version = "V1.0: Documento Soporte de Pago de Nómina Electrónica";
+					reemplazo_doc.InformacionGeneral.Version = "V1.0: Nota de Ajuste de Documento Soporte de Pago de Nómina Electrónica";
 					if (!documento.Moneda.Equals("COP") && documento.Trm != null)
 						reemplazo_doc.InformacionGeneral.TRM = documento.Trm.Valor;
 
@@ -159,12 +159,18 @@ namespace HGInetUBLv2_1
 					eliminar_doc.InformacionGeneral.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
 					eliminar_doc.InformacionGeneral.HoraGen = documento.FechaGen.ToString(Fecha.formato_hora_zona);
 					eliminar_doc.InformacionGeneral.TipoXML = "103";
-					eliminar_doc.InformacionGeneral.Version = "V1.0: Documento Soporte de Pago de Nómina Electrónica";
+					eliminar_doc.InformacionGeneral.Version = "V1.0: Nota de Ajuste de Documento Soporte de Pago de Nómina Electrónica";
 
 					if (documento.Notas != null && documento.Notas.Count > 0)
 						eliminar_doc.Notas = documento.Notas.ToArray();
 
 					eliminar_doc.Empleador = ParticipantesNominaXML.ObtenerEmpleadorAjusteE(documento.DatosEmpleador);
+
+					eliminar_doc.ProveedorXML = new NominaIndividualDeAjusteTypeEliminarProveedorXML();
+					eliminar_doc.ProveedorXML.NIT = resolucion.NitProveedor;
+					eliminar_doc.ProveedorXML.DV = "4";
+					eliminar_doc.ProveedorXML.RazonSocial = "HERRAMIENTAS DE GESTIÓN INFORMÁTICA SAS";
+					eliminar_doc.ProveedorXML.SoftwareID = resolucion.IdSoftware;
 
 					nomina.Eliminar = new NominaIndividualDeAjusteTypeEliminar();
 					nomina.Eliminar = eliminar_doc;
