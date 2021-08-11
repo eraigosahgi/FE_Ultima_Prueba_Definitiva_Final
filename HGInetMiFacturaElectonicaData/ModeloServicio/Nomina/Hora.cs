@@ -32,7 +32,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// <summary>
 		/// Cantidad de Horas. Ocurrencia 1-1
 		/// </summary>
-		public int Cantidad { get; set; }
+		public decimal Cantidad { get; set; }
 
 		/// <summary>
 		/// Se debe colocar el Porcentaje que corresponda de la tabla 5.5.1.5 y el tipo de hora que reporta. Ocurrencia 1-1

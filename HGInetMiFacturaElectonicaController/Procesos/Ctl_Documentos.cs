@@ -1874,10 +1874,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new Exception("No se encontró deducciones en el documento.");
 
 
-			int dias_laborales_periodo = DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month);
+			int dias_laborales_periodo = 30;//DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month);
 
-			if (dias_laborales_periodo == 31)
-				dias_laborales_periodo -= 1;
+			//if (dias_laborales_periodo == 31)
+			//	dias_laborales_periodo -= 1;
 
 			//Se valida los devengados del documento
 			if (tipo_nomina.Equals(TipoDocumento.Nomina) && documento.VariacionNomina == true)
@@ -1915,6 +1915,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			int dias_incapacidad = 0;
 			int dias_licencia = 0;
 			int dias_trabajados = 0;
+			int dias_vacaciones = 0;
 			decimal valor_dia = decimal.Round(salario_empleado / dias_laborales_periodo, 0, MidpointRounding.AwayFromZero);
 
 			if (devengado == null)
@@ -1939,7 +1940,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException(string.Format("El campo {0} de DatosHoras con valor {1} del devengado no está bien formado", "TipoHora", item.TipoHora));
 
 					TipoHoraNomina tipo_hora = Enumeracion.GetEnumObjectByValue<TipoHoraNomina>(item.TipoHora);
-					decimal porcentaje_hora = Convert.ToDecimal(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<TipoHoraNomina>(item.TipoHora)));
+					decimal porcentaje_hora = Convert.ToDecimal(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<TipoHoraNomina>(item.TipoHora))) + 0.00M;
 
 					if (!porcentaje_hora.Equals(item.Porcentaje))
 						throw new ApplicationException(string.Format("El procentaje de la Hora con valor {0} identificada con el código {1} del devengado no está bien formado", item.Porcentaje, tipo_hora));
@@ -1984,6 +1985,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (item.Pago == 0 && item.Cantidad > 0)
 						throw new ApplicationException(string.Format("No se encuentra el valor de las vacaciones con cantidad {0} en el devengado", item.Cantidad));
 
+					//Vacaciones disfrutadas en tiempo y dinero
+					if (item.Tipo == 1)
+					{
+						dias_vacaciones += item.Cantidad;
+					}
 					valor_devengado += item.Pago;
 
 				}
@@ -2150,7 +2156,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			}
 
-			dias_trabajados = dias_laborales_periodo - dias_incapacidad - dias_licencia;
+			dias_trabajados = dias_laborales_periodo - dias_incapacidad - dias_licencia - dias_vacaciones;
 
 			if (!devengado.DiasTrabajados.Equals(dias_trabajados))
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} de los devengados no está bien formado, según el resultado de dias laborales del mes menos incapacidades y menos licencias debe ser un valor de {2}", "DiasTrabajados", devengado.DiasTrabajados, dias_trabajados));
