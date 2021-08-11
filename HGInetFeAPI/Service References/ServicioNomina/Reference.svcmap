@@ -24,14 +24,14 @@
     <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="nomina.xsd" MetadataType="Schema" ID="45f478a6-4303-445b-99f6-dbdf2b83ecd6" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd1" />
-    <MetadataFile FileName="nomina4.xsd" MetadataType="Schema" ID="708ffe29-68b7-4257-a10a-40704f826f0c" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd3" />
-    <MetadataFile FileName="nomina1.xsd" MetadataType="Schema" ID="9ae35168-7134-48bd-bc5e-5b6308a0f21d" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd2" />
-    <MetadataFile FileName="nomina2.xsd" MetadataType="Schema" ID="3a1a0999-11f7-4b40-8977-ddeab0c42bb2" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd0" />
-    <MetadataFile FileName="nomina3.xsd" MetadataType="Schema" ID="59e7a6ad-ff1d-473d-8c85-6eb1c6b25079" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd4" />
-    <MetadataFile FileName="nomina.disco" MetadataType="Disco" ID="3d8dadb7-49da-4a40-bf3b-d61cd6c71eb8" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?disco" />
-    <MetadataFile FileName="nomina.wsdl" MetadataType="Wsdl" ID="76bebedf-f525-433d-b99c-06f21e53addb" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?wsdl" />
-    <MetadataFile FileName="nomina1.wsdl" MetadataType="Wsdl" ID="1a114eab-5455-4d6e-977e-68b9d306408b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="nomina5.xsd" MetadataType="Schema" ID="8f01f62e-10ec-4477-8a33-86caa511ae30" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/nomina.svc?xsd=xsd0" />
+    <MetadataFile FileName="nomina2.wsdl" MetadataType="Wsdl" ID="e3f81569-112f-48d3-accf-044683144e79" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/nomina.svc?wsdl" />
+    <MetadataFile FileName="nomina1.disco" MetadataType="Disco" ID="eb7c6779-54e1-4323-b794-0c89270e8a64" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/nomina.svc?disco" />
+    <MetadataFile FileName="nomina51.xsd" MetadataType="Schema" ID="224d9059-ca63-4659-83b3-d97ab073f0a5" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/nomina.svc?xsd=xsd4" />
+    <MetadataFile FileName="nomina52.xsd" MetadataType="Schema" ID="549c076d-55b1-40c3-ba42-fd71f2cf0236" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/nomina.svc?xsd=xsd3" />
+    <MetadataFile FileName="nomina53.xsd" MetadataType="Schema" ID="fad8c0bd-4bd2-4c38-8b75-f22825d1b2ad" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/nomina.svc?xsd=xsd1" />
+    <MetadataFile FileName="nomina21.wsdl" MetadataType="Wsdl" ID="3f28c775-084b-4e89-8674-82d7465e4d1c" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/nomina.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="nomina54.xsd" MetadataType="Schema" ID="06e2ef06-fadc-4345-8abc-9cc41189a067" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/nomina.svc?xsd=xsd2" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

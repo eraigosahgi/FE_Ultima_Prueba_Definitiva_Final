@@ -2872,7 +2872,7 @@ namespace HGInetFeAPI.ServicioAjusteNomina {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int CantidadField;
+        private decimal CantidadField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodigoConceptoField;
@@ -2903,7 +2903,7 @@ namespace HGInetFeAPI.ServicioAjusteNomina {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Cantidad {
+        public decimal Cantidad {
             get {
                 return this.CantidadField;
             }

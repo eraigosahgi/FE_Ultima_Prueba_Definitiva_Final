@@ -24,14 +24,14 @@
     <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ajustenomina.xsd" MetadataType="Schema" ID="9df12e40-d9ff-454a-a606-5699804f0ebe" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd4" />
-    <MetadataFile FileName="ajustenomina1.xsd" MetadataType="Schema" ID="b6cd7a23-81cc-4ab3-9041-a0e4011b8ddc" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd3" />
-    <MetadataFile FileName="ajustenomina2.xsd" MetadataType="Schema" ID="101a9136-7a79-4350-9730-6b384f36a533" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd2" />
-    <MetadataFile FileName="ajustenomina.disco" MetadataType="Disco" ID="06a151d4-2d4a-4739-86db-7e0adfb62813" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?disco" />
-    <MetadataFile FileName="ajustenomina3.xsd" MetadataType="Schema" ID="c35b5c70-59f5-47ab-980e-4562e6a0e7ca" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd0" />
-    <MetadataFile FileName="ajustenomina4.xsd" MetadataType="Schema" ID="8b407a57-246d-4408-bb92-bb05c64c48df" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd1" />
-    <MetadataFile FileName="ajustenomina.wsdl" MetadataType="Wsdl" ID="02e2d5a0-0f01-4dfd-ae18-e40368cb1689" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="ajustenomina1.wsdl" MetadataType="Wsdl" ID="2ba0f3ff-27dd-4877-a688-4096aeb8332c" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?wsdl" />
+    <MetadataFile FileName="ajustenomina1.disco" MetadataType="Disco" ID="9f4397d3-d531-43ef-85bc-0e6ed6bc5300" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?disco" />
+    <MetadataFile FileName="ajustenomina2.wsdl" MetadataType="Wsdl" ID="4291e282-03c1-40e0-b261-e9eb9999cce2" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?wsdl" />
+    <MetadataFile FileName="ajustenomina21.wsdl" MetadataType="Wsdl" ID="8f9dae6e-f51f-4cf5-8ca5-6e9f0df0a0ba" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="ajustenomina5.xsd" MetadataType="Schema" ID="25631d9e-edd0-4a0f-a0a2-0d5b6da1a8bd" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd4" />
+    <MetadataFile FileName="ajustenomina51.xsd" MetadataType="Schema" ID="4504aa66-4da7-4d57-83d9-4d7161334055" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd3" />
+    <MetadataFile FileName="ajustenomina52.xsd" MetadataType="Schema" ID="b08098b2-b832-4cc4-8f41-9da9583c9419" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd2" />
+    <MetadataFile FileName="ajustenomina53.xsd" MetadataType="Schema" ID="90bd5777-b8ad-44ab-baf8-3620fb863a22" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd1" />
+    <MetadataFile FileName="ajustenomina54.xsd" MetadataType="Schema" ID="b44f50af-c2a9-440d-bd2b-465d13499d0f" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
