@@ -2213,17 +2213,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (deduccion.DatosFondoSP != null)
 			{
-				if (deduccion.DatosFondoSP.Porcentaje > 0 && deduccion.DatosFondoSP.DeduccionFSP == 0)
-					throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Seguridad Pensional y no valor de deducción", deduccion.Pension.Porcentaje));
+				//if (deduccion.DatosFondoSP.Porcentaje > 0 && deduccion.DatosFondoSP.DeduccionFSP == 0)
+				//	throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Seguridad Pensional y no valor de deducción", deduccion.Pension.Porcentaje));
 
-				if (deduccion.DatosFondoSP.Porcentaje == 0 && deduccion.DatosFondoSP.DeduccionFSP > 0)
-					throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Seguridad Pensional y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
+				//if (deduccion.DatosFondoSP.Porcentaje == 0 && deduccion.DatosFondoSP.DeduccionFSP > 0)
+				//	throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Seguridad Pensional y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
 
-				if (deduccion.DatosFondoSP.PorcentajeSub > 0 && deduccion.DatosFondoSP.DeduccionSub == 0)
-					throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Subsistencia y no valor de deducción", deduccion.Pension.Porcentaje));
+				//if (deduccion.DatosFondoSP.PorcentajeSub > 0 && deduccion.DatosFondoSP.DeduccionSub == 0)
+				//	throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Subsistencia y no valor de deducción", deduccion.Pension.Porcentaje));
 
-				if (deduccion.DatosFondoSP.PorcentajeSub == 0 && deduccion.DatosFondoSP.DeduccionSub > 0)
-					throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Subsistencia y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
+				//if (deduccion.DatosFondoSP.PorcentajeSub == 0 && deduccion.DatosFondoSP.DeduccionSub > 0)
+				//	throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Subsistencia y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
 
 				valor_deduccion += deduccion.DatosFondoSP.DeduccionFSP + deduccion.DatosFondoSP.DeduccionSub;
 			}
