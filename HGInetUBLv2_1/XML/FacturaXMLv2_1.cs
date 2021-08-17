@@ -1590,7 +1590,7 @@ namespace HGInetUBLv2_1
 								// <cbc:TaxAmount>
 								TaxSubtotalIva.TaxableAmount = new TaxableAmountType();
 								TaxSubtotalIva.TaxableAmount.currencyID = moneda_detalle.ToString();
-								if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0 && DocDet.IvaPorcentaje > 0)
+								if (DocDet.ProductoGratis == true && DocDet.ValorImpuestoConsumo == 0 && DocDet.IvaPorcentaje >= 0)
 								{
 									TaxSubtotalIva.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 6, MidpointRounding.AwayFromZero);
 								}
