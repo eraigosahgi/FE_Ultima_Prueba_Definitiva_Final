@@ -31,50 +31,65 @@ namespace HGInetUBLv2_1
 
 			try
 			{
-				//para saber donde busca la informacion de resoluciones y que el xml sea del sector salud
-				int cont = 0;
-				if (factura_ubl.UBLExtensions.Count() > 2)
-					cont = 1;
-
+				
 				//Captura la resolucion y el prefijo
-				foreach (XmlNode item in factura_ubl.UBLExtensions[cont].ExtensionContent.ChildNodes)
+				for (int i = 0; i < factura_ubl.UBLExtensions.Count(); i++)
 				{
-					if (item.LocalName.Equals("InvoiceControl"))
+					if (factura_ubl.UBLExtensions[i].ExtensionContent.Name.Contains("sts:DianExtensions"))
 					{
-						foreach (XmlNode item_child in item.ChildNodes)
+						foreach (XmlNode item in factura_ubl.UBLExtensions[i].ExtensionContent.ChildNodes)
 						{
-							if (item_child.LocalName.Equals("InvoiceAuthorization"))
+							if (item.LocalName.Equals("InvoiceControl"))
 							{
-								factura_obj.NumeroResolucion = item_child.InnerText;
-							}
-							if (item_child.LocalName.Equals("AuthorizedInvoices"))
-							{
-								//Valida el nodo que contiene el prefijo
-								foreach (XmlNode item_Authorization in item_child.ChildNodes)
+								foreach (XmlNode item_child in item.ChildNodes)
 								{
-									if (item_Authorization.LocalName.Equals("Prefix"))
+									if (item_child.LocalName.Equals("InvoiceAuthorization"))
 									{
-										factura_obj.Prefijo = item_Authorization.InnerText;
+										factura_obj.NumeroResolucion = item_child.InnerText;
+									}
+									if (item_child.LocalName.Equals("AuthorizedInvoices"))
+									{
+										//Valida el nodo que contiene el prefijo
+										foreach (XmlNode item_Authorization in item_child.ChildNodes)
+										{
+											if (item_Authorization.LocalName.Equals("Prefix"))
+											{
+												factura_obj.Prefijo = item_Authorization.InnerText;
+											}
+										}
+										if (factura_obj.Prefijo == null)
+										{
+											factura_obj.Prefijo = string.Empty;
+										}
 									}
 								}
-								if (factura_obj.Prefijo == null)
+							}
+							else if (item.LocalName.Equals("SoftwareProvider"))
+							{
+								foreach (XmlNode item_child in item.ChildNodes)
 								{
-									factura_obj.Prefijo = string.Empty;
+									if (item_child.LocalName.Equals("ProviderID"))
+									{
+										factura_obj.IdentificacionProveedor = item_child.InnerText;
+									}
 								}
 							}
 						}
-					}
-					else if (item.LocalName.Equals("SoftwareProvider"))
-					{
-						foreach (XmlNode item_child in item.ChildNodes)
+
+						//Si ya se lleno la informacion de la resolucion 
+						if (!string.IsNullOrEmpty(factura_obj.NumeroResolucion))
 						{
-							if (item_child.LocalName.Equals("ProviderID"))
-							{
-								factura_obj.IdentificacionProveedor = item_child.InnerText;
-							}
+							i = factura_ubl.UBLExtensions.Count();
 						}
+
+
 					}
+
+					
+
 				}
+
+				
 
 				//Si tiene prefijo lo substrae para dejar el numero del documento como entero
 				if (!string.IsNullOrEmpty(factura_obj.Prefijo))
