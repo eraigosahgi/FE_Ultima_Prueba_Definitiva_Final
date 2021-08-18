@@ -1450,9 +1450,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#Habilitacion").dxRadioGroup({ visible: true });
 					$("#Habilitacion").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion)] });
 
-					$('#idHabilitacion_NominaE').show();
-					$("#Habilitacion_NominaE").dxRadioGroup({ visible: true });
-					$("#Habilitacion_NominaE").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion_NominaE)] });
+					try {
+						$('#idHabilitacion_NominaE').show();
+						$("#Habilitacion_NominaE").dxRadioGroup({ visible: true });
+						$("#Habilitacion_NominaE").dxRadioGroup({ value: TiposHabilitacion[BuscarID(TiposHabilitacion, Datos_Habilitacion_NominaE)] });
+					} catch (e) {
+
+					}
 
 					$("#divEmailFacturador").show();
 					break;
@@ -1980,6 +1984,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				} catch (err) {
 					DevExpress.ui.notify(err.message, 'error', 3000);
 				}
+			}, function errorCallback(response) {
+				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 			});
 		}
 	}
