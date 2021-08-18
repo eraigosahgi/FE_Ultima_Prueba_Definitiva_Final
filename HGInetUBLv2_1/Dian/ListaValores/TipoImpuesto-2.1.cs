@@ -29,7 +29,7 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("08", "ReteCREE", "ReteCREE"),
 			new ListaItem("20", "FtoHorticultura", "FtoHorticultura"),
 			new ListaItem("21", "Timbre", "Timbre"),
-			new ListaItem("22", "Bolsas", "Bolsas"),
+			new ListaItem("22", "INC Bolsas", "INC Bolsas"),
 			new ListaItem("23", "INCarbono", "INCarbono"),
 			new ListaItem("24", "INCombustibles", "INCombustibles"),
 			new ListaItem("25", "Sobretasa Combustibles", "Sobretasa Combustibles"),
