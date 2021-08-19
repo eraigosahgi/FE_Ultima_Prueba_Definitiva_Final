@@ -261,6 +261,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								Formato formato_nomina = new Formato();
 								Ctl_Formatos clase_formatos = new Ctl_Formatos();
 								formato_nomina.Codigo = clase_formatos.ObtenerFormatosEmpresa(Constantes.NitResolucionconPrefijo, TipoFormato.FormatoPDF.GetHashCode()).Where(x => x.IntDocTipo == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault().IntCodigoFormato;
+								formato_nomina.Titulo = Enumeracion.GetDescription(tipo_doc);
 								documento_obj.DocumentoFormato = new Formato();
 								documento_obj.DocumentoFormato = formato_nomina;
 							}

@@ -298,9 +298,9 @@ namespace HGInetUBLv2_1
 				{
 					NumCr = nomina.Reemplazar.NumeroSecuenciaXML.Numero;
 					FecCr = string.Format("{0}{1}", nomina.Reemplazar.InformacionGeneral.FechaGen.ToString("yyyy-MM-dd"), nomina.Reemplazar.InformacionGeneral.HoraGen); //fecha.ToString(Fecha.formato_fecha_java);
-					ValDev = decimal.Round(nomina.Reemplazar.DevengadosTotal,2).ToString();
-					ValDed = decimal.Round(nomina.Reemplazar.DeduccionesTotal,2).ToString();
-					ValTol = decimal.Round(nomina.Reemplazar.ComprobanteTotal,2).ToString();
+					ValDev = decimal.Round(nomina.Reemplazar.DevengadosTotal + 0.00M,2).ToString();
+					ValDed = decimal.Round(nomina.Reemplazar.DeduccionesTotal + 0.00M,2).ToString();
+					ValTol = decimal.Round(nomina.Reemplazar.ComprobanteTotal + 0.00M,2).ToString();
 					NitNIE = nomina.Reemplazar.Empleador.NIT;
 					DocEmp = nomina.Reemplazar.Trabajador.NumeroDocumento;
 					TipoXML = nomina.Reemplazar.InformacionGeneral.TipoXML;
