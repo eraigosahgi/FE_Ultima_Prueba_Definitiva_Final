@@ -1144,17 +1144,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					//Validacion del total
 					decimal total_calculado = decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento, MidpointRounding.AwayFromZero);
+
+					//Para las facturas del sector SALUD, los anticipos serán indicados como valores DESCONTABLES,PayableAmount (ID FAU14)
+					//if (documento.SectorSalud != null && documento.SectorSalud.CamposSector.Count > 0)
+					//{
+					//	total_calculado -= decimal.Round(documento.ValorAnticipo, MidpointRounding.AwayFromZero);
+					//}
+
 					if (total_calculado != decimal.Round(documento.Total, MidpointRounding.AwayFromZero))
 					{
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "Total", documento.Total, total_calculado));
 					}
 
 					//Validacion del Valor Neto
-					decimal neto_calculado = decimal.Round(documento.Total - documento.ValorReteFuente - documento.ValorReteIva -documento.ValorReteIca, MidpointRounding.AwayFromZero);
-					if (neto_calculado != decimal.Round(documento.Neto, MidpointRounding.AwayFromZero) && autoretenedor == false)
-					{
-						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "Neto", documento.Neto, neto_calculado));
-					}
+					//decimal neto_calculado = decimal.Round(documento.Total - documento.ValorReteFuente - documento.ValorReteIva -documento.ValorReteIca, MidpointRounding.AwayFromZero);
+					//if (neto_calculado != decimal.Round(documento.Neto, MidpointRounding.AwayFromZero) && autoretenedor == false)
+					//{
+					//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "Neto", documento.Neto, neto_calculado));
+					//}
 				}
 
 				//Se valida el detalle del documento
