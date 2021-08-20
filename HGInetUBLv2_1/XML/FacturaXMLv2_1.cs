@@ -43,7 +43,7 @@ namespace HGInetUBLv2_1
 				if (string.IsNullOrWhiteSpace(nombre_archivo_xml))
 					throw new ApplicationException("El nombre del archivo es inválido.");
 
-
+				
 				InvoiceType facturaXML = new InvoiceType();
 				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces(tipo);
 
@@ -52,19 +52,19 @@ namespace HGInetUBLv2_1
 				facturaXML.UBLVersionID = new UBLVersionIDType();
 				facturaXML.UBLVersionID.Value = "UBL 2.1";
 
-				//------se debe enviar el tipo de operacion tabla 6.1.5 - Estandar *
+				//------se debe enviar el tipo de operacion 13.1.5. Tipos de operación - 10 Estandar * - 09 AIU - 11 Mandatos - 12 Transporte - 13 Cambiario
 				facturaXML.CustomizationID = new CustomizationIDType();
-				if (documento.SectorSalud == null)
-				{
-					facturaXML.CustomizationID.Value = "10";
-				}
-				else
+
+				facturaXML.CustomizationID.Value = "10";
+
+				//Documento Tipo Sector Salud
+				if (documento.SectorSalud != null)
 				{
 					facturaXML.CustomizationID.Value = "SS-Recaudo";
 					facturaXML.CustomizationID.schemeID = "SS-CUFE";
 				}
 				
-
+				
 				//Operacion - AIU
 				try
 				{
@@ -465,7 +465,7 @@ namespace HGInetUBLv2_1
 					facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosObligado);
 				#endregion
 
-				if ((documento.Descuentos != null && documento.Descuentos.Sum(x => (x.Valor)) > 0) || (documento.Cargos != null && documento.Descuentos.Sum(x => (x.Valor)) > 0))
+				if ((documento.Descuentos != null && documento.Descuentos.Sum(x => (x.Valor)) > 0) || (documento.Cargos != null && documento.Cargos.Sum(x => (x.Valor)) > 0))
 					facturaXML.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
 
 				if (documento.DatosAdquiriente.DireccionEntrega != null)
@@ -2206,6 +2206,11 @@ namespace HGInetUBLv2_1
 							Mandantario.PowerOfAttorney[0] = power;
 
 							Item.InformationContentProviderParty = Mandantario;
+
+							if (!identificiacion_Obligado.Equals(DocDet.DatosMandatario.Identificacion))
+								InvoiceLineType1.ID.schemeID = "1";
+							else
+								InvoiceLineType1.ID.schemeID = "0";
 						}
 
 

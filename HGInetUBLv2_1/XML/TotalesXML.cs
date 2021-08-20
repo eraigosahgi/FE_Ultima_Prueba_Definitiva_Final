@@ -143,7 +143,7 @@ namespace HGInetUBLv2_1
 				#endregion
 
 				
-				if (decimal.Round(subtotal + impuesto + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo, 2) != documento.Total)
+				if (decimal.Round(subtotal + impuesto + documento.ValorCargo - documento.ValorDescuento, 2) != documento.Total)
 				{
 					decimal total_cal = decimal.Round(subtotal + impuesto + documento.ValorCargo - documento.ValorDescuento - documento.ValorAnticipo, 2);
 					PayableRoundingAmountType Rounding = new PayableRoundingAmountType();
