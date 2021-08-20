@@ -8,20 +8,20 @@ var UsuarioSession = "";
 App.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope, SrvFiltro) {
 	var now = new Date();
 	var Estado;
-	var ResolucionesPrefijo;
 
-	var codigo_facturador = "",
+
+	var codigo_emisor = "",
            numero_documento = "",
            estado_dian = "",
            estado_recibo = "",
            fecha_inicio = "",
            fecha_fin = "",
 		   tipo_filtro_fecha = 1,
-           codigo_adquiriente = "",
+           codigo_Empleado = "",
 			prefijo = "",
-			resolucion = "";
+			tipo_documento = "";
 
-
+	var EmpleadoRecibo;
 
 
 	$("#FechaInicial").dxDateBox({
@@ -58,7 +58,16 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 	cargarFiltros();
 
-	function cargarFiltros() {		
+	function cargarFiltros() {
+
+		$("#filtrosTipoDocumento").dxSelectBox({
+			placeholder: "Tipo de Documento",
+			showClearButton: true,
+			onValueChanged: function (data) {
+				tipo_documento = data.value;
+			}
+		});
+
 		$("#filtrosEstadoRecibo").dxDropDownBox({
 			valueExpr: "ID",
 			placeholder: "Seleccione un Item",
@@ -105,51 +114,6 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		});
 
 
-		//Resolucion - Prefijo
-		$("#filtrosResolucion").dxDropDownBox({
-			valueExpr: "ID",
-			placeholder: "Seleccione un Item",
-			displayExpr: "Descripcion",
-			showClearButton: true,
-			dataSource: DataCheckBox(ResolucionesPrefijo),
-			contentTemplate: function (e) {
-				var value = e.component.option("value"),
-                    $dataGrid = $("<div>").dxDataGrid({
-                    	dataSource: e.component.option("dataSource"),
-                    	allowColumnResizing: true,
-                    	columns:
-                            [
-                                 {
-                                 	caption: "Descripción",
-                                 	dataField: "Descripcion",
-                                 	title: "Descripcion",
-                                 	width: 500
-
-                                 }],
-                    	hoverStateEnabled: true,
-                    	paging: { enabled: true, pageSize: 10 },
-                    	filterRow: { visible: true },
-                    	scrolling: { mode: "infinite" },
-                    	height: 240,
-                    	selection: { mode: "multiple" },
-                    	selectedRowKeys: value,
-                    	onSelectionChanged: function (selectedItems) {
-                    		var keys = selectedItems.selectedRowKeys;
-                    		e.component.option("value", keys);
-                    		resolucion = keys;
-                    	}
-                    });
-
-				dataGrid = $dataGrid.dxDataGrid("instance");
-
-				e.component.on("valueChanged", function (args) {
-					var value = args.value;
-					dataGrid.selectRows(value, false);
-				});
-
-				return $dataGrid;
-			}
-		});
 
 
 		//Define los campos y las opciones
@@ -172,11 +136,25 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
             			}
             		}
             	},
-            	EstadoRecibo: {
+            	//EstadoRecibo: {
+            	//	searchEnabled: true,
+            	//	//Carga la data del control
+            	//	dataSource: new DevExpress.data.ArrayStore({
+            	//		data: EmpleadoRecibo,
+            	//		key: "ID"
+            	//	}),
+            	//	displayExpr: "Name",
+            	//	Enabled: true,
+            	//	placeholder: "Seleccione un Item",
+            	//	onValueChanged: function (data) {
+            	//		estado_recibo = data.value.ID;
+            	//	}
+            	//},
+            	TipoDocumento: {
             		searchEnabled: true,
             		//Carga la data del control
             		dataSource: new DevExpress.data.ArrayStore({
-            			data: AdquirienteRecibo,
+            			data: EmpleadoRecibo,
             			key: "ID"
             		}),
             		displayExpr: "Name",
@@ -199,6 +177,28 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 		//Se desactivan las consultas Automaticas
 		//consultar();
+
+		SrvMaestrosEnum.ObtenerEnum(5, '').then(function (data) {
+			Estado = data;
+			$("#filtrosEstadoRecibo").dxDropDownBox({
+				dataSource: DataCheckBox(Estado)
+			});
+		});
+
+		SrvMaestrosEnum.ObtenerEnum(10, '').then(function (data) {
+			$("#filtrosTipoDocumento").dxSelectBox({
+				dataSource: new DevExpress.data.ArrayStore({
+					data: data,
+					key: "ID"
+				}),
+				displayExpr: "Descripcion",
+				valueExpr: "ID",
+				placeholder: "Tipo de Documento",
+				showClearButton: true
+			});
+		});
+
+
 	}
 
 	$scope.ButtonOptionsConsultar = {
@@ -218,14 +218,14 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
 
-		if (resolucion == "")
-			resolucion = "*";
+		if (tipo_documento == "")
+			tipo_documento = 0;
 
 		var Muestradetalle = true;
 
 		$('#wait').show();
-		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
-		$http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&resolucion=' + resolucion + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
+		var codigo_Empleado = (txt_hgi_Empleado == undefined || txt_hgi_Empleado == '') ? '' : txt_hgi_Empleado;
+		$http.get('/api/DocumentosEmisor?codigo_emisor=' + codigo_emisor + '&numero_documento=' + numero_documento + '&codigo_empleado=' + codigo_Empleado + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_documento=' + tipo_documento + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
@@ -271,7 +271,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				},
 				"export": {
 					enabled: true,
-					fileName: "Documentos",					
+					fileName: "Documentos de Nómina Electrónica",
 				},
 				allowColumnResizing: true
                 , allowColumnReordering: true
@@ -296,9 +296,9 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
                     		var visible_xml = " style='pointer-events:auto;cursor: not-allowed;'";
 
-                    		var visible_xml_acuse = "style='pointer-events:auto;cursor: not-allowed;'";
+                    		//var visible_xml_acuse = "";// "style='pointer-events:auto;cursor: not-allowed;'";
 
-                    		var visible_acuse = "  title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";
+                    		//var visible_acuse = "  title='acuse pendiente' style='pointer-events:auto;cursor: not-allowed; color:white; margin-left:5%;'";
 
                     		var permite_envio = "class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:5%; font-size:19px'";
 
@@ -312,15 +312,15 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                     		else
                     			options.data.Xml = "#";
 
-                    		if (options.data.EstadoAcuse != 0)
-                    			visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
-                    		else
-                    			options.data.RutaAcuse = "#";
+                    		//if (options.data.EstadoAcuse != 0)
+                    		//	visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
+                    		//else
+                    		//	options.data.RutaAcuse = "#";
 
-                    		if (options.data.XmlAcuse)
-                    			visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
-                    		else
-                    			options.data.XmlAcuse = "#";
+                    		//if (options.data.XmlAcuse)
+                    		//	visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
+                    		//else
+                    		//	options.data.XmlAcuse = "#";
 
 
 
@@ -330,7 +330,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                                     $("<a " + permite_envio + "></a>").dxButton({
                                     	onClick: function () {
                                     		$scope.showModal = true;
-                                    		email_destino = options.data.MailAdquiriente;
+                                    		email_destino = options.data.MailEmpleado;
                                     		id_seguridad = options.data.StrIdSeguridad;
                                     		$('input:text[name=EmailDestino]').val("");
                                     		if (permite_envio != "") {
@@ -361,47 +361,48 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                     		message: "El campo Fecha es obligatorio."
                     	}]
                     },
-                    {
-                    	caption: "Fecha Vencimiento",
-                    	dataField: "DatFechaVencDocumento",
-                    	dataType: "date",
-                    	format: "yyyy-MM-dd",
-                    	cssClass: "hidden-xs col-md-1",
-                    	validationRules: [{
-                    		type: "required",
-                    		message: "El campo Fecha es obligatorio."
-                    	}]
-                    },
+                    //{
+                    //	caption: "Fecha Vencimiento",
+                    //	dataField: "DatFechaVencDocumento",
+                    //	dataType: "date",
+                    //	format: "yyyy-MM-dd",
+                    //	cssClass: "hidden-xs col-md-1",
+                    //	validationRules: [{
+                    //		type: "required",
+                    //		message: "El campo Fecha es obligatorio."
+                    //	}]
+                    //},
                     {
                     	caption: "Valor Total",
                     	cssClass: "col-xs-2 col-md-1",
                     	dataField: "IntVlrTotal"
                     },
-					 {
-					 	caption: "SubTotal",
-					 	cssClass: "col-xs-2 col-md-1",
-					 	dataField: "IntSubTotal"
-					 },
-					  {
-					  	caption: "Neto",
-					  	cssClass: "col-xs-2 col-md-1",
-					  	dataField: "IntNeto"
-					  },
+					 //{
+					 //	caption: "SubTotal",
+					 //	cssClass: "col-xs-2 col-md-1",
+					 //	dataField: "IntSubTotal"
+					 //},
+					 // {
+					 // 	caption: "Neto",
+					 // 	cssClass: "col-xs-2 col-md-1",
+					 // 	dataField: "IntNeto"
+					 // },
                      {
-                     	caption: "Adquiriente",
+                     	caption: "Empleado",
                      	cssClass: "hidden-xs col-md-1",
                      	dataField: "IdentificacionAdquiriente"
                      },
-                     {
-                     	caption: "Tipo Documento",
-                     	cssClass: "hidden-xs col-md-1",
-                     	dataField: "tipodoc"
-                     },
+                     
                       {
-                      	caption: "Nombre Adquiriente",
+                      	caption: "Nombre Empleado",
                       	cssClass: "hidden-xs col-md-1",
                       	dataField: "NombreAdquiriente"
                       },
+					  {
+					  	caption: "Tipo Documento",
+					  	cssClass: "hidden-xs col-md-1",
+					  	dataField: "tipodoc"
+					  },
                        {
                        	dataField: "EstadoFactura",
                        	caption: "Estado",
@@ -419,27 +420,27 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                        	}
                        },
 
-					   {
-					   	caption: "Acuse",
-					   	dataField: "EstadoAcuse",
-					   	cssClass: "hidden-xs col-md-1",
-					   	lookup: {
-					   		dataSource: AdquirienteRecibo,
-					   		displayExpr: "Name",
-					   		valueExpr: "ID"
-					   	},
-					   	cellTemplate: function (container, options) {
+					   //{
+					   //	caption: "Acuse",
+					   //	dataField: "EstadoAcuse",
+					   //	cssClass: "hidden-xs col-md-1",
+					   //	lookup: {
+					   //		dataSource: EmpleadoRecibo,
+					   //		displayExpr: "Name",
+					   //		valueExpr: "ID"
+					   //	},
+					   //	cellTemplate: function (container, options) {
 
-					   		$("<div>")
-								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
-								.appendTo(container);
-					   	}
-					   },
-                      {
-                      	caption: "Motivo Rechazo",
-                      	cssClass: "hidden-xs col-md-1",
-                      	dataField: "MotivoRechazo",
-                      },
+					   //		$("<div>")
+					   // 		.append($(ColocarEstadoAcuse(options.data.IntEmpleadoRecibo, options.data.EstadoAcuse)))
+					   // 		.appendTo(container);
+					   //	}
+					   //},
+                      //{
+                      //	caption: "Motivo Rechazo",
+                      //	cssClass: "hidden-xs col-md-1",
+                      //	dataField: "MotivoRechazo",
+                      //},
 					{
 						caption: "Estado Email",
 						cssClass: "hidden-xs col-md-1",
@@ -466,7 +467,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 
 
-						container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.StrEmpresaFacturador, options.data.NumeroDocumento));
+						container.append(ObtenerDetallleNomina(options.data.Pdf, options.data.Xml,  options.data.RutaServDian, options.data.StrIdSeguridad, options.data.StrEmpresaFacturador, options.data.NumeroDocumento));
 
 					}
 				},
@@ -477,24 +478,25 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						summaryType: "sum",
 						displayFormat: " {0} Total ",
 						valueFormat: "currency"
-					}, {
-						column: "IntSubTotal",
-						summaryType: "sum",
-						displayFormat: " {0} Neto ",
-						valueFormat: "currency"
-					}, {
-						column: "IntNeto",
-						summaryType: "sum",
-						displayFormat: " {0} Neto ",
-						valueFormat: "currency"
-					}]
-                    , totalItems: [{
-                    	name: "Suma",
-                    	displayFormat: "{0}",
-                    	valueFormat: "currency",
-                    	summaryType: "custom"
+					},
+					//{
+					//	column: "IntSubTotal",
+					//	summaryType: "sum",
+					//	displayFormat: " {0} Neto ",
+					//	valueFormat: "currency"
+					//}, {
+					//	column: "IntNeto",
+					//	summaryType: "sum",
+					//	displayFormat: " {0} Neto ",
+					//	valueFormat: "currency"
+					//}]
+                    //, totalItems: [{
+                    //	name: "Suma",
+                    //	displayFormat: "{0}",
+                    //	valueFormat: "currency",
+                    //	summaryType: "custom"
 
-                    },
+                    //},
 					{
 						column: "IntVlrTotal",
 						showInColumn: "IntVlrTotal",
@@ -503,32 +505,32 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 							return fNumber.go(data.value).replace("$-", "-$");
 						}
 					},
-					{
-						name: "SumaSubTotal",
-						summaryType: "sum",
-						column: "IntSubTotal",
-						customizeText: function (data) {
-							return fNumber.go(data.value).replace("$-", "-$");
-						}
+					//{
+					//	name: "SumaSubTotal",
+					//	summaryType: "sum",
+					//	column: "IntSubTotal",
+					//	customizeText: function (data) {
+					//		return fNumber.go(data.value).replace("$-", "-$");
+					//	}
 
-					},
-					{
-						name: "SumaNeto",
-						displayFormat: "{0}",
-						valueFormat: "currency",
-						summaryType: "custom"
+					//},
+					//{
+					//	name: "SumaNeto",
+					//	displayFormat: "{0}",
+					//	valueFormat: "currency",
+					//	summaryType: "custom"
 
-					},
-					{
-						column: "IntNeto",
-						summaryType: "sum",
-						customizeText: function (data) {
-							return fNumber.go(data.value).replace("$-", "-$");
-						}
+					//},
+					//{
+					//	column: "IntNeto",
+					//	summaryType: "sum",
+					//	customizeText: function (data) {
+					//		return fNumber.go(data.value).replace("$-", "-$");
+					//	}
 
-					},
+					//},
                     {
-                    	showInColumn: "DatFechaVencDocumento",
+                    	showInColumn: "DatFechaDocumento",
                     	displayFormat: "Total : ",
                     	alignment: "right"
                     }
@@ -545,28 +547,28 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 							}
 						}
 
-						if (options.name === "SumaSubTotal") {
-							if (options.summaryProcess === "start") {
-								options.totalValue = 0;
-								$('#SubTotal').text("");
-							}
-							if (options.summaryProcess === "calculate") {
-								options.totalValue = options.totalValue + options.value.IntSubTotal;
-								$('#SubTotal').text("SubTotal: " + fNumber.go(options.totalValue).replace("$-", "-$"));
-							}
-						}
+						//if (options.name === "SumaSubTotal") {
+						//	if (options.summaryProcess === "start") {
+						//		options.totalValue = 0;
+						//		$('#SubTotal').text("");
+						//	}
+						//	if (options.summaryProcess === "calculate") {
+						//		options.totalValue = options.totalValue + options.value.IntSubTotal;
+						//		$('#SubTotal').text("SubTotal: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+						//	}
+						//}
 
 
-						if (options.name === "SumaNeto") {
-							if (options.summaryProcess === "start") {
-								options.totalValue = 0;
-								$('#Neto').text("");
-							}
-							if (options.summaryProcess === "calculate") {
-								options.totalValue = options.totalValue + options.value.IntNeto;
-								$('#Neto').text("Neto: " + fNumber.go(options.totalValue).replace("$-", "-$"));
-							}
-						}
+						//if (options.name === "SumaNeto") {
+						//	if (options.summaryProcess === "start") {
+						//		options.totalValue = 0;
+						//		$('#Neto').text("");
+						//	}
+						//	if (options.summaryProcess === "calculate") {
+						//		options.totalValue = options.totalValue + options.value.IntNeto;
+						//		$('#Neto').text("Neto: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+						//	}
+						//}
 					}
 				}
                 ,
@@ -587,30 +589,30 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 
 
-	SrvFiltro.ObtenerFiltro('Documento Adquiriente', 'Adquiriente', 'icon-user-tie', 115, '/api/ObtenerAdquirientes?Facturador=' + $('#Hdf_Facturador').val(), 'ID', 'Texto', false, 4).then(function (Datos) {
-		$scope.Adquiriente = Datos;
+	SrvFiltro.ObtenerFiltro('Documento Empleado', 'Empleado', 'icon-user-tie', 115, '/api/ObtenerEmpleados', 'ID', 'Texto', false, 4).then(function (Datos) {
+		$scope.Empleado = Datos;
 	});
 
-	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
-		codigo_facturador = data[0].IdentificacionEmpresa;
-		UsuarioSession = data[0].IdSeguridad;
+	//SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
+	//	codigo_emisor = data[0].IdentificacionEmpresa;
+	//	UsuarioSession = data[0].IdSeguridad;
 
 
-		SrvMaestrosEnum.ObtenerEnum(5, '').then(function (data) {
-			SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
-				Estado = data;
-				items_recibo = dataacuse;
+	//	SrvMaestrosEnum.ObtenerEnum(5, '').then(function (data) {
+	//		SrvMaestrosEnum.ObtenerEnum(1).then(function (dataacuse) {
+	//			Estado = data;
+	//			items_recibo = dataacuse;
 
-				$http.get('/api/ObtenerResPrefijo?codigo_facturador=' + codigo_facturador).then(function (response) {
-					ResolucionesPrefijo = response.data;
-					cargarFiltros();
-				}, function (response) {
-					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-				});
+	//			$http.get('/api/ObtenerResPrefijo?codigo_emisor=' + codigo_emisor).then(function (response) {
+	//				ResolucionesPrefijo = response.data;
+	//				cargarFiltros();
+	//			}, function (response) {
+	//				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+	//			});
 
-			});
-		});
-	});
+	//		});
+	//	});
+	//});
 	ConsultarAuditoria = function (IdSeguridad, IdFacturador, NumeroDocumento) {
 		$rootScope.ConsultarAuditDoc(IdSeguridad, IdFacturador, NumeroDocumento);
 	};
@@ -722,6 +724,7 @@ App.controller('EnvioEmailController', function EnvioEmailController($scope, $ht
 
 
 });
+
 
 
 

@@ -920,12 +920,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}]
 			});
 
-			$("#Habilitacion_NominaE").dxRadioGroup().dxValidator({
-				validationRules: [{
-					type: "required",
-					message: "Debe indicar el tipo de Habilitacion de Nomina"
-				}]
-			});
+			//$("#Habilitacion_NominaE").dxRadioGroup().dxValidator({
+			//	validationRules: [{
+			//		type: "required",
+			//		message: "Debe indicar el tipo de Habilitacion de Nomina"
+			//	}]
+			//});
 			
 		}
 

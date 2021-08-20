@@ -685,6 +685,32 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		/// <summary>
+		/// Obtiene los empleados del emisor
+		/// </summary>        
+		/// <returns></returns>
+		[HttpGet]
+		[Route("api/ObtenerEmpleados")]
+		public IHttpActionResult ObtenerEmpleados()
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				string codigo_emisor = Sesion.DatosEmpresa.StrIdentificacion;
+
+				Ctl_Empresa controlador = new Ctl_Empresa();
+				var lista = controlador.ObtenerEmpleados(codigo_emisor);
+
+
+				return Ok(lista);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 		[HttpGet]
 		[Route("api/ObtenerAdquirientesPagos")]

@@ -198,4 +198,8 @@
   <data name="ActivacionFechaRecepcion" xml:space="preserve">
     <value>1338</value>
   </data>
+  <data name="ConsultaDocumentosEmisor" xml:space="preserve">
+    <value>2311</value>
+    <comment>Documentos del Emisor de Nómina</comment>
+  </data>
 </root>

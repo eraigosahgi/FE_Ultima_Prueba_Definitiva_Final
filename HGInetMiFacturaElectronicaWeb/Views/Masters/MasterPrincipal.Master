@@ -477,6 +477,8 @@
 							<div class="category-content no-padding">
 								<div id="DivMenu" runat="server" style="font-size: 14px !important">
 								</div>
+								<div id="DivMenuNomina" runat="server" style="font-size: 14px !important">
+								</div>
 							</div>
 						</div>
 						<!-- /Navegación Principal  -->

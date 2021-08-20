@@ -325,6 +325,7 @@ PagosFacturadorApp.controller('PagosFacturadorController', function PagosFactura
 					},
 					export: {
 						enabled: true,
+						filename:"Pagos Recibidos"
 					},
 					/*,stateStoring: {
 						enabled: true,

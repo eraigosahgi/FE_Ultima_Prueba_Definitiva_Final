@@ -349,6 +349,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				//}
 				//#endregion
 
+				if (empresa.IntHabilitacionNomina != null)
+				{
+					CrearPermisosNomina(empresa.StrIdentificacion);
+				}
+
 
 
 				return empresa;
@@ -361,15 +366,75 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 		/// <summary>
+		/// Agrega los permisos de nomina del usuario principal de la empresa
+		/// </summary>
+		/// <param name="identificacion"></param>
+		public void CrearPermisosNomina(string identificacion)
+		{
+			try
+			{
+				Ctl_OpcionesUsuario _controlador = new Ctl_OpcionesUsuario();
+
+				TblOpcionesUsuario permiso = new TblOpcionesUsuario();
+
+				//Crea el Pemiso Principal de nomina (Nómina Electrónica)
+				permiso.StrEmpresa = identificacion;
+				permiso.StrUsuario = identificacion;
+				permiso.IntIdOpcion = 23;
+				permiso.IntConsultar = true;
+				permiso.IntAgregar = true;
+				permiso.IntEditar = true;
+				permiso.IntEliminar = true;
+				permiso.IntAnular = true;
+				permiso.IntGestion = true;
+				_controlador.Crear(permiso);
+
+				//Crea el Pemiso (Emisor)
+				permiso = new TblOpcionesUsuario();
+				permiso.StrEmpresa = identificacion;
+				permiso.StrUsuario = identificacion;
+				permiso.IntIdOpcion = 231;
+				permiso.IntConsultar = true;
+				permiso.IntAgregar = true;
+				permiso.IntEditar = true;
+				permiso.IntEliminar = true;
+				permiso.IntAnular = true;
+				permiso.IntGestion = true;
+				_controlador.Crear(permiso);
+
+				//Crea el Pemiso (Documentos Emisor)
+				permiso = new TblOpcionesUsuario();
+				permiso.StrEmpresa = identificacion;
+				permiso.StrUsuario = identificacion;
+				permiso.IntIdOpcion = 2311;
+				permiso.IntConsultar = true;
+				permiso.IntAgregar = true;
+				permiso.IntEditar = true;
+				permiso.IntEliminar = true;
+				permiso.IntAnular = true;
+				permiso.IntGestion = true;
+				_controlador.Crear(permiso);
+
+			}
+			catch (Exception)
+			{
+
+			}
+
+		}
+
+		/// <summary>
 		/// Actualizar una empresa en la BD
 		/// </summary>
 		/// <param name="empresa">Objeto BD de la empresa a Actualizar</param>
 		/// <returns></returns>
 		public TblEmpresas Editar(TblEmpresas empresa, bool Administrador, List<ObjVerificacionEmail> ListaEmailRegistro)
 		{
+
 			try
 			{
 				bool EnviaCorreoSerial = false;
+				bool crear_permiso_nomina = false;
 
 				if (empresa == null)
 					throw new ApplicationException("La empresa es incorrecta!, Error");
@@ -395,6 +460,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					EmpresaActualiza.IntAdquiriente = empresa.IntAdquiriente;
 					EmpresaActualiza.IntHabilitacion = empresa.IntHabilitacion;
+					//Validamos si debemos crear permisos de nomina
+					if (EmpresaActualiza.IntHabilitacionNomina == null && empresa.IntHabilitacionNomina != null)
+					{
+						crear_permiso_nomina = true;
+					}
 					EmpresaActualiza.IntHabilitacionNomina = empresa.IntHabilitacionNomina;
 					EmpresaActualiza.IntObligado = empresa.IntObligado;
 					EmpresaActualiza.StrEmpresaAsociada = empresa.StrEmpresaAsociada;
@@ -584,6 +654,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				#endregion
 
+
+				if (crear_permiso_nomina)
+				{
+					CrearPermisosNomina(EmpresaActualiza.StrIdentificacion);
+				}
 
 				return EmpresaActualiza;
 			}
@@ -1164,11 +1239,35 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		//	return datos;
 		//}
 
-
+		/// <summary>
+		/// Obtiene los adquirientes de un Facturador
+		/// </summary>
+		/// <param name="identificacion"></param>
+		/// <returns></returns>
 		public object ObtenerAdquirientes(string identificacion)
 		{
 
 			var datos = (from Adquirientes in context.QryAdquirientes
+						 where Adquirientes.StrEmpresaFacturador.Equals(identificacion)
+						 select new
+						 {
+							 ID = Adquirientes.StrEmpresaAdquiriente,
+							 Texto = Adquirientes.StrRazonSocial,
+							 Fact = Adquirientes.StrEmpresaFacturador
+						 }).OrderBy(x => x.Texto).ToList();
+
+			return datos;
+		}
+
+		/// <summary>
+		/// Obtiene los empleados de un Emisor
+		/// </summary>
+		/// <param name="identificacion"></param>
+		/// <returns></returns>
+		public object ObtenerEmpleados(string identificacion)
+		{
+
+			var datos = (from Adquirientes in context.QryEmpleados
 						 where Adquirientes.StrEmpresaFacturador.Equals(identificacion)
 						 select new
 						 {

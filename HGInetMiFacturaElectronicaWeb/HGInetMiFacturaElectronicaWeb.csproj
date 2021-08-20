@@ -1940,6 +1940,7 @@
     <Content Include="Scripts\Pages\ConsultarPlanesDocumentos.js" />
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
     <Content Include="Scripts\Pages\DocumentosAdquirientePagos.js" />
+    <Content Include="Scripts\Pages\DocumentosEmisor.js" />
     <Content Include="Scripts\Pages\HGIpayConsultaDocumentos.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
@@ -2811,6 +2812,7 @@
     <Content Include="Views\Pages\ConfirmacionUsuarioPagos.aspx" />
     <Content Include="Views\Pages\ConsultaAdministracionPagos.aspx" />
     <Content Include="Views\Pages\ConsultaResoluciones.aspx" />
+    <Content Include="Views\Pages\DocumentosEmisor.aspx" />
     <Content Include="Views\Pages\GestionAlertas.aspx" />
     <Content Include="Views\Pages\ConfigurarPlanes.aspx" />
     <Content Include="Views\Pages\AuditoriaDocumento.aspx" />
@@ -3059,6 +3061,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConsultaResoluciones.aspx.designer.cs">
       <DependentUpon>ConsultaResoluciones.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\DocumentosEmisor.aspx.cs">
+      <DependentUpon>DocumentosEmisor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\DocumentosEmisor.aspx.designer.cs">
+      <DependentUpon>DocumentosEmisor.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\GestionAlertas.aspx.cs">
       <DependentUpon>GestionAlertas.aspx</DependentUpon>
@@ -3572,7 +3581,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61423/</IISUrl>
+          <IISUrl>http://localhost:61436/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

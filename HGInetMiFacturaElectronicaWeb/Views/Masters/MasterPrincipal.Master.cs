@@ -105,9 +105,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-
+				string d = ex.Message;
 			}
 		}
 
@@ -165,7 +165,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 		public string GenerarTagMenuopt(int IdMenu, string url, string Icono, string DescripcionMenu)
 		{
 			return @"<li runat = 'server'  id='menu_" + IdMenu + "'>" +
-						"<a id='link_" + IdMenu + "' class='legitRipple' href='" + url + "'><i class='" + Icono + "'></i><span style = 'margin: -10px'>" + DescripcionMenu + "</span></a>" +
+						"<a id='link_" + IdMenu + "' class='legitRipple' href='" + url + "'><i class='" + Icono + "'></i><span style = 'margin: -10px; font-size: 12px;'>" + DescripcionMenu + "</span></a>" +
 					"</li>";
 		}
 
@@ -200,6 +200,9 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 				}
 				else
 				{
+					//
+					ListMenu.Add(new ObjMenu(0, -1, "MENÚ", "", ""));
+
 					ListMenu.Add(new ObjMenu(item.IntId, item.IntIdDependencia, item.StrDescripcion, item.StrClaseMenu, item.StrRutaMenu));
 					i++;
 				}
@@ -224,8 +227,10 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 
 
 			//Se define cabecera del menú principal
-			string Menu = @"<ul class='navigation navigation-main navigation-accordion' id='MenuPrincipal' runat='server'>
-                             <li class='navigation-header'><span style = 'margin: -10px'> Menú </span> <i class='icon-menu' title='Menú'></i></li>";
+			//string Menu = @"<ul class='navigation navigation-main navigation-accordion' id='MenuPrincipal' runat='server'>
+   //                          <li class='navigation-header'><span style = 'margin: -10px'> Menú </span> <i class='icon-menu' title='Menú'></i></li>";
+
+			string Menu = @"<ul class='navigation navigation-main navigation-accordion' id='MenuPrincipal' runat='server'>";
 
 			//Se itero la lista de permisos para ir creado los tag del menú
 			foreach (var item in ListaGlobal)
@@ -257,7 +262,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 				//////////////////////////////////////////////////////////////////////////////////////////////
 
 			}
-			DivMenu.InnerHtml = Menu + "</ul> </li> </ul>";
+			DivMenu.InnerHtml = Menu + "</ul> </li> </ul>";			
 			//Guardo el Menu en un Cookies para no tener que crear nuevamente el Menu
 			string NuevoCokkies = Menu + "</ul> </li> </ul>";
 			NuevoCokkies = NuevoCokkies.Replace("<", "xxx").Replace(">", "zzz");
