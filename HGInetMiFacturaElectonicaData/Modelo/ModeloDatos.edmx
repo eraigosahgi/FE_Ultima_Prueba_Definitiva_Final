@@ -463,6 +463,18 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
           <Property Name="IntEstadoEnvio" Type="smallint" Nullable="false" />
           <Property Name="DatFechaDocumento" Type="datetime" Nullable="false" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmpleados' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="QryEmpleados">
+          <Key>
+            <PropertyRef Name="StrEmpresaFacturador" />
+            <PropertyRef Name="StrEmpresaAdquiriente" />
+            <PropertyRef Name="StrRazonSocial" />
+          </Key>
+          <Property Name="StrEmpresaFacturador" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrEmpresaAdquiriente" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrRazonSocial" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Role="TblConfiguracionInteroperabilidad" Type="Self.TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
           <End Role="TblDocumentos" Type="Self.TblDocumentos" Multiplicity="*" />
@@ -773,6 +785,13 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
     [QryDocumentosSaldo].[DatFechaDocumento] AS [DatFechaDocumento]
     FROM [dbo].[QryDocumentosSaldo] AS [QryDocumentosSaldo]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="QryEmpleados" EntityType="Self.QryEmpleados" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [QryEmpleados].[StrEmpresaFacturador] AS [StrEmpresaFacturador], 
+    [QryEmpleados].[StrEmpresaAdquiriente] AS [StrEmpresaAdquiriente], 
+    [QryEmpleados].[StrRazonSocial] AS [StrRazonSocial]
+    FROM [dbo].[QryEmpleados] AS [QryEmpleados]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" Association="Self.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
             <End Role="TblConfiguracionInteroperabilidad" EntitySet="TblConfiguracionInteroperabilidad" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
@@ -968,6 +987,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
             <End Role="TblPagosElectronicos" EntitySet="TblPagosElectronicos" />
           </AssociationSet>
+          <EntitySet Name="QryEmpleados" EntityType="Modelo.QryEmpleados" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1725,6 +1745,16 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="QryEmpleados">
+          <Key>
+            <PropertyRef Name="StrEmpresaFacturador" />
+            <PropertyRef Name="StrEmpresaAdquiriente" />
+            <PropertyRef Name="StrRazonSocial" />
+          </Key>
+          <Property Name="StrEmpresaFacturador" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrEmpresaAdquiriente" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrRazonSocial" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2178,6 +2208,15 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryDocum
                 <ScalarProperty Name="StrIdPlataforma" ColumnName="StrIdPlataforma" />
                 <ScalarProperty Name="StrIdSeguridadPago" ColumnName="StrIdSeguridadPago" />
                 <ScalarProperty Name="StrIdRegistro" ColumnName="StrIdRegistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QryEmpleados">
+            <EntityTypeMapping TypeName="Modelo.QryEmpleados">
+              <MappingFragment StoreEntitySet="QryEmpleados">
+                <ScalarProperty Name="StrRazonSocial" ColumnName="StrRazonSocial" />
+                <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+                <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -48,6 +48,7 @@
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblEmpresas1" />
         <AssociationConnector Association="Modelo.FK_TblPagosDetalles_TblPagosElectronicos" />
         <AssociationConnector Association="Modelo.FK_TblPagosElectronicos_TblPlanesTransacciones" />
+        <EntityTypeShape EntityType="Modelo.QryEmpleados" Width="1.5" PointX="20.875" PointY="0.5" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
