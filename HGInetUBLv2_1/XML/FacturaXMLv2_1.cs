@@ -90,7 +90,7 @@ namespace HGInetUBLv2_1
 				}
 
 				facturaXML.ProfileID = new ProfileIDType();
-				if (documento.TipoOperacion < 2)
+				if (documento.TipoOperacion < 3)
 					facturaXML.ProfileID.Value = "DIAN 2.1: Factura Electrónica de Venta";
 				else
 					facturaXML.ProfileID.Value = "DIAN 2.1: documento soporte en adquisiciones efectuadas a no obligados a facturar.";
@@ -257,7 +257,7 @@ namespace HGInetUBLv2_1
 				}
 				else if (documento.TipoOperacion == 2)//Exportacion
 				{
-					InvoiceTypeCode.Value = "03";
+					InvoiceTypeCode.Value = "02";
 				}
 				else//Documento Equivalente
 				{
@@ -1529,7 +1529,7 @@ namespace HGInetUBLv2_1
 					try
 					{
 						
-						if (DocDet.IvaValor >= 0 )
+						if (DocDet.CalculaIVA < 2)
 						{
 
 							bool llenar_iva = false;

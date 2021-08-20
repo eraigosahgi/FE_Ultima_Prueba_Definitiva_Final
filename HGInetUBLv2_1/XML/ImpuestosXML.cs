@@ -32,7 +32,7 @@ namespace HGInetUBLv2_1
 					version_erp = version_validar;
 
 				//Toma los impuestos de IVA que tiene el producto en el detalle del documento
-				var impuestos_iva = documentoDetalle.Where(d => d.CalculaIVA == 0 && d.ValorImpuestoConsumo == 0).ToList().Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor }).GroupBy(_impuesto => new { _impuesto.IvaPorcentaje }).Select(_impuesto => _impuesto.First()).ToList();
+				var impuestos_iva = documentoDetalle.Where(d => d.CalculaIVA < 2 && d.ValorImpuestoConsumo == 0).ToList().Select(_impuesto => new { _impuesto.IvaPorcentaje, TipoImpuestos.Iva, _impuesto.IvaValor }).GroupBy(_impuesto => new { _impuesto.IvaPorcentaje }).Select(_impuesto => _impuesto.First()).ToList();
 
 				//Toma el impuesto al consumo de los productos que esten el detalle
 				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0 || d.Aiu == 4).ToList().Select(_consumo => new

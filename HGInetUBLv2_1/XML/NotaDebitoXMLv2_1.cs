@@ -763,7 +763,7 @@ namespace HGInetUBLv2_1
 					// <cac:TaxTotal>
 					List<TaxTotalType> TaxesTotal = new List<TaxTotalType>();
 
-					if (DocDet.IvaValor >= 0)
+					if (DocDet.CalculaIVA < 2)
 					{
 
 						bool llenar_iva = false;
