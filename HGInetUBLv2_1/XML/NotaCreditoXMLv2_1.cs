@@ -1289,6 +1289,42 @@ namespace HGInetUBLv2_1
 					CreditNoteLine.Item = Item;
 					#endregion
 
+					#region Producto gratuito 
+					// indica que la línea de factura es gratuita (verdadera) o no (falsa)
+					// <cbc:FreeOfChargeIndicator>
+					FreeOfChargeIndicatorType FreeOfChargeIndicator = new FreeOfChargeIndicatorType();
+					FreeOfChargeIndicator.Value = DocDet.ProductoGratis;
+					CreditNoteLine.FreeOfChargeIndicator = FreeOfChargeIndicator;
+
+					if (DocDet.ProductoGratis == true)
+					{
+						PricingReferenceType Precio = new PricingReferenceType();
+						Precio.AlternativeConditionPrice = new PriceType[1];
+
+						// <fe:Price>
+						PriceType PriceG = new PriceType();
+
+						// <cbc:PriceAmount>
+						PriceAmountType PriceAmountP = new PriceAmountType();
+						PriceAmountP.currencyID = moneda_detalle.ToString();
+						PriceAmountP.Value = decimal.Round((decimal.Round(DocDet.ValorUnitario, 6) > 0) ? decimal.Round(DocDet.ValorUnitario, 6) : (decimal.Round(DocDet.ValorImpuestoConsumo, 6) / decimal.Round(DocDet.Cantidad, 6)), 6);
+						PriceG.PriceAmount = PriceAmountP;
+
+						//Código del tipo de precio informado ista de valores posibles en 6.3.10 
+						PriceTypeCodeType PriceTypeCode = new PriceTypeCodeType();
+						PriceTypeCode.Value = DocDet.ProductoGratisPrecioRef;
+						PriceG.PriceTypeCode = PriceTypeCode;
+
+						Precio.AlternativeConditionPrice[0] = PriceG;
+						CreditNoteLine.PricingReference = Precio;
+
+						if (CreditNoteLine.LineExtensionAmount.Value > 0)
+							CreditNoteLine.LineExtensionAmount.Value = 0.00M;
+
+					}
+
+					#endregion
+
 					#region Valor Unitario producto
 					// <fe:Price>
 					PriceType Price = new PriceType();
