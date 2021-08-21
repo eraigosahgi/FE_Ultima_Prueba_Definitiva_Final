@@ -38,7 +38,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="respuesta">datos de respuesta del documento</param>
 		/// <param name="documento_result">información del proceso interno del documento</param>
 		/// <returns>información adicional de respuesta del documento</returns>
-		public static AcuseRecibo EnviarDian(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result, string IdSetDian = "")
+		public static AcuseRecibo EnviarDian(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, ref FacturaE_Documento documento_result, string IdSetDian = "", bool proceso_sonda = false)
 		{
 
 			string msg_response = String.Empty;
@@ -51,7 +51,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			try
 			{
 
-				acuse = Ctl_DocumentoDian.Enviar(documento_result, documentoBd, empresa, ref respuesta, IdSetDian);
+				acuse = Ctl_DocumentoDian.Enviar(documento_result, documentoBd, empresa, ref respuesta, IdSetDian, proceso_sonda);
 
 				if (acuse.Response.Equals(200))
 				{

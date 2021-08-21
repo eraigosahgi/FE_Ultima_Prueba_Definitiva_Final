@@ -23,7 +23,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 	public class Ctl_DocumentoDian
 	{
 
-		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string IdSetDian, int proceso_acuse = 0)
+		public static AcuseRecibo Enviar(FacturaE_Documento documento, TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string IdSetDian, bool proceso_sonda, int proceso_acuse = 0)
 		{
 
 			string IdSoftware = null;
@@ -189,9 +189,42 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 						else
 						{
 								List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> respuesta_dian = null;
-								
-								//Envio el documento y guardo la respuesta en archivo y en objeto respuesta_dian
-								acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreXml, documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), ruta_certificado,certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian, documento.CUFE, documentoBd.IntDocTipo);
+
+								//Se agrega este proceso para evitar envio a la DIAN si hay intermitencia y demora en la respuesta 
+								bool enviar_sincronico = true;
+
+								//Si es proceso por la sonda no se valida 
+								if (proceso_sonda == false && documento.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
+								{
+									//Esta empresa se usa solo para determinar si envia normal o por sonda posteriormente
+									//*****Se debe cambiar por una tabla de configuracion y es provisional esta forma.
+									Ctl_Empresa empresa_indicador = new Ctl_Empresa();
+									TblEmpresas indicador_envio = empresa_indicador.Obtener("888989");
+									if (indicador_envio.IntManejaAnexos == true)
+										enviar_sincronico = false;
+								}
+
+								if (enviar_sincronico == true)
+								{
+									//Envio el documento y guardo la respuesta en archivo y en objeto respuesta_dian
+									acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreXml, documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), ruta_certificado, certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian, documento.CUFE, documentoBd.IntDocTipo);
+								}
+								else
+								{
+									acuse.Version = "2";
+									acuse.Response = 201;
+									acuse.ReceivedDateTime = Fecha.GetFecha();
+									acuse.ResponseDateTime = Fecha.GetFecha();
+
+									HGInetDIANServicios.DianWSValidacionPrevia.DianResponse respuesta_asincronica = new HGInetDIANServicios.DianWSValidacionPrevia.DianResponse();
+									respuesta_asincronica.StatusCode = "94";
+									respuesta_asincronica.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma").ToArray();
+									respuesta_asincronica.IsValid = false;
+									respuesta_dian = new List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse>();
+									respuesta_dian.Add(respuesta_asincronica);
+									documentoBd.IntIdEstado = 7;
+									respuesta.FechaUltimoProceso = Fecha.GetFecha();
+								}
 
 								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
 								respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
