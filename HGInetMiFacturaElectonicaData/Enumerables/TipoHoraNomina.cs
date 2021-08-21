@@ -39,4 +39,29 @@ namespace HGInetMiFacturaElectonicaData
 		RecargoDominicalesFestivasNocturnas = 7
 
 	}
+
+	public enum TipoHoraNominaPor
+	{
+		[Description("1")]
+		ExtraDiurna = 25,
+
+		[Description("2")]
+		ExtraNocturna = 75,
+
+		[Description("3")]
+		RecargoNocturno = 35,
+
+		[Description("4")]
+		DominicalesFestivas = 100,
+
+		[Description("5")]
+		RecargoDominicalesFestivas = 75,
+
+		[Description("6")]
+		ExtraDominicalesFestivasNocturnas = 150,
+
+		[Description("7")]
+		RecargoDominicalesFestivasNocturnas = 110
+
+	}
 }

@@ -180,7 +180,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						FechaRecepcion = fecha_actual,
 						FechaUltimoProceso = fecha_actual,
 						IdDocumento = "",
-						Identificacion = "",
+						Identificacion = (item.DatosTrabajador != null) ? item.DatosTrabajador.Identificacion : "",
 						IdProceso = proceso_actual.GetHashCode(),
 						MotivoRechazo = "",
 						NumeroResolucion = string.Empty,

@@ -592,7 +592,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Se agrega validacion, se tiene en el listado de la DIAN estas opciones pero presenta notificacion en la rececpion.
-				if (tercero.CodigoTributo.Equals("ZZ") || tercero.CodigoTributo.Equals("ZA"))
+				if (tercero.CodigoTributo.Equals("22"))
 					tercero.CodigoTributo = "01";
 
 				ListaTipoImpuestoTercero list_tipoImp = new ListaTipoImpuestoTercero();
@@ -720,6 +720,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					tercero.RazonSocial = "consumidor final";
 					tercero.Email = Facturador.StrMailAdmin;
+					tercero.CodigoTributo = "ZZ";
 				}
 
 			}
@@ -1946,8 +1947,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (item.TipoHora <= 0 || item.TipoHora > 7)
 						throw new ApplicationException(string.Format("El campo {0} de DatosHoras con valor {1} del devengado no está bien formado", "TipoHora", item.TipoHora));
 
-					TipoHoraNomina tipo_hora = Enumeracion.GetEnumObjectByValue<TipoHoraNomina>(item.TipoHora);
-					decimal porcentaje_hora = Convert.ToDecimal(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<TipoHoraNomina>(item.TipoHora))) + 0.00M;
+					TipoHoraNominaPor tipo_hora = Enumeracion.GetValueFromDescription<TipoHoraNominaPor>(item.TipoHora.ToString());
+					decimal porcentaje_hora = Convert.ToDecimal(tipo_hora.GetHashCode()) + 0.00M;
 
 					if (!porcentaje_hora.Equals(item.Porcentaje))
 						throw new ApplicationException(string.Format("El procentaje de la Hora con valor {0} identificada con el código {1} del devengado no está bien formado", item.Porcentaje, tipo_hora));
@@ -1986,11 +1987,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (item.Tipo <= 0 || item.Tipo > 2)
 						throw new ApplicationException(string.Format("El campo {0} de Vacaciones con valor {1} del devengado no está bien formado", "Tipo", item.Tipo));
 
-					if (item.Pago > 0 && item.Cantidad == 0)
-						throw new ApplicationException(string.Format("No se encuentra la cantidad de dias de las vacaciones por el valor de {0} en el devengado", item.Pago));
+					//Se quita validaciones que no hace la DIAN en el momento
+					//if (item.Pago > 0 && item.Cantidad == 0)
+					//	throw new ApplicationException(string.Format("No se encuentra la cantidad de dias de las vacaciones por el valor de {0} en el devengado", item.Pago));
 
-					if (item.Pago == 0 && item.Cantidad > 0)
-						throw new ApplicationException(string.Format("No se encuentra el valor de las vacaciones con cantidad {0} en el devengado", item.Cantidad));
+					//if (item.Pago == 0 && item.Cantidad > 0)
+					//	throw new ApplicationException(string.Format("No se encuentra el valor de las vacaciones con cantidad {0} en el devengado", item.Cantidad));
 
 					//Vacaciones disfrutadas en tiempo y dinero
 					if (item.Tipo == 1)
