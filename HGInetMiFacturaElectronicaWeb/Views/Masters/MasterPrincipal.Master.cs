@@ -54,28 +54,30 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 						//  if (PermisoActual != null)
 						//{
 
-						//Valido si tengo una Cookies con la 
-						if (Request.Cookies["UserSettings"] != null)
-						{
-							if (Request.Cookies["UserSettings"]["HtmlMenu"] != null && Request.Cookies["UserSettings"]["HtmlMenu"] != "")
-							{
-								string NuevoCookies = Request.Cookies["UserSettings"]["HtmlMenu"];
-								NuevoCookies = NuevoCookies.Replace("xxx", "<").Replace("zzz", ">").Replace("%0d%0a", "").Replace("Ã³", "ó").Replace("Ãº", "Ú");
-								DivMenu.InnerHtml = NuevoCookies;
+						////Valido si tengo una Cookies con la 
+						//if (Request.Cookies["UserSettings"] != null)
+						//{
+						//	if (Request.Cookies["UserSettings"]["HtmlMenu"] != null && Request.Cookies["UserSettings"]["HtmlMenu"] != "")
+						//	{
+						//		string NuevoCookies = Request.Cookies["UserSettings"]["HtmlMenu"];
+						//		NuevoCookies = NuevoCookies.Replace("xxx", "<").Replace("zzz", ">").Replace("%0d%0a", "").Replace("Ã³", "ó").Replace("Ãº", "Ú");
+						//		DivMenu.InnerHtml = NuevoCookies;
 
-							}
-							else
-							{
-								//Si no esta creado en session, crea el menu desde la base de datos
-								ActivarMenu(Sesion.DatosUsuario.StrUsuario, Sesion.DatosEmpresa.StrIdentificacion);
-							}
-						}
-						else
-						{
+						//	}
+						//	else
+						//	{
+						//		//Si no esta creado en session, crea el menu desde la base de datos
+						//		ActivarMenu(Sesion.DatosUsuario.StrUsuario, Sesion.DatosEmpresa.StrIdentificacion);
+						//	}
+						//}
+						//else
+						//{
 
-							//Si no esta creado en session, crea el menu desde la base de datos
-							ActivarMenu(Sesion.DatosUsuario.StrUsuario, Sesion.DatosEmpresa.StrIdentificacion);
-						}
+						//	//Si no esta creado en session, crea el menu desde la base de datos
+						//	ActivarMenu(Sesion.DatosUsuario.StrUsuario, Sesion.DatosEmpresa.StrIdentificacion);
+						//}
+
+						ActivarMenu(Sesion.DatosUsuario.StrUsuario, Sesion.DatosEmpresa.StrIdentificacion);
 						lb_TituloPagina.Text = this.PermisoActual.Titulo;
 						lb_GrupoPagina.Text = this.PermisoActual.GrupoPagina;
 						//}
