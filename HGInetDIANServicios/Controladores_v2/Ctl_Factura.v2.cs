@@ -168,7 +168,7 @@ namespace HGInetDIANServicios
 					DianWSValidacionPrevia.WcfDianCustomerServicesClient webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
 					webServiceHab.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
 					webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
-
+					
 					//Se agrega instruccion para habilitar la seguridad en el envio
 					System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
@@ -200,7 +200,8 @@ namespace HGInetDIANServicios
 						}
 						catch (Exception excepcion)
 						{
-							string msg_custom = string.Format("Error Exec WS => Carpeta: {0} - Archivo: {1}", carpeta, archivo);
+							DateTime fecha_excepcion = Fecha.GetFecha();
+							string msg_custom = string.Format("Error Exec WS => Carpeta: {0} - Archivo: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", carpeta, archivo, acuse_recibo.ReceivedDateTime, fecha_excepcion);
 
 							RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 						}
@@ -215,7 +216,8 @@ namespace HGInetDIANServicios
 							}
 							catch (Exception excepcion)
 							{
-								string msg_custom = string.Format("Error Close WS Envio => Carpeta: {0} - Archivo: {1}", carpeta, archivo);
+								DateTime fecha_excepcion = Fecha.GetFecha();
+								string msg_custom = string.Format("Error Close WS Envio => Carpeta: {0} - Archivo: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", carpeta, archivo, acuse_recibo.ReceivedDateTime, fecha_excepcion);
 
 								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 							}
@@ -234,7 +236,7 @@ namespace HGInetDIANServicios
 								{
 									if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())) && cufe_doc.Equals(respuesta.XmlDocumentKey))
 									{
-										if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento con CUFE"))
+										if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
 										{
 											respuesta.StatusCode = "94";
 
@@ -245,6 +247,7 @@ namespace HGInetDIANServicios
 
 											string key = respuesta.XmlDocumentKey;
 
+											acuse_recibo.ResponseDateTime = Fecha.GetFecha();
 											DianWSValidacionPrevia.DianResponse respuesta_consulta = webServiceHab.GetStatus(key);
 
 											if (respuesta_consulta.XmlBase64Bytes == null && respuesta.XmlBase64Bytes != null)
@@ -262,7 +265,8 @@ namespace HGInetDIANServicios
 							}
 							catch (Exception excepcion)
 							{
-								string msg_custom = string.Format("[0] - Error conversion mensaje respuesta DIAN {0}, CUFE: {1}", nombre_archivo, respuesta.XmlDocumentKey);
+								DateTime fecha_excepcion = Fecha.GetFecha();
+								string msg_custom = string.Format("[0] - Error conversion mensaje respuesta DIAN {0}, CUFE: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", nombre_archivo, respuesta.XmlDocumentKey, acuse_recibo.ResponseDateTime, fecha_excepcion);
 								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 
 							}

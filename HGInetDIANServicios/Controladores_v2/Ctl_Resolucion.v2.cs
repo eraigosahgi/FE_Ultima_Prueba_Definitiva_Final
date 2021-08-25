@@ -16,7 +16,7 @@ namespace HGInetDIANServicios
 	
 		public static DianResolucion.ResolucionesFacturacion Obtener_v2(Guid id_peticion, string identificador_software, string clave, string identificacion_empresa, string identificacion_proveedor, DateTime fecha, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web)
 		{
-
+			DateTime fecha_envio = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha();
 			try
 			{
 
@@ -26,6 +26,7 @@ namespace HGInetDIANServicios
 				//Certificado de producción
 				X509Certificate2 cert = new X509Certificate2(ruta_certificado, clave_certificado);
 				webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
+				webServiceHab.Endpoint.Binding.CloseTimeout = new TimeSpan(0, 0, 5);
 
 				//Se agrega instruccion para habilitar la seguridad en el envio
 				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
@@ -80,7 +81,10 @@ namespace HGInetDIANServicios
 			{
 				MensajeCategoria log_categoria = MensajeCategoria.ServicioDian;
 				MensajeAccion log_accion = MensajeAccion.consulta;
-				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+				DateTime fecha_excepcion = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha();
+				string msg_custom = string.Format("Error Exec WS => Consulta Resolucion - Fecha Envio: {0} - Fecha Excepcion: {1}", fecha_envio, fecha_excepcion);
+
+				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
