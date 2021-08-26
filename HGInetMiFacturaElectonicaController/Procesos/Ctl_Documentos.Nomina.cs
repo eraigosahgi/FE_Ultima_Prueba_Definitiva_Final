@@ -479,7 +479,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "Documento", "int").Replace("no puede ser nulo", "no puede ser menor a 0"));
 
 			if(documento.FechaGen.Equals(validar_fecha))
-				throw new ApplicationException(string.Format("La FechaGen '{0}' no es válida", documento.FechaGen));
+				throw new ApplicationException(string.Format("La FechaGen {0} no es válida", documento.FechaGen));
 
 
 			//Valida que no este vacio y este bien formado 
@@ -499,25 +499,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (documento.DatosPeriodo != null)
 				{
 					if (documento.DatosPeriodo.FechaIngreso.Equals(validar_fecha))
-						throw new ApplicationException(string.Format("La FechaIngreso '{0}' no es válida", documento.DatosPeriodo.FechaIngreso));
+						throw new ApplicationException(string.Format("La FechaIngreso {0} no es válida", documento.DatosPeriodo.FechaIngreso));
 
-					if (documento.DatosPeriodo.FechaLiquidacionInicio.Equals(validar_fecha))
-						throw new ApplicationException(string.Format("La FechaLiquidacionInicio '{0}' no es válida", documento.DatosPeriodo.FechaLiquidacionInicio));
+					if (documento.DatosPeriodo.FechaLiquidacionInicio.Equals(validar_fecha))		
+						throw new ApplicationException(string.Format("La FechaLiquidacionInicio {0} no es válida", documento.DatosPeriodo.FechaLiquidacionInicio));
 
 					if (documento.DatosPeriodo.FechaLiquidacionFin.Equals(validar_fecha))
-						throw new ApplicationException(string.Format("La FechaLiquidacionFin '{0}' no es válida", documento.DatosPeriodo.FechaLiquidacionFin));
+						throw new ApplicationException(string.Format("La FechaLiquidacionFin {0} no es válida", documento.DatosPeriodo.FechaLiquidacionFin));
 
 					//if (!DateTime.TryParseExact(documento.DatosPeriodo.FechaLiquidacion.ToString("yyyy-MM-dd"), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out validar_fecha))
 					//	throw new ApplicationException(string.Format("La FechaLiquidacion '{0}' no es válida", documento.DatosPeriodo.FechaLiquidacion));
 
 					if (documento.DatosPeriodo.FechaLiquidacionInicio.Day > 1)
-						throw new ApplicationException(string.Format("El dia que reporta en FechaLiquidacionInicio '{0}' no es válido según el periodo que esta informando", documento.DatosPeriodo.FechaLiquidacionInicio.Day));
+						throw new ApplicationException(string.Format("El dia que reporta en FechaLiquidacionInicio {0} no es válido según el periodo que esta informando", documento.DatosPeriodo.FechaLiquidacionInicio.Day));
 
 					if (!(DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month) == documento.DatosPeriodo.FechaLiquidacionFin.Day || documento.DatosPeriodo.FechaLiquidacionInicio.Day + 1 == DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month)))
-						throw new ApplicationException(string.Format("El dia que reporta en FechaLiquidacionFin '{0}' no es válido según el periodo que esta informando", documento.DatosPeriodo.FechaLiquidacionFin));
+						throw new ApplicationException(string.Format("El dia que reporta en FechaLiquidacionFin {0} no es válido según el periodo que esta informando", documento.DatosPeriodo.FechaLiquidacionFin));
 
 					if (documento.DatosPeriodo.TiempoLaborado <= 0)
-						throw new ApplicationException(string.Format("El Tiempo Laborado '{0}' no es válido", documento.DatosPeriodo.TiempoLaborado));
+						throw new ApplicationException(string.Format("El Tiempo Laborado {0} no es válido", documento.DatosPeriodo.TiempoLaborado));
 
 					/*
 					if (documento.DatosPeriodo.FechaRetiro != null)
@@ -537,17 +537,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 
 					if (documento.DatosPago.Forma > 1)
-						throw new ApplicationException(string.Format("La Forma de Pago '{0}' no es válido según Estandar DIAN", documento.DatosPago.Forma));
+						throw new ApplicationException(string.Format("La Forma de Pago {0} no es válido según Estandar DIAN", documento.DatosPago.Forma));
 
 					ListaFormasPago list_forma = new ListaFormasPago();
 					ListaItem forma = list_forma.Items.Where(d => d.Codigo.Equals(documento.DatosPago.Forma.ToString())).FirstOrDefault();
 					if (forma == null)
-						throw new ApplicationException(string.Format("La Forma de Pago '{0}' no es válido según Estandar DIAN", documento.DatosPago.Forma));
+						throw new ApplicationException(string.Format("La Forma de Pago {0} no es válido según Estandar DIAN", documento.DatosPago.Forma));
 
 					ListaMediosPago list_medio = new ListaMediosPago();
 					ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento.DatosPago.Metodo.ToString())).FirstOrDefault();
 					if (medio == null)
-						throw new ApplicationException(string.Format("El Medio de Pago '{0}' no es válido según Estandar DIAN", documento.DatosPago.Metodo));
+						throw new ApplicationException(string.Format("El Medio de Pago {0} no es válido según Estandar DIAN", documento.DatosPago.Metodo));
 
 					if (medio.Codigo.Equals("42"))
 					{
@@ -568,7 +568,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//******Falta Enumerable o Lita para PeriodoNomina.
 				if (documento.PeriodoNomina < PeriodoNomina.Semanal.GetHashCode() || documento.PeriodoNomina > PeriodoNomina.Otro.GetHashCode())
-					throw new ApplicationException(string.Format("El PeriodoNomina '{0}' no es válido según Estandar DIAN", documento.PeriodoNomina));
+					throw new ApplicationException(string.Format("El PeriodoNomina {0} no es válido según Estandar DIAN", documento.PeriodoNomina));
 
 				//Valida que no este vacio y Formato correcto
 				if (string.IsNullOrEmpty(documento.Moneda))
