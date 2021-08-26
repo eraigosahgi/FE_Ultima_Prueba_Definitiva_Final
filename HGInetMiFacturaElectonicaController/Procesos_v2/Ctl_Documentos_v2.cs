@@ -473,6 +473,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									//Envio de correo
 									respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
 
+									if (empresa.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+									{
+										Ctl_Log.Guardar(new ApplicationException("Envio Correo"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
+									}
+									
+
+
 									//Se registra el valor de la nota como pago si la empresa maneja pagos electronicos para que afecte el saldo de la factura a pagar
 									if (tipo_doc == TipoDocumento.NotaCredito && empresa.IntManejaPagoE == true)
 									{
@@ -571,6 +578,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 					// no se controla excepción
+				}
+
+				if (empresa.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+				{
+					Ctl_Log.Guardar(new ApplicationException("Retorna Respueta del proceso interno"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
 				}
 
 				return respuesta;

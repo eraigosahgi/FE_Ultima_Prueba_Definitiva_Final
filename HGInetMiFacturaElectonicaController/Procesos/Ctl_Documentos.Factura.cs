@@ -144,11 +144,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Valida si hay items de una lista que no esten en otra
 					List<string> resol = resoluciones_docs.Except(resoluciones_bd, StringComparer.OrdinalIgnoreCase).ToList();
 
-					if ((resol != null || resol.Count > 0) && documentos[0].TipoOperacion != 50)
+					if ((resol != null && resol.Count > 0) && documentos[0].TipoOperacion != 50)
 					{
 						// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
-						lista_resolucion = new List<TblEmpresasResoluciones>();
-						lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, facturador_electronico);
+						//lista_resolucion = new List<TblEmpresasResoluciones>();
+						//lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, facturador_electronico);
+						throw new ApplicationException(string.Format("No se encontró resolución para el facturador'{0}' en nuestra plataforma, por favor valide las resoluciones", facturador_electronico.StrIdentificacion));
 					}
 
 				}
@@ -199,8 +200,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 					respuesta.Add(item_respuesta);
 				});
-				
+
+				if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+				{
+					Ctl_Log.Guardar(new ApplicationException("Inicia conciliacion de Planes"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
+				}
+
 				var datos = Planestransacciones.ConciliarPlanes(ListaPlanes, respuesta);
+
+				if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+				{
+					Ctl_Log.Guardar(new ApplicationException("Termina conciliacion de Planes"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
+				}
 
 				////Planes y transacciones
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -261,6 +272,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				Ctl_Log.Guardar(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, documentos.FirstOrDefault().DatosObligado.Identificacion);
 				//throw new ApplicationException(ex.Message);
 
+			}
+
+			if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+			{
+				Ctl_Log.Guardar(new ApplicationException("Retorna respuesta al servicio"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
 			}
 
 			return respuesta;
@@ -459,8 +475,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else
 				{
 					// realiza el proceso de envío a la DIAN del documento en Validacion Previa V2
+
+					if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+					{
+						Ctl_Log.Guardar(new ApplicationException("Inicio Procesamiento"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
+					}
+
 					item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion,
 						facturador_electronico, documento_bd);
+
+					if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+					{
+						Ctl_Log.Guardar(new ApplicationException("Termina Procesamiento"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
+					}
 				}
 			}
 			catch (Exception excepcion)
@@ -557,6 +584,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				item_respuesta.IdProceso = (short)ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
 				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
 				item_respuesta.Error.Mensaje = "La plataforma de la DIAN no dio respuesta del procesamiento del documento, por favor no modificar el documento y enviarlo de nuevo";
+			}
+
+			if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+			{
+				Ctl_Log.Guardar(new ApplicationException("Entrega respuesta servicio"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
 			}
 
 			return item_respuesta;

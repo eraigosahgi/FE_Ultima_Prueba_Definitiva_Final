@@ -3822,12 +3822,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
-				string ambiente_dian = string.Empty;
+				string ambiente_dian = "1";
 
-				if (facturador.IntHabilitacion.Equals(Habilitacion.Produccion.GetHashCode()))
-					ambiente_dian = "1";
-				else
-					ambiente_dian = "2";
+				//if (facturador.IntHabilitacion.Equals(Habilitacion.Produccion.GetHashCode()))
+				//	ambiente_dian = "1";
+				//else
+				//	ambiente_dian = "2";
 
 				TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(doc.IntDocTipo);
 

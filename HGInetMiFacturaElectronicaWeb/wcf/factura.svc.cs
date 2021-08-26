@@ -38,6 +38,11 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				// id de la petición en la plataforma
 				Guid id_peticion = Guid.NewGuid();
 
+				if (documentos.FirstOrDefault().DatosObligado.Identificacion.Equals("811021438"))
+				{
+					HGInetMiFacturaElectonicaController.Auditorias.Ctl_Log.Guardar(new ApplicationException("Recepcion documento"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
+				}
+
 				return Ctl_Documentos.Procesar(documentos);
 
 			}
