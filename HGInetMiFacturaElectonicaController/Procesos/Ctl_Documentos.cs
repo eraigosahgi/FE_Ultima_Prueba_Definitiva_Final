@@ -1897,6 +1897,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//	dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
 			//}
 
+			//Si el ingreso del empleado es en el mismo mes de la nomina se toma como dias laborales desde que ingreso
+			if (documento.DatosPeriodo.FechaIngreso.Month == documento.DatosPeriodo.FechaLiquidacionFin.Month)
+			{
+				TimeSpan difFecha = documento.DatosPeriodo.FechaLiquidacionFin - documento.DatosPeriodo.FechaIngreso;
+				dias_laborales_periodo = (int)difFecha.Days; 
+			}
+
 			devengados_cal = ValidarDevengados(documento.DatosDevengados, dias_laborales_periodo, documento.DatosTrabajador.Sueldo);
 
 			if (!Numero.Tolerancia(devengados_cal, documento.DevengadosTotal, 2))
@@ -1924,12 +1931,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			int dias_licencia = 0;
 			int dias_trabajados = 0;
 			int dias_vacaciones = 0;
-			decimal valor_dia = decimal.Round(salario_empleado / dias_laborales_periodo, 0, MidpointRounding.AwayFromZero);
+			decimal valor_dia = salario_empleado / dias_laborales_periodo;
 
 			if (devengado == null)
 				throw new Exception("No se encontró devengados en el documento.");
 
-			if (devengado.DiasTrabajados > dias_laborales_periodo || devengado.DiasTrabajados <= 0)
+			if (devengado.DiasTrabajados > dias_laborales_periodo || devengado.DiasTrabajados < 0)
 				throw new ApplicationException(string.Format("El campo {0} con valor {1} del devengado no está bien formado", "DiasTrabajados", devengado.DiasTrabajados));
 
 			if (devengado.DatosTransporte != null)

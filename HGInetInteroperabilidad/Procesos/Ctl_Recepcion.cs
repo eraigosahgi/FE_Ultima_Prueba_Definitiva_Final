@@ -1173,176 +1173,181 @@ namespace HGInetInteroperabilidad.Procesos
 				Ctl_Empresa empresa = new Ctl_Empresa();
 				TblEmpresas facturador_receptor = empresa.ValidarInteroperabilidad(attach_document.Identificacionadquiriente);
 
-				// representación de datos en objeto
-				var documento_obj = (dynamic)null;
-
-				int tipo_doc = 0;
-
-
-
-				if (attach_document.DocumentoElectronico.Contains("<cbc:InvoiceTypeCode"))
+				//Si tiene habilitado este servicio hace todo el proceso
+				if (facturador_receptor.IntInteroperabilidad == true)
 				{
-					tipo_doc = TipoDocumento.Factura.GetHashCode();
-					documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.Factura);
+					// representación de datos en objeto
+					var documento_obj = (dynamic)null;
 
-					//Validaciones del objeto
-					Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.Factura);
+					int tipo_doc = 0;
 
-					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.Factura, documento_obj.Prefijo);
-				}
-				else if (attach_document.DocumentoElectronico.Contains("<cbc:CreditNoteTypeCode"))
-				{
-					tipo_doc = TipoDocumento.NotaCredito.GetHashCode();
-					documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaCredito);
 
-					//Validaciones del objeto
-					Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaCredito);
 
-					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaCredito, documento_obj.Prefijo);
-				}
-				else if (attach_document.DocumentoElectronico.Contains("<cbc:DebitNoteTypeCode"))
-				{
-					tipo_doc = TipoDocumento.NotaDebito.GetHashCode();
-					documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaDebito);
-
-					//Validaciones del objeto
-					Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaDebito);
-
-					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaDebito, documento_obj.Prefijo);
-
-				}
-
-				//Creacion Facturador Emisor del documento 
-				TblEmpresas facturador_emisor = new TblEmpresas();
-
-				try
-				{
-					facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion.Value);
-
-				}
-				catch (Exception excepcion)
-				{
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-					throw new ApplicationException(string.Format("Error creando el Facturador emisor con identificacion {0} Detalle: {1}", documento_obj.DatosObligado.Identificacion, excepcion.Message));
-				}
-
-				TblDocumentos documento_bd = new TblDocumentos();
-				Ctl_Documento ctl_doc = new Ctl_Documento();
-
-				//valida si el Documento ya existe en Base de Datos
-				documento_bd = ctl_doc.Obtener(facturador_emisor.StrIdentificacion, documento_obj.Documento, documento_obj.Prefijo);
-
-				if (documento_bd == null)
-				{
-
-					//Proceso para Gestionar los archivo recibidos y los convertidos en la ruta del facturador emisor
-					bool contiene_pdf = false;
-					bool contiene_anexo = false;
-
-					try
+					if (attach_document.DocumentoElectronico.Contains("<cbc:InvoiceTypeCode"))
 					{
-						ProcesarArchivos(ruta_archivo, nombre_archivo, facturador_emisor, attach_document, ref contiene_pdf, ref contiene_anexo);
+						tipo_doc = TipoDocumento.Factura.GetHashCode();
+						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.Factura);
+
+						//Validaciones del objeto
+						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.Factura);
+
+						nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.Factura, documento_obj.Prefijo);
 					}
-					catch (Exception excepcion)
+					else if (attach_document.DocumentoElectronico.Contains("<cbc:CreditNoteTypeCode"))
 					{
+						tipo_doc = TipoDocumento.NotaCredito.GetHashCode();
+						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaCredito);
 
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-						throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+						//Validaciones del objeto
+						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaCredito);
+
+						nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaCredito, documento_obj.Prefijo);
+					}
+					else if (attach_document.DocumentoElectronico.Contains("<cbc:DebitNoteTypeCode"))
+					{
+						tipo_doc = TipoDocumento.NotaDebito.GetHashCode();
+						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaDebito);
+
+						//Validaciones del objeto
+						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaDebito);
+
+						nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaDebito, documento_obj.Prefijo);
 
 					}
 
-					//Convierto el Objeto a Tbl
+					//Creacion Facturador Emisor del documento 
+					TblEmpresas facturador_emisor = new TblEmpresas();
+
 					try
 					{
-						documento_bd = Convertir(documento_obj, Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc), facturador_emisor, nombre_archivo, documento_obj.IdentificacionProveedor, contiene_pdf, contiene_anexo);
+						facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion.Value);
+
 					}
 					catch (Exception excepcion)
 					{
 						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-						throw new ApplicationException(string.Format("Error al convertir objeto {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+						throw new ApplicationException(string.Format("Error creando el Facturador emisor con identificacion {0} Detalle: {1}", documento_obj.DatosObligado.Identificacion, excepcion.Message));
 					}
 
-					//Valida Proveedor Emisor
-					try
+					TblDocumentos documento_bd = new TblDocumentos();
+					Ctl_Documento ctl_doc = new Ctl_Documento();
+
+					//valida si el Documento ya existe en Base de Datos
+					documento_bd = ctl_doc.Obtener(facturador_emisor.StrIdentificacion, documento_obj.Documento, documento_obj.Prefijo);
+
+					if (documento_bd == null)
 					{
-						Ctl_ConfiguracionInteroperabilidad config_inter = new Ctl_ConfiguracionInteroperabilidad();
-						TblConfiguracionInteroperabilidad proveedor_emisor = config_inter.Obtener(documento_obj.IdentificacionProveedor);
-						if (proveedor_emisor == null)
+
+						//Proceso para Gestionar los archivo recibidos y los convertidos en la ruta del facturador emisor
+						bool contiene_pdf = false;
+						bool contiene_anexo = false;
+
+						try
 						{
-							proveedor_emisor = config_inter.GuardarProveedor(documento_obj.IdentificacionProveedor, string.Empty, string.Format("Proveedor - {0}", facturador_emisor.StrRazonSocial), facturador_emisor.StrMailAdmin, facturador_emisor.StrTelefono, string.Format("Creado por documento recibido - {0}", documento_obj.Documento), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, true, Fecha.GetFecha(), Fecha.GetFecha());
+							ProcesarArchivos(ruta_archivo, nombre_archivo, facturador_emisor, attach_document, ref contiene_pdf, ref contiene_anexo);
 						}
-					}
-					catch (Exception excepcion)
-					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-						throw new ApplicationException(string.Format("Error al crear proveedor Emisor {0} Detalle: {1}", documento_obj.IdentificacionProveedor, excepcion.Message));
-					}
-
-					Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
-					List<ObjPlanEnProceso> ListaPlanes = new List<ObjPlanEnProceso>();
-
-					//asignacion plan de documentos
-					try
-					{
-						ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_receptor.StrIdentificacion, 1);
-
-						if (ListaPlanes == null)
+						catch (Exception excepcion)
 						{
-							///Validación de alertas y notificaciones
-							try
+
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							throw new ApplicationException(string.Format("Error al almacenar el archivo {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+
+						}
+
+						//Convierto el Objeto a Tbl
+						try
+						{
+							documento_bd = Convertir(documento_obj, Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc), facturador_emisor, nombre_archivo, documento_obj.IdentificacionProveedor, contiene_pdf, contiene_anexo);
+						}
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							throw new ApplicationException(string.Format("Error al convertir objeto {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+						}
+
+						//Valida Proveedor Emisor
+						try
+						{
+							Ctl_ConfiguracionInteroperabilidad config_inter = new Ctl_ConfiguracionInteroperabilidad();
+							TblConfiguracionInteroperabilidad proveedor_emisor = config_inter.Obtener(documento_obj.IdentificacionProveedor);
+							if (proveedor_emisor == null)
 							{
-								Ctl_Alertas controlador = new Ctl_Alertas();
-								controlador.alertaSinSaldo(facturador_receptor.StrIdentificacion);
+								proveedor_emisor = config_inter.GuardarProveedor(documento_obj.IdentificacionProveedor, string.Empty, string.Format("Proveedor - {0}", facturador_emisor.StrRazonSocial), facturador_emisor.StrMailAdmin, facturador_emisor.StrTelefono, string.Format("Creado por documento recibido - {0}", documento_obj.Documento), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, true, Fecha.GetFecha(), Fecha.GetFecha());
 							}
-							catch (Exception excepcion)
-							{
-								LogExcepcion.Guardar(excepcion);
-							}
-							throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
 						}
-
-						documento_bd.StrIdPlanTransaccion = Guid.Parse(ListaPlanes.FirstOrDefault().plan.ToString());
-						ListaPlanes.FirstOrDefault().reservado += 1;
-					}
-					catch (Exception excepcion)
-					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, string.Format("Se genera inconsistencias en el proceso de planes. Detalle: {0}", excepcion.Message));
-					}
-
-					//Guardo el documento en BD
-					try
-					{
-						documento_bd = ctl_doc.Crear(documento_bd);
-
-						//Se hace proceso de conciliacion de planes
-						if (ListaPlanes.FirstOrDefault().reservado == 1)
+						catch (Exception excepcion)
 						{
-							ListaPlanes.FirstOrDefault().procesado += 1;
-							var datos = Planestransacciones.ConciliarPlanProceso(ListaPlanes.FirstOrDefault());
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							throw new ApplicationException(string.Format("Error al crear proveedor Emisor {0} Detalle: {1}", documento_obj.IdentificacionProveedor, excepcion.Message));
 						}
+
+						Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
+						List<ObjPlanEnProceso> ListaPlanes = new List<ObjPlanEnProceso>();
+
+						//asignacion plan de documentos
+						try
+						{
+							ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_receptor.StrIdentificacion, 1);
+
+							if (ListaPlanes == null)
+							{
+								///Validación de alertas y notificaciones
+								try
+								{
+									Ctl_Alertas controlador = new Ctl_Alertas();
+									controlador.alertaSinSaldo(facturador_receptor.StrIdentificacion);
+								}
+								catch (Exception excepcion)
+								{
+									LogExcepcion.Guardar(excepcion);
+								}
+								throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
+							}
+
+							documento_bd.StrIdPlanTransaccion = Guid.Parse(ListaPlanes.FirstOrDefault().plan.ToString());
+							ListaPlanes.FirstOrDefault().reservado += 1;
+						}
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, string.Format("Se genera inconsistencias en el proceso de planes. Detalle: {0}", excepcion.Message));
+						}
+
+						//Guardo el documento en BD
+						try
+						{
+							documento_bd = ctl_doc.Crear(documento_bd);
+
+							//Se hace proceso de conciliacion de planes
+							if (ListaPlanes.FirstOrDefault().reservado == 1)
+							{
+								ListaPlanes.FirstOrDefault().procesado += 1;
+								var datos = Planestransacciones.ConciliarPlanProceso(ListaPlanes.FirstOrDefault());
+							}
+						}
+
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							throw new ApplicationException(string.Format("Error al guardar el documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+						}
+
 					}
-						
+
+					try
+					{   // envía el correo del documento al Adquiriente(Facturador Receptor)
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+						email.NotificacionDocumento(documento_bd, (string.IsNullOrEmpty(documento_obj.DatosObligado.Telefono)) ? "vacio" : documento_obj.DatosObligado.Telefono, facturador_receptor.StrMailRecepcion, string.Empty, Procedencia.Plataforma, string.Empty, ProcesoEstado.EnvioEmailAcuse, string.Empty, false, true);
+						//documento_bd.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
+					}
 					catch (Exception excepcion)
 					{
 						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-						throw new ApplicationException(string.Format("Error al guardar el documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+						throw new ApplicationException(string.Format("Error al notificar al facturador receptor la recepcion del documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 					}
 
+					respuesta = true;
 				}
 
-				try
-				{   // envía el correo del documento al Adquiriente(Facturador Receptor)
-					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-					email.NotificacionDocumento(documento_bd, (string.IsNullOrEmpty(documento_obj.DatosObligado.Telefono)) ? "vacio" : documento_obj.DatosObligado.Telefono, facturador_receptor.StrMailRecepcion, string.Empty, Procedencia.Plataforma, string.Empty, ProcesoEstado.EnvioEmailAcuse, string.Empty, false, true);
-					//documento_bd.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
-				}
-				catch (Exception excepcion)
-				{
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-					throw new ApplicationException(string.Format("Error al notificar al facturador receptor la recepcion del documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
-				}
-
-				respuesta = true;
 			}
 			catch (Exception excepcion)
 			{

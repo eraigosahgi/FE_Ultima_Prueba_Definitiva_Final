@@ -82,7 +82,7 @@ namespace HGInetDIANServicios
 				catch (Exception excepcion)
 				{
 					RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
-					throw excepcion;
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 				}
 
 				try
@@ -168,7 +168,7 @@ namespace HGInetDIANServicios
 					DianWSValidacionPrevia.WcfDianCustomerServicesClient webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
 					webServiceHab.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
 					webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
-					
+
 					//Se agrega instruccion para habilitar la seguridad en el envio
 					System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 

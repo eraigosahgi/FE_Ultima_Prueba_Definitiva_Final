@@ -138,6 +138,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						documento_tmp.Actualizar(documentoBd);
 					}
+					msg_response = string.Format("{0} -{1}",msg_response,excepcion.Message);
 					//respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("No es posible la comunicación con la Plataforma de la DIAN para el envío del archivo ZIP con el XML firmado"), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 					respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Se presentó inconsistencias en el envío del archivo ZIP con el XML firmado a la Plataforma de la DIAN: {0}", msg_response), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 				}
